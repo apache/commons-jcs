@@ -40,7 +40,8 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
     private static final boolean debug = true;
     
-    private final @NonNullable ConcurrentMap<K, KeyedWeakReference<K,ReadWriteLock>> rwlMap = 
+    private final @NonNullable 
+            ConcurrentMap<K, KeyedWeakReference<K,ReadWriteLock>> rwlMap = 
             new ConcurrentHashMap<K, KeyedWeakReference<K,ReadWriteLock>>();
     private final @NonNullable Class<? extends ReadWriteLock> rwlClass;
     private final @NonNullable ReferenceQueue<ReadWriteLock> refQ = 
@@ -60,81 +61,92 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
     public KeyedReadWriteLock() {
         this.rwlClass = ReentrantReadWriteLock.class;
     }
-    public KeyedReadWriteLock(Class<? extends ReadWriteLock> rwlClass) {
+    public KeyedReadWriteLock(
+            @NonNullable Class<? extends ReadWriteLock> rwlClass)
+    {
         this.rwlClass = rwlClass;
     }
-    public Lock readLock(K key) {
+    public @NonNullable Lock readLock(@NonNullable final K key) {
         if (debug)
             this.countReadLock.incrementAndGet();
         return this.readWriteLock(key).readLock();
     }
-    public Lock writeLock(K key) {
+    public @NonNullable Lock writeLock(@NonNullable final K key) {
         if (debug)
             this.countWriteLock.incrementAndGet();
         return this.readWriteLock(key).writeLock();
     }
-    private ReadWriteLock readWriteLock(K key) {
+    private @NonNullable ReadWriteLock readWriteLock(@NonNullable final K key) {
         this.collector.run();
-        KeyedWeakReference<K,ReadWriteLock> prevRef = this.rwlMap.get(key);
-        
-        if (prevRef != null) {
-            // existing lock may exist
+        ReadWriteLock ret = this.getExistingLock(key);
+        return ret == null ? this.tryNewLock(key) : ret;
+    }
+    /** 
+     * Returns an existing RWLock for the specified key, or null if not found. 
+     */
+    private ReadWriteLock getExistingLock(@NonNullable final K key) {
+        KeyedWeakReference<K,ReadWriteLock> ref = this.rwlMap.get(key);
+        return ref == null ? null : this.toLock(ref);
+    }
+    /**
+     * Returns the RWLock of the given RWLock weak reference, cleaning up
+     * stale reference as necessary should the RWLock be garbage collected.
+     */
+    private ReadWriteLock toLock(
+            @NonNullable KeyedWeakReference<K,ReadWriteLock> ref)
+    {
+        // existing lock may exist
+        if (debug)
+            this.countKeyHit.incrementAndGet();
+        ReadWriteLock prev = ref.get();
+
+        if (prev != null) {
+            // existing lock
             if (debug)
-                this.countKeyHit.incrementAndGet();
-            ReadWriteLock prev = prevRef.get();
-            
-            if (prev != null) {
-                // existing lock
-                if (debug)
-                    this.countLockExist.incrementAndGet();
-                return prev;
-            }
-            if (debug)
-                this.countLockRefEmpty.incrementAndGet();
-            // stale reference; doesn't matter if fail
-            this.rwlMap.remove(key,  prevRef);
+                this.countLockExist.incrementAndGet();
+            return prev;
         }
-        // Instantiate a new RW lock.
-        ReadWriteLock newLock = null;
+        if (debug)
+            this.countLockRefEmpty.incrementAndGet();
+        // stale reference; doesn't matter if fail
+        this.rwlMap.remove(ref.getKey(),  ref);
+        return null;
+    }
+    /** Instantiate a new RW lock. */
+    private @NonNullable ReadWriteLock createRWLock() {
+        if (debug)
+            this.countRWLockCreate.incrementAndGet();
         try {
-            newLock = rwlClass.newInstance();
-            if (debug)
-                this.countRWLockCreate.incrementAndGet();
+            return rwlClass.newInstance();
         } catch(IllegalAccessException ex) {
             throw new RuntimeException(ex);
         } catch(InstantiationException ex) {
             throw new RuntimeException(ex);
         }
-        return this.getLock(key, newLock);
     }
-    private ReadWriteLock getLock(final K key, ReadWriteLock newLock) 
+    /**
+     * Returns either a new lock created by the executing thread;
+     * or an existing lock created by another thread due to data race.
+     */
+    private @NonNullable ReadWriteLock tryNewLock(@NonNullable final K key)
     {
+        final ReadWriteLock newLock = this.createRWLock();
         final KeyedWeakReference<K,ReadWriteLock> newLockRef = 
                 new KeyedWeakReference<K,ReadWriteLock>(key, newLock, refQ);
-        ReadWriteLock prev = null;
-        KeyedWeakReference<K,ReadWriteLock> prevRef = null;
         do {
-            prevRef = this.rwlMap.putIfAbsent(key, newLockRef);
-
-            if (prevRef == null) {
-                // succesfully deposited the new lock.
+            KeyedWeakReference<K,ReadWriteLock> ref = 
+                    this.rwlMap.putIfAbsent(key, newLockRef);
+            if (ref == null) {
+                // successfully deposited the new lock.
                 if (debug)
                     this.countLockNew.incrementAndGet();
                 return newLock;
             }
-            // existing lock may exist
-            prev = prevRef.get();
+            ReadWriteLock rwl = this.toLock(ref);
             
-            if (prev != null) {
-                // exist lock
-                if (debug)
-                    this.countLockExist.incrementAndGet();
-                return prev;
+            if (rwl != null) {
+                return rwl;
             }
-            // stale reference; doesn't matter if fail
-            if (debug)
-                this.countLockRefEmpty.incrementAndGet();
-            this.rwlMap.remove(key,  prevRef);
         } while(true);
     }
     @Override public String toString() {
