@@ -19,11 +19,13 @@ package org.apache.jcs.yajcache.util.concurrent.locks;
 
 import java.util.concurrent.locks.Lock;
 
+import org.apache.jcs.yajcache.lang.annotation.*;
 /**
  * Factory Interface for key specific ReadWriteLock.
  *
  * @author Hanson Char
  */
+@CopyRightApache
 public interface IKeyedReadWriteLock<K> {
     public Lock readLock(K key);
     public Lock writeLock(K key);
