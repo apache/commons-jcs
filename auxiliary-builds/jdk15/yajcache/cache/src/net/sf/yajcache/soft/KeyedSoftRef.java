@@ -1,6 +1,4 @@
 /*
- * SoftValue.java
- *
  * $Revision$ $Date$
  */
 
