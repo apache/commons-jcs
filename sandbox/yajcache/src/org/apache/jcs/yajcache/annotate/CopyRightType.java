@@ -27,7 +27,7 @@ public enum CopyRightType {
         @Override public String toString() {
             return "\n"
             + "/* ========================================================================\n" 
-            + " * Copyright 2004 The Apache Software Foundation\n"
+            + " * Copyright 2001-2004 The Apache Software Foundation\n"
             + " *\n"
             + " * Licensed under the Apache License, Version 2.0 (the \"License\");\n"
             + " * you may not use this file except in compliance with the License.\n"
