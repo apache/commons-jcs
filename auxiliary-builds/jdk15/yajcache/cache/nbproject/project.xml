@@ -7,5 +7,6 @@
             <minimum-ant-version>1.6</minimum-ant-version>
             <explicit-platform explicit-source-supported="true"/>
         </data>
+        <data version="0.4" xmlns="http://www.netbeans.org/ns/profiler/1"/>
     </configuration>
 </project>
