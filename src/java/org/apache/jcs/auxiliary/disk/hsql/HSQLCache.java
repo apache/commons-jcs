@@ -1,6 +1,6 @@
 package org.apache.jcs.auxiliary.disk.hsql;
 
-/*
+/* ====================================================================
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 2001 The Apache Software Foundation.  All rights
@@ -18,21 +18,21 @@ package org.apache.jcs.auxiliary.disk.hsql;
  *    the documentation and/or other materials provided with the
  *    distribution.
  *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
  *
- * 4. The names "The Jakarta Project", "Velocity", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
- *    permission, please contact apache@apache.org.
+ * 4. The names "Apache" and "Apache Software Foundation" and
+ *    "Apache JCS" must not be used to endorse or promote products
+ *    derived from this software without prior written permission. For
+ *    written permission, please contact apache@apache.org.
  *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
+ * 5. Products derived from this software may not be called "Apache",
+ *    "Apache JCS", nor may "Apache" appear in their name, without
+ *    prior written permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -135,7 +135,6 @@ public class HSQLCache extends AbstractDiskCache
 
         try
         {
-
             Properties p = new Properties();
             String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
             String url = p.getProperty( "url", "jdbc:hsqldb:" );
@@ -179,26 +178,21 @@ public class HSQLCache extends AbstractDiskCache
                 }
 
                 setupTABLE();
-
             }
             catch ( Exception e )
             {
                 log.error( "QueryTool.init", e );
             }
-
         }
         catch ( Exception e )
         {
             log.error( e );
         }
-
-    }
-    // end constructor
+    } // end constructor
 
     /** SETUP TABLE FOR CACHE */
     void setupTABLE()
     {
-
         boolean newT = true;
 
         String setup = "create table " + cacheName
@@ -234,9 +228,7 @@ public class HSQLCache extends AbstractDiskCache
                     System.out.println( "Exception: " + e );
                 }
             }
-        }
-        // end ifnew
-
+        } // end ifnew
     }
 
     /** Description of the Method */
@@ -263,7 +255,6 @@ public class HSQLCache extends AbstractDiskCache
         catch ( IOException e )
         {
             log.error( "Could not serialize element", e );
-
             return;
         }
 
@@ -336,7 +327,6 @@ public class HSQLCache extends AbstractDiskCache
             {
                 log.error( "e2 Exception: " + e2 );
             }
-
         }
     }
 
@@ -393,12 +383,10 @@ public class HSQLCache extends AbstractDiskCache
                 {
                     log.error( e );
                 }
-
             }
             //else {
             //return null;
             //}
-
         }
         catch ( SQLException sqle )
         {
@@ -433,7 +421,6 @@ public class HSQLCache extends AbstractDiskCache
             {
                 log.error( e );
             }
-
         }
         catch ( Exception e )
         {
@@ -461,13 +448,11 @@ public class HSQLCache extends AbstractDiskCache
     /** Description of the Method */
     public void reset()
     {
-
     }
 
     /** Description of the Method */
     public void doDispose()
     {
-
     }
 
     /**
@@ -502,12 +487,10 @@ public class HSQLCache extends AbstractDiskCache
 
     public Set getGroupKeys(String groupName)
     {
-        if (true) 
+        if (true)
         {
             throw new UnsupportedOperationException("Groups not implemented.");
-        }        
+        }
         return null;
     }
 }
-
-
