@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 
 import java.util.StringTokenizer;
 import java.util.Iterator;
+import java.util.Random;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.ElementAttributes;
@@ -650,9 +651,50 @@ public class TestCacheAccess
              p( cache.getMemoryCache().getStats() );
              p( "HitCountRam = " + cache.getHitCountRam() );
              p( "HitCountAux = " + cache.getHitCountAux() );
-          }
-        }
+           }
+           else
+           if ( message.startsWith( "gc" ) )
+           {
+             System.gc();
+              p( "Called system.gc()");
+            }
+           else
+           if ( message.startsWith( "random" ) )
+           {
+             String numS = message.substring( message.indexOf( " " ) + 1,
+                                              message.length() );
+             //p( numS );
 
+             String numS2 = numS.substring( 0, numS.indexOf( " " ) );
+             //p( numS2 );
+
+             String numS3 = numS.substring( numS.indexOf( " " ) + 1,
+                                            numS.length() );
+             //p( numS3 );
+
+             int range = 0;
+             int numOps = 0;
+             try
+             {
+               range = Integer.parseInt( numS2.trim() );
+               numOps = Integer.parseInt( numS3.trim() );
+             }
+             catch ( Exception e )
+             {
+               p( "usage: random range numOps" );
+               p( "ex.  random 100 1000" );
+             }
+             if ( numS == null )
+             {
+               p( "usage: random range numOps" );
+               p( "ex.  random 100 1000" );
+             }
+             else
+             {
+                random(range, numOps);
+             }
+           }
+        }
       }
       catch ( Exception e )
       {
@@ -670,6 +712,39 @@ public class TestCacheAccess
   }
 
   // end main
+
+
+  public static void random( int range, int numOps ) {
+    boolean show = true;
+    try {
+      for ( int i = 0; i < numOps; i++ ) {
+        Random ran = new Random(i);
+        int n = ran.nextInt(4);
+        int kn = ran.nextInt(range);
+        String key = "key" + kn;
+        if ( n == 1 ) {
+          cache_control.put( key, "data" + i + " junk asdfffffffadfasdfasf " + kn + ":" + n );
+          p("put " + key);
+        } else if ( n == 2 ) {
+          cache_control.remove(key);
+          p("removed " + key);
+        } else {
+          // slightly greater chance of get
+          Object obj = cache_control.get( key );
+           if ( show && obj != null )
+           {
+             p( obj.toString() );
+           }
+        }
+      }
+      p( "Finished random cycle of " + numOps );
+    }
+    catch ( Exception e )
+    {
+      p( e.toString() );
+      e.printStackTrace( System.out );
+    }
+  }
 
 
   /** Description of the Method */
@@ -699,6 +774,7 @@ public class TestCacheAccess
     p( "type 'stats' to get stats" );
     p( "type 'deattr' to get teh default element attributes" );
     p( "type 'cloneattr num' to clone attr" );
+    p( "type 'random range numOps' to put, get, and remove randomly" );
 //        p( "type 'removeLateralDirect key' to remove lateral" );
     p( "type 'switch number' to switch to testCache[number], 1 == testCache1" );
     p( "type 'help' for commands" );
