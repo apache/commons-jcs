@@ -11,7 +11,29 @@
   <property file="build.properties" />
   <!-- Set default values for the build -->
   <property file="project.properties" />
+  
+  <target 
+    name="jcs:test-prepare">
 
+    <!-- Make directory for log output from tests (distinct from reports) -->
+
+    <mkdir dir="target/test/logs/jcs"/>
+
+    <!-- Copy test config files to the test build dir -->
+
+    <copy todir="target/classes">
+        <fileset dir="src/test-conf"/>
+    </copy>
+
+  </target>
+
+  <!-- The targets people are used to -->
+
+  <target name="clean" depends="maven:compile"/>
+  <target name="compile" depends="maven:compile"/>
+  <target name="test" depends="maven:test"/>
+  <target name="jar" depends="maven:jar"/>
+  
   <!-- maven:start -->
   
   <!-- ================================================================== -->
@@ -24,7 +46,7 @@
   </target>
         
   <target 
-    name="maven:jar">
+    name="maven:jar" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-maven.xml" target="jar"/>
   </target>
         
@@ -42,24 +64,10 @@
     name="maven:docs">
     <ant antfile="${maven.home}/build-docs.xml" target="docs"/>
   </target>
-        
+    
   <target 
-    name="maven:test">
-    
-    <!-- Make directory for log output from tests (distinct from reports) -->
-
-    <mkdir dir="target/test/logs/jcs"/>
-
-    <!-- Copy test config files to the test build dir -->
-
-    <copy todir="target/classes">
-        <fileset dir="src/test-conf"/>
-    </copy>
-
-    <!-- Delegate to maven -->
-    
+    name="maven:test" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-test.xml" target="test"/>
-    
   </target>
 
   <target 
