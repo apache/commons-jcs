@@ -102,9 +102,7 @@ import java.util.Vector;
 public class JavaGroupsCache
     implements AuxiliaryCache, RequestHandler, MembershipListener
 {
-    private static int ct = 0;
-
-    private final Log log = LogFactory.getLog( JavaGroupsCache.class.getName() + (ct++) );
+    private final Log log = LogFactory.getLog( JavaGroupsCache.class );
 
     private String cacheName;
     private int status;
@@ -153,13 +151,10 @@ public class JavaGroupsCache
 
         try
         {
-            log.info( "Sending" );
-
             dispatcher.castMessage( null,
                                     new Message( null, null, request ),
                                     GroupRequest.GET_NONE,
                                     0 );
-            log.info( "Sent" );
 
         }
         catch ( Exception e )
@@ -342,8 +337,6 @@ public class JavaGroupsCache
     {
         try
         {
-            log.info( "Handling" );
-
             Request request = ( Request ) msg.getObject();
 
             // Switch based on the command and invoke the
@@ -375,8 +368,6 @@ public class JavaGroupsCache
 
                     log.error( "Recieved unknown command" );
             }
-
-            log.info( "Handled" );
         }
         catch ( Exception e )
         {
