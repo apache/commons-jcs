@@ -67,7 +67,6 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 
-
 /**
  *  A background memory shrinker. Just started. <u>DON'T USE</u>
  *
@@ -138,7 +137,7 @@ public class ShrinkerThread extends Thread
             log.debug( "Shrinking" );
         }
 
-        // not thread safe.  Copuld cause problems.  Only call remove directly
+        // not thread safe.  Could cause problems.  Only call remove directly
         // to the map.
         try
         {
@@ -151,6 +150,15 @@ public class ShrinkerThread extends Thread
                 MemoryElementDescriptor me = ( MemoryElementDescriptor ) e.getValue();
 
                 long now = System.currentTimeMillis();
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "now = " + now );
+                    log.debug( "!me.ce.getElementAttributes().getIsEternal() = " + !me.ce.getElementAttributes().getIsEternal() );
+                    log.debug( "me.ce.getElementAttributes().getMaxLifeSeconds() = " + me.ce.getElementAttributes().getMaxLifeSeconds() );
+                    log.debug( "now - me.ce.getElementAttributes().getCreateTime() = " + String.valueOf( now - me.ce.getElementAttributes().getCreateTime() ) );
+                    log.debug( "me.ce.getElementAttributes().getMaxLifeSeconds() * 1000 = " + me.ce.getElementAttributes().getMaxLifeSeconds() * 1000 );
+                }
 
                 // Memory idle, to disk shrinkage
                 if ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() != -1 )
@@ -166,7 +174,8 @@ public class ShrinkerThread extends Thread
                         cache.waterfal( me );
                     }
                 }
-                else if ( !me.ce.getElementAttributes().getIsEternal() )
+
+                if ( !me.ce.getElementAttributes().getIsEternal() )
                 {
                     // Exceeded maxLifeSeconds
                     if ( ( me.ce.getElementAttributes().getMaxLifeSeconds() != -1 ) && ( now - me.ce.getElementAttributes().getCreateTime() ) > ( me.ce.getElementAttributes().getMaxLifeSeconds() * 1000 ) )
@@ -178,17 +187,19 @@ public class ShrinkerThread extends Thread
 
                         // handle event, might move to a new method
                         ArrayList eventHandlers = me.ce.getElementAttributes().getElementEventHandlers();
-                        if ( log.isDebugEnabled() )
+                        if ( eventHandlers != null )
                         {
-                            log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND" );
-                        }
-                        if ( eventHandlers != null ) {
-                          IElementEvent event = new ElementEvent(me.ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND);
-                          Iterator hIt = eventHandlers.iterator();
-                          while ( hIt.hasNext() ) {
-                            IElementEventHandler hand = (IElementEventHandler)hIt.next();
-                            hand.handleElementEvent(event);
-                          }
+                            if ( log.isDebugEnabled() )
+                            {
+                                log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND" );
+                            }
+                            IElementEvent event = new ElementEvent( me.ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND );
+                            Iterator hIt = eventHandlers.iterator();
+                            while ( hIt.hasNext() )
+                            {
+                                IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
+                                hand.handleElementEvent( event );
+                            }
                         }
 
                         itr.remove();
@@ -209,25 +220,31 @@ public class ShrinkerThread extends Thread
 
                         // handle event, might move to a new method
                         ArrayList eventHandlers = me.ce.getElementAttributes().getElementEventHandlers();
-                        if ( log.isDebugEnabled() )
+                        if ( eventHandlers != null )
                         {
-                            log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND" );
-                        }
-                        if ( eventHandlers != null ) {
-                          IElementEvent event = new ElementEvent(me.ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND);
-                          Iterator hIt = eventHandlers.iterator();
-                          while ( hIt.hasNext() ) {
-                            IElementEventHandler hand = (IElementEventHandler)hIt.next();
-                            hand.handleElementEvent(event);
-                          }
+                            if ( log.isDebugEnabled() )
+                            {
+                                log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND" );
+                            }
+                            IElementEvent event = new ElementEvent( me.ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND );
+                            Iterator hIt = eventHandlers.iterator();
+                            while ( hIt.hasNext() )
+                            {
+                                IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
+                                hand.handleElementEvent( event );
+                            }
                         }
 
                         itr.remove();
+
                         //cache.remove( me.ce.getKey() );
                     }
                 }
 
             }
+
+            itr = null;
+
         }
         catch ( Throwable t )
         {
