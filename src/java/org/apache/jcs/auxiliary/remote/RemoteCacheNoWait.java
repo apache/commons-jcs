@@ -93,6 +93,7 @@ public class RemoteCacheNoWait implements AuxiliaryCache
     }
 
     public Set getGroupKeys(String groupName)
+        throws IOException
     {
         return cache.getGroupKeys(groupName);
     }
