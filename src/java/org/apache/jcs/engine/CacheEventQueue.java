@@ -30,6 +30,17 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 /**
  * An event queue is used to propagate ordered cache events to one and only one
  * target listener.
+ *
+ * <pre>
+ * Changes:<br>
+ * 17 April 2004  Hanson Char
+ * <ol><li>Bug fix: add missing synchronization to method addRemoveEvent();</li>
+ * <li>Use the light weight new int[0] for creating the object monitor queueLock,
+ * instead of new Object();</li>
+ * <li>Explicitely qualify member variables of CacheEventQueue in inner classes.
+ * Hopefully this will help identify any potential concurrency issue.</li>
+ * </ol>
+ * </pre>
  */
 public class CacheEventQueue implements ICacheEventQueue
 {
@@ -54,7 +65,7 @@ public class CacheEventQueue implements ICacheEventQueue
 
     // Internal queue implementation
 
-    private Object queueLock = new Object();
+    private Object queueLock = new int[0];
 
     // Dummy node
 
@@ -101,8 +112,8 @@ public class CacheEventQueue implements ICacheEventQueue
         this.maxFailure = maxFailure <= 0 ? 10 : maxFailure;
         this.waitBeforeRetry = waitBeforeRetry <= 0 ? 500 : waitBeforeRetry;
 
-        t = new QProcessor();
-        t.start();
+        this.t = new QProcessor();
+        this.t.start();
 
         if ( log.isDebugEnabled() )
         {
@@ -115,19 +126,19 @@ public class CacheEventQueue implements ICacheEventQueue
      */
     public synchronized void destroy()
     {
-        if ( !destroyed )
+        if ( !this.destroyed )
         {
-            destroyed = true;
+            this.destroyed = true;
 
             // sychronize on queue so the thread will not wait forever,
             // and then interrupt the QueueProcessor
 
-            synchronized ( queueLock )
+            synchronized ( this.queueLock )
             {
-                t.interrupt();
+                this.t.interrupt();
             }
 
-            t = null;
+            this.t = null;
 
             log.info( "Cache event queue destroyed: " + this );
         }
@@ -138,7 +149,7 @@ public class CacheEventQueue implements ICacheEventQueue
      */
     public String toString()
     {
-        return "listenerId=" + listenerId + ", cacheName=" + cacheName;
+        return "listenerId=" + this.listenerId + ", cacheName=" + this.cacheName;
     }
 
     /**
@@ -146,7 +157,7 @@ public class CacheEventQueue implements ICacheEventQueue
      */
     public boolean isAlive()
     {
-        return ( !destroyed );
+        return ( !this.destroyed );
     }
 
     /**
@@ -154,7 +165,7 @@ public class CacheEventQueue implements ICacheEventQueue
      */
     public byte getListenerId()
     {
-        return listenerId;
+        return this.listenerId;
     }
 
     /**
@@ -164,7 +175,7 @@ public class CacheEventQueue implements ICacheEventQueue
     public synchronized void addPutEvent( ICacheElement ce )
         throws IOException
     {
-        if ( !destroyed )
+        if ( !this.destroyed )
         {
             put( new PutEvent( ce ) );
         }
@@ -174,10 +185,10 @@ public class CacheEventQueue implements ICacheEventQueue
      * @param key The feature to be added to the RemoveEvent attribute
      * @exception IOException
      */
-    public void addRemoveEvent( Serializable key )
+    public synchronized void addRemoveEvent( Serializable key )
         throws IOException
     {
-        if ( !destroyed )
+        if ( !this.destroyed )
         {
             put( new RemoveEvent( key ) );
         }
@@ -189,7 +200,7 @@ public class CacheEventQueue implements ICacheEventQueue
     public synchronized void addRemoveAllEvent()
         throws IOException
     {
-        if ( !destroyed )
+        if ( !this.destroyed )
         {
             put( new RemoveAllEvent() );
         }
@@ -201,7 +212,7 @@ public class CacheEventQueue implements ICacheEventQueue
     public synchronized void addDisposeEvent()
         throws IOException
     {
-        if ( !destroyed )
+        if ( !this.destroyed )
         {
             put( new DisposeEvent() );
         }
@@ -218,29 +229,29 @@ public class CacheEventQueue implements ICacheEventQueue
 
         newNode.event = event;
 
-        synchronized ( queueLock )
+        synchronized ( this.queueLock )
         {
-            tail.next = newNode;
-            tail = newNode;
+            this.tail.next = newNode;
+            this.tail = newNode;
 
-            queueLock.notify();
+            this.queueLock.notify();
         }
     }
 
     private AbstractCacheEvent take() throws InterruptedException
     {
-        synchronized ( queueLock )
+        synchronized ( this.queueLock )
         {
             // wait until there is something to read
 
-            while ( head == tail )
+            while ( this.head == this.tail )
             {
-                queueLock.wait();
+                this.queueLock.wait();
             }
 
             // we have the lock, and the list is not empty
 
-            Node node = head.next;
+            Node node = this.head.next;
 
             // This is an awful bug.  This will always return null.
             // This make the event Q and event destroyer.
@@ -251,14 +262,14 @@ public class CacheEventQueue implements ICacheEventQueue
 
             if ( log.isDebugEnabled() )
             {
-              log.debug( "head.event = " + head.event );
+              log.debug( "head.event = " + this.head.event );
               log.debug( "node.event = " + node.event );
             }
 
             // Node becomes the new head (head is always empty)
 
             node.event = null;
-            head = node;
+            this.head = node;
 
             return value;
         }
@@ -281,7 +292,7 @@ public class CacheEventQueue implements ICacheEventQueue
          */
         QProcessor()
         {
-            super( "CacheEventQueue.QProcessor-" + ( ++processorInstanceCount ) );
+            super( "CacheEventQueue.QProcessor-" + ( ++CacheEventQueue.this.processorInstanceCount ) );
 
             setDaemon( true );
         }
@@ -293,7 +304,7 @@ public class CacheEventQueue implements ICacheEventQueue
         {
             AbstractCacheEvent r = null;
 
-            while ( !destroyed )
+            while ( !CacheEventQueue.this.destroyed )
             {
                 try
                 {
@@ -311,14 +322,14 @@ public class CacheEventQueue implements ICacheEventQueue
                     // will exit if we have been properly destroyed.
                 }
 
-                if ( !destroyed && r != null )
+                if ( !CacheEventQueue.this.destroyed && r != null )
                 {
                     r.run();
                 }
             }
             // declare failure as listener is permanently unreachable.
             // queue = null;
-            listener = null;
+            CacheEventQueue.this.listener = null;
             // The listener failure logging more the problem of the user
             // of the q.
             log.info( "QProcessor exiting for " + CacheEventQueue.this );
@@ -338,28 +349,30 @@ public class CacheEventQueue implements ICacheEventQueue
         {
             IOException ex = null;
 
-            while ( !destroyed && failureCount <= maxFailure )
+            while ( !CacheEventQueue.this.destroyed
+                    && CacheEventQueue.this.failureCount <= CacheEventQueue.this.maxFailure )
             {
                 try
                 {
                     ex = null;
                     doRun();
-                    failureCount = 0;
+                    CacheEventQueue.this.failureCount = 0;
                     return;
                     // happy and done.
                 }
                 catch ( IOException e )
                 {
-                    failureCount++;
+                    CacheEventQueue.this.failureCount++;
                     ex = e;
                 }
                 // Let's get idle for a while before retry.
-                if ( !destroyed && failureCount <= maxFailure )
+                if ( !CacheEventQueue.this.destroyed
+                     && CacheEventQueue.this.failureCount <= CacheEventQueue.this.maxFailure )
                 {
                     try
                     {
-                        log.warn( "...retrying propagation " + CacheEventQueue.this + "..." + failureCount );
-                        Thread.currentThread().sleep( waitBeforeRetry );
+                        log.warn( "...retrying propagation " + CacheEventQueue.this + "..." + CacheEventQueue.this.failureCount );
+                        Thread.currentThread().sleep( CacheEventQueue.this.waitBeforeRetry );
                     }
                     catch ( InterruptedException ie )
                     {
@@ -424,7 +437,7 @@ public class CacheEventQueue implements ICacheEventQueue
              * ce.setElementAttributes( attr );
              * ce.setGroupName( groupName );
              */
-            listener.handlePut( ice );
+            CacheEventQueue.this.listener.handlePut( ice );
         }
     }
 
@@ -456,7 +469,7 @@ public class CacheEventQueue implements ICacheEventQueue
         protected void doRun()
             throws IOException
         {
-            listener.handleRemove( cacheName, key );
+            CacheEventQueue.this.listener.handleRemove( CacheEventQueue.this.cacheName, key );
         }
     }
 
@@ -474,7 +487,7 @@ public class CacheEventQueue implements ICacheEventQueue
         protected void doRun()
             throws IOException
         {
-            listener.handleRemoveAll( cacheName );
+            CacheEventQueue.this.listener.handleRemoveAll( CacheEventQueue.this.cacheName );
         }
     }
 
@@ -492,7 +505,7 @@ public class CacheEventQueue implements ICacheEventQueue
         protected void doRun()
             throws IOException
         {
-            listener.handleDispose( cacheName );
+            CacheEventQueue.this.listener.handleDispose( CacheEventQueue.this.cacheName );
         }
     }
 }
