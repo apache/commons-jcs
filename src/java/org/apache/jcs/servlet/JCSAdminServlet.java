@@ -54,18 +54,23 @@ public class JCSAdminServlet extends VelocityServlet
     private static final String DEFAULT_TEMPLATE_NAME =
         "/org/apache/jcs/servlet/JCSAdminServletDefault.vm";
 
+    private static final String REGION_DETAIL_TEMPLATE_NAME =
+        "/org/apache/jcs/servlet/JCSAdminServletRegionDetail.vm";
+
     // Keys for parameters
 
     private static final String CACHE_NAME_PARAM = "cacheName";
 
     private static final String ACTION_PARAM = "action";
     private static final String KEY_PARAM = "key";
+    private static final String SILENT_PARAM = "silent";
 
     // Possible values for 'action' parameter
 
     private static final String CLEAR_ALL_REGIONS_ACTION = "clearAllRegions";
     private static final String CLEAR_REGION_ACTION = "clearRegion";
     private static final String REMOVE_ACTION = "remove";
+    private static final String DETAIL_ACTION = "detail";
 
     private CacheHub cacheHub = CacheHub.getInstance();
 
@@ -75,6 +80,10 @@ public class JCSAdminServlet extends VelocityServlet
                                       Context context )
         throws Exception
     {
+        String templateName = DEFAULT_TEMPLATE_NAME;
+
+        // Get cacheName for actions from request (might be null)
+
         String cacheName = request.getParameter( CACHE_NAME_PARAM );
 
         // If an action was provided, handle it
@@ -106,11 +115,52 @@ public class JCSAdminServlet extends VelocityServlet
                 {
                     removeItem( cacheName, keys[ i ] );
                 }
+
+                templateName = REGION_DETAIL_TEMPLATE_NAME;
+            }
+            else if ( action.equals( DETAIL_ACTION ) )
+            {
+                templateName = REGION_DETAIL_TEMPLATE_NAME;
             }
         }
 
-        // Now populate the context
+        if ( request.getParameter( SILENT_PARAM ) != null )
+        {
+            // If silent parameter was passed, no output should be produced.
 
+            return null;
+        }
+        else
+        {
+            // Populate the context based on the template
+
+            if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
+            {
+                context.put( "cacheName", cacheName );
+                context.put( "keys", getSortedKeys( cacheName ) );
+            }
+            else if ( templateName == DEFAULT_TEMPLATE_NAME )
+            {
+                context.put( "cacheInfoRecords", buildCacheInfo() );
+            }
+
+            return getTemplate( templateName );
+        }
+    }
+
+    private Object[] getSortedKeys( String cacheName )
+    {
+        Cache cache = ( Cache ) cacheHub.getCache( cacheName );
+
+        Object[] keys = cache.getMemoryCache().getKeyArray();
+
+        Arrays.sort( keys );
+
+        return keys;
+    }
+
+    private LinkedList buildCacheInfo() throws Exception
+    {
         String[] cacheNames = cacheHub.getCacheNames();
 
         Arrays.sort( cacheNames );
@@ -134,9 +184,7 @@ public class JCSAdminServlet extends VelocityServlet
             cacheInfo.add( regionInfo );
         }
 
-        context.put( "cacheInfoRecords", cacheInfo );
-
-        return getTemplate( DEFAULT_TEMPLATE_NAME );
+        return cacheInfo;
     }
 
     public int getByteCount( Cache cache )

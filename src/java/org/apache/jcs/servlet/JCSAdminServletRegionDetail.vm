@@ -1,0 +1,25 @@
+<html>
+
+<head><title> JCS Admin Servlet Region Detail </title></head>
+
+<body>
+
+<h1> Keys for region: $cacheName </h1>
+
+<table border="1" cellpadding="5" >
+    <tr>
+        <th> Key </th>
+    </tr>
+
+    #foreach ( $key in $keys )
+        <tr>
+            <td> $key </td>
+            <td> <a href="?action=remove&cacheName=${cacheName}&key=${key}"> Remove </a> </td>
+        </tr>
+    #end
+
+</table>
+
+</body>
+
+</html>

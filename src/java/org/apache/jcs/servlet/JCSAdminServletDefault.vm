@@ -1,3 +1,9 @@
+<html>
+
+<head><title> JCS Admin Servlet </title></head>
+
+<body>
+
 <h1> Cache Regions </h1>
 
 <p>These are the regions which are currently defined in the cache. 'Items' and
@@ -20,8 +26,15 @@ which empties the entire cache.</p>
             <td> $record.ItemCount </td>
             <td> $record.ByteCount </td>
             <td> $record.Status </td>
-            <td> <a href="?action=clearRegion&cacheName=${record.Name}"> Remove all </a> </td>
+            <td>
+                <a href="?action=detail&cacheName=${record.Name}"> Detail </a>
+                | <a href="?action=clearRegion&cacheName=${record.Name}"> Remove all </a>
+            </td>
         </tr>
     #end
 
 </table>
+
+</body>
+
+</html>
