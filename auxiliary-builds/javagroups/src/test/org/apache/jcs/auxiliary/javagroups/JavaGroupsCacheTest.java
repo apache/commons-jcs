@@ -55,6 +55,26 @@ public class JavaGroupsCacheTest extends TestCase
         assertEquals( "four",  two.get( "4" ) );
         assertEquals( "five",  two.get( "5" ) );
 
+        // Remove a value
+
+        one.remove( "2" );
+
+        Thread.sleep( 1000 );
+
+        assertEquals( null, two.get( "2") );
+
+        // Remove all values
+
+        one.remove();
+
+        Thread.sleep( 1000 );
+
+        assertEquals( null, two.get( "1" ) );
+        assertEquals( null, two.get( "2" ) );
+        assertEquals( null, two.get( "3" ) );
+        assertEquals( null, two.get( "4" ) );
+        assertEquals( null, two.get( "5" ) );
+
         // Free caches
 
         manager1.freeCache( "testCache" );
