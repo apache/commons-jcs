@@ -66,7 +66,6 @@ import java.util.HashSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
-import org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;

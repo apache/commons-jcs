@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary;
 
-import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 
 /*

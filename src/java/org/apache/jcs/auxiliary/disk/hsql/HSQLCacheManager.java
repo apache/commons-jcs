@@ -56,7 +56,6 @@ package org.apache.jcs.auxiliary.disk.hsql;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.apache.jcs.auxiliary.disk.hsql.HSQLCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 

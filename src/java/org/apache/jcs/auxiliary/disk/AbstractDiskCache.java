@@ -65,7 +65,6 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueue;
 import org.apache.jcs.engine.CacheInfo;
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;

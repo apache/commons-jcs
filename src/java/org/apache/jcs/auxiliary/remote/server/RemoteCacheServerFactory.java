@@ -12,8 +12,6 @@ import java.util.Properties;
 
 import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-import org.apache.jcs.auxiliary.remote.server.RemoteCacheServer;
-import org.apache.jcs.auxiliary.remote.server.RemoteCacheServerAttributes;
 
 import org.apache.jcs.engine.behavior.ICacheServiceAdmin;
 

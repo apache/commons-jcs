@@ -2,9 +2,6 @@ package org.apache.jcs.auxiliary.lateral;
 
 import java.util.Iterator;
 
-import org.apache.jcs.auxiliary.lateral.LateralCacheManager;
-import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.jcs.auxiliary.lateral.LateralCacheRestore;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;

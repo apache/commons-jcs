@@ -19,7 +19,6 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
-import org.apache.jcs.auxiliary.remote.server.RemoteCacheServerListener;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheManager;

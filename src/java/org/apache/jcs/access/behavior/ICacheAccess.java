@@ -53,10 +53,8 @@ package org.apache.jcs.access.behavior;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import java.io.Serializable;
 
 import org.apache.jcs.access.exception.CacheException;
-import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 

@@ -4,8 +4,6 @@ import java.util.Iterator;
 
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 
-import org.apache.jcs.auxiliary.remote.server.RemoteCacheClusterManager;
-import org.apache.jcs.auxiliary.remote.server.RemoteCacheClusterRestore;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;

@@ -1,7 +1,5 @@
 package org.apache.jcs.access.monitor;
 
-import java.io.IOException;
-
 import org.apache.xmlrpc.WebServer;
 
 import org.apache.commons.logging.Log;

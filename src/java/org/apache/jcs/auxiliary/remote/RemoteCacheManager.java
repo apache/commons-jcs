@@ -14,13 +14,6 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
-import org.apache.jcs.auxiliary.remote.RemoteCache;
-import org.apache.jcs.auxiliary.remote.RemoteCacheMonitor;
-import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
-import org.apache.jcs.auxiliary.remote.RemoteCacheWatchRepairable;
-import org.apache.jcs.auxiliary.remote.ZombieRemoteCacheService;
-import org.apache.jcs.auxiliary.remote.ZombieRemoteCacheWatch;
-
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;

@@ -2,9 +2,6 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.util.Iterator;
 
-import org.apache.jcs.auxiliary.remote.RemoteCacheManager;
-import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
-import org.apache.jcs.auxiliary.remote.RemoteCacheRestore;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;

@@ -54,11 +54,6 @@ package org.apache.jcs.access;
  * <http://www.apache.org/>.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
