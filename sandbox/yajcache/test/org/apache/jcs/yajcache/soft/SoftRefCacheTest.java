@@ -22,7 +22,7 @@ import org.apache.jcs.yajcache.core.SafeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *
@@ -51,8 +51,8 @@ public class SoftRefCacheTest extends TestCase {
 //            }
         }
         log.debug("size: " + c.size());
-        SoftRefCache sc = (SoftRefCache)c;
-        log.debug("count: " + sc.getCollectorCount());
+//        SoftRefFileCache sc = (SoftRefFileCache)c;
+//        log.debug("count: " + sc.getCollectorCount());
         log.debug(SoftRefCacheCleaner.inst.toString());
         
 //        for (int i=0; i < 100; i++) {
@@ -65,7 +65,7 @@ public class SoftRefCacheTest extends TestCase {
             log.debug("get i="+i +":"+ c.get(String.valueOf(i)));
         }
         log.debug("size: " + c.size());
-        log.debug("count: " + sc.getCollectorCount());
+//        log.debug("count: " + sc.getCollectorCount());
         log.debug(SoftRefCacheCleaner.inst.toString());
     }
 }
