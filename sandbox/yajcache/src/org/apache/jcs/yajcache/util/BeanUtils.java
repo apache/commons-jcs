@@ -22,13 +22,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum BeanUtils {
     inst;
     private static final boolean debug = false;

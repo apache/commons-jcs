@@ -19,12 +19,13 @@ package org.apache.jcs.yajcache.util;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum SerializeUtils {
     inst;
     /**
