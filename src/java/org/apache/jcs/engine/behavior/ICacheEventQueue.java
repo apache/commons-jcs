@@ -83,5 +83,13 @@ public interface ICacheEventQueue
      */
     public boolean isAlive();
 
+    /**
+     * Returns debugin stats info.
+  *
+     * @return String
+     */
+    public String getStats();
+
+
 }
 
