@@ -65,7 +65,11 @@ public class BDBJE
   public BDBJE( BDBJECacheAttributes attr )
   {
     attributes = attr;
-    envDir = new File( attributes.getDiskPath() );
+    // create the directory if it doesn't exist.  JE won't do it.
+    envDir = new File(attributes.getDiskPath());
+    if ( !envDir.exists() ) {
+      envDir.mkdir();
+    }
     init();
   }
 
