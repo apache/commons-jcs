@@ -59,7 +59,6 @@ public class SortedPreferentialArray
    * if obj is bigger, or the largest if preferLarge=false and obj is smaller
    * than the largest.
    *
-   *
    * @param obj Object
    */
   public void add(Comparable obj)
@@ -72,44 +71,40 @@ public class SortedPreferentialArray
     if (curSize < maxSize)
     {
       insert(obj);
+      return;
     }
-    else
+    if (preferLarge)
     {
-      if (preferLarge)
+      // insert if obj is larger than the smallest
+      Comparable sma = getSmallest();
+      if (obj.compareTo(sma) > 0)
       {
-        // insert if obj is larger than the smallest
-        Comparable sma = getSmallest();
-        if (obj.compareTo(sma) > 0)
-        {
-          insert(obj);
-        }
-        else
-        {
-          if (log.isDebugEnabled())
-          {
-            log.debug("New object is smaller than smallest");
-          }
-          return;
-        }
+        insert(obj);
+        return;
       }
-      else
+      // obj is less than or equal to the smallest.
+      if (log.isDebugEnabled())
       {
-        Comparable lar = getLargest();
-        // insert if obj is smaller than the largest
-        if (obj.compareTo(lar) > 0)
-        {
-          if (log.isDebugEnabled())
-          {
-            log.debug("New object is largerer than largest");
-          }
-          return;
-        }
-        else
-        {
-          insert(obj);
-        }
+        log.debug("New object is smaller than or equal to the smallest");
       }
+      return;
     }
+    // Not preferLarge
+    Comparable lar = getLargest();
+    // insert if obj is smaller than the largest
+    int diff = obj.compareTo(lar);
+    if (diff > 0 
+    ||  diff == 0)
+    {
+      if (log.isDebugEnabled())
+      {
+        log.debug("New object is larger than or equal to the largest");
+      }
+      return;
+    }
+    // obj is less than the largest.
+    insert(obj);
+    return;
   }
 
   /**
