@@ -18,14 +18,22 @@ which empties the entire cache.</p>
         <th> Items </th>
         <th> Bytes </th>
         <th> Status </th>
+        <th> Memory Hits </th>
+        <th> Aux Hits </th>
+        <th> Not Found Misses </th>
+        <th> Expired Misses </th>
     </tr>
 
     #foreach ( $record in $cacheInfoRecords )
         <tr>
-            <td> $record.Name </td>
-            <td> $record.ItemCount </td>
-            <td> $record.ByteCount </td>
-            <td> $record.Status </td>
+            <td> $record.cache.cacheName </td>
+            <td> $record.cache.size </td>
+            <td> $record.byteCount </td>
+            <td> $record.status </td>
+            <td> $record.cache.hitCountRam </td>
+            <td> $record.cache.hitCountAux </td>
+            <td> $record.cache.missCountNotFound </td>
+            <td> $record.cache.missCountExpired </td>
             <td>
                 <a href="?action=detail&cacheName=${record.Name}"> Detail </a>
                 | <a href="?action=clearRegion&cacheName=${record.Name}"> Remove all </a>

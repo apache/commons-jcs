@@ -176,10 +176,8 @@ public class JCSAdminServlet extends VelocityServlet
 
             regionInfo = new CacheRegionInfo();
 
-            regionInfo.name = cache.getCacheName();
-            regionInfo.itemCount = cache.getSize();
+            regionInfo.cache = cache;
             regionInfo.byteCount = getByteCount( cache );
-            regionInfo.status = statusAsString( cache );
 
             cacheInfo.add( regionInfo );
         }
@@ -210,16 +208,6 @@ public class JCSAdminServlet extends VelocityServlet
         return counter.getCount() - 4;
     }
 
-    private String statusAsString( ICache cache )
-    {
-        int status = cache.getStatus();
-
-        return ( status == CacheConstants.STATUS_ALIVE ? "ALIVE"
-            : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
-            : status == CacheConstants.STATUS_ERROR ? "ERROR"
-            : "UNKNOWN" );
-    }
-
     private void clearAllRegions() throws IOException
     {
         String[] names = cacheHub.getCacheNames();
@@ -243,19 +231,12 @@ public class JCSAdminServlet extends VelocityServlet
     /** Stores info on a cache region for the template */
     public class CacheRegionInfo
     {
-        String name = null;
-        long itemCount = 0;
+        CompositeCache cache = null;
         long byteCount = 0;
-        String status = null;
 
-        public String getName()
+        public CompositeCache getCache()
         {
-            return name;
-        }
-
-        public long getItemCount()
-        {
-            return itemCount;
+            return cache;
         }
 
         public long getByteCount()
@@ -265,7 +246,12 @@ public class JCSAdminServlet extends VelocityServlet
 
         public String getStatus()
         {
-            return status;
+            int status = cache.getStatus();
+
+            return ( status == CacheConstants.STATUS_ALIVE ? "ALIVE"
+                : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
+                : status == CacheConstants.STATUS_ERROR ? "ERROR"
+                : "UNKNOWN" );
         }
     }
 

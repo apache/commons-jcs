@@ -98,8 +98,6 @@ public class CompositeCache
 
     // Auxiliary caches.
     private AuxiliaryCache[] auxCaches;
-    // track hit counts for each
-    private int[] auxHit;
 
     private boolean alive = true;
 
@@ -122,12 +120,21 @@ public class CompositeCache
     public IElementEventQueue elementEventQ;
 
     // Statistics
-    // FIXME: Provide accessors for these for instrumentation
 
-    private static int numInstances;
+    /** Memory cache hit count */
+    private int hitCountRam;
 
-    private int ramHit;
-    private int miss;
+    /** Auxiliary cache hit count (number of times found in ANY auxiliary) */
+    private int hitCountAux;
+
+    /** Auxiliary hit counts broken down by auxiliary */
+    private int[] auxHitCountByIndex;
+
+    /** Count of misses where element was not found */
+    private int missCountNotFound = 0;
+
+    /** Count of misses where element was expired */
+    private int missCountExpired = 0;
 
     /**
      *  The cache hub can only have one memory cache. This could be made more
@@ -149,15 +156,13 @@ public class CompositeCache
                   ICompositeCacheAttributes cattr,
                   IElementAttributes attr )
     {
-        numInstances++;
-
         this.cacheName = cacheName;
 
         this.auxCaches = auxCaches;
 
         if ( auxCaches != null )
         {
-            this.auxHit = new int[auxCaches.length];
+            this.auxHitCountByIndex = new int[auxCaches.length];
         }
 
         this.attr = attr;
@@ -455,7 +460,35 @@ public class CompositeCache
 
             element = memCache.get( key );
 
-            if ( element == null )
+            if ( element != null )
+            {
+                // Found in memory cache
+
+                if ( isExpired( element ) )
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( cacheName +
+                                   " - Memory cache hit, but element expired" );
+                    }
+
+                    missCountExpired++;
+
+                    remove( element );
+                }
+                else
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( cacheName + " - Memory cache hit" );
+                    }
+
+                    // Update counters
+
+                    hitCountRam++;
+                }
+            }
+            else
             {
                 // Item not found in memory. If local invocation look in aux
                 // caches, even if not local look in disk auxiliaries
@@ -495,27 +528,42 @@ public class CompositeCache
 
                         if ( element != null )
                         {
-                            log.debug(
-                                cacheName + " - Aux cache[" + i + "] hit" );
 
                             // Item found in one of the auxiliary caches.
-                            auxHit[i]++;
 
-                            // Spool the item back into memory
-                            memCache.update( element );
+                            if ( isExpired( element ) )
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( cacheName + " - Aux cache[" + i
+                                               + "] hit, but element expired" );
+                                }
+
+                                missCountExpired++;
+
+                                remove( element );
+                            }
+                            else
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( cacheName +
+                                               " - Aux cache[" + i + "] hit" );
+                                }
+
+                                // Update counters
+
+                                hitCountAux++;
+                                auxHitCountByIndex[ i ]++;
+
+                                // Spool the item back into memory
+
+                                memCache.update( element );
+                            }
 
                             break;
                         }
                     }
-                }
-            }
-            else
-            {
-                ramHit++;
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( cacheName + " - Memory cache hit" );
                 }
             }
 
@@ -527,7 +575,7 @@ public class CompositeCache
 
         if ( element == null )
         {
-            miss++;
+            missCountNotFound++;
 
             if ( log.isDebugEnabled() )
             {
@@ -537,8 +585,11 @@ public class CompositeCache
             return null;
         }
 
-        // If an element was found, we still need to deal with expiration.
+        return element;
+    }
 
+    private boolean isExpired( ICacheElement element )
+    {
         try
         {
             IElementAttributes attributes = element.getElementAttributes();
@@ -560,9 +611,7 @@ public class CompositeCache
                         log.debug( "Exceeded maxLife: " + element.getKey() );
                     }
 
-                    remove( key );
-
-                    return null;
+                    return true;
                 }
                 else
                 {
@@ -580,21 +629,19 @@ public class CompositeCache
                             log.info( "Exceeded maxIdle: " + element.getKey() );
                         }
 
-                        remove( key );
-
-                        return null;
+                        return true;
                     }
                 }
             }
-
         }
         catch ( Exception e )
         {
-            log.error( "Error determining expiration period", e );
-            return null;
+            log.error( "Error determining expiration period, expiring", e );
+
+            return true;
         }
 
-        return element;
+        return false;
     }
 
     /**
@@ -760,72 +807,81 @@ public class CompositeCache
      *
      *@param  fromRemote
      */
-    protected void dispose( boolean fromRemote )
+    protected synchronized void dispose( boolean fromRemote )
     {
-        if ( !alive )
+        // If already disposed, return immediately
+
+        if ( ! alive )
         {
             return;
         }
-        synchronized ( this )
+
+        alive = false;
+
+        // Dispose of each auxilliary cache, Remote auxilliaries will be
+        // skipped if 'fromRemote' is true.
+
+        for ( int i = 0; i < auxCaches.length; i++ )
         {
-            if ( !alive )
+            try
             {
-                return;
-            }
-            alive = false;
+                ICache aux = auxCaches[i];
 
-            for ( int i = 0; i < auxCaches.length; i++ )
-            {
-                try
+                // Skip this auxilliary if:
+                //   - The auxilliary is null
+                //   - The auxilliary is not alive
+                //   - The auxilliary is remote and the invocation was remote
+
+                if ( aux == null
+                     || aux.getStatus() == CacheConstants.STATUS_ALIVE
+                     || fromRemote && aux.getCacheType() == REMOTE_CACHE )
                 {
-                    ICache aux = auxCaches[i];
+                    continue;
+                }
 
-                    if ( aux == null || fromRemote && aux.getCacheType() == REMOTE_CACHE )
+                // If the auxilliary is not a lateral, or the cache attributes
+                // have 'getUseLateral' set, all the elements currently in
+                // memory are written to the lateral before disposing
+
+                if ( aux.getCacheType() != ICacheType.LATERAL_CACHE
+                     || this.cacheAttr.getUseLateral() )
+                {
+                    Iterator itr = memCache.getIterator();
+
+                    while ( itr.hasNext() )
                     {
-                        continue;
-                    }
-                    if ( aux.getStatus() == CacheConstants.STATUS_ALIVE )
-                    {
+                        Map.Entry entry = ( Map.Entry ) itr.next();
 
-                        if ( log.isDebugEnabled() )
+                        ICacheElement ce = (ICacheElement) entry.getValue();
+                        try
                         {
-                            log.debug( "size = " + memCache.getSize() );
-                        }
-
-                        if ( !( aux.getCacheType() == ICacheType.LATERAL_CACHE && !this.cacheAttr.getUseLateral() ) )
-                        {
-
-                            Iterator itr = memCache.getIterator();
-
-                            while ( itr.hasNext() )
+                            if ( aux.getCacheType() == ICacheType.LATERAL_CACHE
+                                 && !ce.getElementAttributes().getIsLateral() )
                             {
-                                Map.Entry entry = ( Map.Entry ) itr.next();
-
-                                ICacheElement ce = (ICacheElement) entry.getValue();
-                                try
-                                {
-                                    if ( aux.getCacheType() == ICacheType.LATERAL_CACHE && !ce.getElementAttributes().getIsLateral() )
-                                    {
-                                        continue;
-                                    }
-                                    aux.update( ce );
-                                }
-                                catch ( Exception e )
-                                {
-                                    log.error( e );
-                                }
+                                continue;
                             }
+                            aux.update( ce );
                         }
-                        if ( aux.getCacheType() == ICache.DISK_CACHE )
+                        catch ( Exception e )
                         {
-                            aux.dispose();
+                            log.error( e );
                         }
                     }
                 }
-                catch ( IOException ex )
+
+                // Only call the dispose method for disk auxilliaries
+
+                // FIXME: Why not always call it?
+
+                if ( aux.getCacheType() == ICache.DISK_CACHE )
                 {
-                    log.error( "Failure disposing of aux", ex );
+                    aux.dispose();
                 }
+
+            }
+            catch ( IOException ex )
+            {
+                log.error( "Failure disposing of aux", ex );
             }
         }
 
@@ -1040,13 +1096,35 @@ public class CompositeCache
         }
     }
 
-    /**
-     *  Access to the memory cache for instrumentation.
-     *
-     *@return    The memoryCache value
-     */
+    // ---------------------------------------------------- For Instrumentation
+
+    /** Access to the memory cache for instrumentation. */
     public MemoryCache getMemoryCache()
     {
         return memCache;
+    }
+
+    /** Number of times a requested item was found in the memory cache */
+    public int getHitCountRam()
+    {
+        return hitCountRam;
+    }
+
+    /** Number of times a requested item was found in and auxiliary cache */
+    public int getHitCountAux()
+    {
+        return hitCountAux;
+    }
+
+    /** Number of times a requested element was not found */
+    public int getMissCountNotFound()
+    {
+        return missCountNotFound;
+    }
+
+    /** Number of times a requested element was found but was expired */
+    public int getMissCountExpired()
+    {
+        return missCountExpired;
     }
 }
