@@ -155,7 +155,13 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
             AuxiliaryCache aux = noWaits[i];
             if ( aux != null )
             {
-                allKeys.addAll(aux.getGroupKeys(group));
+                try {
+                    allKeys.addAll(aux.getGroupKeys(group));
+                }
+                catch ( IOException e )
+                {
+                    // ignore
+                }
             }
         }
         return allKeys;

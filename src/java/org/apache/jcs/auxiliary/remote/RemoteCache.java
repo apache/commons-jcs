@@ -214,7 +214,7 @@ public class RemoteCache implements ICache
         }
     }
 
-    public Set getGroupKeys(String groupName)
+    public Set getGroupKeys(String groupName) throws java.rmi.RemoteException
     {
         return remote.getGroupKeys(cacheName, groupName);
     }
@@ -334,6 +334,15 @@ public class RemoteCache implements ICache
         return remote instanceof IZombie ? CacheConstants.STATUS_ERROR : CacheConstants.STATUS_ALIVE;
     }
 
+    /**
+     * Gets the stats attribute of the RemoteCache object
+     *
+     * @return The stats value
+     */
+    public String getStats()
+    {
+        return "cacheName = " + cacheName;
+    }
 
     /**
      * Returns the current cache size.

@@ -179,7 +179,7 @@ public class RemoteCacheServer
 
         if ( prop == null )
         {
-            hub.configure( "/remote.cache.properties" );
+            hub.configure( "/remote.cache.ccf" );
         }
         else
         {
@@ -909,6 +909,17 @@ public class RemoteCacheServer
         return ( byte ) ( id & 0xff );
     }
 
+    /**
+     * Gets the stats attribute of the RemoteCacheServer object
+     *
+     * @return The stats value
+     */
+    public String getStats()
+        throws IOException
+    {
+        //return cacheManager.getStats();
+        return "temp";
+    }
 
     /** Description of the Method */
     private static void p1( String s )

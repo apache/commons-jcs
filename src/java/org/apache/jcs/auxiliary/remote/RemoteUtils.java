@@ -117,6 +117,8 @@ public class RemoteUtils
         }
         catch ( Exception ex )
         {
+
+            log.debug( "Error loading remote properties = " + ex.getMessage() );
             // ignore;
         }
         finally

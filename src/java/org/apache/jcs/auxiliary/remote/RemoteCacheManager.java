@@ -325,6 +325,28 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
         }
     }
 
+    /**
+     * Gets the stats attribute of the RemoteCacheManager object
+     *
+     * @return The stats value
+     */
+    public String getStats()
+    {
+        StringBuffer stats = new StringBuffer();
+        Iterator allCaches = caches.values().iterator();
+        while ( allCaches.hasNext() )
+        {
+            ICache c = ( ICache ) allCaches.next();
+            if ( c != null )
+            {
+                //need to add getStats to ICache
+                //stats.append( "<br>&nbsp;&nbsp;&nbsp;" + c.getStats() );
+                stats.append( c.getCacheName() );
+            }
+        }
+        return stats.toString();
+    }
+
     /** Description of the Method */
     public void release()
     {

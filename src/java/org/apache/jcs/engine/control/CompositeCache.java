@@ -676,7 +676,13 @@ public class CompositeCache
             AuxiliaryCache aux = auxCaches[i];
             if ( aux != null )
             {
-                allKeys.addAll(aux.getGroupKeys(group));
+                try {
+                    allKeys.addAll(aux.getGroupKeys(group));
+                }
+                catch ( IOException e )
+                {
+                    //ignore
+                }
             }
         }
         return allKeys;

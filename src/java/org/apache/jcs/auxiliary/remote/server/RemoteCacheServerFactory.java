@@ -66,6 +66,7 @@ import java.util.Properties;
 
 import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 
 import org.apache.jcs.engine.behavior.ICacheServiceAdmin;
 
@@ -232,7 +233,7 @@ public class RemoteCacheServerFactory
     public static void main( String[] args )
         throws Exception
     {
-        Properties prop = args.length > 0 ? RemoteUtils.loadProps( args[0] ) : new Properties();
+        Properties prop = args.length > 0 ? RemoteUtils.loadProps( args[args.length -1] ) : new Properties();
 
         // shutdown
         if ( args.length > 0 && args[0].toLowerCase().indexOf( "-shutdown" ) != -1 )
@@ -261,6 +262,50 @@ public class RemoteCacheServerFactory
             log.debug( "done." );
             System.exit( 0 );
         }
+
+        // STATS
+        if ( args.length > 0 && args[0].toLowerCase().indexOf( "-stats" ) != -1 )
+        {
+
+            log.debug( "getting cache stats" );
+
+            try
+            {
+
+                int port = Registry.REGISTRY_PORT;
+
+                if ( args.length > 1 )
+                {
+                    port = Integer.parseInt( args[1] );
+                }
+
+                String serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
+                String registry = "//:" + port + "/" + serviceName;
+                log.debug( "looking up server " + registry );
+                Object obj = Naming.lookup( registry );
+                log.debug( "server found" );
+
+                log.debug( "obj = " + obj );
+                IRemoteCacheServiceAdmin admin = ( IRemoteCacheServiceAdmin ) obj;
+
+                try
+                {
+                    log.debug( admin.getStats() );
+                }
+                catch ( Exception es )
+                {
+                    log.error( es );
+                }
+
+            }
+            catch ( Exception ex )
+            {
+                log.error( ex );
+            }
+            log.debug( "done." );
+            System.exit( 0 );
+        }
+
 
         // startup.
         int port;

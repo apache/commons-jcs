@@ -187,6 +187,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
      * Gets the set of keys of objects currently in the group
      */
     public Set getGroupKeys(String group)
+         throws IOException
     {
         HashSet allKeys = new HashSet();
         for ( int i = 0; i < noWaits.length; i++ )
