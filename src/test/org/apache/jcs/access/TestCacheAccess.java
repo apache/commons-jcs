@@ -619,40 +619,68 @@ public class TestCacheAccess
           }
           else
           if (message.startsWith("random"))
-          {
-            String numS = message.substring(message.indexOf(" ") + 1,
-                                            message.length());
-            //p( numS );
+            if (message.startsWith("random"))
+             {
+               String rangeS = "";
+               String numOpsS = "";
+               boolean show = true;
 
-            String numS2 = numS.substring(0, numS.indexOf(" "));
-            //p( numS2 );
+               StringTokenizer toke = new StringTokenizer(message);
+               int tcnt = 0;
+               while (toke.hasMoreElements())
+               {
+                 tcnt++;
+                 String t = (String) toke.nextElement();
+                 if (tcnt == 2)
+                 {
+                   rangeS = t.trim();
+                 }
+                 else
+                 if (tcnt == 3)
+                 {
+                   numOpsS = t.trim();
+                 }
+                 else
+                 if (tcnt == 4)
+                 {
+                   show = new Boolean(t).booleanValue();
+                 }
+               }
 
-            String numS3 = numS.substring(numS.indexOf(" ") + 1,
-                                          numS.length());
-            //p( numS3 );
+               String numS = message.substring(message.indexOf(" ") + 1,
+                                               message.length());
+               //p( numS );
 
-            int range = 0;
-            int numOps = 0;
-            try
-            {
-              range = Integer.parseInt(numS2.trim());
-              numOps = Integer.parseInt(numS3.trim());
-            }
-            catch (Exception e)
-            {
-              p("usage: random range numOps");
-              p("ex.  random 100 1000");
-            }
-            if (numS == null)
-            {
-              p("usage: random range numOps");
-              p("ex.  random 100 1000");
-            }
-            else
-            {
-              random(range, numOps, true);
-            }
-          }
+               String numS2 = numS.substring(0, numS.indexOf(" "));
+               //p( numS2 );
+
+               String numS3 = numS.substring(numS.indexOf(" ") + 1,
+                                             numS.length());
+               //p( numS3 );
+
+               int range = 0;
+               int numOps = 0;
+               try
+               {
+                 range = Integer.parseInt(rangeS.trim());
+                 numOps = Integer.parseInt(numOpsS.trim());
+               }
+               catch (Exception e)
+               {
+                 p("usage: random range numOps show");
+                 p("ex.  random 100 1000 false");
+               }
+               if (numS == null)
+               {
+                 p("usage: random range numOps show");
+                 p("ex.  random 100 1000 false");
+               }
+               else
+               {
+                 random(range, numOps, show);
+               }
+             }
+
         }
       }
       catch (Exception e)
@@ -795,12 +823,16 @@ public class TestCacheAccess
           cache_control.put(key,
                             "data" + i + " junk asdfffffffadfasdfasf " + kn +
                             ":" + n);
-          p("put " + key);
+          if ( show ) {
+            p("put " + key);
+          }
         }
         else if (n == 2)
         {
           cache_control.remove(key);
-          p("removed " + key);
+          if ( show ) {
+            p("removed " + key);
+          }
         }
         else
         {
@@ -811,6 +843,11 @@ public class TestCacheAccess
             p(obj.toString());
           }
         }
+
+        if ( i % 10000 == 0 ) {
+          p( cache_control.getStats() );
+        }
+
       }
       p("Finished random cycle of " + numOps);
     }
@@ -820,6 +857,7 @@ public class TestCacheAccess
       e.printStackTrace(System.out);
     }
   }
+
 
   /**
    * Sets the region to be used by test methods.
