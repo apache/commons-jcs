@@ -75,6 +75,10 @@
 
   <dependencies>
     <dependency>
+      <id>commons-collections</id>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
       <id>commons-configuration</id>
       <version>20030706.202021</version>
     </dependency>
