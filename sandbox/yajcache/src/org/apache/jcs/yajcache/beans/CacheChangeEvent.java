@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package org.apache.jcs.yajcache.event;
+package org.apache.jcs.yajcache.beans;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
-import org.apache.jcs.yajcache.core.ICacheChangeHandler;
 /**
  *
  * @author Hanson Char
  */
 @CopyRightApache
-public class CachePutBeanCloneEvent<V> extends CachePutEvent<V> {
-    protected CachePutBeanCloneEvent(@NonNullable ICache<V> cache, 
-            @NonNullable String key, @NonNullable V val)
-    {
-        super(cache, key, val);
+public abstract class CacheChangeEvent<V> extends java.util.EventObject {
+    /** Creates a new instance of CacheEvent */
+    protected CacheChangeEvent(@NonNullable ICache<V> cache) {
+        super(cache);
     }
-    @Override
-    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
-        return handler.handlePutBeanClone(
-                super.getCache().getName(), super.getKey(), super.getValue());
+    /** Returns the cache which is the source of the events. */
+    protected @NonNullable ICache<V> getCache() {
+        return (ICache<V>)super.getSource();
     }
+    /** 
+     * Dispatches the beans handling to the specific method invokation of the
+     * given handler.
+     */
+    public abstract boolean dispatch(@NonNullable ICacheChangeHandler<V> handler);
 }

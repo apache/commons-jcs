@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package org.apache.jcs.yajcache.event;
+package org.apache.jcs.yajcache.beans;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
-import org.apache.jcs.yajcache.core.ICacheChangeHandler;
 /**
  *
  * @author Hanson Char
  */
 @CopyRightApache
-public abstract class CacheChangeEvent<V> extends java.util.EventObject {
-    /** Creates a new instance of CacheEvent */
-    protected CacheChangeEvent(@NonNullable ICache<V> cache) {
+public class CacheClearEvent<V> extends CacheChangeEvent<V> {
+    public CacheClearEvent(@NonNullable ICache<V> cache)
+    {
         super(cache);
     }
-    /** Returns the cache which is the source of the events. */
-    protected @NonNullable ICache<V> getCache() {
-        return (ICache<V>)super.getSource();
+    @Override 
+    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+        return handler.handleClear(super.getCache().getName());
     }
-    /** 
-     * Dispatches the event handling to the specific method invokation of the
-     * given handler.
-     */
-    public abstract boolean dispatch(@NonNullable ICacheChangeHandler<V> handler);
 }

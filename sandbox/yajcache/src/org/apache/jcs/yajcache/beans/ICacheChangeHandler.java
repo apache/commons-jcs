@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.jcs.yajcache.core;
+package org.apache.jcs.yajcache.beans;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
- * Cache change event listener/handler.
+ * Cache change beans listener/handler.
  *
  * @author Hanson CHar
  */

@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package org.apache.jcs.yajcache.event;
-
+package org.apache.jcs.yajcache.beans;
 import org.apache.jcs.yajcache.lang.annotation.*;
-import org.apache.jcs.yajcache.core.ICache;
-import org.apache.jcs.yajcache.core.ICacheChangeHandler;
+
 /**
- *
  * @author Hanson Char
  */
-@CopyRightApache
-public class CacheClearEvent<V> extends CacheChangeEvent<V> {
-    public CacheClearEvent(@NonNullable ICache<V> cache)
-    {
-        super(cache);
-    }
-    @Override 
-    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
-        return handler.handleClear(super.getCache().getName());
-    }
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
+@TODO("Remove this class: no longer needed")
+public enum CacheChangeEventType {
+    CLEAR_CACHE,
+    PUT,
+    PUT_BEAN_CLONE,
+    PUT_BEAN_COPY,
+    PUT_COPY,
+    REMOVE
 }

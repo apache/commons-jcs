@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.jcs.yajcache.core;
 
-import org.apache.jcs.yajcache.event.CacheChangeEvent;
+package org.apache.jcs.yajcache.beans;
+
 import org.apache.jcs.yajcache.lang.annotation.*;
-
+import org.apache.jcs.yajcache.core.ICache;
 /**
- * Cache change event listener/handler.
  *
- * @author Hanson CHar
+ * @author Hanson Char
  */
 @CopyRightApache
-public interface ICacheChangeListener<V> extends java.util.EventListener {
-    public void cacheChange(@NonNullable CacheChangeEvent<V> evt);
+public class CachePutCopyEvent<V> extends CachePutEvent<V> {
+    public CachePutCopyEvent(@NonNullable ICache<V> cache, 
+            @NonNullable String key, @NonNullable V val)
+    {
+        super(cache, key, val);
+    }
+    @Override
+    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+        return handler.handlePutCopy(
+                super.getCache().getName(), super.getKey(), super.getValue());
+    }
 }

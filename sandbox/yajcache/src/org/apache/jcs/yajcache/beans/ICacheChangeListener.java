@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.jcs.yajcache.beans;
 
-package org.apache.jcs.yajcache.event;
+import org.apache.jcs.yajcache.beans.CacheChangeEvent;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
- * @author Hanson Char
+ * Cache change beans listener/handler.
+ *
+ * @author Hanson CHar
  */
-// @CopyRightApache
-// http://www.netbeans.org/issues/show_bug.cgi?id=53704
-@TODO("Remove this class: no longer needed")
-public enum CacheChangeEventType {
-    CLEAR_CACHE,
-    PUT,
-    PUT_BEAN_CLONE,
-    PUT_BEAN_COPY,
-    PUT_COPY,
-    REMOVE
+@CopyRightApache
+public interface ICacheChangeListener<V> extends java.util.EventListener {
+    public void cacheChange(@NonNullable CacheChangeEvent<V> evt);
 }

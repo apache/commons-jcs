@@ -18,12 +18,14 @@ package org.apache.jcs.yajcache.file;
 
 import java.io.Serializable;
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.jcs.yajcache.core.ICacheChangeListener;
-import org.apache.jcs.yajcache.event.CacheChangeEvent;
+import org.apache.jcs.yajcache.beans.ICacheChangeListener;
+import org.apache.jcs.yajcache.beans.CacheChangeEvent;
+import org.apache.jcs.yajcache.beans.ICacheChangeHandler;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
-import org.apache.jcs.yajcache.core.ICacheChangeHandler;
+import org.apache.jcs.yajcache.beans.ICacheChangeHandler;
+import org.apache.jcs.yajcache.beans.ICacheChangeListener;
 /**
  *
  * Handle cache change events by persisting to or removing from the file system.

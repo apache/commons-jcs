@@ -14,30 +14,24 @@
  * limitations under the License.
  */
 
-package org.apache.jcs.yajcache.event;
+package org.apache.jcs.yajcache.beans;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
-import org.apache.jcs.yajcache.core.ICacheChangeHandler;
 /**
  *
  * @author Hanson Char
  */
 @CopyRightApache
-public class CacheRemoveEvent<V> extends CacheChangeEvent<V> {
-    private final @NonNullable String key;
-
-    public CacheRemoveEvent(@NonNullable ICache<V> cache,
-            @NonNullable String key)
+public class CachePutBeanCopyEvent<V> extends CachePutEvent<V> {
+    public CachePutBeanCopyEvent(@NonNullable ICache<V> cache, 
+            @NonNullable String key, @NonNullable V val)
     {
-        super(cache);
-        this.key = key;
-    }
-    public @NonNullable String getKey() {
-        return key;
+        super(cache, key, val);
     }
     @Override
     public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
-        return handler.handleRemove(super.getCache().getName(), this.key);
+        return handler.handlePutBeanCopy(
+                super.getCache().getName(), super.getKey(), super.getValue());
     }
 }
