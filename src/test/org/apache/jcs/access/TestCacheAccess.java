@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.apache.jcs.engine.control.event.TestElementEventHandler;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
@@ -136,9 +137,10 @@ public class TestCacheAccess
                String.valueOf( n_end - n_start ) + " millis ---" );
           }
           else
-          if ( message.startsWith( "dispose" ) )
+          if ( message.startsWith( "shutDown" ) )
           {
-            cache_control.dispose();
+            CompositeCacheManager.getInstance().shutDown();
+            //cache_control.dispose();
             notDone = false;
             System.exit( -1 );
           }
@@ -641,6 +643,14 @@ public class TestCacheAccess
               p( cache_control.toString() );
             }
           }
+          else
+          if ( message.startsWith( "stats" ) )
+          {
+             CompositeCache cache = CompositeCacheManager.getInstance().getCache(cache_control.getCacheAttributes().getCacheName());
+             p( cache.getMemoryCache().getStats() );
+             p( "HitCountRam = " + cache.getHitCountRam() );
+             p( "HitCountAux = " + cache.getHitCountAux() );
+          }
         }
 
       }
@@ -673,7 +683,7 @@ public class TestCacheAccess
   {
 
     p( "\n\n\n\n" );
-    p( "type 'dispose' to dispose of the cache" );
+    p( "type 'shutDown' to shutdown the cache" );
     p(
         "type 'getm num show[false|true]' to get num automatically from a region" );
     p( "type 'putm num' to put num automatically to a region" );
