@@ -54,7 +54,8 @@ public class KeyedRefCollector<K> implements Runnable {
             // remove unused lock;  may fail but that's fine.
             synMap.remove(keyedRef.getKey(), ref);
             // referent should have been cleared by GC.
-            this.count.incrementAndGet();
+            if (debug)
+                this.count.incrementAndGet();
         }        
     }
     public int getCount() {
