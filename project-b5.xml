@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <pomVersion>3</pomVersion>
+  <name>jakarta-turbine-jcs</name>
+  <id>jcs</id>
+  <currentVersion>1.0-dev</currentVersion>
+  <organization>
+    <name>Apache Software Foundation</name>
+    <url>http://jakarta.apache.org/</url>
+  </organization>
+  <inceptionYear>2002</inceptionYear>
+  <package>org.apache.jcs</package>
+
+  <gumpRepositoryId>jakarta</gumpRepositoryId>
+
+  <shortDescription>Cache</shortDescription>
+  <description>Comprehensive Caching System</description>
+  <url>http://jakarta.apache.org/turbine/jcs/</url>
+  <issueTrackingUrl>http://issues.apache.org/scarab/servlet/scarab/</issueTrackingUrl>
+  <siteAddress>jakarta.apache.org</siteAddress>
+  <siteDirectory>/www/jakarta.apache.org/turbine/jcs/</siteDirectory>
+  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-turbine-jcs/</distributionDirectory>
+
+  <repository>
+    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-turbine-jcs</connection>
+    <url>http://cvs.apache.org/viewcvs/jakarta-turbine-jcs/</url>
+  </repository>
+
+  <mailingLists>
+    <mailingList>
+      <name>JCS User List</name>
+      <subscribe>turbine-jcs-user-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>turbine-jcs-user-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://www.mail-archive.com/turbine-jcs-user@jakarta.apache.org/</archive>
+    </mailingList>
+    <mailingList>
+      <name>JCS Developer List</name>
+      <subscribe>mailto:turbine-jcs-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>mailto:turbine-jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://www.mail-archive.com/turbine-jcs-dev@jakarta.apache.org/</archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <name>Aaron Smuts</name>
+      <id>asmuts</id>
+      <email>asmuts@apache.org</email>
+      <organization/>
+    </developer>
+    <developer>
+      <name>Jason van Zyl</name>
+      <id>jvanzyl</id>
+      <email>jason@zenplex.com</email>
+      <organization>Zenplex</organization>
+    </developer>
+    <developer>
+      <name>James Taylor</name>
+      <id>jtaylor</id>
+      <email>james@jamestaylor.org</email>
+      <organization/>
+    </developer>
+  </developers>
+
+  <dependencies>
+    <dependency>
+      <id>commons-configuration</id>
+      <version>1.0-dev</version>
+    </dependency>
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <id>commons-lang</id>
+      <version>1.0-dev</version>
+    </dependency>
+    <dependency>
+      <id>concurrent</id>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <id>hsqldb</id>
+      <version>1.7.0</version>
+    </dependency>
+    <dependency>
+      <id>log4j</id>
+      <version>1.1.3</version>
+    </dependency>
+    <dependency>
+      <id>servletapi</id>
+      <version>2.2</version>
+    </dependency>
+    <dependency>
+      <id>javagroups</id>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <id>jisp</id>
+      <version>1.0.2</version>
+    </dependency>
+    <dependency>
+      <id>tomcat</id>
+      <version>3.2.1</version>
+      <jar>tomcat-util-3.2.1.jar</jar>
+    </dependency>
+
+    <dependency>
+      <id>velocity</id>
+      <version>1.3-dev</version>
+    </dependency>
+
+    <!-- Required for the server in JCS -->
+
+    <dependency>
+      <id>xmlrpc</id>
+      <version>1.1</version>
+    </dependency>
+
+    <!-- For Configurable / Initializable -->
+    <dependency>
+      <id>stratum</id>
+      <version>1.0-b2-dev</version>
+    </dependency>
+
+  </dependencies>
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <aspectSourceDirectories></aspectSourceDirectories>
+    <unitTest>
+      <includes>
+        <include>**/TestJCS.java</include>
+        <include>**/TestSimpleLoad.java</include>
+        <include>**/TestDiskCache.java</include>
+        <include>**/TestDiskCacheConcurrent.java</include>
+        <include>**/TestTCPLateralCache.java</include>
+      </includes>
+    </unitTest>
+
+    <jars></jars>
+  </build>
+</project>
