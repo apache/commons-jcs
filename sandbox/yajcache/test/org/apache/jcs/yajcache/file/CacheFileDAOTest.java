@@ -23,7 +23,7 @@ import java.util.Arrays;
 import junit.framework.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *
@@ -51,9 +51,9 @@ public class CacheFileDAOTest extends TestCase {
                 CacheFileContentType.XML_ENCODER, "key2", ba2);
         
         log.debug("test readCacheItem");
-        byte[] ba1r = CacheFileDAO.inst.readCacheItem("testCache", "key1");
+        byte[] ba1r = CacheFileDAO.inst.readCacheItem("testCache", "key1").getContent();
         assertTrue(Arrays.equals(ba1, ba1r));
-        byte[] ba2r = CacheFileDAO.inst.readCacheItem("testCache", "key2");
+        byte[] ba2r = (byte[]) CacheFileDAO.inst.readCacheItem("testCache", "key2").getContent();
         assertTrue(Arrays.equals(ba2, ba2r));
         
         log.debug("test removeCacheItem");
@@ -66,19 +66,21 @@ public class CacheFileDAOTest extends TestCase {
         CacheFileUtils.inst.mkCacheDirs("testCacheCorrupt");
         
         log.debug("test readCacheItem missing content");
-        byte[] ba = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyx");
+        CacheFileContent cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyx");
+        byte[] ba = cfc == null ? null : cfc.getContent();
         assertTrue(ba == null);
 
         log.debug("test readCacheItem with corrupted hash code");
         File file = CacheFileUtils.inst.getCacheFile("testCacheCorrupt", "keyy");
         RandomAccessFile raf = new RandomAccessFile(file, "rw");
         byte[] ba2 = {1, 2, 3, 4};
-        CacheFileContent cfc = CacheFileContent.getInstance(CacheFileContentType.JAVA_SERIALIZATION, ba2);
+        cfc = CacheFileContent.getInstance(CacheFileContentType.JAVA_SERIALIZATION, ba2);
         cfc.setContentHashCode(0);
         cfc.write(raf);
         raf.close();
 
-        byte[] ba2i = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        byte[] ba2i = cfc == null ? null : cfc.getContent();
         assertTrue(ba2i == null);
 
         log.debug("test readCacheItem with corrupted length");
@@ -88,8 +90,9 @@ public class CacheFileDAOTest extends TestCase {
         cfc.setContentLength(100);
         cfc.write(raf);
         raf.close();
-
-        ba2i = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        
+        cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        ba2i = cfc == null ? null : cfc.getContent();
         assertTrue(ba2i == null);
 
         log.debug("test readCacheItem with corrupted content");
@@ -99,7 +102,9 @@ public class CacheFileDAOTest extends TestCase {
         cfc.setContent(new byte[] {'a', 'b', 'c', 'd', 'e'});
         cfc.write(raf);
         raf.close();
-        ba2i = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+
+        cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        ba2i = cfc == null ? null : cfc.getContent();
         assertTrue(ba2i == null);
         
         log.debug("test readCacheItem with appended content");
@@ -109,7 +114,9 @@ public class CacheFileDAOTest extends TestCase {
         cfc.setContent(new byte[] {1, 2, 3, 4, 5});
         cfc.write(raf);
         raf.close();
-        ba2i = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        
+        cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        ba2i = cfc == null ? null : cfc.getContent();
         assertTrue(ba2i == null);
         
         log.debug("test readCacheItem with content less than min length");
@@ -119,7 +126,9 @@ public class CacheFileDAOTest extends TestCase {
         cfc.setContent(null);
         cfc.write(raf);
         raf.close();
-        ba2i = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+
+        cfc = CacheFileDAO.inst.readCacheItem("testCacheCorrupt", "keyy");
+        ba2i = cfc == null ? null : cfc.getContent();
         assertTrue(ba2i == null);
         
         log.debug(CacheFileDAO.inst.toString());
