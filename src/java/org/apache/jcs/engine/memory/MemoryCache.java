@@ -26,6 +26,7 @@ import java.util.Set;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  *  For the framework. Insures methods a MemoryCache needs to access. Not sure
@@ -57,12 +58,13 @@ public interface MemoryCache
     public int getSize();
 
     /**
-     * Allows access to stats available in the memory plugin.
-     *
-     * @return String of stats
+     * Returns the historical and statistical data for a region's memory cache.
+     * 
+     * @return 
      */
-    public String getStats();
-
+    public IStats getStatistics();
+    
+    
     /**
      *  Get an iterator for all elements in the memory cache. This should be
      *  removed since it is fairly dangerous. Other classes should not be able

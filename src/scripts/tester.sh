@@ -1,14 +1,12 @@
 #!/bin/zsh -f
 THIS_DIR=$(dirname $0)
 
-pushd ${THIS_DIR}/../..; 
+export CLASSPATH=${THIS_DIR}/../../src/conf
+export CLASSPATH=${CLASSPATH}:${THIS_DIR}/../../target/test-classes
+export CLASSPATH=${CLASSPATH}:${THIS_DIR}/../../target/classes
+export CLASSPATH=${CLASSPATH}:.
 
-export CLASSPATH=.
-export CLASSPATH=${CLASSPATH}:${THIS_DIR}/target/test-classes
-export CLASSPATH=${CLASSPATH}:${THIS_DIR}/target/classes
-#export CLASSPATH=${CLASSPATH}:${THIS_DIR}/src/conf
-
-for i in `find ${THIS_DIR}/jars -name "*.jar" `
+for i in `find ${THIS_DIR}/../../jars -name "*.jar" `
 do
         export CLASSPATH=${CLASSPATH}:$i
 done

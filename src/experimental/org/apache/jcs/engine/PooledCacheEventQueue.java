@@ -18,12 +18,17 @@ package org.apache.jcs.engine;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
@@ -97,7 +102,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue {
      * @param listenerId
      * @param cacheName
      */
-    public CacheEventQueue(ICacheListener listener, long listenerId, String cacheName) {
+    public PooledCacheEventQueue(ICacheListener listener, long listenerId, String cacheName) {
         this(listener, listenerId, cacheName, 10, 500);
     }
 
@@ -110,7 +115,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue {
      * @param maxFailure
      * @param waitBeforeRetry
      */
-    public CacheEventQueue(ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+    public PooledCacheEventQueue(ICacheListener listener, long listenerId, String cacheName, int maxFailure,
             int waitBeforeRetry) {
         if (listener == null) {
             throw new IllegalArgumentException("listener must not be null");
@@ -256,17 +261,64 @@ public class PooledCacheEventQueue implements ICacheEventQueue {
     }
 
     public String getStats() {
-        StringBuffer buf = new StringBuffer();
-        buf.append("\n -------------------------");
-        buf.append("\n Cache Event Queue:");
-        buf.append("\n working = " + this.working);
-        buf.append("\n isAlive() = " + this.isAlive());
-        buf.append("\n isEmpty() = " + this.isEmpty());
-        buf.append("\n pool size = " + pool.getPoolSize() + "/" + pool.getMaximumPoolSize());
-        buf.append("\n queue size = " + queue.size() + "/" + queue.capacity());
-        return buf.toString();
+        return getStatistics().toString();
     }
 
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+    	IStats stats = new Stats();
+    	stats.setTypeName( "Pooled Cache Event Queue" );
+    	
+    	ArrayList elems = new ArrayList();
+    	
+    	IStatElement se = null;
+    	
+    	se = new StatElement();
+    	se.setName( "Working" );
+    	se.setData("" + this.working);
+    	elems.add(se);
+    	
+    	se.setName( "Destroyed" );
+    	se = new StatElement();
+    	se.setData("" + this.isAlive());
+    	elems.add(se);
+
+    	se.setName( "Empty" );
+    	se = new StatElement();
+    	se.setData("" + this.isEmpty());
+    	elems.add(se);
+
+    	se.setName( "Queue Size" );
+    	se = new StatElement();
+    	se.setData("" + queue.size() );
+    	elems.add(se);
+
+    	se.setName( "Queue Capacity" );
+    	se = new StatElement();
+    	se.setData("" + queue.capacity() );
+    	elems.add(se);
+
+    	se.setName( "Pool Size" );
+    	se = new StatElement();
+    	se.setData("" + pool.getPoolSize() );
+    	elems.add(se);   	
+
+    	se.setName( "Maximum Pool Size" );
+    	se = new StatElement();
+    	se.setData("" + pool.getMaximumPoolSize() );
+    	elems.add(se);   	
+
+    	// get an array and put them in the Stats object
+    	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
+    	stats.setStatElements( ses );
+
+    	return stats;
+    }       
+    
     ///////////////////////////// Inner classes /////////////////////////////
 
     /**
@@ -468,6 +520,6 @@ public class PooledCacheEventQueue implements ICacheEventQueue {
 
     public boolean isEmpty() {
         return queue.size() == 0;
-    }
+    }      
 
 }

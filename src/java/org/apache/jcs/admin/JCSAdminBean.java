@@ -45,6 +45,13 @@ public class JCSAdminBean
 
   private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
+  /**
+   * Builds up info about each element in a region.
+   * 
+   * @param cacheName
+   * @return
+   * @throws Exception
+   */
   public LinkedList buildElementInfo( String cacheName ) throws Exception
   {
     CompositeCache cache =
@@ -101,6 +108,14 @@ public class JCSAdminBean
     return records;
   }
 
+  /**
+   * Builds up data on every region.
+   * @TODO we need a most light weight method that does not count
+   * bytes.  The byte counting can really swamp a server.
+   * 
+   * @return list of CacheRegionInfo objects
+   * @throws Exception
+   */
   public LinkedList buildCacheInfo() throws Exception
   {
     String[] cacheNames = cacheHub.getCacheNames();
@@ -127,6 +142,16 @@ public class JCSAdminBean
     return cacheInfo;
   }
 
+  /**
+   * Tries to estimate how much data is in a region.  
+   * This is expensive.
+   * If there are any non serializable objects in the region,
+   * the count will stop when it encouters the first one.
+   * 
+   * @param cache
+   * @return
+   * @throws Exception
+   */
   public int getByteCount( CompositeCache cache ) throws Exception
   {
     MemoryCache memCache = cache.getMemoryCache();
@@ -157,6 +182,11 @@ public class JCSAdminBean
     return counter.getCount() - 4;
   }
 
+  /**
+   * Clears all regions in the cache.
+   * 
+   * @throws IOException
+   */
   public void clearAllRegions() throws IOException
   {
     String[] names = cacheHub.getCacheNames();
@@ -167,11 +197,24 @@ public class JCSAdminBean
     }
   }
 
+  /**
+   * Clears a particular cache region.
+   * 
+   * @param cacheName
+   * @throws IOException
+   */
   public void clearRegion( String cacheName ) throws IOException
   {
     cacheHub.getCache( cacheName ).removeAll();
   }
 
+  /**
+   * Removes a particular item from a particular region.
+   * 
+   * @param cacheName
+   * @param key
+   * @throws IOException
+   */
   public void removeItem( String cacheName, String key ) throws IOException
   {
     cacheHub.getCache( cacheName ).remove( key );

@@ -18,21 +18,17 @@ package org.apache.jcs.access;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
-import java.util.StringTokenizer;
 import java.util.Iterator;
 import java.util.Random;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.ElementAttributes;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.apache.jcs.engine.control.event.TestElementEventHandler;
-import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.JCS;
+import org.apache.jcs.engine.ElementAttributes;
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.event.TestElementEventHandler;
 
 /**
  * Allows the user to run common cache commands from the command line for a test

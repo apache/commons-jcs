@@ -22,11 +22,10 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.apache.jcs.JCS;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
@@ -137,7 +136,7 @@ public class TestLRUMemoryCache extends TestCase
 
         for ( int i = 0; i < 102; i++ )
         {
-            this.assertNull(lru.get( i + ":key" ));
+            assertNull(lru.get( i + ":key" ));
         }
 
         // Test that last items are in cache
@@ -146,7 +145,7 @@ public class TestLRUMemoryCache extends TestCase
         {
             String value = (String) 
                 ((ICacheElement)lru.get( i + ":key" )).getVal();
-            this.assertEquals( region + " data " + i, value );
+            assertEquals( region + " data " + i, value );
         }
 
         // Remove all the items

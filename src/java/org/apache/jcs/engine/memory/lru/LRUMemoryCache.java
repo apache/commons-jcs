@@ -18,6 +18,7 @@ package org.apache.jcs.engine.memory.lru;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -34,6 +35,10 @@ import org.apache.jcs.engine.control.group.GroupAttrName;
 
 import org.apache.jcs.engine.memory.util.DoubleLinkedList;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  *  A fast reference management system. The least recently used items move to
@@ -500,11 +505,21 @@ public class LRUMemoryCache
     }
   }
 
+  /**
+   * Returns the size of the list.
+   * 
+   * @return
+   */
   private int dumpCacheSize()
   {
     return list.size();
   }
 
+  /**
+   * Checks to see if all the items that should be in the cache are.
+   * Checks consistency between List and map.
+   *
+   */
   private void verifyCache()
   {
     if (!log.isDebugEnabled())
@@ -599,6 +614,12 @@ public class LRUMemoryCache
     }
   }
 
+  
+  /**
+   * Logs an error is an element that should be in the cache is not.
+   * 
+   * @param key
+   */
   private void verifyCache(Serializable key)
   {
     if (!log.isDebugEnabled())
@@ -626,37 +647,53 @@ public class LRUMemoryCache
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////
-  public String getStats()
+  /*
+   *  (non-Javadoc)
+   * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
+   */
+  public IStats getStatistics()
   {
-    StringBuffer buf = new StringBuffer(0);
-    buf.append(getInfo());
-    buf.append(getCnts());
-    return buf.toString();
-  }
+  	IStats stats = new Stats();
+  	stats.setTypeName( "LRU Memory Cache" );
+  	
+  	ArrayList elems = new ArrayList();
+  	
+  	IStatElement se = null;
+  	
+  	se = new StatElement();
+  	se.setName( "List Size" );
+  	se.setData("" + list.size());
+	elems.add(se);
+  	
+  	se = new StatElement();
+  	se.setName( "Map Size" );
+  	se.setData("" + map.size());
+	elems.add(se);
+  	
+  	se = new StatElement();
+  	se.setName( "Put Count" );
+	se.setData("" + putCnt);  	
+	elems.add(se);
+  	
+	se = new StatElement();
+  	se.setName( "Hit Count" );
+	se.setData("" + hitCnt);
+	elems.add(se);
 
-  public String getCnts()
-  {
-    StringBuffer buf = new StringBuffer(0);
-    buf.append("\n putCnt = " + putCnt);
-    buf.append("\n hitCnt = " + hitCnt);
-    buf.append("\n missCnt = " + missCnt);
-    buf.append( "\n -------------------------" );
-    if (hitCnt != 0)
-    {
-      // int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
-      //buf.append("\n Hit Rate = " + rate + " %" );
-    }
-    return buf.toString();
-  }
+  	se = new StatElement();
+  	se.setName( "Miss Count" );
+  	se.setData("" + missCnt);
+	elems.add(se);
+	
+	// get an array and put them in the Stats object
+	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
+	stats.setStatElements( ses );
 
-  public String getInfo()
-  {
-    StringBuffer buf = new StringBuffer();
-    buf.append("\n list.size() = " + list.size());
-    buf.append("\n map.size() = " + map.size());
-    buf.append( "\n -------------------------" );
-    return buf.toString();
-  }
+	// int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
+    //buf.append("\n Hit Rate = " + rate + " %" );
+	
+  	return stats;
+  }  
+
 
 }

@@ -17,17 +17,18 @@ package org.apache.jcs.auxiliary.disk.indexed;
  */
 
 import java.io.File;
-import java.io.Serializable;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,8 +39,13 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
-//import org.apache.jcs.utils.locking.ReadWriteLock;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.SortedPreferentialArray;
+
+import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory.
@@ -1239,27 +1245,72 @@ public class IndexedDiskCache
    */
   public String getStats()
   {
-    StringBuffer buf = new StringBuffer();
-    buf.append("\n -------------------------");
-    buf.append("\n Indexed Disk Cache:");
-    buf.append("\n Key Map Size = " + this.keyHash.size());
+    return getStatistics().toString();
+  }
+
+  
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+   */
+  public IStats getStatistics()
+  {
+    IStats stats = new Stats();
+    stats.setTypeName( "Indexed Disk Cache" );
+
+    ArrayList elems = new ArrayList();
+
+    IStatElement se = null;
+
+    se = new StatElement();
+    se.setName( "Key Map Size" );
+    se.setData( "" + this.keyHash.size() );
+    elems.add( se );
+
     try
     {
-      buf.append("\n Data File Length = " + this.dataFile.length());
+      se = new StatElement();
+      se.setName( "Data File Length" );
+      se.setData( "" + this.dataFile.length() );
+      elems.add( se );
     }
     catch (Exception e)
     {
-      log.error(e);
+      log.error( e );
     }
-    buf.append("\n Optimize Opertaion Count = " + this.optCnt);
-    buf.append("\n Times Optimized = " + this.timesOptimized);
-    buf.append("\n Recycle Count = " + this.recycleCnt);
 
-    buf.append( super.getStats() );
+    
+    se = new StatElement();
+    se.setName( "Optimize Opertaion Count" );
+    se.setData( "" + this.optCnt );
+    elems.add( se );
 
-    return buf.toString();
-  }
+    se = new StatElement();
+    se.setName( "Times Optimized" );
+    se.setData( "" + this.timesOptimized );
+    elems.add( se );
 
+    se = new StatElement();
+    se.setName( "Recycle Count" );
+    se.setData( "" + this.recycleCnt );
+    elems.add( se );
+
+    
+    // get the stats from the super too
+    // get as array, convert to list, add list to our outer list
+    IStats sStats = super.getStatistics();
+    IStatElement[] sSEs = sStats.getStatElements();
+    List sL = Arrays.asList( sSEs );
+    elems.addAll( sL );
+
+    // get an array and put them in the Stats object
+    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+    stats.setStatElements( ses );
+
+    return stats;
+  }  
+  
 ///////////////////////////////////////////////////////////////////////////////
 // RECYLCE INNER CLASS
   /**

@@ -247,5 +247,40 @@ public interface IRemoteCacheAttributes extends AuxiliaryCacheAttributes
      * @param r The new localClusterConsistency value
      */
     public void setLocalClusterConsistency( boolean r );
+    
+    /**
+     * The thread pool the remote cache should use.  
+     * At first this will only be for gets.
+     * <p>
+     * The default name is "remote_cache_client"
+     * 
+     * @return
+     */
+    public abstract String getThreadPoolName();
+    
+    /**
+     * Set the anme of the pool to use.  Pools should be defined in the 
+     * cache.ccf.
+     * 
+     * @param name
+     */
+    public abstract void setThreadPoolName( String name );
 
+    /**
+     * -1 and 0 mean no timeout, this is the default
+     * if the timeout is -1 or 0, no threadpool will be used.
+     * 
+     * @return
+     */
+    public abstract int getGetTimeoutMillis();
+
+    /**
+     * -1 means no timeout, this is the default
+     * if the timeout is -1 or 0, no threadpool will be used.
+     * If the timeout is greater than 0 a threadpool will be used
+     * for get requests. 
+     * 
+     * @param millis
+     */
+    public abstract void setGetTimeoutMillis( int millis );
 }

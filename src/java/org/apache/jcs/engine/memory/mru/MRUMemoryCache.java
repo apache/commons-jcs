@@ -20,6 +20,7 @@ package org.apache.jcs.engine.memory.mru;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -31,6 +32,10 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 
@@ -47,8 +52,12 @@ public class MRUMemoryCache
     private final static Log log =
         LogFactory.getLog( MRUMemoryCache.class );
 
+    int hitCnt = 0;
+    int missCnt = 0;
+    int putCnt = 0;    
+    
     /**
-     * Description of the Field
+     * Object to lock on the Field
      */
     protected int[] lockMe = new int[ 0 ];
 
@@ -78,6 +87,8 @@ public class MRUMemoryCache
     public void update( ICacheElement ce )
         throws IOException
     {
+        putCnt++;
+    	
         Serializable key = ce.getKey();
         ce.getElementAttributes().setLastAccessTimeNow();
 
@@ -229,7 +240,7 @@ public class MRUMemoryCache
             {
                 found = true;
                 ce.getElementAttributes().setLastAccessTimeNow();
-                //ramHit++;
+                hitCnt++;
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( cacheName + " -- RAM-HIT for " + key );
@@ -247,14 +258,13 @@ public class MRUMemoryCache
 
             if ( !found )
             {
-                // Item not found in all caches.
-                //miss++;
+                // Item not found in cache.
+            	missCnt++;
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( cacheName + " -- MISS for " + key );
                 }
                 return null;
-                //throw new ObjectNotFoundException( key + " not found in cache" );
             }
         }
         catch ( Exception e )
@@ -402,4 +412,49 @@ public class MRUMemoryCache
             log.debug( "dumpCacheEntries> key=" + key + ", val=" + ( ( ICacheElement ) map.get( key ) ).getVal() );
         }
     }
+    
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+    	IStats stats = new Stats();
+    	stats.setTypeName( "MRU Memory Cache" );
+    	
+    	ArrayList elems = new ArrayList();
+    	
+    	IStatElement se = null;
+    	
+    	se = new StatElement();
+    	se.setName( "List Size" );
+    	se.setData("" + mrulist.size());
+    	elems.add(se);
+    	
+    	se = new StatElement();
+    	se.setName( "Map Size" );
+    	se.setData("" + map.size());
+    	elems.add(se);
+    	
+    	se = new StatElement();
+    	se.setName( "Put Count" );
+    	se.setData("" + putCnt);  	
+    	elems.add(se);
+    	
+    	se = new StatElement();
+    	se.setName( "Hit Count" );
+    	se.setData("" + hitCnt);
+    	elems.add(se);
+
+    	se = new StatElement();
+    	se.setName( "Miss Count" );
+    	se.setData("" + missCnt);
+	  	elems.add(se);
+	  	
+	  	// get an array and put them in the Stats object
+	  	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
+	  	stats.setStatElements( ses );
+  	
+    	return stats;
+    }    
 }

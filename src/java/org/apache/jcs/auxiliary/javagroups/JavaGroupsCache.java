@@ -26,6 +26,10 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 import org.jgroups.Channel;
 import org.jgroups.Message;
 import org.jgroups.View;
@@ -38,6 +42,9 @@ import org.jgroups.blocks.MessageDispatcher;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -358,9 +365,32 @@ public class JavaGroupsCache
    */
   public String getStats()
   {
-    return "";
+    return getStatistics().toString();
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+   */
+  public IStats getStatistics()
+  {
+    IStats stats = new Stats();
+    stats.setTypeName( "JavaGroups Cache" );
+
+    ArrayList elems = new ArrayList();
+
+    IStatElement se = null;
+
+    // no data gathered here
+
+    // get an array and put them in the Stats object
+    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+    stats.setStatElements( ses );
+
+    return stats;
+  }   
+  
   // ---------------------------------------------------------- inner classes
 
     /**
