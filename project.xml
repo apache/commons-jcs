@@ -138,6 +138,11 @@
       <version>1.0.b2</version>
       <url>http://xml.apache.org/commons/</url>
     </dependency>
+    <dependency>
+      <id>struts</id>
+      <version>1.1</version>
+      <jar>struts-1.1.jar</jar>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
