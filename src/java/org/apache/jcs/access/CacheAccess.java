@@ -313,6 +313,8 @@ public class CacheAccess implements ICacheAccess
      * the Cache object can no longer be used as it will be closed.
      *
      * @exception CacheException
+     *
+     * @deprecated
      */
     public void destroy()
         throws CacheException
@@ -333,6 +335,8 @@ public class CacheAccess implements ICacheAccess
      *
      * @param name Key that specifies object to invalidate
      * @exception CacheException
+     *
+     * @deprecated  use remove
      */
     public void destroy( Object name )
         throws CacheException

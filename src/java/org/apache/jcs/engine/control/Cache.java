@@ -790,6 +790,12 @@ public class Cache
             }
             try
             {
+
+                if ( log.isDebugEnabled() )
+                {
+                  log.debug( "Removing " + key + " from cacheType" + cacheType );
+                }
+
                 boolean b = aux.remove( key );
 
                 // Don't take the remote removal into account.
