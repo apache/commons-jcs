@@ -18,7 +18,7 @@ package org.apache.jcs.yajcache.util;
 
 import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.jcs.yajcache.annotate;
+package org.apache.jcs.yajcache.lang.annotation;
 
 import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
