@@ -20,7 +20,7 @@ public class CompositeCacheManagerTester
         {
             propsFile = args[0];
         }
-        CompositeCacheManager ccm = new CompositeCacheManager( propsFile );
+        CacheHub ccm = new CacheHub( propsFile );
     }
 
 }

@@ -9,18 +9,18 @@ import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 
 import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** */
 public class GroupCacheManager
-     extends CompositeCacheManager
+     extends CacheHub
      implements Serializable
 {
     private final static Log log =
-        LogFactory.getLog( CompositeCacheManager.class );
+        LogFactory.getLog( CacheHub.class );
 
     private static GroupCacheManager instance;
 

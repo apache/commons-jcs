@@ -1,41 +1,32 @@
 package org.apache.jcs.engine.control;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
-
 import java.rmi.NotBoundException;
-
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
-import java.util.Set;
-
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
-
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-
-import org.apache.jcs.engine.ElementAttributes;
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CompositeCacheAttributes;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
+import org.apache.jcs.engine.CompositeCacheAttributes;
+import org.apache.jcs.engine.ElementAttributes;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.ICacheHub;
 
 /** Manages a composite cache. */
-public class CompositeCacheManager
-     implements ICompositeCacheManager, IRemoteCacheConstants, Serializable
+public class CacheHub
+    implements ICacheHub, IRemoteCacheConstants, Serializable
 {
     private final static Log log =
-        LogFactory.getLog( CompositeCacheManager.class );
+        LogFactory.getLog( CacheHub.class );
 
     /** Caches managed by this cache manager */
     protected Hashtable caches = new Hashtable();
@@ -53,9 +44,6 @@ public class CompositeCacheManager
     /** Default elemeent attributes for this cache manager */
     protected IElementAttributes defaultElementAttr = new ElementAttributes();
 
-    /** Defaults the cache service name to the rmi server's class name */
-    private String remoteServiceName;
-
     /** Used to keep track of configured auxiliaries */
     protected Hashtable auxFacs = new Hashtable( 11 );
 
@@ -68,18 +56,49 @@ public class CompositeCacheManager
     /** The default auxiliary caches to be used if not preconfigured */
     protected String defaultAuxValues;
 
-    /** Constructor for the CompositeCacheManager object */
-    protected CompositeCacheManager()
+    /** The Singleton Instance */
+    private static CacheHub instance;
+
+    /** Gets the instance of CacheHub */
+    public static CacheHub getInstance()
+    {
+        return getInstance( null );
+    }
+
+    /** Gets the CacheHub instance */
+    public static synchronized CacheHub getInstance( String propFile )
+    {
+        if ( instance == null )
+        {
+            log.debug( "Instance is null, creating" );
+
+            if ( propFile == null )
+            {
+                instance = new CacheHub();
+            }
+            else
+            {
+                instance = new CacheHub( propFile );
+            }
+        }
+
+        instance.incrementClients();
+
+        return instance;
+    }
+
+    /** Constructor for the CacheHub object */
+    protected CacheHub()
     {
         this( "/cache.ccf" );
     }
 
     /**
-     * Constructor for the CompositeCacheManager object
+     * Constructor for the CacheHub object
      *
      * @param propFile
      */
-    protected CompositeCacheManager( String propFile )
+    protected CacheHub( String propFile )
     {
         log.debug( "Creating cache manager from config file: " + propFile );
 
@@ -134,7 +153,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets the defaultCacheAttributes attribute of the CompositeCacheManager
+     * Gets the defaultCacheAttributes attribute of the CacheHub
      * object
      *
      * @return The defaultCacheAttributes value
@@ -144,9 +163,8 @@ public class CompositeCacheManager
         return this.defaultCacheAttr.copy();
     }
 
-
     /**
-     * Sets the defaultCacheAttributes attribute of the CompositeCacheManager
+     * Sets the defaultCacheAttributes attribute of the CacheHub
      * object
      *
      * @param icca The new defaultCacheAttributes value
@@ -157,10 +175,10 @@ public class CompositeCacheManager
     }
 
     /**
-     * Sets the defaultElementAttributes attribute of the CompositeCacheManager
+     * Sets the defaultElementAttributes attribute of the CacheHub
      * object
      *
-     * @param icca The new defaultElementAttributes value
+     * @param iea The new defaultElementAttributes value
      */
     public void setDefaultElementAttributes( IElementAttributes iea )
     {
@@ -168,7 +186,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets the defaultElementAttributes attribute of the CompositeCacheManager
+     * Gets the defaultElementAttributes attribute of the CacheHub
      * object
      *
      * @return The defaultElementAttributes value
@@ -182,8 +200,10 @@ public class CompositeCacheManager
     private void createCaches( Properties props )
         throws IOException, NotBoundException
     {
-        CompositeCacheConfigurator ccc = new CompositeCacheConfigurator( this );
-        ccc.doConfigure( props );
+        CompositeCacheConfigurator configurator =
+            new CompositeCacheConfigurator( this );
+
+        configurator.doConfigure( props );
     }
 
     /** Creates internal system cache */
@@ -195,10 +215,9 @@ public class CompositeCacheManager
         return new Cache( cacheName, auxCaches, cattr, attr );
     }
 
-
     /**
-     * Factory method to create the actual Cache instance. Subclass can override
-     * this method to create the specific cache.
+     * Factory method to create the actual Cache instance. Subclass can
+     * override this method to create the specific cache.
      */
     protected Cache createCache( String cacheName,
                                  ICache[] auxCaches,
@@ -208,40 +227,20 @@ public class CompositeCacheManager
         return new Cache( cacheName, auxCaches, cattr, attr );
     }
 
-    /**
-     * Gets the auxCaches attribute of the CompositeCacheManager object
-     */
-    private ICache[] getAuxCaches( String cacheName,
-                                   IAuxiliaryCacheAttributes iaca )
-    {
-        List auxList = new ArrayList();
-
-        Enumeration enum = auxFacs.elements();
-        while ( enum.hasMoreElements() )
-        {
-            IAuxiliaryCacheFactory iacf = ( IAuxiliaryCacheFactory ) enum.nextElement();
-            // need default ilca here.
-            ICache cache = iacf.createCache( iaca );
-            auxList.add( cache );
-        }
-
-        return ( ICache[] ) auxList.toArray( new ICache[0] );
-    }
-
-    /** Gets the cache attribute of the CompositeCacheManager object */
+    /** Gets the cache attribute of the CacheHub object */
     public ICache getCache( String cacheName )
     {
         return getCache( cacheName, this.defaultCacheAttr.copy() );
     }
 
-    /** Gets the cache attribute of the CompositeCacheManager object */
+    /** Gets the cache attribute of the CacheHub object */
     public ICache getCache( String cacheName, ICompositeCacheAttributes cattr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, this.defaultElementAttr );
     }
 
-    /** Gets the cache attribute of the CompositeCacheManager object */
+    /** Gets the cache attribute of the CacheHub object */
     public ICache getCache( String cacheName,
                             ICompositeCacheAttributes cattr,
                             IElementAttributes attr )
@@ -250,7 +249,7 @@ public class CompositeCacheManager
         return getCache( cattr, this.defaultElementAttr );
     }
 
-    /** Gets the cache attribute of the CompositeCacheManager object */
+    /** Gets the cache attribute of the CacheHub object */
     public ICache getCache( ICompositeCacheAttributes cattr )
     {
         return getCache( cattr, this.defaultElementAttr );
@@ -264,7 +263,8 @@ public class CompositeCacheManager
      * defaults if none are specified. We might want to create separate method
      * for creating/getting. . .
      */
-    public ICache getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public ICache getCache( ICompositeCacheAttributes cattr,
+                            IElementAttributes attr )
     {
         ICache cache = ( ICache ) caches.get( cattr.getCacheName() );
 
@@ -276,11 +276,15 @@ public class CompositeCacheManager
                 if ( cache == null )
                 {
                     cattr.setCacheName( cattr.getCacheName() );
-                    //ICache[] auxCaches = getAuxCaches(cattr.getCacheName(), cattr );
-                    // need to call parse region of ccc
-                    //cache = createCache(cattr.getCacheName(), auxCaches, cattr, attr );
-                    CompositeCacheConfigurator ccc = new CompositeCacheConfigurator( this );
-                    cache = ccc.parseRegion( this.props, cattr.getCacheName(), this.defaultAuxValues, cattr );
+
+                    CompositeCacheConfigurator configurator =
+                        new CompositeCacheConfigurator( this );
+
+                    cache = configurator.parseRegion( this.props,
+                                                      cattr.getCacheName(),
+                                                      this.defaultAuxValues,
+                                                      cattr );
+
                     caches.put( cattr.getCacheName(), cache );
                 }
             }
@@ -338,7 +342,6 @@ public class CompositeCacheManager
         clients++;
     }
 
-
     /** */
     public void release()
     {
@@ -348,7 +351,7 @@ public class CompositeCacheManager
     /** */
     private void release( boolean fromRemote )
     {
-        synchronized ( CompositeCacheManager.class )
+        synchronized ( CacheHub.class )
         {
             // Wait until called by the last client
             if ( --clients > 0 )
@@ -360,14 +363,13 @@ public class CompositeCacheManager
                 }
             }
 
-            // FIXME: Is this really warn or should it be debug?
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Last client called release. There are "
+                           + caches.size() + " caches which will be disposed" );
 
-//            if ( log.isWarnEnabled() )
-//            {
-                log.warn( "Last client called release. There are "
-                     + caches.size() + " caches which will be disposed" );
-                log.warn( "Manager stats: " + getStats() );
-//            }
+                log.debug( "Manager stats: " + getStats() );
+            }
 
             Enumeration allCaches = caches.elements();
 
@@ -386,11 +388,11 @@ public class CompositeCacheManager
     /** Returns a list of the current cache names. */
     public String[] getCacheNames()
     {
-        String[] list = new String[caches.size()];
+        String[] list = new String[ caches.size() ];
         int i = 0;
-        for ( Iterator itr = caches.keySet().iterator(); itr.hasNext();  )
+        for ( Iterator itr = caches.keySet().iterator(); itr.hasNext(); )
         {
-            list[i++] = ( String ) itr.next();
+            list[ i++ ] = ( String ) itr.next();
         }
         return list;
     }
@@ -398,7 +400,7 @@ public class CompositeCacheManager
     /** */
     public int getCacheType()
     {
-        return COMPOSITE_CACHE;
+        return CACHE_HUB;
     }
 
     /** */
@@ -412,7 +414,6 @@ public class CompositeCacheManager
     {
         auxFacs.put( auxFac.getName(), auxFac );
     }
-
 
     /** */
     IAuxiliaryCacheFactory registryFacGet( String name )

@@ -53,50 +53,40 @@ package org.apache.jcs.engine.control;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.exception.CacheException;
-import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.access.exception.ObjectExistsException;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.engine.CacheElement;
-
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheHub;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
- * This is the primary cache hub. It control the flow of items through the
- * cache. The auxiliary and memory caches are plugged in here.
+ * This is the primary hub for a single cache/region. It control the flow of
+ * items through the cache. The auxiliary and memory caches are plugged in
+ * here.
  *
  * @author asmuts
  * @created January 15, 2002
  */
 public class Cache
-     implements ICacheHub, ICache, ICompositeCache, Serializable
+    implements ICache, ICompositeCache, Serializable
 {
     private final static Log log = LogFactory.getLog( Cache.class );
-
-    /**
-     * not used for much
-     */
-    public final String className;
 
     // Auxiliary caches.
     private ICache[] auxCaches;
@@ -128,7 +118,6 @@ public class Cache
      * flexible in the future, but they are tied closely together. More than one
      * doesn't make much sense.
      */
-    // IMemoryCache
     IMemoryCache memCache;
 
     /**
@@ -139,19 +128,19 @@ public class Cache
      * @param cattr The cache attribute
      * @param attr The default element attributes
      */
-    public Cache( String cacheName, ICache[] auxCaches, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public Cache( String cacheName,
+                  ICache[] auxCaches,
+                  ICompositeCacheAttributes cattr,
+                  IElementAttributes attr )
     {
-
         numInstances++;
-        String s = this.getClass().getName();
-        int idx = s.lastIndexOf( "." );
-        this.className = s.substring( idx + 1 );
+
         this.cacheName = cacheName;
 
         this.auxCaches = auxCaches;
         if ( auxCaches != null )
         {
-            this.auxHit = new int[auxCaches.length];
+            this.auxHit = new int[ auxCaches.length ];
         }
 
         this.attr = attr;
@@ -162,7 +151,7 @@ public class Cache
         if ( log.isDebugEnabled() )
         {
             log.debug( "Constructed cache with name " + cacheName +
-                " and cache attributes: " + cattr );
+                       " and cache attributes: " + cattr );
         }
         else if ( log.isInfoEnabled() )
         {
@@ -190,7 +179,6 @@ public class Cache
         return;
     }
 
-
     /**
      * Will no override existing items.
      *
@@ -213,7 +201,6 @@ public class Cache
         return;
     }
 
-
     /**
      * Put in cache and configured auxiliaries.
      *
@@ -228,7 +215,6 @@ public class Cache
         return;
     }
 
-
     /**
      * Description of the Method
      *
@@ -237,7 +223,9 @@ public class Cache
      * @param attr Element attributes
      * @exception IOException
      */
-    public void put( Serializable key, Serializable val, IElementAttributes attr )
+    public void put( Serializable key,
+                     Serializable val,
+                     IElementAttributes attr )
         throws IOException
     {
 
@@ -245,7 +233,7 @@ public class Cache
         {
             NullPointerException npe =
                 new NullPointerException( "key=" + key + " and val=" + val +
-                " must not be null." );
+                                          " must not be null." );
 
             log.error( "Key or value was null. Exception will be thrown", npe );
 
@@ -263,7 +251,6 @@ public class Cache
         return;
     }
 
-
     /**
      * Description of the Method
      *
@@ -272,20 +259,13 @@ public class Cache
      * @param attr Element attributes
      * @exception IOException
      */
-    protected synchronized void updateCaches( Serializable key, Serializable val, IElementAttributes attr )
+    protected synchronized void updateCaches( Serializable key,
+                                              Serializable val,
+                                              IElementAttributes attr )
         throws IOException
     {
-        // FIXME: Replace with tracing aspects
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "updateCaches(key,val,attr) > ICache.INCLUDE_REMOTE_CACHE= " + ICache.INCLUDE_REMOTE_CACHE + " key = " + key );
-        }
-
         updateCaches( key, val, attr, ICache.INCLUDE_REMOTE_CACHE );
-
     }
-
 
     /**
      * Description of the Method
@@ -296,21 +276,16 @@ public class Cache
      * @param updateRemoteCache
      * @exception IOException
      */
-    protected synchronized void updateCaches( Serializable key, Serializable val, IElementAttributes attr, boolean updateRemoteCache )
+    protected synchronized void updateCaches( Serializable key,
+                                              Serializable val,
+                                              IElementAttributes attr,
+                                              boolean updateRemoteCache )
         throws IOException
     {
-        // FIXME: Replace with tracing aspects
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "updateCaches(key,val,attr,updateRemoteCache) > updateRemoteCache= " + updateRemoteCache + " key = " + key );
-        }
-
         CacheElement ce = new CacheElement( cacheName, key, val );
         ce.setElementAttributes( attr );
         updateExclude( ce, updateRemoteCache );
     }
-
 
     /**
      * Standard update method
@@ -321,15 +296,8 @@ public class Cache
     public synchronized void update( ICacheElement ce )
         throws IOException
     {
-        // FIXME: Replace with tracing aspects
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "update(ce) > ICache.INCLUDE_REMOTE_CACHE= " + ICache.INCLUDE_REMOTE_CACHE + " key = " + ce.getKey() );
-        }
         update( ce, ICache.INCLUDE_REMOTE_CACHE );
     }
-
 
     /**
      * Description of the Method
@@ -344,7 +312,6 @@ public class Cache
         updateExclude( ce, updateRemoteCache );
     }
 
-
     /**
      * Description of the Method
      *
@@ -356,27 +323,15 @@ public class Cache
         throws IOException
     {
 
-        if ( ce.getKey() instanceof String && ce.getKey().toString().endsWith( NAME_COMPONENT_DELIMITER ) )
+        if ( ce.getKey() instanceof String
+            && ce.getKey().toString().endsWith( NAME_COMPONENT_DELIMITER ) )
         {
-            throw new IllegalArgumentException(
-                "key must not end with " + NAME_COMPONENT_DELIMITER + " for a put operation" );
+            throw new IllegalArgumentException( "key must not end with "
+                                                + NAME_COMPONENT_DELIMITER
+                                                + " for a put operation" );
         }
 
-        // FIXME: Replace with tracing aspects
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Cache.updateExclude(ce,updateRemoteCache) > updateRemoteCache = " + updateRemoteCache + " key=" + ce.getKey() + ", value type=" + ce.getVal().getClass().getName() + ", " + ce.getElementAttributes().toString() );
-
-            if ( updateRemoteCache == ICache.INCLUDE_REMOTE_CACHE )
-            {
-                log.debug( "updateRemoteCache is TRUE " + updateRemoteCache );
-            }
-            else
-            {
-                log.debug( "updateRemoteCache is FALSE " + updateRemoteCache );
-            }
-        }
+        log.debug( "Updating memory cache" );
 
         memCache.update( ce );
 
@@ -391,13 +346,26 @@ public class Cache
         // more can be added if future auxiliary caches don't fit the model
         // You could run a database cache as either a remote or a local disk.
         // The types would describe the purpose.
+
+        if ( log.isDebugEnabled() )
+        {
+            if ( auxCaches.length > 0 )
+            {
+                log.debug( "Updating auxilliary caches" );
+            }
+            else
+            {
+                log.debug( "No auxilliary cache to update" );
+            }
+        }
+
         for ( int i = 0; i < auxCaches.length; i++ )
         {
-            ICache aux = auxCaches[i];
+            ICache aux = auxCaches[ i ];
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "aux.getCacheType() = " + aux.getCacheType() );
+                log.debug( "Auxilliary cache type: " + aux.getCacheType() );
             }
 
             // SEND TO REMOTE STORE
@@ -405,10 +373,12 @@ public class Cache
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "ce.getElementAttributes().getIsRemote() = " + ce.getElementAttributes().getIsRemote() );
+                    log.debug( "ce.getElementAttributes().getIsRemote() = "
+                               + ce.getElementAttributes().getIsRemote() );
                 }
 
-                if ( ce.getElementAttributes().getIsRemote() && updateRemoteCache )
+                if ( ce.getElementAttributes().getIsRemote()
+                    && updateRemoteCache )
                 {
                     try
                     {
@@ -417,9 +387,9 @@ public class Cache
                         aux.update( ce );
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Updated remote store for " + ce.getKey() + ce );
+                            log.debug( "Updated remote store for "
+                                       + ce.getKey() + ce );
                         }
-
                     }
                     catch ( IOException ex )
                     {
@@ -428,19 +398,20 @@ public class Cache
                 }
                 // SEND LATERALLY
             }
-            else
-                if ( aux != null && aux.getCacheType() == ICache.LATERAL_CACHE )
+            else if ( aux != null
+                && aux.getCacheType() == ICache.LATERAL_CACHE )
             {
                 // lateral can't do the checking since it is dependent on the cache region
                 // restrictions
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "lateralcache in aux list: cattr " +
-                        cacheAttr.getUseLateral() );
+                               cacheAttr.getUseLateral() );
                 }
-                if ( cacheAttr.getUseLateral() && ce.getElementAttributes().getIsLateral() && updateRemoteCache )
+                if ( cacheAttr.getUseLateral()
+                    && ce.getElementAttributes().getIsLateral()
+                    && updateRemoteCache )
                 {
-
                     // later if we want a multicast, possibly delete abnormal broadcaster
                     // DISTRIBUTE LATERALLY
                     // Currently always multicast even if the value is unchanged,
@@ -451,22 +422,16 @@ public class Cache
                         log.debug( "updated lateral cache for " + ce.getKey() );
                     }
                 }
-                // end if lateral
-
-                // DISK CACHE
             }
-            else
-                if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
+            else if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
             {
                 // do nothing, the memory manager will call spool where necesary
                 // TODO: add option to put all element on disk
             }
         }
-        // end for aux list
 
         return;
     }
-    // update
 
     /**
      * ICacheHub method
@@ -479,7 +444,7 @@ public class Cache
         // SPOOL TO DISK.
         for ( int i = 0; i < auxCaches.length; i++ )
         {
-            ICache aux = auxCaches[i];
+            ICache aux = auxCaches[ i ];
 
             if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
             {
@@ -533,7 +498,6 @@ public class Cache
         return get( key, false, this.LOCAL_INVOKATION );
     }
 
-
     /**
      * Description of the Method
      *
@@ -546,7 +510,6 @@ public class Cache
         return get( key, container, this.LOCAL_INVOKATION );
     }
 
-
     /**
      * Description of the Method
      *
@@ -555,7 +518,9 @@ public class Cache
      * @param container
      * @param invocation
      */
-    public Serializable get( Serializable key, boolean container, boolean invocation )
+    public Serializable get( Serializable key,
+                             boolean container,
+                             boolean invocation )
     {
         if ( log.isDebugEnabled() )
         {
@@ -571,7 +536,7 @@ public class Cache
             if ( log.isDebugEnabled() )
             {
                 log.debug( "get: key = " + key + ", is local invocation = "
-                     + ( invocation == this.LOCAL_INVOKATION ) );
+                           + ( invocation == this.LOCAL_INVOKATION ) );
             }
 
             ce = ( ICacheElement ) memCache.get( key, true );
@@ -582,12 +547,13 @@ public class Cache
 
                 for ( int i = 0; i < auxCaches.length; i++ )
                 {
-                    ICache aux = auxCaches[i];
+                    ICache aux = auxCaches[ i ];
 
                     if ( aux != null )
                     {
 
-                        if ( ( invocation == this.LOCAL_INVOKATION ) || aux.getCacheType() == aux.DISK_CACHE )
+                        if ( ( invocation == this.LOCAL_INVOKATION )
+                            || aux.getCacheType() == aux.DISK_CACHE )
                         {
                             if ( log.isDebugEnabled() )
                             {
@@ -613,7 +579,7 @@ public class Cache
                         {
                             found = true;
                             // Item found in one of the auxiliary caches.
-                            auxHit[i]++;
+                            auxHit[ i ]++;
 
                             if ( log.isDebugEnabled() )
                             {
@@ -650,7 +616,6 @@ public class Cache
 
         try
         {
-
             if ( !found )
             {
                 // Item not found in all caches.
@@ -660,7 +625,6 @@ public class Cache
                     log.debug( cacheName + " -- MISS for " + key );
                 }
                 return null;
-                //throw new ObjectNotFoundException( key + " not found in cache" );
             }
         }
         catch ( Exception e )
@@ -694,15 +658,15 @@ public class Cache
                 // POINT OF IDLE TIME?  SEEMS OK
                 // Exceeded maxIdleTime, removal
                     if ( ( ce.getElementAttributes().getIdleTime() != -1 ) && ( now - ce.getElementAttributes().getLastAccessTime() ) > ( ce.getElementAttributes().getIdleTime() * 1000 ) )
-                {
-                    if ( log.isInfoEnabled() )
                     {
-                        log.info( "Exceeded maxIdleTime [ ce.getElementAttributes().getIdleTime() = " + ce.getElementAttributes().getIdleTime() + " ]-- " + ce.getKey() );
+                        if ( log.isInfoEnabled() )
+                        {
+                            log.info( "Exceeded maxIdleTime [ ce.getElementAttributes().getIdleTime() = " + ce.getElementAttributes().getIdleTime() + " ]-- " + ce.getKey() );
+                        }
+                        this.remove( key );
+                        //cache.remove( me.ce.getKey() );
+                        return null;
                     }
-                    this.remove( key );
-                    //cache.remove( me.ce.getKey() );
-                    return null;
-                }
             }
 
         }
@@ -780,7 +744,7 @@ public class Cache
         // Removes from all auxiliary caches.
         for ( int i = 0; i < auxCaches.length; i++ )
         {
-            ICache aux = auxCaches[i];
+            ICache aux = auxCaches[ i ];
 
             if ( aux == null )
             {
@@ -819,7 +783,6 @@ public class Cache
     public synchronized void removeAll()
     {
 
-
         try
         {
             memCache.removeAll();
@@ -832,7 +795,7 @@ public class Cache
         // Removes from all auxiliary disk caches.
         for ( int i = 0; i < auxCaches.length; i++ )
         {
-            ICache aux = auxCaches[i];
+            ICache aux = auxCaches[ i ];
 
             if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
             {
@@ -849,7 +812,6 @@ public class Cache
         return;
     }
 
-
     /**
      * Flushes all cache items from memory to auxilliary caches and close the
      * auxilliary caches.
@@ -858,7 +820,6 @@ public class Cache
     {
         dispose( LOCAL_INVOKATION );
     }
-
 
     /**
      * invoked only by CacheManager.
@@ -883,7 +844,7 @@ public class Cache
             {
                 try
                 {
-                    ICache aux = auxCaches[i];
+                    ICache aux = auxCaches[ i ];
 
                     if ( aux == null || fromRemote && aux.getCacheType() == REMOTE_CACHE )
                     {
@@ -938,7 +899,6 @@ public class Cache
 
     }
 
-
     /**
      * Though this put is extremely fast, this could bog the cache and should be
      * avoided. The dispose method should call a version of this. Good for
@@ -962,7 +922,7 @@ public class Cache
             {
                 try
                 {
-                    ICache aux = auxCaches[i];
+                    ICache aux = auxCaches[ i ];
 
                     if ( aux.getStatus() == ICache.STATUS_ALIVE )
                     {
@@ -996,7 +956,6 @@ public class Cache
         }
     }
 
-
     /**
      * Gets the stats attribute of the Cache object
      *
@@ -1012,13 +971,12 @@ public class Cache
 
         for ( int i = 0; i < auxHit.length; i++ )
         {
-            stats.append( "/n<br> auxHit[" + i + "] = " + auxHit[i] + ", " + this.auxCaches[i].getClass().getName() + "" );
+            stats.append( "/n<br> auxHit[" + i + "] = " + auxHit[ i ] + ", " + this.auxCaches[ i ].getClass().getName() + "" );
         }
         stats.append( "/n<br> miss = " + miss );
         stats.append( "/n<br> cacheAttr = " + cacheAttr.toString() );
         return stats.toString();
     }
-
 
     /**
      * Gets the size attribute of the Cache object
@@ -1030,7 +988,6 @@ public class Cache
         return memCache.getSize();
     }
 
-
     /**
      * Gets the cacheType attribute of the Cache object
      *
@@ -1038,9 +995,8 @@ public class Cache
      */
     public int getCacheType()
     {
-        return COMPOSITE_CACHE;
+        return CACHE_HUB;
     }
-
 
     /**
      * Gets the status attribute of the Cache object
@@ -1052,7 +1008,6 @@ public class Cache
         return alive ? STATUS_ALIVE : STATUS_DISPOSED;
     }
 
-
     /**
      * Description of the Method
      *
@@ -1062,7 +1017,6 @@ public class Cache
     {
         ex.printStackTrace();
     }
-
 
     /**
      * Gets the cacheName attribute of the Cache object
@@ -1074,7 +1028,6 @@ public class Cache
         return cacheName;
     }
 
-
     /**
      * Gets the default element attribute of the Cache object
      *
@@ -1084,7 +1037,6 @@ public class Cache
     {
         return attr;
     }
-
 
     /**
      * Gets the ICompositeCacheAttributes attribute of the Cache object
@@ -1127,7 +1079,6 @@ public class Cache
         return ce.getElementAttributes();
     }
 
-
     /**
      * Create the MemoryCache based on the config parameters. TODO: consider
      * making this an auxiliary, despite its close tie to the CacheHub. TODO:
@@ -1146,14 +1097,14 @@ public class Cache
             {
                 Class c = Class.forName( cattr.getMemoryCacheName() );
                 this.memCache = ( IMemoryCache ) c.newInstance();
-                this.memCache.initialize( cacheName, cattr, ( ICacheHub ) this );
+                this.memCache.initialize( cacheName, cattr, this );
             }
             catch ( Exception e )
             {
                 log.error( e );
                 log.warn( "Using default memory cache" );
-                this.memCache = ( IMemoryCache ) new LRUMemoryCache( cacheName, cattr, ( ICacheHub ) this );
-                this.memCache.initialize( cacheName, cattr, ( ICacheHub ) this );
+                this.memCache = ( IMemoryCache ) new LRUMemoryCache( cacheName, cattr, this );
+                this.memCache.initialize( cacheName, cattr, this );
             }
         }
         else
@@ -1163,6 +1114,5 @@ public class Cache
         return memCache;
     }
     // end createMemoryCache
-
 
 }

@@ -11,6 +11,7 @@ import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
+import org.apache.jcs.engine.control.Cache;
 
 /**
  * For the framework. Insures methods a MemoryCache needs to access.
@@ -23,7 +24,9 @@ public interface IMemoryCache extends ICacheType
 
     // for initialization
     /** Description of the Method */
-    public void initialize( String cacheName, ICompositeCacheAttributes cattr, ICacheHub hub );
+    public void initialize( String cacheName,
+                            ICompositeCacheAttributes cattr,
+                            Cache cache );
 
     // TODO: need a setCacheAttributes or reInitialize method
 

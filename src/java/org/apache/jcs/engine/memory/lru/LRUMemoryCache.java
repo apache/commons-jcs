@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.control.Cache;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -72,7 +73,7 @@ public class LRUMemoryCache implements IMemoryCache, ICache, Serializable
     public ICompositeCacheAttributes cattr;
 
     // The HUB
-    ICacheHub hub;
+    Cache cache;
 
     // status
     private int status = this.STATUS_ERROR;
@@ -105,9 +106,9 @@ public class LRUMemoryCache implements IMemoryCache, ICache, Serializable
      * @param cattr
      * @param hub
      */
-    public LRUMemoryCache( String cacheName, ICompositeCacheAttributes cattr, ICacheHub hub )
+    public LRUMemoryCache( String cacheName, ICompositeCacheAttributes cattr, Cache cache )
     {
-        initialize( cacheName, cattr, hub );
+        initialize( cacheName, cattr, cache );
     }
 
 
@@ -119,12 +120,12 @@ public class LRUMemoryCache implements IMemoryCache, ICache, Serializable
      * @param cattr
      * @param hub
      */
-    public void initialize( String cacheName, ICompositeCacheAttributes cattr, ICacheHub hub )
+    public void initialize( String cacheName, ICompositeCacheAttributes cattr, Cache hub )
     {
         this.cacheName = cacheName;
         this.cattr = cattr;
         this.max = cattr.getMaxObjects();
-        this.hub = hub;
+        this.cache = hub;
         status = this.STATUS_ALIVE;
         log.info( "initialized LRUMemoryCache for " + cacheName );
 
@@ -210,7 +211,7 @@ public class LRUMemoryCache implements IMemoryCache, ICache, Serializable
                 {
                     // Might want to rename this "overflow" incase the hub
                     // wants to do something else.
-                    hub.spoolToDisk( last.ce );
+                    cache.spoolToDisk( last.ce );
                     map.remove( last.ce.getKey() );
                     removeNode( last );
                 }
@@ -694,7 +695,7 @@ public class LRUMemoryCache implements IMemoryCache, ICache, Serializable
     public void waterfal( MemoryElementDescriptor me )
         throws IOException
     {
-        this.hub.spoolToDisk( me.ce );
+        this.cache.spoolToDisk( me.ce );
     }
 
 

@@ -48,7 +48,7 @@ public class DeleteCacheServlet extends AbstractDeleteCacheServlet
 //  boolean debug = true;
 //  String servlet = "/jcs/cache/DeleteCache"; //"/ramraf/DeleteCacheServlet";
 //  Logger log;
-//  CompositeCacheManager cacheMgr;
+//  CacheHub cacheMgr;
 //  //Initialize global variables
 //  public void init(ServletConfig config) throws ServletException {
 //   log = LoggerManager.getLogger( this );

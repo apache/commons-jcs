@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.control.Cache;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -56,7 +57,7 @@ public class ShrinkingMemoryCache implements IMemoryCache, ICache, Serializable
     public ICompositeCacheAttributes cattr;
 
     // The HUB
-    ICacheHub hub;
+    Cache cache;
 
     // status
     private int status = this.STATUS_ERROR;
@@ -82,9 +83,9 @@ public class ShrinkingMemoryCache implements IMemoryCache, ICache, Serializable
      * @param cattr
      * @param hub
      */
-    public ShrinkingMemoryCache( String cacheName, ICompositeCacheAttributes cattr, ICacheHub hub )
+    public ShrinkingMemoryCache( String cacheName, ICompositeCacheAttributes cattr, Cache cache )
     {
-        initialize( cacheName, cattr, hub );
+        initialize( cacheName, cattr, cache );
     }
 
 
@@ -96,11 +97,13 @@ public class ShrinkingMemoryCache implements IMemoryCache, ICache, Serializable
      * @param cattr
      * @param hub
      */
-    public void initialize( String cacheName, ICompositeCacheAttributes cattr, ICacheHub hub )
+    public void initialize( String cacheName,
+                            ICompositeCacheAttributes cattr,
+                            Cache cache )
     {
         this.cacheName = cacheName;
         this.cattr = cattr;
-        this.hub = hub;
+        this.cache = cache;
         status = this.STATUS_ALIVE;
 
         if ( cattr.getUseMemoryShrinker() )
@@ -371,7 +374,7 @@ public class ShrinkingMemoryCache implements IMemoryCache, ICache, Serializable
         {
             log.debug( "Spooling item to disk -- " + me.ce.getKey() );
         }
-        this.hub.spoolToDisk( me.ce );
+        this.cache.spoolToDisk( me.ce );
     }
 
 

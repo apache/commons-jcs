@@ -1,27 +1,21 @@
 package org.apache.jcs.auxiliary.lateral.http.server;
 
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheManagerFactory;
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,13 +30,13 @@ public class LateralCacheServletReciever extends HttpServlet
     private final static Log log =
         LogFactory.getLog( LateralCacheServletReciever.class );
 
-    private static CompositeCacheManager cacheMgr;
+    private static CacheHub cacheMgr;
 
     /** Description of the Method */
     public void init( ServletConfig config )
         throws ServletException
     {
-        cacheMgr = CacheManagerFactory.getInstance();
+        cacheMgr = CacheHub.getInstance();
 
         super.init( config );
     }
@@ -57,7 +51,7 @@ public class LateralCacheServletReciever extends HttpServlet
 
         if ( cacheMgr == null )
         {
-            cacheMgr = CacheManagerFactory.getInstance();
+            cacheMgr = CacheHub.getInstance();
             log.debug( "cacheMgr was null in LateralCacheServlet" );
         }
 

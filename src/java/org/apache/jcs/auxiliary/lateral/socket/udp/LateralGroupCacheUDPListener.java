@@ -3,26 +3,14 @@ package org.apache.jcs.auxiliary.lateral.socket.udp;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
  * Description of the Class
@@ -31,8 +19,8 @@ import org.apache.commons.logging.LogFactory;
  * @created January 15, 2002
  */
 public class LateralGroupCacheUDPListener
-     extends LateralCacheUDPListener
-     implements ILateralCacheListener, Serializable
+    extends LateralCacheUDPListener
+    implements ILateralCacheListener, Serializable
 {
     private final static Log log =
         LogFactory.getLog( LateralGroupCacheUDPListener.class );
@@ -47,7 +35,6 @@ public class LateralGroupCacheUDPListener
         super( ilca );
         log.debug( "creating LateralGroupCacheUDPListener" );
     }
-
 
     /**
      * Gets the instance attribute of the LateralGroupCacheUDPListener class
@@ -129,7 +116,7 @@ public class LateralGroupCacheUDPListener
         {
             if ( cacheMgr == null )
             {
-                cacheMgr = ( ICompositeCacheManager ) GroupCacheManagerFactory.getInstance();
+                cacheMgr = CacheHub.getInstance();
 
                 if ( log.isDebugEnabled() )
                 {

@@ -45,14 +45,14 @@ public class CompositeCacheConfigurator
     final static String CACHE_ATTRIBUTE_PREFIX = ".cacheattributes";
     final static String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
 
-    private CompositeCacheManager ccMgr;
+    private CacheHub ccMgr;
 
     /**
      * Constructor for the CompositeCacheConfigurator object
      *
      * @param ccMgr
      */
-    public CompositeCacheConfigurator( CompositeCacheManager ccMgr )
+    public CompositeCacheConfigurator( CacheHub ccMgr )
     {
         this.ccMgr = ccMgr;
     }

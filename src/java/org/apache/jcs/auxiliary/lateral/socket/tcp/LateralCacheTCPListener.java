@@ -67,10 +67,8 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ILateralCacheTCPList
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
-import org.apache.jcs.engine.control.CacheManagerFactory;
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -89,7 +87,7 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
         LogFactory.getLog( LateralCacheTCPListener.class );
 
     /** Description of the Field */
-    protected static transient ICompositeCacheManager cacheMgr;
+    protected static transient CacheHub cacheMgr;
     /** Description of the Field */
     protected final static HashMap instances = new HashMap();
 
@@ -269,7 +267,7 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
+        CacheHub cm = ( CacheHub ) cacheMgr;
         cm.freeCache( cacheName, ICache.REMOTE_INVOKATION );
     }
 
@@ -282,7 +280,7 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
     {
         if ( cacheMgr == null )
         {
-            cacheMgr = ( ICompositeCacheManager ) CacheManagerFactory.getInstance();
+            cacheMgr = CacheHub.getInstance();
             if ( log.isDebugEnabled() )
             {
                 log.debug( "cacheMgr = " + cacheMgr );

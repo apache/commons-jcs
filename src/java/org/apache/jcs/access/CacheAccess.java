@@ -64,12 +64,10 @@ import org.apache.jcs.access.exception.InvalidHandleException;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 
 import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheManagerFactory;
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -91,7 +89,7 @@ public class CacheAccess implements ICacheAccess
     /**
      * Cache manager use by the various forms of defineRegion and getAccess
      */
-    private static CompositeCacheManager cacheMgr;
+    private static CacheHub cacheMgr;
 
     /**
      * Cache that a given instance of this class provides access to. Should this
@@ -215,7 +213,7 @@ public class CacheAccess implements ICacheAccess
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = CacheManagerFactory.getInstance();
+                    cacheMgr = CacheHub.getInstance();
                 }
             }
         }

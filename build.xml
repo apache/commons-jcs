@@ -45,7 +45,21 @@
         
   <target 
     name="maven:test">
+    
+    <!-- Make directory for log output from tests (distinct from reports) -->
+
+    <mkdir dir="target/test/logs/jcs"/>
+
+    <!-- Copy test config files to the test build dir -->
+
+    <copy todir="target/classes">
+        <fileset dir="src/test-conf"/>
+    </copy>
+
+    <!-- Delegate to maven -->
+    
     <ant antfile="${maven.home}/build-test.xml" target="test"/>
+    
   </target>
 
   <target 

@@ -10,10 +10,7 @@ import java.io.Serializable;
  */
 public interface ICacheType extends Serializable
 {
-
     /** Composite/ memory cache type, cetral hub. */
-    public final static int COMPOSITE_CACHE = 1;
-    /** Description of the Field */
     public final static int CACHE_HUB = 1;
 
     /** Description of the Field */

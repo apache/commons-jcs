@@ -19,7 +19,6 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupAttrName;
@@ -27,12 +26,7 @@ import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupCache;
 import org.apache.jcs.engine.control.group.GroupCache;
 import org.apache.jcs.engine.control.group.GroupCache;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
+import org.apache.jcs.engine.control.CacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -220,7 +214,7 @@ public class RemoteGroupCacheListener extends RemoteCacheListener implements IRe
         {
             if ( cacheMgr == null )
             {
-                cacheMgr = ( ICompositeCacheManager ) GroupCacheManagerFactory.getInstance();
+                cacheMgr = CacheHub.getInstance();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( " groupcache cacheMgr = " + cacheMgr );

@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.control.Cache;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -74,7 +75,7 @@ public class MRUMemoryCache
     public ICompositeCacheAttributes cattr;
 
     // The HUB
-    ICacheHub hub;
+    Cache cache;
 
     // status
     private int status = this.STATUS_ERROR;
@@ -106,9 +107,9 @@ public class MRUMemoryCache
      * @param cattr
      * @param hub
      */
-    public MRUMemoryCache( String cacheName, ICompositeCacheAttributes cattr, ICacheHub hub )
+    public MRUMemoryCache( String cacheName, ICompositeCacheAttributes cattr, Cache cache )
     {
-        initialize( cacheName, cattr, hub );
+        initialize( cacheName, cattr, cache );
     }
 
 
@@ -120,11 +121,11 @@ public class MRUMemoryCache
      * @param cattr
      * @param hub
      */
-    public void initialize( String cacheName, ICompositeCacheAttributes cattr, ICacheHub hub )
+    public void initialize( String cacheName, ICompositeCacheAttributes cattr, Cache cache )
     {
         this.cacheName = cacheName;
         this.cattr = cattr;
-        this.hub = hub;
+        this.cache = cache;
         status = this.STATUS_ALIVE;
 
         if ( cattr.getUseMemoryShrinker() )
@@ -220,7 +221,7 @@ public class MRUMemoryCache
                     // wants to do something else.
                     Serializable last = ( Serializable ) mrulist.getLast();
                     ICacheElement ceL = ( ICacheElement ) map.get( last );
-                    hub.spoolToDisk( ceL );
+                    cache.spoolToDisk( ceL );
 
                     // need a more fine grained locking here
                     synchronized ( map )
@@ -528,7 +529,7 @@ public class MRUMemoryCache
     public void waterfal( MemoryElementDescriptor me )
         throws IOException
     {
-        this.hub.spoolToDisk( me.ce );
+        this.cache.spoolToDisk( me.ce );
     }
 
 
