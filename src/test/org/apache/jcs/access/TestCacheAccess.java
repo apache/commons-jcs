@@ -609,11 +609,7 @@ public class TestCacheAccess
           else
           if (message.startsWith("stats"))
           {
-            CompositeCache cache = CompositeCacheManager.getInstance().getCache(
-                cache_control.getCacheAttributes().getCacheName());
-            p(cache.getMemoryCache().getStats());
-            p("HitCountRam = " + cache.getHitCountRam());
-            p("HitCountAux = " + cache.getHitCountAux());
+            p(cache_control.getStats());
           }
           else
           if (message.startsWith("gc"))
