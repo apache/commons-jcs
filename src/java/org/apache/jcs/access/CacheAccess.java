@@ -439,7 +439,7 @@ public class CacheAccess implements ICacheAccess
     /**
      * Dispose this region. Flushes objects to and closes auxiliary caches.
      */
-    protected void dispose()
+    public void dispose()
     {
         cacheControl.dispose();
     }
