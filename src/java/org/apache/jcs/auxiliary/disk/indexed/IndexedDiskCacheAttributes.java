@@ -32,6 +32,8 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
 
     private String diskPath;
 
+    // default to 500000
+    private int maxKeySize = 500000;
 
     /**
      * Constructor for the DiskCacheAttributes object
@@ -106,6 +108,26 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
         this.name = name;
     }
 
+    /**
+     * Gets the maxKeySize attribute of the DiskCacheAttributes object
+     *
+     * @return The maxKeySize value
+     */
+    public int getMaxKeySize()
+    {
+        return this.maxKeySize;
+    }
+
+
+    /**
+     * Sets the maxKeySize attribute of the DiskCacheAttributes object
+     *
+     * @param name The new maxKeySize value
+     */
+    public void setMaxKeySize( int maxKeySize )
+    {
+        this.maxKeySize = maxKeySize;
+    }
 
     /**
      * Description of the Method

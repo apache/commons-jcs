@@ -31,6 +31,7 @@ import java.util.HashSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
+import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -51,9 +52,12 @@ public class IndexedDiskCache extends AbstractDiskCache
     private String fileName;
     private IndexedDisk dataFile;
     private IndexedDisk keyFile;
-    private HashMap keyHash;
+    private LRUMapJCS keyHash;
+    private int maxKeySize;
 
     private File rafDir;
+
+
 
     IndexedDiskCacheAttributes cattr;
 
@@ -74,6 +78,7 @@ public class IndexedDiskCache extends AbstractDiskCache
 
         String cacheName = cattr.getCacheName();
         String rootDirName = cattr.getDiskPath();
+        maxKeySize = cattr.getMaxKeySize();
 
         this.cattr = cattr;
 
@@ -110,7 +115,7 @@ public class IndexedDiskCache extends AbstractDiskCache
 
             else
             {
-                keyHash = new HashMap();
+                keyHash = new LRUMapJCS( maxKeySize );
 
                 if ( dataFile.length() > 0 )
                 {
@@ -144,17 +149,25 @@ public class IndexedDiskCache extends AbstractDiskCache
 
         try
         {
-            keyHash = ( HashMap ) keyFile.readObject( 0 );
+            keyHash = ( LRUMapJCS ) keyFile.readObject( 0 );
 
             if ( keyHash == null )
             {
-                keyHash = new HashMap();
+                keyHash = new LRUMapJCS( maxKeySize );
             }
-
-            if ( log.isInfoEnabled() )
+            else
             {
-               log.info( "Loaded keys from: " + fileName +
-                    ", key count: " + keyHash.size() );
+                if ( log.isInfoEnabled() )
+                {
+                  log.info( "Loaded keys from: " + fileName +
+                          ", key count: " + keyHash.size() );
+                }
+
+                keyHash.setMaximumSize( maxKeySize );
+                if ( log.isInfoEnabled() )
+                {
+                  log.info( "Reset maxKeySize to: '" + maxKeySize + "'" );
+                }
             }
 
             if ( log.isDebugEnabled() )
@@ -501,7 +514,7 @@ public class IndexedDiskCache extends AbstractDiskCache
             keyFile =
                 new IndexedDisk( new File( rafDir, fileName + ".key" ) );
 
-            keyHash = new HashMap();
+            keyHash = new LRUMapJCS( this.maxKeySize );
         }
         catch ( Exception e )
         {
@@ -579,7 +592,7 @@ public class IndexedDiskCache extends AbstractDiskCache
         {
             // Migrate from keyHash to keyHshTemp in memory,
             // and from dataFile to dataFileTemp on disk.
-            HashMap keyHashTemp = new HashMap();
+            LRUMapJCS keyHashTemp = new LRUMapJCS( this.maxKeySize );
 
             IndexedDisk dataFileTemp =
                 new IndexedDisk( new File( rafDir, fileName + "Temp.data" ) );
@@ -589,11 +602,16 @@ public class IndexedDiskCache extends AbstractDiskCache
                 log.info( "Optomizing file keyHash.size()=" + keyHash.size() );
             }
 
-            Iterator itr = keyHash.keySet().iterator();
+            //Iterator itr = keyHash.keySet().iterator();
 
-            while ( itr.hasNext() )
+            Object[] keys = keyHash.keySet().toArray();
+            int len = keys.length;
+
+            //while ( itr.hasNext() )
+            for ( int i = 0; i < len; i++ )
             {
-                Serializable key = ( Serializable ) itr.next();
+                //Serializable key = ( Serializable ) itr.next();
+                Serializable key = ( Serializable ) keys[i];
 
                 CacheElement tempDe = ( CacheElement ) readElement( key );
                 try
@@ -698,5 +716,7 @@ public class IndexedDiskCache extends AbstractDiskCache
                        ", pos: " + ded.pos );
         }
     }
+
 }
+
 
