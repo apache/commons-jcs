@@ -93,7 +93,6 @@ public class SortedPreferentialArray
         }
       }
       else
-      if (!preferLarge)
       {
         Comparable lar = getLargest();
         // insert if obj is smaller than the largest
@@ -120,12 +119,7 @@ public class SortedPreferentialArray
    */
   public Comparable getLargest()
   {
-    int num = curSize - 1;
-    if (num < 0)
-    {
-      num = 0;
-    }
-    return array[num];
+    return array[curSize-1];
   }
 
   /**
@@ -558,24 +552,18 @@ public class SortedPreferentialArray
    * Removes the item from the array at the specified position.  The remaining
    * items to the right are shifted left.
    * @param position int
+   * @throw IndexOutOfBoundsException if position is out of range.
    */
   private void remove(int position)
   {
-    try
-    {
-      // suffle left from removal point
-      int end = curSize - 1;
-      for (int i = position; i < end; i++)
-      {
-        array[i] = array[i + 1];
-      }
-      curSize--;
-    }
-    catch (Exception e)
-    {
-      log.error("Remove problem" + this.dumpArray(), e);
-    }
+    if (position >= curSize || position < 0) 
+        throw new IndexOutOfBoundsException("position="+position
+                + " must be less than curSize="+curSize);
+    curSize--;
 
+    if (position < curSize)
+        System.arraycopy(array, position+1, array, position, curSize);
+    return;
   }
 
   /**
