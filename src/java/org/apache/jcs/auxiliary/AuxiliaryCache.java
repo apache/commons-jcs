@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * Tag interface for auxiliary caches. Currently this provides no additional
@@ -63,5 +64,12 @@ public interface AuxiliaryCache extends ICache
     /**
      * Gets the set of keys of objects currently in the group
      */
-    public Set getGroupKeys(String group) throws IOException;;
+    public Set getGroupKeys(String group) throws IOException;
+    
+    /**
+     * Returns the historical and statistical data for a region's auxiliary cache.
+     * 
+     * @return 
+     */
+    public IStats getStatistics();    
 }

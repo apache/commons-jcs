@@ -21,6 +21,7 @@ package org.apache.jcs.engine.control;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +42,12 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
+import org.apache.jcs.engine.stats.CacheStats;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.ICacheStats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 import org.apache.jcs.engine.control.event.ElementEvent;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
@@ -991,24 +998,52 @@ public class CompositeCache
      * @return String
      */
     public String getStats()
+    {      
+      return getStatistics().toString();
+    }
+
+    /**
+     * This returns data gathered for this region and all the
+     * auxiliaries it currently uses.
+     * 
+     * @return
+     */
+    public ICacheStats getStatistics()
     {
-      StringBuffer buf = new StringBuffer();
-      buf.append( "\n -------------------------" );
-      buf.append( "\n Composite Cache:" );
-      buf.append("\n HitCountRam = " + getHitCountRam());
-      buf.append("\n HitCountAux = " + getHitCountAux());
+    	ICacheStats stats = new CacheStats();
+    	stats.setRegionName( this.getCacheName() );
+    	
+    	// store the composite cache stats first
+    	IStatElement[] elems = new StatElement[2];
+    	elems[0] = new StatElement();
+    	elems[0].setName( "HitCountRam" );
+    	elems[0].setData( "" + getHitCountRam() );
+    	
+    	elems[1] = new StatElement();
+    	elems[1].setName( "HitCountAux" );
+    	elems[1].setData( "" + getHitCountAux() );
 
-      buf.append(getMemoryCache().getStats());
+    	// store these local stats
+    	stats.setStatElements( elems );
+    	
+    	// memory + aux, memory is not considered an auxiliary internally
+    	int total = auxCaches.length + 1;
+    	IStats[] auxStats = new Stats[total];
+    	    	
+    	auxStats[0] = getMemoryCache().getStatistics();
 
-      for ( int i = 0; i < auxCaches.length; i++ )
-      {
-        ICache aux = auxCaches[i];
-        buf.append(aux.getStats());
-      }
+    	for ( int i = 0; i < auxCaches.length; i++ )
+    	{
+    		AuxiliaryCache aux = auxCaches[i];
+    		auxStats[i + 1] = aux.getStatistics();
+    	}
 
-      return buf.toString();
+    	// sore the auxiliary stats
+    	stats.setAuxiliaryCacheStats( auxStats );
+    	
+    	return stats;
   }
-
+    
 
     /**
      *  Gets the cacheName attribute of the Cache object

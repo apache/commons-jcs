@@ -37,6 +37,7 @@ import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
 /** Manages a composite cache. */
 public class CompositeCacheManager
@@ -116,6 +117,7 @@ public class CompositeCacheManager
 
     /**
      * Get a CacheHub instance which is not configured.
+     * If an instance already exists, it will be returned.
      */
     public static synchronized CompositeCacheManager getUnconfiguredInstance()
     {
@@ -197,28 +199,15 @@ public class CompositeCacheManager
      */
     public void configure( Properties props )
     {
-        // FIXME: need to do something for defaults
-        // create a default entry in the propsfile
-        // setDefaults( props );
-
+        // set the props value and then configure the ThreadPoolManager
+        ThreadPoolManager.setProps( props );
+        ThreadPoolManager poolMgr =  ThreadPoolManager.getInstance();
+      
+        // configure the cache
         CompositeCacheConfigurator configurator =
             new CompositeCacheConfigurator( this );
 
         configurator.doConfigure( props );
-
-        // FIXME: Supposedly neither of these can be thrown from the above code,
-        //        are they safe to remove? Or should the go elsewhere?
-        //
-        // catch ( IOException ex )
-        // {
-        //     log.error( "Failed to create caches", ex );
-        //     throw new IllegalStateException( ex.getMessage() );
-        // }
-        // catch ( NotBoundException ex )
-        // {
-        //     log.error( "Failed to create caches", ex );
-        //     throw new IllegalStateException( ex.getMessage() );
-        // }
     }
 
     /**

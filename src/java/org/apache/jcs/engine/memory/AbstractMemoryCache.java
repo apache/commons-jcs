@@ -27,6 +27,8 @@ import org.apache.jcs.engine.behavior.*;
 import org.apache.jcs.engine.control.*;
 import org.apache.jcs.engine.control.group.*;
 import org.apache.jcs.engine.memory.shrinking.*;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  *  Some common code for the LRU and MRU caches.
@@ -177,16 +179,17 @@ public abstract class AbstractMemoryCache
       }
     }
 
-    /**
-     * Returns the cache statistics.
-     *
-     * @return The stats value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
      */
-    public String getStats()
+    public IStats getStatistics()
     {
-        return "";
+    	IStats stats = new Stats();
+    	stats.setTypeName( "Abstract Memory Cache" );
+    	return stats;
     }
-
+    
     /**
      * Returns the current cache size.
      *

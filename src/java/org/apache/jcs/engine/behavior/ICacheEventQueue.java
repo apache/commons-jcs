@@ -21,6 +21,8 @@ package org.apache.jcs.engine.behavior;
 import java.io.IOException;
 import java.io.Serializable;
 
+import org.apache.jcs.engine.stats.behavior.IStats;
+
 /**
  * Interface for a cache event queue. An event queue is used to propagate
  * ordered cache events to one and only one target listener.
@@ -84,12 +86,10 @@ public interface ICacheEventQueue
     public boolean isAlive();
 
     /**
-     * Returns debugin stats info.
-  *
-     * @return String
+     * Returns the historical and statistical data for an event queue cache.
+     * 
+     * @return 
      */
-    public String getStats();
-
-
+    public IStats getStatistics();   
 }
 

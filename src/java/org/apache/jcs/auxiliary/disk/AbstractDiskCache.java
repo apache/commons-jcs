@@ -20,7 +20,10 @@ package org.apache.jcs.auxiliary.disk;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -32,6 +35,10 @@ import org.apache.jcs.engine.CacheInfo;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.locking.ReadWriteLock;
 import org.apache.jcs.utils.locking.ReadWriteLockManager;
 
@@ -295,15 +302,46 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      */
     public String getStats()
     {
-      StringBuffer buf = new StringBuffer();
-      buf.append( "\n -------------------------" );
-      buf.append( "\n Abstract Disk Cache:" );
-      buf.append( "\n Purgatory Hits: " + purgHits );
-      buf.append( "\n Purgatory Size: " + purgatory.size() );
-      buf.append( this.cacheEventQueue.getStats() );
-      return buf.toString();
+      return getStatistics().toString();
     }
 
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+    	IStats stats = new Stats();
+    	stats.setTypeName( "Abstract Disk Cache" );
+    	
+    	ArrayList elems = new ArrayList();
+    	
+    	IStatElement se = null;
+    	
+    	se = new StatElement();
+    	se.setName( "Purgatory Hits" );
+    	se.setData("" + purgHits);
+    	elems.add(se);
+    	
+    	se.setName( "Purgatory Size" );
+    	se = new StatElement();
+    	se.setData("" + purgatory.size());
+    	elems.add(se);
+    	
+    	// get the stats from the event queue too
+    	// get as array, convert to list, add list to our outer list
+    	IStats eqStats = this.cacheEventQueue.getStatistics();
+    	IStatElement[] eqSEs = eqStats.getStatElements();
+    	List eqL = Arrays.asList(eqSEs);
+		elems.addAll( eqL );
+    	
+    	// get an array and put them in the Stats object
+    	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
+    	stats.setStatElements( ses );
+
+    	return stats;
+    }     
+    
     /**
      * @see ICache#getStatus
      */

@@ -17,20 +17,6 @@ jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
 
-# SYSTEM CACHE
-# should be defined for the storage of group attribute list
-jcs.system.groupIdCache=DC 
-jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.system.groupIdCache.elementattributes=org.apache.jcs.engine.ElementAttributes
-jcs.system.groupIdCache.elementattributes.IsEternal=true
-jcs.system.groupIdCache.elementattributes.MaxLifeSeconds=3600
-jcs.system.groupIdCache.elementattributes.IdleTime=1800
-jcs.system.groupIdCache.elementattributes.IsSpool=true
-jcs.system.groupIdCache.elementattributes.IsRemote=true
-jcs.system.groupIdCache.elementattributes.IsLateral=true
- 
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
@@ -131,6 +117,10 @@ jcs.auxiliary.RC.attributes.RemotePort=1102
 #jcs.auxiliary.RC.attributes.LocalPort=1103
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 #jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
+#-1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000
+jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
 
 # unreliable
 jcs.auxiliary.LUDP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
@@ -184,3 +174,21 @@ jcs.auxiliary.LCHTTP.attributes.httpServers=localhost:8080,localhost:7001,localh
 jcs.auxiliary.LCHTTP.attributes.httpReceiveServlet=/cache/LateralCacheReceiverServlet
 jcs.auxiliary.LCHTTP.attributes.httpDeleteServlet=/cache/DeleteCacheServlet
 
+
+##############################################################
+################## THREAD POOL CONFIGURATION ###################
+# default thread pool config
+thread_pool.default.boundarySize=75
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+thread_pool.default.abortWhenBlocked=false
+thread_pool.default.startUpSize=4
+
+# remote cache client thread pool config
+thread_pool.remote_cache_client.boundarySize=75
+thread_pool.remote_cache_client.maximumPoolSize=150
+thread_pool.remote_cache_client.minimumPoolSize=4
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.abortWhenBlocked=false
+thread_pool.remote_cache_client.startUpSize=4

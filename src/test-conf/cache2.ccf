@@ -131,6 +131,10 @@ jcs.auxiliary.RC.attributes.RemotePort=1102
 #jcs.auxiliary.RC.attributes.LocalPort=1103
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 #jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
+#-1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000
+jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
 
 # unreliable
 jcs.auxiliary.LUDP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
@@ -184,3 +188,21 @@ jcs.auxiliary.LCHTTP.attributes.httpServers=localhost:8080,localhost:7001,localh
 jcs.auxiliary.LCHTTP.attributes.httpReceiveServlet=/cache/LateralCacheReceiverServlet
 jcs.auxiliary.LCHTTP.attributes.httpDeleteServlet=/cache/DeleteCacheServlet
 
+
+##############################################################
+################## THREAD POOL CONFIGURATION ###################
+# default thread pool config
+thread_pool.default.boundarySize=75
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+thread_pool.default.abortWhenBlocked=false
+thread_pool.default.startUpSize=4
+
+# remote cache client thread pool config
+thread_pool.remote_cache_client.boundarySize=75
+thread_pool.remote_cache_client.maximumPoolSize=150
+thread_pool.remote_cache_client.minimumPoolSize=4
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.abortWhenBlocked=false
+thread_pool.remote_cache_client.startUpSize=4

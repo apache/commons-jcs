@@ -15,7 +15,7 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.me
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
-jcs.region.testCache1=LJG
+jcs.region.testCache1=RC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -43,13 +43,19 @@ jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf
 
-# connects to the server started by "startRemoteCacheServer 2"
+# need to make put or invalidate an option
+# just a remove lock to add
 jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
-jcs.auxiliary.RC.attributes.RemoteHost=localhost
-jcs.auxiliary.RC.attributes.RemotePort=1103
-jcs.auxiliary.RFailover.attributes.FailoverServers=localhost:1103,localhost:1102
-jcs.auxiliary.RC.attributes.RemoveUponRemotePut=true
+jcs.auxiliary.RC.attributes.RemoteHost=10.21.209.150
+jcs.auxiliary.RC.attributes.RemotePort=1102
+#jcs.auxiliary.RC.attributes.LocalPort=1103
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
+#jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
+#-1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000
+jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
 
 # unreliable
 jcs.auxiliary.LUDP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
@@ -96,3 +102,20 @@ jcs.auxiliary.LCHTTP.attributes.httpServers=localhost:8080,localhost:7001,localh
 jcs.auxiliary.LCHTTP.attributes.httpReceiveServlet=/cache/LateralCacheReceiverServlet
 jcs.auxiliary.LCHTTP.attributes.httpDeleteServlet=/cache/DeleteCacheServlet
 
+##############################################################
+################## THREAD POOL CONFIGURATION ###################
+# default thread pool config
+thread_pool.default.boundarySize=75
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+thread_pool.default.abortWhenBlocked=false
+thread_pool.default.startUpSize=4
+
+# remote cache client thread pool config
+thread_pool.remote_cache_client.boundarySize=75
+thread_pool.remote_cache_client.maximumPoolSize=150
+thread_pool.remote_cache_client.minimumPoolSize=4
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.abortWhenBlocked=false
+thread_pool.remote_cache_client.startUpSize=4

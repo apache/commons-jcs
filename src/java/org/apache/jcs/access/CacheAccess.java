@@ -330,27 +330,6 @@ public class CacheAccess implements ICacheAccess
         cacheControl.remove( ( Serializable ) name );
     }
 
-
-    // TODO: rethink the point of these methods
-//    /**
-//     * Remove the entire region of elements from other caches specified in the
-//     * cache.properties file as lateral caches.
-//     */
-//    public void removeLateralDirect()
-//    {
-//        cacheControl.removeLateralDirect( "ALL" );
-//    }
-//    /**
-//     * Remove the specified element from other caches specified in in the
-//     * cache.properties file as lateral caches.
-//     *
-//     * @param key Key identifying object to remove
-//     */
-//    public void removeLateralDirect( Serializable key )
-//    {
-//        cacheControl.removeLateralDirect( key );
-//    }
-
     /**
      * If there are any auxiliary caches associated with this cache, save all
      * objects to them.

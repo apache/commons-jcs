@@ -18,12 +18,17 @@ package org.apache.jcs.engine;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one
@@ -349,15 +354,33 @@ public class CacheEventQueue
     }
   }
 
-
-  public String getStats()
+  /*
+   *  (non-Javadoc)
+   * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getStatistics()
+   */
+  public IStats getStatistics()
   {
-    StringBuffer buf = new StringBuffer();
-    buf.append( "\n -------------------------" );
-    buf.append( "\n Cache Event Queue:" );
-    buf.append( "\n working = " + this.working );
-    buf.append( "\n isAlive() = " + this.isAlive() );
-    buf.append( "\n isEmpty() = " + this.isEmpty() );
+  	IStats stats = new Stats();
+  	stats.setTypeName( "Cache Event Queue" );
+  	
+  	ArrayList elems = new ArrayList();
+  	
+  	IStatElement se = null;
+  	
+  	se = new StatElement();
+  	se.setName( "Working" );
+  	se.setData("" + this.working);
+  	elems.add(se);
+  	
+  	se.setName( "Alive" );
+  	se = new StatElement();
+  	se.setData("" + this.isAlive());
+  	elems.add(se);
+
+  	se.setName( "Empty" );
+  	se = new StatElement();
+  	se.setData("" + this.isEmpty());
+  	elems.add(se);
 
     int size = 0;
     synchronized (queueLock)
@@ -377,12 +400,20 @@ public class CacheEventQueue
           }
       }
 
-      buf.append( "\n size = " + size );
+    	se.setName( "Size" );
+      	se = new StatElement();
+      	se.setData("" + size);
+      	elems.add(se);
     }
-    return buf.toString();
-  }
 
+  	// get an array and put them in the Stats object
+  	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
+  	stats.setStatElements( ses );
 
+  	return stats;
+  }     
+  
+  
   ///////////////////////////// Inner classes /////////////////////////////
 
   private static class Node

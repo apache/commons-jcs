@@ -18,6 +18,7 @@ package org.apache.jcs.engine.memory.arc;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 
@@ -30,6 +31,10 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
 import org.apache.jcs.engine.memory.util.DoubleLinkedList;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  *  This is a rough implmentation of an adaptive replacement cache.
@@ -405,7 +410,7 @@ public class ARCMemoryCache
           if (log.isDebugEnabled())
           {
             log.debug("replace -- T1 to B1");
-            log.debug(getInfo());
+            log.debug(getStats());
           }
           temp = (ElementDescriptor) T1.removeLast(); // grab LRU from T1
           // nullify object, temp is now just a dummy container to help
@@ -443,7 +448,7 @@ public class ARCMemoryCache
           if (log.isDebugEnabled())
           {
             log.debug("replace -- T2 to B2");
-            log.debug(getInfo());
+            log.debug(getStats());
           }
 
           temp = (ElementDescriptor) T2.removeLast(); // grab LRU page of T2
@@ -527,40 +532,78 @@ public class ARCMemoryCache
   /////////////////////////////////////////////////////////////////////////
   public String getStats()
   {
-    StringBuffer buf = new StringBuffer(0);
-    buf.append(getInfo());
-    buf.append(getCnts());
-    return buf.toString();
+    return getStatistics().toString();
   }
 
-  public String getCnts()
+  
+  /*
+   *  (non-Javadoc)
+   * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
+   */
+  public IStats getStatistics()
   {
-    StringBuffer buf = new StringBuffer(0);
-    buf.append("\n putCnt = " + putCnt);
-    buf.append("\n hitCnt = " + hitCnt);
-    buf.append("\n missCnt = " + missCnt);
-    buf.append("\n -------------------------");
-    if (hitCnt != 0)
-    {
-      // int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
-      //buf.append("\n Hit Rate = " + rate + " %" );
-    }
-    return buf.toString();
-  }
+  	IStats stats = new Stats();
+  	stats.setTypeName( "LRU Memory Cache" );
+  	
+  	ArrayList elems = new ArrayList();
+  	
+  	IStatElement se = null;
+  	
+  	se = new StatElement();
+  	se.setName( "T1 Size" );
+  	se.setData("" + T1.size());
+	elems.add(se);
 
-  public String getInfo()
-  {
-    StringBuffer buf = new StringBuffer();
-    buf.append("\n T1.size() = " + T1.size());
-    buf.append("\n T2.size() = " + T2.size());
-    buf.append("\n B1.size() = " + B1.size());
-    buf.append("\n B2.size() = " + B2.size());
-    buf.append("\n target_T1 = " + target_T1);
-    buf.append("\n map.size() = " + map.size());
-    buf.append("\n -------------------------");
-    return buf.toString();
-  }
+  	se = new StatElement();
+  	se.setName( "T2 Size" );
+  	se.setData("" + T2.size());
+	elems.add(se);
+	
+  	se = new StatElement();
+  	se.setName( "B1 Size" );
+  	se.setData("" + B1.size());
+	elems.add(se);
 
+  	se = new StatElement();
+  	se.setName( "B2 Size" );
+  	se.setData("" + B2.size());
+	elems.add(se);
+
+  	se = new StatElement();
+  	se.setName( "Target T1 Size" );
+  	se.setData("" + target_T1);
+	elems.add(se);
+
+	se = new StatElement();
+  	se.setName( "Map Size" );
+  	se.setData("" + map.size());
+	elems.add(se);
+  	
+  	se = new StatElement();
+  	se.setName( "Put Count" );
+	se.setData("" + putCnt);  	
+	elems.add(se);
+  	
+	se = new StatElement();
+  	se.setName( "Hit Count" );
+	se.setData("" + hitCnt);
+	elems.add(se);
+
+  	se = new StatElement();
+  	se.setName( "Miss Count" );
+  	se.setData("" + missCnt);
+	elems.add(se);
+	
+	// get an array and put them in the Stats object
+	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
+	stats.setStatElements( ses );
+
+	// int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
+    //buf.append("\n Hit Rate = " + rate + " %" );
+	
+  	return stats;
+  }   
+  
 /////////////////////////////////////////////////
   public class ElementDescriptor
       extends MemoryElementDescriptor
