@@ -11,4 +11,52 @@
 
   </preGoal>
 
-</project>
+  <postgoal name="rmic" xmlns:j="jelly:core" xmlns:u="jelly:util">
+
+
+<property
+      name="mavenDependencyClasspath"
+      refid="maven.dependency.classpath"
+    />
+
+    <j:choose>
+      <j:when test="${systemScope['os.name'].startsWith('Windows')}">
+        <u:tokenize var="classpath"
+delim=";">${mavenDependencyClasspath}</u:tokenize>
+      </j:when>
+      <j:otherwise>
+        <u:tokenize var="classpath"
+delim=":">${mavenDependencyClasspath}</u:tokenize>
+      </j:otherwise>
+    </j:choose>
+
+    <echo>
+    maven.dependency.classpath:
+    <j:forEach var="entry" items="${classpath}">${entry}
+    </j:forEach>
+    </echo>
+
+
+
+	
+    <rmic base="${maven.build.dest}" classname="org.apache.jcs.auxiliary.remote.RemoteCacheListener">
+	<classpath>
+           <path refid="maven.dependency.classpath"/>
+       </classpath>
+    </rmic> 
+
+    <rmic base="${maven.build.dest}" classname="org.apache.jcs.auxiliary.remote.server.RemoteCacheServerListener"> 
+	<classpath>
+           <path refid="maven.dependency.classpath"/>
+       </classpath>
+    </rmic> 
+
+    <rmic base="${maven.build.dest}" classname="org.apache.jcs.auxiliary.remote.server.RemoteCacheServer"> 
+	<classpath>
+           <path refid="maven.dependency.classpath"/>
+       </classpath>
+    </rmic> 
+
+   </postgoal>
+
+ </project>
