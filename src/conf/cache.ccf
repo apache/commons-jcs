@@ -84,9 +84,15 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
 # Primary Disk Cache-- faster than the rest because of memory key storage
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.DC.attributes.DiskPath=i:/dev/raf/3
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
 #new disk cache parameter.
 jcs.auxiliary.DC.attributes.maxKeySize=1000
+
+# Berkeley DB JE
+jcs.auxiliary.JE=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
+jcs.auxiliary.JE.attributes=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
+jcs.auxiliary.JE.attributes.DiskPath=target/test-sandbox/bdbje-disk-cache-conc
+
 
 # HSQL Disk Cache -- too slow as is
 jcs.auxiliary.HDC=org.apache.jcs.auxiliary.disk.hsql.HSQLCacheFactory

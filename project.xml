@@ -147,6 +147,10 @@
       <version>1.1</version>
       <jar>struts-1.1.jar</jar>
     </dependency>
+    <dependency>
+      <id>berkeleydb</id>
+      <version>1.5.0</version>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
@@ -158,9 +162,8 @@
         <include>**/TestJCS.java</include>
         <include>**/TestSimpleLoad.java</include>
         <include>**/TestDiskCache.java</include>
-<!--
         <include>**/TestDiskCacheConcurrent.java</include>
--->
+        <include>**/TestBDBJEDiskCacheConcurrent.java</include>
         <include>**/TestTCPLateralCache.java</include>
       </includes>
       <resources>
