@@ -31,26 +31,50 @@ import org.apache.commons.logging.LogFactory;
 
 import org.apache.jcs.engine.control.event.TestElementEventHandler;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.JCS;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
- * Allows the user to run common cache commands fromt he command line for a test
+ * Allows the user to run common cache commands from the command line for a test
  * cache.
+ *
+ * This also provide basic methods for use in unit tests.
  *
  */
 public class TestCacheAccess
 {
   private final static Log log =
-      LogFactory.getLog( TestCacheAccess.class );
+      LogFactory.getLog(TestCacheAccess.class);
 
-  static GroupCacheAccess cache_control = null;
+  private GroupCacheAccess cache_control = null;
+  private CompositeCacheManager cache_manager = null;
+  private static boolean isSysOut = false;
 
   /**
-   * Test harness.
+   * Construct and initialize the cachecontrol based on the config file.
    *
-   * @param args The command line arguments
+   * @param ccfFileName String
    */
-  public static void main( String[] args )
+  public TestCacheAccess(String ccfFileName)
+  {
+    try
+    {
+      cache_manager = CompositeCacheManager.getInstance(ccfFileName);
+      cache_control = GroupCacheAccess.getGroupAccess("testCache1");
+    }
+    catch (Exception e)
+    {
+      log.error(e);
+      p(e.toString());
+    }
+  }
+
+  /**
+   * This is the main loop called by the main method.
+   *
+   * @param ccfFileName String
+   */
+  public void runLoop()
   {
 
     try
@@ -58,156 +82,101 @@ public class TestCacheAccess
       try
       {
 
-        //CacheManager   cacheMgr = CacheManagerFactory.getInstance();
-        //CacheAttributes cattr = new CacheAttributes();
-        //cattr.setMaxObjects( 10 );
-        //cattr.setUseDisk( true );
-        //CacheAccess cache_control= CacheAccess.getAccess( "testCache" );
-        //cache_control= GroupCacheAccess.getGroupAccess( "testGroupCache" );
-
-        // start the local cache witht he appropriate props file
-        CompositeCacheManager.getInstance( args[0] );
-
-        cache_control = GroupCacheAccess.getGroupAccess( "testCache1" );
-
-        // not necessary if you don't set default element attributes
-//                try
-//                {
-//                    cache_control.defineGroup( "gr" );
-//                }
-//                catch ( CacheException ce )
-//                {
-//                    p( ce.toString() + " /n" + ce.getMessage() );
-//                }
-//                try
-//                {
-//                    cache_control.defineGroup( "gr2" );
-//                }
-//                catch ( CacheException ce )
-//                {
-//                    p( ce.toString() + " /n" + ce.getMessage() );
-//                }
-
-        GroupCacheAccess cache_control2 = GroupCacheAccess.getGroupAccess(
-            "testCache2" );
-        p( "cache_control = " + cache_control );
-
         // process user input till done
         boolean notDone = true;
         String message = null;
         // wait to dispose
-        BufferedReader br = new BufferedReader( new InputStreamReader( System.
-            in ) );
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.
+            in));
 
         help();
 
-        while ( notDone )
+        while (notDone)
         {
-          p( "enter command:" );
+          p("enter command:");
 
           message = br.readLine();
 
-          if ( message.startsWith( "help" ) )
+          if (message.startsWith("help"))
           {
             help();
           }
-//                    else
-//                        if ( message.startsWith( "removeLateralDirect" ) )
-//                    {
-//                        removeLateralDirect( message );
-//                    }
           else
-          if ( message.startsWith( "getAttributeNames" ) )
+          if (message.startsWith("getAttributeNames"))
           {
             long n_start = System.currentTimeMillis();
             String groupName = null;
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
                 groupName = t.trim();
               }
             }
-            getAttributeNames( groupName );
+            getAttributeNames(groupName);
             long n_end = System.currentTimeMillis();
-            p( "---got attrNames for " + groupName + " in " +
-               String.valueOf( n_end - n_start ) + " millis ---" );
+            p("---got attrNames for " + groupName + " in " +
+              String.valueOf(n_end - n_start) + " millis ---");
           }
           else
-          if ( message.startsWith( "shutDown" ) )
+          if (message.startsWith("shutDown"))
           {
             CompositeCacheManager.getInstance().shutDown();
             //cache_control.dispose();
             notDone = false;
-            System.exit( -1 );
+            System.exit( -1);
           }
           else
 
+          /////////////////////////////////////////////////////////////////////
           // get multiple from a region
-          if ( message.startsWith( "getm" ) )
+          if (message.startsWith("getm"))
           {
 
             int num = 0;
             boolean show = true;
 
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
                 try
                 {
-                  num = Integer.parseInt( t.trim() );
+                  num = Integer.parseInt(t.trim());
                 }
-                catch ( NumberFormatException nfe )
+                catch (NumberFormatException nfe)
                 {
-                  p( t + "not a number" );
+                  p(t + "not a number");
                 }
               }
               else
-              if ( tcnt == 3 )
+              if (tcnt == 3)
               {
-                show = new Boolean( t ).booleanValue();
+                show = new Boolean(t).booleanValue();
               }
             }
 
-            if ( tcnt < 2 )
+            if (tcnt < 2)
             {
-              p( "usage: get numbertoget show values[true|false]" );
+              p("usage: get numbertoget show values[true|false]");
             }
             else
             {
-
-              long n_start = System.currentTimeMillis();
-              for ( int n = 0; n < num; n++ )
-              {
-                try
-                {
-                  Object obj = cache_control.get( "key" + n );
-                  if ( show && obj != null )
-                  {
-                    p( obj.toString() );
-                  }
-                }
-                catch ( Exception e )
-                {
-                  log.error( e );
-                }
-              }
-              long n_end = System.currentTimeMillis();
-              p( "---got " + num + " in " + String.valueOf( n_end - n_start ) +
-                 " millis ---" );
+              getMultiple(num, show);
             }
           }
           else
-          if ( message.startsWith( "getg" ) )
+
+          /////////////////////////////////////////////////////////////////////
+          if (message.startsWith("getg"))
           {
 
             String key = null;
@@ -215,35 +184,35 @@ public class TestCacheAccess
             boolean show = true;
             boolean auto = true;
 
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
                 key = t.trim();
               }
               else
-              if ( tcnt == 3 )
+              if (tcnt == 3)
               {
                 group = t.trim();
               }
               else
-              if ( tcnt == 4 )
+              if (tcnt == 4)
               {
-                show = new Boolean( t ).booleanValue();
+                show = new Boolean(t).booleanValue();
               }
-              if ( tcnt == 5 )
+              if (tcnt == 5)
               {
-                auto = new Boolean( t ).booleanValue();
+                auto = new Boolean(t).booleanValue();
               }
             }
 
-            if ( tcnt < 2 )
+            if (tcnt < 2)
             {
-              p( "usage: get key show values[true|false]" );
+              p("usage: get key show values[true|false]");
             }
             else
             {
@@ -251,24 +220,26 @@ public class TestCacheAccess
               long n_start = System.currentTimeMillis();
               try
               {
-                Object obj = cache_control.getFromGroup( key,
-                    group );
-                if ( show && obj != null )
+                Object obj = cache_control.getFromGroup(key,
+                    group);
+                if (show && obj != null)
                 {
-                  p( obj.toString() );
+                  p(obj.toString());
                 }
               }
-              catch ( Exception e )
+              catch (Exception e)
               {
-                log.error( e );
+                log.error(e);
               }
               long n_end = System.currentTimeMillis();
-              p( "---got " + key + " from group " + group + " in " +
-                 String.valueOf( n_end - n_start ) + " millis ---" );
+              p("---got " + key + " from group " + group + " in " +
+                String.valueOf(n_end - n_start) + " millis ---");
             }
           }
           else
-          if ( message.startsWith( "getag" ) )
+
+          /////////////////////////////////////////////////////////////////////
+          if (message.startsWith("getag"))
           {
             // get auto from group
 
@@ -277,35 +248,35 @@ public class TestCacheAccess
             boolean show = true;
             boolean auto = true;
 
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
-                num = Integer.parseInt( t.trim() );
+                num = Integer.parseInt(t.trim());
               }
               else
-              if ( tcnt == 3 )
+              if (tcnt == 3)
               {
                 group = t.trim();
               }
               else
-              if ( tcnt == 4 )
+              if (tcnt == 4)
               {
-                show = new Boolean( t ).booleanValue();
+                show = new Boolean(t).booleanValue();
               }
-              if ( tcnt == 5 )
+              if (tcnt == 5)
               {
-                auto = new Boolean( t ).booleanValue();
+                auto = new Boolean(t).booleanValue();
               }
             }
 
-            if ( tcnt < 2 )
+            if (tcnt < 2)
             {
-              p( "usage: get key show values[true|false]" );
+              p("usage: get key show values[true|false]");
             }
             else
             {
@@ -313,52 +284,54 @@ public class TestCacheAccess
               long n_start = System.currentTimeMillis();
               try
               {
-                for ( int a = 0; a < num; a++ )
+                for (int a = 0; a < num; a++)
                 {
-                  Object obj = cache_control.getFromGroup( "keygr" + a, group );
-                  if ( show && obj != null )
+                  Object obj = cache_control.getFromGroup("keygr" + a, group);
+                  if (show && obj != null)
                   {
-                    p( obj.toString() );
+                    p(obj.toString());
                   }
                 }
               }
-              catch ( Exception e )
+              catch (Exception e)
               {
-                log.error( e );
+                log.error(e);
               }
               long n_end = System.currentTimeMillis();
-              p( "---got " + num + " from group " + group + " in " +
-                 String.valueOf( n_end - n_start ) + " millis ---" );
+              p("---got " + num + " from group " + group + " in " +
+                String.valueOf(n_end - n_start) + " millis ---");
             }
           }
           else
-          if ( message.startsWith( "get" ) )
+
+          /////////////////////////////////////////////////////////////////////
+          if (message.startsWith("get"))
           {
             // plain old get
 
             String key = null;
             boolean show = true;
 
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
                 key = t.trim();
               }
               else
-              if ( tcnt == 3 )
+              if (tcnt == 3)
               {
-                show = new Boolean( t ).booleanValue();
+                show = new Boolean(t).booleanValue();
               }
             }
 
-            if ( tcnt < 2 )
+            if (tcnt < 2)
             {
-              p( "usage: get key show values[true|false]" );
+              p("usage: get key show values[true|false]");
             }
             else
             {
@@ -366,460 +339,574 @@ public class TestCacheAccess
               long n_start = System.currentTimeMillis();
               try
               {
-                Object obj = cache_control.get( key );
-                if ( show && obj != null )
+                Object obj = cache_control.get(key);
+                if (show && obj != null)
                 {
-                  p( obj.toString() );
+                  p(obj.toString());
                 }
               }
-              catch ( Exception e )
+              catch (Exception e)
               {
-                log.error( e );
+                log.error(e);
               }
               long n_end = System.currentTimeMillis();
-              p( "---got " + key + " in " + String.valueOf( n_end - n_start ) +
-                 " millis ---" );
+              p("---got " + key + " in " + String.valueOf(n_end - n_start) +
+                " millis ---");
             }
           }
-          else if ( message.startsWith( "putg" ) )
+          else if (message.startsWith("putg"))
           {
 
             String group = null;
             String key = null;
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
                 key = t.trim();
               }
               else
-              if ( tcnt == 3 )
+              if (tcnt == 3)
               {
                 group = t.trim();
               }
             }
 
-            if ( tcnt < 3 )
+            if (tcnt < 3)
             {
-              p( "usage: putg key group" );
+              p("usage: putg key group");
             }
             else
             {
-//                            IElementAttributes attrp = new ElementAttributes();
-//                            attrp.setIsLateral(true);
-//                            attrp.setIsRemote(true);
               long n_start = System.currentTimeMillis();
-              cache_control.putInGroup( key,
-                                        group,
-                                        "data from putg ----asdfasfas-asfasfas-asfas in group " +
-                                        group );
+              cache_control.putInGroup(key,
+                                       group,
+                                       "data from putg ----asdfasfas-asfasfas-asfas in group " +
+                                       group);
               long n_end = System.currentTimeMillis();
-              p( "---put " + key + " in group " + group + " in " +
-                 String.valueOf( n_end - n_start ) + " millis ---" );
+              p("---put " + key + " in group " + group + " in " +
+                String.valueOf(n_end - n_start) + " millis ---");
             }
           }
           else
 
           // put automatically
-          if ( message.startsWith( "putag" ) )
+          if (message.startsWith("putag"))
           {
 
             String group = null;
             int num = 0;
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
-                num = Integer.parseInt( t.trim() );
+                num = Integer.parseInt(t.trim());
               }
               else
-              if ( tcnt == 3 )
+              if (tcnt == 3)
               {
                 group = t.trim();
               }
             }
 
-            if ( tcnt < 3 )
+            if (tcnt < 3)
             {
-              p( "usage: putag num group" );
+              p("usage: putag num group");
             }
             else
             {
-//                            IElementAttributes attrp = new ElementAttributes();
-//                            attrp.setIsLateral(true);
-//                            attrp.setIsRemote(true);
               long n_start = System.currentTimeMillis();
-              for ( int a = 0; a < num; a++ )
+              for (int a = 0; a < num; a++)
               {
-                cache_control.putInGroup( "keygr" + a,
-                                          group,
-                                          "data " + a +
-                    " from putag ----asdfasfas-asfasfas-asfas in group " +
-                                          group );
+                cache_control.putInGroup("keygr" + a,
+                                         group,
+                                         "data " + a +
+                                         " from putag ----asdfasfas-asfasfas-asfas in group " +
+                                         group);
               }
               long n_end = System.currentTimeMillis();
-              p( "---put " + num + " in group " + group + " in " +
-                 String.valueOf( n_end - n_start ) + " millis ---" );
+              p("---put " + num + " in group " + group + " in " +
+                String.valueOf(n_end - n_start) + " millis ---");
             }
           }
           else
-          if ( message.startsWith( "putm" ) )
+
+          /////////////////////////////////////////////////////////////////////
+          if (message.startsWith("putm"))
           {
-            String numS = message.substring( message.indexOf( " " ) + 1,
-                                             message.length() );
-            int num = Integer.parseInt( numS.trim() );
-            if ( numS == null )
+            String numS = message.substring(message.indexOf(" ") + 1,
+                                            message.length());
+            int num = Integer.parseInt(numS.trim());
+            if (numS == null)
             {
-              p( "usage: putm numbertoput" );
+              p("usage: putm numbertoput");
             }
             else
             {
-//                            IElementAttributes attrp = new ElementAttributes();
-              //attrp.setIsEternal(false);
-              //attrp.setMaxLifeSeconds(30);
-
-//                            attrp.setIsLateral(true);
-//                            attrp.setIsRemote(true);
-              long n_start = System.currentTimeMillis();
-              for ( int n = 0; n < num; n++ )
-              {
-                cache_control.put( "key" + n,
-                                   "data" + n + " put from ta = junk" );
-              }
-              long n_end = System.currentTimeMillis();
-              p( "---put " + num + " in " + String.valueOf( n_end - n_start ) +
-                 " millis ---" );
+              putMultiple(num);
             }
           }
           else
-          if ( message.startsWith( "pute" ) )
+
+          /////////////////////////////////////////////////////////////////////
+          if (message.startsWith("pute"))
           {
-            String numS = message.substring( message.indexOf( " " ) + 1,
-                                             message.length() );
-            int num = Integer.parseInt( numS.trim() );
-            if ( numS == null )
+            String numS = message.substring(message.indexOf(" ") + 1,
+                                            message.length());
+            int num = Integer.parseInt(numS.trim());
+            if (numS == null)
             {
-              p( "usage: putme numbertoput" );
+              p("usage: putme numbertoput");
             }
             else
             {
-//                            IElementAttributes attrp = new ElementAttributes();
-              //attrp.setIsEternal(false);
-              //attrp.setMaxLifeSeconds(30);
-
-//                            attrp.setIsLateral(true);
-//                            attrp.setIsRemote(true);
-
               long n_start = System.currentTimeMillis();
-              for ( int n = 0; n < num; n++ )
+              for (int n = 0; n < num; n++)
               {
                 IElementAttributes attrp = cache_control.getElementAttributes();
                 TestElementEventHandler hand = new TestElementEventHandler();
-                attrp.addElementEventHandler( hand );
-                cache_control.put( "key" + n,
-                                   "data" + n + " put from ta = junk", attrp );
+                attrp.addElementEventHandler(hand);
+                cache_control.put("key" + n,
+                                  "data" + n + " put from ta = junk", attrp);
               }
               long n_end = System.currentTimeMillis();
-              p( "---put " + num + " in " + String.valueOf( n_end - n_start ) +
-                 " millis ---" );
+              p("---put " + num + " in " + String.valueOf(n_end - n_start) +
+                " millis ---");
             }
           }
           else
-          if ( message.startsWith( "put" ) )
+          if (message.startsWith("put"))
           {
 
             String key = null;
             String val = null;
-            StringTokenizer toke = new StringTokenizer( message );
+            StringTokenizer toke = new StringTokenizer(message);
             int tcnt = 0;
-            while ( toke.hasMoreElements() )
+            while (toke.hasMoreElements())
             {
               tcnt++;
-              String t = ( String ) toke.nextElement();
-              if ( tcnt == 2 )
+              String t = (String) toke.nextElement();
+              if (tcnt == 2)
               {
                 key = t.trim();
               }
               else
-              if ( tcnt == 3 )
+              if (tcnt == 3)
               {
                 val = t.trim();
               }
             }
 
-            if ( tcnt < 3 )
+            if (tcnt < 3)
             {
-              p( "usage: put key val" );
+              p("usage: put key val");
             }
             else
             {
-//                            IElementAttributes attrp = new ElementAttributes();
-//                            attrp.setIsLateral(true);
-//                            attrp.setIsRemote(true);
+
               long n_start = System.currentTimeMillis();
-//                            cache_control.put( key, val, attrp.copy() );
-              cache_control.put( key, val );
+              cache_control.put(key, val);
               long n_end = System.currentTimeMillis();
-              p( "---put " + key + " | " + val + " in " +
-                 String.valueOf( n_end - n_start ) + " millis ---" );
+              p("---put " + key + " | " + val + " in " +
+                String.valueOf(n_end - n_start) + " millis ---");
             }
           }
-          else
-          if ( message.startsWith( "removeall" ) )
+          /////////////////////////////////////////////////////////////////////
+          if (message.startsWith("removem"))
           {
-            String key = message.substring( message.indexOf( " " ) + 1,
-                                            message.length() );
+            String numS = message.substring(message.indexOf(" ") + 1,
+                                            message.length());
+            int num = Integer.parseInt(numS.trim());
+            if (numS == null)
+            {
+              p("usage: removem numbertoremove");
+            }
+            else
+            {
+              removeMultiple(num);
+            }
+          }
+
+          else
+          if (message.startsWith("removeall"))
+          {
+            String key = message.substring(message.indexOf(" ") + 1,
+                                           message.length());
             cache_control.remove();
-            p( "removed all" );
+            p("removed all");
           }
           else
-          if ( message.startsWith( "remove" ) )
+          if (message.startsWith("remove"))
           {
-            String key = message.substring( message.indexOf( " " ) + 1,
-                                            message.length() );
-            cache_control.remove( key );
-            p( "removed " + key );
+            String key = message.substring(message.indexOf(" ") + 1,
+                                           message.length());
+            cache_control.remove(key);
+            p("removed " + key);
           }
           else
-          if ( message.startsWith( "deattr" ) )
+          if (message.startsWith("deattr"))
           {
             IElementAttributes ae = cache_control.getElementAttributes();
-            p( "Default IElementAttributes " + ae );
+            p("Default IElementAttributes " + ae);
           }
           else
-          if ( message.startsWith( "cloneattr" ) )
+          if (message.startsWith("cloneattr"))
           {
-            String numS = message.substring( message.indexOf( " " ) + 1,
-                                             message.length() );
-            int num = Integer.parseInt( numS.trim() );
-            if ( numS == null )
+            String numS = message.substring(message.indexOf(" ") + 1,
+                                            message.length());
+            int num = Integer.parseInt(numS.trim());
+            if (numS == null)
             {
-              p( "usage: put numbertoput" );
+              p("usage: put numbertoput");
             }
             else
             {
               IElementAttributes attrp = new ElementAttributes();
               long n_start = System.currentTimeMillis();
-              for ( int n = 0; n < num; n++ )
+              for (int n = 0; n < num; n++)
               {
                 attrp.copy();
               }
               long n_end = System.currentTimeMillis();
-              p( "---cloned attr " + num + " in " +
-                 String.valueOf( n_end - n_start ) + " millis ---" );
+              p("---cloned attr " + num + " in " +
+                String.valueOf(n_end - n_start) + " millis ---");
             }
           }
           else
-          if ( message.startsWith( "switch" ) )
+          if (message.startsWith("switch"))
           {
-            String numS = message.substring( message.indexOf( " " ) + 1,
-                                             message.length() );
+            String numS = message.substring(message.indexOf(" ") + 1,
+                                            message.length());
             try
             {
-              int num = Integer.parseInt( numS.trim() );
+              int num = Integer.parseInt(numS.trim());
             }
-            catch ( Exception e )
+            catch (Exception e)
             {
-              p( "usage: switch number" );
-              p( "  1 == testCache1" );
+              p("usage: switch number");
+              p("  1 == testCache1");
             }
-            if ( numS == null )
+            if (numS == null)
             {
-              p( "usage: switch number" );
-              p( "  1 == testCache1" );
+              p("usage: switch number");
+              p("  1 == testCache1");
             }
             else
             {
-              cache_control = GroupCacheAccess.getGroupAccess( "testCache" +
-                  numS );
-              p( "switched to cache = " + "testCache" + numS );
-              p( cache_control.toString() );
+              setRegion("testCache" + numS);
+              p("switched to cache = " + "testCache" + numS);
+              p(cache_control.toString());
             }
           }
           else
-          if ( message.startsWith( "stats" ) )
+          if (message.startsWith("stats"))
           {
-             CompositeCache cache = CompositeCacheManager.getInstance().getCache(cache_control.getCacheAttributes().getCacheName());
-             p( cache.getMemoryCache().getStats() );
-             p( "HitCountRam = " + cache.getHitCountRam() );
-             p( "HitCountAux = " + cache.getHitCountAux() );
-           }
-           else
-           if ( message.startsWith( "gc" ) )
-           {
-             System.gc();
-              p( "Called system.gc()");
+            CompositeCache cache = CompositeCacheManager.getInstance().getCache(
+                cache_control.getCacheAttributes().getCacheName());
+            p(cache.getMemoryCache().getStats());
+            p("HitCountRam = " + cache.getHitCountRam());
+            p("HitCountAux = " + cache.getHitCountAux());
+          }
+          else
+          if (message.startsWith("gc"))
+          {
+            System.gc();
+            p("Called system.gc()");
+          }
+          else
+          if (message.startsWith("random"))
+          {
+            String numS = message.substring(message.indexOf(" ") + 1,
+                                            message.length());
+            //p( numS );
+
+            String numS2 = numS.substring(0, numS.indexOf(" "));
+            //p( numS2 );
+
+            String numS3 = numS.substring(numS.indexOf(" ") + 1,
+                                          numS.length());
+            //p( numS3 );
+
+            int range = 0;
+            int numOps = 0;
+            try
+            {
+              range = Integer.parseInt(numS2.trim());
+              numOps = Integer.parseInt(numS3.trim());
             }
-           else
-           if ( message.startsWith( "random" ) )
-           {
-             String numS = message.substring( message.indexOf( " " ) + 1,
-                                              message.length() );
-             //p( numS );
-
-             String numS2 = numS.substring( 0, numS.indexOf( " " ) );
-             //p( numS2 );
-
-             String numS3 = numS.substring( numS.indexOf( " " ) + 1,
-                                            numS.length() );
-             //p( numS3 );
-
-             int range = 0;
-             int numOps = 0;
-             try
-             {
-               range = Integer.parseInt( numS2.trim() );
-               numOps = Integer.parseInt( numS3.trim() );
-             }
-             catch ( Exception e )
-             {
-               p( "usage: random range numOps" );
-               p( "ex.  random 100 1000" );
-             }
-             if ( numS == null )
-             {
-               p( "usage: random range numOps" );
-               p( "ex.  random 100 1000" );
-             }
-             else
-             {
-                random(range, numOps);
-             }
-           }
+            catch (Exception e)
+            {
+              p("usage: random range numOps");
+              p("ex.  random 100 1000");
+            }
+            if (numS == null)
+            {
+              p("usage: random range numOps");
+              p("ex.  random 100 1000");
+            }
+            else
+            {
+              random(range, numOps, true);
+            }
+          }
         }
       }
-      catch ( Exception e )
+      catch (Exception e)
       {
-        p( e.toString() );
-        e.printStackTrace( System.out );
+        p(e.toString());
+        e.printStackTrace(System.out);
       }
 
     }
-    catch ( Exception e )
+    catch (Exception e)
     {
-      p( e.toString() );
-      e.printStackTrace( System.out );
+      p(e.toString());
+      e.printStackTrace(System.out);
     }
 
+  } // end runLoop
+
+  /**
+   * Test harness.
+   *
+   * @param args The command line arguments
+   */
+  public static void main(String[] args)
+  {
+    isSysOut = true;
+    String ccfFileName = args[0];
+    TestCacheAccess tca = new TestCacheAccess(ccfFileName);
+    tca.runLoop();
   }
 
   // end main
+/////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets multiple items from the cache with keys of the form key1, key2, key3
+   * up to key[num].
+   *
+   * @param num int
+   */
+  public void getMultiple(int num)
+  {
+    getMultiple(num, false);
+  }
+
+  public void getMultiple(int num, boolean show)
+  {
+    long n_start = System.currentTimeMillis();
+    for (int n = 0; n < num; n++)
+    {
+      try
+      {
+        Object obj = cache_control.get("key" + n);
+        if (show && obj != null)
+        {
+          p(obj.toString());
+        }
+      }
+      catch (Exception e)
+      {
+        log.error(e);
+      }
+    }
+    long n_end = System.currentTimeMillis();
+    p("---got " + num + " in " + String.valueOf(n_end - n_start) +
+      " millis ---");
+  }
+
+  /**
+   * Puts multiple items into the cache.
+   * @param num int
+   */
+  public void putMultiple(int num)
+  {
+    try
+    {
+      long n_start = System.currentTimeMillis();
+      for (int n = 0; n < num; n++)
+      {
+        cache_control.put("key" + n,
+                          "data" + n + " put from ta = junk");
+      }
+      long n_end = System.currentTimeMillis();
+      p("---put " + num + " in " + String.valueOf(n_end - n_start) +
+        " millis ---");
+    }
+    catch (Exception e)
+    {
+      log.error(e);
+    }
+  }
 
 
-  public static void random( int range, int numOps ) {
-    boolean show = true;
-    try {
-      for ( int i = 0; i < numOps; i++ ) {
+  /**
+   * Removes multiple items from the cache.
+   * @param num int
+   */
+  public void removeMultiple(int num)
+  {
+    try
+    {
+      long n_start = System.currentTimeMillis();
+      for (int n = 0; n < num; n++)
+      {
+        cache_control.remove("key" + n);
+      }
+      long n_end = System.currentTimeMillis();
+      p("---removed " + num + " in " + String.valueOf(n_end - n_start) +
+        " millis ---");
+    }
+    catch (Exception e)
+    {
+      log.error(e);
+    }
+  }
+
+  /**
+   * The random method performs numOps number of operations.  The operations
+   * will be a mix of puts, gets, and removes.   The key range will be from
+   * 0 to range.
+   *
+   * @param range int  The end of the key range.
+   * @param numOps int The number of operations to perform
+   */
+  public void random(int range, int numOps)
+  {
+    random( range, numOps, false );
+  }
+  public void random(int range, int numOps, boolean show)
+  {
+    try
+    {
+      for (int i = 0; i < numOps; i++)
+      {
         Random ran = new Random(i);
         int n = ran.nextInt(4);
         int kn = ran.nextInt(range);
         String key = "key" + kn;
-        if ( n == 1 ) {
-          cache_control.put( key, "data" + i + " junk asdfffffffadfasdfasf " + kn + ":" + n );
+        if (n == 1)
+        {
+          cache_control.put(key,
+                            "data" + i + " junk asdfffffffadfasdfasf " + kn +
+                            ":" + n);
           p("put " + key);
-        } else if ( n == 2 ) {
+        }
+        else if (n == 2)
+        {
           cache_control.remove(key);
           p("removed " + key);
-        } else {
+        }
+        else
+        {
           // slightly greater chance of get
-          Object obj = cache_control.get( key );
-           if ( show && obj != null )
-           {
-             p( obj.toString() );
-           }
+          Object obj = cache_control.get(key);
+          if (show && obj != null)
+          {
+            p(obj.toString());
+          }
         }
       }
-      p( "Finished random cycle of " + numOps );
+      p("Finished random cycle of " + numOps);
     }
-    catch ( Exception e )
+    catch (Exception e)
     {
-      p( e.toString() );
-      e.printStackTrace( System.out );
+      p(e.toString());
+      e.printStackTrace(System.out);
     }
   }
 
-
-  /** Description of the Method */
-  public static void p( String s )
+  /**
+   * Sets the region to be used by test methods.
+   *
+   * @param name String -- Name of region
+   */
+  public void setRegion(String name)
   {
-    System.out.println( s );
+    try
+    {
+      cache_control = JCS.getInstance(name);
+    }
+    catch (Exception e)
+    {
+      p(e.toString());
+      e.printStackTrace(System.out);
+    }
+
   }
 
-  /** Description of the Method */
+  /////////////////////////////////////////////////////////////////////////////
+  /**
+   * The tester will print to the console if isSysOut is true, else it will log.
+   * It is false by default.  When run via the main method, isSysOut will be set
+   * to true
+   *
+   * @param s String to print or log
+   */
+  public static void p(String s)
+  {
+    if (isSysOut)
+    {
+      System.out.println(s);
+    }
+    else
+    {
+      if (log.isDebugEnabled())
+      {
+        log.debug(s);
+      }
+    }
+  }
+
+  /**
+   * Displays usage information for command line testing.
+   */
   public static void help()
   {
-
-    p( "\n\n\n\n" );
-    p( "type 'shutDown' to shutdown the cache" );
+    p("\n\n\n\n");
+    p("type 'shutDown' to shutdown the cache");
     p(
-        "type 'getm num show[false|true]' to get num automatically from a region" );
-    p( "type 'putm num' to put num automatically to a region" );
-    p( "type 'removeall' to remove all items in a region" );
-    p( "type 'remove key' to remove" );
-    p( "type 'get key show' to get" );
-    p( "type 'getg key group show' to get" );
-    p( "type 'getag num group show' to get automatically from a group" );
-    p( "type 'getAttributeNames group' to get a list og the group elements" );
-    p( "type 'putg key group val' to put" );
-    p( "type 'putag num group' to put automatically from a group" );
-    p( "type 'put key val' to put" );
-    p( "type 'stats' to get stats" );
-    p( "type 'deattr' to get teh default element attributes" );
-    p( "type 'cloneattr num' to clone attr" );
-    p( "type 'random range numOps' to put, get, and remove randomly" );
-//        p( "type 'removeLateralDirect key' to remove lateral" );
-    p( "type 'switch number' to switch to testCache[number], 1 == testCache1" );
-    p( "type 'help' for commands" );
+        "type 'getm num show[false|true]' to get num automatically from a region");
+    p("type 'putm num' to put num automatically to a region");
+    p("type 'removeall' to remove all items in a region");
+    p("type 'remove key' to remove");
+    p("type 'removem num' to remove a number automatically");
+    p("type 'get key show' to get");
+    p("type 'getg key group show' to get");
+    p("type 'getag num group show' to get automatically from a group");
+    p("type 'getAttributeNames group' to get a list og the group elements");
+    p("type 'putg key group val' to put");
+    p("type 'putag num group' to put automatically from a group");
+    p("type 'put key val' to put");
+    p("type 'stats' to get stats");
+    p("type 'deattr' to get teh default element attributes");
+    p("type 'cloneattr num' to clone attr");
+    p("type 'random range numOps' to put, get, and remove randomly");
+    p("type 'switch number' to switch to testCache[number], 1 == testCache1");
+    p("type 'help' for commands");
 
   }
 
-//    ////////////////////////////////////////
-//    /**
-//     *  Description of the Method
-//     *
-//     */
-//    public static void removeLateralDirect( String message )
-//    {
-//        String key = null;
-//        StringTokenizer toke = new StringTokenizer( message );
-//        int tcnt = 0;
-//        while ( toke.hasMoreElements() )
-//        {
-//            tcnt++;
-//            String t = ( String ) toke.nextElement();
-//            if ( tcnt == 2 )
-//            {
-//                key = t.trim();
-//            }
-//        }
-//        if ( tcnt < 2 )
-//        {
-//            key = "ALL";
-//        }
-//        cache_control.removeLateralDirect( key );
-//        p( "called delete multicast for key " + key );
-//    }
-
-  // end help
-
-  /** Gets the attributeNames attribute of the TestCacheAccess class */
-  static void getAttributeNames( String groupName )
+  /**
+   * Gets the attributeNames attribute of the TestCacheAccess class
+   */
+  public void getAttributeNames(String groupName)
   {
-    Iterator iter = cache_control.getGroupKeys( groupName ).iterator();
+    Iterator iter = cache_control.getGroupKeys(groupName).iterator();
 
-    while ( iter.hasNext() )
+    while (iter.hasNext())
     {
-      p( "=" + ( String ) iter.next() );
+      p("=" + (String) iter.next());
     }
   }
-}
 
-// end test
+} // end class
