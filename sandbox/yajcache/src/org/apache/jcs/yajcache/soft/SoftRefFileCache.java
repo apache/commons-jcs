@@ -35,6 +35,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import org.apache.jcs.yajcache.beans.CacheChangeSupport;
+import org.apache.jcs.yajcache.beans.ICacheChangeListener;
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.config.PerCacheConfig;
 import org.apache.jcs.yajcache.beans.ICacheChangeListener;
@@ -49,11 +51,10 @@ import org.apache.jcs.yajcache.file.CacheFileDAO;
 import org.apache.jcs.yajcache.file.CacheFileUtils;
 import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
 import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
+import org.apache.jcs.yajcache.util.CollectionUtils;
 import org.apache.jcs.yajcache.util.EqualsUtils;
 import org.apache.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
 import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
-import org.apache.jcs.yajcache.beans.CacheChangeSupport;
-import org.apache.jcs.yajcache.beans.ICacheChangeListener;
 
 
 /**
@@ -110,7 +111,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             @NonNullable String name, @NonNullable Class<V> valueType,
             int initialCapacity,float loadFactor, int concurrencyLevel) 
     {
-        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity, loadFactor, concurrencyLevel);
+        this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
         this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
@@ -120,7 +121,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             @NonNullable String name, @NonNullable Class<V> valueType,
             int initialCapacity) 
     {
-        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity);
+        this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity);
         this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
@@ -130,7 +131,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     public SoftRefFileCache(@NonNullable String name,
             @NonNullable Class<V> valueType) 
     {
-        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>();
+        this.map = CollectionUtils.inst.newConcurrentHashMap();
         this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
