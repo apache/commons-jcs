@@ -66,6 +66,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.utils.locking.ReadWriteLock;
+import org.apache.jcs.utils.locking.ReadWriteLockManager;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -115,6 +116,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * and writes to the underlying storage mechansism.
      */
     protected ReadWriteLock lock = new ReadWriteLock();
+
+    /** Manages locking for purgatory item manipulation. */
+    protected ReadWriteLockManager locker = new ReadWriteLockManager();
 
     /**
      * Indicates whether the cache is 'alive', defined as having been
@@ -256,11 +260,21 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     {
         // Remove element from purgatory if it is there
 
-        purgatory.remove( key );
 
+        writeLock( this.cacheName + key.toString() );
+        try
+        {
+
+          purgatory.remove( key );
+
+          doRemove( key );
+
+        }
+        finally
+        {
+          locker.done( this.cacheName + key.toString() );
+        }
         // Remove from persistent store immediately
-
-        doRemove( key );
 
         return false;
     }
@@ -330,6 +344,32 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         return DISK_CACHE;
     }
 
+
+    /**
+     * Internally used write lock for purgatory item modification.
+     *
+     * @param id What name to lock on.
+     */
+    private void writeLock( String id )
+    {
+        try
+        {
+            locker.writeLock( id );
+        }
+        catch ( InterruptedException e )
+        {
+            // See note in readLock()
+
+            log.error( "Was interrupted while acquiring read lock", e );
+        }
+        catch ( Exception e )
+        {
+
+            log.error(  e );
+        }
+    }
+
+
     /**
      * Cache that implements the CacheListener interface, and calls appropriate
      * methods in its parent class.
@@ -379,9 +419,19 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                     // If the element has already been removed from purgatory
                     // do nothing
 
-                    if ( ! purgatory.contains( pe ) )
+                    writeLock( getCacheName() + element.getKey().toString() );
+                    try
                     {
-                        return;
+
+                      if ( ! purgatory.contains( pe ) )
+                      {
+                          return;
+                      }
+
+                    }
+                    finally
+                    {
+                      locker.done( getCacheName() + element.getKey().toString() );
                     }
 
                     element = pe.getCacheElement();
@@ -445,6 +495,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
     }
 
+
     // ---------------------- subclasses should implement the following methods
 
     /**
@@ -477,5 +528,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * setting alive to false does NOT need to be done by this method.
      */
     protected abstract void doDispose();
+
+
 }
 
