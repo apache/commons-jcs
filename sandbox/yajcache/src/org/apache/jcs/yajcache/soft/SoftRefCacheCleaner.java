@@ -20,12 +20,14 @@ import java.util.Map;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
 /**
  *
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 enum SoftRefCacheCleaner {
     inst;
     private static final boolean debug = true;
@@ -38,14 +40,14 @@ enum SoftRefCacheCleaner {
     private volatile int countDataRaceAndRemovedByOthers;
     private volatile int countBye;
     
-    <V> void cleanupKey(@NonNullable Map<String, KeyedSoftRef<V>> map, @NonNullable String key) 
+    <V> void cleanupKey(@NonNullable Map<String, KeyedSoftReference<V>> map, @NonNullable String key) 
     {
         V val = null;
         // already garbage collected.  So try to clean up the key.
         if (debug)
             log.debug("Try to clean up the key");
         this.countTryKeyClean++;
-        KeyedSoftRef<V> oldRef = map.remove(key);
+        KeyedSoftReference<V> oldRef = map.remove(key);
         // If oldRef is null, the key has just been 
         // cleaned up by another thread.
         if (oldRef == null) {
