@@ -126,7 +126,7 @@ public class TestDiskCacheConcurrent extends TestCase
      */
     public void setUp()
     {
-        JCS.setConfigFilename( "/TestDiskCache.ccf" );
+        JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
     }
 
 //    /**
