@@ -18,6 +18,10 @@
 package org.apache.jcs.yajcache.file;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.jcs.yajcache.config.YajCacheConfig;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
@@ -47,7 +51,7 @@ public enum CacheFileUtils {
      * Removes the file directory for the specified cache,
      * including all files under the directory.
      */
-    boolean rmCacheDir(@NonNullable String cacheName) {
+    public boolean rmCacheDir(@NonNullable String cacheName) {
         File dir = this.getCacheDir(cacheName);
         
         if (!dir.exists())
@@ -56,6 +60,30 @@ public enum CacheFileUtils {
             f.delete();
         }
         return dir.delete();
+    }
+    public boolean isCacheDirEmpty(@NonNullable String cacheName) {
+        File dir = this.getCacheDir(cacheName);
+        
+        if (!dir.exists())
+            return true;
+        String[] list = dir.list();
+        return list == null || list.length == 0;
+    }
+    public int getCacheDirSize(@NonNullable String cacheName) {
+        File dir = this.getCacheDir(cacheName);
+        
+        if (!dir.exists())
+            return 0;
+        String[] list = dir.list();
+        return list == null ? 0 : list.length;
+    }
+    public String[] getCacheDirList(@NonNullable String cacheName) 
+    {
+        File dir = this.getCacheDir(cacheName);
+        
+        if (!dir.exists())
+            return null;
+        return dir.list();
     }
     /**
      * Returns the file directory for the specified cache.
