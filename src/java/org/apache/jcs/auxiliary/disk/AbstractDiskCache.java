@@ -379,10 +379,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         {
             locker.done( id );
         }
-        catch ( Throwable e )
+        catch ( IllegalStateException e )
         {
-
-            log.error( e );
+            log.warn( "Problem releasing lock", e );
         }
     }
 
@@ -395,7 +394,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         private byte listenerId = 0;
 
         /**
-         * @see org.apache.jcs.engine.CacheListener#getListenerId
+         * @see ICacheListener#getListenerId
          */
         public byte getListenerId()
             throws IOException
@@ -473,7 +472,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         * @see org.apache.jcs.engine.CacheListener#handleRemove
+         * @see ICacheListener#handleRemove
          */
         public void handleRemove( String cacheName, Serializable key )
             throws IOException
@@ -488,7 +487,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         * @see org.apache.jcs.engine.CacheListener#handleRemoveAll
+         * @see ICacheListener#handleRemoveAll
          */
         public void handleRemoveAll( String cacheName )
             throws IOException
@@ -500,7 +499,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         * @see org.apache.jcs.engine.CacheListener#handleDispose
+         * @see ICacheListener#handleDispose
          */
         public void handleDispose( String cacheName )
             throws IOException
