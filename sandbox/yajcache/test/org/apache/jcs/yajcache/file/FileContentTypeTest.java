@@ -20,7 +20,7 @@ import junit.framework.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *
@@ -44,7 +44,7 @@ public class FileContentTypeTest extends TestCase {
         log.debug("test fromByte with unknown type");
         try {
             CacheFileContentType.fromByte((byte)99);
-            fail("Should never get here for unknown fileContentType");
+            assert false;
         } catch(IllegalArgumentException ex) {
         }
     }
