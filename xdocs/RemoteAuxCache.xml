@@ -4,7 +4,7 @@
   <properties>
     <title>Remote Auxiliary Cache Client / Server</title>
     <author email="pete@kazmier.com">Pete Kazmier</author>
-    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+    <author email="ASmuts@apache.org">Aaron Smuts</author>
   </properties>
 
   <body>
@@ -13,7 +13,7 @@
         The Remote Auxiliary Cache is an optional plug in for JCS.  It
         is intended for use in multi-tiered systems to maintain cache
         consistency.  It uses a highly reliable RMI client server
-        framework that currently allows for up to 256 clients.  Using a
+        framework that currently allows for any number of clients.  Using a
         listener id allows multiple clients running on the same machine
         to connect to the remote cache server.  All cache regions on one
         client share a listener per auxiliary, but register separately.
@@ -157,25 +157,26 @@ registry.host=localhost
 registry.port=1102
 # call back port to local caches.
 remote.cache.service.port=1102
-# tomcat config
-remote.tomcat.on=false
-remote.tomcat.xml=
-    g:/dev/jakarta-turbine-stratum/bin/conf/remote.tomcat.xml
 # cluster setting
 remote.cluster.LocalClusterConsistency=true
         ]]></source>
         <p>
-          The cluster configuration section is currently considered
-          experimental.  The <code>LocalClusterConsistency</code>
+          Remote servers can be chainied (or clustered).  This allows
+          gets from local caches to be distributed between multiple 
+          remote servers.  Since gets are the most common operation for
+          caches, remote server chaining can help scale a caching solution.
+	</p>
+	<p>
+	  The <code>LocalClusterConsistency</code>
           setting tells the remote cache server if it should broadcast
           updates received from other cluster servers to registered
           local caches.
         </p>
         <p>
-          To use experimental clustering, the remote cache will have to
+          To use remote server clustering, the remote cache will have to
           be told what regions to cluster.  The configuration below will
           cluster all non-preconfigured regions with
-          <code>RCluster1</code>.
+          <code>RCluster1</code>.  
         </p>
         <source><![CDATA[
 # sets the default aux value for any non configured caches
@@ -193,24 +194,54 @@ jcs.auxiliary.RCluster1.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
 jcs.auxiliary.RCluster1.attributes.GetOnly=false
         ]]></source>
-      </subsection>
-      <subsection name="TODO">
-        <p>
-          The clustering behavior needs to be better defined.  We may
-          want to implement clustering with lateral caches between
-          remotes rather than remote caches talking to each other.
+	<p>  
+	  RCluster1 is configured to talk to
+          a remote server at <code>localhost:1103</code>.  Additional
+          servers can be added in a comma separated list.
         </p>
         <p>
-          Though small, the remote server configuration could be a bit
-          cleaner.
+          If we startup another remote server listening to port 1103, 
+          (ServerB) then we can have that server talk to the server we have
+          been configuring, listening at 1102 (ServerA).  This would allow us 
+          to set some local caches to talk to ServerA and some to talk 
+          to ServerB.  The two remote servers will broadcast
+          all puts and removes between themselves, and the get requests
+          from local caches could be divided.  The local caches do not
+          need to know anything about the server chaining configuration,
+          unless you want to use a standby, or failover server.
         </p>
         <p>
-          The embedded Tomcat is not workable right now.
-        </p>
+	  We could also use ServerB as a hot standby.  This can be done in
+	  two ways.  You could have all local caches point to ServerA as
+	  a primary and ServerB as a secondary.  Alternatively, you can 
+	  set ServerA as the primary for some local caches and ServerB for 
+	  the primary for some others.  
+	</p>
         <p>
-          Parameters need to be added for running the XML-RPC server as
-          well.
-        </p>
+	  The local cache configuration below uses ServerA as a primary and
+	  ServerB as a backup.  More than one backup can be defined, but
+	  only one will be used at a time.  If the cache is connected
+	  to any server except the primary, it will try to restore the
+	  primary connection indefinitely, at 20 second intervals.
+	</p>
+	        <source><![CDATA[
+	# Remote RMI Cache set up to failover
+	jcs.auxiliary.RFailover=
+	    org.apache.jcs.auxiliary.remote.RemoteCacheFactory
+	jcs.auxiliary.RFailover.attributes=
+	    org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
+	jcs.auxiliary.RFailover.attributes.FailoverServers=
+	    localhost:1102,localhost:1103
+	jcs.auxiliary.RC.attributes.RemoveUponRemotePut=true
+	jcs.auxiliary.RFailover.attributes.GetOnly=false
+	        ]]></source>
+        <p>
+	  Note: Since, as of now, the remote cluster servers do not attempt to get items 
+	  from each other, when the primary server comes up, if it does not
+	  have a disk store, it will be cold.  When clustered gets are enable
+	  or when we have a load all on startup option, this problem
+	  will be solved.
+	</p>
       </subsection>
     </section>
   </body>

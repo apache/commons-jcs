@@ -38,10 +38,10 @@
         <li>Fully configurable runtime parameters</li>
         <li>Remote synchronization</li>
         <li>Remote store recovery</li>
-        <li>Non-blocking "zombie" (balking fa ade) pattern</li>
+        <li>Non-blocking "zombie" (balking facade) pattern</li>
         <li>Optional lateral distribution of elements via HTTP, TCP, or
           UDP</li>
-        <li>Remote server clustering and failover (almost complete)</li>
+        <li>Remote server chaining (or clustering) and failover</li>
       </ul>
       <p> 
         These features provide a framework with no point of failure,
