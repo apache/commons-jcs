@@ -105,7 +105,7 @@ public class CacheAccess implements ICacheAccess
      *
      * @param cacheControl The cache which the created instance accesses
      */
-    protected CacheAccess( CompositeCache cacheControl )
+    public CacheAccess( CompositeCache cacheControl )
     {
         this.cacheControl = cacheControl;
     }

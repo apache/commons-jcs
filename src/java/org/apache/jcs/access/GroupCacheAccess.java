@@ -92,7 +92,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      *
      * @param cacheControl
      */
-    protected GroupCacheAccess( CompositeCache cacheControl )
+    public GroupCacheAccess( CompositeCache cacheControl )
     {
         super( cacheControl );
     }
