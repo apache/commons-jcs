@@ -70,7 +70,6 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.control.CacheHub;
@@ -96,7 +95,7 @@ public class LateralTCPListener
     /** Map of available instances, keyed by port */
     protected final static HashMap instances = new HashMap();
 
-    // ---------- instance variables
+    // ----------------------------------------------------- instance variables
 
     /** The socket listener */
     private ListenerThread receiver;
@@ -352,7 +351,6 @@ public class LateralTCPListener
             try
             {
                 ois = new ObjectInputStream( socket.getInputStream() );
-                ;
             }
             catch ( Exception e )
             {

@@ -27,6 +27,12 @@
 
   </target>
 
+  <target name="jcs:copy-classpath-vm">
+    <copy todir="${maven.build.dest}">
+        <fileset dir="src/java" includes="**/*.vm"/>
+    </copy>
+  </target>
+
   <!-- The targets people are used to -->
 
   <target name="clean" depends="maven:compile"/>

@@ -94,7 +94,7 @@ public class LateralCacheServletReciever extends HttpServlet
             try
             {
                 // need to set as from lateral
-                cache.add( item );
+                cache.localUpdate( item );
             }
             catch ( Exception e )
             {

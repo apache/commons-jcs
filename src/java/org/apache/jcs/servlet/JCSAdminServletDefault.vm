@@ -1,0 +1,27 @@
+<h1> Cache Regions </h1>
+
+<p>These are the regions which are currently defined in the cache. 'Items' and
+'Bytes' refer to the elements currently in memory (not spooled). You can clear
+all items for a region by selecting 'Remove all' next to the desired region
+below. You can also <a href="?action=clearAllRegions">Clear all regions</a>
+which empties the entire cache.</p>
+
+<table border="1" cellpadding="5" >
+    <tr>
+        <th> Cache Name </th>
+        <th> Items </th>
+        <th> Bytes </th>
+        <th> Status </th>
+    </tr>
+
+    #foreach ( $record in $cacheInfoRecords )
+        <tr>
+            <td> $record.Name </td>
+            <td> $record.ItemCount </td>
+            <td> $record.ByteCount </td>
+            <td> $record.Status </td>
+            <td> <a href="?action=clearRegion&cacheName=${record.Name}"> Remove all </a> </td>
+        </tr>
+    #end
+
+</table>
