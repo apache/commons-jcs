@@ -17,6 +17,8 @@ Features
 * no synchronized method
 * minimal synchronization done via distributed (ie keyed) ReadWrite locks
 with zero synchronization
+* all unused ReadWrite locks are automatically removed by GC 
+via WeakReference
 * the cache instance itself (ICache or ICacheSafe) can be used 
 anywhere a map instance can be used
 * optional ICacheSafe to provide thread-safe objects 
