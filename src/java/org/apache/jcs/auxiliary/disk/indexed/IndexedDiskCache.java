@@ -68,6 +68,7 @@ import org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.utils.locking.ReadWriteLock;
 
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory
@@ -89,6 +90,12 @@ public class IndexedDiskCache extends AbstractDiskCache
     private File rafDir;
 
     IndexedDiskCacheAttributes cattr;
+
+    /**
+     * Each instance of a Disk cache should use this lock to synchronize reads
+     * and writes to the underlying storage mechansism.
+     */
+    protected ReadWriteLock storageLock = new ReadWriteLock();
 
     /**
      * Constructor for the DiskCache object
@@ -162,7 +169,7 @@ public class IndexedDiskCache extends AbstractDiskCache
     private void loadKeys()
         throws InterruptedException
     {
-        lock.writeLock();
+        storageLock.writeLock();
 
         try
         {
@@ -185,7 +192,7 @@ public class IndexedDiskCache extends AbstractDiskCache
         }
         finally
         {
-            lock.done();
+            storageLock.done();
         }
     }
 
@@ -202,7 +209,7 @@ public class IndexedDiskCache extends AbstractDiskCache
                     ", key count: " + keyHash.size() );
             }
 
-            lock.writeLock();
+            storageLock.writeLock();
 
             try
             {
@@ -215,7 +222,7 @@ public class IndexedDiskCache extends AbstractDiskCache
             }
             finally
             {
-                lock.done();
+                storageLock.done();
             }
         }
         catch ( Exception e )
@@ -245,7 +252,7 @@ public class IndexedDiskCache extends AbstractDiskCache
             ded.init( dataFile.length(), data );
 
             // make sure this only locks for one particular cache region
-            lock.writeLock();
+            storageLock.writeLock();
 
             try
             {
@@ -269,7 +276,7 @@ public class IndexedDiskCache extends AbstractDiskCache
             }
             finally
             {
-                lock.done();
+                storageLock.done();
             }
             if ( log.isDebugEnabled() )
             {
@@ -305,7 +312,7 @@ public class IndexedDiskCache extends AbstractDiskCache
 
         try
         {
-            lock.readLock();
+            storageLock.readLock();
 
             if ( !alive )
             {
@@ -325,7 +332,7 @@ public class IndexedDiskCache extends AbstractDiskCache
         }
         finally
         {
-            lock.done();
+            storageLock.done();
         }
 
         return object;
@@ -363,7 +370,7 @@ public class IndexedDiskCache extends AbstractDiskCache
     {
         try
         {
-            lock.writeLock();
+            storageLock.writeLock();
 
             if ( key instanceof String
                  && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
@@ -401,7 +408,7 @@ public class IndexedDiskCache extends AbstractDiskCache
         }
         finally
         {
-            lock.done();
+            storageLock.done();
         }
 
         return false;
@@ -436,7 +443,7 @@ public class IndexedDiskCache extends AbstractDiskCache
 
         try
         {
-            lock.writeLock();
+            storageLock.writeLock();
 
             dataFile.close();
             File file = new File( rafDir, fileName + ".data" );
@@ -460,7 +467,7 @@ public class IndexedDiskCache extends AbstractDiskCache
         }
         finally
         {
-            lock.done();
+            storageLock.done();
         }
     }
 
@@ -471,7 +478,7 @@ public class IndexedDiskCache extends AbstractDiskCache
     {
         try
         {
-            lock.writeLock();
+            storageLock.writeLock();
 
             if ( !alive )
             {
@@ -509,7 +516,7 @@ public class IndexedDiskCache extends AbstractDiskCache
         finally
         {
             alive = false;
-            lock.done();
+            storageLock.done();
         }
     }
 

@@ -54,23 +54,22 @@ package org.apache.jcs.auxiliary.disk;
  * <http://www.apache.org/>.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.CacheEventQueue;
-import org.apache.jcs.engine.CacheInfo;
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheEventQueue;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheListener;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.utils.locking.ReadWriteLock;
-import org.apache.jcs.utils.locking.ReadWriteLockManager;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Hashtable;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheEventQueue;
+import org.apache.jcs.engine.CacheInfo;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheEventQueue;
+import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.utils.locking.ReadWriteLock;
+import org.apache.jcs.utils.locking.ReadWriteLockManager;
 
 /**
  * Abstract class providing a base implementation of a disk cache, which can
@@ -258,23 +257,24 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      */
     public final boolean remove( Serializable key )
     {
-        // Remove element from purgatory if it is there
+        String keyAsString = key.toString();
 
+        writeLock( keyAsString );
 
-        writeLock( this.cacheName + key.toString() );
         try
         {
+            // Remove element from purgatory if it is there
 
-          purgatory.remove( key );
+            purgatory.remove( key );
 
-          doRemove( key );
+            // Remove from persistent store immediately
 
+            doRemove( key );
         }
         finally
         {
-          releaseLock( this.cacheName + key.toString() );
+            releaseLock( keyAsString );
         }
-        // Remove from persistent store immediately
 
         return false;
     }
@@ -344,7 +344,6 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         return DISK_CACHE;
     }
 
-
     /**
      * Internally used write lock for purgatory item modification.
      *
@@ -365,10 +364,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         catch ( Throwable e )
         {
 
-            log.error(  e );
+            log.error( e );
         }
     }
-
 
     /**
      * Internally used write lock for purgatory item modification.
@@ -384,10 +382,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         catch ( Throwable e )
         {
 
-            log.error(  e );
+            log.error( e );
         }
     }
-
 
     /**
      * Cache that implements the CacheListener interface, and calls appropriate
@@ -435,38 +432,38 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                 {
                     PurgatoryElement pe = ( PurgatoryElement ) element;
 
-                    // If the element has already been removed from purgatory
-                    // do nothing
+                    String keyAsString = element.getKey().toString();
 
-                    String lK =element.getKey().toString();
-                    writeLock( getCacheName() + lK );
+                    writeLock( keyAsString );
+
                     try
                     {
+                        // If the element has already been removed from
+                        // purgatory do nothing
 
-                      if ( ! purgatory.contains( pe ) )
-                      {
-                          return;
-                      }
+                        if ( ! purgatory.contains( pe ) )
+                        {
+                            return;
+                        }
 
+                        element = pe.getCacheElement();
+
+                        // If the element is still eligable, spool it.
+
+                        if ( pe.isSpoolable() )
+                        {
+                            doUpdate( element );
+                        }
+
+                        // After the update has completed, it is safe to remove
+                        // the element from purgatory.
+
+                        purgatory.remove( element.getKey() );
                     }
                     finally
                     {
-                      releaseLock( getCacheName() + lK );
+                        releaseLock( keyAsString );
                     }
-
-                    element = pe.getCacheElement();
-
-                    // If the element is still eligable, spool it.
-
-                    if ( pe.isSpoolable() )
-                    {
-                        doUpdate( element );
-                    }
-
-                    // After the update has completed, it is safe to remove
-                    // the element from purgatory.
-
-                    purgatory.remove( element.getKey() );
                 }
                 else
                 {
@@ -548,7 +545,6 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * setting alive to false does NOT need to be done by this method.
      */
     protected abstract void doDispose();
-
 
 }
 

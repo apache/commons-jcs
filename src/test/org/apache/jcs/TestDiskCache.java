@@ -175,7 +175,8 @@ public class TestDiskCache extends TestCase
 
         for ( int i = 0; i <= items; i++ )
         {
-            assertNull( jcs.get( i + ":key" ) );
+            assertNull( "Removed key should be null: " + i + ":key",
+                        jcs.get( i + ":key" ) );
         }
     }
 }
