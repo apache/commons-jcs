@@ -98,7 +98,7 @@ public class TestDiskCacheConcurrent extends TestCase
         {
             public void runTest() throws Exception
             {
-                this.runTestForRegion( "indexedRegion1", 0, 200 );
+                this.runTestForRegion( "indexedRegion4", 0, 200 );
             }
         } );
 
@@ -106,7 +106,7 @@ public class TestDiskCacheConcurrent extends TestCase
         {
             public void runTest() throws Exception
             {
-                this.runTestForRegion( "indexedRegion1", 1000, 1200 );
+                this.runTestForRegion( "indexedRegion4", 1000, 1200 );
             }
         } );
 
@@ -114,7 +114,7 @@ public class TestDiskCacheConcurrent extends TestCase
         {
             public void runTest() throws Exception
             {
-                this.runTestForRegion( "indexedRegion1", 2000, 2200 );
+                this.runTestForRegion( "indexedRegion4", 2000, 2200 );
             }
         });
 

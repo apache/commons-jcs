@@ -30,9 +30,20 @@ jcs.region.indexedRegion3.cacheattributes=org.apache.jcs.engine.CompositeCacheAt
 jcs.region.indexedRegion3.cacheattributes.MaxObjects=100
 jcs.region.indexedRegion3.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
+jcs.region.indexedRegion4=indexedDiskCache2
+jcs.region.indexedRegion4.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.indexedRegion4.cacheattributes.MaxObjects=100
+jcs.region.indexedRegion4.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+
 ##### AUXILIARY CACHES
 
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.indexedDiskCache.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=bin/test/indexed-disk-cache
+
+# Indexed Disk Cache
+jcs.auxiliary.indexedDiskCache2=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.indexedDiskCache2.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.indexedDiskCache2.attributes.DiskPath=bin/test/indexed-disk-cache2
