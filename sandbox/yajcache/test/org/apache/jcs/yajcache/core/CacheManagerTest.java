@@ -70,6 +70,7 @@ public class CacheManagerTest extends TestCase {
         } catch(ClassCastException ex) {
             // should go here.
         }
+        log.debug(CacheManager.inst);
     }
 
     public void testGetCacheRaceCondition() {
@@ -89,6 +90,7 @@ public class CacheManagerTest extends TestCase {
             // should go here.
         }
         assertTrue(intCache == intCache1);
+        log.debug(CacheManager.inst);
     }
 
     public void testRemoveCache() {
@@ -105,5 +107,6 @@ public class CacheManagerTest extends TestCase {
                     "race", Double.class, CacheType.SOFT_REFERENCE);
         doubleCache.put("double", 1.234);
         assertEquals(1.234, doubleCache.get("double"));
+        log.debug(CacheManager.inst);
     }
 }

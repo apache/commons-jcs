@@ -69,5 +69,6 @@ public class SoftRefCacheTest extends TestCase {
 //        log.debug("count: " + sc.getCollectorCount());
 //        log.debug(SoftRefCacheCleaner.inst.toString());
         log.debug(c);
+        log.debug(CacheManager.inst);
     }
 }

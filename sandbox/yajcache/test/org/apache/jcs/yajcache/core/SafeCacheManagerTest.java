@@ -69,6 +69,7 @@ public class SafeCacheManagerTest extends TestCase {
         } catch(ClassCastException ex) {
             // should go here.
         }
+        log.debug(CacheManager.inst);
     }
 
     public void testGetCacheRaceCondition() {
@@ -104,6 +105,7 @@ public class SafeCacheManagerTest extends TestCase {
                 "race", Double.class, CacheType.SOFT_REFERENCE_SAFE);
         doubleCache.put("double", 1.234);
         assertEquals(1.234, doubleCache.get("double"));
+        log.debug(CacheManager.inst);
     }
 
     public void testGetSafeCache() {
@@ -174,5 +176,6 @@ public class SafeCacheManagerTest extends TestCase {
         } catch(ClassCastException ex) {
             // should go here.
         }
+        log.debug(CacheManager.inst);
     }
 }
