@@ -1,5 +1,21 @@
 package org.apache.jcs.utils.threadpool;
 
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,32 +34,32 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This manages threadpools for an application using Doug Lea's Util Concurrent
  * package.
  * http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html
- * 
+ *
  * It is a singleton since threads need to be managed vm wide.
- * 
+ *
  * This managers force you to use a bounded queue. By default it uses the
  * current thread for execuion when the buffer is full and no free threads can
  * be created.
- * 
+ *
  * You can specify the props file to use or pass in a properties object prior to
  * configuration. By default it looks for configuration information in
  * thread_pool.properties.
- * 
+ *
  * If set the Properties object will take precedence.
- * 
+ *
  * If a value is not set for a particular pool, the hard coded defaults will be
  * used.
- * 
+ *
  * int boundarySize_DEFAULT = 75; int maximumPoolSize_DEFAULT = 150; int
  * minimumPoolSize_DEFAULT = 4; int keepAliveTime_DEFAULT = 1000 * 60 * 5;
  * boolean abortWhenBlocked = false; int startUpSize_DEFAULT = 4;
- * 
- * 
+ *
+ *
  * You can configure default settings by specifying a default pool in the
  * properties, ie "cache.ccf"
- * 
+ *
  * @author Aaron Smuts
- *  
+ *
  */
 public class ThreadPoolManager
 {
@@ -88,7 +104,7 @@ public class ThreadPoolManager
 
   /**
    * No instances please. This is a singleton.
-   *  
+   *
    */
   private ThreadPoolManager()
   {
@@ -97,7 +113,7 @@ public class ThreadPoolManager
 
   /**
    * Creates a pool based on the configuration info.
-   * 
+   *
    * @param config
    * @return
    */
@@ -125,7 +141,7 @@ public class ThreadPoolManager
    * Returns a configured instance of the ThreadPoolManger To specify a
    * configuation file or Properties object to use call the appropriate setter
    * prior to calling getInstance.
-   * 
+   *
    * @return
    */
   public static synchronized ThreadPoolManager getInstance()
@@ -141,10 +157,10 @@ public class ThreadPoolManager
    * Returns a pool by name. If a pool by this name does not exist in the
    * configuration file or properties, one will be created using the default
    * values.
-   * 
+   *
    * Pools are lazily created.
-   * 
-   * 
+   *
+   *
    * @param name
    * @return
    */
@@ -182,7 +198,7 @@ public class ThreadPoolManager
 
   /**
    * returns the names of all configured pools.
-   * 
+   *
    * @return ArrayList of string names
    */
   public ArrayList getPoolNames()
@@ -202,7 +218,7 @@ public class ThreadPoolManager
 
   /**
    * Setting this post initialization will have no effect.
-   * 
+   *
    * @param propsFileName
    *          The propsFileName to set.
    */
@@ -212,7 +228,7 @@ public class ThreadPoolManager
   }
 
   /**
-   * 
+   *
    * @return Returns the propsFileName.
    */
   public static String getPropsFileName()
@@ -223,7 +239,7 @@ public class ThreadPoolManager
   /**
    * This will be used if it is not null on initialzation. Setting this post
    * initialization will have no effect.
-   * 
+   *
    * @param props
    *          The props to set.
    */
@@ -245,7 +261,7 @@ public class ThreadPoolManager
   /**
    * Intialize the ThreadPoolManager and create all the pools defined in the
    * configuration.
-   *  
+   *
    */
   private void configure()
   {
@@ -305,7 +321,7 @@ public class ThreadPoolManager
 
   /**
    * Configures the default PoolConfiguration settings
-   *  
+   *
    */
   private PoolConfiguration loadConfig( String root )
   {

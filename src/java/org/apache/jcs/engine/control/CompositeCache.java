@@ -21,7 +21,6 @@ package org.apache.jcs.engine.control;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -998,38 +997,38 @@ public class CompositeCache
      * @return String
      */
     public String getStats()
-    {      
+    {
       return getStatistics().toString();
     }
 
     /**
      * This returns data gathered for this region and all the
      * auxiliaries it currently uses.
-     * 
+     *
      * @return
      */
     public ICacheStats getStatistics()
     {
     	ICacheStats stats = new CacheStats();
     	stats.setRegionName( this.getCacheName() );
-    	
+
     	// store the composite cache stats first
     	IStatElement[] elems = new StatElement[2];
     	elems[0] = new StatElement();
     	elems[0].setName( "HitCountRam" );
     	elems[0].setData( "" + getHitCountRam() );
-    	
+
     	elems[1] = new StatElement();
     	elems[1].setName( "HitCountAux" );
     	elems[1].setData( "" + getHitCountAux() );
 
     	// store these local stats
     	stats.setStatElements( elems );
-    	
+
     	// memory + aux, memory is not considered an auxiliary internally
     	int total = auxCaches.length + 1;
     	IStats[] auxStats = new Stats[total];
-    	    	
+
     	auxStats[0] = getMemoryCache().getStatistics();
 
     	for ( int i = 0; i < auxCaches.length; i++ )
@@ -1040,10 +1039,10 @@ public class CompositeCache
 
     	// sore the auxiliary stats
     	stats.setAuxiliaryCacheStats( auxStats );
-    	
+
     	return stats;
   }
-    
+
 
     /**
      *  Gets the cacheName attribute of the Cache object

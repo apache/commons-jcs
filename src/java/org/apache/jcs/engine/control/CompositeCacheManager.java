@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.control;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -21,6 +20,7 @@ package org.apache.jcs.engine.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -37,6 +37,8 @@ import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.stats.CacheStats;
+import org.apache.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
 /** Manages a composite cache. */
@@ -202,7 +204,7 @@ public class CompositeCacheManager
         // set the props value and then configure the ThreadPoolManager
         ThreadPoolManager.setProps( props );
         ThreadPoolManager poolMgr =  ThreadPoolManager.getInstance();
-      
+
         // configure the cache
         CompositeCacheConfigurator configurator =
             new CompositeCacheConfigurator( this );
@@ -440,5 +442,37 @@ public class CompositeCacheManager
     {
         return ( AuxiliaryCacheAttributes ) auxAttrs.get( name );
     }
+
+    /**
+     * Gets stats for debugging.
+     * @return String
+     */
+    public String getStats()
+    {
+      return getStatistics().toString();
+    }
+
+    /**
+     * This returns data gathered for all region and all the
+     * auxiliaries they currently uses.
+     *
+     * @return
+     */
+    public ICacheStats[] getStatistics()
+    {
+      ArrayList cacheStats = new ArrayList();
+      Enumeration allCaches = caches.elements();
+      while ( allCaches.hasMoreElements() )
+      {
+          CompositeCache cache = ( CompositeCache ) allCaches.nextElement();
+          if ( cache != null )
+          {
+            cacheStats.add( cache.getStatistics() );
+          }
+      }
+      ICacheStats[] stats = (ICacheStats[])cacheStats.toArray( new CacheStats[0] );
+      return stats;
+  }
+
 }
 

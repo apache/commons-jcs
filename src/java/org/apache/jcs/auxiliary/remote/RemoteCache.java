@@ -69,7 +69,7 @@ public class RemoteCache implements ICache
 
     private PooledExecutor pool = null;
     private boolean usePoolForGet = false;
-    
+
     /** Description of the Method */
     public String toString()
     {
@@ -95,14 +95,14 @@ public class RemoteCache implements ICache
             log.debug( "Construct> cacheName=" + cattr.getCacheName() );
             log.debug( "irca = " + irca.toString() );
         }
-        
+
         // use a pool if it is greater than 0
         if ( log.isDebugEnabled() )
         {
           log.debug( "GetTimeoutMillis() = " + irca.getGetTimeoutMillis() );
         }
         if ( irca.getGetTimeoutMillis() > 0 )
-        { 
+        {
           pool = ThreadPoolManager.getInstance().getPool( irca.getThreadPoolName() );
           if ( log.isDebugEnabled() )
           {
@@ -113,7 +113,7 @@ public class RemoteCache implements ICache
             usePoolForGet = true;
           }
         }
-        
+
         /*
          * TODO
          * should be done by the remote cache, not the job of the hub manager
@@ -165,7 +165,11 @@ public class RemoteCache implements ICache
             {
                 try
                 {
-                    remote.update( ce, RemoteCacheInfo.listenerId );
+                  if ( log.isDebugEnabled() )
+                  {
+                    log.debug( "sending item to remote server" );
+                  }
+                  remote.update( ce, RemoteCacheInfo.listenerId );
                 }
                 catch ( NullPointerException npe )
                 {
@@ -180,7 +184,10 @@ public class RemoteCache implements ICache
             }
             else
             {
-                //p( "get only mode, irca = " + irca.toString() );
+                if ( log.isDebugEnabled() )
+                {
+                  log.debug( "get only mode, not sending to remote server" );
+                }
             }
         }
     }
@@ -189,7 +196,7 @@ public class RemoteCache implements ICache
     /**
      * Synchronously get from the remote cache; if failed, replace the remote
      * handle with a zombie.
-     * 
+     *
      * Use threadpool to timeout is a value is set for GetTimeoutMillis
      */
     public ICacheElement get( Serializable key )
@@ -199,11 +206,11 @@ public class RemoteCache implements ICache
         {
             if ( usePoolForGet )
             {
-              return getUsingPool( key );
+              return getUsingPool( sanitized( key ) );
             }
-            else 
+            else
             {
-              return remote.get( cacheName, sanitized( key ) );              
+              return remote.get( cacheName, sanitized( key ) );
             }
         }
         catch ( ObjectNotFoundException one )
@@ -220,10 +227,10 @@ public class RemoteCache implements ICache
         }
     }
 
-    
+
     /**
      * This allows gets to timeout in case of remote server machine shutdown.
-     * 
+     *
      * @param key
      * @return
      * @throws IOException
@@ -254,12 +261,24 @@ public class RemoteCache implements ICache
           }
         }
       } );
-      
+
       // execute using the pool
       pool.execute( command );
 
       // used timed get in order to timeout
-      future.timedGet( timeout );
+      ICacheElement ice = (ICacheElement)future.timedGet( timeout );
+      if ( log.isDebugEnabled() )
+      {
+        if ( ice == null )
+        {
+          log.debug( "nothing found in remote cache" );
+        }
+        else
+        {
+          log.debug( "found item in remote cache" );
+        }
+      }
+      return ice;
     }
     catch (InterruptedException ex)
     {
@@ -272,10 +291,8 @@ public class RemoteCache implements ICache
       log.error( "Assuming an IO exception thrown in the backfground.", ex );
       throw new IOException( "Get Request timed out after " + timeout );
     }
-
-    return null;
   }
-    
+
     public Set getGroupKeys(String groupName) throws java.rmi.RemoteException
     {
         return remote.getGroupKeys(cacheName, groupName);
@@ -406,10 +423,10 @@ public class RemoteCache implements ICache
         return getStatistics().toString();
     }
 
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()
@@ -424,7 +441,7 @@ public class RemoteCache implements ICache
       // no data gathered here
       se = new StatElement();
       se.setName( "UsePoolForGet" );
-      se.setData( "" + usePoolForGet );      
+      se.setData( "" + usePoolForGet );
       elems.add( se );
 
       if ( pool != null )
@@ -432,12 +449,12 @@ public class RemoteCache implements ICache
     	se = new StatElement();
        	se.setName( "Pool Size" );
     	se.setData("" + pool.getPoolSize() );
-    	elems.add(se);   	
+    	elems.add(se);
 
     	se = new StatElement();
     	se.setName( "Maximum Pool Size" );
     	se.setData("" + pool.getMaximumPoolSize() );
-    	elems.add(se);   	     
+    	elems.add(se);
       }
 
       // get an array and put them in the Stats object
@@ -445,7 +462,7 @@ public class RemoteCache implements ICache
       stats.setStatElements( ses );
 
       return stats;
-    }       
+    }
     /**
      * Returns the current cache size.
      *

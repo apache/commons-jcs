@@ -873,8 +873,8 @@ public class RemoteCacheServer
     public String getStats()
         throws IOException
     {
-        //return cacheManager.getStats();
-        return "temp";
+        return cacheManager.getStats();
+        //return "temp";
     }
 
     /** Description of the Method */

@@ -21,9 +21,9 @@ jcs.default.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=DC
+jcs.region.testCache1=RC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=10
+jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=5000
@@ -31,8 +31,9 @@ jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
 jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
-jcs.region.testCache1.elementattributes.MaxLifeSeconds=6000
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
 jcs.region.testCache1.elementattributes.IsLateral=true
+jcs.region.testCache1.elementattributes.IsRemote=true
 
 jcs.region.testCache2=DC
 jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -112,15 +113,17 @@ jcs.auxiliary.JDC.attributes.ClearOnStart=false
 # just a remove lock to add
 jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
-jcs.auxiliary.RC.attributes.RemoteHost=localhost
-jcs.auxiliary.RC.attributes.RemotePort=1102
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1102
+#jcs.auxiliary.RC.attributes.RemoteHost=localhost
+#jcs.auxiliary.RC.attributes.RemotePort=1102
 #jcs.auxiliary.RC.attributes.LocalPort=1103
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 #jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
 #-1 means no timeout, this is the default
 # if the timeout is -1, no threadpool will be used.
-jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=0
 jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
+jcs.auxiliary.RC.attributes.GetOnly=false
 
 # unreliable
 jcs.auxiliary.LUDP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory

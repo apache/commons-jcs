@@ -17,7 +17,7 @@ remote.cluster.LocalClusterConsistency=true
 # sets the default aux value for any non configured caches
 jcs.default=DC
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MaxObjects=10000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
@@ -50,7 +50,7 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 ################## CACHE REGIONS AVAILABLE ###################
 jcs.region.testCache1=DC,RCluster1
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MaxObjects=10000
 
 
 ##############################################################
