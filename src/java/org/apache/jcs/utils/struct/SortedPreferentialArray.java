@@ -64,6 +64,11 @@ public class SortedPreferentialArray
    */
   public void add(Comparable obj)
   {
+    if ( obj == null )
+    {
+      return;
+    }
+
     if (curSize < maxSize)
     {
       insert(obj);
@@ -108,6 +113,11 @@ public class SortedPreferentialArray
     }
   }
 
+  /**
+   * Returns the largest without removing it from the array.
+   *
+   * @return Comparable
+   */
   public Comparable getLargest()
   {
     int num = curSize - 1;
@@ -118,6 +128,11 @@ public class SortedPreferentialArray
     return array[num];
   }
 
+  /**
+   * Returns the smallest element without removing it from the array.
+   *
+   * @return Comparable
+   */
   public Comparable getSmallest()
   {
     return array[0];
@@ -258,10 +273,15 @@ public class SortedPreferentialArray
    * Returns and removes the nearer larger or equal object from the aray.
    *
    * @param obj Comparable
-   * @return Comparable
+   * @return Comparable, null if arg is null or none was found.
    */
   public Comparable takeNearestLargerOrEqual(Comparable obj)
   {
+    if ( obj == null )
+    {
+      return null;
+    }
+
     Comparable retVal = null;
     try
     {
@@ -291,6 +311,16 @@ public class SortedPreferentialArray
       log.error("Take problem" + this.dumpArray(), e);
     }
     return retVal;
+  }
+
+  /**
+   * Returns the current size of the array.
+   *
+   * @return int
+   */
+  public int size()
+  {
+    return this.curSize;
   }
 
   /**
@@ -551,7 +581,7 @@ public class SortedPreferentialArray
   /**
    * Debugging method to return a human readable display of array data.
    */
-  private String dumpArray()
+  protected String dumpArray()
   {
     StringBuffer buf = new StringBuffer();
     buf.append("\n ---------------------------");
@@ -564,34 +594,6 @@ public class SortedPreferentialArray
       buf.append("\n " + i + "=" + array[i]);
     }
     return buf.toString();
-  }
-
-  /**
-   * Simple testing program.
-   *
-   * @param args String[]
-   */
-  public static void main(String args[])
-  {
-
-    SortedPreferentialArray array = new SortedPreferentialArray(25);
-    //array.setPreferLarge( false );
-    array.setPreferLarge( true );
-    String[] elem =
-        {
-        "10", "11", "01", "02", "03", "04", "05", "08", "07",
-        "06", "09", "12", "13", "15", "14", "20", "25", "29", "28", "16", "17",
-        "96", "00", "72", "39", "55", "44", "26", "22", "59", "38", "16", "27"};
-
-    for (int i = 0; i < elem.length; i++)
-    {
-      array.add(elem[i]);
-      System.out.println(array.dumpArray());
-    }
-
-    //String t = "01";
-    //System.out.print(t.compareTo("10"));
-
   }
 
 }
