@@ -34,6 +34,7 @@ import org.jgroups.Channel;
 import org.jgroups.Message;
 import org.jgroups.blocks.GroupRequest;
 import org.jgroups.blocks.RpcDispatcher;
+import org.jgroups.blocks.MethodCall;
 import org.jgroups.util.RspList;
 
 /**
@@ -179,8 +180,10 @@ public class LateralJGSender implements IJGConstants
             {
 
                 disp = holder.getDispatcher();
-
-                RspList rsp_list = disp.callRemoteMethods( null, "handleGet", led.ce.getCacheName(), led.ce.getKey(),
+                Object[] args = {led.ce.getCacheName(), led.ce.getKey()};
+                String[] sigs = {java.lang.String.class.getName(), java.io.Serializable.class.getName()};
+                MethodCall meth = new MethodCall(  "handleGet", args, sigs );
+                RspList rsp_list = disp.callRemoteMethods( null, meth,
                     GroupRequest.GET_ALL, 1000 );
 
                 log.debug( "rsp_list = " + rsp_list );
