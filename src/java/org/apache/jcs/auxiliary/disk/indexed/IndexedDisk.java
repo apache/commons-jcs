@@ -127,7 +127,7 @@ class IndexedDisk
             }
             if ( corrupted )
             {
-                log.debug( "The datFile is corrupted" );
+                log.warn( "The dataFile is corrupted!" );
                 //reset();
                 return null;
             }

@@ -299,7 +299,6 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      */
     public final void dispose()
     {
-        alive = false;
 
         // Invoke any implementation specific disposal code
 
@@ -308,6 +307,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         // FIXME: May lose the end of the queue, need to be more graceful
 
         cacheEventQueue.destroy();
+
+        alive = false;
+
     }
 
     /**

@@ -175,6 +175,11 @@ public class IndexedDiskCache extends AbstractDiskCache
     {
         storageLock.writeLock();
 
+        if ( log.isInfoEnabled() )
+        {
+          log.info( "loading keys for " + keyFile.toString() );
+        }
+
         try
         {
             keyHash = ( HashMap ) keyFile.readObject( 0 );
@@ -184,11 +189,24 @@ public class IndexedDiskCache extends AbstractDiskCache
                 keyHash = new HashMap();
             }
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "Loaded keys from: " + fileName +
+               log.info( "Loaded keys from: " + fileName +
                     ", key count: " + keyHash.size() );
             }
+
+            if ( log.isDebugEnabled() )
+            {
+                Iterator itr = keyHash.entrySet().iterator();
+                while ( itr.hasNext() )
+                {
+                   Map.Entry e = (Map.Entry)itr.next();
+                   String key = (String)e.getKey();
+                   IndexedDiskElementDescriptor de = (IndexedDiskElementDescriptor)e.getValue();
+                   log.debug( "key entry: " + key + ", ded.pos" + de.pos + ", ded.len" + de.len );
+                }
+            }
+
         }
         catch ( Exception e )
         {
@@ -589,9 +607,9 @@ public class IndexedDiskCache extends AbstractDiskCache
             IndexedDisk dataFileTemp =
                 new IndexedDisk( new File( rafDir, fileName + "Temp.data" ) );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.info( "optomizing file keyHash.size()=" + keyHash.size() );
+                log.info( "Optomizing file keyHash.size()=" + keyHash.size() );
             }
 
             Iterator itr = keyHash.keySet().iterator();
@@ -603,16 +621,21 @@ public class IndexedDiskCache extends AbstractDiskCache
                 CacheElement tempDe = ( CacheElement ) readElement( key );
                 try
                 {
-                    IndexedDiskElementDescriptor de =
-                        dataFileTemp.appendObject( tempDe );
+                    //IndexedDiskElementDescriptor de =
+                    //    dataFileTemp.appendObject( tempDe );
+
+                    IndexedDiskElementDescriptor ded = new IndexedDiskElementDescriptor();
+                    byte[] data = IndexedDisk.serialize( tempDe );
+                    ded.init( dataFileTemp.length(), data );
+                    dataFileTemp.write( data, ded.pos );
 
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "Put to temp disk cache: " + fileName +
-                                   ", key: " + key );
+                        log.debug( "Optomize: Put to temp disk cache: " + fileName +
+                                   ", key: " + key + ", ded.pos:" + ded.pos + ", ded.len:" + ded.len);
                     }
 
-                    keyHashTemp.put( key, de );
+                    keyHashTemp.put( key, ded );
                 }
                 catch ( Exception e )
                 {
