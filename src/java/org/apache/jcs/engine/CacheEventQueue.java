@@ -46,7 +46,7 @@ public class CacheEventQueue
   // time to wait for an event before snuffing the background thread
   // if the queue is empty.
   // make configurable later
-  private int waitToDieMillis = 60000;
+  private int waitToDieMillis = 10000;
 
   private ICacheListener listener;
   private long listenerId;
@@ -305,6 +305,7 @@ public class CacheEventQueue
           destroyed = false;
           processorThread = new QProcessor( this );
           processorThread.start();
+          log.info( "Cache event queue created: " + this );
         }
         else
         {
@@ -347,6 +348,40 @@ public class CacheEventQueue
       return value;
     }
   }
+
+
+  public String getStats()
+  {
+    StringBuffer buf = new StringBuffer();
+    buf.append( "\n -------------------------" );
+    buf.append( "\n Cache Event Queue:" );
+    buf.append( "\n working = " + this.working );
+    buf.append( "\n isAlive() = " + this.isAlive() );
+    buf.append( "\n isEmpty() = " + this.isEmpty() );
+
+    int size = 0;
+    synchronized (queueLock)
+    {
+      // wait until there is something to read
+      if (head == tail)
+      {
+        size = 0;
+      }
+      else
+      {
+          Node n = head;
+          while ( n != null )
+          {
+            n = n.next;
+            size++;
+          }
+      }
+
+      buf.append( "\n size = " + size );
+    }
+    return buf.toString();
+  }
+
 
   ///////////////////////////// Inner classes /////////////////////////////
 
