@@ -36,9 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jcs.engine.behavior.ICache;
 
-import org.apache.jcs.engine.control.group.GroupCacheHub;
-import org.apache.jcs.engine.control.group.GroupCacheHub;
-import org.apache.jcs.engine.control.group.GroupCacheHub;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 

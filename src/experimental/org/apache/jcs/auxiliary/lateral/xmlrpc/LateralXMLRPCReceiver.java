@@ -82,7 +82,7 @@ public class LateralXMLRPCReceiver implements IXMLRPCConstants
                     server.addHandler( this.HANDLERNAME, handler );
                     server.setParanoid( false );
                 }
-                catch ( IOException ioe )
+                catch ( Exception ioe )
                 {
                     log.error( ioe );
                 }

@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
@@ -84,7 +85,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public void update( ICacheElement item, byte requesterId )
+    public void update( ICacheElement item, long requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -103,7 +104,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key, byte requesterId )
+    public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
@@ -157,6 +158,18 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
         // nothing needs to be done
     }
 
+    /**
+     * Gets the set of keys of objects currently in the group
+     * throws UnsupportedOperationException
+     */
+    public Set getGroupKeys(String cacheName, String group)
+    {
+        if (true)
+        {
+            throw new UnsupportedOperationException("Groups not implemented.");
+        }
+        return null;
+    }
 
     /** Description of the Method */
     public void removeAll( String cacheName )
@@ -167,7 +180,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public void removeAll( String cacheName, byte requesterId )
+    public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, "ALL", null );

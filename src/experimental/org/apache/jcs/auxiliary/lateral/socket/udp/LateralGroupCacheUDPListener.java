@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 
@@ -101,8 +101,8 @@ public class LateralGroupCacheUDPListener
                  * GroupId groupId = new GroupId( gan.groupId );
                  * cache.putGAN( gan, cb.getVal(), cb.getElementAttributes(), false);
                  */
-                ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
-                cache.update( cb, true );
+                cacheMgr.getCache( cb.getCacheName() ).localUpdate( cb );
+
 
             }
             catch ( Exception ioe )

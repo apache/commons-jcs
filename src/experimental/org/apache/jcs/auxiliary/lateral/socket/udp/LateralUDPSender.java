@@ -137,7 +137,7 @@ public class LateralUDPSender
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key, byte requesterId )
+    public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
@@ -173,7 +173,7 @@ public class LateralUDPSender
 
 
     /** Description of the Method */
-    public void removeAll( String cacheName, byte requesterId )
+    public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, "ALL", null );

@@ -28,7 +28,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.behavior.ICache;
 
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
@@ -94,7 +94,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
      *
      * @param id The new listenerId value
      */
-    public void setListenerId( byte id )
+    public void setListenerId( long id )
         throws IOException
     {
         LateralCacheInfo.listenerId = id;
@@ -110,7 +110,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
      *
      * @return The listenerId value
      */
-    public byte getListenerId()
+    public long getListenerId()
         throws IOException
     {
 
@@ -165,8 +165,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
             log.debug( "PUTTING ELEMENT FROM LATERAL" );
         }
         getCacheManager();
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
-        cache.update( cb, true );
+        cacheMgr.getCache( cb.getCacheName() ).localUpdate( cb );
     }
 
 
@@ -182,8 +181,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         getCacheManager();
         // interface limitation here
 
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
-        cache.remove( key, true );
+         cacheMgr.getCache( cacheName ).localRemove( key );
     }
 
 

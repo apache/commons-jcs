@@ -19,12 +19,10 @@ package org.apache.jcs.auxiliary.lateral.xmlrpc;
 
 import java.io.*;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Serializable;
-
+import java.util.Set;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
@@ -102,7 +100,7 @@ public class LateralXMLRPCService
      * @param requesterId
      * @exception IOException
      */
-    public void update( ICacheElement item, byte requesterId )
+    public void update( ICacheElement item, long requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -128,7 +126,7 @@ public class LateralXMLRPCService
      * @param requesterId
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key, byte requesterId )
+    public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
@@ -193,6 +191,19 @@ public class LateralXMLRPCService
     }
 
     /**
+     * Gets the set of keys of objects currently in the group
+     * throws UnsupportedOperationException
+     */
+    public Set getGroupKeys(String cacheName, String group)
+    {
+        if (true)
+        {
+            throw new UnsupportedOperationException("Groups not implemented.");
+        }
+        return null;
+    }
+
+    /**
      * @param cacheName
      * @exception IOException
      */
@@ -207,7 +218,7 @@ public class LateralXMLRPCService
      * @param requesterId
      * @exception IOException
      */
-    public void removeAll( String cacheName, byte requesterId )
+    public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, "ALL", null );

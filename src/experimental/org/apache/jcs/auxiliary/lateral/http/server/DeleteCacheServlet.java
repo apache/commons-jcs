@@ -19,7 +19,7 @@ package org.apache.jcs.auxiliary.lateral.http.server;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.apache.jcs.engine.control.group.GroupCacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Description of the Class
@@ -35,7 +35,7 @@ public class DeleteCacheServlet extends AbstractDeleteCacheServlet
         throws ServletException
     {
 
-        cacheMgr = GroupCacheHub.getInstance();
+        cacheMgr = CompositeCacheManager.getInstance();
 
         super.init( config );
 
