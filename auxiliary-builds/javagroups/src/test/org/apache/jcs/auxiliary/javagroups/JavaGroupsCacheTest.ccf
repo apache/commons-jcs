@@ -1,0 +1,12 @@
+jcs.default = JG
+jcs.default.elementattributes = org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal = true
+jcs.default.elementattributes.MaxLifeSeconds = 60
+jcs.default.elementattributes.IsSpool = true
+jcs.default.elementattributes.IsRemote = true
+jcs.default.elementattributes.IsLateral = true
+
+jcs.auxiliary.JG = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
+jcs.auxiliary.JG.attributes = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
+jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.javagroups.JChannelFactory
+jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:STATE_TRANSFER:QUEUE

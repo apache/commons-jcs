@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<project>
+  <extend>../../project-b5.xml</extend>  
+  <id>jcs-javagroups</id>
+  <name>jcs-javagroups</name>
+  <currentVersion>alpha-0</currentVersion>
+
+  <dependencies>
+    
+    <dependency>
+      <id>jcs</id>
+      <version>1.0-dev</version>
+    </dependency>
+
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <id>commons-lang</id>
+      <version>1.0-dev</version>
+    </dependency>
+
+    <dependency>
+      <id>junit</id>
+      <version>3.7</version>
+    </dependency>
+
+    <dependency>
+      <id>javagroups</id>
+      <version>2.0.1</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <aspectSourceDirectories></aspectSourceDirectories>
+    <resources/>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+      <resources>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.ccf</include>
+        </includes>
+      </resources>
+    </unitTest>
+
+    <jars></jars>
+  </build>
+</project>
+
