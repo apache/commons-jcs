@@ -22,6 +22,7 @@
     <section name="Memory Plugins"> 
       <p> 
 	Currently, JCS provides four memory management options: (1) 	LRUMemoryCache, (2) LHMLRUMemoryCache, (3) MRUMemoryCache, and (4) 	ARCMemoryCache.  All memory caches restrict the number of items that can 	be stored in memory per region.  If a disk cache is configured for the 	region, the items will be spooled to disk when the memory capacity is 	reached.  JCS enforces configurable parameters such as time to live 	and maximum idle time.  Expired elements can be cleaned up by the 	ShrinkerThread, otherwise they will be removed at the next retrieval 	attempt or when the capacity is reached.
+	</p>
 	<p>
 	The LRUMemoryCache is the currently recommended plugin.  Upon 	misconfiguration it is used as the default.  The LRUMemoryCache removes 	the least recently used items when the cache is full.  
 	</p>
