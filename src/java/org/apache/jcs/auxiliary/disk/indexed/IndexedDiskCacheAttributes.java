@@ -79,7 +79,7 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
 
 
     /**
-     * Sets the diskPath attribute of the DiskCacheAttributes object
+     * Sets the diskPath attribute of theputm 2000 DiskCacheAttributes object
      *
      * @param path The new diskPath value
      */
