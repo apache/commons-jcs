@@ -17,12 +17,12 @@
 package org.apache.jcs.yajcache.soft;
 
 import junit.framework.*;
+import org.apache.jcs.yajcache.core.ICacheSafe;
+import org.apache.jcs.yajcache.core.SafeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.core.CacheManager;
 import org.apache.jcs.yajcache.core.CacheType;
-import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
@@ -31,12 +31,12 @@ import org.apache.jcs.yajcache.lang.annotation.*;
  */
 @CopyRightApache
 @TestOnly
-public class SoftRefCacheTest extends TestCase {
+public class SoftRefFileCacheSafeTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     
     public void testSoftRefCache() throws Exception {
-        ICache<byte[]> c = CacheManager.inst.getCache(
-                CacheType.SOFT_REFERENCE, "bytesCache", byte[].class);
+        ICacheSafe<byte[]> c = SafeCacheManager.inst.getCache(
+                CacheType.SOFT_REFERENCE_FILE_SAFE, "bytesCache", byte[].class);
         for (int h=0; h < 10; h++) {
             for (int i=h*10, max=i+10; i < max; i++) {
                 log.debug("put i="+i);
