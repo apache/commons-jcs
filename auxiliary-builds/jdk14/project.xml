@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <extend>../../project-b4.xml</extend>  
+  <id>jcs</id>
+  <name>jdk14-ext</name>
+  <currentVersion>1.0-dev-jdk14-ext</currentVersion>
+ 
+
+  <dependencies>
+    <dependency>
+      <id>commons-collections</id>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <id>commons-configuration</id>
+      <version>20030706.202021</version>
+    </dependency>
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.0.3</version>
+    </dependency>
+    <dependency>
+      <id>commons-lang</id>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <id>concurrent</id>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <id>hsqldb</id>
+      <version>1.7.1</version>
+    </dependency>
+    <dependency>
+      <id>log4j</id>
+      <version>1.2.8</version>
+    </dependency>
+    <dependency>
+      <id>servletapi</id>
+      <version>2.2</version>
+    </dependency>
+    <dependency>
+      <id>javagroups</id>
+      <jar>jgroups-all-2.2.jar</jar>
+    </dependency>
+    <dependency>
+      <id>jisp</id>
+      <version>2.5.1</version>
+    </dependency>
+    <dependency>
+      <id>tomcat</id>
+      <version>3.2.1</version>
+      <jar>tomcat-util-3.2.1.jar</jar>
+    </dependency>
+    <dependency>
+      <id>velocity</id>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <id>junit</id>
+      <version>3.8.1</version>
+    </dependency>
+    <dependency>
+      <id>xmlrpc</id>
+      <version>1.2-b1</version>
+      <url>http://xml.apache.org/xmlrpc/</url>
+    </dependency>
+    <dependency>
+      <id>xerces:xercesImpl</id>
+      <version>2.6.2</version>
+      <url>http://xml.apache.org/xerces2-j/</url>
+    </dependency>
+    <dependency>
+      <id>xml-apis</id>
+      <version>2.0.2</version>
+      <url>http://xml.apache.org/commons/</url>
+    </dependency>
+    <dependency>
+      <id>struts</id>
+      <version>1.1</version>
+      <jar>struts-1.1.jar</jar>
+    </dependency>
+    <dependency>
+      <id>berkeleydb</id>
+      <version>1.5.0</version>
+    </dependency>
+
+    <dependency>
+	<groupId>jcs</groupId>
+	<artifactId>jcs</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTest>
+      <resources>
+      <includes>
+<!--
+        <include>**/TestBDBJEDiskCacheConcurrent.java</include>
+-->
+      </includes>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.ccf</include>
+        </includes>
+      </resources>
+    </unitTest>
+    <jars></jars>
+  </build>
+ 
+</project>
