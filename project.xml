@@ -131,7 +131,7 @@
       <name>jakarta-turbine-stratum</name>
       <type>required</type>
       <version>1.0-b2-dev</version>
-      <jar>stratum-1.0-b2-dev-new.jar</jar>
+      <jar>stratum-1.0-b2-dev.jar</jar>
     </dependency>
 
   </dependencies>
