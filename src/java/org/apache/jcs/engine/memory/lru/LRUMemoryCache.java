@@ -301,12 +301,52 @@ public class LRUMemoryCache
         }
         public Object next()
         {
-            return ((MemoryElementDescriptor)i.next()).ce;
+            return new MapEntryWrapper((Map.Entry)i.next());
         }
         public void remove()
         {
             i.remove();
         } 
+        public boolean equals(Object o)
+        {
+            return i.equals(o);
+        }
+        public int hashCode()
+        {
+            return i.hashCode();
+        }
+    }
+
+    public class MapEntryWrapper
+        implements Map.Entry
+    {
+        private final Map.Entry e;
+        private MapEntryWrapper(Map.Entry e)
+        {
+            this.e = e;
+        }
+
+        public boolean equals(Object o)
+        {
+            return e.equals(o);
+        }
+        public Object getKey()
+        {
+            return e.getKey();
+        }
+        public Object getValue()
+        {
+            return ((MemoryElementDescriptor)e.getValue()).ce;
+        }
+        public int hashCode()
+        {
+            return e.hashCode();
+        }
+        public Object setValue(Object value)
+        {
+            throw new UnsupportedOperationException("Use normal cache methods"
+                + " to alter the contents of the cache.");
+        }
     }
 
     /**
