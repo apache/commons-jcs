@@ -28,6 +28,11 @@ package org.apache.jcs.yajcache.lang.annotation;
 public enum ThreadSafetyType {
     /**  Immutable objects are guaranteed to be thread-safe. */
     IMMUTABLE, 
+    /**
+     * Instances of this class are mutable, but all methods contain
+     * sufficient internal synchronization that instances may be used 
+     * concurrently without the need for external synchronization.
+     */
     SAFE, 
     /**
      * Conditionally thread-safe classes are those for which each individual 
