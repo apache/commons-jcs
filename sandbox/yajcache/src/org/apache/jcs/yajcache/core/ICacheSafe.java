@@ -17,7 +17,7 @@
 package org.apache.jcs.yajcache.core;
 
 import java.util.Map;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *
