@@ -3,8 +3,8 @@ package org.apache.jcs;
 import org.apache.commons.lang.exception.NestableException;
 import org.apache.jcs.engine.control.CacheHub;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
-import org.apache.stratum.configuration.Configuration;
-import org.apache.stratum.configuration.ConfigurationConverter;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationConverter;
 import org.apache.stratum.lifecycle.Configurable;
 import org.apache.stratum.lifecycle.Initializable;
 

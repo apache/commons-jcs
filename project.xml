@@ -49,8 +49,14 @@
       <organization/>
     </developer>
   </developers>
-  
+
   <dependencies>
+    <dependency>
+      <name>commons-configuration</name>
+      <type>required</type>
+      <version>1.0-dev</version>
+      <jar>commons-configuration-1.0-dev.jar</jar>
+    </dependency>
     <dependency>
       <name>commons-logging</name>
       <type>required</type>
