@@ -1,7 +1,9 @@
-@echo off
+@rem echo off
 
 :setcurdir
 call setCURDIR
+echo %CURDIR%
+
 goto javahome
 
 :javahome
@@ -14,14 +16,15 @@ set JAVA_HOME=C:\jdk1.2.2
 
 :setcpbase
 set CLASSPATH=.
-set CLASSPATH=%CLASSPATH%;%CURDIR%\conf\
-set CLASSPATH=%CLASSPATH%;%CURDIR%\classes\
-set CLASSPATH=%CLASSPATH%;%CURDIR%\stratum.jar
+set CLASSPATH=%CLASSPATH%;%CURDIR%\src\conf\
+set CLASSPATH=%CLASSPATH%;%CURDIR%\target\classes\
+set CLASSPATH=%CLASSPATH%;%CURDIR%\target\test-classes\
+rem set CLASSPATH=%CLASSPATH%;%CURDIR%\target\jcs-1.0-dev.jar
 goto jars
 
 :jars
 set _LIBJARS=
-for %%i in (@lib.repo@*.jar) do call %CURDIR%\scripts\cpappend.bat %%i
+for %%i in (%CURDIR%\jars\*.jar) do call %CURDIR%\src\scripts\cpappend.bat %%i
 if not "%_LIBJARS%" == "" goto addLibJars
 
 :addLibJars

@@ -1,1 +1,2 @@
+echo %_LIBJARS%
 set _LIBJARS=%_LIBJARS%;%1
