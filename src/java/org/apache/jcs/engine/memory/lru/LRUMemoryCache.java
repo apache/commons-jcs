@@ -96,14 +96,13 @@ public class LRUMemoryCache
                                                 getFirst()).ce.getKey(),
                                               (MemoryElementDescriptor) list.
                                               getFirst());
-    }
-
-    // If the node was the same as an existing node, remove it.
-    if (old != null &&
-        ( (MemoryElementDescriptor) list.getFirst()).ce.getKey().
-        equals(old.ce.getKey()))
-    {
-      list.remove(old);
+      // If the node was the same as an existing node, remove it.
+      if (old != null &&
+         ( (MemoryElementDescriptor) list.getFirst()).ce.getKey().
+         equals(old.ce.getKey()))
+      {
+        list.remove(old);
+      }
     }
 
     int size = map.size();
