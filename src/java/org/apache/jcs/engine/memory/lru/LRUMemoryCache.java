@@ -194,32 +194,21 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     public ICacheElement getQuiet( Serializable key )
         throws IOException
     {
-        MemoryElementDescriptor me = null;
         ICacheElement ce = null;
 
-        try
+        MemoryElementDescriptor me = (MemoryElementDescriptor) map.get(key);
+        if ( me != null )
         {
-
-            me = ( MemoryElementDescriptor ) map.get( key );
-            if ( me != null )
+            if ( log.isDebugEnabled() )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( cacheName + ": LRUMemoryCache quiet hit for " + key );
-                }
-
-                ce = me.ce;
-
+                log.debug(cacheName + ": LRUMemoryCache quiet hit for " + key);
             }
-            else
-            {
-                log.debug( cacheName + ": LRUMemoryCache quiet miss for " + key );
-            }
-
+            
+            ce = me.ce;    
         }
-        catch ( Exception e )
+        else if ( log.isDebugEnabled() )
         {
-            log.error( e );
+            log.debug( cacheName + ": LRUMemoryCache quiet miss for " + key );
         }
 
         return ce;
@@ -235,40 +224,32 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     public ICacheElement get( Serializable key )
         throws IOException
     {
-        MemoryElementDescriptor me = null;
         ICacheElement ce = null;
 
-        try
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "getting item for key: " + key );
+        }
+        
+        MemoryElementDescriptor me = (MemoryElementDescriptor) map.get(key);
+
+        if ( me != null )
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "getting item for key: " + key );
+                log.debug( cacheName + ": LRUMemoryCache hit for " + key );
             }
-
-            me = ( MemoryElementDescriptor ) map.get( key );
-
-            if ( me != null )
-            {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( cacheName + ": LRUMemoryCache hit for " + key );
-                }
-
-                ce = me.ce;
-
-                ce.getElementAttributes().setLastAccessTimeNow();
-                makeFirst( me );
-            }
-            else
-            {
-                log.debug( cacheName + ": LRUMemoryCache miss for " + key );
-            }
+            
+            ce = me.ce;
+            
+            ce.getElementAttributes().setLastAccessTimeNow();
+            makeFirst( me );
         }
-        catch ( Exception e )
+        else
         {
-            log.error( e );
+            log.debug( cacheName + ": LRUMemoryCache miss for " + key );
         }
-
+        
         return ce;
     }
 
@@ -609,36 +590,28 @@ public class LRUMemoryCache implements MemoryCache, Serializable
      */
     public synchronized void makeFirst( MemoryElementDescriptor me )
     {
-        try
+        if ( me.prev == null )
         {
-            if ( me.prev == null )
-            {
-                // already the first node.
-                return;
-            }
-            me.prev.next = me.next;
-
-            if ( me.next == null )
-            {
-                // last but not the first.
-                last = me.prev;
-                last.next = null;
-            }
-            else
-            {
-                // neither the last nor the first.
-                me.next.prev = me.prev;
-            }
-            first.prev = me;
-            me.next = first;
-            me.prev = null;
-            first = me;
+            // already the first node.
+            return;
         }
-        catch ( Exception e )
+        me.prev.next = me.next;
+        
+        if ( me.next == null )
         {
-            log.error( "Couldn't make first", e );
+            // last but not the first.
+            last = me.prev;
+            last.next = null;
         }
-        return;
+        else
+        {
+            // neither the last nor the first.
+            me.next.prev = me.prev;
+        }
+        first.prev = me;
+        me.next = first;
+        me.prev = null;
+        first = me;
     }
 
     // ---------------------------------------------------------- debug methods
