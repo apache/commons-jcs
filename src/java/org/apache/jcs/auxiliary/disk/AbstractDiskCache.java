@@ -183,16 +183,20 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                 }
             }
 
-            // The element will go back to the memory cache, so set spoolable
-            // to false, which will prevent the queue listener from serializing
-            // the element.
-
-            pe.setSpoolable( false );
+            // Since the element will go back to the memory cache, we could set
+            // spoolableto false, which will prevent the queue listener from serializing
+            // the element.  This would nto match the disk cache behavior and the
+            // behavior of other auxiliaries.  Gets never remove items from auxiliaries.
+            // Beyond consistency, the items should stay in purgatory and get spooled
+            // since the mem cache may be set to 0.  If an item is active, it will keep
+            // getting put into purgatory and removed. The CompositeCache now does
+            // not put an item to memory from disk ifthe size is 0;
+            // pe.setSpoolable( false );  // commented out for above reasons
+            //purgatory.remove( key );
 
             log.debug( "Found element in purgatory, cacheName: " + cacheName
                     + ", key: " + key );
 
-            purgatory.remove( key );
 
             return pe.cacheElement;
         }
@@ -228,8 +232,12 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         {
             // Remove element from purgatory if it is there
 
-            purgatory.remove( key );
-
+            PurgatoryElement pe = ( PurgatoryElement )purgatory.remove( key );
+            if ( pe != null ) {
+              // no way to remove from queue, just make sure it doesn't get on disk
+              // and then removed right afterwards
+              pe.setSpoolable(false);
+            }
             // Remove from persistent store immediately
 
             doRemove( key );
@@ -262,7 +270,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     public final void dispose()
     {
 
-        // FIXME: May lose the end of the queue, need to be more graceful
+       // FIXME: May lose the end of the queue, need to be more graceful
         cacheEventQueue.destroy();
 
         // Invoke any implementation specific disposal code
@@ -278,6 +286,22 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     public String getCacheName()
     {
         return cacheName;
+    }
+
+    /**
+     * Gets basic stats for the abstract disk cache.
+     *
+     * @return String
+     */
+    public String getStats()
+    {
+      StringBuffer buf = new StringBuffer();
+      buf.append( "\n -------------------------" );
+      buf.append( "\n Abstract Disk Cache:" );
+      buf.append( "\n Purgatory Hits: " + purgHits );
+      buf.append( "\n Purgatory Size: " + purgatory.size() );
+      buf.append( this.cacheEventQueue.getStats() );
+      return buf.toString();
     }
 
     /**
