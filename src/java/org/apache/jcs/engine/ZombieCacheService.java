@@ -26,7 +26,7 @@ public class ZombieCacheService implements ICacheService, IZombie
 
 
     /** Description of the Method */
-    public Serializable get( String cacheName, Serializable key )
+    public ICacheElement get( String cacheName, Serializable key )
     {
         return null;
     }

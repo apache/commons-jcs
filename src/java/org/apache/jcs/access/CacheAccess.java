@@ -60,11 +60,14 @@ import org.apache.jcs.access.behavior.ICacheAccess;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.InvalidHandleException;
+import org.apache.jcs.access.exception.ObjectExistsException;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CompositeCacheAttributes;
+import org.apache.jcs.engine.CacheElement;
 
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 import org.apache.jcs.engine.control.Cache;
 import org.apache.jcs.engine.control.CacheHub;
@@ -230,7 +233,9 @@ public class CacheAccess implements ICacheAccess
      */
     public Object get( Object name )
     {
-        return ( Object ) cacheControl.get( ( Serializable ) name );
+        ICacheElement element = cacheControl.get( ( Serializable ) name );
+
+        return ( element != null ) ? element.getVal() : null;
     }
 
     /**
@@ -239,23 +244,22 @@ public class CacheAccess implements ICacheAccess
      * ObjectExistsException is thrown. Names are scoped to a region so they
      * must be unique within the region they are placed.
      *
-     * @param name Key object will be stored with
-     * @param obj Object to store
+     * @param key Key object will be stored with
+     * @param value Object to store
      * @exception CacheException
      */
-    public void putSafe( Object name, Object obj )
+    public void putSafe( Object key, Object value )
         throws CacheException
     {
-        try
+        if ( cacheControl.get( ( Serializable ) key ) != null )
         {
-            cacheControl.putSafe( ( Serializable ) name, ( Serializable ) obj );
+            throw new ObjectExistsException( "Object exists for key " + key );
         }
-        catch ( Exception e )
+        else
         {
-            throw new CacheException( e );
+            put( key, value );
         }
     }
-
 
     /**
      * Place a new object in the cache, associated with key name. If there is
@@ -295,8 +299,8 @@ public class CacheAccess implements ICacheAccess
         try
         {
             cacheControl.put( ( Serializable ) name,
-                ( Serializable ) obj,
-                attr );
+                              ( Serializable ) obj,
+                              attr );
         }
         catch ( Exception e )
         {

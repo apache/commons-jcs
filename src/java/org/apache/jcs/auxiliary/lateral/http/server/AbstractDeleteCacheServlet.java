@@ -133,10 +133,10 @@ public abstract class AbstractDeleteCacheServlet
                     if ( task.equalsIgnoreCase( "stats" ) )
                     {
 
-                        out.println( "<br><br>" );
-                        out.println( "<b>Stats for " + hashtableName + ":</b><br>" );
-                        out.println( cache.getStats() );
-                        out.println( "<br>" );
+//                        out.println( "<br><br>" );
+//                        out.println( "<b>Stats for " + hashtableName + ":</b><br>" );
+//                        out.println( cache.getStats() );
+//                        out.println( "<br>" );
 
                     }
                     else

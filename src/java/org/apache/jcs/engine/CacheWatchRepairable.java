@@ -10,8 +10,8 @@ import java.util.Set;
 
 import java.util.Map.Entry;
 
-import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICacheObserver;
+import org.apache.jcs.engine.behavior.ICacheListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -372,15 +372,7 @@ public class RemoteCacheServer
      * Returns a cache value from the specified remote cache; or null if the
      * cache or key does not exist.
      */
-    public Serializable get( String cacheName, Serializable key )
-        throws IOException
-    {
-        return get( cacheName, key, true );
-    }
-
-
-    /** Description of the Method */
-    public Serializable get( String cacheName, Serializable key, boolean container )
+    public ICacheElement get( String cacheName, Serializable key )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -414,7 +406,7 @@ public class RemoteCacheServer
             ICompositeCache c = ( ICompositeCache ) cacheDesc.cache;
 //            if ( fromCluster )
 //            {
-            return c.get( key, container, CacheConstants.REMOTE_INVOKATION );
+            return c.get( key, CacheConstants.REMOTE_INVOKATION );
 //            }
 //            else
 //            {
@@ -816,19 +808,6 @@ public class RemoteCacheServer
     {
         log.debug( "*** Warning: Server now unreferenced and subject to GC. ***" );
     }
-
-
-    /**
-     * Gets the stats attribute of the RemoteCacheServer object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-        throws IOException
-    {
-        return cacheManager.getStats();
-    }
-
 
     /** Returns the next generated listener id [0,255]. */
     private byte nextListenerId()

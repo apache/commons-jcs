@@ -2,7 +2,7 @@ package org.apache.jcs.auxiliary.lateral.behavior;
 
 import java.io.Serializable;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Description of the Interface
@@ -10,7 +10,7 @@ import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
  * @author asmuts
  * @created January 15, 2002
  */
-public interface ILateralCacheAttributes extends Serializable, IAuxiliaryCacheAttributes
+public interface ILateralCacheAttributes extends Serializable, AuxiliaryCacheAttributes
 {
 
     final static int HTTP = 1;

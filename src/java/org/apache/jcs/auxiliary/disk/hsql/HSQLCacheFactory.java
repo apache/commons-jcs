@@ -53,15 +53,10 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
 
-import org.apache.jcs.auxiliary.disk.hsql.behavior.IHSQLCacheAttributes;
-
-import org.apache.jcs.engine.behavior.ICache;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 
 /**
  * @author Aaron Smuts
@@ -69,26 +64,22 @@ import org.apache.commons.logging.LogFactory;
  * @version 1.0
  */
 
-public class HSQLCacheFactory implements IAuxiliaryCacheFactory
+public class HSQLCacheFactory implements AuxiliaryCacheFactory
 {
-    private final static Log log =
-        LogFactory.getLog( HSQLCacheFactory.class );
-
     private static String name;
 
-
     /** Constructor for the HSQLCacheFactory object */
-    public HSQLCacheFactory() { }
-
+    public HSQLCacheFactory()
+    {
+    }
 
     /** Description of the Method */
-    public ICache createCache( IAuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
     {
-        IHSQLCacheAttributes idca = ( IHSQLCacheAttributes ) iaca;
+        HSQLCacheAttributes idca = ( HSQLCacheAttributes ) iaca;
         HSQLCacheManager dcm = HSQLCacheManager.getInstance( idca );
         return dcm.getCache( idca );
     }
-
 
     /**
      * Gets the name attribute of the HSQLCacheFactory object
@@ -99,7 +90,6 @@ public class HSQLCacheFactory implements IAuxiliaryCacheFactory
     {
         return this.name;
     }
-
 
     /**
      * Sets the name attribute of the HSQLCacheFactory object

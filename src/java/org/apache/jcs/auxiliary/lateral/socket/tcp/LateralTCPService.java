@@ -184,21 +184,9 @@ public class LateralTCPService
     }
 
     /** */
-    public Serializable get( String cacheName, Serializable key )
+    public ICacheElement get( String cacheName, Serializable key )
         throws IOException
     {
-        //p( "get(cacheName,key)" );
-        return get( cacheName, key, true );
-        // nothing needs to be done
-    }
-
-    /**
-     * An expiremental get implementation. By default it should be off.
-     */
-    public Serializable get( String cacheName, Serializable key, boolean container )
-        throws IOException
-    {
-        //p( "get(cacheName,key,container)" );
         CacheElement ce = new CacheElement( cacheName, key, null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         //led.requesterId = requesterId; // later

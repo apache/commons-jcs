@@ -61,11 +61,10 @@ import org.apache.jcs.engine.CacheEventQueue;
 import org.apache.jcs.engine.CacheInfo;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
+import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheListener;
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.utils.locking.ReadWriteLock;
 
 import java.io.IOException;
@@ -90,7 +89,7 @@ import java.util.Hashtable;
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
  * @version $Id$
  */
-public abstract class AbstractDiskCache implements ICache, Serializable
+public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 {
     private final static Log log =
         LogFactory.getLog( AbstractDiskCache.class );
@@ -148,29 +147,6 @@ public abstract class AbstractDiskCache implements ICache, Serializable
     // ------------------------------------------------------- interface ICache
 
     /**
-     * @see org.apache.jcs.engine.behavior.ICache#put
-     */
-    public final void put( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value, null );
-    }
-
-    /**
-     * @see org.apache.jcs.engine.behavior.ICache#put
-     */
-    public final void put( Serializable key, Serializable value,
-                     IElementAttributes attributes )
-        throws IOException
-    {
-        CacheElement ce = new CacheElement( cacheName, key, value );
-
-        ce.setElementAttributes( attributes );
-
-        update( ce );
-    }
-
-    /**
      * Adds the provided element to the cache. Element will be added to
      * purgatory, and then queued for later writing to the serialized storage
      * mechanism.
@@ -215,17 +191,9 @@ public abstract class AbstractDiskCache implements ICache, Serializable
     }
 
     /**
-     * @see org.apache.jcs.engine.behavior.ICache#get
+     * @see AuxiliaryCache#get
      */
-    public final Serializable get( Serializable key )
-    {
-        return get( key, true );
-    }
-
-    /**
-     * @see org.apache.jcs.engine.behavior.ICache#get
-     */
-    public final Serializable get( Serializable key, boolean container )
+    public final ICacheElement get( Serializable key )
     {
         // If not alive, always return null.
 
@@ -259,18 +227,9 @@ public abstract class AbstractDiskCache implements ICache, Serializable
             log.debug( "Found element in purgatory, cacheName: " + cacheName +
                        ", key: " + key );
 
-            if ( container )
-            {
-                purgatory.remove( key );
+            purgatory.remove( key );
 
-                return pe.cacheElement;
-            }
-            else
-            {
-                purgatory.remove( key );
-
-                return ( Serializable ) pe.cacheElement.getVal();
-            }
+            return pe.cacheElement;
         }
 
         // If we reach this point, element was not found in purgatory, so get
@@ -363,17 +322,6 @@ public abstract class AbstractDiskCache implements ICache, Serializable
     }
 
     /**
-     * Subclasses will want to override this to provide more information most
-     * likely.
-     *
-     * @see ICache#getStats
-     */
-    public String getStats()
-    {
-        return "cacheName = " + cacheName;
-    }
-
-    /**
      * @see ICache#getStatus
      */
     public int getStatus()
@@ -390,7 +338,7 @@ public abstract class AbstractDiskCache implements ICache, Serializable
     public abstract int getSize();
 
     /**
-     * @see ICache#getType
+     * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType
      *
      * @return Always returns DISK_CACHE since subclasses should all be of
      *         that type.
@@ -409,7 +357,7 @@ public abstract class AbstractDiskCache implements ICache, Serializable
         private byte listenerId = 0;
 
         /**
-         * @see ICacheListener#getListenerID
+         * @see org.apache.jcs.engine.CacheListener#getListenerId
          */
         public byte getListenerId()
             throws IOException
@@ -418,7 +366,7 @@ public abstract class AbstractDiskCache implements ICache, Serializable
         }
 
         /**
-         * @see ICacheListener#setListenerID
+         * @see ICacheListener#setListenerId
          */
         public void setListenerId( byte id )
             throws IOException
@@ -467,7 +415,7 @@ public abstract class AbstractDiskCache implements ICache, Serializable
         }
 
         /**
-         * @see ICacheListener#handleRemove
+         * @see org.apache.jcs.engine.CacheListener#handleRemove
          */
         public void handleRemove( String cacheName, Serializable key )
             throws IOException
@@ -482,7 +430,7 @@ public abstract class AbstractDiskCache implements ICache, Serializable
         }
 
         /**
-         * @see ICacheListener#handleRemoveAll
+         * @see org.apache.jcs.engine.CacheListener#handleRemoveAll
          */
         public void handleRemoveAll( String cacheName )
             throws IOException
@@ -494,7 +442,7 @@ public abstract class AbstractDiskCache implements ICache, Serializable
         }
 
         /**
-         * @see ICacheListener#handleDispose
+         * @see org.apache.jcs.engine.CacheListener#handleDispose
          */
         public void handleDispose( String cacheName )
             throws IOException
@@ -514,7 +462,7 @@ public abstract class AbstractDiskCache implements ICache, Serializable
      * @param key Key to locate value for.
      * @return An object matching key, or null.
      */
-    protected abstract Serializable doGet( Serializable key );
+    protected abstract ICacheElement doGet( Serializable key );
 
     /**
      * Add a cache element to the persistent store.

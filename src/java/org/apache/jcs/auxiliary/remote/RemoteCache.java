@@ -33,17 +33,11 @@ public class RemoteCache implements ICache
     private final static Log log =
         LogFactory.getLog( RemoteCache.class );
 
-    private static int numCreated = 0;
-
     final String cacheName;
     private IRemoteCacheService remote;
     private IRemoteCacheAttributes irca;
 
     IElementAttributes attr = null;
-
-    private HashMap keyHash;
-    // not synchronized to maximize concurrency.
-
 
     /** Description of the Method */
     public String toString()
@@ -106,36 +100,6 @@ public class RemoteCache implements ICache
         return this.attr;
     }
 
-
-    /**
-     * Synchronously put to the remote cache; if failed, replace the remote
-     * handle with a zombie.
-     */
-    public void put( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value, this.attr.copy() );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, IElementAttributes attr )
-        throws IOException
-    {
-        try
-        {
-            CacheElement ce = new CacheElement( cacheName, sanitized( key ), sanitized( value ) );
-            ce.setElementAttributes( attr );
-            update( ce );
-        }
-        catch ( Exception ex )
-        {
-            handleException( ex, "Failed to put " + key + " to " + cacheName );
-            //throw ex;
-        }
-    }
-
-
     /** Description of the Method */
     public void update( ICacheElement ce )
         throws IOException
@@ -176,7 +140,7 @@ public class RemoteCache implements ICache
      * Synchronously get from the remote cache; if failed, replace the remote
      * handle with a zombie.
      */
-    public Serializable get( Serializable key )
+    public ICacheElement get( Serializable key )
         throws IOException
     {
         try
@@ -214,43 +178,6 @@ public class RemoteCache implements ICache
         // avoid this step for now, [problem with group id wrapper]
         return s;
     }
-
-
-    /**
-     * Synchronously get from the remote cache; if failed, replace the remote
-     * handle with a zombie.
-     */
-    public Serializable get( Serializable key, boolean container )
-        throws IOException
-    {
-        // TODO: rethink this with gets
-        // Do not communicate with cluster except via server.
-        // separates the remote from the local.  Must run a server to
-        // cluster, else it can be run inside a local.
-        //if ( this.irca.getRemoteType() != irca.CLUSTER )
-        if ( true )
-        {
-
-            try
-            {
-                return remote.get( cacheName, sanitized( key ), container );
-            }
-            catch ( ObjectNotFoundException one )
-            {
-                log.debug( "didn't find element " + key + " in remote" );
-                return null;
-            }
-            catch ( Exception ex )
-            {
-                handleException( ex, "Failed to get " + key + " from " + cacheName );
-                return null;
-                // never executes; just keep the compiler happy.
-                //throw ex;
-            }
-        }
-        return null;
-    }
-
 
     /**
      * Synchronously remove from the remote cache; if failed, replace the remote
@@ -338,18 +265,6 @@ public class RemoteCache implements ICache
             //remote = null;
         }
     }
-
-
-    /**
-     * Gets the stats attribute of the RemoteCache object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "cacheName = " + cacheName;
-    }
-
 
     /**
      * Returns the cache status. An error status indicates the remote connection

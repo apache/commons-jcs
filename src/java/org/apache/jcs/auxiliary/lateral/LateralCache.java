@@ -81,35 +81,6 @@ public class LateralCache implements ICache
         return "LateralCache: " + cattr.getCacheName();
     }
 
-
-    /**
-     * Synchronously put to the lateral cache; if failed, replace the remote
-     * handle with a zombie.
-     */
-    public void put( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value, ( IElementAttributes ) this.attr.copy() );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, IElementAttributes attr )
-        throws IOException
-    {
-        try
-        {
-            CacheElement ce = new CacheElement( cattr.getCacheName(), key, value );
-            ce.setElementAttributes( attr );
-            update( ce );
-        }
-        catch ( Exception ex )
-        {
-            handleException( ex, "Failed to put " + key + " to " + cattr.getCacheName() );
-        }
-    }
-
-
     /** Description of the Method */
     public void update( ICacheElement ce )
         throws IOException
@@ -137,38 +108,20 @@ public class LateralCache implements ICache
     // end update
 
     /** Returns null. The performace costs are too great. */
-    public Serializable get( Serializable key )
+    public ICacheElement get( Serializable key )
         throws IOException
     {
-        //p( "get(key)" );
+        ICacheElement obj = null;
+
         if ( cattr.getPutOnlyMode() )
         {
-            //p( "put only mode" );
-            return null;
-        }
-        else
-        {
-            return get( key, true );
-        }
-    }
-
-
-    /** Returns <code>null</code> . */
-    public Serializable get( Serializable key, boolean container )
-        throws IOException
-    {
-        //p( "get(key,container)" );
-        Serializable obj = null;
-        if ( cattr.getPutOnlyMode() )
-        {
-            //p( "put only mode" );
             return null;
         }
         else
         {
             try
             {
-                obj = lateral.get( cacheName, key, container );
+                obj = lateral.get( cacheName, key );
             }
             catch ( Exception e )
             {
@@ -245,18 +198,6 @@ public class LateralCache implements ICache
         //*/
     }
 
-
-    /**
-     * Gets the stats attribute of the LateralCache object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "cacheName = " + cattr.getCacheName();
-    }
-
-
     /**
      * Returns the cache status.
      *
@@ -267,7 +208,6 @@ public class LateralCache implements ICache
         return this.lateral instanceof IZombie ? CacheConstants.STATUS_ERROR : CacheConstants.STATUS_ALIVE;
     }
 
-
     /**
      * Returns the current cache size.
      *
@@ -277,7 +217,6 @@ public class LateralCache implements ICache
     {
         return 0;
     }
-
 
     /**
      * Gets the cacheType attribute of the LateralCache object

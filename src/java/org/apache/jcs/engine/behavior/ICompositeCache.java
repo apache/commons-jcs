@@ -38,17 +38,8 @@ public interface ICompositeCache extends ICache
 
 
     /** allows a get request to stay local * */
-    public Serializable get( Serializable key, boolean container, boolean localInvocation )
+    public ICacheElement get( Serializable key, boolean localInvocation )
         throws IOException;
-
-
-    /**
-     * Returns the cache statistics.
-     *
-     * @return The stats value
-     */
-    public String getStats();
-
 
     /**
      * Returns the current cache size.

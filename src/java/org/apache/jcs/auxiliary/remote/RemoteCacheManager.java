@@ -12,7 +12,8 @@ import java.util.Map;
 
 import org.apache.jcs.engine.behavior.ICache;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 import org.apache.jcs.auxiliary.remote.RemoteCache;
 import org.apache.jcs.auxiliary.remote.RemoteCacheMonitor;
@@ -41,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class RemoteCacheManager implements IAuxiliaryCacheManager
+public class RemoteCacheManager implements AuxiliaryCacheManager
 {
     private final static Log log =
         LogFactory.getLog( RemoteCacheManager.class );
@@ -188,10 +189,7 @@ public class RemoteCacheManager implements IAuxiliaryCacheManager
                 }
             }
         }
-        if ( log.isDebugEnabled() )
-        {
-            ins.log.debug( "Manager stats : " + ins.getStats() + "-- in getInstance()" );
-        }
+
         ins.clients++;
         // Fires up the monitoring daemon.
         if ( monitor == null )
@@ -219,7 +217,7 @@ public class RemoteCacheManager implements IAuxiliaryCacheManager
      *
      * @return The cache value
      */
-    public ICache getCache( String cacheName )
+    public AuxiliaryCache getCache( String cacheName )
     {
         IRemoteCacheAttributes ca = ( IRemoteCacheAttributes ) irca.copy();
         ca.setCacheName( cacheName );
@@ -232,7 +230,7 @@ public class RemoteCacheManager implements IAuxiliaryCacheManager
      *
      * @return The cache value
      */
-    public ICache getCache( IRemoteCacheAttributes cattr )
+    public AuxiliaryCache getCache( IRemoteCacheAttributes cattr )
     {
         RemoteCacheNoWait c = null;
         synchronized ( caches )
@@ -244,11 +242,7 @@ public class RemoteCacheManager implements IAuxiliaryCacheManager
                 caches.put( cattr.getCacheName(), c );
             }
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Manager stats : " + getStats() );
-        }
-        //if ( irca.getUseRemote() ) {
+
         try
         {
             // Remote cache manager can handle this by gettign the type formt he listener
@@ -267,7 +261,7 @@ public class RemoteCacheManager implements IAuxiliaryCacheManager
         {
             log.error( e.getMessage() );
         }
-        //}
+
         return c;
     }
 
@@ -287,29 +281,6 @@ public class RemoteCacheManager implements IAuxiliaryCacheManager
             c.dispose();
         }
     }
-
-
-    // Don't care if there is a concurrency failure ?
-    /**
-     * Gets the stats attribute of the RemoteCacheManager object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        StringBuffer stats = new StringBuffer();
-        Iterator allCaches = caches.values().iterator();
-        while ( allCaches.hasNext() )
-        {
-            ICache c = ( ICache ) allCaches.next();
-            if ( c != null )
-            {
-                stats.append( "<br>&nbsp;&nbsp;&nbsp;" + c.getStats() );
-            }
-        }
-        return stats.toString();
-    }
-
 
     /** Description of the Method */
     public void release()

@@ -1,6 +1,6 @@
 package org.apache.jcs.auxiliary.remote.server;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
@@ -150,16 +150,16 @@ public class RemoteCacheServerAttributes implements IRemoteCacheServerAttributes
 
 
     /** Description of the Method */
-    public IAuxiliaryCacheAttributes copy()
+    public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( IAuxiliaryCacheAttributes ) this.clone();
+            return ( AuxiliaryCacheAttributes ) this.clone();
         }
         catch ( Exception e )
         {
         }
-        return ( IAuxiliaryCacheAttributes ) this;
+        return ( AuxiliaryCacheAttributes ) this;
     }
 
 

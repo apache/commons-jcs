@@ -11,14 +11,6 @@ import java.io.IOException;
  */
 public interface ICacheServiceAdmin
 {
-    /**
-     * Gets the stats attribute of the ICacheServiceAdmin object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-        throws IOException;
-
 
     /** Description of the Method */
     public void shutdown()

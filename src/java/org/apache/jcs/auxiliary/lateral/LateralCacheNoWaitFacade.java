@@ -3,17 +3,11 @@ package org.apache.jcs.auxiliary.lateral;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheElement;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.ICacheElement;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-//import org.apache.jcs.auxiliary.lateral.socket.tcp.*;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheType;
 
 /**
  * Used to provide access to multiple services under nowait protection.
@@ -24,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class LateralCacheNoWaitFacade implements ICache
+public class LateralCacheNoWaitFacade implements AuxiliaryCache
 {
     private final static Log log =
         LogFactory.getLog( LateralCacheNoWaitFacade.class );
@@ -47,32 +41,6 @@ public class LateralCacheNoWaitFacade implements ICache
         this.cacheName = cacheName;
     }
 
-
-    /** Adds a put request to the lateral cache. */
-    public void put( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value, null );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, IElementAttributes attr )
-        throws IOException
-    {
-        try
-        {
-            CacheElement ce = new CacheElement( cacheName, key, value );
-            ce.setElementAttributes( attr );
-            update( ce );
-        }
-        catch ( Exception ex )
-        {
-            log.error( ex );
-        }
-    }
-
-
     /** Description of the Method */
     public void update( ICacheElement ce )
         throws IOException
@@ -85,7 +53,7 @@ public class LateralCacheNoWaitFacade implements ICache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[i].update( ce );
+                noWaits[ i ].update( ce );
             }
         }
         catch ( Exception ex )
@@ -94,22 +62,14 @@ public class LateralCacheNoWaitFacade implements ICache
         }
     }
 
-
     /** Synchronously reads from the lateral cache. */
-    public Serializable get( Serializable key )
-    {
-        return get( key, true );
-    }
-
-
-    /** Description of the Method */
-    public Serializable get( Serializable key, boolean container )
+    public ICacheElement get( Serializable key )
     {
         for ( int i = 0; i < noWaits.length; i++ )
         {
             try
             {
-                Object obj = noWaits[i].get( key, container );
+                Object obj = noWaits[ i ].get( key );
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "obj = " + obj );
@@ -119,7 +79,7 @@ public class LateralCacheNoWaitFacade implements ICache
                     // return after first success
                     // could do this simultaneously
                     // serious blocking risk here
-                    return ( Serializable ) obj;
+                    return ( ICacheElement ) obj;
                 }
             }
             catch ( Exception ex )
@@ -131,7 +91,6 @@ public class LateralCacheNoWaitFacade implements ICache
         return null;
     }
 
-
     /** Adds a remove request to the lateral cache. */
     public boolean remove( Serializable key )
     {
@@ -139,7 +98,7 @@ public class LateralCacheNoWaitFacade implements ICache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[i].remove( key );
+                noWaits[ i ].remove( key );
             }
         }
         catch ( Exception ex )
@@ -149,7 +108,6 @@ public class LateralCacheNoWaitFacade implements ICache
         return false;
     }
 
-
     /** Adds a removeAll request to the lateral cache. */
     public void removeAll()
     {
@@ -157,7 +115,7 @@ public class LateralCacheNoWaitFacade implements ICache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[i].removeAll();
+                noWaits[ i ].removeAll();
             }
         }
         catch ( Exception ex )
@@ -165,7 +123,6 @@ public class LateralCacheNoWaitFacade implements ICache
             log.error( ex );
         }
     }
-
 
     /** Adds a dispose request to the lateral cache. */
     public void dispose()
@@ -174,7 +131,7 @@ public class LateralCacheNoWaitFacade implements ICache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[i].dispose();
+                noWaits[ i ].dispose();
             }
         }
         catch ( Exception ex )
@@ -182,19 +139,6 @@ public class LateralCacheNoWaitFacade implements ICache
             log.error( ex );
         }
     }
-
-
-    /**
-     * No lateral invokation.
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "";
-        //cache.getStats();
-    }
-
 
     /**
      * No lateral invokation.
@@ -207,7 +151,6 @@ public class LateralCacheNoWaitFacade implements ICache
         //cache.getSize();
     }
 
-
     /**
      * Gets the cacheType attribute of the LateralCacheNoWaitFacade object
      *
@@ -217,7 +160,6 @@ public class LateralCacheNoWaitFacade implements ICache
     {
         return ICacheType.LATERAL_CACHE;
     }
-
 
     /**
      * Gets the cacheName attribute of the LateralCacheNoWaitFacade object
@@ -242,7 +184,6 @@ public class LateralCacheNoWaitFacade implements ICache
         return 0;
         //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
     }
-
 
     /** Description of the Method */
     public String toString()

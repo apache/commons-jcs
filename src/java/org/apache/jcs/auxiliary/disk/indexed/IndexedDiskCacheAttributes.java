@@ -53,9 +53,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-
-import org.apache.jcs.auxiliary.disk.indexed.behavior.IIndexedDiskCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Configuration class for the Indexed Disk Cache
@@ -63,7 +61,7 @@ import org.apache.jcs.auxiliary.disk.indexed.behavior.IIndexedDiskCacheAttribute
  * @author asmuts
  * @created January 15, 2002
  */
-public class IndexedDiskCacheAttributes implements IIndexedDiskCacheAttributes
+public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
 {
 
     private String cacheName;
@@ -151,16 +149,16 @@ public class IndexedDiskCacheAttributes implements IIndexedDiskCacheAttributes
      *
      * @return
      */
-    public IAuxiliaryCacheAttributes copy()
+    public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( IAuxiliaryCacheAttributes ) this.clone();
+            return ( AuxiliaryCacheAttributes ) this.clone();
         }
         catch ( Exception e )
         {
         }
-        return ( IAuxiliaryCacheAttributes ) this;
+        return ( AuxiliaryCacheAttributes ) this;
     }
 
 

@@ -1,16 +1,14 @@
 package org.apache.jcs.auxiliary.lateral;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.StringTokenizer;
-
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
-
-import org.apache.jcs.engine.behavior.ICache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.behavior.ICache;
 
 //import org.apache.jcs.auxiliary.*;
 
@@ -24,13 +22,12 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class LateralCacheFactory implements IAuxiliaryCacheFactory
+public class LateralCacheFactory implements AuxiliaryCacheFactory
 {
     private final static Log log =
         LogFactory.getLog( LateralCacheFactory.class );
 
     private static String name;
-
 
     /**
      * Interface method. Allows classforname construction, making caches
@@ -39,7 +36,7 @@ public class LateralCacheFactory implements IAuxiliaryCacheFactory
      * @return
      * @param iaca
      */
-    public ICache createCache( IAuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
     {
         LateralCacheAttributes lac = ( LateralCacheAttributes ) iaca;
         ArrayList noWaits = new ArrayList();
@@ -52,8 +49,8 @@ public class LateralCacheFactory implements IAuxiliaryCacheFactory
             {
                 noWaits.add( ic );
             }
-        } else
-        if ( lac.getTransmissionType() == lac.JAVAGROUPS )
+        }
+        else if ( lac.getTransmissionType() == lac.JAVAGROUPS )
         {
             LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
             ICache ic = lcm.getCache( lac.getCacheName() );
@@ -62,8 +59,7 @@ public class LateralCacheFactory implements IAuxiliaryCacheFactory
                 noWaits.add( ic );
             }
         }
-        else
-            if ( lac.getTransmissionType() == lac.TCP )
+        else if ( lac.getTransmissionType() == lac.TCP )
         {
 
             //pars up the tcp servers and set the tcpServer value and
@@ -91,8 +87,7 @@ public class LateralCacheFactory implements IAuxiliaryCacheFactory
             }
 
         }
-        else
-            if ( lac.getTransmissionType() == lac.XMLRPC )
+        else if ( lac.getTransmissionType() == lac.XMLRPC )
         {
 
             //pars up the tcp servers and set the tcpServer value and
@@ -120,8 +115,7 @@ public class LateralCacheFactory implements IAuxiliaryCacheFactory
             }
 
         }
-        else
-            if ( lac.getTransmissionType() == lac.HTTP )
+        else if ( lac.getTransmissionType() == lac.HTTP )
         {
             StringTokenizer it = new StringTokenizer( lac.getHttpServers(), "," );
             while ( it.hasMoreElements() )
@@ -137,7 +131,7 @@ public class LateralCacheFactory implements IAuxiliaryCacheFactory
             }
         }
 
-        LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( ( LateralCacheNoWait[] ) noWaits.toArray( new LateralCacheNoWait[0] ), iaca.getCacheName() );
+        LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( ( LateralCacheNoWait[] ) noWaits.toArray( new LateralCacheNoWait[ 0 ] ), iaca.getCacheName() );
 
         return lcnwf;
     }
@@ -152,7 +146,6 @@ public class LateralCacheFactory implements IAuxiliaryCacheFactory
     {
         return this.name;
     }
-
 
     /**
      * Sets the name attribute of the LateralCacheFactory object

@@ -131,7 +131,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public Serializable get( String cache, Serializable att )
+    public ICacheElement get( String cache, Serializable att )
         throws IOException
     {
         return null;

@@ -200,10 +200,7 @@ public class RemoteCacheClusterManager implements ICacheManager
             }
 
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Manager stats : " + ins.getStats() + "-- in getInstance()" );
-        }
+
         ins.clients++;
         // Fires up the monitoring daemon.
         if ( monitor == null )
@@ -269,10 +266,7 @@ public class RemoteCacheClusterManager implements ICacheManager
                 caches.put( cattr.getCacheName(), c );
             }
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Manager stats : " + getStats() );
-        }
+
         //if ( irca.getUseRemote() ) {
         try
         {
@@ -306,29 +300,6 @@ public class RemoteCacheClusterManager implements ICacheManager
             c.dispose();
         }
     }
-
-
-    // Don't care if there is a concurrency failure ?
-    /**
-     * Gets the stats attribute of the RemoteCacheClusterManager object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        StringBuffer stats = new StringBuffer();
-        Iterator allCaches = caches.values().iterator();
-        while ( allCaches.hasNext() )
-        {
-            ICache c = ( ICache ) allCaches.next();
-            if ( c != null )
-            {
-                stats.append( "<br>&nbsp;&nbsp;&nbsp;" + c.getStats() );
-            }
-        }
-        return stats.toString();
-    }
-
 
     /** Description of the Method */
     public void release()

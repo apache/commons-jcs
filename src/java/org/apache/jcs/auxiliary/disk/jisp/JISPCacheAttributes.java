@@ -7,9 +7,7 @@
  */
 package org.apache.jcs.auxiliary.disk.jisp;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-
-import org.apache.jcs.auxiliary.disk.jisp.behavior.IJISPCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Description of the Class
@@ -17,7 +15,7 @@ import org.apache.jcs.auxiliary.disk.jisp.behavior.IJISPCacheAttributes;
  * @author asmuts
  * @created January 15, 2002
  */
-public class JISPCacheAttributes implements IJISPCacheAttributes
+public class JISPCacheAttributes implements AuxiliaryCacheAttributes
 {
 
     private String cacheName;
@@ -27,13 +25,11 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
 
     private boolean clearOnStart;
 
-
     /** Constructor for the JISPCacheAttributes object */
     public JISPCacheAttributes()
     {
         clearOnStart = false;
     }
-
 
     /**
      * Sets the diskPath attribute of the JISPCacheAttributes object
@@ -44,7 +40,6 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
     {
         this.diskPath = path;
     }
-
 
     /**
      * Gets the diskPath attribute of the JISPCacheAttributes object
@@ -69,7 +64,6 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
         clearOnStart = clear;
     }
 
-
     /**
      * Gets the clearOnStart attribute of the JISPCacheAttributes object
      *
@@ -79,7 +73,6 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
     {
         return clearOnStart;
     }
-
 
     /**
      * Sets the cacheName attribute of the JISPCacheAttributes object
@@ -91,7 +84,6 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
         this.cacheName = s;
     }
 
-
     /**
      * Gets the cacheName attribute of the JISPCacheAttributes object
      *
@@ -101,7 +93,6 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
     {
         return this.cacheName;
     }
-
 
     /**
      * Gets the name attribute of the JISPCacheAttributes object
@@ -113,7 +104,6 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
         return this.name;
     }
 
-
     /**
      * Sets the name attribute of the JISPCacheAttributes object
      *
@@ -124,20 +114,18 @@ public class JISPCacheAttributes implements IJISPCacheAttributes
         this.name = name;
     }
 
-
     /** Description of the Method */
-    public IAuxiliaryCacheAttributes copy()
+    public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( IAuxiliaryCacheAttributes ) this.clone();
+            return ( AuxiliaryCacheAttributes ) this.clone();
         }
         catch ( Exception e )
         {
         }
-        return ( IAuxiliaryCacheAttributes ) this;
+        return ( AuxiliaryCacheAttributes ) this;
     }
-
 
     /** Description of the Method */
     public String toString()

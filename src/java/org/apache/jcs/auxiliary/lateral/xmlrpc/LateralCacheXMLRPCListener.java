@@ -256,7 +256,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         getCacheManager();
         ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
         // get container
-        return cache.get( key, true, CacheConstants.REMOTE_INVOKATION );
+        return cache.get( key, CacheConstants.REMOTE_INVOKATION );
     }
 
     /** Description of the Method */

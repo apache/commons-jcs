@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 
@@ -393,16 +393,16 @@ public class LateralCacheAttributes implements Serializable, ILateralCacheAttrib
      *
      * @return Self
      */
-    public IAuxiliaryCacheAttributes copy()
+    public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( IAuxiliaryCacheAttributes ) this.clone();
+            return ( AuxiliaryCacheAttributes ) this.clone();
         }
         catch ( Exception e )
         {
         }
-        return ( IAuxiliaryCacheAttributes ) this;
+        return ( AuxiliaryCacheAttributes ) this;
     }
 
 

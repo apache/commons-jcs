@@ -56,9 +56,10 @@ package org.apache.jcs.auxiliary.disk.indexed;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.disk.indexed.behavior.IIndexedDiskCacheAttributes;
+import org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheManager;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -70,7 +71,7 @@ import java.util.Hashtable;
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
  * @version $Id$
  */
-public class IndexedDiskCacheManager implements ICacheManager
+public class IndexedDiskCacheManager implements AuxiliaryCacheManager
 {
     private final static Log log =
         LogFactory.getLog( IndexedDiskCacheManager.class );
@@ -81,7 +82,7 @@ public class IndexedDiskCacheManager implements ICacheManager
 
     private Hashtable caches = new Hashtable();
 
-    private IIndexedDiskCacheAttributes defaultCacheAttributes;
+    private IndexedDiskCacheAttributes defaultCacheAttributes;
 
     /**
      * Constructor for the IndexedDiskCacheManager object
@@ -90,7 +91,7 @@ public class IndexedDiskCacheManager implements ICacheManager
      *                               the instance.
      */
     private IndexedDiskCacheManager(
-        IIndexedDiskCacheAttributes defaultCacheAttributes )
+        IndexedDiskCacheAttributes defaultCacheAttributes )
     {
         this.defaultCacheAttributes = defaultCacheAttributes;
     }
@@ -104,7 +105,7 @@ public class IndexedDiskCacheManager implements ICacheManager
      * @return The instance value
      */
     public static IndexedDiskCacheManager getInstance(
-        IIndexedDiskCacheAttributes defaultCacheAttributes )
+        IndexedDiskCacheAttributes defaultCacheAttributes )
     {
         if ( instance == null )
         {
@@ -118,11 +119,6 @@ public class IndexedDiskCacheManager implements ICacheManager
             }
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Get instance, manager stats: " + instance.getStats() );
-        }
-
         clients++;
 
         return instance;
@@ -132,15 +128,15 @@ public class IndexedDiskCacheManager implements ICacheManager
      * Gets an IndexedDiskCache for the supplied name using the default
      * attributes.
      *
-     * @see getCache( IIndexedDiskCacheAttributes }
+     * @see #getCache( IndexedDiskCacheAttributes }
      *
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
-    public ICache getCache( String cacheName )
+    public AuxiliaryCache getCache( String cacheName )
     {
-        IIndexedDiskCacheAttributes cacheAttributes =
-            ( IIndexedDiskCacheAttributes ) defaultCacheAttributes.copy();
+        IndexedDiskCacheAttributes cacheAttributes =
+            ( IndexedDiskCacheAttributes ) defaultCacheAttributes.copy();
 
         cacheAttributes.setCacheName( cacheName );
 
@@ -152,13 +148,13 @@ public class IndexedDiskCacheManager implements ICacheManager
      * existing cache for the name attribute if one has been created, or will
      * create a new cache.
      *
-     * @param cattr Attributes the cache should have.
+     * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      *
      */
-    public ICache getCache( IIndexedDiskCacheAttributes cacheAttributes )
+    public AuxiliaryCache getCache( IndexedDiskCacheAttributes cacheAttributes )
     {
-        ICache cache = null;
+        AuxiliaryCache cache = null;
 
         String cacheName = cacheAttributes.getCacheName();
 
@@ -169,7 +165,7 @@ public class IndexedDiskCacheManager implements ICacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            cache = ( ICache ) caches.get( cacheName );
+            cache = ( AuxiliaryCache ) caches.get( cacheName );
 
             // If it was not found, create a new one using the supplied
             // attributes
@@ -180,11 +176,6 @@ public class IndexedDiskCacheManager implements ICacheManager
 
                 caches.put( cacheName, cache );
             }
-        }
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "After getCache, manager stats: " + instance.getStats() );
         }
 
         return cache;
@@ -212,31 +203,6 @@ public class IndexedDiskCacheManager implements ICacheManager
             }
         }
     }
-
-    /**
-     * Returns the stats of all the managed caches.
-     *
-     * @return String of stats from each managed cache, seperated by commas.
-     */
-    public String getStats()
-    {
-        StringBuffer stats = new StringBuffer();
-        Enumeration allCaches = caches.elements();
-
-        while ( allCaches.hasMoreElements() )
-        {
-            ICache raf = ( ICache ) allCaches.nextElement();
-
-            if ( raf != null )
-            {
-                stats.append( raf.getStats() );
-                stats.append( ", " );
-            }
-        }
-
-        return stats.toString();
-    }
-
 
     /**
      * Gets the cacheType attribute of the DiskCacheManager object

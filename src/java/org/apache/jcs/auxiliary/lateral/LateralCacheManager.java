@@ -7,7 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
@@ -33,7 +34,7 @@ import org.apache.jcs.engine.behavior.ICache;
  * freeCache, release, getStats - need to find an interface acceptible for all -
  * cache managers or a manager within a type
  */
-public class LateralCacheManager implements IAuxiliaryCacheManager
+public class LateralCacheManager implements AuxiliaryCacheManager
 {
     private final static Log log =
         LogFactory.getLog( LateralCacheManager.class );
@@ -215,7 +216,7 @@ public class LateralCacheManager implements IAuxiliaryCacheManager
      * @return The {3} value
      * @param cacheName
      */
-    public ICache getCache( String cacheName )
+    public AuxiliaryCache getCache( String cacheName )
     {
         LateralCacheNoWait c = null;
         synchronized ( caches )

@@ -53,9 +53,8 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
 
-import org.apache.jcs.auxiliary.disk.hsql.behavior.IHSQLCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Description of the Class
@@ -63,7 +62,7 @@ import org.apache.jcs.auxiliary.disk.hsql.behavior.IHSQLCacheAttributes;
  * @author asmuts
  * @created January 15, 2002
  */
-public class HSQLCacheAttributes implements IHSQLCacheAttributes
+public class HSQLCacheAttributes implements AuxiliaryCacheAttributes
 {
 
     private String cacheName;
@@ -71,10 +70,10 @@ public class HSQLCacheAttributes implements IHSQLCacheAttributes
 
     private String diskPath;
 
-
     /** Constructor for the HSQLCacheAttributes object */
-    public HSQLCacheAttributes() { }
-
+    public HSQLCacheAttributes()
+    {
+    }
 
     /**
      * Sets the diskPath attribute of the HSQLCacheAttributes object
@@ -86,7 +85,6 @@ public class HSQLCacheAttributes implements IHSQLCacheAttributes
         this.diskPath = path;
     }
 
-
     /**
      * Gets the diskPath attribute of the HSQLCacheAttributes object
      *
@@ -96,7 +94,6 @@ public class HSQLCacheAttributes implements IHSQLCacheAttributes
     {
         return this.diskPath;
     }
-
 
     /**
      * Sets the cacheName attribute of the HSQLCacheAttributes object
@@ -108,7 +105,6 @@ public class HSQLCacheAttributes implements IHSQLCacheAttributes
         this.cacheName = s;
     }
 
-
     /**
      * Gets the cacheName attribute of the HSQLCacheAttributes object
      *
@@ -118,7 +114,6 @@ public class HSQLCacheAttributes implements IHSQLCacheAttributes
     {
         return this.cacheName;
     }
-
 
     /**
      * Gets the name attribute of the HSQLCacheAttributes object
@@ -130,7 +125,6 @@ public class HSQLCacheAttributes implements IHSQLCacheAttributes
         return this.name;
     }
 
-
     /**
      * Sets the name attribute of the HSQLCacheAttributes object
      *
@@ -141,20 +135,18 @@ public class HSQLCacheAttributes implements IHSQLCacheAttributes
         this.name = name;
     }
 
-
     /** Description of the Method */
-    public IAuxiliaryCacheAttributes copy()
+    public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( IAuxiliaryCacheAttributes ) this.clone();
+            return ( AuxiliaryCacheAttributes ) this.clone();
         }
         catch ( Exception e )
         {
         }
-        return ( IAuxiliaryCacheAttributes ) this;
+        return ( AuxiliaryCacheAttributes ) this;
     }
-
 
     /** Description of the Method */
     public String toString()

@@ -182,28 +182,6 @@ public class Cache
     }
 
     /**
-     * Will no override existing items.
-     *
-     * @param key
-     * @param val
-     * @exception IOException
-     * @exception ObjectExistsException
-     */
-    public void putSafe( Serializable key, Serializable val )
-        throws IOException, ObjectExistsException
-    {
-        if ( this.get( key ) != null )
-        {
-            throw new ObjectExistsException( "Object exists for key " + key );
-        }
-        else
-        {
-            put( key, val, ( IElementAttributes ) this.attr.copy() );
-        }
-        return;
-    }
-
-    /**
      * Put in cache and configured auxiliaries.
      *
      * @param key
@@ -214,6 +192,7 @@ public class Cache
         throws IOException
     {
         put( key, val, ( IElementAttributes ) this.attr.copy() );
+
         return;
     }
 
@@ -498,21 +477,9 @@ public class Cache
      * @return
      * @param key
      */
-    public Serializable get( Serializable key )
+    public ICacheElement get( Serializable key )
     {
-        return get( key, false, CacheConstants.LOCAL_INVOKATION );
-    }
-
-    /**
-     * Description of the Method
-     *
-     * @return
-     * @param key
-     * @param container
-     */
-    public Serializable get( Serializable key, boolean container )
-    {
-        return get( key, container, CacheConstants.LOCAL_INVOKATION );
+        return get( key, CacheConstants.LOCAL_INVOKATION );
     }
 
     /**
@@ -523,9 +490,7 @@ public class Cache
      * @param container
      * @param invocation
      */
-    public Serializable get( Serializable key,
-                             boolean container,
-                             boolean invocation )
+    public ICacheElement get( Serializable key, boolean invocation )
     {
         if ( log.isDebugEnabled() )
         {
@@ -567,7 +532,7 @@ public class Cache
 
                             try
                             {
-                                ce = ( ICacheElement ) aux.get( key, true );
+                                ce = ( ICacheElement ) aux.get( key );
                             }
                             catch ( IOException ex )
                             {
@@ -681,15 +646,8 @@ public class Cache
             return null;
         }
 
-        if ( container )
-        {
-            return ce;
-        }
-        else
-        {
-            return ce.getVal();
-        }
 
+        return ce;
     }
     // end get
 
@@ -879,7 +837,7 @@ public class Cache
                                     {
                                         continue;
                                     }
-                                    aux.put( key, me.ce.getVal(), me.ce.getElementAttributes() );
+                                    aux.update( me.ce );
                                 }
                                 catch ( Exception e )
                                 {
@@ -939,13 +897,8 @@ public class Cache
                             Map.Entry entry = ( Map.Entry ) itr.next();
                             Serializable key = ( Serializable ) entry.getKey();
                             MemoryElementDescriptor me = ( MemoryElementDescriptor ) entry.getValue();
-                            //try {
-                            // should call update
-                            aux.put( key, me.ce.getVal(), me.ce.getElementAttributes() );
-                            // remove this exception from the interface
-                            //} catch( Exception e ) {
-                            //  log.error( e );
-                            //}
+
+                            aux.update( me.ce );
                         }
                     }
                 }
@@ -1093,16 +1046,15 @@ public class Cache
      * @return
      * @param cattr
      */
-    private MemoryCache createMemoryCache( ICompositeCacheAttributes cattr )
+    private void createMemoryCache( ICompositeCacheAttributes cattr )
     {
-        // Create memory Cache
         if ( memCache == null )
         {
             try
             {
                 Class c = Class.forName( cattr.getMemoryCacheName() );
-                this.memCache = ( MemoryCache ) c.newInstance();
-                this.memCache.initialize( this );
+                memCache = ( MemoryCache ) c.newInstance();
+                memCache.initialize( this );
             }
             catch ( Exception e )
             {
@@ -1114,10 +1066,15 @@ public class Cache
         }
         else
         {
-            log.warn( "Trying to create a memory cache after it already exists." );
+            log.warn( "Refusing to create memory cache -- already exists." );
         }
+    }
+
+    /**
+     * Access to the memory cache for instrumentation.
+     */
+    public MemoryCache getMemoryCache()
+    {
         return memCache;
     }
-    // end createMemoryCache
-
 }

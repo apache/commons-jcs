@@ -190,7 +190,7 @@ public class LateralTCPSender
      * needs work. I just wanted to get some form of get working. Will need some
      * sort of timeout.
      */
-    public Serializable sendAndReceive( LateralElementDescriptor led )
+    public ICacheElement sendAndReceive( LateralElementDescriptor led )
         throws IOException
     {
         ICacheElement ice = null;

@@ -281,15 +281,6 @@ public class RemoteGroupCacheServerFactory
                 log.debug( "obj = " + obj );
                 IRemoteCacheServiceAdmin admin = ( IRemoteCacheServiceAdmin ) obj;
 
-                try
-                {
-                    log.debug( admin.getStats() );
-                }
-                catch ( Exception es )
-                {
-                    log.error( es );
-                }
-
             }
             catch ( Exception ex )
             {

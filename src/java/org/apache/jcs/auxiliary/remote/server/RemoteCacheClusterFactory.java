@@ -6,8 +6,9 @@ import java.util.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 import org.apache.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.RemoteCacheFactory;
@@ -25,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class RemoteCacheClusterFactory implements IAuxiliaryCacheFactory
+public class RemoteCacheClusterFactory implements AuxiliaryCacheFactory
 {
     private final static Log log =
         LogFactory.getLog( RemoteCacheClusterFactory.class );
@@ -40,7 +41,7 @@ public class RemoteCacheClusterFactory implements IAuxiliaryCacheFactory
      * Interface method. Allows classforname construction, making caches
      * pluggable.
      */
-    public ICache createCache( IAuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
     {
         ArrayList noWaits = new ArrayList();
 

@@ -199,42 +199,11 @@ public class LateralJGService
 
     /**
      * @return
-     * @param key
-     * @exception IOException
-     */
-    public Serializable get( String key )
-        throws IOException
-    {
-        //p( "junk get" );
-        //return get( cattr.cacheName, key, true );
-        return null;
-        // nothing needs to be done
-    }
-
-    /**
-     * @return
      * @param cacheName
      * @param key
      * @exception IOException
      */
-    public Serializable get( String cacheName, Serializable key )
-        throws IOException
-    {
-        //p( "get(cacheName,key)" );
-        return get( cacheName, key, true );
-        // nothing needs to be done
-    }
-
-    /**
-     * An expiremental get implementation. By default it should be off.
-     *
-     * @return
-     * @param cacheName
-     * @param key
-     * @param container
-     * @exception IOException
-     */
-    public Serializable get( String cacheName, Serializable key, boolean container )
+    public ICacheElement get( String cacheName, Serializable key )
         throws IOException
     {
         //p( "get(cacheName,key,container)" );

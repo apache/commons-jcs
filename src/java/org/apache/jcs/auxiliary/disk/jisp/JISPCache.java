@@ -53,54 +53,40 @@ package org.apache.jcs.auxiliary.disk.jisp;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+
 import com.coyotegulch.jisp.BTreeIndex;
 import com.coyotegulch.jisp.IndexedObjectDatabase;
 import com.coyotegulch.jisp.KeyObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-
-import org.apache.jcs.auxiliary.disk.jisp.behavior.IJISPCacheAttributes;
-import org.apache.jcs.auxiliary.disk.PurgatoryElement;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.CacheConstants;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
+import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * JISP disk cache implementation. Slow as hell with this type of key.
+ *
+ * <b>VERY EXPERIMENTAL, and only partially implemented</b>
  *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @created January 15, 2002
  * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
-public class JISPCache implements ICache, Serializable
+public class JISPCache extends AbstractDiskCache
 {
     private final static Log log =
         LogFactory.getLog( JISPCache.class );
 
-    private static int numCreated = 0;
     private int numInstances = 0;
-
-    private String cacheName;
 
     /** Description of the Field */
     public boolean isAlive = false;
 
-    IJISPCacheAttributes cattr;
-
-    // disk cache buffer, need to remove key from buffer on update, if its there
-    JISPCacheNoWaitBuffer buffer;
+    JISPCacheAttributes cattr;
 
     //JISP ACCESS
     IndexedObjectDatabase database;
@@ -110,33 +96,18 @@ public class JISPCache implements ICache, Serializable
     String jispDataFileName = "default_this_is_BAD";
     String jispIndexFileName = "default_this_is_BAD";
 
-    // should use this method
     /**
      * Constructor for the JISPCache object
      *
-     * @param buffer
      * @param cattr
      */
-    public JISPCache( JISPCacheNoWaitBuffer buffer, IJISPCacheAttributes cattr )
+    public JISPCache( JISPCacheAttributes cattr )
     {
-        //this( cattr.getCacheName(), cattr.getDiskPath() );
-        this( cattr );
-        this.cattr = cattr;
-        this.buffer = buffer;
-    }
+        super( cattr.getCacheName() );
 
-    /**
-     * Constructor for the JISPCache object
-     *
-     * @param cattr
-     */
-    protected JISPCache( IJISPCacheAttributes cattr )
-    {
         numInstances++;
 
         String rafroot = cattr.getDiskPath();
-
-        this.cacheName = cattr.getCacheName();
 
         if ( rafroot == null )
         {
@@ -237,122 +208,41 @@ public class JISPCache implements ICache, Serializable
         }
     }
 
-
     /** Description of the Method */
-    public void add( Serializable key, Serializable value )
-        throws IOException
+    protected void doUpdate( ICacheElement ce )
     {
-        put( key, value );
-    }
-
-
-    // ignore the multicast field.
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, boolean multicast )
-        throws IOException
-    {
-        put( key, value );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value, null );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, IElementAttributes attr )
-        throws IOException
-    {
-        CacheElement ce = null;
-        ce = new CacheElement( cacheName, key, value );
-        ce.setElementAttributes( attr );
-        update( ce );
-    }
-
-
-    /** Description of the Method */
-    public void update( ICacheElement ce )
-        throws IOException
-    {
-        log.debug( "update" );
-
         if ( !isAlive )
         {
             log.warn( "not alive" );
             return;
         }
 
-        if ( ce instanceof PurgatoryElement )
-        {
-            PurgatoryElement pe = ( PurgatoryElement ) ce;
-            ce = pe.getCacheElement();
-            if ( ! pe.isSpoolable() )
-            {
-                log.debug( "pe is not spoolable" );
-
-                // it has been plucked from purgatory
-                return;
-            }
-        }
-
-        // remove item from purgatory since we are putting it on disk
-        // assume that the disk cache will never break
-        // disk breakage is akin to an out of memory exception
-        buffer.purgatory.remove( ce.getKey() );
         if ( log.isDebugEnabled() )
         {
-            log.debug( "\n putting " + ce.getKey() + " on disk, removing from purgatory" );
+            log.debug( "Putting " + ce.getKey() + " on disk" );
         }
-
-        // make sure this only locks for one particular cache region
-        //locker.writeLock();
 
         try
         {
 
-            KeyObject[] keyArray = new JISPKey[1];
-            keyArray[0] = new JISPKey( ce.getKey() );
+            KeyObject[] keyArray = new JISPKey[ 1 ];
+            keyArray[ 0 ] = new JISPKey( ce.getKey() );
 
             // akin to an update, should insert as well
             database.write( keyArray, ( Serializable ) ce );
-            //p( "put " + ce.getKey() );
 
         }
         catch ( Exception e )
         {
             log.error( e );
         }
-        finally
-        {
-            //locker.done();          // release write lock.
-        }
 
         return;
     }
 
-
     /** Description of the Method */
-    public Serializable get( Serializable key )
+    protected ICacheElement doGet( Serializable key )
     {
-        return get( key, true, true );
-    }
-
-
-    /** Description of the Method */
-    public Serializable get( Serializable key, boolean container )
-    {
-        return get( key, true, true );
-    }
-
-
-    /** Description of the Method */
-    private Serializable get( Serializable key, boolean container, final boolean lock )
-    {
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "getting " + key + " from disk" );
@@ -363,61 +253,45 @@ public class JISPCache implements ICache, Serializable
             return null;
         }
 
-        ICacheElement obj = null;
+        ICacheElement element = null;
 
         try
         {
-
-            obj = ( ICacheElement ) database.read( new JISPKey( key ), index1 );
-
+            element = ( CacheElement )
+                database.read( new JISPKey( key ), index1 );
         }
         catch ( Exception e )
         {
             log.error( e );
         }
 
-        if ( obj == null )
+        if ( element == null )
         {
             return null;
         }
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( " " + key + ", val = " + obj.getVal() );
+            log.debug( " " + key + ", val = " + element.getVal() );
         }
 
-        if ( container )
-        {
-            return ( Serializable ) obj;
-        }
-        return obj.getVal();
+        return element;
     }
-
 
     /**
      * Returns true if the removal was succesful; or false if there is nothing
      * to remove. Current implementation always result in a disk orphan.
      */
-    public boolean remove( Serializable key )
+    protected boolean doRemove( Serializable key )
     {
-
-        KeyObject[] keyArray = new JISPKey[1];
-        keyArray[0] = new JISPKey( key );
+        KeyObject[] keyArray = new JISPKey[ 1 ];
+        keyArray[ 0 ] = new JISPKey( key );
 
         try
         {
+            // FIXME: Partial removal not yet implemented for JISP.
 
-            if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
-            {
-                // remove all keys of the same name group.
-                //sql = "delete from " + cacheName + " where KEY = like '" + key + "%'";
-                // need to figure how to do this in JISP
-            }
-            else
-            {
-                database.remove( keyArray );
-            }
-
+            database.remove( keyArray );
         }
         catch ( Exception e )
         {
@@ -427,9 +301,8 @@ public class JISPCache implements ICache, Serializable
         return false;
     }
 
-
     /** Description of the Method */
-    public void removeAll()
+    protected void doRemoveAll()
     {
         try
         {
@@ -438,17 +311,12 @@ public class JISPCache implements ICache, Serializable
         catch ( Exception e )
         {
             log.error( e );
-            //reset();
-        }
-        finally
-        {
         }
     }
-    // end removeAll
 
     // handle error by last resort, force content update, or removeall
     /** Description of the Method */
-    public void reset()
+    private void reset()
     {
 
         try
@@ -474,23 +342,9 @@ public class JISPCache implements ICache, Serializable
             }
         }
     }
-    // end reset
 
-    /**
-     * Gets the stats attribute of the JISPCache object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "numInstances = " + numInstances;
-    }
-
-
-    // shold be called by cachemanager, since it knows how
-    // many are checked out
     /** Description of the Method */
-    public void dispose()
+    public void doDispose()
     {
 
         if ( !isAlive )
@@ -515,18 +369,6 @@ public class JISPCache implements ICache, Serializable
         // TODO: can we defragment here?
 
     }
-    // end dispose
-
-    /**
-     * Returns the cache status.
-     *
-     * @return The status value
-     */
-    public int getStatus()
-    {
-        return isAlive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
-    }
-
 
     /**
      * Returns the current cache size.
@@ -537,42 +379,6 @@ public class JISPCache implements ICache, Serializable
     {
         return 0;
         // need to get count
-    }
-
-
-    /**
-     * Gets the cacheType attribute of the JISPCache object
-     *
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return DISK_CACHE;
-    }
-
-
-    /** For debugging. */
-    public void dump()
-    {
-        // TODO: not sure this is possible with JISP
-//    log.debug("keyHash.size()=" + keyHash.size());
-//    for (Iterator itr = keyHash.entrySet().iterator(); itr.hasNext();) {
-//      Map.Entry e = (Map.Entry)itr.next();
-//      Serializable key = (Serializable)e.getKey();
-//      DiskElementDescriptor ded = (DiskElementDescriptor)e.getValue();
-//      Serializable val = get(key);
-//      log.debug("disk dump> key=" + key + ", val=" + val + ", pos=" + ded.pos);
-//    }
-    }
-
-    /**
-     * Returns cache name, ha
-     *
-     * @return The cacheName value
-     */
-    public String getCacheName()
-    {
-        return cacheName;
     }
 }
 

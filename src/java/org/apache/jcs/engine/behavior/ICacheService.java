@@ -27,12 +27,7 @@ public interface ICacheService
      * Returns a cache bean from the specified cache; or null if the key does
      * not exist.
      */
-    public Serializable get( String cacheName, Serializable key )
-        throws ObjectNotFoundException, IOException;
-
-
-    /** Description of the Method */
-    public Serializable get( String cacheName, Serializable key, boolean container )
+    public ICacheElement get( String cacheName, Serializable key )
         throws ObjectNotFoundException, IOException;
 
 

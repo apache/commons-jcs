@@ -10,13 +10,11 @@ package org.apache.jcs.auxiliary.disk.jisp;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.apache.jcs.auxiliary.disk.jisp.behavior.IJISPCacheAttributes;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheManager;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.engine.behavior.ICache;
 
 /**
  * Description of the Class
@@ -24,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class JISPCacheManager implements ICacheManager
+public class JISPCacheManager implements AuxiliaryCacheManager
 {
     private final static Log log =
         LogFactory.getLog( JISPCacheManager.class );
@@ -35,37 +33,34 @@ public class JISPCacheManager implements ICacheManager
 
     private static JISPCacheManager instance;
 
-    private static IJISPCacheAttributes defaultCattr;
-
+    private static JISPCacheAttributes defaultCattr;
 
     /**
      * Constructor for the JISPCacheManager object
      *
      * @param cattr
      */
-    private JISPCacheManager( IJISPCacheAttributes cattr )
+    private JISPCacheManager( JISPCacheAttributes cattr )
     {
         this.defaultCattr = cattr;
     }
-
 
     /**
      * Gets the defaultCattr attribute of the JISPCacheManager object
      *
      * @return The defaultCattr value
      */
-    public IJISPCacheAttributes getDefaultCattr()
+    public JISPCacheAttributes getDefaultCattr()
     {
         return this.defaultCattr;
     }
-
 
     /**
      * Gets the instance attribute of the JISPCacheManager class
      *
      * @return The instance value
      */
-    public static JISPCacheManager getInstance( IJISPCacheAttributes cattr )
+    public static JISPCacheManager getInstance( JISPCacheAttributes cattr )
     {
         if ( instance == null )
         {
@@ -77,58 +72,48 @@ public class JISPCacheManager implements ICacheManager
                 }
             }
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Manager stats : " + instance.getStats() + "-- in getInstance()" );
-        }
+
         clients++;
         return instance;
     }
 
-
     /**
      * Gets the cache attribute of the JISPCacheManager object
      *
      * @return The cache value
      */
-    public ICache getCache( String cacheName )
+    public AuxiliaryCache getCache( String cacheName )
     {
-        IJISPCacheAttributes cattr = ( IJISPCacheAttributes ) defaultCattr.copy();
+        JISPCacheAttributes cattr = ( JISPCacheAttributes ) defaultCattr.copy();
         cattr.setCacheName( cacheName );
         return getCache( cattr );
     }
 
-
     /**
      * Gets the cache attribute of the JISPCacheManager object
      *
      * @return The cache value
      */
-    public ICache getCache( IJISPCacheAttributes cattr )
+    public AuxiliaryCache getCache( JISPCacheAttributes cattr )
     {
-        ICache raf = null;
+        AuxiliaryCache raf = null;
 
         log.debug( "cacheName = " + cattr.getCacheName() );
 
         synchronized ( caches )
         {
-            raf = ( ICache ) caches.get( cattr.getCacheName() );
+            raf = ( AuxiliaryCache ) caches.get( cattr.getCacheName() );
 
             if ( raf == null )
             {
-                // make use cattr
-                //raf = new JISPCache( cattr.getCacheName(), cattr.getDiskPath() );
-                raf = new JISPCacheNoWaitBuffer( cattr );
+                raf = new JISPCache( cattr );
+
                 caches.put( cattr.getCacheName(), raf );
             }
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Manager stats : " + instance.getStats() );
-        }
+
         return raf;
     }
-
 
     /** Description of the Method */
     public void freeCache( String name )
@@ -140,33 +125,6 @@ public class JISPCacheManager implements ICacheManager
         }
     }
 
-
-    // Don't care if there is a concurrency failure ?
-    /**
-     * Gets the stats attribute of the JISPCacheManager object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        StringBuffer stats = new StringBuffer();
-        Enumeration allCaches = caches.elements();
-
-        while ( allCaches.hasMoreElements() )
-        {
-            ICache raf = ( ICache ) allCaches.nextElement();
-
-            if ( raf != null )
-            {
-                stats.append( raf.getStats() );
-                stats.append( ", " );
-            }
-        }
-
-        return stats.toString();
-    }
-
-
     /**
      * Gets the cacheType attribute of the JISPCacheManager object
      *
@@ -176,7 +134,6 @@ public class JISPCacheManager implements ICacheManager
     {
         return DISK_CACHE;
     }
-
 
     /** Description of the Method */
     public void release()

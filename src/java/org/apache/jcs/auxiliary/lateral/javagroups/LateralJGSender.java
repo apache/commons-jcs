@@ -219,7 +219,7 @@ public class LateralJGSender implements IJGConstants
      * @param led
      * @exception IOException
      */
-    public Serializable sendAndReceive( LateralElementDescriptor led )
+    public ICacheElement sendAndReceive( LateralElementDescriptor led )
         throws IOException
     {
         ICacheElement ice = null;

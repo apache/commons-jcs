@@ -104,15 +104,6 @@ public class MonitorAccess implements Serializable
     }
 
     /** Description of the Method */
-    public String stats( String cacheName )
-    {
-
-        ICache cache = cacheMgr.getCache( cacheName );
-
-        return cache.getStats();
-    }
-
-    /** Description of the Method */
     public ArrayList overview()
     {
 

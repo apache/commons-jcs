@@ -53,29 +53,24 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
-
-import org.apache.jcs.auxiliary.disk.indexed.behavior.IIndexedDiskCacheAttributes;
-
-import org.apache.jcs.engine.behavior.ICache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 
 /**
  * @author Aaron Smuts
  * @created January 15, 2002
  * @version 1.0
  */
-
-public class IndexedDiskCacheFactory implements IAuxiliaryCacheFactory
+public class IndexedDiskCacheFactory implements AuxiliaryCacheFactory
 {
     private final static Log log =
         LogFactory.getLog( IndexedDiskCacheFactory.class );
 
     private static String name;
-
 
     /**
      * Constructor for the DiskCacheFactory object
@@ -84,20 +79,18 @@ public class IndexedDiskCacheFactory implements IAuxiliaryCacheFactory
     {
     }
 
-
     /**
      * Description of the Method
      *
      * @return
      * @param iaca
      */
-    public ICache createCache( IAuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
     {
-        IIndexedDiskCacheAttributes idca = ( IIndexedDiskCacheAttributes ) iaca;
+        IndexedDiskCacheAttributes idca = ( IndexedDiskCacheAttributes ) iaca;
         IndexedDiskCacheManager dcm = IndexedDiskCacheManager.getInstance( idca );
         return dcm.getCache( idca );
     }
-
 
     /**
      * Gets the name attribute of the DiskCacheFactory object
@@ -108,7 +101,6 @@ public class IndexedDiskCacheFactory implements IAuxiliaryCacheFactory
     {
         return this.name;
     }
-
 
     /**
      * Sets the name attribute of the DiskCacheFactory object

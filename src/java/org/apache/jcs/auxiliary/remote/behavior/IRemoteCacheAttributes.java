@@ -1,6 +1,6 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 //import org.apache.jcs.auxiliary.*;
 
@@ -10,7 +10,7 @@ import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
  * @author asmuts
  * @created January 15, 2002
  */
-public interface IRemoteCacheAttributes extends IAuxiliaryCacheAttributes
+public interface IRemoteCacheAttributes extends AuxiliaryCacheAttributes
 {
 
     /*

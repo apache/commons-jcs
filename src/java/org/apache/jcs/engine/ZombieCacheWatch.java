@@ -1,9 +1,9 @@
 package org.apache.jcs.engine;
 
-import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICacheObserver;
 
 import org.apache.jcs.engine.behavior.IZombie;
+import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * Description of the Class

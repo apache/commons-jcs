@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 
 import org.apache.jcs.config.OptionConverter;
 import org.apache.jcs.config.PropertySetter;
@@ -353,13 +353,13 @@ public class CompositeCacheConfigurator
         ICache auxCache;
 
         // GET FACTORY
-        IAuxiliaryCacheFactory auxFac = ccMgr.registryFacGet( auxName );
+        AuxiliaryCacheFactory auxFac = ccMgr.registryFacGet( auxName );
         if ( auxFac == null )
         {
             // auxFactory was not previously initialized.
             String prefix = AUXILIARY_PREFIX + auxName;
-            auxFac = ( IAuxiliaryCacheFactory ) OptionConverter.instantiateByKey( props, prefix,
-                org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory.class,
+            auxFac = ( AuxiliaryCacheFactory ) OptionConverter.instantiateByKey( props, prefix,
+                org.apache.jcs.auxiliary.AuxiliaryCacheFactory.class,
                 null );
             if ( auxFac == null )
             {
@@ -371,14 +371,14 @@ public class CompositeCacheConfigurator
         }
 
         // GET ATTRIBUTES
-        IAuxiliaryCacheAttributes auxAttr = ccMgr.registryAttrGet( auxName );
+        AuxiliaryCacheAttributes auxAttr = ccMgr.registryAttrGet( auxName );
         String attrName = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
         if ( auxAttr == null )
         {
             // auxFactory was not previously initialized.
             String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
-            auxAttr = ( IAuxiliaryCacheAttributes ) OptionConverter.instantiateByKey( props, prefix,
-                org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes.class,
+            auxAttr = ( AuxiliaryCacheAttributes ) OptionConverter.instantiateByKey( props, prefix,
+                org.apache.jcs.auxiliary.AuxiliaryCacheAttributes.class,
                 null );
             if ( auxFac == null )
             {

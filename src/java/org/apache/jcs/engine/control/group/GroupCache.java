@@ -53,39 +53,24 @@ package org.apache.jcs.engine.control.group;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.HashSet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.CacheConstants;
-
+import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.Cache;
-
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupRWLockManager;
-import org.apache.jcs.engine.control.group.GroupRWLockManager;
-import org.apache.jcs.engine.control.group.GroupRWLockManager;
-
 import org.apache.jcs.utils.locking.ReadWriteLockManager;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Group cache is basically a composite cache with the additional capability of
@@ -122,7 +107,10 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param cattr The cache attribute
      * @param attr The default element attributes
      */
-    public GroupCache( String cacheName, ICache[] auxCaches, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public GroupCache( String cacheName,
+                       ICache[] auxCaches,
+                       ICompositeCacheAttributes cattr,
+                       IElementAttributes attr )
     {
         super( cacheName, auxCaches, cattr, attr );
 
@@ -133,7 +121,6 @@ public class GroupCache extends Cache implements ICompositeCache
         //ICompositeCache systemGroupIdCache = (ICompositeCache)systemCaches.get( "groupIdCache" );
     }
 
-
     /**
      * Constructor for the GroupCache object
      *
@@ -143,7 +130,11 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param attr The default element attributes
      * @param systemGroupIdCache The systemGroupIdCache
      */
-    public GroupCache( String cacheName, ICache[] auxCaches, ICompositeCacheAttributes cattr, IElementAttributes attr, ICompositeCache systemGroupIdCache )
+    public GroupCache( String cacheName,
+                       ICache[] auxCaches,
+                       ICompositeCacheAttributes cattr,
+                       IElementAttributes attr,
+                       ICompositeCache systemGroupIdCache )
     {
         super( cacheName, auxCaches, cattr, attr );
         if ( log.isDebugEnabled() )
@@ -153,7 +144,6 @@ public class GroupCache extends Cache implements ICompositeCache
         this.systemGroupIdCache = systemGroupIdCache;
     }
 
-
     /**
      * Overrides to provide read lock on both GroupAttrName read-operation and
      * String read-operation.
@@ -161,24 +151,10 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param key The key for the element
      * @return Returns element from the cache if found, else null
      */
-    public Serializable get( Serializable key )
+    public ICacheElement get( Serializable key )
     {
-        return get( key, false, CacheConstants.LOCAL_INVOKATION );
+        return get( key, CacheConstants.LOCAL_INVOKATION );
     }
-
-
-    /**
-     * Gets an element fromt he cache
-     *
-     * @param key The key for the element
-     * @param container Should it return the CacheElement wrapper
-     * @return Returns element from the cache if found, else null
-     */
-    public Serializable get( Serializable key, boolean container )
-    {
-        return get( key, false, CacheConstants.LOCAL_INVOKATION );
-    }
-
 
     /**
      * Gets an element fromt he cache
@@ -188,23 +164,25 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param invocation Is the originating method call from a local source
      * @return Returns element from the cache if found, else null
      */
-    public Serializable get( Serializable key, boolean container, boolean invocation )
+    public ICacheElement get( Serializable key, boolean invocation )
     {
 
         // GETTING GROUP ELEMENT
         if ( key instanceof GroupAttrName )
         {
-            return getGAN( ( GroupAttrName ) key, container );
+            return getGAN( ( GroupAttrName ) key );
         }
 
         // GROUP ID
         if ( key instanceof GroupId )
         {
-            return getGI( ( GroupId ) key, container );
+            return getGI( ( GroupId ) key );
         }
         if ( log.isDebugEnabled() )
         {
-            log.debug( this.getCacheName() + " getting " + key + " from super " );
+            log.debug( this.getCacheName() + " getting "
+                       + key + " from super " );
+
             if ( invocation == CacheConstants.LOCAL_INVOKATION )
             {
                 log.debug( "invokation is LOCAL" );
@@ -216,9 +194,8 @@ public class GroupCache extends Cache implements ICompositeCache
         }
 
         // GETTING NON GROUP RELATED ITEM
-        return super.get( key, container, invocation );
+        return super.get( key, invocation );
     }
-
 
     /**
      * Places a read lock on the group id for a GroupAttrName get-operation.
@@ -227,11 +204,10 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param container Should it return the CacheElement wrapper
      * @return The gAN value
      */
-    public Serializable getGAN( GroupAttrName key, boolean container )
+    public ICacheElement getGAN( GroupAttrName key )
     {
-        return getGAN( key, container, CacheConstants.LOCAL_INVOKATION );
+        return getGAN( key, CacheConstants.LOCAL_INVOKATION );
     }
-
 
     /**
      * Gets the gAN attribute of the GroupCache object
@@ -241,7 +217,7 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param invocation Is the originating method call from a local source
      * @return The gAN value
      */
-    public Serializable getGAN( GroupAttrName key, boolean container, boolean invocation )
+    public ICacheElement getGAN( GroupAttrName key, boolean invocation )
     {
         if ( log.isDebugEnabled() )
         {
@@ -260,14 +236,14 @@ public class GroupCache extends Cache implements ICompositeCache
         readLock( key.groupId );
         try
         {
-            obj = super.get( key, container, invocation );
+            obj = super.get( key, invocation );
             //p( "got obj" );
         }
         finally
         {
             locker.done( key.groupId );
         }
-        return ( Serializable ) obj;
+        return ( ICacheElement ) obj;
     }
 
 
@@ -279,11 +255,10 @@ public class GroupCache extends Cache implements ICompositeCache
      * @return The gI value
      */
     // get list from remote if it isn't present
-    public Serializable getGI( GroupId gid, boolean container )
+    public ICacheElement getGI( GroupId gid )
     {
-        return getGI( gid, container, CacheConstants.LOCAL_INVOKATION );
+        return getGI( gid, CacheConstants.LOCAL_INVOKATION );
     }
-
 
     /**
      * removal of a group element will call this to get the list to edit.
@@ -291,7 +266,7 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param invocation Is the originating method call from a local source
      * @return The gI value
      */
-    public Serializable getGI( GroupId gid, boolean container, boolean invocation )
+    public ICacheElement getGI( GroupId gid, boolean invocation )
     {
         if ( log.isDebugEnabled() )
         {
@@ -310,10 +285,10 @@ public class GroupCache extends Cache implements ICompositeCache
         try
         {
             //obj = super.get(gid.key, container);
-            obj = systemGroupIdCache.get( gid.key, container, invocation );
+            obj = systemGroupIdCache.get( gid.key, invocation );
             if ( log.isDebugEnabled() )
             {
-                log.debug( "getGi(gid,container,invocation) > got obj in getGi " + obj );
+                log.debug( "getGi: got obj " + obj );
             }
         }
         catch ( IOException ioeg )
@@ -323,9 +298,8 @@ public class GroupCache extends Cache implements ICompositeCache
         {
             locker.done( gid.key );
         }
-        return ( Serializable ) obj;
+        return ( ICacheElement ) obj;
     }
-
 
     /**
      * Internally used read lock for group modification.
@@ -351,7 +325,6 @@ public class GroupCache extends Cache implements ICompositeCache
         }
     }
 
-
     /**
      * Internally used write lock for group modification.
      *
@@ -371,7 +344,6 @@ public class GroupCache extends Cache implements ICompositeCache
         }
     }
 
-
     /**
      * Overrides to special handling for GroupAttrName put-operation.
      *
@@ -379,7 +351,9 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param val The Object to cache
      * @param attr The element attributes
      */
-    public void put( Serializable key, Serializable val, IElementAttributes attr )
+    public void put( Serializable key,
+                     Serializable val,
+                     IElementAttributes attr )
         throws IOException
     {
         if ( key instanceof GroupAttrName )
@@ -388,7 +362,7 @@ public class GroupCache extends Cache implements ICompositeCache
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "putting via putGAN((GroupAttrName)key, val, attr) method" );
+                    log.debug( "putting via method" );
                 }
                 putGAN( ( GroupAttrName ) key, val, attr );
             }
@@ -399,7 +373,9 @@ public class GroupCache extends Cache implements ICompositeCache
         }
         if ( log.isDebugEnabled() )
         {
-            log.debug( "put(key,val,attr) > updating " + key + " via super method, attr.getIsRemote() = " + attr.getIsRemote() );
+            log.debug( "put(key,val,attr) > updating "
+                       + key + " via super method, attr.getIsRemote() = "
+                       + attr.getIsRemote() );
         }
 
         // NOT GROUP RELATED
@@ -416,7 +392,6 @@ public class GroupCache extends Cache implements ICompositeCache
         }
         return;
     }
-
 
     /** Description of the Method */
     public void put( Serializable key, Serializable val )
@@ -461,7 +436,6 @@ public class GroupCache extends Cache implements ICompositeCache
         }
         return;
     }
-
 
     /** Description of the Method */
     public synchronized void update( ICacheElement ce )
@@ -548,8 +522,6 @@ public class GroupCache extends Cache implements ICompositeCache
         //{
         //}
 
-
-        IElementAttributes attrE = ( IElementAttributes ) this.attr.copy();
         try
         {
             // update should go remote if locally invoked
@@ -582,8 +554,9 @@ public class GroupCache extends Cache implements ICompositeCache
         }
         if ( key == null || val == null )
         {
-            NullPointerException ex = new NullPointerException( "key=" + key + " and val="
-                 + val + " must not be null." );
+            NullPointerException ex
+                = new NullPointerException( "key=" + key + " and val="
+                                            + val + " must not be null." );
             log.error( ex );
             throw ex;
         }
@@ -600,7 +573,9 @@ public class GroupCache extends Cache implements ICompositeCache
      */
     // TODO: DistCacheMulticaster,etc. currently only supports key of String type
     // Needs to support GroupAttrName type, or do we ?
-    private void putGAN( GroupAttrName key, Serializable val, IElementAttributes attrE )
+    private void putGAN( GroupAttrName key,
+                         Serializable val,
+                         IElementAttributes attrE )
         throws IOException
     {
         log.debug( "in putGAN( gan,val,attr) " );
@@ -608,14 +583,14 @@ public class GroupCache extends Cache implements ICompositeCache
         putGAN( key, val, attrE, CacheConstants.LOCAL_INVOKATION );
     }
 
-
     /**
      * Put an element into a group.
      *
      * @param invocation Is the originating method call from a local source
      */
-    //public void putGAN( GroupAttrName key, Serializable val, IElementAttributes attrE, boolean updateRemote )
-    public void putGAN( GroupAttrName key, Serializable val, IElementAttributes attrE, boolean invocation )
+    public void putGAN( GroupAttrName key, Serializable val,
+                        IElementAttributes attrE,
+                        boolean invocation )
         throws IOException
     {
 
@@ -691,14 +666,12 @@ public class GroupCache extends Cache implements ICompositeCache
         }
     }
 
-
     /** Description of the Method */
     protected void createGroup( String group )
         throws CacheException
     {
         createGroup( group, this.attr );
     }
-
 
     /** Description of the Method */
     protected void createGroup( String group, IElementAttributes attrE )
@@ -739,7 +712,6 @@ public class GroupCache extends Cache implements ICompositeCache
         }
     }
 
-
     /**
      * Overrides to provide special handling for GroupAttrName remove-operation.
      */
@@ -751,7 +723,6 @@ public class GroupCache extends Cache implements ICompositeCache
         // need a third method
         return remove( key, CacheConstants.LOCAL_INVOKATION );
     }// rmove
-
 
     /**
      * Easier to classify and send to other methods than relying on type
@@ -814,7 +785,6 @@ public class GroupCache extends Cache implements ICompositeCache
         return super.remove( key, invocation );
     }// end remove
 
-
     /**
      * Special handling for GroupAttrName remove-operation. Provides write lock
      * and automatic attribute name set update. <br>
@@ -865,7 +835,6 @@ public class GroupCache extends Cache implements ICompositeCache
         return ret;
     }
 
-
     /**
      * Handles removal, update, and insertion of items into the attrNameSet for
      * a group cache region. The Group Cache listener called the add when it
@@ -877,7 +846,9 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param invocation The source of the call
      * @param remove Is this a remove request
      */
-    public void updateGroupAttrNameSet( GroupAttrName key, boolean invocation, boolean remove )
+    public void updateGroupAttrNameSet( GroupAttrName key,
+                                        boolean invocation,
+                                        boolean remove )
     {
 
         // update the attribute name set.
@@ -888,7 +859,8 @@ public class GroupCache extends Cache implements ICompositeCache
 
         try
         {
-            ce = ( CacheElement ) systemGroupIdCache.get( groupId.key, true, invocation );
+            ce = ( CacheElement )
+                systemGroupIdCache.get( groupId.key, invocation );
         }
         catch ( IOException ioe )
         {
@@ -924,7 +896,11 @@ public class GroupCache extends Cache implements ICompositeCache
                     try
                     {
 
-                        CacheElement ceID = new CacheElement( this.getCacheName(), groupId.key, attrNameSet );
+                        CacheElement ceID
+                            = new CacheElement( this.getCacheName(),
+                                                groupId.key,
+                                                attrNameSet );
+
                         ceID.setElementAttributes( ce.attr );
                         if ( log.isDebugEnabled() )
                         {
@@ -985,7 +961,6 @@ public class GroupCache extends Cache implements ICompositeCache
         removeGI( groupId, CacheConstants.LOCAL_INVOKATION );
     }
 
-
     /**
      * Skip the lock from the normal remove that is called from the super when
      * an element expires. Keep the read lock method for calls from groupaccess.
@@ -994,7 +969,6 @@ public class GroupCache extends Cache implements ICompositeCache
     {
         return removeGI( groupId, invocation, false );
     }
-
 
     /**
      * Removes the group id. Low level method. We need a higher level for
@@ -1043,7 +1017,6 @@ public class GroupCache extends Cache implements ICompositeCache
         }
         return ok;
     }
-
 
     /**
      * Gets the elementAttributes attribute of the GroupCache object

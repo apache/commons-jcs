@@ -1,7 +1,6 @@
 package org.apache.jcs.auxiliary.remote.group;
 
 import org.apache.jcs.auxiliary.remote.RemoteCache;
-
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 
@@ -20,7 +19,8 @@ public class RemoteGroupCache extends RemoteCache
      * @param irca
      * @param remote
      */
-    protected RemoteGroupCache( IRemoteCacheAttributes irca, IRemoteCacheService remote )
+    protected RemoteGroupCache( IRemoteCacheAttributes irca,
+                                IRemoteCacheService remote )
     {
         super( irca, remote );
         //p( "constructing remote group cache" );

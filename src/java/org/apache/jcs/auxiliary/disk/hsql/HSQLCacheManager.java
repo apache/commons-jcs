@@ -56,7 +56,9 @@ package org.apache.jcs.auxiliary.disk.hsql;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.apache.jcs.auxiliary.disk.hsql.behavior.IHSQLCacheAttributes;
+import org.apache.jcs.auxiliary.disk.hsql.HSQLCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheManager;
@@ -70,7 +72,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class HSQLCacheManager implements ICacheManager
+public class HSQLCacheManager implements AuxiliaryCacheManager
 {
     private final static Log log =
         LogFactory.getLog( HSQLCacheManager.class );
@@ -81,7 +83,7 @@ public class HSQLCacheManager implements ICacheManager
 
     private static HSQLCacheManager instance;
 
-    private static IHSQLCacheAttributes defaultCattr;
+    private static HSQLCacheAttributes defaultCattr;
 
 
     /**
@@ -89,7 +91,7 @@ public class HSQLCacheManager implements ICacheManager
      *
      * @param cattr
      */
-    private HSQLCacheManager( IHSQLCacheAttributes cattr )
+    private HSQLCacheManager( HSQLCacheAttributes cattr )
     {
         this.defaultCattr = cattr;
     }
@@ -100,7 +102,7 @@ public class HSQLCacheManager implements ICacheManager
      *
      * @return The defaultCattr value
      */
-    public IHSQLCacheAttributes getDefaultCattr()
+    public HSQLCacheAttributes getDefaultCattr()
     {
         return this.defaultCattr;
     }
@@ -111,7 +113,7 @@ public class HSQLCacheManager implements ICacheManager
      *
      * @return The instance value
      */
-    public static HSQLCacheManager getInstance( IHSQLCacheAttributes cattr )
+    public static HSQLCacheManager getInstance( HSQLCacheAttributes cattr )
     {
         if ( instance == null )
         {
@@ -123,10 +125,7 @@ public class HSQLCacheManager implements ICacheManager
                 }
             }
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Manager stats : " + instance.getStats() + " -- in getInstance()" );
-        }
+
         clients++;
         return instance;
     }
@@ -137,9 +136,9 @@ public class HSQLCacheManager implements ICacheManager
      *
      * @return The cache value
      */
-    public ICache getCache( String cacheName )
+    public AuxiliaryCache getCache( String cacheName )
     {
-        IHSQLCacheAttributes cattr = ( IHSQLCacheAttributes ) defaultCattr.copy();
+        HSQLCacheAttributes cattr = ( HSQLCacheAttributes ) defaultCattr.copy();
         cattr.setCacheName( cacheName );
         return getCache( cattr );
     }
@@ -150,28 +149,23 @@ public class HSQLCacheManager implements ICacheManager
      *
      * @return The cache value
      */
-    public ICache getCache( IHSQLCacheAttributes cattr )
+    public AuxiliaryCache getCache( HSQLCacheAttributes cattr )
     {
-        ICache raf = null;
+        AuxiliaryCache raf = null;
 
         log.debug( "cacheName = " + cattr.getCacheName() );
 
         synchronized ( caches )
         {
-            raf = ( ICache ) caches.get( cattr.getCacheName() );
+            raf = ( AuxiliaryCache ) caches.get( cattr.getCacheName() );
 
             if ( raf == null )
             {
-                // make use cattr
-                //raf = new HSQLCache( cattr.getCacheName(), cattr.getDiskPath() );
-                raf = new HSQLCacheNoWaitBuffer( cattr );
+                raf = new HSQLCache( cattr );
                 caches.put( cattr.getCacheName(), raf );
             }
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Manager stats : " + instance.getStats() );
-        }
+
         return raf;
     }
 
@@ -185,33 +179,6 @@ public class HSQLCacheManager implements ICacheManager
             raf.dispose();
         }
     }
-
-
-    // Don't care if there is a concurrency failure ?
-    /**
-     * Gets the stats attribute of the HSQLCacheManager object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        StringBuffer stats = new StringBuffer();
-        Enumeration allCaches = caches.elements();
-
-        while ( allCaches.hasMoreElements() )
-        {
-            ICache raf = ( ICache ) allCaches.nextElement();
-
-            if ( raf != null )
-            {
-                stats.append( raf.getStats() );
-                stats.append( ", " );
-            }
-        }
-
-        return stats.toString();
-    }
-
 
     /**
      * Gets the cacheType attribute of the HSQLCacheManager object

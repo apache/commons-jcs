@@ -67,6 +67,7 @@ import org.apache.jcs.access.behavior.IGroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.Cache;
 import org.apache.jcs.engine.control.CacheHub;
 import org.apache.jcs.engine.control.group.GroupAttrName;
@@ -161,11 +162,10 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      */
     public Object getAttribute( Object name, String group )
     {
-        //try {
-        return ( Object ) cacheControl.get( new GroupAttrName( group, name ) );
-        //} catch( ObjectNotFoundException onfe ) {
-        //  return null;
-        //}
+        ICacheElement element
+            = cacheControl.get( new GroupAttrName( group, name ) );
+
+        return ( element != null ) ? element.getVal() : null;
     }
 
     /**
@@ -225,14 +225,8 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         {
             throw new CacheException( "group " + name + " already exists " );
         }
-        try
-        {
-            cacheControl.put( groupId, ( Serializable ) attrNameSet );
-        }
-        catch ( IOException ioe )
-        {
-            throw new CacheException( ioe );
-        }
+
+        put( groupId, ( Serializable ) attrNameSet );
     }
 
     /**
@@ -339,15 +333,8 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         throws CacheException
     {
         removeAttribute( name, group, SET_ATTR_INVOCATION );
-        try
-        {
-            cacheControl.put( new GroupAttrName( group, name ),
-                              ( Serializable ) value );
-        }
-        catch ( IOException ioe )
-        {
-            throw new CacheException( ioe );
-        }
+
+        put( new GroupAttrName( group, name ), ( Serializable ) value );
     }
 
     /**

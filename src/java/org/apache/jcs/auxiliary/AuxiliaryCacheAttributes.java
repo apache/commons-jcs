@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.disk.hsql;
+package org.apache.jcs.auxiliary;
 
 /*
  * The Apache Software License, Version 1.1
@@ -55,127 +55,49 @@ package org.apache.jcs.auxiliary.disk.hsql;
  */
 import java.io.Serializable;
 
-import org.apache.jcs.engine.behavior.IElementAttributes;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.behavior.ICacheElement;
-
 /**
- * Wrapper for items that are in purgatory -- pre-disk storage. Keeps track of
- * whether the item has been rescued from purgatory prior to being banished to
- * the disk. Avoid excessive disk writing.
+ * This is a nominal interface that auxilliary cache attributes should
+ * implement. This allows the auxiliary mangers to share a common interface.
  *
  * @author asmuts
  * @created January 15, 2002
  */
-public class PurgatoryElement implements ICacheElement, Serializable
+public interface AuxiliaryCacheAttributes extends Cloneable, Serializable
 {
 
-    // need speed here.  the method calls are unnecessary.   make protected
-    /** Description of the Field */
-    protected boolean isSpoolable = false;
-    /** Description of the Field */
-    protected ICacheElement ice;
-
-
     /**
-     * Constructor for the PurgatoryElement object
+     * Sets the name of the cache, referenced by the appropriate manager.
      *
-     * @param ice
+     * @param s The new cacheName value
      */
-    public PurgatoryElement( ICacheElement ice )
-    {
-        this.ice = ice;
-    }
-
-
-// lets the queue know that is ready to be spooled
-    /**
-     * Gets the isSpoolable attribute of the PurgatoryElement object
-     *
-     * @return The isSpoolable value
-     */
-    public boolean getIsSpoolable()
-    {
-        return isSpoolable;
-    }
+    public void setCacheName( String s );
 
 
     /**
-     * Sets the isSpoolable attribute of the PurgatoryElement object
-     *
-     * @param isSpoolable The new isSpoolable value
-     */
-    public void setIsSpoolable( boolean isSpoolable )
-    {
-        this.isSpoolable = isSpoolable;
-    }
-
-
-    // ICacheElement Methods
-    /**
-     * Gets the cacheName attribute of the PurgatoryElement object
+     * Gets the cacheName attribute of the IAuxiliaryCacheAttributes object
      *
      * @return The cacheName value
      */
-    public String getCacheName()
-    {
-        return ice.getCacheName();
-    }
+    public String getCacheName();
 
 
     /**
-     * Gets the key attribute of the PurgatoryElement object
+     * Name know by by configurator
      *
-     * @return The key value
+     * @param s The new name value
      */
-    public Serializable getKey()
-    {
-        return ice.getKey();
-    }
+    public void setName( String s );
 
 
     /**
-     * Gets the val attribute of the PurgatoryElement object
+     * Gets the name attribute of the IAuxiliaryCacheAttributes object
      *
-     * @return The val value
+     * @return The name value
      */
-    public Serializable getVal()
-    {
-        return ice.getVal();
-    }
+    public String getName();
 
 
-    /**
-     * Gets the attributes attribute of the PurgatoryElement object
-     *
-     * @return The attributes value
-     */
-    public IElementAttributes getElementAttributes()
-    {
-        return ice.getElementAttributes();
-    }
-
-
-    /**
-     * Sets the attributes attribute of the PurgatoryElement object
-     *
-     * @param attr The new attributes value
-     */
-    public void setElementAttributes( IElementAttributes attr )
-    {
-        ice.setElementAttributes( attr );
-    }
-
-
-    /**
-     * Gets the createTime attribute of the PurgatoryElement object
-     *
-     * @return The createTime value
-     */
-    public long getCreateTime()
-    {
-        return ice.getCreateTime();
-    }
+    /** Description of the Method */
+    public AuxiliaryCacheAttributes copy();
 
 }

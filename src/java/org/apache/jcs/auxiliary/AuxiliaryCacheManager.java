@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.disk.indexed;
+package org.apache.jcs.auxiliary;
 
 /*
  * The Apache Software License, Version 1.1
@@ -11,28 +11,28 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in
- * the documentation and/or other materials provided with the
- * distribution.
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- * any, must include the following acknowlegement:
- * "This product includes software developed by the
- * Apache Software Foundation (http://www.apache.org/)."
- * Alternately, this acknowlegement may appear in the software itself,
- * if and wherever such third-party acknowlegements normally appear.
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Velocity", and "Apache Software
- * Foundation" must not be used to endorse or promote products derived
- * from this software without prior written permission. For written
- * permission, please contact apache@apache.org.
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
- * nor may "Apache" appear in their names without prior written
- * permission of the Apache Group.
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -53,34 +53,18 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
+import org.apache.jcs.engine.behavior.ICacheType;
+
 /**
- * Used to dump out a Disk cache from disk for debugging.
+ * AuxiliaryCacheManager
+ *
+ * FIXME: Should not need to extend ICacheType
  *
  * @author asmuts
  * @created January 15, 2002
  */
-public class IndexedDiskDumper
+public interface AuxiliaryCacheManager extends ICacheType
 {
-    /**
-     * The main program for the DiskDumper class
-     *
-     * @param args The command line arguments
-     */
-    public static void main( String[] args )
-    {
-        if ( args.length != 1 )
-        {
-            System.out.println( "Usage: java org.apache.jcs.auxiliary.disk.DiskDump <cache_name>" );
-            System.exit( 0 );
-        }
-
-        IndexedDiskCacheAttributes attr = new IndexedDiskCacheAttributes();
-
-        attr.setCacheName( args[0] );
-        attr.setDiskPath( args[0] );
-
-        final IndexedDiskCache rc = new IndexedDiskCache( attr );
-        rc.dump();
-        System.exit( 0 );
-    }
+    public AuxiliaryCache getCache( String cacheName );
 }

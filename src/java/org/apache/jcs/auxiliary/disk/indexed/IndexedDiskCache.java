@@ -54,21 +54,20 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * <http://www.apache.org/>.
  */
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
-import org.apache.jcs.auxiliary.disk.indexed.behavior.IIndexedDiskCacheAttributes;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.behavior.ICacheElement;
-
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
+import org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory
@@ -83,50 +82,29 @@ public class IndexedDiskCache extends AbstractDiskCache
         LogFactory.getLog( IndexedDiskCache.class );
 
     private String fileName;
-    private String cacheName;
     private IndexedDisk dataFile;
     private IndexedDisk keyFile;
     private HashMap keyHash;
 
     private File rafDir;
 
-    IIndexedDiskCacheAttributes cattr;
+    IndexedDiskCacheAttributes cattr;
 
     /**
      * Constructor for the DiskCache object
      *
-     * @param buffer
      * @param cattr
      */
-    public IndexedDiskCache( IIndexedDiskCacheAttributes cattr )
+    public IndexedDiskCache( IndexedDiskCacheAttributes cattr )
     {
-        this( cattr.getCacheName(), cattr.getDiskPath() );
+        super( cattr.getCacheName() );
+
+        String cacheName = cattr.getCacheName();
+        String rootDirName = cattr.getDiskPath();
 
         this.cattr = cattr;
-    }
-
-    /**
-     * Constructor for the DiskCache object
-     *
-     * @param cacheName
-     */
-    protected IndexedDiskCache( String cacheName )
-    {
-        this( cacheName, null );
-    }
-
-    /**
-     * Constructor for the DiskCache object
-     *
-     * @param cacheName
-     * @param rafroot
-     */
-    protected IndexedDiskCache( String cacheName, String rootDirName )
-    {
-        super( cacheName );
 
         this.fileName = cacheName;
-        this.cacheName = cacheName;
 
         rafDir = new File( rootDirName );
         rafDir.mkdirs();
@@ -250,9 +228,6 @@ public class IndexedDiskCache extends AbstractDiskCache
      * Update the disk cache. Called from the Queue. Makes sure the Item has not
      * been retireved from purgatory while in queue for disk. Remove items from
      * purgatory when they go to disk.
-     *
-     * @param ce
-     * @exception IOException
      */
     public void doUpdate( ICacheElement ce )
     {
@@ -317,21 +292,16 @@ public class IndexedDiskCache extends AbstractDiskCache
     }
 
     /**
-     * Description of the Method
-     *
-     * @return
-     * @param key
-     * @param container
-     * @param lock
+     * @see AbstractDiskCache#doGet
      */
-    protected Serializable doGet( Serializable key )
+    protected ICacheElement doGet( Serializable key )
     {
         if ( log.isDebugEnabled() )
         {
             log.debug( "Trying to get from disk: " + key );
         }
 
-        Serializable object = null;
+        ICacheElement object = null;
 
         try
         {
@@ -361,10 +331,10 @@ public class IndexedDiskCache extends AbstractDiskCache
         return object;
     }
 
-    private Serializable readElement( Serializable key )
+    private CacheElement readElement( Serializable key )
         throws Exception
     {
-        Serializable object = null;
+        CacheElement object = null;
 
         IndexedDiskElementDescriptor ded =
             ( IndexedDiskElementDescriptor ) keyHash.get( key );
@@ -376,7 +346,7 @@ public class IndexedDiskCache extends AbstractDiskCache
                 log.debug( "Found on disk, key: " + key );
             }
 
-            object = dataFile.readObject( ded.pos );
+            object = ( CacheElement ) dataFile.readObject( ded.pos );
         }
 
         return object;
@@ -492,16 +462,6 @@ public class IndexedDiskCache extends AbstractDiskCache
         {
             lock.done();
         }
-    }
-
-    /**
-     * Gets the stats attribute of the DiskCache object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "fileName = " + fileName;
     }
 
     /**

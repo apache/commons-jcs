@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 import org.apache.jcs.engine.behavior.ICache;
 
@@ -21,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class RemoteCacheFactory implements IAuxiliaryCacheFactory
+public class RemoteCacheFactory implements AuxiliaryCacheFactory
 {
     private final static Log log =
         LogFactory.getLog( RemoteCacheFactory.class );
@@ -41,7 +42,7 @@ public class RemoteCacheFactory implements IAuxiliaryCacheFactory
      * Interface method. Allows classforname construction, making caches
      * pluggable. Should be able to make this work for clusters and local caches
      */
-    public ICache createCache( IAuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
     {
 
         RemoteCacheAttributes rca = ( RemoteCacheAttributes ) iaca;

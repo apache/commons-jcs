@@ -55,8 +55,6 @@ package org.apache.jcs.auxiliary.disk.indexed;
  */
 import java.io.Serializable;
 
-import org.apache.jcs.auxiliary.disk.indexed.behavior.IIndexedDiskElement;
-
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
@@ -69,7 +67,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * @created January 15, 2002
  * @deprecated see PurgatoryElement
  */
-class IndexedDiskElement extends CacheElement implements IIndexedDiskElement, Serializable
+class IndexedDiskElement extends CacheElement implements Serializable
 {
 
     private boolean isSpoolable = false;

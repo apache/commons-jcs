@@ -53,62 +53,48 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import java.util.Properties;
-
-import org.apache.jcs.auxiliary.disk.hsql.behavior.IHSQLCacheAttributes;
-import org.apache.jcs.auxiliary.disk.PurgatoryElement;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.CacheConstants;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-
-import org.apache.jcs.utils.data.PropertyGroups;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.utils.data.PropertyGroups;
 
 /**
+ * HSQLDB Based Local Persistence.
+ *
+ * <b>VERY EXPERIMENTAL, and only partially implemented</b>
+ *
  * @author Aaron Smuts
  * @created January 15, 2002
  * @version 1.0
  */
-public class HSQLCache implements ICache, Serializable
+public class HSQLCache extends AbstractDiskCache
 {
     private final static Log log =
         LogFactory.getLog( HSQLCache.class );
 
-    private static int numCreated = 0;
     private int numInstances = 0;
 
-    private String cacheName;
-
-    /** Description of the Field */
     public boolean isAlive = false;
 
-    IHSQLCacheAttributes cattr;
-
-    // disk cache buffer, need to remove key from buffer on update, if its there
-    HSQLCacheNoWaitBuffer buffer;
+    HSQLCacheAttributes cattr;
 
     // for now use one statement per cache and keep it open
     // can move up to manager level or implement pooling if there are too many
@@ -116,48 +102,20 @@ public class HSQLCache implements ICache, Serializable
     Connection cConn;
     Statement sStatement;
 
-    //PreparedStatement psInsert;
-
-    //PreparedStatement psUpdate;
-    //PreparedStatement psSelect;
-
-    // should use this method
     /**
      * Constructor for the HSQLCache object
      *
-     * @param buffer
      * @param cattr
      */
-    public HSQLCache( HSQLCacheNoWaitBuffer buffer, IHSQLCacheAttributes cattr )
+    public HSQLCache( HSQLCacheAttributes cattr )
     {
-        this( cattr.getCacheName(), cattr.getDiskPath() );
+        super( cattr.getCacheName() );
+
         this.cattr = cattr;
-        this.buffer = buffer;
-    }
 
+        String rafroot = cattr.getDiskPath();
 
-    /**
-     * Constructor for the HSQLCache object
-     *
-     * @param cacheName
-     */
-    protected HSQLCache( String cacheName )
-    {
-        this( cacheName, null );
-    }
-
-
-    /**
-     * Constructor for the HSQLCache object
-     *
-     * @param cacheName
-     * @param rafroot
-     */
-    protected HSQLCache( String cacheName, String rafroot )
-    {
         numInstances++;
-
-        this.cacheName = cacheName;
 
         //String rafroot = cattr.getDiskPath();
         if ( rafroot == null )
@@ -190,11 +148,11 @@ public class HSQLCache implements ICache, Serializable
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "driver  =" + driver
-                         + ", url = " + url
-                         + ", database = " + database
-                         + ", user = " + user
-                         + ", password = " + password
-                         + ", test = " + test );
+                               + ", url = " + url
+                               + ", database = " + database
+                               + ", user = " + user
+                               + ", password = " + password
+                               + ", test = " + test );
                 }
 
                 // As described in the JDBC FAQ:
@@ -205,7 +163,7 @@ public class HSQLCache implements ICache, Serializable
                 Class.forName( driver ).newInstance();
 
                 cConn = DriverManager.getConnection( url + database, user,
-                    password );
+                                                     password );
 
                 try
                 {
@@ -241,7 +199,8 @@ public class HSQLCache implements ICache, Serializable
 
         boolean newT = true;
 
-        String setup = "create table " + cacheName + " (KEY varchar(255) primary key, ELEMENT binary)";
+        String setup = "create table " + cacheName
+            + " (KEY varchar(255) primary key, ELEMENT binary)";
 
         try
         {
@@ -258,7 +217,7 @@ public class HSQLCache implements ICache, Serializable
 
         String setupData[] = {
             "create index iKEY on " + cacheName + " (KEY)"
-            };
+        };
 
         if ( newT )
         {
@@ -266,7 +225,7 @@ public class HSQLCache implements ICache, Serializable
             {
                 try
                 {
-                    sStatement.executeQuery( setupData[i] );
+                    sStatement.executeQuery( setupData[ i ] );
                 }
                 catch ( SQLException e )
                 {
@@ -278,46 +237,8 @@ public class HSQLCache implements ICache, Serializable
 
     }
 
-
     /** Description of the Method */
-    public void add( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value );
-    }
-
-
-    // ignore the multicast field.
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, boolean multicast )
-        throws IOException
-    {
-        put( key, value );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value, null );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, IElementAttributes attr )
-        throws IOException
-    {
-        CacheElement ce = null;
-        ce = new CacheElement( cacheName, key, value );
-        ce.setElementAttributes( attr );
-        update( ce );
-    }
-
-
-    /** Description of the Method */
-    public void update( ICacheElement ce )
-        throws IOException
+    public void doUpdate( ICacheElement ce )
     {
         log.debug( "update" );
 
@@ -326,71 +247,56 @@ public class HSQLCache implements ICache, Serializable
             return;
         }
 
-        if ( ce instanceof PurgatoryElement )
-        {
-            PurgatoryElement pe = ( PurgatoryElement ) ce;
-            ce = pe.getCacheElement();
-            if ( ! pe.isSpoolable() )
-            {
-                log.debug( "pe is not spoolable" );
-
-                // it has been plucked from purgatory
-                return;
-            }
-        }
-//    /*
-//    if ( ce instanceof IDiskElement ) {
-//      IDiskElement ide = (IDiskElement)ce;
-//      if ( !ide.getIsSpoolable() ) {
-//        // it has been plucked from purgatory
-//        return;
-//      }
-//    }
-//    */
-        // remove item from purgatory since we are putting it on disk
-        // assume that the disk cache will never break
-        // disk breakage is akin to an out of memory exception
-        buffer.purgatory.remove( ce.getKey() );
-
         if ( log.isDebugEnabled() )
         {
-            log.debug( "putting " + ce.getKey() + " on disk, removing from purgatory" );
+            log.debug( "Putting " + ce.getKey() + " on disk." );
         }
 
-        // remove single item.
-        byte[] element = serialize( ce );
-        //String sql = "insert into " + cacheName + " (KEY, ELEMENT) values ('" + ce.getKey() + "', '" + element + "' )";
-
-        boolean exists = false;
+        byte[] element;
 
         try
         {
-            //String sqlS = "select ELEMENT from " + cacheName + " where KEY = ?";
-            //PreparedStatement psSelect = cConn.prepareStatement(sqlS);
-            //psSelect.setString(1,(String)ce.getKey());
-            //ResultSet rs =  psSelect.executeQuery();
+            element = serialize( ce );
+        }
+        catch ( IOException e )
+        {
+            log.error( "Could not serialize element", e );
 
-            String sqlS = "select ELEMENT from " + cacheName + " where KEY = '" + ( String ) ce.getKey() + "'";
+            return;
+        }
+
+        boolean exists = false;
+
+        // First do a query to determine if the element already exists
+
+        try
+        {
+            String sqlS = "SELECT element FROM " + cacheName
+                          + " WHERE key = '" + ( String ) ce.getKey() + "'";
+
             ResultSet rs = sStatement.executeQuery( sqlS );
 
             if ( rs.next() )
             {
                 exists = true;
             }
+
             rs.close();
-            //psSelect.close();
         }
         catch ( SQLException e )
         {
             log.error( e );
         }
 
+        // If it doesn't exist, insert it, otherwise update
+
         if ( !exists )
         {
-
             try
             {
-                String sqlI = "insert into " + cacheName + " (KEY, ELEMENT) values (?, ? )";
+                String sqlI = "insert into " + cacheName
+                    + " (KEY, ELEMENT) values (?, ? )";
+
                 PreparedStatement psInsert = cConn.prepareStatement( sqlI );
                 psInsert.setString( 1, ( String ) ce.getKey() );
                 psInsert.setBytes( 2, element );
@@ -400,21 +306,19 @@ public class HSQLCache implements ICache, Serializable
             }
             catch ( SQLException e )
             {
-                if ( e.toString().indexOf( "Violation of unique index" ) != -1 || e.getMessage().indexOf( "Violation of unique index" ) != -1 )
+                if ( e.toString().indexOf( "Violation of unique index" ) != -1
+                     || e.getMessage().indexOf( "Violation of unique index" ) != -1 )
                 {
                     exists = true;
                 }
                 else
                 {
-                    log.error( "Exception: " + e );
+                    log.error( "Could not insert element", e );
                 }
             }
-
         }
         else
         {
-
-            //sql = "update " + cacheName + " set ELEMENT = '" + element + "' where KEY = '" + ce.getKey() + "'";
             try
             {
                 String sqlU = "update " + cacheName + " set ELEMENT  = ? ";
@@ -423,7 +327,7 @@ public class HSQLCache implements ICache, Serializable
                 psUpdate.setString( 2, ( String ) ce.getKey() );
                 psUpdate.execute();
                 psUpdate.close();
-                //sStatement.executeUpdate(sql);
+
                 log.debug( "ran update" );
             }
             catch ( SQLException e2 )
@@ -432,77 +336,11 @@ public class HSQLCache implements ICache, Serializable
             }
 
         }
-
-//    DiskElementDescriptor ded = null;
-//    try {
-//      ded = new DiskElementDescriptor();
-//      byte[] data = Disk.serialize( ce );
-//      ded.init( dataFile.length(), data );
-//      // make sure this only locks for one particular cache region
-//      locker.writeLock();
-//      try {
-//        if (!isAlive) {
-//          return;
-//        }
-//        // Presume it's an append.
-//        //DiskElement re = new DiskElement( cacheName, key, value );
-//        //re.init( dataFile.length(), data );
-//        DiskElementDescriptor old = (DiskElementDescriptor)keyHash.put(ce.getKey(), ded );
-//        // Item with the same key already exists in file.
-//        // Try to reuse the location if possible.
-//        if (old != null && ded.len <= old.len) {
-//          ded.pos = old.pos;
-//        }
-//        dataFile.write(data, ded.pos);
-//        /*
-//         // Only need to write if the item with the same key and value
-//         // does not already exist in the file.
-//         if (re.equals(old)) {
-//         re.pos = old.pos;
-//         }
-//         else {
-//         // Item with the same key but different value already exists in file.
-//         // Try to reuse the location if possible.
-//         if (old != null && re.len <= old.len) {
-//         re.pos = old.pos;
-//         }
-//         dataFile.write(data, re.pos);
-//         }
-//         */
-//      } finally {
-//        locker.done();          // release write lock.
-//      }
-//      if ( log.isDebugEnabled() ) {
-//        log.debug(fileName + " -- put " + ce.getKey() + " on disk at pos " + ded.pos + " size = " + ded.len );
-//      }
-//    } catch( ConcurrentModificationException cme ) {
-//      // do nothing, this means it has gone back to memory mid serialization
-//    } catch (Exception e) {
-//      log.logEx(e, "cacheName = " + cacheName + ", ce.getKey() = " + ce.getKey());
-//      //reset();
-//    }
-        return;
     }
 
-
     /** Description of the Method */
-    public Serializable get( Serializable key )
+    public ICacheElement doGet( Serializable key )
     {
-        return get( key, true, true );
-    }
-
-
-    /** Description of the Method */
-    public Serializable get( Serializable key, boolean container )
-    {
-        return get( key, true, true );
-    }
-
-
-    /** Description of the Method */
-    private Serializable get( Serializable key, boolean container, final boolean lock )
-    {
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "getting " + key + " from disk" );
@@ -513,7 +351,7 @@ public class HSQLCache implements ICache, Serializable
             return null;
         }
 
-        Serializable obj = null;
+        ICacheElement obj = null;
 
         byte[] data = null;
         try
@@ -535,7 +373,7 @@ public class HSQLCache implements ICache, Serializable
                     ObjectInputStream ois = new ObjectInputStream( bis );
                     try
                     {
-                        obj = ( Serializable ) ois.readObject();
+                        obj = ( ICacheElement ) ois.readObject();
                     }
                     finally
                     {
@@ -565,48 +403,20 @@ public class HSQLCache implements ICache, Serializable
             log.error( sqle );
         }
 
-//    if (lock) {
-//      locker.readLock();
-//    }
-//    try {
-//      if (!isAlive) {
-//        return  null;
-//      }
-//      DiskElementDescriptor ded = (DiskElementDescriptor)keyHash.get(key);
-//      if (ded != null) {
-//        if ( debugGet ) {
-//          p( "found " + key + " on disk" );
-//        }
-//        obj = dataFile.readObject(ded.pos);
-//      }
-//      //System.out.println( "got element = " + (CacheElement)obj);
-//    } catch (NullPointerException e) {
-//      log.logEx(e, "cacheName = " + cacheName + ", key = " + key);
-//    } catch (Exception e) {
-//      log.logEx(e, "cacheName = " + cacheName + ", key = " + key);
-//    } finally {
-//      if (lock) {
-//        locker.done();
-//      }
-//    }
-
         return obj;
     }
-
 
     /**
      * Returns true if the removal was succesful; or false if there is nothing
      * to remove. Current implementation always result in a disk orphan.
      */
-    public boolean remove( Serializable key )
+    public boolean doRemove( Serializable key )
     {
-
         // remove single item.
         String sql = "delete from " + cacheName + " where KEY = '" + key + "'";
 
         try
         {
-
             if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
@@ -631,9 +441,8 @@ public class HSQLCache implements ICache, Serializable
         return false;
     }
 
-
     /** Description of the Method */
-    public void removeAll()
+    public void doRemoveAll()
     {
         try
         {
@@ -645,101 +454,19 @@ public class HSQLCache implements ICache, Serializable
             //reset();
         }
     }
-    // end removeAll
 
     // handle error by last resort, force content update, or removeall
     /** Description of the Method */
     public void reset()
     {
-//    log.logIt("Reseting cache");
-//    locker.writeLock();
-//    try {
-//      try {
-//        dataFile.close();
-//        File file = new File(rafDir, fileName + ".data");
-//        file.delete();
-//        keyFile.close();
-//        File file2 = new File(rafDir, fileName + ".key");
-//        file2.delete();
-//      } catch (Exception e) {
-//        log.logEx(e);
-//      }
-//      try {
-//        dataFile = new Disk(new File(rafDir, fileName + ".data"));
-//        keyFile = new Disk(new File(rafDir, fileName + ".key"));
-//        keyHash = new HashMap();
-//      } catch (IOException e) {
-//        log.logEx(e, " -- IN RESET");
-//      } catch (Exception e) {
-//        log.logEx(e, " -- IN RESET");
-//      }
-//    } finally {
-//      locker.done();            // release write lock.
-//    }
-    }
-    // end reset
 
-    /**
-     * Gets the stats attribute of the HSQLCache object
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "numInstances = " + numInstances;
     }
 
-
-    // shold be called by cachemanager, since it knows how
-    // many are checked out
     /** Description of the Method */
-    public void dispose()
+    public void doDispose()
     {
-//    if (!isAlive) {
-//      log.logIt("is not alive and close() was called -- " + fileName);
-//      return;
-//    }
-//    locker.writeLock();
-//    try {
-//      if (!isAlive) {
-//        log.logIt("is not alive and close() was called -- " + fileName);
-//        return;
-//      }
-//      try {
-//        optimizeFile();
-//      } catch (Exception e) {
-//        log.logEx(e, "-- " + fileName);
-//      }
-//      try {
-//        numInstances--;
-//        if (numInstances == 0) {
-//          p( "dispose -- Closing files -- in close -- " + fileName );
-//          log.warn("dispose -- Closing files -- in close -- " + fileName);
-//          dataFile.close();
-//          dataFile = null;
-//          keyFile.close();
-//          keyFile = null;
-//        }
-//      } catch (Exception e) {
-//        log.logEx(e, "-- " + fileName);
-//      }
-//    } finally {
-//      isAlive = false;
-//      locker.done();            // release write lock;
-//    }
-    }
-    // end dispose
 
-    /**
-     * Returns the cache status.
-     *
-     * @return The status value
-     */
-    public int getStatus()
-    {
-        return isAlive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
     }
-
 
     /**
      * Returns the current cache size.
@@ -751,42 +478,6 @@ public class HSQLCache implements ICache, Serializable
         return 0;
         // need to get count
     }
-
-
-    /**
-     * Gets the cacheType attribute of the HSQLCache object
-     *
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return DISK_CACHE;
-    }
-
-
-    /** For debugging. */
-    public void dump()
-    {
-//    log.debug("keyHash.size()=" + keyHash.size());
-//    for (Iterator itr = keyHash.entrySet().iterator(); itr.hasNext();) {
-//      Map.Entry e = (Map.Entry)itr.next();
-//      Serializable key = (Serializable)e.getKey();
-//      DiskElementDescriptor ded = (DiskElementDescriptor)e.getValue();
-//      Serializable val = get(key);
-//      log.debug("disk dump> key=" + key + ", val=" + val + ", pos=" + ded.pos);
-//    }
-    }
-
-    /**
-     * Returns cache name, ha
-     *
-     * @return The cacheName value
-     */
-    public String getCacheName()
-    {
-        return cacheName;
-    }
-
 
     /**
      * Returns the serialized form of the given object in a byte array.
@@ -808,6 +499,5 @@ public class HSQLCache implements ICache, Serializable
     }
 
 }
-// end class
 
 

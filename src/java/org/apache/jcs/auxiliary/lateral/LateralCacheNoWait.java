@@ -2,23 +2,17 @@ package org.apache.jcs.auxiliary.lateral;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.rmi.UnmarshalException;
-
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheAdaptor;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.CacheEventQueue;
-import org.apache.jcs.engine.CacheConstants;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheEventQueue;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.engine.CacheAdaptor;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheEventQueue;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheEventQueue;
 
 //import org.apache.jcs.auxiliary.lateral.socket.tcp.*;
 
@@ -29,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public class LateralCacheNoWait implements ICache
+public class LateralCacheNoWait implements AuxiliaryCache
 {
     private final static Log log =
         LogFactory.getLog( LateralCacheNoWait.class );
@@ -58,33 +52,6 @@ public class LateralCacheNoWait implements ICache
         }
     }
 
-
-    /** Adds a put request to the lateral cache. */
-    public void put( Serializable key, Serializable value )
-        throws IOException
-    {
-        put( key, value, null );
-    }
-
-
-    /** Description of the Method */
-    public void put( Serializable key, Serializable value, IElementAttributes attr )
-        throws IOException
-    {
-        try
-        {
-            CacheElement ce = new CacheElement( cache.getCacheName(), key, value );
-            ce.setElementAttributes( attr );
-            update( ce );
-        }
-        catch ( IOException ex )
-        {
-            log.error( ex );
-            q.destroy();
-        }
-    }
-
-
     /** Description of the Method */
     public void update( ICacheElement ce )
         throws IOException
@@ -100,16 +67,8 @@ public class LateralCacheNoWait implements ICache
         }
     }
 
-
     /** Synchronously reads from the lateral cache. */
-    public Serializable get( Serializable key )
-    {
-        return get( key, true );
-    }
-
-
-    /** Description of the Method */
-    public Serializable get( Serializable key, boolean container )
+    public ICacheElement get( Serializable key )
     {
         try
         {
@@ -135,7 +94,6 @@ public class LateralCacheNoWait implements ICache
         return null;
     }
 
-
     /** Adds a remove request to the lateral cache. */
     public boolean remove( Serializable key )
     {
@@ -151,7 +109,6 @@ public class LateralCacheNoWait implements ICache
         return false;
     }
 
-
     /** Adds a removeAll request to the lateral cache. */
     public void removeAll()
     {
@@ -165,7 +122,6 @@ public class LateralCacheNoWait implements ICache
             q.destroy();
         }
     }
-
 
     /** Adds a dispose request to the lateral cache. */
     public void dispose()
@@ -181,18 +137,6 @@ public class LateralCacheNoWait implements ICache
         }
     }
 
-
-    /**
-     * No lateral invokation.
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return cache.getStats();
-    }
-
-
     /**
      * No lateral invokation.
      *
@@ -203,7 +147,6 @@ public class LateralCacheNoWait implements ICache
         return cache.getSize();
     }
 
-
     /**
      * No lateral invokation.
      *
@@ -213,7 +156,6 @@ public class LateralCacheNoWait implements ICache
     {
         return cache.getCacheType();
     }
-
 
     /**
      * Returns the asyn cache status. An error status indicates either the
@@ -227,7 +169,6 @@ public class LateralCacheNoWait implements ICache
         return q.isAlive() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
     }
 
-
     /**
      * Gets the cacheName attribute of the LateralCacheNoWait object
      *
@@ -237,7 +178,6 @@ public class LateralCacheNoWait implements ICache
     {
         return cache.getCacheName();
     }
-
 
     /**
      * Replaces the lateral cache service handle with the given handle and reset
@@ -249,7 +189,6 @@ public class LateralCacheNoWait implements ICache
         resetEventQ();
         return;
     }
-
 
     /**
      * Resets the event q by first destroying the existing one and starting up
@@ -263,7 +202,6 @@ public class LateralCacheNoWait implements ICache
         }
         this.q = new CacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache.getCacheName() );
     }
-
 
     /** Description of the Method */
     public String toString()

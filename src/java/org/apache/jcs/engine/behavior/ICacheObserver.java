@@ -3,6 +3,8 @@ package org.apache.jcs.engine.behavior;
 
 import java.io.IOException;
 
+import org.apache.jcs.engine.behavior.ICacheListener;
+
 /**
  * Used to register interest in receiving cache changes. <br>
  * <br>

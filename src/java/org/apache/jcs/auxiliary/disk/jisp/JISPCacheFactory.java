@@ -7,15 +7,11 @@
  */
 package org.apache.jcs.auxiliary.disk.jisp;
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
-
-import org.apache.jcs.auxiliary.disk.jisp.behavior.IJISPCacheAttributes;
-
-import org.apache.jcs.engine.behavior.ICache;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 
 /**
  * @author Aaron Smuts
@@ -23,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
  * @version 1.0
  */
 
-public class JISPCacheFactory implements IAuxiliaryCacheFactory
+public class JISPCacheFactory implements AuxiliaryCacheFactory
 {
     private final static Log log =
         LogFactory.getLog( JISPCacheFactory.class );
@@ -31,17 +27,17 @@ public class JISPCacheFactory implements IAuxiliaryCacheFactory
     private static String name;
 
     /** Constructor for the JISPCacheFactory object */
-    public JISPCacheFactory() { }
-
+    public JISPCacheFactory()
+    {
+    }
 
     /** Description of the Method */
-    public ICache createCache( IAuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
     {
-        IJISPCacheAttributes idca = ( IJISPCacheAttributes ) iaca;
+        JISPCacheAttributes idca = ( JISPCacheAttributes ) iaca;
         JISPCacheManager dcm = JISPCacheManager.getInstance( idca );
         return dcm.getCache( idca );
     }
-
 
     /**
      * Gets the name attribute of the JISPCacheFactory object
@@ -52,7 +48,6 @@ public class JISPCacheFactory implements IAuxiliaryCacheFactory
     {
         return this.name;
     }
-
 
     /**
      * Sets the name attribute of the JISPCacheFactory object

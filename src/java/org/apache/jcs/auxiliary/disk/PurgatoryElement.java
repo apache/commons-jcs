@@ -54,10 +54,10 @@ package org.apache.jcs.auxiliary.disk;
  * <http://www.apache.org/>.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-
-import java.io.Serializable;
 
 /**
  * Wrapper for cache elements in purgatory. Elements are stored in purgatory
@@ -83,9 +83,9 @@ public class PurgatoryElement implements ICacheElement, Serializable
     /**
      * Constructor for the PurgatoryElement object
      *
-     * @param ice  CacheElement to wrap.
+     * @param cacheElement CacheElement to wrap.
      */
-    public PurgatoryElement(ICacheElement cacheElement)
+    public PurgatoryElement( ICacheElement cacheElement )
     {
         this.cacheElement = cacheElement;
     }
@@ -105,7 +105,7 @@ public class PurgatoryElement implements ICacheElement, Serializable
      *
      * @param spoolable The new spoolable value
      */
-    public void setSpoolable(boolean spoolable)
+    public void setSpoolable( boolean spoolable )
     {
         this.spoolable = spoolable;
     }
@@ -155,9 +155,9 @@ public class PurgatoryElement implements ICacheElement, Serializable
     /**
      * @see ICacheElement#setElementAttributes
      */
-    public void setElementAttributes(IElementAttributes attr)
+    public void setElementAttributes( IElementAttributes attr )
     {
-        cacheElement.setElementAttributes(attr);
+        cacheElement.setElementAttributes( attr );
     }
 
     /**

@@ -11,8 +11,8 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
@@ -291,11 +291,6 @@ public class CacheHub
             }
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "At end of getCache, manager stats: " + getStats() );
-        }
-
         return cache;
     }
 
@@ -314,27 +309,6 @@ public class CacheHub
         {
             cache.dispose( fromRemote );
         }
-    }
-
-    /** */
-    public String getStats()
-    {
-        StringBuffer stats = new StringBuffer();
-
-        Enumeration allCaches = caches.elements();
-
-        while ( allCaches.hasMoreElements() )
-        {
-            ICache cache = ( ICache ) allCaches.nextElement();
-
-            if ( cache != null )
-            {
-                stats.append( "Cache stats: " ).append( cache.getStats() )
-                    .append( " clients = " ).append( clients );
-            }
-        }
-
-        return stats.toString();
     }
 
     /** */
@@ -368,8 +342,6 @@ public class CacheHub
             {
                 log.debug( "Last client called release. There are "
                            + caches.size() + " caches which will be disposed" );
-
-                log.debug( "Manager stats: " + getStats() );
             }
 
             Enumeration allCaches = caches.elements();
@@ -411,27 +383,27 @@ public class CacheHub
     }
 
     /** */
-    void registryFacPut( IAuxiliaryCacheFactory auxFac )
+    void registryFacPut( AuxiliaryCacheFactory auxFac )
     {
         auxFacs.put( auxFac.getName(), auxFac );
     }
 
     /** */
-    IAuxiliaryCacheFactory registryFacGet( String name )
+    AuxiliaryCacheFactory registryFacGet( String name )
     {
-        return ( IAuxiliaryCacheFactory ) auxFacs.get( name );
+        return ( AuxiliaryCacheFactory ) auxFacs.get( name );
     }
 
     /** */
-    void registryAttrPut( IAuxiliaryCacheAttributes auxAttr )
+    void registryAttrPut( AuxiliaryCacheAttributes auxAttr )
     {
         auxAttrs.put( auxAttr.getName(), auxAttr );
     }
 
     /** */
-    IAuxiliaryCacheAttributes registryAttrGet( String name )
+    AuxiliaryCacheAttributes registryAttrGet( String name )
     {
-        return ( IAuxiliaryCacheAttributes ) auxAttrs.get( name );
+        return ( AuxiliaryCacheAttributes ) auxAttrs.get( name );
     }
 }
 
