@@ -27,6 +27,7 @@ import org.apache.jcs.yajcache.annotate.*;
  * @author Hanson Char
  */
 @CopyRightApache
+@TestOnly
 public class FileContentTypeTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     /**
