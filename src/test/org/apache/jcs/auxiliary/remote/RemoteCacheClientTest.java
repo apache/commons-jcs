@@ -18,25 +18,18 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.net.MalformedURLException;
-
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.registry.Registry;
-
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
-
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-
 import org.apache.jcs.engine.CacheElement;
-
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheObserver;
 import org.apache.jcs.engine.behavior.ICacheService;
@@ -287,7 +280,7 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
     public void setListenerId( long id )
         throws IOException
     {
-        this.listenerId = id;
+        listenerId = id;
         p( "listenerId = " + id );
     }
 
@@ -300,7 +293,7 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
     public long getListenerId()
         throws IOException
     {
-        return this.listenerId;
+        return listenerId;
     }
 
     /** Helper for output, this is an user run test class */

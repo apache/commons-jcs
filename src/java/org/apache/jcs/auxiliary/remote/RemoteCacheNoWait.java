@@ -20,6 +20,9 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.rmi.UnmarshalException;
 
@@ -33,6 +36,10 @@ import org.apache.jcs.engine.CacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheType;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * Used to queue up update requests to the underlying cache. These requests will
@@ -241,6 +248,43 @@ public class RemoteCacheNoWait implements AuxiliaryCache
    */
   public String getStats()
   {
-    return "";
+    return getStatistics().toString();
   }
+  
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+   */
+  public IStats getStatistics()
+  {
+    IStats stats = new Stats();
+    stats.setTypeName( "Remote Cache No Wait" );
+
+    ArrayList elems = new ArrayList();
+
+    IStatElement se = null;
+
+    // no data gathered here
+
+    // get the stats from the cache queue too
+	// get as array, convert to list, add list to our outer list
+	IStats cStats = this.cache.getStatistics();
+	IStatElement[] cSEs = cStats.getStatElements();
+	List cL = Arrays.asList(cSEs);
+	elems.addAll( cL );
+    
+	// get the stats from the event queue too
+	// get as array, convert to list, add list to our outer list
+	IStats eqStats = this.q.getStatistics();
+	IStatElement[] eqSEs = eqStats.getStatElements();
+	List eqL = Arrays.asList(eqSEs);
+	elems.addAll( eqL );
+    
+    // get an array and put them in the Stats object
+    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+    stats.setStatElements( ses );
+
+    return stats;
+  }   
 }

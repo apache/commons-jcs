@@ -17,17 +17,21 @@ package org.apache.jcs.servlet;
  * limitations under the License.
  */
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 
-// JCS Session Implementation
-import org.apache.jcs.utils.servlet.session.HttpServletRequestFacade;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.utils.servlet.session.HttpServletRequestFacade;
 
 /**
  * Session example using the cache for session replicaiton. Modifed from Tomcat

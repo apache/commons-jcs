@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <name>Turbine JCS</name>
   <id>jcs</id>
-  <currentVersion>1.1.2-dev</currentVersion>
+  <currentVersion>1.1.3-dev</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>

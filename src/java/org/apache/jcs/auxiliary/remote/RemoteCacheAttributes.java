@@ -58,6 +58,11 @@ public class RemoteCacheAttributes implements IRemoteCacheAttributes
 
     private boolean localClusterConsistency = false;
 
+    // default name is remote_cache_client
+    private String threadPoolName = "remote_cache_client";
+    // must be greater than 0 for a pool to be used.
+    private int getTimeoutMillis = -1;
+    
     /** Constructor for the RemoteCacheAttributes object */
     public RemoteCacheAttributes() { }
 
@@ -420,6 +425,23 @@ public class RemoteCacheAttributes implements IRemoteCacheAttributes
         this.localClusterConsistency = r;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#getThreadPoolName()
+     */
+    public String getThreadPoolName()
+    {
+      return threadPoolName;
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#setThreadPoolName(java.lang.String)
+     */
+    public void setThreadPoolName( String name )
+    {
+      threadPoolName = name;
+    }
+
     /** Description of the Method */
     public String toString()
     {
@@ -432,4 +454,23 @@ public class RemoteCacheAttributes implements IRemoteCacheAttributes
         return buf.toString();
     }
 
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#getGetTimeoutMillis()
+     */
+    public int getGetTimeoutMillis()
+    {
+      return getTimeoutMillis;
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#setGetTimeoutMillis(int)
+     */
+    public void setGetTimeoutMillis( int millis )
+    {
+      getTimeoutMillis = millis;      
+    }
+    
+    
 }

@@ -20,6 +20,9 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -29,6 +32,10 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * Used to provide access to multiple services under nowait protection. factory
@@ -302,7 +309,47 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
    */
   public String getStats()
   {
-    return "";
+    return getStatistics().toString();
+  }
+  
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+   */
+  public IStats getStatistics()
+  {
+    IStats stats = new Stats();
+    stats.setTypeName( "Remote Cache No Wait Facade" );
+
+    ArrayList elems = new ArrayList();
+
+    IStatElement se = null;
+
+    if ( noWaits != null )
+    {
+      se = new StatElement();
+      se.setName( "Number of No Waits" );
+      se.setData( "" + noWaits.length  );
+      elems.add( se );      
+    
+      for ( int i = 0; i < noWaits.length; i++ )
+      {
+        // get the stats from the super too
+        // get as array, convert to list, add list to our outer list
+        IStats sStats = noWaits[i].getStatistics();
+        IStatElement[] sSEs = sStats.getStatElements();
+        List sL = Arrays.asList( sSEs );
+        elems.addAll( sL );        
+      }
+    
+    }    
+    
+    // get an array and put them in the Stats object
+    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+    stats.setStatElements( ses );
+
+    return stats;
   }
 
 }

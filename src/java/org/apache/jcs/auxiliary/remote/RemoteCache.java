@@ -20,7 +20,11 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.jcs.access.exception.ObjectNotFoundException;
@@ -38,6 +42,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.apache.jcs.engine.behavior.IZombie;
+import org.apache.jcs.engine.stats.StatElement;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStatElement;
+import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.jcs.utils.threadpool.ThreadPoolManager;
+
+import EDU.oswego.cs.dl.util.concurrent.Callable;
+import EDU.oswego.cs.dl.util.concurrent.FutureResult;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 /**
  * Client proxy for an RMI remote cache.
@@ -54,6 +67,9 @@ public class RemoteCache implements ICache
 
     IElementAttributes attr = null;
 
+    private PooledExecutor pool = null;
+    private boolean usePoolForGet = false;
+    
     /** Description of the Method */
     public String toString()
     {
@@ -79,6 +95,25 @@ public class RemoteCache implements ICache
             log.debug( "Construct> cacheName=" + cattr.getCacheName() );
             log.debug( "irca = " + irca.toString() );
         }
+        
+        // use a pool if it is greater than 0
+        if ( log.isDebugEnabled() )
+        {
+          log.debug( "GetTimeoutMillis() = " + irca.getGetTimeoutMillis() );
+        }
+        if ( irca.getGetTimeoutMillis() > 0 )
+        { 
+          pool = ThreadPoolManager.getInstance().getPool( irca.getThreadPoolName() );
+          if ( log.isDebugEnabled() )
+          {
+            log.debug( "Thread Pool = " + pool );
+          }
+          if ( pool != null )
+          {
+            usePoolForGet = true;
+          }
+        }
+        
         /*
          * TODO
          * should be done by the remote cache, not the job of the hub manager
@@ -154,13 +189,22 @@ public class RemoteCache implements ICache
     /**
      * Synchronously get from the remote cache; if failed, replace the remote
      * handle with a zombie.
+     * 
+     * Use threadpool to timeout is a value is set for GetTimeoutMillis
      */
     public ICacheElement get( Serializable key )
         throws IOException
     {
         try
         {
-            return remote.get( cacheName, sanitized( key ) );
+            if ( usePoolForGet )
+            {
+              return getUsingPool( key );
+            }
+            else 
+            {
+              return remote.get( cacheName, sanitized( key ) );              
+            }
         }
         catch ( ObjectNotFoundException one )
         {
@@ -176,6 +220,62 @@ public class RemoteCache implements ICache
         }
     }
 
+    
+    /**
+     * This allows gets to timeout in case of remote server machine shutdown.
+     * 
+     * @param key
+     * @return
+     * @throws IOException
+     */
+  public ICacheElement getUsingPool( final Serializable key )
+      throws IOException
+  {
+    int timeout = irca.getGetTimeoutMillis();
+
+    try
+    {
+      FutureResult future = new FutureResult();
+      Runnable command = future.setter( new Callable()
+      {
+        public Object call() throws IOException
+        {
+          try
+          {
+            return remote.get( cacheName, key );
+          }
+          catch (ObjectNotFoundException onf)
+          {
+            if ( log.isDebugEnabled() )
+            {
+              log.debug( "getusingPool, Didin't find object" );
+            }
+            return null;
+          }
+        }
+      } );
+      
+      // execute using the pool
+      pool.execute( command );
+
+      // used timed get in order to timeout
+      future.timedGet( timeout );
+    }
+    catch (InterruptedException ex)
+    {
+      log.warn( "Get Request timed out after " + timeout );
+      throw new IOException( "Get Request timed out after " + timeout );
+    }
+    catch (InvocationTargetException ex)
+    {
+      // assume that this is an IOException thrown by the callable.
+      log.error( "Assuming an IO exception thrown in the backfground.", ex );
+      throw new IOException( "Get Request timed out after " + timeout );
+    }
+
+    return null;
+  }
+    
     public Set getGroupKeys(String groupName) throws java.rmi.RemoteException
     {
         return remote.getGroupKeys(cacheName, groupName);
@@ -303,9 +403,49 @@ public class RemoteCache implements ICache
      */
     public String getStats()
     {
-        return "cacheName = " + cacheName;
+        return getStatistics().toString();
     }
 
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+      IStats stats = new Stats();
+      stats.setTypeName( "Remote Cache No Wait" );
+
+      ArrayList elems = new ArrayList();
+
+      IStatElement se = null;
+
+      // no data gathered here
+      se = new StatElement();
+      se.setName( "UsePoolForGet" );
+      se.setData( "" + usePoolForGet );      
+      elems.add( se );
+
+      if ( pool != null )
+      {
+    	se = new StatElement();
+       	se.setName( "Pool Size" );
+    	se.setData("" + pool.getPoolSize() );
+    	elems.add(se);   	
+
+    	se = new StatElement();
+    	se.setName( "Maximum Pool Size" );
+    	se.setData("" + pool.getMaximumPoolSize() );
+    	elems.add(se);   	     
+      }
+
+      // get an array and put them in the Stats object
+      IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+      stats.setStatElements( ses );
+
+      return stats;
+    }       
     /**
      * Returns the current cache size.
      *
