@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 public class LateralCacheMonitor implements Runnable
 {
     private final static Log log =
-        LogFactory.getLog( LateralCacheManager.class );
+        LogFactory.getLog( LateralCacheMonitor.class );
 
     private static LateralCacheMonitor instance;
     private static long idlePeriod = 20 * 1000;
@@ -153,21 +153,28 @@ public class LateralCacheMonitor implements Runnable
 
             // Monitor each LateralCacheManager instance one after the other.
             // Each LateralCacheManager corresponds to one lateral connection.
-            for ( Iterator itr = LateralCacheManager.instances.values().iterator(); itr.hasNext();  )
-            {
+            log.info( "LateralCacheManager.instances.size() = "  + LateralCacheManager.instances.size() );
+            //for
+            int cnt = 0;
+            Iterator itr = LateralCacheManager.instances.values().iterator();
+            while ( itr.hasNext() ) {
+                cnt++;
                 LateralCacheManager mgr = ( LateralCacheManager ) itr.next();
                 try
                 {
                     // If any cache is in error, it strongly suggests all caches managed by the
                     // same LateralCacheManager instance are in error.  So we fix them once and for all.
-                    for ( Iterator itr2 = mgr.caches.values().iterator(); itr2.hasNext();  )
-                    {
-                        if ( itr2.hasNext() )
+                    //for
+                    log.info( "\n " + cnt + "- mgr.lca.getTcpServer() = "  + mgr.lca.getTcpServer() + " mgr = " + mgr);
+                    log.info( "\n " + cnt + "- mgr.caches.size() = "  + mgr.caches.size() );
+                    Iterator itr2 = mgr.caches.values().iterator();
+                    //{
+                        while( itr2.hasNext() )
                         {
                             LateralCacheNoWait c = ( LateralCacheNoWait ) itr2.next();
                             if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                             {
-                                log.debug( "found LateralCacheNoWait in error" );
+                                log.info( "found LateralCacheNoWait in error, " + c.toString() );
 
                                 LateralCacheRestore repairer = new LateralCacheRestore( mgr );
                                 // If we can't fix them, just skip and re-try in the next round.
@@ -179,11 +186,12 @@ public class LateralCacheMonitor implements Runnable
                                 {
                                     bad();
                                 }
-                                break;
+                                //break;
+                            } else {
+                              log.info("lcnw not in error");
                             }
-                            log.debug( "lcnw not in error" );
                         }
-                    }
+                    //}
                 }
                 catch ( Exception ex )
                 {

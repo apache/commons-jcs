@@ -228,4 +228,14 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
     {
         return "LateralCacheNoWaitFacade: " + cacheName;
     }
+
+  /**
+   * getStats
+   *
+   * @return String
+   */
+  public String getStats()
+  {
+    return "";
+  }
 }

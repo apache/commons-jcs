@@ -92,9 +92,10 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
                 {
                   log.debug( "tcp server = " +  server );
                 }
-                lac.setTcpServer( server );
-                LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
-                ICache ic = lcm.getCache( lac.getCacheName() );
+                LateralCacheAttributes lacC = (LateralCacheAttributes)lac.copy();
+                lacC.setTcpServer( server );
+                LateralCacheManager lcm = LateralCacheManager.getInstance( lacC );
+                ICache ic = lcm.getCache( lacC.getCacheName() );
                 if ( ic != null )
                 {
                     noWaits.add( ic );

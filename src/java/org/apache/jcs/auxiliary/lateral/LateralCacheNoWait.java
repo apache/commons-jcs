@@ -236,4 +236,14 @@ public class LateralCacheNoWait
   {
     return "LateralCacheNoWait: " + cache.toString();
   }
+
+  /**
+   * getStats
+   *
+   * @return String
+   */
+  public String getStats()
+  {
+    return "";
+  }
 }

@@ -68,6 +68,9 @@ public class LateralTCPListener
 
     private PooledExecutor pooledExecutor = new PooledExecutor();
 
+    private int putCnt = 0;
+    private int removeCnt = 0;
+
     // -------------------------------------------------------- factory methods
 
     /**
@@ -164,10 +167,18 @@ public class LateralTCPListener
     public void handlePut( ICacheElement element )
         throws IOException
     {
+        putCnt++;
+        if ( log.isInfoEnabled() ) {
+          if ( putCnt % 100 == 0 ) {
+            log.info( "Put Count = " + putCnt );
+          }
+        }
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "handlePut> cacheName=" + element.getCacheName() + ", key=" + element.getKey() );
         }
+
 
         // This was the following, however passing true in for updateRemotes
         // causes an a loop, since the element will the be sent to the sender.
@@ -183,6 +194,13 @@ public class LateralTCPListener
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
+      removeCnt++;
+      if ( log.isInfoEnabled() ) {
+        if ( removeCnt % 100 == 0 ) {
+          log.info( "Remove Count = " + removeCnt );
+        }
+      }
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );

@@ -87,7 +87,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
         LateralCacheManager ins = ( LateralCacheManager ) instances.get( lca.toString() );
         if ( ins == null )
         {
-            log.debug( "Instance is null, creating" );
+            log.info( "Instance for [" + lca.toString() + "] is null, creating" );
 
             synchronized ( instances )
             {
@@ -121,9 +121,9 @@ public class LateralCacheManager implements AuxiliaryCacheManager
      *
      * @param lca
      */
-    private LateralCacheManager( ILateralCacheAttributes lca )
+    private LateralCacheManager( ILateralCacheAttributes lcaA )
     {
-        this.lca = lca;
+        this.lca = lcaA;
 
         if ( log.isDebugEnabled() )
         {
@@ -137,6 +137,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
             if ( lca.getTransmissionType() == ILateralCacheAttributes.TCP )
             {
                 log.debug( "Creating TCP service" );
+                log.info( "Creating TCP service, lca = " + lca );
 
                 this.lateralService = new LateralTCPService( lca );
             }
@@ -220,6 +221,8 @@ public class LateralCacheManager implements AuxiliaryCacheManager
             {
                 c = new LateralCacheNoWait( new LateralCache( lca, lateralService ) );
                 caches.put( cacheName, c );
+
+                log.info( "craeted LateralCacheNoWait for " + lca);
             }
         }
 

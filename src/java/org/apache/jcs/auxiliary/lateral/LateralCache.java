@@ -287,4 +287,14 @@ public class LateralCache implements ICache
         this.lateral = lateral;
         return;
     }
+
+  /**
+   * getStats
+   *
+   * @return String
+   */
+  public String getStats()
+  {
+    return "";
+  }
 }

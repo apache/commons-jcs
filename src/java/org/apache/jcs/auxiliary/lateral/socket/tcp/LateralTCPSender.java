@@ -61,6 +61,7 @@ public class LateralTCPSender
     private ObjectOutputStream oos;
     private Socket socket;
     int counter = 0;
+    private int sendCnt = 0;
 
     // reset the ObjectOutputStream every 70 calls
     //private static final int RESET_FREQUENCY = 70;
@@ -173,6 +174,13 @@ public class LateralTCPSender
     public void send( LateralElementDescriptor led )
         throws IOException
     {
+      sendCnt++;
+      if ( log.isInfoEnabled() ) {
+        if ( sendCnt % 100 == 0 ) {
+          log.info( "Send Count = " + sendCnt );
+        }
+      }
+
         log.debug( "sending LateralElementDescriptor" );
 
         if ( led == null )
@@ -197,7 +205,7 @@ public class LateralTCPSender
                     counter = 0;
                     // Failing to reset the object output stream every now and
                     // then creates a serious memory leak.
-                    log.info( "Doing oos.reset()" );
+                    log.debug( "Doing oos.reset()" );
                     oos.reset();
                 }
             }

@@ -439,12 +439,12 @@ public class LateralCacheAttributes implements Serializable, ILateralCacheAttrib
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
-        buf.append( "cacheName=" + cacheName + "\n" );
-        buf.append( "putOnlyMode=" + putOnlyMode + "\n" );
-        buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );
-        buf.append( "transmissionType=" + transmissionType + "\n" );
-        buf.append( "tcpServer=" + tcpServer + "\n" );
-        buf.append( httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) + tcpServer );
+        //buf.append( "cacheName=" + cacheName + "\n" );
+        //buf.append( "putOnlyMode=" + putOnlyMode + "\n" );
+        //buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );
+        //buf.append( "transmissionType=" + transmissionType + "\n" );
+        //buf.append( "tcpServer=" + tcpServer + "\n" );
+        buf.append( transmissionTypeName + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) + tcpServer );
         return buf.toString();
     }
 
