@@ -18,14 +18,16 @@ package org.apache.jcs.yajcache.core;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import org.apache.jcs.yajcache.soft.SoftRefCache;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.jcs.yajcache.config.PerCacheConfig;
+import org.apache.jcs.yajcache.file.CacheFileManager;
+import org.apache.jcs.yajcache.soft.SoftRefFileCache;
 
 /**
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheManager {
     inst;
     // Cache name to Cache mapping.
@@ -73,14 +75,17 @@ public enum CacheManager {
      * an existing cache created earlier by another thread.
      */
 //    @SuppressWarnings({"unchecked"})
-    private @NonNullable <V> ICache<V> createCache(@NonNullable String name, @NonNullable Class<V> valueType) {
-        ICache<V> c = new SoftRefCache<V>(name, valueType);
+    private @NonNullable <V> ICache<V> createCache(
+            @NonNullable String name, @NonNullable Class<V> valueType) 
+    {
+        SoftRefFileCache<V> c = new SoftRefFileCache<V>(name, valueType, new PerCacheConfig());
+        c.addCacheChangeListener(new CacheFileManager<V>(c));
         ICache old = this.map.putIfAbsent(name, c);
 
         if (old != null) {
             // race condition: cache already created by another thread.
             CacheManagerUtils.inst.checkValueType(old, valueType);
-            c = old;
+            return old;
         }
         return c;
     }
