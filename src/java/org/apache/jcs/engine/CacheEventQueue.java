@@ -224,7 +224,18 @@ public class CacheEventQueue implements ICacheEventQueue
 
             Node node = head.next;
 
-            AbstractCacheEvent value = head.event;
+            // This is an awful bug.  This will always return null.
+            // This make the event Q and event destroyer.
+            //AbstractCacheEvent value = head.event;
+
+            // corrected
+            AbstractCacheEvent value = node.event;
+
+            if ( log.isDebugEnabled() )
+            {
+              log.debug( "head.event = " + head.event );
+              log.debug( "node.event = " + node.event );
+            }
 
             // Node becomes the new head (head is always empty)
 
@@ -271,6 +282,12 @@ public class CacheEventQueue implements ICacheEventQueue
                 try
                 {
                     r = take();
+
+                    if ( log.isDebugEnabled() )
+                    {
+                      log.debug( "r from take() = " + r );
+                    }
+
                 }
                 catch ( InterruptedException e )
                 {
