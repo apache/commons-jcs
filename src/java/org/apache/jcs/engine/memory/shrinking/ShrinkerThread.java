@@ -70,7 +70,9 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- *  A background memory shrinker. Just started. <u>DON'T USE</u>
+ *  A background memory shrinker. Memory problems and concurrent modification
+ *  exception caused by acting directly on an iterator of the underlying memory
+ *  cache should have been solved.
  *
  *@author     <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  *@created    February 18, 2002
@@ -97,7 +99,7 @@ public class ShrinkerThread extends Thread
     }
 
     /**
-     *  Description of the Method
+     *  Graceful shutdown after this round of processing.
      */
     public void kill()
     {
@@ -128,8 +130,19 @@ public class ShrinkerThread extends Thread
         return;
     }
 
+
     /**
-     *  Constructor for the shrink object
+     *  This method is called when the thread wakes up. A. The method obtains an
+     *  array of keys for the cache region. B. It iterates through the keys and
+     *  tries to get the item from the cache without affecting the last access
+     *  or position of the item. C. Then the item is checked for expiration.
+     *  This expiration check has 3 parts: 1. Has the
+     *  cacheattributes.MaxMemoryIdleTimeSeconds defined for the region been
+     *  exceeded? If so, the item should be move to disk. 2. Has the item
+     *  exceeded MaxLifeSeconds defined in the element atributes? If so, remove
+     *  it. 3. Has the item exceeded IdleTime defined in the element atributes?
+     *  If so, remove it. If there are event listeners registered for the cache
+     *  element, they will be called.
      */
     protected void shrink()
     {
@@ -139,160 +152,120 @@ public class ShrinkerThread extends Thread
             log.debug( "Shrinking" );
         }
 
-        // not thread safe.  Could cause problems.  Only call remove directly
-        // to the map.
         try
         {
 
-
-/////////////////////////////////////
-
-
-            // creation of the iterator without any change to
-            // the underlying collection does not result in
-            // increased memory uage
-//            java.util.Iterator itr = cache.getIterator();
-//
-//            while ( itr.hasNext() )
-//           {
-//                Map.Entry e = ( Map.Entry ) itr.next();
-//                MemoryElementDescriptor me = ( MemoryElementDescriptor ) e.getValue();
-//                ICacheElement ce = me.ce;
-
-///////////////////////////////////////
-
-
             Object[] keys = cache.getKeyArray();
             int size = keys.length;
-            for ( int i=0; i < size; i++ ) {
+            for ( int i = 0; i < size; i++ )
+            {
 
-                Serializable key = (Serializable)keys[i];
-                ICacheElement ce = cache.getQuiet(key);
-
-
-///////////////////////////////////////
-
+                Serializable key = ( Serializable ) keys[i];
+                ICacheElement ce = cache.getQuiet( key );
 
                 if ( ce != null )
                 {
 
-                  long now = System.currentTimeMillis();
+                    long now = System.currentTimeMillis();
 
-                  if ( log.isDebugEnabled() )
-                  {
-                      log.debug( "now = " + now );
-                      log.debug( "!ce.getElementAttributes().getIsEternal() = " + !ce.getElementAttributes().getIsEternal() );
-                      log.debug( "ce.getElementAttributes().getMaxLifeSeconds() = " + ce.getElementAttributes().getMaxLifeSeconds() );
-                      log.debug( "now - ce.getElementAttributes().getCreateTime() = " + String.valueOf( now - ce.getElementAttributes().getCreateTime() ) );
-                      log.debug( "ce.getElementAttributes().getMaxLifeSeconds() * 1000 = " + ce.getElementAttributes().getMaxLifeSeconds() * 1000 );
-                  }
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "now = " + now );
+                        log.debug( "!ce.getElementAttributes().getIsEternal() = " + !ce.getElementAttributes().getIsEternal() );
+                        log.debug( "ce.getElementAttributes().getMaxLifeSeconds() = " + ce.getElementAttributes().getMaxLifeSeconds() );
+                        log.debug( "now - ce.getElementAttributes().getCreateTime() = " + String.valueOf( now - ce.getElementAttributes().getCreateTime() ) );
+                        log.debug( "ce.getElementAttributes().getMaxLifeSeconds() * 1000 = " + ce.getElementAttributes().getMaxLifeSeconds() * 1000 );
+                    }
 
-                  // Memory idle, to disk shrinkage
-                  if ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() != -1 )
-                  {
-                      long deadAt = ce.getElementAttributes().getLastAccessTime() + ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() * 1000 );
-                      if ( ( deadAt - now ) < 0 )
-                      {
-                          if ( log.isInfoEnabled() )
-                          {
-                              log.info( "Exceeded memory idle time, Pushing item to disk -- " + ce.getKey() + " over by = " + String.valueOf( deadAt - now ) + " ms." );
-                          }
-                          //itr.remove();
-                          cache.remove( ce.getKey() );
+                    // Memory idle, to disk shrinkage
+                    if ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() != -1 )
+                    {
+                        long deadAt = ce.getElementAttributes().getLastAccessTime() + ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() * 1000 );
+                        if ( ( deadAt - now ) < 0 )
+                        {
+                            if ( log.isInfoEnabled() )
+                            {
+                                log.info( "Exceeded memory idle time, Pushing item to disk -- " + ce.getKey() + " over by = " + String.valueOf( deadAt - now ) + " ms." );
+                            }
 
-                          cache.waterfal( ce );
-                      }
-                  }
+                            cache.remove( ce.getKey() );
 
-                  if ( !ce.getElementAttributes().getIsEternal() )
-                  {
-                      // Exceeded maxLifeSeconds
-                      if ( ( ce.getElementAttributes().getMaxLifeSeconds() != -1 ) && ( now - ce.getElementAttributes().getCreateTime() ) > ( ce.getElementAttributes().getMaxLifeSeconds() * 1000 ) )
-                      {
-                          if ( log.isInfoEnabled() )
-                          {
-                              log.info( "Exceeded maxLifeSeconds -- " + ce.getKey() );
-                          }
+                            cache.waterfal( ce );
+                        }
+                    }
 
-                          // handle event, might move to a new method
-                          ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
-                          if ( eventHandlers != null )
-                          {
-                              if ( log.isDebugEnabled() )
-                              {
-                                  log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND" );
-                              }
-                              IElementEvent event = new ElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND );
-                              Iterator hIt = eventHandlers.iterator();
-                              while ( hIt.hasNext() )
-                              {
-                                  IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
-                                  hand.handleElementEvent( event );
-                              }
-                          }
+                    ////////////////////////////////////////////////
+                    if ( !ce.getElementAttributes().getIsEternal() )
+                    {
+                        // Exceeded maxLifeSeconds
+                        if ( ( ce.getElementAttributes().getMaxLifeSeconds() != -1 ) && ( now - ce.getElementAttributes().getCreateTime() ) > ( ce.getElementAttributes().getMaxLifeSeconds() * 1000 ) )
+                        {
+                            if ( log.isInfoEnabled() )
+                            {
+                                log.info( "Exceeded maxLifeSeconds -- " + ce.getKey() );
+                            }
 
-                          //itr.remove();
-                          // TODO: this needs to go through the remove chanel
-                          // since an old copy could be on disk and we may want
-                          // to clean up the other caches.
-                          // probably need to call both
-                          cache.remove( ce.getKey() );
-                      }
-                      else
-                      // Exceeded maxIdleTime, removal
-                          if ( ( ce.getElementAttributes().getIdleTime() != -1 ) && ( now - ce.getElementAttributes().getLastAccessTime() ) > ( ce.getElementAttributes().getIdleTime() * 1000 ) )
-                      {
-                          if ( log.isInfoEnabled() )
-                          {
-                              log.info( "Exceeded maxIdleTime [ ce.getElementAttributes().getIdleTime() = " + ce.getElementAttributes().getIdleTime() + " ]-- " + ce.getKey() );
-                          }
+                            // handle event, might move to a new method
+                            ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
+                            if ( eventHandlers != null )
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND" );
+                                }
+                                IElementEvent event = new ElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND );
+                                Iterator hIt = eventHandlers.iterator();
+                                while ( hIt.hasNext() )
+                                {
+                                    IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
+                                    hand.handleElementEvent( event );
+                                }
+                            }
 
-                          // handle event, might move to a new method
-                          ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
-                          if ( eventHandlers != null )
-                          {
-                              if ( log.isDebugEnabled() )
-                              {
-                                  log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND" );
-                              }
-                              IElementEvent event = new ElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND );
-                              Iterator hIt = eventHandlers.iterator();
-                              while ( hIt.hasNext() )
-                              {
-                                  IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
-                                  hand.handleElementEvent( event );
-                              }
-                          }
+                            cache.remove( ce.getKey() );
+                        }
+                        else
+                        // Exceeded maxIdleTime, removal
+                            if ( ( ce.getElementAttributes().getIdleTime() != -1 ) && ( now - ce.getElementAttributes().getLastAccessTime() ) > ( ce.getElementAttributes().getIdleTime() * 1000 ) )
+                        {
+                            if ( log.isInfoEnabled() )
+                            {
+                                log.info( "Exceeded maxIdleTime [ ce.getElementAttributes().getIdleTime() = " + ce.getElementAttributes().getIdleTime() + " ]-- " + ce.getKey() );
+                            }
 
-                          //itr.remove();
+                            // handle event, might move to a new method
+                            ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
+                            if ( eventHandlers != null )
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND" );
+                                }
+                                IElementEvent event = new ElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND );
+                                Iterator hIt = eventHandlers.iterator();
+                                while ( hIt.hasNext() )
+                                {
+                                    IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
+                                    hand.handleElementEvent( event );
+                                }
+                            }
 
-                          cache.remove( ce.getKey() );
-                      }
-                  }
+                            cache.remove( ce.getKey() );
+                        }
 
-                } // end if ce != null
+                    }// end if not eternal
 
-/////////////////////////////////////
+                }// end if ce != null
 
-
-              }
-
-
-////////////////////////////////////
-
-//            }
-//
-//            itr = null;
-
-////////////////////////////////////
+            }// end for
 
         }
         catch ( Throwable t )
         {
-            log.info( "Expected trouble in shrink cycle", t );
-            // keep going?
-            // concurrent modifications will be a serious problem here
-            // there is no good way yo interate througha  map without locking it
+            log.info( "Unexpected trouble in shrink cycle", t );
+
+            // concurrent modifications should no longer be a problem
+            // It is up to the IMemoryCache to return an array of keys
 
             //stop for now
             return;
