@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * Much like the ICache interface, but htis is specifically designed for the
+ * Much like the ICache interface, but this is specifically designed for the
  * CompositeCaches. This interface guarantees a simple set of methods for use by
  * auxiliary cache implementations.
  *
