@@ -66,8 +66,10 @@ public class SoftRefFileCacheSafeTest extends TestCase {
             log.debug("get i="+i +":"+ c.get(String.valueOf(i)));
         }
         log.debug("size: " + c.size());
+        CacheManager.inst.removeCache("bytesCache");
 //        log.debug("count: " + sc.getCollectorCount());
 //        log.debug(SoftRefCacheCleaner.inst.toString());
         log.debug(c);
+        log.debug(CacheManager.inst);
     }
 }
