@@ -46,10 +46,10 @@
 	      Writing to the disk cache is asynchronous and made efficient by using a 
         memory staging area called purgatory.  Retrievals check purgatory then
      	  disk for an item.  When items are sent to purgatory they are simultaneously 
-        queued to be put to disk.  If an item is retrieved form purgatory it will no
+        queued to be put to disk.  If an item is retrieved from purgatory it will no
         longer be written to disk, since the cache hub will move it back to memory.  
         Using purgatory insures that there is no wait for disk writes, unecessary 
-        disk writes are avoided for boarderline items, and the items are always 
+        disk writes are avoided for borderline items, and the items are always 
         available.  		
       </p>
       </subsection>

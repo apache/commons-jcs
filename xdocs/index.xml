@@ -4,7 +4,7 @@
   <properties>
     <title>Java Caching System</title>
     <author email="pete@kazmier.com">Pete Kazmier</author>
-    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+    <author email="asmuts@apache.org">Aaron Smuts</author>
   </properties>
 
   <body>
@@ -17,7 +17,7 @@
         JCS is most useful for high read, low put applications.  Dynamic
         content and reporting systems can benefit most.  However, any
         site that repeatedly constructs pages, dropdowns, or common
-        search results form a database that is updated at intervals
+        search results from a database that is updated at intervals
         (rather than across categories continuously) can improve
         performance and scalability by implementing caching. Latency
         times drop sharply and bottlenecks move away from the database

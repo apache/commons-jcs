@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="jcs" href="http://jakarta.apache.org/turbine/jcs/">
+<project name="jcs" href="http://jakarta.apache.org/jcs/">
 
   <title>JCS</title>
 
   <body>
 
-    <menu name="JCS Documentation">
+    <menu name="General Information">
       <item name="Overview"             href="/index.html"/>
       <item name="JCS and JCACHE"       href="/JCSandJCACHE.html"/>
+      <item name="Downloads"            href="/Downloads.html"/>
+    </menu>
+
+    <menu name="JCS User's Guide">
       <item name="Basic JCS Config"     href="/BasicJCSConfiguration.html"/>
       <item name="Element Config"       href="/ElementAttributes.html"/>
       <item name="Basic Web Example"    href="/UsingJCSBasicWeb.html"/>
@@ -17,5 +21,7 @@
       <item name="Remote Cache"         href="/RemoteAuxCache.html"/>
       <item name="Lateral TCP Cache"    href="/LateralTCPAuxCache.html"/>
     </menu>
+
+
   </body>
 </project>
