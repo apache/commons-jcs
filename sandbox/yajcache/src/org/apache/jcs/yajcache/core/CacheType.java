@@ -22,6 +22,8 @@ import org.apache.jcs.yajcache.soft.SoftRefFileCache;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
+ * Cache Type.
+ *
  * @author Hanson Char
  */
 // @CopyRightApache
