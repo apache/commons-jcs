@@ -15,14 +15,37 @@ remote.cluster.LocalClusterConsistency=true
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
+# sets the default aux value for any non configured caches
 jcs.default=DC,RCluster1
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=7
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
 
+# SYSTEM CACHE
 # should be defined for the storage of group attribute list
 jcs.system.groupIdCache=DC,RCluster1
 jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
+jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.system.groupIdCache.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.system.groupIdCache.elementattributes.IsEternal=true
+jcs.system.groupIdCache.elementattributes.MaxLifeSeconds=3600
+jcs.system.groupIdCache.elementattributes.IdleTime=1800
+jcs.system.groupIdCache.elementattributes.IsSpool=true
+jcs.system.groupIdCache.elementattributes.IsRemote=true
+jcs.system.groupIdCache.elementattributes.IsLateral=true
+
  
 
 ##############################################################
