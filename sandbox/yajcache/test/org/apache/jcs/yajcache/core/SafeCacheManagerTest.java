@@ -34,36 +34,37 @@ public class SafeCacheManagerTest extends TestCase {
     
     public void testGetCache() {
         log.debug("Test getCache and get");
-        ICacheSafe<String> c = SafeCacheManager.inst.getCache(CacheType.SOFT_REFERENCE_SAFE, "myCache", String.class);
+        ICacheSafe<String> c = CacheManager.inst.getSafeCache(
+                "myCache", String.class, CacheType.SOFT_REFERENCE_SAFE);
         assertTrue(null == c.get("bla"));
         log.debug("Test getCache and put");
-        c = SafeCacheManager.inst.getCache("myCache", String.class);
+        c = CacheManager.inst.getSafeCache("myCache", String.class);
         c.put("bla", "First Put");
         assertTrue("First Put" == c.get("bla"));
         assertEquals(c.size(), 1);
         log.debug("Test getCache and remove");
-        c = SafeCacheManager.inst.getCache("myCache", String.class);
+        c = CacheManager.inst.getSafeCache("myCache", String.class);
         c.remove("bla");
         assertTrue(null == c.get("bla"));
         log.debug("Test getCache and two put's");
-        c = SafeCacheManager.inst.getCache("myCache", String.class);
+        c = CacheManager.inst.getSafeCache("myCache", String.class);
         c.put("1", "First Put");
         c.put("2", "Second Put");
         assertEquals(c.size(), 2);
         assertTrue("Second Put" == c.get("2"));
         assertTrue("First Put" == c.get("1"));
         log.debug("Test getCache and clear");
-        c = SafeCacheManager.inst.getCache("myCache", String.class);
+        c = CacheManager.inst.getSafeCache("myCache", String.class);
         c.clear();
         assertEquals(c.size(), 0);
         assertTrue(null == c.get("2"));
         assertTrue(null == c.get("1"));
         log.debug("Test getCache and getValueType");
-        ICacheSafe c1 = SafeCacheManager.inst.getCache("myCache");
+        ICacheSafe c1 = CacheManager.inst.getSafeCache("myCache");
         assertTrue(c1.getValueType() == String.class);
         log.debug("Test checking of cache value type");
         try {
-            ICacheSafe<Integer> c2 = SafeCacheManager.inst.getCache("myCache", Integer.class);
+            ICacheSafe<Integer> c2 = CacheManager.inst.getSafeCache("myCache", Integer.class);
             assert false : "Bug: Cache for string cannot be used for Integer.";
         } catch(ClassCastException ex) {
             // should go here.
@@ -72,12 +73,15 @@ public class SafeCacheManagerTest extends TestCase {
 
     public void testGetCacheRaceCondition() {
         log.debug("Test simulation of race condition in creating cache");
-        ICacheSafe intCache = SafeCacheManager.inst.testCreateCacheRaceCondition("race", Integer.class);
-        ICacheSafe intCache1 = SafeCacheManager.inst.testCreateCacheRaceCondition("race", Integer.class);
+        ICache intCache = CacheManager.inst.testCreateCacheRaceCondition(
+                "race", Integer.class, CacheType.SOFT_REFERENCE_SAFE);
+        ICache intCache1 = CacheManager.inst.testCreateCacheRaceCondition(
+                "race", Integer.class, CacheType.SOFT_REFERENCE_SAFE);
         log.debug("Test simulation of the worst case scenario: "
                 + "race condition in creating cache AND class cast exception");
         try {
-            ICacheSafe<Double> doubleCache = SafeCacheManager.inst.testCreateCacheRaceCondition("race", Double.class);
+            ICache doubleCache = CacheManager.inst.testCreateCacheRaceCondition(
+                    "race", Double.class, CacheType.SOFT_REFERENCE_SAFE);
             assert false : "Bug: Cache for Integer cannot be used for Double.";
         } catch(ClassCastException ex) {
             // should go here.
@@ -87,15 +91,17 @@ public class SafeCacheManagerTest extends TestCase {
 
     public void testRemoveCache() {
         log.debug("Test remove cache");
-        ICacheSafe<Integer> intCache = SafeCacheManager.inst.getCache("race", Integer.class);
+        ICacheSafe<Integer> intCache = CacheManager.inst.getSafeCache("race", Integer.class);
         intCache.put("1", 1);
         assertEquals(intCache.size(), 1);
-        assertEquals(intCache, SafeCacheManager.inst.removeCache("race"));
+        assertEquals(intCache, CacheManager.inst.removeCache("race"));
         assertEquals(intCache.size(), 0);
-        ICacheSafe intCache1 = SafeCacheManager.inst.getCache("race", Integer.class);
+        ICacheSafe intCache1 = CacheManager.inst.getSafeCache("race", Integer.class);
         assertFalse(intCache == intCache1);
-        SafeCacheManager.inst.removeCache("race");
-        ICacheSafe<Double> doubleCache = SafeCacheManager.inst.testCreateCacheRaceCondition("race", Double.class);
+        CacheManager.inst.removeCache("race");
+        ICache<Double> doubleCache = 
+                CacheManager.inst.testCreateCacheRaceCondition(
+                "race", Double.class, CacheType.SOFT_REFERENCE_SAFE);
         doubleCache.put("double", 1.234);
         assertEquals(1.234, doubleCache.get("double"));
     }
@@ -103,23 +109,23 @@ public class SafeCacheManagerTest extends TestCase {
     public void testGetSafeCache() {
         log.debug("Test getCache and getCopy");
         {
-            ICacheSafe<String> c = SafeCacheManager.inst.getCache(
-                    CacheType.SOFT_REFERENCE_SAFE, "myCache", String.class);
+            ICacheSafe<String> c = CacheManager.inst.getSafeCache(
+                    "myCache", String.class, CacheType.SOFT_REFERENCE_SAFE);
             assertTrue(null == c.getCopy("bla"));
             log.debug("Test getCache and putCopy");
-            c = SafeCacheManager.inst.getCache("myCache", String.class);
+            c = CacheManager.inst.getSafeCache("myCache", String.class);
             c.putCopy("bla", "First Put");
             assertTrue("First Put" == c.getBeanClone("bla"));
             assertEquals(c.size(), 1);
             log.debug("Test getCache and remove");
-            c = SafeCacheManager.inst.getCache("myCache", String.class);
+            c = CacheManager.inst.getSafeCache("myCache", String.class);
             c.remove("bla");
             assertTrue(null == c.getCopy("bla"));
             log.debug("Test getCache and two putCopy's");
         }
-        SafeCacheManager.inst.removeCache("myCache");
-        ICacheSafe<TestSerializable> c = SafeCacheManager.inst.getCache(
-                CacheType.SOFT_REFERENCE_SAFE, "myCache", TestSerializable.class);
+        CacheManager.inst.removeCache("myCache");
+        ICacheSafe<TestSerializable> c = CacheManager.inst.getSafeCache(
+                "myCache", TestSerializable.class, CacheType.SOFT_REFERENCE_SAFE);
         TestSerializable[] ta = {
                 new TestSerializable("First Put"), 
                 new TestSerializable("Second Put"),
@@ -152,17 +158,18 @@ public class SafeCacheManagerTest extends TestCase {
         assertEquals(ta[2], c.getBeanCopy("3"));
         assertEquals(ta[2], c.getCopy("3"));
         log.debug("Test getCache and clear");
-        c = SafeCacheManager.inst.getCache("myCache", TestSerializable.class);
+        c = CacheManager.inst.getSafeCache(
+                "myCache", TestSerializable.class, CacheType.SOFT_REFERENCE_SAFE);
         c.clear();
         assertEquals(c.size(), 0);
         assertTrue(null == c.getCopy("2"));
         assertTrue(null == c.getCopy("1"));
         log.debug("Test getCache and getValueType");
-        ICacheSafe c1 = SafeCacheManager.inst.getCache("myCache");
+        ICacheSafe c1 = CacheManager.inst.getSafeCache("myCache");
         assertTrue(c1.getValueType() == TestSerializable.class);
         log.debug("Test checking of cache value type");
         try {
-            ICacheSafe<Integer> c2 = SafeCacheManager.inst.getCache("myCache", Integer.class);
+            ICacheSafe<Integer> c2 = CacheManager.inst.getSafeCache("myCache", Integer.class);
             assert false : "Bug: Cache for string cannot be used for Integer.";
         } catch(ClassCastException ex) {
             // should go here.

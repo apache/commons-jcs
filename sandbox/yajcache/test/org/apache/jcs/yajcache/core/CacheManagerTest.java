@@ -35,7 +35,8 @@ public class CacheManagerTest extends TestCase {
         CacheManager.inst.getCache("myCache", String.class);
         CacheManager.inst.removeCache("myCache");
         log.debug("Test getCache and get");
-        ICache<String> c = CacheManager.inst.getCache(CacheType.SOFT_REFERENCE, "myCache", String.class);
+        ICache<String> c = CacheManager.inst.getCache(
+                "myCache", String.class, CacheType.SOFT_REFERENCE);
         assertTrue(null == c.get("bla"));
         log.debug("Test getCache and put");
         c = CacheManager.inst.getCache("myCache", String.class);
@@ -73,12 +74,16 @@ public class CacheManagerTest extends TestCase {
 
     public void testGetCacheRaceCondition() {
         log.debug("Test simulation of race condition in creating cache");
-        ICache intCache = CacheManager.inst.testCreateCacheRaceCondition("race", Integer.class);
-        ICache intCache1 = CacheManager.inst.testCreateCacheRaceCondition("race", Integer.class);
+        ICache intCache = CacheManager.inst.testCreateCacheRaceCondition(
+                "race", Integer.class, CacheType.SOFT_REFERENCE);
+        ICache intCache1 = CacheManager.inst.testCreateCacheRaceCondition(
+                "race", Integer.class, CacheType.SOFT_REFERENCE);
         log.debug("Test simulation of the worst case scenario: "
                 + "race condition in creating cache AND class cast exception");
         try {
-            ICache<Double> doubleCache = CacheManager.inst.testCreateCacheRaceCondition("race", Double.class);
+            ICache<Double> doubleCache = 
+                    CacheManager.inst.testCreateCacheRaceCondition(
+                    "race", Double.class, CacheType.SOFT_REFERENCE);
             assert false : "Bug: Cache for Integer cannot be used for Double";
         } catch(ClassCastException ex) {
             // should go here.
@@ -96,7 +101,8 @@ public class CacheManagerTest extends TestCase {
         ICache intCache1 = CacheManager.inst.getCache("race", Integer.class);
         assertFalse(intCache == intCache1);
         CacheManager.inst.removeCache("race");
-        ICache<Double> doubleCache = CacheManager.inst.testCreateCacheRaceCondition("race", Double.class);
+        ICache<Double> doubleCache = CacheManager.inst.testCreateCacheRaceCondition(
+                    "race", Double.class, CacheType.SOFT_REFERENCE);
         doubleCache.put("double", 1.234);
         assertEquals(1.234, doubleCache.get("double"));
     }

@@ -36,7 +36,7 @@ public class SoftRefCacheTest extends TestCase {
     
     public void testSoftRefCache() throws Exception {
         ICache<byte[]> c = CacheManager.inst.getCache(
-                CacheType.SOFT_REFERENCE, "bytesCache", byte[].class);
+                "bytesCache", byte[].class, CacheType.SOFT_REFERENCE);
         for (int h=0; h < 10; h++) {
             for (int i=h*10, max=i+10; i < max; i++) {
                 log.debug("put i="+i);
