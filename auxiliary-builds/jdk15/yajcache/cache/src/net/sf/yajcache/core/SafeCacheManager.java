@@ -8,9 +8,8 @@ package net.sf.yajcache.core;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-
-
 import net.sf.yajcache.soft.SoftRefCacheSafe;
+import net.sf.yajcache.annotate.*;
 
 /**
  * @author Hanson Char
@@ -18,7 +17,8 @@ import net.sf.yajcache.soft.SoftRefCacheSafe;
 public enum SafeCacheManager {
     inst;
     // Cache name to Cache mapping.
-    private final ConcurrentMap<String,ICacheSafe> map = new ConcurrentHashMap<String, ICacheSafe>();
+    private final ConcurrentMap<String,ICacheSafe> map = 
+            new ConcurrentHashMap<String, ICacheSafe>();
     /** 
      * Returns the cache for the specified name and value type;  
      * Creates the cache if necessary.
@@ -70,11 +70,10 @@ public enum SafeCacheManager {
         }
         return c;
     }
-    /**
-     * This package private method is used soley to simluate a race condition 
-     * during cache creation for testing purposes.
-     */
-    <V> ICacheSafe<V> testCreateCacheRaceCondition(String name, Class<V> valueType) 
+
+    @TestOnly("Used soley to simluate a race condition during cache creation")
+    <V> ICacheSafe<V> testCreateCacheRaceCondition(
+            String name, Class<V> valueType)
     {
         return this.createCache(name, valueType);
     }

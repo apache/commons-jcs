@@ -7,6 +7,8 @@
 package net.sf.yajcache.core;
 
 import java.util.Map;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  *
@@ -34,5 +36,10 @@ public class CacheEntry<V> implements Map.Entry<String,V> {
         this.value = val;
         return ret;
     }
-    
+    @Override public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+    @Override public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }

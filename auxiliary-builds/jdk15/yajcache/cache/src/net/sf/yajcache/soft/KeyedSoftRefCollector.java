@@ -4,13 +4,14 @@
 
 package net.sf.yajcache.soft;
 
+import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Collects and clears state cache entries implemented using Soft References.
+ * Collects and clears stale cache entries implemented using Soft References.
  *
  * @author Hanson Char
  */
@@ -29,17 +30,17 @@ class KeyedSoftRefCollector<V> implements Runnable {
      * Removes stale entries from the cache map collected by GC.
      * Thread safetyness provided by ReferenceQueue.
      */
+//    @SuppressWarnings("unchecked")
     public void run() {
-//        if (debug)
-//            log.debug("Run...");
-        KeyedSoftRef<V> ksr;
+        Reference<? extends V> r;
         
-        while ((ksr = (KeyedSoftRef<V>)this.q.poll()) != null) {
+        while ((r = this.q.poll()) != null) {
+            KeyedSoftRef ksr = (KeyedSoftRef)r;
             String key = ksr.getKey();
             if (debug)
                 log.debug("Remove stale entry with key=" + key);
-//            map.remove(key);
             SoftRefCacheCleaner.inst.cleanupKey(map, key);
+            // referent should have been cleared.  Defensively clear it again.
             ksr.clear();
             count++;
         }        

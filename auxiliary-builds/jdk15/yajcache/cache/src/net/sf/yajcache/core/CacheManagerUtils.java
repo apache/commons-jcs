@@ -14,7 +14,9 @@ enum CacheManagerUtils {
     inst;
     /** Checks the value type assignability of an existing cache. */
     void checkValueType(ICache c, Class<?> valueType) {
-        if (!c.getValueType().isAssignableFrom(valueType))
+        Class<?> cacheValueType = c.getValueType();
+        
+        if (!cacheValueType.isAssignableFrom(valueType))
             throw new ClassCastException("Cache " + c.getName()
                 + " of " + c.getValueType() 
                 + " already exists and cannot be used for " + valueType);

@@ -18,6 +18,7 @@ import net.sf.yajcache.core.CacheEntry;
 import net.sf.yajcache.core.ICache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import net.sf.yajcache.annotate.*;
 
 
 /**
@@ -25,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Hanson Char
  */
+@TODO("Annotate the thread-safetyness of the methods")
 public class SoftRefCache<V> implements ICache<V> {
     private static final boolean debug = true;
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
@@ -143,10 +145,23 @@ public class SoftRefCache<V> implements ICache<V> {
             return null;
         V ret = oldRef.get();
         oldRef.clear();
+        
+        if (!value.equals(ret)) {
+            // value changed for the key
+            this.publishFlushKey(key);
+        }
         return ret;
     }
+    
+    @TODO(
+        value="Queue up a flush event for the key.",
+        details="This is useful for synchronizing caches in a cluster environment."
+    )
+    private void publishFlushKey(String key) {
+    }
+    
     public void putAll(Map<? extends String, ? extends V> map) {
-        for (Map.Entry<? extends String, ? extends V> e : map.entrySet())
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), e.getValue());
     }
     public V remove(String key) {
@@ -155,6 +170,7 @@ public class SoftRefCache<V> implements ICache<V> {
         
         if (oldRef == null)
             return null;
+        this.publishFlushKey(key);
         V ret = oldRef.get();
         oldRef.clear();
         return ret;
@@ -175,7 +191,7 @@ public class SoftRefCache<V> implements ICache<V> {
         Set<Map.Entry<String,KeyedSoftRef<V>>> fromSet = map.entrySet();
         Set<Map.Entry<String,V>> toSet = new HashSet<Map.Entry<String,V>>();
         
-        for (Map.Entry<String,KeyedSoftRef<V>> item : fromSet) {
+        for (final Map.Entry<String,KeyedSoftRef<V>> item : fromSet) {
             KeyedSoftRef<V> ref = item.getValue();
             V val = ref.get();
             
@@ -191,7 +207,7 @@ public class SoftRefCache<V> implements ICache<V> {
         Collection<KeyedSoftRef<V>> fromSet = map.values();
         List<V> toCol = new ArrayList<V>(fromSet.size());
         
-        for (KeyedSoftRef<V> ref : fromSet) {
+        for (final KeyedSoftRef<V> ref : fromSet) {
             V val = ref.get();
             
             if (val != null) {
@@ -209,7 +225,7 @@ public class SoftRefCache<V> implements ICache<V> {
         this.collector.run();
         Collection<KeyedSoftRef<V>> fromSet = map.values();
         
-        for (KeyedSoftRef<V> ref : fromSet) {
+        for (final KeyedSoftRef<V> ref : fromSet) {
             V val = ref.get();
             
             if (value.equals(val))

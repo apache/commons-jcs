@@ -11,11 +11,13 @@ import java.util.Map;
 import net.sf.yajcache.core.ICacheSafe;
 import net.sf.yajcache.util.BeanUtils;
 import net.sf.yajcache.util.SerializeUtils;
+import net.sf.yajcache.annotate.*;
 
 /**
  *
  * @author Hanson Char
  */
+@TODO("Annotate the thread-safetyness of the methods")
 public class SoftRefCacheSafe<V> extends SoftRefCache<V> 
         implements ICacheSafe<V> 
 {
@@ -41,11 +43,11 @@ public class SoftRefCacheSafe<V> extends SoftRefCache<V>
         return this.put(key, this.dup(value));
     }
     public void putAll(Map<? extends String, ? extends V> map) {
-        for (Map.Entry<? extends String, ? extends V> e : map.entrySet())
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), e.getValue());
     }
     public void putAllCopies(Map<? extends String, ? extends V> map) {
-        for (Map.Entry<? extends String, ? extends V> e : map.entrySet())
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), this.dup(e.getValue()));
     }
     public V getBeanCopy(String key) {
@@ -56,7 +58,7 @@ public class SoftRefCacheSafe<V> extends SoftRefCache<V>
         return this.put(key, BeanUtils.inst.cloneDeep(value));
     }
     public void putAllBeanCopies(Map<? extends String, ? extends V> map) {
-        for (Map.Entry<? extends String, ? extends V> e : map.entrySet())
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), BeanUtils.inst.cloneDeep(e.getValue()));
     }
     public V getBeanClone(String key) {
@@ -67,7 +69,7 @@ public class SoftRefCacheSafe<V> extends SoftRefCache<V>
         return this.put(key, BeanUtils.inst.cloneShallow(value));
     }
     public void putAllBeanClones(Map<? extends String, ? extends V> map) {
-        for (Map.Entry<? extends String, ? extends V> e : map.entrySet())
+        for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), BeanUtils.inst.cloneShallow(e.getValue()));
     }
     private V dup(V val) {

@@ -11,11 +11,13 @@ import junit.framework.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import net.sf.yajcache.annotate.*;
 
 /**
  *
  * @author Hanson Char
  */
+@TestOnly
 public class CacheManagerTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     

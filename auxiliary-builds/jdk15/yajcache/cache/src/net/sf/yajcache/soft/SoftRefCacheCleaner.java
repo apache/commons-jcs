@@ -46,12 +46,14 @@ enum SoftRefCacheCleaner {
         V oldVal = oldRef.get();
 
         if (val == oldVal) {
+            // not considered a race condition
             oldRef.clear();
             if (debug)
                 log.debug("Key removed and Soft Reference cleared.");
             this.countKeyCleaned++;
             return;
         }
+        // Race condition.
         do {
             if (debug)
                 log.debug("Race condition occurred.  So put back the old stuff.");

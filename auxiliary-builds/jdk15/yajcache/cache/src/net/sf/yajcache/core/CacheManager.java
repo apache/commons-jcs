@@ -18,7 +18,8 @@ import net.sf.yajcache.soft.SoftRefCache;
 public enum CacheManager {
     inst;
     // Cache name to Cache mapping.
-    private final ConcurrentMap<String,ICache<?>> map = new ConcurrentHashMap<String, ICache<?>>();
+    private final ConcurrentMap<String,ICache<?>> map = 
+                new ConcurrentHashMap<String, ICache<?>>();
     /** 
      * Returns the cache for the specified name and value type;  
      * Creates the cache if necessary.
@@ -26,6 +27,7 @@ public enum CacheManager {
      * @throws ClassCastException if the cache already exists for an
      * incompatible value type.
      */
+//    @SuppressWarnings({"unchecked"})
     public <V> ICache<V> getCache(String name, Class<V> valueType)
     {
         ICache c = this.map.get(name);
@@ -59,6 +61,7 @@ public enum CacheManager {
      * @return either the cache created by the current thread, or
      * an existing cache created earlier by another thread.
      */
+//    @SuppressWarnings({"unchecked"})
     private <V> ICache<V> createCache(String name, Class<V> valueType) {
         ICache<V> c = new SoftRefCache<V>(name, valueType);
         ICache old = this.map.putIfAbsent(name, c);

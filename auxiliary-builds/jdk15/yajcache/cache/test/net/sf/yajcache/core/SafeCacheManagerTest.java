@@ -9,11 +9,13 @@ import net.sf.yajcache.util.TestSerializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import net.sf.yajcache.annotate.*;
 
 /**
  *
  * @author Hanson Char
  */
+@TestOnly
 public class SafeCacheManagerTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     

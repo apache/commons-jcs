@@ -10,11 +10,13 @@ import net.sf.yajcache.core.SafeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import net.sf.yajcache.annotate.*;
 
 /**
  *
  * @author Hanson Char
  */
+@TestOnly
 public class SoftRefCacheTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     
@@ -43,8 +45,8 @@ public class SoftRefCacheTest extends TestCase {
 //        for (int i=0; i < 100; i++) {
 //            log.debug("get i="+i +":"+ c.get(String.valueOf(i)));
 //        }
-        log.debug("sleeping for 5 secs");
-        Thread.sleep(5*1000);
+//        log.debug("sleeping for 5 secs");
+//        Thread.sleep(5*1000);
 
         for (int i=0; i < 100; i++) {
             log.debug("get i="+i +":"+ c.get(String.valueOf(i)));

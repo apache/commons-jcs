@@ -8,11 +8,13 @@ package net.sf.yajcache.util;
 
 import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import net.sf.yajcache.annotate.*;
 
 /**
  *
  * @author Hanson Char
  */
+@TestOnly
 public class TestSerializable implements Serializable {
     private static final long serialVersionUID = 1L;
     
