@@ -389,46 +389,6 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         }
     }
 
-
-//    /**
-//     *  Get an Array of the keys for elements in the specified range of
-//     *  the memory cache.  If the end position is greater than the size of the
-//     *  Map, the method will return an array of the remaining elements after
-//     *  the start position.  If the start element is greater than the size of
-//     *  Map, a error will be thrown.
-//     *
-//     *@return    An Object[]
-//     */
-//    public Object[] getKeyArray(int start, int end) throws java.lang.IllegalArgumentException
-//    {
-//
-//        int size = getSize();
-//        if ( start >= size ) {
-//          throw new java.lang.IllegalArgumentException( "Start value is greater than the size of the cache" );
-//        }
-//        int stop = Math.min( size, end );
-//        int count = 0;
-//
-//        // need a better locking strategy here.
-//        synchronized ( this )
-//        {
-//          Object[] result = new Object[stop-start];
-//          Iterator e = this.map.keySet().iterator();
-//          for (int i=0; e.hasNext(); i++)
-//          {
-//              if ( i >= start && i < stop ) {
-//                result[count] = e.next();
-//                count++;
-//              }
-//              if ( i >= stop ) {
-//                continue;
-//              }
-//          }
-//          return result;
-//        }
-//    }
-
-
     /**
      *  Puts an item to the cache.
      *
