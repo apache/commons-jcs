@@ -272,7 +272,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
         finally
         {
-          locker.done( this.cacheName + key.toString() );
+          releaseLock( this.cacheName + key.toString() );
         }
         // Remove from persistent store immediately
 
@@ -362,7 +362,26 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
             log.error( "Was interrupted while acquiring read lock", e );
         }
-        catch ( Exception e )
+        catch ( Throwable e )
+        {
+
+            log.error(  e );
+        }
+    }
+
+
+    /**
+     * Internally used write lock for purgatory item modification.
+     *
+     * @param id What name to lock on.
+     */
+    private void releaseLock( String id )
+    {
+        try
+        {
+            locker.done( id );
+        }
+        catch ( Throwable e )
         {
 
             log.error(  e );
@@ -419,7 +438,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                     // If the element has already been removed from purgatory
                     // do nothing
 
-                    writeLock( getCacheName() + element.getKey().toString() );
+                    String lK =element.getKey().toString();
+                    writeLock( getCacheName() + lK );
                     try
                     {
 
@@ -431,7 +451,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                     }
                     finally
                     {
-                      locker.done( getCacheName() + element.getKey().toString() );
+                      releaseLock( getCacheName() + lK );
                     }
 
                     element = pe.getCacheElement();
