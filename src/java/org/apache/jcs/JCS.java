@@ -53,24 +53,13 @@ package org.apache.jcs;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import org.apache.jcs.access.GroupCacheAccess;
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheAttributes;
 
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 /**
  * Simple class for using JCS. To use JCS in your application, you can use the
@@ -89,7 +78,7 @@ public class JCS extends GroupCacheAccess
 {
     private static String configFilename = null;
 
-    private static GroupCacheManager cacheMgr;
+    private static CacheHub cacheMgr;
 
     /**
      * Protected constructor for use by the static factory methods.
@@ -134,26 +123,26 @@ public class JCS extends GroupCacheAccess
     }
 
     /**
-     * Gets an instance of GroupCacheManager and stores it in the cacheMgr class
+     * Gets an instance of GroupCacheHub and stores it in the cacheMgr class
      * field, if it is not already set. Unlike the implementation in
-     * CacheAccess, the cache manager is a GroupCacheManager. NOTE: This can
+     * CacheAccess, the cache manager is a GroupCacheHub. NOTE: This can
      * will be moved up into GroupCacheAccess.
      */
     protected static void ensureCacheManager()
     {
         if ( cacheMgr == null )
         {
-            synchronized ( GroupCacheAccess.class )
+            synchronized ( JCS.class )
             {
                 if ( cacheMgr == null )
                 {
                     if ( configFilename == null )
                     {
-                        cacheMgr = GroupCacheManagerFactory.getInstance();
+                        cacheMgr = GroupCacheHub.getInstance();
                     }
                     else
                     {
-                        cacheMgr = GroupCacheManagerFactory
+                        cacheMgr = GroupCacheHub
                             .getInstance( configFilename );
                     }
                 }

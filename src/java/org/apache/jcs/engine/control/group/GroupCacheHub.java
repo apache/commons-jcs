@@ -15,27 +15,50 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /** */
-public class GroupCacheManager
+public class GroupCacheHub
      extends CacheHub
      implements Serializable
 {
     private final static Log log =
         LogFactory.getLog( CacheHub.class );
 
-    private static GroupCacheManager instance;
+    /**
+     * Overides the base class getInstance method to use a GroupCacheHub
+     * as the instance.
+     */
+    public static synchronized CacheHub getInstance( String propFile )
+    {
+        if ( instance == null )
+        {
+            log.debug( "Instance is null, creating" );
 
-    /** Constructor for the GroupCacheManager object */
-    protected GroupCacheManager()
+            if ( propFile == null )
+            {
+                instance = new GroupCacheHub();
+            }
+            else
+            {
+                instance = new GroupCacheHub( propFile );
+            }
+        }
+
+        ( ( GroupCacheHub ) instance ).incrementClients();
+
+        return instance;
+    }
+
+    /** Constructor for the GroupCacheHub object */
+    protected GroupCacheHub()
     {
         super();
     }
 
     /**
-     * Constructor for the GroupCacheManager object
+     * Constructor for the GroupCacheHub object
      *
      * @param propFile
      */
-    protected GroupCacheManager( String propFile )
+    protected GroupCacheHub( String propFile )
     {
         super( propFile );
     }
@@ -64,11 +87,5 @@ public class GroupCacheManager
 
         return new GroupCache( cacheName, auxCaches, cattr, attr,
             systemGroupIdCache );
-    }
-
-    /** */
-    protected void incrementClients()
-    {
-        super.incrementClients();
     }
 }

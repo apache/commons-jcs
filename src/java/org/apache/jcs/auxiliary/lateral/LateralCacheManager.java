@@ -1,50 +1,26 @@
 package org.apache.jcs.auxiliary.lateral;
 
 import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheManager;
-
-import org.apache.jcs.auxiliary.lateral.LateralCache;
-import org.apache.jcs.auxiliary.lateral.LateralCacheMonitor;
-import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.jcs.auxiliary.lateral.LateralCacheWatchRepairable;
-import org.apache.jcs.auxiliary.lateral.ZombieLateralCacheService;
-import org.apache.jcs.auxiliary.lateral.ZombieLateralCacheWatch;
-
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-
-// TODO: make these dymanically configurable
-// refactor config class so it only has the used info for each?
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralGroupCacheTCPListener;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-
-import org.apache.jcs.auxiliary.lateral.socket.udp.LateralGroupCacheUDPListener;
-import org.apache.jcs.auxiliary.lateral.socket.udp.LateralUDPService;
-
-import org.apache.jcs.auxiliary.lateral.xmlrpc.LateralGroupCacheXMLRPCListener;
-import org.apache.jcs.auxiliary.lateral.xmlrpc.LateralXMLRPCService;
-
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralGroupCacheJGListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
-
-
-import org.apache.jcs.engine.CacheWatchRepairable;
-
+import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralGroupCacheTCPListener;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
+import org.apache.jcs.auxiliary.lateral.socket.udp.LateralGroupCacheUDPListener;
+import org.apache.jcs.auxiliary.lateral.socket.udp.LateralUDPService;
+import org.apache.jcs.auxiliary.lateral.xmlrpc.LateralGroupCacheXMLRPCListener;
+import org.apache.jcs.auxiliary.lateral.xmlrpc.LateralXMLRPCService;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheAttributes;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-//import  org.apache.jcs.auxiliary.*;
-//import  org.apache.jcs.auxiliary.lateral.http.*;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
@@ -61,9 +37,6 @@ public class LateralCacheManager implements IAuxiliaryCacheManager
 {
     private final static Log log =
         LogFactory.getLog( LateralCacheManager.class );
-
-    //static ArrayList defaultServers;
-    ICacheAttributes defaultCattr;
 
     private static LateralCacheMonitor monitor;
 
@@ -87,7 +60,6 @@ public class LateralCacheManager implements IAuxiliaryCacheManager
      * service if failed to connect.
      */
     private LateralCacheWatchRepairable lateralWatch;
-
 
     /**
      * Gets the instance attribute of the LateralCacheManager class
@@ -264,18 +236,15 @@ public class LateralCacheManager implements IAuxiliaryCacheManager
             {
                 addLateralCacheListener( cacheName, LateralGroupCacheUDPListener.getInstance( lca ) );
             }
-            else
-                if ( lca.getTransmissionType() == lca.TCP )
+            else if ( lca.getTransmissionType() == lca.TCP )
             {
                 addLateralCacheListener( cacheName, LateralGroupCacheTCPListener.getInstance( lca ) );
             }
-            else
-                if ( lca.getTransmissionType() == lca.XMLRPC )
+            else if ( lca.getTransmissionType() == lca.XMLRPC )
             {
                 addLateralCacheListener( cacheName, LateralGroupCacheXMLRPCListener.getInstance( lca ) );
             }
-            else
-                if ( lca.getTransmissionType() == lca.JAVAGROUPS )
+            else if ( lca.getTransmissionType() == lca.JAVAGROUPS )
             {
                 addLateralCacheListener( cacheName, LateralGroupCacheJGListener.getInstance( lca ) );
             }
@@ -335,7 +304,7 @@ public class LateralCacheManager implements IAuxiliaryCacheManager
             this.lateralService = lateralService;
             // need to implment an observer for some types of laterals( http and tcp)
             //this.lateralWatch.setCacheWatch(lateralWatch);
-            for ( Iterator en = caches.values().iterator(); en.hasNext();  )
+            for ( Iterator en = caches.values().iterator(); en.hasNext(); )
             {
                 LateralCacheNoWait cache = ( LateralCacheNoWait ) en.next();
                 cache.fixCache( this.lateralService );

@@ -57,7 +57,7 @@ public class CacheHub
     protected String defaultAuxValues;
 
     /** The Singleton Instance */
-    private static CacheHub instance;
+    protected static CacheHub instance;
 
     /** Gets the instance of CacheHub */
     public static CacheHub getInstance()

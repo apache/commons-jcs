@@ -2,21 +2,16 @@ package org.apache.jcs.access.monitor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
-import java.util.Arrays;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.access.GroupCacheAccess;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.GroupCacheAccess;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 /**
  * Exposes the simple monitoring methods to the public in a simple manner.
@@ -30,7 +25,7 @@ public class MonitorAccess implements Serializable
         LogFactory.getLog( MonitorAccess.class );
 
     /** Description of the Field */
-    protected GroupCacheManager cacheMgr;
+    protected CacheHub cacheMgr;
 
     /** Constructor for the MonitorAccess object */
     public MonitorAccess()
@@ -42,12 +37,11 @@ public class MonitorAccess implements Serializable
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = GroupCacheManagerFactory.getInstance();
+                    cacheMgr = GroupCacheHub.getInstance();
                 }
             }
         }
     }
-
 
     /** Description of the Method */
     public String delete( String cacheName, String key )
@@ -117,7 +111,6 @@ public class MonitorAccess implements Serializable
         return cache.getStats();
     }
 
-
     /** Description of the Method */
     public ArrayList overview()
     {
@@ -129,7 +122,7 @@ public class MonitorAccess implements Serializable
         for ( int i = 0; i < list.length; i++ )
         {
             Hashtable ht = new Hashtable();
-            String name = list[i];
+            String name = list[ i ];
             ht.put( "name", name );
 
             ICache cache = cacheMgr.getCache( name );
@@ -138,9 +131,9 @@ public class MonitorAccess implements Serializable
 
             int status = cache.getStatus();
             String stat = status == ICache.STATUS_ALIVE ? "ALIVE"
-                 : status == ICache.STATUS_DISPOSED ? "DISPOSED"
-                 : status == ICache.STATUS_ERROR ? "ERROR"
-                 : "UNKNOWN";
+                : status == ICache.STATUS_DISPOSED ? "DISPOSED"
+                : status == ICache.STATUS_ERROR ? "ERROR"
+                : "UNKNOWN";
             ht.put( "stat", stat );
 
             data.add( ht );

@@ -54,44 +54,24 @@ package org.apache.jcs.access;
  * <http://www.apache.org/>.
  */
 
-import java.io.Serializable;
 import java.io.IOException;
-
-import java.util.Collection;
-import java.util.ConcurrentModificationException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.jcs.access.behavior.IGroupCacheAccess;
-
-import org.apache.jcs.access.exception.CacheException;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheAttributes;
-
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupId;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-// CACHE
+import org.apache.jcs.access.behavior.IGroupCacheAccess;
+import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.group.GroupAttrName;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
+import org.apache.jcs.engine.control.group.GroupId;
 
 /**
  * Access for groups.
@@ -107,10 +87,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     private static boolean SET_ATTR_INVOCATION = true;
     private static boolean REMOVE_ATTR_INVOCATION = false;
 
-    private static GroupCacheManager cacheMgr;
-
-    //private GroupCache cacheControl;
-
+    private static CacheHub cacheMgr;
 
     /**
      * Constructor for the GroupCacheAccess object
@@ -121,7 +98,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     {
         super( cacheControl );
     }
-
 
     /**
      * Gets the groupAccess attribute of the GroupCacheAccess class
@@ -137,13 +113,12 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = GroupCacheManagerFactory.getInstance();
+                    cacheMgr = GroupCacheHub.getInstance();
                 }
             }
         }
         return new GroupCacheAccess( ( Cache ) cacheMgr.getCache( region ) );
     }
-
 
     /**
      * Gets the groupAccess attribute of the GroupCacheAccess class
@@ -159,14 +134,13 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = GroupCacheManagerFactory.getInstance();
+                    cacheMgr = GroupCacheHub.getInstance();
                 }
             }
         }
 
         return new GroupCacheAccess( ( Cache ) cacheMgr.getCache( region, icca ) );
     }
-
 
     /**
      * Gets an item out of the cache that is in a specified group.
@@ -179,7 +153,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     {
         return getAttribute( name, group );
     }
-
 
     /**
      * Gets the attribute attribute of the GroupCacheAccess object
@@ -194,7 +167,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         //  return null;
         //}
     }
-
 
     /**
      * Allows the user to put an object into a group within a particular cache
@@ -211,7 +183,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         setAttribute( key, group, value );
     }
 
-
     /**
      * Allows the user to put an object into a group within a particular cache
      * region. This method allows the object's attributes to be individually
@@ -227,7 +198,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     {
         setAttribute( key, group, value, attr );
     }
-
 
     /**
      * DefineGroup is used to create a new group object. Attributes may be set
@@ -257,14 +227,13 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         }
         try
         {
-            cacheControl.put( groupId, (Serializable) attrNameSet );
+            cacheControl.put( groupId, ( Serializable ) attrNameSet );
         }
-        catch (IOException ioe)
+        catch ( IOException ioe )
         {
-            throw new CacheException(ioe);
+            throw new CacheException( ioe );
         }
     }
-
 
     /**
      * Description of the Method
@@ -296,12 +265,11 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
             // not sure it will, need special id putting
             cacheControl.put( groupId, ( Serializable ) attrNameSet, attr );
         }
-        catch (IOException ioe)
+        catch ( IOException ioe )
         {
-            throw new CacheException(ioe);
+            throw new CacheException( ioe );
         }
     }
-
 
     /**
      * Gets the groupAttributes attribute of the GroupCacheAccess object.
@@ -321,7 +289,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         catch ( IOException ioe )
         {
             throw new CacheException(
-                "Failure getting element attributes due to ", ioe);
+                "Failure getting element attributes due to ", ioe );
         }
         return attr;
     }
@@ -338,7 +306,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         //return Collections.enumeration(s);
         return Collections.enumeration( getAttributeNameSet( group_name ) );
     }
-
 
     /**
      * Gets the attributeNameSet attribute of the GroupCacheAccess object
@@ -361,7 +328,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         return ( Set ) obj;
     }
 
-
     /**
      * Sets the attribute attribute of the GroupCacheAccess object
      *
@@ -375,15 +341,14 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         removeAttribute( name, group, SET_ATTR_INVOCATION );
         try
         {
-            cacheControl.put( new GroupAttrName(group, name), 
-                              (Serializable) value );
+            cacheControl.put( new GroupAttrName( group, name ),
+                              ( Serializable ) value );
         }
-        catch (IOException ioe)
+        catch ( IOException ioe )
         {
-            throw new CacheException(ioe);
+            throw new CacheException( ioe );
         }
     }
-
 
     /**
      * Sets the attribute attribute of the GroupCacheAccess object
@@ -400,22 +365,20 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         removeAttribute( name, group, SET_ATTR_INVOCATION );
         try
         {
-            cacheControl.put( new GroupAttrName(group, name), 
-                              (Serializable) value, attr );
+            cacheControl.put( new GroupAttrName( group, name ),
+                              ( Serializable ) value, attr );
         }
-        catch (IOException ioe)
+        catch ( IOException ioe )
         {
-            throw new CacheException(ioe);
+            throw new CacheException( ioe );
         }
     }
-
 
     /** Description of the Method */
     public void removeAttribute( Object name, String group )
     {
         removeAttribute( name, group, REMOVE_ATTR_INVOCATION );
     }
-
 
     /** Description of the Method */
     private void removeAttribute( Object name, String group, boolean invocation )
@@ -440,7 +403,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         }
         return;
     }
-
 
     /**
      * Removes an element from the group
@@ -471,7 +433,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         int arS = ar.length;
         for ( int i = 0; i < arS; i++ )
         {
-            removeAttribute( ar[i], group );
+            removeAttribute( ar[ i ], group );
         }
 
         // get into concurrent modificaiton problems here.
@@ -480,7 +442,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         return;
     }
 
-
     /**
      * Gets the valueNames attribute of the GroupCacheAccess object
      *
@@ -488,7 +449,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      */
     public String[] getValueNames( String group )
     {
-        return ( String[] ) getAttributeNameSet( group ).toArray( new String[0] );
+        return ( String[] ) getAttributeNameSet( group ).toArray( new String[ 0 ] );
     }
 
 }

@@ -20,9 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jcs.engine.behavior.ICache;
 
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
+import org.apache.jcs.engine.control.CacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +43,7 @@ public abstract class AbstractDeleteCacheServlet
         LogFactory.getLog( AbstractDeleteCacheServlet.class );
 
     /** Description of the Field */
-    protected GroupCacheManager cacheMgr;
+    protected CacheHub cacheMgr;
     private BasicHttpAuthenticator authenticator;
 
 

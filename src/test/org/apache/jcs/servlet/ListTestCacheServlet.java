@@ -28,12 +28,8 @@ import org.apache.jcs.access.behavior.IGroupCacheAccess;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
+import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +46,7 @@ public class ListTestCacheServlet extends HttpServlet
         LogFactory.getLog( ListTestCacheServlet.class );
 
     /** Description of the Field */
-    protected static GroupCacheManager cacheMgr;
+    protected static CacheHub cacheMgr;
     /** Description of the Field */
     protected static ICache zipListCache;
     /** Description of the Field */
@@ -67,7 +63,7 @@ public class ListTestCacheServlet extends HttpServlet
     public void init( ServletConfig config )
         throws ServletException
     {
-        cacheMgr = GroupCacheManagerFactory.getInstance();
+        cacheMgr = GroupCacheHub.getInstance();
         // use deafult cattr
         zipListCache = cacheMgr.getCache( "zipListCache" );
 

@@ -3,12 +3,7 @@ package org.apache.jcs.auxiliary.lateral.http.server;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 /**
  * Description of the Class
@@ -24,12 +19,11 @@ public class DeleteCacheServlet extends AbstractDeleteCacheServlet
         throws ServletException
     {
 
-        cacheMgr = GroupCacheManagerFactory.getInstance();
+        cacheMgr = GroupCacheHub.getInstance();
 
         super.init( config );
 
     }
-
 
     /**
      * Gets the servletInfo attribute of the DeleteCacheServlet object
@@ -42,6 +36,7 @@ public class DeleteCacheServlet extends AbstractDeleteCacheServlet
     }
 
 }
+
 // end class
 
 //public class DeleteCacheServlet extends HttpServlet implements SingleThreadModel {

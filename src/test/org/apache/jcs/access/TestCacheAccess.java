@@ -65,18 +65,10 @@ import org.apache.jcs.access.exception.CacheException;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.ElementAttributes;
-
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
-import org.apache.jcs.engine.control.group.GroupCacheManagerFactory;
+import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-// CACHE
 
 /**
  * Allows the user to run common cache commands fromt he command line for a test
@@ -114,7 +106,7 @@ public class TestCacheAccess
                 //cache_control= GroupCacheAccess.getGroupAccess( "testGroupCache" );
 
                 // start the local cache witht he appropriate props file
-                GroupCacheManagerFactory.getInstance( args[0] );
+                GroupCacheHub.getInstance( args[0] );
 
                 cache_control = GroupCacheAccess.getGroupAccess( "testCache1" );
 
