@@ -35,7 +35,7 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=DC
+jcs.region.testCache1=LJG
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=20
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -121,7 +121,7 @@ jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttrib
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.UdpMulticastAddr=228.5.6.7
 jcs.auxiliary.LJG.attributes.UdpMulticastPort=6789
-jcs.auxiliary.LJG.attributes.PutOnlyMode=false
+jcs.auxiliary.LJG.attributes.PutOnlyMode=true
 
 
 # almost complete

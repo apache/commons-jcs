@@ -30,7 +30,7 @@ import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListe
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
@@ -38,10 +38,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Description of the Class
+ *  JavaGroups listener.  Good for distributing cache data accross multiple vms
+ *  on the same machine.  You also don't need to know the number of listerners
+ *  for configuration.
  *
- * @version $Id: LateralCacheJGListener.java,v 1.8 2002/02/15 04:33:37 jtaylor
- *      Exp $
  */
 public class LateralCacheJGListener implements ILateralCacheJGListener, Serializable
 {
@@ -84,7 +84,6 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         {
             // need to connect based on type
             //ILateralCacheListener ilcl = this;
-            //p( "in init, ilcl = " + ilcl );
             receiver = new LateralJGReceiver( ilca, this );
             Thread t = new Thread( receiver );
             t.start();
@@ -128,10 +127,6 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         throws IOException
     {
 
-        // set the manager since we are in use
-        //getCacheManager();
-
-        //p( "get listenerId" );
         if ( log.isDebugEnabled() )
         {
             log.debug( "get listenerId = " + LateralCacheInfo.listenerId );
@@ -175,19 +170,15 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
      * @param cb
      * @exception IOException
      */
-    public void handlePut( ICacheElement cb )
+    public void handlePut( ICacheElement element )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( "PUTTING ELEMENT FROM LATERAL" );
+            log.info( "PUTTING ELEMENT FROM LATERAL" );
         }
 
-        getCacheManager();
-
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
-
-        cache.update( cb, true );
+        getCache( element.getCacheName() ).localUpdate( element );
 
         puts++;
         if ( puts % 100 == 0 )
@@ -195,6 +186,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
             log.info( "puts = " + puts );
         }
 
+        // implement remove on put
         //handleRemove(cb.getCacheName(), cb.getKey());
     }
 
@@ -214,12 +206,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
             log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );
         }
 
-        getCacheManager();
-        // interface limitation here
-
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
-
-        cache.remove( key, true );
+        getCache( cacheName ).localRemove( key );
     }
 
 
@@ -236,8 +223,8 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         {
             log.debug( "handleRemoveAll> cacheName=" + cacheName );
         }
-        getCacheManager();
-        ICache cache = cacheMgr.getCache( cacheName );
+
+        ICache cache = getCache( cacheName );
         cache.removeAll();
     }
 
@@ -256,10 +243,8 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         {
             log.debug( "handleGet> cacheName=" + cacheName + ", key = " + key );
         }
-        getCacheManager();
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
-        // get container
-        return cache.get( key, true );
+
+        return getCache( cacheName ).localGet( key );
     }
 
     /**
@@ -279,12 +264,10 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         cm.freeCache( cacheName, true );
     }
 
-
-    // override for new funcitonality
     /**
-     * Gets the cacheManager attribute of the LateralCacheJGListener object
+     * Gets the cacheManager attribute of the LateralCacheTCPListener object
      */
-    protected void getCacheManager()
+    protected CompositeCache getCache( String name )
     {
         if ( cacheMgr == null )
         {
@@ -295,12 +278,8 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
                 log.debug( "cacheMgr = " + cacheMgr );
             }
         }
-        else
-        {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "already got cacheMgr = " + cacheMgr );
-            }
-        }
+
+        return cacheMgr.getCache( name );
     }
+
 }

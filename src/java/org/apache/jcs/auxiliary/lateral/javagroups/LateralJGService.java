@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
@@ -76,9 +77,7 @@ public class LateralJGService
         }
         catch ( IOException e )
         {
-            //log.error( "Could not create sender", e );
-            // This gets thrown over and over in recovery mode.
-            // The stack trace isn't useful here.
+
             log.error( "Could not create sender to [" + lca.getUdpMulticastAddr() + "] -- " + e.getMessage() );
 
             throw e;
@@ -202,6 +201,20 @@ public class LateralJGService
         led.command = led.REMOVEALL;
         sender.send( led );
     }
+
+    /**
+      * Gets the set of keys of objects currently in the group
+      * throws UnsupportedOperationException
+      */
+     public Set getGroupKeys(String cacheName, String group)
+     {
+         if (true)
+         {
+             throw new UnsupportedOperationException("Groups not implemented.");
+         }
+         return null;
+     }
+
 
     /**
      * @param args

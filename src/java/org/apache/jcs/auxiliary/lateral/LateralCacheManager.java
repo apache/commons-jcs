@@ -33,6 +33,9 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
+import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
+import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
+
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
@@ -137,6 +140,13 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
                 this.lateralService = new LateralTCPService( lca );
             }
+            else if ( lca.getTransmissionType() == lca.JAVAGROUPS )
+            {
+                log.debug( "Creating JAVAGROUPS service" );
+
+                this.lateralService = new LateralJGService( lca );
+            }
+
             else
             {
                 log.error( "Type not recognized, must zombie" );
@@ -218,6 +228,10 @@ public class LateralCacheManager implements AuxiliaryCacheManager
             if ( lca.getTransmissionType() == lca.TCP )
             {
                 addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lca ) );
+            }
+            else if ( lca.getTransmissionType() == lca.JAVAGROUPS )
+            {
+                addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( lca ) );
             }
         }
         catch ( IOException ioe )
