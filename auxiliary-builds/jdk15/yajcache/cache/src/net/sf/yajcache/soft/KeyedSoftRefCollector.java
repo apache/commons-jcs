@@ -1,7 +1,5 @@
 /*
- * ReferenceQProcessor.java
- *
- * Created on 17 January 2005, 03:54
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.soft;

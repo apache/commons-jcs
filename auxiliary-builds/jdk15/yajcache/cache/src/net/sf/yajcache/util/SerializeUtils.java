@@ -1,7 +1,7 @@
 /*
  * SerializeUtils.java
  *
- * Created on 17 January 2005, 06:52
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.util;

@@ -1,5 +1,6 @@
 /*
  * SafeCacheManager.java
+ * $Revision$ $Date$ 
  */
 
 package net.sf.yajcache.core;

@@ -1,7 +1,7 @@
 /*
  * ClassUtils.java
  *
- * Created on 19 January 2005, 00:17
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.util;

@@ -1,7 +1,7 @@
 /*
  * ICache.java
  *
- * Created on 17 January 2005, 05:05
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.core;

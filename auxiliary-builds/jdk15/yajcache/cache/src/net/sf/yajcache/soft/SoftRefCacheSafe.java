@@ -1,7 +1,7 @@
 /*
  * SoftRefCacheSafe.java
  *
- * Created on 18 January 2005, 23:21
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.soft;

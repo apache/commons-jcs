@@ -2,7 +2,7 @@
  * SerializeUtilsTest.java
  * JUnit based test
  *
- * Created on 17 January 2005, 23:30
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.util;

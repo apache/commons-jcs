@@ -1,7 +1,7 @@
 /*
  * CacheEntry.java
  *
- * Created on 17 January 2005, 05:42
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.core;

@@ -1,7 +1,7 @@
 /*
  * CacheManagerUtils.java
  *
- * Created on 19 January 2005, 00:05
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.core;

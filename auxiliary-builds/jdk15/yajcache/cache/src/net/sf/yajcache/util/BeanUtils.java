@@ -1,7 +1,7 @@
 /*
  * BeanUtils.java
  *
- * Created on 18 January 2005, 23:02
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.util;

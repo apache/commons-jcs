@@ -2,7 +2,7 @@
  * CacheManagerTest.java
  * JUnit based test
  *
- * Created on 18 January 2005, 03:12
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.core;

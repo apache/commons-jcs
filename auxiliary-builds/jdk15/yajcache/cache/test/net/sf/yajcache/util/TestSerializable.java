@@ -1,7 +1,7 @@
 /*
  * TestSerializable.java
  *
- * $Revision $ $Date$
+ * $Revision$ $Date$
  */
 
 package net.sf.yajcache.util;
