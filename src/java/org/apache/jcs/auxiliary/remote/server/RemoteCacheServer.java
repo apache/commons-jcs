@@ -229,7 +229,7 @@ public class RemoteCacheServer
     public void update( ICacheElement item )
         throws IOException
     {
-        update( item, ( byte ) 0 );
+        update( item, ( long ) 0 );
     }
 
 
@@ -464,7 +464,7 @@ public class RemoteCacheServer
     public void remove( String cacheName, Serializable key )
         throws IOException
     {
-        remove( cacheName, key, ( byte ) 0 );
+        remove( cacheName, key, ( long ) 0 );
     }
 
 
