@@ -117,7 +117,7 @@ public class ReadWriteLock
         while ( writeLockedThread != null )
         {
             log.debug( "readLock wait" );
-            wait();
+            wait(20);
             log.debug( "wake up from readLock wait" );
         }
 
@@ -211,9 +211,20 @@ public class ReadWriteLock
             }
             return;
         }
+
         if ( Thread.currentThread() == writeLockedThread )
         {
-            outstandingWriteLocks--;
+
+            //log.info( "outstandingWriteLocks= " + outstandingWriteLocks );
+            if ( outstandingWriteLocks > 0 )
+            {
+                outstandingWriteLocks--;
+            }
+            else
+            {
+                log.warn( "extra lock release, writelocks are " + outstandingWriteLocks + "and done was called" );
+            }
+
             if ( outstandingWriteLocks > 0 )
             {
                 log.debug( "writeLock released for a nested writeLock request." );
@@ -243,7 +254,7 @@ public class ReadWriteLock
                 if ( waitingForReadLock > 0 )
                 {
                     log.debug( "writeLock released, notified waiting readers" );
-                    
+
                     notifyAll();
                 }
                 else

@@ -300,6 +300,7 @@ public class IndexedDiskCache extends AbstractDiskCache
             {
                 storageLock.done();
             }
+
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Put to file: " + fileName +
@@ -469,8 +470,15 @@ public class IndexedDiskCache extends AbstractDiskCache
             }
             else
             {
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Disk removal: Removed from key hash, key " + key );
+                }
+
                 // remove single item.
                 return keyHash.remove( key ) != null;
+
             }
         }
         catch ( Exception e )
@@ -588,7 +596,14 @@ public class IndexedDiskCache extends AbstractDiskCache
         finally
         {
             alive = false;
-            storageLock.done();
+
+            try
+            {
+              storageLock.done();
+            } catch ( Exception e )
+            {
+                log.error( "Failure releasing lock on shutdown " + e );
+            }
         }
     }
 
@@ -673,6 +688,7 @@ public class IndexedDiskCache extends AbstractDiskCache
                     log.debug( fileName + " -- newData.length() = " +
                         newData.length() );
                 }
+
                 newData.renameTo( newFileName );
             }
             keyHash = keyHashTemp;

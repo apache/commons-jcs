@@ -300,13 +300,11 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     public final void dispose()
     {
 
-        // Invoke any implementation specific disposal code
-
-        doDispose();
-
         // FIXME: May lose the end of the queue, need to be more graceful
-
         cacheEventQueue.destroy();
+
+        // Invoke any implementation specific disposal code
+        doDispose();
 
         alive = false;
 
