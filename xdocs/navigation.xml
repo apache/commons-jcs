@@ -12,7 +12,6 @@
       <item name="Torque"    href="http://jakarta.apache.org/turbine/torque"/>
       <item name="Fulcrum"   href="http://jakarta.apache.org/turbine/fulcrum"/>
       <item name="TDK"       href="http://jakarta.apache.org/turbine/tdk"/>
-      <item name="Stratum"   href="http://jakarta.apache.org/turbine/stratum"/> 
       <item name="Maven"     href="http://jakarta.apache.org/turbine/maven"/>
       <item name="JCS"       href="http://jakarta.apache.org/turbine/jcs"/>
     </links>
