@@ -176,6 +176,22 @@ public interface ICompositeCacheAttributes extends Serializable
      */
     public long getShrinkerIntervalSeconds();
 
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This sets the maximum number of items to spool per run.
+     *
+     * @param seconds The new maxSpoolPerRun value
+     */
+    public void setMaxSpoolPerRun( int maxSpoolPerRun );
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This gets the maximum number of items to spool per run.
+     *
+     * @return The maxSpoolPerRun value
+     */
+    public int getMaxSpoolPerRun();
+
 
     // soultion to interface cloning
     /**

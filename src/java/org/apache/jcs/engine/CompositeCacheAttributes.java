@@ -46,6 +46,8 @@ public class CompositeCacheAttributes implements ICompositeCacheAttributes, Clon
      */
     protected long shrinkerIntervalSeconds = 30;
 
+    protected int maxSpoolPerRun = -1;
+
     private String cacheName;
 
     private String memoryCacheName;
@@ -257,6 +259,31 @@ public class CompositeCacheAttributes implements ICompositeCacheAttributes, Clon
         return this.shrinkerIntervalSeconds;
     }
 
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This sets the maximum number of items to spool per run.
+     *
+     * If the value is -1, then there is no limit to the number of items to be
+     * spooled.
+     *
+     * @param seconds The new maxSpoolPerRun value
+     */
+    public void setMaxSpoolPerRun( int maxSpoolPerRun )
+    {
+      this.maxSpoolPerRun = maxSpoolPerRun;
+    }
+
+    /**
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements
+     * to reclaim space. This gets the maximum number of items to spool per run.
+     *
+     * @return The maxSpoolPerRun value
+     */
+    public int getMaxSpoolPerRun()
+    {
+      return this.maxSpoolPerRun;
+    }
+
 
     /**
      * Description of the Method
@@ -293,6 +320,7 @@ public class CompositeCacheAttributes implements ICompositeCacheAttributes, Clon
             .append( ", useRemote = " ).append( useRemote )
             .append( ", useDisk = " ).append( useDisk )
             .append( ", maxObjs = " ).append( maxObjs )
+            .append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun )
             .append( " ]" );
 
         return dump.toString();

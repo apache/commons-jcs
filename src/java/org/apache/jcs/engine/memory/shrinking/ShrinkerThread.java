@@ -53,6 +53,10 @@ public class ShrinkerThread extends Thread
     /** Maximum memory idle time for the whole cache */
     private final long maxMemoryIdleTime;
 
+    /** Maximum number of items to spool per run.  Default is -1, or no limit. */
+    private int maxSpoolPerRun;
+    private boolean spoolLimit = false;
+
     /** Flag that indicates if the thread is still alive */
     boolean alive = true;
 
@@ -81,6 +85,14 @@ public class ShrinkerThread extends Thread
         {
             this.maxMemoryIdleTime = maxMemoryIdleTimeSeconds * 1000;
         }
+
+        this.maxSpoolPerRun =
+            cache.getCacheAttributes().getMaxSpoolPerRun();
+        if ( this.maxSpoolPerRun != -1 )
+        {
+          this.spoolLimit = true;
+        }
+
     }
 
     /**
@@ -151,10 +163,16 @@ public class ShrinkerThread extends Thread
         {
             Object[] keys = cache.getKeyArray();
             int size = keys.length;
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Keys size: " + size );
+            }
 
             Serializable key;
             ICacheElement cacheElement;
             IElementAttributes attributes;
+
+            int spoolCount = 0;
 
             for ( int i = 0; i < size; i++ )
             {
@@ -201,6 +219,9 @@ public class ShrinkerThread extends Thread
 
                 if ( !remove && ( maxMemoryIdleTime != -1 ) )
                 {
+                  if ( !spoolLimit || (spoolCount <= this.maxSpoolPerRun) )
+                  {
+
                     final long lastAccessTime = attributes.getLastAccessTime();
 
                     if ( lastAccessTime + maxMemoryIdleTime < now )
@@ -214,13 +235,29 @@ public class ShrinkerThread extends Thread
                         // FIXME: Shouldn't we ensure that the element is
                         //        spooled before removing it from memory?
 
+                        spoolCount++;
+
                         cache.remove( cacheElement.getKey() );
 
                         cache.waterfal( cacheElement );
-                    }
-                }
 
+                        key = null;
+                        cacheElement = null;
+                    }
+                  }
+                  else
+                  {
+                      if ( log.isDebugEnabled() )
+                      {
+                        log.debug( "spoolCount = '" + spoolCount + "'; " +
+                                   "maxSpoolPerRun = '" + maxSpoolPerRun + "'");
+                      }
+                  }
+                }
             }
+
+            keys = null;
+            System.gc();
         }
         catch ( Throwable t )
         {
