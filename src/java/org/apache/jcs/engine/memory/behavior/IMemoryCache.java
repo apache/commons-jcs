@@ -9,6 +9,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheHub;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.ICompositeCache;
 
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.control.Cache;
@@ -160,5 +161,13 @@ public interface IMemoryCache extends ICacheType
      *@param  cattr  The new cacheAttributes value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr );
+
+    /**
+     *  Gets the cache hub / region taht the MemoryCache is used by
+     *
+     *@return    The cache value
+     */
+    public ICompositeCache getCompositeCache();
+
 
 }

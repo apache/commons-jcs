@@ -143,6 +143,9 @@ public class ShrinkerThread extends Thread
      *  it. 3. Has the item exceeded IdleTime defined in the element atributes?
      *  If so, remove it. If there are event listeners registered for the cache
      *  element, they will be called.
+     *
+     *@TODO    Change element event handling to use the queue, then move the
+     *      queue to the region and access via the Cache.
      */
     protected void shrink()
     {
@@ -154,6 +157,7 @@ public class ShrinkerThread extends Thread
 
         try
         {
+
 
             Object[] keys = cache.getKeyArray();
             int size = keys.length;
@@ -203,7 +207,8 @@ public class ShrinkerThread extends Thread
                                 while ( hIt.hasNext() )
                                 {
                                     IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
-                                    hand.handleElementEvent( event );
+                                    //hand.handleElementEvent( event );
+                                    cache.getCompositeCache().addElementEvent( hand, event );
                                 }
                             }
 
@@ -232,7 +237,8 @@ public class ShrinkerThread extends Thread
                                 while ( hIt.hasNext() )
                                 {
                                     IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
-                                    hand.handleElementEvent( event );
+                                    //hand.handleElementEvent( event );
+                                    cache.getCompositeCache().addElementEvent( hand, event );
                                 }
                             }
 

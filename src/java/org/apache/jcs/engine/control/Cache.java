@@ -72,9 +72,17 @@ import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
+
+import org.apache.jcs.engine.control.event.ElementEvent;
+import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
+import org.apache.jcs.engine.control.event.behavior.IElementEvent;
+import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
+import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
+import org.apache.jcs.engine.control.event.ElementEventQueue;
 
 /**
  * This is the primary hub for a single cache/region. It control the flow of
@@ -109,6 +117,13 @@ public class Cache
      * Cache Attributes, for hub and memory auxiliary
      */
     public ICompositeCacheAttributes cacheAttr;
+
+
+    /**
+     * Cache Attributes, for hub and memory auxiliary
+     */
+    public IElementEventQueue elementEventQ;
+
 
     // Statistics
     // FIXME: Provide accessors for these for instrumentation
@@ -151,6 +166,8 @@ public class Cache
 
         this.attr = attr;
         this.cacheAttr = cattr;
+
+        elementEventQ = new ElementEventQueue( cacheName );
 
         createMemoryCache( cattr );
 
@@ -1002,6 +1019,24 @@ public class Cache
         }
         return ce.getElementAttributes();
     }
+
+
+    /**
+     * Adds an  ElementEvent  to be handled
+     *
+     * @param hand The IElementEventHandler
+     * @param event The IElementEventHandler IElementEvent event
+     */
+    public void addElementEvent( IElementEventHandler hand, IElementEvent event )
+        throws IOException
+    {
+      if ( log.isDebugEnabled() )
+      {
+        log.debug( "Adding to Q" );
+      }
+      elementEventQ.addElementEvent( hand, event );
+    }
+
 
     /**
      * Create the MemoryCache based on the config parameters. TODO: consider

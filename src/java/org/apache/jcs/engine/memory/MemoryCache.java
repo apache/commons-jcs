@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.control.Cache;
 
 /**
@@ -126,5 +127,13 @@ public interface MemoryCache
      *@param  cattr  The new cacheAttributes value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr );
+
+
+    /**
+     *  Gets the cache hub / region taht the MemoryCache is used by
+     *
+     *@return    The cache value
+     */
+    public ICompositeCache getCompositeCache();
 
 }

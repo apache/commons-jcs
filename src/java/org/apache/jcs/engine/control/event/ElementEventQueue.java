@@ -24,7 +24,7 @@ public class ElementEventQueue implements IElementEventQueue
 
     private String cacheName;
 
-    private boolean destroyed;
+    private boolean destroyed = false;
     private Thread t;
 
     // Internal queue implementation
@@ -105,6 +105,12 @@ public class ElementEventQueue implements IElementEventQueue
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
       throws IOException
     {
+
+        if ( log.isDebugEnabled() )
+        {
+          log.debug( "Adding Event Handler to QUEUE, !destroyed = " + !destroyed );
+        }
+
         if ( !destroyed )
         {
             ElementEventRunner runner = new ElementEventRunner( hand, event );
@@ -141,6 +147,11 @@ public class ElementEventQueue implements IElementEventQueue
 
             while ( head == tail )
             {
+              if ( log.isDebugEnabled() )
+              {
+                log.debug( "Waiting for something to come in to the Q" );
+              }
+
                 queueLock.wait();
             }
 
@@ -279,6 +290,10 @@ public class ElementEventQueue implements IElementEventQueue
         ElementEventRunner( IElementEventHandler hand, IElementEvent event )
             throws IOException
         {
+              if ( log.isDebugEnabled() )
+              {
+                log.debug( "Constructing " + this );
+              }
             this.hand = hand;
             this.event = event;
         }
@@ -291,6 +306,7 @@ public class ElementEventQueue implements IElementEventQueue
         protected void doRun()
             throws IOException
         {
+
           hand.handleElementEvent( event );
         }
     }

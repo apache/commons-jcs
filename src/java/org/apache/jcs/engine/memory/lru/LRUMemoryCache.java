@@ -13,6 +13,7 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.Cache;
 import org.apache.jcs.engine.memory.MemoryCache;
@@ -480,6 +481,18 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     {
         this.cattr = cattr;
     }
+
+
+    /**
+     *  Gets the cache hub / region taht the MemoryCache is used by
+     *
+     *@return    The cache value
+     */
+    public ICompositeCache getCompositeCache()
+    {
+      return this.cache;
+    }
+
 
     // --------------------------- internal mehods (linked list implementation)
 
