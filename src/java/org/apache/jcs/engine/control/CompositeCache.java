@@ -538,8 +538,17 @@ public class CompositeCache
                                 auxHitCountByIndex[ i ]++;
 
                                 // Spool the item back into memory
-
-                                memCache.update( element );
+                                // only spool if the mem cache size is greater than
+                                // 0, else the item will immediately get put into purgatory
+                                if ( memCache.getCacheAttributes().getMaxObjects() > 0 )
+                                {
+                                  memCache.update(element);
+                                } else {
+                                  if ( log.isDebugEnabled() ) {
+                                    log.debug( "Skipping memory update since" +
+                                               "no items are allowed in memory" );
+                                  }
+                                }
                             }
 
                             found = true;
@@ -881,14 +890,14 @@ public class CompositeCache
                 log.error( "Failure disposing of aux", ex );
             }
 
-        }
+          try {
+            memCache.dispose();
+          }
+          catch ( IOException ex )
+          {
+              log.error( "Failure disposing of memCache", ex );
+          }
 
-        try {
-          memCache.dispose();
-        }
-        catch ( IOException ex )
-        {
-            log.error( "Failure disposing of memCache", ex );
         }
 
         log.warn( "Called close for " + cacheName );
@@ -976,6 +985,30 @@ public class CompositeCache
     {
         return alive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
     }
+
+    /**
+     * Gets stats for debugging.
+     * @return String
+     */
+    public String getStats()
+    {
+      StringBuffer buf = new StringBuffer();
+      buf.append( "\n -------------------------" );
+      buf.append( "\n Composite Cache:" );
+      buf.append("\n HitCountRam = " + getHitCountRam());
+      buf.append("\n HitCountAux = " + getHitCountAux());
+
+      buf.append(getMemoryCache().getStats());
+
+      for ( int i = 0; i < auxCaches.length; i++ )
+      {
+        ICache aux = auxCaches[i];
+        buf.append(aux.getStats());
+      }
+
+      return buf.toString();
+  }
+
 
     /**
      *  Gets the cacheName attribute of the Cache object
