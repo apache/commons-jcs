@@ -20,6 +20,8 @@ package org.apache.jcs.yajcache.util.concurrent.locks;
 import java.util.concurrent.locks.Lock;
 
 /**
+ * Factory Interface for key specific ReadWriteLock.
+ *
  * @author Hanson Char
  */
 public interface IKeyedReadWriteLock<K> {

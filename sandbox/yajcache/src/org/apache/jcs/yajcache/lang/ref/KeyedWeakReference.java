@@ -21,6 +21,8 @@ import java.lang.ref.WeakReference;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 /**
+ * Weak reference with an embedded key.
+ *
  * @author Hanson Char
  */
 public class KeyedWeakReference<K,T> extends WeakReference<T> 

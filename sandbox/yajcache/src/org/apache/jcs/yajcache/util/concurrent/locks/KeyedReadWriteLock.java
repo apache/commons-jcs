@@ -27,6 +27,9 @@ import org.apache.jcs.yajcache.lang.ref.KeyedWeakReference;
 
 
 /**
+ * Factory for key specific ReadWriteLock.  
+ * Unused locks are automatically garbage collected.
+ *
  * @author Hanson Char
  */
 public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {

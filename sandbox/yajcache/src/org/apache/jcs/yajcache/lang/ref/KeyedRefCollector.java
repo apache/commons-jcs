@@ -26,6 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
+ * Keyed Reference garbage collector.
+ *
  * @author Hanson Char
  */
 @CopyRightApache
