@@ -320,7 +320,7 @@ public class CompositeCacheManager
     /** */
     public void freeCache( String name, boolean fromRemote )
     {
-        CompositeCache cache = ( CompositeCache ) caches.get( name );
+        CompositeCache cache = ( CompositeCache ) caches.remove( name );
 
         if ( cache != null )
         {
