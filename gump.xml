@@ -34,6 +34,7 @@
     <depend project="jakarta-tomcat-util"/>
     <depend project="jakarta-tomcat"/>
     <depend project="xml-rpc"/>
+    <depend project="jakarta-velocity"/>
 
     <work nested="target/classes"/>
     <home nested="target"/>
