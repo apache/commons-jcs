@@ -100,6 +100,13 @@ public class CompositeCache
 {
     private final static Log log = LogFactory.getLog( CompositeCache.class );
 
+    /**
+     *  EventQueue for handling element events.
+     *  1 should be enough for all the regions. Else should create as needed
+     *  per region.
+     */
+    public static IElementEventQueue elementEventQ = new ElementEventQueue( "AllRegionQueue" );
+
     // Auxiliary caches.
     private AuxiliaryCache[] auxCaches;
 
@@ -117,11 +124,6 @@ public class CompositeCache
      *  Cache Attributes, for hub and memory auxiliary
      */
     public ICompositeCacheAttributes cacheAttr;
-
-    /**
-     *  Cache Attributes, for hub and memory auxiliary
-     */
-    public IElementEventQueue elementEventQ;
 
     // Statistics
 
@@ -163,8 +165,6 @@ public class CompositeCache
 
         this.attr = attr;
         this.cacheAttr = cattr;
-
-        elementEventQ = new ElementEventQueue( cacheName );
 
         createMemoryCache( cattr );
 
