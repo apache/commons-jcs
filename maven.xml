@@ -3,8 +3,11 @@
   <preGoal name="test:test">
 
     <!-- Work area for unit tests -->
-    
+
     <mkdir dir="target/test-sandbox/logs"/>
+    <copy todir="target/test-classes">
+        <fileset dir="src/test-conf"/>
+    </copy>
 
   </preGoal>
 
