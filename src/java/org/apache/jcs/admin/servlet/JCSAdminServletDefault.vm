@@ -35,8 +35,8 @@ which empties the entire cache.</p>
             <td> $record.cache.missCountNotFound </td>
             <td> $record.cache.missCountExpired </td>
             <td>
-                <a href="?action=detail&cacheName=${record.Name}"> Detail </a>
-                | <a href="?action=clearRegion&cacheName=${record.Name}"> Remove all </a>
+                <a href="?action=detail&cacheName=${record.cache.cacheName}"> Detail </a>
+                | <a href="?action=clearRegion&cacheName=${record.cache.cacheName}"> Remove all </a>
             </td>
         </tr>
     #end
