@@ -1,0 +1,48 @@
+<module name="jakarta-turbine-jcs">
+
+
+  <description>Cache</description>
+  <url href="http://jakarta.apache.org/turbine/jcs/"/>
+  
+  <cvs repository="jakarta"/>
+  
+  <!-- This is really the cvs module. We need to change this but -->
+  <!-- I will leave this for now until everything works.         -->
+  
+  <project name="jakarta-turbine-jcs">
+    
+    <!-- Standard Maven target to produce Javadocs, source -->
+    <!-- and binary distributions.                         -->
+    
+    <ant buildfile="build-gump.xml" target="jar">
+      <property name="final.name" value="jcs-@@DATE@@"/>
+    </ant>
+    
+    <!-- All Maven projects need Ant and Xerces to build. -->
+    <depend project="jakarta-ant"/>
+    <depend project="xml-xerces"/>
+
+    <depend project="commons-configuration"/>
+    <depend project="commons-logging"/>
+    <depend project="commons-lang"/>
+    <depend project="concurrent"/>
+    <depend project="hsqldb"/>
+    <depend project="jakarta-log4j"/>
+    <depend project="jakarta-servletapi"/>
+    <depend project="javagroups"/>
+    <depend project="jisp"/>
+    <depend project="jakarta-tomcat-util"/>
+    <depend project="jakarta-tomcat"/>
+    <depend project="xml-rpc"/>
+    <depend project="jakarta-turbine-stratum"/>
+
+    <work nested="target/classes"/>
+    <home nested="target"/>
+    <jar name="jcs-@@DATE@@.jar"/>
+    <javadoc nested="docs/apidocs"/>
+
+
+    
+  </project>
+  
+</module>
