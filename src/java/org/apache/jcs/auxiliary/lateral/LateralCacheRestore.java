@@ -5,12 +5,6 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
 
-import org.apache.jcs.auxiliary.lateral.socket.udp.LateralUDPService;
-
-import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
-
-import org.apache.jcs.auxiliary.lateral.xmlrpc.LateralXMLRPCService;
-
 import org.apache.jcs.engine.behavior.ICacheRestore;
 
 import org.apache.commons.logging.Log;
@@ -58,31 +52,9 @@ public class LateralCacheRestore implements ICacheRestore
 
         try
         {
-
-            // restore based on type.  Only the tcp scoket type really needs restoring.
-            if ( lcm.lca.getTransmissionType() == lcm.lca.UDP )
-            {
-                lateralObj = new LateralUDPService( lcm.lca );
-            }
-            else
-                if ( lcm.lca.getTransmissionType() == lcm.lca.JAVAGROUPS )
-            {
-                lateralObj = new LateralJGService( lcm.lca );
-            }
-            else
-                if ( lcm.lca.getTransmissionType() == lcm.lca.XMLRPC )
-            {
-                lateralObj = new LateralXMLRPCService( lcm.lca );
-            }
-            else
-                if ( lcm.lca.getTransmissionType() == lcm.lca.TCP )
+            if ( lcm.lca.getTransmissionType() == lcm.lca.TCP )
             {
                 lateralObj = new LateralTCPService( lcm.lca );
-            }
-            else
-                if ( lcm.lca.getTransmissionType() == lcm.lca.HTTP )
-            {
-
             }
         }
         catch ( Exception ex )

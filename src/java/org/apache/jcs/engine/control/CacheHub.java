@@ -340,7 +340,7 @@ public class CacheHub
     /** */
     public void freeCache( String name )
     {
-        freeCache( name, CacheConstants.LOCAL_INVOKATION );
+        freeCache( name, false );
     }
 
     /** */
@@ -363,7 +363,7 @@ public class CacheHub
     /** */
     public void release()
     {
-        release( CacheConstants.LOCAL_INVOKATION );
+        release( false );
     }
 
     /** */

@@ -122,7 +122,7 @@ public class RemoteGroupCacheListener extends RemoteCacheListener implements IRe
                     {
                         log.debug( "cache = " + cache );
                     }
-                    cache.updateGroupAttrNameSet( ( GroupAttrName ) cb.getKey(), CacheConstants.REMOTE_INVOKATION, false );
+                    cache.updateGroupAttrNameSet( ( GroupAttrName ) cb.getKey(), true, false );
 
                     log.debug( "Adding to attrNameSet " );
                 }
@@ -142,7 +142,7 @@ public class RemoteGroupCacheListener extends RemoteCacheListener implements IRe
 
                     getCacheManager();
                     ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( irca.getCacheName() );
-                    cache.update( cb, CacheConstants.REMOTE_INVOKATION );
+                    cache.localUpdate( cb );
 
                 }
 

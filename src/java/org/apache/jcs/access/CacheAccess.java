@@ -274,33 +274,41 @@ public class CacheAccess implements ICacheAccess
     public void put( Object name, Object obj )
         throws CacheException
     {
-        try
-        {
-            cacheControl.put( ( Serializable ) name, ( Serializable ) obj );
-        }
-        catch ( Exception e )
-        {
-            throw new CacheException( e );
-        }
+        // Call put with the contained caches default attributes.
+
+        put( ( Serializable ) name,
+             ( Serializable ) obj,
+             cacheControl.getElementAttributes() );
     }
 
     /**
      * Place a new object in the cache. This form allows attributes to associate
      * with the object may be specified with attr.
-     *
-     * @param name Key object will be stored with
-     * @param obj Object to store
-     * @param attr Attributes to store object with
-     * @exception CacheException
      */
-    public void put( Object name, Object obj, IElementAttributes attr )
+    public void put( Object key, Object val, IElementAttributes attr )
         throws CacheException
     {
+        if ( key == null  )
+        {
+            throw new CacheException( "Key must not be null" );
+        }
+        else if ( val == null )
+        {
+            throw new CacheException( "Value must not be null" );
+        }
+
+        // Create the element and update. This may throw an IOException which
+        // should be wrapped by cache access.
+
         try
         {
-            cacheControl.put( ( Serializable ) name,
-                              ( Serializable ) obj,
-                              attr );
+            CacheElement ce = new CacheElement( cacheControl.getCacheName(),
+                              (Serializable) key,
+                              (Serializable) val );
+
+            ce.setElementAttributes( attr );
+
+            cacheControl.update( ce );
         }
         catch ( Exception e )
         {
@@ -319,14 +327,28 @@ public class CacheAccess implements ICacheAccess
     public void destroy()
         throws CacheException
     {
-        cacheControl.removeAll();
+        try
+        {
+            cacheControl.removeAll();
+        }
+        catch( IOException e )
+        {
+            throw new CacheException( e );
+        }
     }
 
     /** Description of the Method */
     public void remove()
         throws CacheException
     {
-        cacheControl.removeAll();
+        try
+        {
+            cacheControl.removeAll();
+        }
+        catch( IOException e )
+        {
+            throw new CacheException( e );
+        }
     }
 
     /**
@@ -486,10 +508,10 @@ public class CacheAccess implements ICacheAccess
 
     // protected void dumpMap()
     // {
-    //     cache_control.dumpMap();
+    //     cacheControl.dumpMap();
     // }
     // protected void dumpCacheEntries()
     // {
-    //     cache_control.dumpCacheEntries();
+    //     cacheControl.dumpCacheEntries();
     // }
 }

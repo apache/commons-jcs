@@ -207,8 +207,6 @@ public class LateralTCPSender
     {
         ICacheElement ice = null;
 
-        log.debug( "sendAndReceive led" );
-
         if ( led == null )
         {
             return null;
@@ -217,7 +215,6 @@ public class LateralTCPSender
         if ( address == null )
         {
             throw new IOException( "No remote host is set for LateralTCPSender." );
-            //return;
         }
 
         if ( oos != null )

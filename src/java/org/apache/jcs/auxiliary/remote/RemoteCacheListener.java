@@ -206,14 +206,8 @@ public class RemoteCacheListener
 
             getCacheManager();
             ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
-//            if ( this.irca.getLocalClusterConsistency() && this.irca.getRemoteType() != irca.CLUSTER )
-//            {
-            cache.update( cb, CacheConstants.EXCLUDE_REMOTE_CACHE );
-//            }
-//            else
-//            {
-//                cache.update( cb, ICache.INCLUDE_REMOTE_CACHE );
-//            }
+
+            cache.localUpdate( cb );
         }
 
         return;
@@ -237,19 +231,8 @@ public class RemoteCacheListener
 
         getCacheManager();
         Cache cache = ( Cache ) cacheMgr.getCache( cacheName );
-        // If cluster updates another cluster, then update listeners to that
-        // cluster.
-        // Do not communicate with cluster except via server.
-        // separates the remote from the local.  Must run a server to
-        // cluster, else it can be run inside a local.
-//        if ( this.irca.getLocalClusterConsistency() && this.irca.getRemoteType() != irca.CLUSTER )
-//        {
-        cache.remove( key, CacheConstants.REMOTE_INVOKATION );
-//        }
-//        else
-//        {
-//            cache.remove( key, cache.LOCAL_INVOKATION );
-//        }
+
+        cache.localRemove( key );
     }
 
 
@@ -276,7 +259,7 @@ public class RemoteCacheListener
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
         CacheHub cm = ( CacheHub ) cacheMgr;
-        cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
+        cm.freeCache( cacheName, true);
     }
 
 

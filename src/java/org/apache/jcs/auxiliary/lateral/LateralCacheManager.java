@@ -13,15 +13,8 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-import org.apache.jcs.auxiliary.lateral.javagroups.LateralGroupCacheJGListener;
-import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralGroupCacheTCPListener;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-import org.apache.jcs.auxiliary.lateral.socket.udp.LateralGroupCacheUDPListener;
-import org.apache.jcs.auxiliary.lateral.socket.udp.LateralUDPService;
-import org.apache.jcs.auxiliary.lateral.xmlrpc.LateralGroupCacheXMLRPCListener;
-import org.apache.jcs.auxiliary.lateral.xmlrpc.LateralXMLRPCService;
-import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralCacheTCPListener;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
@@ -120,39 +113,11 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
         try
         {
-            if ( lca.getTransmissionType() == lca.UDP )
-            {
-                // need to allow for this to be a service.
-                // should wrap sender and new kind of receiver?
-
-                log.debug( "Creating UDP service" );
-
-                this.lateralService = new LateralUDPService( lca );
-            }
-            else if ( lca.getTransmissionType() == lca.HTTP )
-            {
-                log.debug( "[NOT] Creating HTTP service" );
-
-                // FIXME: Why is this disabled?
-                //this.lateralService = new LateralHTTPService( lca );
-            }
-            else if ( lca.getTransmissionType() == lca.TCP )
+            if ( lca.getTransmissionType() == lca.TCP )
             {
                 log.debug( "Creating TCP service" );
 
                 this.lateralService = new LateralTCPService( lca );
-            }
-            else if ( lca.getTransmissionType() == lca.XMLRPC )
-            {
-                log.debug( "Creating XMLRPC service" );
-
-                this.lateralService = new LateralXMLRPCService( lca );
-            }
-            else if ( lca.getTransmissionType() == lca.JAVAGROUPS )
-            {
-                log.debug( "Creating JAVAGROUPS service" );
-
-                this.lateralService = new LateralJGService( lca );
             }
             else
             {
@@ -232,22 +197,9 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
         try
         {
-            // need to set listener based on transmissionType
-            if ( lca.getTransmissionType() == lca.UDP )
+            if ( lca.getTransmissionType() == lca.TCP )
             {
-                addLateralCacheListener( cacheName, LateralGroupCacheUDPListener.getInstance( lca ) );
-            }
-            else if ( lca.getTransmissionType() == lca.TCP )
-            {
-                addLateralCacheListener( cacheName, LateralGroupCacheTCPListener.getInstance( lca ) );
-            }
-            else if ( lca.getTransmissionType() == lca.XMLRPC )
-            {
-                addLateralCacheListener( cacheName, LateralGroupCacheXMLRPCListener.getInstance( lca ) );
-            }
-            else if ( lca.getTransmissionType() == lca.JAVAGROUPS )
-            {
-                addLateralCacheListener( cacheName, LateralGroupCacheJGListener.getInstance( lca ) );
+                addLateralCacheListener( cacheName, LateralCacheTCPListener.getInstance( lca ) );
             }
         }
         catch ( IOException ioe )

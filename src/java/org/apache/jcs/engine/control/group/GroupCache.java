@@ -154,7 +154,7 @@ public class GroupCache extends Cache implements ICompositeCache
      */
     public ICacheElement get( Serializable key )
     {
-        return get( key, CacheConstants.LOCAL_INVOKATION );
+        return get( key, false );
     }
 
     /**
@@ -183,7 +183,7 @@ public class GroupCache extends Cache implements ICompositeCache
             log.debug( this.getCacheName() + " getting "
                        + key + " from super " );
 
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
+            if ( invocation == false )
             {
                 log.debug( "invokation is LOCAL" );
             }
@@ -206,7 +206,7 @@ public class GroupCache extends Cache implements ICompositeCache
      */
     public ICacheElement getGAN( GroupAttrName key )
     {
-        return getGAN( key, CacheConstants.LOCAL_INVOKATION );
+        return getGAN( key, false );
     }
 
     /**
@@ -221,7 +221,7 @@ public class GroupCache extends Cache implements ICompositeCache
     {
         if ( log.isDebugEnabled() )
         {
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
+            if ( invocation == false )
             {
                 log.debug( "invokation is LOCAL" );
             }
@@ -257,7 +257,7 @@ public class GroupCache extends Cache implements ICompositeCache
     // get list from remote if it isn't present
     public ICacheElement getGI( GroupId gid )
     {
-        return getGI( gid, CacheConstants.LOCAL_INVOKATION );
+        return getGI( gid, false );
     }
 
     /**
@@ -271,7 +271,7 @@ public class GroupCache extends Cache implements ICompositeCache
         if ( log.isDebugEnabled() )
         {
             log.debug( "getGi(gid,container,invocation)" );
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
+            if ( invocation == false )
             {
                 log.debug( "invocation is LOCAL" );
             }
@@ -284,8 +284,17 @@ public class GroupCache extends Cache implements ICompositeCache
         readLock( gid.key );
         try
         {
-            //obj = super.get(gid.key, container);
-            obj = systemGroupIdCache.get( gid.key, invocation );
+            if ( invocation )
+            {
+                // Invocation is NOT local
+                obj = systemGroupIdCache.localGet( gid.key );
+            }
+            else
+            {
+                // Invocation is local
+                obj = systemGroupIdCache.get( gid.key );
+            }
+
             if ( log.isDebugEnabled() )
             {
                 log.debug( "getGi: got obj " + obj );
@@ -384,7 +393,7 @@ public class GroupCache extends Cache implements ICompositeCache
             //updateCaches( key, val, attr );
             CacheElement ce = new CacheElement( this.getCacheName(), key, val );
             ce.setElementAttributes( attr );
-            super.update( ce, CacheConstants.INCLUDE_REMOTE_CACHE );
+            super.update( ce );
 
         }
         catch ( IOException ioe )
@@ -429,7 +438,7 @@ public class GroupCache extends Cache implements ICompositeCache
             // problem super calls back up and the last instruction gets confused
             CacheElement ce = new CacheElement( this.getCacheName(), key, val );
             ce.setElementAttributes( attrE );
-            super.update( ce, CacheConstants.INCLUDE_REMOTE_CACHE );
+            super.update( ce );
         }
         catch ( IOException ioe )
         {
@@ -467,7 +476,7 @@ public class GroupCache extends Cache implements ICompositeCache
             // must make sure you call the sure here
             // updateCaches( key, val, attrE, ICache.INCLUDE_REMOTE_CACHE );
             // problem super calls back up and the last instruction gets confused
-            super.update( ce, CacheConstants.INCLUDE_REMOTE_CACHE );
+            super.update( ce );
         }
         catch ( IOException ioe )
         {
@@ -477,12 +486,9 @@ public class GroupCache extends Cache implements ICompositeCache
 
 
     /**
-     * Description of the Method
-     *
-     * @param invocation Is the originating method call from a local source
+     * Update
      */
-    // PROBLEM CACHE HAS THE SAME METHOD AND THE 2nd arg is updateRemote
-    public synchronized void update( ICacheElement ce, boolean invocation )
+    public synchronized void update( ICacheElement ce, boolean localOnly )
         throws IOException
     {
 
@@ -494,17 +500,9 @@ public class GroupCache extends Cache implements ICompositeCache
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "update(ce,invocation) >putting via ga method" );
-                    if ( invocation == CacheConstants.LOCAL_INVOKATION )
-                    {
-                        log.debug( "invocation is LOCAL" );
-                    }
-                    else
-                    {
-                        log.debug( "invocation is NOT Local" );
-                    }
                 }
                 IElementAttributes attrE = ( IElementAttributes ) this.attr.copy();
-                putGAN( ( GroupAttrName ) key, ce.getVal(), attrE, invocation );
+                putGAN( ( GroupAttrName ) key, ce.getVal(), attrE, localOnly );
             }
             catch ( IOException ioe )
             {
@@ -524,18 +522,7 @@ public class GroupCache extends Cache implements ICompositeCache
 
         try
         {
-            // update should go remote if locally invoked
-            boolean updateRemote = false;
-            // DECIDE WHAT TO DO WITH THE LIST
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
-            {
-                updateRemote = CacheConstants.INCLUDE_REMOTE_CACHE;
-            }
-            else
-            {
-                updateRemote = CacheConstants.EXCLUDE_REMOTE_CACHE;
-            }
-            super.update( ce, updateRemote );
+            super.update( ce, localOnly );
         }
         catch ( IOException ioe )
         {
@@ -580,7 +567,7 @@ public class GroupCache extends Cache implements ICompositeCache
     {
         log.debug( "in putGAN( gan,val,attr) " );
 
-        putGAN( key, val, attrE, CacheConstants.LOCAL_INVOKATION );
+        putGAN( key, val, attrE, false );
     }
 
     /**
@@ -590,7 +577,7 @@ public class GroupCache extends Cache implements ICompositeCache
      */
     public void putGAN( GroupAttrName key, Serializable val,
                         IElementAttributes attrE,
-                        boolean invocation )
+                        boolean localOnly )
         throws IOException
     {
 
@@ -598,14 +585,6 @@ public class GroupCache extends Cache implements ICompositeCache
         {
             //p( "in putGAN( gan,val,attr,boolean updateRemote) " );
             log.debug( "in putGAN( gan,val,attr,boolean invocation) " );
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
-            {
-                log.debug( "invocation is LOCAL" );
-            }
-            else
-            {
-                log.debug( "invocation is NOT Local" );
-            }
         }
 
         writeLock( key.groupId );
@@ -622,23 +601,12 @@ public class GroupCache extends Cache implements ICompositeCache
                 log.debug( "putGAN( gan,val,attr,boolean invocation) > updating group attribute via super" );
             }
 
-            // SEND THE ELEMENT IF THE INVOCATION WAS LOCAL
-            // decide what to do with this item
-            boolean updateRemote = false;
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
-            {
-                updateRemote = CacheConstants.INCLUDE_REMOTE_CACHE;
-            }
-            else
-            {
-                updateRemote = CacheConstants.EXCLUDE_REMOTE_CACHE;
-            }
-            super.update( ce, updateRemote );
+            super.update( ce, localOnly );
 
             // UPDATE THE ATTRIBUTENAME LIST, get it first
             GroupId groupId = new GroupId( this.getCacheName(), key.groupId );
             HashSet attrNameSet = null;
-            attrNameSet = ( HashSet ) systemGroupIdCache.get( groupId.key, false );
+            attrNameSet = ( HashSet ) systemGroupIdCache.get( groupId.key );
 
             if ( attrNameSet == null )
             {
@@ -656,9 +624,8 @@ public class GroupCache extends Cache implements ICompositeCache
 
             // DO NOT SEND THE UPDATE LIST REMOTELY
             // THE ELEMENT WILL BE SENT AND THE LIST MAINTAINED REMOTELY
-            systemGroupIdCache.updateExclude( ceID, CacheConstants.EXCLUDE_REMOTE_CACHE );
-            // could use the updateGroupAttr method?
 
+            systemGroupIdCache.localUpdate( ceID );
         }
         finally
         {
@@ -704,7 +671,7 @@ public class GroupCache extends Cache implements ICompositeCache
             ceID.setElementAttributes( attrE );
             //updateCaches(groupId.key, attrNameSet, attrE );
             //super.update( ceID, EXCLUDE_REMOTE_CACHE );
-            systemGroupIdCache.update( ceID, CacheConstants.EXCLUDE_REMOTE_CACHE );
+            systemGroupIdCache.localUpdate( ceID );
 
         }
         catch ( IOException ioe )
@@ -721,7 +688,7 @@ public class GroupCache extends Cache implements ICompositeCache
 
         // if expired super will call remove and we can't have a lock
         // need a third method
-        return remove( key, CacheConstants.LOCAL_INVOKATION );
+        return remove( key, false);
     }// rmove
 
     /**
@@ -739,7 +706,7 @@ public class GroupCache extends Cache implements ICompositeCache
             if ( log.isDebugEnabled() )
             {
                 log.debug( "calling removeGAN" );
-                if ( invocation == CacheConstants.LOCAL_INVOKATION )
+                if ( invocation == false )
                 {
                     log.debug( "invokation is LOCAL" );
                 }
@@ -757,7 +724,7 @@ public class GroupCache extends Cache implements ICompositeCache
             if ( log.isDebugEnabled() )
             {
                 log.debug( "call removeGI" );
-                if ( invocation == CacheConstants.LOCAL_INVOKATION )
+                if ( invocation == false )
                 {
                     log.debug( "invokation is LOCAL" );
                 }
@@ -773,7 +740,7 @@ public class GroupCache extends Cache implements ICompositeCache
         if ( log.isDebugEnabled() )
         {
             log.debug( "call super.remove, " + invocation + " for " + key );
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
+            if ( invocation == false )
             {
                 log.debug( "invokation is LOCAL" );
             }
@@ -805,7 +772,7 @@ public class GroupCache extends Cache implements ICompositeCache
         if ( log.isDebugEnabled() )
         {
             log.debug( "in removeGAN" );
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
+            if ( invocation == false )
             {
                 log.debug( "invocation is LOCAL" );
             }
@@ -859,8 +826,16 @@ public class GroupCache extends Cache implements ICompositeCache
 
         try
         {
-            ce = ( CacheElement )
-                systemGroupIdCache.get( groupId.key, invocation );
+            if ( invocation )
+            {
+                // Invocation is NOT local
+                ce = ( CacheElement ) systemGroupIdCache.localGet( groupId.key );
+            }
+            else
+            {
+                // Invocation is local
+                ce = ( CacheElement ) systemGroupIdCache.get( groupId.key );
+            }
         }
         catch ( IOException ioe )
         {
@@ -908,7 +883,8 @@ public class GroupCache extends Cache implements ICompositeCache
                         }
                         // ALWAYS EXCLUDE THE REMOTE CACHE
                         // TODO: should this be configurable? no
-                        systemGroupIdCache.updateExclude( ceID, CacheConstants.EXCLUDE_REMOTE_CACHE );
+
+                        systemGroupIdCache.localUpdate( ceID );
 
                     }
                     catch ( IOException ioe )
@@ -928,18 +904,16 @@ public class GroupCache extends Cache implements ICompositeCache
                         {
                             log.debug( "calling systemGroupIdCache.remove( groupId.key, EXCLUDE_REMOTE_CACHE )" );
                         }
+
                         // unlike insertion, removal should go remote if locally invoked
-                        boolean updateRemote = false;
-                        // DECIDE WHAT TO DO WITH THE LIST
-                        if ( invocation == CacheConstants.LOCAL_INVOKATION )
+                        if ( invocation )
                         {
-                            updateRemote = CacheConstants.INCLUDE_REMOTE_CACHE;
+                            systemGroupIdCache.localRemove( groupId.key );
                         }
                         else
                         {
-                            updateRemote = CacheConstants.EXCLUDE_REMOTE_CACHE;
+                            systemGroupIdCache.remove( groupId.key );
                         }
-                        systemGroupIdCache.remove( groupId.key, updateRemote );
                     }
                     catch ( IOException ioe )
                     {
@@ -958,7 +932,7 @@ public class GroupCache extends Cache implements ICompositeCache
     {
         log.debug( "removeGI" );
 
-        removeGI( groupId, CacheConstants.LOCAL_INVOKATION );
+        removeGI( groupId, false);
     }
 
     /**
@@ -990,20 +964,14 @@ public class GroupCache extends Cache implements ICompositeCache
         }
         try
         {
-
-            // unlike insertion, removal should go remote if locally invoked
-            boolean updateRemote = false;
-            // DECIDE WHAT TO DO WITH THE LIST
-            if ( invocation == CacheConstants.LOCAL_INVOKATION )
+            if ( invocation )
             {
-                updateRemote = CacheConstants.INCLUDE_REMOTE_CACHE;
+                ok = systemGroupIdCache.localRemove( groupId.key );
             }
             else
             {
-                updateRemote = CacheConstants.EXCLUDE_REMOTE_CACHE;
+                ok = systemGroupIdCache.remove( groupId.key );
             }
-            ok = systemGroupIdCache.remove( groupId.key, updateRemote );
-
         }
         catch ( IOException ioeg )
         {
@@ -1027,7 +995,7 @@ public class GroupCache extends Cache implements ICompositeCache
     public IElementAttributes getElementAttributes( Serializable key )
         throws CacheException, IOException
     {
-        CacheElement ce = ( CacheElement ) getCacheElement( key );
+        CacheElement ce = ( CacheElement ) get( key );
         if ( ce == null )
         {
             throw new ObjectNotFoundException( "key " + key + " is not found" );

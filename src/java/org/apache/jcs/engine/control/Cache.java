@@ -91,7 +91,6 @@ import org.apache.jcs.engine.control.event.ElementEventQueue;
  *
  *@author     <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  *@author     <a href="mailto:jtaylor@apache.org">James Taylor</a>
- *@created    May 13, 2002
  *@version    $Id$
  */
 public class Cache
@@ -182,113 +181,6 @@ public class Cache
     }
 
     /**
-     *  Description of the Method
-     *
-     *@param  ce
-     *@deprecated
-     *@see           this will become protected
-     */
-    public void add( ICacheElement ce )
-    {
-        try
-        {
-            memCache.update( ce );
-        }
-        catch ( Exception e )
-        {
-            log.error( e );
-        }
-        return;
-    }
-
-    /**
-     *  Put in cache and configured auxiliaries.
-     *
-     *@param  key
-     *@param  val
-     *@exception  IOException
-     */
-    public void put( Serializable key, Serializable val )
-        throws IOException
-    {
-        put( key, val, ( IElementAttributes ) this.attr.copy() );
-
-        return;
-    }
-
-    /**
-     *  Description of the Method
-     *
-     *@param  key              Cache key
-     *@param  val              Value to cache
-     *@param  attr             Element attributes
-     *@exception  IOException
-     */
-    public void put( Serializable key,
-                     Serializable val,
-                     IElementAttributes attr )
-        throws IOException
-    {
-
-        if ( key == null || val == null )
-        {
-            NullPointerException npe =
-                new NullPointerException( "key=" + key + " and val=" + val +
-                " must not be null." );
-
-            log.error( "Key or value was null. Exception will be thrown", npe );
-
-            throw npe;
-        }
-
-        try
-        {
-            updateCaches( key, val, attr );
-        }
-        catch ( IOException ioe )
-        {
-            log.error( "Failed updating caches", ioe );
-        }
-        return;
-    }
-
-    /**
-     *  Description of the Method
-     *
-     *@param  key              Cache key
-     *@param  val              Value to cache
-     *@param  attr             Element attributes
-     *@exception  IOException
-     */
-    protected synchronized void updateCaches( Serializable key,
-                                              Serializable val,
-                                              IElementAttributes attr )
-        throws IOException
-    {
-        updateCaches( key, val, attr, CacheConstants.INCLUDE_REMOTE_CACHE );
-    }
-
-    /**
-     *  Description of the Method
-     *
-     *@param  key
-     *@param  val
-     *@param  attr
-     *@param  updateRemoteCache
-     *@exception  IOException
-     */
-    protected synchronized void updateCaches( Serializable key,
-                                              Serializable val,
-                                              IElementAttributes attr,
-                                              boolean updateRemoteCache )
-        throws IOException
-    {
-        CacheElement ce = new CacheElement( cacheName, key, val );
-        ce.setElementAttributes( attr );
-        updateExclude( ce, updateRemoteCache );
-    }
-
-    /**
      *  Standard update method
      *
      *@param  ce
@@ -297,20 +189,19 @@ public class Cache
     public synchronized void update( ICacheElement ce )
         throws IOException
     {
-        update( ce, CacheConstants.INCLUDE_REMOTE_CACHE );
+        update( ce, false );
     }
 
     /**
-     *  Description of the Method
+     *  Standard update method
      *
-     *@param  updateRemoteCache  Should the nonlocal caches be updated
      *@param  ce
      *@exception  IOException
      */
-    public void update( ICacheElement ce, boolean updateRemoteCache )
+    public synchronized void localUpdate( ICacheElement ce )
         throws IOException
     {
-        updateExclude( ce, updateRemoteCache );
+        update( ce, true );
     }
 
     /**
@@ -320,7 +211,7 @@ public class Cache
      *@param  updateRemoteCache
      *@exception  IOException
      */
-    public synchronized void updateExclude( ICacheElement ce, boolean updateRemoteCache )
+    protected synchronized void update( ICacheElement ce, boolean localOnly )
         throws IOException
     {
 
@@ -379,7 +270,7 @@ public class Cache
                 }
 
                 if ( ce.getElementAttributes().getIsRemote()
-                     && updateRemoteCache )
+                     && ! localOnly )
                 {
                     try
                     {
@@ -411,7 +302,7 @@ public class Cache
                 }
                 if ( cacheAttr.getUseLateral()
                      && ce.getElementAttributes().getIsLateral()
-                     && updateRemoteCache )
+                     && ! localOnly )
                 {
                     // later if we want a multicast, possibly delete abnormal broadcaster
                     // DISTRIBUTE LATERALLY
@@ -527,49 +418,37 @@ public class Cache
         }
 
     }
-    // end spoolToDisk
 
     /**
-     *  Gets an item from the cache, and make it the first in the link list.
-     *
-     *@param  key
-     *@return                              The cacheElement value
-     *@exception  ObjectNotFoundException
-     *@exception  IOException
-     */
-    public Serializable getCacheElement( Serializable key )
-        throws ObjectNotFoundException, IOException
-    {
-        return get( key, CacheConstants.LOCAL_INVOKATION );
-    }
-    // end get ce
-
-    /**
-     *  Description of the Method
-     *
-     *@param  key
-     *@return
+     * @see ICache#get
      */
     public ICacheElement get( Serializable key )
     {
-        return get( key, CacheConstants.LOCAL_INVOKATION );
+        return get( key, false );
+    }
+
+    /**
+     * @see ICompositeCache#localGet
+     */
+    public ICacheElement localGet( Serializable key )
+    {
+        return get( key, true );
     }
 
     /**
      *  Description of the Method
      *
      *@param  key
-     *@param  invocation
+     *@param  localOnly
      *@return
      */
-    public ICacheElement get( Serializable key, boolean invocation )
+    protected ICacheElement get( Serializable key, boolean localOnly )
     {
         ICacheElement element = null;
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "get: key = " + key + ", local = "
-                 + ( invocation == CacheConstants.LOCAL_INVOKATION ) );
+            log.debug( "get: key = " + key + ", localOnly = " + localOnly );
         }
 
         try
@@ -589,16 +468,16 @@ public class Cache
 
                     if ( aux != null )
                     {
+                        long cacheType = aux.getCacheType();
 
-                        if ( ( invocation == CacheConstants.LOCAL_INVOKATION )
-                             || aux.getCacheType() == aux.DISK_CACHE )
+                        if ( ! localOnly || cacheType == aux.DISK_CACHE )
                         {
                             if ( log.isDebugEnabled() )
                             {
                                 log.debug( "Attempting to get from aux: "
                                      + aux.getCacheName()
                                      + " which is of type: "
-                                     + aux.getCacheType() );
+                                     + cacheType );
                             }
 
                             try
@@ -721,16 +600,20 @@ public class Cache
     }
 
     /**
-     *  Removes an item from the cache.
-     *
-     *@param  key
-     *@return
+     * @see ICache#remove
      */
     public boolean remove( Serializable key )
     {
-        return remove( key, CacheConstants.LOCAL_INVOKATION );
+        return remove( key, false );
     }
 
+    /**
+     * @see ICompositeCache#localRemove
+     */
+    public boolean localRemove( Serializable key )
+    {
+        return remove( key, true );
+    }
 
     /**
      *  fromRemote: If a remove call was made on a cache with both, then the
@@ -748,18 +631,13 @@ public class Cache
      *  will need to build in an identifier to specify the source of a removal.
      *
      *@param  key
-     *@param  nonLocal
+     *@param  localOnly
      *@return
      */
 
-    public synchronized boolean remove( Serializable key, boolean nonLocal )
+    protected synchronized boolean remove( Serializable key,
+                                           boolean localOnly )
     {
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "remove> key=" + key + ", nonLocal=" + nonLocal );
-        }
-
         boolean removed = false;
 
         try
@@ -780,11 +658,12 @@ public class Cache
             {
                 continue;
             }
-            // avoid notification dead loop.
+
             int cacheType = aux.getCacheType();
 
             // for now let laterals call remote remove but not vice versa
-            if ( nonLocal && ( cacheType == REMOTE_CACHE || cacheType == LATERAL_CACHE ) )
+
+            if ( localOnly && ( cacheType == REMOTE_CACHE || cacheType == LATERAL_CACHE ) )
             {
                 continue;
             }
@@ -811,12 +690,30 @@ public class Cache
         }
         return removed;
     }
-    // end remove
 
     /**
-     *  Removes all cached items.
+     * @see ICache#removeAll
      */
-    public synchronized void removeAll()
+    public void removeAll()
+        throws IOException
+    {
+        removeAll( false );
+    }
+
+    /**
+     * @see ICompositeCache#removeAll
+     */
+    public void localRemoveAll()
+        throws IOException
+    {
+        removeAll( true );
+    }
+
+    /**
+     * Removes all cached items.
+     */
+    protected synchronized void removeAll( boolean localOnly )
+        throws IOException
     {
 
         try
@@ -833,7 +730,10 @@ public class Cache
         {
             ICache aux = auxCaches[i];
 
-            if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
+            int cacheType = aux.getCacheType();
+
+            if ( aux != null
+                 && ( cacheType == ICache.DISK_CACHE || ! localOnly ) )
             {
                 try
                 {
@@ -854,7 +754,7 @@ public class Cache
      */
     public void dispose()
     {
-        dispose( CacheConstants.LOCAL_INVOKATION );
+        dispose( false );
     }
 
     /**
@@ -1083,7 +983,7 @@ public class Cache
     public IElementAttributes getElementAttributes( Serializable key )
         throws CacheException, IOException
     {
-        CacheElement ce = ( CacheElement ) getCacheElement( key );
+        CacheElement ce = ( CacheElement ) get( key );
         if ( ce == null )
         {
             throw new ObjectNotFoundException( "key " + key + " is not found" );

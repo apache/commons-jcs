@@ -279,7 +279,8 @@ public class RemoteCacheServer
                         {
                             log.debug( "not updating clusters **************************************" );
                         }
-                        c.update( item, CacheConstants.REMOTE_INVOKATION );
+
+                        c.localUpdate( item );
                     }
                     else
                     {
@@ -287,7 +288,8 @@ public class RemoteCacheServer
                         {
                             log.debug( "updating clusters **************************************" );
                         }
-                        c.update( item, CacheConstants.LOCAL_INVOKATION );
+
+                        c.update( item );
                     }
                 }
                 catch ( Exception oee )
@@ -412,21 +414,8 @@ public class RemoteCacheServer
         else
         {
             ICompositeCache c = ( ICompositeCache ) cacheDesc.cache;
-//            if ( fromCluster )
-//            {
-            return c.get( key, CacheConstants.REMOTE_INVOKATION );
-//            }
-//            else
-//            {
-//                if ( this.rcsa.getAllowClusterGet() )
-//                {
-//                    return c.get( key, container, ICache.LOCAL_INVOKATION );
-//                }
-//                else
-//                {
-//                    return c.get( key, container, ICache.REMOTE_INVOKATION );
-//                }
-//            }
+
+            return c.localGet( key );
         }
     }
 
@@ -473,7 +462,7 @@ public class RemoteCacheServer
                     {
                         log.debug( "not updating clusters **************************************" );
                     }
-                    removeSuccess = c.remove( key, CacheConstants.REMOTE_INVOKATION );
+                    removeSuccess = c.localRemove( key );
                 }
                 else
                 {
@@ -481,7 +470,7 @@ public class RemoteCacheServer
                     {
                         log.debug( "updating clusters **************************************" );
                     }
-                    removeSuccess = c.remove( key, CacheConstants.LOCAL_INVOKATION );
+                    removeSuccess = c.remove( key );
                 }
 
                 if ( removeSuccess )

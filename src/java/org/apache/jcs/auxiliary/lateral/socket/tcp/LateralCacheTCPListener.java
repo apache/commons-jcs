@@ -53,50 +53,90 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import java.io.IOException;
-import java.io.Serializable;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ILateralCacheTCPListener;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
-
-import org.apache.jcs.engine.control.CacheHub;
-import org.apache.jcs.engine.CacheConstants;
-
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.control.CacheHub;
 
 /**
- * Description of the Class
+ * Listens for connections from other TCP lateral caches and handles them.
  *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
- * @created January 15, 2002
- * @version $Id: LateralCacheTCPListener.java,v 1.8 2002/02/15 04:33:37 jtaylor
- *      Exp $
+ * @version $Id$
  */
-public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serializable
+public class LateralCacheTCPListener
+    implements ILateralCacheListener, Serializable
 {
     private final static Log log =
         LogFactory.getLog( LateralCacheTCPListener.class );
 
-    /** Description of the Field */
+    /** How long the server will block on an accept(). 0 is infinte. */
+    private final static int acceptTimeOut = 0;
+
+    /** The CacheHub this listener is associated with */
     protected static transient CacheHub cacheMgr;
-    /** Description of the Field */
+
+    /** Map of available instances, keyed by port */
     protected final static HashMap instances = new HashMap();
 
-    // instance vars
-    private LateralTCPReceiver receiver;
-    private ILateralCacheAttributes ilca;
-    private boolean inited = false;
+    // ---------- instance variables
 
+    /** The socket listener */
+    private ListenerThread receiver;
+
+    private ILateralCacheAttributes ilca;
+    private int port;
+
+    private PooledExecutor pooledExecutor = new PooledExecutor();
+
+    // -------------------------------------------------------- factory methods
+
+    /**
+     * Gets the instance attribute of the LateralCacheTCPListener class
+     *
+     * @return The instance value
+     */
+    public synchronized static ILateralCacheListener
+        getInstance( ILateralCacheAttributes ilca )
+    {
+        ILateralCacheListener ins = ( ILateralCacheListener )
+            instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
+
+        if ( ins == null )
+        {
+            ins = new LateralCacheTCPListener( ilca );
+
+            ins.init();
+
+            instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "created new listener " + ilca.getTcpListenerPort() );
+            }
+        }
+
+        return ins;
+    }
+
+    // ------------------------------------------------------- instance methods
 
     /**
      * Only need one since it does work for all regions, just reference by
@@ -109,27 +149,24 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
         this.ilca = ilca;
     }
 
-
     /** Description of the Method */
     public void init()
     {
         try
         {
-            // need to connect based on type
-            //ILateralCacheListener ilcl = this;
-            //p( "in init, ilcl = " + ilcl );
-            receiver = new LateralTCPReceiver( ilca, this );
-            Thread t = new Thread( receiver );
-            t.start();
+            this.port = ilca.getTcpListenerPort();
+
+            receiver = new ListenerThread();
+
+            receiver.start();
         }
         catch ( Exception ex )
         {
             log.error( ex );
+
             throw new IllegalStateException( ex.getMessage() );
         }
-        inited = true;
     }
-
 
     /**
      * let the lateral cache set a listener_id. Since there is only one
@@ -149,7 +186,6 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
         }
     }
 
-
     /**
      * Gets the listenerId attribute of the LateralCacheTCPListener object
      *
@@ -158,65 +194,30 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
     public byte getListenerId()
         throws IOException
     {
-
-        // set the manager since we are in use
-        //getCacheManager();
-
-        //p( "get listenerId" );
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "get listenerId = " + LateralCacheInfo.listenerId );
-        }
         return LateralCacheInfo.listenerId;
     }
 
+    // ---------------------------------------- interface ILateralCacheListener
 
-    /**
-     * Gets the instance attribute of the LateralCacheTCPListener class
-     *
-     * @return The instance value
-     */
-    public static ILateralCacheListener getInstance( ILateralCacheAttributes ilca )
-    {
-        //throws IOException, NotBoundException
-        ILateralCacheListener ins = ( ILateralCacheListener ) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
-        if ( ins == null )
-        {
-            synchronized ( LateralCacheTCPListener.class )
-            {
-                if ( ins == null )
-                {
-                    ins = new LateralCacheTCPListener( ilca );
-                    ins.init();
-                }
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "created new listener " + ilca.getTcpListenerPort() );
-                }
-                instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
-            }
-        }
-        return ins;
-    }
-
-
-    //////////////////////////// implements the ILateralCacheListener interface. //////////////
-    /** */
-    public void handlePut( ICacheElement cb )
+    public void handlePut( ICacheElement element )
         throws IOException
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "PUTTING ELEMENT FROM LATERAL" );
+            log.debug( "handlePut> cacheName=" + element.getCacheName() + ", key=" + element.getKey() );
         }
-        getCacheManager();
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
-        cache.update( cb, CacheConstants.REMOTE_INVOKATION );
-        //handleRemove(cb.getCacheName(), cb.getKey());
+
+        // This was the following, however passing true in for updateRemotes
+        // causes an a loop, since the element will the be sent to the sender.
+        // Passing false in fixes things, but I'm not sure I understand all
+        // the details yet.
+        //
+        // getCache( element.getCacheName() )
+        //    .update( element, CacheConstants.REMOTE_INVOKATION );
+
+        getCache( element.getCacheName() ).localUpdate( element );
     }
 
-
-    /** Description of the Method */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
@@ -225,15 +226,9 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
             log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );
         }
 
-        getCacheManager();
-        // interface limitation here
-
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
-        cache.remove( key, CacheConstants.REMOTE_INVOKATION );
+        getCache( cacheName ).localRemove( key );
     }
 
-
-    /** Description of the Method */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
@@ -241,12 +236,10 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
         {
             log.debug( "handleRemoveAll> cacheName=" + cacheName );
         }
-        getCacheManager();
-        ICache cache = cacheMgr.getCache( cacheName );
-        cache.removeAll();
+
+        getCache( cacheName ).localRemoveAll();
     }
 
-    /** Test get implementation. */
     public Serializable handleGet( String cacheName, Serializable key )
         throws IOException
     {
@@ -254,13 +247,10 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
         {
             log.debug( "handleGet> cacheName=" + cacheName + ", key = " + key );
         }
-        getCacheManager();
-        ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
-        // get container
-        return cache.get( key, CacheConstants.REMOTE_INVOKATION );
+
+        return getCache( cacheName ).localGet( key );
     }
 
-    /** Description of the Method */
     public void handleDispose( String cacheName )
         throws IOException
     {
@@ -268,30 +258,192 @@ public class LateralCacheTCPListener implements ILateralCacheTCPListener, Serial
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
+
         CacheHub cm = ( CacheHub ) cacheMgr;
-        cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
+        cm.freeCache( cacheName, true );
     }
 
-
-    // override for new funcitonality
     /**
      * Gets the cacheManager attribute of the LateralCacheTCPListener object
      */
-    protected void getCacheManager()
+    protected ICompositeCache getCache( String name )
     {
         if ( cacheMgr == null )
         {
             cacheMgr = CacheHub.getInstance();
+
             if ( log.isDebugEnabled() )
             {
                 log.debug( "cacheMgr = " + cacheMgr );
             }
         }
-        else
+
+        return ( ICompositeCache ) cacheMgr.getCache( name );
+    }
+
+    // ---------------------------------------------------------- inner classes
+
+    /**
+     * Processes commands from the server socket. There should be one listener
+     * for each configured TCP lateral.
+     */
+    public class ListenerThread extends Thread
+    {
+        /** Main processing method for the ListenerThread object */
+        public void run()
         {
-            if ( log.isDebugEnabled() )
+            try
             {
-                log.debug( "already got cacheMgr = " + cacheMgr );
+                log.info( "Listening on port " + port );
+
+                ServerSocket serverSocket = new ServerSocket( port );
+                serverSocket.setSoTimeout( acceptTimeOut );
+
+                ConnectionHandler handler;
+
+                while ( true )
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Waiting for clients to connect " );
+                    }
+
+                    Socket socket = serverSocket.accept();
+
+                    if ( log.isDebugEnabled() )
+                    {
+                        InetAddress inetAddress = socket.getInetAddress();
+
+                        log.debug( "Connected to client at " + inetAddress );
+                    }
+
+                    handler = new ConnectionHandler( socket );
+
+                    pooledExecutor.execute( handler );
+                }
+            }
+            catch ( Exception e )
+            {
+                log.error( "Exception caught in TCP listener", e );
+            }
+        }
+    }
+
+    /**
+     * Separate thread run when a command comes into the LateralTCPReceiver.
+     */
+    public class ConnectionHandler implements Runnable
+    {
+        private Socket socket;
+
+        /** Construct for a given socket */
+        public ConnectionHandler( Socket socket )
+        {
+            this.socket = socket;
+        }
+
+        /**
+         * Main processing method for the LateralTCPReceiverConnection object
+         */
+        public void run()
+        {
+            ObjectInputStream ois;
+
+            try
+            {
+                ois = new ObjectInputStream( socket.getInputStream() );
+                ;
+            }
+            catch ( Exception e )
+            {
+                log.error( "Could not open ObjectInputStream to " + socket, e );
+
+                return;
+            }
+
+            LateralElementDescriptor led;
+
+            try
+            {
+                while ( true )
+                {
+                    led = ( LateralElementDescriptor ) ois.readObject();
+
+                    if ( led == null )
+                    {
+                        log.debug( "LateralElementDescriptor is null" );
+                        continue;
+                    }
+                    if ( led.requesterId == LateralCacheInfo.listenerId )
+                    {
+                        log.debug( "from self" );
+                    }
+                    else
+                    {
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "receiving LateralElementDescriptor from another"
+                                       + "led = " + led
+                                       + ", led.command = " + led.command
+                                       + ", led.ce = " + led.ce );
+                        }
+
+                        handle( led );
+                    }
+                }
+            }
+            catch ( java.io.EOFException e )
+            {
+                log.info( "Caught java.io.EOFException closing conneciton." );
+            }
+            catch ( java.net.SocketException e )
+            {
+                log.info( "Caught java.net.SocketException closing conneciton." );
+            }
+            catch ( Exception e )
+            {
+                log.error( "Unexpected exception. Closing conneciton", e );
+            }
+
+            try
+            {
+                ois.close();
+            }
+            catch ( Exception e )
+            {
+                log.error( "Could not close connection", e );
+            }
+        }
+
+        private void handle( LateralElementDescriptor led ) throws IOException
+        {
+            String cacheName = led.ce.getCacheName();
+            Serializable key = led.ce.getKey();
+
+            if ( led.command == LateralElementDescriptor.UPDATE )
+            {
+                handlePut( led.ce );
+            }
+            else if ( led.command == LateralElementDescriptor.REMOVE )
+            {
+                handleRemove( cacheName, key );
+            }
+            else if ( led.command == LateralElementDescriptor.REMOVEALL )
+            {
+                handleRemoveAll( cacheName );
+            }
+            else if ( led.command == LateralElementDescriptor.GET )
+            {
+                Serializable obj = handleGet( cacheName, key );
+
+                ObjectOutputStream oos =
+                    new ObjectOutputStream( socket.getOutputStream() );
+
+                if ( oos != null )
+                {
+                    oos.writeObject( obj );
+                    oos.flush();
+                }
             }
         }
     }

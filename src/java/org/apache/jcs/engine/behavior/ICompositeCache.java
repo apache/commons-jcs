@@ -20,56 +20,17 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
  */
 public interface ICompositeCache extends ICache
 {
-
-    /** Puts an item to the cache. */
-    public void update( ICacheElement ce )
+    public ICacheElement localGet( Serializable key )
         throws IOException;
 
-
-    /** Description of the Method */
-    public void update( ICacheElement ce, boolean localInvocation )
+    public void localUpdate( ICacheElement ce )
         throws IOException;
 
-    /** Allows the exclusion of non local caches. */
-    public void updateExclude( ICacheElement ce, boolean excludeRemote )
+    public boolean localRemove( Serializable key )
         throws IOException;
 
-    /** Description of the Method */
-    public boolean remove( Serializable key )
+    public void localRemoveAll()
         throws IOException;
-
-
-    /** Description of the Method */
-    public boolean remove( Serializable key, boolean localInvocation )
-        throws IOException;
-
-
-    /** allows a get request to stay local * */
-    public ICacheElement get( Serializable key, boolean localInvocation )
-        throws IOException;
-
-    /**
-     * Returns the current cache size.
-     *
-     * @return The size value
-     */
-    public int getSize();
-
-
-    /**
-     * Returns the cache status.
-     *
-     * @return The status value
-     */
-    public int getStatus();
-
-
-    /**
-     * Returns the cache name.
-     *
-     * @return The cacheName value
-     */
-    public String getCacheName();
 
     /**
      * Adds an  ElementEvent  to be handled
@@ -79,6 +40,4 @@ public interface ICompositeCache extends ICache
      */
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException;
-
-
 }

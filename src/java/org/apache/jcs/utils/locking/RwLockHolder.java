@@ -10,11 +10,11 @@ package org.apache.jcs.utils.locking;
  */
 class RwLockHolder
 {
+    // 10 seconds
     private final static long UNUSED_TIME = 10 * 1000;
-    // 10 seconds.
 
-    /** Read/Write lock for a specific resource. */
-    final ReadWriteLock rwlock;
+    /** Contained ReadWriteLock */
+    private final ReadWriteLock rwlock;
 
     /**
      * Number of locks that have been placed on the rwlock and not yet released.
@@ -23,7 +23,6 @@ class RwLockHolder
 
     /** Last timestamp when the lcount was zero. */
     long lastInactiveTime = -1;
-
 
     /**
      * Constructs with a Read/Write lock for a specific resource.
@@ -35,14 +34,34 @@ class RwLockHolder
         this.rwlock = rwlock;
     }
 
-
     /**
      * Returns true iff this object satisfies the condition of removing
      * RwLockHolder from the managing ReadWriteLockManager.
      */
     boolean removable( long now )
     {
-        return lcount == 0 && lastInactiveTime > 0 && now - lastInactiveTime > UNUSED_TIME;
+        return lcount == 0
+               && lastInactiveTime > 0
+               && now - lastInactiveTime > UNUSED_TIME;
     }
+
+    /** @see ReadWriteLock#readLock */
+    public void readLock() throws InterruptedException
+    {
+        rwlock.readLock();
+    }
+
+    /** @see ReadWriteLock#writeLock */
+    public void writeLock() throws InterruptedException
+    {
+        rwlock.writeLock();
+    }
+
+    /** @see ReadWriteLock#done */
+    public void done()
+    {
+        rwlock.done();
+    }
+
 }
 

@@ -188,7 +188,7 @@ public class RemoteCacheServerListener
             }
         }
         ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( irca.getCacheName() );
-        cache.update( cb, false );
+        cache.localUpdate( cb );
     }
 
 
@@ -214,7 +214,7 @@ public class RemoteCacheServerListener
         // interface limitation here
 
         Cache cache = ( Cache ) cacheMgr.getCache( cacheName );
-        cache.remove( key, CacheConstants.REMOTE_INVOKATION );
+        cache.localRemove( key );
     }
 
 
@@ -241,7 +241,7 @@ public class RemoteCacheServerListener
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
         CacheHub cm = ( CacheHub ) cacheMgr;
-        cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
+        cm.freeCache( cacheName, true );
     }
 
 

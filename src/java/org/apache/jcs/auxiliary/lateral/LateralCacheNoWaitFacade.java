@@ -70,10 +70,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
             try
             {
                 Object obj = noWaits[ i ].get( key );
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "obj = " + obj );
-                }
+
                 if ( obj != null )
                 {
                     // return after first success

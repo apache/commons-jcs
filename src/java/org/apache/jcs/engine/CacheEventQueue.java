@@ -285,15 +285,14 @@ public class CacheEventQueue implements ICacheEventQueue
 
                     if ( log.isDebugEnabled() )
                     {
-                      log.debug( "r from take() = " + r );
+                        log.debug( "r from take() = " + r );
                     }
 
                 }
                 catch ( InterruptedException e )
                 {
-                    // We were interrupted, so terminate gracefully.
-
-                    this.destroy();
+                    // We were interrupted, just continue -- the while loop
+                    // will exit if we have been properly destroyed.
                 }
 
                 if ( !destroyed && r != null )
