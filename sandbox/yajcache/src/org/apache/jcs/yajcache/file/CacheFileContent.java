@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache File Content which represents the file persistence format 
@@ -38,7 +38,8 @@ import org.apache.jcs.yajcache.annotate.*;
  * @author Hanson Char
  */
 @CopyRightApache
-class CacheFileContent {
+public class CacheFileContent {
+    public static final CacheFileContent CORRUPTED = CacheFileContentCorrupted.inst;
     /**
      * Minimum File Length =
      * contentType (1 byte) + contentLength (4 bytes) + contentHashCode (4 bytes)
@@ -50,7 +51,7 @@ class CacheFileContent {
     
     private byte[] content;
     
-    private CacheFileContent() {}
+    protected CacheFileContent() {}
     
     /**
      * Constructs an instance of CacheFileContent from the given content type
@@ -147,5 +148,9 @@ class CacheFileContent {
         raf.readFully(ba);
         cfc.setContent(ba);
         return cfc;
+    }
+    /** Returns the deserialized content. */
+    public @NonNullable Object deserialize() {
+        return CacheFileContentType.fromByte(this.contentType).deserialize(this.content);
     }
 }
