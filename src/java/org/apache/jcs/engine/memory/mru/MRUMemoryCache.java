@@ -488,8 +488,11 @@ public class MRUMemoryCache
      */
     public Object[] getKeyArray()
     {
-      // may need to lock to map here?
-      return map.keySet().toArray();
+        synchronized ( lockMe )
+        {
+          // may need to lock to map here?
+          return map.keySet().toArray();
+        }
     }
 
     /**
