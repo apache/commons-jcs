@@ -123,9 +123,9 @@ public class BookVObj implements Serializable
         <source><![CDATA[
 package com.genericbookstore.data;
 
-import org.apache.stratum.jcs.JCS;
+import org.apache.jcs.JCS;
 // in case we want to set some special behavior
-import org.apache.stratum.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.IElementAttributes;
 
 public class BookVObjManager 
 {
@@ -352,10 +352,10 @@ public class BookVObjManager
 # sets the default aux value for any non configured caches
 jcs.default=DC,RFailover
 jcs.default.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=3600
 jcs.default.elementattributes.IdleTime=1800
@@ -368,20 +368,20 @@ jcs.default.elementattributes.IsLateral=true
 # should be defined for the storage of group attribute list
 jcs.system.groupIdCache=DC,RFailover
 jcs.system.groupIdCache.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 # CACHE REGIONS AVAILABLE 
 
 # Regions preconfigured for caching
 jcs.region.bookCache=DC,RFailover
 jcs.region.bookCache.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.bookCache.cacheattributes.MaxObjects=1200
 jcs.region.bookCache.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.bookCache.elementattributes.IsEternal=false
 jcs.region.bookCache.elementattributes.MaxLifeSeconds=7200
 jcs.region.bookCache.elementattributes.IdleTime=1800
@@ -393,16 +393,16 @@ jcs.region.bookCache.elementattributes.IsLateral=true
 
 # Primary Disk Cache -- faster than the rest because of memory key storage
 jcs.auxiliary.DC=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=/usr/opt/bookstore/raf
 
 # Remote RMI Cache set up to failover
 jcs.auxiliary.RFailover=
-    org.apache.stratum.jcs.auxiliary.remote.RemoteCacheFactory
+    org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RFailover.attributes=
-    org.apache.stratum.jcs.auxiliary.remote.RemoteCacheAttributes
+    org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
 jcs.auxiliary.RFailover.attributes.FailoverServers=scriptserver:1102
 jcs.auxiliary.RFailover.attributes.GetOnly=false

@@ -51,9 +51,9 @@
         </p>
         <source><![CDATA[
 jcs.auxiliary.LTCP=
-    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheFactory
+    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LTCP.attributes=
-    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheAttributes
+    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=
     localhost:1111,localhost:1112

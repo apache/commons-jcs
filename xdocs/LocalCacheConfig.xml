@@ -58,7 +58,7 @@
 # sets the default aux value for any non configured caches
 jcs.default=DC,RFailover
 jcs.default.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
         ]]></source>
         <p>
@@ -82,7 +82,7 @@ jcs.default.cacheattributes.MaxObjects=1000
         <source><![CDATA[
 jcs.region.testCache=DC,RFailover
 jcs.region.testCache.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache.cacheattributes.MaxObjects=1000
         ]]></source>
         <p>
@@ -117,9 +117,9 @@ jcs.region.testCache.cacheattributes.MaxObjects=1000
         </p>
         <source><![CDATA[
 jcs.auxiliary.DC=
-    org.apache.stratum.jcs.auxiliary.disk.DiskCacheFactory
+    org.apache.jcs.auxiliary.disk.DiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.stratum.jcs.auxiliary.disk.DiskCacheAttributes
+    org.apache.jcs.auxiliary.disk.DiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=c:/dev/cache/raf
         ]]></source>
         <p>
@@ -134,9 +134,9 @@ jcs.auxiliary.DC.attributes.DiskPath=c:/dev/cache/raf
         </p>
         <source><![CDATA[
 jcs.auxiliary.RFailover=
-    org.apache.stratum.jcs.auxiliary.remote.RemoteCacheFactory
+    org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RFailover.attributes=
-    org.apache.stratum.jcs.auxiliary.remote.RemoteCacheAttributes
+    org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL 
 jcs.auxiliary.RFailover.attributes.FailoverServers=
     localhost:1102,localhost:1101

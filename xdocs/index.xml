@@ -46,7 +46,7 @@
       <p> 
         These features provide a framework with no point of failure,
         allowing for full session failover including session data across
-        up to 256 servers.
+        multiple servers.
       </p>
     </section>
   </body>

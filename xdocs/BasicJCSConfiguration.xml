@@ -28,10 +28,10 @@
 
 jcs.default=
 jcs.default.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
         ]]></source>
         <p>
           If you want to add memory shrinking then you can add these
@@ -51,9 +51,9 @@ jcs.default.cacheattributes.cacheattributes.ShrinkerIntervalSeconds=60
         </p>
         <source><![CDATA[
 jcs.auxiliary.DC=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:/dev/jakarta-turbine-stratum/raf
         ]]></source> 
         <p>
@@ -69,10 +69,10 @@ jcs.default=DC
         <source><![CDATA[
 jcs.system.groupIdCache=DC
 jcs.system.groupIdCache.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
         ]]></source>
         <p>
           If you want to predefine a specific region, say called
@@ -81,10 +81,10 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
         <source><![CDATA[
 jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
@@ -97,9 +97,9 @@ jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
         </p>
         <source><![CDATA[
 jcs.auxiliary.LTCP=
-    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheFactory
+    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LTCP.attributes=
-    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheAttributes
+    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
@@ -137,42 +137,43 @@ jcs.region.testCache1=DC,LTCP
 
 jcs.default=DC,LTCP
 jcs.default.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 # System CACHE REGION   
 jcs.system.groupIdCache=DC,LTCP
 jcs.system.groupIdCache.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 # PRE-DEFINED CACHE REGIONS   
 
 jcs.region.testCache1=DC,LTCP
 jcs.region.testCache1.cacheattributes=
-    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+    org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
 
 # AVAILABLE AUXILIARY CACHES   
 jcs.auxiliary.DC=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:/dev/jakarta-turbine-stratum/raf
+jcs.auxiliary.DC.attributes.maxKeySize=100000
 
 jcs.auxiliary.LTCP=
-    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheFactory
+    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LTCP.attributes=
-    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheAttributes
+    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110

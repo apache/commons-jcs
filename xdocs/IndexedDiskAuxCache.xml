@@ -21,7 +21,7 @@
 
       <subsection name="Disk Indexing">
       <p>
-        The Indexed Disk Auxiliary Cache follows, perhaps, the fastest 
+        The Indexed Disk Auxiliary Cache follows the fastest 
     	  pattern of disk caching.  Items are stored at the end of a file 
 	      dedicated to the cache region.  The first byte of each disk entry
 	      specifies the length of the entry.  The start position in the file
@@ -31,6 +31,13 @@
   	    only require about 1 MB of memory.  Locating the position of an item is 
 	      as fast as a map lookup and the retrieval of the item only requires 2
     	  disk accesses.
+      </p>
+      <p>
+	  When items are removed from the disk cache, the location of the available
+	  block on the storage file is recorded in a sorted preferential array of a 
+	  size not to exceed the maximum number of keys allowed in memory.  This allows
+	  the disk cache to reuse empty spots, thereby keeping the file size to a 
+	  minimum.
       </p>
       </subsection>
 
@@ -65,22 +72,23 @@
           referenced by <code>DC</code>.  It uses files located in the 
           "DiskPath" directory.
          </p>
+	   <p>
+	    The Disk indexes are equipped with an LRU storage limit.  The maximum 
+          number of keys is configured by the so the maxKeySize parameter. 
+	   </p>
         <source><![CDATA[
 jcs.auxiliary.DC=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:\dev\jakarta-turbine-stratum\raf
+jcs.auxiliary.DC.attributes.maxKeySize=100000
         ]]></source>
       </subsection>
        <subsection name="TODO">
         <p>
           The Indexed Disk Auxiliary Cache will eventually be equiped 
-          with real-time defragmentation and periodic index storage. 
-          This will increase the persistence reliability and minimize
-          the file size.  Disk indexes may eventually require an LRU storage
-          so the file size can be reduced by removing old records.  Currently 
-          there is no maximum file size configuration.
+          with periodic index storage. 
         </p>
       </subsection>
     </section>
