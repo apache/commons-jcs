@@ -35,6 +35,9 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
     // default to 500000
     private int maxKeySize = 500000;
 
+    // default to -1, i.e., don't optimize until shutdown
+    private int optimizeAtRemoveCount = -1;
+
     /**
      * Constructor for the DiskCacheAttributes object
      */
@@ -128,6 +131,30 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
     {
         this.maxKeySize = maxKeySize;
     }
+
+    /**
+     * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object
+     *
+     * @return The optimizeAtRemoveCount value
+     */
+    public int getOptimizeAtRemoveCount()
+    {
+        return this.optimizeAtRemoveCount;
+    }
+
+
+    /**
+     * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object
+     * This number determines how often the disk cache should run real time
+     * optimizations.
+     *
+     * @param name The new optimizeAtRemoveCount value
+     */
+    public void setOptimizeAtRemoveCount( int cnt)
+    {
+        this.optimizeAtRemoveCount = cnt;
+    }
+
 
     /**
      * Description of the Method

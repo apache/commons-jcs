@@ -68,7 +68,7 @@ class IndexedDisk
      * @return
      * @param pos
      */
-    Serializable readObject( long pos )
+    Serializable readObject( long pos ) throws IOException
     {
         byte[] data = null;
         boolean corrupted = false;
@@ -76,22 +76,31 @@ class IndexedDisk
         {
             synchronized ( this )
             {
-                raf.seek( pos );
-                int datalen = raf.readInt();
-                if ( datalen > raf.length() )
-                {
-                    corrupted = true;
+                if ( pos > raf.length() ) {
+                  corrupted = true;
                 }
                 else
                 {
-                    raf.readFully( data = new byte[datalen] );
+                  raf.seek(pos);
+                  int datalen = raf.readInt();
+                  if (datalen > raf.length())
+                  {
+                    corrupted = true;
+                  }
+                  else
+                  {
+                    raf.readFully(data = new byte[datalen]);
+                  }
                 }
             }
             if ( corrupted )
             {
-                log.warn( "The dataFile is corrupted!" );
+                log.warn( "\n The dataFile is corrupted!" +
+                          "\n raf.length() = " + raf.length() +
+                          "\n pos = " + pos );
                 //reset();
-                return null;
+                throw new IOException( "The Data File Is Corrupt, need to reset" );
+               // return null;
             }
             ByteArrayInputStream bais = new ByteArrayInputStream( data );
             BufferedInputStream bis = new BufferedInputStream( bais );
@@ -108,6 +117,9 @@ class IndexedDisk
         catch ( Exception e )
         {
             log.error( raf, e );
+            if( e instanceof IOException ) {
+              throw (IOException)e;
+            }
         }
         return null;
     }
