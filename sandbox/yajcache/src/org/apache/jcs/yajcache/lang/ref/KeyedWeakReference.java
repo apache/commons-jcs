@@ -25,6 +25,7 @@ import org.apache.jcs.yajcache.lang.annotation.*;
  *
  * @author Hanson Char
  */
+@CopyRightApache
 public class KeyedWeakReference<K,T> extends WeakReference<T> 
         implements IKey<K> 
 {
