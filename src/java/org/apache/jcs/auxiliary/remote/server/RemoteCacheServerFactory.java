@@ -19,24 +19,19 @@ package org.apache.jcs.auxiliary.remote.server;
 
 
 import java.io.IOException;
-
 import java.net.MalformedURLException;
-
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.registry.Registry;
-
-import java.util.Enumeration;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
-
 import org.apache.jcs.engine.behavior.ICacheServiceAdmin;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides remote cache services.
@@ -294,7 +289,7 @@ public class RemoteCacheServerFactory
         }
         log.debug( "main> starting up RemoteCacheServer" );
         RemoteCacheServerFactory.startup( host, port, args.length > 0 ? args[0] : null );
-        log.debug( "main> done" );
+        log.debug( "main> done" );       
     }
 }
 

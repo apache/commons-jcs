@@ -2,9 +2,9 @@
 ################## REMOTE SERVER CONFIG  #####################
 # Registry used to register and provide the IRmiCacheService service.
 registry.host=localhost
-registry.port=1102
+registry.port=1103
 # call back port to local caches.
-remote.cache.service.port=1102
+remote.cache.service.port=1103
 # cluster setting
 remote.cluster.LocalClusterConsistency=true
 
@@ -38,18 +38,18 @@ jcs.region.testCache1.cacheattributes.MaxObjects=1000
 
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
-# server to update for clustering -- remote.cache1.ccf(1101)  and remote.cache3.ccf(1103)
+# server to update for clustering -- remote.cache1.ccf(1101) and remote.cache2.ccf(1102)
 jcs.auxiliary.RCluster=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RCluster.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RCluster.attributes.RemoteTypeName=CLUSTER
 jcs.auxiliary.RCluster.attributes.RemoveUponRemotePut=false
-jcs.auxiliary.RCluster.attributes.ClusterServers=localhost:1101,localhost:1103
+jcs.auxiliary.RCluster.attributes.ClusterServers=localhost:1101,localhost:1102
 jcs.auxiliary.RCluster.attributes.GetOnly=false
 jcs.auxiliary.RCluster.attributes.LocalClusterConsistency=true
+
 
 # disk cache
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf/remote
-
-
+ 

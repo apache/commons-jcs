@@ -58,8 +58,8 @@ public class CacheAccess implements ICacheAccess
     private static CompositeCacheManager cacheMgr;
 
     /**
-     * Cache that a given instance of this class provides access to. Should this
-     * be the inteface?
+     * The cache that a given instance of this class provides access to. 
+     * @TODO Should this be the inteface?
      */
     protected CompositeCache cacheControl;
 
@@ -238,9 +238,9 @@ public class CacheAccess implements ICacheAccess
              cacheControl.getElementAttributes().copy() );
     }
 
-    /**
-     * Place a new object in the cache. This form allows attributes to associate
-     * with the object may be specified with attr.
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.access.behavior.ICacheAccess#put(java.lang.Object, java.lang.Object, org.apache.jcs.engine.behavior.IElementAttributes)
      */
     public void put( Object key, Object val, IElementAttributes attr )
         throws CacheException
@@ -294,8 +294,25 @@ public class CacheAccess implements ICacheAccess
         }
     }
 
-    /** Description of the Method */
+    /**
+     * Removes all of the elements from a region.
+     * 
+     * @deprecated use clear()
+     * 
+     * @throws  CacheException
+     */
     public void remove()
+        throws CacheException
+    {
+        clear();
+    }
+
+    /**
+     *  Removes all of the elements from a region.  
+     * 
+     * @throws  CacheException
+     */
+    public void clear()
         throws CacheException
     {
         try
@@ -307,7 +324,8 @@ public class CacheAccess implements ICacheAccess
             throw new CacheException( e );
         }
     }
-
+    
+    
     /**
      * Invalidate all objects associated with key name, removing all references
      * to the objects from the cache.
@@ -323,7 +341,12 @@ public class CacheAccess implements ICacheAccess
         cacheControl.remove( ( Serializable ) name );
     }
 
-    /** Description of the Method */
+    /**  
+     * Removes a single item by name.
+     * 
+     * @param name, the name of the item to remove. 
+     * @throws  CacheException
+     */
     public void remove( Object name )
         throws CacheException
     {
@@ -355,7 +378,7 @@ public class CacheAccess implements ICacheAccess
     public void resetElementAttributes( IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        // Not implemented
+        cacheControl.setElementAttributes( attr );
     }
 
     /**
@@ -370,7 +393,16 @@ public class CacheAccess implements ICacheAccess
     public void resetElementAttributes( Object name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        // Not implemented
+        ICacheElement element = cacheControl.get( ( Serializable ) name );
+        if ( element == null )
+        {
+            throw new InvalidHandleException( "Object for name [" + name + "] is not in the cache" );            
+        }
+
+        // don't assume pass by reference here, i.e. don't do this:
+        //element.setElementAttributes( attr );
+        put( element.getKey(), element.getVal(), attr );
+        
     }
 
     /**
@@ -412,12 +444,18 @@ public class CacheAccess implements ICacheAccess
         return attr;
     }
 
+    /**
+     * 
+     * @return A String version of the stats.  
+     */     
     public String getStats() {
       return cacheControl.getStats();
     }
 
     /**
      * Dispose this region. Flushes objects to and closes auxiliary caches.
+     * This is a shutdown command.  To simply remove all elements from the region
+     * use clear().
      */
     public void dispose()
     {
@@ -427,7 +465,8 @@ public class CacheAccess implements ICacheAccess
     /**
      * Gets the ICompositeCacheAttributes of the cache region
      *
-     * @return
+     * @return ICompositeCacheAttributes, the controllers config info, defined in the top
+     * section of a region definition.
      */
     public ICompositeCacheAttributes getCacheAttributes()
     {
@@ -444,14 +483,4 @@ public class CacheAccess implements ICacheAccess
         cacheControl.setCacheAttributes( cattr );
     }
 
-    // -------------------------------- methods for testing and error reporting
-
-    // protected void dumpMap()
-    // {
-    //     cacheControl.dumpMap();
-    // }
-    // protected void dumpCacheEntries()
-    // {
-    //     cacheControl.dumpCacheEntries();
-    // }
 }

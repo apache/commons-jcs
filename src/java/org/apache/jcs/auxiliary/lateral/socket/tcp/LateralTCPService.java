@@ -93,7 +93,10 @@ public class LateralTCPService
         update( item, LateralCacheInfo.listenerId );
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement, long)
+     */
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
@@ -103,14 +106,20 @@ public class LateralTCPService
         sender.send( led );
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String, java.io.Serializable)
+     */
     public void remove( String cacheName, Serializable key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String, java.io.Serializable, long)
+     */
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
@@ -121,7 +130,10 @@ public class LateralTCPService
         sender.send( led );
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#release()
+     */
     public void release()
         throws IOException
     {
@@ -135,7 +147,9 @@ public class LateralTCPService
         sender.dispose( cache );
     }
 
-    /** */
+    /*
+     * 
+     */
     public Serializable get( String key )
         throws IOException
     {
@@ -145,7 +159,10 @@ public class LateralTCPService
         // nothing needs to be done
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String, java.io.Serializable)
+     */
     public ICacheElement get( String cacheName, Serializable key )
         throws IOException
     {
@@ -171,14 +188,20 @@ public class LateralTCPService
         return null;
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#removeAll(java.lang.String)
+     */
     public void removeAll( String cacheName )
         throws IOException
     {
         removeAll( cacheName, LateralCacheInfo.listenerId );
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String, long)
+     */
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
@@ -189,7 +212,10 @@ public class LateralTCPService
         sender.send( led );
     }
 
-    /** */
+    /**
+     * 
+     * @param args
+     */
     public static void main( String args[] )
     {
         try
@@ -223,14 +249,20 @@ public class LateralTCPService
     // the connection is not registered, the udp service is
     // is not registered.
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(java.lang.String, org.apache.jcs.engine.behavior.ICacheListener)
+     */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException
     {
         // Empty
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
+     */
     public void addCacheListener( ICacheListener obj )
         throws IOException
     {
@@ -238,14 +270,20 @@ public class LateralTCPService
     }
 
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String, org.apache.jcs.engine.behavior.ICacheListener)
+     */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
     {
         // Empty
     }
 
-    /** */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
+     */
     public void removeCacheListener( ICacheListener obj )
         throws IOException
     {

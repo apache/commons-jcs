@@ -36,20 +36,46 @@ import org.apache.jcs.engine.behavior.ICacheService;
 public interface IRemoteCacheService extends Remote, ICacheService
 {
 
-    /** Puts a cache item to the cache. */
+    /**
+     * Puts a cache item to the cache. 
+     * 
+     * @param item
+     * @param requesterId
+     * @throws ObjectExistsException
+     * @throws IOException
+     */
     public void update( ICacheElement item, long requesterId )
         throws ObjectExistsException, IOException;
 
 
-    /** Removes the given key from the specified cache. */
+    /** 
+     * Removes the given key from the specified cache. 
+     * 
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @throws IOException
+     */
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException;
 
 
-    /** Remove all keys from the sepcified cache. */
+    /** 
+     * Remove all keys from the sepcified cache. 
+     * 
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
     public void removeAll( String cacheName, long requesterId )
         throws IOException;
 
+    /**
+     * @param cacheName
+     * @param groupName
+     * @return A Set of keys
+     * @throws java.rmi.RemoteException
+     */
     public Set getGroupKeys(String cacheName, String groupName)
         throws java.rmi.RemoteException;
 }

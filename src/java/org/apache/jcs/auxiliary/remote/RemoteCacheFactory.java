@@ -33,8 +33,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Description of the Class
- *
+ * The RemoteCacheFactory creates remote caches for the cache hub. It returns a
+ * no wait facade which is a wrapper around a no wait. The no wait object is
+ * either an active connection to a remote cache or a balking zombie if the
+ * remote cache is not accessible. It should be transparent to the clients.
+ *  
  */
 public class RemoteCacheFactory implements AuxiliaryCacheFactory
 {
@@ -43,13 +46,16 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
 
     private String name;
 
-    // store reference of facades to initiate failover
-    /** Description of the Field */
-    public final static HashMap facades = new HashMap();
+    /** store reference of facades to initiate failover */
+    private final static HashMap facades = new HashMap();
 
     /**
      * Interface method. Allows classforname construction, making caches
      * pluggable. Should be able to make this work for clusters and local caches
+     * 
+     * @param iaca
+     * @param cache
+     * @return An AuxiliaryCache implementation
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
                                        CompositeCache cache )
@@ -84,7 +90,7 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
                 }
                 else
                 {
-                    //p( "noWait is null" );
+                    log.info( "noWait is null" );
                 }
             }
 
@@ -114,7 +120,7 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
                         }
                         else
                         {
-                            //p( "noWait is null" );
+                            log.info( "noWait is null" );
                         }
                     }
                 }
@@ -148,17 +154,16 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
                 }
                 else
                 {
-                    //p( "noWait is null" );
+                    log.info( "noWait is null" );
                 }
             }
 
         }
         // end if CLUSTER
 
-        //RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( (RemoteCacheNoWait[])noWaits.toArray(new RemoteCacheNoWait[0]), iaca.getCacheName() );
         RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( ( RemoteCacheNoWait[] ) noWaits.toArray( new RemoteCacheNoWait[0] ), rca );
 
-        facades.put( rca.getCacheName(), rcnwf );
+        getFacades().put( rca.getCacheName(), rcnwf );
 
         return rcnwf;
     }
@@ -183,6 +188,17 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
     public void setName( String name )
     {
         this.name = name;
+    }
+    
+    
+    /**
+     * The facades are what the cache hub talks to.
+     * 
+     * @return Returns the facades.
+     */
+    public static HashMap getFacades()
+    {
+        return facades;
     }
 
 }

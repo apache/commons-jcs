@@ -48,7 +48,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
     private final static Log log =
         LogFactory.getLog( RemoteCacheNoWaitFacade.class );
 
-    /** Description of the Field */
+    /** The connection to a remote server, or a zombie. */
     public RemoteCacheNoWait[] noWaits;
 
     private String cacheName;
@@ -96,7 +96,12 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         this.cacheName = rca.getCacheName();
     }
 
-    /** Description of the Method */
+    /** 
+     * Put an element in the cache.
+     *  
+     * @param ce
+     * @throws IOException
+     */
     public void update( ICacheElement ce )
         throws IOException
     {
@@ -130,7 +135,12 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         }
     }
 
-    /** Synchronously reads from the lateral cache. */
+    /** 
+     * Synchronously reads from the remote cache.
+     *  
+     * @param key
+     * @return Either an ICacheElement or null if it is not found.
+     */
     public ICacheElement get( Serializable key )
     {
         for ( int i = 0; i < noWaits.length; i++ )
@@ -153,7 +163,11 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
     }
 
     /**
-     * Gets the set of keys of objects currently in the group
+     * Gets the set of keys of objects currently in the group.
+     * 
+     * @param group
+     * @return
+     * @throws IOException
      */
     public Set getGroupKeys(String group)
          throws IOException
@@ -171,7 +185,12 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
     }
 
 
-    /** Adds a remove request to the lateral cache. */
+    /** 
+     * Adds a remove request to the remote cache. 
+     * 
+     * @param key
+     * @return wether or not it was removed, right now it return false.
+     */
     public boolean remove( Serializable key )
     {
         try
@@ -188,7 +207,9 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         return false;
     }
 
-    /** Adds a removeAll request to the lateral cache. */
+    /** 
+     * Adds a removeAll request to the lateral cache. 
+     */
     public void removeAll()
     {
         try
@@ -248,14 +269,13 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
      */
     public String getCacheName()
     {
-        return "";
-        //cache.getCacheName();
+        return rca.getCacheName();
     }
 
-
-    // need to do something with this
     /**
      * Gets the status attribute of the RemoteCacheNoWaitFacade object
+     *
+     * @todo need to do something with this
      *
      * @return The status value
      */
@@ -265,21 +285,30 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
     }
 
-    /** Description of the Method */
+    /** 
+     * String form of some of the configuratin information for the remote cache.
+     *  
+     * @return Some info for logging.
+     */
     public String toString()
     {
         return "RemoteCacheNoWaitFacade: " + cacheName + ", rca = " + rca;
     }
 
-    /** Description of the Method */
+    /** 
+     * Begin the failover process if this is a local cache. 
+     * Clustered remote caches do not failover.
+     *  
+     * @param i The no wait in error.  
+     */
     protected void failover( int i )
     {
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "in failover for " + i );
+            log.info( "in failover for " + i );
         }
-        //if ( noWaits.length == 1 ) {
+
         if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
             if ( noWaits[ i ].getStatus() == CacheConstants.STATUS_ERROR )

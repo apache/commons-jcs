@@ -65,7 +65,7 @@ public class RemoteCacheNoWait implements AuxiliaryCache
         this.cache = cache;
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
-            RemoteCacheInfo.listenerId,
+            cache.getListenerId(),
             cache.getCacheName(),
             cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
             cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
@@ -170,6 +170,7 @@ public class RemoteCacheNoWait implements AuxiliaryCache
         catch ( IOException ex )
         {
             log.error( ex );
+            // not clear that we should destroy the q here.
             q.destroy();
         }
     }
@@ -192,7 +193,6 @@ public class RemoteCacheNoWait implements AuxiliaryCache
     public int getCacheType()
     {
         return ICacheType.REMOTE_CACHE;
-        //return cache.getCacheType();
     }
 
     /**
@@ -240,12 +240,22 @@ public class RemoteCacheNoWait implements AuxiliaryCache
         }
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
-            RemoteCacheInfo.listenerId,
+            cache.getListenerId(),
             cache.getCacheName(),
             cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
             cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
     }
 
+    
+    /**
+     * This is temporary.  It allows the amanger to get the lister.
+     * @return
+     */
+    protected RemoteCache getRemoteCache()
+    {
+        return cache;
+    }
+    
     /** Description of the Method */
     public String toString()
     {
@@ -298,4 +308,5 @@ public class RemoteCacheNoWait implements AuxiliaryCache
 
     return stats;
   }
+    
 }

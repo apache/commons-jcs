@@ -199,6 +199,11 @@ public class CacheEventQueue
     {
       destroyed = true;
 
+      if ( log.isInfoEnabled() )
+      {
+          log.info( "Destroying queue, stats =  " + getStatistics() );
+      }
+      
       // sychronize on queue so the thread will not wait forever,
       // and then interrupt the QueueProcessor
 
@@ -211,7 +216,17 @@ public class CacheEventQueue
       }
       processorThread = null;
 
-      log.info( "Cache event queue destroyed: " + this );
+      if ( log.isInfoEnabled() )
+      {
+          log.info( "Cache event queue destroyed: " + this );
+      }
+    }
+    else
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Destroy was called after queue was destroyed.  Doing nothing.  Stats =  " + getStatistics() );
+        }
     }
   }
 

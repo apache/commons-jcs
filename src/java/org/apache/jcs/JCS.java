@@ -108,6 +108,8 @@ public class JCS extends GroupCacheAccess
     /**
      * Set the filename that the cache manager will be initialized with. Only
      * matters before the instance is initialized.
+     * 
+     * @param configFilename
      */
     public static void setConfigFilename( String configFilename )
     {

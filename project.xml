@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project>
+
   <pomVersion>3</pomVersion>
   <name>Turbine JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.1-dev</currentVersion>
+  <currentVersion>1.2.2-dev</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -14,7 +15,9 @@
   <package>org.apache.jcs</package>
   <logo>/images/blue-logo.gif</logo>
 
+
   <gumpRepositoryId>jakarta</gumpRepositoryId>
+
 
   <shortDescription>Cache</shortDescription>
   <description>Comprehensive Caching System</description>
@@ -24,11 +27,13 @@
   <siteDirectory>/www/jakarta.apache.org/turbine/jcs/</siteDirectory>
   <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-turbine-jcs/</distributionDirectory>
 
+
   <repository>
     <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-turbine-jcs</connection>
     <developerConnection>scm:cvs:ext:${maven.username}@cvs.apache.org:/home/cvs:jakarta-turbine-jcs</developerConnection>
     <url>http://cvs.apache.org/viewcvs/jakarta-turbine-jcs/</url>
   </repository>
+
 
   <mailingLists>
     <mailingList>
@@ -44,6 +49,8 @@
       <archive>http://nagoya.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-dev@jakarta.apache.org</archive>
     </mailingList>
   </mailingLists>
+
+
   <developers>
     <developer>
       <name>Aaron Smuts</name>
@@ -153,6 +160,8 @@
       <version>1.5.0</version>
     </dependency>
   </dependencies>
+
+
   <build>
     <sourceDirectory>src/java</sourceDirectory>
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
@@ -177,9 +186,10 @@
         </includes>
       </resources>
     </unitTest>
-
     <jars></jars>
   </build>
+
+
   <reports>
     <report>maven-jdepend-plugin</report>
     <report>maven-checkstyle-plugin</report>
@@ -190,9 +200,12 @@
     <report>maven-javadoc-plugin</report>
     <report>maven-jxr-plugin</report>
     <report>maven-junit-report-plugin</report>
+    <!--
     <report>maven-jcoverage-plugin</report>
+     -->
     <report>maven-tasklist-plugin</report>
     <report>maven-pmd-plugin</report>
     <report>maven-simian-plugin</report>
   </reports>
+
 </project>

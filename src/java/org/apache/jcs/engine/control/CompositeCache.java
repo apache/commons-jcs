@@ -57,11 +57,10 @@ import org.apache.jcs.engine.control.event.ElementEventQueue;
 import org.apache.jcs.engine.control.group.GroupId;
 
 /**
- *  This is the primary hub for a single cache/region. It control the flow of
- *  items through the cache. The auxiliary and memory caches are plugged in
- *  here.
- *
- *@version    $Id$
+ * This is the primary hub for a single cache/region. It control the flow of
+ * items through the cache. The auxiliary and memory caches are plugged in here.
+ * 
+ * @version $Id$
  */
 public class CompositeCache
      implements ICache, Serializable
@@ -121,7 +120,6 @@ public class CompositeCache
      *  Constructor for the Cache object
      *
      *@param  cacheName  The name of the region
-     *@param  auxCaches  The auxiliary caches to be used by this region
      *@param  cattr      The cache attribute
      *@param  attr       The default element attributes
      */
@@ -147,6 +145,11 @@ public class CompositeCache
         }
     }
 
+    /**
+     * This sets the list of auxiliary caches for this region.
+     * 
+     * @param auxCaches
+     */
     public void setAuxCaches( AuxiliaryCache[] auxCaches )
     {
         this.auxCaches = auxCaches;
@@ -182,11 +185,12 @@ public class CompositeCache
     }
 
     /**
-     *  Description of the Method
+     *  Put an item into the cache.  If it is localOnly, then do no notify remote
+     * or lateral auxiliaries.
      *
-     *@param  ce
-     *@param  updateRemoteCache
-     *@exception  IOException
+     * @param  ce, the ICacheElement
+     * @param localOnly, Whether the operation should be restricted to local auxiliaries.
+     * @exception  IOException
      */
     protected synchronized void update( ICacheElement ce, boolean localOnly )
         throws IOException
@@ -401,16 +405,22 @@ public class CompositeCache
 
     }
 
-    /**
-     * @see ICache#get
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICache#get(java.io.Serializable)
      */
     public ICacheElement get( Serializable key )
     {
         return get( key, false );
     }
 
+
+
     /**
-     * @see ICompositeCache#localGet
+     * Do not try to go remote or laterally for this get.
+     * 
+     * @param key
+     * @return ICacheElement
      */
     public ICacheElement localGet( Serializable key )
     {
@@ -419,11 +429,16 @@ public class CompositeCache
 
 
     /**
-     *  Description of the Method
-     *
-     *@param  key
-     *@param  localOnly
-     *@return
+     * Look in memory, then disk, remote, or laterally for this item. The order
+     * is dependent on the order in the cache.ccf file.
+     * <p>
+     * Do not try to go remote or laterally for this get if it is localOnly.
+     * Otherwise try to go remote or lateral if such an auxiliary is configured
+     * for this region.
+     * 
+     * @param key
+     * @param localOnly
+     * @return ICacheElement
      */
     protected ICacheElement get( Serializable key, boolean localOnly )
     {
@@ -584,6 +599,12 @@ public class CompositeCache
         return element;
     }
 
+    /**
+     * Determine if the element has exceeded its max life.
+     * 
+     * @param element
+     * @return true if the element is expired, else false.
+     */
     private boolean isExpired( ICacheElement element )
     {
         try
@@ -640,6 +661,9 @@ public class CompositeCache
 
     /**
      * Gets the set of keys of objects currently in the group
+     * 
+     * @param group
+     * @return A Set of keys, or null.
      */
     public Set getGroupKeys(String group)
     {
@@ -663,8 +687,9 @@ public class CompositeCache
     }
 
 
-    /**
-     * @see ICache#remove
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICache#remove(java.io.Serializable)
      */
     public boolean remove( Serializable key )
     {
@@ -672,7 +697,10 @@ public class CompositeCache
     }
 
     /**
-     * @see ICompositeCache#localRemove
+     * Do not propogate removeall laterally or remotely.
+     * 
+     * @param key
+     * @return true if the item was already in the cache.
      */
     public boolean localRemove( Serializable key )
     {
@@ -696,7 +724,7 @@ public class CompositeCache
      *
      *@param  key
      *@param  localOnly
-     *@return
+     *@return true if the item was in the cache, else false
      */
     protected synchronized boolean remove( Serializable key,
                                            boolean localOnly )
@@ -754,8 +782,9 @@ public class CompositeCache
         return removed;
     }
 
-    /**
-     * @see ICache#removeAll
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICache#removeAll()
      */
     public void removeAll()
         throws IOException
@@ -764,7 +793,8 @@ public class CompositeCache
     }
 
     /**
-     * @see ICompositeCache#removeAll
+     * 
+     * @throws IOException
      */
     public void localRemoveAll()
         throws IOException
@@ -774,6 +804,9 @@ public class CompositeCache
 
     /**
      * Removes all cached items.
+     * 
+     * @param localOnly
+     * @throws IOException
      */
     protected synchronized void removeAll( boolean localOnly )
         throws IOException
@@ -782,10 +815,15 @@ public class CompositeCache
         try
         {
             memCache.removeAll();
+
+            if ( log.isDebugEnabled() )
+            {
+              log.debug( "Removed All keys from mem cache." );
+            }
         }
         catch ( IOException ex )
         {
-            log.error( ex );
+            log.error( "Trouble updating memory cache.", ex );
         }
 
         // Removes from all auxiliary disk caches.
@@ -796,10 +834,16 @@ public class CompositeCache
             int cacheType = aux.getCacheType();
 
             if ( aux != null
-                 && ( cacheType == ICache.DISK_CACHE || ! localOnly ) )
+                 && ( cacheType == ICache.DISK_CACHE || !localOnly ) )
             {
                 try
                 {
+                    
+                    if ( log.isDebugEnabled() )
+                    {
+                      log.debug( "Removing All keys from cacheType" + cacheType );
+                    }
+                    
                     aux.removeAll();
                 }
                 catch ( IOException ex )
@@ -1069,8 +1113,8 @@ public class CompositeCache
 
     /**
      *  Sets the default element attribute of the Cache object
-     *
-     *@return    The attributes value
+     * 
+     * @param attr
      */
     public void setElementAttributes( IElementAttributes attr)
     {
@@ -1172,31 +1216,51 @@ public class CompositeCache
 
     // ---------------------------------------------------- For Instrumentation
 
-    /** Access to the memory cache for instrumentation. */
+    /** 
+     * Access to the memory cache for instrumentation.
+     *  
+     * @return the MemoryCache implementation
+     */
     public MemoryCache getMemoryCache()
     {
         return memCache;
     }
 
-    /** Number of times a requested item was found in the memory cache */
+    /** 
+     * Number of times a requested item was found in the memory cache.
+     *  
+     * @return number of hits in memory
+     */
     public int getHitCountRam()
     {
         return hitCountRam;
     }
 
-    /** Number of times a requested item was found in and auxiliary cache */
+    /** 
+     * Number of times a requested item was found in and auxiliary cache.
+     *  
+     * @return number of auxiliary hits.
+     */
     public int getHitCountAux()
     {
         return hitCountAux;
     }
 
-    /** Number of times a requested element was not found */
+    /** 
+     * Number of times a requested element was not found.
+     *  
+     * @return number of misses.
+     */
     public int getMissCountNotFound()
     {
         return missCountNotFound;
     }
 
-    /** Number of times a requested element was found but was expired */
+    /** 
+     * Number of times a requested element was found but was expired.
+     * 
+     * @return number of found but expired gets.
+     */
     public int getMissCountExpired()
     {
         return missCountExpired;

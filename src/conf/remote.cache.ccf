@@ -1,21 +1,18 @@
 ##############################################################
+################## REMOTE SERVER CONFIG  #####################
 # Registry used to register and provide the IRmiCacheService service.
 registry.host=localhost
-registry.port=1102
+registry.port=1101
 # call back port to local caches.
-remote.cache.service.port=1102
-# tomcat config
-remote.tomcat.on=false
-remote.tomcat.xml=@project_home_f@bin/conf/remote.tomcat.xml
+remote.cache.service.port=1101
 # cluster setting
 remote.cluster.LocalClusterConsistency=true
-#not allowed -- remote.cluster.AllowClusterGet=false
 
 
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
-jcs.default=DC
+jcs.default=DC,RCluster
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=10000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -34,74 +31,24 @@ jcs.default.elementattributes.IsLateral=true
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
-jcs.region.testCache1=DC,RCluster1
+jcs.region.testCache1=DC,RCluster
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=10000
 
 
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
-# server to update for clustering -- remote.cache.ccf 2
-jcs.auxiliary.RCluster1=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RCluster1.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
-jcs.auxiliary.RCluster1.attributes.RemoteTypeName=CLUSTER
-jcs.auxiliary.RCluster1.attributes.RemoveUponRemotePut=false
-jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
-jcs.auxiliary.RCluster1.attributes.GetOnly=false
-jcs.auxiliary.RCluster1.attributes.LocalClusterConsistency=true
+# server to update for clustering -- remote.cache2.ccf(1102)  and remote.cache3.ccf(1103)
+jcs.auxiliary.RCluster=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RCluster.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RCluster.attributes.RemoteTypeName=CLUSTER
+jcs.auxiliary.RCluster.attributes.RemoveUponRemotePut=false
+jcs.auxiliary.RCluster.attributes.ClusterServers=localhost:1102,localhost:1103
+jcs.auxiliary.RCluster.attributes.GetOnly=false
+jcs.auxiliary.RCluster.attributes.LocalClusterConsistency=true
 
-# server to update for clustering
-jcs.auxiliary.RCluster2=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
-jcs.auxiliary.RCluster2.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
-jcs.auxiliary.RCluster2.attributes.RemoteTypeName=CLUSTER
-jcs.auxiliary.RCluster2.attributes.RemoveUponRemotePut=false
-jcs.auxiliary.RCluster2.attributes.ClusterServers=localhost:1104
-jcs.auxiliary.RCluster2.attributes.GetOnly=false
-#jcs.auxiliary.RCluster2.attributes.LocalClusterConsistency=true
 
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf/remote
 
- 
-jcs.auxiliary.LC=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LC.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LC.attributes.TransmissionTypeName=UDP
-jcs.auxiliary.LC.attributes.UdpMulticastAddr=228.5.6.7
-jcs.auxiliary.LC.attributes.UdpMulticastPort=6789
-
-# example of how to configure the http version of the lateral cache
-jcs.auxiliary.LCHTTP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LCHTTP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LCHTTP.attributes.TransmissionType=HTTP
-jcs.auxiliary.LCHTTP.attributes.httpServers=localhost:8080,localhost:7001,localhost:80
-jcs.auxiliary.LCHTTP.attributes.httpReceiveServlet=/cache/LateralCacheReceiverServlet
-jcs.auxiliary.LCHTTP.attributes.httpDeleteServlet=/cache/DeleteCacheServlet
-
-##############################################################
-################## THREAD POOL CONFIGURATION ###################
-# Default thread pool config
-thread_pool.default.boundarySize=2000
-thread_pool.default.maximumPoolSize=150
-thread_pool.default.minimumPoolSize=4
-thread_pool.default.keepAliveTime=350000
-#RUN ABORT WAIT BLOCK DISCARDOLDEST
-thread_pool.default.whenBlockedPolicy=RUN
-thread_pool.default.startUpSize=4
-
-# Default Cache Event Queue thread pool config, used by auxiliaries
-thread_pool.cache_event_queue.useBoundary=false
-#thread_pool.cache_event_queue.boundarySize=2000
-#thread_pool.cache_event_queue.maximumPoolSize=10
-thread_pool.cache_event_queue.minimumPoolSize=5
-thread_pool.cache_event_queue.keepAliveTime=3500
-#thread_pool.cache_event_queue.whenBlockedPolicy=RUN
-thread_pool.cache_event_queue.startUpSize=5
-
-# Remote cache client thread pool config
-thread_pool.remote_cache_client.boundarySize=75
-thread_pool.remote_cache_client.maximumPoolSize=150
-thread_pool.remote_cache_client.minimumPoolSize=4
-thread_pool.remote_cache_client.keepAliveTime=350000
-thread_pool.remote_cache_client.whenBlockedPolicy=RUN
-thread_pool.remote_cache_client.startUpSize=4

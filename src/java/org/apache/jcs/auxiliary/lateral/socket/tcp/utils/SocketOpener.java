@@ -34,7 +34,15 @@ public class SocketOpener implements Runnable
     private int port;
     private Socket socket;
 
-    /** Constructor for the SocketOpener object */
+    /**
+     * Opens a socket with a connection timeout value.  Joins against a backgroud thread that
+     * does the openeing.
+     * 
+     * @param host
+     * @param port
+     * @param timeOut
+     * @return Socket 
+     */
     public static Socket openSocket( String host, int port, int timeOut )
     {
         SocketOpener opener = new SocketOpener( host, port );
@@ -78,7 +86,10 @@ public class SocketOpener implements Runnable
         }
     }
 
-    /** Gets the socket attribute of the SocketOpener object */
+    /** 
+     * 
+     * @return The opened socket
+     */
     public Socket getSocket()
     {
         return socket;

@@ -128,7 +128,7 @@ public class CacheWatchRepairable implements ICacheObserver
         cacheWatch.addCacheListener( obj );
     }
 
-
+    
     /** Description of the Method */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -158,6 +158,10 @@ public class CacheWatchRepairable implements ICacheObserver
             for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext();  )
             {
                 Set listenerSet = ( Set ) itr.next();
+                if ( log.isDebugEnabled() )
+                {
+                  log.debug( "Before removing [" + obj + "] the listenerSet = " + listenerSet );
+                }
                 listenerSet.remove( obj );
             }
         }

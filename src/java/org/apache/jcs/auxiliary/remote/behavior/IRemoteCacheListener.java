@@ -36,7 +36,22 @@ public interface IRemoteCacheListener extends ICacheListener, Remote
     /** Description of the Field */
     public final static int CLIENT_LISTENER = 0;
 
-
+    /**
+     * Get the id to be used by this manager.
+     * 
+     * @return long
+     */
+    public long getListenerId() throws IOException;
+    
+    /**
+     * Set the id to be used by this manager.
+     * The remote cache server identifies clients by this id.  
+     * The value will be set by the server through the remote cache listener.
+     * 
+     * @param id
+     */
+    public void setListenerId( long id ) throws IOException;
+    
     /**
      * Gets the remoteType attribute of the IRemoteCacheListener object
      *
@@ -44,5 +59,7 @@ public interface IRemoteCacheListener extends ICacheListener, Remote
      */
     public int getRemoteType()
         throws IOException;
+    
+    
 
 }

@@ -19,26 +19,22 @@ package org.apache.jcs.auxiliary.remote;
 
 
 import java.io.IOException;
-
 import java.rmi.Naming;
 import java.rmi.registry.Registry;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.jcs.engine.behavior.ICache;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.behavior.ICache;
 
 /**
  * An instance of RemoteCacheManager corresponds to one remote connection of a
@@ -58,7 +54,7 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
 
     private int clients;
 
-    // Contains instances of RemoteCacheNoWait managed by an RemoteCacheManager instance.
+    // Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance.
     final Map caches = new HashMap();
     final String host;
     final int port;
@@ -153,10 +149,67 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
         return;
     }
 
+    /**
+     * Removes a listener.  When the primary recovers the failover must deregister itself 
+     * for a region.  The failover runner will call this method to de-register.  We do not want to
+     * dergister all listeners to a remote server, in case a failover is a primary of another region.
+     * Having one regions failover act as another servers primary is not currently supported.
+     * 
+     * @param cattr
+     * @param listener
+     * @throws IOException
+     */
+    public void removeRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener listener )
+    throws IOException
+    {
+      synchronized ( caches )
+      {
+        remoteWatch.removeCacheListener( cattr.getCacheName(), listener );
+      }
+      return;
+    }
 
     /**
+     * 
+     * @param cattr
+     * @throws IOException
+     */
+    public void removeRemoteCacheListener( IRemoteCacheAttributes cattr )
+    throws IOException
+    {
+      synchronized ( caches )
+      {
+          
+        RemoteCacheNoWait cache = (RemoteCacheNoWait)caches.get( cattr.getCacheName() );  
+        if ( cache != null )
+        {
+            RemoteCache rc = cache.getRemoteCache();
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Found cache for " + cattr.getCacheName() + ", deregistering listener." );
+            }
+            // could also store the listener for a server in the manager.
+            IRemoteCacheListener listener = rc.getListener();
+            remoteWatch.removeCacheListener( cattr.getCacheName(), listener );            
+        }
+        else
+        {
+            log.warn( "Trying to deregister Cache Listener that was never registered.");
+        }
+      }
+      return;
+    }
+
+    
+    /**
      * Returns an instance of RemoteCacheManager for the given connection
-     * parameters. Also starts up the monitoring daemon, if not already started.
+     * parameters. 
+     *
+     * Host and Port uniquely identify a manager instance. 
+     *  
+     * Also starts up the monitoring daemon, if not already started.
+     * 
+     * 
      * If the connection cannot be established, zombie objects will be used for
      * future recovery purposes.
      *
@@ -231,41 +284,44 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
 
 
     /**
-     * Gets the cache attribute of the RemoteCacheManager object
+     * Gets a RemoteCacheNoWait from the RemoteCacheManager.  The RemoteCacheNoWait
+     * are identified by the cache name value of the RemoteCacheAttributes object.
      *
      * @return The cache value
      */
     public AuxiliaryCache getCache( IRemoteCacheAttributes cattr )
     {
         RemoteCacheNoWait c = null;
+        
+
         synchronized ( caches )
         {
             c = ( RemoteCacheNoWait ) caches.get( cattr.getCacheName() );
             if ( c == null )
             {
-                c = new RemoteCacheNoWait( new RemoteCache( cattr, remoteService ) );
-                caches.put( cattr.getCacheName(), c );
+              // create a listener first and pass it to the remotecache sender.
+              RemoteCacheListener listener = null;
+              try
+              {
+                  listener = new RemoteCacheListener( cattr ); 
+                  addRemoteCacheListener( cattr, listener );
+              }
+              catch ( IOException ioe )
+              {
+                  log.error( ioe.getMessage() );
+              }
+              catch ( Exception e )
+              {
+                  log.error( e.getMessage() );
+              }
+
+              c = new RemoteCacheNoWait( new RemoteCache( cattr, remoteService, listener ) );
+              caches.put( cattr.getCacheName(), c );                
             }
+            
+            // might want to do some listener sanity checking here.
         }
 
-        try
-        {
-            // Remote cache manager can handle this by gettign the type formt he listener
-            //if ( cattr.getRemoteType() == cattr.CLUSTER ) {
-            //  addRemoteCacheListener( cattr, RemoteCacheListener.getInstance( cattr ) );
-            //} else
-            //if ( cattr.getRemoteType() == cattr.LOCAL ) {
-            addRemoteCacheListener( cattr, RemoteCacheListener.getInstance( cattr ) );
-            //}
-        }
-        catch ( IOException ioe )
-        {
-            log.error( ioe.getMessage() );
-        }
-        catch ( Exception e )
-        {
-            log.error( e.getMessage() );
-        }
 
         return c;
     }
@@ -339,7 +395,9 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
     }
     //end release()
 
-    /** Fixes up all the caches managed by this cache manager. */
+    /**
+     * Fixes up all the caches managed by this cache manager. 
+     */ 
     public void fixCaches( IRemoteCacheService remoteService, IRemoteCacheObserver remoteWatch )
     {
         synchronized ( caches )
@@ -419,5 +477,6 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
 
     }
 
+        
 }
 

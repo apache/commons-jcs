@@ -49,9 +49,11 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     }
 
     /**
-     * Gets the groupAccess attribute of the GroupCacheAccess class
-     *
+     * Gets the groupAccess attribute of the GroupCacheAccess class.
+     * 
+     * @param region
      * @return The groupAccess value
+     * @throws CacheException
      */
     public static GroupCacheAccess getGroupAccess( String region )
         throws CacheException
@@ -67,9 +69,12 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     }
 
     /**
-     * Gets the groupAccess attribute of the GroupCacheAccess class
-     *
+     * Gets the groupAccess attribute of the GroupCacheAccess class.
+     * 
+     * @param region
+     * @param icca
      * @return The groupAccess value
+     * @throws CacheException
      */
     public static GroupCacheAccess getGroupAccess( String region, ICompositeCacheAttributes icca )
         throws CacheException
@@ -110,9 +115,10 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      * region. This method sets the object's attributes to the default for the
      * region.
      *
-     * @param key The key name.
-     * @param group The group name.
+     * @param name The key name.
+     * @param groupName The group name.
      * @param value The object to cache
+     * @throws CacheException
      */
     public void putInGroup( Object name, String groupName, Object value )
         throws CacheException
@@ -125,10 +131,11 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      * region. This method allows the object's attributes to be individually
      * specified.
      *
-     * @param key The key name.
-     * @param group The group name.
+     * @param name The key name.
+     * @param groupName The group name.
      * @param value The object to cache
      * @param attr The objects attributes.
+     * @throws CacheException
      */
     public void putInGroup( Object name, String groupName, Object value,
                             IElementAttributes attr )
@@ -139,32 +146,43 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
 
         if (attr == null)
         {
-            put( getGroupAttrName(groupName, name), value );
+            put( getGroupAttrName( groupName, name ), value );
         }
         else
         {
-            put( getGroupAttrName(groupName, name), value, attr );
+            put( getGroupAttrName( groupName, name ), value, attr );
         }
     }
 
-    /** Description of the Method */
+    /**
+     * @param name
+     * @param group
+     * 
+     */
     public void remove( Object name, String group )
     {
         GroupAttrName key = getGroupAttrName( group, name );
-        cacheControl.remove(key);
+        cacheControl.remove( key );
     }
 
     /**
-     * Gets the set of keys of objects currently in the group
+     * Gets the set of keys of objects currently in the group.
+     * 
+     * @param group
+     * @return A Set of keys.
      */
     public Set getGroupKeys(String group)
     {
-        return cacheControl.getGroupKeys(group);
+        return cacheControl.getGroupKeys( group );
     }
 
-    /** Invalidates a group */
+    /** 
+     * Invalidates a group: remove all the group members 
+     * 
+     * @param group The name of the group to invalidate
+     */
     public void invalidateGroup( String group )
     {
-        cacheControl.remove(new GroupId( cacheControl.getCacheName(), group ));
+        cacheControl.remove( new GroupId( cacheControl.getCacheName(), group ) );
     }
 }

@@ -20,7 +20,6 @@ package org.apache.jcs.auxiliary.remote.behavior;
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
-//import org.apache.jcs.auxiliary.*;
 
 /**
  * Description of the Interface

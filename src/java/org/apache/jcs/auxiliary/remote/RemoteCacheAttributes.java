@@ -34,7 +34,7 @@ public class RemoteCacheAttributes extends AbstractAuxiliaryCacheAttributes
     private String remoteServiceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
     private String remoteHost;
     private int remotePort;
-
+    
     /*
      * failover servers will be used by local caches one at a time.
      * Listeners will be registered with all cluster servers.
@@ -48,6 +48,8 @@ public class RemoteCacheAttributes extends AbstractAuxiliaryCacheAttributes
     private int localPort = 0;
 
     private int remoteType = LOCAL;
+    
+    // what failover server we are connected to.
     private int failoverIndex = 0;
     private String[] failovers;
 
@@ -168,7 +170,10 @@ public class RemoteCacheAttributes extends AbstractAuxiliaryCacheAttributes
     }
   
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#copy()
+     */
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -396,18 +401,6 @@ public class RemoteCacheAttributes extends AbstractAuxiliaryCacheAttributes
       threadPoolName = name;
     }
 
-    /** Description of the Method */
-    public String toString()
-    {
-        StringBuffer buf = new StringBuffer();
-        buf.append( "\nremotePort = " + this.remoteHost );
-        buf.append( "\nremotePort = " + this.remotePort );
-        buf.append( "\ncacheName = " + this.cacheName );
-        buf.append( "\nremoveUponRemotePut = " + this.removeUponRemotePut );
-        buf.append( "\ngetOnly = " + getOnly );
-        return buf.toString();
-    }
-
 
     /* (non-Javadoc)
      * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#getGetTimeoutMillis()
@@ -425,6 +418,23 @@ public class RemoteCacheAttributes extends AbstractAuxiliaryCacheAttributes
     {
       getTimeoutMillis = millis;      
     }
-    
+   
+    /** 
+     * @return String, all the important values that can be configured
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "\n remoteHost = " + this.remoteHost );
+        buf.append( "\n remotePort = " + this.remotePort );
+        buf.append( "\n cacheName = " + this.cacheName );
+        buf.append( "\n removeUponRemotePut = " + this.removeUponRemotePut );
+        buf.append( "\n getOnly = " + getOnly );
+        buf.append( "\n getTimeoutMillis = " + getTimeoutMillis );
+        buf.append( "\n threadPoolName = " + threadPoolName );
+        buf.append( "\n remoteType = " + remoteType );
+        buf.append( "\n localClusterConsistency = " + localClusterConsistency );
+        return buf.toString();
+    }
     
 }
