@@ -72,7 +72,10 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
             {
                 //String server = (String)it.next();
                 String server = ( String ) it.nextElement();
-                //p( "tcp server = " +  server );
+                if ( log.isDebugEnabled() )
+                {
+                  log.debug( "tcp server = " +  server );
+                }
                 lac.setTcpServer( server );
                 LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
                 ICache ic = lcm.getCache( lac.getCacheName() );

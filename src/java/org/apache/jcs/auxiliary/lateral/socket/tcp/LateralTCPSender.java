@@ -75,7 +75,17 @@ public class LateralTCPSender
         String p1 = lca.getTcpServer();
         String h2 = p1.substring( 0, p1.indexOf( ":" ) );
         int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
-        log.debug( "h2 = " + h2 );
+        if ( log.isDebugEnabled() )
+        {
+          log.debug( "h2 = " + h2 );
+          log.debug( "po = " + po );
+        }
+
+        if ( h2 == null )
+        {
+          throw new IOException( "Cannot connect to invalid address " + h2 + ":" + po );
+        }
+
         init( h2, po );
         this.ilca = lca;
     }
@@ -129,6 +139,7 @@ public class LateralTCPSender
      * @return The addressByName value
      */
     private InetAddress getAddressByName( String host )
+      throws IOException
     {
         try
         {
@@ -137,7 +148,8 @@ public class LateralTCPSender
         catch ( Exception e )
         {
             log.error( "Could not find address of [" + host + "]", e );
-            return null;
+            throw new IOException( "Could not find address of [" + host + "]" + e.getMessage() );
+            //return null;
         }
     }
 

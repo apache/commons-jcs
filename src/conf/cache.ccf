@@ -11,7 +11,7 @@ jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLifeSeconds=3600
+jcs.default.elementattributes.MaxLifeSeconds=7
 jcs.default.elementattributes.IdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
@@ -37,18 +37,20 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 # Regions preconfirgured for caching
 jcs.region.testCache1=DC,RFailover
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MaxObjects=10000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=3
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=10
 
 jcs.region.testCache2=DC,LTCP
 jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache2.cacheattributes.MaxObjects=1000
 jcs.region.testCache2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache2.cacheattributes.UseMemoryShrinker=true
-jcs.region.testCache2.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.testCache2.cacheattributes.MaxMemoryIdleTimeSeconds=10
 jcs.region.testCache2.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.region.testCache2.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.region.testCache2.elementattributes.IsEternal=false
@@ -107,7 +109,7 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
 # Primary Disk Cache-- faster than the rest because of memory key storage
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.DC.attributes.DiskPath=@project_home_f@raf
+jcs.auxiliary.DC.attributes.DiskPath=g:\dev\raf
 
 # HSQL Disk Cache -- too slow as is
 jcs.auxiliary.HDC=org.apache.jcs.auxiliary.disk.hsql.HSQLCacheFactory

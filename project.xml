@@ -131,7 +131,7 @@
       <name>jakarta-turbine-stratum</name>
       <type>required</type>
       <version>1.0-b2-dev</version>
-      <jar>stratum-1.0-b2-dev.jar</jar>
+      <jar>stratum-1.0-b2-dev-new.jar</jar>
     </dependency>
 
   </dependencies>
@@ -146,6 +146,7 @@
       <unitTestPattern>include = **/TestSimpleLoad.java</unitTestPattern>
       <unitTestPattern>include = **/TestDiskCache.java</unitTestPattern>
       <unitTestPattern>include = **/TestDiskCacheConcurrent.java</unitTestPattern>
+      <unitTestPattern>include = **/TestTCPLateralCache.java</unitTestPattern>
     </unitTestPatterns>
     <jarResources></jarResources>
     <jars></jars>
