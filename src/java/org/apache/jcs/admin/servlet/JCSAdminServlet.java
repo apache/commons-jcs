@@ -1,4 +1,4 @@
-package org.apache.jcs.servlet;
+package org.apache.jcs.admin.servlet;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,7 +33,7 @@ import org.apache.velocity.servlet.VelocityServlet;
  * <pre>
  *  [servlet]
  *      [servlet-name]JCSAdminServlet[/servlet-name]
- *      [servlet-class]org.apache.jcs.servlet.JCSAdminServlet[/servlet-class]
+ *      [servlet-class]org.apache.jcs.admin.servlet.JCSAdminServlet[/servlet-class]
  *      [init-param]
  *          [param-name]properties[/param-name]
  *          [param-value]WEB-INF/conf/JCSAdminServlet.velocity.properties[/param-value]
@@ -52,10 +52,10 @@ import org.apache.velocity.servlet.VelocityServlet;
 public class JCSAdminServlet extends VelocityServlet
 {
     private static final String DEFAULT_TEMPLATE_NAME =
-        "/org/apache/jcs/servlet/JCSAdminServletDefault.vm";
+        "/org/apache/jcs/admin/servlet/JCSAdminServletDefault.vm";
 
     private static final String REGION_DETAIL_TEMPLATE_NAME =
-        "/org/apache/jcs/servlet/JCSAdminServletRegionDetail.vm";
+        "/org/apache/jcs/admin/servlet/JCSAdminServletRegionDetail.vm";
 
     // Keys for parameters
 
@@ -74,7 +74,7 @@ public class JCSAdminServlet extends VelocityServlet
 
     private CacheHub cacheHub = CacheHub.getInstance();
 
-    /** @see VelocityServlet#handleRequest */
+    /** @see org.apache.velocity.servlet.VelocityServlet#handleRequest */
     protected Template handleRequest( HttpServletRequest request,
                                       HttpServletResponse response,
                                       Context context )
