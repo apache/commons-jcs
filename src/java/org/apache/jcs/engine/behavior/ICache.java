@@ -52,6 +52,9 @@ public interface ICache extends ICacheType
     /** Returns the cache status. */
     public int getStatus();
 
+    /** Returns the cache stats. */
+    public String getStats();
+
     /** Returns the cache name. */
     public String getCacheName();
 }

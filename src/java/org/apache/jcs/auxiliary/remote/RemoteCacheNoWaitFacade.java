@@ -295,4 +295,14 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         }
     }
 
+  /**
+   * getStats
+   *
+   * @return String
+   */
+  public String getStats()
+  {
+    return "";
+  }
+
 }

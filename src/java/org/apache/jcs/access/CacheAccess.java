@@ -436,6 +436,10 @@ public class CacheAccess implements ICacheAccess
         return attr;
     }
 
+    public String getStats() {
+      return cacheControl.getStats();
+    }
+
     /**
      * Dispose this region. Flushes objects to and closes auxiliary caches.
      */

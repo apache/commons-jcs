@@ -233,4 +233,14 @@ public class RemoteCacheNoWait implements AuxiliaryCache
     {
         return "RemoteCacheNoWait: " + cache.toString();
     }
+
+  /**
+   * getStats
+   *
+   * @return String
+   */
+  public String getStats()
+  {
+    return "";
+  }
 }

@@ -351,7 +351,17 @@ public class JavaGroupsCache
 
     public void block() { }
 
-    // ---------------------------------------------------------- inner classes
+  /**
+   * getStats
+   *
+   * @return String
+   */
+  public String getStats()
+  {
+    return "";
+  }
+
+  // ---------------------------------------------------------- inner classes
 
     /**
      * Object for messages, wraps the command type (update, remove, or remove
