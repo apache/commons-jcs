@@ -18,12 +18,15 @@ package org.apache.jcs.yajcache.core;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+
 import org.apache.jcs.yajcache.lang.annotation.*;
-import org.apache.jcs.yajcache.config.PerCacheConfig;
-import org.apache.jcs.yajcache.file.CacheFileManager;
-import org.apache.jcs.yajcache.soft.SoftRefFileCache;
+import org.apache.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
+import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 
 /**
+ * Cache Manager for getting, creating and removing named caches.
+ *
  * @author Hanson Char
  */
 // @CopyRightApache
@@ -33,38 +36,112 @@ public enum CacheManager {
     // Cache name to Cache mapping.
     private final ConcurrentMap<String,ICache<?>> map = 
                 new ConcurrentHashMap<String, ICache<?>>();
-    private final CacheType DEFAULT_CACHE_TYPE = CacheType.SOFT_REFERENCE_FILE;
+    private final IKeyedReadWriteLock<String> keyedRWLock = 
+            new KeyedReadWriteLock<String>();
     /** 
-     * Returns the cache for the specified name and value type;  
-     * Creates the cache if necessary.
+     * Returns an existing cache for the specified name; 
+     * or null if not found.
+     */
+    public ICache getCache(@NonNullable String name) {
+        return this.map.get(name);
+    }
+    /** 
+     * Returns an existing safe cache for the specified name; 
+     * or null if such a safe cache cannot not found.
+     */
+    public ICacheSafe getSafeCache(@NonNullable String name) {
+        ICache c = this.getCache(name);
+        
+        if (c == null || !(c instanceof ICacheSafe))
+            return null;
+        return (ICacheSafe)c;
+    }
+    /** 
+     * Returns an existing cache for the specified name and value type;  
+     * or null if not found.
      *
      * @throws ClassCastException if the cache already exists for an
      * incompatible value type.
      */
 //    @SuppressWarnings({"unchecked"})
-    public @NonNullable <V> ICache<V> getCache(
-            @NonNullable String name, 
-            @NonNullable Class<V> valueType)
-    {
-        return this.getCache(DEFAULT_CACHE_TYPE, name, valueType);
-    }
-    public @NonNullable <V> ICache<V> getCache(
-            @NonNullable CacheType cacheType, 
-            @NonNullable String name, 
+    public <V> ICache<V> getCache(
+            @NonNullable String name,
             @NonNullable Class<V> valueType)
     {
         ICache c = this.map.get(name);
-               
-        if (c == null)
-            return this.createCache(cacheType, name, valueType);
-        CacheManagerUtils.inst.checkValueType(c, valueType);
+        this.checkValueType(c, valueType);
         return c;
     }
     /** 
-     * Returns an existing cache for the specified name; or null if not found.
+     * Returns an existing safe cache for the specified name and value type;  
+     * or null such a safe cache cannot be found.
+     *
+     * @throws ClassCastException if the cache already exists for an
+     * incompatible value type.
      */
-    public ICache getCache(@NonNullable String name) {
-        return this.map.get(name);
+    public <V> ICacheSafe<V> getSafeCache(
+            @NonNullable String name,
+            @NonNullable Class<V> valueType)
+    {
+        ICache<V> c = this.getCache(name, valueType);
+
+        if (c == null || !(c instanceof ICacheSafe))
+            return null;
+        return (ICacheSafe<V>)c;
+    }
+    /** 
+     * Returns a cache for the specified name, value type and cache type.
+     * Creates the cache if necessary.
+     *
+     * @throws ClassCastException if the cache already exists for an
+     * incompatible value type.
+     */
+    public @NonNullable <V> ICache<V> getCache(
+            @NonNullable String name,
+            @NonNullable Class<V> valueType,
+            @NonNullable CacheType cacheType)
+    {
+        ICache c = this.map.get(name);
+               
+        if (c == null) {
+            switch(cacheType) {
+                case SOFT_REFERENCE:
+                case SOFT_REFERENCE_SAFE:
+                    c = this.tryCreateCache(name, valueType, cacheType);
+                    break;
+                case SOFT_REFERENCE_FILE:
+                case SOFT_REFERENCE_FILE_SAFE:
+                    c = this.tryCreateFileCache(name, valueType, cacheType);
+                    break;
+                default:
+                    throw new AssertionError(cacheType);
+            }
+        }
+        this.checkValueType(c, valueType);
+        return c;
+    }
+    /** 
+     * Returns a safe cache for the specified name, value type and cache type.
+     * Creates the cache if necessary.
+     *
+     * @throws IllegalArgumentException if the cache type specified is not a
+     *  safe cache type.
+     * @throws ClassCastException if the cache already exists for an
+     *  incompatible value type.
+     */
+    public @NonNullable <V> ICacheSafe<V> getSafeCache(
+            @NonNullable String name,
+            @NonNullable Class<V> valueType,
+            @NonNullable CacheType cacheType)
+    {
+        switch(cacheType) {
+            case SOFT_REFERENCE_SAFE:
+            case SOFT_REFERENCE_FILE_SAFE:
+                break;
+            default:
+                throw new IllegalArgumentException(cacheType.toString());
+        }
+        return (ICacheSafe<V>)this.getCache(name, valueType, cacheType);
     }
     /**
      * Removes the specified cache, if it exists.
@@ -84,27 +161,76 @@ public enum CacheManager {
      * an existing cache created earlier by another thread.
      */
 //    @SuppressWarnings({"unchecked"})
-    private @NonNullable <V> ICache<V> createCache(
-            @NonNullable CacheType cacheType,
+    private @NonNullable <V> ICache<V> tryCreateCache(
             @NonNullable String name, 
-            @NonNullable Class<V> valueType)
+            @NonNullable Class<V> valueType,
+            @NonNullable CacheType cacheType)
     {
-        ICache<V> c = cacheType.createCache(name, valueType);
-//        SoftRefFileCache<V> c = new SoftRefFileCache<V>(name, valueType);
-//        c.addCacheChangeListener(new CacheFileManager<V>(c));
-        ICache old = this.map.putIfAbsent(name, c);
+        ICache<V> newCache = cacheType.createCache(name, valueType);
+//        SoftRefFileCache<V> newCache = new SoftRefFileCache<V>(name, valueType);
+//        newCache.addCacheChangeListener(new CacheFileManager<V>(newCache));
+        ICache oldCache = this.map.putIfAbsent(name, newCache);
 
-        if (old != null) {
+        if (oldCache != null) {
             // race condition: cache already created by another thread.
-            CacheManagerUtils.inst.checkValueType(old, valueType);
-            return old;
+            this.checkValueType(oldCache, valueType);
+            return oldCache;
         }
-        return c;
+        return newCache;
+    }
+    /** 
+     * Creates the specified file cache if not already created.
+     * 
+     * @return either the file cache created by the current thread, or
+     * an existing file cache created earlier by another thread.
+     */
+    private @NonNullable <V> ICache<V> tryCreateFileCache(
+            @NonNullable String name, 
+            @NonNullable Class<V> valueType,
+            @NonNullable CacheType cacheType)
+    {
+        Lock lock = this.keyedRWLock.writeLock(name);
+        lock.lock();
+        ICache<V> newCache = null;
+        ICache oldCache = null;
+        try {
+            newCache = cacheType.createCache(name, valueType);
+//        SoftRefFileCache<V> newCache = new SoftRefFileCache<V>(name, valueType);
+//        newCache.addCacheChangeListener(new CacheFileManager<V>(newCache));
+            oldCache = this.map.putIfAbsent(name, newCache);
+        } finally {
+            lock.unlock();
+        }
+
+        if (oldCache != null) {
+            // race condition: cache already created by another thread.
+            this.checkValueType(oldCache, valueType);
+            return oldCache;
+        }
+        return newCache;
     }
 
     @TestOnly("Used solely to simluate a race condition during cache creation ")
-    @NonNullable <V> ICache<V> testCreateCacheRaceCondition(@NonNullable String name, @NonNullable Class<V> valueType) 
+    @NonNullable <V> ICache<V> testCreateCacheRaceCondition(
+            @NonNullable String name, @NonNullable Class<V> valueType, @NonNullable CacheType cacheType) 
     {
-        return this.createCache(DEFAULT_CACHE_TYPE, name, valueType);
+        return this.tryCreateCache(name, valueType, cacheType);
+    }
+    @TestOnly("Used solely to simluate a race condition during cache creation ")
+    @NonNullable <V> ICache<V> testCreateFileCacheRaceCondition(
+            @NonNullable String name, @NonNullable Class<V> valueType, @NonNullable CacheType cacheType) 
+    {
+        return this.tryCreateCache(name, valueType, cacheType);
+    }
+    private void checkValueType(ICache c, @NonNullable Class<?> valueType) {
+        if (c == null)
+            return;
+        Class<?> cacheValueType = c.getValueType();
+        
+        if (!cacheValueType.isAssignableFrom(valueType))
+            throw new ClassCastException("Cache " + c.getName()
+                + " of " + c.getValueType() 
+                + " already exists and cannot be used for " + valueType);
+        return;
     }
 }
