@@ -303,8 +303,8 @@ public class SoftRefCache<V> implements ICache<V> {
             .append("\n").append("countGetEmptyRef", this.countGetEmptyRef)
             .append("\n").append("countGetMiss", this.countGetMiss)
             .append("\n").append("countGetHitMemory", this.countGetHitMemory)
-            .append("\n").append("this.countPut", this.countPut)
-            .append("\n").append("this.countRemove", this.countRemove)
+            .append("\n").append("countPut", this.countPut)
+            .append("\n").append("countRemove", this.countRemove)
             .append("\n").append("collector", this.collector)
             .toString();
     }
