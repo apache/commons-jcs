@@ -121,11 +121,12 @@ public class ReadWriteLock
         {
             while ( thisThread != writeLockedThread )
             {
+                //outstandingWriteLocks++; //testing
                 log.debug( "writeLock wait" );
                 // set this so if there is an error the app will not completely die!
                 thisThread.wait( 2000 );
                 log.debug( "wake up from writeLock wait" );
-            }
+             }
 
             log.debug( "writeLock acquired" );
         }
@@ -176,7 +177,6 @@ public class ReadWriteLock
 
         if ( Thread.currentThread() == writeLockedThread )
         {
-
             //log.info( "outstandingWriteLocks= " + outstandingWriteLocks );
             if ( outstandingWriteLocks > 0 )
             {
@@ -184,7 +184,7 @@ public class ReadWriteLock
             }
             else
             {
-                log.warn( "extra lock release, writelocks are " + outstandingWriteLocks + "and done was called" );
+                log.info( "extra lock release, writelocks are " + outstandingWriteLocks + "and done was called" );
             }
 
             if ( outstandingWriteLocks > 0 )
@@ -192,6 +192,8 @@ public class ReadWriteLock
                 log.debug( "writeLock released for a nested writeLock request." );
                 return;
             }
+
+            // could pull out of sub if block to get nested tracking working.
             if ( outstandingReadLocks == 0 && waitingForWriteLock.size() > 0 )
             {
                 writeLockedThread = ( Thread ) waitingForWriteLock.get( 0 );
