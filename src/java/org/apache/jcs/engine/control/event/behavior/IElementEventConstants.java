@@ -86,18 +86,23 @@ public interface IElementEventConstants
     /**
      *  Moving from memory to disk (what if no disk?)
      */
-    public final static int ELEMENT_EVENT_SPOOLED = 4;
+    public final static int ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE = 4;
+
+    /**
+     *  Moving from memory to disk (what if no disk?)
+     */
+    public final static int ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE = 5;
 
     /**
      *  Removed activley by a remove command. (Could distinguish between local
      *  and remote)
      */
-    public final static int ELEMENT_EVENT_REMOVED = 5;
+    public final static int ELEMENT_EVENT_REMOVED = 6;
 
     /**
      *  Element was requested from cache.
      *  Not sure we ever want to implement this.
      */
-    //public final static int ELEMENT_EVENT_GET = 6;
+    //public final static int ELEMENT_EVENT_GET = 7;
 
 }
