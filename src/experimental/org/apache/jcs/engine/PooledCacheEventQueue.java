@@ -45,7 +45,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * @author Travis Savo <tsavo@ifilm.com>
  *  
  */
-public class CacheEventQueue implements ICacheEventQueue {
+public class PooledCacheEventQueue implements ICacheEventQueue {
     private static final Log log = LogFactory.getLog(CacheEventQueue.class);
 
     // time to wait for an event before snuffing the background thread
