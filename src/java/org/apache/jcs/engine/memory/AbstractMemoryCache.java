@@ -158,7 +158,7 @@ public abstract class AbstractMemoryCache
     public void removeAll()
         throws IOException
     {
-        map = new HashMap();
+        map = new Hashtable();
     }
 
     /**
