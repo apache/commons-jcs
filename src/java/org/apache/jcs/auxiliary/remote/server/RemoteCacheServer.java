@@ -234,7 +234,7 @@ public class RemoteCacheServer
 
 
     /** Description of the Method */
-    public void update( ICacheElement item, byte requesterId )
+    public void update( ICacheElement item, long requesterId )
         throws IOException
     {
 
@@ -263,7 +263,7 @@ public class RemoteCacheServer
             CacheListeners cacheDesc = getCacheListeners( item.getCacheName() );
             Object val = item.getVal();
 
-            Integer remoteTypeL = ( Integer ) idTypeMap.get( new Byte( requesterId ) );
+            Integer remoteTypeL = ( Integer ) idTypeMap.get( new Long( requesterId ) );
             boolean fromCluster = false;
             if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
             {
@@ -353,7 +353,7 @@ public class RemoteCacheServer
      *
      * @return The eventQList value
      */
-    private ICacheEventQueue[] getEventQList( CacheListeners cacheListeners, byte requesterId )
+    private ICacheEventQueue[] getEventQList( CacheListeners cacheListeners, long requesterId )
     {
         ICacheEventQueue[] list = null;
         synchronized ( cacheListeners.eventQMap )
@@ -405,7 +405,7 @@ public class RemoteCacheServer
             log.debug( "get " + key + " from cache " + cacheName );
         }
 
-//        Integer remoteTypeL = ( Integer ) idTypeMap.get( new Byte( requesterId ) );
+//        Integer remoteTypeL = ( Integer ) idTypeMap.get( new Long( requesterId ) );
         boolean fromCluster = false;
 //        if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
 //        {
@@ -469,7 +469,7 @@ public class RemoteCacheServer
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key, byte requesterId )
+    public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -478,7 +478,7 @@ public class RemoteCacheServer
         }
         CacheListeners cacheDesc = ( CacheListeners ) cacheListenersMap.get( cacheName );
 
-        Integer remoteTypeL = ( Integer ) idTypeMap.get( new Byte( requesterId ) );
+        Integer remoteTypeL = ( Integer ) idTypeMap.get( new Long( requesterId ) );
         boolean fromCluster = false;
         if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
         {
@@ -541,12 +541,12 @@ public class RemoteCacheServer
     public void removeAll( String cacheName )
         throws IOException
     {
-        removeAll( cacheName, ( byte ) 0 );
+        removeAll( cacheName, ( long ) 0 );
     }
 
 
     /** Description of the Method */
-    public void removeAll( String cacheName, byte requesterId )
+    public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
         CacheListeners cacheDesc = ( CacheListeners ) cacheListenersMap.get( cacheName );
@@ -573,12 +573,12 @@ public class RemoteCacheServer
     public void dispose( String cacheName )
         throws IOException
     {
-        dispose( cacheName, ( byte ) 0 );
+        dispose( cacheName, ( long ) 0 );
     }
 
 
     /** Description of the Method */
-    public void dispose( String cacheName, byte requesterId )
+    public void dispose( String cacheName, long requesterId )
         throws IOException
     {
         CacheListeners cacheDesc = ( CacheListeners ) cacheListenersMap.get( cacheName );
@@ -610,7 +610,7 @@ public class RemoteCacheServer
             for ( Enumeration en = cacheListenersMap.elements(); en.hasMoreElements();  )
             {
                 CacheListeners cacheDesc = ( CacheListeners ) en.nextElement();
-                ICacheEventQueue[] qlist = getEventQList( cacheDesc, ( byte ) 0 );
+                ICacheEventQueue[] qlist = getEventQList( cacheDesc, ( long ) 0 );
 
                 for ( int i = 0; i < qlist.length; i++ )
                 {
@@ -700,14 +700,14 @@ public class RemoteCacheServer
 
             synchronized ( ICacheListener.class )
             {
-                byte id = 0;
+                long id = 0;
                 try
                 {
                     id = listener.getListenerId();
                     if ( id == 0 )
                     {
                         // must start at one so the next gets recognized
-                        byte listenerIdB = nextListenerId();
+                        long listenerIdB = nextListenerId();
                         if ( log.isDebugEnabled() )
                         {
                             log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache " + cacheName );
@@ -718,7 +718,7 @@ public class RemoteCacheServer
                         p1( "added new vm listener " + listenerIdB );
 
                         // relate the type to an id
-                        this.idTypeMap.put( new Byte( listenerIdB ), new Integer( remoteType ) );
+                        this.idTypeMap.put( new Long( listenerIdB ), new Integer( remoteType ) );
 
                     }
                     else
@@ -847,17 +847,17 @@ public class RemoteCacheServer
     }
 
     /** Returns the next generated listener id [0,255]. */
-    private byte nextListenerId()
+    private long nextListenerId()
     {
-        int id = 0;
-        if ( listenerId[0] == 255 )
+        long id = 0;
+        if ( listenerId[0] == Long.MAX_VALUE )
         {
             synchronized ( listenerId )
             {
                 id = listenerId[0];
                 listenerId[0] = 0;
                 // TODO: record & check if the generated id is currently being
-                // used by a valid listener.  Currently if the id wraps after 255,
+                // used by a valid listener.  Currently if the id wraps after Long.MAX_VALUE,
                 // we just assume it won't collide with an existing listener who is live.
             }
         }
@@ -868,7 +868,7 @@ public class RemoteCacheServer
                 id = ++listenerId[0];
             }
         }
-        return ( byte ) ( id & 0xff );
+        return id; //( long ) ( id & 0xff );
     }
 
     /**

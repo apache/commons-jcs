@@ -45,7 +45,7 @@ public class LateralElementDescriptor implements Serializable
     /** Description of the Field */
     public ICacheElement ce;
     /** Description of the Field */
-    public byte requesterId;
+    public long requesterId;
 
     /** Description of the Field */
     public int command = UPDATE;

@@ -39,7 +39,7 @@ public class RemoteCacheInfo
      * Need since there is no way to identify a client other than by host in
      * rmi.
      */
-    protected static byte listenerId = 0;
+    protected static long listenerId = 0;
 
 }
 

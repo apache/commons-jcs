@@ -69,7 +69,7 @@ public interface ICacheEventQueue
      *
      * @return The listenerId value
      */
-    public byte getListenerId();
+    public long getListenerId();
 
 
     /** Description of the Method */

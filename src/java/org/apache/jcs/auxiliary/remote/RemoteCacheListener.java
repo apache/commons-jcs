@@ -112,7 +112,7 @@ public class RemoteCacheListener
      *
      * @param id The new listenerId value
      */
-    public void setListenerId( byte id )
+    public void setListenerId( long id )
         throws IOException
     {
         RemoteCacheInfo.listenerId = id;
@@ -128,7 +128,7 @@ public class RemoteCacheListener
      *
      * @return The listenerId value
      */
-    public byte getListenerId()
+    public long getListenerId()
         throws IOException
     {
 
@@ -256,8 +256,8 @@ public class RemoteCacheListener
             log.debug( "handleRemoveAll> cacheName=" + cacheName );
         }
         getCacheManager();
-        ICache cache = cacheMgr.getCache( cacheName );
-        cache.removeAll();
+        CompositeCache cache = cacheMgr.getCache( cacheName );
+        cache.localRemoveAll();
     }
 
 

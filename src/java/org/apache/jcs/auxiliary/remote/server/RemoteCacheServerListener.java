@@ -110,7 +110,7 @@ public class RemoteCacheServerListener
      *
      * @param id The new listenerId value
      */
-    public void setListenerId( byte id )
+    public void setListenerId( long id )
         throws IOException
     {
         RemoteCacheServerInfo.listenerId = id;
@@ -126,7 +126,7 @@ public class RemoteCacheServerListener
      *
      * @return The listenerId value
      */
-    public byte getListenerId()
+    public long getListenerId()
         throws IOException
     {
 

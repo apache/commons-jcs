@@ -243,7 +243,7 @@ public class LateralJGSender implements IJGConstants
      * @param requesterId
      * @exception IOException
      */
-    public void update( ICacheElement item, byte requesterId )
+    public void update( ICacheElement item, long requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -275,7 +275,7 @@ public class LateralJGSender implements IJGConstants
      * @param requesterId
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key, byte requesterId )
+    public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
@@ -334,7 +334,7 @@ public class LateralJGSender implements IJGConstants
      * @param requesterId
      * @exception IOException
      */
-    public void removeAll( String cacheName, byte requesterId )
+    public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, "ALL", null );

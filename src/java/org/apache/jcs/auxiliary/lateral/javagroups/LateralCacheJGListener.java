@@ -107,7 +107,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
      * @param id The new listenerId value
      * @exception IOException
      */
-    public void setListenerId( byte id )
+    public void setListenerId( long id )
         throws IOException
     {
         LateralCacheInfo.listenerId = id;
@@ -124,7 +124,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
      * @return The listenerId value
      * @exception IOException
      */
-    public byte getListenerId()
+    public long getListenerId()
         throws IOException
     {
 

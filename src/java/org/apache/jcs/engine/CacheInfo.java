@@ -41,6 +41,6 @@ public class CacheInfo
      */
     protected static VMID vmid = new VMID();
     /** Description of the Field */
-    public static byte listenerId = ( byte ) vmid.hashCode();
+    public static long listenerId = ( long ) vmid.hashCode();
 
 }

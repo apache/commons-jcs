@@ -33,17 +33,17 @@ public interface ILateralCacheService extends ICacheService
 {
 
     /** Puts a cache item to the cache. */
-    public void update( ICacheElement item, byte requesterId )
+    public void update( ICacheElement item, long requesterId )
         throws IOException;
 
 
     /** Removes the given key from the specified cache. */
-    public void remove( String cacheName, Serializable key, byte requesterId )
+    public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException;
 
 
     /** Remove all keys from the sepcified cache. */
-    public void removeAll( String cacheName, byte requesterId )
+    public void removeAll( String cacheName, long requesterId )
         throws IOException;
 
     public Set getGroupKeys(String cacheName, String groupName);

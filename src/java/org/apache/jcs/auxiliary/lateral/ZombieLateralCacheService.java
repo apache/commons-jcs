@@ -36,15 +36,15 @@ public class ZombieLateralCacheService extends ZombieCacheService implements ILa
 {
 
     /** Description of the Method */
-    public void update( ICacheElement item, byte listenerId ) { }
+    public void update( ICacheElement item, long listenerId ) { }
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key, byte listenerId ) { }
+    public void remove( String cacheName, Serializable key, long listenerId ) { }
 
 
     /** Description of the Method */
-    public void removeAll( String cacheName, byte listenerId ) { }
+    public void removeAll( String cacheName, long listenerId ) { }
 
     public Set getGroupKeys(String cacheName, String groupName)
     {

@@ -354,12 +354,12 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      */
     private class MyCacheListener implements ICacheListener
     {
-        private byte listenerId = 0;
+        private long listenerId = 0;
 
         /**
          * @see ICacheListener#getListenerId
          */
-        public byte getListenerId()
+        public long getListenerId()
             throws IOException
         {
             return this.listenerId;
@@ -368,7 +368,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         /**
          * @see ICacheListener#setListenerId
          */
-        public void setListenerId( byte id )
+        public void setListenerId( long id )
             throws IOException
         {
             this.listenerId = id;

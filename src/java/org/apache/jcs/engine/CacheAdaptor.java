@@ -39,7 +39,7 @@ public class CacheAdaptor implements ICacheListener
     private final ICache cache;
 
     /** Description of the Field */
-    protected byte listenerId = 0;
+    protected long listenerId = 0;
 
 
     /**
@@ -47,7 +47,7 @@ public class CacheAdaptor implements ICacheListener
      *
      * @param id The new listenerId value
      */
-    public void setListenerId( byte id )
+    public void setListenerId( long id )
         throws IOException
     {
         this.listenerId = id;
@@ -60,7 +60,7 @@ public class CacheAdaptor implements ICacheListener
      *
      * @return The listenerId value
      */
-    public byte getListenerId()
+    public long getListenerId()
         throws IOException
     {
         return this.listenerId;

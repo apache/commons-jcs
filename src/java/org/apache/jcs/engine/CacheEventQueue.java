@@ -51,7 +51,7 @@ public class CacheEventQueue implements ICacheEventQueue
     // private LinkedQueue queue = new LinkedQueue();
 
     private ICacheListener listener;
-    private byte listenerId;
+    private long listenerId;
     private String cacheName;
 
     private int failureCount;
@@ -80,7 +80,7 @@ public class CacheEventQueue implements ICacheEventQueue
      * @param cacheName
      */
     public CacheEventQueue( ICacheListener listener,
-                            byte listenerId,
+                            long listenerId,
                             String cacheName )
     {
         this( listener, listenerId, cacheName, 10, 500 );
@@ -96,7 +96,7 @@ public class CacheEventQueue implements ICacheEventQueue
      * @param waitBeforeRetry
      */
     public CacheEventQueue( ICacheListener listener,
-                            byte listenerId,
+                            long listenerId,
                             String cacheName,
                             int maxFailure,
                             int waitBeforeRetry )
@@ -163,7 +163,7 @@ public class CacheEventQueue implements ICacheEventQueue
     /**
      * @return The {3} value
      */
-    public byte getListenerId()
+    public long getListenerId()
     {
         return this.listenerId;
     }

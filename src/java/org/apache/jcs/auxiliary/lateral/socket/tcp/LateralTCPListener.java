@@ -138,7 +138,7 @@ public class LateralTCPListener
      *
      * @param id The new listenerId value
      */
-    public void setListenerId( byte id )
+    public void setListenerId( long id )
         throws IOException
     {
         LateralCacheInfo.listenerId = id;
@@ -153,7 +153,7 @@ public class LateralTCPListener
      *
      * @return The listenerId value
      */
-    public byte getListenerId()
+    public long getListenerId()
         throws IOException
     {
         return LateralCacheInfo.listenerId;
