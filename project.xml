@@ -18,14 +18,14 @@
   <mailingLists>
     <mailingList>
       <name>JCS User List</name>
-      <subscribe>turbine-user-jcs-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>turbine-user-jcs-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://www.mail-archive.com/turbine-user-jcs@jakarta.apache.org/</archive>
+      <subscribe>turbine-jcs-user-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>turbine-jcs-user-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://www.mail-archive.com/turbine-jcs-user@jakarta.apache.org/</archive>
     </mailingList>
     <mailingList>
       <name>JCS Developer List</name>
-      <subscribe>mailto:turbine-dev-jcs-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>mailto:turbine-dev-jcs-unsubscribe@jakarta.apache.org</unsubscribe>
+      <subscribe>mailto:turbine-jcs-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>mailto:turbine-jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
       <archive>http://www.mail-archive.com/turbine-jcs-dev@jakarta.apache.org/</archive>
     </mailingList>
   </mailingLists>
