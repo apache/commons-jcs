@@ -35,11 +35,11 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=LJG
+jcs.region.testCache1=
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=10000
-jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.MaxObjects=100000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.arc.ARCMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=5000
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
@@ -50,7 +50,7 @@ jcs.region.testCache1.elementattributes.IsLateral=true
 
 jcs.region.testCache2=DC
 jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache2.cacheattributes.MaxObjects=10
+jcs.region.testCache2.cacheattributes.MaxObjects=100000
 jcs.region.testCache2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache2.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache2.cacheattributes.MaxMemoryIdleTimeSeconds=10
@@ -61,6 +61,20 @@ jcs.region.testCache2.elementattributes.MaxLifeSeconds=600
 jcs.region.testCache2.elementattributes.IsSpool=true
 jcs.region.testCache2.elementattributes.IsRemote=true
 jcs.region.testCache2.elementattributes.IsLateral=true
+
+jcs.region.testCache3=
+jcs.region.testCache3.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache3.cacheattributes.MaxObjects=100000
+jcs.region.testCache3.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LHMLRUMemoryCache
+jcs.region.testCache3.cacheattributes.UseMemoryShrinker=false
+jcs.region.testCache3.cacheattributes.MaxMemoryIdleTimeSeconds=10
+jcs.region.testCache3.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.testCache3.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache3.elementattributes.IsEternal=false
+jcs.region.testCache3.elementattributes.MaxLifeSeconds=3600
+jcs.region.testCache3.elementattributes.IsSpool=true
+jcs.region.testCache3.elementattributes.IsRemote=true
+jcs.region.testCache3.elementattributes.IsLateral=true
 
 
 ##############################################################
@@ -86,13 +100,15 @@ jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
 #new disk cache parameter.
-jcs.auxiliary.DC.attributes.maxKeySize=1000
+jcs.auxiliary.DC.attributes.maxKeySize=100000
 
 # Berkeley DB JE
 jcs.auxiliary.JE=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
 jcs.auxiliary.JE.attributes=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
 jcs.auxiliary.JE.attributes.DiskPath=target/test-sandbox/bdbje-disk-cache-conc
-
+#the minimum cache size is 1024
+jcs.auxiliary.indexedDiskCache.attributes.CacheSize=1024
+#jcs.auxiliary.indexedDiskCache.attributes.CachePercent=0
 
 # HSQL Disk Cache -- too slow as is
 jcs.auxiliary.HDC=org.apache.jcs.auxiliary.disk.hsql.HSQLCacheFactory
