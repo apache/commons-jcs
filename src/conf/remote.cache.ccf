@@ -25,25 +25,11 @@ jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLifeSeconds=7
+jcs.default.elementattributes.MaxLifeSeconds=7000
 jcs.default.elementattributes.IdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
-
-# SYSTEM CACHE
-# should be defined for the storage of group attribute list
-jcs.system.groupIdCache=DC
-jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.system.groupIdCache.elementattributes=org.apache.jcs.engine.ElementAttributes
-jcs.system.groupIdCache.elementattributes.IsEternal=true
-jcs.system.groupIdCache.elementattributes.MaxLifeSeconds=3600
-jcs.system.groupIdCache.elementattributes.IdleTime=1800
-jcs.system.groupIdCache.elementattributes.IsSpool=true
-jcs.system.groupIdCache.elementattributes.IsRemote=true
-jcs.system.groupIdCache.elementattributes.IsLateral=true
  
 
 ##############################################################
@@ -60,9 +46,9 @@ jcs.auxiliary.RCluster1=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RCluster1.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RCluster1.attributes.RemoteTypeName=CLUSTER
 jcs.auxiliary.RCluster1.attributes.RemoveUponRemotePut=false
-#jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
+jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
 jcs.auxiliary.RCluster1.attributes.GetOnly=false
-#jcs.auxiliary.RCluster1.attributes.LocalClusterConsistency=true
+jcs.auxiliary.RCluster1.attributes.LocalClusterConsistency=true
 
 # server to update for clustering
 jcs.auxiliary.RCluster2=org.apache.jcs.auxiliary.remote.RemoteCacheFactory

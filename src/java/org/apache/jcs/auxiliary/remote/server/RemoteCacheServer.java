@@ -226,7 +226,30 @@ public class RemoteCacheServer
     }
 
 
-    /** Description of the Method */
+    /**
+     * An update can come from either a local cache's remote auxiliary, or it
+     * can come from a remote server.  A remote server is considered a a source of
+     * type cluster.
+     * 
+     * If the update came from a cluster, then we should tell the cache manager that 
+     * this was a remote put.  This way, any lateral and remote auxiliaries configured
+     * for the region will not be updated.  This is basically how a remote listener works
+     * when plugged into a local cache.
+     * 
+     * If the cluster is configured to keep local cluster consistency, then all
+     * listeners will be updated.  This allows cluster server A to update cluster server B 
+     * and then B to update its clients if it is told to keep local cluster consistency.  Otherwise,
+     * server A will update server B and B will not tell its clients.  If you cluster using
+     * lateral caches for instance, this is how it will work.  Updates to a cluster node, will
+     * never get to the leavess.  The remote cluster, with local cluster consistency, allows you
+     * to update leaves.  This basically allows you to have a failover remote server.
+     * 
+     * Since currently a cluster will not try to get from other cluster servers, you can scale a bit
+     * with a cluster configuration.  Puts and removes will be broadcasted to all clients, but the
+     * get load on a remote server can be reduced. 
+     * 
+     * 
+     */
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
@@ -255,8 +278,13 @@ public class RemoteCacheServer
         {
             CacheListeners cacheDesc = getCacheListeners( item.getCacheName() );
             /*Object val = */item.getVal();
-
+            
             Integer remoteTypeL = ( Integer ) idTypeMap.get( new Long( requesterId ) );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "in update, requesterId = [" + requesterId + "] remoteType = " + remoteTypeL );
+            }
+
             boolean fromCluster = false;
             if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
             {
@@ -269,9 +297,10 @@ public class RemoteCacheServer
                 {
                     CompositeCache c = ( CompositeCache ) cacheDesc.cache;
 
-                    //TODO; make this a bit less of a hack
-                    // If the source of this request was from a cluster, then
-                    // update the remote caches.  COnsider it a local update.
+                    // If the source of this request was not from a cluster, then
+                    // consider it a local update.  The cache manager will try to update all
+                    // auxiliaries.  
+                    //
                     // This requires that two local caches not be connected to
                     // two clustered remote caches. The failover runner will
                     // have to make sure of this.  ALos, the local cache needs
@@ -279,13 +308,11 @@ public class RemoteCacheServer
                     // id somehow.  The remote cache should udate all local caches
                     // but not update the cluster source.  Cluster remote caches
                     // should only be updated by the server and not the RemoteCache.
-                    // PUT LOGIC IN REMOTE CACHE
-                    // WILL TRY UPDATING REMOTES
                     if ( fromCluster )
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "not updating clusters **************************************" );
+                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region." );
                         }
 
                         c.localUpdate( item );
@@ -294,7 +321,7 @@ public class RemoteCacheServer
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "updating clusters **************************************" );
+                            log.debug( "Put NOT from cluster, updating other auxiliaries for region." );
                         }
 
                         c.update( item );
@@ -312,18 +339,25 @@ public class RemoteCacheServer
 
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
-                    if ( log.isDebugEnabled() )
+                    if ( qlist != null )
                     {
-                        log.debug( "qlist.length = " + qlist.length );
-                    }
-
-                    for ( int i = 0; i < qlist.length; i++ )
-                    {
+                      if ( log.isDebugEnabled() )
+                      {
+                          log.debug( "qlist.length = " + qlist.length );                          
+                      }    
+                      for ( int i = 0; i < qlist.length; i++ )
+                      {
                         qlist[i].addPutEvent( item );
+                      }
                     }
-
+                    else 
+                    {
+                      if ( log.isDebugEnabled() )
+                      {
+                        log.debug( "q list is null" );
+                      }
+                    }    
                 }
-
             }
         }
         catch ( NotBoundException ex )
@@ -333,7 +367,7 @@ public class RemoteCacheServer
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Trouble in Update", e );
         }
 
         // TODO use JAMON
@@ -406,13 +440,6 @@ public class RemoteCacheServer
         {
             log.debug( "get " + key + " from cache " + cacheName );
         }
-
-//        Integer remoteTypeL = ( Integer ) idTypeMap.get( new Long( requesterId ) );
-//        boolean fromCluster = false;
-//        if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-//        {
-//            fromCluster = true;
-//        }
 
         CacheListeners cacheDesc = null;
         try
@@ -496,7 +523,7 @@ public class RemoteCacheServer
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "not updating clusters **************************************" );
+                        log.debug( "Remove FROM cluster, NOT updating other auxiliaries for region" );
                     }
                     removeSuccess = c.localRemove( key );
                 }
@@ -504,11 +531,14 @@ public class RemoteCacheServer
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "updating clusters **************************************" );
+                        log.debug( "Remove NOT from cluster, updating other auxiliaries for region" );
                     }
                     removeSuccess = c.remove( key );
                 }
 
+                // this assumes that if it is not on remote server then it is not on a local.
+                //  this is probalby a bad assumption.
+                //TODO change
                 if ( removeSuccess )
                 {
 
@@ -703,31 +733,35 @@ public class RemoteCacheServer
                 long id = 0;
                 try
                 {
-                    id = listener.getListenerId();
-                    if ( id == 0 )
+                    id = listener.getListenerId();                                        
+                    // clients problably shouldn't do this.
+                    if ( id != 0 )
                     {
-                        // must start at one so the next gets recognized
-                        long listenerIdB = nextListenerId();
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache " + cacheName );
-                        }
-                        listener.setListenerId( listenerIdB );
-                        id = listenerIdB;
-                        // in case it needs synchronization
-                        p1( "added new vm listener " + listenerIdB );
-
-                        // relate the type to an id
-                        this.idTypeMap.put( new Long( listenerIdB ), new Integer( remoteType ) );
-
-                    }
-                    else
+                      log.info ( "added existing vm listener under new id, old id = " + id ); 
+                      p1( "added existing vm listener " + id );                      
+                    }  
+                    
+                    // always get a new listern id, assume that this listener could not be in another queue
+                    
+                    // must start at one so the next gets recognized
+                    long listenerIdB = nextListenerId();
+                    if ( log.isDebugEnabled() )
                     {
-                        p1( "added existing vm listener " + id );
+                        log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache " + cacheName );
                     }
+                    listener.setListenerId( listenerIdB );
+                    id = listenerIdB;
+                    // in case it needs synchronization
+                    log.info ( "added vm listener under new id = " + listenerIdB ); 
+                    p1( "added vm listener under new id = " + listenerIdB );
+
+                    // relate the type to an id
+                    this.idTypeMap.put( new Long( listenerIdB ), new Integer( remoteType ) );
+
                 }
                 catch ( IOException ioe )
                 {
+                  log.error( "Problem setting listener id", ioe );
                 }
 
                 CacheEventQueueFactory fact = new CacheEventQueueFactory();

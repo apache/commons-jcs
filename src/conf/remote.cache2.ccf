@@ -26,31 +26,16 @@ jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
-jcs.default.elementattributes.MaxLifeSeconds=7
+jcs.default.elementattributes.MaxLifeSeconds=7000
 jcs.default.elementattributes.IdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
 
-# SYSTEM CACHE
-# should be defined for the storage of group attribute list
-jcs.system.groupIdCache=DC,RCluster1
-jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.system.groupIdCache.elementattributes=org.apache.jcs.engine.ElementAttributes
-jcs.system.groupIdCache.elementattributes.IsEternal=true
-jcs.system.groupIdCache.elementattributes.MaxLifeSeconds=3600
-jcs.system.groupIdCache.elementattributes.IdleTime=1800
-jcs.system.groupIdCache.elementattributes.IsSpool=true
-jcs.system.groupIdCache.elementattributes.IsRemote=true
-jcs.system.groupIdCache.elementattributes.IsLateral=true
-
- 
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
-jcs.region.testCache1=DC,RCluster1,RCluster2
+jcs.region.testCache1=DC,RCluster1
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 
@@ -75,11 +60,12 @@ jcs.auxiliary.RCluster2.attributes.ClusterServers=localhost:1104
 jcs.auxiliary.RCluster2.attributes.GetOnly=false
 jcs.auxiliary.RCluster2.attributes.LocalClusterConsistency=true
 
+# disk cache
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf/remote
-
  
+# Lateral cache 
 jcs.auxiliary.LC=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LC.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LC.attributes.TransmissionTypeName=UDP
