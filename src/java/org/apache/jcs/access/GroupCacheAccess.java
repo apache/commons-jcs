@@ -210,23 +210,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     public void defineGroup( String name )
         throws CacheException
     {
-        // update the attribute name set.
-        GroupId groupId = new GroupId( cacheControl.getCacheName(), name );
-        HashSet attrNameSet = null;
-        //try {
-        attrNameSet = ( HashSet ) super.get( name );
-        //} catch ( ObjectNotFoundException onfe ) {
-        //}
-        if ( attrNameSet == null )
-        {
-            attrNameSet = new HashSet();
-        }
-        else
-        {
-            throw new CacheException( "group " + name + " already exists " );
-        }
-
-        put( groupId, ( Serializable ) attrNameSet );
+        defineGroup(name, null);
     }
 
     /**
@@ -240,29 +224,21 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     {
         // update the attribute name set.
         GroupId groupId = new GroupId( cacheControl.getCacheName(), name );
-        HashSet attrNameSet = null;
-
-        //attrNameSet = (HashSet)super.get(name);
-        attrNameSet = ( HashSet ) cacheControl.get( groupId );
-
-        if ( attrNameSet == null )
-        {
-            attrNameSet = new HashSet();
-        }
-        else
+        if ( get(groupId) != null )
         {
             throw new CacheException( "group " + name + " already exists " );
         }
-        try
+
+        // TODO: revisit and verify that this works
+        // not sure it will, need special id putting
+        if (attr == null) 
         {
-            // TODO: revisit and verify that this works
-            // not sure it will, need special id putting
-            cacheControl.put( groupId, ( Serializable ) attrNameSet, attr );
+            put( groupId, new HashSet() );            
         }
-        catch ( IOException ioe )
+        else 
         {
-            throw new CacheException( ioe );
-        }
+            put( groupId, new HashSet(), attr );
+        }        
     }
 
     /**
@@ -306,20 +282,14 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      *
      * @return The attributeNameSet value
      */
-    public Set getAttributeNameSet( String group_name )
+    public Set getAttributeNameSet( String groupName )
     {
-        Object obj = null;
-        //try {
-        obj = cacheControl.get( new GroupId( cacheControl.getCacheName(), ( String ) group_name ), false );
-        //} catch( ObjectNotFoundException onfe ) {
-        //  return null;
-        //}
+        Object obj = get(new GroupId(cacheControl.getCacheName(), groupName));
         if ( obj == null || !( obj instanceof Set ) )
         {
             return new HashSet();
-            // returns a null object.
         }
-        return ( Set ) obj;
+        return (Set) obj;
     }
 
     /**
@@ -329,12 +299,10 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      * @param group The new attribute value
      * @param value The new attribute value
      */
-    public void setAttribute( Object name, String group, Object value )
+    public void setAttribute( Object name, String groupName, Object value )
         throws CacheException
     {
-        removeAttribute( name, group, SET_ATTR_INVOCATION );
-
-        put( new GroupAttrName( group, name ), ( Serializable ) value );
+        setAttribute(name, groupName, value, null);
     }
 
     /**
@@ -345,20 +313,30 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      * @param value The new attribute value
      * @param attr The new attribute value
      */
-    public void setAttribute( Object name, String group, Object value, IElementAttributes attr )
+    public void setAttribute( Object name, String groupName, Object value, 
+                              IElementAttributes attr )
         throws CacheException
     {
+        Set group = (Set)
+            get(new GroupId(cacheControl.getCacheName(), groupName));
+        if (group == null) 
+        {
+            throw new CacheException(
+                "Group must be defined prior to being used.");
+        }
+
         // unbind object first if any.
-        removeAttribute( name, group, SET_ATTR_INVOCATION );
-        try
+        removeAttribute( name, groupName, SET_ATTR_INVOCATION );
+
+        if (attr == null) 
         {
-            cacheControl.put( new GroupAttrName( group, name ),
-                              ( Serializable ) value, attr );
+            put( new GroupAttrName(groupName, name), value );            
         }
-        catch ( IOException ioe )
+        else 
         {
-            throw new CacheException( ioe );
+            put( new GroupAttrName(groupName, name), value, attr );            
         }
+        group.add(name);
     }
 
     /** Description of the Method */
@@ -425,8 +403,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
 
         // get into concurrent modificaiton problems here.
         // could make the removal of the ID invalidate the list?
-        cacheControl.remove( new GroupId( cacheControl.getCacheName(), group ), false );
-        return;
+        cacheControl.remove(new GroupId( cacheControl.getCacheName(), group ));
     }
 
     /**
