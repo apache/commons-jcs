@@ -27,7 +27,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
- * Keyed Reference garbage collector.
+ * Keyed Reference garbage collector which removes stale 
+ * Keyed {@link Reference} entries 
+ * from the given {@link ConcurrentMap} using the embedded keys.
+ * The stale Keyed References are put into the given {@link ReferenceQueue}
+ * by the JVM garbage collector.
  *
  * @author Hanson Char
  */
@@ -38,7 +42,9 @@ public class KeyedRefCollector<K> implements Runnable {
     private final @NonNullable ReferenceQueue q;
     private final @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap;
     private final AtomicInteger count = new AtomicInteger(0);
-
+    /**
+     * Constructs with a given reference queue and concurrent map.
+     */
     public KeyedRefCollector(
             @NonNullable ReferenceQueue<?> q, 
             @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap)
@@ -46,6 +52,9 @@ public class KeyedRefCollector<K> implements Runnable {
         this.q = q;
         this.synMap = synMap;
     }
+    /**
+     * Executes one cycle of stale entries removal.
+     */
     public void run() {
         Reference ref;
         
