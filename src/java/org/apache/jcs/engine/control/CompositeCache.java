@@ -69,7 +69,6 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
@@ -94,7 +93,7 @@ import org.apache.jcs.engine.control.event.ElementEventQueue;
  *@version    $Id$
  */
 public class CompositeCache
-     implements ICache, ICompositeCache, Serializable
+     implements ICache, Serializable
 {
     private final static Log log = LogFactory.getLog( CompositeCache.class );
 

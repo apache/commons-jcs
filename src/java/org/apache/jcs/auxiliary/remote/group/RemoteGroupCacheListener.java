@@ -16,9 +16,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupAttrName;
@@ -26,19 +24,17 @@ import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupCache;
 import org.apache.jcs.engine.control.group.GroupCache;
 import org.apache.jcs.engine.control.group.GroupCache;
+
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-// remove
 
 /**
  * Description of the Class
  *
  * @author asmuts
- * @created January 15, 2002
  */
 public class RemoteGroupCacheListener extends RemoteCacheListener implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
 {
@@ -141,7 +137,7 @@ public class RemoteGroupCacheListener extends RemoteCacheListener implements IRe
                     }
 
                     getCacheManager();
-                    ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( irca.getCacheName() );
+                    CompositeCache cache = cacheMgr.getCache( irca.getCacheName() );
                     cache.localUpdate( cb );
 
                 }

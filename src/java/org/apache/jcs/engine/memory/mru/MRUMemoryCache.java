@@ -13,14 +13,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
-
-import org.apache.jcs.engine.behavior.ICompositeCache;
 
 /**
  * A SLOW AS HELL reference management system. The most recently used items move
@@ -523,9 +520,9 @@ public class MRUMemoryCache
      *
      *@return    The cache value
      */
-    public ICompositeCache getCompositeCache()
+    public CompositeCache getCompositeCache()
     {
-      return this.cache;
+        return this.cache;
     }
 
 

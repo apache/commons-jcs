@@ -3,8 +3,7 @@ package org.apache.jcs.engine;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.behavior.ICache;;
 
 /**
  * Used to associates a set of [cache listener to cache event queue] for a

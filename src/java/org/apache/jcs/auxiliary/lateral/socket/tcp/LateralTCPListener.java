@@ -71,7 +71,7 @@ import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
@@ -265,7 +265,7 @@ public class LateralTCPListener
     /**
      * Gets the cacheManager attribute of the LateralCacheTCPListener object
      */
-    protected ICompositeCache getCache( String name )
+    protected CompositeCache getCache( String name )
     {
         if ( cacheMgr == null )
         {
@@ -277,7 +277,7 @@ public class LateralTCPListener
             }
         }
 
-        return ( ICompositeCache ) cacheMgr.getCache( name );
+        return cacheMgr.getCache( name );
     }
 
     // ---------------------------------------------------------- inner classes

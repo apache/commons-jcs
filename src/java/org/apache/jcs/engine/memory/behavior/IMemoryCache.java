@@ -6,10 +6,9 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheHub;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.control.CompositeCache;
 
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.control.CompositeCache;
@@ -167,7 +166,7 @@ public interface IMemoryCache extends ICacheType
      *
      *@return    The cache value
      */
-    public ICompositeCache getCompositeCache();
+    public CompositeCache getCompositeCache();
 
 
 }

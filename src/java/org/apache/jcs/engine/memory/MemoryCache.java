@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.control.CompositeCache;
 
 /**
@@ -134,6 +133,6 @@ public interface MemoryCache
      *
      *@return    The cache value
      */
-    public ICompositeCache getCompositeCache();
+    public CompositeCache getCompositeCache();
 
 }

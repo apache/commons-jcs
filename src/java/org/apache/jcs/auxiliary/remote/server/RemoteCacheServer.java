@@ -25,14 +25,12 @@ import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttribu
 
 import org.apache.jcs.engine.CacheEventQueue;
 import org.apache.jcs.engine.CacheListeners;
-import org.apache.jcs.engine.CacheConstants;
 
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
@@ -259,7 +257,7 @@ public class RemoteCacheServer
             {
                 try
                 {
-                    ICompositeCache c = ( ICompositeCache ) cacheDesc.cache;
+                    CompositeCache c = ( CompositeCache ) cacheDesc.cache;
 
                     //TODO; make this a bit less of a hack
                     // If the source of this request was from a cluster, then
@@ -298,7 +296,7 @@ public class RemoteCacheServer
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                ICompositeCache cache = ( ICompositeCache ) cacheDesc.cache;
+
                 if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
                 {
 
@@ -413,7 +411,7 @@ public class RemoteCacheServer
         }
         else
         {
-            ICompositeCache c = ( ICompositeCache ) cacheDesc.cache;
+            CompositeCache c = ( CompositeCache ) cacheDesc.cache;
 
             return c.localGet( key );
         }
@@ -454,7 +452,7 @@ public class RemoteCacheServer
                 boolean removeSuccess = false;
 
                 // No need to notify if it was not cached.
-                ICompositeCache c = ( ICompositeCache ) cacheDesc.cache;
+                CompositeCache c = ( CompositeCache ) cacheDesc.cache;
 
                 if ( fromCluster )
                 {
@@ -478,7 +476,7 @@ public class RemoteCacheServer
 
                     // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                     // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                    ICompositeCache cache = ( ICompositeCache ) cacheDesc.cache;
+
                     if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
                     {
 

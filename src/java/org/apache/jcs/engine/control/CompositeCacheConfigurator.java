@@ -173,7 +173,7 @@ public class CompositeCacheConfigurator
     }
 
     /** Create cache region. */
-    protected ICache parseRegion( Properties props,
+    protected CompositeCache parseRegion( Properties props,
                                   String regName,
                                   String value )
     {
@@ -181,7 +181,7 @@ public class CompositeCacheConfigurator
     }
 
     /** */
-    protected ICache parseRegion( Properties props,
+    protected CompositeCache parseRegion( Properties props,
                                   String regName,
                                   String value,
                                   ICompositeCacheAttributes cca )
@@ -190,7 +190,7 @@ public class CompositeCacheConfigurator
     }
 
     /** */
-    protected ICache parseRegion( Properties props,
+    protected CompositeCache parseRegion( Properties props,
                                   String regName,
                                   String value,
                                   ICompositeCacheAttributes cca,
@@ -244,7 +244,7 @@ public class CompositeCacheConfigurator
 
         IElementAttributes ea = parseElementAttributes( props, regName, regionPrefix );
 
-        ICache cache = null;
+        CompositeCache cache = null;
         if ( regionPrefix.equals( SYSTEM_REGION_PREFIX ) )
         {
             //cache = ccMgr.createSystemCache( regName, auxCaches, cca, new ElementAttributes() );

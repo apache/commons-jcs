@@ -3,7 +3,6 @@ package org.apache.jcs.engine.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.rmi.NotBoundException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -18,14 +17,13 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.behavior.ICacheHub;
 
 /** Manages a composite cache. */
 public class CompositeCacheManager
-    implements ICacheHub, IRemoteCacheConstants, Serializable
+    implements IRemoteCacheConstants, Serializable
 {
     private final static Log log =
         LogFactory.getLog( CompositeCacheManager.class );
@@ -272,20 +270,20 @@ public class CompositeCacheManager
     }
 
     /** Gets the cache attribute of the CacheHub object */
-    public ICache getCache( String cacheName )
+    public CompositeCache getCache( String cacheName )
     {
         return getCache( cacheName, this.defaultCacheAttr.copy() );
     }
 
     /** Gets the cache attribute of the CacheHub object */
-    public ICache getCache( String cacheName, ICompositeCacheAttributes cattr )
+    public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, this.defaultElementAttr );
     }
 
     /** Gets the cache attribute of the CacheHub object */
-    public ICache getCache( String cacheName,
+    public CompositeCache getCache( String cacheName,
                             ICompositeCacheAttributes cattr,
                             IElementAttributes attr )
     {
@@ -294,7 +292,7 @@ public class CompositeCacheManager
     }
 
     /** Gets the cache attribute of the CacheHub object */
-    public ICache getCache( ICompositeCacheAttributes cattr )
+    public CompositeCache getCache( ICompositeCacheAttributes cattr )
     {
         return getCache( cattr, this.defaultElementAttr );
     }
@@ -307,30 +305,27 @@ public class CompositeCacheManager
      * defaults if none are specified. We might want to create separate method
      * for creating/getting. . .
      */
-    public ICache getCache( ICompositeCacheAttributes cattr,
+    public CompositeCache getCache( ICompositeCacheAttributes cattr,
                             IElementAttributes attr )
     {
-        ICache cache = ( ICache ) caches.get( cattr.getCacheName() );
+        CompositeCache cache;
 
-        if ( cache == null )
+        synchronized ( caches )
         {
-            synchronized ( caches )
+            cache = ( CompositeCache ) caches.get( cattr.getCacheName() );
+            if ( cache == null )
             {
-                cache = ( ICache ) caches.get( cattr.getCacheName() );
-                if ( cache == null )
-                {
-                    cattr.setCacheName( cattr.getCacheName() );
+                cattr.setCacheName( cattr.getCacheName() );
 
-                    CompositeCacheConfigurator configurator =
-                        new CompositeCacheConfigurator( this );
+                CompositeCacheConfigurator configurator =
+                    new CompositeCacheConfigurator( this );
 
-                    cache = configurator.parseRegion( this.props,
-                                                      cattr.getCacheName(),
-                                                      this.defaultAuxValues,
-                                                      cattr );
+                cache = configurator.parseRegion( this.props,
+                                                  cattr.getCacheName(),
+                                                  this.defaultAuxValues,
+                                                  cattr );
 
-                    caches.put( cattr.getCacheName(), cache );
-                }
+                caches.put( cattr.getCacheName(), cache );
             }
         }
 
@@ -416,7 +411,7 @@ public class CompositeCacheManager
     /** */
     public int getCacheType()
     {
-        return CACHE_HUB;
+        return ICacheType.CACHE_HUB;
     }
 
     /** */

@@ -14,13 +14,9 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheManager;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 
 import org.apache.jcs.engine.control.CompositeCache;
-
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -205,7 +201,7 @@ public class RemoteCacheListener
             }
 
             getCacheManager();
-            ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
+            CompositeCache cache = cacheMgr.getCache( cb.getCacheName() );
 
             cache.localUpdate( cb );
         }

@@ -62,11 +62,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
-import org.apache.jcs.engine.CacheConstants;
+
 import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICache;
+
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCache;
+
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
@@ -84,7 +84,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
  *
  * @author asmuts
  */
-public class GroupCache extends CompositeCache implements ICompositeCache
+public class GroupCache extends CompositeCache
 {
     private final static Log log = LogFactory.getLog( GroupCache.class );
 
@@ -98,7 +98,7 @@ public class GroupCache extends CompositeCache implements ICompositeCache
      * list will not move back and forth. The list can be maintained locally but
      * the elements themselves need not be.
      */
-    ICompositeCache systemGroupIdCache;
+    CompositeCache systemGroupIdCache;
 
     /**
      * Constructor for the GroupCache object
@@ -135,7 +135,7 @@ public class GroupCache extends CompositeCache implements ICompositeCache
                        AuxiliaryCache[] auxCaches,
                        ICompositeCacheAttributes cattr,
                        IElementAttributes attr,
-                       ICompositeCache systemGroupIdCache )
+                       CompositeCache systemGroupIdCache )
     {
         super( cacheName, auxCaches, cattr, attr );
         if ( log.isDebugEnabled() )
@@ -201,7 +201,6 @@ public class GroupCache extends CompositeCache implements ICompositeCache
      * Places a read lock on the group id for a GroupAttrName get-operation.
      *
      * @param key The key for the element
-     * @param container Should it return the CacheElement wrapper
      * @return The gAN value
      */
     public ICacheElement getGAN( GroupAttrName key )
@@ -213,7 +212,6 @@ public class GroupCache extends CompositeCache implements ICompositeCache
      * Gets the gAN attribute of the GroupCache object
      *
      * @param key The key for the element
-     * @param container Should it return the CacheElement wrapper
      * @param invocation Is the originating method call from a local source
      * @return The gAN value
      */
@@ -300,13 +298,11 @@ public class GroupCache extends CompositeCache implements ICompositeCache
                 log.debug( "getGi: got obj " + obj );
             }
         }
-        catch ( IOException ioeg )
-        {
-        }
         finally
         {
             locker.done( gid.key );
         }
+
         return ( ICacheElement ) obj;
     }
 
@@ -572,8 +568,6 @@ public class GroupCache extends CompositeCache implements ICompositeCache
 
     /**
      * Put an element into a group.
-     *
-     * @param invocation Is the originating method call from a local source
      */
     public void putGAN( GroupAttrName key, Serializable val,
                         IElementAttributes attrE,
@@ -648,14 +642,7 @@ public class GroupCache extends CompositeCache implements ICompositeCache
         GroupId groupId = new GroupId( this.getCacheName(), group );
         HashSet attrNameSet = null;
 
-        //attrNameSet = (HashSet)super.get(groupId.key);
-        try
-        {
-            attrNameSet = ( HashSet ) systemGroupIdCache.get( groupId.key );
-        }
-        catch ( IOException ioe )
-        {
-        }
+        attrNameSet = ( HashSet ) systemGroupIdCache.get( groupId.key );
 
         if ( attrNameSet == null )
         {
@@ -824,21 +811,15 @@ public class GroupCache extends CompositeCache implements ICompositeCache
         HashSet attrNameSet = null;
         CacheElement ce = null;
 
-        try
+        if ( invocation )
         {
-            if ( invocation )
-            {
-                // Invocation is NOT local
-                ce = ( CacheElement ) systemGroupIdCache.localGet( groupId.key );
-            }
-            else
-            {
-                // Invocation is local
-                ce = ( CacheElement ) systemGroupIdCache.get( groupId.key );
-            }
+            // Invocation is NOT local
+            ce = ( CacheElement ) systemGroupIdCache.localGet( groupId.key );
         }
-        catch ( IOException ioe )
+        else
         {
+            // Invocation is local
+            ce = ( CacheElement ) systemGroupIdCache.get( groupId.key );
         }
 
         // IF THE NAME SET IS FOUND
@@ -898,25 +879,20 @@ public class GroupCache extends CompositeCache implements ICompositeCache
                     // no more attribute, so remove the name set all together, skipLock = true.
                     //super.remove(groupId, invokation );
                     //removeGI(groupId, invokation, true );
-                    try
-                    {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "calling systemGroupIdCache.remove( groupId.key, EXCLUDE_REMOTE_CACHE )" );
-                        }
 
-                        // unlike insertion, removal should go remote if locally invoked
-                        if ( invocation )
-                        {
-                            systemGroupIdCache.localRemove( groupId.key );
-                        }
-                        else
-                        {
-                            systemGroupIdCache.remove( groupId.key );
-                        }
-                    }
-                    catch ( IOException ioe )
+                    if ( log.isDebugEnabled() )
                     {
+                        log.debug( "calling systemGroupIdCache.remove( groupId.key, EXCLUDE_REMOTE_CACHE )" );
+                    }
+
+                    // unlike insertion, removal should go remote if locally invoked
+                    if ( invocation )
+                    {
+                        systemGroupIdCache.localRemove( groupId.key );
+                    }
+                    else
+                    {
+                        systemGroupIdCache.remove( groupId.key );
                     }
                 }
             }
@@ -972,9 +948,6 @@ public class GroupCache extends CompositeCache implements ICompositeCache
             {
                 ok = systemGroupIdCache.remove( groupId.key );
             }
-        }
-        catch ( IOException ioeg )
-        {
         }
         finally
         {
