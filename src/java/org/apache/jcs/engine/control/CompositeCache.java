@@ -323,6 +323,7 @@ public class CompositeCache
         // if the item is not spoolable, return
         if ( !ce.getElementAttributes().getIsSpool() )
         {
+            //TODO define an event for this.
             return;
         }
                         
