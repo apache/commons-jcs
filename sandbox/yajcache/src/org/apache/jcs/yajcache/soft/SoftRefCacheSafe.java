@@ -21,7 +21,8 @@ import java.util.Map;
 import org.apache.jcs.yajcache.core.ICacheSafe;
 import org.apache.jcs.yajcache.util.BeanUtils;
 import org.apache.jcs.yajcache.util.SerializeUtils;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.jcs.yajcache.config.PerCacheConfig;
 
 /**
  *
@@ -33,18 +34,22 @@ public class SoftRefCacheSafe<V> extends SoftRefCache<V>
         implements ICacheSafe<V> 
 {
     public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType, 
+            PerCacheConfig config,
             int initialCapacity, float loadFactor, int concurrencyLevel) 
     {
-        super(name, valueType, initialCapacity, loadFactor, concurrencyLevel);
+        super(name, valueType, config, initialCapacity, loadFactor, concurrencyLevel);
     }
     public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType, 
+            PerCacheConfig config,
             int initialCapacity) 
     {
-        super(name, valueType, initialCapacity);
+        super(name, valueType, config, initialCapacity);
     }
 
-    public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType) {
-        super(name, valueType);
+    public SoftRefCacheSafe(@NonNullable String name, 
+        @NonNullable Class<V> valueType, PerCacheConfig config) 
+    {
+        super(name, valueType, config);
     }
     public V getCopy(@NonNullable String key) {
         V val = this.get(key);
