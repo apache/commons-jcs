@@ -436,7 +436,10 @@ public class Cache
     }
 
     /**
-     * ICacheHub method
+     * Writes the specified element to any disk auxilliaries
+     *
+     * Might want to rename this "overflow" incase the hub wants to do
+     * something else.
      *
      * @param ce The CacheElement
      */

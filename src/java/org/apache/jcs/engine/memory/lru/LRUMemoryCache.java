@@ -76,7 +76,6 @@ public class LRUMemoryCache implements MemoryCache, Serializable
      */
     private ShrinkerThread shrinker;
 
-
     /**
      * Constructor for the LRUMemoryCache object
      */
@@ -118,77 +117,67 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     public void update( ICacheElement ce )
         throws IOException
     {
+        // Asynchronisly create a MemoryElement
 
-        // asynchronisly create a MemoryElement
         ce.getElementAttributes().setLastAccessTimeNow();
         addFirst( ce );
-        MemoryElementDescriptor old = ( MemoryElementDescriptor ) map.put( ce.getKey(), first );
+        MemoryElementDescriptor old =
+            ( MemoryElementDescriptor ) map.put( ce.getKey(), first );
+
+        // If the node was the same as an existing node, remove it.
 
         if ( first.equals( old ) )
         {
-            // the same as an existing item.
             removeNode( old );
         }
 
-        // save a microsecond on the second call.
         int size = map.size();
-        // need to spool at a certain percentage synchronously
+
+        // If the element limit is reached, we need to spool
+
         if ( size < this.cattr.getMaxObjects() )
         {
             return;
         }
         else
         {
+            log.debug( "In memory limit reached, spooling" );
 
-            // SPOOL LAST -- need to make this a grouping in a queue
-            log.debug( "IN RAM overflow" );
+            // Write the last 'chunkSize' items to disk.
 
-            // write the last item to disk.
-            try
+            int chunkSizeCorrected = Math.min( size, chunkSize );
+
+            if ( log.isDebugEnabled() )
             {
-
-                // PUSH 5 TO DISK TO MINIMIZE THE TYPICAL
-                int chunkSizeCorrected = Math.min( size, chunkSize );
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "update: About to spool to disk cache, map.size() = " + size + ", this.cattr.getMaxObjects() = " + this.cattr.getMaxObjects() + ", chunkSizeCorrected = " + chunkSizeCorrected );
-                }
-
-                // The spool will put them in a disk event queue, so there is no
-                // need to pre-queue the queuing.  This would be a bit wasteful
-                // and wouldn't save much time in this synchronous call.
-                for ( int i = 0; i < chunkSizeCorrected; i++ )
-                {
-                    // Might want to rename this "overflow" incase the hub
-                    // wants to do something else.
-                    cache.spoolToDisk( last.ce );
-                    map.remove( last.ce.getKey() );
-                    removeNode( last );
-                }
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "update: After spool, put " + last.ce.getKey() + " on disk cache, map.size() = " + size + ", this.cattr.getMaxObjects() = " + this.cattr.getMaxObjects() + ", chunkSizeCorrected = " + chunkSizeCorrected );
-                }
-
-            }
-            catch ( Exception ex )
-            {
-                // impossible case.
-                ex.printStackTrace();
-                throw new IllegalStateException( ex.getMessage() );
+                log.debug( "About to spool to disk cache, map size: " + size
+                           + ", max objects: " + this.cattr.getMaxObjects()
+                           + ", items to spool: " + chunkSizeCorrected );
             }
 
+            // The spool will put them in a disk event queue, so there is no
+            // need to pre-queue the queuing.  This would be a bit wasteful
+            // and wouldn't save much time in this synchronous call.
+
+            for ( int i = 0; i < chunkSizeCorrected; i++ )
+            {
+                cache.spoolToDisk( last.ce );
+                map.remove( last.ce.getKey() );
+                removeNode( last );
+            }
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "After spool, put " + last.ce.getKey()
+                           + " on disk cache, map size: " + size  );
+            }
         }
-
     }
 
     /**
-     * Description of the Method
+     * Get an item from the cache
      *
-     * @return
-     * @param key
+     * @return Element mathinh key if found, or null
+     * @param key Identifies item to find
      * @exception IOException
      */
     public ICacheElement get( Serializable key )
@@ -196,72 +185,36 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     {
         MemoryElementDescriptor me = null;
         ICacheElement ce = null;
-        boolean found = false;
 
         try
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "get: key = " + key );
+                log.debug( "getting item for key: " + key );
             }
 
             me = ( MemoryElementDescriptor ) map.get( key );
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "me =" + me );
-            }
 
-            if ( me == null )
+            if ( me != null )
             {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( cacheName + ": LRUMemoryCache hit for " + key );
+                }
 
+                ce = me.ce;
+
+                ce.getElementAttributes().setLastAccessTimeNow();
+                makeFirst( me );
             }
             else
             {
-                found = true;
-                ce = me.ce;
-                //ramHit++;
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( cacheName + " -- RAM-HIT for " + key );
-                }
+                log.debug( cacheName + ": LRUMemoryCache miss for " + key );
             }
-
         }
         catch ( Exception e )
         {
             log.error( e );
-        }
-
-        try
-        {
-
-            if ( !found )
-            {
-                // Item not found in all caches.
-                //miss++;
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( cacheName + " -- MISS for " + key );
-                }
-                return null;
-                //throw new ObjectNotFoundException( key + " not found in cache" );
-            }
-        }
-        catch ( Exception e )
-        {
-            log.error( "Error handling miss", e );
-            return null;
-        }
-
-        try
-        {
-            ce.getElementAttributes().setLastAccessTimeNow();
-            makeFirst( me );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Error making first", e );
-            return null;
         }
 
         return ce;
@@ -277,19 +230,16 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     public boolean remove( Serializable key )
         throws IOException
     {
-
         if ( log.isDebugEnabled() )
         {
-            log.debug( "remove> key=" + key );
-            //+, nonLocal="+nonLocal);
+            log.debug( "removing item for key: " + key );
         }
 
-        //p("remove> key="+key+", nonLocal="+nonLocal);
         boolean removed = false;
 
         // handle partial removal
-        if ( key instanceof String
-            && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
+        if ( key instanceof String && ( ( String ) key )
+                .endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             // remove all keys of the same name hierarchy.
             synchronized ( map )
@@ -298,10 +248,15 @@ public class LRUMemoryCache implements MemoryCache, Serializable
                 {
                     Map.Entry entry = ( Map.Entry ) itr.next();
                     Object k = entry.getKey();
-                    if ( k instanceof String && k.toString().startsWith( key.toString() ) )
+
+                    if ( k instanceof String
+                         && ( ( String ) k ).startsWith( key.toString() ) )
                     {
                         itr.remove();
-                        removeNode( ( MemoryElementDescriptor ) entry.getValue() );
+
+                        removeNode( ( MemoryElementDescriptor )
+                            entry.getValue() );
+
                         removed = true;
                     }
                 }
@@ -310,14 +265,16 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         else
         {
             // remove single item.
-            MemoryElementDescriptor ce = ( MemoryElementDescriptor ) map.remove( key );
+            MemoryElementDescriptor ce =
+                ( MemoryElementDescriptor ) map.remove( key );
+
             if ( ce != null )
             {
                 removeNode( ce );
                 removed = true;
             }
         }
-        // end else not hierarchical removal
+
         return removed;
     }
 
@@ -340,16 +297,6 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     public void dispose()
         throws IOException
     {
-    }
-
-    /**
-     * Returns the cache statistics.
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "";
     }
 
     /**
@@ -392,12 +339,42 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         return map.entrySet().iterator();
     }
 
-    // -------------------------------------------------------- internal mehods
+    /**
+     * Puts an item to the cache.
+     *
+     * @param me
+     * @exception IOException
+     */
+    public void waterfal( MemoryElementDescriptor me )
+        throws IOException
+    {
+        this.cache.spoolToDisk( me.ce );
+    }
+
+    /**
+     * Returns the CacheAttributes.
+     *
+     * @return The CacheAttributes value
+     */
+    public ICompositeCacheAttributes getCacheAttributes()
+    {
+        return this.cattr;
+    }
+
+    /**
+     * Sets the CacheAttributes.
+     *
+     * @param cattr The new CacheAttributes value
+     */
+    public void setCacheAttributes( ICompositeCacheAttributes cattr )
+    {
+        this.cattr = cattr;
+    }
+
+    // --------------------------- internal mehods (linked list implementation)
 
     /**
      * Removes the specified node from the link list.
-     *
-     * @param me
      */
     private void removeNode( MemoryElementDescriptor me )
     {
@@ -439,12 +416,9 @@ public class LRUMemoryCache implements MemoryCache, Serializable
 
     /**
      * Adds a new node to the end of the link list. Currently not used.
-     *
-     * @param ce The feature to be added to the Last attribute
      */
     private void addLast( CacheElement ce )
     {
-
         MemoryElementDescriptor me = new MemoryElementDescriptor( ce );
 
         if ( first == null )
@@ -463,8 +437,6 @@ public class LRUMemoryCache implements MemoryCache, Serializable
 
     /**
      * Adds a new node to the start of the link list.
-     *
-     * @param ce The feature to be added to the First attribute
      */
     private void addFirst( ICacheElement ce )
     {
@@ -487,8 +459,6 @@ public class LRUMemoryCache implements MemoryCache, Serializable
 
     /**
      * Moves an existing node to the start of the link list.
-     *
-     * @param ce
      */
     public synchronized void makeFirst( ICacheElement ce )
     {
@@ -497,14 +467,9 @@ public class LRUMemoryCache implements MemoryCache, Serializable
 
     /**
      * Moves an existing node to the start of the link list.
-     *
-     * @param me
      */
     public synchronized void makeFirst( MemoryElementDescriptor me )
     {
-
-        // MemoryElementDescriptor me = new MemoryElementDescriptor(ce);
-
         try
         {
             if ( me.prev == null )
@@ -537,37 +502,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         return;
     }
 
-    /**
-     * Puts an item to the cache.
-     *
-     * @param me
-     * @exception IOException
-     */
-    public void waterfal( MemoryElementDescriptor me )
-        throws IOException
-    {
-        this.cache.spoolToDisk( me.ce );
-    }
-
-    /**
-     * Returns the CacheAttributes.
-     *
-     * @return The CacheAttributes value
-     */
-    public ICompositeCacheAttributes getCacheAttributes()
-    {
-        return this.cattr;
-    }
-
-    /**
-     * Sets the CacheAttributes.
-     *
-     * @param cattr The new CacheAttributes value
-     */
-    public void setCacheAttributes( ICompositeCacheAttributes cattr )
-    {
-        this.cattr = cattr;
-    }
+    // ---------------------------------------------------------- debug methods
 
     /**
      * Dump the cache map for debugging.
@@ -579,8 +514,10 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         {
             //for ( Iterator itr = memCache.getIterator(); itr.hasNext();) {
             Map.Entry e = ( Map.Entry ) itr.next();
-            MemoryElementDescriptor me = ( MemoryElementDescriptor ) e.getValue();
-            log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
+            MemoryElementDescriptor me =
+                ( MemoryElementDescriptor ) e.getValue();
+            log.debug( "dumpMap> key=" + e.getKey()
+                       + ", val=" + me.ce.getVal() );
         }
     }
 
@@ -592,7 +529,8 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         log.debug( "dumpingCacheEntries" );
         for ( MemoryElementDescriptor me = first; me != null; me = me.next )
         {
-            log.debug( "dumpCacheEntries> key=" + me.ce.getKey() + ", val=" + me.ce.getVal() );
+            log.debug( "dumpCacheEntries> key="
+                       + me.ce.getKey() + ", val=" + me.ce.getVal() );
         }
     }
 }

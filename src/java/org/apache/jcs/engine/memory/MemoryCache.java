@@ -59,8 +59,7 @@ public interface MemoryCache
         throws IOException;
 
     /** Puts an item to the cache. */
-    public void update( ICacheElement ce )
-        throws IOException;
+    public void update( ICacheElement ce ) throws IOException;
 
     /** Returns the CacheAttributes. */
     public ICompositeCacheAttributes getCacheAttributes();
