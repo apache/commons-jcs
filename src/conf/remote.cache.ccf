@@ -15,7 +15,7 @@ remote.cluster.LocalClusterConsistency=true
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
-jcs.default=DC,RCluster1
+jcs.default=DC
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -33,7 +33,7 @@ jcs.default.elementattributes.IsLateral=true
 
 # SYSTEM CACHE
 # should be defined for the storage of group attribute list
-jcs.system.groupIdCache=DC,RCluster1
+jcs.system.groupIdCache=DC
 jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -60,7 +60,7 @@ jcs.auxiliary.RCluster1=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RCluster1.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RCluster1.attributes.RemoteTypeName=CLUSTER
 jcs.auxiliary.RCluster1.attributes.RemoveUponRemotePut=false
-jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
+#jcs.auxiliary.RCluster1.attributes.ClusterServers=localhost:1103
 jcs.auxiliary.RCluster1.attributes.GetOnly=false
 #jcs.auxiliary.RCluster1.attributes.LocalClusterConsistency=true
 

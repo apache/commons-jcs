@@ -1,15 +1,24 @@
-grant codeBase "file:/@project_home_f@bin/classes/*" {
+grant {
     permission java.security.AllPermission;
 };
 
-grant codeBase "file:/@project_home_f@bin/*" {
+
+grant codeBase "file:g:/dev/jakarta-turbine-jcs/target/classes/*" {
     permission java.security.AllPermission;
 };
 
-grant codeBase "file:/@lib.repo.f@*" {
+grant codeBase "file:g:/dev/jakarta-turbine-jcs/src/conf/*" {
     permission java.security.AllPermission;
 };
 
-grant codeBase "file:/*" {
+grant codeBase "file:g:/dev/jakarta-turbine-jcs/src/conf/scripts/*" {
+    permission java.security.AllPermission;
+};
+
+grant codeBase "file:g:/dev/jakarta-turbine-jcs/*" {
+    permission java.security.AllPermission;
+};
+
+grant codeBase "file:/G:/*" {
     permission java.security.AllPermission;
 };
