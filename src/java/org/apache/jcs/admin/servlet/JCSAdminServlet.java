@@ -159,7 +159,17 @@ public class JCSAdminServlet extends VelocityServlet
 
         Object[] keys = cache.getMemoryCache().getKeyArray();
 
-        Arrays.sort( keys );
+        // Attempt to sort keys according to their natural ordering. If that
+        // fails, get the key array again and continue unsorted.
+
+        try
+        {
+            Arrays.sort( keys );
+        }
+        catch ( Exception e )
+        {
+            keys = cache.getMemoryCache().getKeyArray();
+        }
 
         LinkedList records = new LinkedList();
 
