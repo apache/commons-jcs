@@ -23,7 +23,7 @@ import org.apache.jcs.yajcache.core.ICache;
  * @author Hanson Char
  */
 @CopyRightApache
-public class CachePutEvent<V> extends CacheChangeEvent {
+public class CachePutEvent<V> extends CacheChangeEvent<V> {
     private final @NonNullable String key;
     private final @NonNullable V value;
 
