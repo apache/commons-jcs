@@ -40,7 +40,7 @@ import org.apache.jcs.yajcache.util.EqualsUtils;
 
 
 /**
- * Cache implemented using Soft References.
+ * Cache implemented using {@link KeyedSoftReference} and {@link ConcurrentHashMap}.
  *
  * @author Hanson Char
  */
@@ -63,10 +63,11 @@ public class SoftRefCache<V> implements ICache<V> {
     
     private AtomicInteger countPut = new AtomicInteger(0);
     private AtomicInteger countRemove = new AtomicInteger(0);
-
+    /** Returns the cache name. */
     public @NonNullable String getName() {
         return this.name;
     }
+    /** Returns the value type of the cache. */
     public @NonNullable Class<V> getValueType() {
         return this.valueType;
     }
@@ -88,7 +89,6 @@ public class SoftRefCache<V> implements ICache<V> {
         this.name = name;
         this.valueType = valueType;
     }
-
     public SoftRefCache(
             @NonNullable String name, 
             @NonNullable Class<V> valueType)
@@ -109,9 +109,6 @@ public class SoftRefCache<V> implements ICache<V> {
         return map.size();
     }
 
-    // @tothink: SoftReference.get() doesn't seem to be thread-safe.
-    // But do we really want to synchronize upon invoking get() ?
-    // It's not thread-safe, but what's the worst consequence ?
     public V get(@NonNullable String key) {
         if (debug)
             this.countGet.incrementAndGet();
@@ -131,55 +128,14 @@ public class SoftRefCache<V> implements ICache<V> {
             if (debug)
                 this.countGetEmptyRef.incrementAndGet();
             this.map.remove(key,  ref);
-//            SoftRefCacheCleaner.inst.cleanupKey(this.map, key);
         }
         // cache value exists.
         // try to refresh the soft reference.
-//        this.renewSoftReference(key, val);
         if (debug)
             this.countGetHitMemory.incrementAndGet();
         return val;
     }
-//    private void renewSoftReference(String key, V val) {
-//        if (debug)
-//            log.debug("get: try to refresh the soft reference.");
-//        KeyedSoftReference<V> oldRef = 
-//                map.put(key, new KeyedSoftReference<V>(key, val, refq));
-//        // Check for race conditon.
-//        if (oldRef == null) {
-//            // key has just been removed by another thread.
-//            if (debug)
-//                log.debug("get: key has just been removed by another thread.");
-//            return;
-//        }
-//        V oldVal = oldRef.get();
-//        // if oldVal is null, it means the GC just cleared it.
-//        while (oldVal != null && oldVal != val) {
-//            // race condition occurred
-//            // put back the old stuff
-//            if (debug)
-//                log.debug("get: race condition occurred. put back the old stuff");
-//            val = oldVal;
-//            oldRef = map.put(key, oldRef);
-//            
-//            if (oldRef == null) {
-//                // key has just been removed by another thread.
-//                if (debug)
-//                    log.debug("get: key has just been removed by another thread.");
-//                oldRef = map.remove(key);
-//                
-//                if (oldRef == null) {
-//                    // again, key has just been removed by another thread.
-//                    if (debug)
-//                        log.debug("again: key has just been removed by another thread.");
-//                    break;
-//                }
-//            }
-//            oldVal = oldRef.get();
-//        }
-//        return;
-//    }
-        
+       
     public V get(@NonNullable Object key) {
         return key == null ? null : this.get(key.toString());
     }
