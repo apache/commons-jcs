@@ -1,7 +1,7 @@
 /*
  * TestSerializable.java
  *
- * Created on 17 January 2005, 23:35
+ * $Revision $ $Date$
  */
 
 package net.sf.yajcache.util;
