@@ -59,7 +59,6 @@ public class CacheEventQueue
   private long listenerId;
   private String cacheName;
 
-  private int failureCount;
   private int maxFailure;
 
   // in milliseconds
@@ -134,7 +133,8 @@ public class CacheEventQueue
   }
   
   /**
-   * Event Q is emtpy.
+   * Kill the processor thread and indicate that the queue is detroyed and no
+   * longer alive, but it can still be working.
    */
   public synchronized void stopProcessing()
   {
@@ -146,6 +146,7 @@ public class CacheEventQueue
 
   /**
    * Returns the time to wait for events before killing the background thread.
+   * @return int
    */
   public int getWaitToDieMillis()
   {
@@ -154,6 +155,7 @@ public class CacheEventQueue
 
   /**
    * Sets the time to wait for events before killing the background thread.
+   * @param wtdm, the ms for the q to sit idle.
    */
   public void setWaitToDieMillis( int wtdm)
   {
@@ -161,7 +163,7 @@ public class CacheEventQueue
   }
 
   /**
-   * @return
+   * @return String debugging info.
    */
   public String toString()
   {
@@ -170,14 +172,19 @@ public class CacheEventQueue
   }
 
   /**
-   * @return The {3} value
+   * @return The alive value
    */
   public boolean isAlive()
   {
     return ( !destroyed );
   }
 
-  public void setAlive( boolean aState )
+  /**
+   * Sets whether the queue is actively processing -- if there are working threads.
+   * 
+   * @param aState
+   */
+public void setAlive( boolean aState )
   {
     destroyed = !aState;
   }
@@ -349,6 +356,8 @@ public class CacheEventQueue
   /**
    * Returns the next cache event from the queue or null if there are no events
    * in the queue.
+   * 
+   * @return An event to process.
    *
    */
   private AbstractCacheEvent take()
@@ -398,8 +407,8 @@ public class CacheEventQueue
   	se.setData("" + this.working);
   	elems.add(se);
   	
-  	se.setName( "Alive" );
   	se = new StatElement();
+  	se.setName( "Alive" );
   	se.setData("" + this.isAlive());
   	elems.add(se);
 
@@ -455,8 +464,11 @@ public class CacheEventQueue
       extends Thread
   {
     CacheEventQueue queue;
+    
     /**
      * Constructor for the QProcessor object
+     * 
+     * @param aQueue, the event queue to take items from.
      */
     QProcessor( CacheEventQueue aQueue )
     {
@@ -741,7 +753,7 @@ public class CacheEventQueue
   }
 
   /**
-   * @return
+   * @return whether the queue is functional.
    */
   public boolean isWorking()
   {
@@ -756,6 +768,10 @@ public class CacheEventQueue
     working = b;
   }
 
+  /**
+   * 
+   * @return whether there are any items in the queue.
+   */
   public boolean isEmpty()
   {
     return tail == head;

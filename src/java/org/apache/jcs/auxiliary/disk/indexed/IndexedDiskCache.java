@@ -32,9 +32,11 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
+
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
-import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -45,8 +47,6 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.SortedPreferentialArray;
-
-import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory.
@@ -93,8 +93,6 @@ public class IndexedDiskCache
    * Each instance of a Disk cache should use this lock to synchronize reads
    * and writes to the underlying storage mechansism.
    */
-  //protected ReadWriteLock storageLock = new ReadWriteLock();
-
   protected WriterPreferenceReadWriteLock storageLock = new
       WriterPreferenceReadWriteLock();
 
@@ -105,7 +103,7 @@ public class IndexedDiskCache
    */
   public IndexedDiskCache(IndexedDiskCacheAttributes cattr)
   {
-    super((IDiskCacheAttributes)cattr);
+    super(cattr);
 
     String cacheName = cattr.getCacheName();
     String rootDirName = cattr.getDiskPath();
@@ -180,10 +178,11 @@ public class IndexedDiskCache
   /**
    * Loads the keys from the .key file.  The keys are stored in a HashMap on
    * disk.  This is converted into a LRUMap.
+   * 
+   * @throws InterruptedException
    */
   private void loadKeys() throws InterruptedException
   {
-    //storageLock.writeLock();
     storageLock.writeLock().acquire();
 
     if (log.isInfoEnabled())
@@ -233,15 +232,17 @@ public class IndexedDiskCache
     }
     finally
     {
-      //storageLock.done();
       storageLock.writeLock().release();
     }
   }
 
 
   /**
-   * Check the consitency between the keys and the datafile.  Makes sure
+   * Check for minimal consitency between the keys and the datafile.  Makes sure
    * no staring positions in the keys exceed the file length.
+   * <p>
+   * The caller should take the appropriate action if the keys and data
+   * are not consistent.  
    *
    * @return True if the test passes
    */
@@ -276,23 +277,7 @@ public class IndexedDiskCache
                     "\n raf.length() = " + len +
                     "\n pos = " + pos );
           return isOk;
-          //reset();
-          //throw new IOException( "The Data File Is Corrupt, need to reset" );
-         // return null;
       }
-
-/*
-      else
-      {
-        raf.seek(pos);
-        int datalen = raf.readInt();
-        if (datalen > raf.length())
-        {
-          isOk = false;
-          break;
-        }
-      }
- */
     }
 
     log.info( "Finished inital consistency check, isOk = " + isOk );
@@ -345,6 +330,8 @@ public class IndexedDiskCache
    * Update the disk cache. Called from the Queue. Makes sure the Item has not
    * been retireved from purgatory while in queue for disk. Remove items from
    * purgatory when they go to disk.
+   * 
+   * @param ce, The ICacheElement to put to disk.
    */
   public void doUpdate(ICacheElement ce)
   {
@@ -354,6 +341,15 @@ public class IndexedDiskCache
       log.debug("Storing element on disk, key: " + ce.getKey());
     }
 
+    if (!alive)
+    {
+        if (log.isDebugEnabled())
+        {
+          log.debug("Disk is not alive, aborting put." );
+        }
+        return;
+    }
+    
     IndexedDiskElementDescriptor ded = null;
 
     try
@@ -369,10 +365,6 @@ public class IndexedDiskCache
 
       try
       {
-        if (!alive)
-        {
-          return;
-        }
 
         IndexedDiskElementDescriptor old =
             (IndexedDiskElementDescriptor)
@@ -452,6 +444,8 @@ public class IndexedDiskCache
   }
 
   /**
+   * @param key
+   * @return ICacheElement or null
    * @see AbstractDiskCache#doGet
    */
   protected ICacheElement doGet(Serializable key)
@@ -587,7 +581,6 @@ public class IndexedDiskCache
     boolean removed = false;
     try
     {
-      //storageLock.writeLock();
       storageLock.writeLock().acquire();
 
       if (key instanceof String
@@ -695,7 +688,6 @@ public class IndexedDiskCache
     }
     finally
     {
-      //storageLock.done();
       storageLock.writeLock().release();
     }
 
@@ -774,9 +766,6 @@ public class IndexedDiskCache
   /**
    * If the maxKeySize is < 0, use 5000, no way to have an unlimted
    * recycle bin right now, or one less than the mazKeySize.
-   * 
-   * @TODO make separate config.  
-   *
    */
   private void initRecycleBin()
   {
@@ -800,7 +789,10 @@ public class IndexedDiskCache
     }       
   }  
   
-  
+  /**
+   * Create the map for keys that contain the index position on disk.
+   *
+   */
   private void initKeyMap()
   {
     keyHash = null;
@@ -821,9 +813,12 @@ public class IndexedDiskCache
       }
     }       
   }    
+  
   /**
    * Dispose of the disk cache in a background thread.  Joins against this
    * thread to put a cap on the disposal time.
+   * 
+   * @todo make dispose window configurable.
    */
   public void doDispose()
   {
@@ -854,7 +849,6 @@ public class IndexedDiskCache
   {
     try
     {
-      //storageLock.writeLock();
       storageLock.writeLock().acquire();
 
       if (!alive)
@@ -896,7 +890,6 @@ public class IndexedDiskCache
 
       try
       {
-        //storageLock.done();
         storageLock.writeLock().release();
       }
       catch (Exception e)
@@ -1017,7 +1010,6 @@ public class IndexedDiskCache
 
       // potentially, this will cause the longest delay
       // lock so no more gets to the queue -- optimizingPutList
-      //storageLock.writeLock();
       storageLock.writeLock().acquire();
       try
       {
@@ -1047,7 +1039,6 @@ public class IndexedDiskCache
       }
       finally
       {
-        //storageLock.done();
         storageLock.writeLock().release();
       }
 
@@ -1125,10 +1116,13 @@ public class IndexedDiskCache
   /**
    * Copies data for a key from main file to temp file and key to temp keyhash
    * Clients must manage locking.
-   *
-   * @param key Serializable
-   * @param keyHash Map
-   * @param dataFileTemp IndexedDisk
+   * 
+   * @param key
+   *            Serializable
+   * @param keyHashTemp
+   * @param dataFileTemp
+   *            IndexedDisk
+   * @throws Exception
    */
   private void moveKeyDataToTemp(Serializable key, LRUMap keyHashTemp,
                                  IndexedDisk dataFileTemp) throws Exception
@@ -1142,7 +1136,7 @@ public class IndexedDiskCache
     catch (IOException e)
     {
       log.error("Failed to get orinigal off disk cache: " + fileName
-                + ", key: " + key + "" );//; keyHash.tag = " + keyHash.tag);
+                + ", key: " + key + "" );
       //reset();
       throw e;
     }
@@ -1310,15 +1304,34 @@ public class IndexedDiskCache
     IStatElement se = null;
 
     se = new StatElement();
+    se.setName( "Is Alive" );
+    se.setData( "" + alive );        
+    elems.add( se );
+    
+    se = new StatElement();
     se.setName( "Key Map Size" );
-    se.setData( "" + this.keyHash.size() );
+    if ( this.keyHash != null )
+    {
+        se.setData( "" + this.keyHash.size() );        
+    }
+    else
+    {
+        se.setData( "-1" );                
+    }
     elems.add( se );
 
     try
     {
       se = new StatElement();
       se.setName( "Data File Length" );
-      se.setData( "" + this.dataFile.length() );
+      if ( this.dataFile != null )
+      {
+          se.setData( "" + this.dataFile.length() );          
+      }
+      else
+      {
+          se.setData( "-1" );                    
+      }
       elems.add( se );
     }
     catch (Exception e)
@@ -1366,13 +1379,22 @@ public class IndexedDiskCache
       extends LRUMapJCS
   {
 
+    /**
+     * <code>tag</code> tells us which map we are working on.
+     */
     public String tag = "orig";
 
+    /**
+     * 
+     */
     public LRUMap()
     {
       super();
     }
 
+    /**
+     * @param maxKeySize
+     */
     public LRUMap(int maxKeySize)
     {
       super(maxKeySize);

@@ -70,8 +70,6 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   private String           cacheName;
 
-  private int              failureCount;
-
   private int              maxFailure;
 
   // in milliseconds
@@ -80,8 +78,6 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   private boolean          destroyed       = true;
 
   private boolean          working         = true;
-
-  private Thread           processorThread;
 
   //The Thread Pool to execute events with.
   private ThreadPool       pool            = null;
@@ -94,6 +90,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
    * @param cacheName
    * @param maxFailure
    * @param waitBeforeRetry
+   * @param threadPoolName
    */
   public PooledCacheEventQueue(ICacheListener listener, long listenerId,
       String cacheName, int maxFailure, int waitBeforeRetry,
@@ -145,12 +142,12 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   {
 
     destroyed = true;
-    processorThread = null;
 
   }
 
   /**
    * Returns the time to wait for events before killing the background thread.
+   * @return the time to wait before shutting down in ms.
    */
   public int getWaitToDieMillis()
   {
@@ -159,6 +156,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /**
    * Sets the time to wait for events before killing the background thread.
+   * @param wtdm
    */
   public void setWaitToDieMillis( int wtdm )
   {
@@ -166,7 +164,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   }
 
   /**
-   * @return
+   * @return String info.
    */
   public String toString()
   {
@@ -182,13 +180,16 @@ public class PooledCacheEventQueue implements ICacheEventQueue
     return (!destroyed);
   }
 
+  /**
+   * @param aState
+   */
   public void setAlive( boolean aState )
   {
-    destroyed = !aState;
+      destroyed = !aState;
   }
 
   /**
-   * @return The {3} value
+   * @return The listenerId value
    */
   public long getListenerId()
   {
@@ -196,19 +197,19 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   }
 
   /**
-   * Destroy the queue.  Interrupt all threads.
+   * Destroy the queue. Interrupt all threads.
    */
-  public synchronized void destroy()
-  {
-    if (!destroyed)
+    public synchronized void destroy()
     {
-      destroyed = true;
-      // TODO decide whether to shutdown or interrupt
-     // pool.getPool().shutdownNow();
-     pool.getPool().interruptAll();
-      log.info( "Cache event queue destroyed: " + this );
+        if (!destroyed)
+        {
+            destroyed = true;
+            // TODO decide whether to shutdown or interrupt
+            // pool.getPool().shutdownNow();
+            pool.getPool().interruptAll();
+            log.info( "Cache event queue destroyed: " + this );
+        }
     }
-  }
 
   /**
    * @param ce
@@ -308,6 +309,9 @@ public class PooledCacheEventQueue implements ICacheEventQueue
     }
   }
 
+  /**
+   * @return Statistics info
+   */
   public String getStats()
   {
     return getStatistics().toString();
@@ -568,7 +572,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   }
 
   /**
-   * Description of the Class
+   * The Event put into the queue for dispose requests.
    *
    * @author asmuts
    * @created January 15, 2002
@@ -593,7 +597,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   }
 
   /**
-   * @return
+   * @return whether or not the queue is functional
    */
   public boolean isWorking()
   {
@@ -601,7 +605,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   }
 
   /**
-   * @param b
+   * @param b, whether the queue is functional
    */
   public void setWorking( boolean b )
   {
@@ -612,7 +616,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
    * If the Queue is using a bounded channel we can determine the size.
    * If it is zero or we can't determine the size, we return true.
    *
-   * @return
+   * @return whether or not there are items in the queue
    */
   public boolean isEmpty()
   {

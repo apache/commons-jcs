@@ -41,24 +41,24 @@ public class ElementAttributes
   /**
    *  Is this item distributable at all.
    */
-  public boolean IS_DISTRIBUTE = false;
+  public boolean IS_DISTRIBUTE = true;
 
   // lateral
 
   /**
    *  can this item be flushed to disk
    */
-  public boolean IS_SPOOL = false;
+  public boolean IS_SPOOL = true;
 
   /**
    *  Is this item laterally distributable
    */
-  public boolean IS_LATERAL = false;
+  public boolean IS_LATERAL = true;
 
   /**
    *  Can this item be sent to the remote cache
    */
-  public boolean IS_REMOTE = false;
+  public boolean IS_REMOTE = true;
 
   /**
    *  can turn off expiration
@@ -173,7 +173,7 @@ public class ElementAttributes
   /**
    *  Description of the Method
    *
-   *@return
+   * @return a clone of these attributes
    */
   public Object clone2()
   {

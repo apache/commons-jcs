@@ -320,6 +320,12 @@ public class CompositeCache
     public void spoolToDisk( ICacheElement ce )
     {
 
+        // if the item is not spoolable, return
+        if ( !ce.getElementAttributes().getIsSpool() )
+        {
+            return;
+        }
+                        
         boolean diskAvailable = false;
 
         // SPOOL TO DISK.

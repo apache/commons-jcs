@@ -86,8 +86,6 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
      * Gets an IndexedDiskCache for the supplied name using the default
      * attributes.
      *
-     * @see #getCache( IndexedDiskCacheAttributes }
-     *
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
