@@ -19,13 +19,14 @@ package org.apache.jcs.yajcache.config;
 
 import java.io.File;
 
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  * @author Hanson Char
  */
-@CopyRightApache
-@TODO("Optional configuration via XML config file")
+//@CopyRightApache
+//@TODO("Optional configuration via XML config file")
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum YajCacheConfig {
     inst;
     

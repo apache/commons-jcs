@@ -15,12 +15,13 @@
  */
 
 package org.apache.jcs.yajcache.core;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 /**
  *
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 enum CacheManagerUtils {
     inst;
     /** Checks the value type assignability of an existing cache. */
