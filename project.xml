@@ -57,6 +57,12 @@
       <email>james@jamestaylor.org</email>
       <organization/>
     </developer>
+    <developer>
+      <name>Hanson Char</name>
+      <id>hchar</id>
+      <email>hchar@apache.org</email>
+      <organization/>
+    </developer>
   </developers>
 
   <dependencies>
