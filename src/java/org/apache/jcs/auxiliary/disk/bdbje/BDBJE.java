@@ -20,10 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.auxiliary.disk.bdbje.behavior.IBDBJECacheAttributes;
 
 import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.serial.SerialBinding;
@@ -42,8 +44,16 @@ import com.sleepycat.je.StatsConfig;
 import com.sleepycat.je.Transaction;
 
 /**
- *  All regions share an environment.  In an environment they each have
- *  a database.
+ *  All regions share an environment.
+ *  In this environment each region has a database.
+ *
+ *  As this is implemented JE is extremely slow at getting things
+ *  to disk, but extremely fast at retrievals.  i will experiment
+ *  with a non-transactional enviroment.
+ *
+ *  To use the je.properties file to configure the Berkeley DB,
+ *  put it in the environment home directory.  It will take
+ *  precedent over all cache.ccf configurations.
  */
 public class BDBJE
 {
@@ -52,78 +62,131 @@ public class BDBJE
 
   private File envDir;
 
-  private Environment coreEnv;
-  private Database coreDb;
-  private Database catalogDb;
-  private StoredClassCatalog catalog;
+  private static Environment coreEnv;
+  private static Hashtable databases = new Hashtable();
+  private static Database catalogDb;
+  private static StoredClassCatalog catalog;
 
-  private BDBJECacheAttributes attributes;
+  private Database coreDb;
+
+  private IBDBJECacheAttributes attributes;
 
   /**
-   *
+   *  Create the cache with the IBDBJECacheAttributes
    */
-  public BDBJE( BDBJECacheAttributes attr )
+  public BDBJE( IBDBJECacheAttributes attr )
   {
     attributes = attr;
     // create the directory if it doesn't exist.  JE won't do it.
-    envDir = new File(attributes.getDiskPath());
-    if ( !envDir.exists() ) {
+    envDir = new File( attributes.getDiskPath() );
+    if ( !envDir.exists() )
+    {
       envDir.mkdir();
     }
     init();
   }
 
-  private void init()
+  /**
+   *   This method makes sure that there is a core env defined.
+   *   A single Environment is shared by all databases.
+   */
+  private synchronized void verifyCoreEnv()
   {
-    try
-    {
-      /* Create a new, transactional database environment */
-      EnvironmentConfig envConfig = new EnvironmentConfig();
-      envConfig.setTransactional( true );
-      // create the env if it doesn't exist, else do nothing
-      envConfig.setAllowCreate( true );
-      coreEnv = new Environment( envDir, envConfig );
 
-      /* Make a database within that environment */
-      Transaction txn = coreEnv.beginTransaction( null, null );
-      DatabaseConfig dbConfig = new DatabaseConfig();
-      dbConfig.setTransactional( true );
-      dbConfig.setAllowCreate( true );
-      dbConfig.setSortedDuplicates( false );
-      // create a database for this region.  Aovids the overhead of
-      // a secondary database for grouping.
-      coreDb =
-          coreEnv.openDatabase( txn, attributes.getCacheName(), dbConfig );
-      if ( log.isInfoEnabled() )
+    if ( coreEnv == null )
+    {
+      try
       {
-        log.info(
-            "created db for region = '"
-            + attributes.getCacheName()
-            + "'" );
+        /* Create a new, transactional database environment */
+        EnvironmentConfig envConfig = new EnvironmentConfig();
+        envConfig.setTransactional( true );
+        // create the env if it doesn't exist, else do nothing
+        envConfig.setAllowCreate( true );
+
+        if ( this.attributes.getCacheSize() != -1 )
+        {
+          envConfig.setCacheSize( this.attributes.getCacheSize() );
+          if ( log.isDebugEnabled() )
+          {
+            log.debug( "Set JE CacheSize to '" + this.attributes.getCacheSize() +
+                       "'" );
+          }
+        }
+        if ( this.attributes.getCachePercent() != -1 )
+        {
+          envConfig.setCachePercent( this.attributes.getCachePercent() );
+          if ( log.isDebugEnabled() )
+          {
+            log.debug( "Set JE CachePercent to '" +
+                       this.attributes.getCachePercent() + "'" );
+          }
+        }
+
+        coreEnv = new Environment( envDir, envConfig );
+
+        /*
+         * A class catalog database is needed for storing class descriptions
+         * for the serial binding used below.  This avoids storing class
+         * descriptions redundantly in each record.
+         */
+        Transaction txn = coreEnv.beginTransaction( null, null );
+        DatabaseConfig catalogConfig = new DatabaseConfig();
+        catalogConfig.setTransactional( true );
+        catalogConfig.setAllowCreate( true );
+        catalogDb = coreEnv.openDatabase( txn, "catalogDb", catalogConfig );
+        catalog = new StoredClassCatalog( catalogDb );
+        txn.commit();
       }
-      /*
-       * A class catalog database is needed for storing class descriptions
-       * for the serial binding used below.  This avoids storing class
-       * descriptions redundantly in each record.
-       */
-      DatabaseConfig catalogConfig = new DatabaseConfig();
-      catalogConfig.setTransactional( true );
-      catalogConfig.setAllowCreate( true );
-      catalogDb = coreEnv.openDatabase( txn, "catalogDb", catalogConfig );
-      catalog = new StoredClassCatalog( catalogDb );
+      catch ( Exception e )
+      {
+        log.error( "Problem creating coreEnv", e );
+      }
+    } // end if
+  }
 
-      txn.commit();
+  /**
+   * Initialize the database for this region.
+   */
+  private synchronized void init()
+  {
+    coreDb = ( Database ) databases.get( attributes.getCacheName() );
+    if ( coreDb == null )
+    {
+      verifyCoreEnv();
 
+      try
+      {
+        /* Make a database within the core environment */
+        Transaction txn = coreEnv.beginTransaction( null, null );
+        DatabaseConfig dbConfig = new DatabaseConfig();
+        dbConfig.setTransactional( true );
+        dbConfig.setAllowCreate( true );
+        dbConfig.setSortedDuplicates( false );
+        // create a database for this region.  Aovids the overhead of
+        // a secondary database for grouping.
+        coreDb =
+            coreEnv.openDatabase( txn, attributes.getCacheName(), dbConfig );
+        if ( log.isInfoEnabled() )
+        {
+          log.info(
+              "created db for region = '"
+              + attributes.getCacheName()
+              + "'" );
+        }
+        txn.commit();
+
+        databases.put( attributes.getCacheName(), coreDb );
+      }
+      catch ( Exception e )
+      {
+        log.error( "Problem init", e );
+      }
+      if ( log.isDebugEnabled() )
+      {
+        log.debug( "Intitialized BDBJE" );
+      }
     }
-    catch ( Exception e )
-    {
-      log.error( "Problem init", e );
-    }
-    if ( log.isDebugEnabled() )
-    {
-      log.debug( "Intitialized BDBJE" );
-    }
-  } // end intit
+  } // end init
 
   /** Getts an item from the cache. */
   public ICacheElement get( Serializable key ) throws IOException
@@ -255,37 +318,6 @@ public class BDBJE
   /** Remove all keys from the sepcified cache. */
   public void removeAll() throws IOException
   {
-    /*
-       Transaction txn = null;
-       Cursor cursor = null;
-       try {
-
-     DatabaseEntry keyEntry = new DatabaseEntry();
-     DatabaseEntry dataEntry = new DatabaseEntry();
-
-     txn = coreEnv.beginTransaction(null, null);
-     cursor = coreDb.openCursor(txn, null);
-
-     int cnt = 0;
-     while (cursor.getNext(keyEntry, dataEntry, LockMode.DEFAULT)
-      == OperationStatus.SUCCESS) {
-
-      if (log.isDebugEnabled()) {
-       log.debug("removed, cnt = " + cnt++);
-      }
-      cursor.delete();
-     }
-       } catch (Exception e) {
-     log.error(e);
-       } finally {
-     try {
-      cursor.close();
-      txn.commit();
-     } catch (Exception e) {
-      log.error(e);
-     }
-       }
-     */
     Transaction txn = null;
     try
     {
@@ -314,31 +346,69 @@ public class BDBJE
    * Closes the database and the environment.  Client should do some
    * client checks.
    */
-  protected void dispose()
+  protected synchronized void dispose()
   {
-    if ( log.isWarnEnabled() )
-    {
-      log.debug( "Disposig of je" );
-    }
     if ( log.isInfoEnabled() )
     {
-      log.info( this.toString() );
+      log.info( "Disposig of region [" + attributes.getCacheName() +
+                "], and environment if this is the only region." );
     }
-    if ( coreEnv != null )
+    if ( coreEnv != null & coreDb != null )
     {
+
+      // close databases
       try
       {
-        coreEnv.sync();
-        //Close the secondary before closing the primaries
+        if ( log.isInfoEnabled() )
+        {
+          log.info( this.getDBStats() );
+        }
         coreDb.close();
-        catalogDb.close();
-
-        // Finally, close the environment.
-        coreEnv.close();
+        databases.remove( attributes.getCacheName() );
       }
       catch ( DatabaseException dbe )
       {
-        log.error( "Error closing coreEnv: " + dbe.toString() );
+        log.error( "Error closing database: " + dbe.toString() );
+      }
+
+      if ( databases.size() == 0 )
+      {
+        // close catalog database
+        try
+        {
+          catalogDb.close();
+        }
+        catch ( DatabaseException dbe )
+        {
+          log.error( "Error closing catalogDB: " + dbe.toString() );
+        }
+
+        /*        // synch env
+                try
+                {
+                  coreEnv.sync();
+                  if (log.isInfoEnabled()) {
+                    log.info("Synchronizing coreEnv");
+                  }
+                }
+                catch (DatabaseException dbe) {
+                  log.error("Error synching coreEnv: " + dbe.toString());
+                }
+         */
+        // close environment
+        try
+        {
+          // Finally, close the environment.
+          if ( log.isInfoEnabled() )
+          {
+            log.info( this.toString() );
+          }
+          coreEnv.close();
+        }
+        catch ( DatabaseException dbe )
+        {
+          log.error( "Error closing coreEnv: " + dbe.toString() );
+        }
       }
     }
   }
@@ -352,9 +422,6 @@ public class BDBJE
     StringBuffer buf = new StringBuffer();
     try
     {
-      buf.append( "\n This database name: " + coreDb.getDatabaseName() );
-      buf.append( "\n This database stats: " + getDBStats() );
-      buf.append( "\n -------------------------------------" );
       buf.append( "\n Environment Data:" );
       EnvironmentStats stats = coreEnv.getStats( new StatsConfig() );
       buf.append( "\n NCacheMiss: " + stats.getNCacheMiss() );
@@ -385,6 +452,8 @@ public class BDBJE
     try
     {
       DatabaseStats stats = coreDb.getStats( new StatsConfig() );
+      buf.append( "\n This database name: " + coreDb.getDatabaseName() );
+      buf.append( "\n This database stats: " );
       buf.append( "\n BinCount: " + stats.getBinCount() );
       buf.append( "\n DeletedLNCount: " + stats.getDeletedLNCount() );
       buf.append( "\n DupCountLNCount: " + stats.getDupCountLNCount() );

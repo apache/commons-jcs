@@ -17,18 +17,22 @@ package org.apache.jcs.auxiliary.disk.bdbje;
  */
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.disk.bdbje.behavior.IBDBJECacheAttributes;
 
 /**
  *  Attributes for Berkeley DB JE disk cache auxiliary.
  */
 public class BDBJECacheAttributes
-    implements AuxiliaryCacheAttributes
+    implements AuxiliaryCacheAttributes, IBDBJECacheAttributes
 {
 
   private String cacheName;
   private String name;
 
   private String diskPath;
+
+  private long cacheSize = -1;
+  private int cachePercent = -1;
 
   /* (non-Javadoc)
    * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#setCacheName(java.lang.String)
@@ -96,5 +100,62 @@ public class BDBJECacheAttributes
   {
     return this.diskPath;
   }
+
+  /**
+   * Gets the CacheSize attribute of the  CacheAttributes object.
+   * If this is not set in the cache.ccf, the default wil be used unless
+   * you provide a je.properties file.
+   *
+   * @return The CacheSize value
+   */
+  public long getCacheSize()
+  {
+    return this.cacheSize;
+  }
+
+  /**
+   * Sets the cacheSize attribute of  CacheAttributes object.
+   * The minimum acceptable size is 1024.  Anything less will
+   * automatically be increased to 1024.
+   *
+   * @param path The new cacheSize value
+   */
+  public void setCacheSize( long size) {
+    if ( size < 1024 ) {
+      size = 1024;
+    }
+    cacheSize = size;
+  }
+
+  /**
+   * Sets the cacheSize attribute of  CacheAttributes object.
+   * The minimum acceptable size is 0.  Anything less will
+   * automatically be increased to 0.
+   * The maximum acceptable size is 100.  Anything more will
+   * automatically be decreased to 100.
+   *
+   * @param path The new cachePercent value
+   */
+   public void setCachePercent( int perc ) {
+     if ( perc < 0 ) {
+       perc = 0;
+     }
+     if ( perc > 100 ) {
+       perc = 100;
+     }
+     cachePercent = perc;
+   }
+
+   /**
+    * Gets the CachePercent attribute of the  CacheAttributes object.
+    * If this is not set in the cache.ccf, the default will be used unless
+    * you provide a je.properties file.  JE defaults to 93%.
+    *
+    * @return The CachePercent value
+    */
+   public int getCachePercent()
+   {
+     return this.cachePercent;
+   }
 
 }
