@@ -44,30 +44,6 @@ is divided into following sections:
         <property file="nbproject/project.properties"/>
     </target>
     <target name="-do-init" depends="-pre-init,-init-private,-init-user,-init-project,-init-macrodef-property">
-        <j2seproject:property name="platform.home" value="platforms.${platform.active}.home" xmlns:j2seproject="http://www.netbeans.org/ns/j2se-project/1"/>
-        <j2seproject:property name="platform.bootcp" value="platforms.${platform.active}.bootclasspath" xmlns:j2seproject="http://www.netbeans.org/ns/j2se-project/1"/>
-        <j2seproject:property name="platform.compiler" value="platforms.${platform.active}.compile" xmlns:j2seproject="http://www.netbeans.org/ns/j2se-project/1"/>
-        <j2seproject:property name="platform.javac.tmp" value="platforms.${platform.active}.javac" xmlns:j2seproject="http://www.netbeans.org/ns/j2se-project/1"/>
-        <condition property="platform.javac" value="${platform.home}/bin/javac">
-            <equals arg1="${platform.javac.tmp}" arg2="$${platforms.${platform.active}.javac}"/>
-        </condition>
-        <property name="platform.javac" value="${platform.javac.tmp}"/>
-        <j2seproject:property name="platform.java.tmp" value="platforms.${platform.active}.java" xmlns:j2seproject="http://www.netbeans.org/ns/j2se-project/1"/>
-        <condition property="platform.java" value="${platform.home}/bin/java">
-            <equals arg1="${platform.java.tmp}" arg2="$${platforms.${platform.active}.java}"/>
-        </condition>
-        <property name="platform.java" value="${platform.java.tmp}"/>
-        <condition property="platform.invalid" value="true">
-            <or>
-                <contains string="${platform.javac}" substring="$${platforms."/>
-                <contains string="${platform.java}" substring="$${platforms."/>
-            </or>
-        </condition>
-        <fail unless="platform.home">Must set platform.home</fail>
-        <fail unless="platform.bootcp">Must set platform.bootcp</fail>
-        <fail unless="platform.java">Must set platform.java</fail>
-        <fail unless="platform.javac">Must set platform.javac</fail>
-        <fail if="platform.invalid">Platform is not correctly set up</fail>
         <available file="${manifest.file}" property="manifest.available"/>
         <condition property="manifest.available+main.class">
             <and>
@@ -130,7 +106,7 @@ is divided into following sections:
             <attribute name="debug" default="${javac.debug}"/>
             <element name="customize" optional="true"/>
             <sequential>
-                <javac srcdir="@{srcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" fork="yes" executable="${platform.javac}" includeantruntime="false">
+                <javac srcdir="@{srcdir}" destdir="@{destdir}" debug="@{debug}" deprecation="${javac.deprecation}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
                     <classpath>
                         <path path="@{classpath}"/>
                     </classpath>
@@ -144,7 +120,7 @@ is divided into following sections:
         <macrodef name="junit" uri="http://www.netbeans.org/ns/j2se-project/1">
             <attribute name="includes" default="**/*Test.java"/>
             <sequential>
-                <junit showoutput="true" fork="true" dir="${basedir}" failureproperty="tests.failed" errorproperty="tests.failed" jvm="${platform.java}">
+                <junit showoutput="true" fork="true" dir="${basedir}" failureproperty="tests.failed" errorproperty="tests.failed">
                     <batchtest todir="${build.test.results.dir}">
                         <fileset dir="${test.src.dir}" includes="@{includes}"/>
                     </batchtest>
@@ -170,9 +146,6 @@ is divided into following sections:
                     <classpath>
                         <path path="@{classpath}"/>
                     </classpath>
-                    <bootclasspath>
-                        <path path="${platform.bootcp}"/>
-                    </bootclasspath>
                 </nbjpdastart>
             </sequential>
         </macrodef>
@@ -191,7 +164,7 @@ is divided into following sections:
             <attribute name="classpath" default="${debug.classpath}"/>
             <attribute name="args" default="${application.args}"/>
             <sequential>
-                <java fork="true" classname="@{classname}" dir="${work.dir}" jvm="${platform.java}">
+                <java fork="true" classname="@{classname}" dir="${work.dir}">
                     <jvmarg value="-Xdebug"/>
                     <jvmarg value="-Xnoagent"/>
                     <jvmarg value="-Djava.compiler=none"/>
@@ -214,7 +187,7 @@ is divided into following sections:
             <attribute name="classname" default="${main.class}"/>
             <element name="customize" optional="true"/>
             <sequential>
-                <java fork="true" classname="@{classname}" dir="${work.dir}" jvm="${platform.java}">
+                <java fork="true" classname="@{classname}" dir="${work.dir}">
                     <jvmarg line="${run.jvmargs}"/>
                     <classpath>
                         <path path="${run.classpath}"/>
@@ -360,63 +333,33 @@ is divided into following sections:
     -->
     <target name="-javadoc-build" depends="init">
         <mkdir dir="${dist.javadoc.dir}"/>
-        <j2seproject:property name="platform.javadoc.tmp" value="platforms.${platform.active}.javadoc" xmlns:j2seproject="http://www.netbeans.org/ns/j2se-project/1"/>
-        <condition property="platform.javadoc" value="${platform.home}/bin/javadoc">
-            <equals arg1="${platform.javadoc.tmp}" arg2="$${platforms.${platform.active}.javadoc}"/>
-        </condition>
-        <property name="platform.javadoc" value="${platform.javadoc.tmp}"/>
-        <condition property="javadoc.notree.opt" value="-notree">
-            <istrue value="${javadoc.notree}"/>
-        </condition>
-        <property name="javadoc.notree.opt" value=""/>
-        <condition property="javadoc.use.opt" value="-use">
-            <istrue value="${javadoc.use}"/>
-        </condition>
-        <property name="javadoc.use.opt" value=""/>
-        <condition property="javadoc.nonavbar.opt" value="-nonavbar">
-            <istrue value="${javadoc.nonavbar}"/>
-        </condition>
-        <property name="javadoc.nonavbar.opt" value=""/>
-        <condition property="javadoc.noindex.opt" value="-noindex">
-            <istrue value="${javadoc.noindex}"/>
-        </condition>
-        <property name="javadoc.noindex.opt" value=""/>
-        <condition property="javadoc.splitindex.opt" value="-splitindex">
-            <istrue value="${javadoc.splitindex}"/>
-        </condition>
-        <property name="javadoc.splitindex.opt" value=""/>
-        <condition property="javadoc.author.opt" value="-author">
-            <istrue value="${javadoc.author}"/>
-        </condition>
-        <property name="javadoc.author.opt" value=""/>
-        <condition property="javadoc.version.opt" value="-version">
-            <istrue value="${javadoc.version}"/>
-        </condition>
-        <property name="javadoc.version.opt" value=""/>
-        <condition property="javadoc.private.opt" value="-private">
-            <istrue value="${javadoc.private}"/>
-        </condition>
-        <property name="javadoc.private.opt" value=""/>
-        <condition property="javadoc.classpath.opt" value="${javac.classpath}">
-            <not>
-                <equals arg1="${javac.classpath}" arg2=""/>
-            </not>
-        </condition>
-        <property name="javadoc.classpath.opt" value="&quot;&quot;"/>
-        <apply executable="${platform.javadoc}" failonerror="true" parallel="true">
-            <arg value="-d"/>
-            <arg file="${dist.javadoc.dir}"/>
-            <arg value="-source"/>
-            <arg value="${javac.source}"/>
-            <arg value="-windowtitle"/>
-            <arg value="${javadoc.windowtitle}"/>
-            <arg line="${javadoc.notree.opt} ${javadoc.use.opt} ${javadoc.nonavbar.opt} ${javadoc.noindex.opt} ${javadoc.splitindex.opt} ${javadoc.author.opt} ${javadoc.version.opt} ${javadoc.private.opt}"/>
-            <arg value="-classpath"/>
-            <arg path="${javadoc.classpath.opt}"/>
-            <arg value="-sourcepath"/>
-            <arg file="${src.dir}"/>
-            <fileset dir="${src.dir}" includes="**/*.java"/>
-        </apply>
+        <javadoc destdir="${dist.javadoc.dir}" source="${javac.source}" notree="${javadoc.notree}" use="${javadoc.use}" nonavbar="${javadoc.nonavbar}" noindex="${javadoc.noindex}" splitindex="${javadoc.splitindex}" author="${javadoc.author}" version="${javadoc.version}" windowtitle="${javadoc.windowtitle}" private="${javadoc.private}" failonerror="true">
+            <classpath>
+                <path path="${javac.classpath}"/>
+            </classpath>
+            <sourcepath>
+                <pathelement location="${src.dir}"/>
+            </sourcepath>
+            <fileset dir="${src.dir}"/>
+            <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api"
+                packagelistloc="C:\Software\jdk\1.5.0\docs\api"
+            />
+            <link offline="true" href="http://jakarta.apache.org/commons/beanutils/api/"
+                packagelistloc="C:\Playground\commons-beanutils\1.7.0\docs\api"
+            />
+            <link offline="true" href="http://jakarta.apache.org/commons/collections/api/"
+                packagelistloc="C:\Playground\commons-collections\3.1\docs\apidocs"
+            />
+            <link offline="true" href="http://jakarta.apache.org/commons/lang/api/"
+                packagelistloc="C:\Playground\commons-lang\2.0\docs\api"
+            />
+            <link offline="true" href="http://jakarta.apache.org/commons/logging/api/"
+                packagelistloc="C:\Playground\commons-logging\1.0.4\docs\apidocs"
+            />
+            <link offline="true" href="http://junit.sourceforge.net/javadoc/"
+                packagelistloc="C:\Playground\junit\3.8.1\javadoc"
+            />
+        </javadoc>
     </target>
     <target name="-javadoc-browse" if="netbeans.home" unless="no.javadoc.preview" depends="init,-javadoc-build">
         <nbbrowse file="${dist.javadoc.dir}/index.html"/>
