@@ -17,6 +17,8 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
@@ -28,12 +30,12 @@ import junit.framework.TestCase;
  *
  * @version $Id$
  */
-public class TestDiskCacheConcurrent extends TestCase
+public class TestBDBJEDiskCacheConcurrent extends TestCase
 {
     /**
      * Constructor for the TestDiskCache object.
      */
-    public TestDiskCacheConcurrent( String testName )
+    public TestBDBJEDiskCacheConcurrent( String testName )
     {
         super( testName );
     }
@@ -56,7 +58,7 @@ public class TestDiskCacheConcurrent extends TestCase
     {
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache1" )
+        suite.addTest( new TestBDBJEDiskCacheConcurrent( "testIndexedDiskCache1" )
         {
             public void runTest() throws Exception
             {
@@ -64,7 +66,7 @@ public class TestDiskCacheConcurrent extends TestCase
             }
         } );
 
-        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache2" )
+        suite.addTest( new TestBDBJEDiskCacheConcurrent( "testIndexedDiskCache2" )
         {
             public void runTest() throws Exception
             {
@@ -72,15 +74,15 @@ public class TestDiskCacheConcurrent extends TestCase
             }
         } );
 
-        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache3" )
+        suite.addTest( new TestBDBJEDiskCacheConcurrent( "testIndexedDiskCache3" )
         {
             public void runTest() throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 2000, 2200 );
+                this.runTestForRegion( "indexedRegion4", 2000, 3200 );
             }
         });
 
-        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache4" )
+        suite.addTest( new TestBDBJEDiskCacheConcurrent( "testIndexedDiskCache4" )
         {
             public void runTest() throws Exception
             {
@@ -88,11 +90,11 @@ public class TestDiskCacheConcurrent extends TestCase
             }
         });
 
-        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache5" )
+        suite.addTest( new TestBDBJEDiskCacheConcurrent( "testIndexedDiskCache5" )
         {
             public void runTest() throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 0, 5200 );
+                this.runTestForRegion( "indexedRegion4", 0, 10000 );
             }
         });
 
@@ -105,8 +107,10 @@ public class TestDiskCacheConcurrent extends TestCase
      */
     public void setUp()
     {
-        JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
+        JCS.setConfigFilename( "/TestBDBJEDiskCacheCon.ccf" );
     }
+
+
 
 //    /**
 //     * Tests the region which uses the indexed disk cache
