@@ -12,7 +12,7 @@
   </preGoal>
 
 
-  <postgoal name="rmic" xmlns:j="jelly:core" xmlns:u="jelly:util">
+  <goal name="rmic" xmlns:j="jelly:core" xmlns:u="jelly:util">
 
     <property
       name="mavenDependencyClasspath"
@@ -53,6 +53,6 @@
       </classpath>
     </rmic> 
 
-  </postgoal>
+  </goal>
 
 </project>
