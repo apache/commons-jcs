@@ -1,6 +1,8 @@
 
 Yet Another Java Cache 
 ----------------------
+http://yajcache.sourceforge.net
+
 Currently a jdk1.5 soft reference memory-only cache with:
 
 * zero configuration

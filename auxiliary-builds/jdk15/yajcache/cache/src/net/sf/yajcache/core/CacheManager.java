@@ -12,6 +12,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import net.sf.yajcache.soft.SoftRefCache;
 
+import net.sf.yajcache.annotate.*;
+
 /**
  * @author Hanson Char
  */
@@ -73,10 +75,8 @@ public enum CacheManager {
         }
         return c;
     }
-    /**
-     * This package private method is used soley to simluate a race condition 
-     * during cache creation for testing purposes.
-     */
+
+    @TestOnly("Used solely to simluate a race condition during cache creation ")
     <V> ICache<V> testCreateCacheRaceCondition(String name, Class<V> valueType) 
     {
         return this.createCache(name, valueType);
