@@ -34,22 +34,20 @@ public class SoftRefCacheSafe<V> extends SoftRefCache<V>
         implements ICacheSafe<V> 
 {
     public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType, 
-            PerCacheConfig config,
             int initialCapacity, float loadFactor, int concurrencyLevel) 
     {
-        super(name, valueType, config, initialCapacity, loadFactor, concurrencyLevel);
+        super(name, valueType, initialCapacity, loadFactor, concurrencyLevel);
     }
     public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType, 
-            PerCacheConfig config,
             int initialCapacity) 
     {
-        super(name, valueType, config, initialCapacity);
+        super(name, valueType, initialCapacity);
     }
 
     public SoftRefCacheSafe(@NonNullable String name, 
-        @NonNullable Class<V> valueType, PerCacheConfig config) 
+        @NonNullable Class<V> valueType) 
     {
-        super(name, valueType, config);
+        super(name, valueType);
     }
     public V getCopy(@NonNullable String key) {
         V val = this.get(key);

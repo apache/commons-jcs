@@ -25,11 +25,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import org.apache.jcs.yajcache.core.CacheEntry;
-import org.apache.jcs.yajcache.core.ICache;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.yajcache.config.PerCacheConfig;
+import org.apache.jcs.yajcache.core.CacheEntry;
+import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
 import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
@@ -50,47 +51,41 @@ public class SoftRefCache<V> implements ICache<V> {
     private final @NonNullable Class<V> valueType;
     private final @NonNullable ConcurrentMap<String, KeyedSoftReference<String,V>> map;
     private final @NonNullable KeyedRefCollector<String> collector;
-    private final @NonNullable PerCacheConfig config;
+    private @NonNullable PerCacheConfig config;
     
-    public String getName() {
+    public @NonNullable String getName() {
         return this.name;
     }
-    public Class<V> getValueType() {
+    public @NonNullable Class<V> getValueType() {
         return this.valueType;
     }
     public SoftRefCache(@NonNullable String name, @NonNullable Class<V> valueType, 
-            @NonNullable PerCacheConfig config,
             int initialCapacity, float loadFactor, int concurrencyLevel) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity, loadFactor, concurrencyLevel);
-        collector = new KeyedRefCollector<String>(refq, map);
+        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity, loadFactor, concurrencyLevel);
+        this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
-        this.config = config;
     }
     public SoftRefCache(
             @NonNullable String name, 
             @NonNullable Class<V> valueType, 
-            @NonNullable PerCacheConfig config,
             int initialCapacity) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity);
-        collector = new KeyedRefCollector<String>(refq, map);
+        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity);
+        this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
-        this.config = config;
     }
 
     public SoftRefCache(
             @NonNullable String name, 
-            @NonNullable Class<V> valueType,
-            @NonNullable PerCacheConfig config) 
+            @NonNullable Class<V> valueType)
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>();
-        collector = new KeyedRefCollector<String>(refq, map);
+        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>();
+        this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
-        this.config = config;
     }
 
     public boolean isEmpty() {
@@ -116,7 +111,8 @@ public class SoftRefCache<V> implements ICache<V> {
         
         if (val == null) {
             // already garbage collected.  So try to clean up the key.
-            SoftRefCacheCleaner.inst.cleanupKey(this.map, key);
+            this.map.remove(key,  ref);
+//            SoftRefCacheCleaner.inst.cleanupKey(this.map, key);
         }
         // cache value exists.
         // try to refresh the soft reference.
@@ -266,5 +262,20 @@ public class SoftRefCache<V> implements ICache<V> {
     /** Returns the number of Soft References collected by GC. */
     public int getCollectorCount() {
         return this.collector.getCount();
+    }
+
+    @NonNullable PerCacheConfig getConfig() {
+        return config;
+    }
+
+    void setConfig(@NonNullable PerCacheConfig config) {
+        this.config = config;
+    }
+    @Override public String toString() {
+        return new ToStringBuilder(this)
+            .append("name", this.getName())
+            .append("valueType", this.getValueType().getName())
+            .append("collector", this.collector)
+            .toString();
     }
 }

@@ -28,15 +28,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
+
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.jcs.yajcache.core.CacheEntry;
-import org.apache.jcs.yajcache.core.ICache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.config.PerCacheConfig;
 import org.apache.jcs.yajcache.core.ICacheChangeListener;
 import org.apache.jcs.yajcache.core.CacheChangeSupport;
+import org.apache.jcs.yajcache.core.CacheEntry;
+import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.file.CacheFileContent;
 import org.apache.jcs.yajcache.file.CacheFileContentType;
 import org.apache.jcs.yajcache.file.CacheFileDAO;
@@ -61,7 +64,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     private final @NonNullable String name;
     private final @NonNullable Class<V> valueType;
     private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
-    private final @NonNullable PerCacheConfig config;
+    private PerCacheConfig config;
    
     private final @NonNullable KeyedRefCollector<String> collector;
     private final IKeyedReadWriteLock<String> krwl = new KeyedReadWriteLock<String>();
@@ -80,54 +83,47 @@ public class SoftRefFileCache<V> implements ICache<V>
     private AtomicInteger countPut = new AtomicInteger(0);
     private AtomicInteger countRemove = new AtomicInteger(0);
     
-    public String getName() {
+    public @NonNullable String getName() {
         return this.name;
     }
-    public Class<V> getValueType() {
+    public @NonNullable Class<V> getValueType() {
         return this.valueType;
     }
     public SoftRefFileCache(
             @NonNullable String name, @NonNullable Class<V> valueType,
-            @NonNullable PerCacheConfig config,
             int initialCapacity,float loadFactor, int concurrencyLevel) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(
-                initialCapacity, loadFactor, concurrencyLevel);
-        collector = new KeyedRefCollector<String>(refq, map);
+        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity, loadFactor, concurrencyLevel);
+        this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
-        this.config = config;
     }
     public SoftRefFileCache(
             @NonNullable String name, @NonNullable Class<V> valueType,
-            @NonNullable PerCacheConfig config,
             int initialCapacity) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity);
-        collector = new KeyedRefCollector<String>(refq, map);
+        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity);
+        this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
-        this.config = config;
     }
     
     public SoftRefFileCache(@NonNullable String name,
-            @NonNullable Class<V> valueType,
-            PerCacheConfig config) 
+            @NonNullable Class<V> valueType) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>();
-        collector = new KeyedRefCollector<String>(refq, map);
+        this.map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>();
+        this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
-        this.config = config;
     }
     
     public boolean isEmpty() {
-        collector.run();
+        this.collector.run();
         return map.isEmpty();
     }
     
     public int size() {
-        collector.run();
+        this.collector.run();
         return map.size();
     }
     
@@ -389,5 +385,20 @@ public class SoftRefFileCache<V> implements ICache<V>
     public void removeCacheChangeListener(@NonNullable ICacheChangeListener<V> listener) 
     {
         this.cacheChangeSupport.removeCacheChangeListener(listener);
+    }
+
+    public PerCacheConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(PerCacheConfig config) {
+        this.config = config;
+    }
+    @Override public String toString() {
+        return new ToStringBuilder(this)
+            .append("name", this.getName())
+            .append("valueType", this.getValueType().getName())
+            .append("collector", this.collector)
+            .toString();
     }
 }
