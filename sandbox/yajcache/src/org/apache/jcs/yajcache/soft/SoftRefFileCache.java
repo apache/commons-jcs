@@ -19,6 +19,7 @@ package org.apache.jcs.yajcache.soft;
 import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -36,9 +37,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.config.PerCacheConfig;
-import org.apache.jcs.yajcache.core.ICacheChangeListener;
-import org.apache.jcs.yajcache.core.CacheChangeSupport;
+import org.apache.jcs.yajcache.beans.ICacheChangeListener;
+import org.apache.jcs.yajcache.beans.CacheChangeSupport;
 import org.apache.jcs.yajcache.core.CacheEntry;
+import org.apache.jcs.yajcache.core.CacheManager;
 import org.apache.jcs.yajcache.core.CacheType;
 import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.file.CacheFileContent;
@@ -50,6 +52,8 @@ import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
 import org.apache.jcs.yajcache.util.EqualsUtils;
 import org.apache.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
 import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
+import org.apache.jcs.yajcache.beans.CacheChangeSupport;
+import org.apache.jcs.yajcache.beans.ICacheChangeListener;
 
 
 /**
@@ -68,12 +72,9 @@ public class SoftRefFileCache<V> implements ICache<V>
     private final @NonNullable Class<V> valueType;
     private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
     private PerCacheConfig config;
-   
+    
     private final @NonNullable KeyedRefCollector<String> collector;
     private final IKeyedReadWriteLock<String> keyedRWLock = new KeyedReadWriteLock<String>();
-    
-//    private final @NonNullable ConcurrentMap<String, CacheOp[]> synMap = 
-//            new ConcurrentHashMap<String, CacheOp[]>();
     
     private final @NonNullable CacheChangeSupport<V> cacheChangeSupport = 
             new CacheChangeSupport<V>(this);
@@ -135,15 +136,38 @@ public class SoftRefFileCache<V> implements ICache<V>
         this.valueType = valueType;
         CacheFileUtils.inst.mkCacheDirs(this.name);
     }
-    @TODO("Check file system")
+    /** Only an approximation. */
     public boolean isEmpty() {
-        this.collector.run();
-        return map.isEmpty();
+        return this.isMemoryCacheEmpty() && this.isCacheDirEmpty();
     }
-    @TODO("Check file system")
-    public int size() {
+    public boolean isMemoryCacheEmpty() {
         this.collector.run();
-        return map.size();
+        return this.map.isEmpty();
+    }
+    public boolean isCacheDirEmpty() {
+        Lock cacheLock = CacheManager.inst.readLock(this);
+        cacheLock.lock();
+        try {
+            return CacheFileUtils.inst.isCacheDirEmpty(this.name);
+        } finally {
+            cacheLock.unlock();
+        }
+    }
+    public int size() {
+        return Math.max(this.getMemoryCacheSize(), this.getCacheDirSize());
+    }
+    public int getMemoryCacheSize() {
+        this.collector.run();
+        return this.map.size();
+    }
+    public int getCacheDirSize() {
+        Lock cacheLock = CacheManager.inst.readLock(this);
+        cacheLock.lock();
+        try {
+            return CacheFileUtils.inst.getCacheDirSize(this.name);
+        } finally {
+            cacheLock.unlock();
+        }
     }
     
     // @tothink: SoftReference.get() doesn't seem to be thread-safe.
@@ -153,12 +177,18 @@ public class SoftRefFileCache<V> implements ICache<V>
         collector.run();
         if (debug)
             this.countGet.incrementAndGet();
-        Lock lock = this.keyedRWLock.readLock(key);
-        lock.lock();
+        Lock cacheLock = CacheManager.inst.readLock(this);
+        cacheLock.lock();
         try {
-            return doGet(key);
+            Lock lock = this.keyedRWLock.readLock(key);
+            lock.lock();
+            try {
+                return doGet(key);
+            } finally {
+                lock.unlock();
+            }
         } finally {
-            lock.unlock();
+            cacheLock.unlock();
         }
     }
     private V doGet(String key) {
@@ -184,9 +214,8 @@ public class SoftRefFileCache<V> implements ICache<V>
                 // GC'd.  So try to clean up the key/ref pair.
                 this.map.remove(key,  ref);
             }
-            // Get from the file system.
             CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
-                
+            
             if (cfc == null) {
                 // Not in file system.
                 if (debug)
@@ -202,6 +231,7 @@ public class SoftRefFileCache<V> implements ICache<V>
                 // Corrupted file.  Try remove it from file system.
                 if (debug)
                     this.countGetCorruptedFile.incrementAndGet();
+                // Don't think I need to put a read lock on the cache for removal.
                 CacheFileDAO.inst.removeCacheItem(this.name, key);
                 return null;
             }
@@ -264,12 +294,18 @@ public class SoftRefFileCache<V> implements ICache<V>
         
         if (debug)
             this.countPut.incrementAndGet();
-        Lock lock = this.keyedRWLock.writeLock(key);
-        lock.lock();
+        Lock cacheLock = CacheManager.inst.readLock(this);
+        cacheLock.lock();
         try {
-            return doPut(key, value);
+            Lock lock = this.keyedRWLock.writeLock(key);
+            lock.lock();
+            try {
+                return doPut(key, value);
+            } finally {
+                lock.unlock();
+            }
         } finally {
-            lock.unlock();
+            cacheLock.unlock();
         }
     }
     private V doPut(@NonNullable String key, @NonNullable V value) {
@@ -292,8 +328,8 @@ public class SoftRefFileCache<V> implements ICache<V>
                 // Try the file system.
                 if (debug)
                     this.countPutSerializable.incrementAndGet();
-                CacheFileContent cfc =
-                        CacheFileDAO.inst.readCacheItem(this.name, key);
+                CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
+
                 if (cfc != null) {
                     if (debug)
                         this.countPutReadFile.incrementAndGet();
@@ -334,7 +370,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
 
     @TODO(
-        value="Queue up a flush event for the key.",
+        value="Queue up a flush beans for the key.",
         details="This is useful for synchronizing caches in a cluster environment."
     )
     private void publishFlushKey(@NonNullable String key) {
@@ -349,12 +385,18 @@ public class SoftRefFileCache<V> implements ICache<V>
         
         if (debug)
             this.countRemove.incrementAndGet();
-        Lock lock = this.keyedRWLock.writeLock(key);
-        lock.lock();
+        Lock cacheLock = CacheManager.inst.readLock(this);
+        cacheLock.lock();
         try {
-            return doRemove(key);
+            Lock lock = this.keyedRWLock.writeLock(key);
+            lock.lock();
+            try {
+                return doRemove(key);
+            } finally {
+                lock.unlock();
+            }
         } finally {
-            lock.unlock();
+            cacheLock.unlock();
         }
     }
     private V doRemove(@NonNullable String key) {
@@ -369,8 +411,8 @@ public class SoftRefFileCache<V> implements ICache<V>
         if (ret == null) {
             // not exist or no longer exist in memory;
             // so check the file system.
-            CacheFileContent cfc =
-                    CacheFileDAO.inst.readCacheItem(this.name, key);
+            CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
+
             if (cfc == null) {
                 // not exist in file system.
                 return null;
@@ -381,25 +423,36 @@ public class SoftRefFileCache<V> implements ICache<V>
             }
         }
         // Must exist the file system, corrupted or not.
+        // Don't think I need to put a read lock on the cache for removal.
         CacheFileDAO.inst.removeCacheItem(this.name, key);
         return ret;
     }
     public V remove(@NonNullable Object key) {
         return key == null ? null : this.remove(key.toString());
     }
-    @TODO("Clear file system")
     public void clear() {
-//        this.collector.run();
-        map.clear();
-        this.cacheChangeSupport.fireCacheClear();
+        for (String key : this.map.keySet())
+            this.remove(key);
     }
-    @TODO("Get from file system")
     public @NonNullable Set<String> keySet() {
-//        this.collector.run();
-        return map.keySet();
+        Set<String> kset = map.keySet();
+        String[] list = null;
+        Lock cacheLock = CacheManager.inst.readLock(this);
+        cacheLock.lock();
+        try {
+            list = CacheFileUtils.inst.getCacheDirList(this.name);
+        } finally {
+            cacheLock.unlock();
+        }
+        if (list != null)
+            kset.addAll(Arrays.asList(list));
+        return kset;
     }
-    @TODO("Get from file system")
-    public @NonNullable Set<Map.Entry<String,V>> entrySet() {
+    @UnsupportedOperation
+    public Set<Map.Entry<String,V>> entrySet() {
+        throw new UnsupportedOperationException("Only memoryEntrySet and keySet are supported.");
+    }
+    public @NonNullable Set<Map.Entry<String,V>> memoryEntrySet() {
 //        this.collector.run();
         Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
         Set<Map.Entry<String,V>> toSet = new HashSet<Map.Entry<String,V>>();
@@ -415,9 +468,11 @@ public class SoftRefFileCache<V> implements ICache<V>
         }
         return toSet;
     }
-    @TODO("Get from file system")
+    @UnsupportedOperation
     public @NonNullable Collection<V> values() {
-//        this.collector.run();
+        throw new UnsupportedOperationException("Only memoryValues and keySet are supported.");
+    }
+    public @NonNullable Collection<V> memoryValues() {
         Collection<KeyedSoftReference<String,V>> fromSet = map.values();
         List<V> toCol = new ArrayList<V>(fromSet.size());
         
@@ -433,9 +488,11 @@ public class SoftRefFileCache<V> implements ICache<V>
     public boolean containsKey(@NonNullable Object key) {
         return this.get(key.toString()) != null;
     }
-    @TODO("Get from file system")
+    @UnsupportedOperation
     public boolean containsValue(@NonNullable Object value) {
-//        this.collector.run();
+        throw new UnsupportedOperationException("Only memoryContainsValue is supported.");
+    }
+    public boolean memoryContainsValue(@NonNullable Object value) {
         Collection<KeyedSoftReference<String,V>> fromSet = map.values();
         
         for (final KeyedSoftReference<String,V> ref : fromSet) {
@@ -454,7 +511,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     {
         this.cacheChangeSupport.addCacheChangeListener(listener);
     }
-    public void removeCacheChangeListener(@NonNullable ICacheChangeListener<V> listener) 
+    public void removeCacheChangeListener(@NonNullable ICacheChangeListener<V> listener)
     {
         this.cacheChangeSupport.removeCacheChangeListener(listener);
     }
