@@ -74,7 +74,7 @@
          </p>
 	   <p>
 	    The Disk indexes are equipped with an LRU storage limit.  The maximum 
-          number of keys is configured by the so the maxKeySize parameter. 
+          number of keys is configured by the maxKeySize parameter. 
 	   </p>
         <source><![CDATA[
 jcs.auxiliary.DC=
