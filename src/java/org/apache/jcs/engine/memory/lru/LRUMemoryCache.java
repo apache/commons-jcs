@@ -32,6 +32,9 @@ import org.apache.jcs.engine.memory.AbstractMemoryCache;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 
+import org.apache.jcs.engine.memory.util.DoubleLinkedList;
+import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
+
 /**
  *  A fast reference management system. The least recently used items move to
  *  the end of the list and get spooled to disk if the cache hub is configured
@@ -49,21 +52,25 @@ public class LRUMemoryCache
     extends AbstractMemoryCache
 {
   private final static Log log =
-      LogFactory.getLog( LRUMemoryCache.class );
+      LogFactory.getLog(LRUMemoryCache.class);
 
-  // LRU double linked list head/tail nodes
-  private MemoryElementDescriptor first;
-  private MemoryElementDescriptor last;
+  // double linked list for lru
+  private DoubleLinkedList list;
+
+  int hitCnt = 0;
+  int missCnt = 0;
+  int putCnt = 0;
 
   /**
    *  For post reflection creation initialization
    *
    *@param  hub
    */
-  public synchronized void initialize( CompositeCache hub )
+  public synchronized void initialize(CompositeCache hub)
   {
-    super.initialize( hub );
-    log.info( "initialized LRUMemoryCache for " + cacheName );
+    super.initialize(hub);
+    list = new DoubleLinkedList();
+    log.info("initialized LRUMemoryCache for " + cacheName);
   }
 
   /**
@@ -72,114 +79,104 @@ public class LRUMemoryCache
    *@param  ce               Description of the Parameter
    *@exception  IOException
    */
-  public void update( ICacheElement ce ) throws IOException
+  public void update(ICacheElement ce) throws IOException
   {
+    putCnt++;
+
     // Asynchronisly create a MemoryElement
 
     ce.getElementAttributes().setLastAccessTimeNow();
     MemoryElementDescriptor old = null;
-    synchronized ( this )
+    synchronized (this)
     {
       // TODO address double synchronization of addFirst, use write lock
-      addFirst( ce );
+      addFirst(ce);
       // this must be synchronized
-      old = ( MemoryElementDescriptor ) map.put( first.ce.getKey(), first );
+      old = (MemoryElementDescriptor) map.put( ( (MemoryElementDescriptor) list.
+                                                getFirst()).ce.getKey(),
+                                              (MemoryElementDescriptor) list.
+                                              getFirst());
     }
 
     // If the node was the same as an existing node, remove it.
-
-    if ( old != null && first.ce.getKey().equals( old.ce.getKey() ) )
+    if (old != null &&
+        ( (MemoryElementDescriptor) list.getFirst()).ce.getKey().
+        equals(old.ce.getKey()))
     {
-      removeNode( old );
+      list.remove(old);
     }
 
     int size = map.size();
     // If the element limit is reached, we need to spool
 
-    if ( size < this.cattr.getMaxObjects() )
+    if (size < this.cattr.getMaxObjects())
     {
       return;
     }
-    log.debug( "In memory limit reached, spooling" );
+    log.debug("In memory limit reached, spooling");
 
     // Write the last 'chunkSize' items to disk.
+    int chunkSizeCorrected = Math.min(size, chunkSize);
 
-    int chunkSizeCorrected = Math.min( size, chunkSize );
-
-    if ( log.isDebugEnabled() )
+    if (log.isDebugEnabled())
     {
-      log.debug( "About to spool to disk cache, map size: " + size
-                 + ", max objects: " + this.cattr.getMaxObjects()
-                 + ", items to spool: " + chunkSizeCorrected );
+      log.debug("About to spool to disk cache, map size: " + size
+                + ", max objects: " + this.cattr.getMaxObjects()
+                + ", items to spool: " + chunkSizeCorrected);
     }
 
     // The spool will put them in a disk event queue, so there is no
     // need to pre-queue the queuing.  This would be a bit wasteful
     // and wouldn't save much time in this synchronous call.
 
-    for ( int i = 0; i < chunkSizeCorrected; i++ )
+    for (int i = 0; i < chunkSizeCorrected; i++)
     {
-      synchronized ( this )
+      synchronized (this)
       {
-        if ( last != null )
+        if (list.getLast() != null)
         {
-          if ( last.ce != null )
+          if ( ( (MemoryElementDescriptor) list.getLast()).ce != null)
           {
-            cache.spoolToDisk( last.ce );
-            if ( !map.containsKey( last.ce.getKey() ) )
+            cache.spoolToDisk( ( (MemoryElementDescriptor) list.getLast()).ce);
+            if (!map.containsKey( ( (MemoryElementDescriptor) list.getLast()).
+                                 ce.getKey()))
             {
-              log.error( "update: map does not contain key: " + last.ce.getKey() );
+              log.error("update: map does not contain key: " +
+                        ( (MemoryElementDescriptor) list.getLast()).ce.getKey());
               verifyCache();
             }
-            if ( map.remove( last.ce.getKey() ) == null )
+            if (map.remove( ( (MemoryElementDescriptor) list.getLast()).ce.
+                           getKey()) == null)
             {
-              log.warn( "update: remove failed for key: " + last.ce.getKey() );
+              log.warn("update: remove failed for key: " +
+                       ( (MemoryElementDescriptor) list.getLast()).ce.getKey());
               verifyCache();
             }
           }
           else
           {
-            throw new Error( "update: last.ce is null!" );
+            throw new Error("update: last.ce is null!");
           }
-          removeNode( last );
+          list.removeLast();
         }
         else
         {
           verifyCache();
-          throw new Error( "update: last is null!" );
+          throw new Error("update: last is null!");
         }
       }
     }
 
-    if ( log.isDebugEnabled() )
+    if (log.isDebugEnabled())
     {
-      log.debug( "update: After spool map size: " + map.size() );
+      log.debug("update: After spool map size: " + map.size());
     }
-    if ( map.size() != dumpCacheSize() )
+    if (map.size() != dumpCacheSize())
     {
-      log.error( "update: After spool, size mismatch: map.size() = "
-                 + map.size() + ", linked list size = " +
-                 dumpCacheSize() );
+      log.error("update: After spool, size mismatch: map.size() = "
+                + map.size() + ", linked list size = " +
+                dumpCacheSize());
     }
-  }
-
-  /**
-   * Remove all of the elements from both the Map and the linked
-   * list implementation. Overrides base class.
-   */
-  public synchronized void removeAll() throws IOException
-  {
-    map.clear();
-    for ( MemoryElementDescriptor me = first; me != null; )
-    {
-      if ( me.prev != null )
-      {
-        me.prev = null;
-      }
-      MemoryElementDescriptor next = me.next;
-      me = next;
-    }
-    first = last = null;
   }
 
   /**
@@ -190,23 +187,23 @@ public class LRUMemoryCache
    *@return                  Element mathinh key if found, or null
    *@exception  IOException
    */
-  public ICacheElement getQuiet( Serializable key ) throws IOException
+  public ICacheElement getQuiet(Serializable key) throws IOException
   {
     ICacheElement ce = null;
 
-    MemoryElementDescriptor me = ( MemoryElementDescriptor ) map.get( key );
-    if ( me != null )
+    MemoryElementDescriptor me = (MemoryElementDescriptor) map.get(key);
+    if (me != null)
     {
-      if ( log.isDebugEnabled() )
+      if (log.isDebugEnabled())
       {
-        log.debug( cacheName + ": LRUMemoryCache quiet hit for " + key );
+        log.debug(cacheName + ": LRUMemoryCache quiet hit for " + key);
       }
 
       ce = me.ce;
     }
-    else if ( log.isDebugEnabled() )
+    else if (log.isDebugEnabled())
     {
-      log.debug( cacheName + ": LRUMemoryCache quiet miss for " + key );
+      log.debug(cacheName + ": LRUMemoryCache quiet miss for " + key);
     }
 
     return ce;
@@ -219,33 +216,35 @@ public class LRUMemoryCache
    *@return                  ICacheElement if found, else null
    *@exception  IOException
    */
-  public synchronized ICacheElement get( Serializable key ) throws IOException
+  public synchronized ICacheElement get(Serializable key) throws IOException
   {
     ICacheElement ce = null;
 
-    if ( log.isDebugEnabled() )
+    if (log.isDebugEnabled())
     {
-      log.debug( "getting item from cache " + cacheName + " for key " +
-                 key );
+      log.debug("getting item from cache " + cacheName + " for key " +
+                key);
     }
 
-    MemoryElementDescriptor me = ( MemoryElementDescriptor ) map.get( key );
+    MemoryElementDescriptor me = (MemoryElementDescriptor) map.get(key);
 
-    if ( me != null )
+    if (me != null)
     {
-      if ( log.isDebugEnabled() )
+      hitCnt++;
+      if (log.isDebugEnabled())
       {
-        log.debug( cacheName + ": LRUMemoryCache hit for " + key );
+        log.debug(cacheName + ": LRUMemoryCache hit for " + key);
       }
 
       ce = me.ce;
 
       ce.getElementAttributes().setLastAccessTimeNow();
-      makeFirst( me );
+      list.makeFirst(me);
     }
     else
     {
-      log.debug( cacheName + ": LRUMemoryCache miss for " + key );
+      missCnt++;
+      log.debug(cacheName + ": LRUMemoryCache miss for " + key);
     }
 
     verifyCache();
@@ -262,32 +261,32 @@ public class LRUMemoryCache
    *@return
    *@exception  IOException
    */
-  public synchronized boolean remove( Serializable key ) throws IOException
+  public synchronized boolean remove(Serializable key) throws IOException
   {
-    if ( log.isDebugEnabled() )
+    if (log.isDebugEnabled())
     {
-      log.debug( "removing item for key: " + key );
+      log.debug("removing item for key: " + key);
     }
 
     boolean removed = false;
 
     // handle partial removal
-    if ( key instanceof String && ( ( String ) key )
-         .endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
+    if (key instanceof String && ( (String) key)
+        .endsWith(CacheConstants.NAME_COMPONENT_DELIMITER))
     {
       // remove all keys of the same name hierarchy.
-      synchronized ( map )
+      synchronized (map)
       {
-        for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
+        for (Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
         {
-          Map.Entry entry = ( Map.Entry ) itr.next();
+          Map.Entry entry = (Map.Entry) itr.next();
           Object k = entry.getKey();
 
-          if ( k instanceof String
-               && ( ( String ) k ).startsWith( key.toString() ) )
+          if (k instanceof String
+              && ( (String) k).startsWith(key.toString()))
           {
-            removeNode( ( MemoryElementDescriptor )
-                        entry.getValue() );
+            list.remove( (MemoryElementDescriptor)
+                        entry.getValue());
 
             itr.remove();
 
@@ -296,23 +295,23 @@ public class LRUMemoryCache
         }
       }
     }
-    else if ( key instanceof GroupId )
+    else if (key instanceof GroupId)
     {
       // remove all keys of the same name hierarchy.
-      synchronized ( map )
+      synchronized (map)
       {
-        for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
+        for (Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
         {
-          Map.Entry entry = ( Map.Entry ) itr.next();
+          Map.Entry entry = (Map.Entry) itr.next();
           Object k = entry.getKey();
 
-          if ( k instanceof GroupAttrName
-               && ( ( GroupAttrName ) k ).groupId.equals( key ) )
+          if (k instanceof GroupAttrName
+              && ( (GroupAttrName) k).groupId.equals(key))
           {
             itr.remove();
 
-            removeNode( ( MemoryElementDescriptor )
-                        entry.getValue() );
+            list.remove( (MemoryElementDescriptor)
+                        entry.getValue());
 
             removed = true;
           }
@@ -323,11 +322,11 @@ public class LRUMemoryCache
     {
       // remove single item.
       MemoryElementDescriptor me =
-          ( MemoryElementDescriptor ) map.remove( key );
+          (MemoryElementDescriptor) map.remove(key);
 
-      if ( me != null )
+      if (me != null)
       {
-        removeNode( me );
+        list.remove(me);
         removed = true;
       }
     }
@@ -335,13 +334,25 @@ public class LRUMemoryCache
     return removed;
   }
 
+  /**
+   * Remove all of the elements from both the Map and the linked
+   * list implementation. Overrides base class.
+   */
+  public synchronized void removeAll() throws IOException
+  {
+    map.clear();
+    list.removeAll();
+  }
+
+
+  // --------------------------- iteration mehods (iteration helpers)
   public class IteratorWrapper
       implements Iterator
   {
-    private final Log log = LogFactory.getLog( LRUMemoryCache.class );
+    private final Log log = LogFactory.getLog(LRUMemoryCache.class);
     private final Iterator i;
 
-    private IteratorWrapper( Map m )
+    private IteratorWrapper(Map m)
     {
       i = m.entrySet().iterator();
     }
@@ -353,7 +364,7 @@ public class LRUMemoryCache
 
     public Object next()
     {
-      return new MapEntryWrapper( ( Map.Entry ) i.next() );
+      return new MapEntryWrapper( (Map.Entry) i.next());
     }
 
     public void remove()
@@ -361,9 +372,9 @@ public class LRUMemoryCache
       i.remove();
     }
 
-    public boolean equals( Object o )
+    public boolean equals(Object o)
     {
-      return i.equals( o );
+      return i.equals(o);
     }
 
     public int hashCode()
@@ -376,14 +387,14 @@ public class LRUMemoryCache
       implements Map.Entry
   {
     private final Map.Entry e;
-    private MapEntryWrapper( Map.Entry e )
+    private MapEntryWrapper(Map.Entry e)
     {
       this.e = e;
     }
 
-    public boolean equals( Object o )
+    public boolean equals(Object o)
     {
-      return e.equals( o );
+      return e.equals(o);
     }
 
     public Object getKey()
@@ -393,7 +404,7 @@ public class LRUMemoryCache
 
     public Object getValue()
     {
-      return ( ( MemoryElementDescriptor ) e.getValue() ).ce;
+      return ( (MemoryElementDescriptor) e.getValue()).ce;
     }
 
     public int hashCode()
@@ -401,11 +412,11 @@ public class LRUMemoryCache
       return e.hashCode();
     }
 
-    public Object setValue( Object value )
+    public Object setValue(Object value)
     {
-      throw new UnsupportedOperationException( "Use normal cache methods"
-                                               +
-          " to alter the contents of the cache." );
+      throw new UnsupportedOperationException("Use normal cache methods"
+                                              +
+                                              " to alter the contents of the cache.");
     }
   }
 
@@ -416,7 +427,7 @@ public class LRUMemoryCache
    */
   public Iterator getIterator()
   {
-    return new IteratorWrapper( map );
+    return new IteratorWrapper(map);
   }
 
   /**
@@ -427,7 +438,7 @@ public class LRUMemoryCache
   public Object[] getKeyArray()
   {
     // need a better locking strategy here.
-    synchronized ( this )
+    synchronized (this)
     {
       // may need to lock to map here?
       return map.keySet().toArray();
@@ -435,79 +446,16 @@ public class LRUMemoryCache
   }
 
   // --------------------------- internal mehods (linked list implementation)
-
-  /**
-   *  Removes the specified node from the link list.
-   *
-   *@param  me  Description of the Parameter
-   */
-  private synchronized void removeNode( MemoryElementDescriptor me )
-  {
-    if ( log.isDebugEnabled() )
-    {
-      log.debug( "removing node " + me.ce.getKey() + " from cache " +
-                 cacheName );
-    }
-
-    if ( me.next == null )
-    {
-      if ( me.prev == null )
-      {
-        // Make sure it really is the only node before setting head and
-        // tail to null. It is possible that we will be passed a node
-        // which has already been removed from the list, in which case
-        // we should ignore it
-
-        if ( me == first && me == last )
-        {
-          first = last = null;
-        }
-      }
-      else
-      {
-        // last but not the first.
-        last = me.prev;
-        last.next = null;
-        me.prev = null;
-      }
-    }
-    else if ( me.prev == null )
-    {
-      // first but not the last.
-      first = me.next;
-      first.prev = null;
-      me.next = null;
-    }
-    else
-    {
-      // neither the first nor the last.
-      me.prev.next = me.next;
-      me.next.prev = me.prev;
-      me.prev = me.next = null;
-    }
-  }
-
   /**
    *  Adds a new node to the end of the link list. Currently not used.
    *
    *@param  ce  The feature to be added to the Last
    */
-  private void addLast( CacheElement ce )
+  private void addLast(CacheElement ce)
   {
-    MemoryElementDescriptor me = new MemoryElementDescriptor( ce );
-
-    if ( first == null )
-    {
-      // empty list.
-      first = me;
-    }
-    else
-    {
-      last.next = me;
-      me.prev = last;
-    }
-    last = me;
-    verifyCache( ce.getKey() );
+    MemoryElementDescriptor me = new MemoryElementDescriptor(ce);
+    list.addLast(me);
+    verifyCache(ce.getKey());
   }
 
   /**
@@ -515,64 +463,12 @@ public class LRUMemoryCache
    *
    *@param  ce  The feature to be added to the First
    */
-  private synchronized void addFirst( ICacheElement ce )
+  private synchronized void addFirst(ICacheElement ce)
   {
 
-    MemoryElementDescriptor me = new MemoryElementDescriptor( ce );
-
-    if ( last == null )
-    {
-      // empty list.
-      last = me;
-    }
-    else
-    {
-      first.prev = me;
-      me.next = first;
-    }
-    first = me;
+    MemoryElementDescriptor me = new MemoryElementDescriptor(ce);
+    list.addFirst(me);
     return;
-  }
-
-  /**
-   *  Moves an existing node to the start of the link list.
-   *
-   *@param  ce  Description of the Parameter
-   */
-  public void makeFirst( ICacheElement ce )
-  {
-    makeFirst( new MemoryElementDescriptor( ce ) );
-  }
-
-  /**
-   *  Moves an existing node to the start of the link list.
-   *
-   *@param  me  Description of the Parameter
-   */
-  public synchronized void makeFirst( MemoryElementDescriptor me )
-  {
-    if ( me.prev == null )
-    {
-      // already the first node.
-      return;
-    }
-    me.prev.next = me.next;
-
-    if ( me.next == null )
-    {
-      // last but not the first.
-      last = me.prev;
-      last.next = null;
-    }
-    else
-    {
-      // neither the last nor the first.
-      me.next.prev = me.prev;
-    }
-    first.prev = me;
-    me.next = first;
-    me.prev = null;
-    first = me;
   }
 
   // ---------------------------------------------------------- debug methods
@@ -582,12 +478,12 @@ public class LRUMemoryCache
    */
   public void dumpMap()
   {
-    log.debug( "dumpingMap" );
-    for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
+    log.debug("dumpingMap");
+    for (Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
     {
-      Map.Entry e = ( Map.Entry ) itr.next();
-      MemoryElementDescriptor me = ( MemoryElementDescriptor ) e.getValue();
-      log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
+      Map.Entry e = (Map.Entry) itr.next();
+      MemoryElementDescriptor me = (MemoryElementDescriptor) e.getValue();
+      log.debug("dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal());
     }
   }
 
@@ -596,118 +492,117 @@ public class LRUMemoryCache
    */
   public void dumpCacheEntries()
   {
-    log.debug( "dumpingCacheEntries" );
-    for ( MemoryElementDescriptor me = first; me != null; me = me.next )
+    log.debug("dumpingCacheEntries");
+    for (MemoryElementDescriptor me = (MemoryElementDescriptor) list.getFirst();
+         me != null; me = (MemoryElementDescriptor) me.next)
     {
-      log.debug( "dumpCacheEntries> key="
-                 + me.ce.getKey() + ", val=" + me.ce.getVal() );
+      log.debug("dumpCacheEntries> key="
+                + me.ce.getKey() + ", val=" + me.ce.getVal());
     }
   }
 
   private int dumpCacheSize()
   {
-    int size = 0;
-    for ( MemoryElementDescriptor me = first; me != null; me = me.next )
-    {
-      size++;
-    }
-    return size;
+    return list.size();
   }
 
   private void verifyCache()
   {
-    if ( !log.isDebugEnabled() )
+    if (!log.isDebugEnabled())
     {
       return;
     }
 
     boolean found = false;
-    log.debug( "verifycache[" + cacheName + "]: mapContains " + map.size() +
-               " elements, linked list contains "
-               + dumpCacheSize() + " elements" );
-    log.debug( "verifycache: checking linked list by key " );
-    for ( MemoryElementDescriptor li = first; li != null; li = li.next )
+    log.debug("verifycache[" + cacheName + "]: mapContains " + map.size() +
+              " elements, linked list contains "
+              + dumpCacheSize() + " elements");
+    log.debug("verifycache: checking linked list by key ");
+    for (MemoryElementDescriptor li = (MemoryElementDescriptor) list.getFirst();
+         li != null; li = (MemoryElementDescriptor) li.next)
     {
       Object key = li.ce.getKey();
-      if ( !map.containsKey( key ) )
+      if (!map.containsKey(key))
       {
-        log.error( "verifycache[" + cacheName +
-                   "]: map does not contain key : " + li.ce.getKey() );
-        log.error( "li.hashcode=" + li.ce.getKey().hashCode() );
-        log.error( "key class=" + key.getClass() );
-        log.error( "key hashcode=" + key.hashCode() );
-        log.error( "key toString=" + key.toString() );
-        if ( key instanceof GroupAttrName )
+        log.error("verifycache[" + cacheName +
+                  "]: map does not contain key : " + li.ce.getKey());
+        log.error("li.hashcode=" + li.ce.getKey().hashCode());
+        log.error("key class=" + key.getClass());
+        log.error("key hashcode=" + key.hashCode());
+        log.error("key toString=" + key.toString());
+        if (key instanceof GroupAttrName)
         {
-          GroupAttrName name = ( GroupAttrName ) key;
-          log.error( "GroupID hashcode=" + name.groupId.hashCode() );
-          log.error( "GroupID.class=" + name.groupId.getClass() );
-          log.error( "AttrName hashcode=" + name.attrName.hashCode() );
-          log.error( "AttrName.class=" + name.attrName.getClass() );
+          GroupAttrName name = (GroupAttrName) key;
+          log.error("GroupID hashcode=" + name.groupId.hashCode());
+          log.error("GroupID.class=" + name.groupId.getClass());
+          log.error("AttrName hashcode=" + name.attrName.hashCode());
+          log.error("AttrName.class=" + name.attrName.getClass());
         }
         dumpMap();
       }
-      else if ( map.get( li.ce.getKey() ) == null )
+      else if (map.get(li.ce.getKey()) == null)
       {
-        log.error( "verifycache[" + cacheName +
-                   "]: linked list retrieval returned null for key: " +
-                   li.ce.getKey() );
+        log.error("verifycache[" + cacheName +
+                  "]: linked list retrieval returned null for key: " +
+                  li.ce.getKey());
       }
     }
 
-    log.debug( "verifycache: checking linked list by value " );
-    for ( MemoryElementDescriptor li3 = first; li3 != null; li3 = li3.next )
+    log.debug("verifycache: checking linked list by value ");
+    for (MemoryElementDescriptor li3 = (MemoryElementDescriptor) list.getFirst();
+         li3 != null; li3 = (MemoryElementDescriptor) li3.next)
     {
-      if ( map.containsValue( li3 ) == false )
+      if (map.containsValue(li3) == false)
       {
-        log.error( "verifycache[" + cacheName +
-                   "]: map does not contain value : " + li3 );
+        log.error("verifycache[" + cacheName +
+                  "]: map does not contain value : " + li3);
         dumpMap();
       }
     }
 
-    log.debug( "verifycache: checking via keysets!" );
-    for ( Iterator itr2 = map.keySet().iterator(); itr2.hasNext(); )
+    log.debug("verifycache: checking via keysets!");
+    for (Iterator itr2 = map.keySet().iterator(); itr2.hasNext(); )
     {
       found = false;
       Serializable val = null;
       try
       {
-        val = ( Serializable ) itr2.next();
+        val = (Serializable) itr2.next();
       }
-      catch ( NoSuchElementException nse )
+      catch (NoSuchElementException nse)
       {
-        log.error( "verifycache: no such element exception" );
+        log.error("verifycache: no such element exception");
       }
 
-      for ( MemoryElementDescriptor li2 = first; li2 != null; li2 = li2.next )
+      for (MemoryElementDescriptor li2 = (MemoryElementDescriptor) list.
+           getFirst(); li2 != null; li2 = (MemoryElementDescriptor) li2.next)
       {
-        if ( val.equals( li2.ce.getKey() ) )
+        if (val.equals(li2.ce.getKey()))
         {
           found = true;
           break;
         }
       }
-      if ( !found )
+      if (!found)
       {
-        log.error( "verifycache[" + cacheName + "]: key not found in list : " +
-                   val );
+        log.error("verifycache[" + cacheName + "]: key not found in list : " +
+                  val);
         dumpCacheEntries();
-        if ( map.containsKey( val ) )
+        if (map.containsKey(val))
         {
-          log.error( "verifycache: map contains key" );
+          log.error("verifycache: map contains key");
         }
         else
         {
-          log.error( "verifycache: map does NOT contain key, what the HECK!" );
+          log.error("verifycache: map does NOT contain key, what the HECK!");
         }
       }
     }
   }
 
-  private void verifyCache( Serializable key )
+  private void verifyCache(Serializable key)
   {
-    if ( !log.isDebugEnabled() )
+    if (!log.isDebugEnabled())
     {
       return;
     }
@@ -715,42 +610,54 @@ public class LRUMemoryCache
     boolean found = false;
 
     // go through the linked list looking for the key
-    for ( MemoryElementDescriptor li = first; li != null; li = li.next )
+    for (MemoryElementDescriptor li = (MemoryElementDescriptor) list.getFirst();
+         li != null; li = (MemoryElementDescriptor) li.next)
     {
-      if ( li.ce.getKey() == key )
+      if (li.ce.getKey() == key)
       {
         found = true;
-        log.debug( "verifycache(key) key match: " + key );
+        log.debug("verifycache(key) key match: " + key);
         break;
       }
     }
-    if ( !found )
+    if (!found)
     {
-      log.error( "verifycache(key)[" + cacheName + "], couldn't find key! : " +
-                 key );
+      log.error("verifycache(key)[" + cacheName + "], couldn't find key! : " +
+                key);
     }
   }
-}
 
-/**
- * needed for memory cache element LRU linked lisk
- */
-class MemoryElementDescriptor
-    implements Serializable
-{
-  /** Description of the Field */
-  public MemoryElementDescriptor prev, next;
-
-  /** Description of the Field */
-  public ICacheElement ce;
-
-  /**
-   * Constructor for the MemoryElementDescriptor object
-   *
-   * @param ce
-   */
-  public MemoryElementDescriptor( ICacheElement ce )
+  /////////////////////////////////////////////////////////////////////////
+  public String getStats()
   {
-    this.ce = ce;
+    StringBuffer buf = new StringBuffer(0);
+    buf.append(getInfo());
+    buf.append(getCnts());
+    return buf.toString();
   }
+
+  public String getCnts()
+  {
+    StringBuffer buf = new StringBuffer(0);
+    buf.append("\n putCnt = " + putCnt);
+    buf.append("\n hitCnt = " + hitCnt);
+    buf.append("\n missCnt = " + missCnt);
+    buf.append( "\n -------------------------" );
+    if (hitCnt != 0)
+    {
+      // int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
+      //buf.append("\n Hit Rate = " + rate + " %" );
+    }
+    return buf.toString();
+  }
+
+  public String getInfo()
+  {
+    StringBuffer buf = new StringBuffer();
+    buf.append("\n list.size() = " + list.size());
+    buf.append("\n map.size() = " + map.size());
+    buf.append( "\n -------------------------" );
+    return buf.toString();
+  }
+
 }
