@@ -17,6 +17,7 @@
 package org.apache.jcs.yajcache.soft;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,12 +34,12 @@ enum SoftRefCacheCleaner {
     private static final boolean debug = true;
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     
-    private volatile int countTryKeyClean;
-    private volatile int countRemovedByOthers;
-    private volatile int countKeyCleaned;
-    private volatile int countDataRace;
-    private volatile int countDataRaceAndRemovedByOthers;
-    private volatile int countBye;
+    private AtomicInteger countTryKeyClean = new AtomicInteger(0);
+    private AtomicInteger countRemovedByOthers = new AtomicInteger(0);
+    private AtomicInteger countKeyCleaned = new AtomicInteger(0);
+    private AtomicInteger countDataRace = new AtomicInteger(0);
+    private AtomicInteger countDataRaceAndRemovedByOthers = new AtomicInteger(0);
+    private AtomicInteger countBye = new AtomicInteger(0);
     
     <V> void cleanupKey(@NonNullable Map<String, 
             KeyedSoftReference<String,V>> map, @NonNullable String key) 
@@ -47,14 +48,14 @@ enum SoftRefCacheCleaner {
         // already garbage collected.  So try to clean up the key.
         if (debug)
             log.debug("Try to clean up the key");
-        this.countTryKeyClean++;
+        this.countTryKeyClean.incrementAndGet();
         KeyedSoftReference<String,V> oldRef = map.remove(key);
         // If oldRef is null, the key has just been 
         // cleaned up by another thread.
         if (oldRef == null) {
             if (debug)
                 log.debug("Key has just been removed by another thread.");
-            this.countRemovedByOthers++;
+            this.countRemovedByOthers.incrementAndGet();
             return;
         }
         // Check for race condition.
@@ -65,14 +66,14 @@ enum SoftRefCacheCleaner {
             oldRef.clear();
             if (debug)
                 log.debug("Key removed and Soft Reference cleared.");
-            this.countKeyCleaned++;
+            this.countKeyCleaned.incrementAndGet();
             return;
         }
         // Race condition.
         do {
             if (debug)
                 log.debug("Race condition occurred.  So put back the old stuff.");
-            this.countDataRace++;
+            this.countDataRace.incrementAndGet();
             // race condition occurred
             // put back the old stuff
             val = oldVal;
@@ -82,7 +83,7 @@ enum SoftRefCacheCleaner {
                 // key has just been cleaned up by another thread.
                 if (debug)
                     log.debug("Key has just been removed by another thread.");
-                this.countDataRaceAndRemovedByOthers++;
+                this.countDataRaceAndRemovedByOthers.incrementAndGet();
                 return;  
             }
             oldVal = oldRef.get();
@@ -90,31 +91,31 @@ enum SoftRefCacheCleaner {
 
         if (debug)
             log.debug("Bye.");
-        this.countBye++;
+        this.countBye.incrementAndGet();
         return;
     }
 
     public int getCountTryKeyClean() {
-        return countTryKeyClean;
+        return countTryKeyClean.intValue();
     }
 
     public int getCountRemovedByOthers() {
-        return countRemovedByOthers;
+        return countRemovedByOthers.intValue();
     }
 
     public int getCountKeyCleaned() {
-        return countKeyCleaned;
+        return countKeyCleaned.intValue();
     }
 
     public int getCountDataRace() {
-        return countDataRace;
+        return countDataRace.intValue();
     }
     public int getCountDataRaceAndRemovedByOthers() {
-        return countDataRaceAndRemovedByOthers;
+        return countDataRaceAndRemovedByOthers.intValue();
     }
 
     public int getCountBye() {
-        return countBye;
+        return countBye.intValue();
     }
     
     @Override public @NonNullable String toString() {

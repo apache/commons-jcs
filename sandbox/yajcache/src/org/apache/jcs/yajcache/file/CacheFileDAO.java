@@ -20,6 +20,7 @@ package org.apache.jcs.yajcache.file;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.yajcache.lang.annotation.*;
@@ -36,13 +37,13 @@ import org.apache.commons.lang.builder.*;
 public enum CacheFileDAO {
     inst;
 
-    private volatile int countWriteIOException;
-    private volatile int countWriteCloseException;
-    private volatile int countReadIOException;
-    private volatile int countReadCloseException;
-    private volatile int countCorruptMinLength;
-    private volatile int countCorruptLength;
-    private volatile int countCorruptInvalid;
+    private AtomicInteger countWriteIOException = new AtomicInteger(0);
+    private AtomicInteger countWriteCloseException = new AtomicInteger(0);
+    private AtomicInteger countReadIOException = new AtomicInteger(0);
+    private AtomicInteger countReadCloseException = new AtomicInteger(0);
+    private AtomicInteger countCorruptMinLength = new AtomicInteger(0);
+    private AtomicInteger countCorruptLength = new AtomicInteger(0);
+    private AtomicInteger countCorruptInvalid = new AtomicInteger(0);
     
     private Log log = LogFactory.getLog(this.getClass());
     
@@ -64,14 +65,14 @@ public enum CacheFileDAO {
             CacheFileContent.getInstance(type, val).write(raf);
             return true;
         } catch(IOException ex) {
-            countWriteIOException++;
+            countWriteIOException.incrementAndGet();
             log.error("", ex);
         } finally {
             if (raf != null) {
                 try {
                     raf.close();
                 } catch(Exception ex) {
-                    countWriteCloseException++;
+                    countWriteCloseException.incrementAndGet();
                     log.error("", ex);
                 }
             }
@@ -94,7 +95,7 @@ public enum CacheFileDAO {
         final long fileSize = file.length();
         
         if (fileSize <= CacheFileContent.MIN_FILE_LENGTH) {
-            countCorruptMinLength++;
+            countCorruptMinLength.incrementAndGet();
             log.warn("Corrupted file which failed the minimum length condition for cacheName=" 
                     + cacheName + " key=" + key);
             return CacheFileContent.CORRUPTED;
@@ -108,7 +109,7 @@ public enum CacheFileDAO {
                 final int contentLength = (int)fileSize - CacheFileContent.MIN_FILE_LENGTH;
                 
                 if (contentLength != cfc.getContentLength()) {
-                    countCorruptLength++;
+                    countCorruptLength.incrementAndGet();
                     log.warn("Corrupted file with unexpected content length for cacheName=" 
                             + cacheName + " key=" + key);
                     return CacheFileContent.CORRUPTED;
@@ -116,24 +117,24 @@ public enum CacheFileDAO {
             }
             else
             {
-                countCorruptInvalid++;
+                countCorruptInvalid.incrementAndGet();
                 log.warn("Corrupted file for cacheName=" + cacheName 
                         + " key=" + key);
                 return CacheFileContent.CORRUPTED;
             }
             return cfc;
         } catch(IOException ex) {
-            countReadIOException++;
+            countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
         } catch(org.apache.commons.lang.SerializationException ex) {
-            countReadIOException++;
+            countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
        } finally {
             if (raf != null) {
                 try {
                     raf.close();
                 } catch(Exception ex) {
-                    countReadCloseException++;
+                    countReadCloseException.incrementAndGet();
                     log.error("", ex);
                 }
             }

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
@@ -71,13 +72,13 @@ public class SoftRefFileCache<V> implements ICache<V>
     private final @NonNullable CacheChangeSupport<V> cacheChangeSupport = 
             new CacheChangeSupport<V>(this);
     
-    private volatile int countGet;
-    private volatile int countGetHitMemory;
-    private volatile int countGetHitFile;
-    private volatile int countGetMiss;
+    private AtomicInteger countGet = new AtomicInteger(0);
+    private AtomicInteger countGetHitMemory = new AtomicInteger(0);
+    private AtomicInteger countGetHitFile = new AtomicInteger(0);
+    private AtomicInteger countGetMiss = new AtomicInteger(0);
     
-    private volatile int countPut;
-    private volatile int countRemove;
+    private AtomicInteger countPut = new AtomicInteger(0);
+    private AtomicInteger countRemove = new AtomicInteger(0);
     
     public String getName() {
         return this.name;

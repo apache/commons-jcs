@@ -19,6 +19,7 @@ package org.apache.jcs.yajcache.lang.ref;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,7 +34,7 @@ public class KeyedRefCollector<K> implements Runnable {
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     private final @NonNullable ReferenceQueue q;
     private final @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap;
-    private volatile int count;
+    private final AtomicInteger count = new AtomicInteger(0);
 
     public KeyedRefCollector(
             @NonNullable ReferenceQueue<?> q, 
@@ -50,9 +51,10 @@ public class KeyedRefCollector<K> implements Runnable {
             // remove unused lock;  may fail but that's fine.
             synMap.remove(keyedRef.getKey(), ref);
             // referent should have been cleared by GC.
+            this.count.incrementAndGet();
         }        
     }
     public int getCount() {
-        return count;
+        return this.count.intValue();
     }
 }
