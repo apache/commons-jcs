@@ -3,10 +3,13 @@ package org.apache.jcs.admin.servlet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Date;
+import java.text.DateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +17,7 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.velocity.Template;
@@ -137,7 +141,7 @@ public class JCSAdminServlet extends VelocityServlet
             if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
             {
                 context.put( "cacheName", cacheName );
-                context.put( "keys", getSortedKeys( cacheName ) );
+                context.put( "elementInfoRecords", buildElementInfo( cacheName ) );
             }
             else if ( templateName == DEFAULT_TEMPLATE_NAME )
             {
@@ -148,15 +152,50 @@ public class JCSAdminServlet extends VelocityServlet
         }
     }
 
-    private Object[] getSortedKeys( String cacheName )
+    private LinkedList buildElementInfo( String cacheName ) throws Exception
     {
-        CompositeCache cache = ( CompositeCache ) cacheHub.getCache( cacheName );
+        CompositeCache cache =
+            ( CompositeCache ) cacheHub.getCache( cacheName );
 
         Object[] keys = cache.getMemoryCache().getKeyArray();
 
         Arrays.sort( keys );
 
-        return keys;
+        LinkedList records = new LinkedList();
+
+        ICacheElement element;
+        IElementAttributes attributes;
+        CacheElementInfo elementInfo;
+
+        DateFormat format = DateFormat.getDateTimeInstance( DateFormat.SHORT,
+                                                            DateFormat.SHORT );
+
+        long now = System.currentTimeMillis();
+
+        for ( int i = 0; i < keys.length; i++ )
+        {
+            element =
+                cache.getMemoryCache().getQuiet( (Serializable) keys[ i ] );
+
+            attributes = element.getElementAttributes();
+
+            elementInfo = new CacheElementInfo();
+
+            elementInfo.key = String.valueOf( keys[ i ] );
+            elementInfo.eternal = attributes.getIsEternal();
+            elementInfo.maxLifeSeconds = attributes.getMaxLifeSeconds();
+
+            elementInfo.createTime =
+                format.format( new Date( attributes.getCreateTime() ) );
+
+            elementInfo.expiresInSeconds =
+                ( now - attributes.getCreateTime()
+                    - ( attributes.getMaxLifeSeconds() * 1000 ) ) / -1000;
+
+            records.add( elementInfo );
+        }
+
+        return records;
     }
 
     private LinkedList buildCacheInfo() throws Exception
@@ -252,6 +291,41 @@ public class JCSAdminServlet extends VelocityServlet
                 : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
                 : status == CacheConstants.STATUS_ERROR ? "ERROR"
                 : "UNKNOWN" );
+        }
+    }
+
+    /** Stores info on a cache element for the template */
+    public class CacheElementInfo
+    {
+        String key = null;
+        boolean eternal = false;
+        String createTime = null;
+        long maxLifeSeconds = -1;
+        long expiresInSeconds = -1;
+
+        public String getKey()
+        {
+            return key;
+        }
+
+        public boolean isEternal()
+        {
+            return eternal;
+        }
+
+        public String getCreateTime()
+        {
+            return createTime;
+        }
+
+        public long getMaxLifeSeconds()
+        {
+            return maxLifeSeconds;
+        }
+
+        public long getExpiresInSeconds()
+        {
+            return expiresInSeconds;
         }
     }
 

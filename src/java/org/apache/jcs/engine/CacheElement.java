@@ -22,8 +22,6 @@ public class CacheElement implements ICacheElement, Serializable
     public final Serializable key;
     /** Description of the Field */
     public final Serializable val;
-    /** Description of the Field */
-    public final long createTime;
 
     /** Description of the Field */
     public ElementAttributes attr;
@@ -44,7 +42,6 @@ public class CacheElement implements ICacheElement, Serializable
         this.cacheName = cacheName;
         this.key = key;
         this.val = val;
-        createTime = System.currentTimeMillis();
     }
 
 
@@ -113,17 +110,6 @@ public class CacheElement implements ICacheElement, Serializable
     public IElementAttributes getElementAttributes()
     {
         return this.attr;
-    }
-
-
-    /**
-     * Gets the createTime attribute of the CacheElement object
-     *
-     * @return The createTime value
-     */
-    public long getCreateTime()
-    {
-        return this.createTime;
     }
 
     /** Description of the Method */

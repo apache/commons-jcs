@@ -159,12 +159,4 @@ public class PurgatoryElement implements ICacheElement, Serializable
     {
         cacheElement.setElementAttributes( attr );
     }
-
-    /**
-     * @see ICacheElement#getCreateTime
-     */
-    public long getCreateTime()
-    {
-        return cacheElement.getCreateTime();
-    }
 }

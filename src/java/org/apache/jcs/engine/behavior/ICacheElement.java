@@ -53,15 +53,4 @@ public interface ICacheElement extends Serializable
      * @param attr The new attributes value
      */
     public void setElementAttributes( IElementAttributes attr );
-
-
-    /**
-     * Gets the createTime attribute of the ICacheElement object
-     *
-     * @return The createTime value
-     */
-    public long getCreateTime();
-
-    // allow thread-safe operations.
-    //  public Object clone();
 }

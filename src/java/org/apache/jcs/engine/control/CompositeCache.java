@@ -449,6 +449,8 @@ public class CompositeCache
     {
         ICacheElement element = null;
 
+        boolean found = false;
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "get: key = " + key + ", localOnly = " + localOnly );
@@ -475,6 +477,8 @@ public class CompositeCache
                     missCountExpired++;
 
                     remove( element );
+
+                    element = null;
                 }
                 else
                 {
@@ -487,6 +491,8 @@ public class CompositeCache
 
                     hitCountRam++;
                 }
+
+                found = true;
             }
             else
             {
@@ -528,7 +534,6 @@ public class CompositeCache
 
                         if ( element != null )
                         {
-
                             // Item found in one of the auxiliary caches.
 
                             if ( isExpired( element ) )
@@ -542,6 +547,8 @@ public class CompositeCache
                                 missCountExpired++;
 
                                 remove( element );
+
+                                element = null;
                             }
                             else
                             {
@@ -561,6 +568,8 @@ public class CompositeCache
                                 memCache.update( element );
                             }
 
+                            found = true;
+
                             break;
                         }
                     }
@@ -573,7 +582,7 @@ public class CompositeCache
             log.error( e );
         }
 
-        if ( element == null )
+        if ( ! found )
         {
             missCountNotFound++;
 
@@ -581,8 +590,6 @@ public class CompositeCache
             {
                 log.debug( cacheName + " - Miss" );
             }
-
-            return null;
         }
 
         return element;
@@ -679,7 +686,6 @@ public class CompositeCache
      *@param  localOnly
      *@return
      */
-
     protected synchronized boolean remove( Serializable key,
                                            boolean localOnly )
     {
