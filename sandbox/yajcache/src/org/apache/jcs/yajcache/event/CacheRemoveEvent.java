@@ -16,8 +16,9 @@
 
 package org.apache.jcs.yajcache.event;
 
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
+import org.apache.jcs.yajcache.core.ICacheChangeHandler;
 /**
  *
  * @author Hanson Char
@@ -34,5 +35,9 @@ public class CacheRemoveEvent<V> extends CacheChangeEvent<V> {
     }
     public @NonNullable String getKey() {
         return key;
+    }
+    @Override
+    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+        return handler.handleRemove(super.getCache().getName(), this.key);
     }
 }

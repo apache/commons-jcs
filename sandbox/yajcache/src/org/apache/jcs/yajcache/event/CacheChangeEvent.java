@@ -16,8 +16,9 @@
 
 package org.apache.jcs.yajcache.event;
 
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
+import org.apache.jcs.yajcache.core.ICacheChangeHandler;
 /**
  *
  * @author Hanson Char
@@ -28,7 +29,13 @@ public abstract class CacheChangeEvent<V> extends java.util.EventObject {
     protected CacheChangeEvent(@NonNullable ICache<V> cache) {
         super(cache);
     }
+    /** Returns the cache which is the source of the events. */
     protected @NonNullable ICache<V> getCache() {
         return (ICache<V>)super.getSource();
     }
+    /** 
+     * Dispatches the event handling to the specific method invokation of the
+     * given handler.
+     */
+    public abstract boolean dispatch(@NonNullable ICacheChangeHandler<V> handler);
 }

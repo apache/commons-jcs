@@ -16,8 +16,9 @@
 
 package org.apache.jcs.yajcache.event;
 
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
+import org.apache.jcs.yajcache.core.ICacheChangeHandler;
 /**
  *
  * @author Hanson Char
@@ -28,5 +29,10 @@ public class CachePutBeanCopyEvent<V> extends CachePutEvent<V> {
             @NonNullable String key, @NonNullable V val)
     {
         super(cache, key, val);
+    }
+    @Override
+    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+        return handler.handlePutBeanCopy(
+                super.getCache().getName(), super.getKey(), super.getValue());
     }
 }

@@ -16,8 +16,9 @@
 
 package org.apache.jcs.yajcache.event;
 
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.core.ICache;
+import org.apache.jcs.yajcache.core.ICacheChangeHandler;
 /**
  *
  * @author Hanson Char
@@ -27,5 +28,9 @@ public class CacheClearEvent<V> extends CacheChangeEvent<V> {
     public CacheClearEvent(@NonNullable ICache<V> cache)
     {
         super(cache);
+    }
+    @Override 
+    public boolean dispatch(@NonNullable ICacheChangeHandler<V> handler) {
+        return handler.handleClear(super.getCache().getName());
     }
 }
