@@ -34,6 +34,7 @@ public enum CacheType {
     SOFT_REFERENCE_FILE,
     SOFT_REFERENCE_FILE_SAFE;
 
+    /** Instantiates and returns a new instance of cache of the current type. */
     <V> ICache<V> createCache(String name, @NonNullable Class<V> valueType)
     {
         switch(this) {
@@ -48,6 +49,7 @@ public enum CacheType {
         }
         throw new AssertionError(this);
     }
+    /** Instantiates and returns a new instance of safe cache of the current type. */
     <V> ICacheSafe<V> createSafeCache(String name, @NonNullable Class<V> valueType)
     {
         switch(this) {
@@ -57,5 +59,35 @@ public enum CacheType {
                 return new SafeCacheWrapper<V>(new SoftRefFileCache<V>(name, valueType));
         }
         throw new UnsupportedOperationException("");
+    }
+    /** 
+     * Returns true if cache of the given cache type can be used as
+     * cache of the current cache type;
+     * false otherwise.
+     */
+    public boolean isAsssignableFrom(CacheType from) {
+        switch(this) {
+            case SOFT_REFERENCE:
+                return true;
+            case SOFT_REFERENCE_SAFE:
+                switch(from) {
+                    case SOFT_REFERENCE_SAFE:
+                    case SOFT_REFERENCE_FILE_SAFE:
+                        return true;
+                    default:
+                        return false;
+                }
+            case SOFT_REFERENCE_FILE:
+                switch(from) {
+                    case SOFT_REFERENCE_FILE:
+                    case SOFT_REFERENCE_FILE_SAFE:
+                        return true;
+                    default:
+                        return false;
+                }
+            case SOFT_REFERENCE_FILE_SAFE:
+                return from == SOFT_REFERENCE_FILE_SAFE;
+        }
+        throw new AssertionError(this);
     }
 }
