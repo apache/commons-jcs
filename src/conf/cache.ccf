@@ -37,15 +37,15 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 # Regions preconfirgured for caching
 jcs.region.testCache1=LJG
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=20
+jcs.region.testCache1.cacheattributes.MaxObjects=10000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
-jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=5
-# New shrinker configuration parameter
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=5000
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
-jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=3
-jcs.region.testCache1.elementattributes.IsEternal=true
-jcs.region.testCache1.elementattributes.MaxLifeSeconds=500
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=6000
 jcs.region.testCache1.elementattributes.IsLateral=true
 
 jcs.region.testCache2=DC
@@ -119,9 +119,14 @@ jcs.auxiliary.LUDP.attributes.UdpMulticastPort=6789
 jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
-jcs.auxiliary.LJG.attributes.UdpMulticastAddr=228.5.6.7
-jcs.auxiliary.LJG.attributes.UdpMulticastPort=6789
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
+jcs.auxiliary.LJG.attributes.JGChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=751):PING(timeout=3000):FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
+
+
+jcs.auxiliary.JG = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
+jcs.auxiliary.JG.attributes = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
+jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.javagroups.JChannelFactory
+jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
 
 
 # almost complete

@@ -108,7 +108,7 @@
     </dependency>
     <dependency>
       <id>javagroups</id>
-      <version>2.0.1</version>
+      <jar>jgroups-all-2.2.jar</jar>
     </dependency>
     <dependency>
       <id>jisp</id>

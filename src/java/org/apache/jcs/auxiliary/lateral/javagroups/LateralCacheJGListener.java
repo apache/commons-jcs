@@ -25,6 +25,7 @@ import java.util.HashMap;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 
@@ -143,8 +144,9 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
      */
     public static ILateralCacheListener getInstance( ILateralCacheAttributes ilca )
     {
+
         //throws IOException, NotBoundException
-        ILateralCacheListener ins = ( ILateralCacheListener ) instances.get( String.valueOf( ilca.getUdpMulticastAddr() ) );
+        ILateralCacheListener ins = ( ILateralCacheListener ) instances.get( ilca.getJGChannelProperties() );
         if ( ins == null )
         {
             synchronized ( LateralCacheJGListener.class )
@@ -154,11 +156,11 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
                     ins = new LateralCacheJGListener( ilca );
                     ins.init();
                 }
-                if ( log.isDebugEnabled() )
+                if ( log.isInfoEnabled() )
                 {
-                    log.debug( "created new listener " + ilca.getUdpMulticastAddr() );
+                    log.info( "created new listener " + ilca.getJGChannelProperties() );
                 }
-                instances.put( String.valueOf( ilca.getUdpMulticastAddr() ), ins );
+                instances.put( ilca.getJGChannelProperties(), ins );
             }
         }
         return ins;
@@ -173,21 +175,22 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
     public void handlePut( ICacheElement element )
         throws IOException
     {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "PUTTING ELEMENT FROM LATERAL" );
+        }
+
+        puts++;
         if ( log.isInfoEnabled() )
         {
-            log.info( "PUTTING ELEMENT FROM LATERAL" );
+            if ( puts % 100 == 0 )
+            {
+                log.info( "puts = " + puts );
+            }
         }
 
         getCache( element.getCacheName() ).localUpdate( element );
 
-        puts++;
-        if ( puts % 100 == 0 )
-        {
-            log.info( "puts = " + puts );
-        }
-
-        // implement remove on put
-        //handleRemove(cb.getCacheName(), cb.getKey());
     }
 
 

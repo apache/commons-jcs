@@ -31,11 +31,11 @@ import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGRpcOpener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.javagroups.JChannel;
-import org.javagroups.Channel;
-import org.javagroups.Message;
-import org.javagroups.blocks.RpcDispatcher;
-import org.javagroups.ChannelNotConnectedException;
+import org.jgroups.JChannel;
+import org.jgroups.Channel;
+import org.jgroups.Message;
+import org.jgroups.blocks.RpcDispatcher;
+import org.jgroups.ChannelNotConnectedException;
 
 /**
  * Processes commands from the server socket.
@@ -47,14 +47,8 @@ public class LateralJGReceiver implements IJGConstants, Runnable
     private final static Log log =
         LogFactory.getLog( LateralJGReceiver.class );
 
-    private int port;
-
     private ILateralCacheJGListener ilcl;
     private ILateralCacheAttributes ilca;
-    /**
-     * How long the server will block on an accept(). 0 is infinte.
-     */
-    private final static int sTimeOut = 5000;
 
 
     /**
@@ -66,7 +60,7 @@ public class LateralJGReceiver implements IJGConstants, Runnable
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Listening on port " + port );
+                log.debug( "Listening" );
             }
 
             JGConnectionHolder holder = JGConnectionHolder.getInstance(ilca);
@@ -79,7 +73,7 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                 throw new IOException( "javagroups is null" );
             }
 
-
+            int conProbCnt = 0;
             while ( true )
             {
                 if ( log.isDebugEnabled() )
@@ -91,10 +85,13 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                 try
                 {
                     Object obj = javagroups.receive( 0 );
-                    if ( obj != null && obj instanceof org.javagroups.Message )
+                    if ( obj != null && obj instanceof org.jgroups.Message )
                     {
                         mes = ( Message ) obj;
-                        log.info( "Starting new socket node." );
+                        if ( log.isDebugEnabled() )
+                        {
+                          log.debug( "Starting new socket node." );
+                        }
                         new Thread( new LateralJGReceiverConnection( mes, ilcl ) ).start();
                     }
                     else
@@ -107,27 +104,37 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                 }
                 catch ( ChannelNotConnectedException cnce )
                 {
-                    log.warn(cnce);
+                    if ( conProbCnt % 5 == 0 )
+                    {
+                      log.warn(cnce);
+                    }
+                    conProbCnt++;
+
+                    if ( conProbCnt >= 2000 )
+                    {
+                      log.error( "Couldn't get connected to group after " + conProbCnt + " tries" );
+                      break;
+                    }
+                    // slow the connection try process down
+                    synchronized (this)
+                    {
+                      this.wait(10);
+                    }
                     // this will cycle unitl connected and eat up the processor
                     // need to throw out and recover
                     // seems to periodically require about 50 tries.
                 }
                 catch ( Exception e )
                 {
+                    // should zombie
                     log.error( "problem receiving", e );
                 }
 
-                //InetAddress inetAddress = javagroups..getInetAddress();
-                //if ( log.isDebugEnabled() )
-                //{
-                //    log.debug( "Connected to client at " + inetAddress );
-                //}
-                //log.info( "Connected to client at " + inetAddress );
             }
         }
         catch ( Exception e )
         {
-            log.error( "Major intialization problem", e );
+            log.error( "Major connection problem", e );
         }
     }
 
@@ -140,7 +147,7 @@ public class LateralJGReceiver implements IJGConstants, Runnable
      */
     public LateralJGReceiver( ILateralCacheAttributes ilca, ILateralCacheJGListener ilcl )
     {
-        this.port = ilca.getTcpListenerPort();
+
         this.ilcl = ilcl;
         this.ilca = ilca;
         if ( log.isDebugEnabled() )

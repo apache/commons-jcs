@@ -49,9 +49,14 @@ public class LateralCacheAttributes implements Serializable, ILateralCacheAttrib
     int tcpListenerPort = 1111;
     int httpListenerPort = 8080;
 
+    // javagroups
+    private String jgChannelProperties = null;
+
+    // general
     private String cacheName;
     private String name;
 
+    // disables gets from laterals
     boolean putOnlyMode = true;
 
     /**
@@ -394,6 +399,17 @@ public class LateralCacheAttributes implements Serializable, ILateralCacheAttrib
     public boolean getPutOnlyMode()
     {
         return putOnlyMode;
+    }
+
+
+    public String getJGChannelProperties()
+    {
+      return jgChannelProperties;
+    }
+
+    public void setJGChannelProperties( String channelProperties )
+    {
+      this.jgChannelProperties = channelProperties;
     }
 
 

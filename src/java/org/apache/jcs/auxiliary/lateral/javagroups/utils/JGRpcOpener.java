@@ -20,10 +20,10 @@ package org.apache.jcs.auxiliary.lateral.javagroups.utils;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 
-import org.javagroups.JChannel;
-import org.javagroups.Channel;
-import org.javagroups.blocks.RpcDispatcher;
-import org.javagroups.blocks.GroupRequest;
+import org.jgroups.JChannel;
+import org.jgroups.Channel;
+import org.jgroups.blocks.RpcDispatcher;
+import org.jgroups.blocks.GroupRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -94,8 +94,8 @@ public class JGRpcOpener implements Runnable
         try
         {
 
-            String props="UDP(mcast_addr=" + ilca.getUdpMulticastAddr() + ";mcast_port=" + ilca.getUdpMulticastPort()+ "):PING:MERGE2(min_interval=5000;max_interval=10000):FD:STABLE:NAKACK:UNICAST:FLUSH:GMS:VIEW_ENFORCER:QUEUE";
-            rpcCh = new JChannel(props);
+            //String props="UDP(mcast_addr=" + ilca.getUdpMulticastAddr() + ";mcast_port=" + ilca.getUdpMulticastPort()+ "):PING:MERGE2(min_interval=5000;max_interval=10000):FD:STABLE:NAKACK:UNICAST:FLUSH:GMS:VIEW_ENFORCER:QUEUE";
+            rpcCh = new JChannel(ilca.getJGChannelProperties());
             rpcCh.setOpt(rpcCh.LOCAL, Boolean.FALSE);
             disp = new RpcDispatcher( rpcCh, null, null, ilcl );
             rpcCh.connect(groupName);

@@ -66,7 +66,7 @@ public class LateralJGService
     public LateralJGService( ILateralCacheAttributes lca )
         throws IOException
     {
-        this.ilca = lca;
+        this.ilca = (ILateralCacheAttributes)lca;
         try
         {
             log.debug( "creating sender" );
@@ -78,7 +78,7 @@ public class LateralJGService
         catch ( IOException e )
         {
 
-            log.error( "Could not create sender to [" + lca.getUdpMulticastAddr() + "] -- " + e.getMessage() );
+            log.error( "Could not create sender to [" + lca.getJGChannelProperties() + "] -- " + e.getMessage() );
 
             throw e;
         }

@@ -33,9 +33,9 @@ import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListe
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.javagroups.Channel;
-import org.javagroups.JChannel;
-import org.javagroups.Message;
+import org.jgroups.Channel;
+import org.jgroups.JChannel;
+import org.jgroups.Message;
 
 /**
  * Separate thread run when a command comes into the LateralJGReceiver.
@@ -55,14 +55,7 @@ public class LateralJGReceiverConnection implements Runnable
 
     private ILateralCacheJGListener ilcl;
 
-    private int puts = 0;
 
-//    /**
-//     * Constructor for the LateralJGReceiverConnection object
-//     *
-//     * @param socket
-//     * @param ilcl
-//     */
     /**
      * Constructor for the LateralJGReceiverConnection object
      *
@@ -72,22 +65,8 @@ public class LateralJGReceiverConnection implements Runnable
     {
         this.ilcl = ilcl;
         this.mes = mes;
-//        this.javagroups = javagroups;
+     }
 
-    }
-
-    //        this.socket = socket;
-//        this.led = led;
-//
-//        try
-//        {
-//            ois = new ObjectInputStream( socket.getInputStream() );
-//        }
-//        catch ( Exception e )
-//        {
-//            log.error( "Could not open ObjectInputStream to " + socket, e );
-//        }
-//    }
 
 
     /**
@@ -99,14 +78,10 @@ public class LateralJGReceiverConnection implements Runnable
     public void run( )
     {
         Serializable obj = null;
-//        Object obj;
 
         try
         {
-//            while ( true )
-//            {
-//                obj = ois.readObject();
-//                LateralElementDescriptor led = ( LateralElementDescriptor ) obj;
+
                 LateralElementDescriptor led = ( LateralElementDescriptor ) mes.getObject();
                 if ( led == null )
                 {
@@ -129,14 +104,6 @@ public class LateralJGReceiverConnection implements Runnable
                     }
                     if ( led.command == led.UPDATE )
                     {
-                        puts++;
-                        if ( log.isDebugEnabled() )
-                        {
-                            if ( puts % 100 == 0 )
-                            {
-                                log.debug( "puts = " + puts );
-                            }
-                        }
                         ilcl.handlePut( led.ce );
                     }
                     else
@@ -148,10 +115,10 @@ public class LateralJGReceiverConnection implements Runnable
                         if ( led.command == led.GET )
                     {
                         obj = getAndRespond( led.ce.getCacheName(), led.ce.getKey() );
-                        //ilcl.handleGet( led.ce.getCacheName(), led.ce.getKey() );
+
                     }
                 }
-//            }
+
         }
         catch ( java.io.EOFException e )
         {
@@ -166,15 +133,7 @@ public class LateralJGReceiverConnection implements Runnable
             log.error( "Unexpected exception. Closing conneciton", e );
         }
 
-//        try
-//        {
-//            ois.close();
-//        }
-//        catch ( Exception e )
-//        {
-//            log.error( "Could not close connection", e );
-//        }
-        //return obj;
+
     }
 
 
@@ -196,22 +155,6 @@ public class LateralJGReceiverConnection implements Runnable
             log.debug( "obj = " + obj );
         }
 
-//        ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
-//
-//        if ( oos != null )
-//        {
-//            try
-//            {
-//                oos.writeObject( obj );
-//                oos.flush();
-//            }
-//            catch ( IOException e )
-//            {
-//                oos = null;
-//                log.error( "Detected problem with connection", e );
-//                throw e;
-//            }
-//        }
         return obj;
     }
 }

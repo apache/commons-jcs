@@ -213,4 +213,18 @@ public interface ILateralCacheAttributes extends Serializable, AuxiliaryCacheAtt
      */
     public boolean getPutOnlyMode();
 
+    /**
+     *
+     * @return String The Javagroups channel propeties.
+     */
+    public String getJGChannelProperties();
+
+    /**
+     *
+     *   Sets the Javagroups channel propeties.
+     *
+     * @param channelProperties String
+     */
+    public void setJGChannelProperties( String channelProperties );
+
 }

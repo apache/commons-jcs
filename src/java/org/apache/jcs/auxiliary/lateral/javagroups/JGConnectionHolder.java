@@ -21,12 +21,12 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
 import java.util.HashMap;
 import java.io.IOException;
 
-import org.javagroups.JChannel;
-import org.javagroups.Channel;
-import org.javagroups.Message;
-import org.javagroups.blocks.RpcDispatcher;
-import org.javagroups.util.RspList;
-import org.javagroups.blocks.GroupRequest;
+import org.jgroups.JChannel;
+import org.jgroups.Channel;
+import org.jgroups.Message;
+import org.jgroups.blocks.RpcDispatcher;
+import org.jgroups.util.RspList;
+import org.jgroups.blocks.GroupRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,7 +66,7 @@ public class JGConnectionHolder
     public static JGConnectionHolder getInstance( ILateralCacheAttributes ilca )
     {
         //throws IOException, NotBoundException
-        JGConnectionHolder ins = ( JGConnectionHolder ) instances.get( String.valueOf( ilca.getUdpMulticastAddr() ) );
+        JGConnectionHolder ins = ( JGConnectionHolder ) instances.get( ilca.getJGChannelProperties() );
         try
         {
             if ( ins == null )
@@ -79,9 +79,9 @@ public class JGConnectionHolder
                     }
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "created new listener " + ilca.getUdpMulticastAddr() );
+                        log.debug( "created new listener " + ilca.getJGChannelProperties() );
                     }
-                    instances.put( String.valueOf( ilca.getUdpMulticastAddr() ), ins );
+                    instances.put( ilca.getJGChannelProperties(), ins );
                 }
             }
         }

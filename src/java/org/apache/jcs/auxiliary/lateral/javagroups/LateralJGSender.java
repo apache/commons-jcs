@@ -42,12 +42,12 @@ import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGSocketOpener;
 import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGRpcOpener;
 import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
 
-import org.javagroups.JChannel;
-import org.javagroups.Channel;
-import org.javagroups.Message;
-import org.javagroups.blocks.RpcDispatcher;
-import org.javagroups.util.RspList;
-import org.javagroups.blocks.GroupRequest;
+import org.jgroups.JChannel;
+import org.jgroups.Channel;
+import org.jgroups.Message;
+import org.jgroups.blocks.RpcDispatcher;
+import org.jgroups.util.RspList;
+import org.jgroups.blocks.GroupRequest;
 
 import org.apache.jcs.engine.CacheElement;
 
@@ -78,6 +78,8 @@ public class LateralJGSender implements IJGConstants
     private Channel javagroups;
     private RpcDispatcher disp;
 
+    private JGConnectionHolder holder;
+
     //private ObjectOutputStream oos;
     //private Socket socket;
     int counter = 0;
@@ -98,32 +100,25 @@ public class LateralJGSender implements IJGConstants
         throws IOException
     {
         this.ilca = lca;
-        init( lca.getUdpMulticastAddr(), lca.getUdpMulticastPort() );
+        init();
     }
 
 
     /**
-     * Description of the Method
+     * Create holder.
      *
-     * @param host
-     * @param port
      * @exception IOException
      */
-    protected void init( String host, int port )
+    protected void init()
         throws IOException
     {
-        this.port = port;
-        this.address = getAddressByName( host );
-        this.remoteHost = host;
 
         try
         {
-            log.debug( "Attempting connection to " + address.getHostName() );
-            //socket = new Socket( address, port );
+            log.debug( "Attempting ccreate channel."  );
 
-            JGConnectionHolder holder = JGConnectionHolder.getInstance(ilca);
+            holder = JGConnectionHolder.getInstance(ilca);
             javagroups = holder.getChannel();
-            disp = holder.getDispatcher();
 
             if ( javagroups == null )
             {
@@ -133,37 +128,18 @@ public class LateralJGSender implements IJGConstants
         }
         catch ( java.net.ConnectException e )
         {
-            log.debug( "Remote host " + address.getHostName() + " refused connection." );
+            log.debug( "Remote host refused connection." );
             throw e;
         }
         catch ( Exception e )
         {
-            log.debug( "Could not connect to " + address.getHostName() +
+            log.debug( "Could not connect to channel" +
                 ". Exception is " + e );
             throw new IOException(e.getMessage());
         }
 
     }
     // end constructor
-
-    /**
-     * Gets the addressByName attribute of the LateralJGSender object
-     *
-     * @return The addressByName value
-     * @param host
-     */
-    private InetAddress getAddressByName( String host )
-    {
-        try
-        {
-            return InetAddress.getByName( host );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Could not find address of [" + host + "]", e );
-            return null;
-        }
-    }
 
 
     /**
@@ -182,14 +158,6 @@ public class LateralJGSender implements IJGConstants
             return;
         }
 
-        if ( address == null )
-        {
-            throw new IOException( "No remote host is set for LateralJGSender." );
-            //return;
-        }
-
-//        if ( oos != null )
-//        {
         try
         {
 
@@ -197,37 +165,18 @@ public class LateralJGSender implements IJGConstants
 
             javagroups.send( send_msg );
 
-//                oos.writeObject( led );
-//                oos.flush();
-//                if ( ++counter >= RESET_FREQUENCY )
-//                {
-//                    counter = 0;
-//                    // Failing to reset the object output stream every now and
-//                    // then creates a serious memory leak.
-//                    log.info( "Doing oos.reset()" );
-//                    oos.reset();
-//                }
-//            }
-//            catch ( IOException e )
-//            {
-//                //oos = null;
-//                log.error( "Detected problem with connection: " + e );
-//                throw e;
         }
         catch ( Exception e )
         {
             log.error( "Detected problem with connection: " + e );
             throw new IOException( e.getMessage() );
         }
-//        }
+
     }
 
 
     /**
-     * Sends commands to the lateral cache listener and gets a response. I'm
-     * afraid that we could get into a pretty bad blocking situation here. This
-     * needs work. I just wanted to get some form of get working. Will need some
-     * sort of timeout.
+     * Sends commands to the lateral cache listener and gets a response.
      *
      * @return
      * @param led
@@ -245,19 +194,13 @@ public class LateralJGSender implements IJGConstants
             return null;
         }
 
-        if ( address == null )
-        {
-            throw new IOException( "No remote host is set for LateralJGSender." );
-            //return;
-        }
-
-//        if ( oos != null )
-//        {
         try
         {
 
             try
             {
+
+                disp = holder.getDispatcher();
 
                 RspList rsp_list = disp.callRemoteMethods( null, "handleGet", (String)led.ce.getCacheName(), (Serializable)led.ce.getKey(),
                     GroupRequest.GET_ALL, 1000 );
@@ -367,9 +310,7 @@ public class LateralJGSender implements IJGConstants
     public void dispose( String cache )
         throws IOException
     {
-        // WILL CLOSE CONNECTION USED BY ALL
-        //oos.close();
-        //javagroups.
+
     }
 
 
@@ -401,42 +342,6 @@ public class LateralJGSender implements IJGConstants
         led.requesterId = requesterId;
         led.command = led.REMOVEALL;
         send( led );
-    }
-
-
-    /**
-     * Description of the Method
-     *
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        try
-        {
-            LateralJGSender lur = null;
-            LateralCacheAttributes lca = new LateralCacheAttributes();
-            lca.setHttpServer( "localhost:8181" );
-            lur = new LateralJGSender( lca );
-
-            // process user input till done
-            boolean notDone = true;
-            String message = null;
-            // wait to dispose
-            BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
-
-            while ( notDone )
-            {
-                System.out.println( "enter mesage:" );
-                message = br.readLine();
-                CacheElement ce = new CacheElement( "test", "test", message );
-                LateralElementDescriptor led = new LateralElementDescriptor( ce );
-                lur.send( led );
-            }
-        }
-        catch ( Exception e )
-        {
-            System.out.println( e.toString() );
-        }
     }
 
 }

@@ -20,8 +20,8 @@ package org.apache.jcs.auxiliary.lateral.javagroups.utils;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 
-import org.javagroups.JChannel;
-import org.javagroups.Channel;
+import org.jgroups.JChannel;
+import org.jgroups.Channel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +31,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 
 /**
  * Socket openere that will timeout on the initial connect rather than block
- * forever. Technique from core java II.
+ * forever.
  *
  * @version $Id$
  */
@@ -62,7 +62,7 @@ public class JGSocketOpener implements Runnable
         }
         catch ( InterruptedException ire )
         {
-            log.error(ire);
+            log.error( "Failed of connect in within timout of " + timeOut,  ire);
         }
         return opener.getSocket();
     }
@@ -90,14 +90,10 @@ public class JGSocketOpener implements Runnable
     {
         try
         {
-            // make configurable
-            String props="UDP(mcast_addr=" + lca.getUdpMulticastAddr() + ";mcast_port=" + lca.getUdpMulticastPort()+ "):PING:MERGE2(min_interval=5000;max_interval=10000):FD:STABLE:NAKACK:UNICAST:" +
-             "FRAG:FLUSH:GMS:VIEW_ENFORCER:STATE_TRANSFER:QUEUE";
 
-            javagroups = new JChannel(props);
+            javagroups = new JChannel( lca.getJGChannelProperties() );
+            // don't send local
             javagroups.setOpt(javagroups.LOCAL, Boolean.FALSE);
-            // could have a channel per region
-            //javagroups.connect(IJGConstants.DEFAULT_JG_GROUP_NAME);
             javagroups.connect(groupName);
 
         }
