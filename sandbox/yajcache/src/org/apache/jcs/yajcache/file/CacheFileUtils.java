@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public enum CacheFileUtils {
      *
      * @return true if succesfull; false otherwise.
      */
-    boolean mkCacheDirs(@NonNullable String cacheName) {
+    public boolean mkCacheDirs(@NonNullable String cacheName) {
         File dir = this.getCacheDir(cacheName);
         return dir.mkdirs();
     }

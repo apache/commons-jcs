@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.file.CacheFileContent;
 import org.apache.jcs.yajcache.file.CacheFileContentType;
 import org.apache.jcs.yajcache.file.CacheFileDAO;
+import org.apache.jcs.yajcache.file.CacheFileUtils;
 import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
 import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
 import org.apache.jcs.yajcache.util.EqualsUtils;
@@ -111,6 +112,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
+        CacheFileUtils.inst.mkCacheDirs(this.name);
     }
     public SoftRefFileCache(
             @NonNullable String name, @NonNullable Class<V> valueType,
@@ -120,6 +122,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
+        CacheFileUtils.inst.mkCacheDirs(this.name);
     }
     
     public SoftRefFileCache(@NonNullable String name,
@@ -129,6 +132,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         this.collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
+        CacheFileUtils.inst.mkCacheDirs(this.name);
     }
     
     public boolean isEmpty() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class SafeCacheManagerTest extends TestCase {
     
     public void testGetCache() {
         log.debug("Test getCache and get");
-        ICacheSafe<String> c = SafeCacheManager.inst.getCache("myCache", String.class);
+        ICacheSafe<String> c = SafeCacheManager.inst.getCache(CacheType.SOFT_REFERENCE_SAFE, "myCache", String.class);
         assertTrue(null == c.get("bla"));
         log.debug("Test getCache and put");
         c = SafeCacheManager.inst.getCache("myCache", String.class);
@@ -103,7 +103,8 @@ public class SafeCacheManagerTest extends TestCase {
     public void testGetSafeCache() {
         log.debug("Test getCache and getCopy");
         {
-            ICacheSafe<String> c = SafeCacheManager.inst.getCache("myCache", String.class);
+            ICacheSafe<String> c = SafeCacheManager.inst.getCache(
+                    CacheType.SOFT_REFERENCE_SAFE, "myCache", String.class);
             assertTrue(null == c.getCopy("bla"));
             log.debug("Test getCache and putCopy");
             c = SafeCacheManager.inst.getCache("myCache", String.class);
@@ -117,7 +118,8 @@ public class SafeCacheManagerTest extends TestCase {
             log.debug("Test getCache and two putCopy's");
         }
         SafeCacheManager.inst.removeCache("myCache");
-        ICacheSafe<TestSerializable> c = SafeCacheManager.inst.getCache("myCache", TestSerializable.class);
+        ICacheSafe<TestSerializable> c = SafeCacheManager.inst.getCache(
+                CacheType.SOFT_REFERENCE_SAFE, "myCache", TestSerializable.class);
         TestSerializable[] ta = {
                 new TestSerializable("First Put"), 
                 new TestSerializable("Second Put"),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class CacheManagerTest extends TestCase {
         CacheManager.inst.getCache("myCache", String.class);
         CacheManager.inst.removeCache("myCache");
         log.debug("Test getCache and get");
-        ICache<String> c = CacheManager.inst.getCache("myCache", String.class);
+        ICache<String> c = CacheManager.inst.getCache(CacheType.SOFT_REFERENCE, "myCache", String.class);
         assertTrue(null == c.get("bla"));
         log.debug("Test getCache and put");
         c = CacheManager.inst.getCache("myCache", String.class);
