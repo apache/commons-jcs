@@ -21,7 +21,7 @@ import org.apache.jcs.yajcache.util.TestSerializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *
@@ -64,7 +64,7 @@ public class SafeCacheManagerTest extends TestCase {
         log.debug("Test checking of cache value type");
         try {
             ICacheSafe<Integer> c2 = SafeCacheManager.inst.getCache("myCache", Integer.class);
-            fail("Bug: Cache for string cannot be used for Integer.");
+            assert false : "Bug: Cache for string cannot be used for Integer.";
         } catch(ClassCastException ex) {
             // should go here.
         }
@@ -78,7 +78,7 @@ public class SafeCacheManagerTest extends TestCase {
                 + "race condition in creating cache AND class cast exception");
         try {
             ICacheSafe<Double> doubleCache = SafeCacheManager.inst.testCreateCacheRaceCondition("race", Double.class);
-            fail("Bug: Cache for Integer cannot be used for Double.");
+            assert false : "Bug: Cache for Integer cannot be used for Double.";
         } catch(ClassCastException ex) {
             // should go here.
         }
@@ -161,7 +161,7 @@ public class SafeCacheManagerTest extends TestCase {
         log.debug("Test checking of cache value type");
         try {
             ICacheSafe<Integer> c2 = SafeCacheManager.inst.getCache("myCache", Integer.class);
-            fail("Bug: Cache for string cannot be used for Integer.");
+            assert false : "Bug: Cache for string cannot be used for Integer.";
         } catch(ClassCastException ex) {
             // should go here.
         }

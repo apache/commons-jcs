@@ -20,7 +20,7 @@ import junit.framework.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  *
@@ -32,6 +32,8 @@ public class CacheManagerTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     
     public void testGetCache() {
+        CacheManager.inst.getCache("myCache", String.class);
+        CacheManager.inst.removeCache("myCache");
         log.debug("Test getCache and get");
         ICache<String> c = CacheManager.inst.getCache("myCache", String.class);
         assertTrue(null == c.get("bla"));
@@ -63,7 +65,7 @@ public class CacheManagerTest extends TestCase {
         log.debug("Test checking of cache value type");
         try {
             ICache<Integer> c2 = CacheManager.inst.getCache("myCache", Integer.class);
-            fail("Bug: Cache for string cannot be used for Integer.");
+            assert false : "Bug: Cache for string cannot be used for Integer";
         } catch(ClassCastException ex) {
             // should go here.
         }
@@ -77,7 +79,7 @@ public class CacheManagerTest extends TestCase {
                 + "race condition in creating cache AND class cast exception");
         try {
             ICache<Double> doubleCache = CacheManager.inst.testCreateCacheRaceCondition("race", Double.class);
-            fail("Bug: Cache for Integer cannot be used for Double.");
+            assert false : "Bug: Cache for Integer cannot be used for Double";
         } catch(ClassCastException ex) {
             // should go here.
         }
