@@ -54,13 +54,15 @@ package org.apache.jcs.engine.control.event.behavior;
  * <http://www.apache.org/>.
  */
 
+import java.io.Serializable;
+
 /**
- *  Description of the Interface
+ *  Defines how an element event object should behave
  *
  *@author     asmuts
  *@created    May 9, 2002
  */
-public interface IElementEvent
+public interface IElementEvent extends Serializable
 {
 
     /**

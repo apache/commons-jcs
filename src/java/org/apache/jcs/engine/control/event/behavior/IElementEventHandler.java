@@ -62,7 +62,7 @@ import java.io.Serializable;
  *@author     asmuts
  *@created    May 9, 2002
  */
-public interface IElementEventHandler
+public interface IElementEventHandler extends Serializable
 {
 
     /**
