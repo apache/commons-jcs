@@ -197,6 +197,50 @@ public class MRUMemoryCache
 
     }
 
+
+
+    /**
+     * Get an item from the cache without affecting its last access
+     * time or position.
+     *
+     * @return Element mathinh key if found, or null
+     * @param key Identifies item to find
+     * @exception IOException
+     */
+    public ICacheElement getQuiet( Serializable key )
+        throws IOException
+    {
+
+        ICacheElement ce = null;
+
+        try
+        {
+
+          ce = ( ICacheElement ) map.get( key );
+          if ( ce != null )
+          {
+              if ( log.isDebugEnabled() )
+              {
+                  log.debug( cacheName + ": MRUMemoryCache quiet hit for " + key );
+              }
+
+          }
+          else
+          {
+              log.debug( cacheName + ": MRUMemoryCache quiet miss for " + key );
+          }
+
+        }
+        catch ( Exception e )
+        {
+            log.error( e );
+        }
+
+        return ce;
+
+    }
+
+
     /**
      * Description of the Method
      *
@@ -414,10 +458,15 @@ public class MRUMemoryCache
      * @param me
      * @exception IOException
      */
-    public void waterfal( MemoryElementDescriptor me )
+//    public void waterfal( MemoryElementDescriptor me )
+//        throws IOException
+//    {
+//        this.cache.spoolToDisk( me.ce );
+//    }
+    public void waterfal( ICacheElement ce )
         throws IOException
     {
-        this.cache.spoolToDisk( me.ce );
+        this.cache.spoolToDisk( ce );
     }
 
     /**
@@ -429,6 +478,18 @@ public class MRUMemoryCache
     {
         //return Collections.enumeration(map.entrySet());
         return map.entrySet().iterator();
+    }
+
+
+    /**
+     * Get an Array of the keys for all elements in the memory cache
+     *
+     * @return Object[]
+     */
+    public Object[] getKeyArray()
+    {
+      // may need to lock to map here?
+      return map.keySet().toArray();
     }
 
     /**

@@ -179,6 +179,51 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         }
     }
 
+
+    /**
+     * Get an item from the cache without affecting its last access
+     * time or position.
+     *
+     * @return Element mathinh key if found, or null
+     * @param key Identifies item to find
+     * @exception IOException
+     */
+    public ICacheElement getQuiet( Serializable key )
+        throws IOException
+    {
+        MemoryElementDescriptor me = null;
+        ICacheElement ce = null;
+
+        try
+        {
+
+          me = ( MemoryElementDescriptor ) map.get( key );
+          if ( me != null )
+          {
+              if ( log.isDebugEnabled() )
+              {
+                  log.debug( cacheName + ": LRUMemoryCache quiet hit for " + key );
+              }
+
+              ce = me.ce;
+
+          }
+          else
+          {
+              log.debug( cacheName + ": LRUMemoryCache quiet miss for " + key );
+          }
+
+        }
+        catch ( Exception e )
+        {
+            log.error( e );
+        }
+
+        return ce;
+
+
+    }
+
     /**
      * Get an item from the cache
      *
@@ -345,17 +390,37 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         return map.entrySet().iterator();
     }
 
+
+    /**
+     * Get an Array of the keys for all elements in the memory cache
+     *
+     * @return An Object[]
+     */
+    public Object[] getKeyArray()
+    {
+      // may need to lock to map here?
+      return map.keySet().toArray();
+    }
+
+
     /**
      * Puts an item to the cache.
      *
      * @param me
      * @exception IOException
      */
-    public void waterfal( MemoryElementDescriptor me )
+//    public void waterfal( MemoryElementDescriptor me )
+//        throws IOException
+//    {
+//        this.cache.spoolToDisk( me.ce );
+//    }
+    public void waterfal( ICacheElement ce )
         throws IOException
     {
-        this.cache.spoolToDisk( me.ce );
+        this.cache.spoolToDisk( ce );
     }
+
+
 
     /**
      * Returns the CacheAttributes.

@@ -11,6 +11,9 @@ import org.apache.jcs.engine.control.Cache;
 /**
  * For the framework. Insures methods a MemoryCache needs to access.
  *
+ * Not sure why we use this.  Should use teh IMemeoryCache interface.
+ * I'll change it later.
+ *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @author <a href="mailto:jtaylor@apache.org">James Taylor</a>
  * @version $Id$
@@ -38,6 +41,14 @@ public interface MemoryCache
      */
     public Iterator getIterator();
 
+
+    /**
+     * Get an Array of the keys for all elements in the memory cache
+     *
+     * @return Object[]
+     */
+    public Object[] getKeyArray();
+
     /**
      * Removes an item from the cache
      *
@@ -54,9 +65,17 @@ public interface MemoryCache
     public ICacheElement get( Serializable key )
         throws IOException;
 
-    /** Spools the item contained in the provided element to disk */
-    public void waterfal( MemoryElementDescriptor me )
+    /** Get an item from the cache without effecting its order or last access time */
+    public ICacheElement getQuiet( Serializable key )
         throws IOException;
+
+    /** Spools the item contained in the provided element to disk */
+//    public void waterfal( MemoryElementDescriptor me )
+//        throws IOException;
+
+    public void waterfal( ICacheElement ce )
+        throws IOException;
+
 
     /** Puts an item to the cache. */
     public void update( ICacheElement ce ) throws IOException;

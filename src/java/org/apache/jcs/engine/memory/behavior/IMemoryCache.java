@@ -53,6 +53,13 @@ public interface IMemoryCache extends ICacheType
     public Iterator getIterator();
 
 
+    /**
+     * Get an Array of the keys for all elements in the memory cache
+     *
+     * @return An Object[]
+     */
+    public Object[] getKeyArray();
+
     /** Removes an item from the cache. */
     public boolean remove( Serializable key )
         throws IOException;
@@ -67,14 +74,21 @@ public interface IMemoryCache extends ICacheType
     public Serializable get( Serializable key )
         throws IOException;
 
+    /** Get an item from the cache without effecting its order or last access time */
+    public ICacheElement getQuiet( Serializable key )
+        throws IOException;
+
 
     /** Description of the Method */
     public Serializable get( Serializable key, boolean container )
         throws IOException;
 
 
-    /** Puts an item to the cache. */
-    public void waterfal( MemoryElementDescriptor me )
+    /** Throws an item out of memory, if there is a disk cache it will be spooled. */
+//    public void waterfal( MemoryElementDescriptor me )
+//        throws IOException;
+
+    public void waterfal( ICacheElement ce )
         throws IOException;
 
 
