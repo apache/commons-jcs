@@ -60,17 +60,18 @@ import java.io.Reader;
 
 import java.util.Enumeration;
 import java.util.StringTokenizer;
+import java.util.Iterator;
 
 import org.apache.jcs.access.exception.CacheException;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.ElementAttributes;
-import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.apache.jcs.engine.control.event.TestElementEventHandler;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 
 
@@ -110,27 +111,27 @@ public class TestCacheAccess
                 //cache_control= GroupCacheAccess.getGroupAccess( "testGroupCache" );
 
                 // start the local cache witht he appropriate props file
-                GroupCacheHub.getInstance( args[0] );
+                CompositeCacheManager.getInstance( args[0] );
 
                 cache_control = GroupCacheAccess.getGroupAccess( "testCache1" );
 
                 // not necessary if you don't set default element attributes
-                try
-                {
-                    cache_control.defineGroup( "gr" );
-                }
-                catch ( CacheException ce )
-                {
-                    p( ce.toString() + " /n" + ce.getMessage() );
-                }
-                try
-                {
-                    cache_control.defineGroup( "gr2" );
-                }
-                catch ( CacheException ce )
-                {
-                    p( ce.toString() + " /n" + ce.getMessage() );
-                }
+//                try
+//                {
+//                    cache_control.defineGroup( "gr" );
+//                }
+//                catch ( CacheException ce )
+//                {
+//                    p( ce.toString() + " /n" + ce.getMessage() );
+//                }
+//                try
+//                {
+//                    cache_control.defineGroup( "gr2" );
+//                }
+//                catch ( CacheException ce )
+//                {
+//                    p( ce.toString() + " /n" + ce.getMessage() );
+//                }
 
                 GroupCacheAccess cache_control2 = GroupCacheAccess.getGroupAccess( "testCache2" );
                 p( "cache_control = " + cache_control );
@@ -741,11 +742,11 @@ public class TestCacheAccess
     /** Gets the attributeNames attribute of the TestCacheAccess class */
     static void getAttributeNames( String groupName )
     {
-        Enumeration enum = cache_control.getAttributeNames( groupName );
-        p( "enum = " + enum );
-        while ( enum.hasMoreElements() )
+        Iterator iter = cache_control.getGroupKeys( groupName ).iterator();
+
+        while ( iter.hasNext() )
         {
-            p( "=" + ( String ) enum.nextElement() );
+            p( "=" + ( String ) iter.next() );
         }
     }
 }

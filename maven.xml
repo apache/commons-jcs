@@ -1,0 +1,11 @@
+<project default="java:jar">
+
+  <preGoal name="test:test">
+
+    <!-- Work area for unit tests -->
+    
+    <mkdir dir="target/test-sandbox/logs"/>
+
+  </preGoal>
+
+</project>
