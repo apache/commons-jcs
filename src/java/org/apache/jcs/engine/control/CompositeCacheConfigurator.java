@@ -191,11 +191,25 @@ public class CompositeCacheConfigurator
 
     /** */
     protected CompositeCache parseRegion( Properties props,
-                                  String regName,
-                                  String value,
-                                  ICompositeCacheAttributes cca,
-                                  String regionPrefix )
+                                          String regName,
+                                          String value,
+                                          ICompositeCacheAttributes cca,
+                                          String regionPrefix )
     {
+        // First, create or get the cache and element attributes, and create
+        // the cache.
+
+        if ( cca == null )
+        {
+            cca = parseCompositeCacheAttributes( props, regName, regionPrefix );
+        }
+
+        IElementAttributes ea = parseElementAttributes( props, regName, regionPrefix );
+
+        CompositeCache cache = new CompositeCache( regName, cca, ea );
+
+        // Next, create the auxiliaries for the new cache
+
         List auxList = new ArrayList();
 
         log.debug( "Parsing region name '" + regName + "', value '" + value + "'" );
@@ -226,35 +240,21 @@ public class CompositeCacheConfigurator
             }
             log.debug( "Parsing auxiliary named \"" + auxName + "\"." );
 
-            auxCache = parseAuxiliary( props, auxName, regName );
+            auxCache = parseAuxiliary( cache, props, auxName, regName );
+
             if ( auxCache != null )
             {
                 auxList.add( auxCache );
             }
         }
 
-        AuxiliaryCache[] auxCaches =
-            ( AuxiliaryCache[] ) auxList.toArray( new AuxiliaryCache[ 0 ] );
+        // Associate the auxiliaries with the cache
 
-        // GET COMPOSITECACHEATTRIBUTES
-        if ( cca == null )
-        {
-            cca = parseCompositeCacheAttributes( props, regName, regionPrefix );
-        }
+        cache.setAuxCaches(
+            ( AuxiliaryCache[] ) auxList.toArray( new AuxiliaryCache[ 0 ] ) );
 
-        IElementAttributes ea = parseElementAttributes( props, regName, regionPrefix );
+        // Return the new cache
 
-        CompositeCache cache = null;
-        if ( regionPrefix.equals( SYSTEM_REGION_PREFIX ) )
-        {
-            //cache = ccMgr.createSystemCache( regName, auxCaches, cca, new ElementAttributes() );
-            cache = ccMgr.createSystemCache( regName, auxCaches, cca, ea );
-        }
-        else
-        {
-            //cache = ccMgr.createCache( regName, auxCaches, cca, new ElementAttributes() );
-            cache = ccMgr.createCache( regName, auxCaches, cca, ea );
-        }
         return cache;
     }
 
@@ -338,7 +338,8 @@ public class CompositeCacheConfigurator
     }
 
     /** Get an aux cache for the listed aux for a region. */
-    protected AuxiliaryCache parseAuxiliary( Properties props,
+    protected AuxiliaryCache parseAuxiliary( CompositeCache cache,
+                                             Properties props,
                                              String auxName,
                                              String regName )
     {
@@ -358,7 +359,9 @@ public class CompositeCacheConfigurator
                 log.error( "Could not instantiate auxFactory named \"" + auxName + "\"." );
                 return null;
             }
+
             auxFac.setName( auxName );
+
             ccMgr.registryFacPut( auxFac );
         }
 
@@ -391,7 +394,7 @@ public class CompositeCacheConfigurator
 
         // GET CACHE FROM FACTORY WITH ATTRIBUTES
         auxAttr.setCacheName( regName );
-        auxCache = auxFac.createCache( auxAttr );
+        auxCache = auxFac.createCache( auxAttr, cache );
         return auxCache;
     }
 }

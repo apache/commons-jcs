@@ -57,6 +57,8 @@ package org.apache.jcs.auxiliary.disk.hsql;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 
 /**
  * @author Aaron Smuts
@@ -66,15 +68,11 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 
 public class HSQLCacheFactory implements AuxiliaryCacheFactory
 {
-    private static String name;
-
-    /** Constructor for the HSQLCacheFactory object */
-    public HSQLCacheFactory()
-    {
-    }
+    private String name;
 
     /** Description of the Method */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
+                                       CompositeCache cache )
     {
         HSQLCacheAttributes idca = ( HSQLCacheAttributes ) iaca;
         HSQLCacheManager dcm = HSQLCacheManager.getInstance( idca );

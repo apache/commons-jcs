@@ -155,18 +155,10 @@ public class CompositeCache
      *@param  attr       The default element attributes
      */
     public CompositeCache( String cacheName,
-                  AuxiliaryCache[] auxCaches,
-                  ICompositeCacheAttributes cattr,
-                  IElementAttributes attr )
+                           ICompositeCacheAttributes cattr,
+                           IElementAttributes attr )
     {
         this.cacheName = cacheName;
-
-        this.auxCaches = auxCaches;
-
-        if ( auxCaches != null )
-        {
-            this.auxHitCountByIndex = new int[auxCaches.length];
-        }
 
         this.attr = attr;
         this.cacheAttr = cattr;
@@ -183,6 +175,16 @@ public class CompositeCache
         else if ( log.isInfoEnabled() )
         {
             log.info( "Constructed cache with name: " + cacheName );
+        }
+    }
+
+    public void setAuxCaches( AuxiliaryCache[] auxCaches )
+    {
+        this.auxCaches = auxCaches;
+
+        if ( auxCaches != null )
+        {
+            this.auxHitCountByIndex = new int[auxCaches.length];
         }
     }
 
@@ -868,7 +870,7 @@ public class CompositeCache
                 //   - The auxilliary is remote and the invocation was remote
 
                 if ( aux == null
-                     || aux.getStatus() == CacheConstants.STATUS_ALIVE
+                     || aux.getStatus() != CacheConstants.STATUS_ALIVE
                      || fromRemote && aux.getCacheType() == REMOTE_CACHE )
                 {
                     continue;
@@ -904,15 +906,9 @@ public class CompositeCache
                     }
                 }
 
-                // Only call the dispose method for disk auxilliaries
+                // Dispose of the auxiliary
 
-                // FIXME: Why not always call it?
-
-                if ( aux.getCacheType() == ICache.DISK_CACHE )
-                {
-                    aux.dispose();
-                }
-
+                aux.dispose();
             }
             catch ( IOException ex )
             {

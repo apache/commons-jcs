@@ -59,6 +59,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 
 /**
  * @author Aaron Smuts
@@ -70,14 +72,7 @@ public class IndexedDiskCacheFactory implements AuxiliaryCacheFactory
     private final static Log log =
         LogFactory.getLog( IndexedDiskCacheFactory.class );
 
-    private static String name;
-
-    /**
-     * Constructor for the DiskCacheFactory object
-     */
-    public IndexedDiskCacheFactory()
-    {
-    }
+    private String name;
 
     /**
      * Description of the Method
@@ -85,7 +80,8 @@ public class IndexedDiskCacheFactory implements AuxiliaryCacheFactory
      * @return
      * @param iaca
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
+                                       CompositeCache cache )
     {
         IndexedDiskCacheAttributes idca = ( IndexedDiskCacheAttributes ) iaca;
         IndexedDiskCacheManager dcm = IndexedDiskCacheManager.getInstance( idca );

@@ -12,6 +12,8 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,22 +29,18 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
     private final static Log log =
         LogFactory.getLog( RemoteCacheFactory.class );
 
-    private static String name;
+    private String name;
 
     // store reference of facades to initiate failover
     /** Description of the Field */
     public final static HashMap facades = new HashMap();
 
-
-    /** Constructor for the RemoteCacheFactory object */
-    public RemoteCacheFactory() { }
-
-
     /**
      * Interface method. Allows classforname construction, making caches
      * pluggable. Should be able to make this work for clusters and local caches
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
+                                       CompositeCache cache )
     {
 
         RemoteCacheAttributes rca = ( RemoteCacheAttributes ) iaca;

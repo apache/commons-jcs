@@ -9,6 +9,8 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 
 //import org.apache.jcs.auxiliary.*;
 
@@ -27,7 +29,7 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
     private final static Log log =
         LogFactory.getLog( LateralCacheFactory.class );
 
-    private static String name;
+    private String name;
 
     /**
      * Interface method. Allows classforname construction, making caches
@@ -36,7 +38,8 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
      * @return
      * @param iaca
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
+                                       CompositeCache cache )
     {
         LateralCacheAttributes lac = ( LateralCacheAttributes ) iaca;
         ArrayList noWaits = new ArrayList();

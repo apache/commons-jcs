@@ -16,6 +16,8 @@ import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWaitFacade;
 
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,17 +33,14 @@ public class RemoteCacheClusterFactory implements AuxiliaryCacheFactory
     private final static Log log =
         LogFactory.getLog( RemoteCacheClusterFactory.class );
 
-    private static String name;
-
-    /** Constructor for the RemoteCacheClusterFactory object */
-    public RemoteCacheClusterFactory() { }
-
+    private String name;
 
     /**
      * Interface method. Allows classforname construction, making caches
      * pluggable.
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
+                                       CompositeCache cache )
     {
         ArrayList noWaits = new ArrayList();
 

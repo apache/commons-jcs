@@ -1,5 +1,8 @@
 package org.apache.jcs.auxiliary;
 
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -63,8 +66,15 @@ package org.apache.jcs.auxiliary;
 public interface AuxiliaryCacheFactory
 {
 
-    /** Description of the Method */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca );
+    /**
+     * @param attr Attributes the factory will use to create the AuxiliaryCache
+     *             instance.
+     * @param cache The CompositeCache which will contain the AuxiliaryCache
+     *              instance being created. Allows auxiliaries to retain a
+     *              reference to their associated CompositeCache.
+     */
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr,
+                                       CompositeCache cache );
 
     /**
      * Sets the name attribute of the IAuxiliaryCacheFactory object

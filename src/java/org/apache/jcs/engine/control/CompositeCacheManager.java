@@ -248,27 +248,6 @@ public class CompositeCacheManager
         return this.defaultElementAttr.copy();
     }
 
-    /** Creates internal system cache */
-    protected CompositeCache createSystemCache( String cacheName,
-                                       AuxiliaryCache[] auxCaches,
-                                       ICompositeCacheAttributes cattr,
-                                       IElementAttributes attr )
-    {
-        return new CompositeCache( cacheName, auxCaches, cattr, attr );
-    }
-
-    /**
-     * Factory method to create the actual Cache instance. Subclass can
-     * override this method to create the specific cache.
-     */
-    protected CompositeCache createCache( String cacheName,
-                                 AuxiliaryCache[] auxCaches,
-                                 ICompositeCacheAttributes cattr,
-                                 IElementAttributes attr )
-    {
-        return new CompositeCache( cacheName, auxCaches, cattr, attr );
-    }
-
     /** Gets the cache attribute of the CacheHub object */
     public CompositeCache getCache( String cacheName )
     {
