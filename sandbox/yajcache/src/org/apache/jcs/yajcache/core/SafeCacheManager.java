@@ -33,6 +33,7 @@ public enum SafeCacheManager {
     // Cache name to Cache mapping.
     private final @NonNullable ConcurrentMap<String,ICacheSafe> map = 
             new ConcurrentHashMap<String, ICacheSafe>();
+    private final CacheType DEFAULT_CACHE_TYPE = CacheType.SOFT_REFERENCE_FILE_SAFE;
     /** 
      * Returns the cache for the specified name and value type;  
      * Creates the cache if necessary.
@@ -41,14 +42,21 @@ public enum SafeCacheManager {
      * incompatible value type.
      */
     public @NonNullable <V> ICacheSafe<V> getCache(
-            @NonNullable String name, @NonNullable Class<V> valueType)
+            @NonNullable String name, 
+            @NonNullable Class<V> valueType)
+    {
+        return this.getCache(DEFAULT_CACHE_TYPE, name, valueType);
+    }
+    public @NonNullable <V> ICacheSafe<V> getCache(
+            @NonNullable CacheType cacheType, 
+            @NonNullable String name, 
+            @NonNullable Class<V> valueType)
     {
         ICacheSafe c = this.map.get(name);
                
         if (c == null)
-            c = this.createCache(name, valueType);
-        else
-            CacheManagerUtils.inst.checkValueType(c, valueType);
+            return this.createCache(cacheType, name, valueType);
+        CacheManagerUtils.inst.checkValueType(c, valueType);
         return c;
     }
     /** 
@@ -75,11 +83,12 @@ public enum SafeCacheManager {
      * an existing cache created earlier by another thread.
      */
     private @NonNullable <V> ICacheSafe<V> createCache(
-            @NonNullable String name, @NonNullable Class<V> valueType) 
+            @NonNullable CacheType cacheType,
+            @NonNullable String name, 
+            @NonNullable Class<V> valueType) 
     {
-        SoftRefFileCacheSafe<V> c = 
-                new SoftRefFileCacheSafe<V>(name, valueType, new PerCacheConfig());
-        c.addCacheChangeListener(new CacheFileManager<V>(c));
+        ICacheSafe<V> c = cacheType.createSafeCache(name, valueType);
+//        c.addCacheChangeListener(new CacheFileManager<V>(c));
         ICacheSafe old = this.map.putIfAbsent(name, c);
 
         if (old != null) {
@@ -94,6 +103,6 @@ public enum SafeCacheManager {
     @NonNullable <V> ICacheSafe<V> testCreateCacheRaceCondition(
             @NonNullable String name, @NonNullable Class<V> valueType)
     {
-        return this.createCache(name, valueType);
+        return this.createCache(DEFAULT_CACHE_TYPE, name, valueType);
     }
 }
