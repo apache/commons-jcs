@@ -63,13 +63,18 @@
       <email>hchar@apache.org</email>
       <organization/>
     </developer>
+    <developer>
+      <name>Travis Savo</name>
+      <email>tsavo@ifilm.com</email>
+      <organization>IFilm</organization>
+    </developer>
   </developers>
 
   <contributors>
-    <contributor>
+    <!--<contributor>
       <name>Travis Savo</name>
       <email>tsavo@IFILM.com</email>
-    </contributor>
+    </contributor>-->
   </contributors>
 
 
