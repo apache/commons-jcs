@@ -82,6 +82,22 @@ public class CacheHub
         return instance;
     }
 
+    public static synchronized CacheHub getInstance( String propsFilename )
+    {
+        if ( instance == null )
+        {
+            log.debug( "Instance is null, creating with default config" );
+
+            instance = createInstance();
+
+            instance.configure( propsFilename );
+        }
+
+        instance.incrementClients();
+
+        return instance;
+    }
+
     /**
      * Get a CacheHub instance which is not configured.
      */

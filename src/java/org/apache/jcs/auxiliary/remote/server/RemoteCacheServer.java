@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import java.util.Map.Entry;
-
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
@@ -124,8 +122,18 @@ public class RemoteCacheServer
      */
     protected CacheHub createCacheManager( String prop )
     {
-        return CacheHub.getInstance(
-            prop == null ? "/remote.cache.properties" : prop );
+        CacheHub hub = CacheHub.getUnconfiguredInstance();
+
+        if ( prop == null )
+        {
+            hub.configure( "/remote.cache.properties" );
+        }
+        else
+        {
+            hub.configure( prop );
+        }
+
+        return hub;
     }
 
 
