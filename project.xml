@@ -40,8 +40,8 @@
     </mailingList>
     <mailingList>
       <name>JCS Developer List</name>
-      <subscribe>mailto:turbine-jcs-dev-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>mailto:turbine-jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <subscribe>turbine-jcs-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>turbine-jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
       <archive>http://archives.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-dev@jakarta.apache.org</archive>
     </mailingList>
   </mailingLists>
