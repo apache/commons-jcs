@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>JCS and JCACHE (JSR-107)</title>
+    <author email="pete@kazmier.com">Pete Kazmier</author>
+    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="JCS and JCACHE (JSR-107)">
+      <p> 
+        The JCS is an attempt to build a system close to JCACHE , <a
+            href="http://jcp.org/jsr/detail/107.jsp">JSR-107</a>, a
+        description of the caching system used in Oracle9i.  JCS grew
+        out of my work over the past two years to build an enterprise
+        level caching system.  Though it is replete with good ideas,
+        there are some aspects of the JCACHE architecture that could
+        lead to inefficiency (ex, the lateral distribution and net
+        searches) and a few programming preferences that I found
+        cumbersome (ex, the use of exceptions to report the common
+        place).  Subsequently there are a few differences between the
+        two systems.  In some cases I have moved my original system
+        closer to the JCACHE model where it presented a better idea.
+        Briefly:
+      </p>
+      <subsection name="Element vs. Region Attributes">
+        <p>
+          My original cache was regionally defined.  Each entry required
+          a very minimal wrapper.  The osc4j specification is an element
+          driven model where each element is fully configurable.  This
+          could lead to a slight performance penalty, but it is a richer
+          model, where elements can inherit or have their own
+          attributes.  So, I converted the entire system into element
+          centered framework.
+        </p>
+      </subsection>
+      <subsection name="Lateral Broadcast vs. Remote Consistency">
+        <p>
+          The oracle model is a laterally distributed framework with no
+          centralized control.  The JCS model has the option for lateral
+          broadcast (which will need to be made more efficient) and a
+          remote store that coordinates consistency. In the JCS Local
+          caches send data to the remote store which then notifies other
+          local caches of changes to "regions" (caches) that are
+          registered.  In JCACHE's lateral model an update is never
+          broadcast from the remote, rather updates come via the lateral
+          caches.  If you broadcast changes to all servers then every
+          server must be ready for every user.  The usage patterns of a
+          user on one box can affect the whole.  Also, the lateral model
+          can make it difficult to synchronize combinations of updates
+          and invalidations.
+        </p>
+        <p>
+          With a remote store the local caches are primed to take on
+          similar patterns by talking to the remote store, but aren't
+          flooded with the elements from another machine.  This
+          significantly cuts down on traffic.  This way each local cache
+          is a relatively separate realm with remotely configurable
+          regions that stay in synch without overriding the user habits
+          of any machine.  It also allows for an efficient mechanism of
+          retrieval, where searching for an element involves, at
+          maximum, only as many steps as there are remote servers in the
+          cluster.  In the lateral model a failed net search could take
+          an extremely long time to complete, making it necessary for
+          the programmer to decide how long of a wait is acceptable.
+        </p>
+        <p>
+          Though this is by and large a poor model, the JCS will include
+          the ability to perform full lateral searches.  A more
+          important feature is remote failover and remote server
+          clustering.  With clustering any concerns about the remote
+          server being a single point of failure vanish and the remote
+          server model is significantly more robust.
+        </p>
+      </subsection>
+      <subsection name="Put vs. Replace">
+        <p>
+          The difference between put and replace is not present in the
+          JCS by default.  The overhead associated with this distinction
+          is tremendous.  However, there will be an alternate "safe-put"
+          method to deal with special caches.
+        </p>
+      </subsection>
+      <subsection name="Nulls vs. Errors">
+        <p>
+          I started to support <code>ObjectNotFoundExceptions</code> for
+          failed gets but the overhead and cumbersome coding needed to
+          surround a simple get method is ridiculous.  Instead the JCS
+          return null.
+        </p>
+      </subsection>
+      <subsection name="Cache Loaders">
+        <p>
+          I'm not supporting cache loaders at this time.  They seem
+          unnecessary, but may be useful in a smart portal.
+        </p>
+      </subsection>
+      <subsection name="Groups vs. Hierarchy">
+        <p>
+          The JCS provides feature rich grouping mechanism, where groups
+          of elements can be invalidated and whose attributes can be
+          listed.  The grouping feature is much like the session API.
+          In addition, the JCS provides a mechanism for hierarchical
+          removal without the overhead of keeping track of all the
+          elements of a group across machines.  Element keys with
+          "<code>:</code>" separators (a value that will be fully
+          configurable) can be arranged in a hierarchy.  A remove
+          command ending in a "<code>:</code>" will issue a removal of
+          all child elements.  I can associate search and menu drop down
+          lists for a particular company in a multi-company system by
+          starting each key in disparate caches with the company id
+          followed by "<code>:</code>" and then the normal key.
+          Invalidating this data when a change is made to data affecting
+          something falling under that company can be removed by simply
+          calling <code>cacheAccess.remove(comp_id + ":")</code>.
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>

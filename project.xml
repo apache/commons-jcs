@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <version>2</version>
+  <name>jakarta-turbine-jcs</name>
+  <id>jcs</id>
+  <currentVersion>1.0-b2-dev</currentVersion>
+  <organization>Apache Software Foundation</organization>
+  <inceptionYear>2002</inceptionYear>
+  <package>org.apache.jcs</package>
+  <shortDescription>Cache</shortDescription>
+  <gumpRepositoryId>jakarta</gumpRepositoryId>
+  <description>Comprehensive Caching System</description>
+  <url>http://jakarta.apache.org/turbine/jcs/</url>
+  <cvsWebUrl>http://cvs.apache.org/viewcvs/jakarta-turbine-jcs/</cvsWebUrl>
+  <siteAddress>jakarta.apache.org</siteAddress>
+  <siteDirectory>/www/jakarta.apache.org/turbine/jcs/</siteDirectory>
+  <mailingLists>
+    <mailingList>
+      <name>JCS User List</name>
+      <subscribe>turbine-user-jcs-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>turbine-user-jcs-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://www.mail-archive.com/turbine-user-jcs@jakarta.apache.org/</archive>
+    </mailingList>
+    <mailingList>
+      <name>JCS Developer List</name>
+      <subscribe>mailto:turbine-dev-jcs-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>mailto:turbine-dev-jcs-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://www.mail-archive.com/turbine-jcs-dev@jakarta.apache.org/</archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <name>Aaron Smuts</name>
+      <id>asmuts</id>
+      <email>asmuts@apache.org</email>
+      <organization/>
+    </developer>
+    <developer>
+      <name>Jason van Zyl</name>
+      <id>jvanzyl</id>
+      <email>jason@zenplex.com</email>
+      <organization>Zenplex</organization>
+    </developer>
+    <developer>
+      <name>James Taylor</name>
+      <id>jtaylor</id>
+      <email>james@jamestaylor.org</email>
+      <organization/>
+    </developer>
+  </developers>
+  
+  <dependencies>
+    <dependency>
+      <name>commons-logging</name>
+      <type>required</type>
+      <version>1.0</version>
+      <jar>commons-logging-1.0.jar</jar>
+    </dependency>
+    <dependency>
+      <name>commons-lang</name>
+      <type>required</type>
+      <version>0.1</version>
+      <jar>commons-lang-0.1-dev.jar</jar>
+    </dependency>
+    <dependency>
+      <name>concurrent</name>
+      <type>required</type>
+      <version>1.0</version>
+      <jar>concurrent.jar</jar>
+    </dependency>
+    <dependency>
+      <name>hsqldb</name>
+      <type>required</type>
+      <version>1.61</version>
+      <jar>hsqldb.jar</jar>
+    </dependency>
+    <dependency>
+      <name>jakarta-log4j</name>
+      <type>required</type>
+      <version>1.1.3</version>
+      <jar>log4j-1.1.3.jar</jar>
+    </dependency>
+    <dependency>
+      <name>jakarta-servletapi</name>
+      <type>required</type>
+      <version>2.2</version>
+      <jar>servlet-2.2.jar</jar>
+    </dependency>
+    <dependency>
+      <name>javagroups</name>
+      <type>required</type>
+      <version>2.0</version>
+      <jar>JavaGroups-2.0.jar</jar>
+    </dependency>
+    <dependency>
+      <name>jisp</name>
+      <type>required</type>
+      <version>1.0.2</version>
+      <jar>jisp_1_0_2.jar</jar>
+    </dependency>
+    <dependency>
+      <name>jakarta-tomcat-util</name>
+      <type>required</type>
+      <version>???</version>
+      <jar>tomcat3.2.1.jar</jar>
+    </dependency>
+    <!-- Required for the server in JCS -->
+
+    <dependency>
+      <name>jakarta-tomcat</name>
+      <type>required</type>
+      <version>???</version>
+      <jar>tomcat3.2.1.jar</jar>
+    </dependency>
+    <dependency>
+      <name>xml-rpc</name>
+      <type>required</type>
+      <version>1.1</version>
+      <jar>xmlrpc.jar</jar>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectories>
+      <sourceDirectory>src/java</sourceDirectory>
+    </sourceDirectories>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <aspectSourceDirectories></aspectSourceDirectories>
+    <unitTestPatterns>
+      <unitTestPattern>include = **/*Test*.java</unitTestPattern>
+    </unitTestPatterns>
+    <jarResources></jarResources>
+    <jars></jars>
+  </build>
+</project>

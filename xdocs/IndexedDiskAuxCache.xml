@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Indexed Disk Auxiliary Cache</title>
+    <author email="ASmuts@yahoo.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Indexed Disk Auxiliary Cache">
+      <p> 
+        The Indexed Disk Auxiliary Cache is an optional plugin for the
+        JCS.  It is primarily intended to provide a secondary store to 
+        ease the memory burden of the cache.  When the memory cache 
+  	    exceeds its maximum size it tells the cache hub that the item
+	      to be removed from memory should be spooled to disk.  The cache 
+	      checks to see if any auxiliaries of type "disk" have been 
+	      configured for the region.  If the "Indexed Disk Auxiliary Cache"  
+	      is used, the item will be spooled to disk.
+      </p>
+
+      <subsection name="Disk Indexing">
+      <p>
+        The Indexed Disk Auxiliary Cache follows, perhaps, the fastest 
+    	  pattern of disk caching.  Items are stored at the end of a file 
+	      dedicated to the cache region.  The first byte of each disk entry
+	      specifies the length of the entry.  The start position in the file
+	      is saved in memory, referenced by the item's key.  Though this still
+	      requires memory, it is insignificant given the performance trade 
+	      off.  Depending on the key size, 500,000 disk entries will probably 
+  	    only require about 1 MB of memory.  Locating the position of an item is 
+	      as fast as a map lookup and the retrieval of the item only requires 2
+    	  disk accesses.
+      </p>
+      </subsection>
+
+      <subsection name="Purgatory">
+      <p>
+	      Writing to the disk cache is asynchronous and made efficient by using a 
+        memory staging area called purgatory.  Retrievals check purgatory then
+     	  disk for an item.  When items are sent to purgatory they are simultaneously 
+        queued to be put to disk.  If an item is retrieved form purgatory it will no
+        longer be written to disk, since the cache hub will move it back to memory.  
+        Using purgatory insures that there is no wait for disk writes, unecessary 
+        disk writes are avoided for boarderline items, and the items are always 
+        available.  		
+      </p>
+      </subsection>
+
+      <subsection name="Persistence">
+      <p>
+	      When the disk cache is properly shutdown, the memory index is written
+        to disk and the value file is defragmented.  When the cache starts
+        up, the disk cache can be configured to read or delete the index file.  This 
+        provides an unreliable persistence mechanism.   
+      </p>
+      </subsection>
+
+
+      <subsection name="Configuration">
+        <p>
+          The simple configuration and is done in the auxiliary 
+          cache section of the <code>cache.ccf</code> configuration file.
+          In the example below, I created an Indexed Disk Auxiliary Cache 
+          referenced by <code>DC</code>.  It uses files located in the 
+          "DiskPath" directory.
+         </p>
+        <source><![CDATA[
+jcs.auxiliary.DC=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=g:\dev\jakarta-turbine-stratum\raf
+        ]]></source>
+      </subsection>
+       <subsection name="TODO">
+        <p>
+          The Indexed Disk Auxiliary Cache will eventually be equiped 
+          with real-time defragmentation and periodic index storage. 
+          This will increase the persistence reliability and minimize
+          the file size.  Disk indexes may eventually require an LRU storage
+          so the file size can be reduced by removing old records.  Currently 
+          there is no maximum file size configuration.
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>

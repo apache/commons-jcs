@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Lateral TCP Auxiliary Cache</title>
+    <author email="pete@kazmier.com">Pete Kazmier</author>
+    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Lateral TCP Auxiliary Cache">
+      <p> 
+        The TCP Lateral Auxiliary Cache is an optional plug in for the
+        JCS.  It is primarily intended to broadcast puts and removals to
+        other local caches, though it can also get cached objects.  It
+        functions by opening up a <code> SocketServer</code> that
+        listens to a configurable port and by creating
+        <code>Socket</code> connections with other local cache
+        <code>SocketServers</code>.  It can be configured to connect to
+        any number of servers.
+      </p>
+      <p>
+        If there is an error connecting to another server or if an error
+        occurs in transmission, it will move into a recovery mode.  In
+        recovery mode the TCP Lateral Auxiliary Cache will continue to
+        communicate with healthy servers while it tries to restore the
+        connection with the server that is in error.
+      </p>
+      <p>
+        The cache hub communicates with a facade that implements a
+        zombie pattern (balking facade) to prevent blocking.  Puts and
+        removals are queued and occur synchronously in the background.
+        Get requests are synchronous and can potentially block for a
+        configurable interval if there is a communication problem.
+      </p>
+      <subsection name="Configuration">
+        <p>
+          The configuration is fairly straightforward and is done in the
+          auxiliary cache section of the <code>cache.ccf</code>
+          configuration file.  In the example below, I created a TCP
+          Lateral Auxiliary Cache referenced by <code>LTCP</code>.  It
+          connects to two servers defined in a comma separated list in
+          the <code>TcpServers</code> attribute.  It listens to port
+          <code>1110</code> and does not run in
+          <code>PutOnlyMode</code>.  Setting <code>PutOnlyMode</code>
+          equal to <code>true</code> would cause the auxiliary cache to
+          return <code>null</code> from any get request.  In most cases this
+          attribute should be set to <code>true</code>, since if the
+          lateral caches were properly configured, the elements in one
+          would be present in all.
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.LTCP=
+    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=
+    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP.attributes.TcpServers=
+    localhost:1111,localhost:1112
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+        ]]></source>
+      </subsection>
+      <subsection name="Potential Issues">
+        <p>
+          The TCP Lateral Auxiliary Cache can provide a high level of
+          consistency but it does not guarantee consistency between
+          caches.  A put for the same object could be issued in two
+          different local caches. Since the transmission is queued, a
+          situation could occur where the item put last in one cache is
+          overridden by a put request from another local cache.  The two
+          local caches could potentially have different versions of the
+          same item.  Like most caches, this is intended for high get
+          and low put utilization, and this occurrence would hint at
+          improper usage.  The RMI Remote cache makes this situation a
+          bit less likely to occur, since the default behavior is to
+          remove local copies on put operations.  If either local cache
+          needed the item put in the above situation, it would have to
+          go remote to retrieve it.  Both local copies would have been
+          expired and would end up using the same version, though it is
+          possible that the version stored remotely would not be the
+          last version created.  The OCS4J tries to implement a locking
+          system to prevent this from occurring, but the locking system
+          itself could suffer from similar problems (when granting locks
+          from two roughly simultaneous lock requests) and it would
+          create a significant burden on all the caches involved.  Since
+          this situation would be extremely rare and is nearly
+          impossible to solve practically, for now JCS will not offer
+          any type of locking.
+        </p>
+      </subsection>
+      <subsection name="TODO">
+        <p>
+          I will be adding a <code>RemoveOnPut</code> attribute that
+          will cause the lateral cache to remove an element from the
+          cache rather than inserting it when a put command comes from
+          another lateral cache.  This will allow the local caches to
+          dictate their own memory usage pattern.  This setting should
+          be run with <code>PutOnlyMode</code> set to false.
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>

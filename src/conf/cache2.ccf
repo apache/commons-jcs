@@ -1,0 +1,90 @@
+##############################################################
+################## DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=DC,RC
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+# should be defined for the storage of group attribute list
+jcs.system.groupIdCache=DC,RC
+jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+ 
+
+##############################################################
+################## CACHE REGIONS AVAILABLE ###################
+jcs.region.testCache1=DC,RC
+jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.testCache2=DC,LTCP
+jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache2.cacheattributes.MaxObjects=1000
+jcs.region.testCache2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+# prefered config
+jcs.region.test2=DC
+jcs.region.test2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.test2.cacheattributes.MaxObjects=1000
+
+
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+jcs.auxiliary.HC=org.apache.jcs.auxiliary.disk.hsql.HSQLCacheFactory
+jcs.auxiliary.HC.attributes=org.apache.jcs.auxiliary.disk.hsql.HSQLCacheAttributes
+jcs.auxiliary.HC.attributes.DiskPath=@project_home@/hsql
+
+# standard disk cache
+jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf
+
+# connects to the server started by "startRemoteCacheServer 2"
+jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC.attributes.RemoteHost=localhost
+jcs.auxiliary.RC.attributes.RemotePort=1103
+jcs.auxiliary.RFailover.attributes.FailoverServers=localhost:1103,localhost:1102
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=true
+
+# unreliable
+jcs.auxiliary.LUDP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LUDP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LUDP.attributes.TransmissionTypeName=UDP
+jcs.auxiliary.LUDP.attributes.UdpMulticastAddr=228.5.6.7
+jcs.auxiliary.LUDP.attributes.UdpMulticastPort=6789
+
+# almost complete
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1110
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+
+jcs.auxiliary.XMLRPC=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.XMLRPC.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.XMLRPC.attributes.TransmissionTypeName=XMLRPC
+jcs.auxiliary.XMLRPC.attributes.HttpServers=localhost:8181
+jcs.auxiliary.XMLRPC.attributes.HttpListenerPort=8182
+jcs.auxiliary.XMLRPC.attributes.PutOnlyMode=false
+
+
+jcs.auxiliary.LTCP2=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP2.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP2.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP2.attributes.TcpServers=localhost:1111,localhost2:1112
+jcs.auxiliary.LTCP2.attributes.TcpListenerPort=1111
+
+# example of how to configure the http version of the lateral cache
+# not converteed to new cache
+jcs.auxiliary.LCHTTP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LCHTTP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LCHTTP.attributes.TransmissionType=HTTP
+jcs.auxiliary.LCHTTP.attributes.httpServers=localhost:8080,localhost:7001,localhost:80
+jcs.auxiliary.LCHTTP.attributes.httpReceiveServlet=/cache/LateralCacheReceiverServlet
+jcs.auxiliary.LCHTTP.attributes.httpDeleteServlet=/cache/DeleteCacheServlet
+

@@ -1,0 +1,1 @@
+set CURDIR=%2

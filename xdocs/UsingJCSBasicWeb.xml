@@ -1,0 +1,440 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Using JCS: Some basics for the web</title>
+    <author email="ASmuts@yahoo.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Using JCS: Some basics for the web"> 
+      <p>
+        The primary bottleneck in most dynamic web-based applications is
+        the retrieval of data from the database.  While it is relatively
+        inexpensive to add more front-end servers to scale the serving
+        of pages and images and the processing of content, it is an
+        expensive and complex ordeal to scale the database.  By taking
+        advantage of data caching, most web applications can reduce
+        latency times and scale farther with fewer machines.
+      </p>
+      <p>
+        JCS is a front-tier cache that can be configured to maintain
+        consistency across multiple servers by using a centralized
+        remote server or by lateral distribution of cache updates.
+        Other caches, like the Javlin EJB data cache, are basically
+        in-memory databases that sit between your EJB's and your
+        database.  Rather than trying to speed up your slow EJB's, you
+        can avoid most of the network traffic and the complexity by
+        implementing JCS front-tier caching.  Centralize your EJB access
+        or your JDBC data access into local managers and perform the
+        caching there.   
+      </p>
+      <subsection name="What to cache?">
+        <p>
+          The data used by most web applications varies in its
+          dynamicity, from completely static to always changing at every
+          request.  Everything that has some degree of stability can be
+          cached.  Prime candidates for caching range from the list data
+          for stable dropdowns, user information, discrete and
+          infrequently changing information, to stable search results
+          that could be sorted in memory.  
+        </p>
+        <p>
+          Since JCS is distributed and allows updates and invalidations
+          to be broadcast to multiple listeners, frequently changing
+          items can be easily cached and kept in sync through your data
+          access layer.  For data that must be 100% up to date, say an
+          account balance prior to a transfer, the data should directly
+          be retrieved from the database.  If your application allows
+          for the viewing and editing of data, the data for the view
+          pages could be cached, but the edit pages should, in most
+          cases, pull the data directly from the database.   
+        </p>
+      </subsection>
+      <subsection name="How to cache discrete data">
+        <p>
+          Let's say that you have an e-commerce book store.  Each book
+          has a related set of information that you must present to the
+          user.  Let's say that 70% of your hits during a particular day
+          are for the same 1,000 popular items that you advertise on key
+          pages of your site, but users are still actively browsing your
+          catalog of over a million books.  You cannot possibly cache
+          your entire database, but you could dramatically decrease the
+          load on your database by caching the 1,000 or so most popular
+          items.  
+        </p>
+        <p>
+          For the sake of simplicity let's ignore tie-ins and
+          user-profile based suggestions (also good candidates for
+          caching) and focus on the core of the book detail page.
+        </p>
+        <p>
+          A simple way to cache the core book information would be to
+          create a value object for book data that contains the
+          necessary information to build the display page.  This value
+          object could hold data from multiple related tables or book
+          subtype table, but lets say that you have a simple table
+          called <code>BOOK</code> that looks something like this: 
+        </p>
+        <source><![CDATA[
+  Table BOOK
+  BOOK_ID_PK
+  TITLE
+  AUTHOR
+  ISBN
+  PRICE
+  PUBLISH_DATE  
+        ]]></source>
+        <p>
+          We could create a value object for this table called
+          <code>BookVObj</code> that has variables with the same
+          names as the table columns that might look like this:
+        </p>
+        <source><![CDATA[
+package com.genericbookstore.data;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class BookVObj implements Serializable
+{
+    public int bookId = 0;
+    public String title;
+    public String author;
+    public String ISBN;
+    public String price;
+    public Date publishDate;
+
+    public BookVObj() 
+    { 
+    }
+}
+        ]]></source>
+        <p>
+          Then we can create a manager called
+          <code>BookVObjManager</code> to store and retrieve
+          <code>BookVObj</code>'s.  All access to core book data
+          should go through this class, including inserts and
+          updates, to keep the caching simple.  Let's make
+          <code>BookVObjManager</code> a singleton that gets a
+          JCS access object in initialization.  The start of the
+          class might look like:
+        </p>
+        <source><![CDATA[
+package com.genericbookstore.data;
+
+import org.apache.stratum.jcs.JCS;
+// in case we want to set some special behavior
+import org.apache.stratum.jcs.engine.behavior.IElementAttributes;
+
+public class BookVObjManager 
+{
+    private static BookVObjManager instance;
+    private static int checkedOut = 0;
+    private static JCS bookCache;
+
+    private BookVObjManager() 
+    {
+        try 
+        {
+            bookCache = JCS.getInstance("bookCache");
+        } 
+        catch (Exception e) 
+        {
+            // Handle cache region initialization failure
+        }
+
+        // Do other initialization that may be necessary, such as getting
+        // references to any data access classes we may need to populate
+        // value objects later
+    }
+
+    /**
+     * Singleton access point to the manager.
+     */
+    public static BookVObjManager getInstance() 
+    {
+        if (instance == null) 
+        {
+            synchronized (BookVObjManager.class) 
+            {
+                if (instance == null) 
+                {
+                    instance = new BookVObjManager();
+                }
+            }
+        }
+
+        synchronized (instance) 
+        {
+            instance.checkedOut++;
+        }
+
+        return instance;
+    }
+        ]]></source>
+        <p>
+          To get a <code>BookVObj</code> we will need some access
+          methods in the manager. We should be able to get a
+          non-cached version if necessary, say before allowing an
+          administrator to edit the book data. The methods might
+          look like:
+        </p>
+        <source><![CDATA[
+    /**
+     * Retrieves a BookVObj.  Default to look in the cache.
+     */
+    public BookVObj getBookVObj(int id) 
+    {
+        return getBookVObj(id, true);
+    }
+    
+    /**
+     * Retrieves a BookVObj. Second argument decides whether to look
+     * in the cache. Returns a new value object if one can't be
+     * loaded from the database. Database cache synchronization is
+     * handled by removing cache elements upon modification.
+     */
+    public BookVObj getBookVObj(int id, boolean fromCache) 
+    {
+        BookVObj vObj = null;
+    
+        // First, if requested, attempt to load from cache
+    
+        if (fromCache) 
+        {
+            vObj = (BookVObj) bookCache.get("BookVObj" + id);
+        }
+    
+        // Either fromCache was false or the object was not found, so
+        // call loadBookVObj to create it
+    
+        if (vObj == null) 
+        {
+            vObj = loadvObj(id);
+        }
+    
+        return  vObj;
+    }
+    
+    /**
+     * Creates a BookVObj based on the id of the BOOK table.  Data
+     * access could be direct JDBC, some or mapping tool, or an EJB.
+     */
+    public BookVObj loadBookVObj(int id) 
+    {
+        BookVObj vObj = new BookVObj();
+    
+        vObj.bookID = id;
+    
+        try 
+        {
+            boolean found = false;
+    
+            // load the data and set the rest of the fields
+            // set found to true if it was found
+    
+            found = true;
+    
+            // cache the value object if found
+    
+            if (found) 
+            {
+                // could use the defaults like this
+                // bookCache.put( "BookVObj" + id, vObj );
+                // or specify special characteristics
+    
+                // put to cache 
+
+                bookCache.put("BookVObj" + id, vObj);
+            }
+    
+        } 
+        catch (Exception e) 
+        {
+            // Handle failure putting object to cache
+        }
+    
+        return vObj;
+    }
+        ]]></source>
+        <p>
+          We will also need a method to insert and update book data.  To
+          keep the caching in one place, this should be the primary way
+          core book data is created.  The method might look like:
+        </p>
+        <source><![CDATA[
+    /**
+     * Stores BookVObj's in database.  Clears old items and caches
+     * new.
+     */
+    public int storeBookVObj(BookVObj vObj) 
+    {
+        try 
+        {
+            // since any cached data is no longer valid, we should 
+            // remove the item from the cache if it an update.
+    
+            if (vObj.bookID != 0) 
+            {
+                bookCache.remove("BookVObj" + vObj.bookID);
+            }
+    
+            // put the new object in the cache
+    
+            bookCache.put("BookVObj" + id, vObj);
+        } 
+        catch (Exception e) 
+        {
+            // Handle failure removing object or putting object to cache.
+        }              
+    }
+}
+        ]]></source>
+        <p>
+          As elements are placed in the cache via <code>put</code>, it
+          is possible to specify custom attributes for those elements
+          such as its maximum lifetime in the cache, whether or not it
+          can be spooled to disk, etc.  It is also possible (and easier)
+          to define these attributes in the configuration file as
+          demonstrated later.  We now have the basic infrastructure for
+          caching the book data.  
+      </p>
+      </subsection>
+      <subsection name="Selecting the appropriate auxiliary caches">
+        <p>
+          The first step in creating a cache region is to determine the
+          makeup of the memory cache.  For the book store example, I
+          would create a region that could store a bit over the minimum
+          number I want to have in memory, so the core items always
+          readily available.  I would set the maximum memory size to
+          <code>1200</code>.  In addition, I might want to have all
+          objects in this cache region expire after <code>7200</code>
+          seconds.  This can be configured in the element attributes on
+          a default or per-region basis as illustrated in the
+          configuration file below.
+        </p>
+        <p>
+          For most cache regions you will want to use a disk
+          cache if the data takes over about .5 milliseconds to
+          create.  The <a href="IndexedDiskAuxCache.html">indexed
+          disk cache</a> is the most efficient disk caching
+          auxiliary, and for normal usage it is recommended.
+        </p>
+        <p>
+          The next step will be to select an appropriate
+          distribution layer.  If you have a back-end server
+          running an apserver or scripts or are running multiple
+          webserver VMs on one machine, you might want to use
+          the centralized <a href="RemoteAuxCache.html">remote
+          cache</a>.  The lateral cache would be fine, but since
+          the lateral cache binds to a port, you'd have to configure
+          each VM's lateral cache to listen to a different port on
+          that machine.
+        </p>
+        <p>
+          If your environment is very flat, say a few
+          load-balanced webservers and a database machine or one
+          webserver with multiple VMs and a database machine,
+          then the lateral cache will probably make more sense.
+          The <a href="LateralTCPAuxCache.html">TCP lateral
+          cache</a> is recommended.  
+        </p>
+        <p>
+          For the book store configuration I will set up a region
+          for the <code>bookCache</code> that uses the LRU memory
+          cache, the indexed disk auxiliary cache, and the remote
+          cache.  The configuration file might look like this:
+        </p>
+        <source><![CDATA[
+# DEFAULT CACHE REGION  
+
+# sets the default aux value for any non configured caches
+jcs.default=DC,RFailover
+jcs.default.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=3600
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+# SYSTEM CACHE
+
+# should be defined for the storage of group attribute list
+jcs.system.groupIdCache=DC,RFailover
+jcs.system.groupIdCache.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+
+# CACHE REGIONS AVAILABLE 
+
+# Regions preconfigured for caching
+jcs.region.bookCache=DC,RFailover
+jcs.region.bookCache.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.region.bookCache.cacheattributes.MaxObjects=1200
+jcs.region.bookCache.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.bookCache.elementattributes.IsEternal=false
+jcs.region.bookCache.elementattributes.MaxLifeSeconds=7200
+jcs.region.bookCache.elementattributes.IdleTime=1800
+jcs.region.bookCache.elementattributes.IsSpool=true
+jcs.region.bookCache.elementattributes.IsRemote=true
+jcs.region.bookCache.elementattributes.IsLateral=true
+
+# AUXILIARY CACHES AVAILABLE 
+
+# Primary Disk Cache -- faster than the rest because of memory key storage
+jcs.auxiliary.DC=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=/usr/opt/bookstore/raf
+
+# Remote RMI Cache set up to failover
+jcs.auxiliary.RFailover=
+    org.apache.stratum.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RFailover.attributes=
+    org.apache.stratum.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
+jcs.auxiliary.RFailover.attributes.FailoverServers=scriptserver:1102
+jcs.auxiliary.RFailover.attributes.GetOnly=false
+        ]]></source>
+        <p>
+          I've set up the default cache settings in the above
+          file to approximate the <code>bookCache</code>
+          settings.  Other non-preconfigured cache regions will
+          use the default settings.  You only have to configure
+          the auxiliary caches once.  For most caches you will
+          not need to pre-configure your regions unless the size
+          of the elements varies radically.  We could easily put
+          several hundred thousand <code>BookVObj</code>'s in
+          memory.  The <code>1200</code> limit was very
+          conservative and would be more appropriate for a large
+          data structure.
+        </p>
+        <p>
+          To get running with the book store example, I will also
+          need to start up the remote cache server on the
+          scriptserver machine.  The 
+          <a href="RemoteAuxCache.html">remote cache
+          documentation</a> describes the configuration.
+        </p>
+        <p>
+          I now have a basic caching system implemented for my book
+          data.  Performance should improve immediately.
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>
+
+
+

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Java Caching System</title>
+    <author email="pete@kazmier.com">Pete Kazmier</author>
+    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Java Caching System"> 
+      <p> 
+        JCS is a distributed caching system written in java for
+        server-side java applications.  It is intended to speed up
+        dynamic web applications by providing a means to manage cached
+        data of various dynamic natures.  Like any caching system, the
+        JCS is most useful for high read, low put applications.  Dynamic
+        content and reporting systems can benefit most.  However, any
+        site that repeatedly constructs pages, dropdowns, or common
+        search results form a database that is updated at intervals
+        (rather than across categories continuously) can improve
+        performance and scalability by implementing caching. Latency
+        times drop sharply and bottlenecks move away from the database
+        in an effectively cached system.
+      </p>
+      <p>
+        The JCS goes beyond simply caching objects in memory.  It
+        provides several important features, necessary for any
+        Enterprise level caching system:
+      </p>
+      <ul>
+        <li>Memory management</li>
+        <li>Disk overflow (and defragmentation)</li>
+        <li>Element grouping</li>
+        <li>Quick nested categorical removal</li>
+        <li>Data expiration</li>
+        <li>Extensible framework</li>
+        <li>Fully configurable runtime parameters</li>
+        <li>Remote synchronization</li>
+        <li>Remote store recovery</li>
+        <li>Non-blocking "zombie" (balking fa ade) pattern</li>
+        <li>Optional lateral distribution of elements via HTTP, TCP, or
+          UDP</li>
+        <li>Remote server clustering and failover (almost complete)</li>
+      </ul>
+      <p> 
+        These features provide a framework with no point of failure,
+        allowing for full session failover including session data across
+        up to 256 servers.
+      </p>
+    </section>
+  </body>
+</document>
+

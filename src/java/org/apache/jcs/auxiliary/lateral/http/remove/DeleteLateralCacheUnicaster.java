@@ -1,0 +1,139 @@
+package org.apache.jcs.auxiliary.lateral.http.remove;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.apache.jcs.utils.threads.IThreadPoolRunnable;
+
+/**
+ * Used to uni-cast a ICacheItem to the named cache on the target server.
+ *
+ * @author asmuts
+ * @created January 15, 2002
+ */
+public class DeleteLateralCacheUnicaster implements IThreadPoolRunnable
+{
+    private final static Log log =
+        LogFactory.getLog( DeleteLateralCacheUnicaster.class );
+
+    private final String hashtableName;
+    private final String key;
+
+    private String urlStr;
+
+    private URLConnection conn;
+
+    /**
+     * Constructs with the given ICacheItem and the url of the target server.
+     *
+     * @param hashtableName
+     * @param key
+     * @param urlStr
+     */
+    public DeleteLateralCacheUnicaster( String hashtableName, String key, String urlStr )
+    {
+
+        this.hashtableName = hashtableName;
+        this.key = key;
+
+        this.urlStr = urlStr;
+
+        log.debug( "In DeleteLateralCacheUnicaster, " + Thread.currentThread().getName() );
+    }
+
+
+    /**
+     * Called when this object is first loaded in the thread pool. Important:
+     * all workers in a pool must be of the same type, otherwise the mechanism
+     * becomes more complex.
+     *
+     * @return The initData value
+     */
+    public Object[] getInitData()
+    {
+        return null;
+    }
+
+
+    /**
+     * Sends a ICacheItem to the target server. This method will be executed in
+     * one of the pool's threads. The thread will be returned to the pool.
+     */
+    // Todo: error recovery and retry.
+    public void runIt( Object thData[] )
+    {
+        long start = System.currentTimeMillis();
+
+        try
+        {
+
+            if ( !urlStr.startsWith( "http://" ) )
+            {
+                urlStr = "http://" + urlStr;
+            }
+            urlStr = urlStr + "?hashtableName=" + hashtableName + "&key=" + key;
+            log.debug( "urlStr = " + urlStr );
+
+            callClearCache( urlStr );
+
+        }
+        catch ( Exception e )
+        {
+            log.error( e );
+        }
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "delete took " + String.valueOf( System.currentTimeMillis() - start ) + " millis\n" );
+        }
+
+        return;
+    }
+
+    /** Description of the Method */
+    public void callClearCache( String ccServletURL )
+    {
+        URL clear;
+        URLConnection clearCon;
+        InputStream in;
+        OutputStream out;
+        try
+        {
+            clear = new URL( ccServletURL );
+            clearCon = clear.openConnection();
+            clearCon.setDoOutput( true );
+            clearCon.setDoInput( true );
+            //clearCon.connect();
+            out = clearCon.getOutputStream();
+            in = clearCon.getInputStream();
+            int cur = in.read();
+            while ( cur != -1 )
+            {
+                cur = in.read();
+            }
+            out.close();
+            in.close();
+            // System.out.println("closed inputstream" );
+        }
+        catch ( Exception e )
+        {
+            log.error( e );
+        }
+        finally
+        {
+            //in.close();
+            out = null;
+            in = null;
+            clearCon = null;
+            clear = null;
+            log.info( "called clear cache for " + ccServletURL );
+            return;
+        }
+    }
+}

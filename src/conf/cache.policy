@@ -1,0 +1,15 @@
+grant codeBase "file:/@project_home_f@bin/classes/*" {
+    permission java.security.AllPermission;
+};
+
+grant codeBase "file:/@project_home_f@bin/*" {
+    permission java.security.AllPermission;
+};
+
+grant codeBase "file:/@lib.repo.f@*" {
+    permission java.security.AllPermission;
+};
+
+grant codeBase "file:/*" {
+    permission java.security.AllPermission;
+};

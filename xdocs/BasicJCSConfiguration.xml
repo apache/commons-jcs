@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Basic JCS Configuration</title>
+    <author email="ASmuts@therealm.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Basic JCS Configuration"> 
+      <p>
+        The following document illustrates several basic JCS
+        configurations.  As you'll see, using JCS can be as simple as
+        creating a single memory cache for you application.  However,
+        with a few configuration changes, you can quickly enable some
+        distributed caching features that can scale your application
+        even further.
+      </p>
+      <subsection name="Building a cache.ccf file">
+        <p>
+          Configuring the JCS can be as simple as your needs.  The most
+          basic configuration would be a pure memory cache where every
+          region takes the default values.  The complete configuration
+          file (cache.ccf) could look like this:
+        </p>
+        <source><![CDATA[
+# DEFAULT CACHE REGION   
+
+jcs.default=
+jcs.default.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+        ]]></source>
+        <p>
+          If you want to add memory shrinking then you can add these
+          lines:
+        </p>
+        <source><![CDATA[
+jcs.default.cacheattributes.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.cacheattributes.ShrinkerIntervalSeconds=60
+        ]]></source>
+        <p>
+          Adding a <a href="IndexedDiskAuxCache.html">disk cache</a> is
+          as simple as telling it what folder to use.  It is recommended
+          that you add a disk cache.  If you want to add a disk cache to
+          your default parameters, then (1) add this to the bottom of
+          the file to create the auxiliary:
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.DC=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=g:/dev/jakarta-turbine-stratum/raf
+        ]]></source> 
+        <p>
+          and (2) change the first line to:
+        </p>
+        <source><![CDATA[
+jcs.default=DC
+        ]]></source>
+        <p>
+          It is a good idea to specify the
+          <code>system.GroupIdCache</code>, so add this to the file:
+        </p>
+        <source><![CDATA[
+jcs.system.groupIdCache=DC
+jcs.system.groupIdCache.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+        ]]></source>
+        <p>
+          If you want to predefine a specific region, say called
+          <code>testCache1</code>, then add these lines:
+        </p>
+        <source><![CDATA[
+jcs.region.testCache1=DC
+jcs.region.testCache1.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
+        ]]></source>
+        <p>
+          If you want to add a lateral cache for distribution (the <a
+            href="LateralTCPAuxCache.html">TCP Lateral Auxiliary</a> is
+          recommended), then add these lines to the bottom of the file
+          to define the auxiliary:
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.LTCP=
+    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=
+    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+        ]]></source>
+        <p>
+          See the TCP Lateral documentation for more information.  If you
+          want to set up <code>testCache1</code> to use this, then change
+          the definition to:
+        </p>
+        <source><![CDATA[
+jcs.region.testCache1=DC,LTCP
+        ]]></source>
+      </subsection>
+      <subsection name="A few comments on configuration">
+        <p>
+          Auxiliary definitions are like log4j appenders, they are defines
+          and then associated with a region like a log4j category.
+        </p>
+        <p>
+          The order of configuration file is unimportant, though you
+          should try to keep it organized for your own sake.
+        </p>
+        <p>
+          Configuration is being refactored and is subject to change.  It
+          should only become easier.  
+        </p>
+      </subsection>
+      <subsection name="The complete file">
+        <p>
+          The complete file from above would look like this:	
+        </p>
+        <source><![CDATA[
+# DEFAULT CACHE REGION   
+
+jcs.default=DC,LTCP
+jcs.default.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+
+# System CACHE REGION   
+jcs.system.groupIdCache=DC,LTCP
+jcs.system.groupIdCache.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+
+# PRE-DEFINED CACHE REGIONS   
+
+jcs.region.testCache1=DC,LTCP
+jcs.region.testCache1.cacheattributes=
+    org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=
+    org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
+
+# AVAILABLE AUXILIARY CACHES   
+jcs.auxiliary.DC=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=
+    org.apache.stratum.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=g:/dev/jakarta-turbine-stratum/raf
+
+jcs.auxiliary.LTCP=
+    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=
+    org.apache.stratum.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+        ]]></source>
+      </subsection>
+    </section>
+  </body>
+</document>
