@@ -91,7 +91,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
 
                 if ( obj != null )
                 {
-                    // return after first success
+                    // TODO: return after first success
                     // could do this simultaneously
                     // serious blocking risk here
                     return ( ICacheElement ) obj;

@@ -75,6 +75,8 @@ public class LateralTCPSender
     /** Only block for 5 seconds before timing out on startup. */
     private final static int openTimeOut = 5000;
 
+    /** Use to synchronize multiple threads that may be trying to get.*/
+    private Object getLock = new int[0];
 
     /**
      * Constructor for the LateralTCPSender object
@@ -212,8 +214,10 @@ public class LateralTCPSender
     /**
      * Sends commands to the lateral cache listener and gets a response. I'm
      * afraid that we could get into a pretty bad blocking situation here. This
-     * needs work. I just wanted to get some form of get working. Will need some
-     * sort of timeout.
+     * needs work. I just wanted to get some form of get working.  However, get
+     * is not recommended for performance reasons.  If you have 10 laterals, then
+     * you have to make 10 failed gets to find out none of the caches have the
+     * item.
      */
     public ICacheElement sendAndReceive( LateralElementDescriptor led )
         throws IOException
@@ -232,6 +236,15 @@ public class LateralTCPSender
 
         if ( oos != null )
         {
+
+          // Synchronized to insure that the get requests to server from this
+          // sender and the responses are processed in order, else you could
+          // return the wrong item from the cache.
+          // This is a big block of code.  May need to rethink this strategy.
+          // This may not be necessary.
+          // Normal puts, etc to laterals do not have to be synchronized.
+          synchronized ( this.getLock )
+          {
             try
             {
 
@@ -246,6 +259,7 @@ public class LateralTCPSender
                 catch ( IOException ioe )
                 {
                   log.error( "Problem cleaning socket before send " + socket, ioe );
+                  throw ioe;
                 }
 
                 // write object to listener
@@ -260,13 +274,14 @@ public class LateralTCPSender
                     if ( ice == null )
                     {
                         //p( "ice is null" );
-                        // TODO: coutn misses
+                        // TODO: count misses
                     }
 
                 }
                 catch ( IOException ioe )
                 {
                     log.error( "Could not open ObjectInputStream to " + socket, ioe );
+                    throw ioe;
                 }
                 catch ( Exception e )
                 {
@@ -288,8 +303,11 @@ public class LateralTCPSender
                 log.error( "Detected problem with connection: " + e );
                 throw e;
             }
-        }
+          }
+        }  // end synchronized block
+
         return ice;
+
     }// end sendAndReceive
 
     // Service Methods //

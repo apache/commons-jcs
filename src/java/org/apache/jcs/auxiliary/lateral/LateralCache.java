@@ -142,7 +142,7 @@ public class LateralCache implements ICache
             catch ( Exception e )
             {
                 log.error( e );
-                // do something with this
+                handleException( e, "Failed to get " + key + " from " + cattr.getCacheName() );
             }
         }
         return obj;
