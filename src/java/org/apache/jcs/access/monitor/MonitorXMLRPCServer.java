@@ -8,10 +8,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Starts an xml rpc server for cache monitoring.
+ * Starts an XML-RPC server for cache monitoring.
  *
  * @author asmuts
  * @created February 12, 2002
+ * @since 1.0
  */
 public class MonitorXMLRPCServer
 {
@@ -25,12 +26,10 @@ public class MonitorXMLRPCServer
      */
     public MonitorXMLRPCServer( int port )
     {
-        MonitorAccess mon = new MonitorAccess();
-
         try
         {
             WebServer server = new WebServer( port );
-            server.addHandler( "JCSMonitor", mon );
+            server.addHandler( "JCSMonitor", new MonitorAccess() );
             server.setParanoid( false );
         }
         catch ( Exception ioe )
