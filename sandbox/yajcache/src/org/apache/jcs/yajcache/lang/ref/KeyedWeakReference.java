@@ -28,16 +28,20 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 public class KeyedWeakReference<K,T> extends WeakReference<T> 
         implements IKey<K> 
 {
-    public final K key;
+    public final @NonNullable K key;
 
-    public KeyedWeakReference(K key, T referrent, 
+    public KeyedWeakReference(@NonNullable K key, T referent) {
+	super(referent);
+        this.key = key;
+    }
+    public KeyedWeakReference(@NonNullable K key, T referrent, 
             ReferenceQueue<? super T> q) 
     {
-        super(referrent);
+        super(referrent, q);
         this.key = key;
     }
     @Implements(IKey.class)
-    public K getKey() {
+    public @NonNullable K getKey() {
         return this.key;
     }
 }
