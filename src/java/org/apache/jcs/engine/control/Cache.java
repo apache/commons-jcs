@@ -426,7 +426,7 @@ public class Cache
      *
      * @param ce The CacheElement
      */
-    public synchronized void spoolToDisk( ICacheElement ce )
+    public void spoolToDisk( ICacheElement ce )
     {
 
         // SPOOL TO DISK.
@@ -452,7 +452,7 @@ public class Cache
                 }
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "moveToMemory -- request to put " + ce.getKey() + " on disk cache[" + i + "]" );
+                    log.debug( "spoolToDisk done for: " + ce.getKey() + " on disk cache[" + i + "]" );
                 }
             }
         }

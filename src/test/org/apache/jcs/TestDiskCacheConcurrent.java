@@ -60,24 +60,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads.
+ * Test which exercises the indexed disk cache. Runs three threads against the
+ * same region.
  *
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
  * @version $Id$
  */
-public class TestDiskCache extends TestCase
+public class TestDiskCacheConcurrent extends TestCase
 {
-    /**
-     * Number of items to cache, twice the configured maxObjects for the
-     * memory cache regions.
-     */
-    private static int items = 200;
-
     /**
      * Constructor for the TestDiskCache object.
      */
-    public TestDiskCache( String testName )
+    public TestDiskCacheConcurrent( String testName )
     {
         super( testName );
     }
@@ -87,7 +81,7 @@ public class TestDiskCache extends TestCase
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = {TestDiskCache.class.getName()};
+        String[] testCaseName = {TestDiskCacheConcurrent.class.getName()};
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -100,29 +94,29 @@ public class TestDiskCache extends TestCase
     {
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new TestDiskCache( "testIndexedDiskCache1" )
+        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache1" )
         {
             public void runTest() throws Exception
             {
-                runTestForRegion( "indexedRegion1" );
+                runTestForRegion( "indexedRegion1", 0, 200 );
             }
         } );
 
-        suite.addTest( new TestDiskCache( "testIndexedDiskCache2" )
+        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache2" )
         {
             public void runTest() throws Exception
             {
-                runTestForRegion( "indexedRegion2" );
+                runTestForRegion( "indexedRegion1", 1000, 1200 );
             }
         } );
 
-        suite.addTest( new TestDiskCache( "testIndexedDiskCache3" )
+        suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache3" )
         {
             public void runTest() throws Exception
             {
-                runTestForRegion( "indexedRegion3" );
+                runTestForRegion( "indexedRegion1", 2000, 2200 );
             }
-        } );
+        });
 
         return suite;
     }
@@ -161,21 +155,21 @@ public class TestDiskCache extends TestCase
      *
      * @exception Exception If an error occurs
      */
-    public void runTestForRegion( String region )
+    public void runTestForRegion( String region, int start, int end )
         throws Exception
     {
         JCS jcs = JCS.getInstance( region );
 
         // Add items to cache
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = start; i <= end; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
         // Test that all items are in cache
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = start; i <= end; i++ )
         {
             String value = ( String ) jcs.get( i + ":key" );
 
@@ -184,16 +178,17 @@ public class TestDiskCache extends TestCase
 
         // Remove all the items
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = start; i <= end; i++ )
         {
             jcs.destroy( i + ":key" );
         }
 
         // Verify removal
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = start; i <= end; i++ )
         {
-            assertNull( jcs.get( i + ":key" ) );
+            assertNull( "Removed key should be null: " + i + ":key",
+                        jcs.get( i + ":key" ) );
         }
     }
 }

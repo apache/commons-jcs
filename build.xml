@@ -46,7 +46,7 @@
   </target>
         
   <target 
-    name="maven:jar" depends="jcs:test-prepare">
+    name="maven:jar">
     <ant antfile="${maven.home}/build-maven.xml" target="jar"/>
   </target>
         

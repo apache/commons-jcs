@@ -158,17 +158,23 @@ public class LRUMemoryCache implements MemoryCache, Serializable
             // need to pre-queue the queuing.  This would be a bit wasteful
             // and wouldn't save much time in this synchronous call.
 
+            MemoryElementDescriptor node;
+
             for ( int i = 0; i < chunkSizeCorrected; i++ )
             {
-                cache.spoolToDisk( last.ce );
-                map.remove( last.ce.getKey() );
-                removeNode( last );
+                synchronized ( this )
+                {
+                    cache.spoolToDisk( last.ce );
+
+                    map.remove( last.ce.getKey() );
+
+                    removeNode( last );
+                }
             }
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "After spool, put " + last.ce.getKey()
-                           + " on disk cache, map size: " + size  );
+                log.debug( "After spool map size: " + size  );
             }
         }
     }
@@ -376,7 +382,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     /**
      * Removes the specified node from the link list.
      */
-    private void removeNode( MemoryElementDescriptor me )
+    private synchronized void removeNode( MemoryElementDescriptor me )
     {
         if ( log.isDebugEnabled() )
         {
@@ -387,8 +393,15 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         {
             if ( me.prev == null )
             {
-                // the only node.
-                first = last = null;
+                // Make sure it really is the only node before setting head and
+                // tail to null. It is possible that we will be passed a node
+                // which has already been removed from the list, in which case
+                // we should ignore it
+
+                if ( me == first && me == last )
+                {
+                    first = last = null;
+                }
             }
             else
             {
@@ -438,7 +451,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     /**
      * Adds a new node to the start of the link list.
      */
-    private void addFirst( ICacheElement ce )
+    private synchronized void addFirst( ICacheElement ce )
     {
 
         MemoryElementDescriptor me = new MemoryElementDescriptor( ce );
@@ -460,7 +473,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     /**
      * Moves an existing node to the start of the link list.
      */
-    public synchronized void makeFirst( ICacheElement ce )
+    public void makeFirst( ICacheElement ce )
     {
         makeFirst( new MemoryElementDescriptor( ce ) );
     }

@@ -137,8 +137,9 @@
     <aspectSourceDirectories></aspectSourceDirectories>
     <unitTestPatterns>
       <unitTestPattern>include = **/TestJCS.java</unitTestPattern>
-      <unitTestPattern>include = **/TestDiskCache.java</unitTestPattern>
       <unitTestPattern>include = **/TestSimpleLoad.java</unitTestPattern>
+      <unitTestPattern>include = **/TestDiskCache.java</unitTestPattern>
+      <unitTestPattern>include = **/TestDiskCacheConcurrent.java</unitTestPattern>
     </unitTestPatterns>
     <jarResources></jarResources>
     <jars></jars>
