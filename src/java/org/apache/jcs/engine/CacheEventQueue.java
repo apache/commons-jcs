@@ -449,10 +449,10 @@ public class CacheEventQueue
             {
               log.debug( "Event from queue after sleep = " + r );
             }
-            if ( r == null )
-            {
-              queue.stopProcessing();
-            }
+          }
+          if ( r == null )
+          {
+            queue.stopProcessing();
           }
         }
 
