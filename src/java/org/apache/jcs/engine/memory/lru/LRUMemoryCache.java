@@ -22,12 +22,12 @@ import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
 /**
  *  A fast reference management system. The least recently used items move to
  *  the end of the list and get spooled to disk if the cache hub is configured
- *  to use a disk cache. Most of the cache bottelnecks ar ein IO. There are no
+ *  to use a disk cache. Most of the cache bottelnecks are in IO. There are no
  *  io bottlenecks here, it's all about processing power. Even though there are
  *  only a few adjustments necessary to maintain the double linked list, we
  *  might want to find a more efficient memory manager for large cache regions.
  *  The LRUMemoryCache is most efficeint when the first element is selected. The
- *  smaller teh region, the better the chance that this will be the case. < .04
+ *  smaller the region, the better the chance that this will be the case. < .04
  *  ms per put, p3 866, 1/10 of that per get
  *
  *@author     <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
@@ -54,7 +54,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     private int max;
 
     /**
-     *  Region Elemental Attributes
+     *  Region Elemental Attributes, used as a default.
      */
     public IElementAttributes attr;
 
@@ -64,7 +64,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     public ICompositeCacheAttributes cattr;
 
     /**
-     *  The cache this store is associated with
+     *  The cache region this store is associated with
      */
     Cache cache;
 
@@ -229,7 +229,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
      *  Get an item from the cache
      *
      *@param  key              Identifies item to find
-     *@return                  Element mathinh key if found, or null
+     *@return                  ICacheElement if found, else null
      *@exception  IOException
      */
     public ICacheElement get( Serializable key )
@@ -273,7 +273,10 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     }
 
     /**
-     *  Removes an item from the cache.
+     *  Removes an item from the cache. This method handles hierarchical
+     *  removal. If the key is a String and ends with the
+     *  CacheConstants.NAME_COMPONENT_DELIMITER, then all items with keys
+     *  starting with the argument String will be removed.
      *
      *@param  key
      *@return
@@ -404,6 +407,45 @@ public class LRUMemoryCache implements MemoryCache, Serializable
             return map.keySet().toArray();
         }
     }
+
+
+//    /**
+//     *  Get an Array of the keys for elements in the specified range of
+//     *  the memory cache.  If the end position is greater than the size of the
+//     *  Map, the method will return an array of the remaining elements after
+//     *  the start position.  If the start element is greater than the size of
+//     *  Map, a error will be thrown.
+//     *
+//     *@return    An Object[]
+//     */
+//    public Object[] getKeyArray(int start, int end) throws java.lang.IllegalArgumentException
+//    {
+//
+//        int size = getSize();
+//        if ( start >= size ) {
+//          throw new java.lang.IllegalArgumentException( "Start value is greater than the size of the cache" );
+//        }
+//        int stop = Math.min( size, end );
+//        int count = 0;
+//
+//        // need a better locking strategy here.
+//        synchronized ( this )
+//        {
+//          Object[] result = new Object[stop-start];
+//          Iterator e = this.map.keySet().iterator();
+//          for (int i=0; e.hasNext(); i++)
+//          {
+//              if ( i >= start && i < stop ) {
+//                result[count] = e.next();
+//                count++;
+//              }
+//              if ( i >= stop ) {
+//                continue;
+//              }
+//          }
+//          return result;
+//        }
+//    }
 
 
     /**
