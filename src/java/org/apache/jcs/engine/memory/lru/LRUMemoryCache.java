@@ -76,13 +76,12 @@ public class LRUMemoryCache
 
         // If the node was the same as an existing node, remove it.
 
-        if ( first.equals( old ) )
+        if ( old != null && first.ce.getKey().equals( old.ce.getKey() ) )
         {
             removeNode( old );
         }
 
         int size = map.size();
-
         // If the element limit is reached, we need to spool
 
         if ( size < this.cattr.getMaxObjects() )
@@ -178,9 +177,9 @@ public class LRUMemoryCache
         {
             log.debug( "getting item for key: " + key );
         }
-        
-        MemoryElementDescriptor me = (MemoryElementDescriptor) map.get(key);
 
+        MemoryElementDescriptor me = (MemoryElementDescriptor)map.get(key);
+        
         if ( me != null )
         {
             if ( log.isDebugEnabled() )
@@ -246,7 +245,6 @@ public class LRUMemoryCache
                 }
             }
         }
-        /*
         else if ( key instanceof GroupId )
         {
             // remove all keys of the same name hierarchy.
@@ -270,7 +268,6 @@ public class LRUMemoryCache
                 }
             }
         }
-        */
         else
         {
             // remove single item.
@@ -373,7 +370,6 @@ public class LRUMemoryCache
             return map.keySet().toArray();
         }
     }
-
 
     // --------------------------- internal mehods (linked list implementation)
 
