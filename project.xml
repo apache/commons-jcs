@@ -168,6 +168,7 @@
         <include>**/TestDiskCacheConcurrentForDeadLock.java</include>
         <include>**/TestTCPLateralCache.java</include>
 	<include>**/TestJCSvHashtablePerf.java</include>
+        <include>**/TestEventQueueConcurrent.java</include>
       </includes>
       <resources>
         <includes>
