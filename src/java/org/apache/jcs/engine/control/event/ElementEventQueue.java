@@ -114,6 +114,12 @@ public class ElementEventQueue implements IElementEventQueue
         if ( !destroyed )
         {
             ElementEventRunner runner = new ElementEventRunner( hand, event );
+
+            if ( log.isDebugEnabled() )
+            {
+              log.debug( "runner = " + runner );
+            }
+
             put( runner );
         }
     }
@@ -149,17 +155,29 @@ public class ElementEventQueue implements IElementEventQueue
             {
               if ( log.isDebugEnabled() )
               {
-                log.debug( "Waiting for something to come in to the Q" );
+                log.debug( "Waiting for something to come into the Q" );
               }
 
                 queueLock.wait();
+
+              if ( log.isDebugEnabled() )
+              {
+                log.debug( "Something came into the Q" );
+              }
+
             }
 
             // we have the lock, and the list is not empty
 
             Node node = head.next;
 
-            AbstractElementEventRunner value = head.event;
+            AbstractElementEventRunner value = node.event;
+
+            if ( log.isDebugEnabled() )
+            {
+              log.debug( "head.event = " + head.event );
+              log.debug( "node.event = " + node.event );
+            }
 
             // Node becomes the new head (head is always empty)
 
@@ -206,6 +224,12 @@ public class ElementEventQueue implements IElementEventQueue
                 try
                 {
                     r = take();
+
+                    if ( log.isDebugEnabled() )
+                    {
+                      log.debug( "r from take() = " + r );
+                    }
+
                 }
                 catch ( InterruptedException e )
                 {
