@@ -1,7 +1,7 @@
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
-jcs.default=DC,RFailover
+jcs.default=DC
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -19,9 +19,9 @@ jcs.default.elementattributes.IsLateral=true
 
 # SYSTEM CACHE
 # should be defined for the storage of group attribute list
-jcs.system.groupIdCache=DC,RFailover
+jcs.system.groupIdCache=DC 
 jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.system.groupIdCache.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.system.groupIdCache.elementattributes.IsEternal=true
@@ -35,57 +35,32 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=DC,RFailover
+jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=10000
+jcs.region.testCache1.cacheattributes.MaxObjects=20
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
-jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=5
+# New shrinker configuration parameter
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=3
-jcs.region.testCache1.elementattributes.IsEternal=false
-jcs.region.testCache1.elementattributes.MaxLifeSeconds=10
+jcs.region.testCache1.elementattributes.IsEternal=true
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=500
+jcs.region.testCache1.elementattributes.IsLateral=true
 
-jcs.region.testCache2=DC,LTCP
+jcs.region.testCache2=DC
 jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache2.cacheattributes.MaxObjects=1000
+jcs.region.testCache2.cacheattributes.MaxObjects=10
 jcs.region.testCache2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
-jcs.region.testCache2.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache2.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache2.cacheattributes.MaxMemoryIdleTimeSeconds=10
 jcs.region.testCache2.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.region.testCache2.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.region.testCache2.elementattributes.IsEternal=false
-jcs.region.testCache2.elementattributes.MaxLifeSeconds=60
+jcs.region.testCache2.elementattributes.MaxLifeSeconds=600
 jcs.region.testCache2.elementattributes.IsSpool=true
 jcs.region.testCache2.elementattributes.IsRemote=true
 jcs.region.testCache2.elementattributes.IsLateral=true
-
-jcs.region.testCache3=DC
-jcs.region.testCache3.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache3.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.shrinking.ShrinkingMemoryCache
-jcs.region.testCache3.cacheattributes.UseMemoryShrinker=true
-jcs.region.testCache3.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.region.testCache3.cacheattributes.ShrinkerIntervalSeconds=60
-
-jcs.region.testCache4=DC,LJG
-jcs.region.testCache4.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache4.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.shrinking.ShrinkingMemoryCache
-jcs.region.testCache4.cacheattributes.UseMemoryShrinker=true
-jcs.region.testCache4.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.region.testCache4.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.region.testCache4.elementattributes=org.apache.jcs.engine.ElementAttributes
-jcs.region.testCache4.elementattributes.IsEternal=false
-jcs.region.testCache4.elementattributes.MaxLifeSeconds=60
-jcs.region.testCache4.elementattributes.IsSpool=true
-jcs.region.testCache4.elementattributes.IsRemote=true
-jcs.region.testCache4.elementattributes.IsLateral=true
-
-
-
-# prefered config
-jcs.region.test2=DC,RFailover
-jcs.region.test2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.test2.cacheattributes.MaxObjects=1000
-jcs.region.test2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 
 ##############################################################
@@ -109,7 +84,9 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
 # Primary Disk Cache-- faster than the rest because of memory key storage
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.DC.attributes.DiskPath=g:\dev\raf
+jcs.auxiliary.DC.attributes.DiskPath=i:/dev/raf/3
+#new disk cache parameter.
+jcs.auxiliary.DC.attributes.maxKeySize=1000
 
 # HSQL Disk Cache -- too slow as is
 jcs.auxiliary.HDC=org.apache.jcs.auxiliary.disk.hsql.HSQLCacheFactory
@@ -151,14 +128,14 @@ jcs.auxiliary.LJG.attributes.PutOnlyMode=false
 jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
-jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
-jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
+jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1112
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
 jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
 
 jcs.auxiliary.LTCP2=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LTCP2.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP2.attributes.TransmissionTypeName=TCP
-jcs.auxiliary.LTCP2.attributes.TcpServers=localhost:1111,localhost2:1112
+jcs.auxiliary.LTCP2.attributes.TcpServers=localhost:1112
 jcs.auxiliary.LTCP2.attributes.TcpListenerPort=1111
 jcs.auxiliary.LTCP2.attributes.PutOnlyMode=true
 
