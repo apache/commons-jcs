@@ -18,10 +18,12 @@ package org.apache.jcs.yajcache.lang.ref;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 /**
+ * Interface for accessing a key.
  *
  * @author Hanson Char
  */
 @CopyRightApache
 public interface IKey<K> {
-    public K getKey();
+    /** Returns the key. */
+    public @NonNullable @Immutable K getKey();
 }

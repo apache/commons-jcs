@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 /**
- * Weak reference with an embedded key.
+ * {@link WeakReference} with an embedded key.
  *
  * @author Hanson Char
  */
@@ -29,20 +29,38 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 public class KeyedWeakReference<K,T> extends WeakReference<T> 
         implements IKey<K> 
 {
-    public final @NonNullable K key;
+    /** The embedded key. */
+    public final @NonNullable @Immutable K key;
 
-    public KeyedWeakReference(@NonNullable K key, T referent) {
+    /**
+     * Creates a new weak reference with an embedded key that refers to 
+     * the given object.  The new
+     * reference is not registered with any queue.
+     *
+     * @param key the embedded key of the new weak reference
+     * @param referent object the new weak reference will refer to
+     */
+    public KeyedWeakReference(@NonNullable @Immutable K key, T referent) {
 	super(referent);
         this.key = key;
     }
-    public KeyedWeakReference(@NonNullable K key, T referrent, 
+    /**
+     * Creates a new weak reference with an embedded key that refers to 
+     * the given object and is registered with the given queue.
+     *
+     * @param key the embedded key of the new weak reference
+     * @param referent object the new weak reference will refer to
+     * @param q the queue with which the reference is to be registered,
+     *          or <tt>null</tt> if registration is not required
+     */
+    public KeyedWeakReference(@NonNullable @Immutable K key, T referent, 
             ReferenceQueue<? super T> q) 
     {
-        super(referrent, q);
+        super(referent, q);
         this.key = key;
     }
     @Implements(IKey.class)
-    public @NonNullable K getKey() {
+    public @NonNullable @Immutable K getKey() {
         return this.key;
     }
 }

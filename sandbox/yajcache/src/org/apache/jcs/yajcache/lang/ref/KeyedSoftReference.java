@@ -22,7 +22,7 @@ import java.lang.ref.SoftReference;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
- * Soft reference with an embedded key.
+ * {@link SoftReference} with an embedded key.
  *
  * @author Hanson Char
  */
@@ -30,21 +30,39 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 public class KeyedSoftReference<K,T> extends SoftReference<T> 
         implements IKey<K> 
 {
-    private final @NonNullable K key;
+    /** The embedded key. */
+    private final @NonNullable @Immutable K key;
     
-    public KeyedSoftReference(@NonNullable K key, T referent) 
+    /**
+     * Creates a new soft reference with an embedded key that refers to 
+     * the given object.  The new
+     * reference is not registered with any queue.
+     *
+     * @param key the embedded key of the new soft reference
+     * @param referent object the new soft reference will refer to
+     */
+    public KeyedSoftReference(@NonNullable @Immutable K key, T referent) 
     {
 	super(referent);
         this.key = key;
     }
-    public KeyedSoftReference(@NonNullable K key, T referrent, 
+    /**
+     * Creates a new soft reference with an embedded key that refers to 
+     * the given object and is registered with the given queue.
+     *
+     * @param key the embedded key of the new soft reference
+     * @param referent object the new soft reference will refer to
+     * @param q the queue with which the reference is to be registered,
+     *          or <tt>null</tt> if registration is not required
+     */
+    public KeyedSoftReference(@NonNullable @Immutable K key, T referent, 
             ReferenceQueue<? super T> q) 
     {
-        super(referrent, q);
+        super(referent, q);
         this.key = key;
     }
     @Implements(IKey.class)
-    public @NonNullable K getKey() {
+    public @NonNullable @Immutable K getKey() {
         return this.key;
     }
 }

@@ -15,10 +15,23 @@
  */
 package org.apache.jcs.yajcache.lang.annotation;
 
+import java.lang.annotation.*;
+
 /**
+ * Element so annotated is expected to be a JavaBean.
  *
  * @author Hanson Char
  */
 @CopyRightApache
+@Documented
+@Inherited
+@Retention(RetentionPolicy.SOURCE)
+@Target({
+    ElementType.TYPE,           // return value of a method is a 
+    ElementType.METHOD,           // return value of a method is a 
+    ElementType.FIELD,          // field is never null
+    ElementType.LOCAL_VARIABLE, // variable is never null
+    ElementType.PARAMETER       // parameter is never null
+})
 public @interface JavaBean {
 }
