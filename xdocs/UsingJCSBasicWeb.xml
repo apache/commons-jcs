@@ -7,7 +7,7 @@
   </properties>
 
   <body>
-    <section name="Using JCS: Some basics for the web"> 
+    <section name="Using JCS: Some basics for the web">
       <p>
         The primary bottleneck in most dynamic web-based applications is
         the retrieval of data from the database.  While it is relatively
@@ -27,7 +27,7 @@
         can avoid most of the network traffic and the complexity by
         implementing JCS front-tier caching.  Centralize your EJB access
         or your JDBC data access into local managers and perform the
-        caching there.   
+        caching there.
       </p>
       <subsection name="What to cache?">
         <p>
@@ -37,7 +37,7 @@
           cached.  Prime candidates for caching range from the list data
           for stable dropdowns, user information, discrete and
           infrequently changing information, to stable search results
-          that could be sorted in memory.  
+          that could be sorted in memory.
         </p>
         <p>
           Since JCS is distributed and allows updates and invalidations
@@ -48,7 +48,7 @@
           be retrieved from the database.  If your application allows
           for the viewing and editing of data, the data for the view
           pages could be cached, but the edit pages should, in most
-          cases, pull the data directly from the database.   
+          cases, pull the data directly from the database.
         </p>
       </subsection>
       <subsection name="How to cache discrete data">
@@ -61,7 +61,7 @@
           catalog of over a million books.  You cannot possibly cache
           your entire database, but you could dramatically decrease the
           load on your database by caching the 1,000 or so most popular
-          items.  
+          items.
         </p>
         <p>
           For the sake of simplicity let's ignore tie-ins and
@@ -74,7 +74,7 @@
           necessary information to build the display page.  This value
           object could hold data from multiple related tables or book
           subtype table, but lets say that you have a simple table
-          called <code>BOOK</code> that looks something like this: 
+          called <code>BOOK</code> that looks something like this:
         </p>
         <source><![CDATA[
   Table BOOK
@@ -83,7 +83,7 @@
   AUTHOR
   ISBN
   PRICE
-  PUBLISH_DATE  
+  PUBLISH_DATE
         ]]></source>
         <p>
           We could create a value object for this table called
@@ -105,8 +105,8 @@ public class BookVObj implements Serializable
     public String price;
     public Date publishDate;
 
-    public BookVObj() 
-    { 
+    public BookVObj()
+    {
     }
 }
         ]]></source>
@@ -127,19 +127,19 @@ import org.apache.jcs.JCS;
 // in case we want to set some special behavior
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
-public class BookVObjManager 
+public class BookVObjManager
 {
     private static BookVObjManager instance;
     private static int checkedOut = 0;
     private static JCS bookCache;
 
-    private BookVObjManager() 
+    private BookVObjManager()
     {
-        try 
+        try
         {
             bookCache = JCS.getInstance("bookCache");
-        } 
-        catch (Exception e) 
+        }
+        catch (Exception e)
         {
             // Handle cache region initialization failure
         }
@@ -152,20 +152,17 @@ public class BookVObjManager
     /**
      * Singleton access point to the manager.
      */
-    public static BookVObjManager getInstance() 
+    public static BookVObjManager getInstance()
     {
-        if (instance == null) 
+        synchronized (BookVObjManager.class)
         {
-            synchronized (BookVObjManager.class) 
+            if (instance == null)
             {
-                if (instance == null) 
-                {
-                    instance = new BookVObjManager();
-                }
+                instance = new BookVObjManager();
             }
         }
 
-        synchronized (instance) 
+        synchronized (instance)
         {
             instance.checkedOut++;
         }
@@ -184,77 +181,77 @@ public class BookVObjManager
     /**
      * Retrieves a BookVObj.  Default to look in the cache.
      */
-    public BookVObj getBookVObj(int id) 
+    public BookVObj getBookVObj(int id)
     {
         return getBookVObj(id, true);
     }
-    
+
     /**
      * Retrieves a BookVObj. Second argument decides whether to look
      * in the cache. Returns a new value object if one can't be
      * loaded from the database. Database cache synchronization is
      * handled by removing cache elements upon modification.
      */
-    public BookVObj getBookVObj(int id, boolean fromCache) 
+    public BookVObj getBookVObj(int id, boolean fromCache)
     {
         BookVObj vObj = null;
-    
+
         // First, if requested, attempt to load from cache
-    
-        if (fromCache) 
+
+        if (fromCache)
         {
             vObj = (BookVObj) bookCache.get("BookVObj" + id);
         }
-    
+
         // Either fromCache was false or the object was not found, so
         // call loadBookVObj to create it
-    
-        if (vObj == null) 
+
+        if (vObj == null)
         {
             vObj = loadvObj(id);
         }
-    
+
         return  vObj;
     }
-    
+
     /**
      * Creates a BookVObj based on the id of the BOOK table.  Data
      * access could be direct JDBC, some or mapping tool, or an EJB.
      */
-    public BookVObj loadBookVObj(int id) 
+    public BookVObj loadBookVObj(int id)
     {
         BookVObj vObj = new BookVObj();
-    
+
         vObj.bookID = id;
-    
-        try 
+
+        try
         {
             boolean found = false;
-    
+
             // load the data and set the rest of the fields
             // set found to true if it was found
-    
+
             found = true;
-    
+
             // cache the value object if found
-    
-            if (found) 
+
+            if (found)
             {
                 // could use the defaults like this
                 // bookCache.put( "BookVObj" + id, vObj );
                 // or specify special characteristics
-    
-                // put to cache 
+
+                // put to cache
 
                 bookCache.put("BookVObj" + id, vObj);
             }
-    
-        } 
-        catch (Exception e) 
+
+        }
+        catch (Exception e)
         {
             // Handle failure putting object to cache
         }
-    
+
         return vObj;
     }
         ]]></source>
@@ -268,26 +265,26 @@ public class BookVObjManager
      * Stores BookVObj's in database.  Clears old items and caches
      * new.
      */
-    public int storeBookVObj(BookVObj vObj) 
+    public int storeBookVObj(BookVObj vObj)
     {
-        try 
+        try
         {
-            // since any cached data is no longer valid, we should 
+            // since any cached data is no longer valid, we should
             // remove the item from the cache if it an update.
-    
-            if (vObj.bookID != 0) 
+
+            if (vObj.bookID != 0)
             {
                 bookCache.remove("BookVObj" + vObj.bookID);
             }
-    
+
             // put the new object in the cache
-    
+
             bookCache.put("BookVObj" + id, vObj);
-        } 
-        catch (Exception e) 
+        }
+        catch (Exception e)
         {
             // Handle failure removing object or putting object to cache.
-        }              
+        }
     }
 }
         ]]></source>
@@ -298,7 +295,7 @@ public class BookVObjManager
           can be spooled to disk, etc.  It is also possible (and easier)
           to define these attributes in the configuration file as
           demonstrated later.  We now have the basic infrastructure for
-          caching the book data.  
+          caching the book data.
       </p>
       </subsection>
       <subsection name="Selecting the appropriate auxiliary caches">
@@ -338,7 +335,7 @@ public class BookVObjManager
           webserver with multiple VMs and a database machine,
           then the lateral cache will probably make more sense.
           The <a href="LateralTCPAuxCache.html">TCP lateral
-          cache</a> is recommended.  
+          cache</a> is recommended.
         </p>
         <p>
           For the book store configuration I will set up a region
@@ -347,7 +344,7 @@ public class BookVObjManager
           cache.  The configuration file might look like this:
         </p>
         <source><![CDATA[
-# DEFAULT CACHE REGION  
+# DEFAULT CACHE REGION
 
 # sets the default aux value for any non configured caches
 jcs.default=DC,RFailover
@@ -373,7 +370,7 @@ jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
     org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
-# CACHE REGIONS AVAILABLE 
+# CACHE REGIONS AVAILABLE
 
 # Regions preconfigured for caching
 jcs.region.bookCache=DC,RFailover
@@ -389,7 +386,7 @@ jcs.region.bookCache.elementattributes.IsSpool=true
 jcs.region.bookCache.elementattributes.IsRemote=true
 jcs.region.bookCache.elementattributes.IsLateral=true
 
-# AUXILIARY CACHES AVAILABLE 
+# AUXILIARY CACHES AVAILABLE
 
 # Primary Disk Cache -- faster than the rest because of memory key storage
 jcs.auxiliary.DC=
@@ -423,7 +420,7 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
         <p>
           To get running with the book store example, I will also
           need to start up the remote cache server on the
-          scriptserver machine.  The 
+          scriptserver machine.  The
           <a href="RemoteAuxCache.html">remote cache
           documentation</a> describes the configuration.
         </p>
