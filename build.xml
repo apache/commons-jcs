@@ -11,8 +11,8 @@
   <property file="build.properties" />
   <!-- Set default values for the build -->
   <property file="project.properties" />
-  
-  <target 
+
+  <target
     name="jcs:test-prepare">
 
     <!-- Make directory for log output from tests (distinct from reports) -->
@@ -33,88 +33,88 @@
   <target name="compile" depends="maven:compile"/>
   <target name="test" depends="maven:test"/>
   <target name="jar" depends="maven:jar"/>
-  
+
   <!-- maven:start -->
-  
+
   <!-- ================================================================== -->
   <!-- D E L E G A T O R S                                                -->
   <!-- ================================================================== -->
-        
-  <target 
+
+  <target
     name="maven:site">
     <ant antfile="${maven.home}/build-docs.xml" target="site"/>
   </target>
-        
-  <target 
-    name="maven:jar">
+
+  <target
+    name="maven:jar" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-maven.xml" target="jar"/>
   </target>
-        
-  <target 
-    name="maven:install-jar">
+
+  <target
+    name="maven:install-jar" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-maven.xml" target="install-jar"/>
   </target>
-        
-  <target 
+
+  <target
     name="maven:env">
     <ant antfile="${maven.home}/build-maven.xml" target="env"/>
   </target>
-        
-  <target 
+
+  <target
     name="maven:docs">
     <ant antfile="${maven.home}/build-docs.xml" target="docs"/>
   </target>
-    
-  <target 
+
+  <target
     name="maven:test" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-test.xml" target="test"/>
   </target>
 
-  <target 
+  <target
     name="maven:run-singletest">
     <ant antfile="${maven.home}/build-test.xml" target="run-singletest"/>
   </target>
 
-  <target 
+  <target
     name="maven:clean">
     <ant antfile="${maven.home}/build-maven.xml" target="clean"/>
   </target>
-        
-  <target  
+
+  <target
     name="maven:metrics">
     <ant antfile="${maven.home}/build-metrics.xml" target="metrics"/>
   </target>
-        
-  <target 
+
+  <target
     name="maven:dist">
     <ant antfile="${maven.home}/build-maven.xml" target="dist"/>
   </target>
-        
-  <target 
+
+  <target
     name="maven:deploy-site">
     <ant antfile="${maven.home}/build-docs.xml" target="deploy-site"/>
   </target>
-        
-  <target 
+
+  <target
     name="maven:gump-descriptor">
     <ant antfile="${maven.home}/build-maven.xml" target="gump-descriptor"/>
   </target>
-        
-  <target 
+
+  <target
     name="maven:javadocs">
     <ant antfile="${maven.home}/build-docs.xml" target="javadocs"/>
   </target>
-        
-  <target 
+
+  <target
     name="maven:compile">
     <ant antfile="${maven.home}/build-maven.xml" target="compile"/>
   </target>
 
-  <target 
+  <target
     name="maven:update-jars">
     <ant antfile="${maven.home}/build-maven.xml" target="update-jars"/>
   </target>
-    
+
   <!-- maven:end -->
 
 </project>
