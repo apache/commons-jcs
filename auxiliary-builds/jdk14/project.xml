@@ -4,7 +4,7 @@
   <extend>../../project-b4.xml</extend>  
   <id>jcs</id>
   <name>jdk14-ext</name>
-  <currentVersion>1.0-dev-jdk14-ext</currentVersion>
+  <currentVersion>1.1-dev-jdk14-ext</currentVersion>
  
 
   <dependencies>

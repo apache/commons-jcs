@@ -19,7 +19,7 @@ set CLASSPATH=.
 set CLASSPATH=%CLASSPATH%;%CURDIR%\src\conf\
 set CLASSPATH=%CLASSPATH%;%CURDIR%\target\classes\
 set CLASSPATH=%CLASSPATH%;%CURDIR%\target\test-classes\
-rem set CLASSPATH=%CLASSPATH%;%CURDIR%\target\jcs-1.0-dev.jar
+rem set CLASSPATH=%CLASSPATH%;%CURDIR%\target\jcs-1.1-dev.jar
 goto jars
 
 :jars
