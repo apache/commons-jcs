@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>Turbine JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.2-dev</currentVersion>
+  <currentVersion>1.2.3-dev</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -40,13 +40,13 @@
       <name>JCS User List</name>
       <subscribe>turbine-jcs-user-subscribe@jakarta.apache.org</subscribe>
       <unsubscribe>turbine-jcs-user-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://nagoya.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-user@jakarta.apache.org</archive>
+      <archive>http://mail-archives.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-user@jakarta.apache.org</archive>
     </mailingList>
     <mailingList>
       <name>JCS Developer List</name>
       <subscribe>turbine-jcs-dev-subscribe@jakarta.apache.org</subscribe>
       <unsubscribe>turbine-jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://nagoya.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-dev@jakarta.apache.org</archive>
+      <archive>http://mail-archives.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-dev@jakarta.apache.org</archive>
     </mailingList>
   </mailingLists>
 
@@ -179,6 +179,7 @@
         <include>**/TestTCPLateralCache.java</include>
 	    <include>**/TestJCSvHashtablePerf.java</include>
         <include>**/TestEventQueueConcurrent.java</include>
+        <include>**/TestSimpleEventHandling.java</include>
       </includes>
       <resources>
         <includes>

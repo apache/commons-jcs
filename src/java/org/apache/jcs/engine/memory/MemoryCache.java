@@ -46,8 +46,9 @@ public interface MemoryCache
 
     /**
      *  Destroy the memory cache
+     * @throws IOException
      */
-    public void dispose() throws IOException;;
+    public void dispose() throws IOException;
 
 
     /**
@@ -60,7 +61,7 @@ public interface MemoryCache
     /**
      * Returns the historical and statistical data for a region's memory cache.
      * 
-     * @return 
+     * @return Statistics and Infor for the Memory Cache.
      */
     public IStats getStatistics();
     
@@ -168,6 +169,8 @@ public interface MemoryCache
 
     /**
      * Gets the set of keys of objects currently in the group
+     * @param group
+     * @return a Set of group keys.
      */
     public Set getGroupKeys(String group);
 }

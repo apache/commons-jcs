@@ -61,8 +61,8 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
 
     /**
      * Sets the maxKeySize attribute of the DiskCacheAttributes object
-     *
-     * @param name The new maxKeySize value
+     * 
+     * @param maxKeySize The new maxKeySize value
      */
     public void setMaxKeySize( int maxKeySize )
     {
@@ -88,7 +88,7 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
      * This number determines how often the disk cache should run real time
      * optimizations.
      *
-     * @param name The new optimizeAtRemoveCount value
+     * @param cnt The new optimizeAtRemoveCount value
      */
     public void setOptimizeAtRemoveCount( int cnt)
     {
@@ -131,7 +131,7 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
     /**
      * Description of the Method
      *
-     * @return
+     * @return AuxiliaryCacheAttributes
      */
     public AuxiliaryCacheAttributes copy()
     {
@@ -149,7 +149,7 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
     /**
      * Description of the Method
      *
-     * @return
+     * @return String
      */
     public String toString()
     {

@@ -25,7 +25,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 
 /**
- * Description of the Class
+ * This class stores attributes for all of the available lateral cache auxiliaries.
  *
  */
 public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
@@ -387,10 +387,9 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
     }
 
 
-    /**
-     * Description of the Method
-     *
-     * @return
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
      */
     public String toString()
     {

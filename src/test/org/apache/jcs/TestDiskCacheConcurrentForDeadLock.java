@@ -34,6 +34,7 @@ public class TestDiskCacheConcurrentForDeadLock extends TestCase
 {
     /**
      * Constructor for the TestDiskCache object.
+     * @param testName
      */
     public TestDiskCacheConcurrentForDeadLock( String testName )
     {
@@ -42,6 +43,7 @@ public class TestDiskCacheConcurrentForDeadLock extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * @param args
      */
     public static void main( String args[] )
     {

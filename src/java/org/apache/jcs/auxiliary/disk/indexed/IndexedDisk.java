@@ -63,10 +63,15 @@ class IndexedDisk
 
 
     /**
-     * Description of the Method
+     * This reads an object from the given starting position on the file.
+     * <p>
+     * The firt four bytes of the record should tell us how long it is.  
+     * The data is read into a byte array and then an object is constructed
+     * from the byte array.
      *
-     * @return
+     * @return Serializable 
      * @param pos
+     * @throws IOException
      */
     Serializable readObject( long pos ) throws IOException
     {

@@ -22,9 +22,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.jcs.JCS;
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-
 /**
  *  Description of the Class
  *
@@ -88,12 +85,12 @@ public class TestSimpleLoad extends TestCase
             String res = ( String ) jcs.get( i + ":key" );
             if ( res == null )
             {
-                this.assertNotNull( "[" + i + ":key] should not be null", res );
+                assertNotNull( "[" + i + ":key] should not be null", res );
             }
         }
 
         // test removal
-        jcs.destroy( "300:key" );
+        jcs.remove( "300:key" );
         assertNull( jcs.get( "300:key" ) );
 
     }

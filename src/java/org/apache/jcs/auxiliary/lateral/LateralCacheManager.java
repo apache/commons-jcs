@@ -44,7 +44,9 @@ import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
  * configured cache hub, then lateral removals may be necessary. For flat
  * webserver production environments, without a strong machine at the app server
  * level, distribution and search may need to occur at the lateral cache level.
- * This is currently not implemented in the lateral cache. TODO: - need
+ * This is currently not implemented in the lateral cache. 
+ * <p>
+ * @TODO: - need
  * freeCache, release, getStats - need to find an interface acceptible for all -
  * cache managers or a manager within a type
  */
@@ -119,7 +121,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
     /**
      * Constructor for the LateralCacheManager object
      *
-     * @param lca
+     * @param lcaA
      */
     private LateralCacheManager( ILateralCacheAttributes lcaA )
     {
@@ -259,7 +261,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
     /**
      * Gets the cacheType attribute of the LateralCacheManager object
      *
-     * @return The {3} value
+     * @return The cache type value
      */
     public int getCacheType()
     {

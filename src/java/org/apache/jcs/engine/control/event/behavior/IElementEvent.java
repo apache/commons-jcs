@@ -28,7 +28,8 @@ public interface IElementEvent extends Serializable
 {
 
     /**
-     *  Gets the elementEvent attribute of the IElementEvent object
+     *  Gets the elementEvent attribute of the IElementEvent object.  This code is
+     * Contained in the IElememtEventConstants class.
      *
      *@return    The elementEvent value
      */

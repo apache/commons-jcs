@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.CacheAdaptor;
@@ -38,7 +39,6 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
-//import org.apache.jcs.auxiliary.lateral.socket.tcp.*;
 
 /**
  * Used to queue up update requests to the underlying cache. These requests will
@@ -81,7 +81,10 @@ public class LateralCacheNoWait
     }
   }
 
-  /** Description of the Method */
+  /** 
+   * @param ce
+   * @throws IOException
+   */
   public void update( ICacheElement ce ) throws IOException
   {
     try
@@ -95,7 +98,10 @@ public class LateralCacheNoWait
     }
   }
 
-  /** Synchronously reads from the lateral cache. */
+  /** Synchronously reads from the lateral cache. 
+   * @param key
+   * @return ICacheElement if found, else null
+   */
   public ICacheElement get( Serializable key )
   {
 
@@ -131,7 +137,10 @@ public class LateralCacheNoWait
     return cache.getGroupKeys( groupName );
   }
 
-  /** Adds a remove request to the lateral cache. */
+  /** Adds a remove request to the lateral cache. 
+   * @param key
+   * @return always false
+   */
   public boolean remove( Serializable key )
   {
     try
@@ -219,6 +228,8 @@ public class LateralCacheNoWait
   /**
    * Replaces the lateral cache service handle with the given handle and reset
    * the queue by starting up a new instance.
+   * 
+   * @param lateral
    */
   public void fixCache( ILateralCacheService lateral )
   {
@@ -245,7 +256,10 @@ public class LateralCacheNoWait
                                   cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
   }
 
-  /** Description of the Method */
+  /*
+   *  (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
   public String toString()
   {
     return "LateralCacheNoWait: " + cache.toString();
@@ -273,8 +287,7 @@ public class LateralCacheNoWait
 
     ArrayList elems = new ArrayList();
 
-    IStatElement se = null;
-
+    //IStatElement se = null;
     // no data gathered here
 
 	// get the stats from the event queue too
