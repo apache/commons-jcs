@@ -164,7 +164,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     {
         ICacheElement element
             = cacheControl.get( new GroupAttrName( group, name ) );
-
         return ( element != null ) ? element.getVal() : null;
     }
 
@@ -326,7 +325,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         }
 
         // unbind object first if any.
-        removeAttribute( name, groupName, SET_ATTR_INVOCATION );
+        boolean isPreviousObj = removeAttribute( name, groupName, false);
 
         if (attr == null) 
         {
@@ -336,37 +335,37 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         {
             put( new GroupAttrName(groupName, name), value, attr );            
         }
-        group.add(name);
+
+        if (!isPreviousObj) 
+        {
+            group.add(name);   
+        }        
     }
 
     /** Description of the Method */
     public void removeAttribute( Object name, String group )
     {
-        removeAttribute( name, group, REMOVE_ATTR_INVOCATION );
+        removeAttribute( name, group, true );
     }
 
     /** Description of the Method */
-    private void removeAttribute( Object name, String group, boolean invocation )
+    private boolean removeAttribute( Object name, String groupName, 
+                                     boolean removeFromGroup )
     {
-        GroupAttrName key = new GroupAttrName( group, name );
-        // Needs to retrive the attribute so as to do object unbinding, if necessary.
-        Serializable val = null;
-        //try {
-        val = cacheControl.get( key );
-        //} catch( ObjectNotFoundException onfe ) {
-        //  return;
-        //}
-
-        if ( val == null )
+        GroupAttrName key = new GroupAttrName( groupName, name );
+        // Needs to retrieve the attribute so as to do object unbinding, 
+        // if necessary.
+        boolean isPreviousObj = cacheControl.get(key) != null;
+        if (isPreviousObj) 
         {
-            return;
+            cacheControl.remove(key);            
         }
-        if ( invocation == REMOVE_ATTR_INVOCATION )
+        if (removeFromGroup) 
         {
-            // remove attribute - name set taken care of by the session cache.
-            cacheControl.remove( key );
+            Set group = getAttributeNameSet(groupName);
+            group.remove(name);
         }
-        return;
+        return isPreviousObj;
     }
 
     /**
@@ -398,7 +397,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         int arS = ar.length;
         for ( int i = 0; i < arS; i++ )
         {
-            removeAttribute( ar[ i ], group );
+            removeAttribute( ar[i], group, false );
         }
 
         // get into concurrent modificaiton problems here.
