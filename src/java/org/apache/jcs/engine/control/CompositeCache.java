@@ -488,7 +488,7 @@ public class CompositeCache
 
                     missCountExpired++;
 
-                    remove( element );
+                    remove( key );
 
                     element = null;
                 }
@@ -558,7 +558,7 @@ public class CompositeCache
 
                                 missCountExpired++;
 
-                                remove( element );
+                                remove( key );
 
                                 element = null;
                             }
