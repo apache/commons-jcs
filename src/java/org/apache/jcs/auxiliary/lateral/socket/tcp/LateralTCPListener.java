@@ -81,11 +81,11 @@ import org.apache.jcs.engine.control.CacheHub;
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @version $Id$
  */
-public class LateralCacheTCPListener
+public class LateralTCPListener
     implements ILateralCacheListener, Serializable
 {
     private final static Log log =
-        LogFactory.getLog( LateralCacheTCPListener.class );
+        LogFactory.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinte. */
     private final static int acceptTimeOut = 0;
@@ -121,7 +121,7 @@ public class LateralCacheTCPListener
 
         if ( ins == null )
         {
-            ins = new LateralCacheTCPListener( ilca );
+            ins = new LateralTCPListener( ilca );
 
             ins.init();
 
@@ -144,7 +144,7 @@ public class LateralCacheTCPListener
      *
      * @param ilca
      */
-    protected LateralCacheTCPListener( ILateralCacheAttributes ilca )
+    protected LateralTCPListener( ILateralCacheAttributes ilca )
     {
         this.ilca = ilca;
     }

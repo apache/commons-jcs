@@ -14,7 +14,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralCacheTCPListener;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
@@ -199,7 +199,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
         {
             if ( lca.getTransmissionType() == lca.TCP )
             {
-                addLateralCacheListener( cacheName, LateralCacheTCPListener.getInstance( lca ) );
+                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lca ) );
             }
         }
         catch ( IOException ioe )
