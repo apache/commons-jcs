@@ -2,6 +2,7 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Set;
 import java.rmi.UnmarshalException;
 
 import org.apache.commons.logging.Log;
@@ -89,6 +90,11 @@ public class RemoteCacheNoWait implements AuxiliaryCache
             throw ex;
         }
         return null;
+    }
+
+    public Set getGroupKeys(String groupName)
+    {
+        return cache.getGroupKeys(groupName);
     }
 
     /** Adds a remove request to the remote cache. */

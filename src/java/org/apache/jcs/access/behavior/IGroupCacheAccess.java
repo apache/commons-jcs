@@ -53,7 +53,7 @@ package org.apache.jcs.access.behavior;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import java.util.Enumeration;
+import java.util.Set;
 
 import org.apache.jcs.access.exception.CacheException;
 
@@ -84,35 +84,14 @@ public interface IGroupCacheAccess extends ICacheAccess
     void putInGroup( Object key, String group, Object obj, IElementAttributes attr )
         throws CacheException;
 
-
-    /**
-     * DefineGroup is used to create a new group object. IElementAttributes may be set
-     * on the group. If no attributes are specified, the attributes of the
-     * region or group the new group is associated with are used. If group is
-     * specified the new group will be associated with the group specified.
-     */
-    void defineGroup( String name )
-        throws CacheException;
-
-
     /** Description of the Method */
-    void defineGroup( String name, IElementAttributes attr )
-        throws CacheException;
-
+    public void remove( Object name, String group );
 
     /**
-     * Gets the groupAttributes attribute of the IGroupCacheAccess object
-     *
-     * @return The groupAttributes value
+     * Gets the set of keys of objects currently in the group
      */
-    IElementAttributes getGroupAttributes( String name )
-        throws CacheException;
+    public Set getGroupKeys(String group);
 
-
-    /**
-     * Gets the attributeNames attribute of the IGroupCacheAccess object
-     *
-     * @return The attributeNames value
-     */
-    Enumeration getAttributeNames( String name );
+    /** Invalidates a group */
+    public void invalidateGroup( String group );
 }

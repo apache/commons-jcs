@@ -71,7 +71,6 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.control.group.GroupId;
 
 /**
@@ -85,9 +84,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
 {
     private final static Log log =
         LogFactory.getLog( GroupCacheAccess.class );
-
-    private static boolean SET_ATTR_INVOCATION = true;
-    private static boolean REMOVE_ATTR_INVOCATION = false;
 
     private static CompositeCacheManager cacheMgr;
 
@@ -115,7 +111,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = GroupCacheHub.getInstance();
+                    cacheMgr = CompositeCacheManager.getInstance();
                 }
             }
         }
@@ -136,7 +132,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = GroupCacheHub.getInstance();
+                    cacheMgr = CompositeCacheManager.getInstance();
                 }
             }
         }
@@ -164,99 +160,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     {
         GroupId gid = new GroupId(cacheControl.getCacheName(), group);
         return new GroupAttrName(gid, name);
-    }
-
-    /**
-     * DefineGroup is used to create a new group object. Attributes may be set
-     * on the group. If no attributes are specified, the attributes of the
-     * region or group the new group is associated with are used. If group is
-     * specified the new group will be associated with the group specified.
-     *
-     * @param name Name of the gorup.
-     */
-    public void defineGroup( String name )
-        throws CacheException
-    {
-        defineGroup(name, null);
-    }
-
-    /**
-     * Description of the Method
-     *
-     * @param name Name of the group
-     * @param attr Default attributes for the group.
-     */
-    public void defineGroup( String name, IElementAttributes attr )
-        throws CacheException
-    {
-        // update the attribute name set.
-        GroupId groupId = new GroupId( cacheControl.getCacheName(), name );
-        if ( get(groupId) != null )
-        {
-            throw new CacheException( "group " + name + " already exists " );
-        }
-
-        // TODO: revisit and verify that this works
-        // not sure it will, need special id putting
-        if (attr == null) 
-        {
-            put( groupId, new HashSet() );            
-        }
-        else 
-        {
-            put( groupId, new HashSet(), attr );
-        }        
-    }
-
-    /**
-     * Gets the groupAttributes attribute of the GroupCacheAccess object.
-     * Slighly confusing since the other method conside an "attribute" to be an
-     * element of the cache and not the parameters governing an element.
-     *
-     * @return The Element Attributes for the group
-     */
-    public IElementAttributes getGroupAttributes( String name )
-        throws CacheException
-    {
-        IElementAttributes attr = null;
-        try
-        {
-            attr = cacheControl.getElementAttributes( ( Serializable ) name );
-        }
-        catch ( IOException ioe )
-        {
-            throw new CacheException(
-                "Failure getting element attributes due to ", ioe );
-        }
-        return attr;
-    }
-
-    /**
-     * Gets the attributeNames attribute of the GroupCacheAccess object
-     *
-     * @return The attributeNames value
-     */
-    public Enumeration getAttributeNames( String group_name )
-    {
-        //Set s = getAttributeNameSet( name );
-        //p( s.toString() );
-        //return Collections.enumeration(s);
-        return Collections.enumeration( getAttributeNameSet( group_name ) );
-    }
-
-    /**
-     * Gets the attributeNameSet attribute of the GroupCacheAccess object
-     *
-     * @return The attributeNameSet value
-     */
-    public Set getAttributeNameSet( String groupName )
-    {
-        Object obj = get(new GroupId(cacheControl.getCacheName(), groupName));
-        if ( obj == null || !( obj instanceof Set ) )
-        {
-            return new HashSet();
-        }
-        return (Set) obj;
     }
 
     /**
@@ -288,16 +191,8 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
                             IElementAttributes attr )
         throws CacheException
     {
-        Set group = (Set)
-            get(new GroupId(cacheControl.getCacheName(), groupName));
-        if (group == null) 
-        {
-            throw new CacheException(
-                "Group must be defined prior to being used.");
-        }
-
         // unbind object first if any.
-        boolean isPreviousObj = remove( name, groupName, false);
+        remove( name, groupName);
 
         if (attr == null) 
         {
@@ -307,57 +202,27 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
         {
             put( getGroupAttrName(groupName, name), value, attr );            
         }
-
-        if (!isPreviousObj) 
-        {
-            group.add(name);   
-        }        
     }
 
     /** Description of the Method */
     public void remove( Object name, String group )
     {
-        remove( name, group, true );
+        GroupAttrName key = getGroupAttrName( group, name );
+        cacheControl.remove(key);            
     }
 
-    /** Description of the Method */
-    private boolean remove( Object name, String groupName, 
-                            boolean removeFromGroup )
+    /**
+     * Gets the set of keys of objects currently in the group
+     */
+    public Set getGroupKeys(String group)
     {
-        GroupAttrName key = getGroupAttrName( groupName, name );
-        // Needs to retrieve the attribute so as to do object unbinding, 
-        // if necessary.
-        boolean isPreviousObj = cacheControl.get(key) != null;
-        if (isPreviousObj) 
-        {
-            cacheControl.remove(key);            
-        }
-        if (removeFromGroup) 
-        {
-            Set group = getAttributeNameSet(groupName);
-            group.remove(name);
-        }
-        return isPreviousObj;
+        return cacheControl.getGroupKeys(group);
     }
+
 
     /** Invalidates a group */
     public void invalidateGroup( String group )
     {
-        // Removes all the attributes and attribute names from the Cache.
-        // In doing so, need to unbind any object associated with the session.
-        // need a static list not dependent on the current state of the source
-        // remove each item, may want to try using partial delete here
-        // move to gorupcache?
-        Set set = getAttributeNameSet( group );
-        Object[] ar = set.toArray();
-        int arS = ar.length;
-        for ( int i = 0; i < arS; i++ )
-        {
-            remove( ar[i], group, false );
-        }
-
-        // get into concurrent modification problems here.
-        // could make the removal of the ID invalidate the list?
         cacheControl.remove(new GroupId( cacheControl.getCacheName(), group ));
     }
 }

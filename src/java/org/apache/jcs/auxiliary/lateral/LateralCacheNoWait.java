@@ -3,6 +3,7 @@ package org.apache.jcs.auxiliary.lateral;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.UnmarshalException;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -93,6 +94,12 @@ public class LateralCacheNoWait implements AuxiliaryCache
         }
         return null;
     }
+
+    public Set getGroupKeys(String groupName)
+    {
+        return cache.getGroupKeys(groupName);
+    }
+
 
     /** Adds a remove request to the lateral cache. */
     public boolean remove( Serializable key )

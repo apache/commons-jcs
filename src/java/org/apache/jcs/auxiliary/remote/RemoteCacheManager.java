@@ -26,7 +26,6 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
-import org.apache.jcs.auxiliary.remote.group.RemoteGroupCacheListener;
 
 import org.apache.jcs.engine.CacheWatchRepairable;
 
@@ -247,10 +246,10 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
         {
             // Remote cache manager can handle this by gettign the type formt he listener
             //if ( cattr.getRemoteType() == cattr.CLUSTER ) {
-            //  addRemoteCacheListener( cattr, RemoteGroupCacheListener.getInstance( cattr ) );
+            //  addRemoteCacheListener( cattr, RemoteCacheListener.getInstance( cattr ) );
             //} else
             //if ( cattr.getRemoteType() == cattr.LOCAL ) {
-            addRemoteCacheListener( cattr, RemoteGroupCacheListener.getInstance( cattr ) );
+            addRemoteCacheListener( cattr, RemoteCacheListener.getInstance( cattr ) );
             //}
         }
         catch ( IOException ioe )

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import java.util.Enumeration;
 import java.util.Set;
+import java.util.Collections;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -161,7 +162,7 @@ public class DistSession
      */
     public Enumeration getAttributeNames()
     {
-        return sessCache.getAttributeNames( session_id );
+        return Collections.enumeration(sessCache.getGroupKeys(session_id));
     }
 
 
@@ -255,7 +256,8 @@ public class DistSession
      */
     public String[] getValueNames()
     {
-        return ( String[] ) sessCache.getAttributeNameSet( session_id ).toArray( new String[0] );
+        return (String[]) sessCache
+            .getGroupKeys(session_id).toArray( new String[0] );
     }
 
 

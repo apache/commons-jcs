@@ -2,6 +2,8 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -126,6 +128,24 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         }
         return null;
     }
+
+    /**
+     * Gets the set of keys of objects currently in the group
+     */
+    public Set getGroupKeys(String group)
+    {
+        HashSet allKeys = new HashSet();
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            AuxiliaryCache aux = noWaits[i];
+            if ( aux != null )
+            {
+                allKeys.addAll(aux.getGroupKeys(group));
+            }
+        }
+        return allKeys;
+    }
+
 
     /** Adds a remove request to the lateral cache. */
     public boolean remove( Serializable key )

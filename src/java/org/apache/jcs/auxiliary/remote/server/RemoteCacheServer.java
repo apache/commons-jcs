@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collections;
 
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
@@ -417,6 +418,31 @@ public class RemoteCacheServer
         }
     }
 
+    /**
+     * Gets the set of keys of objects currently in the group
+     */
+    public Set getGroupKeys(String cacheName, String group)
+    {
+        CacheListeners cacheDesc = null;
+        try
+        {
+            cacheDesc = getCacheListeners( cacheName );
+        }
+        catch ( Exception e )
+        {
+            log.error( e );
+        }
+
+        if ( cacheDesc == null )
+        {
+            return Collections.EMPTY_SET;
+        }
+        else
+        {
+            CompositeCache c = ( CompositeCache ) cacheDesc.cache;
+            return c.getGroupKeys(group);
+        }
+    }
 
     /** Removes the given key from the specified remote cache. */
     public void remove( String cacheName, Serializable key )

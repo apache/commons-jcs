@@ -2,6 +2,7 @@ package org.apache.jcs.auxiliary.lateral.behavior;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheService;
@@ -29,4 +30,5 @@ public interface ILateralCacheService extends ICacheService
     public void removeAll( String cacheName, byte requesterId )
         throws IOException;
 
+    public Set getGroupKeys(String cacheName, String groupName);
 }

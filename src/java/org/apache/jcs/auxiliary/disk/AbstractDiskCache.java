@@ -57,6 +57,7 @@ package org.apache.jcs.auxiliary.disk;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -252,6 +253,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         return null;
     }
 
+    public abstract Set getGroupKeys(String groupName);
+
     /**
      * @see org.apache.jcs.engine.behavior.ICache#remove
      */
@@ -260,7 +263,6 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         String keyAsString = key.toString();
 
         writeLock( keyAsString );
-
         try
         {
             // Remove element from purgatory if it is there

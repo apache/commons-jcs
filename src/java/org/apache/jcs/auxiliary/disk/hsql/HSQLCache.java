@@ -68,6 +68,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,6 +81,7 @@ import org.apache.jcs.utils.data.PropertyGroups;
  * HSQLDB Based Local Persistence.
  *
  * <b>VERY EXPERIMENTAL, and only partially implemented</b>
+ * Requires String keys and does not work with groups.
  *
  * @author Aaron Smuts
  * @created January 15, 2002
@@ -498,6 +500,14 @@ public class HSQLCache extends AbstractDiskCache
         return baos.toByteArray();
     }
 
+    public Set getGroupKeys(String groupName)
+    {
+        if (true) 
+        {
+            throw new UnsupportedOperationException("Groups not implemented.");
+        }        
+        return null;
+    }
 }
 
 

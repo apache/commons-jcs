@@ -1,6 +1,8 @@
 package org.apache.jcs.auxiliary.lateral;
 
 import java.io.Serializable;
+import java.util.Set;
+import java.util.Collections;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 
@@ -28,4 +30,8 @@ public class ZombieLateralCacheService extends ZombieCacheService implements ILa
     /** Description of the Method */
     public void removeAll( String cacheName, byte listenerId ) { }
 
+    public Set getGroupKeys(String cacheName, String groupName)
+    {
+        return Collections.EMPTY_SET;
+    }
 }

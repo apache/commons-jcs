@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -260,5 +262,26 @@ public abstract class AbstractMemoryCache
     public CompositeCache getCompositeCache()
     {
         return this.cache;
+    }
+
+    public Set getGroupKeys(String groupName)
+    {
+        GroupId groupId = new GroupId(getCacheName(), groupName);
+        HashSet keys = new HashSet();
+        synchronized ( map )
+        {
+            for (Iterator itr = map.entrySet().iterator(); itr.hasNext();)
+            {
+                Map.Entry entry = (Map.Entry) itr.next();
+                Object k = entry.getKey();
+
+                if ( k instanceof GroupAttrName
+                     && ((GroupAttrName)k).groupId.equals(groupId) )
+                {
+                    keys.add(((GroupAttrName)k).attrName);
+                }
+            }
+        }
+        return keys;
     }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
@@ -130,6 +131,11 @@ public class LateralCache implements ICache
             }
         }
         return obj;
+    }
+
+    public Set getGroupKeys(String groupName)
+    {
+        return lateral.getGroupKeys(cacheName, groupName);
     }
 
 

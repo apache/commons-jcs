@@ -2,6 +2,7 @@ package org.apache.jcs.auxiliary;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -42,4 +43,9 @@ public interface AuxiliaryCache extends ICache
 
     /** Returns the cache name. */
     public String getCacheName();
+
+    /**
+     * Gets the set of keys of objects currently in the group
+     */
+    public Set getGroupKeys(String group);
 }

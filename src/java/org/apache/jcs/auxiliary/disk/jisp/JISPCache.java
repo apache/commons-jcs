@@ -57,6 +57,7 @@ package org.apache.jcs.auxiliary.disk.jisp;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Set;
 
 import com.coyotegulch.jisp.BTreeIndex;
 import com.coyotegulch.jisp.IndexedObjectDatabase;
@@ -71,6 +72,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * JISP disk cache implementation. Slow as hell with this type of key.
  *
  * <b>VERY EXPERIMENTAL, and only partially implemented</b>
+ * Does not work with groups.
  *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @created January 15, 2002
@@ -276,6 +278,15 @@ public class JISPCache extends AbstractDiskCache
         }
 
         return element;
+    }
+
+    public Set getGroupKeys(String groupName)
+    {
+        if (true) 
+        {
+            throw new UnsupportedOperationException("Groups not implemented.");
+        }        
+        return null;
     }
 
     /**

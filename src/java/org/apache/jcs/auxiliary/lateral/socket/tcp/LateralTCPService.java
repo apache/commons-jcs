@@ -60,6 +60,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
@@ -79,6 +80,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A lateral cache service implementation.
+ * Does not implement getGroupKey
  *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @created January 15, 2002
@@ -194,6 +196,19 @@ public class LateralTCPService
         return sender.sendAndReceive( led );
         //return null;
         // nothing needs to be done
+    }
+
+    /**
+     * Gets the set of keys of objects currently in the group
+     * throws UnsupportedOperationException
+     */
+    public Set getGroupKeys(String cacheName, String group)
+    {
+        if (true) 
+        {
+            throw new UnsupportedOperationException("Groups not implemented.");
+        }        
+        return null;
     }
 
     /** */

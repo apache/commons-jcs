@@ -3,6 +3,7 @@ package org.apache.jcs.engine.memory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
@@ -135,4 +136,8 @@ public interface MemoryCache
      */
     public CompositeCache getCompositeCache();
 
+    /**
+     * Gets the set of keys of objects currently in the group
+     */
+    public Set getGroupKeys(String group);
 }

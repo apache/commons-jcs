@@ -17,6 +17,8 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
+import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
  * A SLOW AS HELL reference management system. The most recently used items move
@@ -307,6 +309,26 @@ public class MRUMemoryCache
                         Serializable keyR = ( ICacheElement ) entry.getKey();
                         map.remove( keyR );
                         mrulist.remove( keyR );
+                        removed = true;
+                    }
+                }
+            }
+        }
+        else if ( key instanceof GroupId )
+        {
+            // remove all keys of the same name hierarchy.
+            synchronized ( map )
+            {
+                for (Iterator itr = map.entrySet().iterator(); itr.hasNext();)
+                {
+                    Map.Entry entry = (Map.Entry) itr.next();
+                    Object k = entry.getKey();
+
+                    if ( k instanceof GroupAttrName
+                         && ((GroupAttrName)k).groupId.equals(key) )
+                    {
+                        itr.remove();
+                        mrulist.remove(k);
                         removed = true;
                     }
                 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 
@@ -161,6 +162,10 @@ public class RemoteCache implements ICache
         }
     }
 
+    public Set getGroupKeys(String groupName)
+    {
+        return remote.getGroupKeys(cacheName, groupName);
+    }
 
     /**
      * Wraps a non JDK object into a MarshalledObject, so that we can avoid

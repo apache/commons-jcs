@@ -60,6 +60,8 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,6 +71,8 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.locking.ReadWriteLock;
+import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory
@@ -359,6 +363,39 @@ public class IndexedDiskCache extends AbstractDiskCache
         return object;
     }
 
+    public Set getGroupKeys(String groupName)
+    {
+        GroupId groupId = new GroupId(cacheName, groupName);
+        HashSet keys = new HashSet();
+        try
+        {
+            storageLock.readLock();
+
+            for (Iterator itr = keyHash.keySet().iterator(); itr.hasNext();)
+            {
+                //Map.Entry entry = (Map.Entry) itr.next();
+                //Object k = entry.getKey();
+                Object k = itr.next();
+                if ( k instanceof GroupAttrName
+                     && ((GroupAttrName)k).groupId.equals(groupId) )
+                {
+                    keys.add(((GroupAttrName)k).attrName);
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failure getting from disk, cacheName: " + cacheName +
+                       ", group = " + groupName, e );
+        }
+        finally
+        {
+            storageLock.done();
+        }
+
+        return keys;
+    }
+
     /**
      * Returns true if the removal was succesful; or false if there is nothing
      * to remove. Current implementation always result in a disk orphan.
@@ -368,6 +405,7 @@ public class IndexedDiskCache extends AbstractDiskCache
      */
     public boolean doRemove( Serializable key )
     {
+        boolean removed = false;
         try
         {
             storageLock.writeLock();
@@ -376,7 +414,6 @@ public class IndexedDiskCache extends AbstractDiskCache
                  && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
-                boolean removed = false;
 
                 Iterator iter = keyHash.entrySet().iterator();
 
@@ -394,6 +431,23 @@ public class IndexedDiskCache extends AbstractDiskCache
                     }
                 }
                 return removed;
+            }
+            else if ( key instanceof GroupId )
+            {
+                // remove all keys of the same name hierarchy.
+                Iterator iter = keyHash.entrySet().iterator();
+                while ( iter.hasNext() )
+                {
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    Object k = entry.getKey();
+
+                    if ( k instanceof GroupAttrName
+                         && ((GroupAttrName)k).groupId.equals(key) )
+                    {
+                        iter.remove();
+                        removed = true;
+                    }
+                }
             }
             else
             {

@@ -59,7 +59,6 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 /**
  * Simple class for using JCS. To use JCS in your application, you can use the
@@ -122,9 +121,9 @@ public class JCS extends GroupCacheAccess
     }
 
     /**
-     * Gets an instance of GroupCacheHub and stores it in the cacheMgr class
+     * Gets an instance of CompositeCacheManager and stores it in the cacheMgr class
      * field, if it is not already set. Unlike the implementation in
-     * CacheAccess, the cache manager is a GroupCacheHub. NOTE: This can
+     * CacheAccess, the cache manager is a CompositeCacheManager. NOTE: This can
      * will be moved up into GroupCacheAccess.
      */
     protected static synchronized void ensureCacheManager()
@@ -133,11 +132,11 @@ public class JCS extends GroupCacheAccess
         {
             if ( configFilename == null )
             {
-                cacheMgr = GroupCacheHub.getInstance();
+                cacheMgr = CompositeCacheManager.getInstance();
             }
             else
             {
-                cacheMgr = GroupCacheHub.getUnconfiguredInstance();
+                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
 
                 cacheMgr.configure( configFilename );
             }

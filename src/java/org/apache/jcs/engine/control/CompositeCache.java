@@ -58,6 +58,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,6 +83,7 @@ import org.apache.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
 import org.apache.jcs.engine.control.event.ElementEventQueue;
+import org.apache.jcs.engine.control.group.GroupId;
 
 /**
  *  This is the primary hub for a single cache/region. It control the flow of
@@ -223,6 +226,11 @@ public class CompositeCache
         {
             throw new IllegalArgumentException( "key must not end with "
                  + CacheConstants.NAME_COMPONENT_DELIMITER
+                 + " for a put operation" );
+        }
+        else if ( ce.getKey() instanceof GroupId )
+        {
+            throw new IllegalArgumentException( "key cannot be a GroupId "
                  + " for a put operation" );
         }
 
@@ -438,6 +446,7 @@ public class CompositeCache
         return get( key, true );
     }
 
+
     /**
      *  Description of the Method
      *
@@ -650,6 +659,26 @@ public class CompositeCache
 
         return false;
     }
+
+
+    /**
+     * Gets the set of keys of objects currently in the group
+     */
+    public Set getGroupKeys(String group)
+    {
+        HashSet allKeys = new HashSet();
+        allKeys.addAll(memCache.getGroupKeys(group));
+        for ( int i = 0; i < auxCaches.length; i++ )
+        {
+            AuxiliaryCache aux = auxCaches[i];
+            if ( aux != null )
+            {
+                allKeys.addAll(aux.getGroupKeys(group));
+            }
+        }
+        return allKeys;
+    }
+
 
     /**
      * @see ICache#remove

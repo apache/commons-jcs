@@ -11,7 +11,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.CacheConstants;
 
 /**
@@ -38,7 +37,7 @@ public class MonitorAccess implements Serializable
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = GroupCacheHub.getInstance();
+                    cacheMgr = CompositeCacheManager.getInstance();
                 }
             }
         }
