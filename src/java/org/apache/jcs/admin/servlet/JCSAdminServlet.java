@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.memory.MemoryCache;
-import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.velocity.Template;
@@ -199,10 +199,10 @@ public class JCSAdminServlet extends VelocityServlet
 
         while ( iter.hasNext() )
         {
-            MemoryElementDescriptor node = ( MemoryElementDescriptor )
+            ICacheElement ce = (ICacheElement)
                 ( ( Map.Entry ) iter.next() ).getValue();
 
-            out.writeObject( node.ce.getVal() );
+            out.writeObject( ce.getVal() );
         }
 
         // 4 bytes lost for the serialization header

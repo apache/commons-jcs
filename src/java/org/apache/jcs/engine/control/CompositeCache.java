@@ -73,7 +73,6 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
 import org.apache.jcs.engine.memory.MemoryCache;
-import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 
 import org.apache.jcs.engine.control.event.ElementEvent;
@@ -802,14 +801,14 @@ public class CompositeCache
                             {
                                 Map.Entry entry = ( Map.Entry ) itr.next();
 
-                                MemoryElementDescriptor me = ( MemoryElementDescriptor ) entry.getValue();
+                                ICacheElement ce = (ICacheElement) entry.getValue();
                                 try
                                 {
-                                    if ( aux.getCacheType() == ICacheType.LATERAL_CACHE && !me.ce.getElementAttributes().getIsLateral() )
+                                    if ( aux.getCacheType() == ICacheType.LATERAL_CACHE && !ce.getElementAttributes().getIsLateral() )
                                     {
                                         continue;
                                     }
-                                    aux.update( me.ce );
+                                    aux.update( ce );
                                 }
                                 catch ( Exception e )
                                 {
@@ -868,9 +867,9 @@ public class CompositeCache
                         {
                             Map.Entry entry = ( Map.Entry ) itr.next();
 
-                            MemoryElementDescriptor me = ( MemoryElementDescriptor ) entry.getValue();
+                            ICacheElement ce = (ICacheElement) entry.getValue();
 
-                            aux.update( me.ce );
+                            aux.update(ce);
                         }
                     }
                 }

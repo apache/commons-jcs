@@ -16,8 +16,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.memory.MemoryCache;
-import org.apache.jcs.engine.memory.MemoryElementDescriptor;
-import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
+import org.apache.jcs.engine.memory.AbstractMemoryCache;
 
 /**
  * A SLOW AS HELL reference management system. The most recently used items move
@@ -26,20 +25,14 @@ import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
  *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @author <a href="mailto:jtaylor@apache.org">James Taylor</a>
+ * @author <a href="mailto:jmcnally@apache.org">John McNally</a>
  * @version $Id$
  */
 public class MRUMemoryCache
-    implements MemoryCache, Serializable
+    extends AbstractMemoryCache
 {
     private final static Log log =
         LogFactory.getLog( MRUMemoryCache.class );
-
-    String cacheName;
-
-    /**
-     * Storage of cache items.
-     */
-    protected HashMap map = new HashMap();
 
     /**
      * Description of the Field
@@ -51,60 +44,17 @@ public class MRUMemoryCache
      */
     protected LinkedList mrulist = new LinkedList();
 
-    // Region Elemental Attributes
     /**
-     * Description of the Field
-     */
-    public IElementAttributes attr;
-
-    // Cache Attributes
-    /**
-     * Description of the Field
-     */
-    public ICompositeCacheAttributes cattr;
-
-    // The HUB
-    CompositeCache cache;
-
-    // status
-    private int status;
-
-    // make configurable
-    private int chunkSize = 2;
-
-    /**
-     * The background memory shrinker
-     */
-    private ShrinkerThread shrinker;
-
-    /**
-     * Constructor for the LRUMemoryCache object
-     */
-    public MRUMemoryCache()
-    {
-        status = CacheConstants.STATUS_ERROR;
-    }
-
-    /**
-     * For post reflection creation initialization
+     *  For post reflection creation initialization
      *
-     * @param cache
+     *@param  hub
      */
-    public synchronized void initialize( CompositeCache cache )
+    public synchronized void initialize( CompositeCache hub )
     {
-        this.cacheName = cache.getCacheName();
-        this.cattr = cache.getCacheAttributes();
-        this.cache = cache;
-
-        status = CacheConstants.STATUS_ALIVE;
-
-        if ( cattr.getUseMemoryShrinker() && shrinker == null )
-        {
-            shrinker = new ShrinkerThread( this );
-            shrinker.setPriority( shrinker.MIN_PRIORITY );
-            shrinker.start();
-        }
+        super.initialize(hub);
+        log.info( "initialized MRUMemoryCache for " + cacheName );
     }
+
 
     /**
      * Puts an item to the cache.
@@ -115,7 +65,6 @@ public class MRUMemoryCache
     public void update( ICacheElement ce )
         throws IOException
     {
-
         Serializable key = ce.getKey();
         ce.getElementAttributes().setLastAccessTimeNow();
 
@@ -192,12 +141,8 @@ public class MRUMemoryCache
                 ex.printStackTrace();
                 throw new IllegalStateException( ex.getMessage() );
             }
-
         }
-
     }
-
-
 
     /**
      * Get an item from the cache without affecting its last access
@@ -210,7 +155,6 @@ public class MRUMemoryCache
     public ICacheElement getQuiet( Serializable key )
         throws IOException
     {
-
         ICacheElement ce = null;
 
         try
@@ -237,9 +181,7 @@ public class MRUMemoryCache
         }
 
         return ce;
-
     }
-
 
     /**
      * Description of the Method
@@ -251,7 +193,6 @@ public class MRUMemoryCache
     public ICacheElement get( Serializable key )
         throws IOException
     {
-
         ICacheElement ce = null;
         boolean found = false;
 
@@ -340,7 +281,6 @@ public class MRUMemoryCache
     public boolean remove( Serializable key )
         throws IOException
     {
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "remove> key=" + key );
@@ -391,97 +331,6 @@ public class MRUMemoryCache
     }
 
     /**
-     * Removes all cached items from the cache.
-     *
-     * @exception IOException
-     */
-    public void removeAll()
-        throws IOException
-    {
-        map = new HashMap();
-    }
-
-    /**
-     * Prepares for shutdown.
-     *
-     * @exception IOException
-     */
-    public void dispose()
-        throws IOException
-    {
-    }
-
-    /**
-     * Returns the cache statistics.
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        return "";
-    }
-
-    /**
-     * Returns the current cache size.
-     *
-     * @return The size value
-     */
-    public int getSize()
-    {
-        return this.map.size();
-    }
-
-    /**
-     * Returns the cache status.
-     *
-     * @return The status value
-     */
-    public int getStatus()
-    {
-        return this.status;
-        //return this.STATUS_ALIVE;
-    }
-
-    /**
-     * Returns the cache name.
-     *
-     * @return The cacheName value
-     */
-    public String getCacheName()
-    {
-        return this.cattr.getCacheName();
-    }
-
-    /**
-     * Puts an item to the cache.
-     *
-     * @param me
-     * @exception IOException
-     */
-//    public void waterfal( MemoryElementDescriptor me )
-//        throws IOException
-//    {
-//        this.cache.spoolToDisk( me.ce );
-//    }
-    public void waterfal( ICacheElement ce )
-        throws IOException
-    {
-        this.cache.spoolToDisk( ce );
-    }
-
-    /**
-     * Gets the iterator attribute of the LRUMemoryCache object
-     *
-     * @return The iterator value
-     */
-    public Iterator getIterator()
-    {
-        //return Collections.enumeration(map.entrySet());
-        return map.entrySet().iterator();
-    }
-
-
-    /**
      * Get an Array of the keys for all elements in the memory cache
      *
      * @return Object[]
@@ -496,37 +345,6 @@ public class MRUMemoryCache
     }
 
     /**
-     * Returns the CacheAttributes.
-     *
-     * @return The CacheAttributes value
-     */
-    public ICompositeCacheAttributes getCacheAttributes()
-    {
-        return this.cattr;
-    }
-
-    /**
-     * Sets the CacheAttributes.
-     *
-     * @param cattr The new CacheAttributes value
-     */
-    public void setCacheAttributes( ICompositeCacheAttributes cattr )
-    {
-        this.cattr = cattr;
-    }
-
-    /**
-     *  Gets the cache hub / region taht the MemoryCache is used by
-     *
-     *@return    The cache value
-     */
-    public CompositeCache getCompositeCache()
-    {
-        return this.cache;
-    }
-
-
-    /**
      * Dump the cache map for debugging.
      */
     public void dumpMap()
@@ -536,10 +354,10 @@ public class MRUMemoryCache
         {
             //for ( Iterator itr = memCache.getIterator(); itr.hasNext();) {
             Map.Entry e = ( Map.Entry ) itr.next();
-            MemoryElementDescriptor me = ( MemoryElementDescriptor ) e.getValue();
-            log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
-        }
-    }
+            ICacheElement ce = ( ICacheElement ) e.getValue();
+            log.debug( "dumpMap> key=" + e.getKey() + ", val=" + ce.getVal() );
+         }
+     }
 
     /**
      * Dump the cache entries from first to list for debugging.

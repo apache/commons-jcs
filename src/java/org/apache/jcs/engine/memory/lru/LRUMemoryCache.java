@@ -16,8 +16,9 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.memory.MemoryCache;
-import org.apache.jcs.engine.memory.MemoryElementDescriptor;
-import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
+import org.apache.jcs.engine.memory.AbstractMemoryCache;
+import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
  *  A fast reference management system. The least recently used items move to
@@ -32,60 +33,19 @@ import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
  *
  *@author     <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  *@author     <a href="mailto:jtaylor@apache.org">James Taylor</a>
+ *@author     <a href="mailto:jmcnally@apache.org">John McNally</a>
  *@created    May 13, 2002
  *@version    $Id$
  */
-public class LRUMemoryCache implements MemoryCache, Serializable
+public class LRUMemoryCache
+    extends AbstractMemoryCache
 {
     private final static Log log =
         LogFactory.getLog( LRUMemoryCache.class );
 
-    String cacheName;
-
-    /**
-     *  Map where items are stored by key
-     */
-    protected Map map = new Hashtable();
-
     // LRU double linked list head/tail nodes
     private MemoryElementDescriptor first;
     private MemoryElementDescriptor last;
-
-    private int max;
-
-    /**
-     *  Region Elemental Attributes, used as a default.
-     */
-    public IElementAttributes attr;
-
-    /**
-     *  Cache Attributes
-     */
-    public ICompositeCacheAttributes cattr;
-
-    /**
-     *  The cache region this store is associated with
-     */
-    CompositeCache cache;
-
-    // status
-    private int status = CacheConstants.STATUS_ERROR;
-
-    // make configurable
-    private int chunkSize = 2;
-
-    /**
-     *  The background memory shrinker
-     */
-    private ShrinkerThread shrinker;
-
-    /**
-     *  Constructor for the LRUMemoryCache object
-     */
-    public LRUMemoryCache()
-    {
-        status = CacheConstants.STATUS_ERROR;
-    }
 
     /**
      *  For post reflection creation initialization
@@ -94,21 +54,8 @@ public class LRUMemoryCache implements MemoryCache, Serializable
      */
     public synchronized void initialize( CompositeCache hub )
     {
-        this.cacheName = hub.getCacheName();
-        this.cattr = hub.getCacheAttributes();
-        this.max = this.cattr.getMaxObjects();
-        this.cache = hub;
-
-        status = CacheConstants.STATUS_ALIVE;
-
+        super.initialize(hub);
         log.info( "initialized LRUMemoryCache for " + cacheName );
-
-        if ( cattr.getUseMemoryShrinker() && shrinker == null )
-        {
-            shrinker = new ShrinkerThread( this );
-            shrinker.setPriority( shrinker.MIN_PRIORITY );
-            shrinker.start();
-        }
     }
 
     /**
@@ -214,6 +161,7 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         return ce;
     }
 
+
     /**
      *  Get an item from the cache
      *
@@ -298,6 +246,31 @@ public class LRUMemoryCache implements MemoryCache, Serializable
                 }
             }
         }
+        /*
+        else if ( key instanceof GroupId )
+        {
+            // remove all keys of the same name hierarchy.
+            synchronized ( map )
+            {
+                for (Iterator itr = map.entrySet().iterator(); itr.hasNext();)
+                {
+                    Map.Entry entry = (Map.Entry) itr.next();
+                    Object k = entry.getKey();
+
+                    if ( k instanceof GroupAttrName
+                         && ((GroupAttrName)k).groupId.equals(key) )
+                    {
+                        itr.remove();
+
+                        removeNode( ( MemoryElementDescriptor )
+                            entry.getValue() );
+
+                        removed = true;
+                    }
+                }
+            }
+        }
+        */
         else
         {
             // remove single item.
@@ -314,65 +287,37 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         return removed;
     }
 
-    /**
-     *  Removes all cached items from the cache.
-     *
-     *@exception  IOException
-     */
-    public void removeAll()
-        throws IOException
+    public class IteratorWrapper
+        implements Iterator
     {
-        map = new HashMap();
+        private final Iterator i;
+        private IteratorWrapper(Map m)
+        {
+            i = m.entrySet().iterator();
+        }
+        public boolean hasNext()
+        {
+            return i.hasNext();
+        }
+        public Object next()
+        {
+            return ((MemoryElementDescriptor)i.next()).ce;
+        }
+        public void remove()
+        {
+            i.remove();
+        } 
     }
 
     /**
-     *  Prepares for shutdown.
+     * Gets the iterator attribute of the LRUMemoryCache object
      *
-     *@exception  IOException
-     */
-    public void dispose()
-        throws IOException { }
-
-    /**
-     *  Returns the current cache size.
-     *
-     *@return    The size value
-     */
-    public int getSize()
-    {
-        return this.map.size();
-    }
-
-    /**
-     *  Returns the cache status.
-     *
-     *@return    The status value
-     */
-    public int getStatus()
-    {
-        return this.status;
-    }
-
-    /**
-     *  Returns the cache name.
-     *
-     *@return    The cacheName value
-     */
-    public String getCacheName()
-    {
-        return this.cattr.getCacheName();
-    }
-
-    /**
-     *  Gets the iterator attribute of the LRUMemoryCache object
-     *
-     *@return    The iterator value
+     * @return The iterator value
      */
     public Iterator getIterator()
     {
-        return map.entrySet().iterator();
+        return new IteratorWrapper(map);
     }
-
 
     /**
      *  Get an Array of the keys for all elements in the memory cache
@@ -387,50 +332,6 @@ public class LRUMemoryCache implements MemoryCache, Serializable
             // may need to lock to map here?
             return map.keySet().toArray();
         }
-    }
-
-    /**
-     *  Puts an item to the cache.
-     *
-     *@param  ce               Description of the Parameter
-     *@exception  IOException
-     */
-    public void waterfal( ICacheElement ce )
-        throws IOException
-    {
-        this.cache.spoolToDisk( ce );
-    }
-
-
-    /**
-     *  Returns the CacheAttributes.
-     *
-     *@return    The CacheAttributes value
-     */
-    public ICompositeCacheAttributes getCacheAttributes()
-    {
-        return this.cattr;
-    }
-
-    /**
-     *  Sets the CacheAttributes.
-     *
-     *@param  cattr  The new CacheAttributes value
-     */
-    public void setCacheAttributes( ICompositeCacheAttributes cattr )
-    {
-        this.cattr = cattr;
-    }
-
-
-    /**
-     *  Gets the cache hub / region taht the MemoryCache is used by
-     *
-     *@return    The cache value
-     */
-    public CompositeCache getCompositeCache()
-    {
-        return this.cache;
     }
 
 
@@ -577,19 +478,16 @@ public class LRUMemoryCache implements MemoryCache, Serializable
     // ---------------------------------------------------------- debug methods
 
     /**
-     *  Dump the cache map for debugging.
+     * Dump the cache map for debugging.
      */
     public void dumpMap()
     {
         log.debug( "dumpingMap" );
-        for ( Iterator itr = map.entrySet().iterator(); itr.hasNext();  )
+        for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
         {
-            //for ( Iterator itr = memCache.getIterator(); itr.hasNext();) {
             Map.Entry e = ( Map.Entry ) itr.next();
-            MemoryElementDescriptor me =
-                ( MemoryElementDescriptor ) e.getValue();
-            log.debug( "dumpMap> key=" + e.getKey()
-                 + ", val=" + me.ce.getVal() );
+            MemoryElementDescriptor me = ( MemoryElementDescriptor ) e.getValue();
+            log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
         }
     }
 
@@ -604,5 +502,26 @@ public class LRUMemoryCache implements MemoryCache, Serializable
             log.debug( "dumpCacheEntries> key="
                  + me.ce.getKey() + ", val=" + me.ce.getVal() );
         }
+    }
+}
+
+/**
+ * needed for memory cache element LRU linked lisk
+ */
+class MemoryElementDescriptor implements Serializable
+{
+    /** Description of the Field */
+    public MemoryElementDescriptor prev, next;
+    /** Description of the Field */
+    public ICacheElement ce;
+
+    /**
+     * Constructor for the MemoryElementDescriptor object
+     *
+     * @param ce
+     */
+    public MemoryElementDescriptor( ICacheElement ce )
+    {
+        this.ce = ce;
     }
 }
