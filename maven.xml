@@ -12,6 +12,11 @@
   </preGoal>
 
 
+  <postGoal name="java:compile" >
+      <attainGoal name="rmic"/>
+  </postGoal>
+
+
   <goal name="rmic" xmlns:j="jelly:core" xmlns:u="jelly:util">
 
     <property
