@@ -58,10 +58,6 @@ package org.apache.jcs.utils.threads;
  * [Additional notices, if required by prior licensing conditions]
  *
  */
-import java.util.zip.*;
-import java.net.*;
-import java.util.*;
-import java.io.*;
 
 /**
  * Implemented if you want to run a piece of code inside a thread pool. * A

@@ -1,13 +1,10 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.io.Serializable;
 
 import java.net.InetAddress;

@@ -55,7 +55,6 @@ package org.apache.jcs.auxiliary.disk.jisp;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
 

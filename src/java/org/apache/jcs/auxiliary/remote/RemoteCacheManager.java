@@ -3,7 +3,6 @@ package org.apache.jcs.auxiliary.remote;
 import java.io.IOException;
 
 import java.rmi.Naming;
-import java.rmi.Remote;
 import java.rmi.registry.Registry;
 
 import java.util.HashMap;
@@ -26,8 +25,6 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
-
-import org.apache.jcs.engine.CacheWatchRepairable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

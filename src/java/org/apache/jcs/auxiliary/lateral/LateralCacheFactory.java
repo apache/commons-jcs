@@ -9,10 +9,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
-
-//import org.apache.jcs.auxiliary.*;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each

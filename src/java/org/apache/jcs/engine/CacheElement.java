@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
-import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**

@@ -1,7 +1,6 @@
 package org.apache.jcs.auxiliary.remote.server;
 
 import java.rmi.Naming;
-import java.rmi.Remote;
 
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;

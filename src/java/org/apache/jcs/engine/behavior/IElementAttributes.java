@@ -55,8 +55,6 @@ package org.apache.jcs.engine.behavior;
  */
 import java.util.ArrayList;
 
-import org.apache.jcs.access.exception.InvalidArgumentException;
-
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**

@@ -60,9 +60,6 @@ import org.apache.jcs.auxiliary.disk.hsql.HSQLCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheManager;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

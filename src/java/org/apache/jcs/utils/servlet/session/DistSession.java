@@ -3,7 +3,6 @@ package org.apache.jcs.utils.servlet.session;
 import java.io.Serializable;
 
 import java.util.Enumeration;
-import java.util.Set;
 import java.util.Collections;
 
 import javax.servlet.ServletContext;

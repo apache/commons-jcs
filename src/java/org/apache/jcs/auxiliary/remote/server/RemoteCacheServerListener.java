@@ -3,7 +3,6 @@ package org.apache.jcs.auxiliary.remote.server;
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import java.rmi.server.UnicastRemoteObject;

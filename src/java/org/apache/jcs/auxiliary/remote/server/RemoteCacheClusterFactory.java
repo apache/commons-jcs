@@ -1,8 +1,5 @@
 package org.apache.jcs.auxiliary.remote.server;
 
-import java.util.*;
-
-//import org.apache.jcs.auxiliary.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -11,12 +8,10 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 import org.apache.jcs.auxiliary.remote.RemoteCacheAttributes;
-import org.apache.jcs.auxiliary.remote.RemoteCacheFactory;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWaitFacade;
 
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 
 import org.apache.commons.logging.Log;

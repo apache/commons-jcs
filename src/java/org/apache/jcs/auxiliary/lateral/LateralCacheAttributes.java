@@ -1,14 +1,8 @@
 package org.apache.jcs.auxiliary.lateral;
 
 import java.io.Serializable;
-
-import java.util.ArrayList;
-
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-
-//import org.apache.jcs.auxiliary.*;
 
 /**
  * Description of the Class
@@ -18,7 +12,6 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
  */
 public class LateralCacheAttributes implements Serializable, ILateralCacheAttributes
 {
-
     String transmissionTypeName = "UDP";
     int transmissionType = UDP;
 

@@ -2,13 +2,9 @@ package org.apache.jcs.engine;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-
-import org.apache.jcs.access.exception.InvalidArgumentException;
 
 /*
  * The Apache Software License, Version 1.1

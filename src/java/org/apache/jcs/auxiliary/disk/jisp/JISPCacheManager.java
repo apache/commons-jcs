@@ -14,7 +14,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.engine.behavior.ICache;
 
 /**
  * Description of the Class

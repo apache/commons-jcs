@@ -2,7 +2,6 @@ package org.apache.jcs.engine.memory.mru;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -12,10 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.control.group.GroupAttrName;

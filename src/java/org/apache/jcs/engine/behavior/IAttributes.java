@@ -1,7 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-import org.apache.jcs.access.exception.InvalidArgumentException;
-
 /**
  * Description of the Interface
  *

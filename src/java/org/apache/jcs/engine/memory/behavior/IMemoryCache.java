@@ -10,8 +10,6 @@ import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 
-import org.apache.jcs.engine.control.CompositeCache;
-
 /**
  *  For the framework. Insures methods a MemoryCache needs to access.
  *

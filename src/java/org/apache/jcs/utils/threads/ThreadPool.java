@@ -62,10 +62,7 @@ package org.apache.jcs.utils.threads;
  * [Additional notices, if required by prior licensing conditions]
  *
  */
-import java.util.zip.*;
-import java.net.*;
 import java.util.*;
-import java.io.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -53,12 +53,9 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import java.io.*;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Serializable;
 import java.util.Set;
 

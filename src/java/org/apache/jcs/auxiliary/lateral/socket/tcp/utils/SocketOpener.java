@@ -54,7 +54,6 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp.utils;
  * <http://www.apache.org/>.
  */
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.Socket;
 
 /**

@@ -2,15 +2,12 @@ package org.apache.jcs.engine;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 
 import java.util.ArrayList;
 
-import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /*

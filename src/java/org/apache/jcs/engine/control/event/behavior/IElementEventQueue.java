@@ -2,11 +2,9 @@
 package org.apache.jcs.engine.control.event.behavior;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 
 
 /**
