@@ -678,9 +678,9 @@ public class Cache
                 if ( maxLifeSeconds != -1
                      && ( now - createTime ) > ( maxLifeSeconds * 1000 ) )
                 {
-                    if ( log.isInfoEnabled() )
+                    if ( log.isDebugEnabled() )
                     {
-                        log.info( "Exceeded maxLife: " + element.getKey() );
+                        log.debug( "Exceeded maxLife: " + element.getKey() );
                     }
 
                     remove( key );

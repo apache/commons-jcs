@@ -258,18 +258,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
         purgatory.remove( key );
 
-        // Queue removal for persistent store
+        // Remove from persistent store immediately
 
-        try
-        {
-            cacheEventQueue.addRemoveEvent( key );
-        }
-        catch ( IOException e )
-        {
-            log.error( e );
-
-            cacheEventQueue.destroy();
-        }
+        doRemove( key );
 
         return false;
     }
@@ -283,18 +274,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
         purgatory = new Hashtable();
 
-        // Queue a remove all for the persistent store
+        // Remove all from persistent store immediately
 
-        try
-        {
-            cacheEventQueue.addRemoveAllEvent();
-        }
-        catch ( IOException e )
-        {
-            log.error( e );
-
-            cacheEventQueue.destroy();
-        }
+        doRemoveAll();
     }
 
     /**

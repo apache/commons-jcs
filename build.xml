@@ -21,7 +21,7 @@
 
     <!-- Copy test config files to the test build dir -->
 
-    <copy todir="target/classes">
+    <copy todir="target/test-classes">
         <fileset dir="src/test-conf"/>
     </copy>
 
@@ -51,7 +51,7 @@
   </target>
 
   <target
-    name="maven:install-jar" depends="jcs:test-prepare">
+    name="maven:install-jar">
     <ant antfile="${maven.home}/build-maven.xml" target="install-jar"/>
   </target>
 
@@ -71,7 +71,7 @@
   </target>
 
   <target
-    name="maven:run-singletest">
+    name="maven:run-singletest" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-test.xml" target="run-singletest"/>
   </target>
 
@@ -86,7 +86,7 @@
   </target>
 
   <target
-    name="maven:dist">
+    name="maven:dist" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-maven.xml" target="dist"/>
   </target>
 
@@ -106,7 +106,7 @@
   </target>
 
   <target
-    name="maven:compile">
+    name="maven:compile" depends="jcs:test-prepare">
     <ant antfile="${maven.home}/build-maven.xml" target="compile"/>
   </target>
 

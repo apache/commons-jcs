@@ -135,24 +135,6 @@ public class TestDiskCache extends TestCase
         JCS.setConfigFilename( "/TestDiskCache.ccf" );
     }
 
-//    /**
-//     * Tests the region which uses the indexed disk cache
-//     */
-//    public void testIndexedDiskCache()
-//        throws Exception
-//    {
-//        runTestForRegion( "indexedRegion" );
-//    }
-//
-//    /**
-//     * Tests the region which uses the indexed disk cache
-//     */
-//    public void testIndexedDiskCache2()
-//        throws Exception
-//    {
-//        runTestForRegion( "indexedRegion2" );
-//    }
-
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
@@ -186,7 +168,7 @@ public class TestDiskCache extends TestCase
 
         for ( int i = 0; i <= items; i++ )
         {
-            jcs.destroy( i + ":key" );
+            jcs.remove( i + ":key" );
         }
 
         // Verify removal
