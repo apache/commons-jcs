@@ -180,7 +180,7 @@ public class TestDiskCacheConcurrent extends TestCase
 
         for ( int i = start; i <= end; i++ )
         {
-            jcs.destroy( i + ":key" );
+            jcs.remove( i + ":key" );
         }
 
         // Verify removal
