@@ -27,8 +27,18 @@ import java.io.Serializable;
  */
 public interface AuxiliaryCacheAttributes extends Cloneable, Serializable
 {
-
-    /**
+  
+  /**
+   * Does not use a thread pool.  
+   */
+  public static final String SINGLE_QUEUE_TYPE = "SINGLE";
+  
+  /**
+   * Uses a thread pool
+   */
+  public static final String POOLED_QUEUE_TYPE = "POOLED";   
+  
+  /**
      * Sets the name of the cache, referenced by the appropriate manager.
      *
      * @param s The new cacheName value
@@ -59,7 +69,46 @@ public interface AuxiliaryCacheAttributes extends Cloneable, Serializable
      */
     public String getName();
 
+    /**
+     * SINGLE is the default.  If you choose POOLED, the value of EventQueuePoolName will be used
+     * 
+     * @param s SINGLE or POOLED
+     * @return
+     */
+    public void setEventQueueType( String s );
 
+    /**
+     * 
+     * @return  SINGLE or POOLED
+     */
+    public String getEventQueueType();
+    
+
+    /**
+     * Returns the value used by the factory.
+     * 
+     * @return
+     */
+    public int getEventQueueTypeFactoryCode();
+
+    /**
+     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used.
+     * This is ignored if the pool type is SINGLE
+     * 
+     * @param s SINGLE or POOLED
+     * @return
+     */
+    public void setEventQueuePoolName( String s );
+
+    /**
+     * Sets the pool name to use.  If a pool is not found by this name, the
+     * thread pool manager will return a default configuration.
+     * 
+     * @return name of thread pool to use for this auxiliary
+     */
+    public String getEventQueuePoolName();
+
+    
     /** Description of the Method */
     public AuxiliaryCacheAttributes copy();
 

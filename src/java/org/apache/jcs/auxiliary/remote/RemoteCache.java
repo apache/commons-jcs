@@ -21,36 +21,29 @@ package org.apache.jcs.auxiliary.remote;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-
-import org.apache.jcs.access.exception.ObjectNotFoundException;
-
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheConstants;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.jcs.access.exception.ObjectNotFoundException;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IZombie;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.jcs.utils.threadpool.ThreadPool;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
 import EDU.oswego.cs.dl.util.concurrent.Callable;
 import EDU.oswego.cs.dl.util.concurrent.FutureResult;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 /**
  * Client proxy for an RMI remote cache.
@@ -67,7 +60,7 @@ public class RemoteCache implements ICache
 
     IElementAttributes attr = null;
 
-    private PooledExecutor pool = null;
+    private ThreadPool pool = null;
     private boolean usePoolForGet = false;
 
     /** Description of the Method */
@@ -448,12 +441,12 @@ public class RemoteCache implements ICache
       {
     	se = new StatElement();
        	se.setName( "Pool Size" );
-    	se.setData("" + pool.getPoolSize() );
+    	se.setData("" + pool.getPool().getPoolSize() );
     	elems.add(se);
 
     	se = new StatElement();
     	se.setName( "Maximum Pool Size" );
-    	se.setData("" + pool.getMaximumPoolSize() );
+    	se.setData("" + pool.getPool().getMaximumPoolSize() );
     	elems.add(se);
       }
 
@@ -538,4 +531,12 @@ public class RemoteCache implements ICache
         }
         throw new IOException( ex.getMessage() );
     }
+    
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+      return irca;
+    }    
 }

@@ -18,6 +18,7 @@ package org.apache.jcs.auxiliary.javagroups;
  */
 
 
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
@@ -44,11 +45,9 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
  *
  * @version $Id$
  */
-public class JavaGroupsCacheAttributes implements AuxiliaryCacheAttributes
+public class JavaGroupsCacheAttributes extends AbstractAuxiliaryCacheAttributes 
+	implements AuxiliaryCacheAttributes
 {
-    private String cacheName;
-    private String name;
-
     private String channelFactoryClassName = "org.jgroups.JChannelFactory";
     private String channelProperties = null;
     private boolean getFromPeers = false;
@@ -83,40 +82,7 @@ public class JavaGroupsCacheAttributes implements AuxiliaryCacheAttributes
         this.getFromPeers = getFromPeers;
     }
 
-    // ----------------------------------------------- AuxiliaryCacheAttributes
-
-    /**
-     * Accessor for cacheName property.
-     */
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
-
-    /**
-     * Mutator for cacheName property.
-     */
-    public void setCacheName( String s )
-    {
-        this.cacheName = s;
-    }
-
-    /**
-     * Accessor for name property.
-     */
-    public String getName()
-    {
-        return this.name;
-    }
-
-    /**
-     * Mutator for name property.
-     */
-    public void setName( String name )
-    {
-        this.name = name;
-    }
-
+    
     /**
      * Return a copy of this JavaGroupsCacheAttributes, cast to an
      * AuxiliaryCacheAttributes

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 
@@ -56,7 +57,7 @@ public class LateralCache implements ICache
     // not synchronized to maximize concurrency.
 
     // generalize this, use another interface
-    ILateralCacheAttributes cattr;
+    public ILateralCacheAttributes cattr;
 
     final String cacheName;
 
@@ -87,14 +88,14 @@ public class LateralCache implements ICache
         this.cacheName = cattr.getCacheName();
         //this.servers = servers;
 
-        this.cattr = cattr;
+        this.cattr =  cattr ;
     }
 
 
     /** Description of the Method */
     public String toString()
     {
-        return "LateralCache: " + cattr.getCacheName();
+        return "LateralCache: " + this.cattr.getCacheName();
     }
 
     /** Description of the Method */
@@ -129,7 +130,7 @@ public class LateralCache implements ICache
     {
         ICacheElement obj = null;
 
-        if ( cattr.getPutOnlyMode() )
+        if ( this.cattr.getPutOnlyMode() )
         {
             return null;
         }
@@ -140,7 +141,7 @@ public class LateralCache implements ICache
         catch ( Exception e )
         {
             log.error( e );
-            handleException( e, "Failed to get " + key + " from " + cattr.getCacheName() );
+            handleException( e, "Failed to get " + key + " from " + this.cattr.getCacheName() );
         }
     return obj;
     }
@@ -168,7 +169,7 @@ public class LateralCache implements ICache
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove " + key + " from " + cattr.getCacheName() );
+            handleException( ex, "Failed to remove " + key + " from " + this.cattr.getCacheName() );
         }
         return false;
     }
@@ -189,7 +190,7 @@ public class LateralCache implements ICache
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove all from " + cattr.getCacheName() );
+            handleException( ex, "Failed to remove all from " + this.cattr.getCacheName() );
         }
     }
 
@@ -205,13 +206,13 @@ public class LateralCache implements ICache
         // asmuts -- Added functionality to help with warnings.  I'm not getting any.
         try
         {
-            lateral.dispose( cattr.getCacheName() );
+            lateral.dispose( this.cattr.getCacheName() );
             // Should remove connection
         }
         catch ( Exception ex )
         {
             log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose " + cattr.getCacheName() );
+            handleException( ex, "Failed to dispose " + this.cattr.getCacheName() );
         }
         //*/
     }
@@ -296,5 +297,13 @@ public class LateralCache implements ICache
   public String getStats()
   {
     return "";
+  }
+
+  /**
+   * @return Returns the AuxiliaryCacheAttributes.
+   */
+  public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+  {
+    return cattr;
   }
 }

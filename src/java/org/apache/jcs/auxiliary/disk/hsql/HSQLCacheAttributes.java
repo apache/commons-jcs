@@ -18,17 +18,16 @@ package org.apache.jcs.auxiliary.disk.hsql;
  */
 
 
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Description of the Class
  *
  */
-public class HSQLCacheAttributes implements AuxiliaryCacheAttributes
+public class HSQLCacheAttributes extends AbstractAuxiliaryCacheAttributes 
+	implements AuxiliaryCacheAttributes
 {
-
-    private String cacheName;
-    private String name;
 
     private String diskPath;
 
@@ -55,46 +54,6 @@ public class HSQLCacheAttributes implements AuxiliaryCacheAttributes
     public String getDiskPath()
     {
         return this.diskPath;
-    }
-
-    /**
-     * Sets the cacheName attribute of the HSQLCacheAttributes object
-     *
-     * @param s The new cacheName value
-     */
-    public void setCacheName( String s )
-    {
-        this.cacheName = s;
-    }
-
-    /**
-     * Gets the cacheName attribute of the HSQLCacheAttributes object
-     *
-     * @return The cacheName value
-     */
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
-
-    /**
-     * Gets the name attribute of the HSQLCacheAttributes object
-     *
-     * @return The name value
-     */
-    public String getName()
-    {
-        return this.name;
-    }
-
-    /**
-     * Sets the name attribute of the HSQLCacheAttributes object
-     *
-     * @param name The new name value
-     */
-    public void setName( String name )
-    {
-        this.name = name;
     }
 
     /** Description of the Method */

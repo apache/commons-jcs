@@ -26,8 +26,11 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
+import EDU.oswego.cs.dl.util.concurrent.Channel;
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 /**
@@ -69,7 +72,9 @@ public class ThreadPoolManager
 
   // DEFAULT SETTINGS, these are not final since they can be set
   // via the Propeties file or object
-  private static int               boundarySize_DEFAULT     = 75;
+  private static boolean          useBoundary_DEFAULT     = true;
+
+  private static int               boundarySize_DEFAULT     = 2000;
 
   private static int               maximumPoolSize_DEFAULT  = 150;
 
@@ -77,7 +82,7 @@ public class ThreadPoolManager
 
   private static int               keepAliveTime_DEFAULT    = 1000 * 60 * 5;
 
-  private static boolean           abortWhenBlocked_DEFAULT = false;
+  private static String            whenBlockedPolicy_DEFAULT = IPoolConfiguration.POLICY_RUN;
 
   private static int               startUpSize_DEFAULT      = 4;
 
@@ -115,26 +120,60 @@ public class ThreadPoolManager
    * Creates a pool based on the configuration info.
    *
    * @param config
-   * @return
+   * @return  A ThreadPoll wrapper
    */
-  private PooledExecutor createPool( PoolConfiguration config )
+  private ThreadPool createPool( PoolConfiguration config )
   {
-
-    PooledExecutor pool = new PooledExecutor( new BoundedBuffer( config
-        .getBoundarySize() ), config.getMaximumPoolSize() );
+    PooledExecutor pool = null;
+    Channel queue = null;
+    if ( config.isUseBoundary() )
+    {
+      if ( log.isDebugEnabled() )
+      {
+        log.debug( "Creating a Bounded Buffer to use for the pool" );
+      }
+      queue = new BoundedBuffer( config.getBoundarySize() );
+      pool = new PooledExecutor( queue , config.getMaximumPoolSize() );      
+    }
+    else 
+    {
+      if ( log.isDebugEnabled() )
+      {
+        log.debug( "Creating a non bounded Linked Queue to use for the pool" );
+      }
+      queue = new LinkedQueue();
+      pool = new PooledExecutor( queue , config.getMaximumPoolSize() );            
+    }
+    
     pool.setMinimumPoolSize( config.getMinimumPoolSize() );
     pool.setKeepAliveTime( config.getKeepAliveTime() );
-    if (config.isAbortWhenBlocked())
+    
+    // when blocked policy
+    if (config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_ABORT))
     {
       pool.abortWhenBlocked();
     }
-    else
+    else if (config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_RUN))
     {
       pool.runWhenBlocked();
     }
+    else if (config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_WAIT))
+    {
+      pool.waitWhenBlocked();
+    }
+    else if (config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_ABORT))
+    {
+      pool.abortWhenBlocked();
+    }
+    else if (config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_DISCARDOLDEST))
+    {
+      pool.discardOldestWhenBlocked();
+    }
+    
+    
     pool.createThreads( config.getStartUpSize() );
 
-    return pool;
+    return new ThreadPool( pool, queue );
   }
 
   /**
@@ -164,13 +203,13 @@ public class ThreadPoolManager
    * @param name
    * @return
    */
-  public PooledExecutor getPool( String name )
+  public ThreadPool getPool( String name )
   {
-    PooledExecutor pool = null;
+    ThreadPool pool = null;
 
     synchronized (pools)
     {
-      pool = (PooledExecutor) pools.get( name );
+      pool = (ThreadPool) pools.get( name );
       if (pool == null)
       {
         if (log.isDebugEnabled())
@@ -311,9 +350,9 @@ public class ThreadPoolManager
 
     // set intial default and then override if new
     // settings are available
-    defaultConfig = new PoolConfiguration( boundarySize_DEFAULT,
+    defaultConfig = new PoolConfiguration( useBoundary_DEFAULT, boundarySize_DEFAULT,
         maximumPoolSize_DEFAULT, minimumPoolSize_DEFAULT,
-        keepAliveTime_DEFAULT, abortWhenBlocked_DEFAULT, startUpSize_DEFAULT );
+        keepAliveTime_DEFAULT, whenBlockedPolicy_DEFAULT, startUpSize_DEFAULT );
 
     defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT );
 
@@ -327,6 +366,19 @@ public class ThreadPoolManager
   {
 
     PoolConfiguration config = (PoolConfiguration) defaultConfig.clone();
+
+    if (props.containsKey( root + ".useBoundary" ))
+    {
+      try
+      {
+        config.setUseBoundary( Boolean.getBoolean( (String) props
+            .get( root + ".useBoundary" ) ) );
+      }
+      catch (NumberFormatException nfe)
+      {
+        log.error( "useBoundary not a boolean.", nfe );
+      }
+    }
 
     // load default if they exist
     if (props.containsKey( root + ".boundarySize" ))
@@ -342,6 +394,7 @@ public class ThreadPoolManager
       }
     }
 
+    // maximum pool size
     if (props.containsKey( root + ".maximumPoolSize" ))
     {
       try
@@ -355,6 +408,7 @@ public class ThreadPoolManager
       }
     }
 
+    // minimum pool size
     if (props.containsKey( root + ".minimumPoolSize" ))
     {
       try
@@ -368,6 +422,7 @@ public class ThreadPoolManager
       }
     }
 
+    // keep alive
     if (props.containsKey( root + ".keepAliveTime" ))
     {
       try
@@ -381,19 +436,14 @@ public class ThreadPoolManager
       }
     }
 
-    if (props.containsKey( root + ".startUpSize" ))
+    // when blocked
+    if (props.containsKey( root + ".whenBlockedPolicy" ))
     {
-      try
-      {
-        config.setAbortWhenBlocked( Boolean.getBoolean( (String) props
-            .get( root + ".abortWhenBlocked" ) ) );
-      }
-      catch (NumberFormatException nfe)
-      {
-        log.error( "abortWhenBlocked not a boolean.", nfe );
-      }
+        config.setWhenBlockedPolicy( (String) props
+            .get( root + ".whenBlockedPolicy" )  );
     }
 
+    // startupsize
     if (props.containsKey( root + ".startUpSize" ))
     {
       try

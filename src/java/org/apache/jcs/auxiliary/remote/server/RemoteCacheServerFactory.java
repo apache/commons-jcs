@@ -26,6 +26,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.registry.Registry;
 
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.jcs.auxiliary.remote.RemoteUtils;
@@ -75,12 +76,17 @@ public class RemoteCacheServerFactory
                 return;
             }
 
+            if ( log.isInfoEnabled() )
+            {
+              log.info( "ConfigFileName = [" + propFile + "]" );
+            }
+            
             // TODO: make automatic
             RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
             rcsa.setConfigFileName( propFile );
 
             Properties prop = RemoteUtils.loadProps( propFile );
-
+                        
             String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
             int servicePort = -1;
             try

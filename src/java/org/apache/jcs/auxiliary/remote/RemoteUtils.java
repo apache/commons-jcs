@@ -27,6 +27,7 @@ import java.rmi.RMISecurityManager;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -74,13 +75,33 @@ public class RemoteUtils
             props.load( is );
             if ( log.isDebugEnabled() )
             {
-                log.debug( "props.size=" + props.size() + ", " + props );
+                log.debug( "props.size=" + props.size()  );
             }
+
+            if ( log.isDebugEnabled() )
+            {
+              if ( props != null )
+              {
+                Enumeration enum = props.keys();
+                StringBuffer buf = new StringBuffer();
+                while( enum.hasMoreElements() )
+                {
+                  String key = (String)enum.nextElement();
+                  buf.append( "\n" + key + " = " + props.getProperty(key) );
+                }
+                log.debug( buf.toString() );
+              }
+              else 
+              {
+                log.debug( "props is null" );                
+              }
+            }
+            
         }
         catch ( Exception ex )
         {
 
-            log.debug( "Error loading remote properties = " + ex.getMessage() );
+            log.error( "Error loading remote properties, for file name [" + propFile + "]", ex );
             // ignore;
         }
         finally

@@ -48,6 +48,8 @@ public class CacheEventQueue
 
   // private LinkedQueue queue = new LinkedQueue();
 
+  private static final int queueType = SINGLE_QUEUE_TYPE;
+  
   // time to wait for an event before snuffing the background thread
   // if the queue is empty.
   // make configurable later
@@ -122,6 +124,15 @@ public class CacheEventQueue
     }
   }
 
+  /*
+   *  (non-Javadoc)
+   * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getQueueType()
+   */
+  public int getQueueType()
+  {
+    return queueType;
+  }
+  
   /**
    * Event Q is emtpy.
    */
@@ -377,8 +388,8 @@ public class CacheEventQueue
   	se.setData("" + this.isAlive());
   	elems.add(se);
 
-  	se.setName( "Empty" );
   	se = new StatElement();
+  	se.setName( "Empty" );
   	se.setData("" + this.isEmpty());
   	elems.add(se);
 
@@ -400,8 +411,8 @@ public class CacheEventQueue
           }
       }
 
+    	se = new StatElement();
     	se.setName( "Size" );
-      	se = new StatElement();
       	se.setData("" + size);
       	elems.add(se);
     }

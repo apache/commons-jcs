@@ -31,6 +31,25 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public interface ICacheEventQueue
 {
 
+  
+  /**
+   * Does not use a thread pool.  
+   */
+  public static final int SINGLE_QUEUE_TYPE = 0;
+  
+  /**
+   * Uses a thread pool
+   */
+  public static final int POOLED_QUEUE_TYPE = 1;  
+  
+  
+  /**
+   * Returnt he type of event queue we are using, either single or pooled.
+   * 
+   * @return
+   */
+  public abstract int getQueueType();
+  
     /**
      * Adds a feature to the PutEvent attribute of the ICacheEventQueue object
      *

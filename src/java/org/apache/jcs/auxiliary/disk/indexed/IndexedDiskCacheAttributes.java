@@ -18,17 +18,16 @@ package org.apache.jcs.auxiliary.disk.indexed;
  */
 
 
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Configuration class for the Indexed Disk Cache
  *
  */
-public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
+public class IndexedDiskCacheAttributes extends AbstractAuxiliaryCacheAttributes 
+	implements AuxiliaryCacheAttributes
 {
-
-    private String cacheName;
-    private String name;
 
     private String diskPath;
 
@@ -67,50 +66,7 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
         return this.diskPath;
     }
 
-
-    /**
-     * Sets the cacheName attribute of the DiskCacheAttributes object
-     *
-     * @param s The new cacheName value
-     */
-    public void setCacheName( String s )
-    {
-        this.cacheName = s;
-    }
-
-
-    /**
-     * Gets the cacheName attribute of the DiskCacheAttributes object
-     *
-     * @return The cacheName value
-     */
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
-
-
-    /**
-     * Gets the name attribute of the DiskCacheAttributes object
-     *
-     * @return The name value
-     */
-    public String getName()
-    {
-        return this.name;
-    }
-
-
-    /**
-     * Sets the name attribute of the DiskCacheAttributes object
-     *
-     * @param name The new name value
-     */
-    public void setName( String name )
-    {
-        this.name = name;
-    }
-
+    
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object
      *

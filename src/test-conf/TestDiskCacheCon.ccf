@@ -42,4 +42,42 @@ jcs.region.indexedRegion4.cacheattributes.MemoryCacheName=org.apache.jcs.engine.
 jcs.auxiliary.indexedDiskCache=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.indexedDiskCache.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache-conc
+jcs.auxiliary.indexedDiskCache.attributes.maxKeySize=10000
+jcs.auxiliary.indexedDiskCache.attributes.optimizeAtRemoveCount=3000000
+jcs.auxiliary.indexedDiskCache.attributes.EventQueueType=POOLED
+jcs.auxiliary.indexedDiskCache.attributes.EventQueuePoolName=disk_cache_event_queue
 
+
+##############################################################
+################## THREAD POOL CONFIGURATION ###################
+# Default thread pool config
+thread_pool.default.boundarySize=2000
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+#RUN ABORT WAIT BLOCK DISCARDOLDEST
+thread_pool.default.whenBlockedPolicy=RUN
+thread_pool.default.startUpSize=4
+
+# Default Cache Event Queue thread pool config, used by auxiliaries
+thread_pool.cache_event_queue.useBoundary=false
+#thread_pool.cache_event_queue.boundarySize=2000
+#thread_pool.cache_event_queue.maximumPoolSize=10
+thread_pool.cache_event_queue.minimumPoolSize=1
+thread_pool.cache_event_queue.keepAliveTime=3500
+#thread_pool.cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.cache_event_queue.startUpSize=1
+
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.disk_cache_event_queue.minimumPoolSize=2
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.startUpSize=1
+
+# Remote cache client thread pool config
+thread_pool.remote_cache_client.boundarySize=75
+thread_pool.remote_cache_client.maximumPoolSize=150
+thread_pool.remote_cache_client.minimumPoolSize=4
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.whenBlockedPolicy=RUN
+thread_pool.remote_cache_client.startUpSize=4

@@ -20,11 +20,11 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.UnmarshalException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.rmi.UnmarshalException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,7 +32,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheEventQueue;
+import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheType;
@@ -63,7 +63,13 @@ public class RemoteCacheNoWait implements AuxiliaryCache
     public RemoteCacheNoWait( RemoteCache cache )
     {
         this.cache = cache;
-        this.q = new CacheEventQueue( new CacheAdaptor( cache ), RemoteCacheInfo.listenerId, cache.getCacheName() );
+        CacheEventQueueFactory fact = new CacheEventQueueFactory();         
+        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), 
+            RemoteCacheInfo.listenerId, 
+            cache.getCacheName(),                                                    
+            cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+            cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+        
         if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
         {
             q.destroy();
@@ -232,7 +238,12 @@ public class RemoteCacheNoWait implements AuxiliaryCache
         {
             q.destroy();
         }
-        this.q = new CacheEventQueue( new CacheAdaptor( cache ), RemoteCacheInfo.listenerId, cache.getCacheName() );
+        CacheEventQueueFactory fact = new CacheEventQueueFactory();         
+        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), 
+            RemoteCacheInfo.listenerId, 
+            cache.getCacheName(),                                                    
+            cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+            cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
     }
 
     /** Description of the Method */

@@ -30,7 +30,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheEventQueue;
+import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.stats.StatElement;
@@ -63,9 +63,13 @@ public class LateralCacheNoWait
   public LateralCacheNoWait( LateralCache cache )
   {
     this.cache = cache;
-    this.q = new CacheEventQueue( new CacheAdaptor( cache ),
+    
+    CacheEventQueueFactory fact = new CacheEventQueueFactory();   
+    this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
                                   LateralCacheInfo.listenerId,
-                                  cache.getCacheName() );
+                                  cache.getCacheName(),                                                    
+                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+                                  cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
 
     // need each no wait to handle each of its real updates and removes, since there may
     // be more than one per cache?  alternativve is to have the cache
@@ -233,9 +237,12 @@ public class LateralCacheNoWait
     {
       q.destroy();
     }
-    this.q = new CacheEventQueue( new CacheAdaptor( cache ),
+    CacheEventQueueFactory fact = new CacheEventQueueFactory();   
+    this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
                                   LateralCacheInfo.listenerId,
-                                  cache.getCacheName() );
+                                  cache.getCacheName(),                                                    
+                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+                                  cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
   }
 
   /** Description of the Method */

@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
@@ -40,7 +41,7 @@ public class BDBJECache
 
   public BDBJECache( BDBJECacheAttributes attr )
   {
-    super( attr.getCacheName() );
+    super( (AuxiliaryCacheAttributes)attr );
     this.je = new BDBJE( attr );
     if ( log.isDebugEnabled() )
     {

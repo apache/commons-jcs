@@ -1,5 +1,7 @@
 package org.apache.jcs.utils.threadpool;
 
+import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
+
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -18,27 +20,51 @@ package org.apache.jcs.utils.threadpool;
 
 /**
  * This object holds configuration data for a thread pool.
- *
+ * 
  * @author Aaron Smuts
- *
+ *  
  */
-public class PoolConfiguration implements Cloneable
+public class PoolConfiguration implements Cloneable, IPoolConfiguration
 {
-  private int     boundarySize     = 75;
 
-  private int     maximumPoolSize  = 150;
+  private boolean useBoundary       = true;
 
-  private int     minimumPoolSize  = 4;
+  private int     boundarySize      = 2000;
 
-  private int     keepAliveTime    = 1000 * 60 * 5;
+  // only has meaning if a bounday is used
+  private int     maximumPoolSize   = 150;
 
-  private boolean abortWhenBlocked = false;
+  // the exact number that will be used in a boundless queue. If the queue has
+  // a boundary, more will be created if the queue fills.
+  private int     minimumPoolSize   = 4;
 
-  private int     startUpSize      = 4;
+  private int     keepAliveTime     = 1000 * 60 * 5;
+
+  //should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST,
+  private String  whenBlockedPolicy = POLICY_RUN;
+
+  private int     startUpSize       = 4;
+
+  /**
+   * @param useBoundary
+   *          The useBoundary to set.
+   */
+  public void setUseBoundary( boolean useBoundary )
+  {
+    this.useBoundary = useBoundary;
+  }
+
+  /**
+   * @return Returns the useBoundary.
+   */
+  public boolean isUseBoundary()
+  {
+    return useBoundary;
+  }
 
   /**
    * Default
-   *
+   *  
    */
   public PoolConfiguration()
   {
@@ -46,7 +72,7 @@ public class PoolConfiguration implements Cloneable
   }
 
   /**
-   *
+   * 
    * @param boundarySize
    * @param maximumPoolSize
    * @param minimumPoolSize
@@ -54,9 +80,9 @@ public class PoolConfiguration implements Cloneable
    * @param abortWhenlocked
    * @param startUpSize
    */
-  public PoolConfiguration(int boundarySize, int maximumPoolSize,
-      int minimumPoolSize, int keepAliveTime, boolean abortWhenBlocked,
-      int startUpSize)
+  public PoolConfiguration(boolean useBoundary, int boundarySize,
+      int maximumPoolSize, int minimumPoolSize, int keepAliveTime,
+      String henBlockedPolicy, int startUpSize)
   {
   }
 
@@ -129,20 +155,53 @@ public class PoolConfiguration implements Cloneable
   }
 
   /**
-   * @param abortWhenBlocked
-   *          The abortWhenBlocked to set.
+   * @param whenBlockedPolicy
+   *          The whenBlockedPolicy to set.
    */
-  public void setAbortWhenBlocked( boolean abortWhenBlocked )
+  public void setWhenBlockedPolicy( String whenBlockedPolicy )
   {
-    this.abortWhenBlocked = abortWhenBlocked;
+    if ( whenBlockedPolicy != null )
+    {
+      if (whenBlockedPolicy.equalsIgnoreCase( POLICY_ABORT ))
+      {
+        this.whenBlockedPolicy = POLICY_ABORT;
+      }
+      else if (whenBlockedPolicy.equalsIgnoreCase( POLICY_RUN ))
+      {
+        this.whenBlockedPolicy = POLICY_RUN;
+      }
+      else if (whenBlockedPolicy.equalsIgnoreCase( POLICY_BLOCK ))
+      {
+        this.whenBlockedPolicy = POLICY_BLOCK;
+      }
+      else if (whenBlockedPolicy.equalsIgnoreCase( POLICY_DISCARDOLDEST ))
+      {
+        this.whenBlockedPolicy = POLICY_DISCARDOLDEST;
+      }
+      else if (whenBlockedPolicy.equalsIgnoreCase( POLICY_WAIT ) )
+      {
+        this.whenBlockedPolicy = POLICY_WAIT;
+      }
+      else 
+      {
+        // the value is invalid, dfault to RUN
+        this.whenBlockedPolicy = POLICY_RUN;
+      }      
+    }
+    else 
+    {
+      // the value is null, dfault to RUN
+      this.whenBlockedPolicy = POLICY_RUN;      
+    }
+    
   }
 
   /**
-   * @return Returns the abortWhenBlocked.
+   * @return Returns the whenBlockedPolicy.
    */
-  public boolean isAbortWhenBlocked()
+  public String getWhenBlockedPolicy()
   {
-    return abortWhenBlocked;
+    return whenBlockedPolicy;
   }
 
   /**
@@ -168,11 +227,12 @@ public class PoolConfiguration implements Cloneable
   public String toString()
   {
     StringBuffer buf = new StringBuffer();
+    buf.append( "useBoundary = [" + isUseBoundary() + "]" );
     buf.append( "boundarySize = [" + boundarySize + "]" );
     buf.append( "maximumPoolSize = [" + maximumPoolSize + "]" );
     buf.append( "minimumPoolSize = [" + minimumPoolSize + "]" );
     buf.append( "keepAliveTime = [" + keepAliveTime + "]" );
-    buf.append( "abortWhenBlocked = [" + abortWhenBlocked + "]" );
+    buf.append( "whenBlockedPolicy = [" + getWhenBlockedPolicy() + "]" );
     buf.append( "startUpSize = [" + startUpSize + "]" );
     return buf.toString();
   }
@@ -182,7 +242,8 @@ public class PoolConfiguration implements Cloneable
    */
   public Object clone()
   {
-    return new PoolConfiguration( boundarySize, maximumPoolSize,
-        minimumPoolSize, keepAliveTime, abortWhenBlocked, startUpSize );
+    return new PoolConfiguration( isUseBoundary(), boundarySize,
+        maximumPoolSize, minimumPoolSize, keepAliveTime,
+        getWhenBlockedPolicy(), startUpSize );
   }
 }

@@ -18,6 +18,7 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
@@ -27,12 +28,9 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
  * Description of the Class
  *
  */
-public class RemoteCacheAttributes implements IRemoteCacheAttributes
+public class RemoteCacheAttributes extends AbstractAuxiliaryCacheAttributes
+	implements IRemoteCacheAttributes
 {
-
-    private String cacheName;
-    private String name;
-
     private String remoteServiceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
     private String remoteHost;
     private int remotePort;
@@ -168,51 +166,7 @@ public class RemoteCacheAttributes implements IRemoteCacheAttributes
     {
         this.remoteType = p;
     }
-
-
-    /**
-     * Sets the cacheName attribute of the RemoteCacheAttributes object
-     *
-     * @param s The new cacheName value
-     */
-    public void setCacheName( String s )
-    {
-        this.cacheName = s;
-    }
-
-
-    /**
-     * Gets the cacheName attribute of the RemoteCacheAttributes object
-     *
-     * @return The cacheName value
-     */
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
-
-
-    /**
-     * Gets the name attribute of the RemoteCacheAttributes object
-     *
-     * @return The name value
-     */
-    public String getName()
-    {
-        return this.name;
-    }
-
-
-    /**
-     * Sets the name attribute of the RemoteCacheAttributes object
-     *
-     * @param name The new name value
-     */
-    public void setName( String name )
-    {
-        this.name = name;
-    }
-
+  
 
     /** Description of the Method */
     public AuxiliaryCacheAttributes copy()

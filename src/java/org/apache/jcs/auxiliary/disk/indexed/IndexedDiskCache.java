@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.engine.CacheConstants;
@@ -104,7 +105,7 @@ public class IndexedDiskCache
    */
   public IndexedDiskCache(IndexedDiskCacheAttributes cattr)
   {
-    super(cattr.getCacheName());
+    super((AuxiliaryCacheAttributes)cattr);
 
     String cacheName = cattr.getCacheName();
     String rootDirName = cattr.getDiskPath();

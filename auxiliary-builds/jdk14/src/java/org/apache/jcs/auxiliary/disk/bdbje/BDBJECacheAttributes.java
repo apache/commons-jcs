@@ -16,55 +16,20 @@ package org.apache.jcs.auxiliary.disk.bdbje;
  * limitations under the License.
  */
 
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.bdbje.behavior.IBDBJECacheAttributes;
 
 /**
  *  Attributes for Berkeley DB JE disk cache auxiliary.
  */
-public class BDBJECacheAttributes
+public class BDBJECacheAttributes extends AbstractAuxiliaryCacheAttributes
     implements AuxiliaryCacheAttributes, IBDBJECacheAttributes
 {
-
-  private String cacheName;
-  private String name;
-
   private String diskPath;
 
   private long cacheSize = -1;
   private int cachePercent = -1;
-
-  /* (non-Javadoc)
-   * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#setCacheName(java.lang.String)
-   */
-  public void setCacheName( String s )
-  {
-    cacheName = s;
-  }
-
-  /* (non-Javadoc)
-   * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#getCacheName()
-   */
-  public String getCacheName()
-  {
-    return cacheName;
-  }
-
-  /* (non-Javadoc)
-   * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#setName(java.lang.String)
-   */
-  public void setName( String s )
-  {
-    name = s;
-  }
-
-  /* (non-Javadoc)
-   * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#getName()
-   */
-  public String getName()
-  {
-    return name;
-  }
 
   /* (non-Javadoc)
    * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#copy()

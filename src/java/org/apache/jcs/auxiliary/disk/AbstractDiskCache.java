@@ -29,9 +29,11 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheEventQueue;
+import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheInfo;
+import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
@@ -107,13 +109,16 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
     // ----------------------------------------------------------- constructors
 
-    public AbstractDiskCache( String cacheName )
+    public AbstractDiskCache( AuxiliaryCacheAttributes attr )
     {
-        this.cacheName = cacheName;
+        this.cacheName = attr.getCacheName();
 
-        this.cacheEventQueue = new CacheEventQueue( new MyCacheListener(),
+        CacheEventQueueFactory fact = new CacheEventQueueFactory();
+        this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(),
                                                     CacheInfo.listenerId,
-                                                    cacheName );
+                                                    cacheName, 
+                                                    attr.getEventQueuePoolName(), 
+                                                    attr.getEventQueueTypeFactoryCode() );
     }
 
     // ------------------------------------------------------- interface ICache

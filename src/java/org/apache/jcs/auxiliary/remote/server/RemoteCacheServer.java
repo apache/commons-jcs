@@ -20,40 +20,33 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.rmi.NotBoundException;
 import java.rmi.registry.Registry;
-
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.Unreferenced;
-
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collections;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
-
-import org.apache.jcs.engine.CacheEventQueue;
+import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheListeners;
-
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
-
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides remote cache services.
@@ -338,10 +331,14 @@ public class RemoteCacheServer
             log.error( e );
         }
 
+        // TODO use JAMON
         if ( timing )
         {
             long end = System.currentTimeMillis();
-            p1( "put took " + String.valueOf( end - start ) + " ms." );
+            if( log.isDebugEnabled() )
+            {
+              log.debug( "put took " + String.valueOf( end - start ) + " ms." );              
+            }
         }
 
         return;
@@ -723,8 +720,15 @@ public class RemoteCacheServer
                 catch ( IOException ioe )
                 {
                 }
-                //eventQMap.put(listener, new CacheEventQueue(listener, getRequester(), cacheName));
-                eventQMap.put( listener, new CacheEventQueue( listener, id, cacheName ) );
+                
+                CacheEventQueueFactory fact = new CacheEventQueueFactory();   
+                ICacheEventQueue q = fact.createCacheEventQueue( listener, 
+                    id, 
+                    cacheName,                                                    
+                    rcsa.getEventQueuePoolName(), 
+                    rcsa.getEventQueueTypeFactoryCode() );
+                
+                eventQMap.put( listener, q );
 
                 if ( log.isDebugEnabled() )
                 {

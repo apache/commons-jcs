@@ -36,6 +36,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -73,7 +74,7 @@ public class HSQLCache extends AbstractDiskCache
      */
     public HSQLCache( HSQLCacheAttributes cattr )
     {
-        super( cattr.getCacheName() );
+        super( (AuxiliaryCacheAttributes)cattr );
 
         this.cattr = cattr;
 

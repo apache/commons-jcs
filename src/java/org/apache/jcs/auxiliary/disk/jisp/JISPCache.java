@@ -27,6 +27,7 @@ import com.coyotegulch.jisp.IndexedObjectDatabase;
 import com.coyotegulch.jisp.KeyObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -66,7 +67,7 @@ public class JISPCache extends AbstractDiskCache
      */
     public JISPCache( JISPCacheAttributes cattr )
     {
-        super( cattr.getCacheName() );
+        super( (AuxiliaryCacheAttributes)cattr);
 
         numInstances++;
 
