@@ -40,15 +40,12 @@ import org.apache.jcs.engine.memory.MemoryCache;
  *
  * @version $Id$
  */
-public class ShrinkerThread extends Thread
+public class ShrinkerThread implements Runnable
 {
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** The MemoryCache instance which this shrinker is watching */
     private final MemoryCache cache;
-
-    /** The time to sleep between shrink runs */
-    private final long shrinkerInterval;
 
     /** Maximum memory idle time for the whole cache */
     private final long maxMemoryIdleTime;
@@ -56,9 +53,6 @@ public class ShrinkerThread extends Thread
     /** Maximum number of items to spool per run.  Default is -1, or no limit. */
     private int maxSpoolPerRun;
     private boolean spoolLimit = false;
-
-    /** Flag that indicates if the thread is still alive */
-    boolean alive = true;
 
     /**
      * Constructor for the ShrinkerThread object.
@@ -70,9 +64,6 @@ public class ShrinkerThread extends Thread
         super();
 
         this.cache = cache;
-
-        this.shrinkerInterval =
-            cache.getCacheAttributes().getShrinkerIntervalSeconds() * 1000;
 
         long maxMemoryIdleTimeSeconds =
             cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds();
@@ -96,39 +87,11 @@ public class ShrinkerThread extends Thread
     }
 
     /**
-     * Graceful shutdown after this round of processing.
-     */
-    public void kill()
-    {
-      if ( log.isInfoEnabled() )
-      {
-          log.info( "Killing Shrinker for: "
-                     + this.cache.getCompositeCache().getCacheName() );
-      }
-        alive = false;
-    }
-
-    /**
      * Main processing method for the ShrinkerThread object
      */
     public void run()
     {
-        while ( alive )
-        {
-
-            shrink();
-
-            try
-            {
-                sleep( shrinkerInterval );
-            }
-            catch ( InterruptedException ie )
-            {
-                // Continue until killed ( alive == false )
-            }
-        }
-
-        return;
+      shrink();
     }
 
     /**
@@ -257,12 +220,18 @@ public class ShrinkerThread extends Thread
                         log.debug( "spoolCount = '" + spoolCount + "'; " +
                                    "maxSpoolPerRun = '" + maxSpoolPerRun + "'");
                       }
+                      
+                      // stop processing if limit has been reached.
+                      if ( spoolLimit && (spoolCount >= this.maxSpoolPerRun ) )
+                      {
+                        keys = null;
+                        return;
+                      }
                   }
                 }
             }
 
             keys = null;
-            //System.gc();
         }
         catch ( Throwable t )
         {

@@ -61,19 +61,7 @@ jcs.auxiliary.DC.attributes.DiskPath=g:/dev/jakarta-turbine-stratum/raf
         </p>
         <source><![CDATA[
 jcs.default=DC
-        ]]></source>
-        <p>
-          It is a good idea to specify the
-          <code>system.GroupIdCache</code>, so add this to the file:
-        </p>
-        <source><![CDATA[
-jcs.system.groupIdCache=DC
-jcs.system.groupIdCache.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
-        ]]></source>
+        ]]></source>        
         <p>
           If you want to predefine a specific region, say called
           <code>testCache1</code>, then add these lines:
@@ -140,14 +128,6 @@ jcs.default.cacheattributes=
     org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
-
-# System CACHE REGION   
-jcs.system.groupIdCache=DC,LTCP
-jcs.system.groupIdCache.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
     org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 # PRE-DEFINED CACHE REGIONS   

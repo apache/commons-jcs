@@ -63,7 +63,6 @@
       </p>
       </subsection>
 
-
       <subsection name="Configuration">
         <p>
           The simple configuration and is done in the auxiliary 
@@ -73,8 +72,10 @@
           "DiskPath" directory.
          </p>
 	   <p>
-	    The Disk indexes are equipped with an LRU storage limit.  The maximum 
-          number of keys is configured by the maxKeySize parameter. 
+	      The Disk indexes are equipped with an LRU storage limit.  The maximum 
+          number of keys is configured by the maxKeySize parameter.  If the
+          maximum key size is less than 0, no limit will be placed on the
+          number of keys.  By default, the max key size is 5000.
 	   </p>
         <source><![CDATA[
 jcs.auxiliary.DC=
@@ -82,9 +83,86 @@ jcs.auxiliary.DC=
 jcs.auxiliary.DC.attributes=
     org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:\dev\jakarta-turbine-stratum\raf
-jcs.auxiliary.DC.attributes.maxKeySize=100000
+jcs.auxiliary.DC.attributes.MaxKeySize=100000
         ]]></source>
       </subsection>
+
+      <subsection name="Additional Configuration Options">
+        <p>
+          The indexed disk cache provides some additional configuration options.
+	   </p>
+	   <p>
+	    The purgatory size of the Disk cache is equipped with an LRU storage limit.
+	    The maximum number of elements allowed in purgatory is configured by the 
+	    MaxPurgatorySize parameter.  By default, the max purgatory size is 5000.
+	   </p>
+	   <p>
+	    Initial testing indicates that the disk cache performs better when the 
+	    key and purgatory sizes are limited.
+	   </p>
+        <source><![CDATA[
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+        ]]></source>
+	   <p>
+	    Slots in the data file become empty when items are removed from the disk cache.
+	    The indexed disk cache keeps track of empty slots in the data file, so they can
+	    be reused.  The slot locations are stored in a sorted preferential array --
+	    the recycle bin.  The smallest items are removed from the recycle bin when it 
+	    reaches the specified limit.  The MaxRecycleBinSize cannot be larger than
+	    the MaxKeySize.  If the MaxKeySize is less than 0, the recycle bin will default 
+	    to 5000.  
+	   </p>
+        <source><![CDATA[
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=10000
+        ]]></source>
+	   <p>
+	    The Disk cache can be configured to defragment the data file at runtime.  Since
+	    defragmentation is only necessary if items have been removed, the deframentation
+	    interval is determined by the number of removes.  Currently there is no way
+	    to schedule defragmentation to run at a set time.  If you set the OptimizeAtRemoveCount
+	    to -1, no optimizations of the data file will occur until shutdown.  By default
+	    the value is -1.
+	   </p>
+        <source><![CDATA[
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=30000
+        ]]></source>
+      </subsection>
+
+      <subsection name="A Complete Configuration Example">
+        <p>
+          In this sample cache.ccf file, I configured the cache to use a disk cache, 
+          called DC, by default.  Also, I explicitly set a cache region called myRegion1
+          to use DC.  I specified custom settings for all of the Indexed Disk Cache
+          configuration parameters. 
+	   </p>      
+        <source><![CDATA[        
+##############################################################
+##### Default Region Configuration
+jcs.default=DC
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+##############################################################
+##### CACHE REGIONS
+jcs.region.myRegion1=DC
+jcs.region.myRegion1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.myRegion1.cacheattributes.MaxObjects=1000
+jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+##############################################################
+##### AUXILIARY CACHES
+# Indexed Disk Cache
+jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC.attributes.MaxKeySize=10000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
+        ]]></source>
+      </subsection>
+
        <subsection name="TODO">
         <p>
           The Indexed Disk Auxiliary Cache will eventually be equiped 

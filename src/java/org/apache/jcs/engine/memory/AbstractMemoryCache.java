@@ -30,6 +30,9 @@ import org.apache.jcs.engine.memory.shrinking.*;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
+import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+
 /**
  *  Some common code for the LRU and MRU caches.
  *
@@ -70,10 +73,9 @@ public abstract class AbstractMemoryCache
     protected int chunkSize = 2;
 
     /**
-     *  The background memory shrinker
+     *  The background memory shrinker, one for all regions.
      */
-    private ShrinkerThread shrinker;
-
+    private static ClockDaemon shrinkerDaemon;
 
     /**
      *  Constructor for the LRUMemoryCache object
@@ -97,12 +99,15 @@ public abstract class AbstractMemoryCache
 
         status = CacheConstants.STATUS_ALIVE;
 
-        if ( cattr.getUseMemoryShrinker() && shrinker == null )
+        if ( cattr.getUseMemoryShrinker() )          
         {
-            shrinker = new ShrinkerThread( this );
-            shrinker.setDaemon(true);
-            shrinker.setPriority( ShrinkerThread.MIN_PRIORITY );
-            shrinker.start();
+            if ( shrinkerDaemon == null )
+            {
+              shrinkerDaemon = new ClockDaemon();
+              shrinkerDaemon.setThreadFactory( new MyThreadFactory() );              
+            }
+            shrinkerDaemon.executePeriodically( cattr.getShrinkerIntervalSeconds() * 1000, new ShrinkerThread( this ), false );
+            
         }
     }
 
@@ -174,8 +179,8 @@ public abstract class AbstractMemoryCache
     public void dispose()
         throws IOException
     {
-      if ( shrinker != null ) {
-        shrinker.kill();
+      if ( shrinkerDaemon != null ) {
+        shrinkerDaemon.shutDown();
       }
     }
 
@@ -293,4 +298,29 @@ public abstract class AbstractMemoryCache
         }
         return keys;
     }
+
+    /**
+     * Allows us to set the daemon status on the clockdaemon
+     * 
+     * @author aaronsm
+     *
+     */
+    class MyThreadFactory implements ThreadFactory 
+    {
+
+      /* (non-Javadoc)
+       * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+       */
+      public Thread newThread( Runnable runner )
+      {
+        Thread t = new Thread( runner );
+        t.setDaemon( true );
+        t.setPriority( Thread.MIN_PRIORITY );
+        return t;
+      }
+      
+    }
+
+    
 }
+

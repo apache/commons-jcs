@@ -18,18 +18,15 @@ package org.apache.jcs.auxiliary.disk.jisp;
  */
 
 
-import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * Description of the Class
  *
  */
-public class JISPCacheAttributes extends AbstractAuxiliaryCacheAttributes
-	implements AuxiliaryCacheAttributes
+public class JISPCacheAttributes extends AbstractDiskCacheAttributes
 {
-
-    private String diskPath;
 
     private boolean clearOnStart;
 
@@ -37,26 +34,6 @@ public class JISPCacheAttributes extends AbstractAuxiliaryCacheAttributes
     public JISPCacheAttributes()
     {
         clearOnStart = false;
-    }
-
-    /**
-     * Sets the diskPath attribute of the JISPCacheAttributes object
-     *
-     * @param path The new diskPath value
-     */
-    public void setDiskPath( String path )
-    {
-        this.diskPath = path;
-    }
-
-    /**
-     * Gets the diskPath attribute of the JISPCacheAttributes object
-     *
-     * @return The diskPath value
-     */
-    public String getDiskPath()
-    {
-        return this.diskPath;
     }
 
 

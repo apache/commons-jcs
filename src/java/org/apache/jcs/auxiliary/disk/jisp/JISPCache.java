@@ -22,15 +22,16 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
+import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
+import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
+
 import com.coyotegulch.jisp.BTreeIndex;
 import com.coyotegulch.jisp.IndexedObjectDatabase;
 import com.coyotegulch.jisp.KeyObject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * JISP disk cache implementation. Slow as hell with this type of key.
@@ -67,7 +68,7 @@ public class JISPCache extends AbstractDiskCache
      */
     public JISPCache( JISPCacheAttributes cattr )
     {
-        super( (AuxiliaryCacheAttributes)cattr);
+        super( (IDiskCacheAttributes)cattr);
 
         numInstances++;
 

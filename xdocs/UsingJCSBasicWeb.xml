@@ -360,15 +360,6 @@ jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
 
-# SYSTEM CACHE
-
-# should be defined for the storage of group attribute list
-jcs.system.groupIdCache=DC,RFailover
-jcs.system.groupIdCache.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
-jcs.system.groupIdCache.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 # CACHE REGIONS AVAILABLE
 
@@ -394,6 +385,10 @@ jcs.auxiliary.DC=
 jcs.auxiliary.DC.attributes=
     org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=/usr/opt/bookstore/raf
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
+jcs.auxiliary.DC.attributes.MaxKeySize=10000
+jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
 
 # Remote RMI Cache set up to failover
 jcs.auxiliary.RFailover=

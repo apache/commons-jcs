@@ -2,7 +2,7 @@ package org.apache.jcs.auxiliary.disk;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.collections.LRUMap;
+import org.apache.commons.collections.map.LRUMap;
 
 /**
   *  Extension of LRUMap for logging of removals.

@@ -32,9 +32,9 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
+import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -66,7 +66,7 @@ public class IndexedDiskCache
   private String fileName;
   private IndexedDisk dataFile;
   private IndexedDisk keyFile;
-  private LRUMap keyHash;
+  private Map keyHash;
   private int maxKeySize;
 
   private File rafDir;
@@ -105,7 +105,7 @@ public class IndexedDiskCache
    */
   public IndexedDiskCache(IndexedDiskCacheAttributes cattr)
   {
-    super((AuxiliaryCacheAttributes)cattr);
+    super((IDiskCacheAttributes)cattr);
 
     String cacheName = cattr.getCacheName();
     String rootDirName = cattr.getDiskPath();
@@ -155,7 +155,7 @@ public class IndexedDiskCache
 
       else
       {
-        keyHash = new LRUMap(maxKeySize);
+        initKeyMap();
 
         if (dataFile.length() > 0)
         {
@@ -163,11 +163,10 @@ public class IndexedDiskCache
         }
       }
 
-      // TODO, make a new size parameter for this.
-      recycle = new SortedPreferentialArray(maxKeySize);
+      // create the recyclebin
+      initRecycleBin();
 
       // Initialization finished successfully, so set alive to true.
-
       alive = true;
     }
     catch (Exception e)
@@ -177,6 +176,7 @@ public class IndexedDiskCache
     }
   }
 
+  
   /**
    * Loads the keys from the .key file.  The keys are stored in a HashMap on
    * disk.  This is converted into a LRUMap.
@@ -194,7 +194,9 @@ public class IndexedDiskCache
     try
     {
 
-      keyHash = new LRUMap(maxKeySize);
+      // create a key map to use.
+      initKeyMap();
+      
       HashMap keys = (HashMap) keyFile.readObject(0);
 
       if (keys != null)
@@ -204,13 +206,8 @@ public class IndexedDiskCache
         if (log.isInfoEnabled())
         {
           log.info("Loaded keys from: " + fileName +
-                   ", key count: " + keyHash.size());
-        }
-
-        keyHash.setMaximumSize(maxKeySize);
-        if (log.isInfoEnabled())
-        {
-          log.info("Reset maxKeySize to: '" + maxKeySize + "'");
+                   ", key count: " + keyHash.size() +
+                   "; upto " + maxKeySize + " will be available." );
         }
 
       }
@@ -759,11 +756,9 @@ public class IndexedDiskCache
       keyFile =
           new IndexedDisk(new File(rafDir, fileName + ".key"));
 
-      recycle = null;
-      recycle = new SortedPreferentialArray(maxKeySize);
+      initRecycleBin();
 
-      keyHash = null;
-      keyHash = new LRUMap(this.maxKeySize);
+      initKeyMap();
     }
     catch (Exception e)
     {
@@ -776,6 +771,56 @@ public class IndexedDiskCache
     }
   }
 
+  /**
+   * If the maxKeySize is < 0, use 5000, no way to have an unlimted
+   * recycle bin right now, or one less than the mazKeySize.
+   * 
+   * @TODO make separate config.  
+   *
+   */
+  private void initRecycleBin()
+  {
+    recycle = null;
+    if ( cattr.getMaxRecycleBinSize() >= 0 )
+    {
+      recycle = new SortedPreferentialArray( cattr.getMaxRecycleBinSize() );   
+      if (log.isInfoEnabled())
+      {
+        log.info("Set recycle max Size to MaxRecycleBinSize: '" + cattr.getMaxRecycleBinSize() + "'");
+      }
+    }
+    else 
+    {
+      // this is a fail safetly.  Will no
+      recycle = new SortedPreferentialArray(0);
+      if (log.isInfoEnabled())
+      {
+        log.warn("Set recycle maxSize to 0, will not try to recycle, MaxRecycleBinSize was less than 0");
+      }
+    }       
+  }  
+  
+  
+  private void initKeyMap()
+  {
+    keyHash = null;
+    if ( maxKeySize >= 0 )
+    {
+      keyHash = new LRUMapJCS(maxKeySize);      
+      if (log.isInfoEnabled())
+      {
+        log.info("Set maxKeySize to: '" + maxKeySize + "'");
+      }
+    }
+    else 
+    {
+      keyHash = new HashMap();// Hashtable();//HashMap();
+      if (log.isInfoEnabled())
+      {
+        log.info("Set maxKeySize to unlimited'");
+      }
+    }       
+  }    
   /**
    * Dispose of the disk cache in a background thread.  Joins against this
    * thread to put a cap on the disposal time.
@@ -1097,7 +1142,7 @@ public class IndexedDiskCache
     catch (IOException e)
     {
       log.error("Failed to get orinigal off disk cache: " + fileName
-                + ", key: " + key + "; keyHash.tag = " + keyHash.tag);
+                + ", key: " + key + "" );//; keyHash.tag = " + keyHash.tag);
       //reset();
       throw e;
     }

@@ -22,14 +22,15 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheInfo;
@@ -65,6 +66,10 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     private static final Log log =
         LogFactory.getLog( AbstractDiskCache.class );
 
+    
+    /**  Generic disk cache attributes */
+    private IDiskCacheAttributes dcattr = null;
+    
     /**
      * Map where elements are stored between being added to this cache and
      * actually spooled to disk. This allows puts to the disk cache to return
@@ -73,7 +78,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * the memory cache while the are still in purgatory, writing to disk can
      * be cancelled.
      */
-    protected Hashtable purgatory = new Hashtable();
+    //protected Hashtable purgatory = new Hashtable();
+    protected Map purgatory = new HashMap();
 
     /**
      * The CacheEventQueue where changes will be queued for asynchronous
@@ -109,18 +115,47 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
     // ----------------------------------------------------------- constructors
 
-    public AbstractDiskCache( AuxiliaryCacheAttributes attr )
+    public AbstractDiskCache( IDiskCacheAttributes attr )
     {
+      	this.dcattr = attr;
+      
         this.cacheName = attr.getCacheName();
 
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(),
                                                     CacheInfo.listenerId,
                                                     cacheName, 
-                                                    attr.getEventQueuePoolName(), 
-                                                    attr.getEventQueueTypeFactoryCode() );
+                                                    dcattr.getEventQueuePoolName(), 
+                                                    dcattr.getEventQueueTypeFactoryCode() );
+        
+        initPurgatory();
     }
 
+    
+    /**
+     * Purgatory size of -1 means to use a HashMap with no size limit.
+     * Anything greater will use an LRU map of some sort.
+     * 
+     * @TODO Currently setting this to 0 will cause nothing to be put to disk, since it
+     * will assume that if an item is not in purgatory, then it must have been plucked.  
+     * We should make 0 work, a way to not use purgatory.
+     * 
+     *
+     */
+    private void initPurgatory()
+    {
+      purgatory = null;
+      
+      if ( dcattr.getMaxPurgatorySize() >= 0 )
+      {
+        purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );              
+      }
+      else 
+      {
+        purgatory = new HashMap();
+      }
+    }
+    
     // ------------------------------------------------------- interface ICache
 
     /**
@@ -269,7 +304,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     {
         // Replace purgatory with a new empty hashtable
 
-        purgatory = new Hashtable();
+        initPurgatory();
 
         // Remove all from persistent store immediately
 
@@ -470,7 +505,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                         // If the element has already been removed from
                         // purgatory do nothing
 
-                        if ( ! purgatory.contains( pe ) )
+                        if ( ! purgatory.containsKey( pe.getKey() ) )
                         {
                             return;
                         }

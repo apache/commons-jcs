@@ -18,15 +18,14 @@ package org.apache.jcs.auxiliary.disk.hsql;
  */
 
 
-import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * Description of the Class
  *
  */
-public class HSQLCacheAttributes extends AbstractAuxiliaryCacheAttributes 
-	implements AuxiliaryCacheAttributes
+public class HSQLCacheAttributes extends AbstractDiskCacheAttributes
 {
 
     private String diskPath;

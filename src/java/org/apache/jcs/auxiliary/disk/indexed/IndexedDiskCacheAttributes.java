@@ -18,22 +18,25 @@ package org.apache.jcs.auxiliary.disk.indexed;
  */
 
 
-import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * Configuration class for the Indexed Disk Cache
  *
  */
-public class IndexedDiskCacheAttributes extends AbstractAuxiliaryCacheAttributes 
-	implements AuxiliaryCacheAttributes
-{
+public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes 
+{   
+  
+    private static final int DEFAULT_maxKeySize = 5000;
+    private static final int DEFAULT_maxRecycleBinSize = 5000;
+  
+    /** -1 mean no limit. */
+    private int maxKeySize = DEFAULT_maxKeySize;
 
-    private String diskPath;
-
-    // default to 5000
-    private int maxKeySize = 5000;
-
+    /** Cannot be larger than the max size.  If max is less than 0, this will be 5000 */
+    private int maxRecycleBinSize = DEFAULT_maxRecycleBinSize;
+    
     // default to -1, i.e., don't optimize until shutdown
     private int optimizeAtRemoveCount = -1;
 
@@ -42,29 +45,7 @@ public class IndexedDiskCacheAttributes extends AbstractAuxiliaryCacheAttributes
      */
     public IndexedDiskCacheAttributes()
     {
-    }
-
-
-    /**
-     * Sets the diskPath attribute of theputm 2000 DiskCacheAttributes object
-     *
-     * @param path The new diskPath value
-     */
-    public void setDiskPath( String path )
-    {
-        this.diskPath = path.trim();
-    }
-
-
-    /**
-     * Gets the diskPath attribute of the DiskCacheAttributes object
-     *
-     * @return The diskPath value
-     */
-    public String getDiskPath()
-    {
-        return this.diskPath;
-    }
+    } 
 
     
     /**
@@ -86,6 +67,9 @@ public class IndexedDiskCacheAttributes extends AbstractAuxiliaryCacheAttributes
     public void setMaxKeySize( int maxKeySize )
     {
         this.maxKeySize = maxKeySize;
+        
+        // make sure the sizes are in accord with our rule.
+        setMaxRecycleBinSize( maxRecycleBinSize );
     }
 
     /**
@@ -113,6 +97,38 @@ public class IndexedDiskCacheAttributes extends AbstractAuxiliaryCacheAttributes
 
 
     /**
+     * This cannot be larger than the maxKeySize.  It wouldn't hurt
+     * anything, but it makes the config necessary.  The recycle bin
+     * entry willbe at least as large as a key.
+     * 
+     * If the maxKeySize
+     * is -1 this will be set tot he default, which is 5000.
+     * 
+     * @param maxRecycleBinSize The maxRecycleBinSize to set.
+     */
+    public void setMaxRecycleBinSize( int maxRecycleBinSize )
+    {
+      if ( maxKeySize >= 0 )
+      {
+        this.maxRecycleBinSize = Math.min( maxRecycleBinSize, maxKeySize );
+      }
+      else
+      {
+        this.maxRecycleBinSize = DEFAULT_maxRecycleBinSize;        
+      }
+    }
+
+
+    /**
+     * @return Returns the maxRecycleBinSize.
+     */
+    public int getMaxRecycleBinSize()
+    {
+      return maxRecycleBinSize;
+    }
+
+    
+    /**
      * Description of the Method
      *
      * @return
@@ -138,7 +154,12 @@ public class IndexedDiskCacheAttributes extends AbstractAuxiliaryCacheAttributes
     public String toString()
     {
         StringBuffer str = new StringBuffer();
-        str.append( "diskPath = " + diskPath );
+        str.append( "IndexedDiskCacheAttributes " );
+        str.append( "\n diskPath = " + diskPath );
+        str.append( "\n maxPurgatorySize   = " + maxPurgatorySize );
+        str.append( "\n maxKeySize  = " + maxKeySize );
+        str.append( "\n maxRecycleBinSize  = " + maxRecycleBinSize );
+        str.append( "\n optimizeAtRemoveCount  = " + optimizeAtRemoveCount );
         return str.toString();
     }
 
