@@ -60,7 +60,7 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
     final int count;
 
     /** Description of the Field */
-    protected static byte listenerId = 0;
+    protected static long listenerId = 0;
 
 
     /**
@@ -284,7 +284,7 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
      *
      * @param id The new listenerId value
      */
-    public void setListenerId( byte id )
+    public void setListenerId( long id )
         throws IOException
     {
         this.listenerId = id;
@@ -297,7 +297,7 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
      *
      * @return The listenerId value
      */
-    public byte getListenerId()
+    public long getListenerId()
         throws IOException
     {
         return this.listenerId;
