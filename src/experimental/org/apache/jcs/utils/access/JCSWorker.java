@@ -1,0 +1,236 @@
+/*
+ * Created on Oct 8, 2003
+ *  
+ */
+package org.apache.jcs.utils.access;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.JCS;
+import org.apache.jcs.access.exception.CacheException;
+/**
+ * Utility class to encapsulate doing a piece of work, and caching the results
+ * in JCS. Simply construct this class with the region name for the Cache and
+ * keep a static reference to it instead of the JCS itself. Then make a new
+ * org.apache.jcs.utils.access.AbstractJCSWorkerHelper and implement Object
+ * doWork() and do the work in there, returning the object to be cached. Then
+ * call .getResult() with the key and the AbstractJCSWorkerHelper to get the
+ * result of the work. If the object isn't allready in the Cache,
+ * AbstractJCSWorkerHelper.doWork() will get called, and the result will be put
+ * into the cache. If the object is allready in cache, the cached result will be
+ * returned instead. As an added bonus, multiple JCSWorkers with the same
+ * region, and key won't do the work multiple times: The first JCSWorker to get
+ * started will do the work, and all subsequent workers with the same region,
+ * group, and key will wait on the first one and use his resulting work instead
+ * of doing the work themselves.
+ * 
+ * This is ideal when the work being done is a query to the database where the
+ * results may take time to be retrieved.
+ * 
+ * For example: <br>
+ * 
+ * <code>
+ *    public static JCSWorker cachingWorker = new JCSWorker("example region");<br>
+ * 		public Object getSomething(Serializable aKey){<br>
+ *      JCSWorkerHelper helper = new AbstractJCSWorkerHelper(){<br>
+ *        public Object doWork(){<br>
+ *          // Do some (DB?) work here which results in a list <br>
+ *          // This only happens if the cache dosn't have a item in this region for aKey <br>
+ *          // Note this is especially useful with Hibernate, which will cache indiviual <br>
+ *          // Objects, but not entire query result sets. <br>
+ *          List results = query.list(); <br>
+ *          // Whatever we return here get's cached with aKey, and future calls to <br>
+ *          // getResult() on a CachedWorker with the same region and key will return that instead. <br>
+ *          return results; <br>
+ *      };<br>
+ *      List result = worker.getResult(aKey, helper);<br>
+ *    }
+ * </code>
+ * 
+ * This is essentially the same as doing: 
+ * <code>
+ *  JCS jcs = JCS.getInstance("exampleregion");<br>
+ *  List results = (List) jcs.get(aKey);<br>
+ *  if(results != null){ //do the work here<br>
+ *    results = query.list(); jcs.put(aKey, results);<br>
+ *  }<br>
+ * </code>
+ * 
+ * But has the added benifit of the work-load sharing; under normal
+ * circumstances if multiple threads all tried to do the same query at the same
+ * time, the same query would happen multiple times on the database, and the
+ * resulting object would get put into JCS multiple times.
+ * 
+ * @author Travis Savo
+ */
+public class JCSWorker {
+	private static final Log logger = LogFactory.getLog(JCSWorker.class);
+	private JCS cache;
+	/**
+	 * Map to hold who's doing work presently.
+	 */
+	private static volatile Map map = new HashMap();
+	/**
+	 * Region for the JCS cache.
+	 */
+	private String region;
+
+	/**
+	 * Constructor which takes a region for the JCS cache.
+	 * 
+	 * @param aName
+	 *          The Region to use for the JCS cache.
+	 * @param aKey
+	 *          The key to store the result under.
+	 * @param aGroup
+	 *          The group to store the result under.
+	 */
+	public JCSWorker(final String aRegion) {
+		region = aRegion;
+		try {
+			cache = JCS.getInstance(aRegion);
+		} catch (CacheException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	/**
+	 * Getter for the region of the JCS Cache.
+	 * 
+	 * @return The JCS region in which the result will be cached.
+	 */
+	public String getRegion() {
+		return region;
+	}
+
+	/**
+	 * Gets the cached result for this region/key OR does the work and caches the
+	 * result, returning the result. If the result has not been cached yet, this
+	 * calls doWork() on the JCSWorkerHelper to do the work and cache the result.
+	 * 
+	 * This is also an opertunity to do any post processing of the result in your
+	 * CachedWorker implementation.
+	 * 
+	 * @param aKey
+	 *          The key to get/put with on the Cache.
+	 * @param aWorker
+	 *          The JCSWorkerHelper implementing Object doWork(). This gets called
+	 *          if the cache get misses, and the result is put into cache.
+	 * @return The result of doing the work, or the cached result.
+	 * @throws Exception
+	 *           Throws an exception if anything goes wrong while doing the work.
+	 */
+	public Object getResult(Serializable aKey, JCSWorkerHelper aWorker) throws Exception {
+		return run(aKey, null, aWorker);
+	}
+
+	/**
+	 * Gets the cached result for this region/key OR does the work and caches the
+	 * result, returning the result. If the result has not been cached yet, this
+	 * calls doWork() on the JCSWorkerHelper to do the work and cache the result.
+	 * 
+	 * This is also an opertunity to do any post processing of the result in your
+	 * CachedWorker implementation.
+	 * 
+	 * @param aKey
+	 *          The key to get/put with on the Cache.
+	 * @param aGroup
+	 *          The cache group to put the result in.
+	 * @param aWorker
+	 *          The JCSWorkerHelper implementing Object doWork(). This gets called
+	 *          if the cache get misses, and the result is put into cache.
+	 * @return The result of doing the work, or the cached result.
+	 * @throws Exception
+	 *           Throws an exception if anything goes wrong while doing the work.
+	 */
+	public Object getResult(Serializable aKey, String aGroup, JCSWorkerHelper aWorker) throws Exception {
+		return run(aKey, aGroup, aWorker);
+	}
+
+	/**
+	 * Try and get the object from the cache, and if it's not there, do the work
+	 * and cache it. This also ensures that only one CachedWorker is doing the
+	 * work and subsequent calls to a CachedWorker with identical region/key/group
+	 * will wait on the results of this call. It will call the
+	 * JCSWorkerHelper.doWork() if the cache misses, and will put the result.
+	 * 
+	 * @return Either the result of doing the work, or the cached result.
+	 * @throws Exception
+	 *           If something goes wrong while doing the work, throw an exception.
+	 */
+	private Object run(Serializable aKey, String aGroup, JCSWorkerHelper aHelper) throws Exception {
+		Object result = null;
+		long start = 0;
+		long dbTime = 0;
+		JCSWorkerHelper helper = null;
+
+		synchronized (map) {
+			//Check to see if we allready have a thread doing this work.
+			helper = (JCSWorkerHelper) map.get(getRegion() + aKey);
+			if (helper == null) {
+				//If not, add ourselves as the Worker so
+				//calls in another thread will use this worker's result
+				map.put(getRegion() + aKey, aHelper);
+			}
+		}
+		if (helper != null) {
+			synchronized (helper) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Found a worker allready doing this work (" + getRegion() + ":" + aKey + ").");
+				}
+				if (!helper.isFinished()) {
+					helper.wait();
+				}
+				if (logger.isDebugEnabled()) {
+					logger.debug("Another thread finished our work for us. Using thoes results instead. (" + getRegion() + ":" + aKey + ").");
+				}
+			}
+		}
+		//Do the work
+		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug(getRegion() + " is doing the work.");
+			}
+			result = null;
+
+			//Try to get the item from the cache
+			if (aGroup != null) {
+				result = cache.getFromGroup(aKey, aGroup);
+			} else {
+				result = cache.get(aKey);
+			}
+			//If the cache dosn't have it, do the work.
+			if (result == null) {
+				result = aHelper.doWork();
+				if (logger.isDebugEnabled()) {
+					logger.debug("Work Done, caching: key:" + aKey + ", group:" + aGroup + ", result:" + result + ".");
+				}
+				//Stick the result of the work in the cache.
+				if (aGroup != null) {
+					cache.putInGroup(aKey, aGroup, result);
+				} else {
+					cache.put(aKey, result);
+				}
+			}
+			//return the result
+			return result;
+		} finally {
+			if (logger.isDebugEnabled()) {
+				logger.debug(getRegion() + ":" + aKey + " entered finally.");
+			}
+			synchronized (map) {
+				//Remove ourselves as the worker.
+				if (helper == null) {
+					map.remove(getRegion() + aKey);
+				}
+				synchronized (this) {
+					aHelper.setFinished(true);
+					//Wake everyone waiting on us
+					notifyAll();
+				}
+			}
+		}
+	}
+}
