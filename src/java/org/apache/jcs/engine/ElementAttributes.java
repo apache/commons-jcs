@@ -8,7 +8,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import java.util.ArrayList;
+
 import org.apache.jcs.access.exception.InvalidArgumentException;
+import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /*
  * The Apache Software License, Version 1.1
@@ -66,73 +69,79 @@ import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
- * Element attribute descriptor class.
+ *  Element attribute descriptor class.
  *
- * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
- * @created January 15, 2002
- * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
+ *@author     <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
+ *@created    January 15, 2002
+ *@version    $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
 public class ElementAttributes implements IElementAttributes, Serializable, Cloneable
 {
 
     /**
-     * Is this item distributable at all.
+     *  Is this item distributable at all.
      */
     public boolean IS_DISTRIBUTE = false;
     // lateral
 
     /**
-     * can this item be flushed to disk
+     *  can this item be flushed to disk
      */
     public boolean IS_SPOOL = false;
 
     /**
-     * Is this item laterally distributable
+     *  Is this item laterally distributable
      */
     public boolean IS_LATERAL = false;
 
     /**
-     * Can this item be sent to the remote cache
+     *  Can this item be sent to the remote cache
      */
     public boolean IS_REMOTE = false;
 
     /**
-     * can turn off expiration
+     *  can turn off expiration
      */
     public boolean IS_ETERNAL = true;
 
     /**
-     * Description of the Field
+     *  Description of the Field
      */
     public long version = 0;
 
     /**
-     * Max life seconds
+     *  Max life seconds
      */
     public long mls = -1;
 
     /**
-     * Description of the Field
+     *  Description of the Field
      */
     public long idle = -1;
 
     /**
-     * The byte size of teh field. Must be manually set.
+     *  The byte size of teh field. Must be manually set.
      */
     public int size = 0;
 
     /**
-     * The creation time
+     *  The creation time
      */
     public long createTime = 0;
 
     /**
-     * The last access time
+     *  The last access time
      */
     public long lastAccessTime = 0;
 
     /**
-     * Constructor for the IElementAttributes object
+     *  The last access time
+     */
+    public ArrayList eventHandlers;
+
+
+    /**
+     *  Constructor for the IElementAttributes object
      */
     public ElementAttributes()
     {
@@ -142,9 +151,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Constructor for the IElementAttributes object
+     *  Constructor for the IElementAttributes object
      *
-     * @param attr
+     *@param  attr
      */
     private ElementAttributes( ElementAttributes attr )
     {
@@ -171,9 +180,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Description of the Method
+     *  Description of the Method
      *
-     * @return
+     *@return
      */
     public IElementAttributes copy()
     {
@@ -186,16 +195,15 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
             // need to make this more efficient.  Just want to insure
             // a proper copy
-            ElementAttributes attr = new ElementAttributes( );
-            attr.setIdleTime(this.getIdleTime());
-            attr.setIsEternal(this.getIsEternal());
-            attr.setIsDistribute(this.getIsDistribute());
-            attr.setIsLateral(this.getIsLateral());
-            attr.setIsRemote(this.getIsRemote());
-            attr.setIsSpool(this.getIsSpool());
-            attr.setMaxLifeSeconds(this.getMaxLifeSeconds());
+            ElementAttributes attr = new ElementAttributes();
+            attr.setIdleTime( this.getIdleTime() );
+            attr.setIsEternal( this.getIsEternal() );
+            attr.setIsDistribute( this.getIsDistribute() );
+            attr.setIsLateral( this.getIsLateral() );
+            attr.setIsRemote( this.getIsRemote() );
+            attr.setIsSpool( this.getIsSpool() );
+            attr.setMaxLifeSeconds( this.getMaxLifeSeconds() );
             return attr;
-
         }
         catch ( Exception e )
         {
@@ -205,9 +213,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Description of the Method
+     *  Description of the Method
      *
-     * @return
+     *@return
      */
     public Object clone2()
     {
@@ -242,9 +250,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
     }
 
     /**
-     * Sets the version attribute of the IElementAttributes object
+     *  Sets the version attribute of the IElementAttributes object
      *
-     * @param version The new version value
+     *@param  version  The new version value
      */
     public void setVersion( long version )
     {
@@ -253,10 +261,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Sets the maxLifeSeconds attribute of the IElementAttributes object
+     *  Sets the maxLifeSeconds attribute of the IElementAttributes object
      *
-     * @param ttl The new timeToLive value
-     * @param mls The new {3} value
+     *@param  mls  The new {3} value
      */
     public void setMaxLifeSeconds( long mls )
     {
@@ -264,9 +271,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
     }
 
     /**
-     * Gets the {3} attribute of the ElementAttributes object
+     *  Gets the {3} attribute of the ElementAttributes object
      *
-     * @return The {3} value
+     *@return    The {3} value
      */
     public long getMaxLifeSeconds()
     {
@@ -275,9 +282,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Sets the idleTime attribute of the IElementAttributes object
+     *  Sets the idleTime attribute of the IElementAttributes object
      *
-     * @param idle The new idleTime value
+     *@param  idle  The new idleTime value
      */
     public void setIdleTime( long idle )
     {
@@ -288,9 +295,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
     //public void setListener( int event, CacheEventListener listerner) {}
 
     /**
-     * Size in bytes.
+     *  Size in bytes.
      *
-     * @param size The new size value
+     *@param  size  The new size value
      */
     public void setSize( int size )
     {
@@ -299,9 +306,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Gets the size attribute of the IElementAttributes object
+     *  Gets the size attribute of the IElementAttributes object
      *
-     * @return The size value
+     *@return    The size value
      */
     public int getSize()
     {
@@ -310,9 +317,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Gets the createTime attribute of the IElementAttributes object
+     *  Gets the createTime attribute of the IElementAttributes object
      *
-     * @return The createTime value
+     *@return    The createTime value
      */
     public long getCreateTime()
     {
@@ -321,7 +328,7 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Sets the createTime attribute of the IElementAttributes object
+     *  Sets the createTime attribute of the IElementAttributes object
      */
     public void setCreateTime()
     {
@@ -330,9 +337,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Gets the version attribute of the IElementAttributes object
+     *  Gets the version attribute of the IElementAttributes object
      *
-     * @return The version value
+     *@return    The version value
      */
     public long getVersion()
     {
@@ -341,11 +348,11 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Gets the idleTime attribute of the IElementAttributes object. Keeping
-     * track of this will require storing the last access time. This could get
-     * expensive.
+     *  Gets the idleTime attribute of the IElementAttributes object. Keeping
+     *  track of this will require storing the last access time. This could get
+     *  expensive.
      *
-     * @return The idleTime value
+     *@return    The idleTime value
      */
     public long getIdleTime()
     {
@@ -354,9 +361,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * If the returned value is negative, the item has expired
+     *  If the returned value is negative, the item has expired
      *
-     * @return The timeToLive value
+     *@return    The timeToLive value
      */
     public long getTimeToLiveSeconds()
     {
@@ -366,9 +373,9 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Gets the LastAccess attribute of the IAttributes object
+     *  Gets the LastAccess attribute of the IAttributes object
      *
-     * @return The LastAccess value
+     *@return    The LastAccess value
      */
     public long getLastAccessTime()
     {
@@ -376,7 +383,7 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
     }
 
     /**
-     * Sets the LastAccessTime as now of the IElementAttributes object
+     *  Sets the LastAccessTime as now of the IElementAttributes object
      */
     public void setLastAccessTimeNow()
     {
@@ -385,76 +392,143 @@ public class ElementAttributes implements IElementAttributes, Serializable, Clon
 
 
     /**
-     * Gets the {3} attribute of the IElementAttributes object
+     *  Gets the {3} attribute of the IElementAttributes object
      *
-     * @return The {3} value
+     *@return    The {3} value
      */
     public boolean getIsDistribute()
     {
         return this.IS_DISTRIBUTE;
     }
-     public void setIsDistribute( boolean val) {
-        this.IS_DISTRIBUTE = val;
-     }
 
     /**
-     * can this item be flushed to disk
+     *  Sets the isDistribute attribute of the ElementAttributes object
      *
-     * @return The {3} value
+     *@param  val  The new isDistribute value
+     */
+    public void setIsDistribute( boolean val )
+    {
+        this.IS_DISTRIBUTE = val;
+    }
+
+    /**
+     *  can this item be flushed to disk
+     *
+     *@return    The {3} value
      */
     public boolean getIsSpool()
     {
         return this.IS_SPOOL;
     }
-     public void setIsSpool( boolean val) {
-        this.IS_SPOOL = val;
-     }
 
     /**
-     * Is this item laterally distributable
+     *  Sets the isSpool attribute of the ElementAttributes object
      *
-     * @return The {3} value
+     *@param  val  The new isSpool value
+     */
+    public void setIsSpool( boolean val )
+    {
+        this.IS_SPOOL = val;
+    }
+
+    /**
+     *  Is this item laterally distributable
+     *
+     *@return    The {3} value
      */
     public boolean getIsLateral()
     {
         return this.IS_LATERAL;
     }
-     public void setIsLateral( boolean val) {
-        this.IS_LATERAL = val;
-     }
 
     /**
-     * Can this item be sent to the remote cache
+     *  Sets the isLateral attribute of the ElementAttributes object
      *
-     * @return The {3} value
+     *@param  val  The new isLateral value
+     */
+    public void setIsLateral( boolean val )
+    {
+        this.IS_LATERAL = val;
+    }
+
+    /**
+     *  Can this item be sent to the remote cache
+     *
+     *@return    The {3} value
      */
     public boolean getIsRemote()
     {
         return this.IS_REMOTE;
     }
-     public void setIsRemote( boolean val) {
-        this.IS_REMOTE = val;
-     }
 
     /**
-     * can turn off expiration
+     *  Sets the isRemote attribute of the ElementAttributes object
      *
-     * @return The {3} value
+     *@param  val  The new isRemote value
+     */
+    public void setIsRemote( boolean val )
+    {
+        this.IS_REMOTE = val;
+    }
+
+    /**
+     *  can turn off expiration
+     *
+     *@return    The {3} value
      */
     public boolean getIsEternal()
     {
         return this.IS_ETERNAL;
     }
 
-     public void setIsEternal( boolean val) {
+    /**
+     *  Sets the isEternal attribute of the ElementAttributes object
+     *
+     *@param  val  The new isEternal value
+     */
+    public void setIsEternal( boolean val )
+    {
         this.IS_ETERNAL = val;
-     }
+    }
 
 
     /**
-     * For logging and debugging the element IElementAttributes.
+     *  Adds a ElementEventHandler. Handler's can be registered for multiple
+     *  events. A registered handler will be called at every recognized event.
      *
-     * @return
+     * The alternative would be to register handlers for each event.  Or maybe
+     * The handler interface should ahve a method to return whether it cares
+     * about certain events.
+     *
+     *@param  eventHandler  The ElementEventHandler to be added to the list.
+     */
+    public void addElementEventHandler( IElementEventHandler eventHandler )
+    {
+        // lazy here, no concurrency problems expected
+        if ( this.eventHandlers == null )
+        {
+            this.eventHandlers = new ArrayList();
+        }
+        this.eventHandlers.add( eventHandler );
+    }
+
+    /**
+     *  Gets the elementEventHandlers. Returns null if none exist. Makes
+     *  checking easy.
+     *
+     *@return    The elementEventHandlers value
+     */
+
+    public ArrayList getElementEventHandlers()
+    {
+        return this.eventHandlers;
+    }
+
+
+    /**
+     *  For logging and debugging the element IElementAttributes.
+     *
+     *@return
      */
     public String toString()
     {

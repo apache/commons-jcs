@@ -53,20 +53,27 @@ package org.apache.jcs.engine.memory.shrinking;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 
+import org.apache.jcs.engine.control.event.ElementEvent;
+import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
+import org.apache.jcs.engine.control.event.behavior.IElementEvent;
+import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
+
+
 /**
- * A background memory shrinker. Just started. <u>DON'T USE</u>
+ *  A background memory shrinker. Just started. <u>DON'T USE</u>
  *
- * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
- * @created February 18, 2002
- * @version $Id:
+ *@author     <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
+ *@created    February 18, 2002
+ *@version    $Id:
  */
 public class ShrinkerThread extends Thread
 {
@@ -78,9 +85,9 @@ public class ShrinkerThread extends Thread
         LogFactory.getLog( ShrinkerThread.class );
 
     /**
-     * Constructor for the ShrinkerThread object. Should take an IMemoryCache
+     *  Constructor for the ShrinkerThread object. Should take an IMemoryCache
      *
-     * @param cache
+     *@param  cache
      */
     public ShrinkerThread( MemoryCache cache )
     {
@@ -89,7 +96,7 @@ public class ShrinkerThread extends Thread
     }
 
     /**
-     * Description of the Method
+     *  Description of the Method
      */
     public void kill()
     {
@@ -97,7 +104,7 @@ public class ShrinkerThread extends Thread
     }
 
     /**
-     * Main processing method for the ShrinkerThread object
+     *  Main processing method for the ShrinkerThread object
      */
     public void run()
     {
@@ -110,7 +117,7 @@ public class ShrinkerThread extends Thread
             try
             {
                 this.sleep( cache.getCacheAttributes()
-                            .getShrinkerIntervalSeconds() * 1000 );
+                    .getShrinkerIntervalSeconds() * 1000 );
             }
             catch ( InterruptedException ie )
             {
@@ -121,7 +128,7 @@ public class ShrinkerThread extends Thread
     }
 
     /**
-     * Constructor for the shrink object
+     *  Constructor for the shrink object
      */
     protected void shrink()
     {
@@ -168,21 +175,56 @@ public class ShrinkerThread extends Thread
                         {
                             log.info( "Exceeded maxLifeSeconds -- " + me.ce.getKey() );
                         }
+
+                        // handle event, might move to a new method
+                        ArrayList eventHandlers = me.ce.getElementAttributes().getElementEventHandlers();
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND" );
+                        }
+                        if ( eventHandlers != null ) {
+                          IElementEvent event = new ElementEvent(me.ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND);
+                          Iterator hIt = eventHandlers.iterator();
+                          while ( hIt.hasNext() ) {
+                            IElementEventHandler hand = (IElementEventHandler)hIt.next();
+                            hand.handleElementEvent(event);
+                          }
+                        }
+
                         itr.remove();
+                        // TODO: this needs to go through the remove chanel
+                        // since an old copy could be on disk and we may want
+                        // to clean up the other caches.
+                        // probably need to call both
                         //cache.remove( me.ce.getKey() );
                     }
                     else
-
                     // Exceeded maxIdleTime, removal
                         if ( ( me.ce.getElementAttributes().getIdleTime() != -1 ) && ( now - me.ce.getElementAttributes().getLastAccessTime() ) > ( me.ce.getElementAttributes().getIdleTime() * 1000 ) )
+                    {
+                        if ( log.isInfoEnabled() )
                         {
-                            if ( log.isInfoEnabled() )
-                            {
-                                log.info( "Exceeded maxIdleTime [ me.ce.getElementAttributes().getIdleTime() = " + me.ce.getElementAttributes().getIdleTime() + " ]-- " + me.ce.getKey() );
-                            }
-                            itr.remove();
-                            //cache.remove( me.ce.getKey() );
+                            log.info( "Exceeded maxIdleTime [ me.ce.getElementAttributes().getIdleTime() = " + me.ce.getElementAttributes().getIdleTime() + " ]-- " + me.ce.getKey() );
                         }
+
+                        // handle event, might move to a new method
+                        ArrayList eventHandlers = me.ce.getElementAttributes().getElementEventHandlers();
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND" );
+                        }
+                        if ( eventHandlers != null ) {
+                          IElementEvent event = new ElementEvent(me.ce, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND);
+                          Iterator hIt = eventHandlers.iterator();
+                          while ( hIt.hasNext() ) {
+                            IElementEventHandler hand = (IElementEventHandler)hIt.next();
+                            hand.handleElementEvent(event);
+                          }
+                        }
+
+                        itr.remove();
+                        //cache.remove( me.ce.getKey() );
+                    }
                 }
 
             }
