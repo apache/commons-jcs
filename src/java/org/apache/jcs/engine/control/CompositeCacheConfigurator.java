@@ -146,10 +146,10 @@ public class CompositeCacheConfigurator
      */
     protected void parseSystemRegions( Properties props )
     {
-        Enumeration enum = props.propertyNames();
-        while ( enum.hasMoreElements() )
+        Enumeration en = props.propertyNames();
+        while ( en.hasMoreElements() )
         {
-            String key = ( String ) enum.nextElement();
+            String key = ( String ) en.nextElement();
             if ( key.startsWith( SYSTEM_REGION_PREFIX )
                 && ( key.indexOf( "attributes" ) == -1 ) )
             {
@@ -170,10 +170,10 @@ public class CompositeCacheConfigurator
     /** Parse region elements. */
     protected void parseRegions( Properties props )
     {
-        Enumeration enum = props.propertyNames();
-        while ( enum.hasMoreElements() )
+        Enumeration en = props.propertyNames();
+        while ( en.hasMoreElements() )
         {
-            String key = ( String ) enum.nextElement();
+            String key = ( String ) en.nextElement();
             if ( key.startsWith( REGION_PREFIX ) && ( key.indexOf( "attributes" ) == -1 ) )
             {
                 String regionName = key.substring( REGION_PREFIX.length() );

@@ -446,16 +446,16 @@ public class ListTestCacheServlet extends HttpServlet
 //
 //            // providing this feature adds a significant burden to the cache,
 //            // but it makes it able to completely implement the seesion api
-//            Enumeration enum = this.cityGroupCache.getAttributeNames( city );
-//            if ( enum == null )
+//            Enumeration en = this.cityGroupCache.getAttributeNames( city );
+//            if ( en == null )
 //            {
 //                out.println( "<br>There is no info for this city. <br>" );
 //            }
 //            else
 //            {
-//                while ( enum.hasMoreElements() )
+//                while ( en.hasMoreElements() )
 //                {
-//                    out.println( "Zip code " + ( String ) enum.nextElement() + " is in <b>" );
+//                    out.println( "Zip code " + ( String ) en.nextElement() + " is in <b>" );
 //                    out.println( "<a href=\"?task=zipForCity&city=" + city + "\">" + city + "</a>" );
 //                    out.println( "</b> city. <br>" );
 //                }

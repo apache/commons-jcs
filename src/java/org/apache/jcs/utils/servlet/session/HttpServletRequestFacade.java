@@ -245,11 +245,11 @@ public class HttpServletRequestFacade implements HttpServletRequest
         // FUTURE: Call req.getParameterMap() for servlet api 2.3
 
         Map params = new HashMap();
-        Enumeration enum = req.getParameterNames();
+        Enumeration en = req.getParameterNames();
         String name;
-        while ( enum.hasMoreElements() )
+        while ( en.hasMoreElements() )
         {
-            name = ( String ) enum.nextElement();
+            name = ( String ) en.nextElement();
             params.put( name, req.getParameterValues( name ) );
         }
         return params;

@@ -82,11 +82,11 @@ public class RemoteUtils
             {
               if ( props != null )
               {
-                Enumeration enum = props.keys();
+                Enumeration en = props.keys();
                 StringBuffer buf = new StringBuffer();
-                while( enum.hasMoreElements() )
+                while( en.hasMoreElements() )
                 {
-                  String key = (String)enum.nextElement();
+                  String key = (String)en.nextElement();
                   buf.append( "\n" + key + " = " + props.getProperty(key) );
                 }
                 log.debug( buf.toString() );
