@@ -460,7 +460,6 @@ public class IndexedDiskCache
 
     try
     {
-      //storageLock.readLock();
       storageLock.readLock().acquire();
       try {
         if (!alive)
@@ -475,7 +474,6 @@ public class IndexedDiskCache
       }
       finally
       {
-        //storageLock.done();
         storageLock.readLock().release();
       }
     }
@@ -528,7 +526,6 @@ public class IndexedDiskCache
     HashSet keys = new HashSet();
     try
     {
-      //storageLock.readLock();
       storageLock.readLock().acquire();
 
       for (Iterator itr = keyHash.keySet().iterator(); itr.hasNext(); )
@@ -550,7 +547,6 @@ public class IndexedDiskCache
     }
     finally
     {
-      //storageLock.done();
       storageLock.readLock().release();
     }
 
@@ -731,7 +727,6 @@ public class IndexedDiskCache
 
     try
     {
-      //storageLock.writeLock();
       storageLock.writeLock().acquire();
 
       dataFile.close();
@@ -758,7 +753,6 @@ public class IndexedDiskCache
     }
     finally
     {
-      //storageLock.done();
       storageLock.writeLock().release();
     }
   }
@@ -963,7 +957,6 @@ public class IndexedDiskCache
 
     try
     {
-      //storageLock.readLock();
       storageLock.readLock().acquire();
       try
       {
@@ -971,7 +964,6 @@ public class IndexedDiskCache
       }
       finally
       {
-        //storageLock.done();
         storageLock.readLock().release();
       }
 

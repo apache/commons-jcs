@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
@@ -42,8 +43,6 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.utils.locking.ReadWriteLock;
-import org.apache.jcs.utils.locking.ReadWriteLockManager;
 
 /**
  * Abstract class providing a base implementation of a disk cache, which can
@@ -64,8 +63,7 @@ import org.apache.jcs.utils.locking.ReadWriteLockManager;
 public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 {
     private static final Log log =
-        LogFactory.getLog( AbstractDiskCache.class );
-
+        LogFactory.getLog( AbstractDiskCache.class );  
 
     /**  Generic disk cache attributes */
     private IDiskCacheAttributes dcattr = null;
@@ -86,16 +84,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * updating of the persistent storage.
      */
     protected ICacheEventQueue cacheEventQueue;
-
-    /**
-     * Each instance of a Disk cache should use this lock to synchronize reads
-     * and writes to the underlying storage mechansism.
-     */
-    protected ReadWriteLock lock = new ReadWriteLock();
-
-    /** Manages locking for purgatory item manipulation. */
-    protected ReadWriteLockManager locker = new ReadWriteLockManager();
-
+    
+    
     /**
      * Indicates whether the cache is 'alive', defined as having been
      * initialized, but not yet disposed.
@@ -234,7 +224,12 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             return null;
         }
 
-        PurgatoryElement pe = ( PurgatoryElement ) purgatory.get( key );
+        PurgatoryElement pe = null;
+        synchronized ( purgatory )
+        {
+            pe = ( PurgatoryElement ) purgatory.get( key );            
+        }
+
 
         // If the element was found in purgatory
 
@@ -297,28 +292,25 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      */
     public final boolean remove( Serializable key )
     {
-        String keyAsString = key.toString();
+        //String keyAsString = key.toString();
 
-        writeLock( keyAsString );
-        try
+        PurgatoryElement pe = null;
+        synchronized ( purgatory )
         {
             // Remove element from purgatory if it is there
-
-            PurgatoryElement pe = ( PurgatoryElement )purgatory.remove( key );
-            if ( pe != null ) {
-              // no way to remove from queue, just make sure it doesn't get on disk
-              // and then removed right afterwards
-              pe.setSpoolable(false);
-            }
-            // Remove from persistent store immediately
-
-            doRemove( key );
+            pe = ( PurgatoryElement )purgatory.remove( key );
         }
-        finally
-        {
-            releaseLock( keyAsString );
-        }
+        
 
+        if ( pe != null ) {
+            // no way to remove from queue, just make sure it doesn't get on disk
+            // and then removed right afterwards
+            pe.setSpoolable(false);
+        }
+        // Remove from persistent store immediately
+
+        doRemove( key );
+        
         return false;
     }
 
@@ -434,46 +426,6 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         return DISK_CACHE;
     }
 
-    /**
-     * Internally used write lock for purgatory item modification.
-     *
-     * @param id What name to lock on.
-     */
-    private void writeLock( String id )
-    {
-        try
-        {
-            locker.writeLock( id );
-        }
-        catch ( InterruptedException e )
-        {
-            // See note in readLock()
-
-            log.error( "Was interrupted while acquiring read lock", e );
-        }
-        catch ( Throwable e )
-        {
-
-            log.error( e );
-        }
-    }
-
-    /**
-     * Internally used write lock for purgatory item modification.
-     *
-     * @param id What name to lock on.
-     */
-    private void releaseLock( String id )
-    {
-        try
-        {
-            locker.done( id );
-        }
-        catch ( IllegalStateException e )
-        {
-            log.warn( "Problem releasing lock", e );
-        }
-    }
 
     /**
      * Cache that implements the CacheListener interface, and calls appropriate
@@ -526,16 +478,14 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                 {
                     PurgatoryElement pe = ( PurgatoryElement ) element;
 
-                    String keyAsString = element.getKey().toString();
+                    //String keyAsString = element.getKey().toString();
 
-                    writeLock( keyAsString );
-
-                    try
+                    synchronized ( purgatory )
                     {
                         // If the element has already been removed from
                         // purgatory do nothing
 
-                        if ( ! purgatory.containsKey( pe.getKey() ) )
+                        if (!purgatory.containsKey( pe.getKey() ))
                         {
                             return;
                         }
@@ -544,20 +494,18 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
                         // If the element is still eligable, spool it.
 
-                        if ( pe.isSpoolable() )
-                        {
-                            doUpdate( element );
-                        }
-
+                    	if (pe.isSpoolable())
+                    	{
+                    	    doUpdate( element );
+                    	}
+                        
                         // After the update has completed, it is safe to remove
                         // the element from purgatory.
 
                         purgatory.remove( element.getKey() );
-                    }
-                    finally
-                    {
-                        releaseLock( keyAsString );
-                    }
+                        
+                    }                    
+
                 }
                 else
                 {
@@ -573,18 +521,13 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                 // queue.  This block handles the case where the disk cache fails
                 // during normal opertations.
                 
-                String keyAsString = element.getKey().toString();
+                //String keyAsString = element.getKey().toString();
 
-                writeLock( keyAsString );
-
-                try
+                synchronized ( purgatory )
                 {
                     purgatory.remove( element.getKey() );
                 }
-                finally
-                {
-                    releaseLock( keyAsString );
-                }                              
+                                        
             }
         }
 
