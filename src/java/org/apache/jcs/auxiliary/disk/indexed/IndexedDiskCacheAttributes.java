@@ -32,8 +32,8 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
 
     private String diskPath;
 
-    // default to 500000
-    private int maxKeySize = 500000;
+    // default to 5000
+    private int maxKeySize = 5000;
 
     // default to -1, i.e., don't optimize until shutdown
     private int optimizeAtRemoveCount = -1;
