@@ -37,9 +37,14 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.utils.locking.ReadWriteLock;
+import org.apache.jcs.utils.struct.SortedPreferentialArray;
 
 /**
- * Disk cache that uses a RandomAccessFile with keys stored in memory
+ * Disk cache that uses a RandomAccessFile with keys stored in memory.
+ *
+ * The maximum number of keys stored in memory is configurable.
+ *
+ * The disk cache tries to recycle spots on disk to limit file expansion.
  *
  * @version $Id$
  */
@@ -51,11 +56,14 @@ public class IndexedDiskCache extends AbstractDiskCache
     private String fileName;
     private IndexedDisk dataFile;
     private IndexedDisk keyFile;
-    private LRUMapJCS keyHash;
+    private LRUMap keyHash;
     private int maxKeySize;
 
     private File rafDir;
 
+    boolean doRecycle = false; //true;
+    // array of empty spots
+    private SortedPreferentialArray recycle;
 
 
     IndexedDiskCacheAttributes cattr;
@@ -114,13 +122,16 @@ public class IndexedDiskCache extends AbstractDiskCache
 
             else
             {
-                keyHash = new LRUMapJCS( maxKeySize );
+                keyHash = new LRUMap( maxKeySize );
 
                 if ( dataFile.length() > 0 )
                 {
                     dataFile.reset();
                 }
             }
+
+            // TODO, make a new size parameter for this.
+            recycle = new SortedPreferentialArray( maxKeySize );
 
             // Initialization finished successfully, so set alive to true.
 
@@ -148,11 +159,11 @@ public class IndexedDiskCache extends AbstractDiskCache
 
         try
         {
-            keyHash = ( LRUMapJCS ) keyFile.readObject( 0 );
+            keyHash = ( LRUMap ) keyFile.readObject( 0 );
 
             if ( keyHash == null )
             {
-                keyHash = new LRUMapJCS( maxKeySize );
+                keyHash = new LRUMap( maxKeySize );
             }
             else
             {
@@ -265,9 +276,30 @@ public class IndexedDiskCache extends AbstractDiskCache
                 // Try to reuse the location if possible.
                 if ( old != null && ded.len <= old.len )
                 {
-                    ded.pos = old.pos;
-                }
+                  ded.pos = old.pos;
+                } else {
+                  if ( doRecycle )
+                  {
+                    IndexedDiskElementDescriptor rep =
+                        (IndexedDiskElementDescriptor)recycle.takeNearestLargerOrEqual(ded);
+                    if ( rep != null )
+                    {
+                      ded.pos = rep.pos;
+                      if (log.isInfoEnabled())
+                      {
+                        log.info("using recycled ded " + ded.pos +
+                                 " rep.len = " + rep.len + " ded.len = " +
+                                 ded.len);
+                      }
+                    } else {
+                      if (log.isInfoEnabled())
+                      {
+                        log.info("no ded to recycle" );
+                      }
 
+                    }
+                  }
+                }
                 dataFile.write( data, ded.pos );
             }
             finally
@@ -419,6 +451,21 @@ public class IndexedDiskCache extends AbstractDiskCache
                     if ( k instanceof String
                          && k.toString().startsWith( key.toString() ) )
                     {
+
+                      if ( doRecycle ) {
+                        // reuse the spot
+                        IndexedDiskElementDescriptor ded =
+                            (IndexedDiskElementDescriptor) keyHash.get(key);
+                        if (ded != null)
+                        {
+                          recycle.add(ded);
+                          if (log.isDebugEnabled())
+                          {
+                            log.debug("recycling ded " + ded);
+                          }
+                        }
+                      }
+
                         iter.remove();
                         removed = true;
                     }
@@ -437,6 +484,20 @@ public class IndexedDiskCache extends AbstractDiskCache
                     if ( k instanceof GroupAttrName
                          && ((GroupAttrName)k).groupId.equals(key) )
                     {
+                      if ( doRecycle ) {
+                        // reuse the spot
+                        IndexedDiskElementDescriptor ded =
+                            (IndexedDiskElementDescriptor) keyHash.get(key);
+                        if (ded != null)
+                        {
+                          recycle.add(ded);
+                          if (log.isDebugEnabled())
+                          {
+                            log.debug("recycling ded " + ded);
+                          }
+                        }
+                      }
+
                         iter.remove();
                         removed = true;
                     }
@@ -448,6 +509,20 @@ public class IndexedDiskCache extends AbstractDiskCache
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Disk removal: Removed from key hash, key " + key );
+                }
+
+                if ( doRecycle ) {
+                  // reuse the spot
+                  IndexedDiskElementDescriptor ded =
+                      (IndexedDiskElementDescriptor) keyHash.get(key);
+                  if (ded != null)
+                  {
+                    recycle.add(ded);
+                    if (log.isDebugEnabled())
+                    {
+                      log.debug("recycling ded " + ded);
+                    }
+                  }
                 }
 
                 // remove single item.
@@ -513,7 +588,11 @@ public class IndexedDiskCache extends AbstractDiskCache
             keyFile =
                 new IndexedDisk( new File( rafDir, fileName + ".key" ) );
 
-            keyHash = new LRUMapJCS( this.maxKeySize );
+            recycle = null;
+            recycle = new SortedPreferentialArray( maxKeySize );
+
+            keyHash = null;
+            keyHash = new LRUMap( this.maxKeySize );
         }
         catch ( Exception e )
         {
@@ -591,7 +670,7 @@ public class IndexedDiskCache extends AbstractDiskCache
         {
             // Migrate from keyHash to keyHshTemp in memory,
             // and from dataFile to dataFileTemp on disk.
-            LRUMapJCS keyHashTemp = new LRUMapJCS( this.maxKeySize );
+            LRUMap keyHashTemp = new LRUMap( this.maxKeySize );
 
             IndexedDisk dataFileTemp =
                 new IndexedDisk( new File( rafDir, fileName + "Temp.data" ) );
@@ -673,6 +752,11 @@ public class IndexedDiskCache extends AbstractDiskCache
             keyHash = keyHashTemp;
             keyFile.reset();
             saveKeys();
+
+            // clean up the recycle store
+            recycle = null;
+            recycle = new SortedPreferentialArray( maxKeySize );
+
         }
         catch ( Exception e )
         {
@@ -716,6 +800,48 @@ public class IndexedDiskCache extends AbstractDiskCache
         }
     }
 
+    /**
+     * Inner class for recylcing and lru
+     */
+    public class LRUMap extends LRUMapJCS {
+
+      public LRUMap( int maxKeySize )
+      {
+        super( maxKeySize );
+      }
+
+
+      protected void processRemovedLRU( Object key, Object value )
+       {
+
+         if ( doRecycle ) {
+           // reuse the spot
+           IndexedDiskElementDescriptor ded =
+               (IndexedDiskElementDescriptor)value;
+           if (ded != null)
+           {
+             recycle.add(ded);
+             if (log.isInfoEnabled())
+             {
+               log.info("recycled ded in LRU" + ded);
+             }
+           }
+         }
+
+
+         if ( log.isDebugEnabled() )
+         {
+           log.debug( "Removing key: '" + key + "' from key store." );
+           log.debug( "Key store size: '" + this.size() + "'." );
+         }
+
+       }
+    }
+
+
 }
+
+
+
 
 

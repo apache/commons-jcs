@@ -25,7 +25,7 @@ import java.io.Serializable;
  * and loaded into memory on startup.
  *
  */
-public class IndexedDiskElementDescriptor implements Serializable
+public class IndexedDiskElementDescriptor implements Serializable, Comparable
 {
 
     /** Position of the cache data entry on disk. */
@@ -45,5 +45,39 @@ public class IndexedDiskElementDescriptor implements Serializable
 
     /** Constructor for the DiskElementDescriptor object */
     public IndexedDiskElementDescriptor() { }
+
+
+    public String toString() {
+      StringBuffer buf = new StringBuffer();
+      buf.append( "DED: " );
+      buf.append( " pos = " + pos );
+      buf.append( " len = " + len );
+      return buf.toString();
+    }
+
+  /**
+   * compareTo
+   *
+   * @param o Object
+   * @return int
+   */
+  public int compareTo(Object o)
+  {
+    if ( o == null ) {
+      return 1;
+    }
+
+    int oLen = ((IndexedDiskElementDescriptor)o).len;
+    if ( oLen == len ) {
+      return 0;
+    } else
+    if ( oLen > len ) {
+      return -1;
+    } else
+    if ( oLen < len ) {
+      return 1;
+    }
+    return 0;
+  }
 
 }
