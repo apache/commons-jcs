@@ -70,6 +70,10 @@ import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.jcs.engine.control.event.TestElementEventHandler;
+
+
+
 /**
  * Allows the user to run common cache commands fromt he command line for a test
  * cache.
@@ -517,6 +521,37 @@ public class TestCacheAccess
                             {
                                 cache_control.put( "key" + n,
                                     "data" + n + " put from ta = junk" );
+                            }
+                            long n_end = System.currentTimeMillis();
+                            p( "---put " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
+                        }
+                    }
+                    else
+                        if ( message.startsWith( "pute" ) )
+                    {
+                        String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
+                        int num = Integer.parseInt( numS.trim() );
+                        if ( numS == null )
+                        {
+                            p( "usage: putme numbertoput" );
+                        }
+                        else
+                        {
+//                            IElementAttributes attrp = new ElementAttributes();
+                            //attrp.setIsEternal(false);
+                            //attrp.setMaxLifeSeconds(30);
+
+//                            attrp.setIsLateral(true);
+//                            attrp.setIsRemote(true);
+
+                            long n_start = System.currentTimeMillis();
+                            for ( int n = 0; n < num; n++ )
+                            {
+                                IElementAttributes attrp = cache_control.getElementAttributes();
+                                TestElementEventHandler hand = new TestElementEventHandler();
+                                attrp.addElementEventHandler( hand );
+                                cache_control.put( "key" + n,
+                                    "data" + n + " put from ta = junk", attrp );
                             }
                             long n_end = System.currentTimeMillis();
                             p( "---put " + num + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
