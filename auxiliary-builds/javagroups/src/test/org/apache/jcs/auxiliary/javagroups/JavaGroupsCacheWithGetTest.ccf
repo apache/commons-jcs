@@ -10,3 +10,4 @@ jcs.auxiliary.JG = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
 jcs.auxiliary.JG.attributes = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
 jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.javagroups.JChannelFactory
 jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
+jcs.auxiliary.JG.attributes.GetFromPeers = true

@@ -88,6 +88,7 @@ public class JavaGroupsCacheAttributes implements AuxiliaryCacheAttributes
 
     private String channelFactoryClassName = "org.javagroups.JChannelFactory";
     private String channelProperties = null;
+    private boolean getFromPeers = false;
 
     public String getChannelFactoryClassName()
     {
@@ -107,6 +108,16 @@ public class JavaGroupsCacheAttributes implements AuxiliaryCacheAttributes
     public void setChannelProperties( String channelProperties )
     {
         this.channelProperties = channelProperties;
+    }
+
+    public boolean isGetFromPeers()
+    {
+        return getFromPeers;
+    }
+
+    public void setGetFromPeers( boolean getFromPeers )
+    {
+        this.getFromPeers = getFromPeers;
     }
 
     // ----------------------------------------------- AuxiliaryCacheAttributes

@@ -45,7 +45,7 @@ public class JavaGroupsCacheTest extends TestCase
         // Wait for it to propogate -- FIXME: This is time sensitive and thus
         //                                    a bad idea for a unit test.
 
-        Thread.sleep( 1000 );
+        Thread.sleep( 500 );
 
         // Assert that the values were correctly propogated
 
@@ -59,7 +59,7 @@ public class JavaGroupsCacheTest extends TestCase
 
         one.remove( "2" );
 
-        Thread.sleep( 1000 );
+        Thread.sleep( 500 );
 
         assertEquals( null, two.get( "2") );
 
@@ -67,7 +67,7 @@ public class JavaGroupsCacheTest extends TestCase
 
         one.remove();
 
-        Thread.sleep( 1000 );
+        Thread.sleep( 500 );
 
         assertEquals( null, two.get( "1" ) );
         assertEquals( null, two.get( "2" ) );

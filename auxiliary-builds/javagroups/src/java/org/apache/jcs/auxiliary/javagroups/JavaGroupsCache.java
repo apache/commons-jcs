@@ -64,11 +64,18 @@ import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.javagroups.Channel;
 import org.javagroups.Message;
+import org.javagroups.View;
+import org.javagroups.Address;
+import org.javagroups.MembershipListener;
+import org.javagroups.util.RspList;
 import org.javagroups.blocks.RequestHandler;
+import org.javagroups.blocks.GroupRequest;
+import org.javagroups.blocks.MessageDispatcher;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * Auxiliary cache using javagroups. Expects to be created with a Channel,
@@ -92,20 +99,27 @@ import java.util.Set;
  * @author <a href="james@jamestaylor.org">James Taylor</a>
  * @version $Id$
  */
-public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
+public class JavaGroupsCache
+    implements AuxiliaryCache, RequestHandler, MembershipListener
 {
-    private final static Log log = LogFactory.getLog( JavaGroupsCache.class );
+    private static int ct = 0;
+
+    private final Log log = LogFactory.getLog( JavaGroupsCache.class.getName() + (ct++) );
 
     private String cacheName;
     private int status;
+
+    private boolean getFromPeers;
 
     private CompositeCache cache;
 
     private Channel channel;
 
-    private Listener listener;
+    private MessageDispatcher dispatcher;
 
-    public JavaGroupsCache( CompositeCache cache, Channel channel )
+    public JavaGroupsCache( CompositeCache cache,
+                            Channel channel,
+                            boolean getFromPeers )
         throws Exception
     {
         this.cache = cache;
@@ -113,16 +127,18 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
         this.cacheName = cache.getCacheName();
         this.channel = channel;
 
-        // Connect channel to the 'group' for our region name
-
-        channel.connect( cacheName );
+        this.getFromPeers = getFromPeers;
 
         // The adapter listens to the channel and fires MessageListener events
         // on this object.
 
-        listener = new Listener( channel, this, cacheName );
+        dispatcher = new MessageDispatcher( channel, null, this, this );
 
-        listener.start();
+        // Connect channel to the 'group' for our region name
+
+        channel.setOpt( Channel.LOCAL, Boolean.FALSE );
+
+        channel.connect( cacheName );
 
         // If all the above succeed, the cache is now alive.
 
@@ -137,7 +153,14 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
 
         try
         {
-            channel.send( new Message( null, null, request ) );
+            log.info( "Sending" );
+
+            dispatcher.castMessage( null,
+                                    new Message( null, null, request ),
+                                    GroupRequest.GET_NONE,
+                                    0 );
+            log.info( "Sent" );
+
         }
         catch ( Exception e )
         {
@@ -160,19 +183,44 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
     }
 
     /**
-     * Not implemented, we expect that if an element is available to one of our
-     * peers, it has already been shared by a previous update.
+     * If 'getFromPeers' is true, this will attempt to get the requested
+     * element from ant other members of the group.
      *
-     * NOTE: This could be easily implemented using a MessageDispatcher and
-     * ResponseCollector, which would be usefull when the caches get out of
-     * sync (for example, if one member is rebooted).
-     *
-     * @param key Ignored
-     * @return Always returns null
+     * @param key
+     * @return
      * @throws IOException Never thrown by this implementation
      */
     public ICacheElement get( Serializable key ) throws IOException
     {
+        if ( getFromPeers )
+        {
+            CacheElement element = new CacheElement( cacheName, key, null );
+
+            Request request = new Request( element, Request.GET );
+
+            // Cast message and wait for all responses.
+
+            // FIXME: we can stop waiting after the first not null response,
+            //        that is more difficult to implement however.
+
+            RspList responses =
+                dispatcher.castMessage( null,
+                                        new Message( null, null, request ),
+                                        GroupRequest.GET_ALL,
+                                        0 );
+
+            // Get results only gives the responses which were not null
+
+            Vector results = responses.getResults();
+
+            // If there were any non null results, return the first
+
+            if ( results.size() > 0 )
+            {
+                return ( ICacheElement ) results.get( 0 );
+            }
+        }
+
         return null;
     }
 
@@ -212,9 +260,18 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
      */
     public void dispose() throws IOException
     {
-        listener.terminate();
+        // This will join the scheduler thread and ensure everything terminates
+
+        dispatcher.stop();
+
+        // Now we can disconnect from the group and close the channel
+
+        channel.disconnect();
+        channel.close();
 
         status = CacheConstants.STATUS_DISPOSED;
+
+        log.info( "Disposed for cache: " + cacheName );
     }
 
     /**
@@ -285,6 +342,8 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
     {
         try
         {
+            log.info( "Handling" );
+
             Request request = ( Request ) msg.getObject();
 
             // Switch based on the command and invoke the
@@ -292,6 +351,11 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
 
             switch ( request.getCommand() )
             {
+                case Request.GET:
+
+                    return cache.localGet( request.getCacheElement().getKey() );
+                    // break;
+
                 case Request.UPDATE:
 
                     cache.localUpdate( request.getCacheElement() );
@@ -312,6 +376,7 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
                     log.error( "Recieved unknown command" );
             }
 
+            log.info( "Handled" );
         }
         catch ( Exception e )
         {
@@ -320,6 +385,17 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
 
         return null;
     }
+
+    // ------------------------------------------- interface MembershipListener
+
+    public void viewAccepted( View view )
+    {
+        log.info( "View Changed: " + String.valueOf( view ) );
+    }
+
+    public void suspect( Address suspectedAddress ) { }
+
+    public void block() { }
 
     // ---------------------------------------------------------- inner classes
 
@@ -332,6 +408,7 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
         public final static int UPDATE = 1;
         public final static int REMOVE = 2;
         public final static int REMOVE_ALL = 3;
+        public final static int GET = 5;
 
         private ICacheElement cacheElement;
         private int command;
@@ -350,92 +427,6 @@ public class JavaGroupsCache implements AuxiliaryCache, RequestHandler
         public int getCommand()
         {
             return command;
-        }
-    }
-
-    /**
-     * Listens for messages on the provided channel and dispatches them to the
-     * CompositeCache that this auxiliary was created with. Also, when
-     * terminated is resposible for disconnecting and closing the Channel.
-     */
-    static class Listener extends Thread
-    {
-        boolean running = true;
-
-        RequestHandler handler;
-
-        Channel channel;
-        Object object;
-
-        public Listener( Channel channel,
-                         RequestHandler handler,
-                         String cacheName )
-        {
-            super( "JavaGroupsCache.Listener: " + cacheName );
-
-            this.channel = channel;
-            this.handler = handler;
-        }
-
-        public void run()
-        {
-            while ( running )
-            {
-                // Get next object from channel, blocking indefinately
-
-                try
-                {
-                    object = channel.receive( 0 );
-                }
-                catch ( Exception e )
-                {
-                    // If we are still supposed to be running, pause and
-                    // continue.
-
-                    if ( running )
-                    {
-                        try
-                        {
-                            Thread.sleep( 1000 );
-                        }
-                        catch ( Exception ignored )
-                        {
-                            // Ignored
-                        }
-                    }
-                }
-
-
-                // Ignore anything that is not a message
-
-                if ( object instanceof Message )
-                {
-                    handler.handle( ( Message ) object );
-                }
-            }
-
-            // When terminated, clean up the channel. Termination should be
-            // initiated by the dispose() method of the enclosing
-            // JavaGroupsCache
-
-            channel.disconnect();
-            channel.close();
-        }
-
-        public void terminate()
-        {
-            running = false;
-
-            this.interrupt();
-
-            try
-            {
-                this.join( 1000 );
-            }
-            catch ( InterruptedException e )
-            {
-                // Ignored, not much we can do anymore.
-            }
         }
     }
 }

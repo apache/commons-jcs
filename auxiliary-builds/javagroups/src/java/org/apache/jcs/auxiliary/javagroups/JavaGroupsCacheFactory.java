@@ -101,7 +101,9 @@ public class JavaGroupsCacheFactory implements AuxiliaryCacheFactory
 
             // Return a new JavaGroupsCache for the new channel.
 
-            return new JavaGroupsCache( cache, channel );
+            return new JavaGroupsCache( cache,
+                                        channel,
+                                        attributes.isGetFromPeers() );
         }
         catch ( Exception e )
         {
