@@ -1,3 +1,6 @@
 *~
 target
 test-reports
+.classpath
+.project
+*.log
