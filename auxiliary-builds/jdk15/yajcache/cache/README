@@ -8,7 +8,7 @@ Currently a jdk1.5 soft reference memory-only cache with:
 * zero configuration
 * zero thread instantiation
 * minimal memory impact (controlled by GC via SoftReference)
-* no sychronized block
+* no synchronized block
 * no synchronized method
 * the cache instance itself (ICache) can be used anywhere a map
 instance can be used
