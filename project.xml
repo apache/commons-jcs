@@ -62,15 +62,15 @@
   <dependencies>
     <dependency>
       <id>commons-configuration</id>
-      <version>1.0-dev</version>
+      <version>20030706.202021</version>
     </dependency>
     <dependency>
       <id>commons-logging</id>
-      <version>1.0.2</version>
+      <version>1.0.3</version>
     </dependency>
     <dependency>
       <id>commons-lang</id>
-      <version>1.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <id>concurrent</id>
@@ -82,7 +82,7 @@
     </dependency>
     <dependency>
       <id>log4j</id>
-      <version>1.1.3</version>
+      <version>1.2.8</version>
     </dependency>
     <dependency>
       <id>servletapi</id>
@@ -103,24 +103,26 @@
     </dependency>
     <dependency>
       <id>velocity</id>
-      <version>1.3-dev</version>
+      <version>1.3.1</version>
     </dependency>
     <dependency>
       <id>junit</id>
-      <version>3.7</version>
+      <version>3.8.1</version>
     </dependency>
     <dependency>
       <id>xmlrpc</id>
-      <version>1.1</version>
+      <version>1.2-b1</version>
+      <url>http://xml.apache.org/xmlrpc/</url>
     </dependency>
     <dependency>
-        <id>xml-apis</id>
-        <version>2.0.2</version>
+      <id>xerces:xercesImpl</id>
+      <version>2.4.0</version>
+      <url>http://xml.apache.org/xerces2-j/</url>
     </dependency>
     <dependency>
-        <id>xerces</id>
-        <version>2.0.2</version>
-        <jar>xercesImpl-2.0.2.jar</jar>
+      <id>xml-apis</id>
+      <version>1.0.b2</version>
+      <url>http://xml.apache.org/commons/</url>
     </dependency>
   </dependencies>
   <build>
