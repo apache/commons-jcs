@@ -25,7 +25,6 @@ public class MonitorXMLRPCServer
      */
     public MonitorXMLRPCServer( int port )
     {
-
         MonitorAccess mon = new MonitorAccess();
 
         try
@@ -34,11 +33,11 @@ public class MonitorXMLRPCServer
             server.addHandler( "JCSMonitor", mon );
             server.setParanoid( false );
         }
-        catch ( IOException ioe )
+        catch ( Exception ioe )
         {
+            // Older versions of Apache XML-RPC's WebServer threw IOException.
             log.error( ioe );
         }
-
     }
 
 }
