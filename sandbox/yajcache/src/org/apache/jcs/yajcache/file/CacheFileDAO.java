@@ -20,10 +20,9 @@ package org.apache.jcs.yajcache.file;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Arrays;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.commons.lang.builder.*;
 
 
@@ -32,7 +31,8 @@ import org.apache.commons.lang.builder.*;
  *
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheFileDAO {
     inst;
 
@@ -82,9 +82,10 @@ public enum CacheFileDAO {
      * Reads the byte array of a specified cache item from the file system.
      * 
      * @return the byte array of a specified cache item from the file system;
-     * or null if it can't.
+     * or null if it doesn't exist;
+     * or CacheFileContent.CORRUPTED if file is corrupted.
      */
-    public byte[] readCacheItem(@NonNullable String cacheName, @NonNullable String key) 
+    public CacheFileContent readCacheItem(@NonNullable String cacheName, @NonNullable String key) 
     {
         File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
         
@@ -96,7 +97,7 @@ public enum CacheFileDAO {
             countCorruptMinLength++;
             log.warn("Corrupted file which failed the minimum length condition for cacheName=" 
                     + cacheName + " key=" + key);
-            return null;
+            return CacheFileContent.CORRUPTED;
         }
         RandomAccessFile raf = null;
         try {
@@ -110,7 +111,7 @@ public enum CacheFileDAO {
                     countCorruptLength++;
                     log.warn("Corrupted file with unexpected content length for cacheName=" 
                             + cacheName + " key=" + key);
-                    return null;
+                    return CacheFileContent.CORRUPTED;
                 }
             }
             else
@@ -118,13 +119,16 @@ public enum CacheFileDAO {
                 countCorruptInvalid++;
                 log.warn("Corrupted file for cacheName=" + cacheName 
                         + " key=" + key);
-                return null;
+                return CacheFileContent.CORRUPTED;
             }
-            return cfc.getContent();
+            return cfc;
         } catch(IOException ex) {
             countReadIOException++;
-            log.warn("", ex);
-        } finally {
+            log.warn(ex.getClass().getName(), ex);
+        } catch(org.apache.commons.lang.SerializationException ex) {
+            countReadIOException++;
+            log.warn(ex.getClass().getName(), ex);
+       } finally {
             if (raf != null) {
                 try {
                     raf.close();
@@ -134,7 +138,7 @@ public enum CacheFileDAO {
                 }
             }
         }
-        return null;
+        return CacheFileContent.CORRUPTED;
     }
     /**
      * Removes the specified cache item from the file system.
