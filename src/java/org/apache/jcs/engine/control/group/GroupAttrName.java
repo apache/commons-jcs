@@ -6,15 +6,16 @@ import java.io.Serializable;
  * Description of the Class
  *
  * @author asmuts
+ * @author <a href="mailto:jmcnally@apache.org">John McNally</a>
  * @created January 15, 2002
  */
 public class GroupAttrName implements Serializable
 {
     //final GroupId groupId;
     /** Description of the Field */
-    public final String groupId;
-    final Object attrName;
-
+    public final GroupId groupId;
+    public final Object attrName;
+    private String toString;
 
     /**
      * Constructor for the GroupAttrName object
@@ -22,15 +23,15 @@ public class GroupAttrName implements Serializable
      * @param groupId
      * @param attrName
      */
-    public GroupAttrName( String groupId, Object attrName )
+    public GroupAttrName( GroupId groupId, Object attrName )
     {
-        //this.groupId = new GroupId(groupId);
         this.groupId = groupId;
         this.attrName = attrName;
 
         if ( groupId == null || attrName == null )
         {
-            throw new IllegalArgumentException( "groupId " + groupId + " and attrName " + attrName + ", must not be null." );
+            throw new IllegalArgumentException( "groupId " + groupId + 
+                " and attrName " + attrName + ", must not be null." );
         }
     }
 
@@ -57,7 +58,13 @@ public class GroupAttrName implements Serializable
     /** Description of the Method */
     public String toString()
     {
-        return "[groupId=" + groupId + ", attrName=" + attrName + "]";
+        if (toString == null) 
+        {
+            toString = "[GAN: groupId=" + groupId + 
+                ", attrName=" + attrName + "]";
+        }
+        
+        return toString;
     }
 
 }

@@ -231,7 +231,7 @@ public class GroupCache extends CompositeCache
 
         Object obj = null;
         // not necessary?, stops at getaux
-        readLock( key.groupId );
+        readLock( key.groupId.toString() );
         try
         {
             obj = super.get( key, invocation );
@@ -239,7 +239,7 @@ public class GroupCache extends CompositeCache
         }
         finally
         {
-            locker.done( key.groupId );
+            locker.done( key.groupId.toString() );
         }
         return ( ICacheElement ) obj;
     }
@@ -279,18 +279,18 @@ public class GroupCache extends CompositeCache
             }
         }
         Object obj = null;
-        readLock( gid.key );
+        readLock( gid.toString() );
         try
         {
             if ( invocation )
             {
                 // Invocation is NOT local
-                obj = systemGroupIdCache.localGet( gid.key );
+                obj = systemGroupIdCache.localGet( gid.toString() );
             }
             else
             {
                 // Invocation is local
-                obj = systemGroupIdCache.get( gid.key );
+                obj = systemGroupIdCache.get( gid.toString() );
             }
 
             if ( log.isDebugEnabled() )
@@ -300,7 +300,7 @@ public class GroupCache extends CompositeCache
         }
         finally
         {
-            locker.done( gid.key );
+            locker.done( gid.toString() );
         }
 
         return ( ICacheElement ) obj;
@@ -581,7 +581,7 @@ public class GroupCache extends CompositeCache
             log.debug( "in putGAN( gan,val,attr,boolean invocation) " );
         }
 
-        writeLock( key.groupId );
+        writeLock( key.toString() );
         try
         {
 
@@ -598,9 +598,9 @@ public class GroupCache extends CompositeCache
             super.update( ce, localOnly );
 
             // UPDATE THE ATTRIBUTENAME LIST, get it first
-            GroupId groupId = new GroupId( this.getCacheName(), key.groupId );
+            GroupId groupId = key.groupId;
             HashSet attrNameSet = null;
-            attrNameSet = ( HashSet ) systemGroupIdCache.get( groupId.key );
+            attrNameSet = (HashSet)systemGroupIdCache.get(groupId.toString());
 
             if ( attrNameSet == null )
             {
@@ -613,7 +613,7 @@ public class GroupCache extends CompositeCache
                 log.debug( "putGAN( gan,val,attr,boolean invocation) > attrNameSet.size()  = " + attrNameSet.size() );
             }
 
-            CacheElement ceID = new CacheElement( this.getCacheName(), groupId.key, attrNameSet );
+            CacheElement ceID = new CacheElement( this.getCacheName(), groupId, attrNameSet );
             ceID.setElementAttributes( attrE );
 
             // DO NOT SEND THE UPDATE LIST REMOTELY
@@ -623,7 +623,7 @@ public class GroupCache extends CompositeCache
         }
         finally
         {
-            locker.done( key.groupId );
+            locker.done( key.toString() );
         }
     }
 
@@ -642,7 +642,7 @@ public class GroupCache extends CompositeCache
         GroupId groupId = new GroupId( this.getCacheName(), group );
         HashSet attrNameSet = null;
 
-        attrNameSet = ( HashSet ) systemGroupIdCache.get( groupId.key );
+        attrNameSet = ( HashSet ) systemGroupIdCache.get( groupId.toString() );
 
         if ( attrNameSet == null )
         {
@@ -654,7 +654,7 @@ public class GroupCache extends CompositeCache
         }
         try
         {
-            CacheElement ceID = new CacheElement( this.getCacheName(), groupId.key, attrNameSet );
+            CacheElement ceID = new CacheElement( this.getCacheName(), groupId, attrNameSet );
             ceID.setElementAttributes( attrE );
             //updateCaches(groupId.key, attrNameSet, attrE );
             //super.update( ceID, EXCLUDE_REMOTE_CACHE );
@@ -807,19 +807,19 @@ public class GroupCache extends CompositeCache
 
         // update the attribute name set.
         // Note: necessary to use super.get to avoid read lock within the current write lock.
-        GroupId groupId = new GroupId( this.getCacheName(), key.groupId );
+        GroupId groupId = key.groupId;
         HashSet attrNameSet = null;
         CacheElement ce = null;
 
         if ( invocation )
         {
             // Invocation is NOT local
-            ce = ( CacheElement ) systemGroupIdCache.localGet( groupId.key );
+            ce = ( CacheElement ) systemGroupIdCache.localGet( groupId.toString() );
         }
         else
         {
             // Invocation is local
-            ce = ( CacheElement ) systemGroupIdCache.get( groupId.key );
+            ce = ( CacheElement ) systemGroupIdCache.get( groupId.toString() );
         }
 
         // IF THE NAME SET IS FOUND
@@ -854,7 +854,7 @@ public class GroupCache extends CompositeCache
 
                         CacheElement ceID
                             = new CacheElement( this.getCacheName(),
-                                                groupId.key,
+                                                groupId,
                                                 attrNameSet );
 
                         ceID.setElementAttributes( ce.attr );
@@ -888,11 +888,11 @@ public class GroupCache extends CompositeCache
                     // unlike insertion, removal should go remote if locally invoked
                     if ( invocation )
                     {
-                        systemGroupIdCache.localRemove( groupId.key );
+                        systemGroupIdCache.localRemove( groupId.toString() );
                     }
                     else
                     {
-                        systemGroupIdCache.remove( groupId.key );
+                        systemGroupIdCache.remove( groupId.toString() );
                     }
                 }
             }
@@ -936,24 +936,24 @@ public class GroupCache extends CompositeCache
 
         if ( !skipLock )
         {
-            writeLock( groupId.key );
+            writeLock( groupId.toString() );
         }
         try
         {
             if ( invocation )
             {
-                ok = systemGroupIdCache.localRemove( groupId.key );
+                ok = systemGroupIdCache.localRemove( groupId.toString() );
             }
             else
             {
-                ok = systemGroupIdCache.remove( groupId.key );
+                ok = systemGroupIdCache.remove( groupId.toString() );
             }
         }
         finally
         {
             if ( !skipLock )
             {
-                locker.done( groupId.key );
+                locker.done( groupId.toString() );
             }
         }
         return ok;
