@@ -77,9 +77,14 @@ public class LRUMemoryCache
     // Asynchronisly create a MemoryElement
 
     ce.getElementAttributes().setLastAccessTimeNow();
-    addFirst( ce );
-    MemoryElementDescriptor old =
-        ( MemoryElementDescriptor ) map.put( first.ce.getKey(), first );
+    MemoryElementDescriptor old = null;
+    synchronized ( this )
+    {
+      // TODO address double synchronization of addFirst, use write lock
+      addFirst( ce );
+      // this must be synchronized
+      old = ( MemoryElementDescriptor ) map.put( first.ce.getKey(), first );
+    }
 
     // If the node was the same as an existing node, remove it.
 
