@@ -18,25 +18,15 @@ package org.apache.jcs.engine.memory;
  */
 
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+import java.io.*;
+import java.util.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.memory.MemoryCache;
-import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupAttrName;
+import org.apache.commons.logging.*;
+import org.apache.jcs.engine.*;
+import org.apache.jcs.engine.behavior.*;
+import org.apache.jcs.engine.control.*;
+import org.apache.jcs.engine.control.group.*;
+import org.apache.jcs.engine.memory.shrinking.*;
 
 /**
  *  Some common code for the LRU and MRU caches.

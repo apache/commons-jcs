@@ -51,6 +51,13 @@ public interface MemoryCache
     public int getSize();
 
     /**
+     * Allows access to stats available in the memory plugin.
+     *
+     * @return String of stats
+     */
+    public String getStats();
+
+    /**
      *  Get an iterator for all elements in the memory cache. This should be
      *  removed since it is fairly dangerous. Other classes should not be able
      *  to directly access items in the memory cache.

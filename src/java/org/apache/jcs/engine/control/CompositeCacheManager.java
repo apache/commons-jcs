@@ -345,6 +345,18 @@ public class CompositeCacheManager
         }
     }
 
+    /**
+     * Calls freeCache on all regions
+     */
+    public void shutDown() {
+      String[] names = getCacheNames();
+      int len = names.length;
+      for ( int i = 0; i < len; i++ ) {
+        String name = names[i];
+        freeCache( name );
+      }
+    }
+
     /** */
     protected void incrementClients()
     {
