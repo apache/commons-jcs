@@ -29,10 +29,10 @@ import org.apache.jcs.yajcache.lang.annotation.*;
  *
  *<pre>
  * File format:
- * <FileContentType>    : byte
- * <ByteArrayLength>    : int
- * <ByteArrayHashCode>  : int
- * <ByteArray>          : byte[]
+ * &lt;FileContentType&gt;    : byte
+ * &lt;ByteArrayLength&gt;    : int
+ * &lt;ByteArrayHashCode&gt;  : int
+ * &lt;ByteArray&gt;          : byte[]
  *</pre>
  *
  * @author Hanson Char
