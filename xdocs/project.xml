@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="stratum" href="http://jakarta.apache.org/turbine/stratum/">
 
-  <title>Stratum</title>
-  <logo href="/images/blue-logo.gif">Stratum</logo>
+  <title>JCS</title>
+  <logo href="/images/blue-logo.gif">JCS</logo>
 
   <body>
     <links>
-      <item name="Turbine"                 href="http://jakarta.apache.org/turbine"/>
-      <item name="Turbine-2"               href="http://jakarta.apache.org/turbine/turbine-2"/>
-      <item name="Turbine-3"               href="http://jakarta.apache.org/turbine/turbine-3"/>
-      <item name="Torque"                  href="http://jakarta.apache.org/turbine/torque"/>
-      <item name="Fulcrum"                 href="http://jakarta.apache.org/turbine/fulcrum"/>
-      <item name="TDK"                     href="http://jakarta.apache.org/turbine/tdk"/>
-      <item name="Stratum"                 href="http://jakarta.apache.org/turbine/stratum"/> 
-      <item name="Maven"                   href="http://jakarta.apache.org/turbine/maven"/>
+      <item name="Turbine"   href="http://jakarta.apache.org/turbine"/>
+      <item name="Turbine-2" href="http://jakarta.apache.org/turbine/turbine-2"/>
+      <item name="Turbine-3" href="http://jakarta.apache.org/turbine/turbine-3"/>
+      <item name="Torque"    href="http://jakarta.apache.org/turbine/torque"/>
+      <item name="Fulcrum"   href="http://jakarta.apache.org/turbine/fulcrum"/>
+      <item name="TDK"       href="http://jakarta.apache.org/turbine/tdk"/>
+      <item name="Stratum"   href="http://jakarta.apache.org/turbine/stratum"/> 
+      <item name="Maven"     href="http://jakarta.apache.org/turbine/maven"/>
+      <item name="JCS"       href="http://jakarta.apache.org/turbine/jcs"/>
     </links>
 
     <menu name="JCS Documentation">
-      <item name="Overview"             href="/JavaCachingSystem.html"/>
+      <item name="Overview"             href="/index.html"/>
       <item name="JCS and JCACHE"       href="/JCSandJCACHE.html"/>
       <item name="Basic JCS Config"     href="/BasicJCSConfiguration.html"/>
       <item name="Basic Web Example"    href="/UsingJCSBasicWeb.html"/>
