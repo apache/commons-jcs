@@ -54,19 +54,15 @@ package org.apache.jcs.engine.memory.shrinking;
  * <http://www.apache.org/>.
  */
 
-import java.util.Map.Entry;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
-import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
 /**
- * A background memory shrinker. Just started. Don't use.
+ * A background memory shrinker. Just started. <u>DON'T USE</u>
  *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @created February 18, 2002
@@ -75,19 +71,18 @@ import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 public class ShrinkerThread extends Thread
 {
 
-    private IMemoryCache cache;
+    private MemoryCache cache;
     boolean alive = true;
 
     private final static Log log =
         LogFactory.getLog( ShrinkerThread.class );
-
 
     /**
      * Constructor for the ShrinkerThread object. Should take an IMemoryCache
      *
      * @param cache
      */
-    public ShrinkerThread( IMemoryCache cache )
+    public ShrinkerThread( MemoryCache cache )
     {
         super();
         this.cache = cache;
@@ -114,7 +109,8 @@ public class ShrinkerThread extends Thread
 
             try
             {
-                this.sleep( cache.getCacheAttributes().getShrinkerIntervalSeconds() * 1000 );
+                this.sleep( cache.getCacheAttributes()
+                            .getShrinkerIntervalSeconds() * 1000 );
             }
             catch ( InterruptedException ie )
             {
@@ -157,14 +153,13 @@ public class ShrinkerThread extends Thread
                     {
                         if ( log.isInfoEnabled() )
                         {
-                            log.info( "Exceeded memory idle time, Pushing item to disk -- " + me.ce.getKey() + " over by = " + String.valueOf(deadAt - now) + " ms.");
+                            log.info( "Exceeded memory idle time, Pushing item to disk -- " + me.ce.getKey() + " over by = " + String.valueOf( deadAt - now ) + " ms." );
                         }
                         itr.remove();
                         cache.waterfal( me );
                     }
-                } else
-
-                if ( !me.ce.getElementAttributes().getIsEternal() )
+                }
+                else if ( !me.ce.getElementAttributes().getIsEternal() )
                 {
                     // Exceeded maxLifeSeconds
                     if ( ( me.ce.getElementAttributes().getMaxLifeSeconds() != -1 ) && ( now - me.ce.getElementAttributes().getCreateTime() ) > ( me.ce.getElementAttributes().getMaxLifeSeconds() * 1000 ) )
@@ -175,18 +170,19 @@ public class ShrinkerThread extends Thread
                         }
                         itr.remove();
                         //cache.remove( me.ce.getKey() );
-                    } else
+                    }
+                    else
 
                     // Exceeded maxIdleTime, removal
-                    if ( ( me.ce.getElementAttributes().getIdleTime() != -1 ) && ( now - me.ce.getElementAttributes().getLastAccessTime() ) > ( me.ce.getElementAttributes().getIdleTime() * 1000 ) )
-                    {
-                        if ( log.isInfoEnabled() )
+                        if ( ( me.ce.getElementAttributes().getIdleTime() != -1 ) && ( now - me.ce.getElementAttributes().getLastAccessTime() ) > ( me.ce.getElementAttributes().getIdleTime() * 1000 ) )
                         {
-                            log.info( "Exceeded maxIdleTime [ me.ce.getElementAttributes().getIdleTime() = " + me.ce.getElementAttributes().getIdleTime() + " ]-- " + me.ce.getKey() );
+                            if ( log.isInfoEnabled() )
+                            {
+                                log.info( "Exceeded maxIdleTime [ me.ce.getElementAttributes().getIdleTime() = " + me.ce.getElementAttributes().getIdleTime() + " ]-- " + me.ce.getKey() );
+                            }
+                            itr.remove();
+                            //cache.remove( me.ce.getKey() );
                         }
-                        itr.remove();
-                        //cache.remove( me.ce.getKey() );
-                    }
                 }
 
             }

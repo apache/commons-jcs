@@ -13,40 +13,6 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
  */
 public interface ICache extends ICacheType
 {
-    /**
-     * Where the current activity came from. This effects whether the remote
-     * will be included. Prevents remote-local loops.
-     */
-    public static boolean REMOTE_INVOKATION = true;
-    /**
-     * Where the current activity came from. This effects whether the remote
-     * will be included. Prevents remote-local loops.
-     */
-    public static boolean LATERAL_INVOKATION = true;
-    /**
-     * Where the current activity came from. This effects whether the remote
-     * will be included. Prevents remote-local loops.
-     */
-    public static boolean LOCAL_INVOKATION = !REMOTE_INVOKATION;
-
-    /** Whether the update should propagate to the remote */
-    public static boolean INCLUDE_REMOTE_CACHE = true;
-    /** Whether the update should propagate to the remote */
-    public static boolean EXCLUDE_REMOTE_CACHE = !INCLUDE_REMOTE_CACHE;
-    /** Description of the Field */
-    public static boolean MULTICAST_ON = true;
-    /** Description of the Field */
-    public static boolean MULTICAST_OFF = false;
-
-    /** Cache alive status. */
-    public final static int STATUS_ALIVE = 1;
-    /** Cache disposed status. */
-    public final static int STATUS_DISPOSED = 2;
-    /** Cache in error. */
-    public final static int STATUS_ERROR = 3;
-
-    /** Delimiter of a cache name component. */
-    public final static String NAME_COMPONENT_DELIMITER = ":";
 
     /** Puts an item to the cache. */
     public void update( ICacheElement ce )

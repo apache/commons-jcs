@@ -19,6 +19,7 @@ import org.apache.jcs.engine.behavior.ICompositeCache;
 
 import org.apache.jcs.engine.control.Cache;
 import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -213,7 +214,7 @@ public class RemoteCacheServerListener
         // interface limitation here
 
         Cache cache = ( Cache ) cacheMgr.getCache( cacheName );
-        cache.remove( key, cache.REMOTE_INVOKATION );
+        cache.remove( key, CacheConstants.REMOTE_INVOKATION );
     }
 
 
@@ -240,7 +241,7 @@ public class RemoteCacheServerListener
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
         CacheHub cm = ( CacheHub ) cacheMgr;
-        cm.freeCache( cacheName, Cache.REMOTE_INVOKATION );
+        cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
     }
 
 

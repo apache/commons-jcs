@@ -24,6 +24,7 @@ import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -216,9 +217,9 @@ public abstract class AbstractDeleteCacheServlet
                 out.print( cache.getSize() );
                 out.print( "</td><td>" );
                 int status = cache.getStatus();
-                out.print( status == ICache.STATUS_ALIVE ? "ALIVE"
-                     : status == ICache.STATUS_DISPOSED ? "DISPOSED"
-                     : status == ICache.STATUS_ERROR ? "ERROR"
+                out.print( status == CacheConstants.STATUS_ALIVE ? "ALIVE"
+                     : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
+                     : status == CacheConstants.STATUS_ERROR ? "ERROR"
                      : "UNKNOWN" );
                 out.print( "</td>" );
                 out.println( "<td><a href=?task=stats&hashtableName=" + name + "&key=NONE&antiCacheRandom="

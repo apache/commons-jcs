@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.apache.jcs.auxiliary.remote.RemoteCacheManager;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.jcs.auxiliary.remote.RemoteCacheRestore;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -164,7 +165,7 @@ public class RemoteCacheMonitor implements Runnable
                         if ( itr2.hasNext() )
                         {
                             RemoteCacheNoWait c = ( RemoteCacheNoWait ) itr2.next();
-                            if ( c.getStatus() == c.STATUS_ERROR )
+                            if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                             {
                                 RemoteCacheRestore repairer = new RemoteCacheRestore( mgr );
                                 // If we can't fix them, just skip and re-try in the next round.

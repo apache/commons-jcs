@@ -16,6 +16,7 @@ import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
+import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -301,7 +302,7 @@ public class CacheHub
     /** */
     public void freeCache( String name )
     {
-        freeCache( name, Cache.LOCAL_INVOKATION );
+        freeCache( name, CacheConstants.LOCAL_INVOKATION );
     }
 
     /** */
@@ -345,7 +346,7 @@ public class CacheHub
     /** */
     public void release()
     {
-        release( Cache.LOCAL_INVOKATION );
+        release( CacheConstants.LOCAL_INVOKATION );
     }
 
     /** */

@@ -65,6 +65,7 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
@@ -72,7 +73,7 @@ import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
-import org.apache.jcs.engine.memory.behavior.IMemoryCache;
+import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 
 /**
@@ -80,8 +81,9 @@ import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
  * items through the cache. The auxiliary and memory caches are plugged in
  * here.
  *
- * @author asmuts
- * @created January 15, 2002
+ * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
+ * @author <a href="mailto:jtaylor@apache.org">James Taylor</a>
+ * @version $Id$
  */
 public class Cache
     implements ICache, ICompositeCache, Serializable
@@ -118,7 +120,7 @@ public class Cache
      * flexible in the future, but they are tied closely together. More than one
      * doesn't make much sense.
      */
-    IMemoryCache memCache;
+    MemoryCache memCache;
 
     /**
      * Constructor for the Cache object
@@ -264,7 +266,7 @@ public class Cache
                                               IElementAttributes attr )
         throws IOException
     {
-        updateCaches( key, val, attr, ICache.INCLUDE_REMOTE_CACHE );
+        updateCaches( key, val, attr, CacheConstants.INCLUDE_REMOTE_CACHE );
     }
 
     /**
@@ -296,7 +298,7 @@ public class Cache
     public synchronized void update( ICacheElement ce )
         throws IOException
     {
-        update( ce, ICache.INCLUDE_REMOTE_CACHE );
+        update( ce, CacheConstants.INCLUDE_REMOTE_CACHE );
     }
 
     /**
@@ -324,10 +326,10 @@ public class Cache
     {
 
         if ( ce.getKey() instanceof String
-            && ce.getKey().toString().endsWith( NAME_COMPONENT_DELIMITER ) )
+            && ce.getKey().toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             throw new IllegalArgumentException( "key must not end with "
-                                                + NAME_COMPONENT_DELIMITER
+                                                + CacheConstants.NAME_COMPONENT_DELIMITER
                                                 + " for a put operation" );
         }
 
@@ -483,7 +485,7 @@ public class Cache
     public Serializable getCacheElement( Serializable key )
         throws ObjectNotFoundException, IOException
     {
-        return get( key, this.LOCAL_INVOKATION );
+        return get( key, CacheConstants.LOCAL_INVOKATION );
     }
     // end get ce
 
@@ -495,7 +497,7 @@ public class Cache
      */
     public Serializable get( Serializable key )
     {
-        return get( key, false, this.LOCAL_INVOKATION );
+        return get( key, false, CacheConstants.LOCAL_INVOKATION );
     }
 
     /**
@@ -507,7 +509,7 @@ public class Cache
      */
     public Serializable get( Serializable key, boolean container )
     {
-        return get( key, container, this.LOCAL_INVOKATION );
+        return get( key, container, CacheConstants.LOCAL_INVOKATION );
     }
 
     /**
@@ -536,10 +538,10 @@ public class Cache
             if ( log.isDebugEnabled() )
             {
                 log.debug( "get: key = " + key + ", is local invocation = "
-                           + ( invocation == this.LOCAL_INVOKATION ) );
+                           + ( invocation == CacheConstants.LOCAL_INVOKATION ) );
             }
 
-            ce = ( ICacheElement ) memCache.get( key, true );
+            ce = memCache.get( key );
 
             if ( ce == null )
             {
@@ -552,7 +554,7 @@ public class Cache
                     if ( aux != null )
                     {
 
-                        if ( ( invocation == this.LOCAL_INVOKATION )
+                        if ( ( invocation == CacheConstants.LOCAL_INVOKATION )
                             || aux.getCacheType() == aux.DISK_CACHE )
                         {
                             if ( log.isDebugEnabled() )
@@ -698,7 +700,7 @@ public class Cache
      */
     public boolean remove( Serializable key )
     {
-        return remove( key, LOCAL_INVOKATION );
+        return remove( key, CacheConstants.LOCAL_INVOKATION );
     }
 
 
@@ -818,7 +820,7 @@ public class Cache
      */
     public void dispose()
     {
-        dispose( LOCAL_INVOKATION );
+        dispose( CacheConstants.LOCAL_INVOKATION );
     }
 
     /**
@@ -850,7 +852,7 @@ public class Cache
                     {
                         continue;
                     }
-                    if ( aux.getStatus() == ICache.STATUS_ALIVE )
+                    if ( aux.getStatus() == CacheConstants.STATUS_ALIVE )
                     {
 
                         if ( log.isDebugEnabled() )
@@ -924,7 +926,7 @@ public class Cache
                 {
                     ICache aux = auxCaches[ i ];
 
-                    if ( aux.getStatus() == ICache.STATUS_ALIVE )
+                    if ( aux.getStatus() == CacheConstants.STATUS_ALIVE )
                     {
 
                         Iterator itr = memCache.getIterator();
@@ -1005,7 +1007,7 @@ public class Cache
      */
     public int getStatus()
     {
-        return alive ? STATUS_ALIVE : STATUS_DISPOSED;
+        return alive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
     }
 
     /**
@@ -1057,7 +1059,7 @@ public class Cache
     {
         this.cacheAttr = cattr;
         // need a better way to do this, what if it is in error
-        this.memCache.initialize( cattr.getCacheName(), cattr, this );
+        this.memCache.initialize( this );
     }
 
     /**
@@ -1088,7 +1090,7 @@ public class Cache
      * @return
      * @param cattr
      */
-    private IMemoryCache createMemoryCache( ICompositeCacheAttributes cattr )
+    private MemoryCache createMemoryCache( ICompositeCacheAttributes cattr )
     {
         // Create memory Cache
         if ( memCache == null )
@@ -1096,15 +1098,15 @@ public class Cache
             try
             {
                 Class c = Class.forName( cattr.getMemoryCacheName() );
-                this.memCache = ( IMemoryCache ) c.newInstance();
-                this.memCache.initialize( cacheName, cattr, this );
+                this.memCache = ( MemoryCache ) c.newInstance();
+                this.memCache.initialize( this );
             }
             catch ( Exception e )
             {
-                log.error( e );
-                log.warn( "Using default memory cache" );
-                this.memCache = ( IMemoryCache ) new LRUMemoryCache( cacheName, cattr, this );
-                this.memCache.initialize( cacheName, cattr, this );
+                log.warn( "Failed to init mem cache, using: LRUMemoryCache", e );
+
+                this.memCache = new LRUMemoryCache();
+                this.memCache.initialize( this );
             }
         }
         else

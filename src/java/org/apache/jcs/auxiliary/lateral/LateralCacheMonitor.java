@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.apache.jcs.auxiliary.lateral.LateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheRestore;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -151,7 +152,7 @@ public class LateralCacheMonitor implements Runnable
                         if ( itr2.hasNext() )
                         {
                             LateralCacheNoWait c = ( LateralCacheNoWait ) itr2.next();
-                            if ( c.getStatus() == c.STATUS_ERROR )
+                            if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                             {
                                 log.debug( "found LateralCacheNoWait in error" );
 

@@ -13,9 +13,6 @@ public interface ICacheType extends Serializable
     /** Composite/ memory cache type, cetral hub. */
     public final static int CACHE_HUB = 1;
 
-    /** Description of the Field */
-    public final static int MEMORY_CACHE = 1;
-
     /** Disk cache type. */
     public final static int DISK_CACHE = 2;
 

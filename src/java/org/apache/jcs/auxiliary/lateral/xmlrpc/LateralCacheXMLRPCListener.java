@@ -68,6 +68,7 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -209,7 +210,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         }
         getCacheManager();
         ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
-        cache.update( cb, ICache.REMOTE_INVOKATION );
+        cache.update( cb, CacheConstants.REMOTE_INVOKATION );
         //handleRemove(cb.getCacheName(), cb.getKey());
     }
 
@@ -227,7 +228,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         // interface limitation here
 
         ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
-        cache.remove( key, ICache.REMOTE_INVOKATION );
+        cache.remove( key, CacheConstants.REMOTE_INVOKATION );
     }
 
 
@@ -255,7 +256,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         getCacheManager();
         ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
         // get container
-        return cache.get( key, true, ICache.REMOTE_INVOKATION );
+        return cache.get( key, true, CacheConstants.REMOTE_INVOKATION );
     }
 
     /** Description of the Method */
@@ -267,7 +268,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
         CacheHub cm = ( CacheHub ) cacheMgr;
-        cm.freeCache( cacheName, ICache.REMOTE_INVOKATION );
+        cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
     }
 
 

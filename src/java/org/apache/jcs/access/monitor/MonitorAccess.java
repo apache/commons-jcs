@@ -12,6 +12,7 @@ import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.control.CacheHub;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
+import org.apache.jcs.engine.CacheConstants;
 
 /**
  * Exposes the simple monitoring methods to the public in a simple manner.
@@ -130,9 +131,9 @@ public class MonitorAccess implements Serializable
             ht.put( "size", Integer.toString( size ) );
 
             int status = cache.getStatus();
-            String stat = status == ICache.STATUS_ALIVE ? "ALIVE"
-                : status == ICache.STATUS_DISPOSED ? "DISPOSED"
-                : status == ICache.STATUS_ERROR ? "ERROR"
+            String stat = status == CacheConstants.STATUS_ALIVE ? "ALIVE"
+                : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
+                : status == CacheConstants.STATUS_ERROR ? "ERROR"
                 : "UNKNOWN";
             ht.put( "stat", stat );
 

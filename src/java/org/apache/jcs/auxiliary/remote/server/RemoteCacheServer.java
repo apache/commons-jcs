@@ -27,6 +27,7 @@ import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttribu
 
 import org.apache.jcs.engine.CacheEventQueue;
 import org.apache.jcs.engine.CacheListeners;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -270,7 +271,7 @@ public class RemoteCacheServer
                         {
                             log.debug( "not updating clusters **************************************" );
                         }
-                        c.update( item, ICache.REMOTE_INVOKATION );
+                        c.update( item, CacheConstants.REMOTE_INVOKATION );
                     }
                     else
                     {
@@ -278,7 +279,7 @@ public class RemoteCacheServer
                         {
                             log.debug( "updating clusters **************************************" );
                         }
-                        c.update( item, ICache.LOCAL_INVOKATION );
+                        c.update( item, CacheConstants.LOCAL_INVOKATION );
                     }
                 }
                 catch ( Exception oee )
@@ -413,7 +414,7 @@ public class RemoteCacheServer
             ICompositeCache c = ( ICompositeCache ) cacheDesc.cache;
 //            if ( fromCluster )
 //            {
-            return c.get( key, container, ICache.REMOTE_INVOKATION );
+            return c.get( key, container, CacheConstants.REMOTE_INVOKATION );
 //            }
 //            else
 //            {
@@ -472,7 +473,7 @@ public class RemoteCacheServer
                     {
                         log.debug( "not updating clusters **************************************" );
                     }
-                    removeSuccess = c.remove( key, ICache.REMOTE_INVOKATION );
+                    removeSuccess = c.remove( key, CacheConstants.REMOTE_INVOKATION );
                 }
                 else
                 {
@@ -480,7 +481,7 @@ public class RemoteCacheServer
                     {
                         log.debug( "updating clusters **************************************" );
                     }
-                    removeSuccess = c.remove( key, ICache.LOCAL_INVOKATION );
+                    removeSuccess = c.remove( key, CacheConstants.LOCAL_INVOKATION );
                 }
 
                 if ( removeSuccess )

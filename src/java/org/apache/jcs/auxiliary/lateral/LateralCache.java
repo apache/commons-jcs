@@ -10,6 +10,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -263,7 +264,7 @@ public class LateralCache implements ICache
      */
     public int getStatus()
     {
-        return this.lateral instanceof IZombie ? STATUS_ERROR : STATUS_ALIVE;
+        return this.lateral instanceof IZombie ? CacheConstants.STATUS_ERROR : CacheConstants.STATUS_ALIVE;
     }
 
 

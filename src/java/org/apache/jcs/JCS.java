@@ -71,7 +71,6 @@ import org.apache.jcs.engine.control.group.GroupCacheHub;
  *
  * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
  * @author <a href="mailto:jtaylor@apache.org">James Taylor</a>
- * @created February 13, 2002
  * @version $Id$
  */
 public class JCS extends GroupCacheAccess

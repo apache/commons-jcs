@@ -12,6 +12,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -358,7 +359,7 @@ public class RemoteCache implements ICache
      */
     public int getStatus()
     {
-        return remote instanceof IZombie ? STATUS_ERROR : STATUS_ALIVE;
+        return remote instanceof IZombie ? CacheConstants.STATUS_ERROR : CacheConstants.STATUS_ALIVE;
     }
 
 

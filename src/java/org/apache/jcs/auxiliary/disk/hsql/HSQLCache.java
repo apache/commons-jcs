@@ -77,6 +77,7 @@ import org.apache.jcs.auxiliary.disk.PurgatoryElement;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -606,7 +607,7 @@ public class HSQLCache implements ICache, Serializable
         try
         {
 
-            if ( key instanceof String && key.toString().endsWith( NAME_COMPONENT_DELIMITER ) )
+            if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
                 sql = "delete from " + cacheName + " where KEY = like '" + key + "%'";
@@ -736,7 +737,7 @@ public class HSQLCache implements ICache, Serializable
      */
     public int getStatus()
     {
-        return isAlive ? STATUS_ALIVE : STATUS_DISPOSED;
+        return isAlive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
     }
 
 

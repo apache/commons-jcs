@@ -6,6 +6,7 @@ import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheClusterManager;
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheClusterRestore;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -149,7 +150,7 @@ public class RemoteCacheClusterMonitor implements Runnable
                         {
                             RemoteCacheNoWait c = ( RemoteCacheNoWait ) itr2.next();
                             //RemoteCacheNoWait c = (RemoteCacheNoWait)mgr.cache;
-                            if ( c.getStatus() == c.STATUS_ERROR )
+                            if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                             {
                                 RemoteCacheClusterRestore repairer = new RemoteCacheClusterRestore( mgr );
                                 // If we can't fix them, just skip and re-try in the next round.

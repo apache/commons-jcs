@@ -11,6 +11,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.CacheEventQueue;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -45,7 +46,7 @@ public class RemoteCacheNoWait implements ICache
     {
         this.cache = cache;
         this.q = new CacheEventQueue( new CacheAdaptor( cache ), RemoteCacheInfo.listenerId, cache.getCacheName() );
-        if ( cache.getStatus() == cache.STATUS_ERROR )
+        if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
         {
             q.destroy();
         }
@@ -227,7 +228,7 @@ public class RemoteCacheNoWait implements ICache
      */
     public int getStatus()
     {
-        return q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
+        return q.isAlive() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
     }
 
 

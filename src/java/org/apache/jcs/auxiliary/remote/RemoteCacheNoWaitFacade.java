@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -297,7 +298,7 @@ public class RemoteCacheNoWaitFacade implements ICache
         //if ( noWaits.length == 1 ) {
         if ( rca.getRemoteType() == rca.LOCAL )
         {
-            if ( noWaits[i].getStatus() == STATUS_ERROR )
+            if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
             {
                 // start failover, primary recovery process
                 RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this );

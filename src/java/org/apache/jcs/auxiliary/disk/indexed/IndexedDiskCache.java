@@ -59,6 +59,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.auxiliary.disk.indexed.behavior.IIndexedDiskCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 import java.io.File;
@@ -395,7 +396,7 @@ public class IndexedDiskCache extends AbstractDiskCache
             lock.writeLock();
 
             if ( key instanceof String
-                 && key.toString().endsWith( NAME_COMPONENT_DELIMITER ) )
+                 && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
                 boolean removed = false;

@@ -1,6 +1,7 @@
 package org.apache.jcs.auxiliary.remote;
 
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -108,7 +109,7 @@ public class RemoteCacheFailoverRunner implements Runnable
                         ICache ic = rcm.getCache( rca.getCacheName() );
                         if ( ic != null )
                         {
-                            if ( ic.getStatus() == ic.STATUS_ALIVE )
+                            if ( ic.getStatus() == CacheConstants.STATUS_ALIVE )
                             {
                                 // may need to do this more gracefully
                                 log.debug( "reseting no wait" );
@@ -162,7 +163,7 @@ public class RemoteCacheFailoverRunner implements Runnable
                 ICache ic = rcm.getCache( rca.getCacheName() );
                 if ( ic != null )
                 {
-                    if ( ic.getStatus() == ic.STATUS_ALIVE )
+                    if ( ic.getStatus() == CacheConstants.STATUS_ALIVE )
                     {
                         // may need to do this more gracefully
                         log.debug( "reseting no wait to PRIMARY" );

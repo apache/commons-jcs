@@ -15,6 +15,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 
 import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -171,7 +172,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         // interface limitation here
 
         ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cacheName );
-        cache.remove( key, ICache.REMOTE_INVOKATION );
+        cache.remove( key, CacheConstants.REMOTE_INVOKATION );
     }
 
 
@@ -198,7 +199,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
         CacheHub cm = ( CacheHub ) cacheMgr;
-        cm.freeCache( cacheName, ICache.REMOTE_INVOKATION );
+        cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
     }
 
 

@@ -2,49 +2,38 @@ package org.apache.jcs.engine.memory.mru;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Set;
-
-import java.util.Map.Entry;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.control.Cache;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheHub;
-import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-
-import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
-import org.apache.jcs.engine.memory.MemoryElementDescriptor;
-import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.memory.MemoryCache;
+import org.apache.jcs.engine.memory.MemoryElementDescriptor;
+import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
 
 /**
  * A SLOW AS HELL reference management system. The most recently used items move
  * to the front of the list and get spooled to disk if the cache hub is
  * configured to use a disk cache.
  *
- * @author asmuts
- * @created January 15, 2002
+ * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
+ * @author <a href="mailto:jtaylor@apache.org">James Taylor</a>
+ * @version $Id$
  */
 public class MRUMemoryCache
-     implements IMemoryCache, ICache, Serializable
+    implements MemoryCache, Serializable
 {
     private final static Log log =
         LogFactory.getLog( MRUMemoryCache.class );
 
-    // MOVE TO MEMORYMANAGER
     String cacheName;
 
     /**
@@ -55,7 +44,7 @@ public class MRUMemoryCache
     /**
      * Description of the Field
      */
-    protected int[] lockMe = new int[0];
+    protected int[] lockMe = new int[ 0 ];
 
     /**
      * MRU list.
@@ -78,7 +67,7 @@ public class MRUMemoryCache
     Cache cache;
 
     // status
-    private int status = this.STATUS_ERROR;
+    private int status;
 
     // make configurable
     private int chunkSize = 2;
@@ -88,74 +77,34 @@ public class MRUMemoryCache
      */
     private ShrinkerThread shrinker;
 
-
-    // for reflection
     /**
      * Constructor for the LRUMemoryCache object
      */
     public MRUMemoryCache()
     {
-        // might want to consider this an error state
-        status = this.STATUS_ERROR;
+        status = CacheConstants.STATUS_ERROR;
     }
 
-
     /**
-     * Constructor for the LRUMemoryCache object
+     * For post reflection creation initialization
      *
-     * @param cacheName
-     * @param cattr
-     * @param hub
+     * @param cache
      */
-    public MRUMemoryCache( String cacheName, ICompositeCacheAttributes cattr, Cache cache )
+    public synchronized void initialize( Cache cache )
     {
-        initialize( cacheName, cattr, cache );
-    }
-
-
-    // for post reflection creation initialization
-    /**
-     * Description of the Method
-     *
-     * @param cacheName
-     * @param cattr
-     * @param hub
-     */
-    public void initialize( String cacheName, ICompositeCacheAttributes cattr, Cache cache )
-    {
-        this.cacheName = cacheName;
-        this.cattr = cattr;
+        this.cacheName = cache.getCacheName();
+        this.cattr = cache.getCacheAttributes();
         this.cache = cache;
-        status = this.STATUS_ALIVE;
 
-        if ( cattr.getUseMemoryShrinker() )
+        status = CacheConstants.STATUS_ALIVE;
+
+        if ( cattr.getUseMemoryShrinker() && shrinker == null )
         {
-            if ( shrinker == null )
-            {
-                synchronized ( MRUMemoryCache.class )
-                {
-                    if ( shrinker == null )
-                    {
-                        shrinker = new ShrinkerThread( this );
-                        shrinker.setPriority( shrinker.MIN_PRIORITY );
-                        shrinker.start();
-                    }
-                }
-            }
+            shrinker = new ShrinkerThread( this );
+            shrinker.setPriority( shrinker.MIN_PRIORITY );
+            shrinker.start();
         }
-
     }
-
-    /**
-     * Gets the cacheType attribute of the LRUMemoryCache object
-     *
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return ICacheType.MEMORY_CACHE;
-    }
-
 
     /**
      * Puts an item to the cache.
@@ -247,62 +196,15 @@ public class MRUMemoryCache
         }
 
     }
-    // end update
-
-    // TODO: Implement or modify interface, just implement
-    // may need insert if we want to distinguish b/wn put and replace
-    /**
-     * Description of the Method
-     *
-     * @param key
-     * @param val
-     * @exception IOException
-     */
-    public void put( Serializable key, Serializable val )
-        throws IOException
-    {
-        // not used
-    }
-
-
-    /**
-     * Description of the Method
-     *
-     * @param key
-     * @param val
-     * @param attr
-     * @exception IOException
-     */
-    public void put( Serializable key, Serializable val, IElementAttributes attr )
-        throws IOException
-    {
-        // not used
-    }
-
-
-    /**
-     * Gets an item from the cache.
-     *
-     * @return
-     * @param key
-     * @exception IOException
-     */
-    public Serializable get( Serializable key )
-        throws IOException
-    {
-        return get( key, true );
-    }
-
 
     /**
      * Description of the Method
      *
      * @return
      * @param key
-     * @param container
      * @exception IOException
      */
-    public Serializable get( Serializable key, boolean container )
+    public ICacheElement get( Serializable key )
         throws IOException
     {
 
@@ -380,15 +282,7 @@ public class MRUMemoryCache
             return null;
         }
 
-        if ( container )
-        {
-            return ce;
-        }
-        else
-        {
-            return ce.getVal();
-        }
-
+        return ce;
     }
     // end get
 
@@ -413,12 +307,13 @@ public class MRUMemoryCache
         boolean removed = false;
 
         // handle partial removal
-        if ( key instanceof String && key.toString().endsWith( NAME_COMPONENT_DELIMITER ) )
+        if ( key instanceof String && key.toString().endsWith(
+            CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             // remove all keys of the same name hierarchy.
             synchronized ( map )
             {
-                for ( Iterator itr = map.entrySet().iterator(); itr.hasNext();  )
+                for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
                 {
                     Map.Entry entry = ( Map.Entry ) itr.next();
                     Object k = entry.getKey();
@@ -451,7 +346,6 @@ public class MRUMemoryCache
         return removed;
     }
 
-
     /**
      * Removes all cached items from the cache.
      *
@@ -463,7 +357,6 @@ public class MRUMemoryCache
         map = new HashMap();
     }
 
-
     /**
      * Prepares for shutdown.
      *
@@ -473,7 +366,6 @@ public class MRUMemoryCache
         throws IOException
     {
     }
-
 
     /**
      * Returns the cache statistics.
@@ -485,7 +377,6 @@ public class MRUMemoryCache
         return "";
     }
 
-
     /**
      * Returns the current cache size.
      *
@@ -495,7 +386,6 @@ public class MRUMemoryCache
     {
         return this.map.size();
     }
-
 
     /**
      * Returns the cache status.
@@ -508,7 +398,6 @@ public class MRUMemoryCache
         //return this.STATUS_ALIVE;
     }
 
-
     /**
      * Returns the cache name.
      *
@@ -518,7 +407,6 @@ public class MRUMemoryCache
     {
         return this.cattr.getCacheName();
     }
-
 
     /**
      * Puts an item to the cache.
@@ -531,7 +419,6 @@ public class MRUMemoryCache
     {
         this.cache.spoolToDisk( me.ce );
     }
-
 
     /**
      * Gets the iterator attribute of the LRUMemoryCache object
@@ -564,14 +451,13 @@ public class MRUMemoryCache
         this.cattr = cattr;
     }
 
-
     /**
      * Dump the cache map for debugging.
      */
     public void dumpMap()
     {
         log.debug( "dumpingMap" );
-        for ( Iterator itr = map.entrySet().iterator(); itr.hasNext();  )
+        for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
         {
             //for ( Iterator itr = memCache.getIterator(); itr.hasNext();) {
             Map.Entry e = ( Map.Entry ) itr.next();
@@ -579,7 +465,6 @@ public class MRUMemoryCache
             log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
         }
     }
-
 
     /**
      * Dump the cache entries from first to list for debugging.

@@ -20,6 +20,7 @@ import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.control.Cache;
 
 import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -207,7 +208,7 @@ public class RemoteCacheListener
             ICompositeCache cache = ( ICompositeCache ) cacheMgr.getCache( cb.getCacheName() );
 //            if ( this.irca.getLocalClusterConsistency() && this.irca.getRemoteType() != irca.CLUSTER )
 //            {
-            cache.update( cb, ICache.EXCLUDE_REMOTE_CACHE );
+            cache.update( cb, CacheConstants.EXCLUDE_REMOTE_CACHE );
 //            }
 //            else
 //            {
@@ -243,7 +244,7 @@ public class RemoteCacheListener
         // cluster, else it can be run inside a local.
 //        if ( this.irca.getLocalClusterConsistency() && this.irca.getRemoteType() != irca.CLUSTER )
 //        {
-        cache.remove( key, cache.REMOTE_INVOKATION );
+        cache.remove( key, CacheConstants.REMOTE_INVOKATION );
 //        }
 //        else
 //        {
@@ -275,7 +276,7 @@ public class RemoteCacheListener
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
         CacheHub cm = ( CacheHub ) cacheMgr;
-        cm.freeCache( cacheName, Cache.REMOTE_INVOKATION );
+        cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
     }
 
 

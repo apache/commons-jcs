@@ -21,6 +21,7 @@ import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.CacheEventQueue;
 import org.apache.jcs.engine.CacheInfo;
+import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -89,7 +90,7 @@ public class JISPCacheNoWaitBuffer implements ICache
         // be more than one per cache?  alternativve is to have the cache
         // perform updates using a different method that spcifies the listener
         //this.q = new CacheEventQueue(new CacheAdaptor(this), JISPCacheInfo.listenerId, cache.getCacheName());
-        if ( cache.getStatus() == cache.STATUS_ERROR )
+        if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
         {
             log.error( "destroying queue" );
             q.destroy();
@@ -309,7 +310,7 @@ public class JISPCacheNoWaitBuffer implements ICache
      */
     public int getStatus()
     {
-        return q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
+        return q.isAlive() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
     }
 
 
