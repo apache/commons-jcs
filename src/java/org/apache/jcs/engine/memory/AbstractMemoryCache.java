@@ -43,7 +43,7 @@ import org.apache.jcs.engine.control.group.GroupAttrName;
  *
  *@version    $Id$
  */
-public abstract class AbstractMemoryCache 
+public abstract class AbstractMemoryCache
     implements MemoryCache, Serializable
 {
     private final static Log log =
@@ -108,6 +108,7 @@ public abstract class AbstractMemoryCache
         if ( cattr.getUseMemoryShrinker() && shrinker == null )
         {
             shrinker = new ShrinkerThread( this );
+            shrinker.setDaemon(true);
             shrinker.setPriority( ShrinkerThread.MIN_PRIORITY );
             shrinker.start();
         }
@@ -181,6 +182,9 @@ public abstract class AbstractMemoryCache
     public void dispose()
         throws IOException
     {
+      if ( shrinker != null ) {
+        shrinker.kill();
+      }
     }
 
     /**

@@ -257,7 +257,7 @@ public class ShrinkerThread extends Thread
             }
 
             keys = null;
-            System.gc();
+            //System.gc();
         }
         catch ( Throwable t )
         {
