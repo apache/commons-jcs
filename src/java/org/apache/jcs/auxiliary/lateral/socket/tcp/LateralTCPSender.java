@@ -272,6 +272,21 @@ public class LateralTCPSender
         {
             try
             {
+
+                try
+                {
+                  //  clean up input stream, nothing should be there yet.
+                  if ( socket.getInputStream().available() > 0 )
+                  {
+                    socket.getInputStream().read( new byte[socket.getInputStream().available()] );
+                  }
+                }
+                catch ( IOException ioe )
+                {
+                  log.error( "Problem cleaning socket before send " + socket, ioe );
+                }
+
+                // write object to listener
                 oos.writeObject( led );
                 oos.flush();
 
