@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +35,7 @@ import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
 import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
+import org.apache.jcs.yajcache.util.EqualsUtils;
 
 
 /**
@@ -49,10 +51,18 @@ public class SoftRefCache<V> implements ICache<V> {
     private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<V>();
     private final @NonNullable String name;
     private final @NonNullable Class<V> valueType;
-    private final @NonNullable ConcurrentMap<String, KeyedSoftReference<String,V>> map;
+    private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
     private final @NonNullable KeyedRefCollector<String> collector;
     private @NonNullable PerCacheConfig config;
+
+    private AtomicInteger countGet = new AtomicInteger(0);
+    private AtomicInteger countGetHitMemory = new AtomicInteger(0);
+    private AtomicInteger countGetMiss = new AtomicInteger(0);
+    private AtomicInteger countGetEmptyRef = new AtomicInteger(0);
     
+    private AtomicInteger countPut = new AtomicInteger(0);
+    private AtomicInteger countRemove = new AtomicInteger(0);
+
     public @NonNullable String getName() {
         return this.name;
     }
@@ -102,21 +112,31 @@ public class SoftRefCache<V> implements ICache<V> {
     // But do we really want to synchronize upon invoking get() ?
     // It's not thread-safe, but what's the worst consequence ?
     public V get(@NonNullable String key) {
+        if (debug)
+            this.countGet.incrementAndGet();
         this.collector.run();
         KeyedSoftReference<String,V> ref = map.get(key);
         
-        if (ref == null)
+        if (ref == null) {
+            if (debug)
+                this.countGetMiss.incrementAndGet();
             return null;
+        }
         V val = ref.get();
         
         if (val == null) {
+            // Rarely gets here, if ever.
             // already garbage collected.  So try to clean up the key.
+            if (debug)
+                this.countGetEmptyRef.incrementAndGet();
             this.map.remove(key,  ref);
 //            SoftRefCacheCleaner.inst.cleanupKey(this.map, key);
         }
         // cache value exists.
         // try to refresh the soft reference.
 //        this.renewSoftReference(key, val);
+        if (debug)
+            this.countGetHitMemory.incrementAndGet();
         return val;
     }
 //    private void renewSoftReference(String key, V val) {
@@ -163,6 +183,8 @@ public class SoftRefCache<V> implements ICache<V> {
         return key == null ? null : this.get(key.toString());
     }
     public V put(@NonNullable String key, @NonNullable V value) {
+        if (debug)
+            this.countPut.incrementAndGet();
         this.collector.run();
         KeyedSoftReference<String,V> oldRef = 
                 map.put(key, new KeyedSoftReference<String,V>(key, value, refq));
@@ -172,7 +194,7 @@ public class SoftRefCache<V> implements ICache<V> {
         V ret = oldRef.get();
         oldRef.clear();
         
-        if (!value.equals(ret)) {
+        if (!EqualsUtils.inst.equals(value, ret)) {
             // value changed for the key
             this.publishFlushKey(key);
         }
@@ -191,6 +213,8 @@ public class SoftRefCache<V> implements ICache<V> {
             this.put(e.getKey(), e.getValue());
     }
     public V remove(@NonNullable String key) {
+        if (debug)
+            this.countRemove.incrementAndGet();
         this.collector.run();
         KeyedSoftReference<String,V> oldRef = map.remove(key);
         
@@ -254,7 +278,7 @@ public class SoftRefCache<V> implements ICache<V> {
         for (final KeyedSoftReference<String,V> ref : fromSet) {
             V val = ref.get();
             
-            if (value.equals(val))
+            if (EqualsUtils.inst.equals(value, val))
                 return true;
         }
         return false;
@@ -273,9 +297,15 @@ public class SoftRefCache<V> implements ICache<V> {
     }
     @Override public String toString() {
         return new ToStringBuilder(this)
-            .append("name", this.getName())
-            .append("valueType", this.getValueType().getName())
-            .append("collector", this.collector)
+            .append("\n").append("name", this.getName())
+            .append("\n").append("valueType", this.getValueType().getName())
+            .append("\n").append("countGet", this.countGet)
+            .append("\n").append("countGetEmptyRef", this.countGetEmptyRef)
+            .append("\n").append("countGetMiss", this.countGetMiss)
+            .append("\n").append("countGetHitMemory", this.countGetHitMemory)
+            .append("\n").append("this.countPut", this.countPut)
+            .append("\n").append("this.countRemove", this.countRemove)
+            .append("\n").append("collector", this.collector)
             .toString();
     }
 }

@@ -45,6 +45,7 @@ import org.apache.jcs.yajcache.file.CacheFileContentType;
 import org.apache.jcs.yajcache.file.CacheFileDAO;
 import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
 import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
+import org.apache.jcs.yajcache.util.EqualsUtils;
 import org.apache.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
 import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 
@@ -76,11 +77,24 @@ public class SoftRefFileCache<V> implements ICache<V>
             new CacheChangeSupport<V>(this);
     
     private AtomicInteger countGet = new AtomicInteger(0);
+    
     private AtomicInteger countGetHitMemory = new AtomicInteger(0);
     private AtomicInteger countGetHitFile = new AtomicInteger(0);
+    
+    private AtomicInteger countGetMissMemory = new AtomicInteger(0);
     private AtomicInteger countGetMiss = new AtomicInteger(0);
+    private AtomicInteger countGetCorruptedFile = new AtomicInteger(0);
+    private AtomicInteger countGetEmptyRef = new AtomicInteger(0);
     
     private AtomicInteger countPut = new AtomicInteger(0);
+    private AtomicInteger countPutClearRef = new AtomicInteger(0);
+    private AtomicInteger countPutMissMemory = new AtomicInteger(0);
+    private AtomicInteger countPutNewMemoryValue = new AtomicInteger(0);
+    private AtomicInteger countPutNewFileValue = new AtomicInteger(0);
+    private AtomicInteger countPutSerializable = new AtomicInteger(0);
+    private AtomicInteger countPutReadFile = new AtomicInteger(0);
+    private AtomicInteger countPutWriteFile = new AtomicInteger(0);
+
     private AtomicInteger countRemove = new AtomicInteger(0);
     
     public @NonNullable String getName() {
@@ -132,6 +146,8 @@ public class SoftRefFileCache<V> implements ICache<V>
     // It's not thread-safe, but what's the worst consequence ?
     public V get(@NonNullable String key) {
         collector.run();
+        if (debug)
+            this.countGet.incrementAndGet();
         Lock lock = this.krwl.readLock(key);
         lock.lock();
         try {
@@ -143,13 +159,23 @@ public class SoftRefFileCache<V> implements ICache<V>
     private V doGet(String key) {
         KeyedSoftReference<String,V> ref = map.get(key);
         V val = null;
-
-        if (ref != null)
+        
+        if (ref != null) {
             val = ref.get();
-
+            
+            if (debug) {
+                if (val == null)
+                    this.countGetEmptyRef.incrementAndGet();
+            }
+        }
+        else {
+            if (debug)
+                this.countGetMissMemory.incrementAndGet();
+        }
         if (val == null) {
             // Not in memory.  
             if (ref != null) {
+                // Rarely gets here, if ever.
                 // GC'd.  So try to clean up the key/ref pair.
                 this.map.remove(key,  ref);
             }
@@ -158,19 +184,29 @@ public class SoftRefFileCache<V> implements ICache<V>
                 
             if (cfc == null) {
                 // Not in file system.
+                if (debug)
+                    this.countGetMiss.incrementAndGet();
                 return null;
             }
             // Found in file system.
+            if (debug)
+                this.countGetHitFile.incrementAndGet();
             val = (V)cfc.deserialize();
             
             if (val == null) {
                 // Corrupted file.  Try remove it from file system.
+                if (debug)
+                    this.countGetCorruptedFile.incrementAndGet();
                 CacheFileDAO.inst.removeCacheItem(this.name, key);
                 return null;
             }
             // Resurrect item back to memory.
             map.putIfAbsent(key,
                     new KeyedSoftReference<String,V>(key, val, refq));
+        }
+        else {
+            if (debug)
+                this.countGetHitMemory.incrementAndGet();
         }
         // cache value exists.
         return val;
@@ -220,6 +256,9 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public V put(@NonNullable String key, @NonNullable V value) {
         this.collector.run();
+        
+        if (debug)
+            this.countPut.incrementAndGet();
         Lock lock = this.krwl.writeLock(key);
         lock.lock();
         try {
@@ -236,18 +275,32 @@ public class SoftRefFileCache<V> implements ICache<V>
         if (oldRef != null) {
             ret = oldRef.get();
             oldRef.clear();
+            
+            if (debug)
+                this.countPutClearRef.incrementAndGet();
         }
         if (ret == null) {
             // Not in memory.
+            if (debug)
+                this.countPutMissMemory.incrementAndGet();
             if (value instanceof Serializable) {
                 // Try the file system.
+                if (debug)
+                    this.countPutSerializable.incrementAndGet();
                 CacheFileContent cfc =
                         CacheFileDAO.inst.readCacheItem(this.name, key);
-                if (cfc != null)
+                if (cfc != null) {
+                    if (debug)
+                        this.countPutReadFile.incrementAndGet();
                     ret = (V)cfc.deserialize();
-                if (!value.equals(ret)) {
+                }
+                if (!EqualsUtils.inst.equals(value, ret)) {
                     // Considered new value being put to memory.  
                     // So persist to file system.
+                    if (debug) {
+                        this.countPutNewFileValue.incrementAndGet();
+                        this.countPutWriteFile.incrementAndGet();
+                    }
                     byte[] ba = SerializationUtils.serialize((Serializable)value);
                     CacheFileDAO.inst.writeCacheItem(
                         this.name, CacheFileContentType.JAVA_SERIALIZATION, key, ba);
@@ -257,10 +310,16 @@ public class SoftRefFileCache<V> implements ICache<V>
         }
         // ret must be non-null.
         // Found in memory
-        if (!value.equals(ret)) {
+        if (!EqualsUtils.inst.equals(value, ret)) {
+            if (debug)
+                this.countPutNewMemoryValue.incrementAndGet();
             // Different value being put to memory.
             if (value instanceof Serializable) {
                 // Persist to file system.
+                if (debug) {
+                    this.countPutSerializable.incrementAndGet();
+                    this.countPutWriteFile.incrementAndGet();
+                }
                 byte[] ba = SerializationUtils.serialize((Serializable)value);
                 CacheFileDAO.inst.writeCacheItem(
                     this.name, CacheFileContentType.JAVA_SERIALIZATION, key, ba);
@@ -282,6 +341,9 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public V remove(@NonNullable String key) {
         this.collector.run();
+        
+        if (debug)
+            this.countRemove.incrementAndGet();
         Lock lock = this.krwl.writeLock(key);
         lock.lock();
         try {
@@ -369,7 +431,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         for (final KeyedSoftReference<String,V> ref : fromSet) {
             V val = ref.get();
             
-            if (value.equals(val))
+            if (EqualsUtils.inst.equals(value, val))
                 return true;
         }
         return false;
@@ -396,9 +458,25 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     @Override public String toString() {
         return new ToStringBuilder(this)
-            .append("name", this.getName())
-            .append("valueType", this.getValueType().getName())
-            .append("collector", this.collector)
+            .append("\n").append("name", this.getName())
+            .append("\n").append("valueType", this.getValueType().getName())
+            .append("\n").append("countGet", this.countGet)
+            .append("\n").append("countGetHitMemory", this.countGetHitMemory)
+            .append("\n").append("countGetHitFile", this.countGetHitFile)
+            .append("\n").append("countGetMissMemory", this.countGetMissMemory)
+            .append("\n").append("countGetEmptyRef", this.countGetEmptyRef)
+            .append("\n").append("countGetMiss", this.countGetMiss)
+            .append("\n").append("countGetCorruptedFile", this.countGetCorruptedFile)
+            .append("\n").append("countPut", this.countPut)
+            .append("\n").append("countPutClearRef", this.countPutClearRef)
+            .append("\n").append("countPutMissMemory", this.countPutMissMemory)
+            .append("\n").append("countPutNewFileValue", this.countPutNewFileValue)
+            .append("\n").append("countPutNewMemoryValue", this.countPutNewMemoryValue)
+            .append("\n").append("countPutReadFile", this.countPutReadFile)
+            .append("\n").append("countPutSerializable", this.countPutSerializable)
+            .append("\n").append("countPutWriteFile", this.countPutWriteFile)
+            .append("\n").append("countRemove", this.countRemove)
+            .append("\n").append("collector", this.collector)
             .toString();
     }
 }
