@@ -18,9 +18,13 @@ package org.apache.jcs.yajcache.core;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.jcs.yajcache.file.CacheFileUtils;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.jcs.yajcache.soft.SoftRefFileCache;
 import org.apache.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
 import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 
@@ -33,9 +37,25 @@ import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheManager {
     inst;
+    
+    private static final boolean debug = true;
+    private AtomicInteger countGetCache = new AtomicInteger(0);
+    
+    private AtomicInteger countCreateCache = new AtomicInteger(0);
+    private AtomicInteger countCreateCacheRace = new AtomicInteger(0);
+    private AtomicInteger countCreateFileCache = new AtomicInteger(0);
+    private AtomicInteger countCreateFileCacheRace = new AtomicInteger(0);
+
+    private AtomicInteger countRemoveCache = new AtomicInteger(0);
+    private AtomicInteger countRemoveFileCache = new AtomicInteger(0);
+    
     // Cache name to Cache mapping.
     private final ConcurrentMap<String,ICache<?>> map = 
                 new ConcurrentHashMap<String, ICache<?>>();
+    /** 
+     * Used for entire cache with external IO,
+     * so cache create/removal won't conflict with normal get/put operations.
+     */
     private final IKeyedReadWriteLock<String> keyedRWLock = 
             new KeyedReadWriteLock<String>();
     /** 
@@ -65,6 +85,8 @@ public enum CacheManager {
             @NonNullable String name,
             @NonNullable Class<V> valueType)
     {
+        if (debug)
+            this.countGetCache.incrementAndGet();
         ICache c = this.map.get(name);
         return c != null && this.checkValueType(c, valueType) ? c : null;
     }
@@ -141,12 +163,37 @@ public enum CacheManager {
     /**
      * Removes the specified cache, if it exists.
      */
-    @TODO("Handle file cache by deleting the dir")
     public ICache removeCache(@NonNullable String name) {
+        if (debug)
+            this.countRemoveCache.incrementAndGet();
         ICache c = this.map.remove(name);
         
         if (c != null) {
-            c.clear();
+            CacheType cacheType = c.getCacheType();
+            
+            switch(cacheType) {
+                case SOFT_REFERENCE:
+                case SOFT_REFERENCE_SAFE:
+                    c.clear();
+                    break;
+                case SOFT_REFERENCE_FILE:
+                case SOFT_REFERENCE_FILE_SAFE:
+                    if (debug)
+                        this.countRemoveFileCache.incrementAndGet();
+                    Lock lock = this.keyedRWLock.writeLock(name);
+                    lock.lock();
+                    try {
+                        // Clear will delete the files as well.
+                        c.clear();
+                        // Delete the cache directory.
+                        CacheFileUtils.inst.rmCacheDir(name);
+                    } finally {
+                        lock.unlock();
+                    }
+                    break;
+                default:
+                    throw new AssertionError(cacheType);
+            }
         }
         return c;
     }
@@ -165,6 +212,8 @@ public enum CacheManager {
             @NonNullable Class<V> valueType,
             @NonNullable CacheType cacheType)
     {
+        if (debug)
+            this.countCreateCache.incrementAndGet();
         ICache<V> newCache = cacheType.createCache(name, valueType);
 //        SoftRefFileCache<V> newCache = new SoftRefFileCache<V>(name, valueType);
 //        newCache.addCacheChangeListener(new CacheFileManager<V>(newCache));
@@ -172,6 +221,8 @@ public enum CacheManager {
 
         if (oldCache != null) {
             // race condition: cache already created by another thread.
+            if (debug)
+                this.countCreateCacheRace.incrementAndGet();
             this.checkTypes(oldCache, cacheType, valueType);
             return oldCache;
         }
@@ -191,14 +242,14 @@ public enum CacheManager {
             @NonNullable Class<V> valueType,
             @NonNullable CacheType cacheType)
     {
-        Lock lock = this.keyedRWLock.writeLock(name);
-        lock.lock();
+        if (debug)
+            this.countCreateFileCache.incrementAndGet();
         ICache<V> newCache = null;
         ICache oldCache = null;
+        Lock lock = this.keyedRWLock.writeLock(name);
+        lock.lock();
         try {
             newCache = cacheType.createCache(name, valueType);
-//        SoftRefFileCache<V> newCache = new SoftRefFileCache<V>(name, valueType);
-//        newCache.addCacheChangeListener(new CacheFileManager<V>(newCache));
             oldCache = this.map.putIfAbsent(name, newCache);
         } finally {
             lock.unlock();
@@ -206,6 +257,8 @@ public enum CacheManager {
 
         if (oldCache != null) {
             // race condition: cache already created by another thread.
+            if (debug)
+                this.countCreateFileCacheRace.incrementAndGet();
             this.checkTypes(oldCache, cacheType, valueType);
             return oldCache;
         }
@@ -257,5 +310,27 @@ public enum CacheManager {
     {
         Class<?> cacheValueType = c.getValueType();
         return cacheValueType.isAssignableFrom(valueType);
+    }
+    /** Retrieves a read lock on the given file cache. */
+    public Lock readLock(SoftRefFileCache<?> cache) {
+        return this.keyedRWLock.readLock(cache.getName());
+    }
+    @Override public String toString() {
+        return new ToStringBuilder(this)
+            .append("\n")
+            .append("countCreateCache", this.countCreateCache)
+            .append("\n")
+            .append("countCreateCacheRace", this.countCreateCacheRace)
+            .append("\n")
+            .append("countCreateFileCache", this.countCreateFileCache)
+            .append("\n")
+            .append("countCreateFileCacheRace", this.countCreateFileCacheRace)
+            .append("\n")
+            .append("countCreateFileCacheRace", this.countGetCache)
+            .append("\n")
+            .append("countRemoveCache", this.countRemoveCache)
+            .append("\n")
+            .append("countRemoveFileCache", this.countRemoveFileCache)
+            .toString();
     }
 }
