@@ -166,6 +166,8 @@ public class ShrinkerThread extends Thread
                 if ( ce != null )
                 {
 
+                    boolean ok = true;
+
                     long now = System.currentTimeMillis();
 
                     if ( log.isDebugEnabled() )
@@ -175,23 +177,6 @@ public class ShrinkerThread extends Thread
                         log.debug( "ce.getElementAttributes().getMaxLifeSeconds() = " + ce.getElementAttributes().getMaxLifeSeconds() );
                         log.debug( "now - ce.getElementAttributes().getCreateTime() = " + String.valueOf( now - ce.getElementAttributes().getCreateTime() ) );
                         log.debug( "ce.getElementAttributes().getMaxLifeSeconds() * 1000 = " + ce.getElementAttributes().getMaxLifeSeconds() * 1000 );
-                    }
-
-                    // Memory idle, to disk shrinkage
-                    if ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() != -1 )
-                    {
-                        long deadAt = ce.getElementAttributes().getLastAccessTime() + ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() * 1000 );
-                        if ( ( deadAt - now ) < 0 )
-                        {
-                            if ( log.isInfoEnabled() )
-                            {
-                                log.info( "Exceeded memory idle time, Pushing item to disk -- " + ce.getKey() + " over by = " + String.valueOf( deadAt - now ) + " ms." );
-                            }
-
-                            cache.remove( ce.getKey() );
-
-                            cache.waterfal( ce );
-                        }
                     }
 
                     ////////////////////////////////////////////////
@@ -222,6 +207,7 @@ public class ShrinkerThread extends Thread
                                 }
                             }
 
+                            ok = false;
                             cache.remove( ce.getKey() );
                         }
                         else
@@ -250,10 +236,30 @@ public class ShrinkerThread extends Thread
                                 }
                             }
 
+                            ok = false;
                             cache.remove( ce.getKey() );
                         }
 
                     }// end if not eternal
+
+                    // This should be last, since we wouldn't want to wast time
+                    // spooling if the item is removed.
+                    // Memory idle, to disk shrinkage
+                    if ( ok && ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() != -1 ) )
+                    {
+                        long deadAt = ce.getElementAttributes().getLastAccessTime() + ( cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds() * 1000 );
+                        if ( ( deadAt - now ) < 0 )
+                        {
+                            if ( log.isInfoEnabled() )
+                            {
+                                log.info( "Exceeded memory idle time, Pushing item to disk -- " + ce.getKey() + " over by = " + String.valueOf( deadAt - now ) + " ms." );
+                            }
+
+                            cache.remove( ce.getKey() );
+
+                            cache.waterfal( ce );
+                        }
+                    }
 
                 }// end if ce != null
 
