@@ -71,10 +71,6 @@
   </developers>
 
   <contributors>
-    <!--<contributor>
-      <name>Travis Savo</name>
-      <email>tsavo@IFILM.com</email>
-    </contributor>-->
   </contributors>
 
 
@@ -164,6 +160,7 @@
     <resources/>
     <unitTest>
       <includes>
+        <include>**/TestDiskCacheNoMemory.java</include>
         <include>**/TestJCS.java</include>
         <include>**/TestSimpleLoad.java</include>
         <include>**/TestDiskCache.java</include>
