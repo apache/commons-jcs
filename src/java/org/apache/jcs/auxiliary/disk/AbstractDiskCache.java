@@ -396,7 +396,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         catch ( java.lang.IllegalStateException e )
         {
 
-            log.error( "Problem releaseing lock", e );
+            log.warn( "Problem releaseing lock" + e.getMessage()  );
         }
     }
 
