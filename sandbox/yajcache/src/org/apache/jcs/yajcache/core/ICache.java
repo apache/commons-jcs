@@ -31,10 +31,10 @@ import org.apache.jcs.yajcache.annotate.*;
 public interface ICache<V> extends Map<String,V> {
     /** Returns the cache name. */
     @ThreadSafety(ThreadSafetyType.IMMUTABLE)
-    public String getName();
+    public @NonNullable String getName();
     /** Returns the value type of the cached items. */
     @ThreadSafety(ThreadSafetyType.IMMUTABLE)
-    public Class<V> getValueType();
+    public @NonNullable Class<V> getValueType();
     /** Returns the value cached for the specified key. */
     @ThreadSafety(
         value=ThreadSafetyType.SAFE,

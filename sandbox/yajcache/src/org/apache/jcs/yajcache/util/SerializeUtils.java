@@ -53,7 +53,7 @@ public enum SerializeUtils {
         // deep clone.
         return (V)SerializationUtils.clone(obj);
     }
-    private <A> A cloneArray(A a) {
+    private @NonNullable <A> A cloneArray(@NonNullable A a) {
         int len = Array.getLength(a);
 	Object result = Array.newInstance(a.getClass().getComponentType(), len);
         System.arraycopy(a, 0, result, 0, len);

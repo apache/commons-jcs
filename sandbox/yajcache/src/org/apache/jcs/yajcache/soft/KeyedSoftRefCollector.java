@@ -32,10 +32,12 @@ class KeyedSoftRefCollector<V> implements Runnable {
     private static final boolean debug = true;
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     private volatile int count;
-    private final ReferenceQueue<V> q;
-    private final Map<String, KeyedSoftRef<V>> map;
+    private final @NonNullable ReferenceQueue<V> q;
+    private final @NonNullable Map<String, KeyedSoftRef<V>> map;
     /** Creates a new instance of ReferenceQProcessor */
-    KeyedSoftRefCollector(ReferenceQueue<V> q, Map<String, KeyedSoftRef<V>> map) {
+    KeyedSoftRefCollector(
+            @NonNullable ReferenceQueue<V> q, @NonNullable Map<String, KeyedSoftRef<V>> map) 
+    {
         this.q = q;
         this.map = map;
     }

@@ -41,11 +41,11 @@ import org.apache.jcs.yajcache.annotate.*;
 public class SoftRefCache<V> implements ICache<V> {
     private static final boolean debug = true;
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
-    private final ReferenceQueue<V> refq = new ReferenceQueue<V>();
-    private final String name;
-    private final Class<V> valueType;
-    private final Map<String, KeyedSoftRef<V>> map;
-    private final KeyedSoftRefCollector<V> collector;
+    private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<V>();
+    private final @NonNullable String name;
+    private final @NonNullable Class<V> valueType;
+    private final @NonNullable Map<String, KeyedSoftRef<V>> map;
+    private final @NonNullable KeyedSoftRefCollector<V> collector;
     
     public String getName() {
         return this.name;
@@ -53,7 +53,7 @@ public class SoftRefCache<V> implements ICache<V> {
     public Class<V> getValueType() {
         return this.valueType;
     }
-    public SoftRefCache(String name, Class<V> valueType, int initialCapacity,
+    public SoftRefCache(@NonNullable String name, @NonNullable Class<V> valueType, int initialCapacity,
                              float loadFactor, int concurrencyLevel) 
     {
         map = new ConcurrentHashMap<String,KeyedSoftRef<V>>(initialCapacity, loadFactor, concurrencyLevel);
@@ -61,14 +61,15 @@ public class SoftRefCache<V> implements ICache<V> {
         this.name = name;
         this.valueType = valueType;
     }
-    public SoftRefCache(String name, Class<V> valueType, int initialCapacity) {
+    public SoftRefCache(@NonNullable String name, @NonNullable Class<V> valueType, int initialCapacity) 
+    {
         map = new ConcurrentHashMap<String,KeyedSoftRef<V>>(initialCapacity);
         collector = new KeyedSoftRefCollector<V>(refq, map);
         this.name = name;
         this.valueType = valueType;
     }
 
-    public SoftRefCache(String name, Class<V> valueType) {
+    public SoftRefCache(@NonNullable String name, @NonNullable Class<V> valueType) {
         map = new ConcurrentHashMap<String,KeyedSoftRef<V>>();
         collector = new KeyedSoftRefCollector<V>(refq, map);
         this.name = name;
@@ -88,7 +89,7 @@ public class SoftRefCache<V> implements ICache<V> {
     // @tothink: SoftReference.get() doesn't seem to be thread-safe.
     // But do we really want to synchronize upon invoking get() ?
     // It's not thread-safe, but what's the worst consequence ?
-    public V get(String key) {
+    public V get(@NonNullable String key) {
         this.collector.run();
         KeyedSoftRef<V> ref = map.get(key);
         
@@ -145,10 +146,10 @@ public class SoftRefCache<V> implements ICache<V> {
 //        return;
 //    }
         
-    public V get(Object key) {
+    public V get(@NonNullable Object key) {
         return key == null ? null : this.get(key.toString());
     }
-    public V put(String key, V value) {
+    public V put(@NonNullable String key, @NonNullable V value) {
         this.collector.run();
         KeyedSoftRef<V> oldRef = map.put(key, new KeyedSoftRef<V>(key, value, refq));
         
@@ -168,14 +169,14 @@ public class SoftRefCache<V> implements ICache<V> {
         value="Queue up a flush event for the key.",
         details="This is useful for synchronizing caches in a cluster environment."
     )
-    private void publishFlushKey(String key) {
+    private void publishFlushKey(@NonNullable String key) {
     }
     
-    public void putAll(Map<? extends String, ? extends V> map) {
+    public void putAll(@NonNullable Map<? extends String, ? extends V> map) {
         for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), e.getValue());
     }
-    public V remove(String key) {
+    public V remove(@NonNullable String key) {
         this.collector.run();
         KeyedSoftRef<V> oldRef = map.remove(key);
         
@@ -186,18 +187,18 @@ public class SoftRefCache<V> implements ICache<V> {
         oldRef.clear();
         return ret;
     }
-    public V remove(Object key) {
+    public V remove(@NonNullable Object key) {
         return key == null ? null : this.remove(key.toString());
     }
     public void clear() {
         this.collector.run();
         map.clear();
     }
-    public Set<String> keySet() {
+    public @NonNullable Set<String> keySet() {
         this.collector.run();
         return map.keySet();
     }
-    public Set<Map.Entry<String,V>> entrySet() {
+    public @NonNullable Set<Map.Entry<String,V>> entrySet() {
         this.collector.run();
         Set<Map.Entry<String,KeyedSoftRef<V>>> fromSet = map.entrySet();
         Set<Map.Entry<String,V>> toSet = new HashSet<Map.Entry<String,V>>();
@@ -213,7 +214,7 @@ public class SoftRefCache<V> implements ICache<V> {
         }
         return toSet;
     }
-    public Collection<V> values() {
+    public @NonNullable Collection<V> values() {
         this.collector.run();
         Collection<KeyedSoftRef<V>> fromSet = map.values();
         List<V> toCol = new ArrayList<V>(fromSet.size());
@@ -227,12 +228,12 @@ public class SoftRefCache<V> implements ICache<V> {
         }
         return toCol;
     }
-    public boolean containsKey(Object key) {
+    public boolean containsKey(@NonNullable Object key) {
         if (key == null)
             return false;
         return this.get(key.toString()) != null;
     }
-    public boolean containsValue(Object value) {
+    public boolean containsValue(@NonNullable Object value) {
         this.collector.run();
         Collection<KeyedSoftRef<V>> fromSet = map.values();
         

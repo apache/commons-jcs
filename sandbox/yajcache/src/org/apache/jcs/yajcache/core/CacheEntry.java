@@ -27,23 +27,23 @@ import org.apache.jcs.yajcache.annotate.*;
  */
 @CopyRightApache
 public class CacheEntry<V> implements Map.Entry<String,V> {
-    private final String key;
-    private V value;
+    private @NonNullable final String key;
+    private @NonNullable V value;
     /** Creates a new instance of CacheEntry */
-    public CacheEntry(String key, V val) {
+    public CacheEntry(@NonNullable String key, @NonNullable V val) {
         this.key = key;
         this.value = val;
     }
 
-    public String getKey() {
+    public @NonNullable String getKey() {
         return key;
     }
 
-    public V getValue() {
+    public @NonNullable V getValue() {
         return value;
     }
 
-    public V setValue(V val) {
+    public V setValue(@NonNullable V val) {
         V ret = this.value;
         this.value = val;
         return ret;
@@ -51,7 +51,7 @@ public class CacheEntry<V> implements Map.Entry<String,V> {
     @Override public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-    @Override public String toString() {
+    @Override @NonNullable public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 }

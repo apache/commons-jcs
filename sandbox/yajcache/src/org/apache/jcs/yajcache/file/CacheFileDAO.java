@@ -52,7 +52,8 @@ public enum CacheFileDAO {
      * @return true if successful; false otherwise.
      */
     public boolean writeCacheItem(
-            String cacheName, CacheFileContentType type, String key, byte[] val)
+            @NonNullable String cacheName, @NonNullable CacheFileContentType type, 
+            @NonNullable String key, @NonNullable byte[] val)
     {
         File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
         RandomAccessFile raf = null;
@@ -83,7 +84,8 @@ public enum CacheFileDAO {
      * @return the byte array of a specified cache item from the file system;
      * or null if it can't.
      */
-    public byte[] readCacheItem(String cacheName, String key) {
+    public byte[] readCacheItem(@NonNullable String cacheName, @NonNullable String key) 
+    {
         File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
         
         if (!file.exists())
@@ -139,14 +141,14 @@ public enum CacheFileDAO {
      *
      * @return true if successful; false otherwise.
      */
-    public boolean removeCacheItem(String cacheName, String key)
+    public boolean removeCacheItem(@NonNullable String cacheName, @NonNullable String key)
     {
         File file = CacheFileUtils.inst.getCacheFile(cacheName, key);
         return file.delete();
     }
 
     @Override 
-    public String toString() {
+    public @NonNullable String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 }

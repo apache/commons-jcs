@@ -27,13 +27,13 @@ import org.apache.jcs.yajcache.annotate.*;
  */
 @CopyRightApache
 class KeyedSoftRef<T> extends SoftReference<T> {
-    private final String key;
+    private final @NonNullable String key;
     
 //    KeyedSoftRef(String key, T value) {
 //	super(value);
 //        this.key = key;
 //    }
-    KeyedSoftRef(String key, T value, ReferenceQueue<? super T> q) {
+    KeyedSoftRef(@NonNullable String key, @NonNullable T value, ReferenceQueue<? super T> q) {
         super(value, q);
         this.key = key;
     }

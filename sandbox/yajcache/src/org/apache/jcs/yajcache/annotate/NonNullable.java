@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package org.apache.jcs.yajcache.event;
+package org.apache.jcs.yajcache.annotate;
 
-import org.apache.jcs.yajcache.annotate.*;
-import org.apache.jcs.yajcache.core.ICache;
+import java.lang.annotation.*;
+
 /**
+ * Element so annotated is never expected to be null.
  *
  * @author Hanson Char
  */
 @CopyRightApache
-public class CacheRemoveEvent<V> extends CacheChangeEvent<V> {
-    private final @NonNullable String key;
-
-    public CacheRemoveEvent(@NonNullable ICache<V> cache,
-            @NonNullable String key)
-    {
-        super(cache);
-        this.key = key;
-    }
-    public @NonNullable String getKey() {
-        return key;
-    }
+@Documented
+@Inherited
+@Retention(RetentionPolicy.SOURCE)
+@Target({
+    ElementType.METHOD,         // return value of a method is never null
+    ElementType.FIELD,          // field is never null
+    ElementType.LOCAL_VARIABLE, // variable is never null
+    ElementType.PARAMETER       // parameter is never null
+})
+public @interface NonNullable {
 }

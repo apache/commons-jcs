@@ -31,7 +31,7 @@ public enum ClassUtils {
      * Returns true if instances of the given class is known to be immutable; 
      * false if we don't know.
      */
-    public boolean isImmutable(Class t) {
+    public boolean isImmutable(@NonNullable Class t) {
         return t == String.class
         ||  t.isPrimitive()
         ||  t == Boolean.class
@@ -47,7 +47,7 @@ public enum ClassUtils {
         ||  t.isEnum()
         ;
     }
-    public boolean isImmutable(Object obj) {
+    public boolean isImmutable(@NonNullable Object obj) {
         return this.isImmutable(obj.getClass());
     }
 }

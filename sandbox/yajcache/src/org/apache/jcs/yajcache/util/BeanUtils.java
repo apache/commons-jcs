@@ -51,14 +51,16 @@ public enum BeanUtils {
             throw new RuntimeException(ex);
         }
     }
-    public byte[] toXmlByteArray(Object bean) {
+    @TODO("Replace XMLEncoder with something fast.  Maybe XStream ?")
+    public @NonNullable byte[] toXmlByteArray(@NonNullable Object bean) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         XMLEncoder out = new XMLEncoder(bos);
         out.writeObject(bean);
         out.close();
         return bos.toByteArray();
     }
-    public Object fromXmlByteArray(byte[] bytes) {
+    @TODO("Replace XMLDecoder with something fast.  Maybe XStream ?")
+    public @NonNullable Object fromXmlByteArray(@NonNullable byte[] bytes) {
         if (debug)
             log.debug(new String(bytes));
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);

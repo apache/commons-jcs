@@ -34,10 +34,10 @@ public class CachePutEvent<V> extends CacheChangeEvent {
         this.key = key;
         this.value = value;
     }
-    public String getKey() {
+    public @NonNullable String getKey() {
         return key;
     }
-    public V getValue() {
+    public @NonNullable V getValue() {
         return value;
     }
 }

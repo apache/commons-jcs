@@ -38,7 +38,8 @@ enum SoftRefCacheCleaner {
     private volatile int countDataRaceAndRemovedByOthers;
     private volatile int countBye;
     
-    <V> void cleanupKey(Map<String, KeyedSoftRef<V>> map, String key) {
+    <V> void cleanupKey(@NonNullable Map<String, KeyedSoftRef<V>> map, @NonNullable String key) 
+    {
         V val = null;
         // already garbage collected.  So try to clean up the key.
         if (debug)
@@ -113,7 +114,7 @@ enum SoftRefCacheCleaner {
         return countBye;
     }
     
-    public String toString() {
+    @Override public @NonNullable String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 }

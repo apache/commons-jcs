@@ -39,7 +39,7 @@ public enum CacheManager {
      * incompatible value type.
      */
 //    @SuppressWarnings({"unchecked"})
-    public <V> ICache<V> getCache(String name, Class<V> valueType)
+    public @NonNullable <V> ICache<V> getCache(@NonNullable String name, @NonNullable Class<V> valueType)
     {
         ICache c = this.map.get(name);
                
@@ -52,13 +52,13 @@ public enum CacheManager {
     /** 
      * Returns an existing cache for the specified name; or null if not found.
      */
-    public ICache getCache(String name) {
+    public ICache getCache(@NonNullable String name) {
         return this.map.get(name);
     }
     /**
      * Removes the specified cache, if it exists.
      */
-    public ICache removeCache(String name) {
+    public ICache removeCache(@NonNullable String name) {
         ICache c = this.map.remove(name);
         
         if (c != null) {
@@ -73,7 +73,7 @@ public enum CacheManager {
      * an existing cache created earlier by another thread.
      */
 //    @SuppressWarnings({"unchecked"})
-    private <V> ICache<V> createCache(String name, Class<V> valueType) {
+    private @NonNullable <V> ICache<V> createCache(@NonNullable String name, @NonNullable Class<V> valueType) {
         ICache<V> c = new SoftRefCache<V>(name, valueType);
         ICache old = this.map.putIfAbsent(name, c);
 
@@ -86,7 +86,7 @@ public enum CacheManager {
     }
 
     @TestOnly("Used solely to simluate a race condition during cache creation ")
-    <V> ICache<V> testCreateCacheRaceCondition(String name, Class<V> valueType) 
+    @NonNullable <V> ICache<V> testCreateCacheRaceCondition(@NonNullable String name, @NonNullable Class<V> valueType) 
     {
         return this.createCache(name, valueType);
     }

@@ -29,7 +29,7 @@ import org.apache.jcs.yajcache.annotate.*;
 public enum SafeCacheManager {
     inst;
     // Cache name to Cache mapping.
-    private final ConcurrentMap<String,ICacheSafe> map = 
+    private final @NonNullable ConcurrentMap<String,ICacheSafe> map = 
             new ConcurrentHashMap<String, ICacheSafe>();
     /** 
      * Returns the cache for the specified name and value type;  
@@ -38,7 +38,7 @@ public enum SafeCacheManager {
      * @throws ClassCastException if the cache already exists for an
      * incompatible value type.
      */
-    public <V> ICacheSafe<V> getCache(String name, Class<V> valueType)
+    public @NonNullable <V> ICacheSafe<V> getCache(@NonNullable String name, @NonNullable Class<V> valueType)
     {
         ICacheSafe c = this.map.get(name);
                
@@ -51,13 +51,13 @@ public enum SafeCacheManager {
     /** 
      * Returns an existing cache for the specified name; or null if not found.
      */
-    public ICacheSafe getCache(String name) {
+    public ICacheSafe getCache(@NonNullable String name) {
         return this.map.get(name);
     }
     /**
      * Removes the specified cache, if it exists.
      */
-    public ICacheSafe removeCache(String name) {
+    public ICacheSafe removeCache(@NonNullable String name) {
         ICacheSafe c = this.map.remove(name);
         
         if (c != null) {
@@ -71,7 +71,9 @@ public enum SafeCacheManager {
      * @return either the cache created by the current thread, or
      * an existing cache created earlier by another thread.
      */
-    private <V> ICacheSafe<V> createCache(String name, Class<V> valueType) {
+    private @NonNullable <V> ICacheSafe<V> createCache(
+            @NonNullable String name, @NonNullable Class<V> valueType) 
+    {
         ICacheSafe c = new SoftRefCacheSafe<V>(name, valueType);
         ICacheSafe old = this.map.putIfAbsent(name, c);
 
@@ -84,8 +86,8 @@ public enum SafeCacheManager {
     }
 
     @TestOnly("Used soley to simluate a race condition during cache creation")
-    <V> ICacheSafe<V> testCreateCacheRaceCondition(
-            String name, Class<V> valueType)
+    @NonNullable <V> ICacheSafe<V> testCreateCacheRaceCondition(
+            @NonNullable String name, @NonNullable Class<V> valueType)
     {
         return this.createCache(name, valueType);
     }

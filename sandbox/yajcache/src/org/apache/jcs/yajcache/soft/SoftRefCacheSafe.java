@@ -32,54 +32,54 @@ import org.apache.jcs.yajcache.annotate.*;
 public class SoftRefCacheSafe<V> extends SoftRefCache<V> 
         implements ICacheSafe<V> 
 {
-    public SoftRefCacheSafe(String name, Class<V> valueType, 
+    public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType, 
             int initialCapacity, float loadFactor, int concurrencyLevel) 
     {
         super(name, valueType, initialCapacity, loadFactor, concurrencyLevel);
     }
-    public SoftRefCacheSafe(String name, Class<V> valueType, 
+    public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType, 
             int initialCapacity) 
     {
         super(name, valueType, initialCapacity);
     }
 
-    public SoftRefCacheSafe(String name, Class<V> valueType) {
+    public SoftRefCacheSafe(@NonNullable String name, @NonNullable Class<V> valueType) {
         super(name, valueType);
     }
-    public V getCopy(String key) {
+    public V getCopy(@NonNullable String key) {
         V val = this.get(key);
         return this.dup(val);
     }
-    public V putCopy(String key, V value) {
+    public V putCopy(@NonNullable String key, @NonNullable V value) {
         return this.put(key, this.dup(value));
     }
-    public void putAll(Map<? extends String, ? extends V> map) {
+    public void putAll(@NonNullable Map<? extends String, ? extends V> map) {
         for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), e.getValue());
     }
-    public void putAllCopies(Map<? extends String, ? extends V> map) {
+    public void putAllCopies(@NonNullable Map<? extends String, ? extends V> map) {
         for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), this.dup(e.getValue()));
     }
-    public V getBeanCopy(String key) {
+    public V getBeanCopy(@NonNullable String key) {
         V val = this.get(key);
         return BeanUtils.inst.cloneDeep(val);
     }
-    public V putBeanCopy(String key, V value) {
+    public V putBeanCopy(@NonNullable String key, @NonNullable V value) {
         return this.put(key, BeanUtils.inst.cloneDeep(value));
     }
-    public void putAllBeanCopies(Map<? extends String, ? extends V> map) {
+    public void putAllBeanCopies(@NonNullable Map<? extends String, ? extends V> map) {
         for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), BeanUtils.inst.cloneDeep(e.getValue()));
     }
-    public V getBeanClone(String key) {
+    public V getBeanClone(@NonNullable String key) {
         V val = this.get(key);
         return BeanUtils.inst.cloneShallow(val);
     }
-    public V putBeanClone(String key, V value) {
+    public V putBeanClone(@NonNullable String key, @NonNullable V value) {
         return this.put(key, BeanUtils.inst.cloneShallow(value));
     }
-    public void putAllBeanClones(Map<? extends String, ? extends V> map) {
+    public void putAllBeanClones(@NonNullable Map<? extends String, ? extends V> map) {
         for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), BeanUtils.inst.cloneShallow(e.getValue()));
     }

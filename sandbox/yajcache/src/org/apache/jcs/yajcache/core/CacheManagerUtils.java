@@ -24,7 +24,7 @@ import org.apache.jcs.yajcache.annotate.*;
 enum CacheManagerUtils {
     inst;
     /** Checks the value type assignability of an existing cache. */
-    void checkValueType(ICache c, Class<?> valueType) {
+    void checkValueType(@NonNullable ICache c, @NonNullable Class<?> valueType) {
         Class<?> cacheValueType = c.getValueType();
         
         if (!cacheValueType.isAssignableFrom(valueType))
