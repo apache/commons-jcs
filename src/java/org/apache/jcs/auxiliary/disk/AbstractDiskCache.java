@@ -63,7 +63,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 {
     private static final Log log =
-        LogFactory.getLog( AbstractDiskCache.class );  
+        LogFactory.getLog( AbstractDiskCache.class );
 
     /**  Generic disk cache attributes */
     private IDiskCacheAttributes dcattr = null;
@@ -84,8 +84,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * updating of the persistent storage.
      */
     protected ICacheEventQueue cacheEventQueue;
-    
-    
+
+
     /**
      * Indicates whether the cache is 'alive', defined as having been
      * initialized, but not yet disposed.
@@ -107,9 +107,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
     /**
      * Construc the abstract disk cache, create event queues and purgatory.
-     * 
+     *
      * @param attr
-     */    
+     */
     public AbstractDiskCache( IDiskCacheAttributes attr )
     {
       	this.dcattr = attr;
@@ -163,7 +163,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * An update results in a put event being created.  The put event will call the
      * handlePut method defined here.  The handlePut method calls the implemented
      * doPut on the child.
-     * 
+     *
      * @param cacheElement
      * @throws IOException
      *
@@ -191,9 +191,10 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             pe.setSpoolable( true );
 
             // Add the element to purgatory
-
-            purgatory.put( pe.getKey(), pe );
-
+            synchronized ( purgatory )
+            {
+              purgatory.put( pe.getKey(), pe );
+            }
             // Queue element for serialization
 
             cacheEventQueue.addPutEvent( pe );
@@ -209,10 +210,10 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     /**
      * Check to see if the item is in purgatory.  If so, return it.  If not,
      * check to see if we have it on disk.
-     * 
+     *
      * @param key
      * @return ICacheElement or null
-     * 
+     *
      * @see AuxiliaryCache#get
      */
     public final ICacheElement get( Serializable key )
@@ -227,7 +228,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         PurgatoryElement pe = null;
         synchronized ( purgatory )
         {
-            pe = ( PurgatoryElement ) purgatory.get( key );            
+            pe = ( PurgatoryElement ) purgatory.get( key );
         }
 
 
@@ -255,7 +256,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             // not put an item to memory from disk ifthe size is 0;
             // Do not set spoolable to false.  Just let it go to disk.  This
             // will allow the memory size = 0 setting to work well.
-            
+
             log.debug( "Found element in purgatory, cacheName: " + cacheName
                     + ", key: " + key );
 
@@ -284,10 +285,10 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
     /**
      * Removes are not queued.  A call to remove is immediate.
-     * 
+     *
      * @param key
      * @return whether the item was present to be removed.
-     * 
+     *
      * @see org.apache.jcs.engine.behavior.ICache#remove
      */
     public final boolean remove( Serializable key )
@@ -300,7 +301,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             // Remove element from purgatory if it is there
             pe = ( PurgatoryElement )purgatory.remove( key );
         }
-        
+
 
         if ( pe != null ) {
             // no way to remove from queue, just make sure it doesn't get on disk
@@ -310,7 +311,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         // Remove from persistent store immediately
 
         doRemove( key );
-        
+
         return false;
     }
 
@@ -447,7 +448,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         /**
          * @param id
          * @throws IOException
-         * 
+         *
          * @see ICacheListener#setListenerId
          */
         public void setListenerId( long id )
@@ -498,13 +499,13 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                     	{
                     	    doUpdate( element );
                     	}
-                        
+
                         // After the update has completed, it is safe to remove
                         // the element from purgatory.
 
                         purgatory.remove( element.getKey() );
-                        
-                    }                    
+
+                    }
 
                 }
                 else
@@ -513,21 +514,21 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                     doUpdate( element );
                 }
             }
-            else 
+            else
             {
                 // The cache is not alive, hence the element should be removed from
                 // purgatory. All elements should be removed eventually.
                 // Perhaps, the alive check should have been done before it went in the
                 // queue.  This block handles the case where the disk cache fails
                 // during normal opertations.
-                
+
                 //String keyAsString = element.getKey().toString();
 
                 synchronized ( purgatory )
                 {
                     purgatory.remove( element.getKey() );
                 }
-                                        
+
             }
         }
 
@@ -535,7 +536,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
          * @param cacheName
          * @param key
          * @throws IOException
-         * 
+         *
          * @see ICacheListener#handleRemove
          */
         public void handleRemove( String cacheName, Serializable key )
@@ -553,7 +554,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         /**
          * @param cacheName
          * @throws IOException
-         * 
+         *
          * @see ICacheListener#handleRemoveAll
          */
         public void handleRemoveAll( String cacheName )
@@ -568,7 +569,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         /**
          * @param cacheName
          * @throws IOException
-         * 
+         *
          * @see ICacheListener#handleDispose
          */
         public void handleDispose( String cacheName )

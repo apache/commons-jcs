@@ -236,9 +236,9 @@ public class SortedPreferentialArray
     insertCnt++;
     if (insertCnt % 100 == 0)
     {
-      if (log.isInfoEnabled())
+      if (log.isDebugEnabled())
       {
-        log.info(this.dumpArray());
+        log.debug(this.dumpArray());
       }
     }
 

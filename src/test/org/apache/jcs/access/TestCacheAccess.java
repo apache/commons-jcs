@@ -34,9 +34,9 @@ import org.apache.jcs.engine.control.event.TestElementEventHandler;
 /**
  * Allows the user to run common cache commands from the command line for a test
  * cache.
- * 
+ *
  * This also provide basic methods for use in unit tests.
- *  
+ *
  */
 public class TestCacheAccess
 {
@@ -49,22 +49,22 @@ public class TestCacheAccess
 
     /**
      * Construct and initialize the cachecontrol based on the config file.
-     * 
+     *
      */
     public TestCacheAccess()
     {
-        this( "testCache1" );        
+        this( "testCache1" );
     }
-    
-    
+
+
     /**
      * @param ccfFileName
      */
-    public TestCacheAccess(String ccfFileName)
+    public TestCacheAccess(String regionName)
     {
         try
         {
-            cache_control = GroupCacheAccess.getGroupAccess( ccfFileName );
+            cache_control = GroupCacheAccess.getGroupAccess( regionName );
         }
         catch (Exception e)
         {
@@ -102,6 +102,10 @@ public class TestCacheAccess
                     if (message.startsWith( "help" ))
                     {
                         help();
+                    }
+                    else if (message.startsWith( "gc" ))
+                    {
+                      System.gc();
                     }
                     else if (message.startsWith( "getAttributeNames" ))
                     {
@@ -674,7 +678,7 @@ public class TestCacheAccess
 
     /**
      * Test harness.
-     * 
+     *
      * @param args
      *            The command line arguments
      */
@@ -682,7 +686,11 @@ public class TestCacheAccess
     {
         isSysOut = true;
         String ccfFileName = args[0];
-        TestCacheAccess tca = new TestCacheAccess( ccfFileName );
+        if ( ccfFileName != null )
+        {
+          JCS.setConfigFilename( ccfFileName );
+        }
+        TestCacheAccess tca = new TestCacheAccess( "testCache1" );
         tca.runLoop();
     }
 
@@ -692,7 +700,7 @@ public class TestCacheAccess
     /**
      * Gets multiple items from the cache with keys of the form key1, key2, key3
      * up to key[num].
-     * 
+     *
      * @param num
      *            int
      */
@@ -730,7 +738,7 @@ public class TestCacheAccess
 
     /**
      * Puts multiple items into the cache.
-     * 
+     *
      * @param num
      *            int
      */
@@ -756,7 +764,7 @@ public class TestCacheAccess
 
     /**
      * Removes multiple items from the cache.
-     * 
+     *
      * @param num
      *            int
      */
@@ -783,7 +791,7 @@ public class TestCacheAccess
      * The random method performs numOps number of operations. The operations
      * will be a mix of puts, gets, and removes. The key range will be from 0 to
      * range.
-     * 
+     *
      * @param range
      *            int The end of the key range.
      * @param numOps
@@ -853,7 +861,7 @@ public class TestCacheAccess
 
     /**
      * Sets the region to be used by test methods.
-     * 
+     *
      * @param name
      *            String -- Name of region
      */
@@ -876,7 +884,7 @@ public class TestCacheAccess
      * The tester will print to the console if isSysOut is true, else it will
      * log. It is false by default. When run via the main method, isSysOut will
      * be set to true
-     * 
+     *
      * @param s
      *            String to print or log
      */
@@ -919,6 +927,7 @@ public class TestCacheAccess
         p( "type 'cloneattr num' to clone attr" );
         p( "type 'random range numOps' to put, get, and remove randomly" );
         p( "type 'switch number' to switch to testCache[number], 1 == testCache1" );
+        p( "type 'gc' to call System.gc()" );
         p( "type 'help' for commands" );
 
     }
