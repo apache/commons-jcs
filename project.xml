@@ -65,6 +65,14 @@
     </developer>
   </developers>
 
+  <contributors>
+    <contributor>
+      <name>Travis Savo</name>
+      <email>tsavo@IFILM.com</email>
+    </contributor>
+  </contributors>
+
+
   <dependencies>
     <dependency>
       <id>commons-configuration</id>
