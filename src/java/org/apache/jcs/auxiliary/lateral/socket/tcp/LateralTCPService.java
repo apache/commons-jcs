@@ -99,7 +99,7 @@ public class LateralTCPService
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
         led.requesterId = requesterId;
-        led.command = led.UPDATE;
+        led.command = LateralElementDescriptor.UPDATE;
         sender.send( led );
     }
 
@@ -117,7 +117,7 @@ public class LateralTCPService
         CacheElement ce = new CacheElement( cacheName, key, null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVE;
+        led.command = LateralElementDescriptor.REMOVE;
         sender.send( led );
     }
 
@@ -152,7 +152,7 @@ public class LateralTCPService
         CacheElement ce = new CacheElement( cacheName, key, null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         //led.requesterId = requesterId; // later
-        led.command = led.GET;
+        led.command = LateralElementDescriptor.GET;
         return sender.sendAndReceive( led );
         //return null;
         // nothing needs to be done
@@ -185,7 +185,7 @@ public class LateralTCPService
         CacheElement ce = new CacheElement( cacheName, "ALL", null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVEALL;
+        led.command = LateralElementDescriptor.REMOVEALL;
         sender.send( led );
     }
 

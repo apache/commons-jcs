@@ -136,7 +136,7 @@ public class LateralCacheMonitor implements Runnable
                     log.debug( "cache monitor sleeping for " + idlePeriod );
                 }
 
-                Thread.currentThread().sleep( idlePeriod );
+                Thread.sleep( idlePeriod );
             }
             catch ( InterruptedException ex )
             {
@@ -181,10 +181,7 @@ public class LateralCacheMonitor implements Runnable
                                 }
                                 break;
                             }
-                            else
-                            {
-                                log.debug( "lcnw not in error" );
-                            }
+                            log.debug( "lcnw not in error" );
                         }
                     }
                 }

@@ -107,7 +107,7 @@ public class HSQLCacheAttributes implements AuxiliaryCacheAttributes
         catch ( Exception e )
         {
         }
-        return ( AuxiliaryCacheAttributes ) this;
+        return this;
     }
 
     /** Description of the Method */

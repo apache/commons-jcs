@@ -93,7 +93,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( name ) );
+        return new CacheAccess( cacheMgr.getCache( name ) );
     }
 
     /**
@@ -110,7 +110,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( name, cattr ) );
+        return new CacheAccess( cacheMgr.getCache( name, cattr ) );
     }
 
     /**
@@ -131,7 +131,7 @@ public class CacheAccess implements ICacheAccess
         ensureCacheManager();
 
         return new CacheAccess(
-            ( CompositeCache ) cacheMgr.getCache( name, cattr, attr ) );
+            cacheMgr.getCache( name, cattr, attr ) );
     }
 
     /**
@@ -146,7 +146,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( region ) );
+        return new CacheAccess( cacheMgr.getCache( region ) );
     }
 
     /**
@@ -164,7 +164,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( region, icca ) );
+        return new CacheAccess( cacheMgr.getCache( region, icca ) );
     }
 
     /**
@@ -218,10 +218,7 @@ public class CacheAccess implements ICacheAccess
         {
             throw new ObjectExistsException( "Object exists for key " + key );
         }
-        else
-        {
-            put( key, value );
-        }
+        put( key, value );
     }
 
     /**
@@ -239,8 +236,8 @@ public class CacheAccess implements ICacheAccess
     {
         // Call put with a copy of the contained caches default attributes.
 
-        put( ( Serializable ) name,
-             ( Serializable ) obj,
+        put( name,
+             obj,
              cacheControl.getElementAttributes().copy() );
     }
 

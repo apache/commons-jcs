@@ -266,7 +266,7 @@ class IndexedDisk
         {
             try
             {
-                Thread.currentThread().sleep( 1000 );
+                Thread.sleep( 1000 );
             }
             catch ( InterruptedException ex )
             {

@@ -17,30 +17,23 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
  * limitations under the License.
  */
 
-import java.io.*;
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-
 import org.apache.jcs.engine.CacheElement;
-
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheListener;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * A lateral cache service implementation.
@@ -66,7 +59,7 @@ public class LateralJGService
     public LateralJGService( ILateralCacheAttributes lca )
         throws IOException
     {
-        this.ilca = (ILateralCacheAttributes)lca;
+        this.ilca = lca;
         try
         {
             log.debug( "creating sender" );
@@ -106,7 +99,7 @@ public class LateralJGService
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
         led.requesterId = requesterId;
-        led.command = led.UPDATE;
+        led.command = LateralElementDescriptor.UPDATE;
         sender.send( led );
     }
 
@@ -133,7 +126,7 @@ public class LateralJGService
         CacheElement ce = new CacheElement( cacheName, key, null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVE;
+        led.command = LateralElementDescriptor.REMOVE;
         sender.send( led );
     }
 
@@ -171,7 +164,7 @@ public class LateralJGService
         CacheElement ce = new CacheElement( cacheName, key, null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         //led.requesterId = requesterId; // later
-        led.command = led.GET;
+        led.command = LateralElementDescriptor.GET;
         return sender.sendAndReceive( led );
         //return null;
         // nothing needs to be done
@@ -198,7 +191,7 @@ public class LateralJGService
         CacheElement ce = new CacheElement( cacheName, "ALL", null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVEALL;
+        led.command = LateralElementDescriptor.REMOVEALL;
         sender.send( led );
     }
 

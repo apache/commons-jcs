@@ -18,6 +18,7 @@ package org.apache.jcs.auxiliary.lateral;
  */
 
 
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 
@@ -68,7 +69,7 @@ public class LateralCacheRestore implements ICacheRestore
 
         try
         {
-            if ( lcm.lca.getTransmissionType() == lcm.lca.TCP )
+            if ( lcm.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
             {
                 lateralObj = new LateralTCPService( lcm.lca );
             }

@@ -133,19 +133,16 @@ public class LateralCache implements ICache
         {
             return null;
         }
-        else
+        try
         {
-            try
-            {
-                obj = lateral.get( cacheName, key );
-            }
-            catch ( Exception e )
-            {
-                log.error( e );
-                handleException( e, "Failed to get " + key + " from " + cattr.getCacheName() );
-            }
+            obj = lateral.get( cacheName, key );
         }
-        return obj;
+        catch ( Exception e )
+        {
+            log.error( e );
+            handleException( e, "Failed to get " + key + " from " + cattr.getCacheName() );
+        }
+    return obj;
     }
 
     public Set getGroupKeys(String groupName)

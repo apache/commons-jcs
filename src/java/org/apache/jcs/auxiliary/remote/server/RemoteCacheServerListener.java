@@ -226,7 +226,7 @@ public class RemoteCacheServerListener
         getCacheManager();
         // interface limitation here
 
-        CompositeCache cache = ( CompositeCache ) cacheMgr.getCache( cacheName );
+        CompositeCache cache = cacheMgr.getCache( cacheName );
         cache.localRemove( key );
     }
 
@@ -253,7 +253,7 @@ public class RemoteCacheServerListener
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
+        CompositeCacheManager cm = cacheMgr;
         cm.freeCache( cacheName, true );
     }
 

@@ -52,7 +52,7 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
      */
     private HSQLCacheManager( HSQLCacheAttributes cattr )
     {
-        this.defaultCattr = cattr;
+        HSQLCacheManager.defaultCattr = cattr;
     }
 
 
@@ -63,7 +63,7 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
      */
     public HSQLCacheAttributes getDefaultCattr()
     {
-        return this.defaultCattr;
+        return HSQLCacheManager.defaultCattr;
     }
 
 

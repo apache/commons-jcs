@@ -57,7 +57,7 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
         LateralCacheAttributes lac = ( LateralCacheAttributes ) iaca;
         ArrayList noWaits = new ArrayList();
 
-        if ( lac.getTransmissionType() == lac.UDP )
+        if ( lac.getTransmissionType() == LateralCacheAttributes.UDP )
         {
             LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
             ICache ic = lcm.getCache( lac.getCacheName() );
@@ -66,7 +66,7 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
                 noWaits.add( ic );
             }
         }
-        else if ( lac.getTransmissionType() == lac.JAVAGROUPS )
+        else if ( lac.getTransmissionType() == LateralCacheAttributes.JAVAGROUPS )
         {
             LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
             ICache ic = lcm.getCache( lac.getCacheName() );
@@ -75,7 +75,7 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
                 noWaits.add( ic );
             }
         }
-        else if ( lac.getTransmissionType() == lac.TCP )
+        else if ( lac.getTransmissionType() == LateralCacheAttributes.TCP )
         {
 
             //pars up the tcp servers and set the tcpServer value and
@@ -106,7 +106,7 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
             }
 
         }
-        else if ( lac.getTransmissionType() == lac.XMLRPC )
+        else if ( lac.getTransmissionType() == LateralCacheAttributes.XMLRPC )
         {
 
             //pars up the tcp servers and set the tcpServer value and
@@ -134,7 +134,7 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
             }
 
         }
-        else if ( lac.getTransmissionType() == lac.HTTP )
+        else if ( lac.getTransmissionType() == LateralCacheAttributes.HTTP )
         {
             StringTokenizer it = new StringTokenizer( lac.getHttpServers(), "," );
             while ( it.hasMoreElements() )

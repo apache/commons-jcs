@@ -248,7 +248,6 @@ public class PropertyGroups extends Hashtable
         /** Description of the Method */
         public Object nextElement()
         {
-            Object ob;
             while ( baseEnum.hasMoreElements() )
             {
                 Object k = baseEnum.nextElement();
@@ -294,7 +293,6 @@ public class PropertyGroups extends Hashtable
         /** Description of the Method */
         public Object nextElement()
         {
-            Object ob;
             while ( baseEnum.hasMoreElements() )
             {
                 Object k = baseEnum.nextElement();

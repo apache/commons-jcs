@@ -17,24 +17,14 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
  * limitations under the License.
  */
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.Socket;
-import java.util.Vector;
-
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 import org.jgroups.Channel;
-import org.jgroups.JChannel;
 import org.jgroups.Message;
 
 /**
@@ -77,8 +67,7 @@ public class LateralJGReceiverConnection implements Runnable
      */
     public void run( )
     {
-        Serializable obj = null;
-
+        //Serializable obj = null;
         try
         {
 
@@ -102,19 +91,19 @@ public class LateralJGReceiverConnection implements Runnable
                              + ", led.ce = " + led.ce
                              + ", ilcl = " + ilcl );
                     }
-                    if ( led.command == led.UPDATE )
+                    if ( led.command == LateralElementDescriptor.UPDATE )
                     {
                         ilcl.handlePut( led.ce );
                     }
                     else
-                        if ( led.command == led.REMOVE )
+                        if ( led.command == LateralElementDescriptor.REMOVE )
                     {
                         ilcl.handleRemove( led.ce.getCacheName(), led.ce.getKey() );
                     }
                     else
-                        if ( led.command == led.GET )
+                        if ( led.command == LateralElementDescriptor.GET )
                     {
-                        obj = getAndRespond( led.ce.getCacheName(), led.ce.getKey() );
+                        /*Serializable obj =*/ getAndRespond( led.ce.getCacheName(), led.ce.getKey() );
 
                     }
                 }

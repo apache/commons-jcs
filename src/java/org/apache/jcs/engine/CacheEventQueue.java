@@ -34,7 +34,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
  * the queue goes emtpy for a specified period, now set to 1 minute.  If
  * something comes in after that a new processor thread should be created.
  *
- * I didn't get all of Hanson's cahnges in yet, but I did add the syncronization.
+ * I didn't get all of Hanson's changes in yet, but I did add the syncronization.
  */
 public class CacheEventQueue
     implements ICacheEventQueue
@@ -472,29 +472,26 @@ public class CacheEventQueue
           setAlive( false );
           return;
         }
-        else
-        {
-          if ( log.isInfoEnabled() )
-          {
-            log.info( "Error while running event from Queue: " +
-                         this +". Retrying..." );
-          }
-          try
-          {
-            Thread.sleep( waitBeforeRetry );
-            run();
-          }
-          catch ( InterruptedException ie )
-          {
-            if ( log.isErrorEnabled() )
-            {
-              log.warn( "Interrupted while sleeping for retry on event " +
-                           this +"." );
-            }
-            setWorking( false );
-            setAlive( false );
-          }
-        }
+	    if ( log.isInfoEnabled() )
+	    {
+	      log.info( "Error while running event from Queue: " +
+	                   this +". Retrying..." );
+	    }
+	    try
+	    {
+	      Thread.sleep( waitBeforeRetry );
+	      run();
+	    }
+	    catch ( InterruptedException ie )
+	    {
+	      if ( log.isErrorEnabled() )
+	      {
+	        log.warn( "Interrupted while sleeping for retry on event " + this +
+	                "." );
+	      }
+	      setWorking( false );
+	      setAlive( false );
+	    }
       }
     }
 

@@ -221,7 +221,7 @@ public class LateralTCPListener
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
 
-        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
+        CompositeCacheManager cm = cacheMgr;
         cm.freeCache( cacheName, true );
     }
 

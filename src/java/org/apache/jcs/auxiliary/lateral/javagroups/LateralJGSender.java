@@ -16,47 +16,25 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
  * limitations under the License.
  */
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.io.Serializable;
-
-import java.util.Vector;
-import java.util.Iterator;
-
 import java.net.InetAddress;
-import java.net.Socket;
-
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
-
-import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGSocketOpener;
-import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGRpcOpener;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
-
-import org.jgroups.JChannel;
-import org.jgroups.Channel;
-import org.jgroups.Message;
-import org.jgroups.blocks.RpcDispatcher;
-import org.jgroups.util.RspList;
-import org.jgroups.blocks.GroupRequest;
-
-import org.apache.jcs.engine.CacheElement;
-
-import org.apache.jcs.engine.behavior.ICacheElement;
-
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
+import java.util.Iterator;
+import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
+import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.jgroups.Channel;
+import org.jgroups.Message;
+import org.jgroups.blocks.GroupRequest;
+import org.jgroups.blocks.RpcDispatcher;
+import org.jgroups.util.RspList;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
@@ -202,7 +180,7 @@ public class LateralJGSender implements IJGConstants
 
                 disp = holder.getDispatcher();
 
-                RspList rsp_list = disp.callRemoteMethods( null, "handleGet", (String)led.ce.getCacheName(), (Serializable)led.ce.getKey(),
+                RspList rsp_list = disp.callRemoteMethods( null, "handleGet", led.ce.getCacheName(), led.ce.getKey(),
                     GroupRequest.GET_ALL, 1000 );
 
                 log.debug( "rsp_list = " + rsp_list );
@@ -248,7 +226,7 @@ public class LateralJGSender implements IJGConstants
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
         led.requesterId = requesterId;
-        led.command = led.UPDATE;
+        led.command = LateralElementDescriptor.UPDATE;
         send( led );
     }
 
@@ -281,7 +259,7 @@ public class LateralJGSender implements IJGConstants
         CacheElement ce = new CacheElement( cacheName, key, null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVE;
+        led.command = LateralElementDescriptor.REMOVE;
         send( led );
     }
 
@@ -340,7 +318,7 @@ public class LateralJGSender implements IJGConstants
         CacheElement ce = new CacheElement( cacheName, "ALL", null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVEALL;
+        led.command = LateralElementDescriptor.REMOVEALL;
         send( led );
     }
 

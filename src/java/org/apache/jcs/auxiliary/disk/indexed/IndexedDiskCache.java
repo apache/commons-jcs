@@ -22,11 +22,10 @@ package org.apache.jcs.auxiliary.disk.indexed;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,9 +34,9 @@ import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.utils.locking.ReadWriteLock;
-import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.control.group.GroupAttrName;
+import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.utils.locking.ReadWriteLock;
 
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory
@@ -613,7 +612,7 @@ public class IndexedDiskCache extends AbstractDiskCache
                 //Serializable key = ( Serializable ) itr.next();
                 Serializable key = ( Serializable ) keys[i];
 
-                CacheElement tempDe = ( CacheElement ) readElement( key );
+                CacheElement tempDe = readElement( key );
                 try
                 {
                     //IndexedDiskElementDescriptor de =

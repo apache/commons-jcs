@@ -192,7 +192,7 @@ public class JISPCache extends AbstractDiskCache
             keyArray[ 0 ] = new JISPKey( ce.getKey() );
 
             // akin to an update, should insert as well
-            database.write( keyArray, ( Serializable ) ce );
+            database.write( keyArray, ce );
 
         }
         catch ( Exception e )

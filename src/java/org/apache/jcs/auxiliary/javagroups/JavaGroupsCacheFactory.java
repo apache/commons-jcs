@@ -18,15 +18,14 @@ package org.apache.jcs.auxiliary.javagroups;
  */
 
 
-import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jgroups.ChannelFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.jgroups.Channel;
+import org.jgroups.ChannelFactory;
 
 /**
  * AuxiliaryCacheFactory for creating instances of {@link JavaGroupsCache}

@@ -229,7 +229,7 @@ public class RemoteCacheServer
     public void update( ICacheElement item )
         throws IOException
     {
-        update( item, ( long ) 0 );
+        update( item, 0 );
     }
 
 
@@ -261,7 +261,7 @@ public class RemoteCacheServer
         try
         {
             CacheListeners cacheDesc = getCacheListeners( item.getCacheName() );
-            Object val = item.getVal();
+            /*Object val = */item.getVal();
 
             Integer remoteTypeL = ( Integer ) idTypeMap.get( new Long( requesterId ) );
             boolean fromCluster = false;
@@ -341,7 +341,7 @@ public class RemoteCacheServer
         if ( timing )
         {
             long end = System.currentTimeMillis();
-            this.p1( "put took " + String.valueOf( end - start ) + " ms." );
+            p1( "put took " + String.valueOf( end - start ) + " ms." );
         }
 
         return;
@@ -406,7 +406,7 @@ public class RemoteCacheServer
         }
 
 //        Integer remoteTypeL = ( Integer ) idTypeMap.get( new Long( requesterId ) );
-        boolean fromCluster = false;
+//        boolean fromCluster = false;
 //        if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
 //        {
 //            fromCluster = true;
@@ -426,12 +426,9 @@ public class RemoteCacheServer
         {
             return null;
         }
-        else
-        {
-            CompositeCache c = ( CompositeCache ) cacheDesc.cache;
+        CompositeCache c = ( CompositeCache ) cacheDesc.cache;
 
-            return c.localGet( key );
-        }
+        return c.localGet( key );
     }
 
     /**
@@ -453,18 +450,15 @@ public class RemoteCacheServer
         {
             return Collections.EMPTY_SET;
         }
-        else
-        {
-            CompositeCache c = ( CompositeCache ) cacheDesc.cache;
-            return c.getGroupKeys(group);
-        }
+        CompositeCache c = ( CompositeCache ) cacheDesc.cache;
+        return c.getGroupKeys(group);
     }
 
     /** Removes the given key from the specified remote cache. */
     public void remove( String cacheName, Serializable key )
         throws IOException
     {
-        remove( cacheName, key, ( long ) 0 );
+        remove( cacheName, key, 0 );
     }
 
 
@@ -541,7 +535,7 @@ public class RemoteCacheServer
     public void removeAll( String cacheName )
         throws IOException
     {
-        removeAll( cacheName, ( long ) 0 );
+        removeAll( cacheName, 0 );
     }
 
 
@@ -573,7 +567,7 @@ public class RemoteCacheServer
     public void dispose( String cacheName )
         throws IOException
     {
-        dispose( cacheName, ( long ) 0 );
+        dispose( cacheName, 0 );
     }
 
 
@@ -610,7 +604,7 @@ public class RemoteCacheServer
             for ( Enumeration en = cacheListenersMap.elements(); en.hasMoreElements();  )
             {
                 CacheListeners cacheDesc = ( CacheListeners ) en.nextElement();
-                ICacheEventQueue[] qlist = getEventQList( cacheDesc, ( long ) 0 );
+                ICacheEventQueue[] qlist = getEventQList( cacheDesc, 0 );
 
                 for ( int i = 0; i < qlist.length; i++ )
                 {

@@ -134,13 +134,13 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
         try
         {
-            if ( lca.getTransmissionType() == lca.TCP )
+            if ( lca.getTransmissionType() == ILateralCacheAttributes.TCP )
             {
                 log.debug( "Creating TCP service" );
 
                 this.lateralService = new LateralTCPService( lca );
             }
-            else if ( lca.getTransmissionType() == lca.JAVAGROUPS )
+            else if ( lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
             {
                 log.debug( "Creating JAVAGROUPS service" );
 
@@ -225,11 +225,11 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
         try
         {
-            if ( lca.getTransmissionType() == lca.TCP )
+            if ( lca.getTransmissionType() == ILateralCacheAttributes.TCP )
             {
                 addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lca ) );
             }
-            else if ( lca.getTransmissionType() == lca.JAVAGROUPS )
+            else if ( lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
             {
                 addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( lca ) );
             }

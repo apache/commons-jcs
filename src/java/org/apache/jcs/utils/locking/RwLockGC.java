@@ -98,7 +98,7 @@ public class RwLockGC extends Thread
             try
             {
 //p("RwLockGC sleeping for " + IDLE_PERIOD);
-                Thread.currentThread().sleep( IDLE_PERIOD );
+                sleep( IDLE_PERIOD );
             }
             catch ( InterruptedException ex )
             {

@@ -115,7 +115,7 @@ public class ShrinkerThread extends Thread
 
             try
             {
-                this.sleep( shrinkerInterval );
+                sleep( shrinkerInterval );
             }
             catch ( InterruptedException ie )
             {

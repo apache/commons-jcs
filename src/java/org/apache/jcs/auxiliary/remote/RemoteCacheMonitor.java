@@ -150,7 +150,7 @@ public class RemoteCacheMonitor implements Runnable
 
             try
             {
-                Thread.currentThread().sleep( idlePeriod );
+                Thread.sleep( idlePeriod );
             }
             catch ( InterruptedException ex )
             {

@@ -20,23 +20,17 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.rmi.RemoteException;
-
 import java.rmi.server.UnicastRemoteObject;
-
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 // remove
 
@@ -241,7 +235,7 @@ public class RemoteCacheListener
         }
 
         getCacheManager();
-        CompositeCache cache = ( CompositeCache ) cacheMgr.getCache( cacheName );
+        CompositeCache cache = cacheMgr.getCache( cacheName );
 
         cache.localRemove( key );
     }
@@ -269,7 +263,7 @@ public class RemoteCacheListener
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
+        CompositeCacheManager cm = cacheMgr;
         cm.freeCache( cacheName, true);
     }
 

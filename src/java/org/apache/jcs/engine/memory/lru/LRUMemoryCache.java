@@ -98,69 +98,66 @@ public class LRUMemoryCache
         {
             return;
         }
-        else
+        log.debug( "In memory limit reached, spooling" );
+
+        // Write the last 'chunkSize' items to disk.
+
+        int chunkSizeCorrected = Math.min( size, chunkSize );
+
+        if ( log.isDebugEnabled() )
         {
-            log.debug( "In memory limit reached, spooling" );
+            log.debug( "About to spool to disk cache, map size: " + size
+                 + ", max objects: " + this.cattr.getMaxObjects()
+                 + ", items to spool: " + chunkSizeCorrected );
+        }
 
-            // Write the last 'chunkSize' items to disk.
+        // The spool will put them in a disk event queue, so there is no
+        // need to pre-queue the queuing.  This would be a bit wasteful
+        // and wouldn't save much time in this synchronous call.
 
-            int chunkSizeCorrected = Math.min( size, chunkSize );
-
-            if ( log.isDebugEnabled() )
+        for ( int i = 0; i < chunkSizeCorrected; i++ )
+        {
+            synchronized ( this )
             {
-                log.debug( "About to spool to disk cache, map size: " + size
-                     + ", max objects: " + this.cattr.getMaxObjects()
-                     + ", items to spool: " + chunkSizeCorrected );
-            }
-
-            // The spool will put them in a disk event queue, so there is no
-            // need to pre-queue the queuing.  This would be a bit wasteful
-            // and wouldn't save much time in this synchronous call.
-
-            for ( int i = 0; i < chunkSizeCorrected; i++ )
-            {
-                synchronized ( this )
+                if ( last != null ) 
                 {
-                    if ( last != null ) 
+                    if ( last.ce != null )
                     {
-                        if ( last.ce != null )
+                        cache.spoolToDisk( last.ce );
+                        if ( !map.containsKey(last.ce.getKey()) )
                         {
-                            cache.spoolToDisk( last.ce );
-                            if ( !map.containsKey(last.ce.getKey()) )
-                            {
-                                log.error("update: map does not contain key: " + last.ce.getKey());
-                                verifyCache();
-                            }
-                            if ( map.remove(last.ce.getKey()) == null )
-                            {
-                                log.warn("update: remove failed for key: " + last.ce.getKey() );
-                                verifyCache();
-                            }
+                            log.error("update: map does not contain key: " + last.ce.getKey());
+                            verifyCache();
                         }
-                        else
+                        if ( map.remove(last.ce.getKey()) == null )
                         {
-                            throw new Error("update: last.ce is null!");
+                            log.warn("update: remove failed for key: " + last.ce.getKey() );
+                            verifyCache();
                         }
-                        removeNode( last );
-                    } 
-                    else 
-                    {
-                        verifyCache();
-                        throw new Error("update: last is null!");
                     }
+                    else
+                    {
+                        throw new Error("update: last.ce is null!");
+                    }
+                    removeNode( last );
+                } 
+                else 
+                {
+                    verifyCache();
+                    throw new Error("update: last is null!");
                 }
             }
+        }
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("update: After spool map size: " + map.size());
-            }
-            if ( map.size() != dumpCacheSize() )
-            {
-                log.error("update: After spool, size mismatch: map.size() = "
-                          + map.size() + ", linked list size = " +
-                          dumpCacheSize());
-            }
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("update: After spool map size: " + map.size());
+        }
+        if ( map.size() != dumpCacheSize() )
+        {
+            log.error("update: After spool, size mismatch: map.size() = "
+                      + map.size() + ", linked list size = " +
+                      dumpCacheSize());
         }
     }
 

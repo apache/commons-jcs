@@ -40,6 +40,6 @@ public class RemoteCacheServerInfo
      */
     protected static VMID vmid = new VMID();
     /** Description of the Field */
-    public static long listenerId = ( long ) vmid.hashCode();
+    public static long listenerId = vmid.hashCode();
 
 }

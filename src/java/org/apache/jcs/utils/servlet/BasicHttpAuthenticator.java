@@ -64,7 +64,7 @@ public class BasicHttpAuthenticator
             {
                 res.setContentType( "text/html" );
                 res.setHeader( "WWW-Authenticate", wwwAuthHeader );
-                res.sendError( res.SC_UNAUTHORIZED );
+                res.sendError( HttpServletResponse.SC_UNAUTHORIZED );
                 return false;
             }
         }

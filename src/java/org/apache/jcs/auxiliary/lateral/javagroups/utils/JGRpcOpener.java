@@ -17,20 +17,13 @@ package org.apache.jcs.auxiliary.lateral.javagroups.utils;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-
-import org.jgroups.JChannel;
-import org.jgroups.Channel;
-import org.jgroups.blocks.RpcDispatcher;
-import org.jgroups.blocks.GroupRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
 import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
+import org.jgroups.Channel;
+import org.jgroups.JChannel;
+import org.jgroups.blocks.RpcDispatcher;
 
 /**
  * Socket openere that will timeout on the initial connect rather than block
@@ -96,7 +89,7 @@ public class JGRpcOpener implements Runnable
 
             //String props="UDP(mcast_addr=" + ilca.getUdpMulticastAddr() + ";mcast_port=" + ilca.getUdpMulticastPort()+ "):PING:MERGE2(min_interval=5000;max_interval=10000):FD:STABLE:NAKACK:UNICAST:FLUSH:GMS:VIEW_ENFORCER:QUEUE";
             rpcCh = new JChannel(ilca.getJGChannelProperties());
-            rpcCh.setOpt(rpcCh.LOCAL, Boolean.FALSE);
+            rpcCh.setOpt(Channel.LOCAL, Boolean.FALSE);
             disp = new RpcDispatcher( rpcCh, null, null, ilcl );
             rpcCh.connect(groupName);
 

@@ -245,7 +245,7 @@ public class RemoteCache implements ICache
         // Do not communicate with cluster except via server.
         // separates the remote from the local.  Must run a server to
         // cluster, else it can be run inside a local.
-        if ( this.irca.getRemoteType() != irca.CLUSTER )
+        if ( this.irca.getRemoteType() != IRemoteCacheAttributes.CLUSTER )
         {
 
             if ( !this.irca.getGetOnly() )
@@ -367,7 +367,7 @@ public class RemoteCache implements ICache
         // initiate failover if local
         RemoteCacheNoWaitFacade rcnwf = ( RemoteCacheNoWaitFacade ) RemoteCacheFactory.facades.get( irca.getCacheName() );
         log.debug( "Initiating failover, rcnf = " + rcnwf );
-        if ( rcnwf != null && rcnwf.rca.getRemoteType() == rcnwf.rca.LOCAL )
+        if ( rcnwf != null && rcnwf.rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
             log.debug( "found facade calling failover" );
             // may need to remove the noWait index here. It will be 0 if it is local

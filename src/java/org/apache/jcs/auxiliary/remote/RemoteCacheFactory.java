@@ -60,7 +60,7 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
         ArrayList noWaits = new ArrayList();
 
         // if LOCAL
-        if ( rca.getRemoteType() == rca.LOCAL )
+        if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
 
             // a list toi be turned into an array of failover server information
@@ -127,7 +127,7 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
             // if CLUSTER
         }
         else
-            if ( rca.getRemoteType() == rca.CLUSTER )
+            if ( rca.getRemoteType() == RemoteCacheAttributes.CLUSTER )
         {
 
             // REGISTER LISTENERS FOR EACH SYSTEM CLUSTERED CACHEs
@@ -140,7 +140,7 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
                 rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                 rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
                 RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
-                rca.setRemoteType( rca.CLUSTER );
+                rca.setRemoteType( RemoteCacheAttributes.CLUSTER );
                 ICache ic = rcm.getCache( rca );
                 if ( ic != null )
                 {

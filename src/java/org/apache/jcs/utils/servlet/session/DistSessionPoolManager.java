@@ -44,7 +44,7 @@ public class DistSessionPoolManager
         long start = System.currentTimeMillis();
         for ( int i = 0; i < num; i++ )
         {
-            DistSession ht = new DistSession();
+            /*DistSession ht = */ new DistSession();
         }
         long end = System.currentTimeMillis();
         System.out.println( "New DistSession creation took " + String.valueOf( end - start ) + " millis." );

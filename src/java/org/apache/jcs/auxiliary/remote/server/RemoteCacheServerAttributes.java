@@ -175,7 +175,7 @@ public class RemoteCacheServerAttributes implements IRemoteCacheServerAttributes
         catch ( Exception e )
         {
         }
-        return ( AuxiliaryCacheAttributes ) this;
+        return this;
     }
 
 

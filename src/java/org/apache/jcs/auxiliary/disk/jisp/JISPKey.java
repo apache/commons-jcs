@@ -83,22 +83,8 @@ public class JISPKey extends KeyObject
             {
                 return KEY_MORE;
             }
-            /*
-             * for string
-             * int cv = ((JISPKey)key).m_key.compareTo(m_key);
-             * if ( cv == 0  )  {
-             * return KEY_EQUAL;
-             * } else if ( cv < 0  )  {
-             * return KEY_LESS;
-             * } else {
-             * return KEY_MORE;
-             * }
-             */
         }
-        else
-        {
-            return KEY_ERROR;
-        }
+        return KEY_ERROR;
     }
 
 
@@ -150,10 +136,7 @@ public class JISPKey extends KeyObject
             return ( orig == test );
             //return ( m_key.equals( ( ( JISPKey ) obj ).m_key ) );
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
 

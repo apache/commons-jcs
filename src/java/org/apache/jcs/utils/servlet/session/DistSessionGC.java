@@ -100,13 +100,13 @@ class DistSessionGC extends Thread implements ISessionConstants
                     log.debug( "sessIdSet.size()=" + sessIdSet.size() );
                     log.debug( "sleeping for " + IDLE_PERIOD );
                 }
-                Thread.currentThread().sleep( IDLE_PERIOD );
+                Thread.sleep( IDLE_PERIOD );
             }
             catch ( InterruptedException ex )
             {
                 // ignore;
             }
-            long now = System.currentTimeMillis();
+            //long now = System.currentTimeMillis();
             // Take a snapshot of the hashtable.
             String[] sessIds = null;
             synchronized ( sessIdSet )

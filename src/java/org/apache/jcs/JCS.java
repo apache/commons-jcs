@@ -62,7 +62,7 @@ public class JCS extends GroupCacheAccess
     {
         ensureCacheManager();
 
-        return new JCS( ( CompositeCache ) cacheMgr.getCache( region ) );
+        return new JCS( cacheMgr.getCache( region ) );
     }
 
     /**
@@ -79,7 +79,7 @@ public class JCS extends GroupCacheAccess
     {
         ensureCacheManager();
 
-        return new JCS( ( CompositeCache ) cacheMgr.getCache( region, icca ) );
+        return new JCS( cacheMgr.getCache( region, icca ) );
     }
 
     /**

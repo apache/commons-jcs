@@ -17,25 +17,16 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
  * limitations under the License.
  */
 
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.io.IOException;
-
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
-import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGSocketOpener;
-import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGRpcOpener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.jgroups.JChannel;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
+import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 import org.jgroups.Channel;
-import org.jgroups.Message;
-import org.jgroups.blocks.RpcDispatcher;
 import org.jgroups.ChannelNotConnectedException;
+import org.jgroups.Message;
 
 /**
  * Processes commands from the server socket.
@@ -65,7 +56,7 @@ public class LateralJGReceiver implements IJGConstants, Runnable
 
             JGConnectionHolder holder = JGConnectionHolder.getInstance(ilca);
             Channel javagroups = holder.getChannel();
-            RpcDispatcher disp = holder.getDispatcher();
+            /* RpcDispatcher disp = */ holder.getDispatcher();
 
             if ( javagroups == null )
             {

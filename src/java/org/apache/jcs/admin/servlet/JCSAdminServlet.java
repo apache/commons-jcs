@@ -16,29 +16,11 @@ package org.apache.jcs.admin.servlet;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Date;
-import java.text.DateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jcs.admin.CacheElementInfo;
-import org.apache.jcs.admin.CacheRegionInfo;
-import org.apache.jcs.admin.CountingOnlyOutputStream;
 import org.apache.jcs.admin.JCSAdminBean;
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.memory.MemoryCache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.servlet.VelocityServlet;
@@ -155,22 +137,19 @@ public class JCSAdminServlet
 
       return null;
     }
-    else
+    // Populate the context based on the template
+
+    if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
     {
-      // Populate the context based on the template
-
-      if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
-      {
-        context.put( "cacheName", cacheName );
-        context.put( "elementInfoRecords", admin.buildElementInfo( cacheName ) );
-      }
-      else if ( templateName == DEFAULT_TEMPLATE_NAME )
-      {
-        context.put( "cacheInfoRecords", admin.buildCacheInfo() );
-      }
-
-      return getTemplate( templateName );
+      context.put( "cacheName", cacheName );
+      context.put( "elementInfoRecords", admin.buildElementInfo( cacheName ) );
     }
+    else if ( templateName == DEFAULT_TEMPLATE_NAME )
+    {
+      context.put( "cacheInfoRecords", admin.buildCacheInfo() );
+    }
+
+    return getTemplate( templateName );
   }
 
 }

@@ -19,24 +19,18 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
-
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.CacheConstants;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  *  JavaGroups listener.  Good for distributing cache data accross multiple vms
@@ -263,7 +257,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
+        CompositeCacheManager cm = cacheMgr;
         cm.freeCache( cacheName, true );
     }
 

@@ -108,7 +108,7 @@ public abstract class AbstractMemoryCache
         if ( cattr.getUseMemoryShrinker() && shrinker == null )
         {
             shrinker = new ShrinkerThread( this );
-            shrinker.setPriority( shrinker.MIN_PRIORITY );
+            shrinker.setPriority( ShrinkerThread.MIN_PRIORITY );
             shrinker.start();
         }
     }

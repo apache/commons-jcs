@@ -93,9 +93,9 @@ public class MRUMemoryCache
             if ( replace )
             {
                 // the slowest method I've ever seen
-                mrulist.remove( ( String ) key );
+                mrulist.remove( key );
             }
-            mrulist.addFirst( ( String ) key );
+            mrulist.addFirst( key );
         }
 
         // save a microsecond on the second call.
@@ -105,55 +105,52 @@ public class MRUMemoryCache
         {
             return;
         }
-        else
+        // SPOOL LAST -- need to make this a grouping in a queue
+
+        log.debug( "In RAM overflow" );
+
+        // write the last item to disk.
+        try
         {
-            // SPOOL LAST -- need to make this a grouping in a queue
 
-            log.debug( "In RAM overflow" );
+            // PUSH 5 TO DISK TO MINIMIZE THE TYPICAL
+            int chunkSizeCorrected = Math.min( size, chunkSize );
 
-            // write the last item to disk.
-            try
+            if ( log.isDebugEnabled() )
             {
-
-                // PUSH 5 TO DISK TO MINIMIZE THE TYPICAL
-                int chunkSizeCorrected = Math.min( size, chunkSize );
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "update: About to spool to disk cache, map.size() = " + size + ", this.cattr.getMaxObjects() = " + this.cattr.getMaxObjects() + ", chunkSizeCorrected = " + chunkSizeCorrected );
-                }
-
-                // The spool will put them in a disk event queue, so there is no
-                // need to pre-queue the queuing.  This would be a bit wasteful
-                // and wouldn't save much time in this synchronous call.
-                for ( int i = 0; i < chunkSizeCorrected; i++ )
-                {
-                    // Might want to rename this "overflow" incase the hub
-                    // wants to do something else.
-                    Serializable last = ( Serializable ) mrulist.getLast();
-                    ICacheElement ceL = ( ICacheElement ) map.get( last );
-                    cache.spoolToDisk( ceL );
-
-                    // need a more fine grained locking here
-                    synchronized ( map )
-                    {
-                        map.remove( last );
-                        mrulist.remove( last );
-                    }
-                }
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "update: After spool,  map.size() = " + size + ", this.cattr.getMaxObjects() = " + this.cattr.getMaxObjects() + ", chunkSizeCorrected = " + chunkSizeCorrected );
-                }
-
+                log.debug( "update: About to spool to disk cache, map.size() = " + size + ", this.cattr.getMaxObjects() = " + this.cattr.getMaxObjects() + ", chunkSizeCorrected = " + chunkSizeCorrected );
             }
-            catch ( Exception ex )
+
+            // The spool will put them in a disk event queue, so there is no
+            // need to pre-queue the queuing.  This would be a bit wasteful
+            // and wouldn't save much time in this synchronous call.
+            for ( int i = 0; i < chunkSizeCorrected; i++ )
             {
-                // impossible case.
-                ex.printStackTrace();
-                throw new IllegalStateException( ex.getMessage() );
+                // Might want to rename this "overflow" incase the hub
+                // wants to do something else.
+                Serializable last = ( Serializable ) mrulist.getLast();
+                ICacheElement ceL = ( ICacheElement ) map.get( last );
+                cache.spoolToDisk( ceL );
+
+                // need a more fine grained locking here
+                synchronized ( map )
+                {
+                    map.remove( last );
+                    mrulist.remove( last );
+                }
             }
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "update: After spool,  map.size() = " + size + ", this.cattr.getMaxObjects() = " + this.cattr.getMaxObjects() + ", chunkSizeCorrected = " + chunkSizeCorrected );
+            }
+
+        }
+        catch ( Exception ex )
+        {
+            // impossible case.
+            ex.printStackTrace();
+            throw new IllegalStateException( ex.getMessage() );
         }
     }
 

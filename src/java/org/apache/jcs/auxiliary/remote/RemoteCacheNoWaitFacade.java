@@ -273,7 +273,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
             log.debug( "in failover for " + i );
         }
         //if ( noWaits.length == 1 ) {
-        if ( rca.getRemoteType() == rca.LOCAL )
+        if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
             if ( noWaits[ i ].getStatus() == CacheConstants.STATUS_ERROR )
             {

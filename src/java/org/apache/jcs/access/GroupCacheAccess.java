@@ -66,7 +66,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
                 }
             }
         }
-        return new GroupCacheAccess( ( CompositeCache ) cacheMgr.getCache( region ) );
+        return new GroupCacheAccess( cacheMgr.getCache( region ) );
     }
 
     /**
@@ -88,7 +88,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
             }
         }
 
-        return new GroupCacheAccess( ( CompositeCache ) cacheMgr.getCache( region, icca ) );
+        return new GroupCacheAccess( cacheMgr.getCache( region, icca ) );
     }
 
     /**

@@ -19,9 +19,7 @@ package org.apache.jcs.config.plugins;
 
 import javax.servlet.ServletException;
 
-import org.apache.jcs.JCS;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;

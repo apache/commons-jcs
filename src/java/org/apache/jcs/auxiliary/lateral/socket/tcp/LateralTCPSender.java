@@ -127,7 +127,7 @@ public class LateralTCPSender
                 throw new IOException( "Socket is null" );
             }
 
-            socket.setSoTimeout( this.timeOut );
+            socket.setSoTimeout( LateralTCPSender.timeOut );
             synchronized ( this )
             {
                 oos = new ObjectOutputStream( socket.getOutputStream() );
@@ -317,7 +317,7 @@ public class LateralTCPSender
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
         led.requesterId = requesterId;
-        led.command = led.UPDATE;
+        led.command = LateralElementDescriptor.UPDATE;
         send( led );
     }
 
@@ -337,7 +337,7 @@ public class LateralTCPSender
         CacheElement ce = new CacheElement( cacheName, key, null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVE;
+        led.command = LateralElementDescriptor.REMOVE;
         send( led );
     }
 
@@ -379,7 +379,7 @@ public class LateralTCPSender
         CacheElement ce = new CacheElement( cacheName, "ALL", null );
         LateralElementDescriptor led = new LateralElementDescriptor( ce );
         led.requesterId = requesterId;
-        led.command = led.REMOVEALL;
+        led.command = LateralElementDescriptor.REMOVEALL;
         send( led );
     }
 

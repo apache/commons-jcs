@@ -136,7 +136,7 @@ public class RemoteCacheClusterMonitor implements Runnable
             try
             {
 //      p("cache monitor sleeping for " + idlePeriod);
-                Thread.currentThread().sleep( idlePeriod );
+                Thread.sleep( idlePeriod );
             }
             catch ( InterruptedException ex )
             {

@@ -204,7 +204,7 @@ public class RemoteCacheFailoverRunner implements Runnable
             try
             {
                 log.debug( "cache failover runner sleeping for " + idlePeriod );
-                Thread.currentThread().sleep( idlePeriod );
+                Thread.sleep( idlePeriod );
             }
             catch ( InterruptedException ex )
             {

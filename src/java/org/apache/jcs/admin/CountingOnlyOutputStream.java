@@ -18,8 +18,6 @@ package org.apache.jcs.admin;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * Keeps track of the number of bytes written to it, but doesn't write them

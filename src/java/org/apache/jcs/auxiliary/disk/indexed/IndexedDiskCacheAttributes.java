@@ -143,7 +143,7 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
         catch ( Exception e )
         {
         }
-        return ( AuxiliaryCacheAttributes ) this;
+        return this;
     }
 
 

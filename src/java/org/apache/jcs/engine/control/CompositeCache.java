@@ -481,7 +481,7 @@ public class CompositeCache
                     {
                         long cacheType = aux.getCacheType();
 
-                        if ( ! localOnly || cacheType == aux.DISK_CACHE )
+                        if ( ! localOnly || cacheType == AuxiliaryCache.DISK_CACHE )
                         {
                             if ( log.isDebugEnabled() )
                             {
@@ -594,24 +594,21 @@ public class CompositeCache
 
                     return true;
                 }
-                else
+                long idleTime = attributes.getIdleTime();
+                long lastAccessTime = attributes.getLastAccessTime();
+
+                // Remove if maxIdleTime exceeded
+                // FIXME: Does this really belong here?
+
+                if ( ( idleTime != -1 )
+                     && ( now - lastAccessTime ) > ( idleTime * 1000 ) )
                 {
-                    long idleTime = attributes.getIdleTime();
-                    long lastAccessTime = attributes.getLastAccessTime();
-
-                    // Remove if maxIdleTime exceeded
-                    // FIXME: Does this really belong here?
-
-                    if ( ( idleTime != -1 )
-                         && ( now - lastAccessTime ) > ( idleTime * 1000 ) )
+                    if ( log.isDebugEnabled() )
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.info( "Exceeded maxIdle: " + element.getKey() );
-                        }
-
-                        return true;
+                        log.info( "Exceeded maxIdle: " + element.getKey() );
                     }
+
+                    return true;
                 }
             }
         }

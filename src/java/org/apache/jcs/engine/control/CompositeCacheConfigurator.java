@@ -124,7 +124,7 @@ public class CompositeCacheConfigurator
     protected void setDefaultCompositeCacheAttributes( Properties props )
     {
         ICompositeCacheAttributes icca =
-            parseCompositeCacheAttributes( props, "", this.DEFAULT_REGION );
+            parseCompositeCacheAttributes( props, "", CompositeCacheConfigurator.DEFAULT_REGION );
         ccMgr.setDefaultCacheAttributes( icca );
 
         log.info( "setting defaultCompositeCacheAttributes to " + icca );
@@ -134,7 +134,7 @@ public class CompositeCacheConfigurator
     protected void setDefaultElementAttributes( Properties props )
     {
         IElementAttributes iea =
-            parseElementAttributes( props, "", this.DEFAULT_REGION );
+            parseElementAttributes( props, "", CompositeCacheConfigurator.DEFAULT_REGION );
         ccMgr.setDefaultElementAttributes( iea );
 
         log.info( "setting defaultElementAttributes to " + iea );
@@ -325,7 +325,7 @@ public class CompositeCacheConfigurator
     {
         IElementAttributes eAttr;
 
-        String attrName = regionPrefix + regName + this.ELEMENT_ATTRIBUTE_PREFIX;
+        String attrName = regionPrefix + regName + CompositeCacheConfigurator.ELEMENT_ATTRIBUTE_PREFIX;
 
         // auxFactory was not previously initialized.
         //String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;

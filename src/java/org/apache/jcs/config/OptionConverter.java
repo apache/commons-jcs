@@ -358,41 +358,32 @@ public class OptionConverter
                 {
                     return val;
                 }
-                else
-                {
-                    sbuf.append( val.substring( i, val.length() ) );
-                    return sbuf.toString();
-                }
+	            sbuf.append( val.substring( i, val.length() ) );
+	            return sbuf.toString();
             }
-            else
+            sbuf.append( val.substring( i, j ) );
+            k = val.indexOf( DELIM_STOP, j );
+            if ( k == -1 )
             {
-                sbuf.append( val.substring( i, j ) );
-                k = val.indexOf( DELIM_STOP, j );
-                if ( k == -1 )
-                {
-                    throw new IllegalArgumentException( '"' + val +
-                        "\" has no closing brace. Opening brace at position " + j
-                         + '.' );
-                }
-                else
-                {
-                    j += DELIM_START_LEN;
-                    String key = val.substring( j, k );
-                    // first try in System properties
-                    String replacement = getSystemProperty( key, null );
-                    // then try props parameter
-                    if ( replacement == null && props != null )
-                    {
-                        replacement = props.getProperty( key );
-                    }
-
-                    if ( replacement != null )
-                    {
-                        sbuf.append( replacement );
-                    }
-                    i = k + DELIM_STOP_LEN;
-                }
+                throw new IllegalArgumentException( '"' + val +
+                    "\" has no closing brace. Opening brace at position " + j
+                     + '.' );
             }
+            j += DELIM_START_LEN;
+            String key = val.substring( j, k );
+            // first try in System properties
+            String replacement = getSystemProperty( key, null );
+            // then try props parameter
+            if ( replacement == null && props != null )
+            {
+                replacement = props.getProperty( key );
+            }
+
+            if ( replacement != null )
+            {
+                sbuf.append( replacement );
+            }
+            i = k + DELIM_STOP_LEN;
         }
     }
 

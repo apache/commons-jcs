@@ -219,7 +219,7 @@ public class RemoteCacheAttributes implements IRemoteCacheAttributes
         catch ( Exception e )
         {
         }
-        return ( AuxiliaryCacheAttributes ) this;
+        return this;
     }
 
 

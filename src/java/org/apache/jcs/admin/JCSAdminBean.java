@@ -17,24 +17,20 @@ package org.apache.jcs.admin;
  */
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Date;
 import java.text.DateFormat;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.memory.MemoryCache;
 
 /**
  * A servlet which provides HTTP access to JCS. Allows a summary of regions
@@ -52,7 +48,7 @@ public class JCSAdminBean
   public LinkedList buildElementInfo( String cacheName ) throws Exception
   {
     CompositeCache cache =
-        ( CompositeCache ) cacheHub.getCache( cacheName );
+        cacheHub.getCache( cacheName );
 
     Object[] keys = cache.getMemoryCache().getKeyArray();
 
@@ -118,7 +114,7 @@ public class JCSAdminBean
 
     for ( int i = 0; i < cacheNames.length; i++ )
     {
-      cache = ( CompositeCache ) cacheHub.getCache( cacheNames[i] );
+      cache = cacheHub.getCache( cacheNames[i] );
 
       regionInfo = new CacheRegionInfo();
 

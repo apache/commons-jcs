@@ -17,17 +17,11 @@ package org.apache.jcs.auxiliary.lateral.javagroups.utils;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-
-import org.jgroups.JChannel;
-import org.jgroups.Channel;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.jgroups.Channel;
+import org.jgroups.JChannel;
 
 /**
  * Socket openere that will timeout on the initial connect rather than block
@@ -93,7 +87,7 @@ public class JGSocketOpener implements Runnable
 
             javagroups = new JChannel( lca.getJGChannelProperties() );
             // don't send local
-            javagroups.setOpt(javagroups.LOCAL, Boolean.FALSE);
+            javagroups.setOpt(Channel.LOCAL, Boolean.FALSE);
             javagroups.connect(groupName);
 
         }

@@ -160,7 +160,7 @@ public class HttpServletRequestFacade implements HttpServletRequest
         // Ensure that the specified encoding is valid
         byte buffer[] = new byte[1];
         buffer[0] = ( byte ) 'a';
-        String dummy = new String( buffer, enc );
+        new String( buffer, enc );
 
         // Save the validated encoding
         this.characterEncoding = enc;

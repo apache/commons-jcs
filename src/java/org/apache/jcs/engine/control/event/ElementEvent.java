@@ -33,7 +33,7 @@ public class ElementEvent
      implements IElementEventConstants, IElementEvent
 {
 
-    private int elementEvent = this.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND;
+    private int elementEvent = ElementEvent.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND;
     /**
      *  Constructor for the ElementEvent object
      *

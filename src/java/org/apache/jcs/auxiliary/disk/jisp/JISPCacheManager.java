@@ -50,7 +50,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
      */
     private JISPCacheManager( JISPCacheAttributes cattr )
     {
-        this.defaultCattr = cattr;
+        JISPCacheManager.defaultCattr = cattr;
     }
 
     /**
@@ -60,7 +60,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
      */
     public JISPCacheAttributes getDefaultCattr()
     {
-        return this.defaultCattr;
+        return JISPCacheManager.defaultCattr;
     }
 
     /**

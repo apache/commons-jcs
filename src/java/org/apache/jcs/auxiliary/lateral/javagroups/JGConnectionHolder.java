@@ -18,24 +18,18 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
  */
 
 
-import java.util.HashMap;
 import java.io.IOException;
-
-import org.jgroups.JChannel;
-import org.jgroups.Channel;
-import org.jgroups.Message;
-import org.jgroups.blocks.RpcDispatcher;
-import org.jgroups.util.RspList;
-import org.jgroups.blocks.GroupRequest;
+import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
+import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGRpcOpener;
 import org.apache.jcs.auxiliary.lateral.javagroups.utils.JGSocketOpener;
+import org.jgroups.Channel;
+import org.jgroups.blocks.RpcDispatcher;
 
 /**
  * Description of the Class

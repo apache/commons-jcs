@@ -427,7 +427,7 @@ public class LateralCacheAttributes implements Serializable, ILateralCacheAttrib
         catch ( Exception e )
         {
         }
-        return ( AuxiliaryCacheAttributes ) this;
+        return this;
     }
 
 

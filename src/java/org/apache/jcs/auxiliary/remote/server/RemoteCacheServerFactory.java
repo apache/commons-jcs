@@ -176,7 +176,7 @@ public class RemoteCacheServerFactory
             // TODO: safer exit ?
             try
             {
-                Thread.currentThread().sleep( 2000 );
+                Thread.sleep( 2000 );
             }
             catch ( InterruptedException ex )
             {
