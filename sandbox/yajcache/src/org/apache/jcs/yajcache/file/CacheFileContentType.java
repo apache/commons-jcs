@@ -17,7 +17,9 @@
 
 package org.apache.jcs.yajcache.file;
 
-import org.apache.jcs.yajcache.annotate.*;
+import java.io.Serializable;
+import org.apache.commons.lang.SerializationUtils;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache File Content Type.  A cache file represents the file persistence
@@ -27,7 +29,8 @@ import org.apache.jcs.yajcache.annotate.*;
  *
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheFileContentType {
     JAVA_SERIALIZATION,
     XML_ENCODER;
@@ -40,15 +43,15 @@ public enum CacheFileContentType {
             case XML_ENCODER:
                 return 1;
             default:
-                throw new IllegalStateException("Should never happen");
+                throw new AssertionError(this);
         }
     }
     /** 
      * Returns the corresponding CacheFileContentType enum instance 
      * from the given byte value. 
      */
-    @NonNullable 
-    public static CacheFileContentType fromByte(byte b) {
+    
+    public static @NonNullable CacheFileContentType fromByte(byte b) {
         switch(b) {
             case 0:
                 return JAVA_SERIALIZATION;
@@ -56,6 +59,26 @@ public enum CacheFileContentType {
                 return XML_ENCODER;
             default:
                 throw new IllegalArgumentException("Unsupported b="+b);
+        }
+    }
+    public byte[] serialize(Object obj) {
+        switch(this) {
+            case JAVA_SERIALIZATION:
+                return SerializationUtils.serialize((Serializable)obj);
+            case XML_ENCODER:
+                return org.apache.jcs.yajcache.util.BeanUtils.inst.toXmlByteArray(obj);
+            default:
+                throw new AssertionError(this);
+        }
+    }
+    public Object deserialize(byte[] ba) {
+        switch(this) {
+            case JAVA_SERIALIZATION:
+                return SerializationUtils.deserialize(ba);
+            case XML_ENCODER:
+                return org.apache.jcs.yajcache.util.BeanUtils.inst.fromXmlByteArray(ba);
+            default:
+                throw new AssertionError(this);
         }
     }
 }
