@@ -17,9 +17,7 @@
 package org.apache.jcs.yajcache.core;
 
 import org.apache.jcs.yajcache.soft.SoftRefCache;
-import org.apache.jcs.yajcache.soft.SoftRefCacheSafe;
 import org.apache.jcs.yajcache.soft.SoftRefFileCache;
-import org.apache.jcs.yajcache.soft.SoftRefFileCacheSafe;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 
@@ -40,11 +38,11 @@ public enum CacheType {
             case SOFT_REFERENCE:
                 return new SoftRefCache<V>(name, valueType);
             case SOFT_REFERENCE_SAFE:
-                return new SoftRefCacheSafe<V>(name, valueType);
+                return new SafeCacheWrapper<V>(new SoftRefCache<V>(name, valueType));
             case SOFT_REFERENCE_FILE:
                 return new SoftRefFileCache<V>(name, valueType);
             case SOFT_REFERENCE_FILE_SAFE:
-                return new SoftRefFileCacheSafe<V>(name, valueType);
+                return new SafeCacheWrapper<V>(new SoftRefFileCache<V>(name, valueType));
         }
         throw new AssertionError(this);
     }
@@ -52,9 +50,9 @@ public enum CacheType {
     {
         switch(this) {
             case SOFT_REFERENCE_SAFE:
-                return new SoftRefCacheSafe<V>(name, valueType);
+                return new SafeCacheWrapper<V>(new SoftRefCache<V>(name, valueType));
             case SOFT_REFERENCE_FILE_SAFE:
-                return new SoftRefFileCacheSafe<V>(name, valueType);
+                return new SafeCacheWrapper<V>(new SoftRefFileCache<V>(name, valueType));
         }
         throw new UnsupportedOperationException("");
     }

@@ -19,9 +19,7 @@ package org.apache.jcs.yajcache.core;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.apache.jcs.yajcache.lang.annotation.*;
-import org.apache.jcs.yajcache.config.PerCacheConfig;
-import org.apache.jcs.yajcache.file.CacheFileManager;
-import org.apache.jcs.yajcache.soft.SoftRefFileCacheSafe;
+
 
 /**
  * @author Hanson Char
