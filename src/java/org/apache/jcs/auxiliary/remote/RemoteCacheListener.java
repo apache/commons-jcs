@@ -162,14 +162,11 @@ public class RemoteCacheListener
     public static IRemoteCacheListener getInstance( IRemoteCacheAttributes irca )
     {
         //throws IOException, NotBoundException
-        if ( instance == null )
+        synchronized ( RemoteCacheListener.class )
         {
-            synchronized ( RemoteCacheListener.class )
+            if ( instance == null )
             {
-                if ( instance == null )
-                {
-                    instance = new RemoteCacheListener( irca );
-                }
+                instance = new RemoteCacheListener( irca );
             }
         }
         //instance.incrementClients();

@@ -75,14 +75,11 @@ public class RemoteCacheClusterMonitor implements Runnable
      */
     static RemoteCacheClusterMonitor getInstance()
     {
-        if ( instance == null )
+        synchronized ( RemoteCacheClusterMonitor.class )
         {
-            synchronized ( RemoteCacheClusterMonitor.class )
+            if ( instance == null )
             {
-                if ( instance == null )
-                {
-                    return instance = new RemoteCacheClusterMonitor();
-                }
+                return instance = new RemoteCacheClusterMonitor();
             }
         }
         return instance;

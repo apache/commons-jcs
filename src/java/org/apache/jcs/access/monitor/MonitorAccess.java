@@ -46,15 +46,11 @@ public class MonitorAccess implements Serializable
     /** Constructor for the MonitorAccess object */
     public MonitorAccess()
     {
-        // FIXME: Removed double-checked locking.
-        if ( cacheMgr == null )
+        synchronized ( GroupCacheAccess.class )
         {
-            synchronized ( GroupCacheAccess.class )
+            if ( cacheMgr == null )
             {
-                if ( cacheMgr == null )
-                {
-                    cacheMgr = CompositeCacheManager.getInstance();
-                }
+                cacheMgr = CompositeCacheManager.getInstance();
             }
         }
     }

@@ -44,4 +44,15 @@ public class CacheRegionInfo
              : status == CacheConstants.STATUS_ERROR ? "ERROR"
              : "UNKNOWN" );
   }
+
+  /**
+   * Return the stats for the region.
+   *
+   * @return String
+   */
+  public String getStats()
+  {
+    return cache.getStats();
+  }
+
 }

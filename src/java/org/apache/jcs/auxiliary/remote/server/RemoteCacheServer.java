@@ -163,9 +163,9 @@ public class RemoteCacheServer
         NotBoundException
     {
         CacheListeners cacheListeners = ( CacheListeners ) cacheListenersMap.get( cacheName );
-        if ( cacheListeners == null )
+        synchronized ( cacheListenersMap )
         {
-            synchronized ( cacheListenersMap )
+          if ( cacheListeners == null )
             {
                 cacheListeners = ( CacheListeners ) cacheListenersMap.get( cacheName );
                 if ( cacheListeners == null )
@@ -191,9 +191,9 @@ public class RemoteCacheServer
         NotBoundException
     {
         CacheListeners cacheListeners = ( CacheListeners ) clusterListenersMap.get( cacheName );
-        if ( cacheListeners == null )
+        synchronized ( clusterListenersMap )
         {
-            synchronized ( clusterListenersMap )
+          if ( cacheListeners == null )
             {
                 cacheListeners = ( CacheListeners ) clusterListenersMap.get( cacheName );
                 if ( cacheListeners == null )

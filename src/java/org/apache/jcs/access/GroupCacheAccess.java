@@ -56,14 +56,11 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     public static GroupCacheAccess getGroupAccess( String region )
         throws CacheException
     {
-        if ( cacheMgr == null )
+        synchronized ( GroupCacheAccess.class )
         {
-            synchronized ( GroupCacheAccess.class )
+            if ( cacheMgr == null )
             {
-                if ( cacheMgr == null )
-                {
-                    cacheMgr = CompositeCacheManager.getInstance();
-                }
+                cacheMgr = CompositeCacheManager.getInstance();
             }
         }
         return new GroupCacheAccess( cacheMgr.getCache( region ) );
@@ -77,14 +74,11 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     public static GroupCacheAccess getGroupAccess( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        if ( cacheMgr == null )
+        synchronized ( GroupCacheAccess.class )
         {
-            synchronized ( GroupCacheAccess.class )
+            if ( cacheMgr == null )
             {
-                if ( cacheMgr == null )
-                {
-                    cacheMgr = CompositeCacheManager.getInstance();
-                }
+                cacheMgr = CompositeCacheManager.getInstance();
             }
         }
 
@@ -136,20 +130,20 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      * @param value The object to cache
      * @param attr The objects attributes.
      */
-    public void putInGroup( Object name, String groupName, Object value, 
+    public void putInGroup( Object name, String groupName, Object value,
                             IElementAttributes attr )
         throws CacheException
     {
         // unbind object first if any.
         remove( name, groupName);
 
-        if (attr == null) 
+        if (attr == null)
         {
-            put( getGroupAttrName(groupName, name), value );            
+            put( getGroupAttrName(groupName, name), value );
         }
-        else 
+        else
         {
-            put( getGroupAttrName(groupName, name), value, attr );            
+            put( getGroupAttrName(groupName, name), value, attr );
         }
     }
 
@@ -157,7 +151,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     public void remove( Object name, String group )
     {
         GroupAttrName key = getGroupAttrName( group, name );
-        cacheControl.remove(key);            
+        cacheControl.remove(key);
     }
 
     /**

@@ -141,22 +141,21 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
 
         //throws IOException, NotBoundException
         ILateralCacheListener ins = ( ILateralCacheListener ) instances.get( ilca.getJGChannelProperties() );
-        if ( ins == null )
+
+        synchronized ( LateralCacheJGListener.class )
         {
-            synchronized ( LateralCacheJGListener.class )
+            if ( ins == null )
             {
-                if ( ins == null )
-                {
-                    ins = new LateralCacheJGListener( ilca );
-                    ins.init();
-                }
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "created new listener " + ilca.getJGChannelProperties() );
-                }
-                instances.put( ilca.getJGChannelProperties(), ins );
+                ins = new LateralCacheJGListener( ilca );
+                ins.init();
             }
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "created new listener " + ilca.getJGChannelProperties() );
+            }
+            instances.put( ilca.getJGChannelProperties(), ins );
         }
+
         return ins;
     }
 

@@ -180,9 +180,9 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
         Location loc = new Location( host, port );
 
         RemoteCacheManager ins = ( RemoteCacheManager ) instances.get( loc );
-        if ( ins == null )
+        synchronized ( instances )
         {
-            synchronized ( instances )
+            if ( ins == null )
             {
                 ins = ( RemoteCacheManager ) instances.get( loc );
                 if ( ins == null )

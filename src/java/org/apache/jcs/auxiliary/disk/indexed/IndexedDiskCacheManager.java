@@ -68,15 +68,12 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
     public static IndexedDiskCacheManager getInstance(
         IndexedDiskCacheAttributes defaultCacheAttributes )
     {
-        if ( instance == null )
+        synchronized ( IndexedDiskCacheManager.class )
         {
-            synchronized ( IndexedDiskCacheManager.class )
+            if ( instance == null )
             {
-                if ( instance == null )
-                {
-                    instance =
-                        new IndexedDiskCacheManager( defaultCacheAttributes );
-                }
+                instance =
+                    new IndexedDiskCacheManager( defaultCacheAttributes );
             }
         }
 

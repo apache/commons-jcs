@@ -73,14 +73,11 @@ public class LateralCacheMonitor implements Runnable
      */
     static LateralCacheMonitor getInstance()
     {
-        if ( instance == null )
+        synchronized ( LateralCacheMonitor.class )
         {
-            synchronized ( LateralCacheMonitor.class )
+            if ( instance == null )
             {
-                if ( instance == null )
-                {
-                    return instance = new LateralCacheMonitor();
-                }
+                return instance = new LateralCacheMonitor();
             }
         }
         return instance;

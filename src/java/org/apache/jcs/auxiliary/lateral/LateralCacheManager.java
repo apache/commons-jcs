@@ -85,12 +85,12 @@ public class LateralCacheManager implements AuxiliaryCacheManager
     public static LateralCacheManager getInstance( ILateralCacheAttributes lca )
     {
         LateralCacheManager ins = ( LateralCacheManager ) instances.get( lca.toString() );
-        if ( ins == null )
+        synchronized ( instances )
         {
-            log.info( "Instance for [" + lca.toString() + "] is null, creating" );
-
-            synchronized ( instances )
+            if ( ins == null )
             {
+                log.info( "Instance for [" + lca.toString() + "] is null, creating" );
+
                 ins = ( LateralCacheManager ) instances.get( lca.toString() );
                 if ( ins == null )
                 {

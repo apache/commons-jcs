@@ -63,20 +63,17 @@ public class JGConnectionHolder
         JGConnectionHolder ins = ( JGConnectionHolder ) instances.get( ilca.getJGChannelProperties() );
         try
         {
-            if ( ins == null )
+            synchronized ( JGConnectionHolder.class )
             {
-                synchronized ( JGConnectionHolder.class )
+                if ( ins == null )
                 {
-                    if ( ins == null )
-                    {
-                        ins = new JGConnectionHolder( ilca );
-                    }
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "created new listener " + ilca.getJGChannelProperties() );
-                    }
-                    instances.put( ilca.getJGChannelProperties(), ins );
+                    ins = new JGConnectionHolder( ilca );
                 }
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "created new listener " + ilca.getJGChannelProperties() );
+                }
+                instances.put( ilca.getJGChannelProperties(), ins );
             }
         }
         catch ( Exception e )

@@ -74,14 +74,11 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
      */
     public static HSQLCacheManager getInstance( HSQLCacheAttributes cattr )
     {
-        if ( instance == null )
+        synchronized ( HSQLCacheManager.class )
         {
-            synchronized ( HSQLCacheManager.class )
+            if ( instance == null )
             {
-                if ( instance == null )
-                {
-                    instance = new HSQLCacheManager( cattr );
-                }
+                instance = new HSQLCacheManager( cattr );
             }
         }
 

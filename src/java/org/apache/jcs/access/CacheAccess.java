@@ -173,14 +173,11 @@ public class CacheAccess implements ICacheAccess
      */
     protected static void ensureCacheManager()
     {
-        if ( cacheMgr == null )
+        synchronized ( CacheAccess.class )
         {
-            synchronized ( CacheAccess.class )
+            if ( cacheMgr == null )
             {
-                if ( cacheMgr == null )
-                {
-                    cacheMgr = CompositeCacheManager.getInstance();
-                }
+                cacheMgr = CompositeCacheManager.getInstance();
             }
         }
     }

@@ -58,22 +58,20 @@ public class LateralGroupCacheJGListener
     {
         //throws IOException, NotBoundException
         ILateralCacheListener ins = ( ILateralCacheListener ) instances.get( String.valueOf( ilca.getUdpMulticastAddr() ) );
-        if ( ins == null )
+        synchronized ( LateralGroupCacheJGListener.class )
         {
-            synchronized ( LateralGroupCacheJGListener.class )
+            if ( ins == null )
             {
-                if ( ins == null )
-                {
-                    ins = new LateralGroupCacheJGListener( ilca );
-                    ins.init();
-                }
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "created new listener " + ilca.getUdpMulticastAddr() );
-                }
-                instances.put( String.valueOf( ilca.getUdpMulticastAddr() ), ins );
+                ins = new LateralGroupCacheJGListener( ilca );
+                ins.init();
             }
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "created new listener " + ilca.getUdpMulticastAddr() );
+            }
+            instances.put( String.valueOf( ilca.getUdpMulticastAddr() ), ins );
         }
+
         return ins;
     }
 

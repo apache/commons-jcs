@@ -78,14 +78,11 @@ public class RemoteCacheMonitor implements Runnable
      */
     static RemoteCacheMonitor getInstance()
     {
-        if ( instance == null )
+        synchronized ( RemoteCacheMonitor.class )
         {
-            synchronized ( RemoteCacheMonitor.class )
+            if ( instance == null )
             {
-                if ( instance == null )
-                {
-                    return instance = new RemoteCacheMonitor();
-                }
+                return instance = new RemoteCacheMonitor();
             }
         }
         return instance;

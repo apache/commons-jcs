@@ -70,14 +70,11 @@ public class JISPCacheManager implements AuxiliaryCacheManager
      */
     public static JISPCacheManager getInstance( JISPCacheAttributes cattr )
     {
-        if ( instance == null )
+        synchronized ( JISPCacheManager.class )
         {
-            synchronized ( JISPCacheManager.class )
+            if ( instance == null )
             {
-                if ( instance == null )
-                {
-                    instance = new JISPCacheManager( cattr );
-                }
+                instance = new JISPCacheManager( cattr );
             }
         }
 
