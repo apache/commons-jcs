@@ -15,7 +15,6 @@ public class GroupAttrName implements Serializable
     /** Description of the Field */
     public final GroupId groupId;
     public final Object attrName;
-    private String hashString;
     private String toString;
 
     /**
@@ -28,12 +27,12 @@ public class GroupAttrName implements Serializable
     {
         this.groupId = groupId;
         this.attrName = attrName;
+
         if ( groupId == null || attrName == null )
         {
             throw new IllegalArgumentException( "groupId " + groupId + 
                 " and attrName " + attrName + ", must not be null." );
         }
-        this.hashString = groupId.toString() + attrName.toString();
     }
 
 
@@ -49,14 +48,18 @@ public class GroupAttrName implements Serializable
         {
             return false;
         }
-        return hashString.equals( ((GroupAttrName) obj).hashString );
+        GroupAttrName to = ( GroupAttrName ) obj;
+        return groupId.equals( to.groupId ) && attrName.equals( to.attrName );
     }
 
 
-    /** Description of the Method */
-    public int hashCode()
+    /**
+     * @return A hash code based on the hash code of {@ #groupid} and
+     * {@link #attrName}.
+     */
+    ppublic int hashCode()
     {
-        return hashString.hashCode();
+        return groupId.hashCode() ^ attrName.hashCode();
     }
 
 
