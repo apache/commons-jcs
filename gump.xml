@@ -34,14 +34,14 @@
     <depend project="jakarta-tomcat-util"/>
     <depend project="jakarta-tomcat"/>
     <depend project="xml-rpc"/>
-    <depend project="jakarta-turbine-stratum"/>
 
     <work nested="target/classes"/>
     <home nested="target"/>
     <jar name="jcs-@@DATE@@.jar"/>
     <javadoc nested="docs/apidocs"/>
 
-
+    <nag to="turbine-jcs-dev@jakarta.apache.org"
+         from="JCS Developers &lt;turbine-jcs-dev@jakarta.apache.org&gt;"/>
     
   </project>
   
