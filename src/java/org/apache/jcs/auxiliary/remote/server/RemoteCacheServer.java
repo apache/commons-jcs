@@ -422,7 +422,6 @@ public class RemoteCacheServer
      * Gets the set of keys of objects currently in the group
      */
     public Set getGroupKeys(String cacheName, String group)
-        throws IOException
     {
         CacheListeners cacheDesc = null;
         try

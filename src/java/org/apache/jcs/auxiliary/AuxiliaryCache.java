@@ -47,5 +47,5 @@ public interface AuxiliaryCache extends ICache
     /**
      * Gets the set of keys of objects currently in the group
      */
-    public Set getGroupKeys(String group) throws IOException;
+    public Set getGroupKeys(String group);
 }

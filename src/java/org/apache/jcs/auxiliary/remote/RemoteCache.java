@@ -163,7 +163,6 @@ public class RemoteCache implements ICache
     }
 
     public Set getGroupKeys(String groupName)
-        throws IOException
     {
         return remote.getGroupKeys(cacheName, groupName);
     }
