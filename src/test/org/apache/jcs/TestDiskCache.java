@@ -104,7 +104,7 @@ public class TestDiskCache extends TestCase
         {
             public void runTest() throws Exception
             {
-                runTestForRegion( "indexedRegion1" );
+                this.runTestForRegion( "indexedRegion1" );
             }
         } );
 
@@ -112,7 +112,7 @@ public class TestDiskCache extends TestCase
         {
             public void runTest() throws Exception
             {
-                runTestForRegion( "indexedRegion2" );
+                this.runTestForRegion( "indexedRegion2" );
             }
         } );
 
@@ -120,7 +120,7 @@ public class TestDiskCache extends TestCase
         {
             public void runTest() throws Exception
             {
-                runTestForRegion( "indexedRegion3" );
+                this.runTestForRegion( "indexedRegion3" );
             }
         } );
 
