@@ -10,6 +10,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.Cache;
 import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 /** */
 public class GroupCacheHub
@@ -28,7 +29,7 @@ public class GroupCacheHub
      * @see CacheHub#createSystemCache
      */
     protected Cache createSystemCache( String cacheName,
-                                       ICache[] auxCaches,
+                                       AuxiliaryCache[] auxCaches,
                                        ICompositeCacheAttributes cattr,
                                        IElementAttributes attr )
     {
@@ -43,7 +44,7 @@ public class GroupCacheHub
      * @see CacheHub#createCache
      */
     protected Cache createCache( String cacheName,
-                                 ICache[] auxCaches,
+                                 AuxiliaryCache[] auxCaches,
                                  ICompositeCacheAttributes cattr,
                                  IElementAttributes attr )
     {

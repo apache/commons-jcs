@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
@@ -251,7 +252,7 @@ public class CacheHub
 
     /** Creates internal system cache */
     protected Cache createSystemCache( String cacheName,
-                                       ICache[] auxCaches,
+                                       AuxiliaryCache[] auxCaches,
                                        ICompositeCacheAttributes cattr,
                                        IElementAttributes attr )
     {
@@ -263,7 +264,7 @@ public class CacheHub
      * override this method to create the specific cache.
      */
     protected Cache createCache( String cacheName,
-                                 ICache[] auxCaches,
+                                 AuxiliaryCache[] auxCaches,
                                  ICompositeCacheAttributes cattr,
                                  IElementAttributes attr )
     {

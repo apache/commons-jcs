@@ -412,14 +412,7 @@ public class TestCacheAccess
                             p( "---got " + key + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
                         }
                     }
-                    else
-                        if ( message.startsWith( "stats" ) )
-                    {
-                        // print stats
-                        p( cache_control.getStats() );
-                    }
-                    else
-                        if ( message.startsWith( "putg" ) )
+                    else if ( message.startsWith( "putg" ) )
                     {
 
                         String group = null;

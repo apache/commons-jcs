@@ -62,18 +62,18 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.exception.CacheException;
-import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
-import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.memory.MemoryCache;
+import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 
 /**
@@ -91,7 +91,7 @@ public class Cache
     private final static Log log = LogFactory.getLog( Cache.class );
 
     // Auxiliary caches.
-    private ICache[] auxCaches;
+    private AuxiliaryCache[] auxCaches;
     // track hit counts for each
     private int[] auxHit;
 
@@ -110,8 +110,11 @@ public class Cache
      */
     public ICompositeCacheAttributes cacheAttr;
 
-    // statistics
+    // Statistics
+    // FIXME: Provide accessors for these for instrumentation
+
     private static int numInstances;
+
     private int ramHit;
     private int miss;
 
@@ -131,7 +134,7 @@ public class Cache
      * @param attr The default element attributes
      */
     public Cache( String cacheName,
-                  ICache[] auxCaches,
+                  AuxiliaryCache[] auxCaches,
                   ICompositeCacheAttributes cattr,
                   IElementAttributes attr )
     {
@@ -140,6 +143,7 @@ public class Cache
         this.cacheName = cacheName;
 
         this.auxCaches = auxCaches;
+
         if ( auxCaches != null )
         {
             this.auxHit = new int[ auxCaches.length ];
@@ -374,7 +378,7 @@ public class Cache
                     }
                     catch ( IOException ex )
                     {
-                        handleException( ex );
+                        log.error( "Failure in updateExclude", ex );
                     }
                 }
                 // SEND LATERALLY
@@ -487,37 +491,32 @@ public class Cache
      *
      * @return
      * @param key
-     * @param container
      * @param invocation
      */
     public ICacheElement get( Serializable key, boolean invocation )
     {
+        ICacheElement element = null;
+
         if ( log.isDebugEnabled() )
         {
-            log.debug( "in cache get(key,container)" );
+            log.debug( "get: key = " + key + ", local = "
+                       + ( invocation == CacheConstants.LOCAL_INVOKATION ) );
         }
-
-        ICacheElement ce = null;
-        boolean found = false;
 
         try
         {
+            // First look in memory cache
 
-            if ( log.isDebugEnabled() )
+            element = memCache.get( key );
+
+            if ( element == null )
             {
-                log.debug( "get: key = " + key + ", is local invocation = "
-                           + ( invocation == CacheConstants.LOCAL_INVOKATION ) );
-            }
-
-            ce = memCache.get( key );
-
-            if ( ce == null )
-            {
-                // Item not found in memory.  Try the auxiliary caches if local.
+                // Item not found in memory. If local invocation look in aux
+                // caches, even if not local look in disk auxiliaries
 
                 for ( int i = 0; i < auxCaches.length; i++ )
                 {
-                    ICache aux = auxCaches[ i ];
+                    AuxiliaryCache aux = auxCaches[ i ];
 
                     if ( aux != null )
                     {
@@ -527,54 +526,50 @@ public class Cache
                         {
                             if ( log.isDebugEnabled() )
                             {
-                                log.debug( "get(key,container,invocation) > in local block, aux.getCacheType() = " + aux.getCacheType() );
+                                log.debug( "Attempting to get from aux: "
+                                           + aux.getCacheName()
+                                           + " which is of type: "
+                                           + aux.getCacheType() );
                             }
 
                             try
                             {
-                                ce = ( ICacheElement ) aux.get( key );
+                                element = aux.get( key );
                             }
                             catch ( IOException ex )
                             {
-                                handleException( ex );
+                                log.error( "Error getting from aux", ex );
                             }
                         }
 
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "ce = " + ce );
+                            log.debug( "Got CacheElement: " + element );
                         }
 
-                        if ( ce != null )
+                        if ( element != null )
                         {
-                            found = true;
+                            log.debug(
+                                cacheName + " - Aux cache[" + i + "] hit" );
+
                             // Item found in one of the auxiliary caches.
                             auxHit[ i ]++;
 
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( cacheName + " -- AUX[" + i + "]-HIT for " + key );
-                                log.debug( "ce.getKey() = " + ce.getKey() );
-                                log.debug( "ce.getVal() = " + ce.getVal() );
-                            }
-
-                            memCache.update( ce );
+                            // Spool the item back into memory
+                            memCache.update( element );
 
                             break;
                         }
                     }
-                    // end for
                 }
-                // end if invocation = LOCAL
-
             }
             else
             {
-                found = true;
                 ramHit++;
+
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( cacheName + " -- RAM-HIT for " + key );
+                    log.debug( cacheName + " - Memory cache hit" );
                 }
             }
 
@@ -584,59 +579,66 @@ public class Cache
             log.error( e );
         }
 
-        try
+        if ( element == null )
         {
-            if ( !found )
+            miss++;
+
+            if ( log.isDebugEnabled() )
             {
-                // Item not found in all caches.
-                miss++;
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( cacheName + " -- MISS for " + key );
-                }
-                return null;
+                log.debug( cacheName + " - Miss" );
             }
-        }
-        catch ( Exception e )
-        {
-            log.error( "Error handling miss", e );
+
             return null;
         }
 
-        // HUB Manages expiration
+        // If an element was found, we still need to deal with expiration.
+
         try
         {
+            IElementAttributes attributes = element.getElementAttributes();
 
-            if ( !ce.getElementAttributes().getIsEternal() )
+            if ( ! attributes.getIsEternal() )
             {
-
                 long now = System.currentTimeMillis();
 
-                // Exceeded maxLifeSeconds
-                if ( ( ce.getElementAttributes().getMaxLifeSeconds() != -1 ) && ( now - ce.getElementAttributes().getCreateTime() ) > ( ce.getElementAttributes().getMaxLifeSeconds() * 1000 ) )
+                // Remove if maxLifeSeconds exceeded
+
+                long maxLifeSeconds = attributes.getMaxLifeSeconds();
+                long createTime = attributes.getCreateTime();
+
+                if ( maxLifeSeconds != -1
+                     && ( now - createTime ) > ( maxLifeSeconds * 1000 ) )
                 {
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "Exceeded maxLifeSeconds -- " + ce.getKey() );
+                        log.info( "Exceeded maxLife: " + element.getKey() );
                     }
-                    this.remove( key );
-                    //cache.remove( me.ce.getKey() );
+
+                    remove( key );
+
                     return null;
                 }
                 else
-                // NOT SURE IF THIS REALLY BELONGS HERE.  WHAT IS THE
-                // POINT OF IDLE TIME?  SEEMS OK
-                // Exceeded maxIdleTime, removal
-                    if ( ( ce.getElementAttributes().getIdleTime() != -1 ) && ( now - ce.getElementAttributes().getLastAccessTime() ) > ( ce.getElementAttributes().getIdleTime() * 1000 ) )
+                {
+                    long idleTime = attributes.getIdleTime();
+                    long lastAccessTime = attributes.getLastAccessTime();
+
+                    // Remove if maxIdleTime exceeded
+                    // FIXME: Does this really belong here?
+
+                    if ( ( idleTime != -1 )
+                         && ( now - lastAccessTime ) > ( idleTime * 1000 ) )
                     {
-                        if ( log.isInfoEnabled() )
+                        if ( log.isDebugEnabled() )
                         {
-                            log.info( "Exceeded maxIdleTime [ ce.getElementAttributes().getIdleTime() = " + ce.getElementAttributes().getIdleTime() + " ]-- " + ce.getKey() );
+                            log.info( "Exceeded maxIdle: " + element.getKey() );
                         }
-                        this.remove( key );
-                        //cache.remove( me.ce.getKey() );
+
+                        remove( key );
+
                         return null;
                     }
+                }
             }
 
         }
@@ -646,12 +648,8 @@ public class Cache
             return null;
         }
 
-
-        return ce;
+        return element;
     }
-    // end get
-
-
 
     /**
      * Removes an item from the cache.
@@ -684,7 +682,7 @@ public class Cache
      * @param key
      * @param nonLocal
      */
-    // can't be protected because groupcache method needs to be called from access
+
     public synchronized boolean remove( Serializable key, boolean nonLocal )
     {
 
@@ -733,7 +731,7 @@ public class Cache
             }
             catch ( IOException ex )
             {
-                handleException( ex );
+                log.error( "Failure removing from aux", ex );
             }
         }
         return removed;
@@ -768,7 +766,7 @@ public class Cache
                 }
                 catch ( IOException ex )
                 {
-                    handleException( ex );
+                    log.error( "Failure removing all from aux", ex );
                 }
             }
         }
@@ -829,7 +827,7 @@ public class Cache
                             while ( itr.hasNext() )
                             {
                                 Map.Entry entry = ( Map.Entry ) itr.next();
-                                Serializable key = ( Serializable ) entry.getKey();
+
                                 MemoryElementDescriptor me = ( MemoryElementDescriptor ) entry.getValue();
                                 try
                                 {
@@ -853,7 +851,7 @@ public class Cache
                 }
                 catch ( IOException ex )
                 {
-                    handleException( ex );
+                    log.error( "Failure disposing of aux", ex );
                 }
             }
         }
@@ -895,7 +893,7 @@ public class Cache
                         while ( itr.hasNext() )
                         {
                             Map.Entry entry = ( Map.Entry ) itr.next();
-                            Serializable key = ( Serializable ) entry.getKey();
+
                             MemoryElementDescriptor me = ( MemoryElementDescriptor ) entry.getValue();
 
                             aux.update( me.ce );
@@ -904,7 +902,7 @@ public class Cache
                 }
                 catch ( IOException ex )
                 {
-                    handleException( ex );
+                    log.error( "Failure saving aux caches", ex );
                 }
             }
         }
@@ -912,28 +910,6 @@ public class Cache
         {
             log.debug( "Called save for " + cacheName );
         }
-    }
-
-    /**
-     * Gets the stats attribute of the Cache object
-     *
-     * FIXME: Remove HTML!
-     *
-     * @return The stats value
-     */
-    public String getStats()
-    {
-        StringBuffer stats = new StringBuffer();
-        stats.append( "cacheName = " + cacheName + ", numInstances = " + numInstances );
-        stats.append( "<br> ramSize = " + memCache.getSize() + "/ ramHit = " + ramHit );
-
-        for ( int i = 0; i < auxHit.length; i++ )
-        {
-            stats.append( "/n<br> auxHit[" + i + "] = " + auxHit[ i ] + ", " + this.auxCaches[ i ].getClass().getName() + "" );
-        }
-        stats.append( "/n<br> miss = " + miss );
-        stats.append( "/n<br> cacheAttr = " + cacheAttr.toString() );
-        return stats.toString();
     }
 
     /**
@@ -964,16 +940,6 @@ public class Cache
     public int getStatus()
     {
         return alive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
-    }
-
-    /**
-     * Description of the Method
-     *
-     * @param ex
-     */
-    private void handleException( IOException ex )
-    {
-        ex.printStackTrace();
     }
 
     /**
@@ -1043,7 +1009,6 @@ public class Cache
      * might want to create a memory cache config file separate from that of the
      * hub -- ICompositeCacheAttributes
      *
-     * @return
      * @param cattr
      */
     private void createMemoryCache( ICompositeCacheAttributes cattr )

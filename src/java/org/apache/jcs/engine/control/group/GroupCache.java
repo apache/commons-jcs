@@ -71,6 +71,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.Cache;
 import org.apache.jcs.utils.locking.ReadWriteLockManager;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 /**
  * Group cache is basically a composite cache with the additional capability of
@@ -108,7 +109,7 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param attr The default element attributes
      */
     public GroupCache( String cacheName,
-                       ICache[] auxCaches,
+                       AuxiliaryCache[] auxCaches,
                        ICompositeCacheAttributes cattr,
                        IElementAttributes attr )
     {
@@ -131,7 +132,7 @@ public class GroupCache extends Cache implements ICompositeCache
      * @param systemGroupIdCache The systemGroupIdCache
      */
     public GroupCache( String cacheName,
-                       ICache[] auxCaches,
+                       AuxiliaryCache[] auxCaches,
                        ICompositeCacheAttributes cattr,
                        IElementAttributes attr,
                        ICompositeCache systemGroupIdCache )

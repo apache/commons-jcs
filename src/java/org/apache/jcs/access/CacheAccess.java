@@ -459,17 +459,6 @@ public class CacheAccess implements ICacheAccess
     }
 
     /**
-     * Return statistics for the region.
-     *
-     * @return HTML formatted string containing region statistics
-     */
-    protected String getStats()
-    {
-        return cacheControl.getStats();
-    }
-
-
-    /**
      * Gets the ICompositeCacheAttributes of the cache region
      *
      * @return
