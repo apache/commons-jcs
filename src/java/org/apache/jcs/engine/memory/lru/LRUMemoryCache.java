@@ -72,7 +72,7 @@ public class LRUMemoryCache
         ce.getElementAttributes().setLastAccessTimeNow();
         addFirst( ce );
         MemoryElementDescriptor old =
-            ( MemoryElementDescriptor ) map.put( ce.getKey(), first );
+            ( MemoryElementDescriptor ) map.put( first.ce.getKey(), first );
 
         // If the node was the same as an existing node, remove it.
 
@@ -107,27 +107,72 @@ public class LRUMemoryCache
             // need to pre-queue the queuing.  This would be a bit wasteful
             // and wouldn't save much time in this synchronous call.
 
-            MemoryElementDescriptor node;
-
             for ( int i = 0; i < chunkSizeCorrected; i++ )
             {
                 synchronized ( this )
                 {
-                    cache.spoolToDisk( last.ce );
-
-                    map.remove( last.ce.getKey() );
-
-                    removeNode( last );
+                    if ( last != null ) 
+                    {
+                        if ( last.ce != null )
+                        {
+                            cache.spoolToDisk( last.ce );
+                            if ( !map.containsKey(last.ce.getKey()) )
+                            {
+                                log.error("update: map does not contain key: " + last.ce.getKey());
+                                verifyCache();
+                            }
+                            if ( map.remove(last.ce.getKey()) == null )
+                            {
+                                log.warn("update: remove failed for key: " + last.ce.getKey() );
+                                verifyCache();
+                            }
+                        }
+                        else
+                        {
+                            throw new Error("update: last.ce is null!");
+                        }
+                        removeNode( last );
+                    } 
+                    else 
+                    {
+                        verifyCache();
+                        throw new Error("update: last is null!");
+                    }
                 }
             }
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "After spool map size: " + size );
+                log.debug("update: After spool map size: " + map.size());
+            }
+            if ( map.size() != dumpCacheSize() )
+            {
+                log.error("update: After spool, size mismatch: map.size() = "
+                          + map.size() + ", linked list size = " +
+                          dumpCacheSize());
             }
         }
     }
 
+    /**
+     * Remove all of the elements from both the Map and the linked
+     * list implementation. Overrides base class.
+     */ 
+    public synchronized void removeAll()
+        throws IOException
+    {
+        map.clear();
+        for ( MemoryElementDescriptor me = first; me != null; ) 
+        {
+            if ( me.prev != null )
+            {
+                me.prev = null;
+            }
+            MemoryElementDescriptor next = me.next;
+            me = next;
+        }
+        first = last = null;
+    }
 
     /**
      *  Get an item from the cache without affecting its last access time or
@@ -168,14 +213,15 @@ public class LRUMemoryCache
      *@return                  ICacheElement if found, else null
      *@exception  IOException
      */
-    public ICacheElement get( Serializable key )
+    public synchronized ICacheElement get( Serializable key )
         throws IOException
     {
         ICacheElement ce = null;
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "getting item for key: " + key );
+            log.debug( "getting item from cache " + cacheName + " for key " +
+                       key );
         }
 
         MemoryElementDescriptor me = (MemoryElementDescriptor)map.get(key);
@@ -197,6 +243,7 @@ public class LRUMemoryCache
             log.debug( cacheName + ": LRUMemoryCache miss for " + key );
         }
         
+        verifyCache();
         return ce;
     }
 
@@ -210,7 +257,7 @@ public class LRUMemoryCache
      *@return
      *@exception  IOException
      */
-    public boolean remove( Serializable key )
+    public synchronized boolean remove( Serializable key )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -287,7 +334,9 @@ public class LRUMemoryCache
     public class IteratorWrapper
         implements Iterator
     {
+        private final Log log = LogFactory.getLog( LRUMemoryCache.class );
         private final Iterator i;
+
         private IteratorWrapper(Map m)
         {
             i = m.entrySet().iterator();
@@ -382,7 +431,8 @@ public class LRUMemoryCache
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "removing node " + me.ce.getKey() );
+            log.debug( "removing node " + me.ce.getKey() + " from cache " +
+                       cacheName );
         }
 
         if ( me.next == null )
@@ -443,7 +493,7 @@ public class LRUMemoryCache
             me.prev = last;
         }
         last = me;
-        return;
+        verifyCache(ce.getKey());
     }
 
     /**
@@ -537,6 +587,124 @@ public class LRUMemoryCache
         {
             log.debug( "dumpCacheEntries> key="
                  + me.ce.getKey() + ", val=" + me.ce.getVal() );
+        }
+    }
+
+    private int dumpCacheSize() 
+    {
+        int size = 0;
+        for ( MemoryElementDescriptor me = first; me != null;  me = me.next )
+        {
+            size++;
+        }
+        return size; 
+    }
+
+    private void verifyCache() 
+    {
+        if ( !log.isDebugEnabled() ) 
+            return;
+
+        boolean found = false;
+        log.debug("verifycache[" + cacheName + "]: mapContains " + map.size() + " elements, linked list contains " 
+                  + dumpCacheSize() + " elements" );
+        log.debug("verifycache: checking linked list by key ");
+        for ( MemoryElementDescriptor li = first; li != null; li = li.next ) 
+        {
+            Object key = li.ce.getKey();
+            if ( !map.containsKey(key) ) 
+            {
+                log.error("verifycache[" + cacheName + "]: map does not contain key : " + li.ce.getKey());
+                log.error("li.hashcode=" + li.ce.getKey().hashCode());
+                log.error("key class=" + key.getClass());
+                log.error("key hashcode=" + key.hashCode());
+                log.error("key toString=" + key.toString());
+                if ( key instanceof GroupAttrName ) 
+                {
+                    GroupAttrName name = (GroupAttrName) key;
+                    log.error("GroupID hashcode=" + name.groupId.hashCode());
+                    log.error("GroupID.class=" + name.groupId.getClass());
+                    log.error("AttrName hashcode=" + name.attrName.hashCode());
+                    log.error("AttrName.class=" + name.attrName.getClass());
+                }
+                dumpMap();
+            }
+            else if ( map.get(li.ce.getKey()) == null ) 
+            {
+                log.error("verifycache[" + cacheName +
+                          "]: linked list retrieval returned null for key: " +
+                          li.ce.getKey());
+            }
+        }
+
+        log.debug("verifycache: checking linked list by value ");
+        for ( MemoryElementDescriptor li3 = first; li3 != null; li3 = li3.next ) 
+        {
+            if ( map.containsValue(li3) == false ) 
+            {
+                log.error("verifycache[" + cacheName + "]: map does not contain value : " + li3);
+                dumpMap();
+            } 
+        }
+
+        log.debug("verifycache: checking via keysets!");
+        for ( Iterator itr2 = map.keySet().iterator(); itr2.hasNext(); )
+        {
+            found = false;
+            Serializable val = null;
+            try
+            {
+                val = (Serializable) itr2.next();
+            }
+            catch ( NoSuchElementException nse )
+            {
+                log.error("verifycache: no such element exception");
+            }                
+
+            for ( MemoryElementDescriptor li2 = first; li2 != null; li2 = li2.next ) 
+            {
+                if ( val.equals(li2.ce.getKey()) )
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if ( !found ) 
+            {
+                log.error("verifycache[" + cacheName + "]: key not found in list : " + val );
+                dumpCacheEntries();
+                if ( map.containsKey(val) ) 
+                {
+                    log.error("verifycache: map contains key");
+                }
+                else 
+                {
+                    log.error("verifycache: map does NOT contain key, what the HECK!");
+                }
+            }
+        }
+    }
+
+    private void verifyCache(Serializable key) 
+    {
+        if ( !log.isDebugEnabled() ) 
+            return;
+
+        boolean found = false;
+
+        // go through the linked list looking for the key
+        for ( MemoryElementDescriptor li = first; li != null; li = li.next ) 
+        {
+            if ( li.ce.getKey() == key ) 
+            {
+                found = true;
+                log.debug("verifycache(key) key match: " + key );
+                break;
+            }
+        }
+        if ( !found ) 
+        {
+            log.error("verifycache(key)[" + cacheName + "], couldn't find key! : " + key );
         }
     }
 }
