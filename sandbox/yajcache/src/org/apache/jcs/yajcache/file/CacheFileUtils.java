@@ -19,14 +19,15 @@ package org.apache.jcs.yajcache.file;
 
 import java.io.File;
 import org.apache.jcs.yajcache.config.YajCacheConfig;
-import org.apache.jcs.yajcache.annotate.*;
+import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache File Utilities.
  *
  * @author Hanson Char
  */
-@CopyRightApache
+// @CopyRightApache
+// http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheFileUtils {
     inst;
     
