@@ -24,11 +24,11 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheHub;
 
 /** Manages a composite cache. */
-public class CacheHub
+public class CompositeCacheManager
     implements ICacheHub, IRemoteCacheConstants, Serializable
 {
     private final static Log log =
-        LogFactory.getLog( CacheHub.class );
+        LogFactory.getLog( CompositeCacheManager.class );
 
     /** Caches managed by this cache manager */
     protected Hashtable caches = new Hashtable();
@@ -59,7 +59,7 @@ public class CacheHub
     protected String defaultAuxValues;
 
     /** The Singleton Instance */
-    protected static CacheHub instance;
+    protected static CompositeCacheManager instance;
 
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates
@@ -67,7 +67,7 @@ public class CacheHub
      * configuration. If you want to configure from your own source, use
      * {@link #getUnconfiguredInstance} and then call {@link #configure}
      */
-    public static synchronized CacheHub getInstance()
+    public static synchronized CompositeCacheManager getInstance()
     {
         if ( instance == null )
         {
@@ -83,7 +83,7 @@ public class CacheHub
         return instance;
     }
 
-    public static synchronized CacheHub getInstance( String propsFilename )
+    public static synchronized CompositeCacheManager getInstance( String propsFilename )
     {
         if ( instance == null )
         {
@@ -102,7 +102,7 @@ public class CacheHub
     /**
      * Get a CacheHub instance which is not configured.
      */
-    public static synchronized CacheHub getUnconfiguredInstance()
+    public static synchronized CompositeCacheManager getUnconfiguredInstance()
     {
         if ( instance == null )
         {
@@ -120,9 +120,9 @@ public class CacheHub
      * Simple factory method, must override in subclasses so getInstance
      * creates / returns the correct object.
      */
-    protected static CacheHub createInstance()
+    protected static CompositeCacheManager createInstance()
     {
-        return new CacheHub();
+        return new CompositeCacheManager();
     }
 
     /**
@@ -251,24 +251,24 @@ public class CacheHub
     }
 
     /** Creates internal system cache */
-    protected Cache createSystemCache( String cacheName,
+    protected CompositeCache createSystemCache( String cacheName,
                                        AuxiliaryCache[] auxCaches,
                                        ICompositeCacheAttributes cattr,
                                        IElementAttributes attr )
     {
-        return new Cache( cacheName, auxCaches, cattr, attr );
+        return new CompositeCache( cacheName, auxCaches, cattr, attr );
     }
 
     /**
      * Factory method to create the actual Cache instance. Subclass can
      * override this method to create the specific cache.
      */
-    protected Cache createCache( String cacheName,
+    protected CompositeCache createCache( String cacheName,
                                  AuxiliaryCache[] auxCaches,
                                  ICompositeCacheAttributes cattr,
                                  IElementAttributes attr )
     {
-        return new Cache( cacheName, auxCaches, cattr, attr );
+        return new CompositeCache( cacheName, auxCaches, cattr, attr );
     }
 
     /** Gets the cache attribute of the CacheHub object */
@@ -346,7 +346,7 @@ public class CacheHub
     /** */
     public void freeCache( String name, boolean fromRemote )
     {
-        Cache cache = ( Cache ) caches.get( name );
+        CompositeCache cache = ( CompositeCache ) caches.get( name );
 
         if ( cache != null )
         {
@@ -369,7 +369,7 @@ public class CacheHub
     /** */
     private void release( boolean fromRemote )
     {
-        synchronized ( CacheHub.class )
+        synchronized ( CompositeCacheManager.class )
         {
             // Wait until called by the last client
             if ( --clients > 0 )
@@ -391,7 +391,7 @@ public class CacheHub
 
             while ( allCaches.hasMoreElements() )
             {
-                Cache cache = ( Cache ) allCaches.nextElement();
+                CompositeCache cache = ( CompositeCache ) allCaches.nextElement();
 
                 if ( cache != null )
                 {

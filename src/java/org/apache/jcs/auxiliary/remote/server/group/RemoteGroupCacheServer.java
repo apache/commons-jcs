@@ -7,7 +7,7 @@ import java.rmi.registry.Registry;
 
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheServer;
 
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
@@ -35,7 +35,7 @@ public class RemoteGroupCacheServer extends RemoteCacheServer
 
 
     /** Description of the Method */
-    protected CacheHub createCacheManager( String prop )
+    protected CompositeCacheManager createCacheManager( String prop )
     {
         return GroupCacheHub.getInstance( prop == null ? "/remote.cache.ccf" : prop );
     }

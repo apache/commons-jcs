@@ -67,7 +67,7 @@ import org.apache.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListe
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
@@ -87,7 +87,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         LogFactory.getLog( LateralCacheXMLRPCListener.class );
 
     /** Description of the Field */
-    protected static transient CacheHub cacheMgr;
+    protected static transient CompositeCacheManager cacheMgr;
     /** Description of the Field */
     protected final static HashMap instances = new HashMap();
 
@@ -267,7 +267,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CacheHub cm = ( CacheHub ) cacheMgr;
+        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
         cm.freeCache( cacheName, CacheConstants.REMOTE_INVOKATION );
     }
 
@@ -280,7 +280,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
     {
         if ( cacheMgr == null )
         {
-            cacheMgr = CacheHub.getInstance();
+            cacheMgr = CompositeCacheManager.getInstance();
             if ( log.isDebugEnabled() )
             {
                 log.debug( "cacheMgr = " + cacheMgr );

@@ -72,7 +72,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them.
@@ -90,7 +90,7 @@ public class LateralTCPListener
     private final static int acceptTimeOut = 0;
 
     /** The CacheHub this listener is associated with */
-    protected static transient CacheHub cacheMgr;
+    protected static transient CompositeCacheManager cacheMgr;
 
     /** Map of available instances, keyed by port */
     protected final static HashMap instances = new HashMap();
@@ -258,7 +258,7 @@ public class LateralTCPListener
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
 
-        CacheHub cm = ( CacheHub ) cacheMgr;
+        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
         cm.freeCache( cacheName, true );
     }
 
@@ -269,7 +269,7 @@ public class LateralTCPListener
     {
         if ( cacheMgr == null )
         {
-            cacheMgr = CacheHub.getInstance();
+            cacheMgr = CompositeCacheManager.getInstance();
 
             if ( log.isDebugEnabled() )
             {

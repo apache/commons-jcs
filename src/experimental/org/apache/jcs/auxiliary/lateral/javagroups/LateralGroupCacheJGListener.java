@@ -57,7 +57,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -128,7 +128,7 @@ public class LateralGroupCacheJGListener
         {
             if ( cacheMgr == null )
             {
-                cacheMgr = CacheHub.getInstance();
+                cacheMgr = CompositeCacheManager.getInstance();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( " groupcache cacheMgr = " + cacheMgr );

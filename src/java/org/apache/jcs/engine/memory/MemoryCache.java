@@ -7,7 +7,7 @@ import java.util.Iterator;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCache;
-import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.control.CompositeCache;
 
 /**
  *  For the framework. Insures methods a MemoryCache needs to access. Not sure
@@ -26,7 +26,7 @@ public interface MemoryCache
      *
      *@param  cache  The cache (region) this memory store is attached to.
      */
-    public void initialize( Cache cache );
+    public void initialize( CompositeCache cache );
 
     /**
      *  Get the number of elements contained in the memory store

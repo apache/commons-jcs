@@ -15,7 +15,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
@@ -67,7 +67,7 @@ public class MRUMemoryCache
     public ICompositeCacheAttributes cattr;
 
     // The HUB
-    Cache cache;
+    CompositeCache cache;
 
     // status
     private int status;
@@ -93,7 +93,7 @@ public class MRUMemoryCache
      *
      * @param cache
      */
-    public synchronized void initialize( Cache cache )
+    public synchronized void initialize( CompositeCache cache )
     {
         this.cacheName = cache.getCacheName();
         this.cattr = cache.getCacheAttributes();

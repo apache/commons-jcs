@@ -14,7 +14,7 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
@@ -34,7 +34,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         LogFactory.getLog( LateralCacheUDPListener.class );
 
     /** Description of the Field */
-    protected static transient CacheHub cacheMgr;
+    protected static transient CompositeCacheManager cacheMgr;
 
     /** Description of the Field */
     protected final static HashMap instances = new HashMap();
@@ -197,7 +197,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CacheHub cm = ( CacheHub ) cacheMgr;
+        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
         cm.freeCache( cacheName, true );
     }
 
@@ -210,7 +210,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
     {
         if ( cacheMgr == null )
         {
-            cacheMgr = CacheHub.getInstance();
+            cacheMgr = CompositeCacheManager.getInstance();
 
             if ( log.isDebugEnabled() )
             {

@@ -21,7 +21,7 @@ public class CompositeCacheManagerTester
             propsFile = args[0];
         }
 
-        CacheHub hub = new CacheHub();
+        CompositeCacheManager hub = new CompositeCacheManager();
 
         hub.configure( propsFile );
     }

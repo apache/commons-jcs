@@ -28,7 +28,7 @@ import org.apache.jcs.access.behavior.IGroupCacheAccess;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 import org.apache.commons.logging.Log;

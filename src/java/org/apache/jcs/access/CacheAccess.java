@@ -69,8 +69,8 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,20 +92,20 @@ public class CacheAccess implements ICacheAccess
     /**
      * Cache manager use by the various forms of defineRegion and getAccess
      */
-    private static CacheHub cacheMgr;
+    private static CompositeCacheManager cacheMgr;
 
     /**
      * Cache that a given instance of this class provides access to. Should this
      * be the inteface?
      */
-    protected Cache cacheControl;
+    protected CompositeCache cacheControl;
 
     /**
      * Constructor for the CacheAccess object.
      *
      * @param cacheControl The cache which the created instance accesses
      */
-    protected CacheAccess( Cache cacheControl )
+    protected CacheAccess( CompositeCache cacheControl )
     {
         this.cacheControl = cacheControl;
     }
@@ -130,7 +130,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( Cache ) cacheMgr.getCache( name ) );
+        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( name ) );
     }
 
     /**
@@ -147,7 +147,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( Cache ) cacheMgr.getCache( name, cattr ) );
+        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( name, cattr ) );
     }
 
     /**
@@ -168,7 +168,7 @@ public class CacheAccess implements ICacheAccess
         ensureCacheManager();
 
         return new CacheAccess(
-            ( Cache ) cacheMgr.getCache( name, cattr, attr ) );
+            ( CompositeCache ) cacheMgr.getCache( name, cattr, attr ) );
     }
 
     /**
@@ -183,7 +183,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( Cache ) cacheMgr.getCache( region ) );
+        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( region ) );
     }
 
     /**
@@ -201,7 +201,7 @@ public class CacheAccess implements ICacheAccess
     {
         ensureCacheManager();
 
-        return new CacheAccess( ( Cache ) cacheMgr.getCache( region, icca ) );
+        return new CacheAccess( ( CompositeCache ) cacheMgr.getCache( region, icca ) );
     }
 
     /**
@@ -216,7 +216,7 @@ public class CacheAccess implements ICacheAccess
             {
                 if ( cacheMgr == null )
                 {
-                    cacheMgr = CacheHub.getInstance();
+                    cacheMgr = CompositeCacheManager.getInstance();
                 }
             }
         }

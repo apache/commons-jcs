@@ -68,8 +68,8 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.control.group.GroupId;
@@ -88,14 +88,14 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     private static boolean SET_ATTR_INVOCATION = true;
     private static boolean REMOVE_ATTR_INVOCATION = false;
 
-    private static CacheHub cacheMgr;
+    private static CompositeCacheManager cacheMgr;
 
     /**
      * Constructor for the GroupCacheAccess object
      *
      * @param cacheControl
      */
-    protected GroupCacheAccess( Cache cacheControl )
+    protected GroupCacheAccess( CompositeCache cacheControl )
     {
         super( cacheControl );
     }
@@ -118,7 +118,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
                 }
             }
         }
-        return new GroupCacheAccess( ( Cache ) cacheMgr.getCache( region ) );
+        return new GroupCacheAccess( ( CompositeCache ) cacheMgr.getCache( region ) );
     }
 
     /**
@@ -140,7 +140,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
             }
         }
 
-        return new GroupCacheAccess( ( Cache ) cacheMgr.getCache( region, icca ) );
+        return new GroupCacheAccess( ( CompositeCache ) cacheMgr.getCache( region, icca ) );
     }
 
     /**

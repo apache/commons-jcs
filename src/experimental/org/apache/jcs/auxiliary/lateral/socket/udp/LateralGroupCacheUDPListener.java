@@ -9,7 +9,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
@@ -116,7 +116,7 @@ public class LateralGroupCacheUDPListener
         {
             if ( cacheMgr == null )
             {
-                cacheMgr = CacheHub.getInstance();
+                cacheMgr = CompositeCacheManager.getInstance();
 
                 if ( log.isDebugEnabled() )
                 {

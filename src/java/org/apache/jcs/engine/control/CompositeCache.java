@@ -93,10 +93,10 @@ import org.apache.jcs.engine.control.event.ElementEventQueue;
  *@author     <a href="mailto:jtaylor@apache.org">James Taylor</a>
  *@version    $Id$
  */
-public class Cache
+public class CompositeCache
      implements ICache, ICompositeCache, Serializable
 {
-    private final static Log log = LogFactory.getLog( Cache.class );
+    private final static Log log = LogFactory.getLog( CompositeCache.class );
 
     // Auxiliary caches.
     private AuxiliaryCache[] auxCaches;
@@ -146,7 +146,7 @@ public class Cache
      *@param  cattr      The cache attribute
      *@param  attr       The default element attributes
      */
-    public Cache( String cacheName,
+    public CompositeCache( String cacheName,
                   AuxiliaryCache[] auxCaches,
                   ICompositeCacheAttributes cattr,
                   IElementAttributes attr )

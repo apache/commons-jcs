@@ -17,8 +17,8 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheManager;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
@@ -39,7 +39,7 @@ public class RemoteCacheServerListener
         LogFactory.getLog( RemoteCacheServerListener.class );
 
     /** Description of the Field */
-    protected static transient CacheHub cacheMgr;
+    protected static transient CompositeCacheManager cacheMgr;
 
     /** Description of the Field */
     protected static IRemoteCacheListener instance;
@@ -213,7 +213,7 @@ public class RemoteCacheServerListener
         getCacheManager();
         // interface limitation here
 
-        Cache cache = ( Cache ) cacheMgr.getCache( cacheName );
+        CompositeCache cache = ( CompositeCache ) cacheMgr.getCache( cacheName );
         cache.localRemove( key );
     }
 
@@ -240,7 +240,7 @@ public class RemoteCacheServerListener
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CacheHub cm = ( CacheHub ) cacheMgr;
+        CompositeCacheManager cm = ( CompositeCacheManager ) cacheMgr;
         cm.freeCache( cacheName, true );
     }
 
@@ -253,7 +253,7 @@ public class RemoteCacheServerListener
     {
         if ( cacheMgr == null )
         {
-            cacheMgr = CacheHub.getInstance();
+            cacheMgr = CompositeCacheManager.getInstance();
 
             if ( log.isDebugEnabled() )
             {

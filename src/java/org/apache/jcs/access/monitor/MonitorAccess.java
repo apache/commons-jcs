@@ -10,7 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.CacheConstants;
 
@@ -26,7 +26,7 @@ public class MonitorAccess implements Serializable
         LogFactory.getLog( MonitorAccess.class );
 
     /** Description of the Field */
-    protected CacheHub cacheMgr;
+    protected CompositeCacheManager cacheMgr;
 
     /** Constructor for the MonitorAccess object */
     public MonitorAccess()

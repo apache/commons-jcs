@@ -33,7 +33,7 @@ import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,7 +65,7 @@ public class RemoteCacheServer
     // association of listeners (regions).
     private final Hashtable cacheListenersMap = new Hashtable();
     private final Hashtable clusterListenersMap = new Hashtable();
-    private CacheHub cacheManager;
+    private CompositeCacheManager cacheManager;
 
     // relates listener id with a type
     private final Hashtable idTypeMap = new Hashtable();
@@ -120,9 +120,9 @@ public class RemoteCacheServer
     /**
      * Subclass can overrdie this method to create the specific cache manager.
      */
-    protected CacheHub createCacheManager( String prop )
+    protected CompositeCacheManager createCacheManager( String prop )
     {
-        CacheHub hub = CacheHub.getUnconfiguredInstance();
+        CompositeCacheManager hub = CompositeCacheManager.getUnconfiguredInstance();
 
         if ( prop == null )
         {

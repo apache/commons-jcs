@@ -23,7 +23,7 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
@@ -44,7 +44,7 @@ public abstract class AbstractDeleteCacheServlet
         LogFactory.getLog( AbstractDeleteCacheServlet.class );
 
     /** Description of the Field */
-    protected CacheHub cacheMgr;
+    protected CompositeCacheManager cacheMgr;
     private BasicHttpAuthenticator authenticator;
 
 

@@ -57,8 +57,8 @@ package org.apache.jcs;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 
 /**
@@ -77,14 +77,14 @@ public class JCS extends GroupCacheAccess
 {
     private static String configFilename = null;
 
-    private static CacheHub cacheMgr;
+    private static CompositeCacheManager cacheMgr;
 
     /**
      * Protected constructor for use by the static factory methods.
      *
      * @param cacheControl Cache which the instance will provide access to
      */
-    protected JCS( Cache cacheControl )
+    protected JCS( CompositeCache cacheControl )
     {
         super( cacheControl );
     }
@@ -101,7 +101,7 @@ public class JCS extends GroupCacheAccess
     {
         ensureCacheManager();
 
-        return new JCS( ( Cache ) cacheMgr.getCache( region ) );
+        return new JCS( ( CompositeCache ) cacheMgr.getCache( region ) );
     }
 
     /**
@@ -118,7 +118,7 @@ public class JCS extends GroupCacheAccess
     {
         ensureCacheManager();
 
-        return new JCS( ( Cache ) cacheMgr.getCache( region, icca ) );
+        return new JCS( ( CompositeCache ) cacheMgr.getCache( region, icca ) );
     }
 
     /**

@@ -12,7 +12,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
-import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.control.CompositeCache;
 
 /**
  *  For the framework. Insures methods a MemoryCache needs to access.
@@ -33,7 +33,7 @@ public interface IMemoryCache extends ICacheType
      */
     public void initialize( String cacheName,
                             ICompositeCacheAttributes cattr,
-                            Cache cache );
+                            CompositeCache cache );
 
     // TODO: need a setCacheAttributes or reInitialize method
 

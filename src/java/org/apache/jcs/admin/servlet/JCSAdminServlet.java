@@ -14,8 +14,8 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.MemoryElementDescriptor;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.control.CacheHub;
-import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.servlet.VelocityServlet;
@@ -72,7 +72,7 @@ public class JCSAdminServlet extends VelocityServlet
     private static final String REMOVE_ACTION = "remove";
     private static final String DETAIL_ACTION = "detail";
 
-    private CacheHub cacheHub = CacheHub.getInstance();
+    private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
     /** @see org.apache.velocity.servlet.VelocityServlet#handleRequest */
     protected Template handleRequest( HttpServletRequest request,
@@ -150,7 +150,7 @@ public class JCSAdminServlet extends VelocityServlet
 
     private Object[] getSortedKeys( String cacheName )
     {
-        Cache cache = ( Cache ) cacheHub.getCache( cacheName );
+        CompositeCache cache = ( CompositeCache ) cacheHub.getCache( cacheName );
 
         Object[] keys = cache.getMemoryCache().getKeyArray();
 
@@ -168,11 +168,11 @@ public class JCSAdminServlet extends VelocityServlet
         LinkedList cacheInfo = new LinkedList();
 
         CacheRegionInfo regionInfo;
-        Cache cache;
+        CompositeCache cache;
 
         for ( int i = 0; i < cacheNames.length; i++ )
         {
-            cache = ( Cache ) cacheHub.getCache( cacheNames[ i ] );
+            cache = ( CompositeCache ) cacheHub.getCache( cacheNames[ i ] );
 
             regionInfo = new CacheRegionInfo();
 
@@ -187,7 +187,7 @@ public class JCSAdminServlet extends VelocityServlet
         return cacheInfo;
     }
 
-    public int getByteCount( Cache cache )
+    public int getByteCount( CompositeCache cache )
         throws Exception
     {
         MemoryCache memCache = cache.getMemoryCache();

@@ -1,7 +1,7 @@
 package org.apache.jcs;
 
 import org.apache.commons.lang.exception.NestableException;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupCacheHub;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationConverter;
@@ -30,7 +30,7 @@ public class JCSComponent
     /** @see Initializable#initialize */
     public void initialize() throws Exception
     {
-        CacheHub instance = GroupCacheHub.getUnconfiguredInstance();
+        CompositeCacheManager instance = GroupCacheHub.getUnconfiguredInstance();
 
         instance.configure(
             ConfigurationConverter.getProperties( configuration ) );

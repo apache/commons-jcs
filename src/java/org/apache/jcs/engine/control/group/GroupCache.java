@@ -69,7 +69,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.control.Cache;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.utils.locking.ReadWriteLockManager;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
@@ -84,7 +84,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
  *
  * @author asmuts
  */
-public class GroupCache extends Cache implements ICompositeCache
+public class GroupCache extends CompositeCache implements ICompositeCache
 {
     private final static Log log = LogFactory.getLog( GroupCache.class );
 

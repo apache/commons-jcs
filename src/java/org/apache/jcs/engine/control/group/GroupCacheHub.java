@@ -8,27 +8,27 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 /** */
 public class GroupCacheHub
-    extends CacheHub
+    extends CompositeCacheManager
     implements Serializable
 {
     /**
-     * @see CacheHub#createInstance
+     * @see CompositeCacheManager#createInstance
      */
-    protected static CacheHub createInstance()
+    protected static CompositeCacheManager createInstance()
     {
         return new GroupCacheHub();
     }
 
     /**
-     * @see CacheHub#createSystemCache
+     * @see CompositeCacheManager#createSystemCache
      */
-    protected Cache createSystemCache( String cacheName,
+    protected CompositeCache createSystemCache( String cacheName,
                                        AuxiliaryCache[] auxCaches,
                                        ICompositeCacheAttributes cattr,
                                        IElementAttributes attr )
@@ -41,9 +41,9 @@ public class GroupCacheHub
     }
 
     /**
-     * @see CacheHub#createCache
+     * @see CompositeCacheManager#createCache
      */
-    protected Cache createCache( String cacheName,
+    protected CompositeCache createCache( String cacheName,
                                  AuxiliaryCache[] auxCaches,
                                  ICompositeCacheAttributes cattr,
                                  IElementAttributes attr )

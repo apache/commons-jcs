@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 
-import org.apache.jcs.engine.control.Cache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,13 +30,13 @@ public class LateralCacheServletReciever extends HttpServlet
     private final static Log log =
         LogFactory.getLog( LateralCacheServletReciever.class );
 
-    private static CacheHub cacheMgr;
+    private static CompositeCacheManager cacheMgr;
 
     /** Description of the Method */
     public void init( ServletConfig config )
         throws ServletException
     {
-        cacheMgr = CacheHub.getInstance();
+        cacheMgr = CompositeCacheManager.getInstance();
 
         super.init( config );
     }
@@ -51,7 +51,7 @@ public class LateralCacheServletReciever extends HttpServlet
 
         if ( cacheMgr == null )
         {
-            cacheMgr = CacheHub.getInstance();
+            cacheMgr = CompositeCacheManager.getInstance();
             log.debug( "cacheMgr was null in LateralCacheServlet" );
         }
 
@@ -90,7 +90,7 @@ public class LateralCacheServletReciever extends HttpServlet
             log.debug( "item read in = " + item );
             log.debug( "item.getKey = " + item.getKey() );
 
-            Cache cache = ( Cache ) cacheMgr.getCache( hashtableName );
+            CompositeCache cache = ( CompositeCache ) cacheMgr.getCache( hashtableName );
             try
             {
                 // need to set as from lateral

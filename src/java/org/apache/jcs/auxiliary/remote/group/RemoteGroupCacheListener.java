@@ -26,7 +26,7 @@ import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupCache;
 import org.apache.jcs.engine.control.group.GroupCache;
 import org.apache.jcs.engine.control.group.GroupCache;
-import org.apache.jcs.engine.control.CacheHub;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
@@ -215,7 +215,7 @@ public class RemoteGroupCacheListener extends RemoteCacheListener implements IRe
         {
             if ( cacheMgr == null )
             {
-                cacheMgr = CacheHub.getInstance();
+                cacheMgr = CompositeCacheManager.getInstance();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( " groupcache cacheMgr = " + cacheMgr );
