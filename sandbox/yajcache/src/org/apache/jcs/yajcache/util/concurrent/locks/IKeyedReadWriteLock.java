@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * @author Hanson Char
  */
-public interface IKeyedReadWriteLock {
-    public Lock readLock(String key);
-    public Lock writeLock(String key);
+public interface IKeyedReadWriteLock<K> {
+    public Lock readLock(K key);
+    public Lock writeLock(K key);
 }

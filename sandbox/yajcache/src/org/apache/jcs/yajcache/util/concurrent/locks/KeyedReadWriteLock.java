@@ -29,26 +29,27 @@ import org.apache.jcs.yajcache.lang.ref.KeyedWeakReference;
 /**
  * @author Hanson Char
  */
-public class KeyedReadWriteLock implements IKeyedReadWriteLock {
-    private final ConcurrentMap<String, KeyedWeakReference<ReadWriteLock>> rwlMap = 
-            new ConcurrentHashMap<String, KeyedWeakReference<ReadWriteLock>>();
+public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
+    private final ConcurrentMap<K, KeyedWeakReference<K,ReadWriteLock>> rwlMap = 
+            new ConcurrentHashMap<K, KeyedWeakReference<K,ReadWriteLock>>();
     private final Class<? extends ReadWriteLock> rwlClass;
     private final ReferenceQueue<ReadWriteLock> refQ = 
             new ReferenceQueue<ReadWriteLock>();
-    private final KeyedRefCollector collector = new KeyedRefCollector(refQ, rwlMap);
+    private final KeyedRefCollector<K> collector = 
+            new KeyedRefCollector<K>(refQ, rwlMap);
     public KeyedReadWriteLock() {
         this.rwlClass = ReentrantReadWriteLock.class;
     }
     public KeyedReadWriteLock(Class<? extends ReadWriteLock> rwlClass) {
         this.rwlClass = rwlClass;
     }
-    public Lock readLock(String key) {
+    public Lock readLock(K key) {
         return this.readWriteLock(key).readLock();
     }
-    public Lock writeLock(String key) {
+    public Lock writeLock(K key) {
         return this.readWriteLock(key).writeLock();
     }
-    private ReadWriteLock readWriteLock(String key) {
+    private ReadWriteLock readWriteLock(K key) {
         ReadWriteLock newLock = null;
         try {
             newLock = rwlClass.newInstance();
@@ -59,32 +60,42 @@ public class KeyedReadWriteLock implements IKeyedReadWriteLock {
         }
         return this.getLock(key, newLock);
     }
-    private ReadWriteLock getLock(final String key, ReadWriteLock newLock) 
+    private ReadWriteLock getLock(final K key, ReadWriteLock newLock) 
     {
         this.collector.run();
-        final KeyedWeakReference<ReadWriteLock> newLockRef = 
-                new KeyedWeakReference<ReadWriteLock>(key, newLock, refQ);
-        KeyedWeakReference<ReadWriteLock> prevRef = 
-                this.rwlMap.putIfAbsent(key, newLockRef);
-        if (prevRef == null) {
-            // succesfully deposited the new lock.
-            return newLock;
-        }
-        ReadWriteLock prev = prevRef.get();
+        ReadWriteLock prev = null;
+        KeyedWeakReference<K,ReadWriteLock> prevRef = this.rwlMap.get(key);
         
-        for (; prev == null; prev=prevRef.get()) {
-            // Unused lock is garbage collected.  So clean it up.
-            rwlMap.remove(key, prevRef);  // remove may fail, but that's fine.
+        if (prevRef != null) {
+            // existing lock may exist
+            prev = prevRef.get();
+            
+            if (prev != null) {
+                // existing lock
+                return prev;
+            }
+            // stale reference; doesn't matter if fail
+            this.rwlMap.remove(key,  prevRef);
+        }
+        final KeyedWeakReference<K,ReadWriteLock> newLockRef = 
+                new KeyedWeakReference<K,ReadWriteLock>(key, newLock, refQ);
+        do {
             prevRef = this.rwlMap.putIfAbsent(key, newLockRef);
 
             if (prevRef == null) {
                 // succesfully deposited the new lock.
                 return newLock;
             }
-            // data race: someone else has just put in a lock.
-        }
-        // Return the lock deposited by another thread.
-        return prev;
+            // existing lock may exist
+            prev = prevRef.get();
+            
+            if (prev != null) {
+                // exist lock
+                return prev;
+            }
+            // stale reference; doesn't matter if fail
+            this.rwlMap.remove(key,  prevRef);
+        } while(true);
     }
 //    public void removeUnusedLocks() {
 //        this.collector.run();

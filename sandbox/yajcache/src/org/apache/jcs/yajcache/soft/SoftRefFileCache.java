@@ -59,12 +59,11 @@ public class SoftRefFileCache<V> implements ICache<V>
     private final @NonNullable ReferenceQueue<V> refq = new ReferenceQueue<V>();
     private final @NonNullable String name;
     private final @NonNullable Class<V> valueType;
-    private final @NonNullable ConcurrentMap<String, KeyedSoftReference<V>> map;
+    private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
     private final @NonNullable PerCacheConfig config;
-
-    
-    private final @NonNullable KeyedRefCollector collector;
-    private final IKeyedReadWriteLock krwl = new KeyedReadWriteLock();
+   
+    private final @NonNullable KeyedRefCollector<String> collector;
+    private final IKeyedReadWriteLock<String> krwl = new KeyedReadWriteLock<String>();
     
 //    private final @NonNullable ConcurrentMap<String, CacheOp[]> synMap = 
 //            new ConcurrentHashMap<String, CacheOp[]>();
@@ -91,9 +90,9 @@ public class SoftRefFileCache<V> implements ICache<V>
             @NonNullable PerCacheConfig config,
             int initialCapacity,float loadFactor, int concurrencyLevel) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<V>>(
+        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(
                 initialCapacity, loadFactor, concurrencyLevel);
-        collector = new KeyedRefCollector(refq, map);
+        collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
         this.config = config;
@@ -103,8 +102,8 @@ public class SoftRefFileCache<V> implements ICache<V>
             @NonNullable PerCacheConfig config,
             int initialCapacity) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<V>>(initialCapacity);
-        collector = new KeyedRefCollector(refq, map);
+        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>(initialCapacity);
+        collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
         this.config = config;
@@ -114,8 +113,8 @@ public class SoftRefFileCache<V> implements ICache<V>
             @NonNullable Class<V> valueType,
             PerCacheConfig config) 
     {
-        map = new ConcurrentHashMap<String,KeyedSoftReference<V>>();
-        collector = new KeyedRefCollector(refq, map);
+        map = new ConcurrentHashMap<String,KeyedSoftReference<String,V>>();
+        collector = new KeyedRefCollector<String>(refq, map);
         this.name = name;
         this.valueType = valueType;
         this.config = config;
@@ -145,7 +144,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         }
     }
     private V doGet(String key) {
-        KeyedSoftReference<V> ref = map.get(key);
+        KeyedSoftReference<String,V> ref = map.get(key);
         V val = null;
 
         if (ref != null)
@@ -174,7 +173,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             }
             // Resurrect item back to memory.
             map.putIfAbsent(key,
-                    new KeyedSoftReference<V>(key, val, refq));
+                    new KeyedSoftReference<String,V>(key, val, refq));
         }
         // cache value exists.
         return val;
@@ -233,8 +232,8 @@ public class SoftRefFileCache<V> implements ICache<V>
         }
     }
     private V doPut(@NonNullable String key, @NonNullable V value) {
-        KeyedSoftReference<V> oldRef =
-                map.put(key, new KeyedSoftReference<V>(key, value, refq));
+        KeyedSoftReference<String,V> oldRef =
+                map.put(key, new KeyedSoftReference<String,V>(key, value, refq));
         V ret = null;
         
         if (oldRef != null) {
@@ -295,7 +294,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         }
     }
     private V doRemove(@NonNullable String key) {
-        KeyedSoftReference<V> oldRef = map.remove(key);
+        KeyedSoftReference<String,V> oldRef = map.remove(key);
         V ret = null;
 
         if (oldRef != null) {
@@ -335,11 +334,11 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public @NonNullable Set<Map.Entry<String,V>> entrySet() {
 //        this.collector.run();
-        Set<Map.Entry<String,KeyedSoftReference<V>>> fromSet = map.entrySet();
+        Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
         Set<Map.Entry<String,V>> toSet = new HashSet<Map.Entry<String,V>>();
         
-        for (final Map.Entry<String, KeyedSoftReference<V>> item : fromSet) {
-            KeyedSoftReference<V> ref = item.getValue();
+        for (final Map.Entry<String, KeyedSoftReference<String,V>> item : fromSet) {
+            KeyedSoftReference<String,V> ref = item.getValue();
             V val = ref.get();
             
             if (val != null) {
@@ -351,10 +350,10 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public @NonNullable Collection<V> values() {
 //        this.collector.run();
-        Collection<KeyedSoftReference<V>> fromSet = map.values();
+        Collection<KeyedSoftReference<String,V>> fromSet = map.values();
         List<V> toCol = new ArrayList<V>(fromSet.size());
         
-        for (final KeyedSoftReference<V> ref : fromSet) {
+        for (final KeyedSoftReference<String,V> ref : fromSet) {
             V val = ref.get();
             
             if (val != null) {
@@ -368,9 +367,9 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public boolean containsValue(@NonNullable Object value) {
 //        this.collector.run();
-        Collection<KeyedSoftReference<V>> fromSet = map.values();
+        Collection<KeyedSoftReference<String,V>> fromSet = map.values();
         
-        for (final KeyedSoftReference<V> ref : fromSet) {
+        for (final KeyedSoftReference<String,V> ref : fromSet) {
             V val = ref.get();
             
             if (value.equals(val))

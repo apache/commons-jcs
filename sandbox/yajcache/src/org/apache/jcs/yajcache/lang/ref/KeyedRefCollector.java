@@ -28,16 +28,16 @@ import org.apache.jcs.yajcache.lang.annotation.*;
  * @author Hanson Char
  */
 @CopyRightApache
-public class KeyedRefCollector implements Runnable {
+public class KeyedRefCollector<K> implements Runnable {
     private static final boolean debug = true;
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
     private final @NonNullable ReferenceQueue q;
-    private final @NonNullable ConcurrentMap<String, ? extends IKey> synMap;
+    private final @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap;
     private volatile int count;
 
     public KeyedRefCollector(
             @NonNullable ReferenceQueue<?> q, 
-            @NonNullable ConcurrentMap<String, ? extends IKey> synMap)
+            @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap)
     {
         this.q = q;
         this.synMap = synMap;

@@ -23,17 +23,19 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 /**
  * @author Hanson Char
  */
-public class KeyedWeakReference<T> extends WeakReference<T> implements IKey {
-    public final String key;
+public class KeyedWeakReference<K,T> extends WeakReference<T> 
+        implements IKey<K> 
+{
+    public final K key;
 
-    public KeyedWeakReference(String key, T referrent, 
+    public KeyedWeakReference(K key, T referrent, 
             ReferenceQueue<? super T> q) 
     {
         super(referrent);
         this.key = key;
     }
     @Implements(IKey.class)
-    public String getKey() {
+    public K getKey() {
         return this.key;
     }
 }

@@ -40,14 +40,15 @@ enum SoftRefCacheCleaner {
     private volatile int countDataRaceAndRemovedByOthers;
     private volatile int countBye;
     
-    <V> void cleanupKey(@NonNullable Map<String, KeyedSoftReference<V>> map, @NonNullable String key) 
+    <V> void cleanupKey(@NonNullable Map<String, 
+            KeyedSoftReference<String,V>> map, @NonNullable String key) 
     {
         V val = null;
         // already garbage collected.  So try to clean up the key.
         if (debug)
             log.debug("Try to clean up the key");
         this.countTryKeyClean++;
-        KeyedSoftReference<V> oldRef = map.remove(key);
+        KeyedSoftReference<String,V> oldRef = map.remove(key);
         // If oldRef is null, the key has just been 
         // cleaned up by another thread.
         if (oldRef == null) {

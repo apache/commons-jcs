@@ -28,21 +28,23 @@ import org.apache.jcs.yajcache.lang.annotation.*;
  * @author Hanson Char
  */
 @CopyRightApache
-public class KeyedSoftReference<T> extends SoftReference<T> implements IKey {
-    private final @NonNullable String key;
+public class KeyedSoftReference<K,T> extends SoftReference<T> 
+        implements IKey<K> 
+{
+    private final @NonNullable K key;
     
 //    KeyedSoftRef(String key, T value) {
 //	super(value);
 //        this.key = key;
 //    }
-    public KeyedSoftReference(@NonNullable String key, @NonNullable T referrent, 
+    public KeyedSoftReference(@NonNullable K key, @NonNullable T referrent, 
             ReferenceQueue<? super T> q) 
     {
         super(referrent, q);
         this.key = key;
     }
     @Implements(IKey.class)
-    public String getKey() {
+    public K getKey() {
         return this.key;
     }
 }

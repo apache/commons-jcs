@@ -20,6 +20,6 @@ package org.apache.jcs.yajcache.lang.ref;
  *
  * @author Hanson Char
  */
-public interface IKey {
-    public String getKey();
+public interface IKey<K> {
+    public K getKey();
 }
