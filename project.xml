@@ -3,9 +3,9 @@
 <project>
 
   <pomVersion>3</pomVersion>
-  <name>Turbine JCS</name>
+  <name>JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.4-dev</currentVersion>
+  <currentVersion>1.2.5-dev</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -13,7 +13,7 @@
   </organization>
   <inceptionYear>2002</inceptionYear>
   <package>org.apache.jcs</package>
-  <logo>/images/blue-logo.gif</logo>
+  <logo></logo>
 
 
   <gumpRepositoryId>jakarta</gumpRepositoryId>

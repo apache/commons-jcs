@@ -2,15 +2,8 @@
 <project name="jcs" href="http://jakarta.apache.org/turbine/jcs/">
 
   <title>JCS</title>
-  <logo href="/images/blue-logo.gif">JCS</logo>
 
   <body>
-    <links>
-      <item name="Turbine"                 href="http://jakarta.apache.org/turbine/"/>
-      <item name="Fulcrum"                 href="http://jakarta.apache.org/turbine/fulcrum/"/>
-      <item name="TDK"                     href="http://jakarta.apache.org/turbine/tdk/"/>
-      <item name="JCS"                     href="http://jakarta.apache.org/turbine/jcs/"/>
-    </links>
 
     <menu name="JCS Documentation">
       <item name="Overview"             href="/index.html"/>
