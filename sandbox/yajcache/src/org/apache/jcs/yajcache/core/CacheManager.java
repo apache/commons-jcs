@@ -59,9 +59,6 @@ public enum CacheManager {
     /** 
      * Returns an existing cache for the specified name and value type;  
      * or null if not found.
-     *
-     * @throws ClassCastException if the cache already exists for an
-     * incompatible value type.
      */
 //    @SuppressWarnings({"unchecked"})
     public <V> ICache<V> getCache(
@@ -69,15 +66,11 @@ public enum CacheManager {
             @NonNullable Class<V> valueType)
     {
         ICache c = this.map.get(name);
-        this.checkValueType(c, valueType);
-        return c;
+        return c != null && this.checkValueType(c, valueType) ? c : null;
     }
     /** 
      * Returns an existing safe cache for the specified name and value type;  
-     * or null such a safe cache cannot be found.
-     *
-     * @throws ClassCastException if the cache already exists for an
-     * incompatible value type.
+     * or null if such a safe cache cannot be found.
      */
     public <V> ICacheSafe<V> getSafeCache(
             @NonNullable String name,
@@ -85,16 +78,16 @@ public enum CacheManager {
     {
         ICache<V> c = this.getCache(name, valueType);
 
-        if (c == null || !(c instanceof ICacheSafe))
+        if (!(c instanceof ICacheSafe))
             return null;
-        return (ICacheSafe<V>)c;
+        return this.checkValueType(c, valueType) ? (ICacheSafe<V>)c : null;
     }
     /** 
      * Returns a cache for the specified name, value type and cache type.
      * Creates the cache if necessary.
      *
      * @throws ClassCastException if the cache already exists for an
-     * incompatible value type.
+     * incompatible value type or incompatible cache type.
      */
     public @NonNullable <V> ICache<V> getCache(
             @NonNullable String name,
@@ -117,7 +110,9 @@ public enum CacheManager {
                     throw new AssertionError(cacheType);
             }
         }
-        this.checkValueType(c, valueType);
+        else {
+            this.checkTypes(c, cacheType, valueType);
+        }
         return c;
     }
     /** 
@@ -127,7 +122,7 @@ public enum CacheManager {
      * @throws IllegalArgumentException if the cache type specified is not a
      *  safe cache type.
      * @throws ClassCastException if the cache already exists for an
-     *  incompatible value type.
+     *  incompatible value type or cache type.
      */
     public @NonNullable <V> ICacheSafe<V> getSafeCache(
             @NonNullable String name,
@@ -146,6 +141,7 @@ public enum CacheManager {
     /**
      * Removes the specified cache, if it exists.
      */
+    @TODO("Handle file cache by deleting the dir")
     public ICache removeCache(@NonNullable String name) {
         ICache c = this.map.remove(name);
         
@@ -158,7 +154,10 @@ public enum CacheManager {
      * Creates the specified cache if not already created.
      * 
      * @return either the cache created by the current thread, or
-     * an existing cache created earlier by another thread.
+     * an existing cache created by another thread due to data race.
+     *
+     * @throws ClassCastException if the cache already exists for an
+     * incompatible value type or incompatible cache type.
      */
 //    @SuppressWarnings({"unchecked"})
     private @NonNullable <V> ICache<V> tryCreateCache(
@@ -173,7 +172,7 @@ public enum CacheManager {
 
         if (oldCache != null) {
             // race condition: cache already created by another thread.
-            this.checkValueType(oldCache, valueType);
+            this.checkTypes(oldCache, cacheType, valueType);
             return oldCache;
         }
         return newCache;
@@ -182,7 +181,10 @@ public enum CacheManager {
      * Creates the specified file cache if not already created.
      * 
      * @return either the file cache created by the current thread, or
-     * an existing file cache created earlier by another thread.
+     * an existing file cache created by another thread due to data race.
+     *
+     * @throws ClassCastException if the cache already exists for an
+     * incompatible value type or incompatible cache type.
      */
     private @NonNullable <V> ICache<V> tryCreateFileCache(
             @NonNullable String name, 
@@ -204,7 +206,7 @@ public enum CacheManager {
 
         if (oldCache != null) {
             // race condition: cache already created by another thread.
-            this.checkValueType(oldCache, valueType);
+            this.checkTypes(oldCache, cacheType, valueType);
             return oldCache;
         }
         return newCache;
@@ -222,15 +224,38 @@ public enum CacheManager {
     {
         return this.tryCreateCache(name, valueType, cacheType);
     }
-    private void checkValueType(ICache c, @NonNullable Class<?> valueType) {
+    /**
+     * Checks the compatibility of the given cacheType and valueType with the
+     * given cache.
+     *
+     * @throws ClassCastException if the cache already exists for an
+     * incompatible value type or incompatible cache type.
+     */
+    private <V> void checkTypes(ICache c, 
+            @NonNullable CacheType cacheType, @NonNullable Class<V> valueType) 
+    {
         if (c == null)
             return;
-        Class<?> cacheValueType = c.getValueType();
-        
-        if (!cacheValueType.isAssignableFrom(valueType))
+        if (!c.getCacheType().isAsssignableFrom(cacheType))
             throw new ClassCastException("Cache " + c.getName()
-                + " of " + c.getValueType() 
-                + " already exists and cannot be used for " + valueType);
+                + " of type " + c.getCacheType() 
+                + " already exists and cannot be used for cache type " + cacheType);
+        if (!this.checkValueType(c, valueType))
+            throw new ClassCastException("Cache " + c.getName()
+                + " of value type " + c.getValueType() 
+                + " already exists and cannot be used for value type " + valueType);
         return;
+    }
+    /**
+     * Checks the compatibility of the given valueType with the
+     * given cache.
+     *
+     * @return true if the valueType is compatible with the cache;
+     *  false otherwise.
+     */
+    private boolean checkValueType(@NonNullable ICache c, @NonNullable Class<?> valueType) 
+    {
+        Class<?> cacheValueType = c.getValueType();
+        return cacheValueType.isAssignableFrom(valueType);
     }
 }
