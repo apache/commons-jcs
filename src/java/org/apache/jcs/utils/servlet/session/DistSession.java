@@ -320,7 +320,7 @@ public class DistSession
         if ( invocation == REMOVE_ATTR_INVOCATION )
         {
             // remove attribute - name set taken care of by the session cache.
-            sessCache.destroy( name, session_id );
+            sessCache.remove( name, session_id );
         }
         // Generate object unbinding event if necessary.
         if ( val instanceof HttpSessionBindingListener )

@@ -67,7 +67,6 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
  */
 public interface IGroupCacheAccess extends ICacheAccess
 {
-
     /**
      * Gets the g attribute of the IGroupCacheAccess object
      *
@@ -116,36 +115,4 @@ public interface IGroupCacheAccess extends ICacheAccess
      * @return The attributeNames value
      */
     Enumeration getAttributeNames( String name );
-
-
-    /**
-     * Sets the attribute attribute of the IGroupCacheAccess object
-     *
-     * @param name The new attribute value
-     * @param group The new attribute value
-     * @param value The new attribute value
-     */
-    void setAttribute( Object name, String group, Object value )
-        throws CacheException;
-
-
-    /**
-     * Sets the attribute attribute of the IGroupCacheAccess object
-     *
-     * @param name The new attribute value
-     * @param group The new attribute value
-     * @param value The new attribute value
-     * @param attr The new attribute value
-     */
-    void setAttribute( Object name, String group, Object value, IElementAttributes attr )
-        throws CacheException;
-
-
-    /**
-     * Gets the attribute attribute of the IGroupCacheAccess object
-     *
-     * @return The attribute value
-     */
-    Object getAttribute( Object name, String group );
-
 }
