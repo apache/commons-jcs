@@ -69,7 +69,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     private PerCacheConfig config;
    
     private final @NonNullable KeyedRefCollector<String> collector;
-    private final IKeyedReadWriteLock<String> krwl = new KeyedReadWriteLock<String>();
+    private final IKeyedReadWriteLock<String> keyedRWLock = new KeyedReadWriteLock<String>();
     
 //    private final @NonNullable ConcurrentMap<String, CacheOp[]> synMap = 
 //            new ConcurrentHashMap<String, CacheOp[]>();
@@ -152,7 +152,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         collector.run();
         if (debug)
             this.countGet.incrementAndGet();
-        Lock lock = this.krwl.readLock(key);
+        Lock lock = this.keyedRWLock.readLock(key);
         lock.lock();
         try {
             return doGet(key);
@@ -263,7 +263,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         
         if (debug)
             this.countPut.incrementAndGet();
-        Lock lock = this.krwl.writeLock(key);
+        Lock lock = this.keyedRWLock.writeLock(key);
         lock.lock();
         try {
             return doPut(key, value);
@@ -348,7 +348,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         
         if (debug)
             this.countRemove.incrementAndGet();
-        Lock lock = this.krwl.writeLock(key);
+        Lock lock = this.keyedRWLock.writeLock(key);
         lock.lock();
         try {
             return doRemove(key);
@@ -481,6 +481,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             .append("\n").append("countPutWriteFile", this.countPutWriteFile)
             .append("\n").append("countRemove", this.countRemove)
             .append("\n").append("collector", this.collector)
+            .append("\n").append("keyedRWLock", this.keyedRWLock)
             .toString();
     }
 }
