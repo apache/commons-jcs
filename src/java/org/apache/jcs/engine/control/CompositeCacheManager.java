@@ -210,6 +210,8 @@ public class CompositeCacheManager
             new CompositeCacheConfigurator( this );
 
         configurator.doConfigure( props );
+
+        this.props = props;
     }
 
     /**

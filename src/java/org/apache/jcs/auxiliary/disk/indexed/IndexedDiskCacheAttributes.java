@@ -25,18 +25,18 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
  * Configuration class for the Indexed Disk Cache
  *
  */
-public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes 
-{   
-  
+public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
+{
+
     private static final int DEFAULT_maxKeySize = 5000;
     private static final int DEFAULT_maxRecycleBinSize = 5000;
-  
+
     /** -1 mean no limit. */
     private int maxKeySize = DEFAULT_maxKeySize;
 
     /** Cannot be larger than the max size.  If max is less than 0, this will be 5000 */
     private int maxRecycleBinSize = DEFAULT_maxRecycleBinSize;
-    
+
     // default to -1, i.e., don't optimize until shutdown
     private int optimizeAtRemoveCount = -1;
 
@@ -45,9 +45,9 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
      */
     public IndexedDiskCacheAttributes()
     {
-    } 
+    }
 
-    
+
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object
      *
@@ -61,13 +61,13 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
 
     /**
      * Sets the maxKeySize attribute of the DiskCacheAttributes object
-     * 
+     *
      * @param maxKeySize The new maxKeySize value
      */
     public void setMaxKeySize( int maxKeySize )
     {
         this.maxKeySize = maxKeySize;
-        
+
         // make sure the sizes are in accord with our rule.
         setMaxRecycleBinSize( maxRecycleBinSize );
     }
@@ -100,22 +100,15 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
      * This cannot be larger than the maxKeySize.  It wouldn't hurt
      * anything, but it makes the config necessary.  The recycle bin
      * entry willbe at least as large as a key.
-     * 
+     *
      * If the maxKeySize
      * is -1 this will be set tot he default, which is 5000.
-     * 
+     *
      * @param maxRecycleBinSize The maxRecycleBinSize to set.
      */
     public void setMaxRecycleBinSize( int maxRecycleBinSize )
     {
-      if ( maxKeySize >= 0 )
-      {
-        this.maxRecycleBinSize = Math.min( maxRecycleBinSize, maxKeySize );
-      }
-      else
-      {
-        this.maxRecycleBinSize = DEFAULT_maxRecycleBinSize;        
-      }
+      this.maxRecycleBinSize =  maxRecycleBinSize;
     }
 
 
@@ -127,7 +120,7 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
       return maxRecycleBinSize;
     }
 
-    
+
     /**
      * Description of the Method
      *

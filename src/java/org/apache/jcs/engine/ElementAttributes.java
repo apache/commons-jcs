@@ -31,7 +31,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Element attribute descriptor class.
- * 
+ *
  * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
 public class ElementAttributes implements IElementAttributes, Serializable,
@@ -111,7 +111,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Constructor for the IElementAttributes object
-     * 
+     *
      * @param attr
      */
     private ElementAttributes(ElementAttributes attr)
@@ -139,7 +139,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Copies the attributes, including references to event handlers.
-     * 
+     *
      * @return a copy of the Attributes
      */
     public IElementAttributes copy()
@@ -167,7 +167,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Deep clone the attributes.
-     * 
+     *
      * @return a clone of these attributes
      */
     public Object clone2()
@@ -199,7 +199,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the version attribute of the IElementAttributes object
-     * 
+     *
      * @param version
      *            The new version value
      */
@@ -210,7 +210,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the maxLifeSeconds attribute of the IElementAttributes object
-     * 
+     *
      * @param mls
      *            The new {3} value
      */
@@ -221,7 +221,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Gets the {3} attribute of the ElementAttributes object
-     * 
+     *
      * @return The {3} value
      */
     public long getMaxLifeSeconds()
@@ -231,7 +231,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the idleTime attribute of the IElementAttributes object
-     * 
+     *
      * @param idle
      *            The new idleTime value
      */
@@ -244,7 +244,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Size in bytes.
-     * 
+     *
      * @param size
      *            The new size value
      */
@@ -255,7 +255,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Gets the size attribute of the IElementAttributes object
-     * 
+     *
      * @return The size value
      */
     public int getSize()
@@ -265,7 +265,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Gets the createTime attribute of the IElementAttributes object
-     * 
+     *
      * @return The createTime value
      */
     public long getCreateTime()
@@ -283,7 +283,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Gets the version attribute of the IElementAttributes object
-     * 
+     *
      * @return The version value
      */
     public long getVersion()
@@ -295,7 +295,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
      * Gets the idleTime attribute of the IElementAttributes object. Keeping
      * track of this will require storing the last access time. This could get
      * expensive.
-     * 
+     *
      * @return The idleTime value
      */
     public long getIdleTime()
@@ -305,18 +305,19 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * If the returned value is negative, the item has expired
-     * 
+     *
      * @return The timeToLive value
      */
     public long getTimeToLiveSeconds()
     {
         long now = System.currentTimeMillis();
-        return (this.getCreateTime() + (this.getMaxLifeSeconds() * 1000)) - now;
+        return ((this.getCreateTime() + (this.getMaxLifeSeconds()
+                                         * 1000)) - now) / 1000;
     }
 
     /**
      * Gets the LastAccess attribute of the IAttributes object
-     * 
+     *
      * @return The LastAccess value
      */
     public long getLastAccessTime()
@@ -334,7 +335,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Gets the {3} attribute of the IElementAttributes object
-     * 
+     *
      * @return The {3} value
      */
     public boolean getIsDistribute()
@@ -344,7 +345,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the isDistribute attribute of the ElementAttributes object
-     * 
+     *
      * @param val
      *            The new isDistribute value
      */
@@ -355,7 +356,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * can this item be flushed to disk
-     * 
+     *
      * @return The {3} value
      */
     public boolean getIsSpool()
@@ -365,7 +366,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the isSpool attribute of the ElementAttributes object
-     * 
+     *
      * @param val
      *            The new isSpool value
      */
@@ -376,7 +377,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Is this item laterally distributable
-     * 
+     *
      * @return The {3} value
      */
     public boolean getIsLateral()
@@ -386,7 +387,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the isLateral attribute of the ElementAttributes object
-     * 
+     *
      * @param val
      *            The new isLateral value
      */
@@ -397,7 +398,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Can this item be sent to the remote cache
-     * 
+     *
      * @return The {3} value
      */
     public boolean getIsRemote()
@@ -407,7 +408,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the isRemote attribute of the ElementAttributes object
-     * 
+     *
      * @param val
      *            The new isRemote value
      */
@@ -418,7 +419,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * can turn off expiration
-     * 
+     *
      * @return The {3} value
      */
     public boolean getIsEternal()
@@ -428,7 +429,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the isEternal attribute of the ElementAttributes object
-     * 
+     *
      * @param val
      *            The new isEternal value
      */
@@ -440,11 +441,11 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     /**
      * Adds a ElementEventHandler. Handler's can be registered for multiple
      * events. A registered handler will be called at every recognized event.
-     * 
+     *
      * The alternative would be to register handlers for each event. Or maybe
      * The handler interface should have a method to return whether it cares
      * about certain events.
-     * 
+     *
      * @param eventHandler
      *            The ElementEventHandler to be added to the list.
      */
@@ -460,7 +461,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the eventHandlers of the IElementAttributes object
-     * 
+     *
      * @param eventHandlers
      *            value
      */
@@ -480,7 +481,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     /**
      * Gets the elementEventHandlers. Returns null if none exist. Makes checking
      * easy.
-     * 
+     *
      * @return The elementEventHandlers value
      */
 
@@ -491,7 +492,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * For logging and debugging the element IElementAttributes.
-     * 
+     *
      * @return String info about the values.
      */
     public String toString()
