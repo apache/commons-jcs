@@ -37,7 +37,7 @@ jcs.system.groupIdCache.elementattributes.IsLateral=true
 # Regions preconfirgured for caching
 jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=100 
+jcs.region.testCache1.cacheattributes.MaxObjects=10
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=5000
@@ -65,7 +65,7 @@ jcs.region.testCache2.elementattributes.IsLateral=true
 jcs.region.testCache3=
 jcs.region.testCache3.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache3.cacheattributes.MaxObjects=100000
-jcs.region.testCache3.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LHMLRUMemoryCache
+jcs.region.testCache3.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache3.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache3.cacheattributes.MaxMemoryIdleTimeSeconds=10
 jcs.region.testCache3.cacheattributes.ShrinkerIntervalSeconds=60
@@ -101,7 +101,7 @@ jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCac
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
 #new disk cache parameter.
 jcs.auxiliary.DC.attributes.maxKeySize=100000
-jcs.auxiliary.DC.attributes.optimizeAtRemoveCount=-1
+jcs.auxiliary.DC.attributes.optimizeAtRemoveCount=300
 
 # Berkeley DB JE
 jcs.auxiliary.JE=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
