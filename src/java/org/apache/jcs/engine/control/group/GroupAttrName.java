@@ -57,7 +57,7 @@ public class GroupAttrName implements Serializable
      * @return A hash code based on the hash code of {@ #groupid} and
      * {@link #attrName}.
      */
-    ppublic int hashCode()
+    public int hashCode()
     {
         return groupId.hashCode() ^ attrName.hashCode();
     }
