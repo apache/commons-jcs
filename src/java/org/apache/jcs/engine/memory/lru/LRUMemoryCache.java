@@ -301,12 +301,12 @@ public class LRUMemoryCache implements MemoryCache, Serializable
         else
         {
             // remove single item.
-            MemoryElementDescriptor ce =
+            MemoryElementDescriptor me =
                 ( MemoryElementDescriptor ) map.remove( key );
 
-            if ( ce != null )
+            if ( me != null )
             {
-                removeNode( ce );
+                removeNode( me );
                 removed = true;
             }
         }
