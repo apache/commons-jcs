@@ -880,6 +880,15 @@ public class CompositeCache
             {
                 log.error( "Failure disposing of aux", ex );
             }
+
+          try {
+            memCache.dispose();
+          }
+          catch ( IOException ex )
+          {
+              log.error( "Failure disposing of memCache", ex );
+          }
+
         }
 
         log.warn( "Called close for " + cacheName );

@@ -100,6 +100,11 @@ public class ShrinkerThread extends Thread
      */
     public void kill()
     {
+      if ( log.isInfoEnabled() )
+      {
+          log.info( "Killing Shrinker for: "
+                     + this.cache.getCompositeCache().getCacheName() );
+      }
         alive = false;
     }
 

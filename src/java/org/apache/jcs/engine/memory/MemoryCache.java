@@ -44,6 +44,12 @@ public interface MemoryCache
     public void initialize( CompositeCache cache );
 
     /**
+     *  Destroy the memory cache
+     */
+    public void dispose() throws IOException;;
+
+
+    /**
      *  Get the number of elements contained in the memory store
      *
      *@return    Element count
