@@ -1,0 +1,20 @@
+
+Pre-requisite
+-------------
+1) jdk 1.5.0_01+ installed
+1) Ant 1.6.2+ installed
+2) copy lib/junit-3.8.1.jar to your <ANT_HOME>/lib/
+
+Build
+-----
+Simply type:
+
+ant
+
+Alternatively, if you've got NetBeans 4.0, life is even easier.
+Simply open up the "cache" project folder, and build it.
+
+Cheers,
+Hanson
+
+hanson.char@gmail.com
