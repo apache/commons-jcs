@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.yajcache.config.PerCacheConfig;
 import org.apache.jcs.yajcache.core.CacheEntry;
+import org.apache.jcs.yajcache.core.CacheType;
 import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.lang.annotation.*;
 import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
@@ -294,6 +295,10 @@ public class SoftRefCache<V> implements ICache<V> {
 
     void setConfig(@NonNullable PerCacheConfig config) {
         this.config = config;
+    }
+    @Implements(ICache.class)
+    public CacheType getCacheType() {
+        return CacheType.SOFT_REFERENCE;
     }
     @Override public String toString() {
         return new ToStringBuilder(this)

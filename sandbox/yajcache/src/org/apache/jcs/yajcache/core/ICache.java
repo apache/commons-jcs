@@ -43,4 +43,7 @@ public interface ICache<V> extends Map<String,V> {
              + " by this interface."
     )
     public V get(String key);
+    /** Returns the cache type. */
+    @ThreadSafety(ThreadSafetyType.IMMUTABLE)
+    public @NonNullable CacheType getCacheType();
 }

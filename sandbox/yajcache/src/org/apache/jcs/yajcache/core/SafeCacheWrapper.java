@@ -37,6 +37,8 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
     /** Underlying cache. */
     private final @NonNullable ICache<V> cache;
     
+    private final CacheType cacheType;
+    
     /** 
      * Constructs a safe cache by wrapping an underlying cache. 
      * @param cache underlying cache.
@@ -44,6 +46,17 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
     public SafeCacheWrapper(@NonNullable ICache<V> cache)
     {
         this.cache = cache;
+        
+        switch(cache.getCacheType()) {
+            case SOFT_REFERENCE:
+                this.cacheType = CacheType.SOFT_REFERENCE_SAFE;
+                break;
+            case SOFT_REFERENCE_FILE:
+                this.cacheType = CacheType.SOFT_REFERENCE_FILE_SAFE;
+                break;
+            default:
+                throw new AssertionError(this);
+        }
     }
     
     // ICache implementation by delegating to the underlying cache.
@@ -135,6 +148,10 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
             return (V)SerializeUtils.inst.dup((Serializable)val);
         }
         return val;
+    }
+    @Implements(ICache.class)
+    public CacheType getCacheType() {
+        return this.cacheType;
     }
     @Override public String toString() {
         return new ToStringBuilder(this)

@@ -39,6 +39,7 @@ import org.apache.jcs.yajcache.config.PerCacheConfig;
 import org.apache.jcs.yajcache.core.ICacheChangeListener;
 import org.apache.jcs.yajcache.core.CacheChangeSupport;
 import org.apache.jcs.yajcache.core.CacheEntry;
+import org.apache.jcs.yajcache.core.CacheType;
 import org.apache.jcs.yajcache.core.ICache;
 import org.apache.jcs.yajcache.file.CacheFileContent;
 import org.apache.jcs.yajcache.file.CacheFileContentType;
@@ -134,12 +135,12 @@ public class SoftRefFileCache<V> implements ICache<V>
         this.valueType = valueType;
         CacheFileUtils.inst.mkCacheDirs(this.name);
     }
-    
+    @TODO("Check file system")
     public boolean isEmpty() {
         this.collector.run();
         return map.isEmpty();
     }
-    
+    @TODO("Check file system")
     public int size() {
         this.collector.run();
         return map.size();
@@ -386,15 +387,18 @@ public class SoftRefFileCache<V> implements ICache<V>
     public V remove(@NonNullable Object key) {
         return key == null ? null : this.remove(key.toString());
     }
+    @TODO("Clear file system")
     public void clear() {
 //        this.collector.run();
         map.clear();
         this.cacheChangeSupport.fireCacheClear();
     }
+    @TODO("Get from file system")
     public @NonNullable Set<String> keySet() {
 //        this.collector.run();
         return map.keySet();
     }
+    @TODO("Get from file system")
     public @NonNullable Set<Map.Entry<String,V>> entrySet() {
 //        this.collector.run();
         Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
@@ -411,6 +415,7 @@ public class SoftRefFileCache<V> implements ICache<V>
         }
         return toSet;
     }
+    @TODO("Get from file system")
     public @NonNullable Collection<V> values() {
 //        this.collector.run();
         Collection<KeyedSoftReference<String,V>> fromSet = map.values();
@@ -428,6 +433,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     public boolean containsKey(@NonNullable Object key) {
         return this.get(key.toString()) != null;
     }
+    @TODO("Get from file system")
     public boolean containsValue(@NonNullable Object value) {
 //        this.collector.run();
         Collection<KeyedSoftReference<String,V>> fromSet = map.values();
@@ -459,6 +465,10 @@ public class SoftRefFileCache<V> implements ICache<V>
 
     public void setConfig(PerCacheConfig config) {
         this.config = config;
+    }
+    @Implements(ICache.class)
+    public CacheType getCacheType() {
+        return CacheType.SOFT_REFERENCE_FILE;
     }
     @Override public String toString() {
         return new ToStringBuilder(this)
