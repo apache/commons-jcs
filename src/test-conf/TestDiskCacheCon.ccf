@@ -41,5 +41,5 @@ jcs.region.indexedRegion4.cacheattributes.MemoryCacheName=org.apache.jcs.engine.
 # Indexed Disk Cache
 jcs.auxiliary.indexedDiskCache=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.indexedDiskCache.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.indexedDiskCache.attributes.DiskPath=bin/test/indexed-disk-cache-conc
+jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache-conc
 
