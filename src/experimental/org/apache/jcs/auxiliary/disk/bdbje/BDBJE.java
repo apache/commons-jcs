@@ -17,31 +17,33 @@ package org.apache.jcs.auxiliary.disk.bdbje;
  */
 
 import java.io.File;
-import java.io.Serializable;
-
 import java.io.IOException;
-
-import org.apache.jcs.engine.behavior.ICacheElement;
+import java.io.Serializable;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.je.Cursor;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseEntry;
+import com.sleepycat.je.DatabaseStats;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
+import com.sleepycat.je.EnvironmentStats;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
+import com.sleepycat.je.StatsConfig;
 import com.sleepycat.je.Transaction;
 
 /**
- *  For now this is shared by all regions.
+ *  All regions share an environment.  In an environment they each have
+ *  a database.
  */
 public class BDBJE
 {
@@ -74,6 +76,7 @@ public class BDBJE
       /* Create a new, transactional database environment */
       EnvironmentConfig envConfig = new EnvironmentConfig();
       envConfig.setTransactional( true );
+      // create the env if it doesn't exist, else do nothing
       envConfig.setAllowCreate( true );
       coreEnv = new Environment( envDir, envConfig );
 
@@ -82,8 +85,18 @@ public class BDBJE
       DatabaseConfig dbConfig = new DatabaseConfig();
       dbConfig.setTransactional( true );
       dbConfig.setAllowCreate( true );
-      coreDb = coreEnv.openDatabase( txn, "bindingsDb", dbConfig );
-
+      dbConfig.setSortedDuplicates( false );
+      // create a database for this region.  Aovids the overhead of
+      // a secondary database for grouping.
+      coreDb =
+          coreEnv.openDatabase( txn, attributes.getCacheName(), dbConfig );
+      if ( log.isInfoEnabled() )
+      {
+        log.info(
+            "created db for region = '"
+            + attributes.getCacheName()
+            + "'" );
+      }
       /*
        * A class catalog database is needed for storing class descriptions
        * for the serial binding used below.  This avoids storing class
@@ -94,6 +107,7 @@ public class BDBJE
       catalogConfig.setAllowCreate( true );
       catalogDb = coreEnv.openDatabase( txn, "catalogDb", catalogConfig );
       catalog = new StoredClassCatalog( catalogDb );
+
       txn.commit();
 
     }
@@ -125,9 +139,6 @@ public class BDBJE
       EntryBinding keyBinding =
           new SerialBinding( catalog, key.getClass() );
 
-      // store for data
-      //	DatabaseEntry dataEntry = new DatabaseEntry();
-
       /*
        * Create a serial binding for MyData data objects.  Serial bindings
        * can be used to store any Serializable object.
@@ -136,35 +147,21 @@ public class BDBJE
           new SerialBinding( catalog, ICacheElement.class );
       keyBinding.objectToEntry( key, searchKey );
 
-      // retrieve the data
-      Cursor cursor = coreDb.openCursor( null, null );
-      //if (cursor.getNext(keyEntry, dataEntry, LockMode.DEFAULT)
-      //	== OperationStatus.SUCCESS) {
-      //
-
-      // searchKey is the key that we want to find in the secondary db.
-      //DatabaseEntry searchKey = new DatabaseEntry(key..getBytes());
-
       // foundKey and foundData are populated from the primary entry that
-      // is associated with the secondary db key.
       DatabaseEntry foundKey = new DatabaseEntry();
       DatabaseEntry foundData = new DatabaseEntry();
 
       OperationStatus retVal =
-          cursor.getSearchKey( searchKey,
-                               foundData, LockMode.DEFAULT );
+          coreDb.get( null, searchKey, foundData, LockMode.DEFAULT );
 
       if ( retVal == OperationStatus.SUCCESS )
       {
-        //Object keyN = bind.entryToObject(keyEntry);
-        ice =
-            ( ICacheElement ) dataBinding.entryToObject( foundData );
+        ice = ( ICacheElement ) dataBinding.entryToObject( foundData );
         if ( log.isDebugEnabled() )
         {
           log.debug( "key=" + key + " ice=" + ice );
         }
       }
-      cursor.close();
     }
     catch ( Exception e )
     {
@@ -197,10 +194,14 @@ public class BDBJE
 
       OperationStatus status = coreDb.put( txn, keyEntry, dataEntry );
 
-      if ( log.isInfoEnabled() )
+      if ( log.isDebugEnabled() )
       {
-        log.info( "Put key '" + item.getKey() + "' on disk \n status = '" +
-                  status + "'" );
+        log.debug(
+            "Put key '"
+            + item.getKey()
+            + "' on disk \n status = '"
+            + status
+            + "'" );
       }
 
       /*
@@ -225,16 +226,172 @@ public class BDBJE
   }
 
   /** Removes the given key from the specified cache. */
-  public void remove( String cacheName, Serializable key ) throws IOException
+  public void remove( Serializable key ) throws IOException
   {
+    try
+    {
+      DatabaseEntry searchKey = new DatabaseEntry();
 
+      EntryBinding keyBinding =
+          new SerialBinding( catalog, key.getClass() );
+      keyBinding.objectToEntry( key, searchKey );
+
+      coreDb.delete( null, searchKey );
+      if ( log.isDebugEnabled() )
+      {
+        log.debug( "removed, key = '" + key + "'" );
+      }
+    }
+    catch ( Exception e )
+    {
+      log.error( "Problem removing key = '" + key + "'", e );
+    }
   }
 
   /** Remove all keys from the sepcified cache. */
-  public void removeAll( String cacheName, long requesterId ) throws
-      IOException
+  public void removeAll() throws IOException
   {
+    /*
+       Transaction txn = null;
+       Cursor cursor = null;
+       try {
+
+     DatabaseEntry keyEntry = new DatabaseEntry();
+     DatabaseEntry dataEntry = new DatabaseEntry();
+
+     txn = coreEnv.beginTransaction(null, null);
+     cursor = coreDb.openCursor(txn, null);
+
+     int cnt = 0;
+     while (cursor.getNext(keyEntry, dataEntry, LockMode.DEFAULT)
+      == OperationStatus.SUCCESS) {
+
+      if (log.isDebugEnabled()) {
+       log.debug("removed, cnt = " + cnt++);
+      }
+      cursor.delete();
+     }
+       } catch (Exception e) {
+     log.error(e);
+       } finally {
+     try {
+      cursor.close();
+      txn.commit();
+     } catch (Exception e) {
+      log.error(e);
+     }
+       }
+     */
+    Transaction txn = null;
+    try
+    {
+      txn = coreEnv.beginTransaction( null, null );
+      coreDb.truncate( txn, false );
+    }
+    catch ( Exception e )
+    {
+      log.error( e );
+    }
+    finally
+    {
+      try
+      {
+        txn.commit();
+      }
+      catch ( Exception e )
+      {
+        log.error( e );
+      }
+    }
 
   }
 
+  /*
+   * Closes the database and the environment.  Client should do some
+   * client checks.
+   */
+  protected void dispose()
+  {
+    if ( log.isWarnEnabled() )
+    {
+      log.debug( "Disposig of je" );
+    }
+    if ( log.isInfoEnabled() )
+    {
+      log.info( this.toString() );
+    }
+    if ( coreEnv != null )
+    {
+      try
+      {
+        coreEnv.sync();
+        //Close the secondary before closing the primaries
+        coreDb.close();
+        catalogDb.close();
+
+        // Finally, close the environment.
+        coreEnv.close();
+      }
+      catch ( DatabaseException dbe )
+      {
+        log.error( "Error closing coreEnv: " + dbe.toString() );
+      }
+    }
+  }
+
+  /*
+   * Returns info about the JE
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+    StringBuffer buf = new StringBuffer();
+    try
+    {
+      buf.append( "\n This database name: " + coreDb.getDatabaseName() );
+      buf.append( "\n This database stats: " + getDBStats() );
+      buf.append( "\n -------------------------------------" );
+      buf.append( "\n Environment Data:" );
+      EnvironmentStats stats = coreEnv.getStats( new StatsConfig() );
+      buf.append( "\n NCacheMiss: " + stats.getNCacheMiss() );
+      buf.append( "\n CacheTotalBytes: " + stats.getCacheTotalBytes() );
+      buf.append( "\n NCleanerRuns: " + stats.getNCleanerRuns() );
+      buf.append( "\n -------------------------------------" );
+      buf.append( "\n Other Databases in this Environment:" );
+      List myDbNames = coreEnv.getDatabaseNames();
+      for ( int i = 0; i < myDbNames.size(); i++ )
+      {
+        buf.append( "\n Database Name: " + ( String ) myDbNames.get( i ) );
+      }
+    }
+    catch ( DatabaseException dbe )
+    {
+      log.error( "Error getting toString()" + dbe.toString() );
+    }
+    return buf.toString();
+  }
+
+  /**
+   * Gets the stats for this db.
+   * @return
+   */
+  public String getDBStats()
+  {
+    StringBuffer buf = new StringBuffer();
+    try
+    {
+      DatabaseStats stats = coreDb.getStats( new StatsConfig() );
+      buf.append( "\n BinCount: " + stats.getBinCount() );
+      buf.append( "\n DeletedLNCount: " + stats.getDeletedLNCount() );
+      buf.append( "\n DupCountLNCount: " + stats.getDupCountLNCount() );
+      buf.append( "\n InCount: " + stats.getInCount() );
+      buf.append( "\n LnCount: " + stats.getLnCount() );
+      buf.append( "\n MaxDepth: " + stats.getMaxDepth() );
+    }
+    catch ( DatabaseException dbe )
+    {
+      log.error( "Error getting stats" + dbe.toString() );
+    }
+    return buf.toString();
+  }
 }

@@ -43,7 +43,7 @@ public class BDBJECacheManager
   private BDBJECacheAttributes defaultCacheAttributes;
 
   /*  right now use one berkely db for all regions */
-  private BDBJE je;
+  //private BDBJE je;
 
   /**
    * Constructor for the IndexedDiskCacheManager object
@@ -54,7 +54,7 @@ public class BDBJECacheManager
   private BDBJECacheManager( BDBJECacheAttributes defaultCacheAttributes )
   {
     this.defaultCacheAttributes = defaultCacheAttributes;
-    je = new BDBJE( defaultCacheAttributes );
+    //je = new BDBJE( defaultCacheAttributes );
     if ( log.isDebugEnabled() )
     {
       log.debug( "Created JE" );
@@ -136,7 +136,7 @@ public class BDBJECacheManager
 
       if ( cache == null )
       {
-        cache = new BDBJECache( cacheAttributes, je );
+        cache = new BDBJECache( cacheAttributes );
         caches.put( cacheName, cache );
       }
     }

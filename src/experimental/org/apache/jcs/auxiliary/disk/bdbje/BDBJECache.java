@@ -38,10 +38,10 @@ public class BDBJECache
   /*  right now we are using one berkely db for all regions */
   private BDBJE je;
 
-  public BDBJECache( BDBJECacheAttributes attr, BDBJE je )
+  public BDBJECache( BDBJECacheAttributes attr )
   {
     super( attr.getCacheName() );
-    this.je = je;
+    this.je = new BDBJE( attr );
     if ( log.isDebugEnabled() )
     {
       log.debug( "constructed BDBJECache" );
@@ -113,8 +113,20 @@ public class BDBJECache
    */
   protected boolean doRemove( Serializable key )
   {
-    // TODO Auto-generated method stub
-    return false;
+    if ( log.isDebugEnabled() )
+    {
+      log.debug( "doRemove, key '" + key + "'" );
+    }
+    try
+    {
+      je.remove( key );
+    }
+    catch ( Exception e )
+    {
+      log.error( e );
+      return false;
+    }
+    return true;
   }
 
   /* (non-Javadoc)
@@ -122,7 +134,18 @@ public class BDBJECache
    */
   protected void doRemoveAll()
   {
-    // TODO Auto-generated method stub
+    if ( log.isDebugEnabled() )
+    {
+      log.debug( "doRemoveAll" );
+    }
+    try
+    {
+      je.removeAll();
+    }
+    catch ( Exception e )
+    {
+      log.error( e );
+    }
 
   }
 
@@ -131,8 +154,7 @@ public class BDBJECache
    */
   protected void doDispose()
   {
-    // TODO Auto-generated method stub
-
+    je.dispose();
   }
 
 }
