@@ -34,5 +34,5 @@ public interface IRemoteCacheService extends Remote, ICacheService
     public void removeAll( String cacheName, byte requesterId )
         throws IOException;
 
-    public Set getGroupKeys(String cacheName, String groupName);
+    public Set getGroupKeys(String cacheName, String groupName) throws IOException;
 }
