@@ -217,6 +217,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
+     * Check to see if the item is in purgatory.  If so, return it.  If not,
+     * check to see if we have it on disk.
+     * 
      * @param key
      * @return ICacheElement or null
      * 
@@ -255,7 +258,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             // since the mem cache may be set to 0.  If an item is active, it will keep
             // getting put into purgatory and removed. The CompositeCache now does
             // not put an item to memory from disk ifthe size is 0;
-
+            // Do not set spoolable to false.  Just let it go to disk.  This
+            // will allow the memory size = 0 setting to work well.
+            
             log.debug( "Found element in purgatory, cacheName: " + cacheName
                     + ", key: " + key );
 

@@ -20,44 +20,31 @@ package org.apache.jcs.auxiliary.lateral;
 
 import java.io.IOException;
 import java.io.Serializable;
-
-import java.util.HashMap;
 import java.util.Set;
-
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CacheConstants;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.IZombie;
 
 /**
- * Lateral distributor. Returns null on get. Net search not implemented.
+ * Lateral distributor. Returns null on get by default. Net search not implemented.
  *
  */
 public class LateralCache implements ICache
 {
     private final static Log log =
         LogFactory.getLog( LateralCache.class );
-
-    private static int numCreated = 0;
-
-    IElementAttributes attr = null;
-
-    private HashMap keyHash;
-    // not synchronized to maximize concurrency.
-
+    
     // generalize this, use another interface
-    public ILateralCacheAttributes cattr;
+    private ILateralCacheAttributes cattr;
 
     final String cacheName;
 
@@ -86,19 +73,25 @@ public class LateralCache implements ICache
     protected LateralCache( ILateralCacheAttributes cattr )
     {
         this.cacheName = cattr.getCacheName();
-        //this.servers = servers;
-
         this.cattr =  cattr ;
     }
 
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
-        return "LateralCache: " + this.cattr.getCacheName();
+        return "LateralCache: " + cattr.getCacheName();
     }
 
-    /** Description of the Method */
+    /** 
+     * Update lateral.
+     *  
+     * @param ce
+     * @throws IOException
+     */    
     public void update( ICacheElement ce )
         throws IOException
     {
@@ -124,7 +117,14 @@ public class LateralCache implements ICache
     }
     // end update
 
-    /** Returns null. The performace costs are too great. */
+    /** 
+     * The performace costs are too great.  It is not recommended that you enable lateral
+     * gets.
+     *  
+     * @param key
+     * @return
+     * @throws IOException
+     */
     public ICacheElement get( Serializable key )
         throws IOException
     {
@@ -146,6 +146,12 @@ public class LateralCache implements ICache
     return obj;
     }
 
+
+    /**
+     * 
+     * @param groupName
+     * @return A set og group keys.
+     */
     public Set getGroupKeys(String groupName)
     {
         return lateral.getGroupKeys(cacheName, groupName);
@@ -155,6 +161,9 @@ public class LateralCache implements ICache
     /**
      * Synchronously remove from the remote cache; if failed, replace the remote
      * handle with a zombie.
+     * @param key
+     * @return
+     * @throws IOException
      */
     public boolean remove( Serializable key )
         throws IOException
@@ -178,6 +187,8 @@ public class LateralCache implements ICache
     /**
      * Synchronously removeAll from the remote cache; if failed, replace the
      * remote handle with a zombie.
+     * 
+     * @throws IOException
      */
     public void removeAll()
         throws IOException
@@ -195,7 +206,8 @@ public class LateralCache implements ICache
     }
 
 
-    /** Synchronously dispose the cache. Not sure we want this. */
+    /** Synchronously dispose the cache. Not sure we want this. 
+     * @throws IOException*/
     public void dispose()
         throws IOException
     {
@@ -259,7 +271,11 @@ public class LateralCache implements ICache
     }
 
 
-    /** Not yet sure what to do here. */
+    /** Not yet sure what to do here. 
+     * @param ex
+     * @param msg
+     * @throws IOException
+     */
     private void handleException( Exception ex, String msg )
         throws IOException
     {
@@ -282,6 +298,7 @@ public class LateralCache implements ICache
 
     /**
      * Replaces the current remote cache service handle with the given handle.
+     * @param lateral
      */
     public void fixCache( ILateralCacheService lateral )
     {

@@ -324,6 +324,7 @@ public class CompositeCache
         if ( !ce.getElementAttributes().getIsSpool() )
         {
             //TODO define an event for this.
+            handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_NOT_ALLOWED );
             return;
         }
                         
@@ -339,26 +340,10 @@ public class CompositeCache
 
                 diskAvailable = true;
 
-                // write the last item to disk.2
+                // write the last items to disk.2
                 try
                 {
-                    // handle event, might move to a new method
-                    ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
-                    if ( eventHandlers != null )
-                    {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE" );
-                        }
-                        IElementEvent event = new ElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE );
-                        Iterator hIt = eventHandlers.iterator();
-                        while ( hIt.hasNext() )
-                        {
-                            IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
-                            //hand.handleElementEvent( event );
-                            addElementEvent( hand, event );
-                        }
-                    }
+                    handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE );
 
                     aux.update( ce );
                 }
@@ -384,28 +369,12 @@ public class CompositeCache
             try
             {
 
-                // handle event, might move to a new method
-                ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
-                if ( eventHandlers != null )
-                {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Handlers are registered.  Event -- ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE" );
-                    }
-                    IElementEvent event = new ElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE );
-                    Iterator hIt = eventHandlers.iterator();
-                    while ( hIt.hasNext() )
-                    {
-                        IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
-                        //hand.handleElementEvent( event );
-                        addElementEvent( hand, event );
-                    }
-                }
+                handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE );
 
             }
             catch ( Exception e )
             {
-                log.error( "Trouble handling the event", e );
+                log.error( "Trouble handling the ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE  element event", e );
             }
 
         }
@@ -740,7 +709,7 @@ public class CompositeCache
 
         try
         {
-            removed = memCache.remove( key );
+            removed = memCache.remove( key );            
         }
         catch ( IOException e )
         {
@@ -1057,7 +1026,7 @@ public class CompositeCache
      * This returns data gathered for this region and all the
      * auxiliaries it currently uses.
      *
-     * @return
+     * @return Statistics and Info on the Region.
      */
     public ICacheStats getStatistics()
     {
@@ -1172,24 +1141,6 @@ public class CompositeCache
 
 
     /**
-     *  Adds an ElementEvent to be handled
-     *
-     *@param  hand             The IElementEventHandler
-     *@param  event            The IElementEventHandler IElementEvent event
-     *@exception  IOException  Description of the Exception
-     */
-    public void addElementEvent( IElementEventHandler hand, IElementEvent event )
-        throws IOException
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Adding to Q" );
-        }
-        elementEventQ.addElementEvent( hand, event );
-    }
-
-
-    /**
      *  Create the MemoryCache based on the config parameters. TODO: consider
      *  making this an auxiliary, despite its close tie to the CacheHub. TODO:
      *  might want to create a memory cache config file separate from that of
@@ -1272,4 +1223,58 @@ public class CompositeCache
     {
         return missCountExpired;
     }
+    
+    
+    /**
+     * If there are event handlers for the item, then create an event and
+     * queue it up.
+     * 
+     * @param ce
+     * @param eventType
+     */
+    private void handleElementEvent( ICacheElement ce, int eventType )
+    {
+        // handle event, might move to a new method
+        ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
+        if ( eventHandlers != null )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Element Handlers are registered.  Create event type " +  eventType );
+            }
+            IElementEvent event = new ElementEvent( ce, eventType );
+            Iterator hIt = eventHandlers.iterator();
+            while ( hIt.hasNext() )
+            {
+                IElementEventHandler hand = ( IElementEventHandler ) hIt.next();
+                try 
+                {
+                    addElementEvent( hand, event );                    
+                }
+                catch ( Exception e )
+                {
+                    log.error( "Trouble adding element event to queue", e );
+                }
+            }
+        }
+        
+    }
+    
+    
+    /**
+     *  Adds an ElementEvent to be handled
+     *
+     *@param  hand             The IElementEventHandler
+     *@param  event            The IElementEventHandler IElementEvent event
+     *@exception  IOException  Description of the Exception
+     */
+    public void addElementEvent( IElementEventHandler hand, IElementEvent event )
+        throws IOException
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Adding event to Element Event Queue" );
+        }
+        elementEventQ.addElementEvent( hand, event );
+    }    
 }

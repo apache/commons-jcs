@@ -4,11 +4,15 @@ import junit.framework.*;
 
 import org.apache.jcs.access.TestCacheAccess;
 
+/**
+ * This is used by other tests to generate a random load on the disk cache.
+ */
 public class TestDiskCacheConcurrentRandom
     extends TestCase {
 
   /**
    * Constructor for the TestDiskCache object.
+ * @param testName
    */
   public TestDiskCacheConcurrentRandom(String testName) {
     super(testName);
@@ -20,6 +24,9 @@ public class TestDiskCacheConcurrentRandom
    * so items should spool to disk.
    *
    * @param region Name of the region to access
+ * @param range
+ * @param numOps
+ * @param testNum
    *
    * @exception Exception If an error occurs
    */
@@ -38,7 +45,7 @@ public class TestDiskCacheConcurrentRandom
       String data = "testData" + testNum;
       jcs.put( key, data );
       String value = ( String ) jcs.get( key );
-      this.assertEquals( data, value );
+      assertEquals( data, value );
 
   }
 

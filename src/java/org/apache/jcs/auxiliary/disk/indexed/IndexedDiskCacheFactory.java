@@ -21,6 +21,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
@@ -37,15 +38,25 @@ public class IndexedDiskCacheFactory implements AuxiliaryCacheFactory
     private String name;
 
     /**
-     * Description of the Method
+     * Get an instance of the IndexDiskCacheManager for the attributes and then 
+     * get an IndexedDiskCache from the manager.
+     * <p>
+     * The manager is a singleton.
+     * <p>
+     * One disk cache is returned per region fromt he maanger.
      *
-     * @return
-     * @param iaca
+     * @param iaca The auxiliary attributes.
+     * @param cache The CacheHub
+     * @return AuxiliaryCache
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
                                        CompositeCache cache )
     {
         IndexedDiskCacheAttributes idca = ( IndexedDiskCacheAttributes ) iaca;
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Creating DiskCache for attributes = " + idca );
+        }
         IndexedDiskCacheManager dcm = IndexedDiskCacheManager.getInstance( idca );
         return dcm.getCache( idca );
     }

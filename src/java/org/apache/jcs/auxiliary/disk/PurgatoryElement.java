@@ -74,6 +74,7 @@ public class PurgatoryElement implements ICacheElement, Serializable
 
     /**
      * Get the wrapped cache element.
+     * @return ICacheElement
      */
     public ICacheElement getCacheElement()
     {
@@ -115,6 +116,8 @@ public class PurgatoryElement implements ICacheElement, Serializable
     }
 
     /**
+     * @param attr
+     * 
      * @see ICacheElement#setElementAttributes
      */
     public void setElementAttributes( IElementAttributes attr )

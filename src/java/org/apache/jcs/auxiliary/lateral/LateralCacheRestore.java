@@ -59,6 +59,8 @@ public class LateralCacheRestore implements ICacheRestore
     /**
      * Returns true iff the connection to the lateral host for the corresponding
      * cache manager can be successfully re-established.
+     * 
+     * @return whether or not the cache can be fixed.  
      */
     public boolean canFix()
     {

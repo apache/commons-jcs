@@ -20,6 +20,12 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 
+/**
+ * This has common attributes that any conceivable disk cache would need. 
+ * 
+ * @author aaronsm
+ *
+ */
 public abstract class AbstractDiskCacheAttributes extends
     AbstractAuxiliaryCacheAttributes implements IDiskCacheAttributes
 {
@@ -73,7 +79,7 @@ public abstract class AbstractDiskCacheAttributes extends
   /**
    * Description of the Method
    * 
-   * @return
+   * @return AuxiliaryCacheAttributes
    */
   public AuxiliaryCacheAttributes copy()
   {
@@ -90,7 +96,7 @@ public abstract class AbstractDiskCacheAttributes extends
   /**
    * Description of the Method
    *
-   * @return
+   * @return String
    */
   public String toString()
   {

@@ -15,7 +15,7 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.me
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
-jcs.region.testCache1=RC
+jcs.region.testCache1=LTCP
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -75,7 +75,7 @@ jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttri
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1112
-jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
 
 jcs.auxiliary.XMLRPC=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.XMLRPC.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes

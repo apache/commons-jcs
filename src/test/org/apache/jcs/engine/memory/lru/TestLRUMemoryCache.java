@@ -28,8 +28,8 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
- * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads.
+ * Test which exercises the LRUMemory cache. This one uses three different
+ * regions for three threads.
  *
  * @version $Id$
  */
@@ -43,6 +43,7 @@ public class TestLRUMemoryCache extends TestCase
 
     /**
      * Constructor for the TestDiskCache object.
+     * @param testName
      */
     public TestLRUMemoryCache( String testName )
     {
@@ -51,6 +52,7 @@ public class TestLRUMemoryCache extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * @param args
      */
     public static void main( String args[] )
     {
@@ -144,7 +146,7 @@ public class TestLRUMemoryCache extends TestCase
         for ( int i = 102; i < items; i++ )
         {
             String value = (String) 
-                ((ICacheElement)lru.get( i + ":key" )).getVal();
+                lru.get( i + ":key" ).getVal();
             assertEquals( region + " data " + i, value );
         }
 

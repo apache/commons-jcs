@@ -49,6 +49,7 @@ public class TestEventQueueConcurrent extends TestCase
 
     /**
      * Constructor for the TestDiskCache object.
+     * @param testName
      */
     public TestEventQueueConcurrent(String testName)
     {
@@ -57,6 +58,7 @@ public class TestEventQueueConcurrent extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * @param args
      */
     public static void main(String args[])
     {
@@ -273,8 +275,14 @@ public class TestEventQueueConcurrent extends TestCase
     private class CacheListenerImpl implements ICacheListener
     {
 
+        /**
+         * <code>putCount</code>
+         */
         protected int putCount = 0;
 
+        /**
+         * <code>removeCount</code>
+         */
         protected int removeCount = 0;
 
         /*

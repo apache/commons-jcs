@@ -18,21 +18,24 @@ package org.apache.jcs.engine.control.event.behavior;
  */
 
 
-import java.io.Serializable;
 
 /**
- *  Description of the Interface
+ * This interface defines the behavior for event handler.  Event handlers are
+ * transient.  They are not replicated and are not written to disk.  
+ * <p>
+ * If you want an event handler by default for all elements in a region,
+ * then you can add it to the default element attributes.  This way it will get create
+ * whenever an item gets put into the cache.    
  *
  */
-public interface IElementEventHandler extends Serializable
+public interface IElementEventHandler extends IElementEventConstants
 {
 
     /**
-     *  Description of the Method
+     *  Handle events for this element.  The events are typed.
      *
-     *@param  event  Description of the Parameter
-     *@return        Description of the Return Value
+     *@param  event  The event created by the cache.
      */
-    public Serializable handleElementEvent( IElementEvent event );
+    public void handleElementEvent( IElementEvent event );
 
 }

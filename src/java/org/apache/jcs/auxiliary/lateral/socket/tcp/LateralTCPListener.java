@@ -74,8 +74,9 @@ public class LateralTCPListener
     // -------------------------------------------------------- factory methods
 
     /**
-     * Gets the instance attribute of the LateralCacheTCPListener class
-     *
+     * Gets the instance attribute of the LateralCacheTCPListener class.
+     * 
+     * @param ilca
      * @return The instance value
      */
     public synchronized static ILateralCacheListener
@@ -140,6 +141,7 @@ public class LateralTCPListener
      * reconnect.
      *
      * @param id The new listenerId value
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException
@@ -155,6 +157,7 @@ public class LateralTCPListener
      * Gets the listenerId attribute of the LateralCacheTCPListener object
      *
      * @return The listenerId value
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException
@@ -220,6 +223,12 @@ public class LateralTCPListener
         getCache( cacheName ).localRemoveAll();
     }
 
+    /**
+     * @param cacheName
+     * @param key
+     * @return Serializable
+     * @throws IOException
+     */
     public Serializable handleGet( String cacheName, Serializable key )
         throws IOException
     {
@@ -244,7 +253,10 @@ public class LateralTCPListener
     }
 
     /**
-     * Gets the cacheManager attribute of the LateralCacheTCPListener object
+     * Gets the cacheManager attribute of the LateralCacheTCPListener object.
+     * 
+     * @param name
+     * @return CompositeCache
      */
     protected CompositeCache getCache( String name )
     {
@@ -316,7 +328,9 @@ public class LateralTCPListener
     {
         private Socket socket;
 
-        /** Construct for a given socket */
+        /** Construct for a given socket 
+         * @param socket
+         */
         public ConnectionHandler( Socket socket )
         {
             this.socket = socket;

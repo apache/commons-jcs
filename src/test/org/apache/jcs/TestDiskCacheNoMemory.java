@@ -39,6 +39,7 @@ public class TestDiskCacheNoMemory extends TestCase
 
     /**
      * Constructor for the TestDiskCache object.
+     * @param testName
      */
     public TestDiskCacheNoMemory( String testName )
     {
@@ -47,6 +48,7 @@ public class TestDiskCacheNoMemory extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * @param args
      */
     public static void main( String args[] )
     {
@@ -124,7 +126,7 @@ public class TestDiskCacheNoMemory extends TestCase
         {
             String value = ( String ) jcs.get( i + ":key" );
 
-            this.assertEquals( region + " data " + i, value );
+            assertEquals( region + " data " + i, value );
         }
 
         // Remove all the items

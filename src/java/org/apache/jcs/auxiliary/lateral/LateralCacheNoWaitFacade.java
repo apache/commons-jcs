@@ -21,6 +21,8 @@ package org.apache.jcs.auxiliary.lateral;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -64,7 +66,10 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         this.cacheName = cacheName;
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
+     */
     public void update( ICacheElement ce )
         throws IOException
     {
@@ -85,7 +90,12 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         }
     }
 
-    /** Synchronously reads from the lateral cache. */
+    /** 
+     * Synchronously reads from the lateral cache.
+     *  
+     * @param key
+     * @return ICacheElement
+     */
     public ICacheElement get( Serializable key )
     {
         for ( int i = 0; i < noWaits.length; i++ )
@@ -111,8 +121,9 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         return null;
     }
 
-    /**
-     * Gets the set of keys of objects currently in the group
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
     public Set getGroupKeys(String group)
     {
@@ -134,7 +145,12 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         return allKeys;
     }
 
-    /** Adds a remove request to the lateral cache. */
+    /** 
+     * Adds a remove request to the lateral cache. 
+     * 
+     * @param key
+     * @return always false.
+     */
     public boolean remove( Serializable key )
     {
         try
@@ -151,7 +167,9 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         return false;
     }
 
-    /** Adds a removeAll request to the lateral cache. */
+    /** 
+     * Adds a removeAll request to the lateral cache. 
+     */
     public void removeAll()
     {
         try
@@ -228,7 +246,10 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         return "LateralCacheNoWaitFacade: " + cacheName;
@@ -264,6 +285,17 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
       se.setName( "Number of No Waits" );
       se.setData( "" + noWaits.length  );
       elems.add( se );      
+      
+      for ( int i = 0; i < noWaits.length; i++ )
+      {
+        // get the stats from the super too
+        // get as array, convert to list, add list to our outer list
+        IStats sStats = noWaits[i].getStatistics();
+        IStatElement[] sSEs = sStats.getStatElements();
+        List sL = Arrays.asList( sSEs );
+        elems.addAll( sL );        
+      }
+      
     }
 
     // get an array and put them in the Stats object

@@ -37,22 +37,34 @@ public class TestJCS extends TestCase
 {
     Random random = new Random();
 
+    /**
+     * @param testName
+     */
     public TestJCS( String testName )
     {
         super( testName );
     }
 
+    /**
+     * @return Test
+     */
     public static Test suite()
     {
         return new TestSuite( TestJCS.class );
     }
 
+    /**
+     * @param args
+     */
     public static void main( String args[] )
     {
         String[] testCaseName = { TestJCS.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
+    /**
+     * @throws Exception
+     */
     public void testJCS() throws Exception
     {
         JCS jcs = JCS.getInstance( "testCache1" );

@@ -19,7 +19,7 @@ package org.apache.jcs.engine.control.event.behavior;
 
 
 /**
- *  Description of the Interface
+ *  This describes the events that an item can encounter.
  *
  */
 public interface IElementEventConstants
@@ -56,16 +56,22 @@ public interface IElementEventConstants
      */
     public final static int ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE = 5;
 
+    
+    /**
+     *  Moving from memory to disk, but item is not spoolable
+     */
+    public final static int ELEMENT_EVENT_SPOOLED_NOT_ALLOWED = 6;
+    
     /**
      *  Removed activley by a remove command. (Could distinguish between local
      *  and remote)
      */
-    public final static int ELEMENT_EVENT_REMOVED = 6;
+    //public final static int ELEMENT_EVENT_REMOVED = 7;
 
     /**
      *  Element was requested from cache.
      *  Not sure we ever want to implement this.
      */
-    //public final static int ELEMENT_EVENT_GET = 7;
+    //public final static int ELEMENT_EVENT_GET = 8;
 
 }

@@ -16,14 +16,17 @@ package org.apache.jcs.engine.control;
  * limitations under the License.
  */
 
+/**
+ */
 public class CompositeCacheManagerTester
 {
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param args*/
     public static void main( String args[] )
     {
 
-        CompositeCacheManagerTester ccmt = new CompositeCacheManagerTester();
+        //CompositeCacheManagerTester ccmt = new CompositeCacheManagerTester();
 
         String propsFile = "/cache.ccf";
         if ( args.length > 0 )

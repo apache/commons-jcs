@@ -48,8 +48,9 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
      * Interface method. Allows classforname construction, making caches
      * pluggable.
      *
-     * @return
+     * @return AuxiliaryCache
      * @param iaca
+     * @param cache
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
                                        CompositeCache cache )
@@ -102,7 +103,7 @@ public class LateralCacheFactory implements AuxiliaryCacheFactory
                 }
                 else
                 {
-                    //p( "noWait is null" );
+                    log.debug( "noWait is null, no lateral connection made" );
                 }
             }
 

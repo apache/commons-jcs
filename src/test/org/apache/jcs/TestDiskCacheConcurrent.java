@@ -32,6 +32,7 @@ public class TestDiskCacheConcurrent extends TestCase
 {
     /**
      * Constructor for the TestDiskCache object.
+     * @param testName
      */
     public TestDiskCacheConcurrent( String testName )
     {
@@ -40,6 +41,7 @@ public class TestDiskCacheConcurrent extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * @param args
      */
     public static void main( String args[] )
     {
@@ -131,6 +133,8 @@ public class TestDiskCacheConcurrent extends TestCase
      * than the size of the memory cache, so items should spool to disk.
      *
      * @param region Name of the region to access
+     * @param start
+     * @param end
      *
      * @exception Exception If an error occurs
      */
@@ -152,7 +156,7 @@ public class TestDiskCacheConcurrent extends TestCase
         {
             String value = ( String ) jcs.get( i + ":key" );
 
-            this.assertEquals( region + " data " + i, value );
+            assertEquals( region + " data " + i, value );
         }
 
 /*// you can't remove in one thread and expect them to be in another
