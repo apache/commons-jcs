@@ -3,14 +3,11 @@ package org.apache.jcs.engine;
 import java.io.IOException;
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
-
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one
@@ -22,7 +19,7 @@ public class CacheEventQueue implements ICacheEventQueue
 
     private static int processorInstanceCount = 0;
 
-    private LinkedQueue queue = new LinkedQueue();
+    // private LinkedQueue queue = new LinkedQueue();
 
     private ICacheListener listener;
     private byte listenerId;
@@ -37,6 +34,14 @@ public class CacheEventQueue implements ICacheEventQueue
     private boolean destroyed;
     private Thread t;
 
+    // Internal queue implementation
+
+    private Object queueLock = new Object();
+
+    // Dummy node
+
+    private Node head = new Node();
+    private Node tail = head;
 
     /**
      * Constructs with the specified listener and the cache name.
@@ -99,7 +104,7 @@ public class CacheEventQueue implements ICacheEventQueue
             // sychronize on queue so the thread will not wait forever,
             // and then interrupt the QueueProcessor
 
-            synchronized ( queue )
+            synchronized ( queueLock )
             {
                 t.interrupt();
             }
@@ -191,25 +196,53 @@ public class CacheEventQueue implements ICacheEventQueue
      */
     private void put( AbstractCacheEvent event )
     {
-        try
-        {
-            queue.put( event );
-        }
-        catch ( InterruptedException e )
-        {
-            // We should handle terminated gracefully here, however the
-            // LinkedQueue implementation of Channel shouldn't throw
-            // this since puts are non blocking. For now I will ignore
-            // it. [james@jamestaylor.org]
+        Node newNode = new Node();
 
-            // Options:
-            //   - destory self
-            //   - destory and rethrow
+        newNode.event = event;
+
+        synchronized ( queueLock )
+        {
+            tail.next = newNode;
+            tail = newNode;
+
+            queueLock.notify();
         }
     }
 
+    private AbstractCacheEvent take() throws InterruptedException
+    {
+        synchronized ( queueLock )
+        {
+            // wait until there is something to read
+
+            while ( head == tail )
+            {
+                queueLock.wait();
+            }
+
+            // we have the lock, and the list is not empty
+
+            Node node = head.next;
+
+            AbstractCacheEvent value = head.event;
+
+            // Node becomes the new head (head is always empty)
+
+            node.event = null;
+            head = node;
+
+            return value;
+        }
+    }
 
     ///////////////////////////// Inner classes /////////////////////////////
+
+    private static class Node
+    {
+        Node next = null;
+        AbstractCacheEvent event = null;
+    }
+
     /**
      * @author asmuts
      * @created January 15, 2002
@@ -226,19 +259,18 @@ public class CacheEventQueue implements ICacheEventQueue
             setDaemon( true );
         }
 
-
         /**
          * Main processing method for the QProcessor object
          */
         public void run()
         {
-            Runnable r = null;
+            AbstractCacheEvent r = null;
 
             while ( !destroyed )
             {
                 try
                 {
-                    r = ( Runnable ) queue.take();
+                    r = take();
                 }
                 catch ( InterruptedException e )
                 {
@@ -253,14 +285,13 @@ public class CacheEventQueue implements ICacheEventQueue
                 }
             }
             // declare failure as listener is permanently unreachable.
-            queue = null;
+            // queue = null;
             listener = null;
             // The listener failure logging more the problem of the user
             // of the q.
             log.info( "QProcessor exiting for " + CacheEventQueue.this );
         }
     }
-
 
     /**
      * Retries before declaring failure.
@@ -316,7 +347,6 @@ public class CacheEventQueue implements ICacheEventQueue
             return;
         }
 
-
         /**
          * Description of the Method
          *
@@ -326,7 +356,6 @@ public class CacheEventQueue implements ICacheEventQueue
             throws IOException;
     }
 
-
     /**
      * @author asmuts
      * @created January 15, 2002
@@ -335,7 +364,6 @@ public class CacheEventQueue implements ICacheEventQueue
     {
 
         private ICacheElement ice;
-
 
         /**
          * Constructor for the PutEvent object
@@ -355,7 +383,6 @@ public class CacheEventQueue implements ICacheEventQueue
              */
         }
 
-
         /**
          * Description of the Method
          *
@@ -373,7 +400,6 @@ public class CacheEventQueue implements ICacheEventQueue
         }
     }
 
-
     /**
      * Description of the Class
      *
@@ -383,7 +409,6 @@ public class CacheEventQueue implements ICacheEventQueue
     private class RemoveEvent extends AbstractCacheEvent
     {
         private Serializable key;
-
 
         /**
          * Constructor for the RemoveEvent object
@@ -397,7 +422,6 @@ public class CacheEventQueue implements ICacheEventQueue
             this.key = key;
         }
 
-
         /**
          * Description of the Method
          *
@@ -409,7 +433,6 @@ public class CacheEventQueue implements ICacheEventQueue
             listener.handleRemove( cacheName, key );
         }
     }
-
 
     /**
      * Description of the Class
@@ -430,7 +453,6 @@ public class CacheEventQueue implements ICacheEventQueue
             listener.handleRemoveAll( cacheName );
         }
     }
-
 
     /**
      * Description of the Class

@@ -8,6 +8,8 @@ package org.apache.jcs.engine;
  */
 public interface CacheConstants
 {
+    public static final String DEFAULT_CONFIG = "/cache.ccf";
+
     /**
      * Where the current activity came from. This effects whether the remote
      * will be included. Prevents remote-local loops.

@@ -127,24 +127,19 @@ public class JCS extends GroupCacheAccess
      * CacheAccess, the cache manager is a GroupCacheHub. NOTE: This can
      * will be moved up into GroupCacheAccess.
      */
-    protected static void ensureCacheManager()
+    protected static synchronized void ensureCacheManager()
     {
         if ( cacheMgr == null )
         {
-            synchronized ( JCS.class )
+            if ( configFilename == null )
             {
-                if ( cacheMgr == null )
-                {
-                    if ( configFilename == null )
-                    {
-                        cacheMgr = GroupCacheHub.getInstance();
-                    }
-                    else
-                    {
-                        cacheMgr = GroupCacheHub
-                            .getInstance( configFilename );
-                    }
-                }
+                cacheMgr = GroupCacheHub.getInstance();
+            }
+            else
+            {
+                cacheMgr = GroupCacheHub.getUnconfiguredInstance();
+
+                cacheMgr.configure( configFilename );
             }
         }
     }

@@ -60,27 +60,21 @@ public class CacheHub
     /** The Singleton Instance */
     protected static CacheHub instance;
 
-    /** Gets the instance of CacheHub */
-    public static CacheHub getInstance()
-    {
-        return getInstance( null );
-    }
-
-    /** Gets the CacheHub instance */
-    public static synchronized CacheHub getInstance( String propFile )
+    /**
+     * Gets the CacheHub instance. For backward compatibility, if this creates
+     * the instance it will attempt to configure it with the default
+     * configuration. If you want to configure from your own source, use
+     * {@link #getUnconfiguredInstance} and then call {@link #configure}
+     */
+    public static synchronized CacheHub getInstance()
     {
         if ( instance == null )
         {
-            log.debug( "Instance is null, creating" );
+            log.debug( "Instance is null, creating with default config" );
 
-            if ( propFile == null )
-            {
-                instance = new CacheHub();
-            }
-            else
-            {
-                instance = new CacheHub( propFile );
-            }
+            instance = createInstance();
+
+            instance.configure();
         }
 
         instance.incrementClients();
@@ -88,23 +82,53 @@ public class CacheHub
         return instance;
     }
 
-    /** Constructor for the CacheHub object */
-    protected CacheHub()
+    /**
+     * Get a CacheHub instance which is not configured.
+     */
+    public static synchronized CacheHub getUnconfiguredInstance()
     {
-        this( "/cache.ccf" );
+        if ( instance == null )
+        {
+            log.debug( "Instance is null, creating with provided config" );
+
+            instance = createInstance();
+        }
+
+        instance.incrementClients();
+
+        return instance;
     }
 
     /**
-     * Constructor for the CacheHub object
-     *
-     * @param propFile
+     * Simple factory method, must override in subclasses so getInstance
+     * creates / returns the correct object.
      */
-    protected CacheHub( String propFile )
+    protected static CacheHub createInstance()
+    {
+        return new CacheHub();
+    }
+
+    /**
+     * Configure with default properties file
+     */
+    public void configure()
+    {
+        configure( CacheConstants.DEFAULT_CONFIG );
+    }
+
+    /**
+     * Configure from specific properties file
+     *
+     * @param propFile Path <u>within classpath</u> to load configuration from
+     */
+    public void configure( String propFile )
     {
         log.debug( "Creating cache manager from config file: " + propFile );
 
         Properties props = new Properties();
+
         InputStream is = getClass().getResourceAsStream( propFile );
+
         try
         {
             props.load( is );
@@ -131,26 +155,38 @@ public class CacheHub
             }
         }
 
+        configure( props );
+    }
+
+    /**
+     * Configure from properties object
+     *
+     * @param props
+     */
+    public void configure( Properties props )
+    {
         // FIXME: need to do something for defaults
         // create a default entry in the propsfile
         // setDefaults( props );
 
-        // Create caches
+        CompositeCacheConfigurator configurator =
+            new CompositeCacheConfigurator( this );
 
-        try
-        {
-            createCaches( props );
-        }
-        catch ( IOException ex )
-        {
-            log.error( "Failed to create caches", ex );
-            throw new IllegalStateException( ex.getMessage() );
-        }
-        catch ( NotBoundException ex )
-        {
-            log.error( "Failed to create caches", ex );
-            throw new IllegalStateException( ex.getMessage() );
-        }
+        configurator.doConfigure( props );
+
+        // FIXME: Supposedly neither of these can be thrown from the above code,
+        //        are they safe to remove? Or should the go elsewhere?
+        //
+        // catch ( IOException ex )
+        // {
+        //     log.error( "Failed to create caches", ex );
+        //     throw new IllegalStateException( ex.getMessage() );
+        // }
+        // catch ( NotBoundException ex )
+        // {
+        //     log.error( "Failed to create caches", ex );
+        //     throw new IllegalStateException( ex.getMessage() );
+        // }
     }
 
     /**
@@ -195,16 +231,6 @@ public class CacheHub
     public IElementAttributes getDefaultElementAttributes()
     {
         return this.defaultElementAttr.copy();
-    }
-
-    /** */
-    private void createCaches( Properties props )
-        throws IOException, NotBoundException
-    {
-        CompositeCacheConfigurator configurator =
-            new CompositeCacheConfigurator( this );
-
-        configurator.doConfigure( props );
     }
 
     /** Creates internal system cache */

@@ -160,7 +160,6 @@ public class GroupCache extends Cache implements ICompositeCache
      * Gets an element fromt he cache
      *
      * @param key The key for the element
-     * @param container Should it return the CacheElement wrapper
      * @param invocation Is the originating method call from a local source
      * @return Returns element from the cache if found, else null
      */
