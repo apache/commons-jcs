@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
  * @author asmuts
  * @created January 15, 2002
  */
-public abstract class ReadWriteLockManager
+public class ReadWriteLockManager
 {
     private final static Log log =
         LogFactory.getLog( ReadWriteLockManager.class );
@@ -22,8 +22,10 @@ public abstract class ReadWriteLockManager
      */
     private static RwLockGC gc;
 
-    /** Class name for debugging purposes. */
-    private String clsname;
+    /**
+     * Hashtable of locks managed
+     */
+    private Hashtable locks = new Hashtable();
 
     /** Places a read lock on the specified resource. */
     public final void readLock( String id )
@@ -32,14 +34,12 @@ public abstract class ReadWriteLockManager
         lock( id, false );
     }
 
-
     /** Places a write lock on the specified resource. */
     public final void writeLock( String id )
         throws InterruptedException
     {
         lock( id, true );
     }
-
 
     /**
      * Release the read/write lock previously placed on the specified resource.
@@ -96,7 +96,6 @@ public abstract class ReadWriteLockManager
         throw new IllegalStateException( "holder.lcount went down below zero ("
              + holder.lcount + ") for id=" + id );
     }
-
 
     /** Places either a read or write lock on the specified resource. */
     private void lock( String id, boolean isWrite )
@@ -177,23 +176,14 @@ public abstract class ReadWriteLockManager
         return;
     }
 
-
     /**
      * Returns the lock table of all the resources managed by the subclass.
      *
      * @return The locks value
      */
-    protected abstract Hashtable getLocks();
-
-
-    /**
-     * Subclass must always override this constructor to create and preserve a
-     * singleton instance of the subclass.
-     */
-    protected ReadWriteLockManager()
+    protected Hashtable getLocks()
     {
-        clsname = getClass().getName();
-        clsname = clsname.substring( clsname.lastIndexOf( '.' ) + 1 );
+        return locks;
     }
 }
 

@@ -102,7 +102,7 @@ public class GroupCache extends Cache implements ICompositeCache
     private final static Log log = LogFactory.getLog( GroupCache.class );
 
     /** Manages locking for group item manipulation. */
-    private ReadWriteLockManager locker = GroupRWLockManager.getInstance();
+    private ReadWriteLockManager locker = new ReadWriteLockManager();
 
     /**
      * Declare a group_id cache here, so ids and elements don't compete for

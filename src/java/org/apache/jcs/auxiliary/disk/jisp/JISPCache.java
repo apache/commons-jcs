@@ -109,8 +109,6 @@ public class JISPCache implements ICache, Serializable
     String jispDataFileName = "default_this_is_BAD";
     String jispIndexFileName = "default_this_is_BAD";
 
-    private final static JISPLockManager locker = JISPLockManager.getInstance();
-
     // should use this method
     /**
      * Constructor for the JISPCache object
