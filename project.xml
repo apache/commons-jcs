@@ -127,6 +127,7 @@
       <unitTestPattern>include = **/TestDiskCache.java</unitTestPattern>
       <unitTestPattern>include = **/TestDiskCacheConcurrent.java</unitTestPattern>
       <unitTestPattern>include = **/TestTCPLateralCache.java</unitTestPattern>
+      <unitTestPattern>include = **/TestLRUMemoryCache.java</unitTestPattern>
     </unitTestPatterns>
     <jarResources></jarResources>
     <jars></jars>
