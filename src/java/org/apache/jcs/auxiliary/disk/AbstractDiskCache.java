@@ -53,6 +53,7 @@ package org.apache.jcs.auxiliary.disk;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheElement;
@@ -72,20 +73,22 @@ import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
- *  Abstract class providing a base implementation of a disk cache, which can be
- *  easily extended to implement a disk cache for a specific perstistence
- *  mechanism. When implementing the abstract methods note that while this base
- *  class handles most things, it does not acquire or release any locks.
- *  Implementations should do so as neccesary. This is mainly done to minimize
- *  the time speant in critical sections. Error handling in this class needs to
- *  be addressed. Currently if an exception is thrown by the persistence
- *  mechanism, this class destroys the event queue. Should it also destory
- *  purgatory? Should it dispose itself?
+ * Abstract class providing a base implementation of a disk cache, which can
+ * be easily extended to implement a disk cache for a specific perstistence
+ * mechanism.
  *
- *@author     <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
- *@author     <a href="mailto:james@jamestaylor.org">James Taylor</a>
- *@created    May 13, 2002
- *@version    $Id$
+ * When implementing the abstract methods note that while this base class
+ * handles most things, it does not acquire or release any locks.
+ * Implementations should do so as neccesary. This is mainly done to minimize
+ * the time speant in critical sections.
+ *
+ * Error handling in this class needs to be addressed. Currently if an
+ * exception is thrown by the persistence mechanism, this class destroys the
+ * event queue. Should it also destory purgatory? Should it dispose itself?
+ *
+ * @author <a href="mailto:asmuts@yahoo.com">Aaron Smuts</a>
+ * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
+ * @version $Id$
  */
 public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 {
@@ -93,75 +96,66 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         LogFactory.getLog( AbstractDiskCache.class );
 
     /**
-     *  Map where elements are stored between being added to this cache and
-     *  actually spooled to disk. This allows puts to the disk cache to return
-     *  quickly, and the more expensive operation of serializing the elements to
-     *  persistent storage queued for later. If the elements are pulled into the
-     *  memory cache while the are still in purgatory, writing to disk can be
-     *  cancelled.
+     * Map where elements are stored between being added to this cache and
+     * actually spooled to disk. This allows puts to the disk cache to return
+     * quickly, and the more expensive operation of serializing the elements
+     * to persistent storage queued for later. If the elements are pulled into
+     * the memory cache while the are still in purgatory, writing to disk can
+     * be cancelled.
      */
     protected Hashtable purgatory = new Hashtable();
 
     /**
-     *  The CacheEventQueue where changes will be queued for asynchronous
-     *  updating of the persistent storage.
+     * The CacheEventQueue where changes will be queued for asynchronous
+     * updating of the persistent storage.
      */
     protected ICacheEventQueue cacheEventQueue;
 
     /**
-     *  Each instance of a Disk cache should use this lock to synchronize reads
-     *  and writes to the underlying storage mechansism.
+     * Each instance of a Disk cache should use this lock to synchronize reads
+     * and writes to the underlying storage mechansism.
      */
     protected ReadWriteLock lock = new ReadWriteLock();
 
-    /**
-     *  Manages locking for purgatory item manipulation.
-     */
+    /** Manages locking for purgatory item manipulation. */
     protected ReadWriteLockManager locker = new ReadWriteLockManager();
 
     /**
-     *  Indicates whether the cache is 'alive', defined as having been
-     *  initialized, but not yet disposed.
+     * Indicates whether the cache is 'alive', defined as having been
+     * initialized, but not yet disposed.
      */
     protected boolean alive = false;
 
     /**
-     *  Every cache will have a name, subclasses must set this when they are
-     *  initialized.
+     * Every cache will have a name, subclasses must set this when they are
+     * initialized.
      */
     protected String cacheName;
 
     /**
-     *  DEBUG: Keeps a count of the number of purgatory hits for debug messages
+     * DEBUG: Keeps a count of the number of purgatory hits for debug messages
      */
     protected int purgHits = 0;
 
     // ----------------------------------------------------------- constructors
 
-    /**
-     *  Constructor for the AbstractDiskCache object
-     *
-     *@param  cacheName  Description of the Parameter
-     */
     public AbstractDiskCache( String cacheName )
     {
         this.cacheName = cacheName;
 
         this.cacheEventQueue = new CacheEventQueue( new MyCacheListener(),
-            CacheInfo.listenerId,
-            cacheName );
+                                                    CacheInfo.listenerId,
+                                                    cacheName );
     }
 
     // ------------------------------------------------------- interface ICache
 
     /**
-     *  Adds the provided element to the cache. Element will be added to
-     *  purgatory, and then queued for later writing to the serialized storage
-     *  mechanism.
+     * Adds the provided element to the cache. Element will be added to
+     * purgatory, and then queued for later writing to the serialized storage
+     * mechanism.
      *
-     *@param  cacheElement     Description of the Parameter
-     *@exception  IOException  Description of the Exception
-     *@see                     org.apache.jcs.engine.behavior.ICache#update
+     * @see org.apache.jcs.engine.behavior.ICache#update
      */
     public final void update( ICacheElement cacheElement )
         throws IOException
@@ -169,7 +163,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         if ( log.isDebugEnabled() )
         {
             log.debug( "Putting element in purgatory, cacheName: " + cacheName +
-                ", key: " + cacheElement.getKey() );
+                       ", key: " + cacheElement.getKey() );
         }
 
         try
@@ -201,9 +195,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     *@param  key  Description of the Parameter
-     *@return      Description of the Return Value
-     *@see         AuxiliaryCache#get
+     * @see AuxiliaryCache#get
      */
     public final ICacheElement get( Serializable key )
     {
@@ -237,7 +229,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             pe.setSpoolable( false );
 
             log.debug( "Found element in purgatory, cacheName: " + cacheName +
-                ", key: " + key );
+                       ", key: " + key );
 
             purgatory.remove( key );
 
@@ -262,27 +254,25 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     *@param  key  Description of the Parameter
-     *@return      Description of the Return Value
-     *@see         org.apache.jcs.engine.behavior.ICache#remove
+     * @see org.apache.jcs.engine.behavior.ICache#remove
      */
     public final boolean remove( Serializable key )
     {
         // Remove element from purgatory if it is there
 
 
-        writeLock( key.toString() );
+        writeLock( this.cacheName + key.toString() );
         try
         {
 
-            purgatory.remove( key );
+          purgatory.remove( key );
 
-            doRemove( key );
+          doRemove( key );
 
         }
         finally
         {
-            releaseLock( key.toString() );
+          releaseLock( this.cacheName + key.toString() );
         }
         // Remove from persistent store immediately
 
@@ -290,7 +280,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     *@see    org.apache.jcs.engine.behavior.ICache#removeAll
+     * @see org.apache.jcs.engine.behavior.ICache#removeAll
      */
     public final void removeAll()
     {
@@ -304,7 +294,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     *  Adds a dispose request to the disk cache.
+     * Adds a dispose request to the disk cache.
      */
     public final void dispose()
     {
@@ -320,8 +310,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     *@return    The cacheName value
-     *@see       ICache#getCacheName
+     * @see ICache#getCacheName
      */
     public String getCacheName()
     {
@@ -329,8 +318,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     *@return    The status value
-     *@see       ICache#getStatus
+     * @see ICache#getStatus
      */
     public int getStatus()
     {
@@ -338,18 +326,18 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     *  Size cannot be determined without knowledge of the cache implementation,
-     *  so subclasses will need to implement this method.
+     * Size cannot be determined without knowledge of the cache implementation,
+     * so subclasses will need to implement this method.
      *
-     *@return    The size value
-     *@see       ICache#getSize
+     * @see ICache#getSize
      */
     public abstract int getSize();
 
     /**
-     *@return    Always returns DISK_CACHE since subclasses should all be of
-     *      that type.
-     *@see       org.apache.jcs.engine.behavior.ICacheType#getCacheType
+     * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType
+     *
+     * @return Always returns DISK_CACHE since subclasses should all be of
+     *         that type.
      */
     public int getCacheType()
     {
@@ -358,9 +346,9 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
 
     /**
-     *  Internally used write lock for purgatory item modification.
+     * Internally used write lock for purgatory item modification.
      *
-     *@param  id  What name to lock on.
+     * @param id What name to lock on.
      */
     private void writeLock( String id )
     {
@@ -377,15 +365,15 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         catch ( Throwable e )
         {
 
-            log.error( e );
+            log.error(  e );
         }
     }
 
 
     /**
-     *  Internally used write lock for purgatory item modification.
+     * Internally used write lock for purgatory item modification.
      *
-     *@param  id  What name to lock on.
+     * @param id What name to lock on.
      */
     private void releaseLock( String id )
     {
@@ -393,29 +381,24 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         {
             locker.done( id );
         }
-        catch ( java.lang.IllegalStateException e )
+        catch ( Throwable e )
         {
 
-            log.warn( "Problem releaseing lock" + e.getMessage()  );
+            log.error(  e );
         }
     }
 
 
     /**
-     *  Cache that implements the CacheListener interface, and calls appropriate
-     *  methods in its parent class.
-     *
-     *@author     asmuts
-     *@created    May 13, 2002
+     * Cache that implements the CacheListener interface, and calls appropriate
+     * methods in its parent class.
      */
     private class MyCacheListener implements ICacheListener
     {
         private byte listenerId = 0;
 
         /**
-         *@return                  The listenerId value
-         *@exception  IOException  Description of the Exception
-         *@see                     org.apache.jcs.engine.CacheListener#getListenerId
+         * @see org.apache.jcs.engine.CacheListener#getListenerId
          */
         public byte getListenerId()
             throws IOException
@@ -424,9 +407,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         *@param  id               The new listenerId value
-         *@exception  IOException  Description of the Exception
-         *@see                     ICacheListener#setListenerId
+         * @see ICacheListener#setListenerId
          */
         public void setListenerId( byte id )
             throws IOException
@@ -435,13 +416,12 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         *@param  element          Description of the Parameter
-         *@exception  IOException  Description of the Exception
-         *@see                     ICacheListener#handlePut NOTE: This checks if
-         *      the element is a puratory element and behaves differently
-         *      depending. However since we have control over how elements are
-         *      added to the cache event queue, that may not be needed ( they
-         *      are always PurgatoryElements ).
+         * @see ICacheListener#handlePut
+         *
+         * NOTE: This checks if the element is a puratory element and behaves
+         * differently depending. However since we have control over how
+         * elements are added to the cache event queue, that may not be needed
+         * ( they are always PurgatoryElements ).
          */
         public void handlePut( ICacheElement element )
             throws IOException
@@ -458,20 +438,20 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                     // If the element has already been removed from purgatory
                     // do nothing
 
-                    String lK = element.getKey().toString();
-                    writeLock( lK );
+                    String lK =element.getKey().toString();
+                    writeLock( getCacheName() + lK );
                     try
                     {
 
-                        if ( !purgatory.contains( pe ) )
-                        {
-                            return;
-                        }
+                      if ( ! purgatory.contains( pe ) )
+                      {
+                          return;
+                      }
 
                     }
                     finally
                     {
-                        releaseLock( lK );
+                      releaseLock( getCacheName() + lK );
                     }
 
                     element = pe.getCacheElement();
@@ -496,10 +476,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         *@param  cacheName        Description of the Parameter
-         *@param  key              Description of the Parameter
-         *@exception  IOException  Description of the Exception
-         *@see                     org.apache.jcs.engine.CacheListener#handleRemove
+         * @see org.apache.jcs.engine.CacheListener#handleRemove
          */
         public void handleRemove( String cacheName, Serializable key )
             throws IOException
@@ -514,9 +491,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         *@param  cacheName        Description of the Parameter
-         *@exception  IOException  Description of the Exception
-         *@see                     org.apache.jcs.engine.CacheListener#handleRemoveAll
+         * @see org.apache.jcs.engine.CacheListener#handleRemoveAll
          */
         public void handleRemoveAll( String cacheName )
             throws IOException
@@ -528,9 +503,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
 
         /**
-         *@param  cacheName        Description of the Parameter
-         *@exception  IOException  Description of the Exception
-         *@see                     org.apache.jcs.engine.CacheListener#handleDispose
+         * @see org.apache.jcs.engine.CacheListener#handleDispose
          */
         public void handleDispose( String cacheName )
             throws IOException
@@ -546,38 +519,36 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     // ---------------------- subclasses should implement the following methods
 
     /**
-     *  Get a value from the persistent store.
+     * Get a value from the persistent store.
      *
-     *@param  key  Key to locate value for.
-     *@return      An object matching key, or null.
+     * @param key Key to locate value for.
+     * @return An object matching key, or null.
      */
     protected abstract ICacheElement doGet( Serializable key );
 
     /**
-     *  Add a cache element to the persistent store.
-     *
-     *@param  element  Description of the Parameter
+     * Add a cache element to the persistent store.
      */
     protected abstract void doUpdate( ICacheElement element );
 
     /**
-     *  Remove an object from the persistent store if found.
+     * Remove an object from the persistent store if found.
      *
-     *@param  key  Key of object to remove.
-     *@return      Description of the Return Value
+     * @param key Key of object to remove.
      */
     protected abstract boolean doRemove( Serializable key );
 
     /**
-     *  Remove all objects from the persistent store.
+     * Remove all objects from the persistent store.
      */
     protected abstract void doRemoveAll();
 
     /**
-     *  Dispose of the persistent store. Note that disposal of purgatory and
-     *  setting alive to false does NOT need to be done by this method.
+     * Dispose of the persistent store. Note that disposal of purgatory and
+     * setting alive to false does NOT need to be done by this method.
      */
     protected abstract void doDispose();
+
 
 }
 
