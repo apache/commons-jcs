@@ -18,7 +18,6 @@ package org.apache.jcs.yajcache.lang.ref;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
-import org.apache.jcs.yajcache.lang.annotation.*;
 
 import org.apache.jcs.yajcache.lang.annotation.*;
 
@@ -33,18 +32,19 @@ public class KeyedSoftReference<K,T> extends SoftReference<T>
 {
     private final @NonNullable K key;
     
-//    KeyedSoftRef(String key, T value) {
-//	super(value);
-//        this.key = key;
-//    }
-    public KeyedSoftReference(@NonNullable K key, @NonNullable T referrent, 
+    public KeyedSoftReference(@NonNullable K key, T referent) 
+    {
+	super(referent);
+        this.key = key;
+    }
+    public KeyedSoftReference(@NonNullable K key, T referrent, 
             ReferenceQueue<? super T> q) 
     {
         super(referrent, q);
         this.key = key;
     }
     @Implements(IKey.class)
-    public K getKey() {
+    public @NonNullable K getKey() {
         return this.key;
     }
 }
