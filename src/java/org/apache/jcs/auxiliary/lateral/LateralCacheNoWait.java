@@ -63,12 +63,12 @@ public class LateralCacheNoWait
   public LateralCacheNoWait( LateralCache cache )
   {
     this.cache = cache;
-    
-    CacheEventQueueFactory fact = new CacheEventQueueFactory();   
+
+    CacheEventQueueFactory fact = new CacheEventQueueFactory();
     this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
                                   LateralCacheInfo.listenerId,
-                                  cache.getCacheName(),                                                    
-                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+                                  cache.getCacheName(),
+                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
                                   cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
 
     // need each no wait to handle each of its real updates and removes, since there may
@@ -203,7 +203,7 @@ public class LateralCacheNoWait
    */
   public int getStatus()
   {
-    return q.isAlive() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
+    return q.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
   }
 
   /**
@@ -218,7 +218,7 @@ public class LateralCacheNoWait
 
   /**
    * Replaces the lateral cache service handle with the given handle and reset
-   * the event queue by starting up a new instance.
+   * the queue by starting up a new instance.
    */
   public void fixCache( ILateralCacheService lateral )
   {
@@ -233,15 +233,15 @@ public class LateralCacheNoWait
    */
   public void resetEventQ()
   {
-    if ( q.isAlive() )
+    if ( q.isWorking() )
     {
       q.destroy();
     }
-    CacheEventQueueFactory fact = new CacheEventQueueFactory();   
+    CacheEventQueueFactory fact = new CacheEventQueueFactory();
     this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
                                   LateralCacheInfo.listenerId,
-                                  cache.getCacheName(),                                                    
-                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+                                  cache.getCacheName(),
+                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
                                   cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
   }
 
@@ -260,10 +260,10 @@ public class LateralCacheNoWait
   {
     return getStatistics().toString();
   }
-  
+
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
    */
   public IStats getStatistics()
@@ -283,11 +283,11 @@ public class LateralCacheNoWait
 	IStatElement[] eqSEs = eqStats.getStatElements();
 	List eqL = Arrays.asList(eqSEs);
 	elems.addAll( eqL );
-        
+
     // get an array and put them in the Stats object
     IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
     stats.setStatElements( ses );
 
     return stats;
-  }   
+  }
 }

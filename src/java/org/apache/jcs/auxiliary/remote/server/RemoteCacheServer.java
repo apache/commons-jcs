@@ -312,6 +312,11 @@ public class RemoteCacheServer
 
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "qlist.length = " + qlist.length );
+                    }
+
                     for ( int i = 0; i < qlist.length; i++ )
                     {
                         qlist[i].addPutEvent( item );
@@ -337,7 +342,7 @@ public class RemoteCacheServer
             long end = System.currentTimeMillis();
             if( log.isDebugEnabled() )
             {
-              log.debug( "put took " + String.valueOf( end - start ) + " ms." );              
+              log.debug( "put took " + String.valueOf( end - start ) + " ms." );
             }
         }
 
@@ -362,7 +367,7 @@ public class RemoteCacheServer
         for ( int i = 0; i < list.length; i++ )
         {
             ICacheEventQueue q = list[i];
-            if ( q.isAlive() && q.getListenerId() != requesterId )
+            if ( q.isWorking() && q.getListenerId() != requesterId )
             {
                 count++;
             }
@@ -646,10 +651,14 @@ public class RemoteCacheServer
                 Map.Entry e = ( Map.Entry ) itr.next();
                 ICacheEventQueue q = ( ICacheEventQueue ) e.getValue();
 
-                if ( !q.isAlive() )
+                // this does not care if the q is alive (i.e. if
+                // there are active threads; it cares if the queue
+                // is working -- if it has not encoutnered errors
+                // above the failure threshhold
+                if ( !q.isWorking() )
                 {
                     itr.remove();
-                    p1( "Cache event queue " + q + " dead and removed from cache server." );
+                    p1( "Cache event queue " + q + " is not working and removed from cache server." );
                 }
             }
         }
@@ -720,14 +729,14 @@ public class RemoteCacheServer
                 catch ( IOException ioe )
                 {
                 }
-                
-                CacheEventQueueFactory fact = new CacheEventQueueFactory();   
-                ICacheEventQueue q = fact.createCacheEventQueue( listener, 
-                    id, 
-                    cacheName,                                                    
-                    rcsa.getEventQueuePoolName(), 
+
+                CacheEventQueueFactory fact = new CacheEventQueueFactory();
+                ICacheEventQueue q = fact.createCacheEventQueue( listener,
+                    id,
+                    cacheName,
+                    rcsa.getEventQueuePoolName(),
                     rcsa.getEventQueueTypeFactoryCode() );
-                
+
                 eventQMap.put( listener, q );
 
                 if ( log.isDebugEnabled() )

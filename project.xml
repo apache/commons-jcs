@@ -4,7 +4,7 @@
   <pomVersion>3</pomVersion>
   <name>Turbine JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2-dev</currentVersion>
+  <currentVersion>1.2.1-dev</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -190,6 +190,7 @@
     <report>maven-javadoc-plugin</report>
     <report>maven-jxr-plugin</report>
     <report>maven-junit-report-plugin</report>
+    <report>maven-jcoverage-plugin</report>
     <report>maven-tasklist-plugin</report>
     <report>maven-pmd-plugin</report>
     <report>maven-simian-plugin</report>

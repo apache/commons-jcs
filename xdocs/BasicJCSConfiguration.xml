@@ -41,6 +41,7 @@ jcs.default.cacheattributes.MemoryCacheName=
 jcs.default.cacheattributes.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.cacheattributes.MaxSpoolPerRun=500
         ]]></source>
         <p>
           Adding a <a href="IndexedDiskAuxCache.html">disk cache</a> is
@@ -76,6 +77,7 @@ jcs.region.testCache1.cacheattributes.MemoryCacheName=
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
         ]]></source>
         <p>
           If you want to add a lateral cache for distribution (the <a
@@ -141,6 +143,7 @@ jcs.region.testCache1.cacheattributes.MemoryCacheName=
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
 
 # AVAILABLE AUXILIARY CACHES   
 jcs.auxiliary.DC=

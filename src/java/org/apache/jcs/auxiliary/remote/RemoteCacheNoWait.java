@@ -63,13 +63,13 @@ public class RemoteCacheNoWait implements AuxiliaryCache
     public RemoteCacheNoWait( RemoteCache cache )
     {
         this.cache = cache;
-        CacheEventQueueFactory fact = new CacheEventQueueFactory();         
-        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), 
-            RemoteCacheInfo.listenerId, 
-            cache.getCacheName(),                                                    
-            cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+        CacheEventQueueFactory fact = new CacheEventQueueFactory();
+        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
+            RemoteCacheInfo.listenerId,
+            cache.getCacheName(),
+            cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
             cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
-        
+
         if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
         {
             q.destroy();
@@ -204,7 +204,7 @@ public class RemoteCacheNoWait implements AuxiliaryCache
      */
     public int getStatus()
     {
-        return q.isAlive() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
+        return q.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
     }
 
     /**
@@ -234,15 +234,15 @@ public class RemoteCacheNoWait implements AuxiliaryCache
      */
     public void resetEventQ()
     {
-        if ( q.isAlive() )
+        if ( q.isWorking() )
         {
             q.destroy();
         }
-        CacheEventQueueFactory fact = new CacheEventQueueFactory();         
-        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), 
-            RemoteCacheInfo.listenerId, 
-            cache.getCacheName(),                                                    
-            cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), 
+        CacheEventQueueFactory fact = new CacheEventQueueFactory();
+        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
+            RemoteCacheInfo.listenerId,
+            cache.getCacheName(),
+            cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
             cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
     }
 
@@ -261,10 +261,10 @@ public class RemoteCacheNoWait implements AuxiliaryCache
   {
     return getStatistics().toString();
   }
-  
+
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
    */
   public IStats getStatistics()
@@ -284,18 +284,18 @@ public class RemoteCacheNoWait implements AuxiliaryCache
 	IStatElement[] cSEs = cStats.getStatElements();
 	List cL = Arrays.asList(cSEs);
 	elems.addAll( cL );
-    
+
 	// get the stats from the event queue too
 	// get as array, convert to list, add list to our outer list
 	IStats eqStats = this.q.getStatistics();
 	IStatElement[] eqSEs = eqStats.getStatElements();
 	List eqL = Arrays.asList(eqSEs);
 	elems.addAll( eqL );
-    
+
     // get an array and put them in the Stats object
     IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
     stats.setStatElements( ses );
 
     return stats;
-  }   
+  }
 }

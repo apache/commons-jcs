@@ -37,25 +37,25 @@ import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 /**
  * An event queue is used to propagate ordered cache events to one and only one
  * target listener.
- * 
+ *
  * This is a modified version of the experimental version. It uses a
  * PooledExecutor and a BoundedBuffer to queue up events and execute them as
  * threads become available.
- * 
+ *
  * The PooledExecutor is static, because presumably these processes will be IO
  * bound, so throwing more than a few threads at them will serve no purpose
  * other than to saturate the IO interface. In light of this, having one thread
  * per region seems unnecessary. This may prove to be false.
- * 
+ *
  * @author Aaron Smuts
  * @author Travis Savo <tsavo@ifilm.com>
- *  
+ *
  */
 public class PooledCacheEventQueue implements ICacheEventQueue
 {
-  
+
   private static final int queueType = POOLED_QUEUE_TYPE;
-  
+
   private static final Log log             = LogFactory
                                                .getLog( PooledCacheEventQueue.class );
 
@@ -88,7 +88,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /**
    * Constructor for the CacheEventQueue object
-   * 
+   *
    * @param listener
    * @param listenerId
    * @param cacheName
@@ -136,8 +136,8 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   {
     return queueType;
   }
-  
-  
+
+
   /**
    * Event Q is emtpy.
    */
@@ -196,13 +196,16 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   }
 
   /**
-   * Event Q is emtpy.
+   * Destroy the queue.  Interrupt all threads.
    */
   public synchronized void destroy()
   {
     if (!destroyed)
     {
       destroyed = true;
+      // TODO decide whether to shutdown or interrupt
+     // pool.getPool().shutdownNow();
+     pool.getPool().interruptAll();
       log.info( "Cache event queue destroyed: " + this );
     }
   }
@@ -290,7 +293,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /**
    * Adds an event to the queue.
-   * 
+   *
    * @param event
    */
   private void put( AbstractCacheEvent event )
@@ -312,7 +315,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getStatistics()
    */
   public IStats getStatistics()
@@ -352,7 +355,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
         se.setName( "Queue Capacity" );
         se = new StatElement();
         se.setData( "" + bb.capacity() );
-        elems.add( se );        
+        elems.add( se );
       }
     }
 
@@ -377,7 +380,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /**
    * Retries before declaring failure.
-   * 
+   *
    * @author asmuts
    * @created January 15, 2002
    */
@@ -455,7 +458,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /**
      * Constructor for the PutEvent object
-     * 
+     *
      * @param ice
      * @exception IOException
      */
@@ -470,7 +473,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /**
      * Description of the Method
-     * 
+     *
      * @exception IOException
      */
     protected void doRun() throws IOException
@@ -492,7 +495,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /**
    * Description of the Class
-   * 
+   *
    * @author asmuts
    * @created January 15, 2002
    */
@@ -502,7 +505,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /**
      * Constructor for the RemoveEvent object
-     * 
+     *
      * @param key
      * @exception IOException
      */
@@ -513,7 +516,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /**
      * Description of the Method
-     * 
+     *
      * @exception IOException
      */
     protected void doRun() throws IOException
@@ -523,7 +526,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     public String toString()
@@ -535,7 +538,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /**
    * Description of the Class
-   * 
+   *
    * @author asmuts
    * @created January 15, 2002
    */
@@ -544,7 +547,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /**
      * Description of the Method
-     * 
+     *
      * @exception IOException
      */
     protected void doRun() throws IOException
@@ -554,7 +557,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     public String toString()
@@ -566,7 +569,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
   /**
    * Description of the Class
-   * 
+   *
    * @author asmuts
    * @created January 15, 2002
    */
@@ -575,7 +578,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
 
     /**
      * Called when gets to the end of the queue
-     * 
+     *
      * @exception IOException
      */
     protected void doRun() throws IOException
@@ -608,16 +611,16 @@ public class PooledCacheEventQueue implements ICacheEventQueue
   /**
    * If the Queue is using a bounded channel we can determine the size.
    * If it is zero or we can't determine the size, we return true.
-   * 
+   *
    * @return
    */
   public boolean isEmpty()
   {
     if ( pool.getQueue() == null )
     {
-      return true;      
+      return pool.getQueue().peek() == null;
     }
-    else 
+    else
     {
         if ( pool.getQueue() instanceof BoundedBuffer )
         {
@@ -626,7 +629,7 @@ public class PooledCacheEventQueue implements ICacheEventQueue
         }
         else
         {
-          return true;                
+          return true;
         }
     }
   }

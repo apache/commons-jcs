@@ -31,25 +31,25 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public interface ICacheEventQueue
 {
 
-  
+
   /**
-   * Does not use a thread pool.  
+   * Does not use a thread pool.
    */
   public static final int SINGLE_QUEUE_TYPE = 0;
-  
+
   /**
    * Uses a thread pool
    */
-  public static final int POOLED_QUEUE_TYPE = 1;  
-  
-  
+  public static final int POOLED_QUEUE_TYPE = 1;
+
+
   /**
    * Returnt he type of event queue we are using, either single or pooled.
-   * 
+   *
    * @return
    */
   public abstract int getQueueType();
-  
+
     /**
      * Adds a feature to the PutEvent attribute of the ICacheEventQueue object
      *
@@ -98,17 +98,26 @@ public interface ICacheEventQueue
 
 
     /**
-     * Gets the alive attribute of the ICacheEventQueue object
+     * Gets the alive attribute of the ICacheEventQueue object.
+     * Alive just indicates that there are active threads.  This
+     * is less important that if the queue is working.
      *
      * @return The alive value
      */
     public boolean isAlive();
 
     /**
-     * Returns the historical and statistical data for an event queue cache.
-     * 
-     * @return 
+     *  A Queue is working unless it has reached its max failure count.
+     *
+     * @return boolean
      */
-    public IStats getStatistics();   
+    public boolean isWorking();
+
+    /**
+     * Returns the historical and statistical data for an event queue cache.
+     *
+     * @return
+     */
+    public IStats getStatistics();
 }
 

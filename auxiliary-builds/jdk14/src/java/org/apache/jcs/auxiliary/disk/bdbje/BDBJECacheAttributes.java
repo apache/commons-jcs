@@ -19,12 +19,13 @@ package org.apache.jcs.auxiliary.disk.bdbje;
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.bdbje.behavior.IBDBJECacheAttributes;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  *  Attributes for Berkeley DB JE disk cache auxiliary.
  */
-public class BDBJECacheAttributes extends AbstractAuxiliaryCacheAttributes
-    implements AuxiliaryCacheAttributes, IBDBJECacheAttributes
+public class BDBJECacheAttributes extends AbstractDiskCacheAttributes
+    implements IBDBJECacheAttributes
 {
   private String diskPath;
 

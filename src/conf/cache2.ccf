@@ -20,6 +20,7 @@ jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttrib
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.elementattributes.IsLateral=true
+jcs.region.testCache1.elementattributes.IsRemote=true
 
 jcs.region.testCache2=DC
 jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -47,15 +48,15 @@ jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf
 # just a remove lock to add
 jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
-jcs.auxiliary.RC.attributes.RemoteHost=10.21.209.150
-jcs.auxiliary.RC.attributes.RemotePort=1102
-#jcs.auxiliary.RC.attributes.LocalPort=1103
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1102
+jcs.auxiliary.RC.attributes.LocalPort=1104
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 #jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
 #-1 means no timeout, this is the default
 # if the timeout is -1, no threadpool will be used.
 jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000
 jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
+jcs.auxiliary.RC.attributes.GetOnly=false
 
 # unreliable
 jcs.auxiliary.LUDP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory

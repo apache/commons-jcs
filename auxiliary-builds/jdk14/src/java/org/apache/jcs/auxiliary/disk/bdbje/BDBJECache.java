@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 
 /**
  *  One BDBJECache per regions.  For now they share one underlying Berekeley DB.
@@ -41,7 +42,7 @@ public class BDBJECache
 
   public BDBJECache( BDBJECacheAttributes attr )
   {
-    super( (AuxiliaryCacheAttributes)attr );
+    super( (IDiskCacheAttributes)attr );
     this.je = new BDBJE( attr );
     if ( log.isDebugEnabled() )
     {

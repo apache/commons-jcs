@@ -861,6 +861,7 @@ public class CompositeCache
                 // have 'getUseLateral' set, all the elements currently in
                 // memory are written to the lateral before disposing
 
+                //TODO make sure disk gets a change to finish
                 if ( aux.getCacheType() != ICacheType.LATERAL_CACHE
                      || this.cacheAttr.getUseLateral() )
                 {

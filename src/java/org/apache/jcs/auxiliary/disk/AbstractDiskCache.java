@@ -66,10 +66,10 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     private static final Log log =
         LogFactory.getLog( AbstractDiskCache.class );
 
-    
+
     /**  Generic disk cache attributes */
     private IDiskCacheAttributes dcattr = null;
-    
+
     /**
      * Map where elements are stored between being added to this cache and
      * actually spooled to disk. This allows puts to the disk cache to return
@@ -118,44 +118,44 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     public AbstractDiskCache( IDiskCacheAttributes attr )
     {
       	this.dcattr = attr;
-      
+
         this.cacheName = attr.getCacheName();
 
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(),
                                                     CacheInfo.listenerId,
-                                                    cacheName, 
-                                                    dcattr.getEventQueuePoolName(), 
+                                                    cacheName,
+                                                    dcattr.getEventQueuePoolName(),
                                                     dcattr.getEventQueueTypeFactoryCode() );
-        
+
         initPurgatory();
     }
 
-    
+
     /**
      * Purgatory size of -1 means to use a HashMap with no size limit.
      * Anything greater will use an LRU map of some sort.
-     * 
+     *
      * @TODO Currently setting this to 0 will cause nothing to be put to disk, since it
-     * will assume that if an item is not in purgatory, then it must have been plucked.  
+     * will assume that if an item is not in purgatory, then it must have been plucked.
      * We should make 0 work, a way to not use purgatory.
-     * 
+     *
      *
      */
     private void initPurgatory()
     {
       purgatory = null;
-      
+
       if ( dcattr.getMaxPurgatorySize() >= 0 )
       {
-        purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );              
+        purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
       }
-      else 
+      else
       {
         purgatory = new HashMap();
       }
     }
-    
+
     // ------------------------------------------------------- interface ICache
 
     /**
@@ -318,7 +318,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     {
 
        // FIXME: May lose the end of the queue, need to be more graceful
-        cacheEventQueue.destroy();
+       // call finish up or something first
+       cacheEventQueue.destroy();
 
         // Invoke any implementation specific disposal code
         doDispose();
@@ -353,35 +354,35 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     {
     	IStats stats = new Stats();
     	stats.setTypeName( "Abstract Disk Cache" );
-    	
+
     	ArrayList elems = new ArrayList();
-    	
+
     	IStatElement se = null;
-    	
+
     	se = new StatElement();
     	se.setName( "Purgatory Hits" );
     	se.setData("" + purgHits);
     	elems.add(se);
-    	
+
     	se.setName( "Purgatory Size" );
     	se = new StatElement();
     	se.setData("" + purgatory.size());
     	elems.add(se);
-    	
+
     	// get the stats from the event queue too
     	// get as array, convert to list, add list to our outer list
     	IStats eqStats = this.cacheEventQueue.getStatistics();
     	IStatElement[] eqSEs = eqStats.getStatElements();
     	List eqL = Arrays.asList(eqSEs);
 		elems.addAll( eqL );
-    	
+
     	// get an array and put them in the Stats object
     	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
     	stats.setStatElements( ses );
 
     	return stats;
-    }     
-    
+    }
+
     /**
      * @see ICache#getStatus
      */
