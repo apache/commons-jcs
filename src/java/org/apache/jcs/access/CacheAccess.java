@@ -274,11 +274,11 @@ public class CacheAccess implements ICacheAccess
     public void put( Object name, Object obj )
         throws CacheException
     {
-        // Call put with the contained caches default attributes.
+        // Call put with a copy of the contained caches default attributes.
 
         put( ( Serializable ) name,
              ( Serializable ) obj,
-             cacheControl.getElementAttributes() );
+             cacheControl.getElementAttributes().copy() );
     }
 
     /**
