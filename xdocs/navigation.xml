@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="stratum" href="http://jakarta.apache.org/turbine/stratum/">
+<project name="jcs" href="http://jakarta.apache.org/turbine/jcs/">
 
   <title>JCS</title>
   <logo href="/images/blue-logo.gif">JCS</logo>
@@ -10,7 +10,6 @@
       <item name="Fulcrum"                 href="http://jakarta.apache.org/turbine/fulcrum/"/>
       <item name="TDK"                     href="http://jakarta.apache.org/turbine/tdk/"/>
       <item name="JCS"                     href="http://jakarta.apache.org/turbine/jcs/"/>
-      <item name="Turbine Wiki"            href="http://jakarta.apache.org/turbine/common/wiki.html"/>
     </links>
 
     <menu name="JCS Documentation">
