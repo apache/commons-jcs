@@ -46,9 +46,12 @@ public interface MemoryCache
 
 
     /**
-     *  Get an Array of the keys for all elements in the memory cache
+     *  Get an Array of the keys for all elements in the memory cache.
      *
      *@return    Object[]
+     *@TODO      This should probably be done in chunks with a range pased in.
+     *      This will be a problem if someone puts a 1,000,000 or so items in a
+     *      region.
      */
     public Object[] getKeyArray();
 
