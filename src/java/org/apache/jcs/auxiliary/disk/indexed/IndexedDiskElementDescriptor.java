@@ -34,7 +34,10 @@ public class IndexedDiskElementDescriptor implements Serializable, Comparable
     public int len;
 
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param pos
+     * @param data
+     */
     public void init( long pos, byte[] data )
     {
         this.pos = pos;

@@ -90,8 +90,8 @@ public class IndexedDiskCache
   private int recycleCnt = 0;
 
   /**
-   * Each instance of a Disk cache should use this lock to synchronize reads
-   * and writes to the underlying storage mechansism.
+   * use this lock to synchronize reads and writes 
+   * to the underlying storage mechansism.
    */
   protected WriterPreferenceReadWriteLock storageLock = new
       WriterPreferenceReadWriteLock();
@@ -239,7 +239,7 @@ public class IndexedDiskCache
 
   /**
    * Check for minimal consitency between the keys and the datafile.  Makes sure
-   * no staring positions in the keys exceed the file length.
+   * no starting positions in the keys exceed the file length.
    * <p>
    * The caller should take the appropriate action if the keys and data
    * are not consistent.  
@@ -298,9 +298,6 @@ public class IndexedDiskCache
                   ", key count: " + keyHash.size());
       }
 
-      //storageLock.writeLock();
-      //storageLock.writeLock().acquire();
-
       try
       {
         keyFile.reset();
@@ -315,9 +312,7 @@ public class IndexedDiskCache
       }
       finally
       {
-        //storageLock.done();
-        //storageLock.writeLock().release();
-
+          // noopt
       }
     }
     catch (Exception e)
@@ -358,7 +353,6 @@ public class IndexedDiskCache
       byte[] data = IndexedDisk.serialize(ce);
 
       // make sure this only locks for one particular cache region
-      //storageLock.writeLock();
       storageLock.writeLock().acquire();
 
       ded.init(dataFile.length(), data);
@@ -419,7 +413,6 @@ public class IndexedDiskCache
       }
       finally
       {
-        //storageLock.done();
         storageLock.writeLock().release();
       }
 
@@ -696,7 +689,7 @@ public class IndexedDiskCache
   }
 
   /**
-   * Description of the Method
+   *  Remove all the items fromt he disk cache by reseting everything.
    */
   public void doRemoveAll()
   {
@@ -714,10 +707,12 @@ public class IndexedDiskCache
     }
   }
 
-  // end removeAll
 
   /**
-   * handle error by last resort, force content update, or removeall
+   * Reset effectively clears the disk cache, creating new files, recyclebins,
+   * and keymaps.
+   * <p>
+   * It can be used to handle errors by last resort, force content update, or removeall.
    */
   private void reset()
   {
@@ -800,7 +795,7 @@ public class IndexedDiskCache
     }
     else 
     {
-      keyHash = new HashMap();// Hashtable();//HashMap();
+      keyHash = new HashMap();
       if (log.isInfoEnabled())
       {
         log.info("Set maxKeySize to unlimited'");

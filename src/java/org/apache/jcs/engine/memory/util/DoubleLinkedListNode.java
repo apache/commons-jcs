@@ -29,10 +29,21 @@ public class DoubleLinkedListNode
   Object payload;
 
   /** Double Linked list references */
-  public DoubleLinkedListNode prev, next;
+  public DoubleLinkedListNode prev;
+  /** Double Linked list references */
+  public DoubleLinkedListNode next;
 
   public DoubleLinkedListNode( Object payloadP )
   {
     payload = payloadP;
   }
+  
+ /**
+  * @return Object
+  */
+  public Object getPayload()
+  {
+      return payload;
+  }
+  
 }

@@ -23,8 +23,6 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  */
 public class MemoryElementDescriptor extends DoubleLinkedListNode
 {
-  /** Double Linked list references */
-  //public MemoryElementDescriptor prev, next;
 
   /** The CacheElement wrapped by this descriptor */
   public ICacheElement ce;
