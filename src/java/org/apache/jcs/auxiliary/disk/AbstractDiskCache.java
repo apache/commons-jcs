@@ -251,12 +251,21 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
     /**
      * @see org.apache.jcs.engine.behavior.ICache#remove
+     *
+     * FIXME: This now updates the 'spoolable' property of the purgatory element
+     *        for the given key to 'false', however to be really safe we should
+     *        pause the event queue while in this method.
      */
     public final boolean remove( Serializable key )
     {
         // Remove element from purgatory if it is there
 
-        purgatory.remove( key );
+        PurgatoryElement pe = ( PurgatoryElement ) purgatory.remove( key );
+
+        if ( pe != null )
+        {
+            pe.setSpoolable( false );
+        }
 
         // Remove from persistent store immediately
 
@@ -361,7 +370,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
          *
          * NOTE: This checks if the element is a puratory element and behaves
          * differently depending. However since we have control over how
-         * elements are added to the cache event queue.
+         * elements are added to the cache event queue, that may not be needed
+         * ( they are always PurgatoryElements ).
          */
         public void handlePut( ICacheElement element )
             throws IOException
@@ -374,6 +384,14 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                 if ( element instanceof PurgatoryElement )
                 {
                     PurgatoryElement pe = ( PurgatoryElement ) element;
+
+                    // If the element has already been removed from purgatory
+                    // do nothing
+
+                    if ( ! purgatory.contains( pe ) )
+                    {
+                        return;
+                    }
 
                     element = pe.getCacheElement();
 
