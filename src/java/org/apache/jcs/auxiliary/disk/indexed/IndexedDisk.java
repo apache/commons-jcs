@@ -70,6 +70,7 @@ class IndexedDisk
      */
     Serializable readObject( long pos ) throws IOException
     {
+        String message = null;
         byte[] data = null;
         boolean corrupted = false;
         try
@@ -78,6 +79,7 @@ class IndexedDisk
             {
                 if ( pos > raf.length() ) {
                   corrupted = true;
+                  message = "Postion is greater than raf length";
                 }
                 else
                 {
@@ -86,6 +88,7 @@ class IndexedDisk
                   if (datalen > raf.length())
                   {
                     corrupted = true;
+                    message = "Postion(" + pos + ") + datalen (" + datalen + ") is greater than raf length";
                   }
                   else
                   {
@@ -96,6 +99,7 @@ class IndexedDisk
             if ( corrupted )
             {
                 log.warn( "\n The dataFile is corrupted!" +
+                          "\n " + message +
                           "\n raf.length() = " + raf.length() +
                           "\n pos = " + pos );
                 //reset();
@@ -271,6 +275,8 @@ class IndexedDisk
     synchronized void reset()
         throws IOException
     {
+
+        log.warn( "Resetting data file" );
         raf.close();
         File f = new File( filepath );
         int i = 0;

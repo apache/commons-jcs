@@ -131,6 +131,15 @@ public class IndexedDiskCache
         if (keyHash.size() == 0)
         {
           dataFile.reset();
+        } else {
+          boolean isOk = checkKeyDataConsistency();
+          if (!isOk)
+          {
+            keyHash.clear();
+            keyFile.reset();
+            dataFile.reset();
+            log.warn( "Corruption detected.  Reset data and keys files.");
+          }
         }
       }
 
@@ -196,6 +205,7 @@ public class IndexedDiskCache
         {
           log.info("Reset maxKeySize to: '" + maxKeySize + "'");
         }
+
       }
 
       if (log.isDebugEnabled())
@@ -222,6 +232,68 @@ public class IndexedDiskCache
       //storageLock.done();
       storageLock.writeLock().release();
     }
+  }
+
+
+  /**
+   * Check the consitency between the keys and the datafile.  Makes sure
+   * no staring positions in the keys exceed the file length.
+   *
+   * @return True if the test passes
+   */
+  private boolean checkKeyDataConsistency() {
+
+    log.info( "Performing inital consistency check" );
+
+    boolean isOk = true;
+    long len = 0;
+    try {
+      len = dataFile.length();
+    }catch (Exception e ) {
+      log.error(e);
+    }
+
+    Iterator itr = keyHash.entrySet().iterator();
+    while (itr.hasNext())
+    {
+      Map.Entry e = (Map.Entry) itr.next();
+      IndexedDiskElementDescriptor de = (IndexedDiskElementDescriptor) e.
+          getValue();
+      long pos = de.pos;
+
+      if (pos > len)
+      {
+        isOk = false;
+      }
+
+      if ( !isOk )
+      {
+          log.warn( "\n The dataFile is corrupted!" +
+                    "\n raf.length() = " + len +
+                    "\n pos = " + pos );
+          return isOk;
+          //reset();
+          //throw new IOException( "The Data File Is Corrupt, need to reset" );
+         // return null;
+      }
+
+/*
+      else
+      {
+        raf.seek(pos);
+        int datalen = raf.readInt();
+        if (datalen > raf.length())
+        {
+          isOk = false;
+          break;
+        }
+      }
+ */
+    }
+
+    log.info( "Finished inital consistency check, isOk = " + isOk );
+
+    return isOk;
   }
 
   /**
@@ -392,27 +464,33 @@ public class IndexedDiskCache
     {
       //storageLock.readLock();
       storageLock.readLock().acquire();
+      try {
+        if (!alive)
+        {
+          log.debug("No longer alive so returning null, cacheName: " +
+                    cacheName + ", key = " + key);
 
-      if (!alive)
-      {
-        log.debug("No longer alive so returning null, cacheName: " +
-                  cacheName + ", key = " + key);
+          return null;
+        }
 
-        return null;
+        object = readElement(key);
       }
-
-      object = readElement(key);
-
+      finally
+      {
+        //storageLock.done();
+        storageLock.readLock().release();
+      }
+    }
+    catch (IOException ioe)
+    {
+      log.error("Failure getting from disk, cacheName: " + cacheName +
+                ", key = " + key, ioe);
+      reset();
     }
     catch (Exception e)
     {
       log.error("Failure getting from disk, cacheName: " + cacheName +
                 ", key = " + key, e);
-    }
-    finally
-    {
-      //storageLock.done();
-      storageLock.readLock().release();
     }
 
     return object;
@@ -501,11 +579,12 @@ public class IndexedDiskCache
       }
     }
 
+    boolean reset = false;
     boolean removed = false;
     try
     {
       //storageLock.writeLock();
-      storageLock.writeLock().release();
+      storageLock.writeLock().acquire();
 
       if (key instanceof String
           && key.toString().endsWith(CacheConstants.NAME_COMPONENT_DELIMITER))
@@ -608,13 +687,18 @@ public class IndexedDiskCache
     catch (Exception e)
     {
       log.error(e);
-      reset();
+      reset = true;
     }
     finally
     {
       //storageLock.done();
       storageLock.writeLock().release();
     }
+
+    if ( reset ) {
+      reset();
+    }
+
 
     return false;
   }
@@ -645,7 +729,9 @@ public class IndexedDiskCache
    */
   private void reset()
   {
-    log.debug("Reseting cache");
+    if ( log.isInfoEnabled() ) {
+      log.info("Reseting cache");
+    }
 
     try
     {
@@ -850,7 +936,7 @@ public class IndexedDiskCache
           new IndexedDisk(new File(rafDir, fileName + "Temp.data"));
       //dataFileTemp.reset();
 
-      // set flag to true
+      // make sure flag is set to true
       isOptomizing = true;
 
       int len = keys.length;
@@ -1005,7 +1091,7 @@ public class IndexedDiskCache
     {
       log.error("Failed to get orinigal off disk cache: " + fileName
                 + ", key: " + key + "; keyHash.tag = " + keyHash.tag);
-      reset();
+      //reset();
       throw e;
     }
 
@@ -1078,10 +1164,20 @@ public class IndexedDiskCache
                    newData.length());
         }
 
-        newData.renameTo(newFileName);
+        boolean success = newData.renameTo(newFileName);
+        if (log.isInfoEnabled())
+        {
+          log.info( " rename success = " + success );
+        }
       }
       dataFile =
           new IndexedDisk(newFileName);
+
+      if (log.isInfoEnabled())
+      {
+          log.info("1 dataFile.length() " + dataFile.length());
+      }
+
 
       keyHash = keyHashTemp;
       keyFile.reset();
