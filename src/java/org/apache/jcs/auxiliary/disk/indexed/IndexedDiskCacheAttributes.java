@@ -85,7 +85,7 @@ public class IndexedDiskCacheAttributes implements AuxiliaryCacheAttributes
      */
     public void setDiskPath( String path )
     {
-        this.diskPath = path;
+        this.diskPath = path.trim();
     }
 
 
