@@ -48,14 +48,20 @@ public class MonitorAccess implements Serializable
     {
         synchronized ( GroupCacheAccess.class )
         {
-            if ( cacheMgr == null )
+            if ( this.cacheMgr == null )
             {
-                cacheMgr = CompositeCacheManager.getInstance();
+                this.cacheMgr = CompositeCacheManager.getInstance();
             }
         }
     }
 
-    /** Description of the Method */
+    /** 
+     * Removes all.
+     *  
+     * @param cacheName
+     * @param key
+     * @return
+     */
     public String delete( String cacheName, String key )
     {
 
@@ -65,7 +71,7 @@ public class MonitorAccess implements Serializable
         try
         {
 
-            ICache cache = cacheMgr.getCache( cacheName );
+            ICache cache = this.cacheMgr.getCache( cacheName );
 
             if ( key != null )
             {
@@ -114,13 +120,17 @@ public class MonitorAccess implements Serializable
         return result;
     }
 
-    /** Description of the Method */
+    /** 
+     * Gives basic info on all the regions.  Better to use getStats.
+     * 
+     * @return list of hashtables with keys (name,size,stat)
+     */
     public ArrayList overview()
     {
 
         ArrayList data = new ArrayList();
 
-        String[] list = cacheMgr.getCacheNames();
+        String[] list = this.cacheMgr.getCacheNames();
         Arrays.sort( list );
         for ( int i = 0; i < list.length; i++ )
         {
@@ -128,7 +138,7 @@ public class MonitorAccess implements Serializable
             String name = list[ i ];
             ht.put( "name", name );
 
-            ICache cache = cacheMgr.getCache( name );
+            ICache cache = this.cacheMgr.getCache( name );
             int size = cache.getSize();
             ht.put( "size", Integer.toString( size ) );
 

@@ -30,21 +30,22 @@ public class CountingOnlyOutputStream
 
   public void write( byte[] b ) throws IOException
   {
-    count += b.length;
+    this.count += b.length;
   }
 
   public void write( byte[] b, int off, int len ) throws IOException
   {
-    count += len;
+    this.count += len;
   }
 
   public void write( int b ) throws IOException
   {
-    count++;
+    this.count++;
   }
 
   /**
    * The number of bytes that have passed through this stream.
+   * @return
    */
   public int getCount()
   {

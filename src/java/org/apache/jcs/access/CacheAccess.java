@@ -193,7 +193,7 @@ public class CacheAccess implements ICacheAccess
      */
     public Object get( Object name )
     {
-        ICacheElement element = cacheControl.get( ( Serializable ) name );
+        ICacheElement element = this.cacheControl.get( ( Serializable ) name );
 
         return ( element != null ) ? element.getVal() : null;
     }
@@ -211,7 +211,7 @@ public class CacheAccess implements ICacheAccess
     public void putSafe( Object key, Object value )
         throws CacheException
     {
-        if ( cacheControl.get( ( Serializable ) key ) != null )
+        if ( this.cacheControl.get( ( Serializable ) key ) != null )
         {
             throw new ObjectExistsException( "Object exists for key " + key );
         }
@@ -235,7 +235,7 @@ public class CacheAccess implements ICacheAccess
 
         put( name,
              obj,
-             cacheControl.getElementAttributes().copy() );
+             this.cacheControl.getElementAttributes().copy() );
     }
 
     /*
@@ -259,13 +259,13 @@ public class CacheAccess implements ICacheAccess
 
         try
         {
-            CacheElement ce = new CacheElement( cacheControl.getCacheName(),
+            CacheElement ce = new CacheElement( this.cacheControl.getCacheName(),
                               (Serializable) key,
                               (Serializable) val );
 
             ce.setElementAttributes( attr );
 
-            cacheControl.update( ce );
+            this.cacheControl.update( ce );
         }
         catch ( Exception e )
         {
@@ -286,7 +286,7 @@ public class CacheAccess implements ICacheAccess
     {
         try
         {
-            cacheControl.removeAll();
+            this.cacheControl.removeAll();
         }
         catch ( IOException e )
         {
@@ -317,7 +317,7 @@ public class CacheAccess implements ICacheAccess
     {
         try
         {
-            cacheControl.removeAll();
+            this.cacheControl.removeAll();
         }
         catch ( IOException e )
         {
@@ -338,7 +338,7 @@ public class CacheAccess implements ICacheAccess
     public void destroy( Object name )
         throws CacheException
     {
-        cacheControl.remove( ( Serializable ) name );
+        this.cacheControl.remove( ( Serializable ) name );
     }
 
     /**  
@@ -350,7 +350,7 @@ public class CacheAccess implements ICacheAccess
     public void remove( Object name )
         throws CacheException
     {
-        cacheControl.remove( ( Serializable ) name );
+        this.cacheControl.remove( ( Serializable ) name );
     }
 
     /**
@@ -359,7 +359,7 @@ public class CacheAccess implements ICacheAccess
      */
     public void save()
     {
-        cacheControl.save();
+        this.cacheControl.save();
     }
 
     /**
@@ -378,7 +378,7 @@ public class CacheAccess implements ICacheAccess
     public void resetElementAttributes( IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        cacheControl.setElementAttributes( attr );
+        this.cacheControl.setElementAttributes( attr );
     }
 
     /**
@@ -393,7 +393,7 @@ public class CacheAccess implements ICacheAccess
     public void resetElementAttributes( Object name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        ICacheElement element = cacheControl.get( ( Serializable ) name );
+        ICacheElement element = this.cacheControl.get( ( Serializable ) name );
         if ( element == null )
         {
             throw new InvalidHandleException( "Object for name [" + name + "] is not in the cache" );            
@@ -415,7 +415,7 @@ public class CacheAccess implements ICacheAccess
     public IElementAttributes getElementAttributes()
         throws CacheException
     {
-        return cacheControl.attr;
+        return this.cacheControl.attr;
     }
 
     /**
@@ -434,7 +434,7 @@ public class CacheAccess implements ICacheAccess
 
         try
         {
-            attr = cacheControl.getElementAttributes( ( Serializable ) name );
+            attr = this.cacheControl.getElementAttributes( ( Serializable ) name );
         }
         catch ( IOException ioe )
         {
@@ -449,7 +449,7 @@ public class CacheAccess implements ICacheAccess
      * @return A String version of the stats.  
      */     
     public String getStats() {
-      return cacheControl.getStats();
+      return this.cacheControl.getStats();
     }
 
     /**
@@ -459,7 +459,7 @@ public class CacheAccess implements ICacheAccess
      */
     public void dispose()
     {
-        cacheControl.dispose();
+        this.cacheControl.dispose();
     }
 
     /**
@@ -470,7 +470,7 @@ public class CacheAccess implements ICacheAccess
      */
     public ICompositeCacheAttributes getCacheAttributes()
     {
-        return cacheControl.getCacheAttributes();
+        return this.cacheControl.getCacheAttributes();
     }
 
     /**
@@ -480,7 +480,7 @@ public class CacheAccess implements ICacheAccess
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
-        cacheControl.setCacheAttributes( cattr );
+        this.cacheControl.setCacheAttributes( cattr );
     }
 
 }

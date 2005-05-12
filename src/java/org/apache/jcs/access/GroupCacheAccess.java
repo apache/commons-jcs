@@ -100,13 +100,13 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     public Object getFromGroup( Object name, String group )
     {
         ICacheElement element
-            = cacheControl.get( getGroupAttrName( group, name ) );
+            = this.cacheControl.get( getGroupAttrName( group, name ) );
         return ( element != null ) ? element.getVal() : null;
     }
 
     private GroupAttrName getGroupAttrName(String group, Object name)
     {
-        GroupId gid = new GroupId(cacheControl.getCacheName(), group);
+        GroupId gid = new GroupId(this.cacheControl.getCacheName(), group);
         return new GroupAttrName(gid, name);
     }
 
@@ -162,7 +162,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     public void remove( Object name, String group )
     {
         GroupAttrName key = getGroupAttrName( group, name );
-        cacheControl.remove( key );
+        this.cacheControl.remove( key );
     }
 
     /**
@@ -173,7 +173,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      */
     public Set getGroupKeys(String group)
     {
-        return cacheControl.getGroupKeys( group );
+        return this.cacheControl.getGroupKeys( group );
     }
 
     /** 
@@ -183,6 +183,6 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      */
     public void invalidateGroup( String group )
     {
-        cacheControl.remove( new GroupId( cacheControl.getCacheName(), group ) );
+        this.cacheControl.remove( new GroupId( this.cacheControl.getCacheName(), group ) );
     }
 }

@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jcs.admin.JCSAdminBean;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.servlet.VelocityServlet;
@@ -76,8 +75,6 @@ public class JCSAdminServlet
   private static final String CLEAR_REGION_ACTION = "clearRegion";
   private static final String REMOVE_ACTION = "remove";
   private static final String DETAIL_ACTION = "detail";
-
-  private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
   /** @see org.apache.velocity.servlet.VelocityServlet#handleRequest */
   protected Template handleRequest( HttpServletRequest request,

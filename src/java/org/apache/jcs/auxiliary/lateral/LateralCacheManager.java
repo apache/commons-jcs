@@ -129,25 +129,25 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Creating lateral cache service, lca = " + lca );
+            log.debug( "Creating lateral cache service, lca = " + this.lca );
         }
 
         // need to create the service based on the type
 
         try
         {
-            if ( lca.getTransmissionType() == ILateralCacheAttributes.TCP )
+            if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
             {
                 log.debug( "Creating TCP service" );
-                log.info( "Creating TCP service, lca = " + lca );
+                log.info( "Creating TCP service, lca = " + this.lca );
 
-                this.lateralService = new LateralTCPService( lca );
+                this.lateralService = new LateralTCPService( this.lca );
             }
-            else if ( lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+            else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
             {
                 log.debug( "Creating JAVAGROUPS service" );
 
-                this.lateralService = new LateralJGService( lca );
+                this.lateralService = new LateralJGService( this.lca );
             }
 
             else
@@ -164,8 +164,8 @@ public class LateralCacheManager implements AuxiliaryCacheManager
                 throw new Exception( "no service created for lateral cache." );
             }
 
-            lateralWatch = new LateralCacheWatchRepairable();
-            lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
+            this.lateralWatch = new LateralCacheWatchRepairable();
+            this.lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
 
         }
         catch ( Exception ex )
@@ -176,9 +176,9 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
             log.error( "Failure, lateral instance will use zombie service", ex );
 
-            lateralService = new ZombieLateralCacheService();
-            lateralWatch = new LateralCacheWatchRepairable();
-            lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
+            this.lateralService = new ZombieLateralCacheService();
+            this.lateralWatch = new LateralCacheWatchRepairable();
+            this.lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
 
             // Notify the cache monitor about the error, and kick off
             // the recovery process.
@@ -198,9 +198,9 @@ public class LateralCacheManager implements AuxiliaryCacheManager
     public void addLateralCacheListener( String cacheName, ILateralCacheListener listener )
         throws IOException
     {
-        synchronized ( caches )
+        synchronized ( this.caches )
         {
-            lateralWatch.addCacheListener( cacheName, listener );
+            this.lateralWatch.addCacheListener( cacheName, listener );
         }
     }
 
@@ -215,28 +215,28 @@ public class LateralCacheManager implements AuxiliaryCacheManager
     public AuxiliaryCache getCache( String cacheName )
     {
         LateralCacheNoWait c = null;
-        synchronized ( caches )
+        synchronized ( this.caches )
         {
             //c = (LateralCache)caches.get(cacheName);
-            c = ( LateralCacheNoWait ) caches.get( cacheName );
+            c = ( LateralCacheNoWait ) this.caches.get( cacheName );
             if ( c == null )
             {
-                c = new LateralCacheNoWait( new LateralCache( lca, lateralService ) );
-                caches.put( cacheName, c );
+                c = new LateralCacheNoWait( new LateralCache( this.lca, this.lateralService ) );
+                this.caches.put( cacheName, c );
 
-                log.info( "craeted LateralCacheNoWait for " + lca);
+                log.info( "craeted LateralCacheNoWait for " + this.lca);
             }
         }
 
         try
         {
-            if ( lca.getTransmissionType() == ILateralCacheAttributes.TCP )
+            if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
             {
-                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lca ) );
+                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca ) );
             }
-            else if ( lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+            else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
             {
-                addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( lca ) );
+                addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( this.lca ) );
             }
         }
         catch ( IOException ioe )
@@ -289,12 +289,12 @@ public class LateralCacheManager implements AuxiliaryCacheManager
     {
         log.debug( "Fixing lateral caches:" );
 
-        synchronized ( caches )
+        synchronized ( this.caches )
         {
             this.lateralService = lateralService;
             // need to implment an observer for some types of laterals( http and tcp)
             //this.lateralWatch.setCacheWatch(lateralWatch);
-            for ( Iterator en = caches.values().iterator(); en.hasNext(); )
+            for ( Iterator en = this.caches.values().iterator(); en.hasNext(); )
             {
                 LateralCacheNoWait cache = ( LateralCacheNoWait ) en.next();
                 cache.fixCache( this.lateralService );

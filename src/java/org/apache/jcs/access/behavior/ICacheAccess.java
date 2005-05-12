@@ -38,28 +38,46 @@ public interface ICacheAccess
     //public static CacheAccess getAccess( String region );
 
 
-    /** Description of the Method */
+    /** 
+     * Basic get method.
+     * 
+     * @param name
+     * @return Object or null if not found.
+     */
     Object get( Object name );
 
 
     /**
      * Puts in cache if an item does not exist with the name in that region.
+     * @param name
+     * @param obj
+     * @throws CacheException
      */
     void putSafe( Object name, Object obj )
         throws CacheException;
 
-    /** Puts and/or overides an element with the name in that region. */
+    /** Puts and/or overides an element with the name in that region. 
+     * @param name
+     * @param obj
+     * @throws CacheException
+     */
     void put( Object name, Object obj )
         throws CacheException;
 
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param name
+     * @param obj
+     * @param attr
+     * @throws CacheException
+     */
     void put( Object name, Object obj, IElementAttributes attr )
         throws CacheException;
 
 
     /**
      * Removes an item or all items. Should be called remove.
+     * @throws CacheException
      *
      * @deprecated
      * @see #remove
@@ -67,12 +85,18 @@ public interface ICacheAccess
     void destroy()
         throws CacheException;
 
-    /** Description of the Method */
+    /** 
+     * Old remove all method.
+     * 
+     * @throws CacheException
+     */
     void remove()
         throws CacheException;
 
     /**
-     * Description of the Method
+     * The older removeall method.
+     * @param name
+     * @throws CacheException
      *
      * @deprecated
      * @see #remove
@@ -80,21 +104,14 @@ public interface ICacheAccess
     void destroy( Object name )
         throws CacheException;
 
-    /** Description of the Method */
+    /**
+     * Remove an object for this key if one exists, else do nothing. 
+     * 
+     * @param name
+     * @throws CacheException
+     */
     void remove( Object name )
         throws CacheException;
-
-//    /**
-//     *  Remove either the entire region of elements or the the specified element
-//     *  from other caches specified in in the cache.properties file as lateral
-//     *  caches.
-//     */
-//    void removeLateralDirect();
-//    /**
-//     *  Description of the Method
-//     *
-//     */
-//    void removeLateralDirect( Serializable key );
 
     /**
      * ResetAttributes allows for some of the attributes of a region to be reset
@@ -105,12 +122,21 @@ public interface ICacheAccess
      * default settings on groups and regions will not affect existing objects.
      * Only object loaded after the reset will use the new defaults. If no name
      * argument is provided, the reset is applied to the region.
+     * 
+     * @param attr
+     * @throws CacheException
      */
     void resetElementAttributes( IElementAttributes attr )
         throws CacheException;
 
 
-    /** Description of the Method */
+    /**  
+     * Reset the attributes on the object matching this key name.
+     * 
+     * @param name
+     * @param attr
+     * @throws CacheException
+     */
     void resetElementAttributes( Object name, IElementAttributes attr )
         throws CacheException;
 
@@ -122,6 +148,7 @@ public interface ICacheAccess
      * object must override the Object.equals and Object.hashCode methods.
      *
      * @return The elementAttributes value
+     * @throws CacheException
      */
     IElementAttributes getElementAttributes()
         throws CacheException;
@@ -129,8 +156,10 @@ public interface ICacheAccess
 
     /**
      * Gets the elementAttributes attribute of the ICacheAccess object
+     * @param name
      *
      * @return The elementAttributes value
+     * @throws CacheException
      */
     IElementAttributes getElementAttributes( Object name )
         throws CacheException;
@@ -151,4 +180,3 @@ public interface ICacheAccess
     public void setCacheAttributes( ICompositeCacheAttributes cattr );
 
 }
-// end interface

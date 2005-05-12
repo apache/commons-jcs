@@ -20,7 +20,7 @@ public abstract class AbstractAuxiliaryCacheAttributes implements
    */
   public void setCacheName( String s )
   {
-    cacheName = s;
+    this.cacheName = s;
   }
 
   /* (non-Javadoc)
@@ -28,7 +28,7 @@ public abstract class AbstractAuxiliaryCacheAttributes implements
    */
   public String getCacheName()
   {
-    return cacheName;
+    return this.cacheName;
   }
 
   /* (non-Javadoc)
@@ -36,7 +36,7 @@ public abstract class AbstractAuxiliaryCacheAttributes implements
    */
   public void setName( String s )
   {
-    name = s;
+    this.name = s;
   }
 
   /* (non-Javadoc)
@@ -44,7 +44,7 @@ public abstract class AbstractAuxiliaryCacheAttributes implements
    */
   public String getName()
   {
-    return name;
+    return this.name;
   }
 
   /* (non-Javadoc)

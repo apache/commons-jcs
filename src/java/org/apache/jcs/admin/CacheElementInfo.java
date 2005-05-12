@@ -1,4 +1,3 @@
-
 package org.apache.jcs.admin;
 
 /*
@@ -17,38 +16,60 @@ package org.apache.jcs.admin;
  * limitations under the License.
  */
 
-
 /** Stores info on a cache element for the template */
 public class CacheElementInfo
 {
-  String key = null;
-  boolean eternal = false;
-  String createTime = null;
-  long maxLifeSeconds = -1;
-  long expiresInSeconds = -1;
+    String key = null;
 
-  public String getKey()
-  {
-    return key;
-  }
+    boolean eternal = false;
 
-  public boolean isEternal()
-  {
-    return eternal;
-  }
+    String createTime = null;
 
-  public String getCreateTime()
-  {
-    return createTime;
-  }
+    long maxLifeSeconds = -1;
 
-  public long getMaxLifeSeconds()
-  {
-    return maxLifeSeconds;
-  }
+    long expiresInSeconds = -1;
 
-  public long getExpiresInSeconds()
-  {
-    return expiresInSeconds;
-  }
+    /**
+     * @return a string representation of the key
+     */
+    public String getKey()
+    {
+        return this.key;
+    }
+
+    /**
+     * @return true if the item does not expire
+     */
+    public boolean isEternal()
+    {
+        return this.eternal;
+    }
+
+    /**
+     * @return the time the object was created
+     */
+    public String getCreateTime()
+    {
+        return this.createTime;
+    }
+
+    /**
+     * Ignored if isEternal
+     * 
+     * @return the longest this object can live.
+     */
+    public long getMaxLifeSeconds()
+    {
+        return this.maxLifeSeconds;
+    }
+
+    /**
+     * Ignored if isEternal
+     * 
+     * @return how many seconds until this object expires.
+     */
+    public long getExpiresInSeconds()
+    {
+        return this.expiresInSeconds;
+    }
 }

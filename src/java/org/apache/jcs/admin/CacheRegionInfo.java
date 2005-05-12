@@ -22,37 +22,47 @@ import org.apache.jcs.engine.CacheConstants;
 /** Stores info on a cache region for the template */
 public class CacheRegionInfo
 {
-  CompositeCache cache = null;
-  long byteCount = 0;
+    CompositeCache cache = null;
 
-  public CompositeCache getCache()
-  {
-    return cache;
-  }
+    long byteCount = 0;
 
-  public long getByteCount()
-  {
-    return byteCount;
-  }
+    /**
+     * @return
+     */
+    public CompositeCache getCache()
+    {
+        return this.cache;
+    }
 
-  public String getStatus()
-  {
-    int status = cache.getStatus();
+    /**
+     * @return
+     */
+    public long getByteCount()
+    {
+        return this.byteCount;
+    }
 
-    return ( status == CacheConstants.STATUS_ALIVE ? "ALIVE"
-             : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
-             : status == CacheConstants.STATUS_ERROR ? "ERROR"
-             : "UNKNOWN" );
-  }
+    /**
+     * @return
+     */
+    public String getStatus()
+    {
+        int status = this.cache.getStatus();
 
-  /**
-   * Return the stats for the region.
-   *
-   * @return String
-   */
-  public String getStats()
-  {
-    return cache.getStats();
-  }
+        return (status == CacheConstants.STATUS_ALIVE ? "ALIVE"
+                : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
+                        : status == CacheConstants.STATUS_ERROR ? "ERROR"
+                                : "UNKNOWN");
+    }
+
+    /**
+     * Return the stats for the region.
+     * 
+     * @return String
+     */
+    public String getStats()
+    {
+        return this.cache.getStats();
+    }
 
 }
