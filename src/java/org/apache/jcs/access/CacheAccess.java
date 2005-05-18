@@ -36,14 +36,21 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.stats.behavior.ICacheStats;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Class which provides interface for all access to the cache. An instance of
- * this class is tied to a specific cache region. Static methods are provided to
- * get such instances.
+ * This class provides an interface for all types of access to the cache. 
+ * <p>
+ * An instance of this class is tied to a specific cache region. Static methods 
+ * are provided to get such instances.
+ * <p>
+ * Using this class you can retrieve an item, the items wrapper, the element configuration, 
+ * put an item in the cache, remove an item, and clear a region.
+ * <p>
+ * The JCS class is the prefered way to access these methods.
  *
  * @version $Id$
  */
@@ -199,6 +206,26 @@ public class CacheAccess implements ICacheAccess
     }
 
     /**
+     * This method returns the ICacheElement wrapper which provides access to 
+     * element info and other attributes.  
+     * <p>
+     * This returns a reference to the wrapper.  Any modifications will
+     * be reflected in the cache.  No defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the
+     * how long the element has been in the cache.
+     * <p>
+     * The last access time in teh ElementAttributes should be current.
+     *
+     * @param name Key the object is stored as
+     * @return The ICacheElement if the object is found or null
+     */
+    public ICacheElement getCacheElement( Object name )
+    {
+        return this.cacheControl.get( ( Serializable ) name );
+    }
+    
+    /**
      * Place a new object in the cache, associated with key name. If there is
      * currently an object associated with name in the region an
      * ObjectExistsException is thrown. Names are scoped to a region so they
@@ -232,7 +259,6 @@ public class CacheAccess implements ICacheAccess
         throws CacheException
     {
         // Call put with a copy of the contained caches default attributes.
-
         put( name,
              obj,
              this.cacheControl.getElementAttributes().copy() );
@@ -256,7 +282,6 @@ public class CacheAccess implements ICacheAccess
 
         // Create the element and update. This may throw an IOException which
         // should be wrapped by cache access.
-
         try
         {
             CacheElement ce = new CacheElement( this.cacheControl.getCacheName(),
@@ -356,6 +381,8 @@ public class CacheAccess implements ICacheAccess
     /**
      * If there are any auxiliary caches associated with this cache, save all
      * objects to them.
+     * <p>
+     * This is mainly a testing method.  Dispose should do what you want on shutdown in a safer manner.
      */
     public void save()
     {
@@ -445,6 +472,18 @@ public class CacheAccess implements ICacheAccess
     }
 
     /**
+     * This returns the ICacheStats object with information on this region and its auxiliaries.
+     * <p>
+     * This data can be formatted as needed.
+     * 
+     * @return ICacheStats
+     */
+    public ICacheStats getStatistics()
+    {
+    	return this.cacheControl.getStatistics();
+    }
+    
+    /**
      * 
      * @return A String version of the stats.  
      */     
@@ -454,7 +493,9 @@ public class CacheAccess implements ICacheAccess
 
     /**
      * Dispose this region. Flushes objects to and closes auxiliary caches.
-     * This is a shutdown command.  To simply remove all elements from the region
+     * This is a shutdown command! 
+     * <p>
+     * To simply remove all elements from the region
      * use clear().
      */
     public void dispose()

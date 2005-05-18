@@ -39,13 +39,6 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 {
 
     /**
-     * Is this item distributable at all.
-     */
-    public boolean   IS_DISTRIBUTE  = true;
-
-    // lateral
-
-    /**
      * can this item be flushed to disk
      */
     public boolean   IS_SPOOL       = true;
@@ -122,8 +115,6 @@ public class ElementAttributes implements IElementAttributes, Serializable,
         // waterfal onto disk, for pure disk set memory to 0
         IS_SPOOL = attr.IS_SPOOL;
 
-        IS_DISTRIBUTE = attr.IS_DISTRIBUTE;
-
         // lateral
         IS_LATERAL = attr.IS_LATERAL;
 
@@ -151,7 +142,6 @@ public class ElementAttributes implements IElementAttributes, Serializable,
             ElementAttributes attr = new ElementAttributes();
             attr.setIdleTime( this.getIdleTime() );
             attr.setIsEternal( this.getIsEternal() );
-            attr.setIsDistribute( this.getIsDistribute() );
             attr.setIsLateral( this.getIsLateral() );
             attr.setIsRemote( this.getIsRemote() );
             attr.setIsSpool( this.getIsSpool() );
@@ -197,76 +187,63 @@ public class ElementAttributes implements IElementAttributes, Serializable,
         return null;
     }
 
-    /**
-     * Sets the version attribute of the IElementAttributes object
-     *
-     * @param version
-     *            The new version value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#setVersion(long)
      */
     public void setVersion( long version )
     {
         this.version = version;
     }
 
-    /**
-     * Sets the maxLifeSeconds attribute of the IElementAttributes object
-     *
-     * @param mls
-     *            The new {3} value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#setMaxLifeSeconds(long)
      */
     public void setMaxLifeSeconds( long mls )
     {
         this.mls = mls;
     }
 
-    /**
-     * Gets the {3} attribute of the ElementAttributes object
-     *
-     * @return The {3} value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getMaxLifeSeconds()
      */
     public long getMaxLifeSeconds()
     {
         return this.mls;
     }
 
-    /**
-     * Sets the idleTime attribute of the IElementAttributes object
-     *
-     * @param idle
-     *            The new idleTime value
-     */
+	/*
+	 *  (non-Javadoc)
+	 * @see org.apache.jcs.engine.behavior.IElementAttributes#setIdleTime(long)
+	 */
     public void setIdleTime( long idle )
     {
         this.idle = idle;
     }
 
-    //public void setListener( int event, CacheEventListener listerner) {}
-
-    /**
-     * Size in bytes.
-     *
-     * @param size
-     *            The new size value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#setSize(int)
      */
     public void setSize( int size )
     {
         this.size = size;
     }
 
-    /**
-     * Gets the size attribute of the IElementAttributes object
-     *
-     * @return The size value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getSize()
      */
     public int getSize()
     {
         return size;
     }
 
-    /**
-     * Gets the createTime attribute of the IElementAttributes object
-     *
-     * @return The createTime value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getCreateTime()
      */
     public long getCreateTime()
     {
@@ -281,32 +258,27 @@ public class ElementAttributes implements IElementAttributes, Serializable,
         createTime = System.currentTimeMillis();
     }
 
-    /**
-     * Gets the version attribute of the IElementAttributes object
-     *
-     * @return The version value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getVersion()
      */
     public long getVersion()
     {
         return version;
     }
 
-    /**
-     * Gets the idleTime attribute of the IElementAttributes object. Keeping
-     * track of this will require storing the last access time. This could get
-     * expensive.
-     *
-     * @return The idleTime value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getIdleTime()
      */
     public long getIdleTime()
     {
         return this.idle;
     }
 
-    /**
-     * If the returned value is negative, the item has expired
-     *
-     * @return The timeToLive value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getTimeToLiveSeconds()
      */
     public long getTimeToLiveSeconds()
     {
@@ -315,81 +287,54 @@ public class ElementAttributes implements IElementAttributes, Serializable,
                                          * 1000)) - now) / 1000;
     }
 
-    /**
-     * Gets the LastAccess attribute of the IAttributes object
-     *
-     * @return The LastAccess value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getLastAccessTime()
      */
     public long getLastAccessTime()
     {
         return this.lastAccessTime;
     }
 
-    /**
-     * Sets the LastAccessTime as now of the IElementAttributes object
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#setLastAccessTimeNow()
      */
     public void setLastAccessTimeNow()
     {
         this.lastAccessTime = System.currentTimeMillis();
     }
 
-    /**
-     * Gets the {3} attribute of the IElementAttributes object
-     *
-     * @return The {3} value
-     */
-    public boolean getIsDistribute()
-    {
-        return this.IS_DISTRIBUTE;
-    }
-
-    /**
-     * Sets the isDistribute attribute of the ElementAttributes object
-     *
-     * @param val
-     *            The new isDistribute value
-     */
-    public void setIsDistribute( boolean val )
-    {
-        this.IS_DISTRIBUTE = val;
-    }
-
-    /**
-     * can this item be flushed to disk
-     *
-     * @return The {3} value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsSpool()
      */
     public boolean getIsSpool()
     {
         return this.IS_SPOOL;
     }
 
-    /**
-     * Sets the isSpool attribute of the ElementAttributes object
-     *
-     * @param val
-     *            The new isSpool value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsSpool(boolean)
      */
     public void setIsSpool( boolean val )
     {
         this.IS_SPOOL = val;
     }
 
-    /**
-     * Is this item laterally distributable
-     *
-     * @return The {3} value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsLateral()
      */
     public boolean getIsLateral()
     {
         return this.IS_LATERAL;
     }
 
-    /**
-     * Sets the isLateral attribute of the ElementAttributes object
-     *
-     * @param val
-     *            The new isLateral value
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsLateral(boolean)
      */
     public void setIsLateral( boolean val )
     {
@@ -484,7 +429,6 @@ public class ElementAttributes implements IElementAttributes, Serializable,
      *
      * @return The elementEventHandlers value
      */
-
     public ArrayList getElementEventHandlers()
     {
         return this.eventHandlers;

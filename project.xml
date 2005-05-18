@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.5-dev</currentVersion>
+  <currentVersion>1.2.6</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -38,15 +38,27 @@
   <mailingLists>
     <mailingList>
       <name>JCS User List</name>
-      <subscribe>turbine-jcs-user-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>turbine-jcs-user-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-user@jakarta.apache.org</archive>
+      <subscribe>jcs-users-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>jcs-users-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/</archive>
     </mailingList>
     <mailingList>
       <name>JCS Developer List</name>
-      <subscribe>turbine-jcs-dev-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>turbine-jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/eyebrowse/SummarizeList?listName=turbine-jcs-dev@jakarta.apache.org</archive>
+      <subscribe>jcs-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/</archive>
+    </mailingList>
+    <mailingList>
+      <name>OLD User list</name>
+      <subscribe></subscribe>
+      <unsubscribe></unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-user/</archive>
+    </mailingList>
+    <mailingList>
+      <name>OLD Developer list</name>
+      <subscribe></subscribe>
+      <unsubscribe></unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-dev/</archive>
     </mailingList>
   </mailingLists>
 
@@ -170,6 +182,7 @@
     <resources/>
     <unitTest>
       <includes>
+        <include>**/TestCacheElementRetrieval.java</include>
         <include>**/TestDiskCacheNoMemory.java</include>
         <include>**/TestJCS.java</include>
         <include>**/TestSimpleLoad.java</include>

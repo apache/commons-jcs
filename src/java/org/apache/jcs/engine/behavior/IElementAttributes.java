@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
- *  Inteface for cache element attributes classes.
+ *  Interface for cache element attributes classes.  Every item is the cache is associated with 
+ * an element attributes object.  It is used to track the life of the object as well as to restrict 
+ * its behavior.  By default, elements get a clone of the region's attributes.  
  *
  */
 public interface IElementAttributes
@@ -35,30 +37,37 @@ public interface IElementAttributes
   public void setVersion( long version );
 
   /**
-   *  Sets the maxLife attribute of the IAttributes object
+   *  Sets the maxLife attribute of the IAttributes object.  
    *
-   *@param  mls  The new {3} value
+   *@param  mls  The new MaxLifeSeconds value
    */
   public void setMaxLifeSeconds( long mls );
 
   /**
-   *  Sets the maxLife attribute of the IAttributes object
+   *  Sets the maxLife attribute of the IAttributes object.  
+   * How many seconds it can live after creation.
+   * <p>
+   * If this is exceeded the element will not be returned, instead it will be removed.
+   * It will be removed on retrieval, or removed actively if the memory shrinker is turned on.
+   * 
    *
-   *@return    The {3} value
+   *@return    The MaxLifeSeconds value
    */
   public long getMaxLifeSeconds();
 
   /**
-   *  Sets the idleTime attribute of the IAttributes object
+   *  Sets the idleTime attribute of the IAttributes object.  This is the maximum
+   * time the item can be idle in the cache, that is not accessed.
+   * <p>
+   * If this is exceeded the element will not be returned, instead it will be removed.
+   * It will be removed on retrieval, or removed actively if the memory shrinker is turned on.
    *
    *@param  idle  The new idleTime value
    */
   public void setIdleTime( long idle );
 
-  //public void setListener( int event, CacheEventListener listerner) {}
-
   /**
-   *  Size in bytes.
+   *  Size in bytes.  This is not used except in the admin pages.  It will be -1 by default.
    *
    *@param  size  The new size value
    */
@@ -72,16 +81,21 @@ public interface IElementAttributes
   public int getSize();
 
   /**
-   *  Gets the createTime attribute of the IAttributes object
+   *  Gets the createTime attribute of the IAttributes object.  
+   * <p>
+   * This shoudd be the current time in milliseconds returned by the sysutem call when the element is
+   * put in the cache.
+   * <p>
+   * Putting an item in the cache overrides any existing items.
    *
    *@return    The createTime value
    */
   public long getCreateTime();
 
   /**
-   *  Gets the LastAccess attribute of the IAttributes object
+   *  Gets the LastAccess attribute of the IAttributes object.
    *
-   *@return    The LastAccess value
+   *@return    The LastAccess value.
    */
   public long getLastAccessTime();
 
@@ -105,9 +119,11 @@ public interface IElementAttributes
   public long getIdleTime();
 
   /**
-   *  Gets the time left to live of the IAttributes object
+   *  Gets the time left to live of the IAttributes object.
+   * <p>
+   * This is the (max life + create time) - current time.
    *
-   *@return    The t value
+   *@return    The TimeToLiveSeconds value
    */
   public long getTimeToLiveSeconds();
 
@@ -118,68 +134,66 @@ public interface IElementAttributes
    */
   public IElementAttributes copy();
 
-  /**
-   *  Gets the {3} attribute of the IElementAttributes object
-   *
-   *@return    The {3} value
-   */
-  public boolean getIsDistribute();
 
   /**
-   *  Sets the isDistribute attribute of the IElementAttributes object
-   *
-   *@param  val  The new isDistribute value
-   */
-  public void setIsDistribute( boolean val );
-
-  // lateral
-
-  /**
-   *  can this item be flushed to disk
-   *
-   *@return    The {3} value
+   *  Can this item be spooled to disk
+   * <p>
+   * By default this is true.
+   * 
+   *@return    The spoolable value
    */
   public boolean getIsSpool();
 
   /**
    *  Sets the isSpool attribute of the IElementAttributes object
-   *
+   * <p>
+   * By default this is true.
+   * 
    *@param  val  The new isSpool value
    */
   public void setIsSpool( boolean val );
 
   /**
-   *  Is this item laterally distributable
-   *
-   *@return    The {3} value
+   *  Is this item laterally distributable.  Can it be sent to 
+   *  auxiliaries of type lateral.
+   * <p>
+   * By default this is true.
+   * 
+   *@return    The isLateral value
    */
   public boolean getIsLateral();
 
   /**
    *  Sets the isLateral attribute of the IElementAttributes object
-   *
+   * <p>
+   * By default this is true.
+   * 
    *@param  val  The new isLateral value
    */
   public void setIsLateral( boolean val );
 
   /**
-   *  Can this item be sent to the remote cache
-   *
-   *@return    The {3} value
+   *  Can this item be sent to the remote cache.
+   * <p>
+   * By default this is true.
+   * 
+   *@return    The isRemote value
    */
   public boolean getIsRemote();
 
   /**
-   *  Sets the isRemote attribute of the IElementAttributes object
+   *  Sets the isRemote attribute of the IElementAttributes object.
+   * <p>
+   * By default this is true.
    *
    *@param  val  The new isRemote value
    */
   public void setIsRemote( boolean val );
 
   /**
-   *  can turn off expiration
+   *  This turns off expiration if it is true.
    *
-   *@return    The {3} value
+   *@return    The IsEternal value
    */
   public boolean getIsEternal();
 
@@ -200,10 +214,13 @@ public interface IElementAttributes
 
   /**
    *  Gets the elementEventHandlers.
+   * <p>
+   * Event handlers are transient.  The only events defined are in memory events.
+   * All handlers are lost if the item goes to disk.
    *
-   *@return    The elementEventHandlers value
+   *@return    The elementEventHandlers value, null if there are none
    */
-
+  public ArrayList getElementEventHandlers();
 
   /**
    *  Sets the eventHandlers of the IElementAttributes object
@@ -211,7 +228,5 @@ public interface IElementAttributes
    *@param eventHandlers value
    */
   public void addElementEventHandlers( ArrayList eventHandlers );
-
-  public ArrayList getElementEventHandlers();
 
 }

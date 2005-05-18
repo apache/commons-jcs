@@ -23,15 +23,21 @@ import java.io.Serializable;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
- * Description of the Interface
+ * Every item is the cache is wrapped in an ICacheElement.  This 
+ * contains information about the element: the region name, the key, 
+ * the value, and the element attributes.  
+ * <p>
+ * The element attributes have lots of useful information
+ * about each elment, such as when they were created, how long they have to live,
+ * and if they are allowed to be spooled, etc.
  *
  */
 public interface ICacheElement extends Serializable
 {
-    //, Cloneable
 
     /**
-     * Gets the cacheName attribute of the ICacheElement object
+     * Gets the cacheName attribute of the ICacheElement object.
+     * The cacheName is also known as the region name.
      *
      * @return The cacheName value
      */

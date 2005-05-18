@@ -57,8 +57,10 @@ import org.apache.jcs.engine.control.event.ElementEventQueue;
 import org.apache.jcs.engine.control.group.GroupId;
 
 /**
- * This is the primary hub for a single cache/region. It control the flow of
+ * This is the primary hub for a single cache/region. It controls the flow of
  * items through the cache. The auxiliary and memory caches are plugged in here.
+ * <p>
+ * This is the core of a JCS region.
  * 
  * @version $Id$
  */
@@ -79,7 +81,7 @@ public class CompositeCache
 
     private boolean alive = true;
 
-    // this is int he cacheAttr, shouldn't be used, remove
+    // this is in the cacheAttr, shouldn't be used, remove
     final String cacheName;
 
     /**
@@ -984,7 +986,7 @@ public class CompositeCache
     }
 
     /**
-     *  Gets the size attribute of the Cache object
+     *  Gets the size attribute of the Cache object.  This return the number of elements, not the byte size.
      *
      *@return    The size value
      */
@@ -1066,7 +1068,7 @@ public class CompositeCache
 
 
     /**
-     *  Gets the cacheName attribute of the Cache object
+     *  Gets the cacheName attribute of the Cache object.  This is also known as the region name.
      *
      *@return    The cacheName value
      */
