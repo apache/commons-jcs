@@ -43,7 +43,7 @@ public class TestCacheAccess
     private final static Log log           = LogFactory
                                                    .getLog( TestCacheAccess.class );
 
-    private GroupCacheAccess cache_control = null;
+    private JCS cache_control = null;
 
     private static boolean   isSysOut      = false;
 
@@ -64,7 +64,7 @@ public class TestCacheAccess
     {
         try
         {
-            cache_control = GroupCacheAccess.getGroupAccess( regionName );
+            cache_control = JCS.getInstance( regionName );
         }
         catch (Exception e)
         {
@@ -574,28 +574,13 @@ public class TestCacheAccess
                     }
                     else if (message.startsWith( "switch" ))
                     {
-                        String numS = message.substring(
+                        String name = message.substring(
                                 message.indexOf( " " ) + 1, message.length() );
-                        try
-                        {
-                            Integer.parseInt( numS.trim() );
-                        }
-                        catch (Exception e)
-                        {
-                            p( "usage: switch number" );
-                            p( "  1 == testCache1" );
-                        }
-                        if (numS == null)
-                        {
-                            p( "usage: switch number" );
-                            p( "  1 == testCache1" );
-                        }
-                        else
-                        {
-                            setRegion( "testCache" + numS );
-                            p( "switched to cache = " + "testCache" + numS );
-                            p( cache_control.toString() );
-                        }
+                        
+    
+                        setRegion( name );
+                        p( "switched to cache = " + name );
+                        p( cache_control.toString() );
                     }
                     else if (message.startsWith( "stats" ))
                     {
@@ -926,7 +911,7 @@ public class TestCacheAccess
         p( "type 'deattr' to get the default element attributes" );
         p( "type 'cloneattr num' to clone attr" );
         p( "type 'random range numOps' to put, get, and remove randomly" );
-        p( "type 'switch number' to switch to testCache[number], 1 == testCache1" );
+        p( "type 'switch name' to switch to this region name" );
         p( "type 'gc' to call System.gc()" );
         p( "type 'help' for commands" );
 
