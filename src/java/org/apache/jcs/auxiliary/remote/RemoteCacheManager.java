@@ -104,6 +104,11 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
             }
             // Successful connection to the remote server.
             remoteService = ( IRemoteCacheService ) obj;
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "remoteService = " + remoteService );
+            }            
+            
             remoteWatch = new RemoteCacheWatchRepairable();
             remoteWatch.setCacheWatch( ( IRemoteCacheObserver ) obj );
         }
@@ -111,7 +116,7 @@ public class RemoteCacheManager implements AuxiliaryCacheManager
         {
             // Failed to connect to the remote server.
             // Configure this RemoteCacheManager instance to use the "zombie" services.
-            log.error( ex.getMessage() );
+            log.error( "Problem finding server at [" + registry +"]", ex );
             remoteService = new ZombieRemoteCacheService();
             remoteWatch = new RemoteCacheWatchRepairable();
             remoteWatch.setCacheWatch( new ZombieRemoteCacheWatch() );

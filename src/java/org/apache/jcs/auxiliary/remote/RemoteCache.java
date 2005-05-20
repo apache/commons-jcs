@@ -72,7 +72,7 @@ public class RemoteCache implements ICache
      * a remote cache server.  One of these exists for each region.  This also holds
      * a reference to a listener.  The same listener is used for all regions for one
      * remote server.  Holding a reference to the listener allows this object to
-     * know the listener id assigned byt he remote cache.
+     * know the listener id assigned by the remote cache.
      * 
      * @param cattr
      * @param remote
@@ -90,6 +90,7 @@ public class RemoteCache implements ICache
         {
             log.debug( "Construct> cacheName=" + cattr.getCacheName() );
             log.debug( "irca = " + irca );
+            log.debug( "remote = " + remote );
             log.debug( "listener = " + listener );
         }
 
@@ -522,8 +523,8 @@ public class RemoteCache implements ICache
     private void handleException( Exception ex, String msg ) throws IOException
     {
         log.error( "Disabling remote cache due to error " + msg );
-        //log.error(ex);
-        log.error( ex.toString() );
+        log.error(ex);
+        //log.error( ex.toString() );
         
         remote = new ZombieRemoteCacheService();
         // may want to flush if region specifies
