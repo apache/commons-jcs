@@ -95,7 +95,7 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                 }
                 catch ( ChannelNotConnectedException cnce )
                 {
-                    if ( conProbCnt % 5 == 0 )
+                    if ( conProbCnt % 20 == 0 )
                     {
                       log.warn(cnce);
                     }

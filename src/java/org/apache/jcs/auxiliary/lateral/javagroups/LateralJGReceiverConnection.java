@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
-import org.jgroups.Channel;
 import org.jgroups.Message;
 
 /**
@@ -39,16 +38,15 @@ public class LateralJGReceiverConnection implements Runnable
     private final static Log log =
         LogFactory.getLog( LateralJGReceiverConnection.class );
 
-    private Channel javagroups;
+    //private Channel javagroups;
     private Message mes;
-
 
     private ILateralCacheJGListener ilcl;
 
 
     /**
      * Constructor for the LateralJGReceiverConnection object
-     *
+     * @param mes The JGroups message
      * @param ilcl
      */
     public LateralJGReceiverConnection( Message mes, ILateralCacheJGListener ilcl )
@@ -56,7 +54,6 @@ public class LateralJGReceiverConnection implements Runnable
         this.ilcl = ilcl;
         this.mes = mes;
      }
-
 
 
     /**
@@ -67,45 +64,45 @@ public class LateralJGReceiverConnection implements Runnable
      */
     public void run( )
     {
-        //Serializable obj = null;
         try
         {
-
                 LateralElementDescriptor led = ( LateralElementDescriptor ) mes.getObject();
                 if ( led == null )
                 {
-                    log.debug( "LateralElementDescriptor is null" );
-                    //continue;
-                }
-                if ( led.requesterId == LateralCacheInfo.listenerId )
-                {
-                    log.debug( "from self" );
+                    log.warn( "LateralElementDescriptor is null! Can't do anything." );
                 }
                 else
                 {
-                    if ( log.isDebugEnabled() )
+                    if ( led.requesterId == LateralCacheInfo.listenerId )
                     {
-                        log.debug( "receiving LateralElementDescriptor from another, led = "
-                             + ", led = " + led
-                             + ", led.command = " + led.command
-                             + ", led.ce = " + led.ce
-                             + ", ilcl = " + ilcl );
-                    }
-                    if ( led.command == LateralElementDescriptor.UPDATE )
-                    {
-                        ilcl.handlePut( led.ce );
+                        log.debug( "from self" );
                     }
                     else
-                        if ( led.command == LateralElementDescriptor.REMOVE )
                     {
-                        ilcl.handleRemove( led.ce.getCacheName(), led.ce.getKey() );
-                    }
-                    else
-                        if ( led.command == LateralElementDescriptor.GET )
-                    {
-                        /*Serializable obj =*/ getAndRespond( led.ce.getCacheName(), led.ce.getKey() );
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "receiving LateralElementDescriptor from another, led = "
+                                 + ", led = " + led
+                                 + ", led.command = " + led.command
+                                 + ", led.ce = " + led.ce
+                                 + ", ilcl = " + ilcl );
+                        }
+                        if ( led.command == LateralElementDescriptor.UPDATE )
+                        {
+                            ilcl.handlePut( led.ce );
+                        }
+                        else
+                            if ( led.command == LateralElementDescriptor.REMOVE )
+                        {
+                            ilcl.handleRemove( led.ce.getCacheName(), led.ce.getKey() );
+                        }
+                        else
+                            if ( led.command == LateralElementDescriptor.GET )
+                        {
+                            /*Serializable obj =*/ getAndRespond( led.ce.getCacheName(), led.ce.getKey() );
 
-                    }
+                        }
+                    }                    
                 }
 
         }
@@ -119,12 +116,9 @@ public class LateralJGReceiverConnection implements Runnable
         }
         catch ( Exception e )
         {
-            log.error( "Unexpected exception. Closing conneciton", e );
+            log.error( "Unexpected exception.", e );
         }
-
-
     }
-
 
     /**
      * Send back the object if found.
