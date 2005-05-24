@@ -1,4 +1,5 @@
-<project default="java:jar">
+<project default="java:jar" xmlns:j="jelly:core" xmlns:ant="jelly:ant"
+	xmlns:deploy="deploy" xmlns:u="jelly:util" xmlns:maven="jelly:maven">
 
   <preGoal name="test:test">
 
@@ -48,6 +49,12 @@
       </classpath>
     </rmic> 
 
+  </goal>
+
+  <goal name="copyjars">
+    <j:forEach var="lib" items="${pom.artifacts}">
+      <ant:copy todir="${basedir}/jars" file="${lib.path}"/>
+    </j:forEach>
   </goal>
 
 </project>
