@@ -27,6 +27,7 @@ import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListe
 import org.jgroups.Channel;
 import org.jgroups.ChannelNotConnectedException;
 import org.jgroups.Message;
+import org.jgroups.blocks.RpcDispatcher;
 
 /**
  * Processes commands from the server socket.
@@ -56,7 +57,17 @@ public class LateralJGReceiver implements IJGConstants, Runnable
 
             JGConnectionHolder holder = JGConnectionHolder.getInstance(ilca);
             Channel javagroups = holder.getChannel();
-            /* RpcDispatcher disp = */ holder.getDispatcher();
+            
+            // don't need a dispatcher unless we are allowing gets.
+            // gets are not supported right now.
+            if ( !ilca.getPutOnlyMode() )
+            {
+                RpcDispatcher disp =  holder.getDispatcher();       
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Dispatcher = " + disp );
+                }
+            }
 
             if ( javagroups == null )
             {
@@ -89,7 +100,7 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( obj );
+                            log.debug( "Received unknown object from jgroups = " + obj );
                         }
                     }
                 }
@@ -109,7 +120,7 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                     // slow the connection try process down
                     synchronized (this)
                     {
-                      this.wait(10);
+                      this.wait(100);
                     }
                     // this will cycle unitl connected and eat up the processor
                     // need to throw out and recover

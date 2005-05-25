@@ -166,7 +166,7 @@ public class LateralJGSender implements IJGConstants
     {
         ICacheElement ice = null;
 
-        log.debug( "sendAndReceive led" );
+        log.debug( "SendAndReceive led" );
 
         if ( led == null )
         {

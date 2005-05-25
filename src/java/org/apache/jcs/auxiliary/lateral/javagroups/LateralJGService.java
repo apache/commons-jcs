@@ -71,7 +71,7 @@ public class LateralJGService
         catch ( IOException e )
         {
 
-            log.error( "Could not create sender to [" + lca.getJGChannelProperties() + "] -- " + e.getMessage() );
+            log.error( "Could not create sender to [" + lca.getJGChannelProperties() + "]", e );
 
             throw e;
         }

@@ -127,6 +127,11 @@ public class JGConnectionHolder
     public RpcDispatcher getDispatcher()
         throws IOException
     {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Creating Dispatcher, jgroups group name " + IJGConstants.RPC_JG_GROUP_NAME );
+        }
+        
         try
         {
             if ( disp == null )
@@ -142,7 +147,7 @@ public class JGConnectionHolder
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem creating dispatcher", e );
         }
         return disp;
     }

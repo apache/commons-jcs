@@ -93,7 +93,7 @@ public class JGSocketOpener implements Runnable
         }
         catch ( Exception e )
         {
-            log.error(e);
+            log.error(" Problem connecting", e);
         }
     }
 
