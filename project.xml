@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.6</currentVersion>
+  <currentVersion>1.2.6.1</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -128,8 +128,8 @@
       <version>2.2</version>
     </dependency>
     <dependency>
-      <id>javagroups</id>
-      <jar>jgroups-all-2.2.jar</jar>
+      <id>jgroups</id>
+      <version>2.2.5</version>
     </dependency>
     <dependency>
       <id>jisp</id>
