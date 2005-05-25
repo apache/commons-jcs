@@ -52,10 +52,9 @@ jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
-jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=228.1.2.3;mcast_port=45566;ip_ttl=32):PING(timeout=3000;num_initial_members=6):FD(timeout=5000):VERIFY_SUSPECT(timeout=1500):pbcast.STABLE(desired_avg_gossip=10000):pbcast.NAKACK(gc_lag=10;retransmit_timeout=3000):UNICAST(timeout=5000;min_wait_time=2000):MERGE2:FRAG:pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=false;print_local_addr=false)
-#jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=238.10.10.10;mcast_port=7070):PING(timeout=3000):FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
-jcs.auxiliary.LJG.attributes.EventQueueType=POOLED
-jcs.auxiliary.LJG.attributes.EventQueuePolName=lg_event_queue
+jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.10.10.10;mcast_port=5555;ip_ttl=32):PING(timeout=3000;num_initial_members=6):FD(timeout=3000):VERIFY_SUSPECT(timeout=1500):pbcast.NAKACK(gc_lag=10;retransmit_timeout=600,1200,2400,4800):UNICAST(timeout=600,1200,2400,4800):pbcast.STABLE(desired_avg_gossip=10000):FRAG:pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=true;print_local_addr=true)
+#jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.10.10.10;mcast_port=5555;ip_ttl=32):PING(timeout=3000;num_initial_members=6):FD(timeout=5000):VERIFY_SUSPECT(timeout=1500):pbcast.STABLE(desired_avg_gossip=10000):pbcast.NAKACK(gc_lag=10;retransmit_timeout=3000):UNICAST:MERGE2:FRAG:pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=false;print_local_addr=false)
+
 
 ##############################################################
 ################## OPTIONAL THREAD POOL CONFIGURATION ###################
