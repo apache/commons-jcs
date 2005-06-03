@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
@@ -25,53 +23,78 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 
 /**
- * This class stores attributes for all of the available lateral cache auxiliaries.
- *
+ * This class stores attributes for all of the available lateral cache
+ * auxiliaries.
+ *  
  */
-public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
-	implements Serializable, ILateralCacheAttributes
+public class LateralCacheAttributes
+    extends AbstractAuxiliaryCacheAttributes
+    implements Serializable, ILateralCacheAttributes
 {
     String transmissionTypeName = "UDP";
+
     int transmissionType = UDP;
 
     String httpServers;
+
     // used to identify the service that this manager will be
     // operating on
     String httpServer = "";
+
     String httpReceiveServlet = "";
+
     String httpDeleteServlet = "";
 
     String udpMulticastAddr = "228.5.6.7";
+
     int udpMulticastPort = 6789;
 
-    //ArrayList tcpServers;
-    String tcpServers;
+
+    int httpListenerPort = 8080;
+
+    // TCP --------------------------------------------
+    String tcpServers = "";
+
     // used to identify the service that this manager will be
     // operating on
     String tcpServer = "";
-    int tcpListenerPort = 1111;
-    int httpListenerPort = 8080;
 
-    // javagroups
+    int tcpListenerPort = 0;
+
+    // udp discovery for tcp server
+    private String udpDiscoveryAddr = "228.5.6.7";
+
+    private int udpDiscoveryPort = 6789;
+
+    private boolean udpDiscoveryEnabled = true;
+
+    
+    // JAVAGROUPS -------------------------
     private String jgChannelProperties = null;
 
+    
+    // GENERAL ------------------------------
     // disables gets from laterals
     boolean putOnlyMode = true;
 
+    // do we receive and broadcast or only broadcast
+    // this is useful when you don't want to get any notifications
+    private boolean receive = true;
+
     /**
      * Sets the httpServer attribute of the LateralCacheAttributes object
-     *
-     * @param val The new httpServer value
+     * 
+     * @param val
+     *            The new httpServer value
      */
     public void setHttpServer( String val )
     {
         httpServer = val;
     }
 
-
     /**
      * Gets the httpServer attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The httpServer value
      */
     public String getHttpServer()
@@ -79,30 +102,20 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return httpServer;
     }
 
-
-    /*
-     *
-     * public void setTcpServers( ArrayList val ) {
-     * tcpServers = val;
-     * }
-     * public ArrayList getTcpServers( ) {
-     * return tcpServers;
-     * }
-     */
     /**
      * Sets the tcpServers attribute of the LateralCacheAttributes object
-     *
-     * @param val The new tcpServers value
+     * 
+     * @param val
+     *            The new tcpServers value
      */
     public void setTcpServers( String val )
     {
         tcpServers = val;
     }
 
-
     /**
      * Gets the tcpServers attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The tcpServers value
      */
     public String getTcpServers()
@@ -112,18 +125,18 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
 
     /**
      * Sets the httpServers attribute of the LateralCacheAttributes object
-     *
-     * @param val The new httpServers value
+     * 
+     * @param val
+     *            The new httpServers value
      */
     public void setHttpServers( String val )
     {
         httpServers = val;
     }
 
-
     /**
      * Gets the httpSrvers attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The httpServers value
      */
     public String getHttpServers()
@@ -133,18 +146,18 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
 
     /**
      * Sets the tcpServer attribute of the LateralCacheAttributes object
-     *
-     * @param val The new tcpServer value
+     * 
+     * @param val
+     *            The new tcpServer value
      */
     public void setTcpServer( String val )
     {
         tcpServer = val;
     }
 
-
     /**
      * Gets the tcpServer attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The tcpServer value
      */
     public String getTcpServer()
@@ -152,21 +165,20 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return tcpServer;
     }
 
-
     /**
      * Sets the tcpListenerPort attribute of the LateralCacheAttributes object
-     *
-     * @param val The new tcpListenerPort value
+     * 
+     * @param val
+     *            The new tcpListenerPort value
      */
     public void setTcpListenerPort( int val )
     {
         this.tcpListenerPort = val;
     }
 
-
     /**
      * Gets the tcpListenerPort attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The tcpListenerPort value
      */
     public int getTcpListenerPort()
@@ -174,21 +186,20 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return this.tcpListenerPort;
     }
 
-
     /**
      * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
-     *
-     * @param val The new tcpListenerPort value
+     * 
+     * @param val
+     *            The new tcpListenerPort value
      */
     public void setHttpListenerPort( int val )
     {
         this.httpListenerPort = val;
     }
 
-
     /**
      * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
-     *
+     * 
      * @return The httpListenerPort value
      */
     public int getHttpListenerPort()
@@ -196,21 +207,20 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return this.httpListenerPort;
     }
 
-
     /**
      * Sets the udpMulticastAddr attribute of the LateralCacheAttributes object
-     *
-     * @param val The new udpMulticastAddr value
+     * 
+     * @param val
+     *            The new udpMulticastAddr value
      */
     public void setUdpMulticastAddr( String val )
     {
         udpMulticastAddr = val;
     }
 
-
     /**
      * Gets the udpMulticastAddr attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The udpMulticastAddr value
      */
     public String getUdpMulticastAddr()
@@ -218,21 +228,20 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return udpMulticastAddr;
     }
 
-
     /**
      * Sets the udpMulticastPort attribute of the LateralCacheAttributes object
-     *
-     * @param val The new udpMulticastPort value
+     * 
+     * @param val
+     *            The new udpMulticastPort value
      */
     public void setUdpMulticastPort( int val )
     {
         udpMulticastPort = val;
     }
 
-
     /**
      * Gets the udpMulticastPort attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The udpMulticastPort value
      */
     public int getUdpMulticastPort()
@@ -240,11 +249,11 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return udpMulticastPort;
     }
 
-
     /**
      * Sets the transmissionType attribute of the LateralCacheAttributes object
-     *
-     * @param val The new transmissionType value
+     * 
+     * @param val
+     *            The new transmissionType value
      */
     public void setTransmissionType( int val )
     {
@@ -253,32 +262,27 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         {
             transmissionTypeName = "UDP";
         }
-        else
-            if ( val == HTTP )
+        else if ( val == HTTP )
         {
             transmissionTypeName = "HTTP";
         }
-        else
-            if ( val == TCP )
+        else if ( val == TCP )
         {
             transmissionTypeName = "TCP";
         }
-        else
-            if ( val == XMLRPC )
+        else if ( val == XMLRPC )
         {
             transmissionTypeName = "XMLRPC";
         }
-        else
-            if ( val == JAVAGROUPS )
+        else if ( val == JAVAGROUPS )
         {
             transmissionTypeName = "JAVAGROUPS";
         }
     }
 
-
     /**
      * Gets the transmissionType attribute of the LateralCacheAttributes object
-     *
+     * 
      * @return The transmissionType value
      */
     public int getTransmissionType()
@@ -286,12 +290,12 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return this.transmissionType;
     }
 
-
     /**
      * Sets the transmissionTypeName attribute of the LateralCacheAttributes
      * object
-     *
-     * @param val The new transmissionTypeName value
+     * 
+     * @param val
+     *            The new transmissionTypeName value
      */
     public void setTransmissionTypeName( String val )
     {
@@ -300,34 +304,29 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         {
             transmissionType = UDP;
         }
-        else
-            if ( val.equals( "HTTP" ) )
+        else if ( val.equals( "HTTP" ) )
         {
             transmissionType = HTTP;
         }
-        else
-            if ( val.equals( "TCP" ) )
+        else if ( val.equals( "TCP" ) )
         {
             transmissionType = TCP;
         }
-        else
-            if ( val.equals( "XMLRPC" ) )
+        else if ( val.equals( "XMLRPC" ) )
         {
             transmissionType = XMLRPC;
         }
-        else
-            if ( val.equals( "JAVAGROUPS" ) )
+        else if ( val.equals( "JAVAGROUPS" ) )
         {
             transmissionType = JAVAGROUPS;
         }
 
     }
 
-
     /**
      * Gets the transmissionTypeName attribute of the LateralCacheAttributes
      * object
-     *
+     * 
      * @return The transmissionTypeName value
      */
     public String getTransmissionTypeName()
@@ -335,19 +334,18 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return this.transmissionTypeName;
     }
 
-   
     /**
      * Sets the outgoingOnlyMode attribute of the ILateralCacheAttributes. When
      * this is true the lateral cache will only issue put and remove order and
      * will not try to retrieve elements from other lateral caches.
-     *
-     * @param val The new transmissionTypeName value
+     * 
+     * @param val
+     *            The new transmissionTypeName value
      */
     public void setPutOnlyMode( boolean val )
     {
         this.putOnlyMode = val;
     }
-
 
     /**
      * @return The outgoingOnlyMode value. Stops gets from going remote.
@@ -357,38 +355,105 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         return putOnlyMode;
     }
 
-
     public String getJGChannelProperties()
     {
-      return jgChannelProperties;
+        return jgChannelProperties;
     }
 
     public void setJGChannelProperties( String channelProperties )
     {
-      this.jgChannelProperties = channelProperties;
+        this.jgChannelProperties = channelProperties;
     }
-
 
     /**
      * Returns a clone of the attributes.
-     *
+     * 
      * @return Self
      */
     public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( AuxiliaryCacheAttributes ) this.clone();
+            return (AuxiliaryCacheAttributes) this.clone();
         }
         catch ( Exception e )
         {
+            //noop
         }
         return this;
     }
 
+    /**
+     * @param udpDiscoveryAddr
+     *            The udpDiscoveryAddr to set.
+     */
+    public void setUdpDiscoveryAddr( String udpDiscoveryAddr )
+    {
+        this.udpDiscoveryAddr = udpDiscoveryAddr;
+    }
+
+    /**
+     * @return Returns the udpDiscoveryAddr.
+     */
+    public String getUdpDiscoveryAddr()
+    {
+        return udpDiscoveryAddr;
+    }
+
+    /**
+     * @param udpDiscoveryPort
+     *            The udpDiscoveryPort to set.
+     */
+    public void setUdpDiscoveryPort( int udpDiscoveryPort )
+    {
+        this.udpDiscoveryPort = udpDiscoveryPort;
+    }
+
+    /**
+     * @return Returns the udpDiscoveryPort.
+     */
+    public int getUdpDiscoveryPort()
+    {
+        return udpDiscoveryPort;
+    }
+
+    /**
+     * @param receive
+     *            The receive to set.
+     */
+    public void setReceive( boolean receive )
+    {
+        this.receive = receive;
+    }
+
+    /**
+     * @return Returns the receive.
+     */
+    public boolean isReceive()
+    {
+        return receive;
+    }
+
+    /**
+     * @param udpDiscoveryEnabled
+     *            The udpDiscoveryEnabled to set.
+     */
+    public void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled )
+    {
+        this.udpDiscoveryEnabled = udpDiscoveryEnabled;
+    }
+
+    /**
+     * @return Returns the udpDiscoveryEnabled.
+     */
+    public boolean isUdpDiscoveryEnabled()
+    {
+        return udpDiscoveryEnabled;
+    }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     public String toString()
@@ -399,7 +464,8 @@ public class LateralCacheAttributes extends AbstractAuxiliaryCacheAttributes
         //buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );
         //buf.append( "transmissionType=" + transmissionType + "\n" );
         //buf.append( "tcpServer=" + tcpServer + "\n" );
-        buf.append( transmissionTypeName + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) + tcpServer );
+        buf.append( transmissionTypeName + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort )
+            + tcpServer );
         return buf.toString();
     }
 

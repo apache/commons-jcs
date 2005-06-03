@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -32,15 +30,15 @@ import org.jgroups.Channel;
 import org.jgroups.blocks.RpcDispatcher;
 
 /**
- * Description of the Class
+ * This holds connections, or channels, for jgroups.
  */
 public class JGConnectionHolder
 {
 
-    private final static Log log =
-        LogFactory.getLog( JGConnectionHolder.class );
+    private final static Log log = LogFactory.getLog( JGConnectionHolder.class );
 
     private Channel jg;
+
     private RpcDispatcher disp;
 
     private ILateralCacheAttributes ilca;
@@ -50,17 +48,17 @@ public class JGConnectionHolder
      */
     protected final static HashMap instances = new HashMap();
 
-
     /**
      * Gets the instance attribute of the LateralGroupCacheJGListener class
-     *
+     * 
      * @return The instance value
      * @param ilca
      */
     public static JGConnectionHolder getInstance( ILateralCacheAttributes ilca )
     {
         //throws IOException, NotBoundException
-        JGConnectionHolder ins = ( JGConnectionHolder ) instances.get( ilca.getJGChannelProperties() );
+        JGConnectionHolder ins = (JGConnectionHolder) instances.get( ilca.getJGChannelProperties() );
+        //JGConnectionHolder ins = (JGConnectionHolder) instances.get( ilca.getCacheName() );
         try
         {
             synchronized ( JGConnectionHolder.class )
@@ -83,10 +81,9 @@ public class JGConnectionHolder
         return ins;
     }
 
-
     /**
      * Constructor for the JGConnectionHolder object
-     *
+     * 
      * @param lca
      * @param ilca
      */
@@ -95,43 +92,41 @@ public class JGConnectionHolder
         this.ilca = ilca;
     }
 
-
     /**
      * Gets the {3} attribute of the JGConnectionHolder object
-     *
+     * 
      * @return The {3} value
      * @exception IOException
      */
-    public Channel getChannel()
+    public synchronized Channel getChannel()
         throws IOException
     {
         if ( jg == null )
         {
-            synchronized ( JGConnectionHolder.class )
+            jg = JGSocketOpener.openSocket( ilca, 5000, IJGConstants.DEFAULT_JG_GROUP_NAME );
+            //jg = JGSocketOpener.openSocket( ilca, 5000, this.ilca.getCacheName() );
+            if ( log.isInfoEnabled() )
             {
-                if ( jg == null )
-                {
-                    jg = JGSocketOpener.openSocket( ilca, 5000, IJGConstants.DEFAULT_JG_GROUP_NAME );
-                }
+                log.info( "Created channel " + jg + " for region name " + this.ilca.getCacheName() );
             }
         }
         return jg;
     }
 
     /**
-     * Gets the {3} attribute of the JGConnectionHolder object
-     *
-     * @return The {3} value
+     * Gets the Dispatcher attribute of the JGConnectionHolder object
+     * 
+     * @return The Dispatcher value
      * @exception IOException
      */
-    public RpcDispatcher getDispatcher()
+    public synchronized RpcDispatcher getDispatcher()
         throws IOException
     {
         if ( log.isDebugEnabled() )
         {
             log.debug( "Creating Dispatcher, jgroups group name " + IJGConstants.RPC_JG_GROUP_NAME );
         }
-        
+
         try
         {
             if ( disp == null )
@@ -140,7 +135,8 @@ public class JGConnectionHolder
                 {
                     if ( disp == null )
                     {
-                        disp = JGRpcOpener.openSocket( ( ILateralCacheJGListener ) LateralGroupCacheJGListener.getInstance( ilca ), ilca, 5000, IJGConstants.RPC_JG_GROUP_NAME );
+                        disp = JGRpcOpener.openSocket( (ILateralCacheJGListener) LateralGroupCacheJGListener
+                            .getInstance( ilca ), ilca, 5000, IJGConstants.RPC_JG_GROUP_NAME );
                     }
                 }
             }

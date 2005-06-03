@@ -294,12 +294,13 @@ public class RemoteCacheServer
             start = System.currentTimeMillis();
         }
 
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
+            // not thread safe, but it doesn't ahve to be accurate
             puts++;
             if ( puts % 100 == 0 )
             {
-                p1( "puts = " + puts );
+                log.info( "puts = " + puts );
             }
         }
 

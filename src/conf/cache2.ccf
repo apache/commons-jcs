@@ -3,7 +3,7 @@
 # sets the default aux value for any non configured caches
 jcs.default=DC
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MaxObjects=200000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 # should be defined for the storage of group attribute list
@@ -15,9 +15,9 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.me
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
-jcs.region.testCache1=LTCP
+jcs.region.testCache1=RC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MaxObjects=200000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.elementattributes.IsLateral=true
 jcs.region.testCache1.elementattributes.IsRemote=true
@@ -48,7 +48,7 @@ jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf
 # just a remove lock to add
 jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
-jcs.auxiliary.RC.attributes.FailoverServers=localhost:1102
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1102,localhost:1101
 jcs.auxiliary.RC.attributes.LocalPort=1202
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000

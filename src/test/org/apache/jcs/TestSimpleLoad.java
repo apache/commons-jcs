@@ -32,6 +32,16 @@ public class TestSimpleLoad extends TestCase
     private static int items = 20000;
 
     /**
+     * Test setup
+     */
+    public void setUp()
+        throws Exception
+    {
+        JCS.setConfigFilename( "/TestSimpleLoad.ccf" );
+        JCS.getInstance( "testCache1" );
+    }    
+    
+    /**
      *  Constructor for the TestSimpleLoad object
      *
      *@param  testName  Description of the Parameter
@@ -75,12 +85,12 @@ public class TestSimpleLoad extends TestCase
 //        cattr.setMaxObjects( 20002 );
 //        jcs.setCacheAttributes( cattr );
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 1; i <= items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
 
-        for ( int i = items; i >= items; i-- )
+        for ( int i = items; i > 0; i-- )
         {
             String res = ( String ) jcs.get( i + ":key" );
             if ( res == null )

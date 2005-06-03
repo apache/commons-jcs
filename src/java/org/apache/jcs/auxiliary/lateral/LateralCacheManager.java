@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.lateral;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,7 +34,6 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
 
-
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
  * laterally configured caches. Non laterally configured cache regions should
@@ -44,26 +41,29 @@ import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
  * configured cache hub, then lateral removals may be necessary. For flat
  * webserver production environments, without a strong machine at the app server
  * level, distribution and search may need to occur at the lateral cache level.
- * This is currently not implemented in the lateral cache. 
+ * This is currently not implemented in the lateral cache.
  * <p>
- * @TODO: - need
- * freeCache, release, getStats - need to find an interface acceptible for all -
- * cache managers or a manager within a type
+ * 
+ * @TODO: - need freeCache, release, getStats - need to find an interface
+ *        acceptible for all - cache managers or a manager within a type
  */
-public class LateralCacheManager implements AuxiliaryCacheManager
+public class LateralCacheManager
+    implements AuxiliaryCacheManager
 {
-    private final static Log log =
-        LogFactory.getLog( LateralCacheManager.class );
+    private final static Log log = LogFactory.getLog( LateralCacheManager.class );
 
     private static LateralCacheMonitor monitor;
 
     final static Map instances = new HashMap();
+
     // each manager instance has caches
     final Map caches = new HashMap();
+
     /**
      * Description of the Field
      */
     protected ILateralCacheAttributes lca;
+
     private int clients;
 
     /**
@@ -80,20 +80,20 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the instance attribute of the LateralCacheManager class
-     *
+     * 
      * @return The instance value
      * @param lca
      */
     public static LateralCacheManager getInstance( ILateralCacheAttributes lca )
     {
-        LateralCacheManager ins = ( LateralCacheManager ) instances.get( lca.toString() );
+        LateralCacheManager ins = (LateralCacheManager) instances.get( lca.toString() );
         synchronized ( instances )
         {
             if ( ins == null )
             {
                 log.info( "Instance for [" + lca.toString() + "] is null, creating" );
 
-                ins = ( LateralCacheManager ) instances.get( lca.toString() );
+                ins = (LateralCacheManager) instances.get( lca.toString() );
                 if ( ins == null )
                 {
                     ins = new LateralCacheManager( lca );
@@ -107,7 +107,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
         if ( monitor == null )
         {
             monitor = LateralCacheMonitor.getInstance();
-            // If the returned monitor is null, it means it's already started elsewhere.
+            // Should never be null
             if ( monitor != null )
             {
                 Thread t = new Thread( monitor );
@@ -120,7 +120,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
     /**
      * Constructor for the LateralCacheManager object
-     *
+     * 
      * @param lcaA
      */
     private LateralCacheManager( ILateralCacheAttributes lcaA )
@@ -161,7 +161,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
             {
                 log.error( "No service created, must zombie" );
 
-                throw new Exception( "no service created for lateral cache." );
+                throw new Exception( "No service created for lateral cache." );
             }
 
             this.lateralWatch = new LateralCacheWatchRepairable();
@@ -188,11 +188,11 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.
-     *
-     * @param cacheName The feature to be added to the LateralCacheListener
-     *      attribute
-     * @param listener The feature to be added to the LateralCacheListener
-     *      attribute
+     * 
+     * @param cacheName
+     *            The feature to be added to the LateralCacheListener attribute
+     * @param listener
+     *            The feature to be added to the LateralCacheListener attribute
      * @exception IOException
      */
     public void addLateralCacheListener( String cacheName, ILateralCacheListener listener )
@@ -208,8 +208,14 @@ public class LateralCacheManager implements AuxiliaryCacheManager
      * Called to access a precreated region or construct one with defaults.
      * Since all aux cache access goes through the manager, this will never be
      * called.
-     *
-     * @return The {3} value
+     * <p>
+     * After getting the manager instance for a server, the factory gets a cache
+     * for the region name it is constructing.
+     * <p>
+     * There should be one manager per server and one cache per region per
+     * manager.
+     * 
+     * @return AuxiliaryCache
      * @param cacheName
      */
     public AuxiliaryCache getCache( String cacheName )
@@ -217,50 +223,62 @@ public class LateralCacheManager implements AuxiliaryCacheManager
         LateralCacheNoWait c = null;
         synchronized ( this.caches )
         {
-            //c = (LateralCache)caches.get(cacheName);
-            c = ( LateralCacheNoWait ) this.caches.get( cacheName );
+            c = (LateralCacheNoWait) this.caches.get( cacheName );
             if ( c == null )
             {
-                c = new LateralCacheNoWait( new LateralCache( this.lca, this.lateralService ) );
+                LateralCacheAttributes attr = (LateralCacheAttributes) lca.copy();
+                attr.setCacheName( cacheName );
+                LateralCache cache = new LateralCache( attr, this.lateralService );
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Created cache for noWait, cache = [" + cache + "]" );
+                }
+                c = new LateralCacheNoWait( cache );
                 this.caches.put( cacheName, c );
 
-                log.info( "craeted LateralCacheNoWait for " + this.lca);
+                log.info( "Created LateralCacheNoWait for " + this.lca + " LateralCacheNoWait = [" + c + "]" );
             }
         }
 
-        try
+        // don't create a listener if we are not receiving.
+        if ( lca.isReceive() )
         {
-            if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
+            try
             {
-                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca ) );
+                if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
+                {
+                    addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca ) );
+                }
+                else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+                {
+                    addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( this.lca ) );
+                }
             }
-            else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+            catch ( IOException ioe )
             {
-                addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( this.lca ) );
+                log.error( "Problem creating lateral listener", ioe );
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem creating lateral listener", e );
             }
         }
-        catch ( IOException ioe )
+        else
         {
-            log.error( ioe );
-        }
-        catch ( Exception e )
-        {
-            log.error( e );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Not creating a listener since we are not receiving." );
+            }
         }
 
-        // TODO:  need listener repair
-
-        // if ( log.isDebugEnabled() )
-        // {
-        //     log.debug("LateralManager stats : " + getStats());
-        // }
+        // TODO: need listener repair
 
         return c;
     }
 
     /**
      * Gets the cacheType attribute of the LateralCacheManager object
-     *
+     * 
      * @return The cache type value
      */
     public int getCacheType()
@@ -270,7 +288,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the stats attribute of the LateralCacheManager object
-     *
+     * 
      * @return The {3} value
      */
     public String getStats()
@@ -281,7 +299,7 @@ public class LateralCacheManager implements AuxiliaryCacheManager
 
     /**
      * Fixes up all the caches managed by this cache manager.
-     *
+     * 
      * @param lateralService
      * @param lateralWatch
      */
@@ -292,11 +310,12 @@ public class LateralCacheManager implements AuxiliaryCacheManager
         synchronized ( this.caches )
         {
             this.lateralService = lateralService;
-            // need to implment an observer for some types of laterals( http and tcp)
+            // need to implment an observer for some types of laterals( http and
+            // tcp)
             //this.lateralWatch.setCacheWatch(lateralWatch);
             for ( Iterator en = this.caches.values().iterator(); en.hasNext(); )
             {
-                LateralCacheNoWait cache = ( LateralCacheNoWait ) en.next();
+                LateralCacheNoWait cache = (LateralCacheNoWait) en.next();
                 cache.fixCache( this.lateralService );
             }
         }

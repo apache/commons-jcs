@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.lateral;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,12 +39,12 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * Composite factory should construct LateralCacheNoWaitFacade to give to the
  * composite cache out of caches it constructs from the varies manager to
  * lateral services. Perhaps the lateralcache factory should be able to do this.
- *
+ *  
  */
-public class LateralCacheNoWaitFacade implements AuxiliaryCache
+public class LateralCacheNoWaitFacade
+    implements AuxiliaryCache
 {
-    private final static Log log =
-        LogFactory.getLog( LateralCacheNoWaitFacade.class );
+    private final static Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
 
     /** Description of the Field */
     public LateralCacheNoWait[] noWaits;
@@ -56,7 +54,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
     /**
      * Constructs with the given lateral cache, and fires events to any
      * listeners.
-     *
+     * 
      * @param noWaits
      * @param cacheName
      */
@@ -66,8 +64,48 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         this.cacheName = cacheName;
     }
 
+    /**
+     * Adds a no wait to the list if it isn't already in the list.
+     * 
+     * @param noWait
+     * @return true if it wasn't alreay contained
+     */
+    public boolean addNoWait( LateralCacheNoWait noWait )
+    {
+        if ( noWait == null )
+        {
+            return false;
+        }
+
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            // we know noWait isn't null
+            if ( noWait.equals( noWaits[i] ) )
+            {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "No Wait already contained, [" + noWait + "]" );
+                }
+                return false;
+            }
+        }
+
+        LateralCacheNoWait[] newArray = new LateralCacheNoWait[noWaits.length + 1];
+
+        System.arraycopy( noWaits, 0, newArray, 0, noWaits.length );
+
+        // set the last position to the new noWait
+        newArray[noWaits.length] = noWait;
+        
+        noWaits = newArray;
+
+        return true;
+
+    }
+
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void update( ICacheElement ce )
@@ -81,7 +119,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[ i ].update( ce );
+                noWaits[i].update( ce );
             }
         }
         catch ( Exception ex )
@@ -90,9 +128,9 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         }
     }
 
-    /** 
+    /**
      * Synchronously reads from the lateral cache.
-     *  
+     * 
      * @param key
      * @return ICacheElement
      */
@@ -102,14 +140,14 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         {
             try
             {
-                Object obj = noWaits[ i ].get( key );
+                Object obj = noWaits[i].get( key );
 
                 if ( obj != null )
                 {
                     // TODO: return after first success
                     // could do this simultaneously
                     // serious blocking risk here
-                    return ( ICacheElement ) obj;
+                    return (ICacheElement) obj;
                 }
             }
             catch ( Exception ex )
@@ -122,10 +160,11 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
-    public Set getGroupKeys(String group)
+    public Set getGroupKeys( String group )
     {
         HashSet allKeys = new HashSet();
         for ( int i = 0; i < noWaits.length; i++ )
@@ -133,8 +172,9 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
             AuxiliaryCache aux = noWaits[i];
             if ( aux != null )
             {
-                try {
-                    allKeys.addAll(aux.getGroupKeys(group));
+                try
+                {
+                    allKeys.addAll( aux.getGroupKeys( group ) );
                 }
                 catch ( IOException e )
                 {
@@ -145,8 +185,8 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         return allKeys;
     }
 
-    /** 
-     * Adds a remove request to the lateral cache. 
+    /**
+     * Adds a remove request to the lateral cache.
      * 
      * @param key
      * @return always false.
@@ -157,7 +197,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[ i ].remove( key );
+                noWaits[i].remove( key );
             }
         }
         catch ( Exception ex )
@@ -167,8 +207,8 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         return false;
     }
 
-    /** 
-     * Adds a removeAll request to the lateral cache. 
+    /**
+     * Adds a removeAll request to the lateral cache.
      */
     public void removeAll()
     {
@@ -176,7 +216,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[ i ].removeAll();
+                noWaits[i].removeAll();
             }
         }
         catch ( Exception ex )
@@ -192,7 +232,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[ i ].dispose();
+                noWaits[i].dispose();
             }
         }
         catch ( Exception ex )
@@ -203,7 +243,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
 
     /**
      * No lateral invokation.
-     *
+     * 
      * @return The size value
      */
     public int getSize()
@@ -214,7 +254,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
 
     /**
      * Gets the cacheType attribute of the LateralCacheNoWaitFacade object
-     *
+     * 
      * @return The cacheType value
      */
     public int getCacheType()
@@ -224,7 +264,7 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
 
     /**
      * Gets the cacheName attribute of the LateralCacheNoWaitFacade object
-     *
+     * 
      * @return The cacheName value
      */
     public String getCacheName()
@@ -233,11 +273,10 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         //cache.getCacheName();
     }
 
-
     // need to do something with this
     /**
      * Gets the status attribute of the LateralCacheNoWaitFacade object
-     *
+     * 
      * @return The status value
      */
     public int getStatus()
@@ -247,7 +286,8 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     public String toString()
@@ -255,53 +295,56 @@ public class LateralCacheNoWaitFacade implements AuxiliaryCache
         return "LateralCacheNoWaitFacade: " + cacheName;
     }
 
-  /**
-   * getStats
-   *
-   * @return String
-   */
-  public String getStats()
-  {
-    return getStatistics().toString();
-  }
-  
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
-   */
-  public IStats getStatistics()
-  {
-    IStats stats = new Stats();
-    stats.setTypeName( "Lateral Cache No Wait Facade" );
-
-    ArrayList elems = new ArrayList();
-
-    IStatElement se = null;
-
-    if ( noWaits != null )
+    /**
+     * getStats
+     * 
+     * @return String
+     */
+    public String getStats()
     {
-      se = new StatElement();
-      se.setName( "Number of No Waits" );
-      se.setData( "" + noWaits.length  );
-      elems.add( se );      
-      
-      for ( int i = 0; i < noWaits.length; i++ )
-      {
-        // get the stats from the super too
-        // get as array, convert to list, add list to our outer list
-        IStats sStats = noWaits[i].getStatistics();
-        IStatElement[] sSEs = sStats.getStatElements();
-        List sL = Arrays.asList( sSEs );
-        elems.addAll( sL );        
-      }
-      
+        return getStatistics().toString();
     }
 
-    // get an array and put them in the Stats object
-    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
-    stats.setStatElements( ses );
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+        IStats stats = new Stats();
+        stats.setTypeName( "Lateral Cache No Wait Facade" );
 
-    return stats;
-  }
+        ArrayList elems = new ArrayList();
+
+        IStatElement se = null;
+
+        if ( noWaits != null )
+        {
+            se = new StatElement();
+            se.setName( "Number of No Waits" );
+            se.setData( "" + noWaits.length );
+            elems.add( se );
+
+            for ( int i = 0; i < noWaits.length; i++ )
+            {
+                if ( noWaits[i] != null )
+                {
+                    // get the stats from the super too
+                    // get as array, convert to list, add list to our outer list
+                    IStats sStats = noWaits[i].getStatistics();
+                    IStatElement[] sSEs = sStats.getStatElements();
+                    List sL = Arrays.asList( sSEs );
+                    elems.addAll( sL );
+                }
+            }
+
+        }
+
+        // get an array and put them in the Stats object
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        stats.setStatElements( ses );
+
+        return stats;
+    }
 }

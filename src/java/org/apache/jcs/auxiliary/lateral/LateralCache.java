@@ -76,16 +76,6 @@ public class LateralCache implements ICache
         this.cattr =  cattr ;
     }
 
-
-    /*
-     *  (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    public String toString()
-    {
-        return "LateralCache: " + cattr.getCacheName();
-    }
-
     /** 
      * Update lateral.
      *  
@@ -323,4 +313,18 @@ public class LateralCache implements ICache
   {
     return cattr;
   }
+  
+  /*
+   *  (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
+  public String toString()
+  {
+      StringBuffer buf = new StringBuffer();
+      buf.append( "\n LateralCache " );
+      buf.append( "\n Cache Name [" + cattr.getCacheName() + "]" );
+      buf.append( "\n cattr =  [" + cattr + "]" );
+      return buf.toString();
+  }
+  
 }

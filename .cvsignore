@@ -4,3 +4,4 @@ test-reports
 .classpath
 .project
 *.log
+jars

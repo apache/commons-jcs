@@ -20,7 +20,7 @@ public class TestJCSvHashtablePerf extends TestCase
 
     float ratioGet = 0;
 
-    float target   = 2.50f;
+    float target   = 3.50f;
 
     int   loops    = 20;
 

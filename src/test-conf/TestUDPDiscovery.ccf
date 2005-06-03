@@ -1,0 +1,76 @@
+##############################################################
+################## DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=LTCP
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=200001
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+
+##############################################################
+################## CACHE REGIONS AVAILABLE ###################
+# Regions preconfirgured for caching
+jcs.region.testCache1=LTCP
+jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
+jcs.region.testCache1.elementattributes.IsLateral=true
+jcs.region.testCache1.elementattributes.IsRemote=true
+
+jcs.region.testCache2=LTCP2
+jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache2.cacheattributes.MaxObjects=1000
+jcs.region.testCache2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache2.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache2.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache2.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache2.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache2.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache2.elementattributes.IsEternal=false
+jcs.region.testCache2.elementattributes.MaxLifeSeconds=60000
+jcs.region.testCache2.elementattributes.IsLateral=true
+jcs.region.testCache2.elementattributes.IsRemote=true
+
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+
+# Lateral TCp with UDP discovery enabled
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP.attributes.TcpServers=
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+#jcs.auxiliary.LTCP.attributes.Receive=true
+
+# Lateral TCP with UDP discovery disabled
+jcs.auxiliary.LTCP2=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP2.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP2.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP2.attributes.TcpServers=
+jcs.auxiliary.LTCP2.attributes.TcpListenerPort=1111
+jcs.auxiliary.LTCP2.attributes.PutOnlyMode=true
+jcs.auxiliary.LTCP2.attributes.UdpDiscoveryHost=228.5.6.8
+jcs.auxiliary.LTCP2.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP2.attributes.UdpDiscoveryEnabled=false
+

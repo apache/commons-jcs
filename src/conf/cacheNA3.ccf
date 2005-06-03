@@ -1,7 +1,7 @@
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
-jcs.default=DC,LJG
+jcs.default=DC,RC
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=250000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -20,7 +20,7 @@ jcs.default.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=DC,LJG
+jcs.region.testCache1=DC,RC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=250000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -41,18 +41,26 @@ jcs.region.testCache1.elementattributes.IsSpool=true
 # Primary Disk Cache-- faster than the rest because of memory key storage
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.DC.attributes.DiskPath=logs/rafJG1
+jcs.auxiliary.DC.attributes.DiskPath=logs/rafNA
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=100000
 jcs.auxiliary.DC.attributes.MaxKeySize=500000
 jcs.auxiliary.DC.attributes.MaxRecycleBinSize=50000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=-1
 
-# Lateral JavaGroups Distribution
-jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
-jcs.auxiliary.LJG.attributes.PutOnlyMode=true
-jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.10.10.10;mcast_port=5555;ip_ttl=32):PING(timeout=3000;num_initial_members=6):FD(timeout=3000):VERIFY_SUSPECT(timeout=1500):pbcast.NAKACK(gc_lag=10;retransmit_timeout=600,1200,2400,4800):UNICAST(timeout=600,1200,2400,4800):pbcast.STABLE(desired_avg_gossip=10000):FRAG:pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=false;print_local_addr=true)
+# REMOTE SERVER RS1
+jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
+# First server is primary, the rest will be tried in order if the primary fails
+jcs.auxiliary.RC.attributes.FailoverServers=server:1101
+jcs.auxiliary.RC.attributes.LocalPort=1200
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
+#-1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=-1
+jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
+jcs.auxiliary.RC.attributes.GetOnly=false
+jcs.auxiliary.RC.attributes.EventQueueType=POOLED
+jcs.auxiliary.RC.attributes.EventQueuePolName=disk_cache_event_queue
 
 
 ##############################################################
@@ -67,9 +75,35 @@ thread_pool.default.whenBlockedPolicy=RUN
 thread_pool.default.startUpSize=4
 
 # Remote cache client thread pool config
-thread_pool.lg_event_queue.boundarySize=5000
-thread_pool.lg_event_queue.maximumPoolSize=75
-thread_pool.lg_event_queue.minimumPoolSize=10
-thread_pool.lg_event_queue.keepAliveTime=350000
-thread_pool.lg_event_queue.whenBlockedPolicy=DISCARDOLDEST
-thread_pool.lg_event_queue.startUpSize=4
+thread_pool.remote_cache_client.boundarySize=75
+thread_pool.remote_cache_client.maximumPoolSize=150
+thread_pool.remote_cache_client.minimumPoolSize=25
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.whenBlockedPolicy=RUN
+thread_pool.remote_cache_client.startUpSize=4
+
+thread_pool.remote_cache_server.boundarySize=100000
+thread_pool.remote_cache_server.maximumPoolSize=150
+thread_pool.remote_cache_server.minimumPoolSize=15
+thread_pool.remote_cache_server.keepAliveTime=350000
+thread_pool.remote_cache_server.whenBlockedPolicy=RUN
+thread_pool.remote_cache_server.startUpSize=4
+
+##############################################################
+################## OPTIONAL THREAD POOL CONFIGURATION ###################
+# Default thread pool config
+thread_pool.default.boundarySize=2000
+thread_pool.default.maximumPoolSize=150
+thread_pool.default.minimumPoolSize=4
+thread_pool.default.keepAliveTime=350000
+#RUN ABORT WAIT BLOCK DISCARDOLDEST
+thread_pool.default.whenBlockedPolicy=RUN
+thread_pool.default.startUpSize=4
+
+# Remote cache client thread pool config
+thread_pool.remote_cache_client.boundarySize=5000
+thread_pool.remote_cache_client.maximumPoolSize=75
+thread_pool.remote_cache_client.minimumPoolSize=10
+thread_pool.remote_cache_client.keepAliveTime=350000
+thread_pool.remote_cache_client.whenBlockedPolicy=DISCARDOLDEST
+thread_pool.remote_cache_client.startUpSize=4

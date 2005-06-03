@@ -120,10 +120,17 @@ public class CacheElement implements ICacheElement, Serializable
     /**
      * Gets the IElementAttributes attribute of the CacheElement object
      *
-     * @return The IElementAttributes value
+     * @return The IElementAttributes value, never null
      */
     public IElementAttributes getElementAttributes()
     {
+        // create default attributes if they are null
+        // this shouldn't happen, but could if a corrupt
+        // object was sent over the wire.
+        if ( this.attr == null )
+        {
+            this.attr = new ElementAttributes();
+        }
         return this.attr;
     }
 

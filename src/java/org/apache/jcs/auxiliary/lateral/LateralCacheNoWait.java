@@ -39,268 +39,280 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
-
 /**
  * Used to queue up update requests to the underlying cache. These requests will
  * be processed in their order of arrival via the cache event queue processor.
- *
+ *  
  */
 public class LateralCacheNoWait
     implements AuxiliaryCache
 {
-  private final static Log log =
-      LogFactory.getLog( LateralCacheNoWait.class );
+    private final static Log log = LogFactory.getLog( LateralCacheNoWait.class );
 
-  private final LateralCache cache;
-  private ICacheEventQueue q;
+    private final LateralCache cache;
 
-  /**
-   * Constructs with the given lateral cache, and fires up an event queue for
-   * aysnchronous processing.
-   *
-   * @param cache
-   */
-  public LateralCacheNoWait( LateralCache cache )
-  {
-    this.cache = cache;
+    private ICacheEventQueue q;
 
-    CacheEventQueueFactory fact = new CacheEventQueueFactory();
-    this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
-                                  LateralCacheInfo.listenerId,
-                                  cache.getCacheName(),
-                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
-                                  cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
-
-    // need each no wait to handle each of its real updates and removes, since there may
-    // be more than one per cache?  alternativve is to have the cache
-    // perform updates using a different method that spcifies the listener
-    //this.q = new CacheEventQueue(new CacheAdaptor(this), LateralCacheInfo.listenerId, cache.getCacheName());
-    if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
+    /**
+     * Constructs with the given lateral cache, and fires up an event queue for
+     * aysnchronous processing.
+     * 
+     * @param cache
+     */
+    public LateralCacheNoWait( LateralCache cache )
     {
-      q.destroy();
+        this.cache = cache;
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Constructing LateralCacheNoWait, LateralCache = [" + cache + "]" );
+        }
+        
+        CacheEventQueueFactory fact = new CacheEventQueueFactory();
+        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
+            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
+            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+
+        // need each no wait to handle each of its real updates and removes,
+        // since there may
+        // be more than one per cache? alternativve is to have the cache
+        // perform updates using a different method that spcifies the listener
+        //this.q = new CacheEventQueue(new CacheAdaptor(this),
+        // LateralCacheInfo.listenerId, cache.getCacheName());
+        if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
+        {
+            q.destroy();
+        }
     }
-  }
 
-  /** 
-   * @param ce
-   * @throws IOException
-   */
-  public void update( ICacheElement ce ) throws IOException
-  {
-    try
+    /**
+     * @param ce
+     * @throws IOException
+     */
+    public void update( ICacheElement ce )
+        throws IOException
     {
-      q.addPutEvent( ce );
-    }
-    catch ( IOException ex )
-    {
-      log.error( ex );
-      q.destroy();
-    }
-  }
-
-  /** Synchronously reads from the lateral cache. 
-   * @param key
-   * @return ICacheElement if found, else null
-   */
-  public ICacheElement get( Serializable key )
-  {
-
-    if ( this.getStatus() != CacheConstants.STATUS_ERROR )
-    {
-      try
-      {
-        return cache.get( key );
-      }
-      catch ( UnmarshalException ue )
-      {
-        log.debug( "Retrying the get owing to UnmarshalException..." );
         try
         {
-          return cache.get( key );
+            q.addPutEvent( ce );
         }
         catch ( IOException ex )
         {
-          log.error( "Failed in retrying the get for the second time." );
-          q.destroy();
+            log.error( ex );
+            q.destroy();
         }
-      }
-      catch ( IOException ex )
-      {
-        q.destroy();
-      }
     }
-    return null;
-  }
 
-  public Set getGroupKeys( String groupName )
-  {
-    return cache.getGroupKeys( groupName );
-  }
-
-  /** Adds a remove request to the lateral cache. 
-   * @param key
-   * @return always false
-   */
-  public boolean remove( Serializable key )
-  {
-    try
+    /**
+     * Synchronously reads from the lateral cache.
+     * 
+     * @param key
+     * @return ICacheElement if found, else null
+     */
+    public ICacheElement get( Serializable key )
     {
-      q.addRemoveEvent( key );
+
+        if ( this.getStatus() != CacheConstants.STATUS_ERROR )
+        {
+            try
+            {
+                return cache.get( key );
+            }
+            catch ( UnmarshalException ue )
+            {
+                log.debug( "Retrying the get owing to UnmarshalException..." );
+                try
+                {
+                    return cache.get( key );
+                }
+                catch ( IOException ex )
+                {
+                    log.error( "Failed in retrying the get for the second time." );
+                    q.destroy();
+                }
+            }
+            catch ( IOException ex )
+            {
+                q.destroy();
+            }
+        }
+        return null;
     }
-    catch ( IOException ex )
+
+    public Set getGroupKeys( String groupName )
     {
-      log.error( ex );
-      q.destroy();
+        return cache.getGroupKeys( groupName );
     }
-    return false;
-  }
 
-  /** Adds a removeAll request to the lateral cache. */
-  public void removeAll()
-  {
-    try
+    /**
+     * Adds a remove request to the lateral cache.
+     * 
+     * @param key
+     * @return always false
+     */
+    public boolean remove( Serializable key )
     {
-      q.addRemoveAllEvent();
+        try
+        {
+            q.addRemoveEvent( key );
+        }
+        catch ( IOException ex )
+        {
+            log.error( ex );
+            q.destroy();
+        }
+        return false;
     }
-    catch ( IOException ex )
+
+    /** Adds a removeAll request to the lateral cache. */
+    public void removeAll()
     {
-      log.error( ex );
-      q.destroy();
+        try
+        {
+            q.addRemoveAllEvent();
+        }
+        catch ( IOException ex )
+        {
+            log.error( ex );
+            q.destroy();
+        }
     }
-  }
 
-  /** Adds a dispose request to the lateral cache. */
-  public void dispose()
-  {
-    try
+    /** Adds a dispose request to the lateral cache. */
+    public void dispose()
     {
-      q.addDisposeEvent();
+        try
+        {
+            q.addDisposeEvent();
+        }
+        catch ( IOException ex )
+        {
+            log.error( ex );
+            q.destroy();
+        }
     }
-    catch ( IOException ex )
+
+    /**
+     * No lateral invokation.
+     * 
+     * @return The size value
+     */
+    public int getSize()
     {
-      log.error( ex );
-      q.destroy();
+        return cache.getSize();
     }
-  }
 
-  /**
-   * No lateral invokation.
-   *
-   * @return The size value
-   */
-  public int getSize()
-  {
-    return cache.getSize();
-  }
-
-  /**
-   * No lateral invokation.
-   *
-   * @return The cacheType value
-   */
-  public int getCacheType()
-  {
-    return cache.getCacheType();
-  }
-
-  /**
-   * Returns the asyn cache status. An error status indicates either the
-   * lateral connection is not available, or the asyn queue has been
-   * unexpectedly destroyed. No lateral invokation.
-   *
-   * @return The status value
-   */
-  public int getStatus()
-  {
-    return q.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
-  }
-
-  /**
-   * Gets the cacheName attribute of the LateralCacheNoWait object
-   *
-   * @return The cacheName value
-   */
-  public String getCacheName()
-  {
-    return cache.getCacheName();
-  }
-
-  /**
-   * Replaces the lateral cache service handle with the given handle and reset
-   * the queue by starting up a new instance.
-   * 
-   * @param lateral
-   */
-  public void fixCache( ILateralCacheService lateral )
-  {
-    cache.fixCache( lateral );
-    resetEventQ();
-    return;
-  }
-
-  /**
-   * Resets the event q by first destroying the existing one and starting up
-   * new one.
-   */
-  public void resetEventQ()
-  {
-    if ( q.isWorking() )
+    /**
+     * No lateral invokation.
+     * 
+     * @return The cacheType value
+     */
+    public int getCacheType()
     {
-      q.destroy();
+        return cache.getCacheType();
     }
-    CacheEventQueueFactory fact = new CacheEventQueueFactory();
-    this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ),
-                                  LateralCacheInfo.listenerId,
-                                  cache.getCacheName(),
-                                  cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(),
-                                  cache.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
-  }
 
-  /*
-   *  (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
-  public String toString()
-  {
-    return "LateralCacheNoWait: " + cache.toString();
-  }
+    /**
+     * Returns the asyn cache status. An error status indicates either the
+     * lateral connection is not available, or the asyn queue has been
+     * unexpectedly destroyed. No lateral invokation.
+     * 
+     * @return The status value
+     */
+    public int getStatus()
+    {
+        return q.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
+    }
 
-  /**
-   * getStats
-   *
-   * @return String
-   */
-  public String getStats()
-  {
-    return getStatistics().toString();
-  }
+    /**
+     * Gets the cacheName attribute of the LateralCacheNoWait object
+     * 
+     * @return The cacheName value
+     */
+    public String getCacheName()
+    {
+        return cache.getCacheName();
+    }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
-   */
-  public IStats getStatistics()
-  {
-    IStats stats = new Stats();
-    stats.setTypeName( "Lateral Cache No Wait" );
+    /**
+     * Replaces the lateral cache service handle with the given handle and reset
+     * the queue by starting up a new instance.
+     * 
+     * @param lateral
+     */
+    public void fixCache( ILateralCacheService lateral )
+    {
+        cache.fixCache( lateral );
+        resetEventQ();
+        return;
+    }
 
-    ArrayList elems = new ArrayList();
+    /**
+     * Resets the event q by first destroying the existing one and starting up
+     * new one.
+     */
+    public void resetEventQ()
+    {
+        if ( q.isWorking() )
+        {
+            q.destroy();
+        }
+        CacheEventQueueFactory fact = new CacheEventQueueFactory();
+        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
+            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
+            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+    }
 
-    //IStatElement se = null;
-    // no data gathered here
+    /**
+     * getStats
+     * 
+     * @return String
+     */
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
 
-	// get the stats from the event queue too
-	// get as array, convert to list, add list to our outer list
-	IStats eqStats = this.q.getStatistics();
-	IStatElement[] eqSEs = eqStats.getStatElements();
-	List eqL = Arrays.asList(eqSEs);
-	elems.addAll( eqL );
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+        IStats stats = new Stats();
+        stats.setTypeName( "Lateral Cache No Wait" );
 
-    // get an array and put them in the Stats object
-    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
-    stats.setStatElements( ses );
+        ArrayList elems = new ArrayList();
 
-    return stats;
-  }
+        //IStatElement se = null;
+        // no data gathered here
+
+        // get the stats from the event queue too
+        // get as array, convert to list, add list to our outer list
+        IStats eqStats = this.q.getStatistics();
+        IStatElement[] eqSEs = eqStats.getStatElements();
+        List eqL = Arrays.asList( eqSEs );
+        elems.addAll( eqL );
+
+        // get an array and put them in the Stats object
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        stats.setStatElements( ses );
+
+        return stats;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( " LateralCacheNoWait " );
+        buf.append( " Status = " + this.getStatus() );
+        buf.append( " cache = [" + cache.toString() + "]" );
+        return buf.toString();
+    }
 }

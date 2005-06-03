@@ -253,6 +253,7 @@ public class RemoteCacheServerFactory
 
                 try
                 {
+                    System.out.println( admin.getStats().toString() );
                     log.debug( admin.getStats() );
                 }
                 catch ( Exception es )

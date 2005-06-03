@@ -191,12 +191,12 @@ public class RemoteCacheServerListener
     public void handlePut( ICacheElement cb )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
             puts++;
             if ( puts % 100 == 0 )
             {
-                log.debug( "puts = " + puts );
+                log.info( "puts from remote server = " + puts );
             }
         }
 
@@ -209,12 +209,12 @@ public class RemoteCacheServerListener
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
             removes++;
             if ( removes % 100 == 0 )
             {
-                log.debug( "removes = " + removes );
+                log.info( "removes = " + removes );
             }
         }
 
@@ -235,9 +235,9 @@ public class RemoteCacheServerListener
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( "handleRemoveAll> cacheName=" + cacheName );
+            log.info( "handleRemoveAll> cacheName=" + cacheName );
         }
         getCacheManager();
         ICache cache = cacheMgr.getCache( cacheName );

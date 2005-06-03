@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.6.1</currentVersion>
+  <currentVersion>1.2.6.3</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -196,6 +196,7 @@
         <include>**/TestSortedPrefArray.java</include>
         <include>**/TestRemovalConcurrent.java</include>
         <include>**/TestRemovalSimple.java</include>
+        <include>**/TestUDPDiscovery.java</include>
       </includes>
       <resources>
         <includes>

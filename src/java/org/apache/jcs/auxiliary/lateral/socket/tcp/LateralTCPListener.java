@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -40,14 +38,13 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them.
- *
+ * 
  * @version $Id$
  */
 public class LateralTCPListener
     implements ILateralCacheListener, Serializable
 {
-    private final static Log log =
-        LogFactory.getLog( LateralTCPListener.class );
+    private final static Log log = LogFactory.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinte. */
     private final static int acceptTimeOut = 0;
@@ -64,11 +61,13 @@ public class LateralTCPListener
     private ListenerThread receiver;
 
     private ILateralCacheAttributes ilca;
+
     private int port;
 
     private PooledExecutor pooledExecutor = new PooledExecutor();
 
     private int putCnt = 0;
+
     private int removeCnt = 0;
 
     // -------------------------------------------------------- factory methods
@@ -79,11 +78,9 @@ public class LateralTCPListener
      * @param ilca
      * @return The instance value
      */
-    public synchronized static ILateralCacheListener
-        getInstance( ILateralCacheAttributes ilca )
+    public synchronized static ILateralCacheListener getInstance( ILateralCacheAttributes ilca )
     {
-        ILateralCacheListener ins = ( ILateralCacheListener )
-            instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
+        ILateralCacheListener ins = (ILateralCacheListener) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
         if ( ins == null )
         {
@@ -107,7 +104,7 @@ public class LateralTCPListener
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
-     *
+     * 
      * @param ilca
      */
     protected LateralTCPListener( ILateralCacheAttributes ilca )
@@ -115,7 +112,9 @@ public class LateralTCPListener
         this.ilca = ilca;
     }
 
-    /** Description of the Method */
+    /**
+     * This starts the ListenerThread on the specified port.
+     */
     public void init()
     {
         try
@@ -139,8 +138,11 @@ public class LateralTCPListener
      * listerenr for all the regions and every region gets registered? the id
      * shouldn't be set if it isn't zero. If it is we assume that it is a
      * reconnect.
-     *
-     * @param id The new listenerId value
+     * <p>
+     * By default, the listener id is the vmid.
+     * 
+     * @param id
+     *            The new listenerId value
      * @throws IOException
      */
     public void setListenerId( long id )
@@ -155,7 +157,7 @@ public class LateralTCPListener
 
     /**
      * Gets the listenerId attribute of the LateralCacheTCPListener object
-     *
+     * 
      * @return The listenerId value
      * @throws IOException
      */
@@ -165,16 +167,21 @@ public class LateralTCPListener
         return LateralCacheInfo.listenerId;
     }
 
-    // ---------------------------------------- interface ILateralCacheListener
 
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
+     */
     public void handlePut( ICacheElement element )
         throws IOException
     {
         putCnt++;
-        if ( log.isInfoEnabled() ) {
-          if ( putCnt % 100 == 0 ) {
-            log.info( "Put Count = " + putCnt );
-          }
+        if ( log.isInfoEnabled() )
+        {
+            if ( getPutCnt() % 100 == 0 )
+            {
+                log.info( "Put Count = " + getPutCnt() );
+            }
         }
 
         if ( log.isDebugEnabled() )
@@ -182,27 +189,24 @@ public class LateralTCPListener
             log.debug( "handlePut> cacheName=" + element.getCacheName() + ", key=" + element.getKey() );
         }
 
-
-        // This was the following, however passing true in for updateRemotes
-        // causes an a loop, since the element will the be sent to the sender.
-        // Passing false in fixes things, but I'm not sure I understand all
-        // the details yet.
-        //
-        // getCache( element.getCacheName() )
-        //    .update( element, CacheConstants.REMOTE_INVOKATION );
-
         getCache( element.getCacheName() ).localUpdate( element );
     }
 
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String, java.io.Serializable)
+     */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
-      removeCnt++;
-      if ( log.isInfoEnabled() ) {
-        if ( removeCnt % 100 == 0 ) {
-          log.info( "Remove Count = " + removeCnt );
+        removeCnt++;
+        if ( log.isInfoEnabled() )
+        {
+            if ( getRemoveCnt() % 100 == 0 )
+            {
+                log.info( "Remove Count = " + getRemoveCnt() );
+            }
         }
-      }
 
         if ( log.isDebugEnabled() )
         {
@@ -212,6 +216,10 @@ public class LateralTCPListener
         getCache( cacheName ).localRemove( key );
     }
 
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
+     */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
@@ -240,6 +248,10 @@ public class LateralTCPListener
         return getCache( cacheName ).localGet( key );
     }
 
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
+     */
     public void handleDispose( String cacheName )
         throws IOException
     {
@@ -276,10 +288,27 @@ public class LateralTCPListener
     // ---------------------------------------------------------- inner classes
 
     /**
+     * @return Returns the putCnt.
+     */
+    public int getPutCnt()
+    {
+        return putCnt;
+    }
+
+    /**
+     * @return Returns the removeCnt.
+     */
+    public int getRemoveCnt()
+    {
+        return removeCnt;
+    }
+
+    /**
      * Processes commands from the server socket. There should be one listener
      * for each configured TCP lateral.
      */
-    public class ListenerThread extends Thread
+    public class ListenerThread
+        extends Thread
     {
         /** Main processing method for the ListenerThread object */
         public void run()
@@ -324,11 +353,14 @@ public class LateralTCPListener
     /**
      * Separate thread run when a command comes into the LateralTCPReceiver.
      */
-    public class ConnectionHandler implements Runnable
+    public class ConnectionHandler
+        implements Runnable
     {
         private Socket socket;
 
-        /** Construct for a given socket 
+        /**
+         * Construct for a given socket
+         * 
          * @param socket
          */
         public ConnectionHandler( Socket socket )
@@ -360,7 +392,7 @@ public class LateralTCPListener
             {
                 while ( true )
                 {
-                    led = ( LateralElementDescriptor ) ois.readObject();
+                    led = (LateralElementDescriptor) ois.readObject();
 
                     if ( led == null )
                     {
@@ -375,10 +407,8 @@ public class LateralTCPListener
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "receiving LateralElementDescriptor from another"
-                                       + "led = " + led
-                                       + ", led.command = " + led.command
-                                       + ", led.ce = " + led.ce );
+                            log.debug( "receiving LateralElementDescriptor from another" + "led = " + led
+                                + ", led.command = " + led.command + ", led.ce = " + led.ce );
                         }
 
                         handle( led );
@@ -408,7 +438,15 @@ public class LateralTCPListener
             }
         }
 
-        private void handle( LateralElementDescriptor led ) throws IOException
+        /**
+         * This calls the appropriate method, based on the command sent in the
+         * Lateral element descriptor.
+         * 
+         * @param led
+         * @throws IOException
+         */
+        private void handle( LateralElementDescriptor led )
+            throws IOException
         {
             String cacheName = led.ce.getCacheName();
             Serializable key = led.ce.getKey();
@@ -429,8 +467,7 @@ public class LateralTCPListener
             {
                 Serializable obj = handleGet( cacheName, key );
 
-                ObjectOutputStream oos =
-                    new ObjectOutputStream( socket.getOutputStream() );
+                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
 
                 if ( oos != null )
                 {

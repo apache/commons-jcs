@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,13 +16,11 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-
 import java.util.Iterator;
-
-import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.CacheConstants;
 
 /**
  * Used to monitor and repair any failed connection for the lateral cache
@@ -32,26 +29,35 @@ import org.apache.commons.logging.LogFactory;
  * connection error, the monitor changes to operate in a time driven mode. That
  * is, it attempts to recover the connections on a periodic basis. When all
  * failed connections are restored, it changes back to the failure driven mode.
- *
+ *  
  */
-public class LateralCacheMonitor implements Runnable
+public class LateralCacheMonitor
+    implements Runnable
 {
-    private final static Log log =
-        LogFactory.getLog( LateralCacheMonitor.class );
+    private final static Log log = LogFactory.getLog( LateralCacheMonitor.class );
 
     private static LateralCacheMonitor instance;
+
     private static long idlePeriod = 20 * 1000;
+
     // minimum 20 seconds.
     //private static long idlePeriod = 3*1000; // for debugging.
 
-    // Must make sure LateralCacheMonitor is started before any lateral error can be detected!
+    // Must make sure LateralCacheMonitor is started before any lateral error
+    // can be detected!
     private boolean alright = true;
 
+    private final static int TIME = 0;
+
+    private final static int ERROR = 1;
+
+    private static int mode = ERROR;
 
     /**
      * Configures the idle period between repairs.
-     *
-     * @param idlePeriod The new idlePeriod value
+     * 
+     * @param idlePeriod
+     *            The new idlePeriod value
      */
     public static void setIdlePeriod( long idlePeriod )
     {
@@ -61,14 +67,25 @@ public class LateralCacheMonitor implements Runnable
         }
     }
 
+    /**
+     * Allows close classes, ie testers to set the idel period to somethin
+     * testable.
+     * @param idlePeriod
+     */
+    protected static void forceShortIdlePeriod( long idlePeriod )
+    {
+        LateralCacheMonitor.idlePeriod = idlePeriod;
+    }
 
     /** Constructor for the LateralCacheMonitor object */
-    private LateralCacheMonitor() { }
-
+    private LateralCacheMonitor( )
+    {
+            // nop
+    }
 
     /**
      * Returns the singleton instance;
-     *
+     * 
      * @return The instance value
      */
     static LateralCacheMonitor getInstance()
@@ -83,7 +100,6 @@ public class LateralCacheMonitor implements Runnable
         return instance;
     }
 
-
     /**
      * Notifies the cache monitor that an error occurred, and kicks off the
      * error recovery process.
@@ -97,48 +113,56 @@ public class LateralCacheMonitor implements Runnable
         }
     }
 
-    // Run forever.
-
-    // Avoid the use of any synchronization in the process of monitoring for performance reason.
-    // If exception is thrown owing to synchronization,
-    // just skip the monitoring until the next round.
-    /** Main processing method for the LateralCacheMonitor object */
+    /**
+     *  Main processing method for the LateralCacheMonitor object 
+     */
     public void run()
     {
         do
         {
-            if ( alright )
+            if ( mode == ERROR )
             {
-                synchronized ( this )
+                if ( log.isDebugEnabled() )
                 {
                     if ( alright )
                     {
-                        // Failure driven mode.
-                        try
+                        log.debug( "ERROR DRIVEN MODE: alright = " + alright + ", connection monitor will wait for an error." );                        
+                    }
+                    else
+                    {
+                        log.debug( "ERROR DRIVEN MODE: alright = " + alright + " connection monitor running." );                                            
+                    }
+                }
+                
+                if ( alright )
+                {
+                    synchronized ( this )
+                    {
+                        if ( alright )
                         {
-                            wait();
-                            // wake up only if there is an error.
-                        }
-                        catch ( InterruptedException ignore )
-                        {
+                            // Failure driven mode.
+                            try
+                            {
+                                wait();
+                                // wake up only if there is an error.
+                            }
+                            catch ( InterruptedException ignore )
+                            {
+                                //no op, this is expected
+                            }
                         }
                     }
                 }
             }
-            // Time driven mode: sleep between each round of recovery attempt.
-            try
+            else
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "cache monitor sleeping for " + idlePeriod );
-                }
-
-                Thread.sleep( idlePeriod );
+                log.debug( "TIME DRIVEN MODE: connection monitor will sleep for " + idlePeriod + " after this run." );
+                // Time driven mode: sleep between each round of recovery
+                // attempt.
+                // will need to test not just check status
             }
-            catch ( InterruptedException ex )
-            {
-                // ignore;
-            }
+            
+           
             // The "alright" flag must be false here.
             // Simply presume we can fix all the errors until proven otherwise.
             synchronized ( this )
@@ -146,63 +170,104 @@ public class LateralCacheMonitor implements Runnable
                 alright = true;
             }
 
-            log.debug( "cache monitor running." );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Cache monitor running." );                
+            }
 
             // Monitor each LateralCacheManager instance one after the other.
             // Each LateralCacheManager corresponds to one lateral connection.
-            log.info( "LateralCacheManager.instances.size() = "  + LateralCacheManager.instances.size() );
+            log.info( "LateralCacheManager.instances.size() = " + LateralCacheManager.instances.size() );
             //for
             int cnt = 0;
             Iterator itr = LateralCacheManager.instances.values().iterator();
-            while ( itr.hasNext() ) {
+            while ( itr.hasNext() )
+            {
                 cnt++;
-                LateralCacheManager mgr = ( LateralCacheManager ) itr.next();
+                LateralCacheManager mgr = (LateralCacheManager) itr.next();
                 try
                 {
-                    // If any cache is in error, it strongly suggests all caches managed by the
-                    // same LateralCacheManager instance are in error.  So we fix them once and for all.
+                    // If any cache is in error, it strongly suggests all caches
+                    // managed by the
+                    // same LateralCacheManager instance are in error. So we fix
+                    // them once and for all.
                     //for
-                    log.info( "\n " + cnt + "- mgr.lca.getTcpServer() = "  + mgr.lca.getTcpServer() + " mgr = " + mgr);
-                    log.info( "\n " + cnt + "- mgr.caches.size() = "  + mgr.caches.size() );
-                    Iterator itr2 = mgr.caches.values().iterator();
-                    //{
-                        while( itr2.hasNext() )
-                        {
-                            LateralCacheNoWait c = ( LateralCacheNoWait ) itr2.next();
-                            if ( c.getStatus() == CacheConstants.STATUS_ERROR )
-                            {
-                                log.info( "found LateralCacheNoWait in error, " + c.toString() );
+                    log.info( "\n " + cnt + "- mgr.lca.getTcpServer() = " + mgr.lca.getTcpServer() + " mgr = " + mgr );
+                    log.info( "\n " + cnt + "- mgr.caches.size() = " + mgr.caches.size() );
 
-                                LateralCacheRestore repairer = new LateralCacheRestore( mgr );
-                                // If we can't fix them, just skip and re-try in the next round.
-                                if ( repairer.canFix() )
-                                {
-                                    repairer.fix();
-                                }
-                                else
-                                {
-                                    bad();
-                                }
-                                //break;
-                            } else {
-                              log.info("lcnw not in error");
-                            }
+                    if ( mgr.caches.size() == 0 )
+                    {
+                        // there is probably a problem.
+                        // monitor may be running when we just started up and there
+                        // is not a cache yet.
+                        // if this is error driven mode, mark as bad,
+                        // otherwise we will come back around argain.
+                        if ( mode == ERROR )
+                        {
+                            bad();                            
                         }
-                    //}
+                    }
+                    
+                    Iterator itr2 = mgr.caches.values().iterator();
+                    
+                    while ( itr2.hasNext() )
+                    {
+                        LateralCacheNoWait c = (LateralCacheNoWait) itr2.next();
+                        if ( c.getStatus() == CacheConstants.STATUS_ERROR )
+                        {
+                            log.info( "found LateralCacheNoWait in error, " + c.toString() );
+
+                            LateralCacheRestore repairer = new LateralCacheRestore( mgr );
+                            // If we can't fix them, just skip and re-try in the
+                            // next round.
+                            if ( repairer.canFix() )
+                            {
+                                repairer.fix();
+                            }
+                            else
+                            {
+                                bad();
+                            }
+                            //break;
+                        }
+                        else
+                        {
+                            log.info( "Lateral Cache No Wait not in error" );
+                        }
+                    }
                 }
                 catch ( Exception ex )
                 {
                     bad();
-                    // Problem encountered in fixing the caches managed by a LateralCacheManager instance.
+                    // Problem encountered in fixing the caches managed by a
+                    // LateralCacheManager instance.
                     // Soldier on to the next LateralCacheManager instance.
-                    log.error( ex );
+                    log.error( "Problem encountered in fixing the caches", ex );
                 }
             }
-        } while ( true );
+            
+            try
+            {
+                // don't want to sleep after waking from an error
+                // run immediately and sleep here.
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Lateral cache monitor sleeping for " + idlePeriod + " between runs." );
+                }
+
+                Thread.sleep( idlePeriod );
+            }
+            catch ( InterruptedException ex )
+            {
+                // ignore;
+            }            
+        }
+        while ( true );
     }
 
-
-    /** Sets the "alright" flag to false in a critial section. */
+    /** 
+     * Sets the "alright" flag to false in a critial section. 
+     */
     private void bad()
     {
         if ( alright )
@@ -214,4 +279,3 @@ public class LateralCacheMonitor implements Runnable
         }
     }
 }
-

@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -45,22 +43,27 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
  * repair structure, so it is significant;y different.
- *
+ * 
  * @version $Id$
  */
 public class LateralTCPSender
 {
-    private final static Log log =
-        LogFactory.getLog( LateralTCPSender.class );
+    private final static Log log = LogFactory.getLog( LateralTCPSender.class );
 
     private ILateralCacheAttributes ilca;
 
     private String remoteHost;
+
     private InetAddress address;
+
     int port = 1111;
+
     private ObjectOutputStream oos;
+
     private Socket socket;
+
     int counter = 0;
+
     private int sendCnt = 0;
 
     // reset the ObjectOutputStream every 70 calls
@@ -76,12 +79,12 @@ public class LateralTCPSender
     /** Only block for 5 seconds before timing out on startup. */
     private final static int openTimeOut = 5000;
 
-    /** Use to synchronize multiple threads that may be trying to get.*/
+    /** Use to synchronize multiple threads that may be trying to get. */
     private Object getLock = new int[0];
 
     /**
      * Constructor for the LateralTCPSender object
-     *
+     * 
      * @param lca
      * @exception IOException
      */
@@ -93,19 +96,18 @@ public class LateralTCPSender
         int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
         if ( log.isDebugEnabled() )
         {
-          log.debug( "h2 = " + h2 );
-          log.debug( "po = " + po );
+            log.debug( "h2 = " + h2 );
+            log.debug( "po = " + po );
         }
 
         if ( h2 == null )
         {
-          throw new IOException( "Cannot connect to invalid address " + h2 + ":" + po );
+            throw new IOException( "Cannot connect to invalid address " + h2 + ":" + po );
         }
 
         init( h2, po );
         this.ilca = lca;
     }
-
 
     /** Description of the Method */
     protected void init( String host, int port )
@@ -118,7 +120,6 @@ public class LateralTCPSender
         try
         {
             log.debug( "Attempting connection to " + address.getHostName() );
-            //socket = new Socket( address, port );
 
             //  have time out socket open do this for us
             socket = SocketOpener.openSocket( host, port, openTimeOut );
@@ -141,21 +142,19 @@ public class LateralTCPSender
         }
         catch ( IOException e )
         {
-            log.debug( "Could not connect to " + address.getHostName() +
-                ". Exception is " + e );
+            log.debug( "Could not connect to " + address.getHostName() + ". Exception is " + e );
             throw e;
         }
 
     }
-    // end constructor
 
     /**
      * Gets the addressByName attribute of the LateralTCPSender object
-     *
+     * 
      * @return The addressByName value
      */
     private InetAddress getAddressByName( String host )
-      throws IOException
+        throws IOException
     {
         try
         {
@@ -163,23 +162,23 @@ public class LateralTCPSender
         }
         catch ( Exception e )
         {
-            log.error( "Could not find address of [" + host + "]", e );
-            throw new IOException( "Could not find address of [" + host + "]" + e.getMessage() );
-            //return null;
+            log.error( "Could not find address of [" + host + "] ", e );
+            throw new IOException( "Could not find address of [" + host + "] " + e.getMessage() );
         }
     }
-
 
     /** Sends commands to the lateral cache listener. */
     public void send( LateralElementDescriptor led )
         throws IOException
     {
-      sendCnt++;
-      if ( log.isInfoEnabled() ) {
-        if ( sendCnt % 100 == 0 ) {
-          log.info( "Send Count = " + sendCnt );
+        sendCnt++;
+        if ( log.isInfoEnabled() )
+        {
+            if ( sendCnt % 100 == 0 )
+            {
+                log.info( "Send Count = " + sendCnt );
+            }
         }
-      }
 
         log.debug( "sending LateralElementDescriptor" );
 
@@ -218,12 +217,11 @@ public class LateralTCPSender
         }
     }
 
-
     /**
      * Sends commands to the lateral cache listener and gets a response. I'm
      * afraid that we could get into a pretty bad blocking situation here. This
-     * needs work. I just wanted to get some form of get working.  However, get
-     * is not recommended for performance reasons.  If you have 10 laterals, then
+     * needs work. I just wanted to get some form of get working. However, get
+     * is not recommended for performance reasons. If you have 10 laterals, then
      * you have to make 10 failed gets to find out none of the caches have the
      * item.
      */
@@ -245,74 +243,75 @@ public class LateralTCPSender
         if ( oos != null )
         {
 
-          // Synchronized to insure that the get requests to server from this
-          // sender and the responses are processed in order, else you could
-          // return the wrong item from the cache.
-          // This is a big block of code.  May need to rethink this strategy.
-          // This may not be necessary.
-          // Normal puts, etc to laterals do not have to be synchronized.
-          synchronized ( this.getLock )
-          {
-            try
+            // Synchronized to insure that the get requests to server from this
+            // sender and the responses are processed in order, else you could
+            // return the wrong item from the cache.
+            // This is a big block of code. May need to rethink this strategy.
+            // This may not be necessary.
+            // Normal puts, etc to laterals do not have to be synchronized.
+            synchronized ( this.getLock )
             {
-
                 try
                 {
-                  //  clean up input stream, nothing should be there yet.
-                  if ( socket.getInputStream().available() > 0 )
-                  {
-                    socket.getInputStream().read( new byte[socket.getInputStream().available()] );
-                  }
-                }
-                catch ( IOException ioe )
-                {
-                  log.error( "Problem cleaning socket before send " + socket, ioe );
-                  throw ioe;
-                }
 
-                // write object to listener
-                oos.writeObject( led );
-                oos.flush();
-
-                try
-                {
-                    ObjectInputStream ois = new ObjectInputStream( socket.getInputStream() );
-                    Object obj = ois.readObject();
-                    ice = ( ICacheElement ) obj;
-                    if ( ice == null )
+                    try
                     {
-                        //p( "ice is null" );
-                        // TODO: count misses
+                        //  clean up input stream, nothing should be there yet.
+                        if ( socket.getInputStream().available() > 0 )
+                        {
+                            socket.getInputStream().read( new byte[socket.getInputStream().available()] );
+                        }
+                    }
+                    catch ( IOException ioe )
+                    {
+                        log.error( "Problem cleaning socket before send " + socket, ioe );
+                        throw ioe;
                     }
 
-                }
-                catch ( IOException ioe )
-                {
-                    log.error( "Could not open ObjectInputStream to " + socket, ioe );
-                    throw ioe;
-                }
-                catch ( Exception e )
-                {
-                    log.error( e );
-                }
+                    // write object to listener
+                    oos.writeObject( led );
+                    oos.flush();
 
-                if ( ++counter >= RESET_FREQUENCY )
+                    try
+                    {
+                        ObjectInputStream ois = new ObjectInputStream( socket.getInputStream() );
+                        Object obj = ois.readObject();
+                        ice = (ICacheElement) obj;
+                        if ( ice == null )
+                        {
+                            //p( "ice is null" );
+                            // TODO: count misses
+                        }
+
+                    }
+                    catch ( IOException ioe )
+                    {
+                        log.error( "Could not open ObjectInputStream to " + socket, ioe );
+                        throw ioe;
+                    }
+                    catch ( Exception e )
+                    {
+                        log.error( e );
+                    }
+
+                    if ( ++counter >= RESET_FREQUENCY )
+                    {
+                        counter = 0;
+                        // Failing to reset the object output stream every now
+                        // and
+                        // then creates a serious memory leak.
+                        log.info( "Doing oos.reset()" );
+                        oos.reset();
+                    }
+                }
+                catch ( IOException e )
                 {
-                    counter = 0;
-                    // Failing to reset the object output stream every now and
-                    // then creates a serious memory leak.
-                    log.info( "Doing oos.reset()" );
-                    oos.reset();
+                    oos = null;
+                    log.error( "Detected problem with connection: " + e );
+                    throw e;
                 }
             }
-            catch ( IOException e )
-            {
-                oos = null;
-                log.error( "Detected problem with connection: " + e );
-                throw e;
-            }
-          }
-        }  // end synchronized block
+        } // end synchronized block
 
         return ice;
 
@@ -329,14 +328,12 @@ public class LateralTCPSender
         send( led );
     }
 
-
     /** Description of the Method */
     public void remove( String cacheName, Serializable key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
     }
-
 
     /** Description of the Method */
     public void remove( String cacheName, Serializable key, long requesterId )
@@ -349,14 +346,12 @@ public class LateralTCPSender
         send( led );
     }
 
-
     /** Description of the Method */
     public void release()
         throws IOException
     {
         // nothing needs to be done
     }
-
 
     /**
      * Closes connection used by all LateralTCPSenders for this lateral
@@ -371,14 +366,12 @@ public class LateralTCPSender
         oos.close();
     }
 
-
     /** Description of the Method */
     public void removeAll( String cacheName )
         throws IOException
     {
         removeAll( cacheName, LateralCacheInfo.listenerId );
     }
-
 
     /** Description of the Method */
     public void removeAll( String cacheName, long requesterId )
@@ -390,7 +383,6 @@ public class LateralTCPSender
         led.command = LateralElementDescriptor.REMOVEALL;
         send( led );
     }
-
 
     /** Description of the Method */
     public static void main( String args[] )
@@ -422,4 +414,3 @@ public class LateralTCPSender
     }
 
 }
-// end class
