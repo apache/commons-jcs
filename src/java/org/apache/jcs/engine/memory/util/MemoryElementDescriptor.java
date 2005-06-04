@@ -21,20 +21,21 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * This wrapper is needed for double linked lists.
  */
-public class MemoryElementDescriptor extends DoubleLinkedListNode
+public class MemoryElementDescriptor
+    extends DoubleLinkedListNode
 {
 
-  /** The CacheElement wrapped by this descriptor */
-  public ICacheElement ce;
+    /** The CacheElement wrapped by this descriptor */
+    public ICacheElement ce;
 
-  /**
-   * Constructor for the MemoryElementDescriptor object
-   *
-   * @param ce
-   */
-  public MemoryElementDescriptor( ICacheElement ce )
-  {
-    super(ce);
-    this.ce = ce;
-  }
+    /**
+     * Constructor for the MemoryElementDescriptor object
+     * 
+     * @param ce
+     */
+    public MemoryElementDescriptor( ICacheElement ce )
+    {
+        super( ce );
+        this.ce = ce;
+    }
 }

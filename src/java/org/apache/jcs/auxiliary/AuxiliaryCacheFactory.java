@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,36 +16,37 @@ package org.apache.jcs.auxiliary;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.engine.control.CompositeCache;
 
 /**
  * Description of the Interface
- *
+ *  
  */
 public interface AuxiliaryCacheFactory
 {
 
     /**
-     * @param attr Attributes the factory will use to create the AuxiliaryCache
-     *             instance.
-     * @param cache The CompositeCache which will contain the AuxiliaryCache
-     *              instance being created. Allows auxiliaries to retain a
-     *              reference to their associated CompositeCache.
+     * @param attr
+     *            Attributes the factory will use to create the AuxiliaryCache
+     *            instance.
+     * @param cache
+     *            The CompositeCache which will contain the AuxiliaryCache
+     *            instance being created. Allows auxiliaries to retain a
+     *            reference to their associated CompositeCache.
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr,
-                                       CompositeCache cache );
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, CompositeCache cache );
 
     /**
      * Sets the name attribute of the IAuxiliaryCacheFactory object
-     *
-     * @param s The new name value
+     * 
+     * @param s
+     *            The new name value
      */
     public void setName( String s );
 
     /**
      * Gets the name attribute of the IAuxiliaryCacheFactory object
-     *
+     * 
      * @return The name value
      */
     public String getName();

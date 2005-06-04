@@ -1,6 +1,5 @@
 package org.apache.jcs.access.monitor;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.access.monitor;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,12 +31,12 @@ import org.apache.jcs.engine.CacheConstants;
 
 /**
  * Exposes the simple monitoring methods to the public in a simple manner.
- *
+ *  
  */
-public class MonitorAccess implements Serializable
+public class MonitorAccess
+    implements Serializable
 {
-    private static final Log log =
-        LogFactory.getLog( MonitorAccess.class );
+    private static final Log log = LogFactory.getLog( MonitorAccess.class );
 
     /** Description of the Field */
     protected CompositeCacheManager cacheMgr;
@@ -55,9 +53,9 @@ public class MonitorAccess implements Serializable
         }
     }
 
-    /** 
+    /**
      * Removes all.
-     *  
+     * 
      * @param cacheName
      * @param key
      * @return
@@ -96,7 +94,7 @@ public class MonitorAccess implements Serializable
 
                     while ( toke.hasMoreElements() )
                     {
-                        String temp = ( String ) toke.nextElement();
+                        String temp = (String) toke.nextElement();
                         cache.remove( key );
 
                         if ( log.isDebugEnabled() )
@@ -120,8 +118,8 @@ public class MonitorAccess implements Serializable
         return result;
     }
 
-    /** 
-     * Gives basic info on all the regions.  Better to use getStats.
+    /**
+     * Gives basic info on all the regions. Better to use getStats.
      * 
      * @return list of hashtables with keys (name,size,stat)
      */
@@ -135,7 +133,7 @@ public class MonitorAccess implements Serializable
         for ( int i = 0; i < list.length; i++ )
         {
             Hashtable ht = new Hashtable();
-            String name = list[ i ];
+            String name = list[i];
             ht.put( "name", name );
 
             ICache cache = this.cacheMgr.getCache( name );
@@ -143,10 +141,13 @@ public class MonitorAccess implements Serializable
             ht.put( "size", Integer.toString( size ) );
 
             int status = cache.getStatus();
-            String stat = status == CacheConstants.STATUS_ALIVE ? "ALIVE"
-                : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
-                : status == CacheConstants.STATUS_ERROR ? "ERROR"
-                : "UNKNOWN";
+            String stat = status == CacheConstants.STATUS_ALIVE
+                                                               ? "ALIVE"
+                                                               : status == CacheConstants.STATUS_DISPOSED
+                                                                                                         ? "DISPOSED"
+                                                                                                         : status == CacheConstants.STATUS_ERROR
+                                                                                                                                                ? "ERROR"
+                                                                                                                                                : "UNKNOWN";
             ht.put( "stat", stat );
 
             data.add( ht );

@@ -1,6 +1,5 @@
 package org.apache.jcs.access.exception;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,12 +16,12 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-
 /**
  * Description of the Class
- *
+ *  
  */
-public class InvalidGroupException extends CacheException
+public class InvalidGroupException
+    extends CacheException
 {
 
     /** Constructor for the InvalidGroupException object */
@@ -31,10 +30,9 @@ public class InvalidGroupException extends CacheException
         super();
     }
 
-
     /**
      * Constructor for the InvalidGroupException object
-     *
+     * 
      * @param message
      */
     public InvalidGroupException( String message )

@@ -1,6 +1,5 @@
 package org.apache.jcs.access.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,28 +16,26 @@ package org.apache.jcs.access.behavior;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Description of the Interface
- *
+ *  
  */
 public interface ICacheAccess
 {
 
     // Static methods that should be implemented
     //public static void defineRegion( String name, CacheAttributes cattr,
-    //                                 Attributes attr )  throws CacheException;
+    //                                 Attributes attr ) throws CacheException;
     //public static void defineRegion( String name, CacheAttributes cattr )
     //    throws CacheException;
-    //public static void defineRegion( String name )  throws CacheException;
+    //public static void defineRegion( String name ) throws CacheException;
     //public static CacheAccess getAccess( String region );
 
-
-    /** 
+    /**
      * Basic get method.
      * 
      * @param name
@@ -46,9 +43,9 @@ public interface ICacheAccess
      */
     Object get( Object name );
 
-
     /**
      * Puts in cache if an item does not exist with the name in that region.
+     * 
      * @param name
      * @param obj
      * @throws CacheException
@@ -56,7 +53,9 @@ public interface ICacheAccess
     void putSafe( Object name, Object obj )
         throws CacheException;
 
-    /** Puts and/or overides an element with the name in that region. 
+    /**
+     * Puts and/or overides an element with the name in that region.
+     * 
      * @param name
      * @param obj
      * @throws CacheException
@@ -64,8 +63,9 @@ public interface ICacheAccess
     void put( Object name, Object obj )
         throws CacheException;
 
-
-    /** Description of the Method 
+    /**
+     * Description of the Method
+     * 
      * @param name
      * @param obj
      * @param attr
@@ -74,18 +74,18 @@ public interface ICacheAccess
     void put( Object name, Object obj, IElementAttributes attr )
         throws CacheException;
 
-
     /**
      * Removes an item or all items. Should be called remove.
+     * 
      * @throws CacheException
-     *
+     * 
      * @deprecated
      * @see #remove
      */
     void destroy()
         throws CacheException;
 
-    /** 
+    /**
      * Old remove all method.
      * 
      * @throws CacheException
@@ -95,9 +95,10 @@ public interface ICacheAccess
 
     /**
      * The older removeall method.
+     * 
      * @param name
      * @throws CacheException
-     *
+     * 
      * @deprecated
      * @see #remove
      */
@@ -105,7 +106,7 @@ public interface ICacheAccess
         throws CacheException;
 
     /**
-     * Remove an object for this key if one exists, else do nothing. 
+     * Remove an object for this key if one exists, else do nothing.
      * 
      * @param name
      * @throws CacheException
@@ -129,8 +130,7 @@ public interface ICacheAccess
     void resetElementAttributes( IElementAttributes attr )
         throws CacheException;
 
-
-    /**  
+    /**
      * Reset the attributes on the object matching this key name.
      * 
      * @param name
@@ -140,42 +140,41 @@ public interface ICacheAccess
     void resetElementAttributes( Object name, IElementAttributes attr )
         throws CacheException;
 
-
     /**
-     * GetElementAttributes will return an attribute object describing the current
-     * attributes associated with the object name. If no name parameter is
-     * available, the attributes for the region will be returned. The name
+     * GetElementAttributes will return an attribute object describing the
+     * current attributes associated with the object name. If no name parameter
+     * is available, the attributes for the region will be returned. The name
      * object must override the Object.equals and Object.hashCode methods.
-     *
+     * 
      * @return The elementAttributes value
      * @throws CacheException
      */
     IElementAttributes getElementAttributes()
         throws CacheException;
 
-
     /**
      * Gets the elementAttributes attribute of the ICacheAccess object
+     * 
      * @param name
-     *
+     * 
      * @return The elementAttributes value
      * @throws CacheException
      */
     IElementAttributes getElementAttributes( Object name )
         throws CacheException;
 
-
     /**
      * Gets the ICompositeCacheAttributes of the cache region
-     *
+     * 
      * @return
      */
     public ICompositeCacheAttributes getCacheAttributes();
 
     /**
      * Sets the ICompositeCacheAttributes of the cache region
-     *
-     * @param cattr The new ICompositeCacheAttribute value
+     * 
+     * @param cattr
+     *            The new ICompositeCacheAttribute value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr );
 

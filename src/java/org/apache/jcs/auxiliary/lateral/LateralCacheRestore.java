@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
@@ -32,22 +30,22 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Used to repair the lateral caches managed by the associated instance of
  * LateralCacheManager.
- *
+ *  
  */
-public class LateralCacheRestore implements ICacheRestore
+public class LateralCacheRestore
+    implements ICacheRestore
 {
-    private final static Log log =
-        LogFactory.getLog( LateralCacheRestore.class );
+    private final static Log log = LogFactory.getLog( LateralCacheRestore.class );
 
     private final LateralCacheManager lcm;
+
     private boolean canFix = true;
 
     private Object lateralObj;
 
-
     /**
      * Constructs with the given instance of LateralCacheManager.
-     *
+     * 
      * @param lcm
      */
     public LateralCacheRestore( LateralCacheManager lcm )
@@ -55,12 +53,11 @@ public class LateralCacheRestore implements ICacheRestore
         this.lcm = lcm;
     }
 
-
     /**
      * Returns true iff the connection to the lateral host for the corresponding
      * cache manager can be successfully re-established.
      * 
-     * @return whether or not the cache can be fixed.  
+     * @return whether or not the cache can be fixed.
      */
     public boolean canFix()
     {
@@ -85,7 +82,6 @@ public class LateralCacheRestore implements ICacheRestore
         return canFix;
     }
 
-
     /**
      * Fixes up all the caches managed by the associated cache manager.
      */
@@ -95,7 +91,7 @@ public class LateralCacheRestore implements ICacheRestore
         {
             return;
         }
-        lcm.fixCaches( ( ILateralCacheService ) lateralObj, ( ILateralCacheObserver ) lateralObj );
+        lcm.fixCaches( (ILateralCacheService) lateralObj, (ILateralCacheObserver) lateralObj );
         String msg = "Lateral connection resumed.";
         log.info( msg );
         log.debug( msg );

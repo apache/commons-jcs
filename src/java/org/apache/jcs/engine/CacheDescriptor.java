@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -25,23 +23,23 @@ import org.apache.jcs.engine.behavior.ICache;
 
 /**
  * Used to associates a list of cache event queues for a cache.
- *
+ *  
  */
 public class CacheDescriptor
 {
 
     /** Description of the Field */
     public final ICache cache;
+
     /*
      * Map ICacheListener to ICacheEventQueue.
      */
     /** Description of the Field */
     public final Map eventQMap = new Hashtable();
 
-
     /**
      * Constructor for the CacheDescriptor object
-     *
+     * 
      * @param cache
      */
     public CacheDescriptor( ICache cache )

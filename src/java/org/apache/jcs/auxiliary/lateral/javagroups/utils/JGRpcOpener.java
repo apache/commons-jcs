@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups.utils;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -28,28 +27,33 @@ import org.jgroups.blocks.RpcDispatcher;
 /**
  * Socket openere that will timeout on the initial connect rather than block
  * forever. Technique from core java II.
- *
+ * 
  * @version $Id$
  */
-public class JGRpcOpener implements Runnable
+public class JGRpcOpener
+    implements Runnable
 {
 
-    private final static Log log =
-        LogFactory.getLog( JGRpcOpener.class );
-
+    private final static Log log = LogFactory.getLog( JGRpcOpener.class );
 
     private String host;
+
     private int port;
+
     //private Socket socket;
     private Channel rpcCh;
+
     private RpcDispatcher disp;
 
     private String groupName;
+
     private ILateralCacheJGListener ilcl;
+
     private ILateralCacheAttributes ilca;
 
     /** Constructor for the SocketOpener object */
-    public static RpcDispatcher openSocket( ILateralCacheJGListener ilcl, ILateralCacheAttributes ilca, int timeOut, String groupName )
+    public static RpcDispatcher openSocket( ILateralCacheJGListener ilcl, ILateralCacheAttributes ilca, int timeOut,
+                                           String groupName )
     {
         JGRpcOpener opener = new JGRpcOpener( ilcl, ilca, groupName );
         Thread t = new Thread( opener );
@@ -60,15 +64,14 @@ public class JGRpcOpener implements Runnable
         }
         catch ( InterruptedException ire )
         {
-            log.error(ire);
+            log.error( ire );
         }
         return opener.getSocket();
     }
 
-
     /**
      * Constructor for the SocketOpener object
-     *
+     * 
      * @param host
      * @param port
      */
@@ -80,23 +83,24 @@ public class JGRpcOpener implements Runnable
         this.groupName = groupName;
     }
 
-
     /** Main processing method for the SocketOpener object */
     public void run()
     {
         try
         {
 
-            //String props="UDP(mcast_addr=" + ilca.getUdpMulticastAddr() + ";mcast_port=" + ilca.getUdpMulticastPort()+ "):PING:MERGE2(min_interval=5000;max_interval=10000):FD:STABLE:NAKACK:UNICAST:FLUSH:GMS:VIEW_ENFORCER:QUEUE";
-            rpcCh = new JChannel(ilca.getJGChannelProperties());
-            rpcCh.setOpt(Channel.LOCAL, Boolean.FALSE);
+            //String props="UDP(mcast_addr=" + ilca.getUdpMulticastAddr() +
+            // ";mcast_port=" + ilca.getUdpMulticastPort()+
+            // "):PING:MERGE2(min_interval=5000;max_interval=10000):FD:STABLE:NAKACK:UNICAST:FLUSH:GMS:VIEW_ENFORCER:QUEUE";
+            rpcCh = new JChannel( ilca.getJGChannelProperties() );
+            rpcCh.setOpt( Channel.LOCAL, Boolean.FALSE );
             disp = new RpcDispatcher( rpcCh, null, null, ilcl );
-            rpcCh.connect(groupName);
+            rpcCh.connect( groupName );
 
         }
         catch ( Exception e )
         {
-            log.error(e);
+            log.error( e );
         }
     }
 

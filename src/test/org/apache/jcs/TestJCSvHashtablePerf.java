@@ -13,23 +13,24 @@ import junit.framework.TestSuite;
  * Currenlty JCS is un 2x a hashtable for gets, and under 1.2x for puts.
  *  
  */
-public class TestJCSvHashtablePerf extends TestCase
+public class TestJCSvHashtablePerf
+    extends TestCase
 {
 
     float ratioPut = 0;
 
     float ratioGet = 0;
 
-    float target   = 3.50f;
+    float target = 3.50f;
 
-    int   loops    = 20;
+    int loops = 20;
 
-    int   tries    = 50000;
+    int tries = 50000;
 
     /**
      * @param testName
      */
-    public TestJCSvHashtablePerf(String testName)
+    public TestJCSvHashtablePerf( String testName )
     {
         super( testName );
     }
@@ -50,7 +51,8 @@ public class TestJCSvHashtablePerf extends TestCase
      * @exception Exception
      *                Description of the Exception
      */
-    public void testSimpleLoad() throws Exception
+    public void testSimpleLoad()
+        throws Exception
     {
         doWork();
         assertTrue( this.ratioPut < target );
@@ -79,70 +81,62 @@ public class TestJCSvHashtablePerf extends TestCase
             JCS.setConfigFilename( "/TestJCSvHashtablePerf.ccf" );
             JCS cache = JCS.getInstance( "testCache1" );
 
-            for (int j = 0; j < loops; j++)
+            for ( int j = 0; j < loops; j++ )
             {
 
                 String name = "JCS      ";
                 start = System.currentTimeMillis();
-                for (int i = 0; i < tries; i++)
+                for ( int i = 0; i < tries; i++ )
                 {
                     cache.put( "key:" + i, "data" + i );
                 }
                 end = System.currentTimeMillis();
                 time = end - start;
                 putTotalJCS += time;
-                tPer = Float.intBitsToFloat( (int) time )
-                        / Float.intBitsToFloat( tries );
-                System.out.println( name + " put time for " + tries + " = "
-                        + time + "; millis per = " + tPer );
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out.println( name + " put time for " + tries + " = " + time + "; millis per = " + tPer );
 
                 start = System.currentTimeMillis();
-                for (int i = 0; i < tries; i++)
+                for ( int i = 0; i < tries; i++ )
                 {
                     cache.get( "key:" + i );
                 }
                 end = System.currentTimeMillis();
                 time = end - start;
                 getTotalJCS += time;
-                tPer = Float.intBitsToFloat( (int) time )
-                        / Float.intBitsToFloat( tries );
-                System.out.println( name + " get time for " + tries + " = "
-                        + time + "; millis per = " + tPer );
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out.println( name + " get time for " + tries + " = " + time + "; millis per = " + tPer );
 
                 ///////////////////////////////////////////////////////////////
                 name = "Hashtable";
                 Hashtable cache2 = new Hashtable();
                 start = System.currentTimeMillis();
-                for (int i = 0; i < tries; i++)
+                for ( int i = 0; i < tries; i++ )
                 {
                     cache2.put( "key:" + i, "data" + i );
                 }
                 end = System.currentTimeMillis();
                 time = end - start;
                 putTotalHashtable += time;
-                tPer = Float.intBitsToFloat( (int) time )
-                        / Float.intBitsToFloat( tries );
-                System.out.println( name + " put time for " + tries + " = "
-                        + time + "; millis per = " + tPer );
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out.println( name + " put time for " + tries + " = " + time + "; millis per = " + tPer );
 
                 start = System.currentTimeMillis();
-                for (int i = 0; i < tries; i++)
+                for ( int i = 0; i < tries; i++ )
                 {
                     cache2.get( "key:" + i );
                 }
                 end = System.currentTimeMillis();
                 time = end - start;
                 getTotalHashtable += time;
-                tPer = Float.intBitsToFloat( (int) time )
-                        / Float.intBitsToFloat( tries );
-                System.out.println( name + " get time for " + tries + " = "
-                        + time + "; millis per = " + tPer );
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out.println( name + " get time for " + tries + " = " + time + "; millis per = " + tPer );
 
                 System.out.println( "\n" );
             }
 
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
             e.printStackTrace( System.out );
             System.out.println( e );
@@ -153,24 +147,19 @@ public class TestJCSvHashtablePerf extends TestCase
         long putAvHashtable = putTotalHashtable / loops;
         long getAvHashtable = getTotalHashtable / loops;
 
-        System.out.println( "Finished " + loops + " loops of " + tries
-                + " gets and puts" );
+        System.out.println( "Finished " + loops + " loops of " + tries + " gets and puts" );
 
         System.out.println( "\n" );
         System.out.println( "Put average for JCS       = " + putAvJCS );
         System.out.println( "Put average for Hashtable = " + putAvHashtable );
-        ratioPut = Float.intBitsToFloat( (int) putAvJCS )
-                / Float.intBitsToFloat( (int) putAvHashtable );
-        System.out.println( "JCS puts took " + ratioPut
-                + " times the Hashtable, the goal is <" + target + "x" );
+        ratioPut = Float.intBitsToFloat( (int) putAvJCS ) / Float.intBitsToFloat( (int) putAvHashtable );
+        System.out.println( "JCS puts took " + ratioPut + " times the Hashtable, the goal is <" + target + "x" );
 
         System.out.println( "\n" );
         System.out.println( "Get average for JCS       = " + getAvJCS );
         System.out.println( "Get average for Hashtable = " + getAvHashtable );
-        ratioGet = Float.intBitsToFloat( (int) getAvJCS )
-                / Float.intBitsToFloat( (int) getAvHashtable );
-        System.out.println( "JCS gets took " + ratioGet
-                + " times the Hashtable, the goal is <" + target + "x" );
+        ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
+        System.out.println( "JCS gets took " + ratioGet + " times the Hashtable, the goal is <" + target + "x" );
 
     }
 

@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,15 +16,16 @@ package org.apache.jcs.auxiliary.remote;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 
 import org.apache.jcs.engine.ZombieCacheWatch;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class ZombieRemoteCacheWatch extends ZombieCacheWatch implements IRemoteCacheObserver
+public class ZombieRemoteCacheWatch
+    extends ZombieCacheWatch
+    implements IRemoteCacheObserver
 {
 }

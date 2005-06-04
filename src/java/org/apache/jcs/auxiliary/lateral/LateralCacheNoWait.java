@@ -67,7 +67,7 @@ public class LateralCacheNoWait
         {
             log.debug( "Constructing LateralCacheNoWait, LateralCache = [" + cache + "]" );
         }
-        
+
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache

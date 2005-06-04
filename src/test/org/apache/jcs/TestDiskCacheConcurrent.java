@@ -1,6 +1,5 @@
 package org.apache.jcs;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -25,13 +23,16 @@ import junit.framework.TestCase;
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
  * same region.
- *
- * @version $Id$
+ * 
+ * @version $Id: TestDiskCacheConcurrent.java,v 1.8 2005/02/01 00:01:59 asmuts
+ *          Exp $
  */
-public class TestDiskCacheConcurrent extends TestCase
+public class TestDiskCacheConcurrent
+    extends TestCase
 {
     /**
      * Constructor for the TestDiskCache object.
+     * 
      * @param testName
      */
     public TestDiskCacheConcurrent( String testName )
@@ -41,18 +42,19 @@ public class TestDiskCacheConcurrent extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * 
      * @param args
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = {TestDiskCacheConcurrent.class.getName()};
+        String[] testCaseName = { TestDiskCacheConcurrent.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
     /**
      * A unit test suite for JUnit
-     *
-     * @return    The test suite
+     * 
+     * @return The test suite
      */
     public static Test suite()
     {
@@ -60,7 +62,8 @@ public class TestDiskCacheConcurrent extends TestCase
 
         suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache1" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion4", 0, 200 );
             }
@@ -68,7 +71,8 @@ public class TestDiskCacheConcurrent extends TestCase
 
         suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache2" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion4", 1000, 1200 );
             }
@@ -76,28 +80,30 @@ public class TestDiskCacheConcurrent extends TestCase
 
         suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache3" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion4", 2000, 2200 );
             }
-        });
+        } );
 
         suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache4" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion4", 2200, 5200 );
             }
-        });
+        } );
 
         suite.addTest( new TestDiskCacheConcurrent( "testIndexedDiskCache5" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion4", 0, 5200 );
             }
-        });
-
+        } );
 
         return suite;
     }
@@ -110,33 +116,35 @@ public class TestDiskCacheConcurrent extends TestCase
         JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
     }
 
-//    /**
-//     * Tests the region which uses the indexed disk cache
-//     */
-//    public void testIndexedDiskCache()
-//        throws Exception
-//    {
-//        runTestForRegion( "indexedRegion" );
-//    }
-//
-//    /**
-//     * Tests the region which uses the indexed disk cache
-//     */
-//    public void testIndexedDiskCache2()
-//        throws Exception
-//    {
-//        runTestForRegion( "indexedRegion2" );
-//    }
+    //    /**
+    //     * Tests the region which uses the indexed disk cache
+    //     */
+    //    public void testIndexedDiskCache()
+    //        throws Exception
+    //    {
+    //        runTestForRegion( "indexedRegion" );
+    //    }
+    //
+    //    /**
+    //     * Tests the region which uses the indexed disk cache
+    //     */
+    //    public void testIndexedDiskCache2()
+    //        throws Exception
+    //    {
+    //        runTestForRegion( "indexedRegion2" );
+    //    }
 
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region Name of the region to access
+     * 
+     * @param region
+     *            Name of the region to access
      * @param start
      * @param end
-     *
-     * @exception Exception If an error occurs
+     * 
+     * @exception Exception
+     *                If an error occurs
      */
     public void runTestForRegion( String region, int start, int end )
         throws Exception
@@ -154,27 +162,21 @@ public class TestDiskCacheConcurrent extends TestCase
 
         for ( int i = start; i <= end; i++ )
         {
-            String value = ( String ) jcs.get( i + ":key" );
+            String value = (String) jcs.get( i + ":key" );
 
             assertEquals( region + " data " + i, value );
         }
 
-/*// you can't remove in one thread and expect them to be in another
-        // Remove all the items
-
-        for ( int i = start; i <= end; i++ )
-        {
-            jcs.remove( i + ":key" );
-        }
-
-        // Verify removal
-
-        for ( int i = start; i <= end; i++ )
-        {
-            assertNull( "Removed key should be null: " + i + ":key",
-                        jcs.get( i + ":key" ) );
-        }
-*/
+        /*
+         * // you can't remove in one thread and expect them to be in another //
+         * Remove all the items
+         * 
+         * for ( int i = start; i <= end; i++ ) { jcs.remove( i + ":key" ); }
+         *  // Verify removal
+         * 
+         * for ( int i = start; i <= end; i++ ) { assertNull( "Removed key
+         * should be null: " + i + ":key", jcs.get( i + ":key" ) ); }
+         */
 
     }
 }

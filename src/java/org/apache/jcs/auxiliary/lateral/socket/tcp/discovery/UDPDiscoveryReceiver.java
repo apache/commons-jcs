@@ -91,13 +91,14 @@ public class UDPDiscoveryReceiver
 
         log.debug( "constructing listener, " + this.multicastAddressString + ":" + this.multicastPort );
 
-        try 
+        try
         {
-            createSocket( this.multicastAddressString, this.multicastPort );            
+            createSocket( this.multicastAddressString, this.multicastPort );
         }
         catch ( IOException ioe )
         {
-            // consider eatign this so we can go on, or constructing the socket later
+            // consider eatign this so we can go on, or constructing the socket
+            // later
             throw ioe;
         }
     }

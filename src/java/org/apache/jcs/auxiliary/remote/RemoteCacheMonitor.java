@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.remote;
  * limitations under the License.
  */
 
-
 import java.util.Iterator;
 
 import org.apache.jcs.engine.CacheConstants;
@@ -33,30 +31,35 @@ import org.apache.commons.logging.LogFactory;
  * the monitor changes to operate in a time driven mode. That is, it attempts to
  * recover the connections on a periodic basis. When all failed connections are
  * restored, it changes back to the failure driven mode.
- *
+ *  
  */
-public class RemoteCacheMonitor implements Runnable
+public class RemoteCacheMonitor
+    implements Runnable
 {
-    private final static Log log =
-        LogFactory.getLog( RemoteCacheMonitor.class );
+    private final static Log log = LogFactory.getLog( RemoteCacheMonitor.class );
 
     private static RemoteCacheMonitor instance;
+
     private static long idlePeriod = 30 * 1000;
+
     // minimum 30 seconds.
     //private static long idlePeriod = 3*1000; // for debugging.
 
-    // Must make sure RemoteCacheMonitor is started before any remote error can be detected!
+    // Must make sure RemoteCacheMonitor is started before any remote error can
+    // be detected!
     private boolean alright = true;
 
     final static int TIME = 0;
-    final static int ERROR = 1;
-    static int mode = ERROR;
 
+    final static int ERROR = 1;
+
+    static int mode = ERROR;
 
     /**
      * Configures the idle period between repairs.
-     *
-     * @param idlePeriod The new idlePeriod value
+     * 
+     * @param idlePeriod
+     *            The new idlePeriod value
      */
     public static void setIdlePeriod( long idlePeriod )
     {
@@ -66,14 +69,14 @@ public class RemoteCacheMonitor implements Runnable
         }
     }
 
-
     /** Constructor for the RemoteCacheMonitor object */
-    private RemoteCacheMonitor() { }
-
+    private RemoteCacheMonitor()
+    {
+    }
 
     /**
      * Returns the singleton instance;
-     *
+     * 
      * @return The instance value
      */
     static RemoteCacheMonitor getInstance()
@@ -87,7 +90,6 @@ public class RemoteCacheMonitor implements Runnable
         }
         return instance;
     }
-
 
     /**
      * Notifies the cache monitor that an error occurred, and kicks off the
@@ -105,7 +107,8 @@ public class RemoteCacheMonitor implements Runnable
 
     // Run forever.
 
-    // Avoid the use of any synchronization in the process of monitoring for performance reason.
+    // Avoid the use of any synchronization in the process of monitoring for
+    // performance reason.
     // If exception is thrown owing to synchronization,
     // just skip the monitoring until the next round.
     /** Main processing method for the RemoteCacheMonitor object */
@@ -123,7 +126,8 @@ public class RemoteCacheMonitor implements Runnable
                     {
                         if ( alright )
                         {
-                            // make this configurable, comment out wait to enter time driven mode
+                            // make this configurable, comment out wait to enter
+                            // time driven mode
                             // Failure driven mode.
                             try
                             {
@@ -141,7 +145,8 @@ public class RemoteCacheMonitor implements Runnable
             else
             {
                 log.debug( "TIME DRIVEN MODE: cache monitor sleeping for " + idlePeriod );
-                // Time driven mode: sleep between each round of recovery attempt.
+                // Time driven mode: sleep between each round of recovery
+                // attempt.
                 // will need to test not just check status
             }
 
@@ -163,22 +168,25 @@ public class RemoteCacheMonitor implements Runnable
             //p("cache monitor running.");
             // Monitor each RemoteCacheManager instance one after the other.
             // Each RemoteCacheManager corresponds to one remote connection.
-            for ( Iterator itr = RemoteCacheManager.instances.values().iterator(); itr.hasNext();  )
+            for ( Iterator itr = RemoteCacheManager.instances.values().iterator(); itr.hasNext(); )
             {
-                RemoteCacheManager mgr = ( RemoteCacheManager ) itr.next();
+                RemoteCacheManager mgr = (RemoteCacheManager) itr.next();
                 try
                 {
-                    // If any cache is in error, it strongly suggests all caches managed by the
-                    // same RmicCacheManager instance are in error.  So we fix them once and for all.
-                    for ( Iterator itr2 = mgr.caches.values().iterator(); itr2.hasNext();  )
+                    // If any cache is in error, it strongly suggests all caches
+                    // managed by the
+                    // same RmicCacheManager instance are in error. So we fix
+                    // them once and for all.
+                    for ( Iterator itr2 = mgr.caches.values().iterator(); itr2.hasNext(); )
                     {
                         if ( itr2.hasNext() )
                         {
-                            RemoteCacheNoWait c = ( RemoteCacheNoWait ) itr2.next();
+                            RemoteCacheNoWait c = (RemoteCacheNoWait) itr2.next();
                             if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                             {
                                 RemoteCacheRestore repairer = new RemoteCacheRestore( mgr );
-                                // If we can't fix them, just skip and re-try in the next round.
+                                // If we can't fix them, just skip and re-try in
+                                // the next round.
                                 if ( repairer.canFix() )
                                 {
                                     repairer.fix();
@@ -195,14 +203,15 @@ public class RemoteCacheMonitor implements Runnable
                 catch ( Exception ex )
                 {
                     bad();
-                    // Problem encountered in fixing the caches managed by a RemoteCacheManager instance.
+                    // Problem encountered in fixing the caches managed by a
+                    // RemoteCacheManager instance.
                     // Soldier on to the next RemoteCacheManager instance.
                     log.error( ex );
                 }
             }
-        } while ( true );
+        }
+        while ( true );
     }
-
 
     /** Sets the "alright" flag to false in a critial section. */
     private void bad()
@@ -216,4 +225,3 @@ public class RemoteCacheMonitor implements Runnable
         }
     }
 }
-

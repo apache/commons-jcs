@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.jisp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.disk.jisp;
  * limitations under the License.
  */
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
@@ -29,25 +27,24 @@ import org.apache.jcs.engine.control.CompositeCache;
  * @version 1.0
  */
 
-public class JISPCacheFactory implements AuxiliaryCacheFactory
+public class JISPCacheFactory
+    implements AuxiliaryCacheFactory
 {
-    private final static Log log =
-        LogFactory.getLog( JISPCacheFactory.class );
+    private final static Log log = LogFactory.getLog( JISPCacheFactory.class );
 
     private String name;
 
     /** Description of the Method */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
-                                       CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
     {
-        JISPCacheAttributes idca = ( JISPCacheAttributes ) iaca;
+        JISPCacheAttributes idca = (JISPCacheAttributes) iaca;
         JISPCacheManager dcm = JISPCacheManager.getInstance( idca );
         return dcm.getCache( idca );
     }
 
     /**
      * Gets the name attribute of the JISPCacheFactory object
-     *
+     * 
      * @return The name value
      */
     public String getName()
@@ -57,8 +54,9 @@ public class JISPCacheFactory implements AuxiliaryCacheFactory
 
     /**
      * Sets the name attribute of the JISPCacheFactory object
-     *
-     * @param name The new name value
+     * 
+     * @param name
+     *            The new name value
      */
     public void setName( String name )
     {

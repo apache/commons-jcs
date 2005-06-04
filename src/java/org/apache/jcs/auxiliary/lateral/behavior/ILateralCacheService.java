@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.lateral.behavior;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
@@ -27,24 +25,23 @@ import org.apache.jcs.engine.behavior.ICacheService;
 
 /**
  * Used to retrieve and update the lateral cache.
- *
+ *  
  */
-public interface ILateralCacheService extends ICacheService
+public interface ILateralCacheService
+    extends ICacheService
 {
 
     /** Puts a cache item to the cache. */
     public void update( ICacheElement item, long requesterId )
         throws IOException;
 
-
     /** Removes the given key from the specified cache. */
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException;
-
 
     /** Remove all keys from the sepcified cache. */
     public void removeAll( String cacheName, long requesterId )
         throws IOException;
 
-    public Set getGroupKeys(String cacheName, String groupName);
+    public Set getGroupKeys( String cacheName, String groupName );
 }

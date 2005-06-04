@@ -1,6 +1,5 @@
 package org.apache.jcs.access.exception;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,12 +16,12 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-
 /**
  * Description of the Class
- *
+ *  
  */
-public class NotARetrievableObjectException extends CacheException
+public class NotARetrievableObjectException
+    extends CacheException
 {
 
     /** Constructor for the NotARetrievableObjectException object */
@@ -31,10 +30,9 @@ public class NotARetrievableObjectException extends CacheException
         super();
     }
 
-
     /**
      * Constructor for the NotARetrievableObjectException object
-     *
+     * 
      * @param message
      */
     public NotARetrievableObjectException( String message )

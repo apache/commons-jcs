@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.disk;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -45,36 +43,36 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * Abstract class providing a base implementation of a disk cache, which can
- * be easily extended to implement a disk cache for a specific perstistence
+ * Abstract class providing a base implementation of a disk cache, which can be
+ * easily extended to implement a disk cache for a specific perstistence
  * mechanism.
- *
+ * 
  * When implementing the abstract methods note that while this base class
  * handles most things, it does not acquire or release any locks.
  * Implementations should do so as neccesary. This is mainly done to minimize
  * the time speant in critical sections.
- *
- * Error handling in this class needs to be addressed. Currently if an
- * exception is thrown by the persistence mechanism, this class destroys the
- * event queue. Should it also destory purgatory? Should it dispose itself?
- *
+ * 
+ * Error handling in this class needs to be addressed. Currently if an exception
+ * is thrown by the persistence mechanism, this class destroys the event queue.
+ * Should it also destory purgatory? Should it dispose itself?
+ * 
  * @version $Id$
  */
-public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
+public abstract class AbstractDiskCache
+    implements AuxiliaryCache, Serializable
 {
-    private static final Log log =
-        LogFactory.getLog( AbstractDiskCache.class );
+    private static final Log log = LogFactory.getLog( AbstractDiskCache.class );
 
-    /**  Generic disk cache attributes */
+    /** Generic disk cache attributes */
     private IDiskCacheAttributes dcattr = null;
 
     /**
      * Map where elements are stored between being added to this cache and
      * actually spooled to disk. This allows puts to the disk cache to return
-     * quickly, and the more expensive operation of serializing the elements
-     * to persistent storage queued for later. If the elements are pulled into
-     * the memory cache while the are still in purgatory, writing to disk can
-     * be cancelled.
+     * quickly, and the more expensive operation of serializing the elements to
+     * persistent storage queued for later. If the elements are pulled into the
+     * memory cache while the are still in purgatory, writing to disk can be
+     * cancelled.
      */
     //protected Hashtable purgatory = new Hashtable();
     protected Map purgatory = new HashMap();
@@ -84,7 +82,6 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * updating of the persistent storage.
      */
     protected ICacheEventQueue cacheEventQueue;
-
 
     /**
      * Indicates whether the cache is 'alive', defined as having been
@@ -107,50 +104,48 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
     /**
      * Construc the abstract disk cache, create event queues and purgatory.
-     *
+     * 
      * @param attr
      */
     public AbstractDiskCache( IDiskCacheAttributes attr )
     {
-      	this.dcattr = attr;
+        this.dcattr = attr;
 
         this.cacheName = attr.getCacheName();
 
         // create queue
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(),
-                                                    CacheInfo.listenerId,
-                                                    cacheName,
-                                                    dcattr.getEventQueuePoolName(),
-                                                    dcattr.getEventQueueTypeFactoryCode() );
+        this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId, cacheName,
+                                                           dcattr.getEventQueuePoolName(), dcattr
+                                                               .getEventQueueTypeFactoryCode() );
 
         // create purgatory
         initPurgatory();
     }
 
-
     /**
-     * Purgatory size of -1 means to use a HashMap with no size limit.
-     * Anything greater will use an LRU map of some sort.
-     *
-     * @TODO Currently setting this to 0 will cause nothing to be put to disk, since it
-     * will assume that if an item is not in purgatory, then it must have been plucked.
-     * We should make 0 work, a way to not use purgatory.
-     *
-     *
+     * Purgatory size of -1 means to use a HashMap with no size limit. Anything
+     * greater will use an LRU map of some sort.
+     * 
+     * @TODO Currently setting this to 0 will cause nothing to be put to disk,
+     *       since it will assume that if an item is not in purgatory, then it
+     *       must have been plucked. We should make 0 work, a way to not use
+     *       purgatory.
+     * 
+     *  
      */
     private void initPurgatory()
     {
-      purgatory = null;
+        purgatory = null;
 
-      if ( dcattr.getMaxPurgatorySize() >= 0 )
-      {
-        purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
-      }
-      else
-      {
-        purgatory = new HashMap();
-      }
+        if ( dcattr.getMaxPurgatorySize() >= 0 )
+        {
+            purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
+        }
+        else
+        {
+            purgatory = new HashMap();
+        }
     }
 
     // ------------------------------------------------------- interface ICache
@@ -160,13 +155,13 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
      * purgatory, and then queued for later writing to the serialized storage
      * mechanism.
      * <p>
-     * An update results in a put event being created.  The put event will call the
-     * handlePut method defined here.  The handlePut method calls the implemented
-     * doPut on the child.
-     *
+     * An update results in a put event being created. The put event will call
+     * the handlePut method defined here. The handlePut method calls the
+     * implemented doPut on the child.
+     * 
      * @param cacheElement
      * @throws IOException
-     *
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#update
      */
     public final void update( ICacheElement cacheElement )
@@ -174,8 +169,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Putting element in purgatory, cacheName: " + cacheName
-                    + ", key: " + cacheElement.getKey() );
+            log.debug( "Putting element in purgatory, cacheName: " + cacheName + ", key: " + cacheElement.getKey() );
         }
 
         try
@@ -193,7 +187,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             // Add the element to purgatory
             synchronized ( purgatory )
             {
-              purgatory.put( pe.getKey(), pe );
+                purgatory.put( pe.getKey(), pe );
             }
             // Queue element for serialization
 
@@ -208,12 +202,12 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     }
 
     /**
-     * Check to see if the item is in purgatory.  If so, return it.  If not,
-     * check to see if we have it on disk.
-     *
+     * Check to see if the item is in purgatory. If so, return it. If not, check
+     * to see if we have it on disk.
+     * 
      * @param key
      * @return ICacheElement or null
-     *
+     * 
      * @see AuxiliaryCache#get
      */
     public final ICacheElement get( Serializable key )
@@ -228,9 +222,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         PurgatoryElement pe = null;
         synchronized ( purgatory )
         {
-            pe = ( PurgatoryElement ) purgatory.get( key );
+            pe = (PurgatoryElement) purgatory.get( key );
         }
-
 
         // If the element was found in purgatory
 
@@ -247,19 +240,22 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             }
 
             // Since the element will go back to the memory cache, we could set
-            // spoolableto false, which will prevent the queue listener from serializing
-            // the element.  This would nto match the disk cache behavior and the
-            // behavior of other auxiliaries.  Gets never remove items from auxiliaries.
-            // Beyond consistency, the items should stay in purgatory and get spooled
-            // since the mem cache may be set to 0.  If an item is active, it will keep
-            // getting put into purgatory and removed. The CompositeCache now does
+            // spoolableto false, which will prevent the queue listener from
+            // serializing
+            // the element. This would nto match the disk cache behavior and the
+            // behavior of other auxiliaries. Gets never remove items from
+            // auxiliaries.
+            // Beyond consistency, the items should stay in purgatory and get
+            // spooled
+            // since the mem cache may be set to 0. If an item is active, it
+            // will keep
+            // getting put into purgatory and removed. The CompositeCache now
+            // does
             // not put an item to memory from disk ifthe size is 0;
-            // Do not set spoolable to false.  Just let it go to disk.  This
+            // Do not set spoolable to false. Just let it go to disk. This
             // will allow the memory size = 0 setting to work well.
 
-            log.debug( "Found element in purgatory, cacheName: " + cacheName
-                    + ", key: " + key );
-
+            log.debug( "Found element in purgatory, cacheName: " + cacheName + ", key: " + key );
 
             return pe.cacheElement;
         }
@@ -281,14 +277,14 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         return null;
     }
 
-    public abstract Set getGroupKeys(String groupName);
+    public abstract Set getGroupKeys( String groupName );
 
     /**
-     * Removes are not queued.  A call to remove is immediate.
-     *
+     * Removes are not queued. A call to remove is immediate.
+     * 
      * @param key
      * @return whether the item was present to be removed.
-     *
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#remove
      */
     public final boolean remove( Serializable key )
@@ -299,14 +295,15 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         synchronized ( purgatory )
         {
             // Remove element from purgatory if it is there
-            pe = ( PurgatoryElement )purgatory.remove( key );
+            pe = (PurgatoryElement) purgatory.remove( key );
         }
 
-
-        if ( pe != null ) {
-            // no way to remove from queue, just make sure it doesn't get on disk
+        if ( pe != null )
+        {
+            // no way to remove from queue, just make sure it doesn't get on
+            // disk
             // and then removed right afterwards
-            pe.setSpoolable(false);
+            pe.setSpoolable( false );
         }
         // Remove from persistent store immediately
 
@@ -335,8 +332,8 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     public final void dispose()
     {
 
-       // This stops the processor thread.
-       cacheEventQueue.destroy();
+        // This stops the processor thread.
+        cacheEventQueue.destroy();
 
         // Invoke any implementation specific disposal code
         doDispose();
@@ -355,49 +352,50 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
     /**
      * Gets basic stats for the abstract disk cache.
-     *
+     * 
      * @return String
      */
     public String getStats()
     {
-      return getStatistics().toString();
+        return getStatistics().toString();
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()
     {
-    	IStats stats = new Stats();
-    	stats.setTypeName( "Abstract Disk Cache" );
+        IStats stats = new Stats();
+        stats.setTypeName( "Abstract Disk Cache" );
 
-    	ArrayList elems = new ArrayList();
+        ArrayList elems = new ArrayList();
 
-    	IStatElement se = null;
+        IStatElement se = null;
 
-    	se = new StatElement();
-    	se.setName( "Purgatory Hits" );
-    	se.setData("" + purgHits);
-    	elems.add(se);
+        se = new StatElement();
+        se.setName( "Purgatory Hits" );
+        se.setData( "" + purgHits );
+        elems.add( se );
 
-    	se = new StatElement();
-    	se.setName( "Purgatory Size" );
-    	se.setData("" + purgatory.size());
-    	elems.add(se);
+        se = new StatElement();
+        se.setName( "Purgatory Size" );
+        se.setData( "" + purgatory.size() );
+        elems.add( se );
 
-    	// get the stats from the event queue too
-    	// get as array, convert to list, add list to our outer list
-    	IStats eqStats = this.cacheEventQueue.getStatistics();
-    	IStatElement[] eqSEs = eqStats.getStatElements();
-    	List eqL = Arrays.asList(eqSEs);
-		elems.addAll( eqL );
+        // get the stats from the event queue too
+        // get as array, convert to list, add list to our outer list
+        IStats eqStats = this.cacheEventQueue.getStatistics();
+        IStatElement[] eqSEs = eqStats.getStatElements();
+        List eqL = Arrays.asList( eqSEs );
+        elems.addAll( eqL );
 
-    	// get an array and put them in the Stats object
-    	IStatElement[] ses = (IStatElement[])elems.toArray( new StatElement[0] );
-    	stats.setStatElements( ses );
+        // get an array and put them in the Stats object
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        stats.setStatElements( ses );
 
-    	return stats;
+        return stats;
     }
 
     /**
@@ -411,28 +409,28 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     /**
      * Size cannot be determined without knowledge of the cache implementation,
      * so subclasses will need to implement this method.
-     *
+     * 
      * @see ICache#getSize
      */
     public abstract int getSize();
 
     /**
      * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType
-     *
-     * @return Always returns DISK_CACHE since subclasses should all be of
-     *         that type.
+     * 
+     * @return Always returns DISK_CACHE since subclasses should all be of that
+     *         type.
      */
     public int getCacheType()
     {
         return DISK_CACHE;
     }
 
-
     /**
      * Cache that implements the CacheListener interface, and calls appropriate
      * methods in its parent class.
      */
-    private class MyCacheListener implements ICacheListener
+    private class MyCacheListener
+        implements ICacheListener
     {
         private long listenerId = 0;
 
@@ -448,7 +446,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         /**
          * @param id
          * @throws IOException
-         *
+         * 
          * @see ICacheListener#setListenerId
          */
         public void setListenerId( long id )
@@ -461,11 +459,11 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
          * @param element
          * @throws IOException
          * @see ICacheListener#handlePut
-         *
+         * 
          * NOTE: This checks if the element is a puratory element and behaves
          * differently depending. However since we have control over how
-         * elements are added to the cache event queue, that may not be needed
-         * ( they are always PurgatoryElements ).
+         * elements are added to the cache event queue, that may not be needed (
+         * they are always PurgatoryElements ).
          */
         public void handlePut( ICacheElement element )
             throws IOException
@@ -477,7 +475,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
                 if ( element instanceof PurgatoryElement )
                 {
-                    PurgatoryElement pe = ( PurgatoryElement ) element;
+                    PurgatoryElement pe = (PurgatoryElement) element;
 
                     //String keyAsString = element.getKey().toString();
 
@@ -486,7 +484,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
                         // If the element has already been removed from
                         // purgatory do nothing
 
-                        if (!purgatory.containsKey( pe.getKey() ))
+                        if ( !purgatory.containsKey( pe.getKey() ) )
                         {
                             return;
                         }
@@ -495,10 +493,10 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
 
                         // If the element is still eligable, spool it.
 
-                    	if (pe.isSpoolable())
-                    	{
-                    	    doUpdate( element );
-                    	}
+                        if ( pe.isSpoolable() )
+                        {
+                            doUpdate( element );
+                        }
 
                         // After the update has completed, it is safe to remove
                         // the element from purgatory.
@@ -516,10 +514,12 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
             }
             else
             {
-                // The cache is not alive, hence the element should be removed from
+                // The cache is not alive, hence the element should be removed
+                // from
                 // purgatory. All elements should be removed eventually.
-                // Perhaps, the alive check should have been done before it went in the
-                // queue.  This block handles the case where the disk cache fails
+                // Perhaps, the alive check should have been done before it went
+                // in the
+                // queue. This block handles the case where the disk cache fails
                 // during normal opertations.
 
                 //String keyAsString = element.getKey().toString();
@@ -536,7 +536,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
          * @param cacheName
          * @param key
          * @throws IOException
-         *
+         * 
          * @see ICacheListener#handleRemove
          */
         public void handleRemove( String cacheName, Serializable key )
@@ -554,7 +554,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         /**
          * @param cacheName
          * @throws IOException
-         *
+         * 
          * @see ICacheListener#handleRemoveAll
          */
         public void handleRemoveAll( String cacheName )
@@ -569,7 +569,7 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         /**
          * @param cacheName
          * @throws IOException
-         *
+         * 
          * @see ICacheListener#handleDispose
          */
         public void handleDispose( String cacheName )
@@ -582,27 +582,29 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
         }
     }
 
-
     // ---------------------- subclasses should implement the following methods
 
     /**
      * Get a value from the persistent store.
-     *
-     * @param key Key to locate value for.
+     * 
+     * @param key
+     *            Key to locate value for.
      * @return An object matching key, or null.
      */
     protected abstract ICacheElement doGet( Serializable key );
 
     /**
      * Add a cache element to the persistent store.
+     * 
      * @param element
      */
     protected abstract void doUpdate( ICacheElement element );
 
     /**
      * Remove an object from the persistent store if found.
-     *
-     * @param key Key of object to remove.
+     * 
+     * @param key
+     *            Key of object to remove.
      * @return whether or no the item was present when removed
      */
     protected abstract boolean doRemove( Serializable key );
@@ -619,4 +621,3 @@ public abstract class AbstractDiskCache implements AuxiliaryCache, Serializable
     protected abstract void doDispose();
 
 }
-

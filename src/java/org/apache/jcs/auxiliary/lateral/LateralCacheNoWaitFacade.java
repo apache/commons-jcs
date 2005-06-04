@@ -96,7 +96,7 @@ public class LateralCacheNoWaitFacade
 
         // set the last position to the new noWait
         newArray[noWaits.length] = noWait;
-        
+
         noWaits = newArray;
 
         return true;

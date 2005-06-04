@@ -1,6 +1,5 @@
 package org.apache.jcs.access.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.access.behavior;
  * limitations under the License.
  */
 
-
 import java.util.Set;
 
 import org.apache.jcs.access.exception.CacheException;
@@ -26,23 +24,24 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Description of the Interface
- *
+ *  
  */
-public interface IGroupCacheAccess extends ICacheAccess
+public interface IGroupCacheAccess
+    extends ICacheAccess
 {
     /**
      * Gets the g attribute of the IGroupCacheAccess object
      * 
      * @param name
-     * @param group, the name of the group to associate this with.
+     * @param group,
+     *            the name of the group to associate this with.
      * @return The g value
      */
     Object getFromGroup( Object name, String group );
 
-
-    /** 
+    /**
      * Puts an item int eh cache associated with this group.
-     *  
+     * 
      * @param key
      * @param group
      * @param obj
@@ -51,8 +50,7 @@ public interface IGroupCacheAccess extends ICacheAccess
     void putInGroup( Object key, String group, Object obj )
         throws CacheException;
 
-
-    /** 
+    /**
      * Put in the cache associated with this group using these attributes.
      * 
      * @param key
@@ -64,9 +62,9 @@ public interface IGroupCacheAccess extends ICacheAccess
     void putInGroup( Object key, String group, Object obj, IElementAttributes attr )
         throws CacheException;
 
-    /** 
+    /**
      * Remove the item from this group in this region by this name.
-     *  
+     * 
      * @param name
      * @param group
      */
@@ -78,10 +76,11 @@ public interface IGroupCacheAccess extends ICacheAccess
      * @param group
      * @return the set of group keys.
      */
-    public Set getGroupKeys(String group);
+    public Set getGroupKeys( String group );
 
-    /** 
-     * Invalidates a group 
+    /**
+     * Invalidates a group
+     * 
      * @param group
      */
     public void invalidateGroup( String group );

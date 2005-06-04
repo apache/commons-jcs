@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote.server;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.remote.server;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,21 +33,22 @@ import org.apache.jcs.engine.behavior.ICacheServiceAdmin;
 
 /**
  * Provides remote cache services.
- *
+ *  
  */
 public class RemoteCacheServerFactory
-     implements IRemoteCacheConstants
+    implements IRemoteCacheConstants
 {
-    private final static Log log =
-        LogFactory.getLog( RemoteCacheServerFactory.class );
+    private final static Log log = LogFactory.getLog( RemoteCacheServerFactory.class );
 
     /** The single instance of the RemoteCacheServer object. */
     private static RemoteCacheServer instance;
+
     private static String serviceName;
 
     /** Constructor for the RemoteCacheServerFactory object */
-    private RemoteCacheServerFactory() { }
-
+    private RemoteCacheServerFactory()
+    {
+    }
 
     /////////////////////// Statup/shutdown methods. //////////////////
     /**
@@ -57,8 +56,7 @@ public class RemoteCacheServerFactory
      * registry on the given host and port.
      */
     public static void startup( String host, int port, String propFile )
-        throws IOException,
-        NotBoundException
+        throws IOException, NotBoundException
     {
         if ( instance != null )
         {
@@ -73,15 +71,15 @@ public class RemoteCacheServerFactory
 
             if ( log.isInfoEnabled() )
             {
-              log.info( "ConfigFileName = [" + propFile + "]" );
+                log.info( "ConfigFileName = [" + propFile + "]" );
             }
-            
+
             // TODO: make automatic
             RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
             rcsa.setConfigFileName( propFile );
 
             Properties prop = RemoteUtils.loadProps( propFile );
-                        
+
             String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
             int servicePort = -1;
             try
@@ -93,7 +91,8 @@ public class RemoteCacheServerFactory
             }
             catch ( NumberFormatException ignore )
             {
-                log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT + " not specified.  An anonymous port will be used." );
+                log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT
+                    + " not specified.  An anonymous port will be used." );
             }
 
             String lccStr = prop.getProperty( REMOTE_LOCAL_CLUSTER_CONSISTENCY );
@@ -121,8 +120,7 @@ public class RemoteCacheServerFactory
             }
             // Register the RemoteCacheServer remote object in the registry.
             serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-            log.debug( "main> binding server to " + host + ":" + port + " with the name " +
-                serviceName );
+            log.debug( "main> binding server to " + host + ":" + port + " with the name " + serviceName );
             try
             {
                 Naming.rebind( "//" + host + ":" + port + "/" + serviceName, instance );
@@ -130,16 +128,14 @@ public class RemoteCacheServerFactory
             catch ( MalformedURLException ex )
             {
                 // impossible case.
-                throw new IllegalArgumentException( ex.getMessage() + "; host=" + host
-                     + ", port=" + port );
+                throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port );
             }
         }
     }
 
-
     /**
      * put your documentation comment here
-     *
+     * 
      * @param host
      * @param port
      * @exception IOException
@@ -165,8 +161,8 @@ public class RemoteCacheServerFactory
             catch ( MalformedURLException ex )
             {
                 // impossible case.
-                throw new IllegalArgumentException( ex.getMessage() + "; host=" + host
-                     + ", port=" + port + ", serviceName=" + serviceName );
+                throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port
+                    + ", serviceName=" + serviceName );
             }
             catch ( NotBoundException ex )
             {
@@ -186,17 +182,17 @@ public class RemoteCacheServerFactory
         }
     }
 
-
     /**
      * Creates an local RMI registry on the default port, starts up the remote
      * cache server, and binds it to the registry.
-     *
-     * @param args The command line arguments
+     * 
+     * @param args
+     *            The command line arguments
      */
     public static void main( String[] args )
         throws Exception
     {
-        Properties prop = args.length > 0 ? RemoteUtils.loadProps( args[args.length -1] ) : new Properties();
+        Properties prop = args.length > 0 ? RemoteUtils.loadProps( args[args.length - 1] ) : new Properties();
 
         // shutdown
         if ( args.length > 0 && args[0].toLowerCase().indexOf( "-shutdown" ) != -1 )
@@ -213,7 +209,7 @@ public class RemoteCacheServerFactory
             {
                 log.debug( "server found" );
             }
-            ICacheServiceAdmin admin = ( ICacheServiceAdmin ) obj;
+            ICacheServiceAdmin admin = (ICacheServiceAdmin) obj;
             try
             {
                 admin.shutdown();
@@ -249,7 +245,7 @@ public class RemoteCacheServerFactory
                 log.debug( "server found" );
 
                 log.debug( "obj = " + obj );
-                IRemoteCacheServiceAdmin admin = ( IRemoteCacheServiceAdmin ) obj;
+                IRemoteCacheServiceAdmin admin = (IRemoteCacheServiceAdmin) obj;
 
                 try
                 {
@@ -270,7 +266,6 @@ public class RemoteCacheServerFactory
             System.exit( 0 );
         }
 
-
         // startup.
         int port;
         try
@@ -290,7 +285,6 @@ public class RemoteCacheServerFactory
         }
         log.debug( "main> starting up RemoteCacheServer" );
         RemoteCacheServerFactory.startup( host, port, args.length > 0 ? args[0] : null );
-        log.debug( "main> done" );       
+        log.debug( "main> done" );
     }
 }
-

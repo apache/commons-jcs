@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -28,82 +27,77 @@ import org.jgroups.Message;
 
 /**
  * Separate thread run when a command comes into the LateralJGReceiver.
- *
+ * 
  * @version $Id: LateralJGReceiverConnection.java,v 1.7 2002/02/15 04:33:37
- *      jtaylor Exp $
+ *          jtaylor Exp $
  */
-public class LateralJGReceiverConnection implements Runnable
+public class LateralJGReceiverConnection
+    implements Runnable
 {
 
-    private final static Log log =
-        LogFactory.getLog( LateralJGReceiverConnection.class );
+    private final static Log log = LogFactory.getLog( LateralJGReceiverConnection.class );
 
     //private Channel javagroups;
     private Message mes;
 
     private ILateralCacheJGListener ilcl;
 
-
     /**
      * Constructor for the LateralJGReceiverConnection object
-     * @param mes The JGroups message
+     * 
+     * @param mes
+     *            The JGroups message
      * @param ilcl
      */
     public LateralJGReceiverConnection( Message mes, ILateralCacheJGListener ilcl )
     {
         this.ilcl = ilcl;
         this.mes = mes;
-     }
-
+    }
 
     /**
      * Main processing method for the LateralJGReceiverConnection object
-     *
+     * 
      * @return
      * @param led
      */
-    public void run( )
+    public void run()
     {
         try
         {
-                LateralElementDescriptor led = ( LateralElementDescriptor ) mes.getObject();
-                if ( led == null )
+            LateralElementDescriptor led = (LateralElementDescriptor) mes.getObject();
+            if ( led == null )
+            {
+                log.warn( "LateralElementDescriptor is null! Can't do anything." );
+            }
+            else
+            {
+                if ( led.requesterId == LateralCacheInfo.listenerId )
                 {
-                    log.warn( "LateralElementDescriptor is null! Can't do anything." );
+                    log.debug( "from self" );
                 }
                 else
                 {
-                    if ( led.requesterId == LateralCacheInfo.listenerId )
+                    if ( log.isDebugEnabled() )
                     {
-                        log.debug( "from self" );
+                        log.debug( "receiving LateralElementDescriptor from another, led = " + ", led = " + led
+                            + ", led.command = " + led.command + ", led.ce = " + led.ce + ", ilcl = " + ilcl );
                     }
-                    else
+                    if ( led.command == LateralElementDescriptor.UPDATE )
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "receiving LateralElementDescriptor from another, led = "
-                                 + ", led = " + led
-                                 + ", led.command = " + led.command
-                                 + ", led.ce = " + led.ce
-                                 + ", ilcl = " + ilcl );
-                        }
-                        if ( led.command == LateralElementDescriptor.UPDATE )
-                        {
-                            ilcl.handlePut( led.ce );
-                        }
-                        else
-                            if ( led.command == LateralElementDescriptor.REMOVE )
-                        {
-                            ilcl.handleRemove( led.ce.getCacheName(), led.ce.getKey() );
-                        }
-                        else
-                            if ( led.command == LateralElementDescriptor.GET )
-                        {
-                            /*Serializable obj =*/ getAndRespond( led.ce.getCacheName(), led.ce.getKey() );
+                        ilcl.handlePut( led.ce );
+                    }
+                    else if ( led.command == LateralElementDescriptor.REMOVE )
+                    {
+                        ilcl.handleRemove( led.ce.getCacheName(), led.ce.getKey() );
+                    }
+                    else if ( led.command == LateralElementDescriptor.GET )
+                    {
+                        /* Serializable obj = */getAndRespond( led.ce.getCacheName(), led.ce.getKey() );
 
-                        }
-                    }                    
+                    }
                 }
+            }
 
         }
         catch ( java.io.EOFException e )
@@ -122,7 +116,7 @@ public class LateralJGReceiverConnection implements Runnable
 
     /**
      * Send back the object if found.
-     *
+     * 
      * @return The {3} value
      * @param cacheName
      * @param key

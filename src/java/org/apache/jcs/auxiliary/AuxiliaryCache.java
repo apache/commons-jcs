@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
@@ -32,25 +30,31 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * example, there will be a mechanism for determining the type
  * (disk/lateral/remote) of the auxiliary here -- and the existing getCacheType
  * will be removed from ICache.
- *
+ * 
  * @version $Id$
  */
-public interface AuxiliaryCache extends ICache
+public interface AuxiliaryCache
+    extends ICache
 {
     /** Puts an item to the cache. */
-    public void update( ICacheElement ce ) throws IOException;
+    public void update( ICacheElement ce )
+        throws IOException;
 
     /** Gets an item from the cache. */
-    public ICacheElement get( Serializable key ) throws IOException;
+    public ICacheElement get( Serializable key )
+        throws IOException;
 
     /** Removes an item from the cache. */
-    public boolean remove( Serializable key ) throws IOException;
+    public boolean remove( Serializable key )
+        throws IOException;
 
     /** Removes all cached items from the cache. */
-    public void removeAll() throws IOException;
+    public void removeAll()
+        throws IOException;
 
     /** Prepares for shutdown. */
-    public void dispose() throws IOException;
+    public void dispose()
+        throws IOException;
 
     /** Returns the current cache size. */
     public int getSize();
@@ -63,16 +67,19 @@ public interface AuxiliaryCache extends ICache
 
     /**
      * Gets the set of keys of objects currently in the group
+     * 
      * @param group
      * @return a set of group keys
      * @throws IOException
      */
-    public Set getGroupKeys(String group) throws IOException;
-    
+    public Set getGroupKeys( String group )
+        throws IOException;
+
     /**
-     * Returns the historical and statistical data for a region's auxiliary cache.
+     * Returns the historical and statistical data for a region's auxiliary
+     * cache.
      * 
-     * @return 
+     * @return
      */
-    public IStats getStatistics();    
+    public IStats getStatistics();
 }

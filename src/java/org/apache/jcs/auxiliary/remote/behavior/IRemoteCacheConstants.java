@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,24 +16,28 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * limitations under the License.
  */
 
-
 /**
  * Description of the Interface
- *
+ *  
  */
 public interface IRemoteCacheConstants
 {
 
     /** Mapping to props file value */
     public final static String REMOTE_CACHE_SERVICE_NAME = "remote.cache.service.name";
+
     /** Mapping to props file value */
     public final static String REMOTE_CACHE_SERVICE_VAL = IRemoteCacheService.class.getName();
+
     /** Mapping to props file value */
     public final static String TOMCAT_XML = "remote.tomcat.xml";
+
     /** Mapping to props file value */
     public final static String TOMCAT_ON = "remote.tomcat.on";
+
     /** Mapping to props file value */
     public final static String REMOTE_CACHE_SERVICE_PORT = "remote.cache.service.port";
+
     /** Mapping to props file value */
     public final static String REMOTE_LOCAL_CLUSTER_CONSISTENCY = "remote.cluster.LocalClusterConsistency";
 

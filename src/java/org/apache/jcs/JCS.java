@@ -1,6 +1,5 @@
 package org.apache.jcs;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
@@ -31,10 +29,11 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * to use JCS. One JCS should be created for each region you want to access. If
  * you have several regions, then get instances for each. For best performance
  * the getInstance call should be made in an initialization method.
- *
+ * 
  * @version $Id$
  */
-public class JCS extends GroupCacheAccess
+public class JCS
+    extends GroupCacheAccess
 {
     private static String configFilename = null;
 
@@ -42,8 +41,9 @@ public class JCS extends GroupCacheAccess
 
     /**
      * Protected constructor for use by the static factory methods.
-     *
-     * @param cacheControl Cache which the instance will provide access to
+     * 
+     * @param cacheControl
+     *            Cache which the instance will provide access to
      */
     protected JCS( CompositeCache cacheControl )
     {
@@ -52,8 +52,9 @@ public class JCS extends GroupCacheAccess
 
     /**
      * Get a JCS which accesses the provided region.
-     *
-     * @param region Region that return JCS will provide access to
+     * 
+     * @param region
+     *            Region that return JCS will provide access to
      * @return A JCS which provides access to a given region.
      * @exception CacheException
      */
@@ -67,14 +68,15 @@ public class JCS extends GroupCacheAccess
 
     /**
      * Get a JCS which accesses the provided region.
-     *
-     * @param region Region that return JCS will provide access to
-     * @param icca CacheAttributes for region
+     * 
+     * @param region
+     *            Region that return JCS will provide access to
+     * @param icca
+     *            CacheAttributes for region
      * @return A JCS which provides access to a given region.
      * @exception CacheException
      */
-    public static JCS getInstance( String region,
-                                   ICompositeCacheAttributes icca )
+    public static JCS getInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
         ensureCacheManager();
@@ -83,8 +85,8 @@ public class JCS extends GroupCacheAccess
     }
 
     /**
-     * Gets an instance of CompositeCacheManager and stores it in the cacheMgr class
-     * field, if it is not already set. Unlike the implementation in
+     * Gets an instance of CompositeCacheManager and stores it in the cacheMgr
+     * class field, if it is not already set. Unlike the implementation in
      * CacheAccess, the cache manager is a CompositeCacheManager. NOTE: This can
      * will be moved up into GroupCacheAccess.
      */

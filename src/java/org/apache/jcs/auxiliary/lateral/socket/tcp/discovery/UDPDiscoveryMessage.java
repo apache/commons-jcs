@@ -35,7 +35,7 @@ public class UDPDiscoveryMessage
     private long requesterId;
 
     private ArrayList cacheNames = new ArrayList();;
-        
+
     /**
      * @param port
      *            The port to set.
@@ -105,7 +105,8 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @param cacheNames The cacheNames to set.
+     * @param cacheNames
+     *            The cacheNames to set.
      */
     public void setCacheNames( ArrayList cacheNames )
     {
@@ -118,8 +119,8 @@ public class UDPDiscoveryMessage
     public ArrayList getCacheNames()
     {
         return cacheNames;
-    }    
-    
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -137,11 +138,10 @@ public class UDPDiscoveryMessage
         Iterator it = cacheNames.iterator();
         while ( it.hasNext() )
         {
-            String name = (String)it.next();
+            String name = (String) it.next();
             buf.append( " cacheName = [" + name + "]" );
         }
         return buf.toString();
     }
-
 
 }

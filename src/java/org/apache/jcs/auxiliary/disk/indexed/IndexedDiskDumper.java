@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,17 +16,17 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * limitations under the License.
  */
 
-
 /**
  * Used to dump out a Disk cache from disk for debugging.
- *
+ *  
  */
 public class IndexedDiskDumper
 {
     /**
      * The main program for the DiskDumper class
-     *
-     * @param args The command line arguments
+     * 
+     * @param args
+     *            The command line arguments
      */
     public static void main( String[] args )
     {

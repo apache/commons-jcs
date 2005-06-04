@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,20 +16,20 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-
 import java.rmi.dgc.VMID;
 
 /**
  * A shared static variable holder for the lateral cache
- *
+ *  
  */
 public class LateralCacheInfo
 {
 
     // shouldn't be instantiated
     /** Constructor for the LateralCacheInfo object */
-    private LateralCacheInfo() { }
-
+    private LateralCacheInfo()
+    {
+    }
 
     /**
      * Shouldn't be used till after reconneting, after setting = thread safe
@@ -39,6 +38,7 @@ public class LateralCacheInfo
      * rmi.
      */
     protected static VMID vmid = new VMID();
+
     /** Description of the Field */
     public static long listenerId = vmid.hashCode();
 

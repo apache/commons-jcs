@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,8 +16,6 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * limitations under the License.
  */
 
-
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,29 +27,30 @@ import org.apache.jcs.engine.control.CompositeCache;
 /**
  * @version 1.0
  */
-public class IndexedDiskCacheFactory implements AuxiliaryCacheFactory
+public class IndexedDiskCacheFactory
+    implements AuxiliaryCacheFactory
 {
-    private final static Log log =
-        LogFactory.getLog( IndexedDiskCacheFactory.class );
+    private final static Log log = LogFactory.getLog( IndexedDiskCacheFactory.class );
 
     private String name;
 
     /**
-     * Get an instance of the IndexDiskCacheManager for the attributes and then 
+     * Get an instance of the IndexDiskCacheManager for the attributes and then
      * get an IndexedDiskCache from the manager.
      * <p>
      * The manager is a singleton.
      * <p>
      * One disk cache is returned per region fromt he maanger.
-     *
-     * @param iaca The auxiliary attributes.
-     * @param cache The CacheHub
+     * 
+     * @param iaca
+     *            The auxiliary attributes.
+     * @param cache
+     *            The CacheHub
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
-                                       CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
     {
-        IndexedDiskCacheAttributes idca = ( IndexedDiskCacheAttributes ) iaca;
+        IndexedDiskCacheAttributes idca = (IndexedDiskCacheAttributes) iaca;
         if ( log.isDebugEnabled() )
         {
             log.debug( "Creating DiskCache for attributes = " + idca );
@@ -63,7 +61,7 @@ public class IndexedDiskCacheFactory implements AuxiliaryCacheFactory
 
     /**
      * Gets the name attribute of the DiskCacheFactory object
-     *
+     * 
      * @return The name value
      */
     public String getName()
@@ -73,8 +71,9 @@ public class IndexedDiskCacheFactory implements AuxiliaryCacheFactory
 
     /**
      * Sets the name attribute of the DiskCacheFactory object
-     *
-     * @param name The new name value
+     * 
+     * @param name
+     *            The new name value
      */
     public void setName( String name )
     {

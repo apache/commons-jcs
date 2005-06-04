@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,20 +16,20 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import java.rmi.dgc.VMID;
 
 /**
  * A shared static variable holder for the lateral cache
- *
+ *  
  */
 public class CacheInfo
 {
 
     // shouldn't be instantiated
     /** Constructor for the CacheInfo object */
-    private CacheInfo() { }
-
+    private CacheInfo()
+    {
+    }
 
     /**
      * Shouldn't be used till after reconneting, after setting = thread safe
@@ -40,6 +39,7 @@ public class CacheInfo
      * old id. We may need to reset this when moving into failover.
      */
     protected static VMID vmid = new VMID();
+
     /** Description of the Field */
     public static long listenerId = vmid.hashCode();
 

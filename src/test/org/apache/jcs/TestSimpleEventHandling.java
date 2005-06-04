@@ -25,12 +25,15 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
- * This test suite verifies that the basic ElementEvent are called as they should be.
+ * This test suite verifies that the basic ElementEvent are called as they
+ * should be.
  * 
  * 
- * @version $Id$
+ * @version $Id: TestSimpleEventHandling.java,v 1.1 2005/02/01 00:01:59 asmuts
+ *          Exp $
  */
-public class TestSimpleEventHandling extends TestCase
+public class TestSimpleEventHandling
+    extends TestCase
 {
 
     private static int items = 20000;
@@ -41,7 +44,7 @@ public class TestSimpleEventHandling extends TestCase
      * @param testName
      *            Description of the Parameter
      */
-    public TestSimpleEventHandling(String testName)
+    public TestSimpleEventHandling( String testName )
     {
         super( testName );
     }
@@ -68,16 +71,15 @@ public class TestSimpleEventHandling extends TestCase
         return new TestSuite( TestSimpleEventHandling.class );
     }
 
-    
     /**
      * Test setup with expected configuration parameters.
-     * 
+     *  
      */
     public void setUp()
     {
         JCS.setConfigFilename( "/TestSimpleEventHandling.ccf" );
     }
-    
+
     /**
      * Verify that the spooled event is called as expected.
      * 
@@ -85,46 +87,17 @@ public class TestSimpleEventHandling extends TestCase
      * @exception Exception
      *                Description of the Exception
      */
-    public void testSpoolEvent() throws Exception
+    public void testSpoolEvent()
+        throws Exception
     {
         MyEventHandler meh = new MyEventHandler();
 
         JCS jcs = JCS.getInstance( "WithDisk" );
         // this should add the event handler to all items as they are created.
-        jcs.getElementAttributes()
-                .addElementEventHandler( meh );
+        jcs.getElementAttributes().addElementEventHandler( meh );
 
         // put them in
-        for (int i = 0; i <= items; i++)
-        {
-            jcs.put( i + ":key", "data" + i );
-        }
-
-        // wait a bit for it to finish
-        Thread.sleep( items / 20  );
-
-        // test to see if the count is right
-        assertTrue(
-                "The number of ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE events [" + meh.getSpoolCount() + "] does not equal the number expected [" + items + "]",
-                meh.getSpoolCount() >= items );
-
-    }
-
-    /**
-     * Test overflow with no disk configured for the region.
-     * @throws Exception
-     */
-    public void testSpoolNoDiskEvent() throws Exception
-    {
-        MyEventHandler meh = new MyEventHandler();
-
-        JCS jcs = JCS.getInstance( "NoDisk" );
-        // this should add the event handler to all items as they are created.
-        jcs.getElementAttributes()
-                .addElementEventHandler( meh );
-
-        // put them in
-        for (int i = 0; i <= items; i++)
+        for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
@@ -133,9 +106,37 @@ public class TestSimpleEventHandling extends TestCase
         Thread.sleep( items / 20 );
 
         // test to see if the count is right
-        assertTrue(
-                "The number of ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE events  [" +  meh.getSpoolNoDiskCount() + "] does not equal the number expected.",
-                meh.getSpoolNoDiskCount() >= items );
+        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE events [" + meh.getSpoolCount()
+            + "] does not equal the number expected [" + items + "]", meh.getSpoolCount() >= items );
+
+    }
+
+    /**
+     * Test overflow with no disk configured for the region.
+     * 
+     * @throws Exception
+     */
+    public void testSpoolNoDiskEvent()
+        throws Exception
+    {
+        MyEventHandler meh = new MyEventHandler();
+
+        JCS jcs = JCS.getInstance( "NoDisk" );
+        // this should add the event handler to all items as they are created.
+        jcs.getElementAttributes().addElementEventHandler( meh );
+
+        // put them in
+        for ( int i = 0; i <= items; i++ )
+        {
+            jcs.put( i + ":key", "data" + i );
+        }
+
+        // wait a bit for it to finish
+        Thread.sleep( items / 20 );
+
+        // test to see if the count is right
+        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE events  [" + meh.getSpoolNoDiskCount()
+            + "] does not equal the number expected.", meh.getSpoolNoDiskCount() >= items );
 
     }
 
@@ -144,17 +145,17 @@ public class TestSimpleEventHandling extends TestCase
      * 
      * @throws Exception
      */
-    public void testSpoolNotAllowedEvent() throws Exception
+    public void testSpoolNotAllowedEvent()
+        throws Exception
     {
         MyEventHandler meh = new MyEventHandler();
 
         JCS jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
-        jcs.getElementAttributes()
-                .addElementEventHandler( meh );
+        jcs.getElementAttributes().addElementEventHandler( meh );
 
         // put them in
-        for (int i = 0; i <= items; i++)
+        for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
         }
@@ -163,26 +164,26 @@ public class TestSimpleEventHandling extends TestCase
         Thread.sleep( items / 20 );
 
         // test to see if the count is right
-        assertTrue(
-                "The number of ELEMENT_EVENT_SPOOLED_NOT_ALLOWED events [" +  meh.getSpoolNotAllowedCount() + "] does not equal the number expected.",
-                meh.getSpoolNotAllowedCount() >= items );
+        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_NOT_ALLOWED events [" + meh.getSpoolNotAllowedCount()
+            + "] does not equal the number expected.", meh.getSpoolNotAllowedCount() >= items );
 
     }
-    
+
     /**
      * Simple event counter used to verify test results.
      * 
      * @author aaronsm
      *  
      */
-    public class MyEventHandler implements IElementEventHandler
+    public class MyEventHandler
+        implements IElementEventHandler
     {
 
-        private int spoolCount           = 0;
+        private int spoolCount = 0;
 
         private int spoolNotAllowedCount = 0;
 
-        private int spoolNoDiskCount     = 0;
+        private int spoolNoDiskCount = 0;
 
         /*
          * (non-Javadoc)
@@ -191,25 +192,28 @@ public class TestSimpleEventHandling extends TestCase
          */
         public synchronized void handleElementEvent( IElementEvent event )
         {
-            //System.out.println( "Handling Event of Type " + event.getElementEvent() ); 
-            
-            if (event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE)
+            //System.out.println( "Handling Event of Type " +
+            // event.getElementEvent() );
+
+            if ( event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE )
             {
-                //System.out.println( "Handling Event of Type ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE, " + getSpoolCount() ); 
+                //System.out.println( "Handling Event of Type
+                // ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE, " + getSpoolCount() );
                 setSpoolCount( getSpoolCount() + 1 );
             }
-            else if (event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_NOT_ALLOWED)
+            else if ( event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_NOT_ALLOWED )
             {
                 setSpoolNotAllowedCount( getSpoolNotAllowedCount() + 1 );
             }
-            else if (event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE)
+            else if ( event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE )
             {
                 setSpoolNoDiskCount( getSpoolNoDiskCount() + 1 );
             }
         }
 
         /**
-         * @param spoolCount The spoolCount to set.
+         * @param spoolCount
+         *            The spoolCount to set.
          */
         protected void setSpoolCount( int spoolCount )
         {
@@ -225,7 +229,8 @@ public class TestSimpleEventHandling extends TestCase
         }
 
         /**
-         * @param spoolNotAllowedCount The spoolNotAllowedCount to set.
+         * @param spoolNotAllowedCount
+         *            The spoolNotAllowedCount to set.
          */
         protected void setSpoolNotAllowedCount( int spoolNotAllowedCount )
         {
@@ -241,7 +246,8 @@ public class TestSimpleEventHandling extends TestCase
         }
 
         /**
-         * @param spoolNoDiskCount The spoolNoDiskCount to set.
+         * @param spoolNoDiskCount
+         *            The spoolNoDiskCount to set.
          */
         protected void setSpoolNoDiskCount( int spoolNoDiskCount )
         {

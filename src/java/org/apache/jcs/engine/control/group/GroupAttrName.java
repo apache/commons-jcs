@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.control.group;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,24 +16,26 @@ package org.apache.jcs.engine.control.group;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class GroupAttrName implements Serializable
+public class GroupAttrName
+    implements Serializable
 {
     //final GroupId groupId;
     /** Description of the Field */
     public final GroupId groupId;
+
     public final Object attrName;
+
     private String toString;
 
     /**
      * Constructor for the GroupAttrName object
-     *
+     * 
      * @param groupId
      * @param attrName
      */
@@ -45,16 +46,16 @@ public class GroupAttrName implements Serializable
 
         if ( groupId == null || attrName == null )
         {
-            throw new IllegalArgumentException( "groupId " + groupId + 
-                " and attrName " + attrName + ", must not be null." );
+            throw new IllegalArgumentException( "groupId " + groupId + " and attrName " + attrName
+                + ", must not be null." );
         }
     }
 
-
     /**
      * Tests object equality.
-     *
-     * @param obj The <code>GroupAttrName</code> instance to test.
+     * 
+     * @param obj
+     *            The <code>GroupAttrName</code> instance to test.
      * @return Whether equal.
      */
     public boolean equals( Object obj )
@@ -63,30 +64,27 @@ public class GroupAttrName implements Serializable
         {
             return false;
         }
-        GroupAttrName to = ( GroupAttrName ) obj;
+        GroupAttrName to = (GroupAttrName) obj;
         return groupId.equals( to.groupId ) && attrName.equals( to.attrName );
     }
 
-
     /**
-     * @return A hash code based on the hash code of {@ #groupid} and
-     * {@link #attrName}.
+     * @return A hash code based on the hash code of {@ #groupid}and
+     *         {@link #attrName}.
      */
     public int hashCode()
     {
         return groupId.hashCode() ^ attrName.hashCode();
     }
 
-
     /** Description of the Method */
     public String toString()
     {
-        if (toString == null) 
+        if ( toString == null )
         {
-            toString = "[GAN: groupId=" + groupId + 
-                ", attrName=" + attrName + "]";
+            toString = "[GAN: groupId=" + groupId + ", attrName=" + attrName + "]";
         }
-        
+
         return toString;
     }
 

@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,14 +25,15 @@ import java.io.Serializable;
 
 /**
  * Description of the Class
- *
+ *  
  */
 public class CacheUtils
 {
 
     /** Constructor for the CacheUtils object */
-    private CacheUtils() { }
-
+    private CacheUtils()
+    {
+    }
 
     /** Returns a deeply cloned object. */
     public static Serializable dup( Serializable obj )
@@ -42,7 +41,6 @@ public class CacheUtils
     {
         return deserialize( serialize( obj ) );
     }
-
 
     /**
      * Returns the serialized form of the given object in a byte array.
@@ -63,7 +61,6 @@ public class CacheUtils
         return baos.toByteArray();
     }
 
-
     /** Returns the object deserialized from the given byte array. */
     public static Serializable deserialize( byte[] buf )
         throws IOException
@@ -72,7 +69,7 @@ public class CacheUtils
         ObjectInputStream ois = new ObjectInputStream( bais );
         try
         {
-            return ( Serializable ) ois.readObject();
+            return (Serializable) ois.readObject();
         }
         catch ( ClassNotFoundException ex )
         {

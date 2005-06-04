@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,17 +16,17 @@ package org.apache.jcs.engine.behavior;
  * limitations under the License.
  */
 
-
 /**
  * Inteface implemented by a specific cache.
- *
+ *  
  */
-public interface ICacheManager extends ICacheType
+public interface ICacheManager
+    extends ICacheType
 {
 
     /**
      * methods to get a cache region from a maanger
-     *
+     * 
      * @return The cache value
      */
     public ICache getCache( String cacheName );

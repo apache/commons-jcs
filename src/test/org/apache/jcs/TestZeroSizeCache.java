@@ -36,8 +36,8 @@ public class TestZeroSizeCache
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
-        }        
-        
+        }
+
         for ( int i = items; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
@@ -57,8 +57,8 @@ public class TestZeroSizeCache
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", "data" + i );
-        }        
-        
+        }
+
         for ( int i = items; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
@@ -69,7 +69,7 @@ public class TestZeroSizeCache
         }
 
         System.out.println( jcs.getStats() );
-        
+
     }
 
 }

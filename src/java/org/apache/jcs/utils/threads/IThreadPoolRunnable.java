@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.threads;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,25 +16,25 @@ package org.apache.jcs.utils.threads;
  * limitations under the License.
  */
 
-
 /**
  * Implemented if you want to run a piece of code inside a thread pool. * A
  * thread pool that is trying to copy the apache process management. asmuts --
  * Pulled out of tomcat, since it seems to move around and hide. Trying to
  * reduce the number of dependencies
- *
+ *  
  */
 public interface IThreadPoolRunnable
 {
     // XXX use notes or a hashtable-like
-    // Important: ThreadData in JDK1.2 is implemented as a Hashtable( Thread -> object ),
+    // Important: ThreadData in JDK1.2 is implemented as a Hashtable( Thread ->
+    // object ),
     // expensive.
 
     /**
      * Called when this object is first loaded in the thread pool. Important:
      * all workers in a pool must be of the same type, otherwise the mechanism
      * becomes more complex.
-     *
+     * 
      * @return The initData value
      */
     public Object[] getInitData();

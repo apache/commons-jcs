@@ -1,6 +1,5 @@
 package org.apache.jcs.access.exception;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,12 +16,12 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-
 /**
  * Description of the Class
- *
+ *  
  */
-public class ObjectNotFoundException extends CacheException
+public class ObjectNotFoundException
+    extends CacheException
 {
 
     /** Constructor for the ObjectNotFoundException object */
@@ -31,10 +30,9 @@ public class ObjectNotFoundException extends CacheException
         super();
     }
 
-
     /**
      * Constructor for the ObjectNotFoundException object
-     *
+     * 
      * @param message
      */
     public ObjectNotFoundException( String message )

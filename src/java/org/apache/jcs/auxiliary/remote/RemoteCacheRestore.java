@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.remote;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.rmi.Naming;
 
@@ -36,23 +34,23 @@ import org.apache.commons.logging.LogFactory;
  * found to be in error, the restorer kicks off and tries to reconnect. When it
  * is succesful, the status of the manager changes. When the failover runner
  * finds that the primary is in good shape, it will switch back.
- *
+ *  
  */
-public class RemoteCacheRestore implements ICacheRestore
+public class RemoteCacheRestore
+    implements ICacheRestore
 {
-    private final static Log log =
-        LogFactory.getLog( RemoteCacheRestore.class );
+    private final static Log log = LogFactory.getLog( RemoteCacheRestore.class );
 
     private final RemoteCacheManager rcm;
+
     //private final IAuxiliaryCacheManager rcm;
     private boolean canFix = true;
 
     private Object remoteObj;
 
-
     /**
      * Constructs with the given instance of RemoteCacheManager.
-     *
+     * 
      * @param rcm
      */
     public RemoteCacheRestore( RemoteCacheManager rcm )
@@ -60,7 +58,6 @@ public class RemoteCacheRestore implements ICacheRestore
         //public RemoteCacheRestore(IAuxiliaryCacheManager rcm) {
         this.rcm = rcm;
     }
-
 
     /**
      * Returns true if the connection to the remote host for the corresponding
@@ -81,13 +78,13 @@ public class RemoteCacheRestore implements ICacheRestore
         }
         catch ( Exception ex )
         {
-            //log.error(ex, "host=" + rcm.host + "; port" + rcm.port + "; service=" + rcm.service );
+            //log.error(ex, "host=" + rcm.host + "; port" + rcm.port + ";
+            // service=" + rcm.service );
             log.error( "host=" + rcm.host + "; port" + rcm.port + "; service=" + rcm.service );
             canFix = false;
         }
         return canFix;
     }
-
 
     /**
      * Fixes up all the caches managed by the associated cache manager.
@@ -98,7 +95,7 @@ public class RemoteCacheRestore implements ICacheRestore
         {
             return;
         }
-        rcm.fixCaches( ( IRemoteCacheService ) remoteObj, ( IRemoteCacheObserver ) remoteObj );
+        rcm.fixCaches( (IRemoteCacheService) remoteObj, (IRemoteCacheObserver) remoteObj );
         String msg = "Remote connection to " + "//" + rcm.host + ":" + rcm.port + "/" + rcm.service + " resumed.";
         log.info( msg );
     }

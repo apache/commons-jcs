@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.memory;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.engine.memory;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.*;
 import java.util.*;
@@ -34,35 +32,34 @@ import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- *  Some common code for the LRU and MRU caches.
- *
- *@version    $Id$
+ * Some common code for the LRU and MRU caches.
+ * 
+ * @version $Id$
  */
 public abstract class AbstractMemoryCache
     implements MemoryCache, Serializable
 {
-    private final static Log log =
-        LogFactory.getLog( AbstractMemoryCache.class );
+    private final static Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
     protected String cacheName;
 
     /**
-     *  Map where items are stored by key
+     * Map where items are stored by key
      */
     protected Map map;
 
     /**
-     *  Region Elemental Attributes, used as a default.
+     * Region Elemental Attributes, used as a default.
      */
     public IElementAttributes attr;
 
     /**
-     *  Cache Attributes
+     * Cache Attributes
      */
     public ICompositeCacheAttributes cattr;
 
     /**
-     *  The cache region this store is associated with
+     * The cache region this store is associated with
      */
     protected CompositeCache cache;
 
@@ -73,12 +70,12 @@ public abstract class AbstractMemoryCache
     protected int chunkSize = 2;
 
     /**
-     *  The background memory shrinker, one for all regions.
+     * The background memory shrinker, one for all regions.
      */
     private static ClockDaemon shrinkerDaemon;
 
     /**
-     *  Constructor for the LRUMemoryCache object
+     * Constructor for the LRUMemoryCache object
      */
     public AbstractMemoryCache()
     {
@@ -87,9 +84,9 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     *  For post reflection creation initialization
-     *
-     *@param  hub
+     * For post reflection creation initialization
+     * 
+     * @param hub
      */
     public synchronized void initialize( CompositeCache hub )
     {
@@ -99,70 +96,77 @@ public abstract class AbstractMemoryCache
 
         status = CacheConstants.STATUS_ALIVE;
 
-        if ( cattr.getUseMemoryShrinker() )          
+        if ( cattr.getUseMemoryShrinker() )
         {
             if ( shrinkerDaemon == null )
             {
-              shrinkerDaemon = new ClockDaemon();
-              shrinkerDaemon.setThreadFactory( new MyThreadFactory() );              
+                shrinkerDaemon = new ClockDaemon();
+                shrinkerDaemon.setThreadFactory( new MyThreadFactory() );
             }
-            shrinkerDaemon.executePeriodically( cattr.getShrinkerIntervalSeconds() * 1000, new ShrinkerThread( this ), false );
-            
+            shrinkerDaemon.executePeriodically( cattr.getShrinkerIntervalSeconds() * 1000, new ShrinkerThread( this ),
+                                                false );
+
         }
     }
 
     /**
-     *  Removes an item from the cache
-     *
-     *@param  key              Identifies item to be removed
-     *@return                  Description of the Return Value
-     *@exception  IOException  Description of the Exception
+     * Removes an item from the cache
+     * 
+     * @param key
+     *            Identifies item to be removed
+     * @return Description of the Return Value
+     * @exception IOException
+     *                Description of the Exception
      */
     public abstract boolean remove( Serializable key )
         throws IOException;
 
     /**
-     *  Get an item from the cache
-     *
-     *@param  key              Description of the Parameter
-     *@return                  Description of the Return Value
-     *@exception  IOException  Description of the Exception
+     * Get an item from the cache
+     * 
+     * @param key
+     *            Description of the Parameter
+     * @return Description of the Return Value
+     * @exception IOException
+     *                Description of the Exception
      */
     public abstract ICacheElement get( Serializable key )
         throws IOException;
 
     /**
-     *  Get an item from the cache without effecting its order or last access
-     *  time
-     *
-     *@param  key              Description of the Parameter
-     *@return                  The quiet value
-     *@exception  IOException  Description of the Exception
+     * Get an item from the cache without effecting its order or last access
+     * time
+     * 
+     * @param key
+     *            Description of the Parameter
+     * @return The quiet value
+     * @exception IOException
+     *                Description of the Exception
      */
     public abstract ICacheElement getQuiet( Serializable key )
         throws IOException;
 
     /**
-     *  Puts an item to the cache.
-     *
-     *@param  ce               Description of the Parameter
-     *@exception  IOException  Description of the Exception
+     * Puts an item to the cache.
+     * 
+     * @param ce
+     *            Description of the Parameter
+     * @exception IOException
+     *                Description of the Exception
      */
     public abstract void update( ICacheElement ce )
         throws IOException;
 
-
     /**
-     *  Get an Array of the keys for all elements in the memory cache
-     *
-     *@return    An Object[]
+     * Get an Array of the keys for all elements in the memory cache
+     * 
+     * @return An Object[]
      */
     public abstract Object[] getKeyArray();
 
-
     /**
      * Removes all cached items from the cache.
-     *
+     * 
      * @exception IOException
      */
     public void removeAll()
@@ -173,31 +177,33 @@ public abstract class AbstractMemoryCache
 
     /**
      * Prepares for shutdown.
-     *
+     * 
      * @exception IOException
      */
     public void dispose()
         throws IOException
     {
-      if ( shrinkerDaemon != null ) {
-        shrinkerDaemon.shutDown();
-      }
+        if ( shrinkerDaemon != null )
+        {
+            shrinkerDaemon.shutDown();
+        }
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
      */
     public IStats getStatistics()
     {
-    	IStats stats = new Stats();
-    	stats.setTypeName( "Abstract Memory Cache" );
-    	return stats;
+        IStats stats = new Stats();
+        stats.setTypeName( "Abstract Memory Cache" );
+        return stats;
     }
-    
+
     /**
      * Returns the current cache size.
-     *
+     * 
      * @return The size value
      */
     public int getSize()
@@ -207,7 +213,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the cache status.
-     *
+     * 
      * @return The status value
      */
     public int getStatus()
@@ -218,7 +224,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the cache name.
-     *
+     * 
      * @return The cacheName value
      */
     public String getCacheName()
@@ -228,7 +234,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Puts an item to the cache.
-     *
+     * 
      * @param me
      * @exception IOException
      */
@@ -240,7 +246,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Gets the iterator attribute of the LRUMemoryCache object
-     *
+     * 
      * @return The iterator value
      */
     public Iterator getIterator()
@@ -250,7 +256,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the CacheAttributes.
-     *
+     * 
      * @return The CacheAttributes value
      */
     public ICompositeCacheAttributes getCacheAttributes()
@@ -260,8 +266,9 @@ public abstract class AbstractMemoryCache
 
     /**
      * Sets the CacheAttributes.
-     *
-     * @param cattr The new CacheAttributes value
+     * 
+     * @param cattr
+     *            The new CacheAttributes value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
@@ -269,30 +276,29 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     *  Gets the cache hub / region taht the MemoryCache is used by
-     *
-     *@return    The cache value
+     * Gets the cache hub / region taht the MemoryCache is used by
+     * 
+     * @return The cache value
      */
     public CompositeCache getCompositeCache()
     {
         return this.cache;
     }
 
-    public Set getGroupKeys(String groupName)
+    public Set getGroupKeys( String groupName )
     {
-        GroupId groupId = new GroupId(getCacheName(), groupName);
+        GroupId groupId = new GroupId( getCacheName(), groupName );
         HashSet keys = new HashSet();
         synchronized ( map )
         {
-            for (Iterator itr = map.entrySet().iterator(); itr.hasNext();)
+            for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
             {
                 Map.Entry entry = (Map.Entry) itr.next();
                 Object k = entry.getKey();
 
-                if ( k instanceof GroupAttrName
-                     && ((GroupAttrName)k).groupId.equals(groupId) )
+                if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
                 {
-                    keys.add(((GroupAttrName)k).attrName);
+                    keys.add( ( (GroupAttrName) k ).attrName );
                 }
             }
         }
@@ -303,24 +309,25 @@ public abstract class AbstractMemoryCache
      * Allows us to set the daemon status on the clockdaemon
      * 
      * @author aaronsm
-     *
+     *  
      */
-    class MyThreadFactory implements ThreadFactory 
+    class MyThreadFactory
+        implements ThreadFactory
     {
 
-      /* (non-Javadoc)
-       * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
-       */
-      public Thread newThread( Runnable runner )
-      {
-        Thread t = new Thread( runner );
-        t.setDaemon( true );
-        t.setPriority( Thread.MIN_PRIORITY );
-        return t;
-      }
-      
+        /*
+         * (non-Javadoc)
+         * 
+         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            t.setDaemon( true );
+            t.setPriority( Thread.MIN_PRIORITY );
+            return t;
+        }
+
     }
 
-    
 }
-

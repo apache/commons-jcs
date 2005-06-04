@@ -31,62 +31,62 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Element attribute descriptor class.
- *
+ * 
  * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
-public class ElementAttributes implements IElementAttributes, Serializable,
-        Cloneable
+public class ElementAttributes
+    implements IElementAttributes, Serializable, Cloneable
 {
 
     /**
      * can this item be flushed to disk
      */
-    public boolean   IS_SPOOL       = true;
+    public boolean IS_SPOOL = true;
 
     /**
      * Is this item laterally distributable
      */
-    public boolean   IS_LATERAL     = true;
+    public boolean IS_LATERAL = true;
 
     /**
      * Can this item be sent to the remote cache
      */
-    public boolean   IS_REMOTE      = true;
+    public boolean IS_REMOTE = true;
 
     /**
      * can turn off expiration
      */
-    public boolean   IS_ETERNAL     = true;
+    public boolean IS_ETERNAL = true;
 
     /**
      * Description of the Field
      */
-    public long      version        = 0;
+    public long version = 0;
 
     /**
      * Max life seconds
      */
-    public long      mls            = -1;
+    public long mls = -1;
 
     /**
      * Description of the Field
      */
-    public long      idle           = -1;
+    public long idle = -1;
 
     /**
      * The byte size of teh field. Must be manually set.
      */
-    public int       size           = 0;
+    public int size = 0;
 
     /**
      * The creation time
      */
-    public long      createTime     = 0;
+    public long createTime = 0;
 
     /**
      * The last access time
      */
-    public long      lastAccessTime = 0;
+    public long lastAccessTime = 0;
 
     /**
      * The list of Event handlers to use.
@@ -104,10 +104,10 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Constructor for the IElementAttributes object
-     *
+     * 
      * @param attr
      */
-    private ElementAttributes(ElementAttributes attr)
+    private ElementAttributes( ElementAttributes attr )
     {
 
         IS_ETERNAL = attr.IS_ETERNAL;
@@ -130,7 +130,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Copies the attributes, including references to event handlers.
-     *
+     * 
      * @return a copy of the Attributes
      */
     public IElementAttributes copy()
@@ -149,7 +149,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
             attr.addElementEventHandlers( this.eventHandlers );
             return attr;
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
             return new ElementAttributes();
         }
@@ -157,7 +157,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Deep clone the attributes.
-     *
+     * 
      * @return a clone of these attributes
      */
     public Object clone2()
@@ -181,14 +181,15 @@ public class ElementAttributes implements IElementAttributes, Serializable,
             attr.createTime = System.currentTimeMillis();
             return attr;
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
         }
         return null;
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setVersion(long)
      */
     public void setVersion( long version )
@@ -197,7 +198,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setMaxLifeSeconds(long)
      */
     public void setMaxLifeSeconds( long mls )
@@ -206,7 +208,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getMaxLifeSeconds()
      */
     public long getMaxLifeSeconds()
@@ -214,17 +217,19 @@ public class ElementAttributes implements IElementAttributes, Serializable,
         return this.mls;
     }
 
-	/*
-	 *  (non-Javadoc)
-	 * @see org.apache.jcs.engine.behavior.IElementAttributes#setIdleTime(long)
-	 */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.IElementAttributes#setIdleTime(long)
+     */
     public void setIdleTime( long idle )
     {
         this.idle = idle;
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setSize(int)
      */
     public void setSize( int size )
@@ -233,7 +238,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getSize()
      */
     public int getSize()
@@ -242,7 +248,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getCreateTime()
      */
     public long getCreateTime()
@@ -259,7 +266,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getVersion()
      */
     public long getVersion()
@@ -268,7 +276,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getIdleTime()
      */
     public long getIdleTime()
@@ -277,18 +286,19 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getTimeToLiveSeconds()
      */
     public long getTimeToLiveSeconds()
     {
         long now = System.currentTimeMillis();
-        return ((this.getCreateTime() + (this.getMaxLifeSeconds()
-                                         * 1000)) - now) / 1000;
+        return ( ( this.getCreateTime() + ( this.getMaxLifeSeconds() * 1000 ) ) - now ) / 1000;
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getLastAccessTime()
      */
     public long getLastAccessTime()
@@ -297,7 +307,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setLastAccessTimeNow()
      */
     public void setLastAccessTimeNow()
@@ -306,7 +317,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsSpool()
      */
     public boolean getIsSpool()
@@ -315,7 +327,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsSpool(boolean)
      */
     public void setIsSpool( boolean val )
@@ -324,7 +337,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsLateral()
      */
     public boolean getIsLateral()
@@ -333,7 +347,8 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsLateral(boolean)
      */
     public void setIsLateral( boolean val )
@@ -343,7 +358,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Can this item be sent to the remote cache
-     *
+     * 
      * @return The {3} value
      */
     public boolean getIsRemote()
@@ -353,7 +368,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the isRemote attribute of the ElementAttributes object
-     *
+     * 
      * @param val
      *            The new isRemote value
      */
@@ -364,7 +379,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * can turn off expiration
-     *
+     * 
      * @return The {3} value
      */
     public boolean getIsEternal()
@@ -374,7 +389,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the isEternal attribute of the ElementAttributes object
-     *
+     * 
      * @param val
      *            The new isEternal value
      */
@@ -386,18 +401,18 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     /**
      * Adds a ElementEventHandler. Handler's can be registered for multiple
      * events. A registered handler will be called at every recognized event.
-     *
+     * 
      * The alternative would be to register handlers for each event. Or maybe
      * The handler interface should have a method to return whether it cares
      * about certain events.
-     *
+     * 
      * @param eventHandler
      *            The ElementEventHandler to be added to the list.
      */
     public void addElementEventHandler( IElementEventHandler eventHandler )
     {
         // lazy here, no concurrency problems expected
-        if (this.eventHandlers == null)
+        if ( this.eventHandlers == null )
         {
             this.eventHandlers = new ArrayList();
         }
@@ -406,18 +421,18 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * Sets the eventHandlers of the IElementAttributes object
-     *
+     * 
      * @param eventHandlers
      *            value
      */
     public void addElementEventHandlers( ArrayList eventHandlers )
     {
-        if (eventHandlers == null)
+        if ( eventHandlers == null )
         {
             return;
         }
 
-        for (Iterator iter = eventHandlers.iterator(); iter.hasNext();)
+        for ( Iterator iter = eventHandlers.iterator(); iter.hasNext(); )
         {
             addElementEventHandler( (IElementEventHandler) iter.next() );
         }
@@ -426,7 +441,7 @@ public class ElementAttributes implements IElementAttributes, Serializable,
     /**
      * Gets the elementEventHandlers. Returns null if none exist. Makes checking
      * easy.
-     *
+     * 
      * @return The elementEventHandlers value
      */
     public ArrayList getElementEventHandlers()
@@ -436,25 +451,20 @@ public class ElementAttributes implements IElementAttributes, Serializable,
 
     /**
      * For logging and debugging the element IElementAttributes.
-     *
+     * 
      * @return String info about the values.
      */
     public String toString()
     {
         StringBuffer dump = new StringBuffer();
 
-        dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL )
-        	.append( ", IS_SPOOL = " ).append( IS_SPOOL )
-        	.append( ", IS_REMOTE = " ).append( IS_REMOTE )
-            .append( ", IS_ETERNAL = " ).append( IS_ETERNAL )
-            .append( ", MaxLifeSeconds = " ).append( this.getMaxLifeSeconds() )
-            .append( ", IdleTime = " ).append( this.getIdleTime() )
-            .append( ", CreateTime = " ).append( this.getCreateTime() )
-            .append( ", LastAccessTime = " ).append( this.getLastAccessTime() )
-            .append( ", getTimeToLiveSeconds() = " ).append(
-                        String.valueOf( getTimeToLiveSeconds() ) )
-            .append( ", createTime = " ).append( String.valueOf( createTime ) )
-            .append( " ]" );
+        dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL ).append( ", IS_SPOOL = " ).append( IS_SPOOL )
+            .append( ", IS_REMOTE = " ).append( IS_REMOTE ).append( ", IS_ETERNAL = " ).append( IS_ETERNAL )
+            .append( ", MaxLifeSeconds = " ).append( this.getMaxLifeSeconds() ).append( ", IdleTime = " )
+            .append( this.getIdleTime() ).append( ", CreateTime = " ).append( this.getCreateTime() )
+            .append( ", LastAccessTime = " ).append( this.getLastAccessTime() ).append( ", getTimeToLiveSeconds() = " )
+            .append( String.valueOf( getTimeToLiveSeconds() ) ).append( ", createTime = " )
+            .append( String.valueOf( createTime ) ).append( " ]" );
 
         return dump.toString();
     }

@@ -16,7 +16,6 @@ package org.apache.jcs.config.plugins;
  * limitations under the License.
  */
 
-
 import javax.servlet.ServletException;
 
 import org.apache.jcs.engine.control.CompositeCacheManager;
@@ -25,64 +24,65 @@ import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;
 
 /**
- *   This plugin provides a simple way to integrate with Struts.
- *   It allows you to specify the configuration file for JCS in
- *   the struts-config.xml file.
- *   JCS will initialize and be destroyed at applicatiohn shutdown.
- *
- *   Add these lines to your struts-config.xml
- *
- *   <plug-in className="org.apache.jcs.config.plugins.JCSStrutsPlugin">
- *    <set-property property="config-file-name" value="cache.ccf" />
- *   </plug-in>
- *
- *
+ * This plugin provides a simple way to integrate with Struts. It allows you to
+ * specify the configuration file for JCS in the struts-config.xml file. JCS
+ * will initialize and be destroyed at applicatiohn shutdown.
+ * 
+ * Add these lines to your struts-config.xml
+ * 
+ * <plug-in className="org.apache.jcs.config.plugins.JCSStrutsPlugin">
+ * <set-property property="config-file-name" value="cache.ccf" /> </plug-in>
+ * 
+ *  
  */
-public class JCSStrutsPlugin implements PlugIn
+public class JCSStrutsPlugin
+    implements PlugIn
 {
 
-  private static CompositeCacheManager cacheMgr;
+    private static CompositeCacheManager cacheMgr;
 
-  /**
-   * Initialize JCS with config-file-name param.
-   * If no file is specified, cache.ccf will be used.
-   *
-   * @param servlet ActionServlet
-   * @param config ModuleConfig
-   * @throws ServletException
-   */
-  public void init( ActionServlet servlet, ModuleConfig config )
-    throws ServletException
-  {
-
-    String configFileName = servlet.getInitParameter( "config-file-name" );
-    if ( configFileName == null )
+    /**
+     * Initialize JCS with config-file-name param. If no file is specified,
+     * cache.ccf will be used.
+     * 
+     * @param servlet
+     *            ActionServlet
+     * @param config
+     *            ModuleConfig
+     * @throws ServletException
+     */
+    public void init( ActionServlet servlet, ModuleConfig config )
+        throws ServletException
     {
-      configFileName = "cache.ccf";
-    }
 
-    if ( cacheMgr == null )
-    {
+        String configFileName = servlet.getInitParameter( "config-file-name" );
         if ( configFileName == null )
         {
-            cacheMgr = CompositeCacheManager.getInstance();
+            configFileName = "cache.ccf";
         }
-        else
-        {
-            cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
 
-            cacheMgr.configure( configFileName );
+        if ( cacheMgr == null )
+        {
+            if ( configFileName == null )
+            {
+                cacheMgr = CompositeCacheManager.getInstance();
+            }
+            else
+            {
+                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+
+                cacheMgr.configure( configFileName );
+            }
         }
+
     }
 
-  }
-
-  /**
-   * Destroys all the regions.
-   */
-  public void destroy()
-  {
-    cacheMgr.release();
-  }
+    /**
+     * Destroys all the regions.
+     */
+    public void destroy()
+    {
+        cacheMgr.release();
+    }
 
 }

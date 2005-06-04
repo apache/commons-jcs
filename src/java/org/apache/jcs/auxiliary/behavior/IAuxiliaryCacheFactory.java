@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,12 +16,11 @@ package org.apache.jcs.auxiliary.behavior;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.engine.behavior.ICache;
 
 /**
  * Description of the Interface
- *
+ *  
  */
 public interface IAuxiliaryCacheFactory
 {
@@ -30,18 +28,17 @@ public interface IAuxiliaryCacheFactory
     /** Description of the Method */
     public ICache createCache( IAuxiliaryCacheAttributes iaca );
 
-
     /**
      * Sets the name attribute of the IAuxiliaryCacheFactory object
-     *
-     * @param s The new name value
+     * 
+     * @param s
+     *            The new name value
      */
     public void setName( String s );
 
-
     /**
      * Gets the name attribute of the IAuxiliaryCacheFactory object
-     *
+     * 
      * @return The name value
      */
     public String getName();

@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.javagroups;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,24 +47,25 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * Auxiliary cache using javagroups. Expects to be created with a Channel,
- * the {@link JavaGroupsCacheFactory} is responsible for creating that channel.
- * To do so it uses configuration properties specified by an instance of
+ * Auxiliary cache using javagroups. Expects to be created with a Channel, the
+ * {@link JavaGroupsCacheFactory}is responsible for creating that channel. To
+ * do so it uses configuration properties specified by an instance of
  * {@link JavaGroupsCacheAttributes}.
  * <p>
- * At creation time the provided channel is connected to a group having the
- * same name as the cache / region name this auxiliary is associated with.
- * update / remove / removeAll operations are broadcast to all members of the
- * group. A listener thread processes requests from other members of the group,
- * and dispatches to appropriate methods on the associated CompositeCache. </p>
+ * At creation time the provided channel is connected to a group having the same
+ * name as the cache / region name this auxiliary is associated with. update /
+ * remove / removeAll operations are broadcast to all members of the group. A
+ * listener thread processes requests from other members of the group, and
+ * dispatches to appropriate methods on the associated CompositeCache.
+ * </p>
  * <p>
  * Calls to get are currently ignored.
  * <p>
  * Messages are sent to peers asynchronously. Synchronous messaging could be
  * added using MessageDispatcher or RpcDispatcher. Combined with a get
- * implementation this could provide much higher cache consistency (but with
- * a substantial speed penalty).
- *
+ * implementation this could provide much higher cache consistency (but with a
+ * substantial speed penalty).
+ * 
  * @version $Id$
  */
 public class JavaGroupsCache
@@ -75,6 +74,7 @@ public class JavaGroupsCache
     private final Log log = LogFactory.getLog( JavaGroupsCache.class );
 
     private String cacheName;
+
     private int status;
 
     private boolean getFromPeers;
@@ -85,9 +85,7 @@ public class JavaGroupsCache
 
     private MessageDispatcher dispatcher;
 
-    public JavaGroupsCache( CompositeCache cache,
-                            Channel channel,
-                            boolean getFromPeers )
+    public JavaGroupsCache( CompositeCache cache, Channel channel, boolean getFromPeers )
         throws Exception
     {
         this.cache = cache;
@@ -121,10 +119,7 @@ public class JavaGroupsCache
 
         try
         {
-            dispatcher.castMessage( null,
-                                    new Message( null, null, request ),
-                                    GroupRequest.GET_NONE,
-                                    0 );
+            dispatcher.castMessage( null, new Message( null, null, request ), GroupRequest.GET_NONE, 0 );
 
         }
         catch ( Exception e )
@@ -138,24 +133,29 @@ public class JavaGroupsCache
     /**
      * Sends the provided element to all peers (connected to the same channel
      * and region name).
-     *
-     * @param ce CacheElement to replicate
-     * @throws IOException Never thrown by this implementation
+     * 
+     * @param ce
+     *            CacheElement to replicate
+     * @throws IOException
+     *             Never thrown by this implementation
      */
-    public void update( ICacheElement ce ) throws IOException
+    public void update( ICacheElement ce )
+        throws IOException
     {
         send( ce, Request.UPDATE );
     }
 
     /**
-     * If 'getFromPeers' is true, this will attempt to get the requested
-     * element from ant other members of the group.
-     *
+     * If 'getFromPeers' is true, this will attempt to get the requested element
+     * from ant other members of the group.
+     * 
      * @param key
      * @return
-     * @throws IOException Never thrown by this implementation
+     * @throws IOException
+     *             Never thrown by this implementation
      */
-    public ICacheElement get( Serializable key ) throws IOException
+    public ICacheElement get( Serializable key )
+        throws IOException
     {
         if ( getFromPeers )
         {
@@ -168,11 +168,8 @@ public class JavaGroupsCache
             // FIXME: we can stop waiting after the first not null response,
             //        that is more difficult to implement however.
 
-            RspList responses =
-                dispatcher.castMessage( null,
-                                        new Message( null, null, request ),
-                                        GroupRequest.GET_ALL,
-                                        0 );
+            RspList responses = dispatcher.castMessage( null, new Message( null, null, request ), GroupRequest.GET_ALL,
+                                                        0 );
 
             // Get results only gives the responses which were not null
 
@@ -182,7 +179,7 @@ public class JavaGroupsCache
 
             if ( results.size() > 0 )
             {
-                return ( ICacheElement ) results.get( 0 );
+                return (ICacheElement) results.get( 0 );
             }
         }
 
@@ -192,11 +189,14 @@ public class JavaGroupsCache
     /**
      * Sends a request to all peers to remove the element having the provided
      * key.
-     *
-     * @param key Key of element to be removed
-     * @throws IOException Never thrown by this implementation
+     * 
+     * @param key
+     *            Key of element to be removed
+     * @throws IOException
+     *             Never thrown by this implementation
      */
-    public boolean remove( Serializable key ) throws IOException
+    public boolean remove( Serializable key )
+        throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
 
@@ -207,10 +207,12 @@ public class JavaGroupsCache
 
     /**
      * Sends a request to remove ALL elements from the peers
-     *
-     * @throws IOException Never thrown by this implementation
+     * 
+     * @throws IOException
+     *             Never thrown by this implementation
      */
-    public void removeAll() throws IOException
+    public void removeAll()
+        throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, null, null );
 
@@ -220,10 +222,11 @@ public class JavaGroupsCache
     /**
      * Dispose this cache, terminates the listener thread and disconnects the
      * channel from the group.
-     *
+     * 
      * @throws IOException
      */
-    public void dispose() throws IOException
+    public void dispose()
+        throws IOException
     {
         // This will join the scheduler thread and ensure everything terminates
 
@@ -241,7 +244,7 @@ public class JavaGroupsCache
 
     /**
      * Since this is a lateral, size is not defined.
-     *
+     * 
      * @return Always returns 0
      */
     public int getSize()
@@ -251,7 +254,7 @@ public class JavaGroupsCache
 
     /**
      * Returns the status of this auxiliary.
-     *
+     * 
      * @return One of the status constants from {@link CacheConstants}
      */
     public int getStatus()
@@ -261,7 +264,7 @@ public class JavaGroupsCache
 
     /**
      * Accessor for cacheName property
-     *
+     * 
      * @return Name of cache / region this auxiliary is associated with.
      */
     public String getCacheName()
@@ -272,8 +275,9 @@ public class JavaGroupsCache
     /**
      * Not implemented (I believe since get is not supported, this should also
      * not be).
-     *
-     * @param group Ignored
+     * 
+     * @param group
+     *            Ignored
      * @return Always reurns null
      */
     public Set getGroupKeys( String group )
@@ -285,7 +289,7 @@ public class JavaGroupsCache
 
     /**
      * Get the cache type (always Lateral).
-     *
+     * 
      * @return Always returns ICacheType.LATERAL_CACHE
      */
     public int getCacheType()
@@ -296,18 +300,19 @@ public class JavaGroupsCache
     // ----------------------------------------------- interface RequestHandler
 
     /**
-     * Handles a message from a peer. The message should contain a Request,
-     * and depending on the command this will call localUpdate, localRemove,
-     * or localRemoveAll on the associated CompositeCache.
-     *
-     * @param msg The JavaGroups Message
+     * Handles a message from a peer. The message should contain a Request, and
+     * depending on the command this will call localUpdate, localRemove, or
+     * localRemoveAll on the associated CompositeCache.
+     * 
+     * @param msg
+     *            The JavaGroups Message
      * @return Always returns null
      */
     public Object handle( Message msg )
     {
         try
         {
-            Request request = ( Request ) msg.getObject();
+            Request request = (Request) msg.getObject();
 
             // Switch based on the command and invoke the
             // appropriate method on the associate composite cache
@@ -317,7 +322,7 @@ public class JavaGroupsCache
                 case Request.GET:
 
                     return cache.localGet( request.getCacheElement().getKey() );
-                    // break;
+                // break;
 
                 case Request.UPDATE:
 
@@ -354,57 +359,66 @@ public class JavaGroupsCache
         log.info( "View Changed: " + String.valueOf( view ) );
     }
 
-    public void suspect( Address suspectedAddress ) { }
+    public void suspect( Address suspectedAddress )
+    {
+    }
 
-    public void block() { }
+    public void block()
+    {
+    }
 
-  /**
-   * getStats
-   *
-   * @return String
-   */
-  public String getStats()
-  {
-    return getStatistics().toString();
-  }
+    /**
+     * getStats
+     * 
+     * @return String
+     */
+    public String getStats()
+    {
+        return getStatistics().toString();
+    }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
-   */
-  public IStats getStatistics()
-  {
-    IStats stats = new Stats();
-    stats.setTypeName( "JavaGroups Cache" );
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+        IStats stats = new Stats();
+        stats.setTypeName( "JavaGroups Cache" );
 
-    ArrayList elems = new ArrayList();
+        ArrayList elems = new ArrayList();
 
-    IStatElement se = null;
+        IStatElement se = null;
 
-    // no data gathered here
+        // no data gathered here
 
-    // get an array and put them in the Stats object
-    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
-    stats.setStatElements( ses );
+        // get an array and put them in the Stats object
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        stats.setStatElements( ses );
 
-    return stats;
-  }   
-  
-  // ---------------------------------------------------------- inner classes
+        return stats;
+    }
+
+    // ---------------------------------------------------------- inner classes
 
     /**
      * Object for messages, wraps the command type (update, remove, or remove
      * all) and original cache element to distribute.
      */
-    static class Request implements Serializable
+    static class Request
+        implements Serializable
     {
         public final static int UPDATE = 1;
+
         public final static int REMOVE = 2;
+
         public final static int REMOVE_ALL = 3;
+
         public final static int GET = 5;
 
         private ICacheElement cacheElement;
+
         private int command;
 
         public Request( ICacheElement cacheElement, int command )

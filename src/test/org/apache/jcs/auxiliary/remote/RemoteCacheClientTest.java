@@ -36,29 +36,32 @@ import org.apache.jcs.engine.behavior.ICacheService;
 
 /**
  * Description of the Class
- *
+ * 
  * @author asmuts
  * @created January 15, 2002
  */
-public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCacheConstants
+public class RemoteCacheClientTest
+    implements IRemoteCacheListener, IRemoteCacheConstants
 {
 
     ICacheObserver watch;
+
     ICacheService cache;
 
     /** The registry host name. */
     final String host;
+
     /** The registry port number. */
     final int port;
+
     final int count;
 
     /** Description of the Field */
     protected static long listenerId = 0;
 
-
     /**
      * Gets the remoteType attribute of the RemoteCacheClientTest object
-     *
+     * 
      * @return The remoteType value
      */
     public int getRemoteType()
@@ -67,10 +70,9 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         return 0;
     }
 
-
     /**
      * Constructor for the RemoteCacheClientTest object
-     *
+     * 
      * @param count
      * @exception MalformedURLException
      * @exception NotBoundException
@@ -82,10 +84,9 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         this( count, true, true, false );
     }
 
-
     /**
      * Constructor for the RemoteCacheClientTest object
-     *
+     * 
      * @param count
      * @param write
      * @param read
@@ -100,10 +101,9 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         this( "", Registry.REGISTRY_PORT, count, write, read, delete );
     }
 
-
     /**
      * Constructor for the RemoteCacheClientTest object
-     *
+     * 
      * @param host
      * @param port
      * @param count
@@ -114,8 +114,7 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
      * @exception NotBoundException
      * @exception IOException
      */
-    public RemoteCacheClientTest( String host, int port, int count,
-                                  boolean write, boolean read, boolean delete )
+    public RemoteCacheClientTest( String host, int port, int count, boolean write, boolean read, boolean delete )
         throws MalformedURLException, NotBoundException, IOException
     {
         this.count = count;
@@ -126,7 +125,8 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
 
         try
         {
-            // Export this remote object to make it available to receive incoming calls,
+            // Export this remote object to make it available to receive
+            // incoming calls,
             // using an anonymous port.
             UnicastRemoteObject.exportObject( this );
             ee = null;
@@ -150,8 +150,8 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
 
         p( "server found" );
 
-        cache = ( ICacheService ) obj;
-        watch = ( ICacheObserver ) obj;
+        cache = (ICacheService) obj;
+        watch = (ICacheObserver) obj;
 
         p( "subscribing to the server" );
 
@@ -195,14 +195,12 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         }
     }
 
-
     /** Description of the Method */
     public void handlePut( ICacheElement cb )
         throws IOException
     {
         p( "handlePut> cb=" + cb );
     }
-
 
     /** Description of the Method */
     public void handleRemove( String cacheName, Serializable key )
@@ -211,14 +209,12 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         p( "handleRemove> cacheName=" + cacheName + ", key=" + key );
     }
 
-
     /** Description of the Method */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
         p( "handleRemove> cacheName=" + cacheName );
     }
-
 
     /** Description of the Method */
     public void handleDispose( String cacheName )
@@ -227,16 +223,14 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         p( "handleDispose> cacheName=" + cacheName );
     }
 
-
     /*
-     * public void handleRelease() throws IOException {
-     * p("handleRelease>");
-     * }
+     * public void handleRelease() throws IOException { p("handleRelease>"); }
      */
     /**
      * The main program for the RemoteCacheClientTest class
-     *
-     * @param args The command line arguments
+     * 
+     * @param args
+     *            The command line arguments
      */
     public static void main( String[] args )
         throws Exception
@@ -271,11 +265,11 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         RemoteCacheClientTest client = new RemoteCacheClientTest( count, write, read, delete );
     }
 
-
     /**
      * Sets the listenerId attribute of the RemoteCacheClientTest object
-     *
-     * @param id The new listenerId value
+     * 
+     * @param id
+     *            The new listenerId value
      */
     public void setListenerId( long id )
         throws IOException
@@ -284,10 +278,9 @@ public class RemoteCacheClientTest implements IRemoteCacheListener, IRemoteCache
         p( "listenerId = " + id );
     }
 
-
     /**
      * Gets the listenerId attribute of the RemoteCacheClientTest object
-     *
+     * 
      * @return The listenerId value
      */
     public long getListenerId()

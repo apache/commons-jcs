@@ -1,6 +1,5 @@
 package org.apache.jcs;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -30,10 +28,11 @@ import java.util.Random;
 
 /**
  * Simple test for the JCS class.
- *
+ * 
  * @version $Id$
  */
-public class TestJCS extends TestCase
+public class TestJCS
+    extends TestCase
 {
     Random random = new Random();
 
@@ -65,44 +64,45 @@ public class TestJCS extends TestCase
     /**
      * @throws Exception
      */
-    public void testJCS() throws Exception
+    public void testJCS()
+        throws Exception
     {
         JCS jcs = JCS.getInstance( "testCache1" );
-        
+
         LinkedList list = buildList();
-        
+
         jcs.put( "some:key", list );
-        
+
         assertEquals( list, jcs.get( "some:key" ) );
     }
- 
+
     private LinkedList buildList()
     {
         LinkedList list = new LinkedList();
-        
+
         for ( int i = 0; i < 100; i++ )
         {
             list.add( buildMap() );
         }
-        
+
         return list;
     }
-    
+
     private HashMap buildMap()
-    {       
+    {
         HashMap map = new HashMap();
-        
+
         byte[] keyBytes = new byte[32];
         byte[] valBytes = new byte[128];
-        
+
         for ( int i = 0; i < 10; i++ )
         {
             random.nextBytes( keyBytes );
             random.nextBytes( valBytes );
-            
+
             map.put( new String( keyBytes ), new String( valBytes ) );
         }
-        
+
         return map;
     }
 

@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -26,7 +24,7 @@ import org.apache.jcs.engine.behavior.ICache;
 /**
  * Used to associates a set of [cache listener to cache event queue] for a
  * cache.
- *
+ *  
  */
 public class CacheListeners
 {
@@ -40,10 +38,9 @@ public class CacheListeners
     /** Description of the Field */
     public final Map eventQMap = new Hashtable();
 
-
     /**
      * Constructs with the given cache.
-     *
+     * 
      * @param cache
      */
     public CacheListeners( ICache cache )

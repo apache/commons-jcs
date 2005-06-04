@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.remote;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,12 +39,12 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * Used to provide access to multiple services under nowait protection. factory
  * should construct NoWaitFacade to give to the composite cache out of caches it
  * constructs from the varies manager to lateral services.
- *
+ *  
  */
-public class RemoteCacheNoWaitFacade implements AuxiliaryCache
+public class RemoteCacheNoWaitFacade
+    implements AuxiliaryCache
 {
-    private final static Log log =
-        LogFactory.getLog( RemoteCacheNoWaitFacade.class );
+    private final static Log log = LogFactory.getLog( RemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
     public RemoteCacheNoWait[] noWaits;
@@ -59,7 +57,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
     /**
      * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade
      * object
-     *
+     * 
      * @return The remoteCacheAttributes value
      */
     public RemoteCacheAttributes getRemoteCacheAttributes()
@@ -70,8 +68,9 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
     /**
      * Sets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade
      * object
-     *
-     * @param rca The new remoteCacheAttributes value
+     * 
+     * @param rca
+     *            The new remoteCacheAttributes value
      */
     public void setRemoteCacheAttributes( RemoteCacheAttributes rca )
     {
@@ -81,7 +80,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
     /**
      * Constructs with the given remote cache, and fires events to any
      * listeners.
-     *
+     * 
      * @param noWaits
      * @param rca
      */
@@ -96,9 +95,9 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         this.cacheName = rca.getCacheName();
     }
 
-    /** 
+    /**
      * Put an element in the cache.
-     *  
+     * 
      * @param ce
      * @throws IOException
      */
@@ -114,30 +113,33 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( ; i < noWaits.length; i++ )
             {
-                noWaits[ i ].update( ce );
+                noWaits[i].update( ce );
                 // an initial move into a zombie will lock this to primary
-                // recovery.  will not discover other servers until primary reconnect
+                // recovery. will not discover other servers until primary
+                // reconnect
                 // and subsequent error
             }
         }
         catch ( Exception ex )
         {
             log.error( ex );
-            // can handle failover here?  Is it safe to try the others?
+            // can handle failover here? Is it safe to try the others?
             // check to see it the noWait is now a zombie
             // if it is a zombie, then move to the next in the failover list
             // will need to keep them in order or a count
             failover( i );
             // should start a failover thread
-            // should probably only failover if there is only one in the noWait list
-            // should start a background thread to set the original as the primary
+            // should probably only failover if there is only one in the noWait
+            // list
+            // should start a background thread to set the original as the
+            // primary
             // if we are in failover state
         }
     }
 
-    /** 
+    /**
      * Synchronously reads from the remote cache.
-     *  
+     * 
      * @param key
      * @return Either an ICacheElement or null if it is not found.
      */
@@ -147,10 +149,10 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         {
             try
             {
-                Object obj = noWaits[ i ].get( key );
+                Object obj = noWaits[i].get( key );
                 if ( obj != null )
                 {
-                    return ( ICacheElement ) obj;
+                    return (ICacheElement) obj;
                 }
             }
             catch ( Exception ex )
@@ -169,8 +171,8 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
      * @return
      * @throws IOException
      */
-    public Set getGroupKeys(String group)
-         throws IOException
+    public Set getGroupKeys( String group )
+        throws IOException
     {
         HashSet allKeys = new HashSet();
         for ( int i = 0; i < noWaits.length; i++ )
@@ -178,15 +180,14 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
             AuxiliaryCache aux = noWaits[i];
             if ( aux != null )
             {
-                allKeys.addAll(aux.getGroupKeys(group));
+                allKeys.addAll( aux.getGroupKeys( group ) );
             }
         }
         return allKeys;
     }
 
-
-    /** 
-     * Adds a remove request to the remote cache. 
+    /**
+     * Adds a remove request to the remote cache.
      * 
      * @param key
      * @return wether or not it was removed, right now it return false.
@@ -197,7 +198,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[ i ].remove( key );
+                noWaits[i].remove( key );
             }
         }
         catch ( Exception ex )
@@ -207,8 +208,8 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         return false;
     }
 
-    /** 
-     * Adds a removeAll request to the lateral cache. 
+    /**
+     * Adds a removeAll request to the lateral cache.
      */
     public void removeAll()
     {
@@ -216,7 +217,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[ i ].removeAll();
+                noWaits[i].removeAll();
             }
         }
         catch ( Exception ex )
@@ -232,7 +233,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         {
             for ( int i = 0; i < noWaits.length; i++ )
             {
-                noWaits[ i ].dispose();
+                noWaits[i].dispose();
             }
         }
         catch ( Exception ex )
@@ -243,7 +244,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
 
     /**
      * No lateral invokation.
-     *
+     * 
      * @return The size value
      */
     public int getSize()
@@ -254,7 +255,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
 
     /**
      * Gets the cacheType attribute of the RemoteCacheNoWaitFacade object
-     *
+     * 
      * @return The cacheType value
      */
     public int getCacheType()
@@ -264,7 +265,7 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
 
     /**
      * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object
-     *
+     * 
      * @return The cacheName value
      */
     public String getCacheName()
@@ -274,9 +275,9 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
 
     /**
      * Gets the status attribute of the RemoteCacheNoWaitFacade object
-     *
+     * 
      * @todo need to do something with this
-     *
+     * 
      * @return The status value
      */
     public int getStatus()
@@ -285,9 +286,9 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
     }
 
-    /** 
+    /**
      * String form of some of the configuratin information for the remote cache.
-     *  
+     * 
      * @return Some info for logging.
      */
     public String toString()
@@ -295,11 +296,12 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         return "RemoteCacheNoWaitFacade: " + cacheName + ", rca = " + rca;
     }
 
-    /** 
-     * Begin the failover process if this is a local cache. 
-     * Clustered remote caches do not failover.
-     *  
-     * @param i The no wait in error.  
+    /**
+     * Begin the failover process if this is a local cache. Clustered remote
+     * caches do not failover.
+     * 
+     * @param i
+     *            The no wait in error.
      */
     protected void failover( int i )
     {
@@ -311,11 +313,12 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
 
         if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
-            if ( noWaits[ i ].getStatus() == CacheConstants.STATUS_ERROR )
+            if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
             {
                 // start failover, primary recovery process
                 RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this );
-                // If the returned monitor is null, it means it's already started elsewhere.
+                // If the returned monitor is null, it means it's already
+                // started elsewhere.
                 if ( runner != null )
                 {
                     runner.notifyError();
@@ -331,54 +334,54 @@ public class RemoteCacheNoWaitFacade implements AuxiliaryCache
         }
     }
 
-  /**
-   * getStats
-   *
-   * @return String
-   */
-  public String getStats()
-  {
-    return getStatistics().toString();
-  }
-  
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
-   */
-  public IStats getStatistics()
-  {
-    IStats stats = new Stats();
-    stats.setTypeName( "Remote Cache No Wait Facade" );
-
-    ArrayList elems = new ArrayList();
-
-    IStatElement se = null;
-
-    if ( noWaits != null )
+    /**
+     * getStats
+     * 
+     * @return String
+     */
+    public String getStats()
     {
-      se = new StatElement();
-      se.setName( "Number of No Waits" );
-      se.setData( "" + noWaits.length  );
-      elems.add( se );      
-    
-      for ( int i = 0; i < noWaits.length; i++ )
-      {
-        // get the stats from the super too
-        // get as array, convert to list, add list to our outer list
-        IStats sStats = noWaits[i].getStatistics();
-        IStatElement[] sSEs = sStats.getStatElements();
-        List sL = Arrays.asList( sSEs );
-        elems.addAll( sL );        
-      }
-    
-    }    
-    
-    // get an array and put them in the Stats object
-    IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
-    stats.setStatElements( ses );
+        return getStatistics().toString();
+    }
 
-    return stats;
-  }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+     */
+    public IStats getStatistics()
+    {
+        IStats stats = new Stats();
+        stats.setTypeName( "Remote Cache No Wait Facade" );
+
+        ArrayList elems = new ArrayList();
+
+        IStatElement se = null;
+
+        if ( noWaits != null )
+        {
+            se = new StatElement();
+            se.setName( "Number of No Waits" );
+            se.setData( "" + noWaits.length );
+            elems.add( se );
+
+            for ( int i = 0; i < noWaits.length; i++ )
+            {
+                // get the stats from the super too
+                // get as array, convert to list, add list to our outer list
+                IStats sStats = noWaits[i].getStatistics();
+                IStatElement[] sSEs = sStats.getStatElements();
+                List sL = Arrays.asList( sSEs );
+                elems.addAll( sL );
+            }
+
+        }
+
+        // get an array and put them in the Stats object
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        stats.setStatElements( ses );
+
+        return stats;
+    }
 
 }

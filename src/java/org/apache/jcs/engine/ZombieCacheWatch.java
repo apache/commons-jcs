@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.engine.behavior.ICacheObserver;
 
 import org.apache.jcs.engine.behavior.IZombie;
@@ -25,33 +23,42 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class ZombieCacheWatch implements ICacheObserver, IZombie
+public class ZombieCacheWatch
+    implements ICacheObserver, IZombie
 {
     /**
      * Adds a feature to the CacheListener attribute of the ZombieCacheWatch
      * object
-     *
-     * @param cacheName The feature to be added to the CacheListener attribute
-     * @param obj The feature to be added to the CacheListener attribute
+     * 
+     * @param cacheName
+     *            The feature to be added to the CacheListener attribute
+     * @param obj
+     *            The feature to be added to the CacheListener attribute
      */
-    public void addCacheListener( String cacheName, ICacheListener obj ) { }
-
+    public void addCacheListener( String cacheName, ICacheListener obj )
+    {
+    }
 
     /**
      * Adds a feature to the CacheListener attribute of the ZombieCacheWatch
      * object
-     *
-     * @param obj The feature to be added to the CacheListener attribute
+     * 
+     * @param obj
+     *            The feature to be added to the CacheListener attribute
      */
-    public void addCacheListener( ICacheListener obj ) { }
-
-
-    /** Description of the Method */
-    public void removeCacheListener( String cacheName, ICacheListener obj ) { }
-
+    public void addCacheListener( ICacheListener obj )
+    {
+    }
 
     /** Description of the Method */
-    public void removeCacheListener( ICacheListener obj ) { }
+    public void removeCacheListener( String cacheName, ICacheListener obj )
+    {
+    }
+
+    /** Description of the Method */
+    public void removeCacheListener( ICacheListener obj )
+    {
+    }
 }

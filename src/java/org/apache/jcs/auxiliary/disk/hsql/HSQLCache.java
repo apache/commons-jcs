@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.hsql;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -44,16 +42,16 @@ import org.apache.jcs.utils.data.PropertyGroups;
 
 /**
  * HSQLDB Based Local Persistence.
- *
- * <b>VERY EXPERIMENTAL, and only partially implemented</b>
- * Requires String keys and does not work with groups.
- *
+ * 
+ * <b>VERY EXPERIMENTAL, and only partially implemented </b> Requires String
+ * keys and does not work with groups.
+ * 
  * @version 1.0
  */
-public class HSQLCache extends AbstractDiskCache
+public class HSQLCache
+    extends AbstractDiskCache
 {
-    private final static Log log =
-        LogFactory.getLog( HSQLCache.class );
+    private final static Log log = LogFactory.getLog( HSQLCache.class );
 
     private int numInstances = 0;
 
@@ -65,16 +63,17 @@ public class HSQLCache extends AbstractDiskCache
     // can move up to manager level or implement pooling if there are too many
     // caches
     Connection cConn;
+
     Statement sStatement;
 
     /**
      * Constructor for the HSQLCache object
-     *
+     * 
      * @param cattr
      */
     public HSQLCache( HSQLCacheAttributes cattr )
     {
-        super( (IDiskCacheAttributes)cattr );
+        super( (IDiskCacheAttributes) cattr );
 
         this.cattr = cattr;
 
@@ -105,29 +104,26 @@ public class HSQLCache extends AbstractDiskCache
             String user = p.getProperty( "user", "sa" );
             String password = p.getProperty( "password", "" );
             boolean test = p.getProperty( "test", "true" ).equalsIgnoreCase( "true" );
-            // boolean log = p.getProperty( "log", "true" ).equalsIgnoreCase( "true" );
+            // boolean log = p.getProperty( "log", "true" ).equalsIgnoreCase(
+            // "true" );
 
             try
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "driver  =" + driver
-                               + ", url = " + url
-                               + ", database = " + database
-                               + ", user = " + user
-                               + ", password = " + password
-                               + ", test = " + test );
+                    log.debug( "driver  =" + driver + ", url = " + url + ", database = " + database + ", user = "
+                        + user + ", password = " + password + ", test = " + test );
                 }
 
                 // As described in the JDBC FAQ:
                 // http://java.sun.com/products/jdbc/jdbc-frequent.html;
                 // Why doesn't calling class.forName() load my JDBC driver?
-                // There is a bug in the JDK 1.1.x that can cause Class.forName() to fail.
+                // There is a bug in the JDK 1.1.x that can cause
+                // Class.forName() to fail.
                 new org.hsqldb.jdbcDriver();
                 Class.forName( driver ).newInstance();
 
-                cConn = DriverManager.getConnection( url + database, user,
-                                                     password );
+                cConn = DriverManager.getConnection( url + database, user, password );
 
                 try
                 {
@@ -158,8 +154,7 @@ public class HSQLCache extends AbstractDiskCache
     {
         boolean newT = true;
 
-        String setup = "create table " + cacheName
-            + " (KEY varchar(255) primary key, ELEMENT binary)";
+        String setup = "create table " + cacheName + " (KEY varchar(255) primary key, ELEMENT binary)";
 
         try
         {
@@ -174,9 +169,7 @@ public class HSQLCache extends AbstractDiskCache
             log.error( e );
         }
 
-        String setupData[] = {
-            "create index iKEY on " + cacheName + " (KEY)"
-        };
+        String setupData[] = { "create index iKEY on " + cacheName + " (KEY)" };
 
         if ( newT )
         {
@@ -184,7 +177,7 @@ public class HSQLCache extends AbstractDiskCache
             {
                 try
                 {
-                    sStatement.executeQuery( setupData[ i ] );
+                    sStatement.executeQuery( setupData[i] );
                 }
                 catch ( SQLException e )
                 {
@@ -227,8 +220,7 @@ public class HSQLCache extends AbstractDiskCache
 
         try
         {
-            String sqlS = "SELECT element FROM " + cacheName
-                          + " WHERE key = '" + ( String ) ce.getKey() + "'";
+            String sqlS = "SELECT element FROM " + cacheName + " WHERE key = '" + (String) ce.getKey() + "'";
 
             ResultSet rs = sStatement.executeQuery( sqlS );
 
@@ -250,11 +242,10 @@ public class HSQLCache extends AbstractDiskCache
         {
             try
             {
-                String sqlI = "insert into " + cacheName
-                    + " (KEY, ELEMENT) values (?, ? )";
+                String sqlI = "insert into " + cacheName + " (KEY, ELEMENT) values (?, ? )";
 
                 PreparedStatement psInsert = cConn.prepareStatement( sqlI );
-                psInsert.setString( 1, ( String ) ce.getKey() );
+                psInsert.setString( 1, (String) ce.getKey() );
                 psInsert.setBytes( 2, element );
                 psInsert.execute();
                 psInsert.close();
@@ -263,7 +254,7 @@ public class HSQLCache extends AbstractDiskCache
             catch ( SQLException e )
             {
                 if ( e.toString().indexOf( "Violation of unique index" ) != -1
-                     || e.getMessage().indexOf( "Violation of unique index" ) != -1 )
+                    || e.getMessage().indexOf( "Violation of unique index" ) != -1 )
                 {
                     exists = true;
                 }
@@ -280,7 +271,7 @@ public class HSQLCache extends AbstractDiskCache
                 String sqlU = "update " + cacheName + " set ELEMENT  = ? ";
                 PreparedStatement psUpdate = cConn.prepareStatement( sqlU );
                 psUpdate.setBytes( 1, element );
-                psUpdate.setString( 2, ( String ) ce.getKey() );
+                psUpdate.setString( 2, (String) ce.getKey() );
                 psUpdate.execute();
                 psUpdate.close();
 
@@ -313,7 +304,7 @@ public class HSQLCache extends AbstractDiskCache
         {
             String sqlS = "select ELEMENT from " + cacheName + " where KEY = ?";
             PreparedStatement psSelect = cConn.prepareStatement( sqlS );
-            psSelect.setString( 1, ( String ) key );
+            psSelect.setString( 1, (String) key );
             ResultSet rs = psSelect.executeQuery();
             if ( rs.next() )
             {
@@ -328,7 +319,7 @@ public class HSQLCache extends AbstractDiskCache
                     ObjectInputStream ois = new ObjectInputStream( bis );
                     try
                     {
-                        obj = ( ICacheElement ) ois.readObject();
+                        obj = (ICacheElement) ois.readObject();
                     }
                     finally
                     {
@@ -420,7 +411,7 @@ public class HSQLCache extends AbstractDiskCache
 
     /**
      * Returns the current cache size.
-     *
+     * 
      * @return The size value
      */
     public int getSize()
@@ -448,11 +439,11 @@ public class HSQLCache extends AbstractDiskCache
         return baos.toByteArray();
     }
 
-    public Set getGroupKeys(String groupName)
+    public Set getGroupKeys( String groupName )
     {
-        if (true)
+        if ( true )
         {
-            throw new UnsupportedOperationException("Groups not implemented.");
+            throw new UnsupportedOperationException( "Groups not implemented." );
         }
         return null;
     }

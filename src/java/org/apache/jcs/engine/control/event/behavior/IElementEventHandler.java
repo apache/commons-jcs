@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.control.event.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,24 +16,24 @@ package org.apache.jcs.engine.control.event.behavior;
  * limitations under the License.
  */
 
-
-
 /**
- * This interface defines the behavior for event handler.  Event handlers are
- * transient.  They are not replicated and are not written to disk.  
+ * This interface defines the behavior for event handler. Event handlers are
+ * transient. They are not replicated and are not written to disk.
  * <p>
- * If you want an event handler by default for all elements in a region,
- * then you can add it to the default element attributes.  This way it will get create
- * whenever an item gets put into the cache.    
- *
+ * If you want an event handler by default for all elements in a region, then
+ * you can add it to the default element attributes. This way it will get create
+ * whenever an item gets put into the cache.
+ *  
  */
-public interface IElementEventHandler extends IElementEventConstants
+public interface IElementEventHandler
+    extends IElementEventConstants
 {
 
     /**
-     *  Handle events for this element.  The events are typed.
-     *
-     *@param  event  The event created by the cache.
+     * Handle events for this element. The events are typed.
+     * 
+     * @param event
+     *            The event created by the cache.
      */
     public void handleElementEvent( IElementEvent event );
 

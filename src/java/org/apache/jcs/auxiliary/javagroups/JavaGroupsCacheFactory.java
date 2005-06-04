@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.javagroups;
  * limitations under the License.
  */
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
@@ -28,44 +26,40 @@ import org.jgroups.Channel;
 import org.jgroups.ChannelFactory;
 
 /**
- * AuxiliaryCacheFactory for creating instances of {@link JavaGroupsCache}
- * for a particular CompositeCache and {@link JavaGroupsCacheAttributes}.
- *
- * @version $Id$
+ * AuxiliaryCacheFactory for creating instances of {@link JavaGroupsCache}for a
+ * particular CompositeCache and {@link JavaGroupsCacheAttributes}.
+ * 
+ * @version $Id: JavaGroupsCacheFactory.java,v 1.2 2004/06/12 02:34:13 asmuts
+ *          Exp $
  */
-public class JavaGroupsCacheFactory implements AuxiliaryCacheFactory
+public class JavaGroupsCacheFactory
+    implements AuxiliaryCacheFactory
 {
-    private final static Log log =
-        LogFactory.getLog( JavaGroupsCacheFactory.class );
+    private final static Log log = LogFactory.getLog( JavaGroupsCacheFactory.class );
 
     private String name;
 
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
-                                       CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
     {
         try
         {
             // Cast provided attributes to JavaGroupsCacheAttributes
 
-            JavaGroupsCacheAttributes attributes =
-                ( JavaGroupsCacheAttributes ) iaca;
+            JavaGroupsCacheAttributes attributes = (JavaGroupsCacheAttributes) iaca;
 
             // Create a ChannelFactory using the classname specified in the
             // config as 'channelFactoryClassName'
 
-            ChannelFactory factory = ( ChannelFactory ) Class.forName(
-                attributes.getChannelFactoryClassName() ).newInstance();
+            ChannelFactory factory = (ChannelFactory) Class.forName( attributes.getChannelFactoryClassName() )
+                .newInstance();
 
             // Create a channel based on 'channelProperties' from the config
 
-            Channel channel =
-                factory.createChannel( attributes.getJGChannelProperties() );
+            Channel channel = factory.createChannel( attributes.getJGChannelProperties() );
 
             // Return a new JavaGroupsCache for the new channel.
 
-            return new JavaGroupsCache( cache,
-                                        channel,
-                                        attributes.isGetFromPeers() );
+            return new JavaGroupsCache( cache, channel, attributes.isGetFromPeers() );
         }
         catch ( Exception e )
         {

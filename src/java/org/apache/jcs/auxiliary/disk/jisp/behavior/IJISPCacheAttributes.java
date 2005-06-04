@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.jisp.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,45 +16,44 @@ package org.apache.jcs.auxiliary.disk.jisp.behavior;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
 
 /**
  * Description of the Interface
- *
+ *  
  */
-public interface IJISPCacheAttributes extends IAuxiliaryCacheAttributes
+public interface IJISPCacheAttributes
+    extends IAuxiliaryCacheAttributes
 {
 
     /**
      * Sets the diskPath attribute of the IJISPCacheAttributes object
-     *
-     * @param path The new diskPath value
+     * 
+     * @param path
+     *            The new diskPath value
      */
     public void setDiskPath( String path );
 
-
     /**
      * Gets the diskPath attribute of the IJISPCacheAttributes object
-     *
+     * 
      * @return The diskPath value
      */
     public String getDiskPath();
-
 
     // whether the disk cache should clear the old files
     // so there are no lingering elements.
     /**
      * Sets the clearOnStart attribute of the IJISPCacheAttributes object
-     *
-     * @param clear The new clearOnStart value
+     * 
+     * @param clear
+     *            The new clearOnStart value
      */
     public void setClearOnStart( boolean clear );
 
-
     /**
      * Gets the clearOnStart attribute of the IJISPCacheAttributes object
-     *
+     * 
      * @return The clearOnStart value
      */
     public boolean getClearOnStart();

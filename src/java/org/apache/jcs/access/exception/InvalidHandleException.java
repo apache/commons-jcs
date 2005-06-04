@@ -1,6 +1,5 @@
 package org.apache.jcs.access.exception;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,23 +16,22 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-
 /**
  * Description of the Class
- *
+ *  
  */
-public class InvalidHandleException extends CacheException
+public class InvalidHandleException
+    extends CacheException
 {
 
     /** Constructor for the InvalidHandleException object */
-    public InvalidHandleException() 
-    { 
+    public InvalidHandleException()
+    {
     }
-
 
     /**
      * Constructor for the InvalidHandleException object
-     *
+     * 
      * @param message
      */
     public InvalidHandleException( String message )

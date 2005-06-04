@@ -1,6 +1,5 @@
 package org.apache.jcs.access.exception;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,12 +16,12 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-
 /**
  * Description of the Class
- *
+ *  
  */
-public class NullObjectException extends CacheException
+public class NullObjectException
+    extends CacheException
 {
 
     /** Constructor for the NullObjectException object */
@@ -31,10 +30,9 @@ public class NullObjectException extends CacheException
         super();
     }
 
-
     /**
      * Constructor for the NullObjectException object
-     *
+     * 
      * @param message
      */
     public NullObjectException( String message )

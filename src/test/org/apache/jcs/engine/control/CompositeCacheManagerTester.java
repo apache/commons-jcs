@@ -21,8 +21,11 @@ package org.apache.jcs.engine.control;
 public class CompositeCacheManagerTester
 {
 
-    /** Description of the Method 
-     * @param args*/
+    /**
+     * Description of the Method
+     * 
+     * @param args
+     */
     public static void main( String args[] )
     {
 

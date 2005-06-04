@@ -25,128 +25,132 @@ import org.apache.velocity.context.Context;
 import org.apache.velocity.servlet.VelocityServlet;
 
 /**
- * A servlet which provides HTTP access to JCS. Allows a summary of regions
- * to be viewed, and removeAll to be run on individual regions or all regions.
- * Also provides the ability to remove items (any number of key arguments can
- * be provided with action 'remove'). Should be initialized with a properties
- * file that provides at least a classpath resource loader. Since this extends
+ * A servlet which provides HTTP access to JCS. Allows a summary of regions to
+ * be viewed, and removeAll to be run on individual regions or all regions. Also
+ * provides the ability to remove items (any number of key arguments can be
+ * provided with action 'remove'). Should be initialized with a properties file
+ * that provides at least a classpath resource loader. Since this extends
  * VelocityServlet, which uses the singleton model for velocity, it will share
  * configuration with any other Velocity in the same JVM.
- *
+ * 
  * Initialization in a webapp will look something like this:
+ * 
  * <pre>
- *  [servlet]
- *      [servlet-name]JCSAdminServlet[/servlet-name]
- *      [servlet-class]org.apache.jcs.admin.servlet.JCSAdminServlet[/servlet-class]
- *      [init-param]
- *          [param-name]properties[/param-name]
- *          [param-value]WEB-INF/conf/JCSAdminServlet.velocity.properties[/param-value]
- *      [/init-param]
- *  [/servlet]
+ * 
+ *   [servlet]
+ *       [servlet-name]JCSAdminServlet[/servlet-name]
+ *       [servlet-class]org.apache.jcs.admin.servlet.JCSAdminServlet[/servlet-class]
+ *       [init-param]
+ *           [param-name]properties[/param-name]
+ *           [param-value]WEB-INF/conf/JCSAdminServlet.velocity.properties[/param-value]
+ *       [/init-param]
+ *   [/servlet]
+ *  
  * </pre>
- *
+ * 
  * FIXME: It would be nice to use the VelocityEngine model so this can be truly
- *        standalone. Right now if you run it in the same container as, say,
- *        turbine, turbine must be run first to ensure it's config takes
- *        precedence.
- *
+ * standalone. Right now if you run it in the same container as, say, turbine,
+ * turbine must be run first to ensure it's config takes precedence.
+ * 
  * @version $Id$
  */
 public class JCSAdminServlet
     extends VelocityServlet
 {
-  private static final String DEFAULT_TEMPLATE_NAME =
-      "/org/apache/jcs/admin/servlet/JCSAdminServletDefault.vm";
+    private static final String DEFAULT_TEMPLATE_NAME = "/org/apache/jcs/admin/servlet/JCSAdminServletDefault.vm";
 
-  private static final String REGION_DETAIL_TEMPLATE_NAME =
-      "/org/apache/jcs/admin/servlet/JCSAdminServletRegionDetail.vm";
+    private static final String REGION_DETAIL_TEMPLATE_NAME = "/org/apache/jcs/admin/servlet/JCSAdminServletRegionDetail.vm";
 
-  // Keys for parameters
+    // Keys for parameters
 
-  private static final String CACHE_NAME_PARAM = "cacheName";
+    private static final String CACHE_NAME_PARAM = "cacheName";
 
-  private static final String ACTION_PARAM = "action";
-  private static final String KEY_PARAM = "key";
-  private static final String SILENT_PARAM = "silent";
+    private static final String ACTION_PARAM = "action";
 
-  // Possible values for 'action' parameter
+    private static final String KEY_PARAM = "key";
 
-  private static final String CLEAR_ALL_REGIONS_ACTION = "clearAllRegions";
-  private static final String CLEAR_REGION_ACTION = "clearRegion";
-  private static final String REMOVE_ACTION = "remove";
-  private static final String DETAIL_ACTION = "detail";
+    private static final String SILENT_PARAM = "silent";
 
-  /** @see org.apache.velocity.servlet.VelocityServlet#handleRequest */
-  protected Template handleRequest( HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    Context context ) throws Exception
-  {
+    // Possible values for 'action' parameter
 
-    JCSAdminBean admin = new JCSAdminBean();
+    private static final String CLEAR_ALL_REGIONS_ACTION = "clearAllRegions";
 
-    String templateName = DEFAULT_TEMPLATE_NAME;
+    private static final String CLEAR_REGION_ACTION = "clearRegion";
 
-    // Get cacheName for actions from request (might be null)
+    private static final String REMOVE_ACTION = "remove";
 
-    String cacheName = request.getParameter( CACHE_NAME_PARAM );
+    private static final String DETAIL_ACTION = "detail";
 
-    // If an action was provided, handle it
-
-    String action = request.getParameter( ACTION_PARAM );
-
-    if ( action != null )
+    /** @see org.apache.velocity.servlet.VelocityServlet#handleRequest */
+    protected Template handleRequest( HttpServletRequest request, HttpServletResponse response, Context context )
+        throws Exception
     {
-      if ( action.equals( CLEAR_ALL_REGIONS_ACTION ) )
-      {
-        admin.clearAllRegions();
-      }
-      else if ( action.equals( CLEAR_REGION_ACTION ) )
-      {
-        if ( cacheName == null )
+
+        JCSAdminBean admin = new JCSAdminBean();
+
+        String templateName = DEFAULT_TEMPLATE_NAME;
+
+        // Get cacheName for actions from request (might be null)
+
+        String cacheName = request.getParameter( CACHE_NAME_PARAM );
+
+        // If an action was provided, handle it
+
+        String action = request.getParameter( ACTION_PARAM );
+
+        if ( action != null )
         {
-          // Not Allowed
+            if ( action.equals( CLEAR_ALL_REGIONS_ACTION ) )
+            {
+                admin.clearAllRegions();
+            }
+            else if ( action.equals( CLEAR_REGION_ACTION ) )
+            {
+                if ( cacheName == null )
+                {
+                    // Not Allowed
+                }
+                else
+                {
+                    admin.clearRegion( cacheName );
+                }
+            }
+            else if ( action.equals( REMOVE_ACTION ) )
+            {
+                String[] keys = request.getParameterValues( KEY_PARAM );
+
+                for ( int i = 0; i < keys.length; i++ )
+                {
+                    admin.removeItem( cacheName, keys[i] );
+                }
+
+                templateName = REGION_DETAIL_TEMPLATE_NAME;
+            }
+            else if ( action.equals( DETAIL_ACTION ) )
+            {
+                templateName = REGION_DETAIL_TEMPLATE_NAME;
+            }
         }
-        else
+
+        if ( request.getParameter( SILENT_PARAM ) != null )
         {
-          admin.clearRegion( cacheName );
-        }
-      }
-      else if ( action.equals( REMOVE_ACTION ) )
-      {
-        String[] keys = request.getParameterValues( KEY_PARAM );
+            // If silent parameter was passed, no output should be produced.
 
-        for ( int i = 0; i < keys.length; i++ )
+            return null;
+        }
+        // Populate the context based on the template
+
+        if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
         {
-          admin.removeItem( cacheName, keys[i] );
+            context.put( "cacheName", cacheName );
+            context.put( "elementInfoRecords", admin.buildElementInfo( cacheName ) );
+        }
+        else if ( templateName == DEFAULT_TEMPLATE_NAME )
+        {
+            context.put( "cacheInfoRecords", admin.buildCacheInfo() );
         }
 
-        templateName = REGION_DETAIL_TEMPLATE_NAME;
-      }
-      else if ( action.equals( DETAIL_ACTION ) )
-      {
-        templateName = REGION_DETAIL_TEMPLATE_NAME;
-      }
+        return getTemplate( templateName );
     }
-
-    if ( request.getParameter( SILENT_PARAM ) != null )
-    {
-      // If silent parameter was passed, no output should be produced.
-
-      return null;
-    }
-    // Populate the context based on the template
-
-    if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
-    {
-      context.put( "cacheName", cacheName );
-      context.put( "elementInfoRecords", admin.buildElementInfo( cacheName ) );
-    }
-    else if ( templateName == DEFAULT_TEMPLATE_NAME )
-    {
-      context.put( "cacheInfoRecords", admin.buildCacheInfo() );
-    }
-
-    return getTemplate( templateName );
-  }
 
 }

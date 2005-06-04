@@ -49,7 +49,8 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
  * Client proxy for an RMI remote cache.
  *  
  */
-public class RemoteCache implements ICache
+public class RemoteCache
+    implements ICache
 {
     private final static Log log = LogFactory.getLog( RemoteCache.class );
 
@@ -68,25 +69,24 @@ public class RemoteCache implements ICache
     private boolean usePoolForGet = false;
 
     /**
-     * Constructor for the RemoteCache object.  This object communicates with
-     * a remote cache server.  One of these exists for each region.  This also holds
-     * a reference to a listener.  The same listener is used for all regions for one
-     * remote server.  Holding a reference to the listener allows this object to
-     * know the listener id assigned by the remote cache.
+     * Constructor for the RemoteCache object. This object communicates with a
+     * remote cache server. One of these exists for each region. This also holds
+     * a reference to a listener. The same listener is used for all regions for
+     * one remote server. Holding a reference to the listener allows this object
+     * to know the listener id assigned by the remote cache.
      * 
      * @param cattr
      * @param remote
      * @param listener
      */
-    public RemoteCache(IRemoteCacheAttributes cattr,
-            IRemoteCacheService remote, IRemoteCacheListener listener)
+    public RemoteCache( IRemoteCacheAttributes cattr, IRemoteCacheService remote, IRemoteCacheListener listener )
     {
         this.irca = cattr;
         this.cacheName = cattr.getCacheName();
         this.remote = remote;
         this.listener = listener;
 
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug( "Construct> cacheName=" + cattr.getCacheName() );
             log.debug( "irca = " + irca );
@@ -95,19 +95,18 @@ public class RemoteCache implements ICache
         }
 
         // use a pool if it is greater than 0
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug( "GetTimeoutMillis() = " + irca.getGetTimeoutMillis() );
         }
-        if (irca.getGetTimeoutMillis() > 0)
+        if ( irca.getGetTimeoutMillis() > 0 )
         {
-            pool = ThreadPoolManager.getInstance().getPool(
-                    irca.getThreadPoolName() );
-            if (log.isDebugEnabled())
+            pool = ThreadPoolManager.getInstance().getPool( irca.getThreadPoolName() );
+            if ( log.isDebugEnabled() )
             {
                 log.debug( "Thread Pool = " + pool );
             }
-            if (pool != null)
+            if ( pool != null )
             {
                 usePoolForGet = true;
             }
@@ -145,39 +144,39 @@ public class RemoteCache implements ICache
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
-    public void update( ICacheElement ce ) throws IOException
+    public void update( ICacheElement ce )
+        throws IOException
     {
-        if (true)
+        if ( true )
         {
 
-            if (!this.irca.getGetOnly())
+            if ( !this.irca.getGetOnly() )
             {
                 try
                 {
-                    if (log.isDebugEnabled())
+                    if ( log.isDebugEnabled() )
                     {
                         log.debug( "sending item to remote server" );
                     }
                     remote.update( ce, getListenerId() );
                 }
-                catch (NullPointerException npe)
+                catch ( NullPointerException npe )
                 {
-                    log.error( "npe for ce = " + ce + "ce.attr = "
-                            + ce.getElementAttributes(), npe );
+                    log.error( "npe for ce = " + ce + "ce.attr = " + ce.getElementAttributes(), npe );
                     return;
                 }
-                catch (Exception ex)
+                catch ( Exception ex )
                 {
-                    handleException( ex, "Failed to put " + ce.getKey()
-                            + " to " + ce.getCacheName() );
+                    handleException( ex, "Failed to put " + ce.getKey() + " to " + ce.getCacheName() );
                 }
             }
             else
             {
-                if (log.isDebugEnabled())
+                if ( log.isDebugEnabled() )
                 {
                     log.debug( "get only mode, not sending to remote server" );
                 }
@@ -191,18 +190,19 @@ public class RemoteCache implements ICache
      * 
      * Use threadpool to timeout is a value is set for GetTimeoutMillis
      * 
-     * @param  key
+     * @param key
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
-    public ICacheElement get( Serializable key ) throws IOException
+    public ICacheElement get( Serializable key )
+        throws IOException
     {
-        
-        ICacheElement retVal = null; 
-        
+
+        ICacheElement retVal = null;
+
         try
         {
-            if (usePoolForGet)
+            if ( usePoolForGet )
             {
                 retVal = getUsingPool( sanitized( key ) );
             }
@@ -211,17 +211,17 @@ public class RemoteCache implements ICache
                 retVal = remote.get( cacheName, sanitized( key ) );
             }
         }
-        catch (ObjectNotFoundException one)
+        catch ( ObjectNotFoundException one )
         {
             log.debug( "didn't find element " + key + " in remote" );
             return null;
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             handleException( ex, "Failed to get " + key + " from " + cacheName );
             // never executes; just keep the compiler happy.
         }
-        
+
         return retVal;
     }
 
@@ -233,7 +233,7 @@ public class RemoteCache implements ICache
      * @throws IOException
      */
     public ICacheElement getUsingPool( final Serializable key )
-            throws IOException
+        throws IOException
     {
         int timeout = irca.getGetTimeoutMillis();
 
@@ -242,15 +242,16 @@ public class RemoteCache implements ICache
             FutureResult future = new FutureResult();
             Runnable command = future.setter( new Callable()
             {
-                public Object call() throws IOException
+                public Object call()
+                    throws IOException
                 {
                     try
                     {
                         return remote.get( cacheName, key );
                     }
-                    catch (ObjectNotFoundException onf)
+                    catch ( ObjectNotFoundException onf )
                     {
-                        if (log.isDebugEnabled())
+                        if ( log.isDebugEnabled() )
                         {
                             log.debug( "getusingPool, Didin't find object" );
                         }
@@ -264,9 +265,9 @@ public class RemoteCache implements ICache
 
             // used timed get in order to timeout
             ICacheElement ice = (ICacheElement) future.timedGet( timeout );
-            if (log.isDebugEnabled())
+            if ( log.isDebugEnabled() )
             {
-                if (ice == null)
+                if ( ice == null )
                 {
                     log.debug( "nothing found in remote cache" );
                 }
@@ -277,16 +278,15 @@ public class RemoteCache implements ICache
             }
             return ice;
         }
-        catch (InterruptedException ex)
+        catch ( InterruptedException ex )
         {
             log.warn( "Get Request timed out after " + timeout );
             throw new IOException( "Get Request timed out after " + timeout );
         }
-        catch (InvocationTargetException ex)
+        catch ( InvocationTargetException ex )
         {
             // assume that this is an IOException thrown by the callable.
-            log.error( "Assuming an IO exception thrown in the backfground.",
-                    ex );
+            log.error( "Assuming an IO exception thrown in the backfground.", ex );
             throw new IOException( "Get Request timed out after " + timeout );
         }
     }
@@ -298,7 +298,8 @@ public class RemoteCache implements ICache
      * @return
      * @throws java.rmi.RemoteException
      */
-    public Set getGroupKeys( String groupName ) throws java.rmi.RemoteException
+    public Set getGroupKeys( String groupName )
+        throws java.rmi.RemoteException
     {
         return remote.getGroupKeys( cacheName, groupName );
     }
@@ -313,7 +314,8 @@ public class RemoteCache implements ICache
      * @return A sanitized version of the key.
      * @throws IOException
      */
-    private Serializable sanitized( Serializable s ) throws IOException
+    private Serializable sanitized( Serializable s )
+        throws IOException
     {
         // In the unlikely case when the passed in object is a MarshalledObjct,
         // we again wrap
@@ -334,27 +336,25 @@ public class RemoteCache implements ICache
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
-    public boolean remove( Serializable key ) throws IOException
+    public boolean remove( Serializable key )
+        throws IOException
     {
-        if (true)
+        if ( true )
         {
 
-            if (!this.irca.getGetOnly())
+            if ( !this.irca.getGetOnly() )
             {
-                if (log.isDebugEnabled())
+                if ( log.isDebugEnabled() )
                 {
                     log.debug( "remove> key=" + key );
                 }
                 try
                 {
-                    remote
-                            .remove( cacheName, sanitized( key ),
-                                    getListenerId() );
+                    remote.remove( cacheName, sanitized( key ), getListenerId() );
                 }
-                catch (Exception ex)
+                catch ( Exception ex )
                 {
-                    handleException( ex, "Failed to remove " + key + " from "
-                            + cacheName );
+                    handleException( ex, "Failed to remove " + key + " from " + cacheName );
                 }
             }
         }
@@ -367,21 +367,21 @@ public class RemoteCache implements ICache
      * 
      * @throws IOException
      */
-    public void removeAll() throws IOException
+    public void removeAll()
+        throws IOException
     {
-        if (true)
+        if ( true )
         {
 
-            if (!this.irca.getGetOnly())
+            if ( !this.irca.getGetOnly() )
             {
                 try
                 {
                     remote.removeAll( cacheName, getListenerId() );
                 }
-                catch (Exception ex)
+                catch ( Exception ex )
                 {
-                    handleException( ex, "Failed to remove all from "
-                            + cacheName );
+                    handleException( ex, "Failed to remove all from " + cacheName );
                 }
             }
         }
@@ -393,7 +393,8 @@ public class RemoteCache implements ICache
      * 
      * @throws IOException
      */
-    public void dispose() throws IOException
+    public void dispose()
+        throws IOException
     {
         //    remote.freeCache(cacheName);
         log.debug( "disposing of remote cache" );
@@ -401,7 +402,7 @@ public class RemoteCache implements ICache
         {
             remote.dispose( cacheName );
         }
-        catch (Exception ex)
+        catch ( Exception ex )
         {
             log.error( "couldn't dispose" );
             handleException( ex, "Failed to dispose " + cacheName );
@@ -417,8 +418,7 @@ public class RemoteCache implements ICache
      */
     public int getStatus()
     {
-        return remote instanceof IZombie ? CacheConstants.STATUS_ERROR
-                : CacheConstants.STATUS_ALIVE;
+        return remote instanceof IZombie ? CacheConstants.STATUS_ERROR : CacheConstants.STATUS_ALIVE;
     }
 
     /**
@@ -450,7 +450,7 @@ public class RemoteCache implements ICache
         se.setData( "" + usePoolForGet );
         elems.add( se );
 
-        if (pool != null)
+        if ( pool != null )
         {
             se = new StatElement();
             se.setName( "Pool Size" );
@@ -464,8 +464,7 @@ public class RemoteCache implements ICache
         }
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems
-                .toArray( new StatElement[0] );
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -504,7 +503,9 @@ public class RemoteCache implements ICache
     /**
      * Replaces the current remote cache service handle with the given handle.
      * 
-     * @param remote, IRemoteCacheService -- the remote server or  proxy to the remote server
+     * @param remote,
+     *            IRemoteCacheService -- the remote server or proxy to the
+     *            remote server
      */
     public void fixCache( IRemoteCacheService remote )
     {
@@ -520,12 +521,13 @@ public class RemoteCache implements ICache
      * @param msg
      * @throws IOException
      */
-    private void handleException( Exception ex, String msg ) throws IOException
+    private void handleException( Exception ex, String msg )
+        throws IOException
     {
         log.error( "Disabling remote cache due to error " + msg );
-        log.error(ex);
+        log.error( ex );
         //log.error( ex.toString() );
-        
+
         remote = new ZombieRemoteCacheService();
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
@@ -534,11 +536,10 @@ public class RemoteCache implements ICache
 
         // initiate failover if local
         RemoteCacheNoWaitFacade rcnwf = (RemoteCacheNoWaitFacade) RemoteCacheFactory.getFacades()
-                .get( irca.getCacheName() );
+            .get( irca.getCacheName() );
         log.debug( "Initiating failover, rcnf = " + rcnwf );
-        
-        if (rcnwf != null
-                && rcnwf.rca.getRemoteType() == RemoteCacheAttributes.LOCAL)
+
+        if ( rcnwf != null && rcnwf.rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
             log.debug( "found facade, calling failover" );
             // may need to remove the noWait index here. It will be 0 if it is
@@ -547,7 +548,7 @@ public class RemoteCache implements ICache
             rcnwf.failover( 0 );
         }
 
-        if (ex instanceof IOException)
+        if ( ex instanceof IOException )
         {
             throw (IOException) ex;
         }
@@ -576,13 +577,13 @@ public class RemoteCache implements ICache
         {
             listener.setListenerId( id );
 
-            if (log.isDebugEnabled())
+            if ( log.isDebugEnabled() )
             {
                 log.debug( "set listenerId = " + id );
             }
 
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
             log.error( "Problem setting listenerId", e );
         }
@@ -598,13 +599,13 @@ public class RemoteCache implements ICache
     {
         try
         {
-            if (log.isDebugEnabled())
+            if ( log.isDebugEnabled() )
             {
                 log.debug( "get listenerId = " + listener.getListenerId() );
             }
             return listener.getListenerId();
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
             log.error( "Problem setting listenerId", e );
         }
@@ -621,7 +622,7 @@ public class RemoteCache implements ICache
     {
         return listener;
     }
-    
+
     /**
      * Debugging info.
      * 
@@ -631,5 +632,5 @@ public class RemoteCache implements ICache
     {
         return "RemoteCache: " + cacheName + " attributes = " + irca;
     }
-    
+
 }

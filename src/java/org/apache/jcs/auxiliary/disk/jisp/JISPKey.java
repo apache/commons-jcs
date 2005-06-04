@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.jisp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.disk.jisp;
  * limitations under the License.
  */
 
-
 import com.coyotegulch.jisp.KeyObject;
 
 import java.io.IOException;
@@ -30,20 +28,19 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class JISPKey extends KeyObject
+public class JISPKey
+    extends KeyObject
 {
-    private final static Log log =
-        LogFactory.getLog( JISPKey.class );
+    private final static Log log = LogFactory.getLog( JISPKey.class );
 
     /** Description of the Field */
     public Serializable m_key;
 
-
     /**
      * Constructor for the JISPKey object
-     *
+     * 
      * @param key_value
      */
     public JISPKey( Serializable key_value )
@@ -52,13 +49,11 @@ public class JISPKey extends KeyObject
 
     }
 
-
     /** Constructor for the JISPKey object */
     public JISPKey()
     {
         m_key = "";
     }
-
 
     /** Description of the Method */
     public int compareTo( KeyObject key )
@@ -87,7 +82,6 @@ public class JISPKey extends KeyObject
         return KEY_ERROR;
     }
 
-
     /** Description of the Method */
     public KeyObject makeNullKey()
     {
@@ -96,7 +90,6 @@ public class JISPKey extends KeyObject
         return nullKey;
     }
 
-
     /** Description of the Method */
     public void writeExternal( ObjectOutput out )
         throws IOException
@@ -104,19 +97,17 @@ public class JISPKey extends KeyObject
         out.writeObject( m_key );
     }
 
-
     /** Description of the Method */
     public void readExternal( ObjectInput in )
         throws IOException, ClassNotFoundException
     {
-        m_key = ( ( Serializable ) ( in.readObject() ) );
+        m_key = ( (Serializable) ( in.readObject() ) );
     }
 
-
-//    public int intValue()
-//    {
-//        return m_key;
-//    }
+    //    public int intValue()
+    //    {
+    //        return m_key;
+    //    }
 
     /** Description of the Method */
     public String toString()
@@ -124,21 +115,19 @@ public class JISPKey extends KeyObject
         return m_key.toString();
     }
 
-
     /** Description of the Method */
     public boolean equals( Object obj )
     {
         if ( ( obj != null ) && ( obj instanceof JISPKey ) )
         {
             int orig = m_key.hashCode();
-            int test = ( ( JISPKey ) obj ).m_key.hashCode();
+            int test = ( (JISPKey) obj ).m_key.hashCode();
 
             return ( orig == test );
             //return ( m_key.equals( ( ( JISPKey ) obj ).m_key ) );
         }
         return false;
     }
-
 
     /** Description of the Method */
     public int hashCode()

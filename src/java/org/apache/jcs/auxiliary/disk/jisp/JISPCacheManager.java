@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.jisp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.disk.jisp;
  * limitations under the License.
  */
 
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -28,12 +26,12 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class JISPCacheManager implements AuxiliaryCacheManager
+public class JISPCacheManager
+    implements AuxiliaryCacheManager
 {
-    private final static Log log =
-        LogFactory.getLog( JISPCacheManager.class );
+    private final static Log log = LogFactory.getLog( JISPCacheManager.class );
 
     private static int clients;
 
@@ -45,7 +43,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
 
     /**
      * Constructor for the JISPCacheManager object
-     *
+     * 
      * @param cattr
      */
     private JISPCacheManager( JISPCacheAttributes cattr )
@@ -55,7 +53,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the defaultCattr attribute of the JISPCacheManager object
-     *
+     * 
      * @return The defaultCattr value
      */
     public JISPCacheAttributes getDefaultCattr()
@@ -65,7 +63,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the instance attribute of the JISPCacheManager class
-     *
+     * 
      * @return The instance value
      */
     public static JISPCacheManager getInstance( JISPCacheAttributes cattr )
@@ -84,19 +82,19 @@ public class JISPCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the cache attribute of the JISPCacheManager object
-     *
+     * 
      * @return The cache value
      */
     public AuxiliaryCache getCache( String cacheName )
     {
-        JISPCacheAttributes cattr = ( JISPCacheAttributes ) defaultCattr.copy();
+        JISPCacheAttributes cattr = (JISPCacheAttributes) defaultCattr.copy();
         cattr.setCacheName( cacheName );
         return getCache( cattr );
     }
 
     /**
      * Gets the cache attribute of the JISPCacheManager object
-     *
+     * 
      * @return The cache value
      */
     public AuxiliaryCache getCache( JISPCacheAttributes cattr )
@@ -107,7 +105,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
 
         synchronized ( caches )
         {
-            raf = ( AuxiliaryCache ) caches.get( cattr.getCacheName() );
+            raf = (AuxiliaryCache) caches.get( cattr.getCacheName() );
 
             if ( raf == null )
             {
@@ -123,7 +121,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
     /** Description of the Method */
     public void freeCache( String name )
     {
-        JISPCache raf = ( JISPCache ) caches.get( name );
+        JISPCache raf = (JISPCache) caches.get( name );
         if ( raf != null )
         {
             raf.dispose();
@@ -132,7 +130,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the cacheType attribute of the JISPCacheManager object
-     *
+     * 
      * @return The cacheType value
      */
     public int getCacheType()
@@ -154,7 +152,7 @@ public class JISPCacheManager implements AuxiliaryCacheManager
 
             while ( allCaches.hasMoreElements() )
             {
-                JISPCache raf = ( JISPCache ) allCaches.nextElement();
+                JISPCache raf = (JISPCache) allCaches.nextElement();
                 if ( raf != null )
                 {
                     raf.dispose();

@@ -1,6 +1,5 @@
 package org.apache.jcs.access.monitor;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.access.monitor;
  * limitations under the License.
  */
 
-
 import org.apache.xmlrpc.WebServer;
 
 import org.apache.commons.logging.Log;
@@ -25,17 +23,16 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Starts an XML-RPC server for cache monitoring.
- *
+ * 
  * @since 1.0
  */
 public class MonitorXMLRPCServer
 {
-    private static final Log log =
-        LogFactory.getLog( MonitorXMLRPCServer.class );
+    private static final Log log = LogFactory.getLog( MonitorXMLRPCServer.class );
 
     /**
      * Constructor for the MonitorXMLRPCServer object
-     *
+     * 
      * @param port
      */
     public MonitorXMLRPCServer( int port )

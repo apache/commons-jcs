@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,19 +16,18 @@ package org.apache.jcs.engine.behavior;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 
 /**
  * Description of the Interface
- *
+ *  
  */
 public interface ICacheServiceAdmin
 {
 
     /**
      * Gets the stats attribute of the ICacheServiceAdmin object
-     *
+     * 
      * @return The stats value
      */
     public String getStats()
@@ -38,7 +36,6 @@ public interface ICacheServiceAdmin
     /** Description of the Method */
     public void shutdown()
         throws IOException;
-
 
     /** Description of the Method */
     public void shutdown( String host, int port )

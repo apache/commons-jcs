@@ -1,6 +1,5 @@
 package org.apache.jcs.access;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.access;
  * limitations under the License.
  */
 
-
 import java.util.Set;
 
 import org.apache.jcs.access.behavior.IGroupCacheAccess;
@@ -32,15 +30,17 @@ import org.apache.jcs.engine.control.group.GroupId;
 
 /**
  * Access for groups.
- *
+ *  
  */
-public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
+public class GroupCacheAccess
+    extends CacheAccess
+    implements IGroupCacheAccess
 {
     private static CompositeCacheManager cacheMgr;
 
     /**
      * Constructor for the GroupCacheAccess object
-     *
+     * 
      * @param cacheControl
      */
     public GroupCacheAccess( CompositeCache cacheControl )
@@ -92,59 +92,66 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
 
     /**
      * Gets an item out of the cache that is in a specified group.
-     *
-     * @param name The key name.
-     * @param group The group name.
+     * 
+     * @param name
+     *            The key name.
+     * @param group
+     *            The group name.
      * @return The cached value, null if not found.
      */
     public Object getFromGroup( Object name, String group )
     {
-        ICacheElement element
-            = this.cacheControl.get( getGroupAttrName( group, name ) );
+        ICacheElement element = this.cacheControl.get( getGroupAttrName( group, name ) );
         return ( element != null ) ? element.getVal() : null;
     }
 
-    private GroupAttrName getGroupAttrName(String group, Object name)
+    private GroupAttrName getGroupAttrName( String group, Object name )
     {
-        GroupId gid = new GroupId(this.cacheControl.getCacheName(), group);
-        return new GroupAttrName(gid, name);
+        GroupId gid = new GroupId( this.cacheControl.getCacheName(), group );
+        return new GroupAttrName( gid, name );
     }
 
     /**
      * Allows the user to put an object into a group within a particular cache
      * region. This method sets the object's attributes to the default for the
      * region.
-     *
-     * @param name The key name.
-     * @param groupName The group name.
-     * @param value The object to cache
+     * 
+     * @param name
+     *            The key name.
+     * @param groupName
+     *            The group name.
+     * @param value
+     *            The object to cache
      * @throws CacheException
      */
     public void putInGroup( Object name, String groupName, Object value )
         throws CacheException
     {
-        putInGroup(name, groupName, value, null);
+        putInGroup( name, groupName, value, null );
     }
 
     /**
      * Allows the user to put an object into a group within a particular cache
      * region. This method allows the object's attributes to be individually
      * specified.
-     *
-     * @param name The key name.
-     * @param groupName The group name.
-     * @param value The object to cache
-     * @param attr The objects attributes.
+     * 
+     * @param name
+     *            The key name.
+     * @param groupName
+     *            The group name.
+     * @param value
+     *            The object to cache
+     * @param attr
+     *            The objects attributes.
      * @throws CacheException
      */
-    public void putInGroup( Object name, String groupName, Object value,
-                            IElementAttributes attr )
+    public void putInGroup( Object name, String groupName, Object value, IElementAttributes attr )
         throws CacheException
     {
         // unbind object first if any.
-        remove( name, groupName);
+        remove( name, groupName );
 
-        if (attr == null)
+        if ( attr == null )
         {
             put( getGroupAttrName( groupName, name ), value );
         }
@@ -157,7 +164,7 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
     /**
      * @param name
      * @param group
-     * 
+     *  
      */
     public void remove( Object name, String group )
     {
@@ -171,15 +178,16 @@ public class GroupCacheAccess extends CacheAccess implements IGroupCacheAccess
      * @param group
      * @return A Set of keys.
      */
-    public Set getGroupKeys(String group)
+    public Set getGroupKeys( String group )
     {
         return this.cacheControl.getGroupKeys( group );
     }
 
-    /** 
-     * Invalidates a group: remove all the group members 
+    /**
+     * Invalidates a group: remove all the group members
      * 
-     * @param group The name of the group to invalidate
+     * @param group
+     *            The name of the group to invalidate
      */
     public void invalidateGroup( String group )
     {

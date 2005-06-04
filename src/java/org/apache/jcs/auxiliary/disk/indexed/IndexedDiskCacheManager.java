@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * limitations under the License.
  */
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
@@ -29,13 +27,14 @@ import java.util.Hashtable;
 
 /**
  * Cache manager for IndexedDiskCaches.
- *
- * @version $Id$
+ * 
+ * @version $Id: IndexedDiskCacheManager.java,v 1.7 2005/01/29 00:40:02 asmuts
+ *          Exp $
  */
-public class IndexedDiskCacheManager implements AuxiliaryCacheManager
+public class IndexedDiskCacheManager
+    implements AuxiliaryCacheManager
 {
-    private final static Log log =
-        LogFactory.getLog( IndexedDiskCacheManager.class );
+    private final static Log log = LogFactory.getLog( IndexedDiskCacheManager.class );
 
     private static int clients;
 
@@ -47,33 +46,30 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
 
     /**
      * Constructor for the IndexedDiskCacheManager object
-     *
-     * @param defaultCacheAttributes Default attributes for caches managed by
-     *                               the instance.
+     * 
+     * @param defaultCacheAttributes
+     *            Default attributes for caches managed by the instance.
      */
-    private IndexedDiskCacheManager(
-        IndexedDiskCacheAttributes defaultCacheAttributes )
+    private IndexedDiskCacheManager( IndexedDiskCacheAttributes defaultCacheAttributes )
     {
         this.defaultCacheAttributes = defaultCacheAttributes;
     }
 
     /**
      * Gets the singleton instance of the manager
-     *
-     * @param defaultCacheAttributes If the instance has not yet been created,
-     *                               it will be initialized with this set of
-     *                               default attributes.
+     * 
+     * @param defaultCacheAttributes
+     *            If the instance has not yet been created, it will be
+     *            initialized with this set of default attributes.
      * @return The instance value
      */
-    public static IndexedDiskCacheManager getInstance(
-        IndexedDiskCacheAttributes defaultCacheAttributes )
+    public static IndexedDiskCacheManager getInstance( IndexedDiskCacheAttributes defaultCacheAttributes )
     {
         synchronized ( IndexedDiskCacheManager.class )
         {
             if ( instance == null )
             {
-                instance =
-                    new IndexedDiskCacheManager( defaultCacheAttributes );
+                instance = new IndexedDiskCacheManager( defaultCacheAttributes );
             }
         }
 
@@ -85,14 +81,14 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
     /**
      * Gets an IndexedDiskCache for the supplied name using the default
      * attributes.
-     *
-     * @param cacheName Name that will be used when creating attributes.
+     * 
+     * @param cacheName
+     *            Name that will be used when creating attributes.
      * @return A cache.
      */
     public AuxiliaryCache getCache( String cacheName )
     {
-        IndexedDiskCacheAttributes cacheAttributes =
-            ( IndexedDiskCacheAttributes ) defaultCacheAttributes.copy();
+        IndexedDiskCacheAttributes cacheAttributes = (IndexedDiskCacheAttributes) defaultCacheAttributes.copy();
 
         cacheAttributes.setCacheName( cacheName );
 
@@ -103,10 +99,11 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
      * Get an IndexedDiskCache for the supplied attributes. Will provide an
      * existing cache for the name attribute if one has been created, or will
      * create a new cache.
-     *
-     * @param cacheAttributes Attributes the cache should have.
+     * 
+     * @param cacheAttributes
+     *            Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
-     *
+     *  
      */
     public AuxiliaryCache getCache( IndexedDiskCacheAttributes cacheAttributes )
     {
@@ -121,7 +118,7 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            cache = ( AuxiliaryCache ) caches.get( cacheName );
+            cache = (AuxiliaryCache) caches.get( cacheName );
 
             // If it was not found, create a new one using the supplied
             // attributes
@@ -140,12 +137,13 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
     /**
      * Disposes the cache with the given name, if found in the set of managed
      * caches.
-     *
-     * @param cacheName Name of cache to dispose.
+     * 
+     * @param cacheName
+     *            Name of cache to dispose.
      */
     public void freeCache( String cacheName )
     {
-        ICache cache = ( ICache ) caches.get( cacheName );
+        ICache cache = (ICache) caches.get( cacheName );
 
         if ( cache != null )
         {
@@ -162,7 +160,7 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the cacheType attribute of the DiskCacheManager object
-     *
+     * 
      * @return The cacheType value
      */
     public int getCacheType()
@@ -189,7 +187,7 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
 
             while ( allCaches.hasMoreElements() )
             {
-                ICache cache = ( ICache ) allCaches.nextElement();
+                ICache cache = (ICache) allCaches.nextElement();
 
                 if ( cache != null )
                 {
@@ -199,8 +197,7 @@ public class IndexedDiskCacheManager implements AuxiliaryCacheManager
                     }
                     catch ( Exception e )
                     {
-                        log.error( "Failure disposing cache: " +
-                            cache.getCacheName(), e );
+                        log.error( "Failure disposing cache: " + cache.getCacheName(), e );
                     }
                 }
             }

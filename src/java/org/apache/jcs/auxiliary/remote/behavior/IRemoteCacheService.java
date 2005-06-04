@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
@@ -31,13 +29,14 @@ import org.apache.jcs.engine.behavior.ICacheService;
 
 /**
  * Used to retrieve and update the remote cache.
- *
+ *  
  */
-public interface IRemoteCacheService extends Remote, ICacheService
+public interface IRemoteCacheService
+    extends Remote, ICacheService
 {
 
     /**
-     * Puts a cache item to the cache. 
+     * Puts a cache item to the cache.
      * 
      * @param item
      * @param requesterId
@@ -47,9 +46,8 @@ public interface IRemoteCacheService extends Remote, ICacheService
     public void update( ICacheElement item, long requesterId )
         throws ObjectExistsException, IOException;
 
-
-    /** 
-     * Removes the given key from the specified cache. 
+    /**
+     * Removes the given key from the specified cache.
      * 
      * @param cacheName
      * @param key
@@ -59,9 +57,8 @@ public interface IRemoteCacheService extends Remote, ICacheService
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException;
 
-
-    /** 
-     * Remove all keys from the sepcified cache. 
+    /**
+     * Remove all keys from the sepcified cache.
      * 
      * @param cacheName
      * @param requesterId
@@ -76,6 +73,6 @@ public interface IRemoteCacheService extends Remote, ICacheService
      * @return A Set of keys
      * @throws java.rmi.RemoteException
      */
-    public Set getGroupKeys(String cacheName, String groupName)
+    public Set getGroupKeys( String cacheName, String groupName )
         throws java.rmi.RemoteException;
 }

@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,16 +16,16 @@ package org.apache.jcs.auxiliary;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.engine.behavior.ICacheType;
 
 /**
  * AuxiliaryCacheManager
- *
+ * 
  * FIXME: Should not need to extend ICacheType
- *
+ *  
  */
-public interface AuxiliaryCacheManager extends ICacheType
+public interface AuxiliaryCacheManager
+    extends ICacheType
 {
     public AuxiliaryCache getCache( String cacheName );
 }

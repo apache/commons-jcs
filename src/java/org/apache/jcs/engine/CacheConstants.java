@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,10 +16,9 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 /**
  * Constants used throughout the JCS cache engine
- *
+ * 
  * @version $Id$
  */
 public interface CacheConstants

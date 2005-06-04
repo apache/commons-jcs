@@ -33,7 +33,8 @@ import org.apache.jcs.engine.behavior.ICacheListener;
  * 
  * @author Aaron Smuts
  */
-public class TestEventQueueConcurrent extends TestCase
+public class TestEventQueueConcurrent
+    extends TestCase
 {
 
     private static CacheEventQueue queue = null;
@@ -49,22 +50,23 @@ public class TestEventQueueConcurrent extends TestCase
 
     /**
      * Constructor for the TestDiskCache object.
+     * 
      * @param testName
      */
-    public TestEventQueueConcurrent(String testName)
+    public TestEventQueueConcurrent( String testName )
     {
-        super(testName);
+        super( testName );
     }
 
     /**
      * Main method passes this test to the text test runner.
+     * 
      * @param args
      */
-    public static void main(String args[])
+    public static void main( String args[] )
     {
-        String[] testCaseName =
-        { TestEventQueueConcurrent.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
+        String[] testCaseName = { TestEventQueueConcurrent.class.getName() };
+        junit.textui.TestRunner.main( testCaseName );
     }
 
     /**
@@ -77,69 +79,77 @@ public class TestEventQueueConcurrent extends TestCase
 
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest(new TestEventQueueConcurrent("testRunPutTest1")
+        suite.addTest( new TestEventQueueConcurrent( "testRunPutTest1" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
-                this.runPutTest(200, 200);
+                this.runPutTest( 200, 200 );
             }
-        });
+        } );
 
-        suite.addTest(new TestEventQueueConcurrent("testRunPutTest2")
+        suite.addTest( new TestEventQueueConcurrent( "testRunPutTest2" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
-                this.runPutTest(1200, 1400);
+                this.runPutTest( 1200, 1400 );
             }
-        });
+        } );
 
-        suite.addTest(new TestEventQueueConcurrent("testRunRemoveTest1")
+        suite.addTest( new TestEventQueueConcurrent( "testRunRemoveTest1" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
-                this.runRemoveTest(2200);
+                this.runRemoveTest( 2200 );
             }
-        });
+        } );
 
-        suite.addTest(new TestEventQueueConcurrent("testStopProcessing1")
+        suite.addTest( new TestEventQueueConcurrent( "testStopProcessing1" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runStopProcessingTest();
             }
-        });
+        } );
 
-        suite.addTest(new TestEventQueueConcurrent("testRunPutTest4")
+        suite.addTest( new TestEventQueueConcurrent( "testRunPutTest4" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
-                this.runPutTest(5200, 6600);
+                this.runPutTest( 5200, 6600 );
             }
-        });
+        } );
 
-        suite.addTest(new TestEventQueueConcurrent("testRunRemoveTest2")
+        suite.addTest( new TestEventQueueConcurrent( "testRunRemoveTest2" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
-                this.runRemoveTest(5200);
+                this.runRemoveTest( 5200 );
             }
-        });
+        } );
 
-        suite.addTest(new TestEventQueueConcurrent("testStopProcessing2")
+        suite.addTest( new TestEventQueueConcurrent( "testStopProcessing2" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runStopProcessingTest();
             }
-        });
+        } );
 
-        suite.addTest(new TestEventQueueConcurrent("testRunPutDelayTest")
+        suite.addTest( new TestEventQueueConcurrent( "testRunPutDelayTest" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
-                this.runPutDelayTest(100, 6700);
+                this.runPutDelayTest( 100, 6700 );
             }
-        });
+        } );
 
         return suite;
     }
@@ -150,9 +160,9 @@ public class TestEventQueueConcurrent extends TestCase
     public void setUp()
     {
         listen = new CacheListenerImpl();
-        queue = new CacheEventQueue(listen, 1L, "testCache1", maxFailure, waitBeforeRetry);
+        queue = new CacheEventQueue( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
 
-        queue.setWaitToDieMillis(idleTime);
+        queue.setWaitToDieMillis( idleTime );
     }
 
     /**
@@ -162,28 +172,29 @@ public class TestEventQueueConcurrent extends TestCase
      * @param expectedPutCount
      * @throws Exception
      */
-    public void runPutTest(int end, int expectedPutCount) throws Exception
+    public void runPutTest( int end, int expectedPutCount )
+        throws Exception
     {
-        for (int i = 0; i <= end; i++)
+        for ( int i = 0; i <= end; i++ )
         {
-            CacheElement elem = new CacheElement("testCache1", i + ":key", i + "data");
-            queue.addPutEvent(elem);
+            CacheElement elem = new CacheElement( "testCache1", i + ":key", i + "data" );
+            queue.addPutEvent( elem );
         }
 
-        while (!queue.isEmpty())
+        while ( !queue.isEmpty() )
         {
-            synchronized (this)
+            synchronized ( this )
             {
-                System.out.println("queue is still busy, waiting 250 millis");
-                this.wait(250);
+                System.out.println( "queue is still busy, waiting 250 millis" );
+                this.wait( 250 );
             }
         }
-        System.out.println("queue is empty, comparing putCount");
+        System.out.println( "queue is empty, comparing putCount" );
 
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
-        assertTrue("The put count [" + listen.putCount
-            + "] is below the expected minimum threshold [" + expectedPutCount + "]", listen.putCount >= (expectedPutCount-1) );
+        assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
+            + expectedPutCount + "]", listen.putCount >= ( expectedPutCount - 1 ) );
 
     }
 
@@ -193,11 +204,12 @@ public class TestEventQueueConcurrent extends TestCase
      * @param end
      * @throws Exception
      */
-    public void runRemoveTest(int end) throws Exception
+    public void runRemoveTest( int end )
+        throws Exception
     {
-        for (int i = 0; i <= end; i++)
+        for ( int i = 0; i <= end; i++ )
         {
-            queue.addRemoveEvent(i + ":key");
+            queue.addRemoveEvent( i + ":key" );
         }
 
     }
@@ -207,7 +219,8 @@ public class TestEventQueueConcurrent extends TestCase
      * 
      * @throws Exception
      */
-    public void runStopProcessingTest() throws Exception
+    public void runStopProcessingTest()
+        throws Exception
     {
         queue.stopProcessing();
     }
@@ -219,60 +232,62 @@ public class TestEventQueueConcurrent extends TestCase
      * @param expectedPutCount
      * @throws Exception
      */
-    public void runPutDelayTest(int end, int expectedPutCount) throws Exception
+    public void runPutDelayTest( int end, int expectedPutCount )
+        throws Exception
     {
-        while (!queue.isEmpty())
+        while ( !queue.isEmpty() )
         {
-            synchronized (this)
+            synchronized ( this )
             {
-                System.out.println("queue is busy, waiting 250 millis to begin");
-                this.wait(250);
+                System.out.println( "queue is busy, waiting 250 millis to begin" );
+                this.wait( 250 );
             }
         }
-        System.out.println("queue is empty, begin");
+        System.out.println( "queue is empty, begin" );
 
         // get it going
-        CacheElement elem = new CacheElement("testCache1", "a:key", "adata");
-        queue.addPutEvent(elem);
+        CacheElement elem = new CacheElement( "testCache1", "a:key", "adata" );
+        queue.addPutEvent( elem );
 
-        for (int i = 0; i <= end; i++)
+        for ( int i = 0; i <= end; i++ )
         {
-            synchronized (this)
+            synchronized ( this )
             {
-                if (i % 2 == 0)
+                if ( i % 2 == 0 )
                 {
-                    this.wait(idleTime);
+                    this.wait( idleTime );
                 }
                 else
                 {
-                    this.wait(idleTime / 2);
+                    this.wait( idleTime / 2 );
                 }
             }
-            CacheElement elem2 = new CacheElement("testCache1", i + ":key", i + "data");
-            queue.addPutEvent(elem2);
+            CacheElement elem2 = new CacheElement( "testCache1", i + ":key", i + "data" );
+            queue.addPutEvent( elem2 );
         }
 
-        while (!queue.isEmpty())
+        while ( !queue.isEmpty() )
         {
-            synchronized (this)
+            synchronized ( this )
             {
-                System.out.println("queue is still busy, waiting 250 millis");
-                this.wait(250);
+                System.out.println( "queue is still busy, waiting 250 millis" );
+                this.wait( 250 );
             }
         }
-        System.out.println("queue is empty, comparing putCount");
+        System.out.println( "queue is empty, comparing putCount" );
 
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
-        assertTrue("The put count [" + listen.putCount
-            + "] is below the expected minimum threshold", listen.putCount >= expectedPutCount);
+        assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold",
+                    listen.putCount >= expectedPutCount );
 
     }
 
     /**
      * This is a dummy cache listener to use when testing the event queue.
      */
-    private class CacheListenerImpl implements ICacheListener
+    private class CacheListenerImpl
+        implements ICacheListener
     {
 
         /**
@@ -290,9 +305,10 @@ public class TestEventQueueConcurrent extends TestCase
          * 
          * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
          */
-        public void handlePut(ICacheElement item) throws IOException
+        public void handlePut( ICacheElement item )
+            throws IOException
         {
-            synchronized (this)
+            synchronized ( this )
             {
                 putCount++;
             }
@@ -304,9 +320,10 @@ public class TestEventQueueConcurrent extends TestCase
          * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
          *      java.io.Serializable)
          */
-        public void handleRemove(String cacheName, Serializable key) throws IOException
+        public void handleRemove( String cacheName, Serializable key )
+            throws IOException
         {
-            synchronized (this)
+            synchronized ( this )
             {
                 removeCount++;
             }
@@ -318,7 +335,8 @@ public class TestEventQueueConcurrent extends TestCase
          * 
          * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
          */
-        public void handleRemoveAll(String cacheName) throws IOException
+        public void handleRemoveAll( String cacheName )
+            throws IOException
         {
             // TODO Auto-generated method stub
 
@@ -329,7 +347,8 @@ public class TestEventQueueConcurrent extends TestCase
          * 
          * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
          */
-        public void handleDispose(String cacheName) throws IOException
+        public void handleDispose( String cacheName )
+            throws IOException
         {
             // TODO Auto-generated method stub
 
@@ -340,7 +359,8 @@ public class TestEventQueueConcurrent extends TestCase
          * 
          * @see org.apache.jcs.engine.behavior.ICacheListener#setListenerId(long)
          */
-        public void setListenerId(long id) throws IOException
+        public void setListenerId( long id )
+            throws IOException
         {
             // TODO Auto-generated method stub
 
@@ -351,7 +371,8 @@ public class TestEventQueueConcurrent extends TestCase
          * 
          * @see org.apache.jcs.engine.behavior.ICacheListener#getListenerId()
          */
-        public long getListenerId() throws IOException
+        public long getListenerId()
+            throws IOException
         {
             // TODO Auto-generated method stub
             return 0;

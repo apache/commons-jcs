@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine.behavior;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -27,7 +25,7 @@ import java.io.Serializable;
  * Note: objects which implement this interface are local listeners to cache
  * changes, whereas objects which implement IRmiCacheListener are remote
  * listeners to cache changes.
- *
+ *  
  */
 public interface ICacheListener
 {
@@ -35,41 +33,37 @@ public interface ICacheListener
     public void handlePut( ICacheElement item )
         throws IOException;
 
-
     /** Notifies the subscribers for a cache entry removal. */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException;
-
 
     /** Notifies the subscribers for a cache remove-all. */
     public void handleRemoveAll( String cacheName )
         throws IOException;
 
-
     /** Notifies the subscribers for freeing up the named cache. */
     public void handleDispose( String cacheName )
         throws IOException;
 
-
     /**
      * Notifies the subscribers for releasing all caches.
-     *
-     * @param id The new listenerId value
+     * 
+     * @param id
+     *            The new listenerId value
      */
-//  public void handleRelease() throws IOException;
-
+    //  public void handleRelease() throws IOException;
     /**
      * sets unique identifier of listener home
-     *
-     * @param id The new listenerId value
+     * 
+     * @param id
+     *            The new listenerId value
      */
     public void setListenerId( long id )
         throws IOException;
 
-
     /**
      * Gets the listenerId attribute of the ICacheListener object
-     *
+     * 
      * @return The listenerId value
      */
     public long getListenerId()

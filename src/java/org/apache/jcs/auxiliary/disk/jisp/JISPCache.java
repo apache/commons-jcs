@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.jisp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.disk.jisp;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.File;
 import java.io.Serializable;
@@ -35,16 +33,16 @@ import com.coyotegulch.jisp.KeyObject;
 
 /**
  * JISP disk cache implementation. Slow as hell with this type of key.
- *
- * <b>VERY EXPERIMENTAL, and only partially implemented</b>
- * Does not work with groups.
- *
+ * 
+ * <b>VERY EXPERIMENTAL, and only partially implemented </b> Does not work with
+ * groups.
+ * 
  * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
-public class JISPCache extends AbstractDiskCache
+public class JISPCache
+    extends AbstractDiskCache
 {
-    private final static Log log =
-        LogFactory.getLog( JISPCache.class );
+    private final static Log log = LogFactory.getLog( JISPCache.class );
 
     private int numInstances = 0;
 
@@ -55,20 +53,23 @@ public class JISPCache extends AbstractDiskCache
 
     //JISP ACCESS
     IndexedObjectDatabase database;
+
     BTreeIndex index1;
+
     private static int s_order = 101;
 
     String jispDataFileName = "default_this_is_BAD";
+
     String jispIndexFileName = "default_this_is_BAD";
 
     /**
      * Constructor for the JISPCache object
-     *
+     * 
      * @param cattr
      */
     public JISPCache( JISPCacheAttributes cattr )
     {
-        super( (IDiskCacheAttributes)cattr);
+        super( (IDiskCacheAttributes) cattr );
 
         numInstances++;
 
@@ -118,6 +119,7 @@ public class JISPCache extends AbstractDiskCache
         }
 
     }
+
     // end constructor
 
     /** SETUP TABLE FOR CACHE */
@@ -149,6 +151,7 @@ public class JISPCache extends AbstractDiskCache
         }
 
     }
+
     // end setupTable
 
     /** Description of the Method */
@@ -190,8 +193,8 @@ public class JISPCache extends AbstractDiskCache
         try
         {
 
-            KeyObject[] keyArray = new JISPKey[ 1 ];
-            keyArray[ 0 ] = new JISPKey( ce.getKey() );
+            KeyObject[] keyArray = new JISPKey[1];
+            keyArray[0] = new JISPKey( ce.getKey() );
 
             // akin to an update, should insert as well
             database.write( keyArray, ce );
@@ -222,8 +225,7 @@ public class JISPCache extends AbstractDiskCache
 
         try
         {
-            element = ( CacheElement )
-                database.read( new JISPKey( key ), index1 );
+            element = (CacheElement) database.read( new JISPKey( key ), index1 );
         }
         catch ( Exception e )
         {
@@ -243,12 +245,12 @@ public class JISPCache extends AbstractDiskCache
         return element;
     }
 
-    public Set getGroupKeys(String groupName)
+    public Set getGroupKeys( String groupName )
     {
-        if (true) 
+        if ( true )
         {
-            throw new UnsupportedOperationException("Groups not implemented.");
-        }        
+            throw new UnsupportedOperationException( "Groups not implemented." );
+        }
         return null;
     }
 
@@ -258,8 +260,8 @@ public class JISPCache extends AbstractDiskCache
      */
     protected boolean doRemove( Serializable key )
     {
-        KeyObject[] keyArray = new JISPKey[ 1 ];
-        keyArray[ 0 ] = new JISPKey( key );
+        KeyObject[] keyArray = new JISPKey[1];
+        keyArray[0] = new JISPKey( key );
 
         try
         {
@@ -346,7 +348,7 @@ public class JISPCache extends AbstractDiskCache
 
     /**
      * Returns the current cache size.
-     *
+     * 
      * @return The size value
      */
     public int getSize()
@@ -355,4 +357,3 @@ public class JISPCache extends AbstractDiskCache
         // need to get count
     }
 }
-

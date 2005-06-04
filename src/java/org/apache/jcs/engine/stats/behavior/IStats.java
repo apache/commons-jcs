@@ -19,39 +19,41 @@ package org.apache.jcs.engine.stats.behavior;
 import java.io.Serializable;
 
 /**
- * This interface defines the common behavior for a stats holder. 
+ * This interface defines the common behavior for a stats holder.
  * 
  * @author aaronsm
- *
+ *  
  */
-public interface IStats extends Serializable {
+public interface IStats
+    extends Serializable
+{
 
-	/**
-	 * Return generic statistical or historical data.
-	 * 
-	 * @return IStatElement[]
-	 */
-	public abstract IStatElement[] getStatElements( );
-		
-	/**
-	 * Set the generic statistical or historical data.
-	 * 
-	 * @param stats
-	 */
-	public abstract void setStatElements( IStatElement[] stats );	
+    /**
+     * Return generic statistical or historical data.
+     * 
+     * @return IStatElement[]
+     */
+    public abstract IStatElement[] getStatElements();
 
-	/**
-	 * Get the type name, such as "LRU Memory Cache."  No formal type is defined.
-	 * 
-	 * @return String
-	 */
-	public abstract String getTypeName();
+    /**
+     * Set the generic statistical or historical data.
+     * 
+     * @param stats
+     */
+    public abstract void setStatElements( IStatElement[] stats );
 
-	/**
-	 * Set the type name, such as "LRU Memory Cache."  No formal type is defined.
-	 * If we need formal types, we can use the cachetype param
-	 * 
-	 * @param name
-	 */
-	public abstract void setTypeName( String name );		
+    /**
+     * Get the type name, such as "LRU Memory Cache." No formal type is defined.
+     * 
+     * @return String
+     */
+    public abstract String getTypeName();
+
+    /**
+     * Set the type name, such as "LRU Memory Cache." No formal type is defined.
+     * If we need formal types, we can use the cachetype param
+     * 
+     * @param name
+     */
+    public abstract void setTypeName( String name );
 }

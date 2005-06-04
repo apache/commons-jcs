@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -41,23 +39,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A lateral cache service implementation.
- * Does not implement getGroupKey
- *
+ * A lateral cache service implementation. Does not implement getGroupKey
+ * 
  * @version $Id$
  */
 public class LateralTCPService
-     implements ILateralCacheService, ILateralCacheObserver
+    implements ILateralCacheService, ILateralCacheObserver
 {
-    private final static Log log =
-        LogFactory.getLog( LateralTCPService.class );
+    private final static Log log = LogFactory.getLog( LateralTCPService.class );
 
     private ILateralCacheAttributes ilca;
+
     private LateralTCPSender sender;
 
     /**
      * Constructor for the LateralTCPService object
-     *
+     * 
      * @param lca
      * @exception IOException
      */
@@ -94,8 +91,10 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
+     *      long)
      */
     public void update( ICacheElement item, long requesterId )
         throws IOException
@@ -107,8 +106,10 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String, java.io.Serializable)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String,
+     *      java.io.Serializable)
      */
     public void remove( String cacheName, Serializable key )
         throws IOException
@@ -117,8 +118,10 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String, java.io.Serializable, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String,
+     *      java.io.Serializable, long)
      */
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
@@ -131,7 +134,8 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheService#release()
      */
     public void release()
@@ -148,7 +152,7 @@ public class LateralTCPService
     }
 
     /*
-     * 
+     *  
      */
     public Serializable get( String key )
         throws IOException
@@ -160,8 +164,10 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String, java.io.Serializable)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String,
+     *      java.io.Serializable)
      */
     public ICacheElement get( String cacheName, Serializable key )
         throws IOException
@@ -176,20 +182,21 @@ public class LateralTCPService
     }
 
     /**
-     * Gets the set of keys of objects currently in the group
-     * throws UnsupportedOperationException
+     * Gets the set of keys of objects currently in the group throws
+     * UnsupportedOperationException
      */
-    public Set getGroupKeys(String cacheName, String group)
+    public Set getGroupKeys( String cacheName, String group )
     {
-        if (true)
+        if ( true )
         {
-            throw new UnsupportedOperationException("Groups not implemented.");
+            throw new UnsupportedOperationException( "Groups not implemented." );
         }
         return null;
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheService#removeAll(java.lang.String)
      */
     public void removeAll( String cacheName )
@@ -199,8 +206,10 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String,
+     *      long)
      */
     public void removeAll( String cacheName, long requesterId )
         throws IOException
@@ -220,15 +229,13 @@ public class LateralTCPService
     {
         try
         {
-            LateralTCPSender sender =
-                new LateralTCPSender( new LateralCacheAttributes() );
+            LateralTCPSender sender = new LateralTCPSender( new LateralCacheAttributes() );
 
             // process user input till done
             boolean notDone = true;
             String message = null;
             // wait to dispose
-            BufferedReader br =
-                new BufferedReader( new InputStreamReader( System.in ) );
+            BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
 
             while ( notDone )
             {
@@ -250,8 +257,10 @@ public class LateralTCPService
     // is not registered.
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(java.lang.String, org.apache.jcs.engine.behavior.ICacheListener)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(java.lang.String,
+     *      org.apache.jcs.engine.behavior.ICacheListener)
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -260,7 +269,8 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
      */
     public void addCacheListener( ICacheListener obj )
@@ -269,10 +279,11 @@ public class LateralTCPService
         // Empty
     }
 
-
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String, org.apache.jcs.engine.behavior.ICacheListener)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String,
+     *      org.apache.jcs.engine.behavior.ICacheListener)
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -281,7 +292,8 @@ public class LateralTCPService
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
      */
     public void removeCacheListener( ICacheListener obj )
@@ -291,4 +303,3 @@ public class LateralTCPService
     }
 
 }
-

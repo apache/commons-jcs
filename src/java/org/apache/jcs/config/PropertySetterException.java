@@ -1,6 +1,5 @@
 package org.apache.jcs.config;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.config;
  * limitations under the License.
  */
 
-
 /**
  * This class is based on the log4j class org.apache.log4j.config.PropertySetter
  * that was made by Anders Kristensen
@@ -26,19 +24,19 @@ package org.apache.jcs.config;
 
 /**
  * Thrown when an error is encountered whilst attempting to set a property using
- * the {@link PropertySetter} utility class.
- *
+ * the {@link PropertySetter}utility class.
+ * 
  * @since 1.1
  */
-public class PropertySetterException extends Exception
+public class PropertySetterException
+    extends Exception
 {
     /** Description of the Field */
     protected Throwable rootCause;
 
-
     /**
      * Constructor for the PropertySetterException object
-     *
+     * 
      * @param msg
      */
     public PropertySetterException( String msg )
@@ -46,10 +44,9 @@ public class PropertySetterException extends Exception
         super( msg );
     }
 
-
     /**
      * Constructor for the PropertySetterException object
-     *
+     * 
      * @param rootCause
      */
     public PropertySetterException( Throwable rootCause )
@@ -58,10 +55,9 @@ public class PropertySetterException extends Exception
         this.rootCause = rootCause;
     }
 
-
     /**
      * Returns descriptive text on the cause of this exception.
-     *
+     * 
      * @return The message value
      */
 
@@ -75,4 +71,3 @@ public class PropertySetterException extends Exception
         return msg;
     }
 }
-

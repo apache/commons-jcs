@@ -33,191 +33,191 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.memory.MemoryCache;
 
 /**
- * A servlet which provides HTTP access to JCS. Allows a summary of regions
- * to be viewed, and removeAll to be run on individual regions or all regions.
- * Also provides the ability to remove items (any number of key arguments can
- * be provided with action 'remove'). Should be initialized with a properties
- * file that provides at least a classpath resource loader.
- *
+ * A servlet which provides HTTP access to JCS. Allows a summary of regions to
+ * be viewed, and removeAll to be run on individual regions or all regions. Also
+ * provides the ability to remove items (any number of key arguments can be
+ * provided with action 'remove'). Should be initialized with a properties file
+ * that provides at least a classpath resource loader.
+ *  
  */
 public class JCSAdminBean
 {
 
-  private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
+    private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
-  /**
-   * Builds up info about each element in a region.
-   * 
-   * @param cacheName
-   * @return
-   * @throws Exception
-   */
-  public LinkedList buildElementInfo( String cacheName ) throws Exception
-  {
-    CompositeCache cache =
-        cacheHub.getCache( cacheName );
-
-    Object[] keys = cache.getMemoryCache().getKeyArray();
-
-    // Attempt to sort keys according to their natural ordering. If that
-    // fails, get the key array again and continue unsorted.
-
-    try
+    /**
+     * Builds up info about each element in a region.
+     * 
+     * @param cacheName
+     * @return
+     * @throws Exception
+     */
+    public LinkedList buildElementInfo( String cacheName )
+        throws Exception
     {
-      Arrays.sort( keys );
-    }
-    catch ( Exception e )
-    {
-      keys = cache.getMemoryCache().getKeyArray();
-    }
+        CompositeCache cache = cacheHub.getCache( cacheName );
 
-    LinkedList records = new LinkedList();
+        Object[] keys = cache.getMemoryCache().getKeyArray();
 
-    ICacheElement element;
-    IElementAttributes attributes;
-    CacheElementInfo elementInfo;
+        // Attempt to sort keys according to their natural ordering. If that
+        // fails, get the key array again and continue unsorted.
 
-    DateFormat format = DateFormat.getDateTimeInstance( DateFormat.SHORT,
-        DateFormat.SHORT );
+        try
+        {
+            Arrays.sort( keys );
+        }
+        catch ( Exception e )
+        {
+            keys = cache.getMemoryCache().getKeyArray();
+        }
 
-    long now = System.currentTimeMillis();
+        LinkedList records = new LinkedList();
 
-    for ( int i = 0; i < keys.length; i++ )
-    {
-      element =
-          cache.getMemoryCache().getQuiet( ( Serializable ) keys[i] );
+        ICacheElement element;
+        IElementAttributes attributes;
+        CacheElementInfo elementInfo;
 
-      attributes = element.getElementAttributes();
+        DateFormat format = DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT );
 
-      elementInfo = new CacheElementInfo();
+        long now = System.currentTimeMillis();
 
-      elementInfo.key = String.valueOf( keys[i] );
-      elementInfo.eternal = attributes.getIsEternal();
-      elementInfo.maxLifeSeconds = attributes.getMaxLifeSeconds();
+        for ( int i = 0; i < keys.length; i++ )
+        {
+            element = cache.getMemoryCache().getQuiet( (Serializable) keys[i] );
 
-      elementInfo.createTime =
-          format.format( new Date( attributes.getCreateTime() ) );
+            attributes = element.getElementAttributes();
 
-      elementInfo.expiresInSeconds =
-          ( now - attributes.getCreateTime()
-            - ( attributes.getMaxLifeSeconds() * 1000 ) ) / -1000;
+            elementInfo = new CacheElementInfo();
 
-      records.add( elementInfo );
-    }
+            elementInfo.key = String.valueOf( keys[i] );
+            elementInfo.eternal = attributes.getIsEternal();
+            elementInfo.maxLifeSeconds = attributes.getMaxLifeSeconds();
 
-    return records;
-  }
+            elementInfo.createTime = format.format( new Date( attributes.getCreateTime() ) );
 
-  /**
-   * Builds up data on every region.
-   * @TODO we need a most light weight method that does not count
-   * bytes.  The byte counting can really swamp a server.
-   * 
-   * @return list of CacheRegionInfo objects
-   * @throws Exception
-   */
-  public LinkedList buildCacheInfo() throws Exception
-  {
-    String[] cacheNames = cacheHub.getCacheNames();
+            elementInfo.expiresInSeconds = ( now - attributes.getCreateTime() - ( attributes.getMaxLifeSeconds() * 1000 ) )
+                / -1000;
 
-    Arrays.sort( cacheNames );
+            records.add( elementInfo );
+        }
 
-    LinkedList cacheInfo = new LinkedList();
-
-    CacheRegionInfo regionInfo;
-    CompositeCache cache;
-
-    for ( int i = 0; i < cacheNames.length; i++ )
-    {
-      cache = cacheHub.getCache( cacheNames[i] );
-
-      regionInfo = new CacheRegionInfo();
-
-      regionInfo.cache = cache;
-      regionInfo.byteCount = getByteCount( cache );
-
-      cacheInfo.add( regionInfo );
+        return records;
     }
 
-    return cacheInfo;
-  }
-
-  /**
-   * Tries to estimate how much data is in a region.  
-   * This is expensive.
-   * If there are any non serializable objects in the region,
-   * the count will stop when it encouters the first one.
-   * 
-   * @param cache
-   * @return
-   * @throws Exception
-   */
-  public int getByteCount( CompositeCache cache ) throws Exception
-  {
-    MemoryCache memCache = cache.getMemoryCache();
-
-    Iterator iter = memCache.getIterator();
-
-    CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
-    ObjectOutputStream out = new ObjectOutputStream( counter );
-
-    // non serializable objects will cause problems here
-    try
+    /**
+     * Builds up data on every region.
+     * 
+     * @TODO we need a most light weight method that does not count bytes. The
+     *       byte counting can really swamp a server.
+     * 
+     * @return list of CacheRegionInfo objects
+     * @throws Exception
+     */
+    public LinkedList buildCacheInfo()
+        throws Exception
     {
-      while ( iter.hasNext() )
-      {
-        ICacheElement ce = ( ICacheElement )
-            ( ( Map.Entry ) iter.next() ).getValue();
+        String[] cacheNames = cacheHub.getCacheNames();
 
-        out.writeObject( ce.getVal() );
-      }
-    }
-    catch ( Exception e )
-    {
-      //log later
+        Arrays.sort( cacheNames );
+
+        LinkedList cacheInfo = new LinkedList();
+
+        CacheRegionInfo regionInfo;
+        CompositeCache cache;
+
+        for ( int i = 0; i < cacheNames.length; i++ )
+        {
+            cache = cacheHub.getCache( cacheNames[i] );
+
+            regionInfo = new CacheRegionInfo();
+
+            regionInfo.cache = cache;
+            regionInfo.byteCount = getByteCount( cache );
+
+            cacheInfo.add( regionInfo );
+        }
+
+        return cacheInfo;
     }
 
-    // 4 bytes lost for the serialization header
-
-    return counter.getCount() - 4;
-  }
-
-  /**
-   * Clears all regions in the cache.
-   * 
-   * @throws IOException
-   */
-  public void clearAllRegions() throws IOException
-  {
-    String[] names = cacheHub.getCacheNames();
-
-    for ( int i = 0; i < names.length; i++ )
+    /**
+     * Tries to estimate how much data is in a region. This is expensive. If
+     * there are any non serializable objects in the region, the count will stop
+     * when it encouters the first one.
+     * 
+     * @param cache
+     * @return
+     * @throws Exception
+     */
+    public int getByteCount( CompositeCache cache )
+        throws Exception
     {
-      cacheHub.getCache( names[i] ).removeAll();
+        MemoryCache memCache = cache.getMemoryCache();
+
+        Iterator iter = memCache.getIterator();
+
+        CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream( counter );
+
+        // non serializable objects will cause problems here
+        try
+        {
+            while ( iter.hasNext() )
+            {
+                ICacheElement ce = (ICacheElement) ( (Map.Entry) iter.next() ).getValue();
+
+                out.writeObject( ce.getVal() );
+            }
+        }
+        catch ( Exception e )
+        {
+            //log later
+        }
+
+        // 4 bytes lost for the serialization header
+
+        return counter.getCount() - 4;
     }
-  }
 
-  /**
-   * Clears a particular cache region.
-   * 
-   * @param cacheName
-   * @throws IOException
-   */
-  public void clearRegion( String cacheName ) throws IOException
-  {
-    cacheHub.getCache( cacheName ).removeAll();
-  }
+    /**
+     * Clears all regions in the cache.
+     * 
+     * @throws IOException
+     */
+    public void clearAllRegions()
+        throws IOException
+    {
+        String[] names = cacheHub.getCacheNames();
 
-  /**
-   * Removes a particular item from a particular region.
-   * 
-   * @param cacheName
-   * @param key
-   * @throws IOException
-   */
-  public void removeItem( String cacheName, String key ) throws IOException
-  {
-    cacheHub.getCache( cacheName ).remove( key );
-  }
+        for ( int i = 0; i < names.length; i++ )
+        {
+            cacheHub.getCache( names[i] ).removeAll();
+        }
+    }
+
+    /**
+     * Clears a particular cache region.
+     * 
+     * @param cacheName
+     * @throws IOException
+     */
+    public void clearRegion( String cacheName )
+        throws IOException
+    {
+        cacheHub.getCache( cacheName ).removeAll();
+    }
+
+    /**
+     * Removes a particular item from a particular region.
+     * 
+     * @param cacheName
+     * @param key
+     * @throws IOException
+     */
+    public void removeItem( String cacheName, String key )
+        throws IOException
+    {
+        cacheHub.getCache( cacheName ).remove( key );
+    }
 
 }

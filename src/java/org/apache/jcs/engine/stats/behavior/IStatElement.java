@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.stats.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -18,39 +17,40 @@ package org.apache.jcs.engine.stats.behavior;
  */
 
 /**
- * IAuxiliaryCacheStats will hold these IStatElements.  
+ * IAuxiliaryCacheStats will hold these IStatElements.
  * 
  * @author aaronsm
- *
+ *  
  */
-public interface IStatElement {
+public interface IStatElement
+{
 
-	/**
-	 * Get the name of the stat element, ex. HitCount
-	 * 
-	 * @return the stat element name
-	 */
-	public abstract String getName();
+    /**
+     * Get the name of the stat element, ex. HitCount
+     * 
+     * @return the stat element name
+     */
+    public abstract String getName();
 
-	/**
-	 * 
-	 * @param name
-	 */
-	public abstract void setName( String name );
+    /**
+     * 
+     * @param name
+     */
+    public abstract void setName( String name );
 
-	/**
-	 * Get the data, ex. for hit count you would get a String value for some
-	 * number.
-	 * 
-	 * @return String data
-	 */
-	public abstract String getData();
+    /**
+     * Get the data, ex. for hit count you would get a String value for some
+     * number.
+     * 
+     * @return String data
+     */
+    public abstract String getData();
 
-	/**
-	 * Set the data for this element.
-	 * 
-	 * @param data
-	 */
-	public abstract void setData( String data );
+    /**
+     * Set the data for this element.
+     * 
+     * @param data
+     */
+    public abstract void setData( String data );
 
 }

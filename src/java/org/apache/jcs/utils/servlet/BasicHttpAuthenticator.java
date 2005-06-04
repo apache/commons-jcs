@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.servlet;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.utils.servlet;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,26 +30,24 @@ import sun.misc.BASE64Decoder;
 
 /**
  * Used to perform basic http authentication.
- *
+ *  
  */
 public class BasicHttpAuthenticator
 {
-    private final static Log log =
-        LogFactory.getLog( BasicHttpAuthenticator.class );
+    private final static Log log = LogFactory.getLog( BasicHttpAuthenticator.class );
 
     /** Contains the "WWW-Authenticate" http response header. */
     private final String wwwAuthHeader;
 
-
     /**
-     * @param jcs the jcs parameter used to specify the "WWW-Authenticate" http
-     *      response header.
+     * @param jcs
+     *            the jcs parameter used to specify the "WWW-Authenticate" http
+     *            response header.
      */
     public BasicHttpAuthenticator( String jcs )
     {
         this.wwwAuthHeader = "BASIC jcs=\"" + jcs + "\"";
     }
-
 
     /**
      * Authenticates the http <code>"Authorization"</code> header information.
@@ -75,7 +71,6 @@ public class BasicHttpAuthenticator
         }
         return true;
     }
-
 
     /**
      * Returns true iff the given "Authorization" http request header contains
@@ -109,15 +104,14 @@ public class BasicHttpAuthenticator
         return checkPassword( userid, password );
     }
 
-
     /**
      * Default implementation of checking the password.
-     *
+     * 
      * @return true iff the given user id and password is valid.
      */
     protected boolean checkPassword( String userid, String password )
     {
         return userid.equalsIgnoreCase( IUtilConstants.ADMIN_USERID )
-             && password.equals( IUtilConstants.ADMIN_PASSWORD );
+            && password.equals( IUtilConstants.ADMIN_PASSWORD );
     }
 }

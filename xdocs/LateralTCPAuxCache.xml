@@ -33,7 +33,7 @@
         Get requests are synchronous and can potentially block for a
         configurable interval if there is a communication problem.
       </p>
-      <subsection name="Configuration">
+      <subsection name="Non-UDP Discovery Configuration">
         <p>
           The configuration is fairly straightforward and is done in the
           auxiliary cache section of the <code>cache.ccf</code>
@@ -59,6 +59,42 @@ jcs.auxiliary.LTCP.attributes.TcpServers=
     localhost:1111,localhost:1112
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+        ]]></source>
+        <p>
+		  A mostly configurationless mode is available for the TCP
+		  lateral cache if you use the <a href="LateralUDPDiscovery.html">UDP Discovery</a>
+		   mechanism.
+        </p>
+      </subsection>
+      <subsection name="Send Only Configuration">
+        <p>
+          You can configure the TCP lateral cache to operate
+          in send only more by setting the <code>Receive</code> attribute
+          to false.  By default the receive attribute is true.
+          When it is set to false, the lateral cache will not
+          establish a socket server.    
+        </p>
+        <p>
+           Setting receive to false allows you to broadcast puts 
+           and removes, but not receive any.  This is useful for
+           nodes of an application that produce data, but are not
+           involved in data retrieval.
+        </p>
+        <p>
+          The configuration below is the same as above, except the
+          <code>Receive</code> attribute is set to false.
+        </p>
+        <source><![CDATA[
+jcs.auxiliary.LTCP=
+    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=
+    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP.attributes.TcpServers=
+    localhost:1111,localhost:1112
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+jcs.auxiliary.LTCP.attributes.Receive=false
         ]]></source>
       </subsection>
       <subsection name="Potential Issues">

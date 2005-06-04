@@ -18,11 +18,11 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 public class UDPDiscoveryManager
 {
     private final static Log log = LogFactory.getLog( UDPDiscoveryManager.class );
-    
+
     private static UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();
 
     private Map services = new HashMap();
-    
+
     private UDPDiscoveryManager()
     {
         // noopt
@@ -37,7 +37,7 @@ public class UDPDiscoveryManager
     {
         return INSTANCE;
     }
-    
+
     /**
      * Returns the UDP Discovery service associated with this instance.
      * 
@@ -47,25 +47,25 @@ public class UDPDiscoveryManager
     public synchronized UDPDiscoveryService getService( LateralCacheAttributes lca )
     {
         String key = lca.getTcpServer() + ":" + lca.getTcpListenerPort();
-        
-        UDPDiscoveryService service = (UDPDiscoveryService)services.get( key );
+
+        UDPDiscoveryService service = (UDPDiscoveryService) services.get( key );
         if ( service == null )
         {
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Creating service for " + key );
             }
-            
+
             service = new UDPDiscoveryService( lca );
-            services.put( key, service );                            
+            services.put( key, service );
         }
-        
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "Returning service [" + service + "] for lca [" + lca + "]" );
         }
-        
-        return service;        
+
+        return service;
     }
-    
+
 }

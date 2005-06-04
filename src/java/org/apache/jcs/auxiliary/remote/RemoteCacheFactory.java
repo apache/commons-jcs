@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.remote;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +37,10 @@ import org.apache.commons.logging.LogFactory;
  * remote cache is not accessible. It should be transparent to the clients.
  *  
  */
-public class RemoteCacheFactory implements AuxiliaryCacheFactory
+public class RemoteCacheFactory
+    implements AuxiliaryCacheFactory
 {
-    private final static Log log =
-        LogFactory.getLog( RemoteCacheFactory.class );
+    private final static Log log = LogFactory.getLog( RemoteCacheFactory.class );
 
     private String name;
 
@@ -57,11 +55,10 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
      * @param cache
      * @return An AuxiliaryCache implementation
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
-                                       CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
     {
 
-        RemoteCacheAttributes rca = ( RemoteCacheAttributes ) iaca;
+        RemoteCacheAttributes rca = (RemoteCacheAttributes) iaca;
 
         ArrayList noWaits = new ArrayList();
 
@@ -104,13 +101,14 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
                 {
                     fCnt++;
 
-                    String server = ( String ) fit.nextElement();
+                    String server = (String) fit.nextElement();
                     failovers.add( server );
 
                     rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                     rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
                     RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
-                    // add a listener if there are none, need to tell rca what number it is at
+                    // add a listener if there are none, need to tell rca what
+                    // number it is at
                     if ( ( !primayDefined && fCnt == 1 ) || noWaits.size() <= 0 )
                     {
                         ICache ic = rcm.getCache( rca );
@@ -128,12 +126,11 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
             }
             // end if failoverList != null
 
-            rca.setFailovers( ( String[] ) failovers.toArray( new String[0] ) );
+            rca.setFailovers( (String[]) failovers.toArray( new String[0] ) );
 
             // if CLUSTER
         }
-        else
-            if ( rca.getRemoteType() == RemoteCacheAttributes.CLUSTER )
+        else if ( rca.getRemoteType() == RemoteCacheAttributes.CLUSTER )
         {
 
             // REGISTER LISTENERS FOR EACH SYSTEM CLUSTERED CACHEs
@@ -141,8 +138,8 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
             while ( it.hasMoreElements() )
             {
                 //String server = (String)it.next();
-                String server = ( String ) it.nextElement();
-                //p( "tcp server = " +  server );
+                String server = (String) it.nextElement();
+                //p( "tcp server = " + server );
                 rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                 rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
                 RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
@@ -161,17 +158,19 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
         }
         // end if CLUSTER
 
-        RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( ( RemoteCacheNoWait[] ) noWaits.toArray( new RemoteCacheNoWait[0] ), rca );
+        RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( (RemoteCacheNoWait[]) noWaits
+            .toArray( new RemoteCacheNoWait[0] ), rca );
 
         getFacades().put( rca.getCacheName(), rcnwf );
 
         return rcnwf;
     }
+
     // end createCache
 
     /**
      * Gets the name attribute of the RemoteCacheFactory object
-     *
+     * 
      * @return The name value
      */
     public String getName()
@@ -179,18 +178,17 @@ public class RemoteCacheFactory implements AuxiliaryCacheFactory
         return this.name;
     }
 
-
     /**
      * Sets the name attribute of the RemoteCacheFactory object
-     *
-     * @param name The new name value
+     * 
+     * @param name
+     *            The new name value
      */
     public void setName( String name )
     {
         this.name = name;
     }
-    
-    
+
     /**
      * The facades are what the cache hub talks to.
      * 

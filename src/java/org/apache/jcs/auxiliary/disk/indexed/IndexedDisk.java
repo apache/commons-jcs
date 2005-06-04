@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -36,21 +34,19 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides thread safe access to the underlying random access file.
- *
+ *  
  */
 class IndexedDisk
 {
-    private static final Log log =
-        LogFactory.getLog( IndexedDisk.class );
+    private static final Log log = LogFactory.getLog( IndexedDisk.class );
 
     private final String filepath;
 
     private RandomAccessFile raf;
 
-
     /**
      * Constructor for the Disk object
-     *
+     * 
      * @param file
      * @exception FileNotFoundException
      */
@@ -61,19 +57,19 @@ class IndexedDisk
         raf = new RandomAccessFile( filepath, "rw" );
     }
 
-
     /**
      * This reads an object from the given starting position on the file.
      * <p>
-     * The firt four bytes of the record should tell us how long it is.  
-     * The data is read into a byte array and then an object is constructed
-     * from the byte array.
-     *
-     * @return Serializable 
+     * The firt four bytes of the record should tell us how long it is. The data
+     * is read into a byte array and then an object is constructed from the byte
+     * array.
+     * 
+     * @return Serializable
      * @param pos
      * @throws IOException
      */
-    Serializable readObject( long pos ) throws IOException
+    Serializable readObject( long pos )
+        throws IOException
     {
         String message = null;
         byte[] data = null;
@@ -82,41 +78,40 @@ class IndexedDisk
         {
             synchronized ( this )
             {
-                if ( pos > raf.length() ) {
-                  corrupted = true;
-                  message = "Postion is greater than raf length";
+                if ( pos > raf.length() )
+                {
+                    corrupted = true;
+                    message = "Postion is greater than raf length";
                 }
                 else
                 {
-                  raf.seek(pos);
-                  int datalen = raf.readInt();
-                  if (datalen > raf.length())
-                  {
-                    corrupted = true;
-                    message = "Postion(" + pos + ") + datalen (" + datalen + ") is greater than raf length";
-                  }
-                  else
-                  {
-                    raf.readFully(data = new byte[datalen]);
-                  }
+                    raf.seek( pos );
+                    int datalen = raf.readInt();
+                    if ( datalen > raf.length() )
+                    {
+                        corrupted = true;
+                        message = "Postion(" + pos + ") + datalen (" + datalen + ") is greater than raf length";
+                    }
+                    else
+                    {
+                        raf.readFully( data = new byte[datalen] );
+                    }
                 }
             }
             if ( corrupted )
             {
-                log.warn( "\n The dataFile is corrupted!" +
-                          "\n " + message +
-                          "\n raf.length() = " + raf.length() +
-                          "\n pos = " + pos );
+                log.warn( "\n The dataFile is corrupted!" + "\n " + message + "\n raf.length() = " + raf.length()
+                    + "\n pos = " + pos );
                 //reset();
                 throw new IOException( "The Data File Is Corrupt, need to reset" );
-               // return null;
+                // return null;
             }
             ByteArrayInputStream bais = new ByteArrayInputStream( data );
             BufferedInputStream bis = new BufferedInputStream( bais );
             ObjectInputStream ois = new ObjectInputStream( bis );
             try
             {
-                return ( Serializable ) ois.readObject();
+                return (Serializable) ois.readObject();
             }
             finally
             {
@@ -126,17 +121,17 @@ class IndexedDisk
         catch ( Exception e )
         {
             log.error( raf, e );
-            if( e instanceof IOException ) {
-              throw (IOException)e;
+            if ( e instanceof IOException )
+            {
+                throw (IOException) e;
             }
         }
         return null;
     }
 
-
     /**
      * Appends byte array to the Disk.
-     *
+     * 
      * @return
      * @param data
      */
@@ -156,10 +151,9 @@ class IndexedDisk
         return false;
     }
 
-
     /**
      * Writes the given byte array to the Disk at the specified position.
-     *
+     * 
      * @return
      * @param data
      * @param pos
@@ -188,10 +182,9 @@ class IndexedDisk
         return false;
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @return
      * @param obj
      * @param pos
@@ -209,10 +202,9 @@ class IndexedDisk
         return false;
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @return
      * @param obj
      */
@@ -232,7 +224,7 @@ class IndexedDisk
                 ded.init( pos, data );
                 success = write( data, pos );
             }
-            //return  success ? new DiskElement(pos, data) : null;
+            //return success ? new DiskElement(pos, data) : null;
             return success ? ded : null;
         }
         catch ( IOException ex )
@@ -242,10 +234,9 @@ class IndexedDisk
         return null;
     }
 
-
     /**
      * Returns the raf length.
-     *
+     * 
      * @return
      * @exception IOException
      */
@@ -258,10 +249,9 @@ class IndexedDisk
         }
     }
 
-
     /**
      * Closes the raf.
-     *
+     * 
      * @exception IOException
      */
     synchronized void close()
@@ -271,10 +261,9 @@ class IndexedDisk
         return;
     }
 
-
     /**
      * Sets the raf to empty.
-     *
+     * 
      * @exception IOException
      */
     synchronized void reset()
@@ -306,10 +295,9 @@ class IndexedDisk
         return;
     }
 
-
     /**
      * Returns the serialized form of the given object in a byte array.
-     *
+     * 
      * @return
      * @param obj
      * @exception IOException
@@ -330,4 +318,3 @@ class IndexedDisk
         return baos.toByteArray();
     }
 }
-

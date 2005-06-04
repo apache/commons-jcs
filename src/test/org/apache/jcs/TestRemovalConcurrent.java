@@ -22,108 +22,117 @@ import junit.framework.TestCase;
 
 /**
  * Test which exercises the hierarchical removal when the cache is active.
- * */
+ */
 public class TestRemovalConcurrent
-  extends TestCase
+    extends TestCase
 {
-  /**
-   * Constructor for the TestDiskCache object.
-   * @param testName
-   */
-  public TestRemovalConcurrent( String testName )
-  {
-    super( testName );
-  }
-
-  /**
-   * Main method passes this test to the text test runner.
-   * @param args
-   */
-  public static void main( String args[] )
-  {
-    String[] testCaseName = {
-      RemovalTestUtil.class.getName()};
-    junit.textui.TestRunner.main( testCaseName );
-  }
-
-  /**
-   * A unit test suite for JUnit.  This verfies that we can remove hierarchically
-   * while the region is active.
-   *
-   * @return    The test suite
-   */
-  public static Test suite()
-  {
-    ActiveTestSuite suite = new ActiveTestSuite();
-
-    suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
+    /**
+     * Constructor for the TestDiskCache object.
+     * 
+     * @param testName
+     */
+    public TestRemovalConcurrent( String testName )
     {
-      public void runTest() throws Exception
-      {
-        runTestPutThenRemoveCategorical( 0, 200 );
-      }
-    } );
+        super( testName );
+    }
 
-    suite.addTest( new RemovalTestUtil( "testPutCache1" )
+    /**
+     * Main method passes this test to the text test runner.
+     * 
+     * @param args
+     */
+    public static void main( String args[] )
     {
-      public void runTest() throws Exception
-      {
-        runPutInRange( 300, 400 );
-      }
-    } );
+        String[] testCaseName = { RemovalTestUtil.class.getName() };
+        junit.textui.TestRunner.main( testCaseName );
+    }
 
-    suite.addTest( new RemovalTestUtil( "testPutCache2" )
+    /**
+     * A unit test suite for JUnit. This verfies that we can remove
+     * hierarchically while the region is active.
+     * 
+     * @return The test suite
+     */
+    public static Test suite()
     {
-      public void runTest() throws Exception
-      {
-        runPutInRange( 401, 600 );
-      }
-    } );
+        ActiveTestSuite suite = new ActiveTestSuite();
 
-    // stomp on previous put
-    suite.addTest( new RemovalTestUtil( "testPutCache3" )
+        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runTestPutThenRemoveCategorical( 0, 200 );
+            }
+        } );
+
+        suite.addTest( new RemovalTestUtil( "testPutCache1" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runPutInRange( 300, 400 );
+            }
+        } );
+
+        suite.addTest( new RemovalTestUtil( "testPutCache2" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runPutInRange( 401, 600 );
+            }
+        } );
+
+        // stomp on previous put
+        suite.addTest( new RemovalTestUtil( "testPutCache3" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runPutInRange( 401, 600 );
+            }
+        } );
+
+        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runTestPutThenRemoveCategorical( 601, 700 );
+            }
+        } );
+
+        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runTestPutThenRemoveCategorical( 701, 800 );
+            }
+        } );
+
+        suite.addTest( new RemovalTestUtil( "testPutCache2" )
+        {
+            // verify that there are no errors with concurrent gets.
+            public void runTest()
+                throws Exception
+            {
+                runGetInRange( 0, 1000, false );
+            }
+        } );
+        return suite;
+
+    }
+
+    /**
+     * Test setup
+     */
+    public void setUp()
+        throws Exception
     {
-      public void runTest() throws Exception
-      {
-        runPutInRange( 401, 600 );
-      }
-    } );
-
-    suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
-    {
-      public void runTest() throws Exception
-      {
-        runTestPutThenRemoveCategorical( 601, 700 );
-      }
-    } );
-
-    suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
-    {
-      public void runTest() throws Exception
-      {
-        runTestPutThenRemoveCategorical( 701, 800 );
-      }
-    } );
-
-    suite.addTest( new RemovalTestUtil( "testPutCache2" )
-    {
-      // verify that there are no errors with concurrent gets.
-      public void runTest() throws Exception
-      {
-        runGetInRange( 0, 1000, false );
-      }
-    } );
-    return suite;
-
-  }
-
-  /**
-   * Test setup
-   */
-  public void setUp() throws Exception
-  {
-    JCS.setConfigFilename( "/TestRemoval.ccf" );
-    JCS.getInstance( "testCache1" );
-  }
+        JCS.setConfigFilename( "/TestRemoval.ccf" );
+        JCS.getInstance( "testCache1" );
+    }
 
 }

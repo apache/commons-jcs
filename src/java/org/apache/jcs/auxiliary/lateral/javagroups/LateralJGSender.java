@@ -40,21 +40,24 @@ import org.jgroups.util.RspList;
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
  * repair structure, so it is significant;y different.
- *
+ * 
  * @version $Id$
  */
-public class LateralJGSender implements IJGConstants
+public class LateralJGSender
+    implements IJGConstants
 {
-    private final static Log log =
-        LogFactory.getLog( LateralJGSender.class );
+    private final static Log log = LogFactory.getLog( LateralJGSender.class );
 
     private ILateralCacheAttributes ilca;
 
     private String remoteHost;
+
     private InetAddress address;
+
     int port = 1111;
 
     private Channel javagroups;
+
     private RpcDispatcher disp;
 
     private JGConnectionHolder holder;
@@ -68,10 +71,9 @@ public class LateralJGSender implements IJGConstants
      */
     private final static int openTimeOut = 5000;
 
-
     /**
      * Constructor for the LateralJGSender object
-     *
+     * 
      * @param lca
      * @exception IOException
      */
@@ -82,10 +84,9 @@ public class LateralJGSender implements IJGConstants
         init();
     }
 
-
     /**
      * Create holder.
-     *
+     * 
      * @exception IOException
      */
     protected void init()
@@ -94,9 +95,9 @@ public class LateralJGSender implements IJGConstants
 
         try
         {
-            log.debug( "Attempting ccreate channel."  );
+            log.debug( "Attempting ccreate channel." );
 
-            holder = JGConnectionHolder.getInstance(ilca);
+            holder = JGConnectionHolder.getInstance( ilca );
             javagroups = holder.getChannel();
 
             if ( javagroups == null )
@@ -112,18 +113,17 @@ public class LateralJGSender implements IJGConstants
         }
         catch ( Exception e )
         {
-            log.debug( "Could not connect to channel" +
-                ". Exception is " + e );
-            throw new IOException(e.getMessage());
+            log.debug( "Could not connect to channel" + ". Exception is " + e );
+            throw new IOException( e.getMessage() );
         }
 
     }
-    // end constructor
 
+    // end constructor
 
     /**
      * Sends commands to the lateral cache listener.
-     *
+     * 
      * @param led
      * @exception IOException
      */
@@ -153,10 +153,9 @@ public class LateralJGSender implements IJGConstants
 
     }
 
-
     /**
      * Sends commands to the lateral cache listener and gets a response.
-     *
+     * 
      * @return
      * @param led
      * @exception IOException
@@ -180,11 +179,10 @@ public class LateralJGSender implements IJGConstants
             {
 
                 disp = holder.getDispatcher();
-                Object[] args = {led.ce.getCacheName(), led.ce.getKey()};
-                String[] sigs = {java.lang.String.class.getName(), java.io.Serializable.class.getName()};
-                MethodCall meth = new MethodCall(  "handleGet", args, sigs );
-                RspList rsp_list = disp.callRemoteMethods( null, meth,
-                    GroupRequest.GET_ALL, 1000 );
+                Object[] args = { led.ce.getCacheName(), led.ce.getKey() };
+                String[] sigs = { java.lang.String.class.getName(), java.io.Serializable.class.getName() };
+                MethodCall meth = new MethodCall( "handleGet", args, sigs );
+                RspList rsp_list = disp.callRemoteMethods( null, meth, GroupRequest.GET_ALL, 1000 );
 
                 log.debug( "rsp_list = " + rsp_list );
                 Vector vec = rsp_list.getResults();
@@ -193,7 +191,7 @@ public class LateralJGSender implements IJGConstants
 
                 while ( it.hasNext() )
                 {
-                    ice = ( ICacheElement ) it.next();
+                    ice = (ICacheElement) it.next();
                     if ( ice != null )
                     {
                         break;
@@ -212,14 +210,14 @@ public class LateralJGSender implements IJGConstants
             log.error( "Detected problem with connection: " + e );
             throw new IOException( e.getMessage() );
         }
-//        }
+        //        }
         return ice;
     }// end sendAndReceive
 
     // Service Methods //
     /**
      * Description of the Method
-     *
+     * 
      * @param item
      * @param requesterId
      * @exception IOException
@@ -233,10 +231,9 @@ public class LateralJGSender implements IJGConstants
         send( led );
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @param cacheName
      * @param key
      * @exception IOException
@@ -247,10 +244,9 @@ public class LateralJGSender implements IJGConstants
         remove( cacheName, key, LateralCacheInfo.listenerId );
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @param cacheName
      * @param key
      * @param requesterId
@@ -266,10 +262,9 @@ public class LateralJGSender implements IJGConstants
         send( led );
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @exception IOException
      */
     public void release()
@@ -278,13 +273,12 @@ public class LateralJGSender implements IJGConstants
         // nothing needs to be done
     }
 
-
     /**
      * Closes connection used by all LateralJGSenders for this lateral
      * conneciton. Dispose request should come into the facade and be sent to
      * all lateral cache sevices. The lateral cache service will then call this
      * method.
-     *
+     * 
      * @param cache
      * @exception IOException
      */
@@ -294,10 +288,9 @@ public class LateralJGSender implements IJGConstants
 
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @param cacheName
      * @exception IOException
      */
@@ -307,10 +300,9 @@ public class LateralJGSender implements IJGConstants
         removeAll( cacheName, LateralCacheInfo.listenerId );
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @param cacheName
      * @param requesterId
      * @exception IOException

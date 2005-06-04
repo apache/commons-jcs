@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 
 import java.rmi.Remote;
@@ -26,13 +24,15 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * Listens for remote cache event notification ( rmi callback ).
- *
+ *  
  */
-public interface IRemoteCacheListener extends ICacheListener, Remote
+public interface IRemoteCacheListener
+    extends ICacheListener, Remote
 {
 
     /** Description of the Field */
     public final static int SERVER_LISTENER = 0;
+
     /** Description of the Field */
     public final static int CLIENT_LISTENER = 0;
 
@@ -41,25 +41,25 @@ public interface IRemoteCacheListener extends ICacheListener, Remote
      * 
      * @return long
      */
-    public long getListenerId() throws IOException;
-    
+    public long getListenerId()
+        throws IOException;
+
     /**
-     * Set the id to be used by this manager.
-     * The remote cache server identifies clients by this id.  
-     * The value will be set by the server through the remote cache listener.
+     * Set the id to be used by this manager. The remote cache server identifies
+     * clients by this id. The value will be set by the server through the
+     * remote cache listener.
      * 
      * @param id
      */
-    public void setListenerId( long id ) throws IOException;
-    
+    public void setListenerId( long id )
+        throws IOException;
+
     /**
      * Gets the remoteType attribute of the IRemoteCacheListener object
-     *
+     * 
      * @return The remoteType value
      */
     public int getRemoteType()
         throws IOException;
-    
-    
 
 }

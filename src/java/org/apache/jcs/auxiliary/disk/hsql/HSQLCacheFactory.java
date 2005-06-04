@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.hsql;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
@@ -27,22 +25,22 @@ import org.apache.jcs.engine.control.CompositeCache;
  * @version 1.0
  */
 
-public class HSQLCacheFactory implements AuxiliaryCacheFactory
+public class HSQLCacheFactory
+    implements AuxiliaryCacheFactory
 {
     private String name;
 
     /** Description of the Method */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca,
-                                       CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
     {
-        HSQLCacheAttributes idca = ( HSQLCacheAttributes ) iaca;
+        HSQLCacheAttributes idca = (HSQLCacheAttributes) iaca;
         HSQLCacheManager dcm = HSQLCacheManager.getInstance( idca );
         return dcm.getCache( idca );
     }
 
     /**
      * Gets the name attribute of the HSQLCacheFactory object
-     *
+     * 
      * @return The name value
      */
     public String getName()
@@ -52,8 +50,9 @@ public class HSQLCacheFactory implements AuxiliaryCacheFactory
 
     /**
      * Sets the name attribute of the HSQLCacheFactory object
-     *
-     * @param name The new name value
+     * 
+     * @param name
+     *            The new name value
      */
     public void setName( String name )
     {

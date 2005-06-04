@@ -1,6 +1,5 @@
 package org.apache.jcs.access;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.access;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,22 +40,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This class provides an interface for all types of access to the cache. 
+ * This class provides an interface for all types of access to the cache.
  * <p>
- * An instance of this class is tied to a specific cache region. Static methods 
+ * An instance of this class is tied to a specific cache region. Static methods
  * are provided to get such instances.
  * <p>
- * Using this class you can retrieve an item, the items wrapper, the element configuration, 
- * put an item in the cache, remove an item, and clear a region.
+ * Using this class you can retrieve an item, the items wrapper, the element
+ * configuration, put an item in the cache, remove an item, and clear a region.
  * <p>
  * The JCS class is the prefered way to access these methods.
- *
+ * 
  * @version $Id$
  */
-public class CacheAccess implements ICacheAccess
+public class CacheAccess
+    implements ICacheAccess
 {
-    private static final Log log =
-        LogFactory.getLog( CacheAccess.class );
+    private static final Log log = LogFactory.getLog( CacheAccess.class );
 
     /**
      * Cache manager use by the various forms of defineRegion and getAccess
@@ -65,15 +63,17 @@ public class CacheAccess implements ICacheAccess
     private static CompositeCacheManager cacheMgr;
 
     /**
-     * The cache that a given instance of this class provides access to. 
+     * The cache that a given instance of this class provides access to.
+     * 
      * @TODO Should this be the inteface?
      */
     protected CompositeCache cacheControl;
 
     /**
      * Constructor for the CacheAccess object.
-     *
-     * @param cacheControl The cache which the created instance accesses
+     * 
+     * @param cacheControl
+     *            The cache which the created instance accesses
      */
     public CacheAccess( CompositeCache cacheControl )
     {
@@ -90,8 +90,9 @@ public class CacheAccess implements ICacheAccess
      * cache in the props file and then strictly use the get access method. Use
      * of the define region outside of an initialization block should be
      * avoided.
-     *
-     * @param name Name that will identify the region
+     * 
+     * @param name
+     *            Name that will identify the region
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
@@ -105,14 +106,15 @@ public class CacheAccess implements ICacheAccess
 
     /**
      * Define a new cache region with the specified name and attributes.
-     *
-     * @param name Name that will identify the region
-     * @param cattr CompositeCacheAttributes for the region
+     * 
+     * @param name
+     *            Name that will identify the region
+     * @param cattr
+     *            CompositeCacheAttributes for the region
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
-    public static CacheAccess defineRegion( String name,
-                                            CompositeCacheAttributes cattr )
+    public static CacheAccess defineRegion( String name, CompositeCacheAttributes cattr )
         throws CacheException
     {
         ensureCacheManager();
@@ -123,28 +125,29 @@ public class CacheAccess implements ICacheAccess
     /**
      * Define a new cache region with the specified name and attributes and
      * return a CacheAccess to it.
-     *
-     * @param name Name that will identify the region
-     * @param cattr CompositeCacheAttributes for the region
-     * @param attr Attributes for the region
+     * 
+     * @param name
+     *            Name that will identify the region
+     * @param cattr
+     *            CompositeCacheAttributes for the region
+     * @param attr
+     *            Attributes for the region
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
-    public static CacheAccess defineRegion( String name,
-                                            CompositeCacheAttributes cattr,
-                                            IElementAttributes attr )
+    public static CacheAccess defineRegion( String name, CompositeCacheAttributes cattr, IElementAttributes attr )
         throws CacheException
     {
         ensureCacheManager();
 
-        return new CacheAccess(
-            cacheMgr.getCache( name, cattr, attr ) );
+        return new CacheAccess( cacheMgr.getCache( name, cattr, attr ) );
     }
 
     /**
      * Get a CacheAccess instance for the given region.
-     *
-     * @param region Name that identifies the region
+     * 
+     * @param region
+     *            Name that identifies the region
      * @return CacheAccess instance for region
      * @exception CacheException
      */
@@ -159,14 +162,14 @@ public class CacheAccess implements ICacheAccess
     /**
      * Get a CacheAccess instance for the given region with the given
      * attributes.
-     *
-     * @param region Name that identifies the region
+     * 
+     * @param region
+     *            Name that identifies the region
      * @param icca
      * @return CacheAccess instance for region
      * @exception CacheException
      */
-    public static CacheAccess getAccess( String region,
-                                         ICompositeCacheAttributes icca )
+    public static CacheAccess getAccess( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
         ensureCacheManager();
@@ -194,51 +197,55 @@ public class CacheAccess implements ICacheAccess
     /**
      * Retrieve an object from the cache region this instance provides access
      * to.
-     *
-     * @param name Key the object is stored as
+     * 
+     * @param name
+     *            Key the object is stored as
      * @return The object if found or null
      */
     public Object get( Object name )
     {
-        ICacheElement element = this.cacheControl.get( ( Serializable ) name );
+        ICacheElement element = this.cacheControl.get( (Serializable) name );
 
         return ( element != null ) ? element.getVal() : null;
     }
 
     /**
-     * This method returns the ICacheElement wrapper which provides access to 
-     * element info and other attributes.  
+     * This method returns the ICacheElement wrapper which provides access to
+     * element info and other attributes.
      * <p>
-     * This returns a reference to the wrapper.  Any modifications will
-     * be reflected in the cache.  No defensive copy is made.
+     * This returns a reference to the wrapper. Any modifications will be
+     * reflected in the cache. No defensive copy is made.
      * <p>
      * This method is most useful if you want to determine things such as the
      * how long the element has been in the cache.
      * <p>
      * The last access time in teh ElementAttributes should be current.
-     *
-     * @param name Key the object is stored as
+     * 
+     * @param name
+     *            Key the object is stored as
      * @return The ICacheElement if the object is found or null
      */
     public ICacheElement getCacheElement( Object name )
     {
-        return this.cacheControl.get( ( Serializable ) name );
+        return this.cacheControl.get( (Serializable) name );
     }
-    
+
     /**
      * Place a new object in the cache, associated with key name. If there is
      * currently an object associated with name in the region an
      * ObjectExistsException is thrown. Names are scoped to a region so they
      * must be unique within the region they are placed.
-     *
-     * @param key Key object will be stored with
-     * @param value Object to store
+     * 
+     * @param key
+     *            Key object will be stored with
+     * @param value
+     *            Object to store
      * @exception CacheException
      */
     public void putSafe( Object key, Object value )
         throws CacheException
     {
-        if ( this.cacheControl.get( ( Serializable ) key ) != null )
+        if ( this.cacheControl.get( (Serializable) key ) != null )
         {
             throw new ObjectExistsException( "Object exists for key " + key );
         }
@@ -250,28 +257,30 @@ public class CacheAccess implements ICacheAccess
      * currently an object associated with name in the region it is replaced.
      * Names are scoped to a region so they must be unique within the region
      * they are placed.
-     *
-     * @param name Key object will be stored with
-     * @param obj Object to store
+     * 
+     * @param name
+     *            Key object will be stored with
+     * @param obj
+     *            Object to store
      * @exception CacheException
      */
     public void put( Object name, Object obj )
         throws CacheException
     {
         // Call put with a copy of the contained caches default attributes.
-        put( name,
-             obj,
-             this.cacheControl.getElementAttributes().copy() );
+        put( name, obj, this.cacheControl.getElementAttributes().copy() );
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.access.behavior.ICacheAccess#put(java.lang.Object, java.lang.Object, org.apache.jcs.engine.behavior.IElementAttributes)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.access.behavior.ICacheAccess#put(java.lang.Object,
+     *      java.lang.Object, org.apache.jcs.engine.behavior.IElementAttributes)
      */
     public void put( Object key, Object val, IElementAttributes attr )
         throws CacheException
     {
-        if ( key == null  )
+        if ( key == null )
         {
             throw new CacheException( "Key must not be null" );
         }
@@ -284,9 +293,8 @@ public class CacheAccess implements ICacheAccess
         // should be wrapped by cache access.
         try
         {
-            CacheElement ce = new CacheElement( this.cacheControl.getCacheName(),
-                              (Serializable) key,
-                              (Serializable) val );
+            CacheElement ce = new CacheElement( this.cacheControl.getCacheName(), (Serializable) key,
+                                                (Serializable) val );
 
             ce.setElementAttributes( attr );
 
@@ -301,9 +309,9 @@ public class CacheAccess implements ICacheAccess
     /**
      * Destory the region and all objects within it. After calling this method,
      * the Cache object can no longer be used as it will be closed.
-     *
+     * 
      * @exception CacheException
-     *
+     * 
      * @deprecated
      */
     public void destroy()
@@ -324,7 +332,7 @@ public class CacheAccess implements ICacheAccess
      * 
      * @deprecated use clear()
      * 
-     * @throws  CacheException
+     * @throws CacheException
      */
     public void remove()
         throws CacheException
@@ -333,9 +341,9 @@ public class CacheAccess implements ICacheAccess
     }
 
     /**
-     *  Removes all of the elements from a region.  
+     * Removes all of the elements from a region.
      * 
-     * @throws  CacheException
+     * @throws CacheException
      */
     public void clear()
         throws CacheException
@@ -349,40 +357,42 @@ public class CacheAccess implements ICacheAccess
             throw new CacheException( e );
         }
     }
-    
-    
+
     /**
      * Invalidate all objects associated with key name, removing all references
      * to the objects from the cache.
-     *
-     * @param name Key that specifies object to invalidate
+     * 
+     * @param name
+     *            Key that specifies object to invalidate
      * @exception CacheException
-     *
-     * @deprecated  use remove
+     * 
+     * @deprecated use remove
      */
     public void destroy( Object name )
         throws CacheException
     {
-        this.cacheControl.remove( ( Serializable ) name );
+        this.cacheControl.remove( (Serializable) name );
     }
 
-    /**  
+    /**
      * Removes a single item by name.
      * 
-     * @param name, the name of the item to remove. 
-     * @throws  CacheException
+     * @param name,
+     *            the name of the item to remove.
+     * @throws CacheException
      */
     public void remove( Object name )
         throws CacheException
     {
-        this.cacheControl.remove( ( Serializable ) name );
+        this.cacheControl.remove( (Serializable) name );
     }
 
     /**
      * If there are any auxiliary caches associated with this cache, save all
      * objects to them.
      * <p>
-     * This is mainly a testing method.  Dispose should do what you want on shutdown in a safer manner.
+     * This is mainly a testing method. Dispose should do what you want on
+     * shutdown in a safer manner.
      */
     public void save()
     {
@@ -397,8 +407,9 @@ public class CacheAccess implements ICacheAccess
      * after the reset will use the new defaults. If no name argument is
      * provided, the reset is applied to the region. NOTE: this method is
      * currently not implemented.
-     *
-     * @param attr New attributes for this region.
+     * 
+     * @param attr
+     *            New attributes for this region.
      * @exception CacheException
      * @exception InvalidHandleException
      */
@@ -411,31 +422,33 @@ public class CacheAccess implements ICacheAccess
     /**
      * Reset attributes for a particular element in the cache. NOTE: this method
      * is currently not implemented.
-     *
-     * @param name Key of object to reset attributes for
-     * @param attr New attributes for the object
+     * 
+     * @param name
+     *            Key of object to reset attributes for
+     * @param attr
+     *            New attributes for the object
      * @exception CacheException
      * @exception InvalidHandleException
      */
     public void resetElementAttributes( Object name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        ICacheElement element = this.cacheControl.get( ( Serializable ) name );
+        ICacheElement element = this.cacheControl.get( (Serializable) name );
         if ( element == null )
         {
-            throw new InvalidHandleException( "Object for name [" + name + "] is not in the cache" );            
+            throw new InvalidHandleException( "Object for name [" + name + "] is not in the cache" );
         }
 
         // don't assume pass by reference here, i.e. don't do this:
         //element.setElementAttributes( attr );
         put( element.getKey(), element.getVal(), attr );
-        
+
     }
 
     /**
-     * GetElementAttributes will return an attribute object describing the current
-     * attributes associated with the object name.
-     *
+     * GetElementAttributes will return an attribute object describing the
+     * current attributes associated with the object name.
+     * 
      * @return Attributes for this region
      * @exception CacheException
      */
@@ -446,11 +459,12 @@ public class CacheAccess implements ICacheAccess
     }
 
     /**
-     * GetElementAttributes will return an attribute object describing the current
-     * attributes associated with the object name. The name object must override
-     * the Object.equals and Object.hashCode methods.
-     *
-     * @param name Key of object to get attributes for
+     * GetElementAttributes will return an attribute object describing the
+     * current attributes associated with the object name. The name object must
+     * override the Object.equals and Object.hashCode methods.
+     * 
+     * @param name
+     *            Key of object to get attributes for
      * @return Attributes for the object, null if object not in cache
      * @exception CacheException
      */
@@ -461,7 +475,7 @@ public class CacheAccess implements ICacheAccess
 
         try
         {
-            attr = this.cacheControl.getElementAttributes( ( Serializable ) name );
+            attr = this.cacheControl.getElementAttributes( (Serializable) name );
         }
         catch ( IOException ioe )
         {
@@ -472,7 +486,8 @@ public class CacheAccess implements ICacheAccess
     }
 
     /**
-     * This returns the ICacheStats object with information on this region and its auxiliaries.
+     * This returns the ICacheStats object with information on this region and
+     * its auxiliaries.
      * <p>
      * This data can be formatted as needed.
      * 
@@ -480,23 +495,23 @@ public class CacheAccess implements ICacheAccess
      */
     public ICacheStats getStatistics()
     {
-    	return this.cacheControl.getStatistics();
-    }
-    
-    /**
-     * 
-     * @return A String version of the stats.  
-     */     
-    public String getStats() {
-      return this.cacheControl.getStats();
+        return this.cacheControl.getStatistics();
     }
 
     /**
-     * Dispose this region. Flushes objects to and closes auxiliary caches.
-     * This is a shutdown command! 
+     * 
+     * @return A String version of the stats.
+     */
+    public String getStats()
+    {
+        return this.cacheControl.getStats();
+    }
+
+    /**
+     * Dispose this region. Flushes objects to and closes auxiliary caches. This
+     * is a shutdown command!
      * <p>
-     * To simply remove all elements from the region
-     * use clear().
+     * To simply remove all elements from the region use clear().
      */
     public void dispose()
     {
@@ -505,9 +520,9 @@ public class CacheAccess implements ICacheAccess
 
     /**
      * Gets the ICompositeCacheAttributes of the cache region
-     *
-     * @return ICompositeCacheAttributes, the controllers config info, defined in the top
-     * section of a region definition.
+     * 
+     * @return ICompositeCacheAttributes, the controllers config info, defined
+     *         in the top section of a region definition.
      */
     public ICompositeCacheAttributes getCacheAttributes()
     {
@@ -516,8 +531,9 @@ public class CacheAccess implements ICacheAccess
 
     /**
      * Sets the ICompositeCacheAttributes of the cache region.
-     *
-     * @param cattr The new ICompositeCacheAttribute value
+     * 
+     * @param cattr
+     *            The new ICompositeCacheAttribute value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {

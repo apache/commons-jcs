@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.control.group;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,24 +16,26 @@ package org.apache.jcs.engine.control.group;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 /**
  * Used to avoid name conflict when group cache items are mixed with non-group
  * cache items in the same cache.
- *
+ *  
  */
-public class GroupId implements Serializable
+public class GroupId
+    implements Serializable
 {
     /** Description of the Field */
     public final String groupName;
+
     public final String cacheName;
+
     private String toString;
 
     /**
      * Constructor for the GroupId object
-     *
+     * 
      * @param cacheName
      * @param groupName
      */
@@ -45,25 +46,24 @@ public class GroupId implements Serializable
 
         if ( cacheName == null )
         {
-            throw new IllegalArgumentException("cacheName must not be null.");
+            throw new IllegalArgumentException( "cacheName must not be null." );
         }
         if ( groupName == null )
         {
-            throw new IllegalArgumentException("groupName must not be null.");
+            throw new IllegalArgumentException( "groupName must not be null." );
         }
     }
 
     /** Description of the Method */
     public boolean equals( Object obj )
     {
-        if ( obj == null || !(obj instanceof GroupId) )
+        if ( obj == null || !( obj instanceof GroupId ) )
         {
             return false;
         }
-        GroupId g = (GroupId)obj;
-        return cacheName.equals(g.cacheName) && groupName.equals(g.groupName);
+        GroupId g = (GroupId) obj;
+        return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
     }
-
 
     /** Description of the Method */
     public int hashCode()
@@ -74,11 +74,11 @@ public class GroupId implements Serializable
     /** Description of the Method */
     public String toString()
     {
-        if (toString == null) 
+        if ( toString == null )
         {
             toString = "[groupId=" + cacheName + ", " + groupName + ']';
         }
-        
+
         return toString;
     }
 }

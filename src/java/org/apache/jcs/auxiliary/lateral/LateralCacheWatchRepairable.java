@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,15 +16,16 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 
 import org.apache.jcs.engine.CacheWatchRepairable;
 
 /**
  * Same as CacheWatcherWrapper but implements the IRemoteCacheWatch interface.
- *
+ *  
  */
-public class LateralCacheWatchRepairable extends CacheWatchRepairable implements ILateralCacheObserver
+public class LateralCacheWatchRepairable
+    extends CacheWatchRepairable
+    implements ILateralCacheObserver
 {
 }

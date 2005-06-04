@@ -1,6 +1,5 @@
 package org.apache.jcs.access.exception;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,14 +16,13 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-
 import org.apache.commons.lang.exception.NestableException;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class CacheException 
+public class CacheException
     extends NestableException
 {
     /** Constructor for the CacheException object */
@@ -33,38 +31,38 @@ public class CacheException
         super();
     }
 
-
     /**
      * Constructor for the CacheException object
-     *
+     * 
      * @param nested
      */
-    public CacheException(Throwable nested)
+    public CacheException( Throwable nested )
     {
-        super(nested);
+        super( nested );
     }
-
 
     /**
      * Constructor for the CacheException object
-     *
+     * 
      * @param message
      */
-    public CacheException(String message)
+    public CacheException( String message )
     {
-        super(message);
+        super( message );
     }
 
     /**
      * Constructs a new <code>CacheException</code> with specified detail
      * message and nested <code>Throwable</code>.
-     *
-     * @param msg the error message.
-     * @param nested the exception or error that caused this exception
-     *               to be thrown.
+     * 
+     * @param msg
+     *            the error message.
+     * @param nested
+     *            the exception or error that caused this exception to be
+     *            thrown.
      */
-    public CacheException(String msg, Throwable nested)
+    public CacheException( String msg, Throwable nested )
     {
-        super(msg, nested);
+        super( msg, nested );
     }
 }

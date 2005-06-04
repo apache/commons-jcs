@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.hsql;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,15 +16,15 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class HSQLCacheAttributes extends AbstractDiskCacheAttributes
+public class HSQLCacheAttributes
+    extends AbstractDiskCacheAttributes
 {
 
     private String diskPath;
@@ -37,8 +36,9 @@ public class HSQLCacheAttributes extends AbstractDiskCacheAttributes
 
     /**
      * Sets the diskPath attribute of the HSQLCacheAttributes object
-     *
-     * @param path The new diskPath value
+     * 
+     * @param path
+     *            The new diskPath value
      */
     public void setDiskPath( String path )
     {
@@ -47,7 +47,7 @@ public class HSQLCacheAttributes extends AbstractDiskCacheAttributes
 
     /**
      * Gets the diskPath attribute of the HSQLCacheAttributes object
-     *
+     * 
      * @return The diskPath value
      */
     public String getDiskPath()
@@ -60,7 +60,7 @@ public class HSQLCacheAttributes extends AbstractDiskCacheAttributes
     {
         try
         {
-            return ( AuxiliaryCacheAttributes ) this.clone();
+            return (AuxiliaryCacheAttributes) this.clone();
         }
         catch ( Exception e )
         {

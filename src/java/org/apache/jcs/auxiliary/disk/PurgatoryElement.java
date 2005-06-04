@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.disk;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -25,12 +23,13 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Wrapper for cache elements in purgatory. Elements are stored in purgatory
- * when they are spooled to the auxilliary cache, but have not yet been
- * written to disk.
- *
+ * when they are spooled to the auxilliary cache, but have not yet been written
+ * to disk.
+ * 
  * @version $Id$
  */
-public class PurgatoryElement implements ICacheElement, Serializable
+public class PurgatoryElement
+    implements ICacheElement, Serializable
 {
     /**
      * Is the element ready to be spooled?
@@ -44,8 +43,9 @@ public class PurgatoryElement implements ICacheElement, Serializable
 
     /**
      * Constructor for the PurgatoryElement object
-     *
-     * @param cacheElement CacheElement to wrap.
+     * 
+     * @param cacheElement
+     *            CacheElement to wrap.
      */
     public PurgatoryElement( ICacheElement cacheElement )
     {
@@ -54,7 +54,7 @@ public class PurgatoryElement implements ICacheElement, Serializable
 
     /**
      * Gets the spoolable property.
-     *
+     * 
      * @return The spoolable value
      */
     public boolean isSpoolable()
@@ -64,8 +64,9 @@ public class PurgatoryElement implements ICacheElement, Serializable
 
     /**
      * Sets the spoolable property.
-     *
-     * @param spoolable The new spoolable value
+     * 
+     * @param spoolable
+     *            The new spoolable value
      */
     public void setSpoolable( boolean spoolable )
     {
@@ -74,6 +75,7 @@ public class PurgatoryElement implements ICacheElement, Serializable
 
     /**
      * Get the wrapped cache element.
+     * 
      * @return ICacheElement
      */
     public ICacheElement getCacheElement()

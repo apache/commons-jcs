@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -31,17 +30,17 @@ import org.jgroups.blocks.RpcDispatcher;
 
 /**
  * Processes commands from the server socket.
- *
+ * 
  * @version $Id$
  */
-public class LateralJGReceiver implements IJGConstants, Runnable
+public class LateralJGReceiver
+    implements IJGConstants, Runnable
 {
-    private final static Log log =
-        LogFactory.getLog( LateralJGReceiver.class );
+    private final static Log log = LogFactory.getLog( LateralJGReceiver.class );
 
     private ILateralCacheJGListener ilcl;
-    private ILateralCacheAttributes ilca;
 
+    private ILateralCacheAttributes ilca;
 
     /**
      * Main processing method for the LateralJGReceiver object
@@ -55,14 +54,14 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                 log.debug( "Listening" );
             }
 
-            JGConnectionHolder holder = JGConnectionHolder.getInstance(ilca);
+            JGConnectionHolder holder = JGConnectionHolder.getInstance( ilca );
             Channel javagroups = holder.getChannel();
-            
+
             // don't need a dispatcher unless we are allowing gets.
             // gets are not supported right now.
             if ( !ilca.getPutOnlyMode() )
             {
-                RpcDispatcher disp =  holder.getDispatcher();       
+                RpcDispatcher disp = holder.getDispatcher();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Dispatcher = " + disp );
@@ -89,10 +88,10 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                     Object obj = javagroups.receive( 0 );
                     if ( obj != null && obj instanceof org.jgroups.Message )
                     {
-                        mes = ( Message ) obj;
+                        mes = (Message) obj;
                         if ( log.isDebugEnabled() )
                         {
-                          log.debug( "Starting new socket node." );
+                            log.debug( "Starting new socket node." );
                         }
                         new Thread( new LateralJGReceiverConnection( mes, ilcl ) ).start();
                     }
@@ -108,19 +107,19 @@ public class LateralJGReceiver implements IJGConstants, Runnable
                 {
                     if ( conProbCnt % 20 == 0 )
                     {
-                      log.warn(cnce);
+                        log.warn( cnce );
                     }
                     conProbCnt++;
 
                     if ( conProbCnt >= 2000 )
                     {
-                      log.error( "Couldn't get connected to group after " + conProbCnt + " tries" );
-                      break;
+                        log.error( "Couldn't get connected to group after " + conProbCnt + " tries" );
+                        break;
                     }
                     // slow the connection try process down
-                    synchronized (this)
+                    synchronized ( this )
                     {
-                      this.wait(100);
+                        this.wait( 100 );
                     }
                     // this will cycle unitl connected and eat up the processor
                     // need to throw out and recover
@@ -140,10 +139,9 @@ public class LateralJGReceiver implements IJGConstants, Runnable
         }
     }
 
-
     /**
      * Constructor for the LateralJGReceiver object
-     *
+     * 
      * @param lca
      * @param ilcl
      */

@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.control.event.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,21 +16,21 @@ package org.apache.jcs.engine.control.event.behavior;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 /**
- *  Defines how an element event object should behave
- *
+ * Defines how an element event object should behave
+ *  
  */
-public interface IElementEvent extends Serializable
+public interface IElementEvent
+    extends Serializable
 {
 
     /**
-     *  Gets the elementEvent attribute of the IElementEvent object.  This code is
+     * Gets the elementEvent attribute of the IElementEvent object. This code is
      * Contained in the IElememtEventConstants class.
-     *
-     *@return    The elementEvent value
+     * 
+     * @return The elementEvent value
      */
     public int getElementEvent();
 

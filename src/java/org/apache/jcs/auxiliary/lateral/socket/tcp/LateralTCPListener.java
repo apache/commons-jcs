@@ -167,9 +167,9 @@ public class LateralTCPListener
         return LateralCacheInfo.listenerId;
     }
 
-
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void handlePut( ICacheElement element )
@@ -193,8 +193,10 @@ public class LateralTCPListener
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String, java.io.Serializable)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
+     *      java.io.Serializable)
      */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
@@ -217,7 +219,8 @@ public class LateralTCPListener
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
      */
     public void handleRemoveAll( String cacheName )
@@ -249,7 +252,8 @@ public class LateralTCPListener
     }
 
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
      */
     public void handleDispose( String cacheName )

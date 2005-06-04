@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups.utils;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -26,17 +25,17 @@ import org.jgroups.JChannel;
 /**
  * Socket openere that will timeout on the initial connect rather than block
  * forever.
- *
+ * 
  * @version $Id$
  */
-public class JGSocketOpener implements Runnable
+public class JGSocketOpener
+    implements Runnable
 {
 
-    private final static Log log =
-        LogFactory.getLog( JGSocketOpener.class );
-
+    private final static Log log = LogFactory.getLog( JGSocketOpener.class );
 
     private ILateralCacheAttributes lca;
+
     private Channel javagroups;
 
     private String groupName;
@@ -44,8 +43,7 @@ public class JGSocketOpener implements Runnable
     /**
      * Constructor for the <code>SocketOpener</code> object.
      */
-    public static Channel openSocket( ILateralCacheAttributes lca,
-                                      int timeOut, String groupName )
+    public static Channel openSocket( ILateralCacheAttributes lca, int timeOut, String groupName )
     {
         JGSocketOpener opener = new JGSocketOpener( lca, groupName );
         Thread t = new Thread( opener );
@@ -56,15 +54,14 @@ public class JGSocketOpener implements Runnable
         }
         catch ( InterruptedException ire )
         {
-            log.error( "Failed of connect in within timout of " + timeOut,  ire);
+            log.error( "Failed of connect in within timout of " + timeOut, ire );
         }
         return opener.getSocket();
     }
 
-
     /**
      * Constructor for the SocketOpener object
-     *
+     * 
      * @param host
      * @param port
      */
@@ -75,10 +72,8 @@ public class JGSocketOpener implements Runnable
         this.groupName = groupName;
     }
 
-
     /**
-     * Main processing method for the <code>SocketOpener</code>
-     * object.
+     * Main processing method for the <code>SocketOpener</code> object.
      */
     public void run()
     {
@@ -87,19 +82,18 @@ public class JGSocketOpener implements Runnable
 
             javagroups = new JChannel( lca.getJGChannelProperties() );
             // don't send local
-            javagroups.setOpt(Channel.LOCAL, Boolean.FALSE);
-            javagroups.connect(groupName);
+            javagroups.setOpt( Channel.LOCAL, Boolean.FALSE );
+            javagroups.connect( groupName );
 
         }
         catch ( Exception e )
         {
-            log.error(" Problem connecting", e);
+            log.error( " Problem connecting", e );
         }
     }
 
     /**
-     * Gets the socket attribute of the <code>SocketOpener</code>
-     * object.
+     * Gets the socket attribute of the <code>SocketOpener</code> object.
      */
     public Channel getSocket()
     {

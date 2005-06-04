@@ -22,42 +22,41 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
  * Common disk cache attributes.
  *  
  */
-public interface IDiskCacheAttributes extends AuxiliaryCacheAttributes
+public interface IDiskCacheAttributes
+    extends AuxiliaryCacheAttributes
 {
-  
-  public static final int MAX_PURGATORY_SIZE_DEFUALT = 5000;
 
-  /**
-   * Sets the diskPath attribute of the IJISPCacheAttributes object
-   * 
-   * @param path
-   *          The new diskPath value
-   */
-  public void setDiskPath( String path );
+    public static final int MAX_PURGATORY_SIZE_DEFUALT = 5000;
 
-  /**
-   * Gets the diskPath attribute of the IJISPCacheAttributes object
-   * 
-   * @return The diskPath value
-   */
-  public String getDiskPath();
+    /**
+     * Sets the diskPath attribute of the IJISPCacheAttributes object
+     * 
+     * @param path
+     *            The new diskPath value
+     */
+    public void setDiskPath( String path );
 
+    /**
+     * Gets the diskPath attribute of the IJISPCacheAttributes object
+     * 
+     * @return The diskPath value
+     */
+    public String getDiskPath();
 
-  
-  /**
-   * Gets the maxKeySize attribute of the DiskCacheAttributes object
-   *
-   * @return The maxPurgatorySize value
-   */
-  public int getMaxPurgatorySize();
+    /**
+     * Gets the maxKeySize attribute of the DiskCacheAttributes object
+     * 
+     * @return The maxPurgatorySize value
+     */
+    public int getMaxPurgatorySize();
 
-
-  /**
-   * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
-   *
-   * @param name The new maxPurgatorySize value
-   */
-  public void setMaxPurgatorySize( int maxPurgatorySize );
+    /**
+     * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
+     * 
+     * @param name
+     *            The new maxPurgatorySize value
+     */
+    public void setMaxPurgatorySize( int maxPurgatorySize );
 
 }
 //   end interface

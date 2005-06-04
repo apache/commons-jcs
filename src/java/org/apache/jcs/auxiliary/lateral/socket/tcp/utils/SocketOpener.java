@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp.utils;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,31 +16,33 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp.utils;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.net.Socket;
 
 /**
  * Socket openere that will timeout on the initial connect rather than block
  * forever. Technique from core java II.
- *
+ * 
  * @version $Id$
  */
-public class SocketOpener implements Runnable
+public class SocketOpener
+    implements Runnable
 {
 
     private String host;
+
     private int port;
+
     private Socket socket;
 
     /**
-     * Opens a socket with a connection timeout value.  Joins against a backgroud thread that
-     * does the openeing.
+     * Opens a socket with a connection timeout value. Joins against a backgroud
+     * thread that does the openeing.
      * 
      * @param host
      * @param port
      * @param timeOut
-     * @return Socket 
+     * @return Socket
      */
     public static Socket openSocket( String host, int port, int timeOut )
     {
@@ -59,10 +60,9 @@ public class SocketOpener implements Runnable
         return opener.getSocket();
     }
 
-
     /**
      * Constructor for the SocketOpener object
-     *
+     * 
      * @param host
      * @param port
      */
@@ -72,7 +72,6 @@ public class SocketOpener implements Runnable
         this.host = host;
         this.port = port;
     }
-
 
     /** Main processing method for the SocketOpener object */
     public void run()
@@ -86,7 +85,7 @@ public class SocketOpener implements Runnable
         }
     }
 
-    /** 
+    /**
      * 
      * @return The opened socket
      */

@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine.behavior;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -30,14 +28,13 @@ import org.apache.jcs.access.exception.ObjectNotFoundException;
  * Note: server which implements this interface provides a local cache service,
  * whereas server which implements IRmiCacheService provides a remote cache
  * service.
- *
+ *  
  */
 public interface ICacheService
 {
     /** Puts a cache item to the cache. */
     public void update( ICacheElement item )
         throws ObjectExistsException, IOException;
-
 
     /**
      * Returns a cache bean from the specified cache; or null if the key does
@@ -46,21 +43,17 @@ public interface ICacheService
     public ICacheElement get( String cacheName, Serializable key )
         throws ObjectNotFoundException, IOException;
 
-
     /** Removes the given key from the specified cache. */
     public void remove( String cacheName, Serializable key )
         throws IOException;
-
 
     /** Remove all keys from the sepcified cache. */
     public void removeAll( String cacheName )
         throws IOException;
 
-
     /** Frees the specified cache. */
     public void dispose( String cacheName )
         throws IOException;
-
 
     /** Frees all caches. */
     public void release()

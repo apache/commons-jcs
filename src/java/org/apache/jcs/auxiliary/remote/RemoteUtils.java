@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.auxiliary.remote;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.InputStream;
 import java.io.IOException;
@@ -35,16 +33,16 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Description of the Class
- *
+ *  
  */
 public class RemoteUtils
 {
-    private final static Log log =
-        LogFactory.getLog( RemoteUtils.class );
+    private final static Log log = LogFactory.getLog( RemoteUtils.class );
 
     /** Constructor for the RemoteUtils object */
-    private RemoteUtils() { }
-
+    private RemoteUtils()
+    {
+    }
 
     /**
      * Creates and exports a registry on the specified port of the local host.
@@ -63,7 +61,6 @@ public class RemoteUtils
         return port;
     }
 
-
     /** Description of the Method */
     public static Properties loadProps( String propFile )
         throws IOException
@@ -75,28 +72,28 @@ public class RemoteUtils
             props.load( is );
             if ( log.isDebugEnabled() )
             {
-                log.debug( "props.size=" + props.size()  );
+                log.debug( "props.size=" + props.size() );
             }
 
             if ( log.isDebugEnabled() )
             {
-              if ( props != null )
-              {
-                Enumeration en = props.keys();
-                StringBuffer buf = new StringBuffer();
-                while( en.hasMoreElements() )
+                if ( props != null )
                 {
-                  String key = (String)en.nextElement();
-                  buf.append( "\n" + key + " = " + props.getProperty(key) );
+                    Enumeration en = props.keys();
+                    StringBuffer buf = new StringBuffer();
+                    while ( en.hasMoreElements() )
+                    {
+                        String key = (String) en.nextElement();
+                        buf.append( "\n" + key + " = " + props.getProperty( key ) );
+                    }
+                    log.debug( buf.toString() );
                 }
-                log.debug( buf.toString() );
-              }
-              else 
-              {
-                log.debug( "props is null" );                
-              }
+                else
+                {
+                    log.debug( "props is null" );
+                }
             }
-            
+
         }
         catch ( Exception ex )
         {
@@ -114,4 +111,3 @@ public class RemoteUtils
         return props;
     }
 }
-

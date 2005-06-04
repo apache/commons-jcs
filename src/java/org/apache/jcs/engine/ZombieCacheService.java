@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -27,18 +25,21 @@ import org.apache.jcs.engine.behavior.IZombie;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class ZombieCacheService implements ICacheService, IZombie
+public class ZombieCacheService
+    implements ICacheService, IZombie
 {
 
     /** Description of the Method */
-    public void put( ICacheElement item ) { }
-
+    public void put( ICacheElement item )
+    {
+    }
 
     /** Description of the Method */
-    public void update( ICacheElement item ) { }
-
+    public void update( ICacheElement item )
+    {
+    }
 
     /** Description of the Method */
     public ICacheElement get( String cacheName, Serializable key )
@@ -46,27 +47,30 @@ public class ZombieCacheService implements ICacheService, IZombie
         return null;
     }
 
-
     /** Description of the Method */
     public Serializable get( String cacheName, Serializable key, boolean container )
     {
         return null;
     }
 
+    /** Description of the Method */
+    public void remove( String cacheName, Serializable key )
+    {
+    }
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key ) { }
-
-
-    /** Description of the Method */
-    public void removeAll( String cacheName ) { }
-
+    public void removeAll( String cacheName )
+    {
+    }
 
     /** Description of the Method */
-    public void dispose( String cacheName ) { }
-
+    public void dispose( String cacheName )
+    {
+    }
 
     /** Description of the Method */
-    public void release() { }
+    public void release()
+    {
+    }
 
 }

@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,24 +16,28 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * Configuration class for the Indexed Disk Cache
- *
+ *  
  */
-public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
+public class IndexedDiskCacheAttributes
+    extends AbstractDiskCacheAttributes
 {
 
     private static final int DEFAULT_maxKeySize = 5000;
+
     private static final int DEFAULT_maxRecycleBinSize = 5000;
 
     /** -1 mean no limit. */
     private int maxKeySize = DEFAULT_maxKeySize;
 
-    /** Cannot be larger than the max size.  If max is less than 0, this will be 5000 */
+    /**
+     * Cannot be larger than the max size. If max is less than 0, this will be
+     * 5000
+     */
     private int maxRecycleBinSize = DEFAULT_maxRecycleBinSize;
 
     // default to -1, i.e., don't optimize until shutdown
@@ -47,10 +50,9 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
     {
     }
 
-
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object
-     *
+     * 
      * @return The maxKeySize value
      */
     public int getMaxKeySize()
@@ -58,11 +60,11 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
         return this.maxKeySize;
     }
 
-
     /**
      * Sets the maxKeySize attribute of the DiskCacheAttributes object
-     *
-     * @param maxKeySize The new maxKeySize value
+     * 
+     * @param maxKeySize
+     *            The new maxKeySize value
      */
     public void setMaxKeySize( int maxKeySize )
     {
@@ -73,8 +75,9 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
     }
 
     /**
-     * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object
-     *
+     * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes
+     * object
+     * 
      * @return The optimizeAtRemoveCount value
      */
     public int getOptimizeAtRemoveCount()
@@ -82,55 +85,52 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
         return this.optimizeAtRemoveCount;
     }
 
-
     /**
-     * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object
-     * This number determines how often the disk cache should run real time
-     * optimizations.
-     *
-     * @param cnt The new optimizeAtRemoveCount value
+     * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes
+     * object This number determines how often the disk cache should run real
+     * time optimizations.
+     * 
+     * @param cnt
+     *            The new optimizeAtRemoveCount value
      */
-    public void setOptimizeAtRemoveCount( int cnt)
+    public void setOptimizeAtRemoveCount( int cnt )
     {
         this.optimizeAtRemoveCount = cnt;
     }
 
-
     /**
-     * This cannot be larger than the maxKeySize.  It wouldn't hurt
-     * anything, but it makes the config necessary.  The recycle bin
-     * entry willbe at least as large as a key.
-     *
-     * If the maxKeySize
-     * is -1 this will be set tot he default, which is 5000.
-     *
-     * @param maxRecycleBinSize The maxRecycleBinSize to set.
+     * This cannot be larger than the maxKeySize. It wouldn't hurt anything, but
+     * it makes the config necessary. The recycle bin entry willbe at least as
+     * large as a key.
+     * 
+     * If the maxKeySize is -1 this will be set tot he default, which is 5000.
+     * 
+     * @param maxRecycleBinSize
+     *            The maxRecycleBinSize to set.
      */
     public void setMaxRecycleBinSize( int maxRecycleBinSize )
     {
-      this.maxRecycleBinSize =  maxRecycleBinSize;
+        this.maxRecycleBinSize = maxRecycleBinSize;
     }
-
 
     /**
      * @return Returns the maxRecycleBinSize.
      */
     public int getMaxRecycleBinSize()
     {
-      return maxRecycleBinSize;
+        return maxRecycleBinSize;
     }
-
 
     /**
      * Description of the Method
-     *
+     * 
      * @return AuxiliaryCacheAttributes
      */
     public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( AuxiliaryCacheAttributes ) this.clone();
+            return (AuxiliaryCacheAttributes) this.clone();
         }
         catch ( Exception e )
         {
@@ -138,10 +138,9 @@ public class IndexedDiskCacheAttributes extends AbstractDiskCacheAttributes
         return this;
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @return String
      */
     public String toString()

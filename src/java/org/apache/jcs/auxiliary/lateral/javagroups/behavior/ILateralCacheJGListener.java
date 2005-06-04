@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -24,11 +23,11 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 
 /**
  * Listens for lateral cache event notification.
- *
- * @version $Id:   asmuts
- *      Exp $
+ * 
+ * @version $Id$
  */
-public interface ILateralCacheJGListener extends ILateralCacheListener
+public interface ILateralCacheJGListener
+    extends ILateralCacheListener
 {
 
     /** Description of the Method */

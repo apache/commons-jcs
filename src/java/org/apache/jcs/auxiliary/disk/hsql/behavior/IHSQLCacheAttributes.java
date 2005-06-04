@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.hsql.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,29 +16,29 @@ package org.apache.jcs.auxiliary.disk.hsql.behavior;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
 
 /**
  * Title: Description:
- *
+ * 
  * @version 1.0
  */
 
-public interface IHSQLCacheAttributes extends IAuxiliaryCacheAttributes
+public interface IHSQLCacheAttributes
+    extends IAuxiliaryCacheAttributes
 {
 
     /**
      * Sets the diskPath attribute of the IHSQLCacheAttributes object
-     *
-     * @param path The new diskPath value
+     * 
+     * @param path
+     *            The new diskPath value
      */
     public void setDiskPath( String path );
 
-
     /**
      * Gets the diskPath attribute of the IHSQLCacheAttributes object
-     *
+     * 
      * @return The diskPath value
      */
     public String getDiskPath();

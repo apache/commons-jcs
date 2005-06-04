@@ -1,6 +1,5 @@
 package org.apache.jcs.access.exception;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,12 +16,12 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-
 /**
  * Description of the Class
- *
+ *  
  */
-public class InvalidArgumentException extends CacheException
+public class InvalidArgumentException
+    extends CacheException
 {
 
     /** Constructor for the InvalidArgumentException object */
@@ -31,10 +30,9 @@ public class InvalidArgumentException extends CacheException
         super();
     }
 
-
     /**
      * Constructor for the InvalidArgumentException object
-     *
+     * 
      * @param message
      */
     public InvalidArgumentException( String message )

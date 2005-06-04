@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.threads;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,10 +16,9 @@ package org.apache.jcs.utils.threads;
  * limitations under the License.
  */
 
-
 /**
  * Provides a singleton thread pool.
- *
+ *  
  */
 public class ThreadPoolManager
 {
@@ -29,58 +27,59 @@ public class ThreadPoolManager
 
     /** The thread pool. */
     private ThreadPool pool = new ThreadPool();
+
     /** True iff the thread pool has been started. */
     private boolean started;
 
-
     /** Can only be constructed by this class. */
-    private ThreadPoolManager() { }
-
+    private ThreadPoolManager()
+    {
+    }
 
     /**
      * Sets the max number of threads that you can open in the pool. Will only
      * be effective if called before the getInstance method is invoked for the
      * first time.
-     *
-     * @param maxThreads The new maxThreads value
+     * 
+     * @param maxThreads
+     *            The new maxThreads value
      */
     public static void setMaxThreads( int maxThreads )
     {
         singleton.pool.setMaxThreads( maxThreads );
     }
 
-
     /**
      * Sets the min number of idle threads that you can leave in the pool. Will
      * only be effective if called before the getInstance method is invoked for
      * the first time.
-     *
-     * @param minSpareThreads The new minSpareThreads value
+     * 
+     * @param minSpareThreads
+     *            The new minSpareThreads value
      */
     public static void setMinSpareThreads( int minSpareThreads )
     {
         singleton.pool.setMinSpareThreads( minSpareThreads );
     }
 
-
     /**
      * Sets the max number of idle threads that you can leave in the pool. Will
      * only be effective if called before the getInstance method is invoked for
      * the first time.
-     *
-     * @param maxSpareThreads The new maxSpareThreads value
+     * 
+     * @param maxSpareThreads
+     *            The new maxSpareThreads value
      */
     public static void setMaxSpareThreads( int maxSpareThreads )
     {
         singleton.pool.setMaxSpareThreads( maxSpareThreads );
     }
 
-
     /**
      * Gets the max number of threads that you can open in the pool. Will only
      * be accurate if called after the getInstance method is invoked for the
      * first time.
-     *
+     * 
      * @return The maxThreads value
      */
     public static int getMaxThreads()
@@ -88,12 +87,11 @@ public class ThreadPoolManager
         return singleton.pool.getMaxThreads();
     }
 
-
     /**
      * Gets the min number of idle threads that you can leave in the pool. Will
      * only be accurate if called after the getInstance method is invoked for
      * the first time.
-     *
+     * 
      * @return The minSpareThreads value
      */
     public static int getMinSpareThreads()
@@ -101,12 +99,11 @@ public class ThreadPoolManager
         return singleton.pool.getMinSpareThreads();
     }
 
-
     /**
      * Gets the max number of idle threads that you can leave in the pool. Will
      * only be accurate if called after the getInstance method is invoked for
      * the first time.
-     *
+     * 
      * @return The maxSpareThreads value
      */
     public static int getMaxSpareThreads()
@@ -114,12 +111,11 @@ public class ThreadPoolManager
         return singleton.pool.getMaxSpareThreads();
     }
 
-
     /**
      * Returns the singleton thread pool manager, which can be used to execute a
      * given IThreadPoolRunnable on a thread in the pool. Configuration of the
      * thread pool must be made prior to invoking this method.
-     *
+     * 
      * @return The instance value
      */
     public static ThreadPoolManager getInstance()
@@ -138,7 +134,6 @@ public class ThreadPoolManager
         return singleton;
     }
 
-
     /**
      * Shuts down the thread pool and re-initializes it to the default.
      */
@@ -155,7 +150,6 @@ public class ThreadPoolManager
         }
         return;
     }
-
 
     /**
      * Executes a given IThreadPoolRunnable on a thread in the pool, block if

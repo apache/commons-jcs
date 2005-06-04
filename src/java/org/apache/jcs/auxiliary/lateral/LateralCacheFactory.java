@@ -164,12 +164,13 @@ public class LateralCacheFactory
             .toArray( new LateralCacheNoWait[0] ), iaca.getCacheName() );
 
         createDiscoveryService( lac, lcnwf );
-        
+
         return lcnwf;
     }
 
     /**
-     * Makes sure a listener gets created.  It will get monitored as soon as it is used.
+     * Makes sure a listener gets created. It will get monitored as soon as it
+     * is used.
      * 
      * @param lac
      */
@@ -177,7 +178,7 @@ public class LateralCacheFactory
     {
         // don't create a listener if we are not receiving.
         if ( lac.isReceive() )
-        {    
+        {
             try
             {
                 if ( lac.getTransmissionType() == ILateralCacheAttributes.TCP )
@@ -194,7 +195,7 @@ public class LateralCacheFactory
             catch ( Exception e )
             {
                 log.error( "Problem creating lateral listener", e );
-            }                    
+            }
         }
         else
         {
@@ -204,9 +205,10 @@ public class LateralCacheFactory
             }
         }
     }
-    
+
     /**
-     * Creates the discovery service. Only creates this for tcp laterals right now.
+     * Creates the discovery service. Only creates this for tcp laterals right
+     * now.
      * 
      * @param lac
      * @param lcnwf

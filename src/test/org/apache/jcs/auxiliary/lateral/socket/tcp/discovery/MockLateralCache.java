@@ -10,11 +10,12 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * For testing things that need a lateral cache
- *
+ * 
  * @author Aaron Smuts
- *
+ *  
  */
-public class MockLateralCache extends LateralCache
+public class MockLateralCache
+    extends LateralCache
     implements ICache
 {
 
@@ -28,8 +29,10 @@ public class MockLateralCache extends LateralCache
 
     // generalize this, use another interface
     private ILateralCacheAttributes cattr;
-        
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void update( ICacheElement ce )
@@ -39,7 +42,9 @@ public class MockLateralCache extends LateralCache
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#get(java.io.Serializable)
      */
     public ICacheElement get( Serializable key )
@@ -49,7 +54,9 @@ public class MockLateralCache extends LateralCache
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#remove(java.io.Serializable)
      */
     public boolean remove( Serializable key )
@@ -59,7 +66,9 @@ public class MockLateralCache extends LateralCache
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#removeAll()
      */
     public void removeAll()
@@ -69,7 +78,9 @@ public class MockLateralCache extends LateralCache
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#dispose()
      */
     public void dispose()
@@ -79,7 +90,9 @@ public class MockLateralCache extends LateralCache
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#getSize()
      */
     public int getSize()
@@ -88,7 +101,9 @@ public class MockLateralCache extends LateralCache
         return 0;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#getStatus()
      */
     public int getStatus()
@@ -97,7 +112,9 @@ public class MockLateralCache extends LateralCache
         return 0;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#getStats()
      */
     public String getStats()
@@ -106,7 +123,9 @@ public class MockLateralCache extends LateralCache
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICache#getCacheName()
      */
     public String getCacheName()
@@ -114,7 +133,9 @@ public class MockLateralCache extends LateralCache
         return super.getCacheName();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType()
      */
     public int getCacheType()

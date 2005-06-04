@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,14 +16,14 @@ package org.apache.jcs.auxiliary.behavior;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.engine.behavior.ICacheManager;
 
 /**
  * Description of the Interface
- *
+ *  
  */
-public interface IAuxiliaryCacheManager extends ICacheManager
+public interface IAuxiliaryCacheManager
+    extends ICacheManager
 {
 
 }

@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 import java.util.Set;
 import java.util.Collections;
@@ -29,39 +27,53 @@ import org.apache.jcs.engine.ZombieCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * The ZombieLateralCacheService is used a facade when the lateral is not available.  
- * It balks when the lateral is in error.  When lateral service is restored, this
- * is replaced by a live facade.
- *
+ * The ZombieLateralCacheService is used a facade when the lateral is not
+ * available. It balks when the lateral is in error. When lateral service is
+ * restored, this is replaced by a live facade.
+ *  
  */
-public class ZombieLateralCacheService extends ZombieCacheService implements ILateralCacheService
+public class ZombieLateralCacheService
+    extends ZombieCacheService
+    implements ILateralCacheService
 {
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
+     *      long)
      */
-    public void update( ICacheElement item, long listenerId ) { }
-
+    public void update( ICacheElement item, long listenerId )
+    {
+    }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String, java.io.Serializable, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String,
+     *      java.io.Serializable, long)
      */
-    public void remove( String cacheName, Serializable key, long listenerId ) { }
-
-
-    /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String, long)
-     */
-    public void removeAll( String cacheName, long listenerId ) { }
+    public void remove( String cacheName, Serializable key, long listenerId )
+    {
+    }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#getGroupKeys(java.lang.String, java.lang.String)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String,
+     *      long)
      */
-    public Set getGroupKeys(String cacheName, String groupName)
+    public void removeAll( String cacheName, long listenerId )
+    {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#getGroupKeys(java.lang.String,
+     *      java.lang.String)
+     */
+    public Set getGroupKeys( String cacheName, String groupName )
     {
         return Collections.EMPTY_SET;
     }

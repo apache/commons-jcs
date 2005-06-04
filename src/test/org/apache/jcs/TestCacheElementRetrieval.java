@@ -16,31 +16,32 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 import junit.framework.TestCase;
 
 /**
  * @author Aaron Smuts
- *
+ *  
  */
-public class TestCacheElementRetrieval extends TestCase {
+public class TestCacheElementRetrieval
+    extends TestCase
+{
 
-	
-	public void testSimpleElementRetrieval() throws Exception
-	{
+    public void testSimpleElementRetrieval()
+        throws Exception
+    {
         JCS jcs = JCS.getInstance( "testCache1" );
-        
+
         jcs.put( "test_key", "test_data" );
-        
+
         long now = System.currentTimeMillis();
         ICacheElement elem = jcs.getCacheElement( "test_key" );
         assertEquals( "Name wasn't right", "testCache1", elem.getCacheName() );
-        
+
         long diff = elem.getElementAttributes().getCreateTime() - now;
-        assertTrue ( "Create time should have been at or after the call", now >= 0 );
-                
-	}
-	
+        assertTrue( "Create time should have been at or after the call", now >= 0 );
+
+    }
+
 }

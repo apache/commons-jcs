@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -28,18 +27,17 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @version $Id: LateralGroupCacheJGListener.java,v 1.6 2002/02/15 04:33:37
- *      jtaylor Exp $
+ *          jtaylor Exp $
  */
 public class LateralGroupCacheJGListener
-     extends LateralCacheJGListener
-     implements ILateralCacheJGListener
+    extends LateralCacheJGListener
+    implements ILateralCacheJGListener
 {
-    private final static Log log =
-        LogFactory.getLog( LateralGroupCacheJGListener.class );
+    private final static Log log = LogFactory.getLog( LateralGroupCacheJGListener.class );
 
     /**
      * Constructor for the LateralGroupCacheJGListener object
-     *
+     * 
      * @param ilca
      */
     protected LateralGroupCacheJGListener( ILateralCacheAttributes ilca )
@@ -48,16 +46,16 @@ public class LateralGroupCacheJGListener
         log.debug( "creating LateralGroupCacheJGListener" );
     }
 
-
     /**
      * Gets the instance attribute of the LateralGroupCacheJGListener class
-     *
+     * 
      * @return The instance value
      */
     public static ILateralCacheListener getInstance( ILateralCacheAttributes ilca )
     {
         //throws IOException, NotBoundException
-        ILateralCacheListener ins = ( ILateralCacheListener ) instances.get( String.valueOf( ilca.getUdpMulticastAddr() ) );
+        ILateralCacheListener ins = (ILateralCacheListener) instances
+            .get( String.valueOf( ilca.getUdpMulticastAddr() ) );
         synchronized ( LateralGroupCacheJGListener.class )
         {
             if ( ins == null )
@@ -75,12 +73,10 @@ public class LateralGroupCacheJGListener
         return ins;
     }
 
-
     // override for new funcitonality
     // lazy init is too slow, find a better way
     /**
-     * Gets the cacheManager attribute of the LateralGroupCacheJGListener
-     * object
+     * Gets the cacheManager attribute of the LateralGroupCacheJGListener object
      */
     protected void getCacheManager()
     {

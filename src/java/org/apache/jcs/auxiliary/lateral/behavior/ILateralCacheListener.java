@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,14 +16,14 @@ package org.apache.jcs.auxiliary.lateral.behavior;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * Listens for lateral cache event notification.
- *
+ *  
  */
-public interface ILateralCacheListener extends ICacheListener
+public interface ILateralCacheListener
+    extends ICacheListener
 {
 
     /** Description of the Method */

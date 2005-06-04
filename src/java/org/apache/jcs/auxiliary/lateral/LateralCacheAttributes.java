@@ -49,7 +49,6 @@ public class LateralCacheAttributes
 
     int udpMulticastPort = 6789;
 
-
     int httpListenerPort = 8080;
 
     // TCP --------------------------------------------
@@ -68,11 +67,9 @@ public class LateralCacheAttributes
 
     private boolean udpDiscoveryEnabled = true;
 
-    
     // JAVAGROUPS -------------------------
     private String jgChannelProperties = null;
 
-    
     // GENERAL ------------------------------
     // disables gets from laterals
     boolean putOnlyMode = true;

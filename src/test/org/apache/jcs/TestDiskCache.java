@@ -1,6 +1,5 @@
 package org.apache.jcs;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -25,19 +23,21 @@ import junit.framework.TestCase;
 /**
  * Test which exercises the indexed disk cache. This one uses three different
  * regions for thre threads.
- *
+ * 
  * @version $Id$
  */
-public class TestDiskCache extends TestCase
+public class TestDiskCache
+    extends TestCase
 {
     /**
-     * Number of items to cache, twice the configured maxObjects for the
-     * memory cache regions.
+     * Number of items to cache, twice the configured maxObjects for the memory
+     * cache regions.
      */
     private static int items = 200;
 
     /**
      * Constructor for the TestDiskCache object.
+     * 
      * @param testName
      */
     public TestDiskCache( String testName )
@@ -47,18 +47,19 @@ public class TestDiskCache extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * 
      * @param args
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = {TestDiskCache.class.getName()};
+        String[] testCaseName = { TestDiskCache.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
     /**
      * A unit test suite for JUnit
-     *
-     * @return    The test suite
+     * 
+     * @return The test suite
      */
     public static Test suite()
     {
@@ -66,7 +67,8 @@ public class TestDiskCache extends TestCase
 
         suite.addTest( new TestDiskCache( "testIndexedDiskCache1" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion1" );
             }
@@ -74,7 +76,8 @@ public class TestDiskCache extends TestCase
 
         suite.addTest( new TestDiskCache( "testIndexedDiskCache2" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion2" );
             }
@@ -82,7 +85,8 @@ public class TestDiskCache extends TestCase
 
         suite.addTest( new TestDiskCache( "testIndexedDiskCache3" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion3" );
             }
@@ -102,10 +106,12 @@ public class TestDiskCache extends TestCase
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region Name of the region to access
-     *
-     * @exception Exception If an error occurs
+     * 
+     * @param region
+     *            Name of the region to access
+     * 
+     * @exception Exception
+     *                If an error occurs
      */
     public void runTestForRegion( String region )
         throws Exception
@@ -123,7 +129,7 @@ public class TestDiskCache extends TestCase
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = ( String ) jcs.get( i + ":key" );
+            String value = (String) jcs.get( i + ":key" );
 
             assertEquals( region + " data " + i, value );
         }
@@ -139,8 +145,7 @@ public class TestDiskCache extends TestCase
 
         for ( int i = 0; i <= items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key",
-                        jcs.get( i + ":key" ) );
+            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
     }
 }

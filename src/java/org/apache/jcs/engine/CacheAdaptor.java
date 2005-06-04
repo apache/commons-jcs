@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -30,9 +28,10 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Used for Cache-to-Cache messaging purposes.
- *
+ *  
  */
-public class CacheAdaptor implements ICacheListener
+public class CacheAdaptor
+    implements ICacheListener
 {
     private final static Log log = LogFactory.getLog( CacheAdaptor.class );
 
@@ -41,11 +40,11 @@ public class CacheAdaptor implements ICacheListener
     /** Description of the Field */
     protected long listenerId = 0;
 
-
     /**
      * Sets the listenerId attribute of the CacheAdaptor object
-     *
-     * @param id The new listenerId value
+     * 
+     * @param id
+     *            The new listenerId value
      */
     public void setListenerId( long id )
         throws IOException
@@ -54,10 +53,9 @@ public class CacheAdaptor implements ICacheListener
         log.debug( "listenerId = " + id );
     }
 
-
     /**
      * Gets the listenerId attribute of the CacheAdaptor object
-     *
+     * 
      * @return The listenerId value
      */
     public long getListenerId()
@@ -66,17 +64,15 @@ public class CacheAdaptor implements ICacheListener
         return this.listenerId;
     }
 
-
     /**
      * Constructor for the CacheAdaptor object
-     *
+     * 
      * @param cache
      */
     public CacheAdaptor( ICache cache )
     {
         this.cache = cache;
     }
-
 
     /** Description of the Method */
     public void handlePut( ICacheElement item )
@@ -85,7 +81,8 @@ public class CacheAdaptor implements ICacheListener
         try
         {
             //cache.put(item.getKey(), item.getVal());
-            //cache.update( (CacheElement)item );// .put(item.getKey(), item.getVal());
+            //cache.update( (CacheElement)item );// .put(item.getKey(),
+            // item.getVal());
             cache.update( item );
         }
         catch ( Exception e )
@@ -94,7 +91,6 @@ public class CacheAdaptor implements ICacheListener
         }
     }
 
-
     /** Description of the Method */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
@@ -102,14 +98,12 @@ public class CacheAdaptor implements ICacheListener
         cache.remove( key );
     }
 
-
     /** Description of the Method */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
         cache.removeAll();
     }
-
 
     /** Description of the Method */
     public void handleDispose( String cacheName )

@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.locking;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.utils.locking;
  * limitations under the License.
  */
 
-
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -29,29 +27,30 @@ import org.apache.jcs.utils.locking.RwLockHolder;
 /**
  * Used to enhance performance by delaying the removal of unreferenced
  * RwLockHolder objects managed by the ReadWriteLockManager.
- *
+ *  
  */
-public class RwLockGC extends Thread
+public class RwLockGC
+    extends Thread
 {
     private final static Log log = LogFactory.getLog( RwLockGC.class );
 
     private final Hashtable ht;
+
     private final static long IDLE_PERIOD = 60 * 1000;
+
     // 60 seconds.
 
     private boolean clean = true;
 
-
     /**
      * Constructor for the RwLockGC object
-     *
+     * 
      * @param ht
      */
     RwLockGC( Hashtable ht )
     {
         this.ht = ht;
     }
-
 
     /**
      * Notifies the garbage collection that there is garbage available, and
@@ -68,7 +67,8 @@ public class RwLockGC extends Thread
 
     // Run forever.
 
-    // Minimize the use of any synchronization in the process of garbage collection
+    // Minimize the use of any synchronization in the process of garbage
+    // collection
     // for performance reason.
     /** Main processing method for the RwLockGC object */
     public void run()
@@ -81,7 +81,7 @@ public class RwLockGC extends Thread
                 {
                     if ( clean )
                     {
-//p("RwLockGC entering into a wait state");
+                        //p("RwLockGC entering into a wait state");
                         // Garbage driven mode.
                         try
                         {
@@ -97,7 +97,7 @@ public class RwLockGC extends Thread
             // Time driven mode: sleep between each round of garbage collection.
             try
             {
-//p("RwLockGC sleeping for " + IDLE_PERIOD);
+                //p("RwLockGC sleeping for " + IDLE_PERIOD);
                 sleep( IDLE_PERIOD );
             }
             catch ( InterruptedException ex )
@@ -105,40 +105,43 @@ public class RwLockGC extends Thread
                 // ignore;
             }
             // The "clean" flag must be false here.
-            // Simply presume we can collect all the garbage until proven otherwise.
+            // Simply presume we can collect all the garbage until proven
+            // otherwise.
             synchronized ( this )
             {
                 clean = true;
             }
             long now = System.currentTimeMillis();
             // Take a snapshot of the hashtable.
-            Map.Entry[] entries = ( Map.Entry[] ) ht.entrySet().toArray( new Map.Entry[0] );
-//p("RwLockHolder garbage collecting...");
+            Map.Entry[] entries = (Map.Entry[]) ht.entrySet().toArray( new Map.Entry[0] );
+            //p("RwLockHolder garbage collecting...");
             for ( int i = 0; i < entries.length; i++ )
             {
-                RwLockHolder holder = ( RwLockHolder ) entries[i].getValue();
+                RwLockHolder holder = (RwLockHolder) entries[i].getValue();
                 if ( holder.removable( now ) )
                 {
                     Object key = entries[i].getKey();
                     synchronized ( ht )
                     {
-                        holder = ( RwLockHolder ) ht.get( key );
-                        // holder cannot possibly be null as this should be the only thread removing them.
+                        holder = (RwLockHolder) ht.get( key );
+                        // holder cannot possibly be null as this should be the
+                        // only thread removing them.
                         if ( holder.removable( now ) )
                         {
                             ht.remove( key );
                             /*
-                             * p("removing key=" + key + ", now=" + now + ", holder.lastInactiveTime="
-                             * + holder.lastInactiveTime);
+                             * p("removing key=" + key + ", now=" + now + ",
+                             * holder.lastInactiveTime=" +
+                             * holder.lastInactiveTime);
                              */
                         }
                     }
                 }
             }
             // end for loop.
-        } while ( true );
+        }
+        while ( true );
     }
-
 
     /** Sets the "clean" flag to false in a critial section. */
     private void dirty()
@@ -152,4 +155,3 @@ public class RwLockGC extends Thread
         }
     }
 }
-

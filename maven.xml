@@ -57,4 +57,9 @@
     </j:forEach>
   </goal>
 
+
+  <postGoal name="site">
+    <attainGoal name="pdf"/>
+  </postGoal>
+
 </project>

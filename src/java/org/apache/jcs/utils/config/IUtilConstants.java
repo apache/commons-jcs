@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.config;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.utils.config;
  * limitations under the License.
  */
 
-
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -28,26 +26,26 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Description of the Interface
- *
+ *  
  */
 public interface IUtilConstants
 {
     /** Description of the Field */
     public final static String ADMIN_USERID = Config.ADMIN_USERID;
+
     /** Description of the Field */
     public final static String ADMIN_PASSWORD = Config.ADMIN_PASSWORD;
 
-
     /**
      * Description of the Class
-     *
+     *  
      */
     final static class Config
     {
-        private final static Log log =
-            LogFactory.getLog( Config.class );
+        private final static Log log = LogFactory.getLog( Config.class );
 
         private final static String ADMIN_USERID;
+
         private final static String ADMIN_PASSWORD;
 
         static
@@ -79,8 +77,9 @@ public interface IUtilConstants
             ADMIN_PASSWORD = props.getProperty( "admin.password", "system" );
         }
 
-
         /** Constructor for the Config object */
-        private Config() { }
+        private Config()
+        {
+        }
     }
 }

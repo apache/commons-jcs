@@ -21,63 +21,77 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * @author aaronsm
- *
+ *  
  */
-public class Stats implements IStats {
+public class Stats
+    implements IStats
+{
 
-	private IStatElement[] stats = null;	
-	
-	private String typeName = null;
-	
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStats#getStatElements()
-	 */
-	public IStatElement[] getStatElements() {
-		return stats;
-	}
+    private IStatElement[] stats = null;
 
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStats#setStatElements(org.apache.jcs.engine.stats.behavior.IStatElement[])
-	 */
-	public void setStatElements(IStatElement[] stats) {
-		this.stats = stats;
-	}
+    private String typeName = null;
 
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStats#getTypeName()
-	 */
-	public String getTypeName() {
-		return typeName;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStats#getStatElements()
+     */
+    public IStatElement[] getStatElements()
+    {
+        return stats;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStats#setTypeName(java.lang.String)
-	 */
-	public void setTypeName(String name) {
-		typeName = name;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStats#setStatElements(org.apache.jcs.engine.stats.behavior.IStatElement[])
+     */
+    public void setStatElements( IStatElement[] stats )
+    {
+        this.stats = stats;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStats#getTypeName()
+     */
+    public String getTypeName()
+    {
+        return typeName;
+    }
 
-	/*
-	 *  (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		StringBuffer buf = new StringBuffer();
-		
-		buf.append( typeName );
-		
-		if ( stats != null )
-		{
-			for( int i = 0; i < stats.length; i++ )
-			{
-				buf.append( "\n" );
-				buf.append( stats[i] );
-			}
-		}
-		
-		return buf.toString();
-	}
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStats#setTypeName(java.lang.String)
+     */
+    public void setTypeName( String name )
+    {
+        typeName = name;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+
+        buf.append( typeName );
+
+        if ( stats != null )
+        {
+            for ( int i = 0; i < stats.length; i++ )
+            {
+                buf.append( "\n" );
+                buf.append( stats[i] );
+            }
+        }
+
+        return buf.toString();
+    }
+
 }

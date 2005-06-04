@@ -28,23 +28,29 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class ZombieRemoteCacheService extends ZombieCacheService implements IRemoteCacheService
+public class ZombieRemoteCacheService
+    extends ZombieCacheService
+    implements IRemoteCacheService
 {
 
     /** Description of the Method */
-    public void update( ICacheElement item, long listenerId ) { }
-
-
-    /** Description of the Method */
-    public void remove( String cacheName, Serializable key, long listenerId ) { }
-
+    public void update( ICacheElement item, long listenerId )
+    {
+    }
 
     /** Description of the Method */
-    public void removeAll( String cacheName, long listenerId ) { }
+    public void remove( String cacheName, Serializable key, long listenerId )
+    {
+    }
 
-    public Set getGroupKeys(String cacheName, String groupName)
+    /** Description of the Method */
+    public void removeAll( String cacheName, long listenerId )
+    {
+    }
+
+    public Set getGroupKeys( String cacheName, String groupName )
     {
         return Collections.EMPTY_SET;
     }

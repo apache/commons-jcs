@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.remote;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -32,21 +30,19 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
-
 /**
- * Registered with RemoteCache server. 
- * The server updates the local caches via this listener.
- * Each server asings a unique listener id for a listener.  
- *
+ * Registered with RemoteCache server. The server updates the local caches via
+ * this listener. Each server asings a unique listener id for a listener.
+ *  
  */
 public class RemoteCacheListener
-     implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
+    implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
 {
-    private final static Log log =
-        LogFactory.getLog( RemoteCacheListener.class );
+    private final static Log log = LogFactory.getLog( RemoteCacheListener.class );
 
-    /** The cache manager used to put items in differnt regions.  
-     * This is set lazily and should not be sent to the remote server.
+    /**
+     * The cache manager used to put items in differnt regions. This is set
+     * lazily and should not be sent to the remote server.
      */
     protected static transient CompositeCacheManager cacheMgr;
 
@@ -55,30 +51,31 @@ public class RemoteCacheListener
 
     /** Number of put requests received */
     protected int puts = 0;
+
     /** Number of remove requests received */
     protected int removes = 0;
-    
+
     /**
-     * This is set by the remote cache server. 
+     * This is set by the remote cache server.
      */
     protected long listenerId = 0;
-
 
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
      * 
-     * The constructor exports this object, making it available to receive 
-     * incoming calls.  The calback port is anonymous unless a local port vlaue was specified
-     * in the configurtion.
-     *
+     * The constructor exports this object, making it available to receive
+     * incoming calls. The calback port is anonymous unless a local port vlaue
+     * was specified in the configurtion.
+     * 
      * @param irca
      */
     public RemoteCacheListener( IRemoteCacheAttributes irca )
     {
         this.irca = irca;
 
-        // Export this remote object to make it available to receive incoming calls,
+        // Export this remote object to make it available to receive incoming
+        // calls,
         // using an anonymous port unless the local port is specified.
         try
         {
@@ -99,50 +96,48 @@ public class RemoteCacheListener
 
     }
 
-
     /**
      * let the remote cache set a listener_id. Since there is only one listerenr
      * for all the regions and every region gets registered? the id shouldn't be
      * set if it isn't zero. If it is we assume that it is a reconnect.
-     *
-     * @param id The new listenerId value
+     * 
+     * @param id
+     *            The new listenerId value
      * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException
     {
-      
+
         listenerId = id;
         if ( log.isDebugEnabled() )
         {
             log.debug( "set listenerId = " + id );
-        }        
+        }
     }
 
-
     /**
-     * Gets the listenerId attribute of the RemoteCacheListener object.
-     * This is stored int he object.  The RemoteCache object contains a reference to the
+     * Gets the listenerId attribute of the RemoteCacheListener object. This is
+     * stored int he object. The RemoteCache object contains a reference to the
      * listener and get the id this way.
-     *
+     * 
      * @return The listenerId value
      * @throws IOException
      */
     public long getListenerId()
         throws IOException
     {
-      	if ( log.isDebugEnabled() )
-      	{
-          log.debug( "get listenerId = " + listenerId);
-      	}
-      	return listenerId;
-        
-    }
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "get listenerId = " + listenerId );
+        }
+        return listenerId;
 
+    }
 
     /**
      * Gets the remoteType attribute of the RemoteCacheListener object
-     *
+     * 
      * @return The remoteType value
      * @throws IOException
      */
@@ -156,7 +151,8 @@ public class RemoteCacheListener
         return irca.getRemoteType();
     }
 
-    //////////////////////////// implements the IRemoteCacheListener interface. //////////////
+    //////////////////////////// implements the IRemoteCacheListener interface.
+    // //////////////
     /**
      * Just remove the element since it has been updated elsewhere cd should be
      * incomplete for faster transmission. We don't want to pass data only
@@ -200,10 +196,11 @@ public class RemoteCacheListener
         return;
     }
 
-
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String, java.io.Serializable)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
+     *      java.io.Serializable)
      */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
@@ -225,9 +222,9 @@ public class RemoteCacheListener
         cache.localRemove( key );
     }
 
-
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
      */
     public void handleRemoveAll( String cacheName )
@@ -242,9 +239,9 @@ public class RemoteCacheListener
         cache.localRemoveAll();
     }
 
-
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
      */
     public void handleDispose( String cacheName )
@@ -255,13 +252,12 @@ public class RemoteCacheListener
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
         CompositeCacheManager cm = cacheMgr;
-        cm.freeCache( cacheName, true);
+        cm.freeCache( cacheName, true );
     }
 
-
     /**
-     * Gets the cacheManager attribute of the RemoteCacheListener object.  
-     * This is one of the few places that force the cache to be a singleton.
+     * Gets the cacheManager attribute of the RemoteCacheListener object. This
+     * is one of the few places that force the cache to be a singleton.
      */
     protected void getCacheManager()
     {
@@ -282,8 +278,7 @@ public class RemoteCacheListener
             }
         }
     }
-    
-    
+
     /**
      * For easier debugging.
      * 
@@ -291,12 +286,12 @@ public class RemoteCacheListener
      */
     public String toString()
     {
-      StringBuffer buf = new StringBuffer();
-      buf.append( "\n RemoteCacheListener: "  );
-      buf.append( "\n RemoteHost = " + irca.getRemoteHost() );
-      buf.append( "\n RemotePort = " + irca.getRemotePort() );
-      buf.append( "\n ListenerId = " + listenerId );
-      return buf.toString();
+        StringBuffer buf = new StringBuffer();
+        buf.append( "\n RemoteCacheListener: " );
+        buf.append( "\n RemoteHost = " + irca.getRemoteHost() );
+        buf.append( "\n RemotePort = " + irca.getRemotePort() );
+        buf.append( "\n ListenerId = " + listenerId );
+        return buf.toString();
     }
-    
+
 }

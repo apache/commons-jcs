@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -33,20 +32,21 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
- *  JavaGroups listener.  Good for distributing cache data accross multiple vms
- *  on the same machine.  You also don't need to know the number of listerners
- *  for configuration.
- *
+ * JavaGroups listener. Good for distributing cache data accross multiple vms on
+ * the same machine. You also don't need to know the number of listerners for
+ * configuration.
+ *  
  */
-public class LateralCacheJGListener implements ILateralCacheJGListener, Serializable
+public class LateralCacheJGListener
+    implements ILateralCacheJGListener, Serializable
 {
-    private final static Log log =
-        LogFactory.getLog( LateralCacheJGListener.class );
+    private final static Log log = LogFactory.getLog( LateralCacheJGListener.class );
 
     /**
      * Description of the Field
      */
     protected static transient CompositeCacheManager cacheMgr;
+
     /**
      * Description of the Field
      */
@@ -54,21 +54,23 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
 
     // instance vars
     private LateralJGReceiver receiver;
+
     private ILateralCacheAttributes ilca;
+
     private boolean inited = false;
+
     private int puts = 0;
 
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
-     *
+     * 
      * @param ilca
      */
     protected LateralCacheJGListener( ILateralCacheAttributes ilca )
     {
         this.ilca = ilca;
     }
-
 
     /**
      * Description of the Method
@@ -91,14 +93,14 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         inited = true;
     }
 
-
     /**
      * let the lateral cache set a listener_id. Since there is only one
      * listerenr for all the regions and every region gets registered? the id
      * shouldn't be set if it isn't zero. If it is we assume that it is a
      * reconnect.
-     *
-     * @param id The new listenerId value
+     * 
+     * @param id
+     *            The new listenerId value
      * @exception IOException
      */
     public void setListenerId( long id )
@@ -111,10 +113,9 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         }
     }
 
-
     /**
      * Gets the listenerId attribute of the LateralCacheJGListener object
-     *
+     * 
      * @return The listenerId value
      * @exception IOException
      */
@@ -129,10 +130,9 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         return LateralCacheInfo.listenerId;
     }
 
-
     /**
      * Gets the instance attribute of the LateralCacheJGListener class
-     *
+     * 
      * @return The instance value
      * @param ilca
      */
@@ -140,7 +140,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
     {
 
         //throws IOException, NotBoundException
-        ILateralCacheListener ins = ( ILateralCacheListener ) instances.get( ilca.getJGChannelProperties() );
+        ILateralCacheListener ins = (ILateralCacheListener) instances.get( ilca.getJGChannelProperties() );
 
         synchronized ( LateralCacheJGListener.class )
         {
@@ -159,8 +159,8 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         return ins;
     }
 
-
-    //////////////////////////// implements the ILateralCacheListener interface. //////////////
+    //////////////////////////// implements the ILateralCacheListener
+    // interface. //////////////
     /**
      * @param cb
      * @exception IOException
@@ -186,10 +186,9 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
 
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @param cacheName
      * @param key
      * @exception IOException
@@ -205,10 +204,9 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
         getCache( cacheName ).localRemove( key );
     }
 
-
     /**
      * Description of the Method
-     *
+     * 
      * @param cacheName
      * @exception IOException
      */
@@ -226,7 +224,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
 
     /**
      * Test get implementation.
-     *
+     * 
      * @return
      * @param cacheName
      * @param key
@@ -245,7 +243,7 @@ public class LateralCacheJGListener implements ILateralCacheJGListener, Serializ
 
     /**
      * Description of the Method
-     *
+     * 
      * @param cacheName
      * @exception IOException
      */

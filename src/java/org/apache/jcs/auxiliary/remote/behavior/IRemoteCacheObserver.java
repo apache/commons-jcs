@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,16 +16,16 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * limitations under the License.
  */
 
-
 import java.rmi.Remote;
 
 import org.apache.jcs.engine.behavior.ICacheObserver;
 
 /**
  * Used to register interest in receiving remote cache changes.
- *
+ *  
  */
-public interface IRemoteCacheObserver extends Remote, ICacheObserver
+public interface IRemoteCacheObserver
+    extends Remote, ICacheObserver
 {
 
 }

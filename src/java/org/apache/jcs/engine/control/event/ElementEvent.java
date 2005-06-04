@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.control.event;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,28 +16,30 @@ package org.apache.jcs.engine.control.event;
  * limitations under the License.
  */
 
-
 import java.util.EventObject;
 
 import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
 
 /**
- *  Element events will trigger the creation of Element Event objects. This is a
- *  wrapper around the cache element that indicates the event triggered.
- *
+ * Element events will trigger the creation of Element Event objects. This is a
+ * wrapper around the cache element that indicates the event triggered.
+ *  
  */
 public class ElementEvent
-     extends EventObject
-     implements IElementEventConstants, IElementEvent
+    extends EventObject
+    implements IElementEventConstants, IElementEvent
 {
 
     private int elementEvent = ElementEvent.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND;
+
     /**
-     *  Constructor for the ElementEvent object
-     *
-     *@param  source        The Cache Element (should restrict?)
-     *@param  elementEvent  The event id defined in the constants class.
+     * Constructor for the ElementEvent object
+     * 
+     * @param source
+     *            The Cache Element (should restrict?)
+     * @param elementEvent
+     *            The event id defined in the constants class.
      */
     public ElementEvent( Object source, int elementEvent )
     {
@@ -47,10 +48,10 @@ public class ElementEvent
     }
 
     /**
-     *  Gets the elementEvent attribute of the ElementEvent object
-     *
-     *@return    The elementEvent value. The List of values is defined in
-     *      IElementEventConstants.
+     * Gets the elementEvent attribute of the ElementEvent object
+     * 
+     * @return The elementEvent value. The List of values is defined in
+     *         IElementEventConstants.
      */
     public int getElementEvent()
     {

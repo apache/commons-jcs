@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.threads;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.utils.threads;
  * limitations under the License.
  */
 
-
 import java.util.*;
 
 import org.apache.commons.logging.Log;
@@ -27,22 +25,24 @@ import org.apache.commons.logging.LogFactory;
  * A thread pool that is trying to copy the apache process management. asmuts --
  * Pulled out of tomcat, since it seems to move around and hide. Trying to
  * reduce the number of dependencies
- *
+ *  
  */
 public class ThreadPool
 {
-    private final static Log log =
-        LogFactory.getLog( ThreadPool.class );
+    private final static Log log = LogFactory.getLog( ThreadPool.class );
 
     /*
      * Default values ...
      */
     /** Description of the Field */
     public final static int MAX_THREADS = 200;
+
     /** Description of the Field */
     public final static int MAX_SPARE_THREADS = 50;
+
     /** Description of the Field */
     public final static int MIN_SPARE_THREADS = 4;
+
     /** Description of the Field */
     public final static int WORK_WAIT_TIMEOUT = 60 * 1000;
 
@@ -123,8 +123,9 @@ public class ThreadPool
 
     /**
      * Sets the maxThreads attribute of the ThreadPool object
-     *
-     * @param maxThreads The new maxThreads value
+     * 
+     * @param maxThreads
+     *            The new maxThreads value
      */
     public void setMaxThreads( int maxThreads )
     {
@@ -133,7 +134,7 @@ public class ThreadPool
 
     /**
      * Gets the maxThreads attribute of the ThreadPool object
-     *
+     * 
      * @return The maxThreads value
      */
     public int getMaxThreads()
@@ -143,8 +144,9 @@ public class ThreadPool
 
     /**
      * Sets the minSpareThreads attribute of the ThreadPool object
-     *
-     * @param minSpareThreads The new minSpareThreads value
+     * 
+     * @param minSpareThreads
+     *            The new minSpareThreads value
      */
     public void setMinSpareThreads( int minSpareThreads )
     {
@@ -153,7 +155,7 @@ public class ThreadPool
 
     /**
      * Gets the minSpareThreads attribute of the ThreadPool object
-     *
+     * 
      * @return The minSpareThreads value
      */
     public int getMinSpareThreads()
@@ -163,8 +165,9 @@ public class ThreadPool
 
     /**
      * Sets the maxSpareThreads attribute of the ThreadPool object
-     *
-     * @param maxSpareThreads The new maxSpareThreads value
+     * 
+     * @param maxSpareThreads
+     *            The new maxSpareThreads value
      */
     public void setMaxSpareThreads( int maxSpareThreads )
     {
@@ -173,7 +176,7 @@ public class ThreadPool
 
     /**
      * Gets the maxSpareThreads attribute of the ThreadPool object
-     *
+     * 
      * @return The maxSpareThreads value
      */
     public int getMaxSpareThreads()
@@ -247,7 +250,7 @@ public class ThreadPool
             }
 
             // If we are here it means that there is a free thred. Take it.
-            c = ( ControlRunnable ) pool.lastElement();
+            c = (ControlRunnable) pool.lastElement();
             pool.removeElement( c );
             currentThreadsBusy++;
         }
@@ -261,10 +264,8 @@ public class ThreadPool
     {
         if ( logfull )
         {
-            log.debug( "All threads are busy, waiting. Please " +
-                "increase maxThreads or check the servlet" +
-                " status" + currentThreadCount + " " +
-                maxThreads );
+            log.debug( "All threads are busy, waiting. Please " + "increase maxThreads or check the servlet"
+                + " status" + currentThreadCount + " " + maxThreads );
             logfull = false;
         }
     }
@@ -281,13 +282,13 @@ public class ThreadPool
             {
                 try
                 {
-                    ( ( ControlRunnable ) ( pool.elementAt( i ) ) ).terminate();
+                    ( (ControlRunnable) ( pool.elementAt( i ) ) ).terminate();
                 }
                 catch ( Throwable t )
                 {
                     /*
-                     * Do nothing... The show must go on, we are shutting
-                     * down the pool and nothing should stop that.
+                     * Do nothing... The show must go on, we are shutting down
+                     * the pool and nothing should stop that.
                      */
                     log.error( "Ignored exception while shutting down thread pool" );
                 }
@@ -308,13 +309,11 @@ public class ThreadPool
         }
         if ( ( currentThreadCount - currentThreadsBusy ) > maxSpareThreads )
         {
-            int toFree = currentThreadCount -
-                currentThreadsBusy -
-                maxSpareThreads;
+            int toFree = currentThreadCount - currentThreadsBusy - maxSpareThreads;
 
             for ( int i = 0; i < toFree; i++ )
             {
-                ControlRunnable c = ( ControlRunnable ) pool.firstElement();
+                ControlRunnable c = (ControlRunnable) pool.firstElement();
                 pool.removeElement( c );
                 c.terminate();
                 currentThreadCount--;
@@ -351,11 +350,9 @@ public class ThreadPool
         notify();
     }
 
-
     /*
-     * Checks for problematic configuration and fix it.
-     * The fix provides reasonable settings for a single CPU
-     * with medium load.
+     * Checks for problematic configuration and fix it. The fix provides
+     * reasonable settings for a single CPU with medium load.
      */
     /** Description of the Method */
     protected void adjustLimits()
@@ -430,17 +427,20 @@ public class ThreadPool
 
     /**
      * Periodically execute an action - cleanup in this case
-     *
+     *  
      */
-    class MonitorRunnable implements Runnable
+    class MonitorRunnable
+        implements Runnable
     {
         ThreadPool p;
+
         Thread t;
+
         boolean shouldTerminate;
 
         /**
          * Constructor for the MonitorRunnable object
-         *
+         * 
          * @param p
          */
         MonitorRunnable( ThreadPool p )
@@ -494,9 +494,10 @@ public class ThreadPool
     /**
      * A Thread object that executes various actions ( IThreadPoolRunnable )
      * under control of ThreadPool
-     *
+     *  
      */
-    class ControlRunnable implements Runnable
+    class ControlRunnable
+        implements Runnable
     {
 
         /** ThreadPool where this thread will be returned */
@@ -520,11 +521,12 @@ public class ThreadPool
          * of thread data with action type ), but right now it's enough.
          */
         boolean noThData;
+
         Object thData[] = null;
 
         /**
          * Start a new thread, with no method in it
-         *
+         * 
          * @param p
          */
         ControlRunnable( ThreadPool p )
@@ -591,9 +593,9 @@ public class ThreadPool
                     {
                         log.error( "Caught exception executing " + toRun.toString() + ", terminating thread" );
                         /*
-                         * The runnable throw an exception (can be even a ThreadDeath),
-                         * signalling that the thread die.
-                         *
+                         * The runnable throw an exception (can be even a
+                         * ThreadDeath), signalling that the thread die.
+                         * 
                          * The meaning is that we should release the thread from
                          * the pool.
                          */
@@ -614,8 +616,8 @@ public class ThreadPool
                     }
 
                     /*
-                     * Check if should terminate.
-                     * termination happens when the pool is shutting down.
+                     * Check if should terminate. termination happens when the
+                     * pool is shutting down.
                      */
                     if ( shouldTerminate )
                     {

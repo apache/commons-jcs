@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine.behavior;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 
 import org.apache.jcs.engine.behavior.ICacheListener;
@@ -28,42 +26,46 @@ import org.apache.jcs.engine.behavior.ICacheListener;
  * Note: server which implements this interface provides a local cache event
  * notification service, whereas server which implements IRmiCacheWatch provides
  * a remote cache event notification service.
- *
+ *  
  */
 public interface ICacheObserver
 {
     /**
      * Subscribes to the specified cache.
-     *
-     * @param cacheName the specified cache.
-     * @param obj object to notify for cache changes.
+     * 
+     * @param cacheName
+     *            the specified cache.
+     * @param obj
+     *            object to notify for cache changes.
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException;
+
     //, CacheNotFoundException;
 
     /**
      * Subscribes to all caches.
-     *
-     * @param obj object to notify for all cache changes.
+     * 
+     * @param obj
+     *            object to notify for all cache changes.
      */
     public void addCacheListener( ICacheListener obj )
         throws IOException;
 
-
     /**
      * Unsubscribes from the specified cache.
-     *
-     * @param obj existing subscriber.
+     * 
+     * @param obj
+     *            existing subscriber.
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException;
 
-
     /**
      * Unsubscribes from all caches.
-     *
-     * @param obj existing subscriber.
+     * 
+     * @param obj
+     *            existing subscriber.
      */
     public void removeCacheListener( ICacheListener obj )
         throws IOException;

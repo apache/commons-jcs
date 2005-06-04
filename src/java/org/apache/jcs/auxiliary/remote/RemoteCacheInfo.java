@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,21 +16,21 @@ package org.apache.jcs.auxiliary.remote;
  * limitations under the License.
  */
 
-
 /*
  * This won't work when registered to mulitple remotes, will use a variable int he rcm
  */
 /**
  * A shared static variable holder for the remote cache
- *
+ *  
  */
 public class RemoteCacheInfo
 {
 
     // shouldn't be instantiated
     /** Constructor for the RemoteCacheInfo object */
-    private RemoteCacheInfo() { }
-
+    private RemoteCacheInfo()
+    {
+    }
 
     /**
      * Shouldn't be used till after reconneting, after setting = thread safe
@@ -42,4 +41,3 @@ public class RemoteCacheInfo
     protected static long listenerId = 0;
 
 }
-

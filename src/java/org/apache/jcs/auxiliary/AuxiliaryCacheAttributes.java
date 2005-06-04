@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,72 +16,72 @@ package org.apache.jcs.auxiliary;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 /**
  * This is a nominal interface that auxilliary cache attributes should
  * implement. This allows the auxiliary mangers to share a common interface.
- *
+ *  
  */
-public interface AuxiliaryCacheAttributes extends Cloneable, Serializable
+public interface AuxiliaryCacheAttributes
+    extends Cloneable, Serializable
 {
-  
-  /**
-   * Does not use a thread pool.  
-   */
-  public static final String SINGLE_QUEUE_TYPE = "SINGLE";
-  
-  /**
-   * Uses a thread pool
-   */
-  public static final String POOLED_QUEUE_TYPE = "POOLED";   
-  
-  /**
+
+    /**
+     * Does not use a thread pool.
+     */
+    public static final String SINGLE_QUEUE_TYPE = "SINGLE";
+
+    /**
+     * Uses a thread pool
+     */
+    public static final String POOLED_QUEUE_TYPE = "POOLED";
+
+    /**
      * Sets the name of the cache, referenced by the appropriate manager.
-     *
-     * @param s The new cacheName value
+     * 
+     * @param s
+     *            The new cacheName value
      */
     public void setCacheName( String s );
 
-
     /**
      * Gets the cacheName attribute of the IAuxiliaryCacheAttributes object
-     *
+     * 
      * @return The cacheName value
      */
     public String getCacheName();
 
-
     /**
      * Name know by by configurator
-     *
-     * @param s The new name value
+     * 
+     * @param s
+     *            The new name value
      */
     public void setName( String s );
 
-
     /**
      * Gets the name attribute of the IAuxiliaryCacheAttributes object
-     *
+     * 
      * @return The name value
      */
     public String getName();
 
     /**
-     * SINGLE is the default.  If you choose POOLED, the value of EventQueuePoolName will be used
+     * SINGLE is the default. If you choose POOLED, the value of
+     * EventQueuePoolName will be used
      * 
-     * @param s SINGLE or POOLED
+     * @param s
+     *            SINGLE or POOLED
      * @return
      */
     public void setEventQueueType( String s );
 
     /**
      * 
-     * @return  SINGLE or POOLED
+     * @return SINGLE or POOLED
      */
     public String getEventQueueType();
-    
 
     /**
      * Returns the value used by the factory.
@@ -92,23 +91,23 @@ public interface AuxiliaryCacheAttributes extends Cloneable, Serializable
     public int getEventQueueTypeFactoryCode();
 
     /**
-     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used.
-     * This is ignored if the pool type is SINGLE
+     * If you choose a POOLED event queue type, the value of EventQueuePoolName
+     * will be used. This is ignored if the pool type is SINGLE
      * 
-     * @param s SINGLE or POOLED
+     * @param s
+     *            SINGLE or POOLED
      * @return
      */
     public void setEventQueuePoolName( String s );
 
     /**
-     * Sets the pool name to use.  If a pool is not found by this name, the
+     * Sets the pool name to use. If a pool is not found by this name, the
      * thread pool manager will return a default configuration.
      * 
      * @return name of thread pool to use for this auxiliary
      */
     public String getEventQueuePoolName();
 
-    
     /** Description of the Method */
     public AuxiliaryCacheAttributes copy();
 

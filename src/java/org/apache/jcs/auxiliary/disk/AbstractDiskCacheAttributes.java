@@ -21,90 +21,91 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 
 /**
- * This has common attributes that any conceivable disk cache would need. 
+ * This has common attributes that any conceivable disk cache would need.
  * 
  * @author aaronsm
- *
+ *  
  */
-public abstract class AbstractDiskCacheAttributes extends
-    AbstractAuxiliaryCacheAttributes implements IDiskCacheAttributes
+public abstract class AbstractDiskCacheAttributes
+    extends AbstractAuxiliaryCacheAttributes
+    implements IDiskCacheAttributes
 {
 
-  /** path to disk */
-  protected String diskPath;
+    /** path to disk */
+    protected String diskPath;
 
-  /** default to 5000 */
-  protected int    maxPurgatorySize = MAX_PURGATORY_SIZE_DEFUALT;
+    /** default to 5000 */
+    protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFUALT;
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setDiskPath(java.lang.String)
-   */
-  public void setDiskPath( String path )
-  {
-    this.diskPath = path.trim();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getDiskPath()
-   */
-  public String getDiskPath()
-  {
-    return this.diskPath;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getMaxPurgatorySize()
-   */
-  public int getMaxPurgatorySize()
-  {
-    return maxPurgatorySize;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setMaxPurgatorySize(int)
-   */
-  public void setMaxPurgatorySize( int maxPurgatorySize )
-  {
-    this.maxPurgatorySize = maxPurgatorySize;
-  }
-
-  /**
-   * Description of the Method
-   * 
-   * @return AuxiliaryCacheAttributes
-   */
-  public AuxiliaryCacheAttributes copy()
-  {
-    try
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setDiskPath(java.lang.String)
+     */
+    public void setDiskPath( String path )
     {
-      return (AuxiliaryCacheAttributes) this.clone();
+        this.diskPath = path.trim();
     }
-    catch (Exception e)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getDiskPath()
+     */
+    public String getDiskPath()
     {
+        return this.diskPath;
     }
-    return this;
-  }
-  
-  /**
-   * Description of the Method
-   *
-   * @return String
-   */
-  public String toString()
-  {
-      StringBuffer str = new StringBuffer();
-      str.append( "AbstractDiskCacheAttributes " );
-      str.append( "\n diskPath = " + diskPath );
-      str.append( "\n maxPurgatorySize   = " + maxPurgatorySize );
-      return str.toString();
-  }  
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getMaxPurgatorySize()
+     */
+    public int getMaxPurgatorySize()
+    {
+        return maxPurgatorySize;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setMaxPurgatorySize(int)
+     */
+    public void setMaxPurgatorySize( int maxPurgatorySize )
+    {
+        this.maxPurgatorySize = maxPurgatorySize;
+    }
+
+    /**
+     * Description of the Method
+     * 
+     * @return AuxiliaryCacheAttributes
+     */
+    public AuxiliaryCacheAttributes copy()
+    {
+        try
+        {
+            return (AuxiliaryCacheAttributes) this.clone();
+        }
+        catch ( Exception e )
+        {
+        }
+        return this;
+    }
+
+    /**
+     * Description of the Method
+     * 
+     * @return String
+     */
+    public String toString()
+    {
+        StringBuffer str = new StringBuffer();
+        str.append( "AbstractDiskCacheAttributes " );
+        str.append( "\n diskPath = " + diskPath );
+        str.append( "\n maxPurgatorySize   = " + maxPurgatorySize );
+        return str.toString();
+    }
 
 }

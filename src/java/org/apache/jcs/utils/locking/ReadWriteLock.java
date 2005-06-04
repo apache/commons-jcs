@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.locking;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.utils.locking;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.util.ArrayList;
 
@@ -34,12 +32,11 @@ import org.apache.commons.logging.LogFactory;
  * The invariant required by this class is that the method <code>done</code>
  * must be called, and only be called, after a previous call to either the
  * method <code>readLock</code> or <code>writeLock</code>.
- *
+ *  
  */
 public class ReadWriteLock
 {
-    private final static Log log =
-        LogFactory.getLog( ReadWriteLock.class );
+    private final static Log log = LogFactory.getLog( ReadWriteLock.class );
 
     /** Number of threads waiting to read. */
     private int waitingForReadLock = 0;
@@ -62,10 +59,10 @@ public class ReadWriteLock
      */
     private ArrayList waitingForWriteLock = new ArrayList();
 
-
     /** Default constructor. */
-    public ReadWriteLock() { }
-
+    public ReadWriteLock()
+    {
+    }
 
     /**
      * Issue a read lock if there is no outstanding write lock or threads
@@ -79,7 +76,7 @@ public class ReadWriteLock
         while ( writeLockedThread != null )
         {
             log.debug( "readLock wait" );
-            wait(20);
+            wait( 20 );
             log.debug( "wake up from readLock wait" );
         }
 
@@ -88,7 +85,6 @@ public class ReadWriteLock
         waitingForReadLock--;
         outstandingReadLocks++;
     }
-
 
     /**
      * Issue a write lock if there are no outstanding read or write locks.
@@ -123,10 +119,11 @@ public class ReadWriteLock
             {
                 //outstandingWriteLocks++; //testing
                 log.debug( "writeLock wait" );
-                // set this so if there is an error the app will not completely die!
+                // set this so if there is an error the app will not completely
+                // die!
                 thisThread.wait( 2000 );
                 log.debug( "wake up from writeLock wait" );
-             }
+            }
 
             log.debug( "writeLock acquired" );
         }
@@ -137,13 +134,13 @@ public class ReadWriteLock
         }
     }
 
-
     /**
      * Threads call this method to relinquish a lock that they previously got
      * from this object.
-     *
-     * @throws IllegalStateException if called when there are no outstanding
-     *      locks or there is a write lock issued to a different thread.
+     * 
+     * @throws IllegalStateException
+     *             if called when there are no outstanding locks or there is a
+     *             write lock issued to a different thread.
      */
     public synchronized void done()
     {
@@ -152,11 +149,11 @@ public class ReadWriteLock
             outstandingReadLocks--;
             if ( outstandingReadLocks == 0 && waitingForWriteLock.size() > 0 )
             {
-                writeLockedThread = ( Thread ) waitingForWriteLock.get( 0 );
+                writeLockedThread = (Thread) waitingForWriteLock.get( 0 );
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "readLock released and before notifying a write lock waiting thread "
-                         + writeLockedThread );
+                        + writeLockedThread );
                 }
                 synchronized ( writeLockedThread )
                 {
@@ -165,7 +162,7 @@ public class ReadWriteLock
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "readLock released and after  notifying a write lock waiting thread "
-                         + writeLockedThread );
+                        + writeLockedThread );
                 }
             }
             else if ( log.isDebugEnabled() )
@@ -196,11 +193,11 @@ public class ReadWriteLock
             // could pull out of sub if block to get nested tracking working.
             if ( outstandingReadLocks == 0 && waitingForWriteLock.size() > 0 )
             {
-                writeLockedThread = ( Thread ) waitingForWriteLock.get( 0 );
+                writeLockedThread = (Thread) waitingForWriteLock.get( 0 );
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "writeLock released and before notifying a write lock waiting thread "
-                         + writeLockedThread );
+                        + writeLockedThread );
                 }
                 synchronized ( writeLockedThread )
                 {
@@ -209,7 +206,7 @@ public class ReadWriteLock
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "writeLock released and after notifying a write lock waiting thread "
-                         + writeLockedThread );
+                        + writeLockedThread );
                 }
             }
             else
@@ -232,4 +229,3 @@ public class ReadWriteLock
         throw new IllegalStateException( "Thread does not have lock" );
     }
 }
-

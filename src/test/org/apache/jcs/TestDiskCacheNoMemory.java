@@ -1,6 +1,5 @@
 package org.apache.jcs;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,28 +16,29 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads.  It uses a config file that specifies 0 items in
+ * regions for thre threads. It uses a config file that specifies 0 items in
  * memory.
- *
+ * 
  * @version $Id$
  */
-public class TestDiskCacheNoMemory extends TestCase
+public class TestDiskCacheNoMemory
+    extends TestCase
 {
     /**
-     * Number of items to cache; the configured maxObjects for the
-     * memory cache regions is 0.
+     * Number of items to cache; the configured maxObjects for the memory cache
+     * regions is 0.
      */
     private static int items = 2000;
 
     /**
      * Constructor for the TestDiskCache object.
+     * 
      * @param testName
      */
     public TestDiskCacheNoMemory( String testName )
@@ -48,18 +48,19 @@ public class TestDiskCacheNoMemory extends TestCase
 
     /**
      * Main method passes this test to the text test runner.
+     * 
      * @param args
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = {TestDiskCacheNoMemory.class.getName()};
+        String[] testCaseName = { TestDiskCacheNoMemory.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
     /**
      * A unit test suite for JUnit
-     *
-     * @return    The test suite
+     * 
+     * @return The test suite
      */
     public static Test suite()
     {
@@ -67,7 +68,8 @@ public class TestDiskCacheNoMemory extends TestCase
 
         suite.addTest( new TestDiskCacheNoMemory( "testIndexedDiskCache1" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion1" );
             }
@@ -75,7 +77,8 @@ public class TestDiskCacheNoMemory extends TestCase
 
         suite.addTest( new TestDiskCacheNoMemory( "testIndexedDiskCache2" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion2" );
             }
@@ -83,7 +86,8 @@ public class TestDiskCacheNoMemory extends TestCase
 
         suite.addTest( new TestDiskCacheNoMemory( "testIndexedDiskCache3" )
         {
-            public void runTest() throws Exception
+            public void runTest()
+                throws Exception
             {
                 this.runTestForRegion( "indexedRegion3" );
             }
@@ -103,10 +107,12 @@ public class TestDiskCacheNoMemory extends TestCase
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region Name of the region to access
-     *
-     * @exception Exception If an error occurs
+     * 
+     * @param region
+     *            Name of the region to access
+     * 
+     * @exception Exception
+     *                If an error occurs
      */
     public void runTestForRegion( String region )
         throws Exception
@@ -124,7 +130,7 @@ public class TestDiskCacheNoMemory extends TestCase
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = ( String ) jcs.get( i + ":key" );
+            String value = (String) jcs.get( i + ":key" );
 
             assertEquals( region + " data " + i, value );
         }
@@ -140,8 +146,7 @@ public class TestDiskCacheNoMemory extends TestCase
 
         for ( int i = 0; i <= items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key",
-                        jcs.get( i + ":key" ) );
+            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
 
         // dump the stats tot he report

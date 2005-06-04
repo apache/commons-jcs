@@ -26,29 +26,33 @@ import java.io.OutputStream;
 public class CountingOnlyOutputStream
     extends OutputStream
 {
-  private int count;
+    private int count;
 
-  public void write( byte[] b ) throws IOException
-  {
-    this.count += b.length;
-  }
+    public void write( byte[] b )
+        throws IOException
+    {
+        this.count += b.length;
+    }
 
-  public void write( byte[] b, int off, int len ) throws IOException
-  {
-    this.count += len;
-  }
+    public void write( byte[] b, int off, int len )
+        throws IOException
+    {
+        this.count += len;
+    }
 
-  public void write( int b ) throws IOException
-  {
-    this.count++;
-  }
+    public void write( int b )
+        throws IOException
+    {
+        this.count++;
+    }
 
-  /**
-   * The number of bytes that have passed through this stream.
-   * @return
-   */
-  public int getCount()
-  {
-    return this.count;
-  }
+    /**
+     * The number of bytes that have passed through this stream.
+     * 
+     * @return
+     */
+    public int getCount()
+    {
+        return this.count;
+    }
 }

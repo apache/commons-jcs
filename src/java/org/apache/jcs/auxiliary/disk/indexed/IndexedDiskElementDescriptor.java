@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,24 +16,26 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 /**
  * Disk objects are located by descriptor entries. These are saved on shutdown
  * and loaded into memory on startup.
- *
+ *  
  */
-public class IndexedDiskElementDescriptor implements Serializable, Comparable
+public class IndexedDiskElementDescriptor
+    implements Serializable, Comparable
 {
 
     /** Position of the cache data entry on disk. */
     long pos;
+
     /** Number of bytes the serialized form of the cache data takes. */
     public int len;
 
-
-    /** Description of the Method 
+    /**
+     * Description of the Method
+     * 
      * @param pos
      * @param data
      */
@@ -45,42 +46,48 @@ public class IndexedDiskElementDescriptor implements Serializable, Comparable
         //    this.hash = hashCode(data);
     }
 
-
     /** Constructor for the DiskElementDescriptor object */
-    public IndexedDiskElementDescriptor() { }
-
-
-    public String toString() {
-      StringBuffer buf = new StringBuffer();
-      buf.append( "DED: " );
-      buf.append( " pos = " + pos );
-      buf.append( " len = " + len );
-      return buf.toString();
+    public IndexedDiskElementDescriptor()
+    {
     }
 
-  /**
-   * compareTo
-   *
-   * @param o Object
-   * @return int
-   */
-  public int compareTo(Object o)
-  {
-    if ( o == null ) {
-      return 1;
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "DED: " );
+        buf.append( " pos = " + pos );
+        buf.append( " len = " + len );
+        return buf.toString();
     }
 
-    int oLen = ((IndexedDiskElementDescriptor)o).len;
-    if ( oLen == len ) {
-      return 0;
-    } else
-    if ( oLen > len ) {
-      return -1;
-    } else
-    if ( oLen < len ) {
-      return 1;
+    /**
+     * compareTo
+     * 
+     * @param o
+     *            Object
+     * @return int
+     */
+    public int compareTo( Object o )
+    {
+        if ( o == null )
+        {
+            return 1;
+        }
+
+        int oLen = ( (IndexedDiskElementDescriptor) o ).len;
+        if ( oLen == len )
+        {
+            return 0;
+        }
+        else if ( oLen > len )
+        {
+            return -1;
+        }
+        else if ( oLen < len )
+        {
+            return 1;
+        }
+        return 0;
     }
-    return 0;
-  }
 
 }

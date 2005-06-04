@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.memory.shrinking;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.engine.memory.shrinking;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -37,10 +35,11 @@ import org.apache.jcs.engine.memory.MemoryCache;
  * A background memory shrinker. Memory problems and concurrent modification
  * exception caused by acting directly on an iterator of the underlying memory
  * cache should have been solved.
- *
+ * 
  * @version $Id$
  */
-public class ShrinkerThread implements Runnable
+public class ShrinkerThread
+    implements Runnable
 {
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
@@ -50,14 +49,16 @@ public class ShrinkerThread implements Runnable
     /** Maximum memory idle time for the whole cache */
     private final long maxMemoryIdleTime;
 
-    /** Maximum number of items to spool per run.  Default is -1, or no limit. */
+    /** Maximum number of items to spool per run. Default is -1, or no limit. */
     private int maxSpoolPerRun;
+
     private boolean spoolLimit = false;
 
     /**
      * Constructor for the ShrinkerThread object.
-     *
-     * @param cache The MemoryCache which the new shrinker should watch.
+     * 
+     * @param cache
+     *            The MemoryCache which the new shrinker should watch.
      */
     public ShrinkerThread( MemoryCache cache )
     {
@@ -65,8 +66,7 @@ public class ShrinkerThread implements Runnable
 
         this.cache = cache;
 
-        long maxMemoryIdleTimeSeconds =
-            cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds();
+        long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds();
 
         if ( maxMemoryIdleTimeSeconds == -1 )
         {
@@ -77,11 +77,10 @@ public class ShrinkerThread implements Runnable
             this.maxMemoryIdleTime = maxMemoryIdleTimeSeconds * 1000;
         }
 
-        this.maxSpoolPerRun =
-            cache.getCacheAttributes().getMaxSpoolPerRun();
+        this.maxSpoolPerRun = cache.getCacheAttributes().getMaxSpoolPerRun();
         if ( this.maxSpoolPerRun != -1 )
         {
-          this.spoolLimit = true;
+            this.spoolLimit = true;
         }
 
     }
@@ -91,40 +90,33 @@ public class ShrinkerThread implements Runnable
      */
     public void run()
     {
-      shrink();
+        shrink();
     }
 
     /**
      * This method is called when the thread wakes up. Frist the method obtains
      * an array of keys for the cache region. It iterates through the keys and
-     * tries to get the item from the cache without affecting the last access
-     * or position of the item. The item is checked for expiration, the
-     * expiration check has 3 parts:
+     * tries to get the item from the cache without affecting the last access or
+     * position of the item. The item is checked for expiration, the expiration
+     * check has 3 parts:
      * <ol>
-     *   <li>
-     *     Has the cacheattributes.MaxMemoryIdleTimeSeconds defined for the
-     *     region been exceeded? If so, the item should be move to disk.
-     *   </li>
-     *   <li>
-     *     Has the item exceeded MaxLifeSeconds defined in the element
-     *     attributes? If so, remove it.
-     *   </li>
-     *   <li>
-     *     Has the item exceeded IdleTime defined in the element atributes?
-     *     If so, remove it. If there are event listeners registered for
-     *     the cache element, they will be called.
-     *   </li>
+     * <li>Has the cacheattributes.MaxMemoryIdleTimeSeconds defined for the
+     * region been exceeded? If so, the item should be move to disk.</li>
+     * <li>Has the item exceeded MaxLifeSeconds defined in the element
+     * attributes? If so, remove it.</li>
+     * <li>Has the item exceeded IdleTime defined in the element atributes? If
+     * so, remove it. If there are event listeners registered for the cache
+     * element, they will be called.</li>
      * </ol>
-     *
-     * @todo Change element event handling to use the queue, then move the
-     *       queue to the region and access via the Cache.
+     * 
+     * @todo Change element event handling to use the queue, then move the queue
+     *       to the region and access via the Cache.
      */
     protected void shrink()
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Shrinking memory cache for: "
-                       + this.cache.getCompositeCache().getCacheName() );
+            log.debug( "Shrinking memory cache for: " + this.cache.getCompositeCache().getCacheName() );
         }
 
         try
@@ -144,7 +136,7 @@ public class ShrinkerThread implements Runnable
 
             for ( int i = 0; i < size; i++ )
             {
-                key = ( Serializable ) keys[ i ];
+                key = (Serializable) keys[i];
                 cacheElement = cache.getQuiet( key );
 
                 if ( cacheElement == null )
@@ -187,47 +179,46 @@ public class ShrinkerThread implements Runnable
 
                 if ( !remove && ( maxMemoryIdleTime != -1 ) )
                 {
-                  if ( !spoolLimit || (spoolCount <= this.maxSpoolPerRun) )
-                  {
+                    if ( !spoolLimit || ( spoolCount <= this.maxSpoolPerRun ) )
+                    {
 
-                    final long lastAccessTime = attributes.getLastAccessTime();
+                        final long lastAccessTime = attributes.getLastAccessTime();
 
-                    if ( lastAccessTime + maxMemoryIdleTime < now )
+                        if ( lastAccessTime + maxMemoryIdleTime < now )
+                        {
+                            if ( log.isDebugEnabled() )
+                            {
+                                log.debug( "Exceeded memory idle time: " + cacheElement.getKey() );
+                            }
+
+                            // FIXME: Shouldn't we ensure that the element is
+                            //        spooled before removing it from memory?
+
+                            spoolCount++;
+
+                            cache.remove( cacheElement.getKey() );
+
+                            cache.waterfal( cacheElement );
+
+                            key = null;
+                            cacheElement = null;
+                        }
+                    }
+                    else
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Exceeded memory idle time: "
-                                       + cacheElement.getKey() );
+                            log.debug( "spoolCount = '" + spoolCount + "'; " + "maxSpoolPerRun = '" + maxSpoolPerRun
+                                + "'" );
                         }
 
-                        // FIXME: Shouldn't we ensure that the element is
-                        //        spooled before removing it from memory?
-
-                        spoolCount++;
-
-                        cache.remove( cacheElement.getKey() );
-
-                        cache.waterfal( cacheElement );
-
-                        key = null;
-                        cacheElement = null;
+                        // stop processing if limit has been reached.
+                        if ( spoolLimit && ( spoolCount >= this.maxSpoolPerRun ) )
+                        {
+                            keys = null;
+                            return;
+                        }
                     }
-                  }
-                  else
-                  {
-                      if ( log.isDebugEnabled() )
-                      {
-                        log.debug( "spoolCount = '" + spoolCount + "'; " +
-                                   "maxSpoolPerRun = '" + maxSpoolPerRun + "'");
-                      }
-                      
-                      // stop processing if limit has been reached.
-                      if ( spoolLimit && (spoolCount >= this.maxSpoolPerRun ) )
-                      {
-                        keys = null;
-                        return;
-                      }
-                  }
                 }
             }
 
@@ -249,9 +240,11 @@ public class ShrinkerThread implements Runnable
     /**
      * Check if either lifetime or idletime has expired for the provided event,
      * and remove it from the cache if so.
-     *
-     * @param cacheElement Element to check for expiration
-     * @param now Time to consider expirations relative to
+     * 
+     * @param cacheElement
+     *            Element to check for expiration
+     * @param now
+     *            Time to consider expirations relative to
      * @return true if the element should be removed, or false.
      * @throws IOException
      */
@@ -271,8 +264,7 @@ public class ShrinkerThread implements Runnable
                 log.info( "Exceeded maxLifeSeconds: " + cacheElement.getKey() );
             }
 
-            handleElementEvents( cacheElement, IElementEventConstants
-                .ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND );
+            handleElementEvents( cacheElement, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND );
 
             return true;
         }
@@ -288,8 +280,7 @@ public class ShrinkerThread implements Runnable
                 log.info( "Exceeded maxIdleTime " + cacheElement.getKey() );
             }
 
-            handleElementEvents( cacheElement, IElementEventConstants
-                .ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND );
+            handleElementEvents( cacheElement, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND );
 
             return true;
         }
@@ -300,13 +291,15 @@ public class ShrinkerThread implements Runnable
     /**
      * Handle any events registered for the given element of the given event
      * type.
-     *
-     * @param cacheElement Element to handle events for
-     * @param eventType Type of event to handle
-     * @throws IOException If an error occurs
+     * 
+     * @param cacheElement
+     *            Element to handle events for
+     * @param eventType
+     *            Type of event to handle
+     * @throws IOException
+     *             If an error occurs
      */
-    private void handleElementEvents( ICacheElement cacheElement,
-                                      int eventType )
+    private void handleElementEvents( ICacheElement cacheElement, int eventType )
         throws IOException
     {
         IElementAttributes attributes = cacheElement.getElementAttributes();
@@ -326,8 +319,7 @@ public class ShrinkerThread implements Runnable
 
             while ( handlerIter.hasNext() )
             {
-                IElementEventHandler hand =
-                    ( IElementEventHandler ) handlerIter.next();
+                IElementEventHandler hand = (IElementEventHandler) handlerIter.next();
 
                 cache.getCompositeCache().addElementEvent( hand, event );
             }

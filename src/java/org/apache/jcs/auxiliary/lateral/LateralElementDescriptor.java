@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,25 +16,28 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class LateralElementDescriptor implements Serializable
+public class LateralElementDescriptor
+    implements Serializable
 {
 
     // command types
     /** Description of the Field */
     public final static int UPDATE = 1;
+
     /** Description of the Field */
     public final static int REMOVE = 2;
+
     /** Description of the Field */
     public final static int REMOVEALL = 3;
+
     /** Description of the Field */
     public final static int DISPOSE = 4;
 
@@ -44,21 +46,22 @@ public class LateralElementDescriptor implements Serializable
 
     /** Description of the Field */
     public ICacheElement ce;
+
     /** Description of the Field */
     public long requesterId;
 
     /** Description of the Field */
     public int command = UPDATE;
 
-
     // for update command
     /** Constructor for the LateralElementDescriptor object */
-    public LateralElementDescriptor() { }
-
+    public LateralElementDescriptor()
+    {
+    }
 
     /**
      * Constructor for the LateralElementDescriptor object
-     *
+     * 
      * @param ce
      */
     public LateralElementDescriptor( ICacheElement ce )

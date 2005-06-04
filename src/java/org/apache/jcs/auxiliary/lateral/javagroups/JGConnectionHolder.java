@@ -58,7 +58,8 @@ public class JGConnectionHolder
     {
         //throws IOException, NotBoundException
         JGConnectionHolder ins = (JGConnectionHolder) instances.get( ilca.getJGChannelProperties() );
-        //JGConnectionHolder ins = (JGConnectionHolder) instances.get( ilca.getCacheName() );
+        //JGConnectionHolder ins = (JGConnectionHolder) instances.get(
+        // ilca.getCacheName() );
         try
         {
             synchronized ( JGConnectionHolder.class )
@@ -104,7 +105,8 @@ public class JGConnectionHolder
         if ( jg == null )
         {
             jg = JGSocketOpener.openSocket( ilca, 5000, IJGConstants.DEFAULT_JG_GROUP_NAME );
-            //jg = JGSocketOpener.openSocket( ilca, 5000, this.ilca.getCacheName() );
+            //jg = JGSocketOpener.openSocket( ilca, 5000,
+            // this.ilca.getCacheName() );
             if ( log.isInfoEnabled() )
             {
                 log.info( "Created channel " + jg + " for region name " + this.ilca.getCacheName() );

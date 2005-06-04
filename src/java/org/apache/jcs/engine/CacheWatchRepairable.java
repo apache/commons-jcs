@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.engine;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.io.IOException;
 
@@ -37,38 +35,40 @@ import org.apache.commons.logging.LogFactory;
  * listeners can be recorded locally for remote connection recovery purposes.
  * (Durable subscription like those in JMS is not implemented at this stage for
  * it can be too expensive on the runtime.)
- *
+ *  
  */
-public class CacheWatchRepairable implements ICacheObserver
+public class CacheWatchRepairable
+    implements ICacheObserver
 {
-    private final static Log log =
-        LogFactory.getLog( CacheWatchRepairable.class );
+    private final static Log log = LogFactory.getLog( CacheWatchRepairable.class );
 
     // the underlying ICacheObserver.
     private ICacheObserver cacheWatch;
+
     private Map cacheMap = new HashMap();
 
     /**
      * Replaces the underlying cache watch service and reattached all existing
      * listeners to the new cache watch.
-     *
-     * @param cacheWatch The new cacheWatch value
+     * 
+     * @param cacheWatch
+     *            The new cacheWatch value
      */
     public void setCacheWatch( ICacheObserver cacheWatch )
     {
         this.cacheWatch = cacheWatch;
         synchronized ( cacheMap )
         {
-            for ( Iterator itr = cacheMap.entrySet().iterator(); itr.hasNext();  )
+            for ( Iterator itr = cacheMap.entrySet().iterator(); itr.hasNext(); )
             {
-                Map.Entry entry = ( Map.Entry ) itr.next();
-                String cacheName = ( String ) entry.getKey();
-                Set listenerSet = ( Set ) entry.getValue();
-                for ( Iterator itr2 = listenerSet.iterator(); itr2.hasNext();  )
+                Map.Entry entry = (Map.Entry) itr.next();
+                String cacheName = (String) entry.getKey();
+                Set listenerSet = (Set) entry.getValue();
+                for ( Iterator itr2 = listenerSet.iterator(); itr2.hasNext(); )
                 {
                     try
                     {
-                        cacheWatch.addCacheListener( cacheName, ( ICacheListener ) itr2.next() );
+                        cacheWatch.addCacheListener( cacheName, (ICacheListener) itr2.next() );
                     }
                     catch ( IOException ex )
                     {
@@ -79,22 +79,24 @@ public class CacheWatchRepairable implements ICacheObserver
         }
     }
 
-
     /**
      * Adds a feature to the CacheListener attribute of the CacheWatchRepairable
      * object
-     *
-     * @param cacheName The feature to be added to the CacheListener attribute
-     * @param obj The feature to be added to the CacheListener attribute
+     * 
+     * @param cacheName
+     *            The feature to be added to the CacheListener attribute
+     * @param obj
+     *            The feature to be added to the CacheListener attribute
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException
     {
-        // Record the added cache listener locally, regardless of whether the remote add-listener
+        // Record the added cache listener locally, regardless of whether the
+        // remote add-listener
         // operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            Set listenerSet = ( Set ) cacheMap.get( cacheName );
+            Set listenerSet = (Set) cacheMap.get( cacheName );
             if ( listenerSet == null )
             {
                 listenerSet = new HashSet();
@@ -105,39 +107,40 @@ public class CacheWatchRepairable implements ICacheObserver
         cacheWatch.addCacheListener( cacheName, obj );
     }
 
-
     /**
      * Adds a feature to the CacheListener attribute of the CacheWatchRepairable
      * object
-     *
-     * @param obj The feature to be added to the CacheListener attribute
+     * 
+     * @param obj
+     *            The feature to be added to the CacheListener attribute
      */
     public void addCacheListener( ICacheListener obj )
         throws IOException
     {
-        // Record the added cache listener locally, regardless of whether the remote add-listener
+        // Record the added cache listener locally, regardless of whether the
+        // remote add-listener
         // operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext();  )
+            for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext(); )
             {
-                Set listenerSet = ( Set ) itr.next();
+                Set listenerSet = (Set) itr.next();
                 listenerSet.add( obj );
             }
         }
         cacheWatch.addCacheListener( obj );
     }
 
-    
     /** Description of the Method */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
     {
-        // Record the removal locally, regardless of whether the remote remove-listener
+        // Record the removal locally, regardless of whether the remote
+        // remove-listener
         // operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            Set listenerSet = ( Set ) cacheMap.get( cacheName );
+            Set listenerSet = (Set) cacheMap.get( cacheName );
             if ( listenerSet != null )
             {
                 listenerSet.remove( obj );
@@ -146,21 +149,21 @@ public class CacheWatchRepairable implements ICacheObserver
         cacheWatch.removeCacheListener( cacheName, obj );
     }
 
-
     /** Description of the Method */
     public void removeCacheListener( ICacheListener obj )
         throws IOException
     {
-        // Record the removal locally, regardless of whether the remote remove-listener
+        // Record the removal locally, regardless of whether the remote
+        // remove-listener
         // operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext();  )
+            for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext(); )
             {
-                Set listenerSet = ( Set ) itr.next();
+                Set listenerSet = (Set) itr.next();
                 if ( log.isDebugEnabled() )
                 {
-                  log.debug( "Before removing [" + obj + "] the listenerSet = " + listenerSet );
+                    log.debug( "Before removing [" + obj + "] the listenerSet = " + listenerSet );
                 }
                 listenerSet.remove( obj );
             }

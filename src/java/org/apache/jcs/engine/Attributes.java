@@ -1,6 +1,5 @@
 package org.apache.jcs.engine;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine;
  * limitations under the License.
  */
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -28,10 +26,11 @@ import org.apache.jcs.engine.behavior.IAttributes;
 
 /**
  * Element attribute descriptor class.
- *
+ * 
  * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
-public class Attributes implements IAttributes, Serializable, Cloneable
+public class Attributes
+    implements IAttributes, Serializable, Cloneable
 {
 
     // too slow to be private
@@ -39,46 +38,61 @@ public class Attributes implements IAttributes, Serializable, Cloneable
     // remove
     /** Description of the Field */
     public boolean IS_DISTRIBUTE = false;
+
     // lateral
 
     /** Description of the Field */
     public boolean IS_LATERAL = false;
+
     // lateral
     /** Description of the Field */
     public boolean IS_NOFLUSH = false;
+
     /** Description of the Field */
     public boolean IS_REPLY = false;
+
     /** Description of the Field */
     public boolean IS_SYNCHRONIZE = false;
+
     /** Description of the Field */
     public boolean IS_SPOOL = false;
+
     /** Description of the Field */
     public boolean IS_GROUP_TTL_DESTROY = false;
+
     /** Description of the Field */
     public boolean IS_ORIGINAL = false;
+
     /** Description of the Field */
     public boolean IS_REMOTE = false;
+
     // central rmi store
     /** Description of the Field */
     public boolean IS_ETERNAL = true;
+
     //false; // can turn off expiration
 
     /** Description of the Field */
     public long version = 0;
+
     /** Description of the Field */
     public long ttl = 0;
+
     // timetolive
     /** Description of the Field */
     public long default_ttl = 0;
+
     /** Description of the Field */
     public long idle = 0;
+
     /** Description of the Field */
     public long lastAccess = 0;
+
     /** Description of the Field */
     public int size = 0;
+
     /** Description of the Field */
     public long createTime = 0;
-
 
     /** Constructor for the Attributes object */
     public Attributes()
@@ -86,10 +100,9 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         this.createTime = System.currentTimeMillis();
     }
 
-
     /**
      * Constructor for the Attributes object
-     *
+     * 
      * @param attr
      */
     private Attributes( Attributes attr )
@@ -120,14 +133,13 @@ public class Attributes implements IAttributes, Serializable, Cloneable
 
     }
 
-
     //public Object clone () {
     /** Description of the Method */
     public Attributes copy()
     {
         try
         {
-            Attributes attr = ( Attributes ) this.clone();
+            Attributes attr = (Attributes) this.clone();
             attr.createTime = System.currentTimeMillis();
             return attr;
         }
@@ -137,29 +149,23 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         }
     }
 
-
     /** Description of the Method */
     public Object clone2()
     {
 
         try
         {
-            ByteArrayOutputStream baos =
-                new ByteArrayOutputStream( 100 );
-            ObjectOutputStream oos = new
-                ObjectOutputStream( baos );
+            ByteArrayOutputStream baos = new ByteArrayOutputStream( 100 );
+            ObjectOutputStream oos = new ObjectOutputStream( baos );
             oos.writeObject( this );
             byte buf[] = baos.toByteArray();
             oos.close();
 
             // deserialize byte array into ArrayList
 
-            ByteArrayInputStream bais =
-                new ByteArrayInputStream( buf );
-            ObjectInputStream ois = new
-                ObjectInputStream( bais );
-            Attributes attr =
-                ( Attributes ) ois.readObject();
+            ByteArrayInputStream bais = new ByteArrayInputStream( buf );
+            ObjectInputStream ois = new ObjectInputStream( bais );
+            Attributes attr = (Attributes) ois.readObject();
             ois.close();
 
             attr.createTime = System.currentTimeMillis();
@@ -170,72 +176,70 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         }
         return null;
         /*
-         * System.out.println( "cloning" );
-         * Attributes attr = new Attributes( this );
-         * return attr;
+         * System.out.println( "cloning" ); Attributes attr = new Attributes(
+         * this ); return attr;
          */
     }
 
     /**
      * Sets the version attribute of the Attributes object
-     *
-     * @param version The new version value
+     * 
+     * @param version
+     *            The new version value
      */
     public void setVersion( long version )
     {
         this.version = version;
     }
 
-
     /**
      * Sets the timeToLive attribute of the Attributes object
-     *
-     * @param ttl The new timeToLive value
+     * 
+     * @param ttl
+     *            The new timeToLive value
      */
     public void setTimeToLive( long ttl )
     {
         this.ttl = ttl;
     }
 
-
-//    /**
-//     * Sets the defaultTimeToLive attribute of the Attributes object
-//     *
-//     * @param ttl The new defaultTimeToLive value
-//     */
-//    public void setDefaultTimeToLive( long ttl )
-//    {
-//        this.default_ttl = ttl;
-//    }
-
+    //    /**
+    //     * Sets the defaultTimeToLive attribute of the Attributes object
+    //     *
+    //     * @param ttl The new defaultTimeToLive value
+    //     */
+    //    public void setDefaultTimeToLive( long ttl )
+    //    {
+    //        this.default_ttl = ttl;
+    //    }
 
     /**
      * Sets the idleTime attribute of the Attributes object
-     *
-     * @param idle The new idleTime value
+     * 
+     * @param idle
+     *            The new idleTime value
      */
     public void setIdleTime( long idle )
     {
         this.idle = idle;
     }
 
-
     //public void setListener( int event, CacheEventListener listerner) {}
 
     /**
      * Size in bytes.
-     *
-     * @param size The new size value
+     * 
+     * @param size
+     *            The new size value
      */
     public void setSize( int size )
     {
         this.size = size;
     }
 
-
     /**
      * Gets the size attribute of the Attributes object
-     *
+     * 
      * @return The size value
      */
     public int getSize()
@@ -243,10 +247,9 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         return size;
     }
 
-
     /**
      * Gets the createTime attribute of the Attributes object
-     *
+     * 
      * @return The createTime value
      */
     public long getCreateTime()
@@ -254,13 +257,11 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         return createTime;
     }
 
-
     /** Sets the createTime attribute of the Attributes object */
     public void setCreateTime()
     {
         createTime = System.currentTimeMillis();
     }
-
 
     //public CacheLoader getLoader( ) {
     //  return new CacheLoader
@@ -268,7 +269,7 @@ public class Attributes implements IAttributes, Serializable, Cloneable
 
     /**
      * Gets the version attribute of the Attributes object
-     *
+     * 
      * @return The version value
      */
     public long getVersion()
@@ -276,10 +277,9 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         return version;
     }
 
-
     /**
      * Gets the idleTime attribute of the Attributes object
-     *
+     * 
      * @return The idleTime value
      */
     public long getIdleTime()
@@ -287,13 +287,12 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         return this.idle;
     }
 
-
     /**
-     * Gets the timeToLive attribute of the Attributes object.
-     * This should be called maxLifeSeconds since it is the number of
-     * seconds teh item will be available after creation, not the time
-     * from now.  Need another method.  This one can calculate the time left.
-     *
+     * Gets the timeToLive attribute of the Attributes object. This should be
+     * called maxLifeSeconds since it is the number of seconds teh item will be
+     * available after creation, not the time from now. Need another method.
+     * This one can calculate the time left.
+     * 
      * @return The timeToLive value
      */
     public long getTimeToLive()
@@ -301,34 +300,31 @@ public class Attributes implements IAttributes, Serializable, Cloneable
         return this.ttl;
     }
 
-
-// NOT NECESSARY will be using max life not time left pattern
-//    /** Description of the Method */
-//    public long timeToSeconds( int days, int hours, int minutes, int seconds )
-//        throws InvalidArgumentException
-//    {
-//        return 5;
-//    }
-
+    // NOT NECESSARY will be using max life not time left pattern
+    //    /** Description of the Method */
+    //    public long timeToSeconds( int days, int hours, int minutes, int seconds
+    // )
+    //        throws InvalidArgumentException
+    //    {
+    //        return 5;
+    //    }
 
     /** Description of the Method */
     public String toString()
     {
         StringBuffer dump = new StringBuffer();
 
-        dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL )
-            .append( ", IS_SPOOL = " ).append( IS_SPOOL )
-            .append( ", IS_REMOTE = " ).append( IS_REMOTE )
-            .append( ", IS_ETERNAL = " ).append( IS_ETERNAL )
-            .append( ", ttl = " ).append( String.valueOf( ttl ) )
-            .append( ", createTime = " ).append( String.valueOf( createTime ) )
-            .append( " ]" );
+        dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL ).append( ", IS_SPOOL = " ).append( IS_SPOOL )
+            .append( ", IS_REMOTE = " ).append( IS_REMOTE ).append( ", IS_ETERNAL = " ).append( IS_ETERNAL )
+            .append( ", ttl = " ).append( String.valueOf( ttl ) ).append( ", createTime = " )
+            .append( String.valueOf( createTime ) ).append( " ]" );
 
         return dump.toString();
         //dump.append( " IS_NOFLUSH = " + IS_NOFLUSH + "\n");
         //dump.append( " IS_REPLY = " + IS_REPLY + "\n");
         //dump.append( " IS_SYNCHRONIZE = " + IS_SYNCHRONIZE + "\n");
-        //dump.append( " IS_GROUP_TTL_DESTROY = " + IS_GROUP_TTL_DESTROY + "\n");
+        //dump.append( " IS_GROUP_TTL_DESTROY = " + IS_GROUP_TTL_DESTROY +
+        // "\n");
         //dump.append( " IS_ORIGINAL = " + IS_ORIGINAL + "\n");
     }
 }

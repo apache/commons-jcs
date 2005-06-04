@@ -25,19 +25,19 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 /**
  * 
  * @author aaronsm
- *
+ *  
  */
-public class TestElementEventHandler implements IElementEventHandler {
+public class TestElementEventHandler
+    implements IElementEventHandler
+{
 
+    private final static Log log = LogFactory.getLog( TestElementEventHandler.class );
 
-  private final static Log log = LogFactory.getLog( TestElementEventHandler.class );
+    public void handleElementEvent( IElementEvent event )
+    {
+        log.debug( "HANDLER -- HANDLER -- HANDLER -- ---EVENT CODE = " + event.getElementEvent() );
 
-
-  public void handleElementEvent(IElementEvent event )
-  {
-    log.debug( "HANDLER -- HANDLER -- HANDLER -- ---EVENT CODE = " + event.getElementEvent() );
-
-    log.debug( "/n/n EVENT CODE = " + event.getElementEvent() + " ***************************"  );
-    //return "Done";
-  }
+        log.debug( "/n/n EVENT CODE = " + event.getElementEvent() + " ***************************" );
+        //return "Done";
+    }
 }

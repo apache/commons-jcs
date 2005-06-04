@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,12 +16,10 @@ package org.apache.jcs.engine.behavior;
  * limitations under the License.
  */
 
-
 /**
  * Interface to mark an object as zombie for error recovery purposes.
- *
+ *  
  */
 public interface IZombie
 {
 }
-

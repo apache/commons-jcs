@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.locking;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.utils.locking;
  * limitations under the License.
  */
 
-
 import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
@@ -25,12 +23,11 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * The Generic ReadWriteLock Manager for various resources.
- *
+ *  
  */
 public class ReadWriteLockManager
 {
-    private final static Log log =
-        LogFactory.getLog( ReadWriteLockManager.class );
+    private final static Log log = LogFactory.getLog( ReadWriteLockManager.class );
 
     /**
      * Used to asynchronously remove unused RwLockHolder objects managed ty this
@@ -57,7 +54,7 @@ public class ReadWriteLockManager
         lock( id, true );
     }
 
-     /** Places either a read or write lock on the specified resource. */
+    /** Places either a read or write lock on the specified resource. */
     private void lock( String id, boolean isWrite )
         throws InterruptedException
     {
@@ -78,25 +75,24 @@ public class ReadWriteLockManager
 
         synchronized ( ht )
         {
-            holder = ( RwLockHolder ) ht.get( id );
+            holder = (RwLockHolder) ht.get( id );
 
             if ( holder != null )
             {
-                // Lock already exists.  So just use it.
+                // Lock already exists. So just use it.
                 holder.lcount++;
 
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Incrementing holder count to "
-                               + holder.lcount + " on "
-                               + lockType + " lock for id = " + id );
+                    log.debug( "Incrementing holder count to " + holder.lcount + " on " + lockType + " lock for id = "
+                        + id );
                 }
             }
         }
 
         if ( holder == null )
         {
-            // Lock does not exist.  So create a new one.
+            // Lock does not exist. So create a new one.
 
             RwLockHolder newHolder = new RwLockHolder( new ReadWriteLock() );
 
@@ -107,13 +103,16 @@ public class ReadWriteLockManager
 
             synchronized ( ht )
             {
-                holder = ( RwLockHolder ) ht.put( id, newHolder );
+                holder = (RwLockHolder) ht.put( id, newHolder );
 
                 if ( holder != null )
                 {
-                    // Oops, the lock is already created by someone else concurrently.
-                    // So we increment, put it back and discard the new lock we just created.
-                    // We use this strategy to minimize the time spent in the synchronized block.
+                    // Oops, the lock is already created by someone else
+                    // concurrently.
+                    // So we increment, put it back and discard the new lock we
+                    // just created.
+                    // We use this strategy to minimize the time spent in the
+                    // synchronized block.
                     holder.lcount++;
                     ht.put( id, holder );
                 }
@@ -163,12 +162,11 @@ public class ReadWriteLockManager
     {
         Hashtable ht = getLocks();
 
-        RwLockHolder holder = ( RwLockHolder ) ht.get( id );
+        RwLockHolder holder = (RwLockHolder) ht.get( id );
 
         if ( holder == null )
         {
-            String message =
-                "done called without an outstanding lock for id: " + id;
+            String message = "done called without an outstanding lock for id: " + id;
 
             if ( log.isDebugEnabled() )
             {
@@ -186,9 +184,11 @@ public class ReadWriteLockManager
         }
         // Somehow if we don't synchronize while changing the count,
         // the count went down below zero!
-        // Theoretically this should never happen, as a "done" is always preceeded
+        // Theoretically this should never happen, as a "done" is always
+        // preceeded
         // by either a read or write lock issued from the very same thread.
-        // So for the moment, let's blame the JVM and make it work via synchronization,
+        // So for the moment, let's blame the JVM and make it work via
+        // synchronization,
         // until futher investigation.
         int lcount;
         // used to minimize the time spent in the synchronized block.
@@ -210,15 +210,13 @@ public class ReadWriteLockManager
         }
         else
         {
-            throw new IllegalStateException(
-                "holder.lcount went down below zero ("
-                + holder.lcount + ") for id=" + id );
+            throw new IllegalStateException( "holder.lcount went down below zero (" + holder.lcount + ") for id=" + id );
         }
     }
 
     /**
      * Returns the lock table of all the resources managed by the subclass.
-     *
+     * 
      * @return The locks value
      */
     protected Hashtable getLocks()
@@ -226,4 +224,3 @@ public class ReadWriteLockManager
         return locks;
     }
 }
-

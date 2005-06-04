@@ -47,9 +47,9 @@ public class UDPDiscoveryService
     private LateralCacheAttributes lca = null;
 
     private UDPDiscoverySenderThread sender = null;
-    
+
     private String hostAddress = "unknown";
-    
+
     /**
      * 
      * @param facade
@@ -62,7 +62,7 @@ public class UDPDiscoveryService
         //this.facade = facade;
 
         this.lca = lca;
-        
+
         try
         {
             // todo, you should be able to set this
@@ -83,8 +83,8 @@ public class UDPDiscoveryService
             //receiver = new UDPDiscoveryReceiver( facade,
             // lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort() );
             receiver = new UDPDiscoveryReceiver( this, lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort() );
-            Thread t = new Thread(receiver);
-            t.setDaemon(true);
+            Thread t = new Thread( receiver );
+            t.setDaemon( true );
             t.start();
         }
         catch ( Exception e )
@@ -99,11 +99,11 @@ public class UDPDiscoveryService
             daemon = new ClockDaemon();
             daemon.setThreadFactory( new MyThreadFactory() );
         }
-        
+
         // create a sender thread
-        sender = new UDPDiscoverySenderThread( lca.getUdpDiscoveryAddr(), lca
-                                      .getUdpDiscoveryPort(), hostAddress, lca.getTcpListenerPort(), this.getCacheNames() );
-        
+        sender = new UDPDiscoverySenderThread( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), hostAddress, lca
+            .getTcpListenerPort(), this.getCacheNames() );
+
         daemon.executePeriodically( 30 * 1000, sender, false );
     }
 
@@ -121,8 +121,8 @@ public class UDPDiscoveryService
      */
     public synchronized boolean addNoWaitFacade( LateralCacheNoWaitFacade facade, String cacheName )
     {
-        boolean isNew = !facades.containsKey(cacheName);
-        
+        boolean isNew = !facades.containsKey( cacheName );
+
         // override or put anew, it doesn't matter
         facades.put( cacheName, facade );
 
@@ -131,10 +131,10 @@ public class UDPDiscoveryService
             if ( sender != null )
             {
                 // need to reset the cache names since we have a new one
-                sender.setCacheNames( this.getCacheNames() );                            
+                sender.setCacheNames( this.getCacheNames() );
             }
         }
-        
+
         return isNew;
 
     }
@@ -173,10 +173,11 @@ public class UDPDiscoveryService
     }
 
     /**
-     * Send a passive broadcast in response to a request broadcast.  Never send a request for a request.
-     * We can respond to our own reques, since a request broadcast is not intended as a connection request.
-     * We might want to only send messages, so we would send a request, but never a passive broadcast.
-     *
+     * Send a passive broadcast in response to a request broadcast. Never send a
+     * request for a request. We can respond to our own reques, since a request
+     * broadcast is not intended as a connection request. We might want to only
+     * send messages, so we would send a request, but never a passive broadcast.
+     *  
      */
     protected void serviceRequestBroadcast()
     {
@@ -200,9 +201,9 @@ public class UDPDiscoveryService
         catch ( Exception e )
         {
             log.error( "Problem calling the UDP Discovery Sender", e );
-        }      
+        }
     }
-    
+
     /**
      * Get all the cache names we have facades for.
      * 

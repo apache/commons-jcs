@@ -16,7 +16,6 @@ package org.apache.jcs.engine.control;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -45,8 +44,7 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 public class CompositeCacheManager
     implements IRemoteCacheConstants, Serializable
 {
-    private final static Log log =
-        LogFactory.getLog( CompositeCacheManager.class );
+    private final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 
     /** Caches managed by this cache manager */
     protected Hashtable caches = new Hashtable();
@@ -58,8 +56,7 @@ public class CompositeCacheManager
     private int clients;
 
     /** Default cache attributes for this cache manager */
-    protected ICompositeCacheAttributes defaultCacheAttr =
-        new CompositeCacheAttributes();
+    protected ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();
 
     /** Default elemeent attributes for this cache manager */
     protected IElementAttributes defaultElementAttr = new ElementAttributes();
@@ -83,7 +80,7 @@ public class CompositeCacheManager
      * Gets the CacheHub instance. For backward compatibility, if this creates
      * the instance it will attempt to configure it with the default
      * configuration. If you want to configure from your own source, use
-     * {@link #getUnconfiguredInstance} and then call {@link #configure}
+     * {@link #getUnconfiguredInstance}and then call {@link #configure}
      */
     public static synchronized CompositeCacheManager getInstance()
     {
@@ -118,8 +115,8 @@ public class CompositeCacheManager
     }
 
     /**
-     * Get a CacheHub instance which is not configured.
-     * If an instance already exists, it will be returned.
+     * Get a CacheHub instance which is not configured. If an instance already
+     * exists, it will be returned.
      */
     public static synchronized CompositeCacheManager getUnconfiguredInstance()
     {
@@ -136,8 +133,8 @@ public class CompositeCacheManager
     }
 
     /**
-     * Simple factory method, must override in subclasses so getInstance
-     * creates / returns the correct object.
+     * Simple factory method, must override in subclasses so getInstance creates /
+     * returns the correct object.
      */
     protected static CompositeCacheManager createInstance()
     {
@@ -154,8 +151,9 @@ public class CompositeCacheManager
 
     /**
      * Configure from specific properties file
-     *
-     * @param propFile Path <u>within classpath</u> to load configuration from
+     * 
+     * @param propFile
+     *            Path <u>within classpath </u> to load configuration from
      */
     public void configure( String propFile )
     {
@@ -196,18 +194,17 @@ public class CompositeCacheManager
 
     /**
      * Configure from properties object
-     *
+     * 
      * @param props
      */
     public void configure( Properties props )
     {
         // set the props value and then configure the ThreadPoolManager
         ThreadPoolManager.setProps( props );
-        ThreadPoolManager poolMgr =  ThreadPoolManager.getInstance();
+        ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
 
         // configure the cache
-        CompositeCacheConfigurator configurator =
-            new CompositeCacheConfigurator( this );
+        CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
 
         configurator.doConfigure( props );
 
@@ -215,9 +212,8 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets the defaultCacheAttributes attribute of the CacheHub
-     * object
-     *
+     * Gets the defaultCacheAttributes attribute of the CacheHub object
+     * 
      * @return The defaultCacheAttributes value
      */
     public ICompositeCacheAttributes getDefaultCacheAttributes()
@@ -226,10 +222,10 @@ public class CompositeCacheManager
     }
 
     /**
-     * Sets the defaultCacheAttributes attribute of the CacheHub
-     * object
-     *
-     * @param icca The new defaultCacheAttributes value
+     * Sets the defaultCacheAttributes attribute of the CacheHub object
+     * 
+     * @param icca
+     *            The new defaultCacheAttributes value
      */
     public void setDefaultCacheAttributes( ICompositeCacheAttributes icca )
     {
@@ -237,10 +233,10 @@ public class CompositeCacheManager
     }
 
     /**
-     * Sets the defaultElementAttributes attribute of the CacheHub
-     * object
-     *
-     * @param iea The new defaultElementAttributes value
+     * Sets the defaultElementAttributes attribute of the CacheHub object
+     * 
+     * @param iea
+     *            The new defaultElementAttributes value
      */
     public void setDefaultElementAttributes( IElementAttributes iea )
     {
@@ -248,9 +244,8 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets the defaultElementAttributes attribute of the CacheHub
-     * object
-     *
+     * Gets the defaultElementAttributes attribute of the CacheHub object
+     * 
      * @return The defaultElementAttributes value
      */
     public IElementAttributes getDefaultElementAttributes()
@@ -272,9 +267,7 @@ public class CompositeCacheManager
     }
 
     /** Gets the cache attribute of the CacheHub object */
-    public CompositeCache getCache( String cacheName,
-                            ICompositeCacheAttributes cattr,
-                            IElementAttributes attr )
+    public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, this.defaultElementAttr );
@@ -294,25 +287,20 @@ public class CompositeCacheManager
      * defaults if none are specified. We might want to create separate method
      * for creating/getting. . .
      */
-    public CompositeCache getCache( ICompositeCacheAttributes cattr,
-                            IElementAttributes attr )
+    public CompositeCache getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         CompositeCache cache;
 
         synchronized ( caches )
         {
-            cache = ( CompositeCache ) caches.get( cattr.getCacheName() );
+            cache = (CompositeCache) caches.get( cattr.getCacheName() );
             if ( cache == null )
             {
                 cattr.setCacheName( cattr.getCacheName() );
 
-                CompositeCacheConfigurator configurator =
-                    new CompositeCacheConfigurator( this );
+                CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
 
-                cache = configurator.parseRegion( this.props,
-                                                  cattr.getCacheName(),
-                                                  this.defaultAuxValues,
-                                                  cattr );
+                cache = configurator.parseRegion( this.props, cattr.getCacheName(), this.defaultAuxValues, cattr );
 
                 caches.put( cattr.getCacheName(), cache );
             }
@@ -330,7 +318,7 @@ public class CompositeCacheManager
     /** */
     public void freeCache( String name, boolean fromRemote )
     {
-        CompositeCache cache = ( CompositeCache ) caches.remove( name );
+        CompositeCache cache = (CompositeCache) caches.remove( name );
 
         if ( cache != null )
         {
@@ -341,13 +329,15 @@ public class CompositeCacheManager
     /**
      * Calls freeCache on all regions
      */
-    public void shutDown() {
-      String[] names = getCacheNames();
-      int len = names.length;
-      for ( int i = 0; i < len; i++ ) {
-        String name = names[i];
-        freeCache( name );
-      }
+    public void shutDown()
+    {
+        String[] names = getCacheNames();
+        int len = names.length;
+        for ( int i = 0; i < len; i++ )
+        {
+            String name = names[i];
+            freeCache( name );
+        }
     }
 
     /** */
@@ -379,15 +369,14 @@ public class CompositeCacheManager
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Last client called release. There are "
-                           + caches.size() + " caches which will be disposed" );
+                log.debug( "Last client called release. There are " + caches.size() + " caches which will be disposed" );
             }
 
             Enumeration allCaches = caches.elements();
 
             while ( allCaches.hasMoreElements() )
             {
-                CompositeCache cache = ( CompositeCache ) allCaches.nextElement();
+                CompositeCache cache = (CompositeCache) allCaches.nextElement();
 
                 if ( cache != null )
                 {
@@ -400,11 +389,11 @@ public class CompositeCacheManager
     /** Returns a list of the current cache names. */
     public String[] getCacheNames()
     {
-        String[] list = new String[ caches.size() ];
+        String[] list = new String[caches.size()];
         int i = 0;
         for ( Iterator itr = caches.keySet().iterator(); itr.hasNext(); )
         {
-            list[ i++ ] = ( String ) itr.next();
+            list[i++] = (String) itr.next();
         }
         return list;
     }
@@ -430,7 +419,7 @@ public class CompositeCacheManager
     /** */
     AuxiliaryCacheFactory registryFacGet( String name )
     {
-        return ( AuxiliaryCacheFactory ) auxFacs.get( name );
+        return (AuxiliaryCacheFactory) auxFacs.get( name );
     }
 
     /** */
@@ -442,39 +431,39 @@ public class CompositeCacheManager
     /** */
     AuxiliaryCacheAttributes registryAttrGet( String name )
     {
-        return ( AuxiliaryCacheAttributes ) auxAttrs.get( name );
+        return (AuxiliaryCacheAttributes) auxAttrs.get( name );
     }
 
     /**
      * Gets stats for debugging.
+     * 
      * @return String
      */
     public String getStats()
     {
-      return getStatistics().toString();
+        return getStatistics().toString();
     }
 
     /**
-     * This returns data gathered for all region and all the
-     * auxiliaries they currently uses.
-     *
+     * This returns data gathered for all region and all the auxiliaries they
+     * currently uses.
+     * 
      * @return
      */
     public ICacheStats[] getStatistics()
     {
-      ArrayList cacheStats = new ArrayList();
-      Enumeration allCaches = caches.elements();
-      while ( allCaches.hasMoreElements() )
-      {
-          CompositeCache cache = ( CompositeCache ) allCaches.nextElement();
-          if ( cache != null )
-          {
-            cacheStats.add( cache.getStatistics() );
-          }
-      }
-      ICacheStats[] stats = (ICacheStats[])cacheStats.toArray( new CacheStats[0] );
-      return stats;
-  }
+        ArrayList cacheStats = new ArrayList();
+        Enumeration allCaches = caches.elements();
+        while ( allCaches.hasMoreElements() )
+        {
+            CompositeCache cache = (CompositeCache) allCaches.nextElement();
+            if ( cache != null )
+            {
+                cacheStats.add( cache.getStatistics() );
+            }
+        }
+        ICacheStats[] stats = (ICacheStats[]) cacheStats.toArray( new CacheStats[0] );
+        return stats;
+    }
 
 }
-

@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.control.event;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.engine.control.event;
  * limitations under the License.
  */
 
-
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
@@ -27,12 +25,12 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
 
-
 /**
  * An event queue is used to propagate ordered cache events to one and only one
  * target listener.
  */
-public class ElementEventQueue implements IElementEventQueue
+public class ElementEventQueue
+    implements IElementEventQueue
 {
     private final static Log log = LogFactory.getLog( ElementEventQueue.class );
 
@@ -41,6 +39,7 @@ public class ElementEventQueue implements IElementEventQueue
     private String cacheName;
 
     private boolean destroyed = false;
+
     private Thread t;
 
     // Internal queue implementation
@@ -50,14 +49,15 @@ public class ElementEventQueue implements IElementEventQueue
     // Dummy node
 
     private Node head = new Node();
+
     private Node tail = head;
 
     /**
      * Constructor for the ElementEventQueue object
-     *
+     * 
      * @param cacheName
      */
-    public ElementEventQueue(  String cacheName  )
+    public ElementEventQueue( String cacheName )
     {
 
         this.cacheName = cacheName;
@@ -110,21 +110,21 @@ public class ElementEventQueue implements IElementEventQueue
         return ( !destroyed );
     }
 
-
-
     /**
-     * Adds an  ElementEvent  to be handled
-     *
-     * @param hand The IElementEventHandler
-     * @param event The IElementEventHandler IElementEvent event
+     * Adds an ElementEvent to be handled
+     * 
+     * @param hand
+     *            The IElementEventHandler
+     * @param event
+     *            The IElementEventHandler IElementEvent event
      */
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
-      throws IOException
+        throws IOException
     {
 
         if ( log.isDebugEnabled() )
         {
-          log.debug( "Adding Event Handler to QUEUE, !destroyed = " + !destroyed );
+            log.debug( "Adding Event Handler to QUEUE, !destroyed = " + !destroyed );
         }
 
         if ( !destroyed )
@@ -133,17 +133,16 @@ public class ElementEventQueue implements IElementEventQueue
 
             if ( log.isDebugEnabled() )
             {
-              log.debug( "runner = " + runner );
+                log.debug( "runner = " + runner );
             }
 
             put( runner );
         }
     }
 
-
     /**
      * Adds an event to the queue.
-     *
+     * 
      * @param event
      */
     private void put( AbstractElementEventRunner event )
@@ -161,7 +160,8 @@ public class ElementEventQueue implements IElementEventQueue
         }
     }
 
-    private AbstractElementEventRunner take() throws InterruptedException
+    private AbstractElementEventRunner take()
+        throws InterruptedException
     {
         synchronized ( queueLock )
         {
@@ -169,17 +169,17 @@ public class ElementEventQueue implements IElementEventQueue
 
             while ( head == tail )
             {
-              if ( log.isDebugEnabled() )
-              {
-                log.debug( "Waiting for something to come into the Q" );
-              }
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Waiting for something to come into the Q" );
+                }
 
                 queueLock.wait();
 
-              if ( log.isDebugEnabled() )
-              {
-                log.debug( "Something came into the Q" );
-              }
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Something came into the Q" );
+                }
 
             }
 
@@ -191,8 +191,8 @@ public class ElementEventQueue implements IElementEventQueue
 
             if ( log.isDebugEnabled() )
             {
-              log.debug( "head.event = " + head.event );
-              log.debug( "node.event = " + node.event );
+                log.debug( "head.event = " + head.event );
+                log.debug( "node.event = " + node.event );
             }
 
             // Node becomes the new head (head is always empty)
@@ -209,12 +209,14 @@ public class ElementEventQueue implements IElementEventQueue
     private static class Node
     {
         Node next = null;
+
         AbstractElementEventRunner event = null;
     }
 
     /**
      */
-    private class QProcessor extends Thread
+    private class QProcessor
+        extends Thread
     {
         /**
          * Constructor for the QProcessor object
@@ -241,7 +243,7 @@ public class ElementEventQueue implements IElementEventQueue
 
                     if ( log.isDebugEnabled() )
                     {
-                      log.debug( "r from take() = " + r );
+                        log.debug( "r from take() = " + r );
                     }
 
                 }
@@ -264,9 +266,10 @@ public class ElementEventQueue implements IElementEventQueue
 
     /**
      * Retries before declaring failure.
-     *
+     *  
      */
-    private abstract class AbstractElementEventRunner implements Runnable
+    private abstract class AbstractElementEventRunner
+        implements Runnable
     {
         /**
          * Main processing method for the AbstractElementEvent object
@@ -275,21 +278,19 @@ public class ElementEventQueue implements IElementEventQueue
         {
             IOException ex = null;
 
+            try
+            {
+                ex = null;
+                doRun();
+                return;
+                // happy and done.
+            }
+            catch ( IOException e )
+            {
+                ex = e;
+            }
 
-                try
-                {
-                    ex = null;
-                    doRun();
-                    return;
-                    // happy and done.
-                }
-                catch ( IOException e )
-                {
-                    ex = e;
-                }
-
-
-            // Too bad.  The handler has problems.
+            // Too bad. The handler has problems.
             if ( ex != null )
             {
                 log.warn( "Giving up element event handling " + ElementEventQueue.this, ex );
@@ -300,7 +301,7 @@ public class ElementEventQueue implements IElementEventQueue
 
         /**
          * Description of the Method
-         *
+         * 
          * @exception IOException
          */
         protected abstract void doRun()
@@ -309,43 +310,42 @@ public class ElementEventQueue implements IElementEventQueue
 
     /**
      */
-    private class ElementEventRunner extends AbstractElementEventRunner
+    private class ElementEventRunner
+        extends AbstractElementEventRunner
     {
 
         private IElementEventHandler hand;
+
         private IElementEvent event;
 
         /**
          * Constructor for the PutEvent object
-         *
+         * 
          * @param ice
          * @exception IOException
          */
         ElementEventRunner( IElementEventHandler hand, IElementEvent event )
             throws IOException
         {
-              if ( log.isDebugEnabled() )
-              {
+            if ( log.isDebugEnabled() )
+            {
                 log.debug( "Constructing " + this );
-              }
+            }
             this.hand = hand;
             this.event = event;
         }
 
         /**
          * Description of the Method
-         *
+         * 
          * @exception IOException
          */
         protected void doRun()
             throws IOException
         {
 
-          hand.handleElementEvent( event );
+            hand.handleElementEvent( event );
         }
     }
 
 }
-
-
-

@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.locking;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,11 +16,10 @@ package org.apache.jcs.utils.locking;
  * limitations under the License.
  */
 
-
 /**
  * Used to keep track of the total number of outstanding locks placed but not
  * yet released for a given resource.
- *
+ *  
  */
 class RwLockHolder
 {
@@ -41,7 +39,7 @@ class RwLockHolder
 
     /**
      * Constructs with a Read/Write lock for a specific resource.
-     *
+     * 
      * @param rwlock
      */
     RwLockHolder( ReadWriteLock rwlock )
@@ -55,19 +53,19 @@ class RwLockHolder
      */
     boolean removable( long now )
     {
-        return lcount == 0
-               && lastInactiveTime > 0
-               && now - lastInactiveTime > UNUSED_TIME;
+        return lcount == 0 && lastInactiveTime > 0 && now - lastInactiveTime > UNUSED_TIME;
     }
 
     /** @see ReadWriteLock#readLock */
-    public void readLock() throws InterruptedException
+    public void readLock()
+        throws InterruptedException
     {
         rwlock.readLock();
     }
 
     /** @see ReadWriteLock#writeLock */
-    public void writeLock() throws InterruptedException
+    public void writeLock()
+        throws InterruptedException
     {
         rwlock.writeLock();
     }
@@ -79,4 +77,3 @@ class RwLockHolder
     }
 
 }
-

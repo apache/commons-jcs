@@ -19,31 +19,32 @@ package org.apache.jcs.engine.memory.util;
 import java.io.Serializable;
 
 /**
- * This serves as a placeholder in a double linked list.  You can extend this
- * to add functionality.  This allows you to remove in constant time from
- * a linked list.
+ * This serves as a placeholder in a double linked list. You can extend this to
+ * add functionality. This allows you to remove in constant time from a linked
+ * list.
  */
 public class DoubleLinkedListNode
     implements Serializable
 {
-  Object payload;
+    Object payload;
 
-  /** Double Linked list references */
-  public DoubleLinkedListNode prev;
-  /** Double Linked list references */
-  public DoubleLinkedListNode next;
+    /** Double Linked list references */
+    public DoubleLinkedListNode prev;
 
-  public DoubleLinkedListNode( Object payloadP )
-  {
-    payload = payloadP;
-  }
-  
- /**
-  * @return Object
-  */
-  public Object getPayload()
-  {
-      return payload;
-  }
-  
+    /** Double Linked list references */
+    public DoubleLinkedListNode next;
+
+    public DoubleLinkedListNode( Object payloadP )
+    {
+        payload = payloadP;
+    }
+
+    /**
+     * @return Object
+     */
+    public Object getPayload()
+    {
+        return payload;
+    }
+
 }

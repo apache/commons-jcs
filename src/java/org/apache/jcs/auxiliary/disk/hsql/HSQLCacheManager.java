@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.hsql;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * limitations under the License.
  */
 
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -29,12 +27,12 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class HSQLCacheManager implements AuxiliaryCacheManager
+public class HSQLCacheManager
+    implements AuxiliaryCacheManager
 {
-    private static final Log log =
-        LogFactory.getLog( HSQLCacheManager.class );
+    private static final Log log = LogFactory.getLog( HSQLCacheManager.class );
 
     private static int clients;
 
@@ -44,10 +42,9 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
 
     private static HSQLCacheAttributes defaultCattr;
 
-
     /**
      * Constructor for the HSQLCacheManager object
-     *
+     * 
      * @param cattr
      */
     private HSQLCacheManager( HSQLCacheAttributes cattr )
@@ -55,10 +52,9 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
         HSQLCacheManager.defaultCattr = cattr;
     }
 
-
     /**
      * Gets the defaultCattr attribute of the HSQLCacheManager object
-     *
+     * 
      * @return The defaultCattr value
      */
     public HSQLCacheAttributes getDefaultCattr()
@@ -66,10 +62,9 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
         return HSQLCacheManager.defaultCattr;
     }
 
-
     /**
      * Gets the instance attribute of the HSQLCacheManager class
-     *
+     * 
      * @return The instance value
      */
     public static HSQLCacheManager getInstance( HSQLCacheAttributes cattr )
@@ -86,23 +81,21 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
         return instance;
     }
 
-
     /**
      * Gets the cache attribute of the HSQLCacheManager object
-     *
+     * 
      * @return The cache value
      */
     public AuxiliaryCache getCache( String cacheName )
     {
-        HSQLCacheAttributes cattr = ( HSQLCacheAttributes ) defaultCattr.copy();
+        HSQLCacheAttributes cattr = (HSQLCacheAttributes) defaultCattr.copy();
         cattr.setCacheName( cacheName );
         return getCache( cattr );
     }
 
-
     /**
      * Gets the cache attribute of the HSQLCacheManager object
-     *
+     * 
      * @return The cache value
      */
     public AuxiliaryCache getCache( HSQLCacheAttributes cattr )
@@ -113,7 +106,7 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
 
         synchronized ( caches )
         {
-            raf = ( AuxiliaryCache ) caches.get( cattr.getCacheName() );
+            raf = (AuxiliaryCache) caches.get( cattr.getCacheName() );
 
             if ( raf == null )
             {
@@ -125,11 +118,10 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
         return raf;
     }
 
-
     /** Description of the Method */
     public void freeCache( String name )
     {
-        HSQLCache raf = ( HSQLCache ) caches.get( name );
+        HSQLCache raf = (HSQLCache) caches.get( name );
         if ( raf != null )
         {
             raf.dispose();
@@ -138,14 +130,13 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
 
     /**
      * Gets the cacheType attribute of the HSQLCacheManager object
-     *
+     * 
      * @return The cacheType value
      */
     public int getCacheType()
     {
         return DISK_CACHE;
     }
-
 
     /** Description of the Method */
     public void release()
@@ -161,7 +152,7 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
 
             while ( allCaches.hasMoreElements() )
             {
-                HSQLCache raf = ( HSQLCache ) allCaches.nextElement();
+                HSQLCache raf = (HSQLCache) allCaches.nextElement();
                 if ( raf != null )
                 {
                     raf.dispose();
@@ -170,4 +161,3 @@ public class HSQLCacheManager implements AuxiliaryCacheManager
         }
     }
 }
-

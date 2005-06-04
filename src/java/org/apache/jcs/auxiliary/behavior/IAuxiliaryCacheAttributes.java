@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,48 +16,46 @@ package org.apache.jcs.auxiliary.behavior;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 /**
  * This is a nominal interface that auxilliary cache attributes should
  * implement. This allows the auxiliary mangers to share a common interface.
- *
+ *  
  */
-public interface IAuxiliaryCacheAttributes extends Cloneable, Serializable
+public interface IAuxiliaryCacheAttributes
+    extends Cloneable, Serializable
 {
 
     /**
      * Sets the name of the cache, referenced by the appropriate manager.
-     *
-     * @param s The new cacheName value
+     * 
+     * @param s
+     *            The new cacheName value
      */
     public void setCacheName( String s );
 
-
     /**
      * Gets the cacheName attribute of the IAuxiliaryCacheAttributes object
-     *
+     * 
      * @return The cacheName value
      */
     public String getCacheName();
 
-
     /**
      * Name know by by configurator
-     *
-     * @param s The new name value
+     * 
+     * @param s
+     *            The new name value
      */
     public void setName( String s );
 
-
     /**
      * Gets the name attribute of the IAuxiliaryCacheAttributes object
-     *
+     * 
      * @return The name value
      */
     public String getName();
-
 
     /** Description of the Method */
     public IAuxiliaryCacheAttributes copy();

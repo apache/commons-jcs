@@ -1,6 +1,5 @@
 package org.apache.jcs.config;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,7 +16,6 @@ package org.apache.jcs.config;
  * limitations under the License.
  */
 
-
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -29,23 +27,26 @@ import org.apache.commons.logging.LogFactory;
  * G&uuml;lc&uuml; Simon Kitching; Avy Sharell (sharell@online.fr) Anders
  * Kristensen Matthieu Verbert (mve@zurich.ibm.com) A convenience class to
  * convert property values to specific types.
- *
+ *  
  */
 public class OptionConverter
 {
-    private final static Log log =
-        LogFactory.getLog( OptionConverter.class );
+    private final static Log log = LogFactory.getLog( OptionConverter.class );
 
     static String DELIM_START = "${";
+
     static char DELIM_STOP = '}';
+
     static int DELIM_START_LEN = 2;
+
     static int DELIM_STOP_LEN = 1;
 
     static StringBuffer sbuf = new StringBuffer();
 
     /** OptionConverter is a static class. */
-    private OptionConverter() { }
-
+    private OptionConverter()
+    {
+    }
 
     /** Description of the Method */
     public static String[] concatanateArrays( String[] l, String[] r )
@@ -58,7 +59,6 @@ public class OptionConverter
 
         return a;
     }
-
 
     /** Description of the Method */
     public static String convertSpecialChars( String s )
@@ -112,15 +112,16 @@ public class OptionConverter
         return sbuf.toString();
     }
 
-
     /**
      * Very similar to <code>System.getProperty</code> except that the {@link
      * SecurityException} is hidden.
-     *
-     * @param key The key to search for.
-     * @param def The default value to return.
+     * 
+     * @param key
+     *            The key to search for.
+     * @param def
+     *            The default value to return.
      * @return the string value of the system property, or the default value if
-     *      there is no property with that key.
+     *         there is no property with that key.
      * @since 1.1
      */
 
@@ -138,10 +139,8 @@ public class OptionConverter
         }
     }
 
-
     /** Description of the Method */
-    public static Object instantiateByKey( Properties props, String key, Class superClass,
-                                           Object defaultValue )
+    public static Object instantiateByKey( Properties props, String key, Class superClass, Object defaultValue )
     {
 
         // Get the value of the property in string form
@@ -152,16 +151,15 @@ public class OptionConverter
             return defaultValue;
         }
         // Trim className to avoid trailing spaces that cause problems.
-        return OptionConverter.instantiateByClassName( className.trim(), superClass,
-            defaultValue );
+        return OptionConverter.instantiateByClassName( className.trim(), superClass, defaultValue );
     }
 
-
     /**
-     * If <code>value</code> is "true", then <code>true</code> is returned. If
-     * <code>value</code> is "false", then <code>true</code> is returned.
-     * Otherwise, <code>default</code> is returned. <p>
-     *
+     * If <code>value</code> is "true", then <code>true</code> is returned.
+     * If <code>value</code> is "false", then <code>true</code> is returned.
+     * Otherwise, <code>default</code> is returned.
+     * <p>
+     * 
      * Case of value is unimportant.
      */
 
@@ -183,7 +181,6 @@ public class OptionConverter
         return dEfault;
     }
 
-
     /** Description of the Method */
     public static int toInt( String value, int dEfault )
     {
@@ -202,7 +199,6 @@ public class OptionConverter
         }
         return dEfault;
     }
-
 
     /** Description of the Method */
     public static long toFileSize( String value, long dEfault )
@@ -246,7 +242,6 @@ public class OptionConverter
         return dEfault;
     }
 
-
     /**
      * Find the value corresponding to <code>key</code> in <code>props</code>.
      * Then perform variable substitution on the found value.
@@ -271,21 +266,21 @@ public class OptionConverter
         }
     }
 
-
     /**
-     * Instantiate an object given a class name. Check that the <code>className</code>
-     * is a subclass of <code>superClass</code>. If that test fails or the
-     * object could not be instantiated, then <code>defaultValue</code> is
-     * returned.
-     *
-     * @param className The fully qualified class name of the object to
-     *      instantiate.
-     * @param superClass The class to which the new object should belong.
-     * @param defaultValue The object to return in case of non-fulfillment
+     * Instantiate an object given a class name. Check that the
+     * <code>className</code> is a subclass of <code>superClass</code>. If
+     * that test fails or the object could not be instantiated, then
+     * <code>defaultValue</code> is returned.
+     * 
+     * @param className
+     *            The fully qualified class name of the object to instantiate.
+     * @param superClass
+     *            The class to which the new object should belong.
+     * @param defaultValue
+     *            The object to return in case of non-fulfillment
      */
 
-    public static Object instantiateByClassName( String className, Class superClass,
-                                                 Object defaultValue )
+    public static Object instantiateByClassName( String className, Class superClass, Object defaultValue )
     {
         if ( className != null )
         {
@@ -294,8 +289,8 @@ public class OptionConverter
                 Class classObj = Class.forName( className );
                 if ( !superClass.isAssignableFrom( classObj ) )
                 {
-                    log.error( "A \"" + className + "\" object is not assignable to a \"" +
-                        superClass.getName() + "\" variable." );
+                    log.error( "A \"" + className + "\" object is not assignable to a \"" + superClass.getName()
+                        + "\" variable." );
                     return defaultValue;
                 }
                 return classObj.newInstance();
@@ -309,39 +304,54 @@ public class OptionConverter
     }
 
     /**
-     * Perform variable substitution in string <code>val</code> from the values
-     * of keys found in the system propeties. <p>
-     *
-     * The variable substitution delimeters are <b>${</b> and <b>}</b> . <p>
-     *
-     * For example, if the System properties contains "key=value", then the call
-     * <pre>
-     *String s = OptionConverter.substituteVars("Value of key is ${key}.");
-     *</pre> will set the variable <code>s</code> to "Value of key is value.".
+     * Perform variable substitution in string <code>val</code> from the
+     * values of keys found in the system propeties.
      * <p>
-     *
-     * If no value could be found for the specified key, then the <code>props</code>
-     * parameter is searched, if the value could not be found there, then
-     * substitution defaults to the empty string. <p>
-     *
+     * 
+     * The variable substitution delimeters are <b>${ </b> and <b>} </b>.
+     * <p>
+     * 
+     * For example, if the System properties contains "key=value", then the call
+     * 
+     * <pre>
+     * String s = OptionConverter.substituteVars( &quot;Value of key is ${key}.&quot; );
+     * </pre>
+     * 
+     * will set the variable <code>s</code> to "Value of key is value.".
+     * <p>
+     * 
+     * If no value could be found for the specified key, then the
+     * <code>props</code> parameter is searched, if the value could not be
+     * found there, then substitution defaults to the empty string.
+     * <p>
+     * 
      * For example, if system propeties contains no value for the key
-     * "inexistentKey", then the call <pre>
-     *String s = OptionConverter.subsVars("Value of inexistentKey is [${inexistentKey}]");
-     *</pre> will set <code>s</code> to "Value of inexistentKey is []" <p>
-     *
-     * An {@link java.lang.IllegalArgumentException} is thrown if <code>val</code>
-     * contains a start delimeter "${" which is not balanced by a stop delimeter
-     * "}". </p> <p>
-     *
-     * <b>Author</b> Avy Sharell</a> </p>
-     *
-     * @param val The string on which variable substitution is performed.
-     * @throws IllegalArgumentException if <code>val</code> is malformed.
+     * "inexistentKey", then the call
+     * 
+     * <pre>
+     * String s = OptionConverter.subsVars( &quot;Value of inexistentKey is [${inexistentKey}]&quot; );
+     * </pre>
+     * 
+     * will set <code>s</code> to "Value of inexistentKey is []"
+     * <p>
+     * 
+     * An {@link java.lang.IllegalArgumentException}is thrown if
+     * <code>val</code> contains a start delimeter "${" which is not balanced
+     * by a stop delimeter "}".
+     * </p>
+     * <p>
+     * 
+     * <b>Author </b> Avy Sharell </a>
+     * </p>
+     * 
+     * @param val
+     *            The string on which variable substitution is performed.
+     * @throws IllegalArgumentException
+     *             if <code>val</code> is malformed.
      */
 
     public static String substVars( String val, Properties props )
-        throws
-        IllegalArgumentException
+        throws IllegalArgumentException
     {
         sbuf.setLength( 0 );
 
@@ -358,16 +368,15 @@ public class OptionConverter
                 {
                     return val;
                 }
-	            sbuf.append( val.substring( i, val.length() ) );
-	            return sbuf.toString();
+                sbuf.append( val.substring( i, val.length() ) );
+                return sbuf.toString();
             }
             sbuf.append( val.substring( i, j ) );
             k = val.indexOf( DELIM_STOP, j );
             if ( k == -1 )
             {
-                throw new IllegalArgumentException( '"' + val +
-                    "\" has no closing brace. Opening brace at position " + j
-                     + '.' );
+                throw new IllegalArgumentException( '"' + val + "\" has no closing brace. Opening brace at position "
+                    + j + '.' );
             }
             j += DELIM_START_LEN;
             String key = val.substring( j, k );

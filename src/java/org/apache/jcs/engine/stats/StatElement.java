@@ -20,51 +20,65 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 
 /**
  * @author aaronsm
- *
+ *  
  */
-public class StatElement implements IStatElement {
+public class StatElement
+    implements IStatElement
+{
 
-	private String name = null;
-	
-	private String data = null;
-	
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStatElement#getName()
-	 */
-	public String getName() {
-		return name;
-	}
+    private String name = null;
 
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStatElement#setName(java.lang.String)
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String data = null;
 
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStatElement#getData()
-	 */
-	public String getData() {
-		return data;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStatElement#getName()
+     */
+    public String getName()
+    {
+        return name;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.apache.jcs.engine.stats.behavior.IStatElement#setData(java.lang.String)
-	 */
-	public void setData(String data) {
-		this.data = data;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStatElement#setName(java.lang.String)
+     */
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	
-	/*
-	 *  (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		StringBuffer buf = new StringBuffer();		
-		buf.append( name + " = " + data );
-		return buf.toString();
-	}	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStatElement#getData()
+     */
+    public String getData()
+    {
+        return data;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.stats.behavior.IStatElement#setData(java.lang.String)
+     */
+    public void setData( String data )
+    {
+        this.data = data;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( name + " = " + data );
+        return buf.toString();
+    }
 }

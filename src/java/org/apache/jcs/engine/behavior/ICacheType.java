@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,14 +16,14 @@ package org.apache.jcs.engine.behavior;
  * limitations under the License.
  */
 
-
 import java.io.Serializable;
 
 /**
  * Inteface implemented by a specific cache.
- *
+ *  
  */
-public interface ICacheType extends Serializable
+public interface ICacheType
+    extends Serializable
 {
     /** Composite/ memory cache type, cetral hub. */
     public final static int CACHE_HUB = 1;
@@ -38,10 +37,9 @@ public interface ICacheType extends Serializable
     /** Remote cache type. */
     public final static int REMOTE_CACHE = 4;
 
-
     /**
      * Returns the cache type.
-     *
+     * 
      * @return The cacheType value
      */
     public int getCacheType();

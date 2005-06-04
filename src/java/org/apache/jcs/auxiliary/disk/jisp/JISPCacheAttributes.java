@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk.jisp;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,15 +16,15 @@ package org.apache.jcs.auxiliary.disk.jisp;
  * limitations under the License.
  */
 
-
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * Description of the Class
- *
+ *  
  */
-public class JISPCacheAttributes extends AbstractDiskCacheAttributes
+public class JISPCacheAttributes
+    extends AbstractDiskCacheAttributes
 {
 
     private boolean clearOnStart;
@@ -36,13 +35,13 @@ public class JISPCacheAttributes extends AbstractDiskCacheAttributes
         clearOnStart = false;
     }
 
-
     // whether the disk cache should clear the old files
     // so there are no lingering elements.
     /**
      * Sets the clearOnStart attribute of the JISPCacheAttributes object
-     *
-     * @param clear The new clearOnStart value
+     * 
+     * @param clear
+     *            The new clearOnStart value
      */
     public void setClearOnStart( boolean clear )
     {
@@ -51,7 +50,7 @@ public class JISPCacheAttributes extends AbstractDiskCacheAttributes
 
     /**
      * Gets the clearOnStart attribute of the JISPCacheAttributes object
-     *
+     * 
      * @return The clearOnStart value
      */
     public boolean getClearOnStart()
@@ -59,13 +58,12 @@ public class JISPCacheAttributes extends AbstractDiskCacheAttributes
         return clearOnStart;
     }
 
-    
     /** Description of the Method */
     public AuxiliaryCacheAttributes copy()
     {
         try
         {
-            return ( AuxiliaryCacheAttributes ) this.clone();
+            return (AuxiliaryCacheAttributes) this.clone();
         }
         catch ( Exception e )
         {

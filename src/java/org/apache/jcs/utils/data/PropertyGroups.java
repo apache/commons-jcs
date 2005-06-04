@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.data;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +15,6 @@ package org.apache.jcs.utils.data;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -35,16 +33,19 @@ import java.util.Properties;
  * would be an error; it would conflict with alpha_zip or alpha_zap. it is not
  * an error to ask for a property whose name is a group name, but the answer is
  * null.
- *
+ *  
  */
-public class PropertyGroups extends Hashtable
+public class PropertyGroups
+    extends Hashtable
 {
 
     private Properties props = null;
-    private String fileName = null;
-    int simpleKeys;
-    int compoundKeys;
 
+    private String fileName = null;
+
+    int simpleKeys;
+
+    int compoundKeys;
 
     /** Constructor for the PropertyGroups object */
     public PropertyGroups()
@@ -54,10 +55,9 @@ public class PropertyGroups extends Hashtable
         compoundKeys = 0;
     }
 
-
     /**
      * Constructor for the PropertyGroups object
-     *
+     * 
      * @param name
      * @exception Exception
      */
@@ -68,7 +68,6 @@ public class PropertyGroups extends Hashtable
         load( name );
     }
 
-
     /** Description of the Method */
     public void load( String name )
         throws Exception
@@ -77,7 +76,6 @@ public class PropertyGroups extends Hashtable
         load();
     }
 
-
     /** Description of the Method */
     public void load()
         throws Exception
@@ -85,15 +83,14 @@ public class PropertyGroups extends Hashtable
         java.io.InputStream is = getClass().getResourceAsStream( fileName );
         if ( null == is )
         {
-            throw
-                new Exception( "PropertyGroups.load: can't get resource " + fileName );
+            throw new Exception( "PropertyGroups.load: can't get resource " + fileName );
         }
         props.load( is );
         is.close();
         Enumeration keys = props.keys();
         while ( keys.hasMoreElements() )
         {
-            String key = ( String ) keys.nextElement();
+            String key = (String) keys.nextElement();
             int sloc;
             if ( 0 > ( sloc = key.indexOf( '_' ) ) )
             {
@@ -104,7 +101,7 @@ public class PropertyGroups extends Hashtable
             {
                 String key1 = key.substring( 0, sloc );
                 String key2 = key.substring( 1 + sloc );
-                Properties subprops = ( Properties ) get( key1 );
+                Properties subprops = (Properties) get( key1 );
                 if ( null == subprops )
                 {
                     compoundKeys++;
@@ -115,10 +112,9 @@ public class PropertyGroups extends Hashtable
         }
     }
 
-
     /**
      * Gets the property attribute of the PropertyGroups object
-     *
+     * 
      * @return The property value
      */
     public String getProperty( String key )
@@ -126,15 +122,14 @@ public class PropertyGroups extends Hashtable
         Object ob = get( key );
         if ( ob instanceof String )
         {
-            return ( String ) ob;
+            return (String) ob;
         }
         return null;
     }
 
-
     /**
      * Gets the property attribute of the PropertyGroups object
-     *
+     * 
      * @return The property value
      */
     public String getProperty( String key, String dflt )
@@ -147,10 +142,9 @@ public class PropertyGroups extends Hashtable
         return p == null ? dflt : p;
     }
 
-
     /**
      * Gets the properties attribute of the PropertyGroups object
-     *
+     * 
      * @return The properties value
      */
     public Properties getProperties( String key )
@@ -162,11 +156,10 @@ public class PropertyGroups extends Hashtable
         Object ob = get( key );
         if ( ob instanceof Properties )
         {
-            return ( Properties ) ob;
+            return (Properties) ob;
         }
         return null;
     }
-
 
     /** Description of the Method */
     public Enumeration propertyKeys()
@@ -174,23 +167,20 @@ public class PropertyGroups extends Hashtable
         return new PropertyKeysEnum();
     }
 
-
     /** Description of the Method */
     public Enumeration simpleKeys()
     {
         return new SimpleKeysEnum();
     }
 
-
     /** Description of the Method */
     private void keyVal( StringBuffer sB, Object key )
     {
-        String k = ( String ) key;
+        String k = (String) key;
         sB.append( k );
         sB.append( "=" );
         sB.append( get( key ).toString() );
     }
-
 
     /** Description of the Method */
     public synchronized String toString()
@@ -219,16 +209,16 @@ public class PropertyGroups extends Hashtable
         return sB.toString();
     }
 
-
     /**
      * Description of the Class
-     *
+     *  
      */
-    class PropertyKeysEnum implements Enumeration
+    class PropertyKeysEnum
+        implements Enumeration
     {
         int howMany;
-        Enumeration baseEnum;
 
+        Enumeration baseEnum;
 
         /** Constructor for the PropertyKeysEnum object */
         public PropertyKeysEnum()
@@ -237,13 +227,11 @@ public class PropertyGroups extends Hashtable
             baseEnum = keys();
         }
 
-
         /** Description of the Method */
         public boolean hasMoreElements()
         {
             return howMany > 0;
         }
-
 
         /** Description of the Method */
         public Object nextElement()
@@ -263,17 +251,19 @@ public class PropertyGroups extends Hashtable
         }
 
     }
+
     // end of PropertyKeysEnum inner class
 
     /**
      * Description of the Class
-     *
+     *  
      */
-    class SimpleKeysEnum implements Enumeration
+    class SimpleKeysEnum
+        implements Enumeration
     {
         int howMany;
-        Enumeration baseEnum;
 
+        Enumeration baseEnum;
 
         /** Constructor for the SimpleKeysEnum object */
         public SimpleKeysEnum()
@@ -282,13 +272,11 @@ public class PropertyGroups extends Hashtable
             baseEnum = keys();
         }
 
-
         /** Description of the Method */
         public boolean hasMoreElements()
         {
             return howMany > 0;
         }
-
 
         /** Description of the Method */
         public Object nextElement()

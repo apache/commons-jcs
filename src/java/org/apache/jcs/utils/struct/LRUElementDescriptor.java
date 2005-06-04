@@ -4,11 +4,12 @@ import org.apache.jcs.engine.memory.util.DoubleLinkedListNode;
 
 /**
  * @author aaronsm
- *
+ *  
  */
-public class LRUElementDescriptor extends DoubleLinkedListNode
+public class LRUElementDescriptor
+    extends DoubleLinkedListNode
 {
-    
+
     /**
      * <code>key</code>
      */
@@ -18,14 +19,15 @@ public class LRUElementDescriptor extends DoubleLinkedListNode
      * @param key
      * @param payloadP
      */
-    public LRUElementDescriptor(Object key, Object payloadP)
+    public LRUElementDescriptor( Object key, Object payloadP )
     {
         super( payloadP );
         this.setKey( key );
     }
 
     /**
-     * @param key The key to set.
+     * @param key
+     *            The key to set.
      */
     public void setKey( Object key )
     {

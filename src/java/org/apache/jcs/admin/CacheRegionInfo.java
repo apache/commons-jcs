@@ -49,10 +49,13 @@ public class CacheRegionInfo
     {
         int status = this.cache.getStatus();
 
-        return (status == CacheConstants.STATUS_ALIVE ? "ALIVE"
-                : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
-                        : status == CacheConstants.STATUS_ERROR ? "ERROR"
-                                : "UNKNOWN");
+        return ( status == CacheConstants.STATUS_ALIVE
+                                                      ? "ALIVE"
+                                                      : status == CacheConstants.STATUS_DISPOSED
+                                                                                                ? "DISPOSED"
+                                                                                                : status == CacheConstants.STATUS_ERROR
+                                                                                                                                       ? "ERROR"
+                                                                                                                                       : "UNKNOWN" );
     }
 
     /**

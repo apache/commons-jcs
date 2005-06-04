@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -37,22 +36,21 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * A lateral cache service implementation.
- *
- * @version $Id: LateralJGService.java,v 1.8 2002/02/17 07:16:24 asmuts Exp
- *      $
+ * 
+ * @version $Id$
  */
 public class LateralJGService
-     implements ILateralCacheService, ILateralCacheObserver
+    implements ILateralCacheService, ILateralCacheObserver
 {
-    private final static Log log =
-        LogFactory.getLog( LateralJGService.class );
+    private final static Log log = LogFactory.getLog( LateralJGService.class );
 
     private ILateralCacheAttributes ilca;
+
     private LateralJGSender sender;
 
     /**
      * Constructor for the LateralJGService object
-     *
+     * 
      * @param lca
      * @exception IOException
      */
@@ -141,7 +139,7 @@ public class LateralJGService
 
     /**
      * Will close the connection.
-     *
+     * 
      * @param cache
      * @exception IOException
      */
@@ -196,18 +194,17 @@ public class LateralJGService
     }
 
     /**
-      * Gets the set of keys of objects currently in the group
-      * throws UnsupportedOperationException
-      */
-     public Set getGroupKeys(String cacheName, String group)
-     {
-         if (true)
-         {
-             throw new UnsupportedOperationException("Groups not implemented.");
-         }
-         return null;
-     }
-
+     * Gets the set of keys of objects currently in the group throws
+     * UnsupportedOperationException
+     */
+    public Set getGroupKeys( String cacheName, String group )
+    {
+        if ( true )
+        {
+            throw new UnsupportedOperationException( "Groups not implemented." );
+        }
+        return null;
+    }
 
     /**
      * @param args
@@ -216,15 +213,13 @@ public class LateralJGService
     {
         try
         {
-            LateralJGSender sender =
-                new LateralJGSender( new LateralCacheAttributes() );
+            LateralJGSender sender = new LateralJGSender( new LateralCacheAttributes() );
 
             // process user input till done
             boolean notDone = true;
             String message = null;
             // wait to dispose
-            BufferedReader br =
-                new BufferedReader( new InputStreamReader( System.in ) );
+            BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
 
             while ( notDone )
             {
@@ -246,8 +241,10 @@ public class LateralJGService
     // is not registered.
 
     /**
-     * @param cacheName The feature to be added to the CacheListener attribute
-     * @param obj The feature to be added to the CacheListener attribute
+     * @param cacheName
+     *            The feature to be added to the CacheListener attribute
+     * @param obj
+     *            The feature to be added to the CacheListener attribute
      * @exception IOException
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
@@ -257,7 +254,8 @@ public class LateralJGService
     }
 
     /**
-     * @param obj The feature to be added to the CacheListener attribute
+     * @param obj
+     *            The feature to be added to the CacheListener attribute
      * @exception IOException
      */
     public void addCacheListener( ICacheListener obj )
@@ -265,7 +263,6 @@ public class LateralJGService
     {
         // Empty
     }
-
 
     /**
      * @param cacheName
@@ -289,4 +286,3 @@ public class LateralJGService
     }
 
 }
-

@@ -70,6 +70,7 @@ public class LateralCacheMonitor
     /**
      * Allows close classes, ie testers to set the idel period to somethin
      * testable.
+     * 
      * @param idlePeriod
      */
     protected static void forceShortIdlePeriod( long idlePeriod )
@@ -78,9 +79,9 @@ public class LateralCacheMonitor
     }
 
     /** Constructor for the LateralCacheMonitor object */
-    private LateralCacheMonitor( )
+    private LateralCacheMonitor()
     {
-            // nop
+        // nop
     }
 
     /**
@@ -114,7 +115,7 @@ public class LateralCacheMonitor
     }
 
     /**
-     *  Main processing method for the LateralCacheMonitor object 
+     * Main processing method for the LateralCacheMonitor object
      */
     public void run()
     {
@@ -126,14 +127,15 @@ public class LateralCacheMonitor
                 {
                     if ( alright )
                     {
-                        log.debug( "ERROR DRIVEN MODE: alright = " + alright + ", connection monitor will wait for an error." );                        
+                        log.debug( "ERROR DRIVEN MODE: alright = " + alright
+                            + ", connection monitor will wait for an error." );
                     }
                     else
                     {
-                        log.debug( "ERROR DRIVEN MODE: alright = " + alright + " connection monitor running." );                                            
+                        log.debug( "ERROR DRIVEN MODE: alright = " + alright + " connection monitor running." );
                     }
                 }
-                
+
                 if ( alright )
                 {
                     synchronized ( this )
@@ -161,8 +163,7 @@ public class LateralCacheMonitor
                 // attempt.
                 // will need to test not just check status
             }
-            
-           
+
             // The "alright" flag must be false here.
             // Simply presume we can fix all the errors until proven otherwise.
             synchronized ( this )
@@ -172,7 +173,7 @@ public class LateralCacheMonitor
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Cache monitor running." );                
+                log.debug( "Cache monitor running." );
             }
 
             // Monitor each LateralCacheManager instance one after the other.
@@ -198,18 +199,19 @@ public class LateralCacheMonitor
                     if ( mgr.caches.size() == 0 )
                     {
                         // there is probably a problem.
-                        // monitor may be running when we just started up and there
+                        // monitor may be running when we just started up and
+                        // there
                         // is not a cache yet.
                         // if this is error driven mode, mark as bad,
                         // otherwise we will come back around argain.
                         if ( mode == ERROR )
                         {
-                            bad();                            
+                            bad();
                         }
                     }
-                    
+
                     Iterator itr2 = mgr.caches.values().iterator();
-                    
+
                     while ( itr2.hasNext() )
                     {
                         LateralCacheNoWait c = (LateralCacheNoWait) itr2.next();
@@ -245,7 +247,7 @@ public class LateralCacheMonitor
                     log.error( "Problem encountered in fixing the caches", ex );
                 }
             }
-            
+
             try
             {
                 // don't want to sleep after waking from an error
@@ -260,13 +262,13 @@ public class LateralCacheMonitor
             catch ( InterruptedException ex )
             {
                 // ignore;
-            }            
+            }
         }
         while ( true );
     }
 
-    /** 
-     * Sets the "alright" flag to false in a critial section. 
+    /**
+     * Sets the "alright" flag to false in a critial section.
      */
     private void bad()
     {

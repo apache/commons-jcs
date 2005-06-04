@@ -1,6 +1,5 @@
 package org.apache.jcs;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,16 +16,16 @@ package org.apache.jcs;
  * limitations under the License.
  */
 
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- *  Description of the Class
- *
+ * Description of the Class
+ *  
  */
-public class TestSimpleLoad extends TestCase
+public class TestSimpleLoad
+    extends TestCase
 {
 
     private static int items = 20000;
@@ -39,12 +38,13 @@ public class TestSimpleLoad extends TestCase
     {
         JCS.setConfigFilename( "/TestSimpleLoad.ccf" );
         JCS.getInstance( "testCache1" );
-    }    
-    
+    }
+
     /**
-     *  Constructor for the TestSimpleLoad object
-     *
-     *@param  testName  Description of the Parameter
+     * Constructor for the TestSimpleLoad object
+     * 
+     * @param testName
+     *            Description of the Parameter
      */
     public TestSimpleLoad( String testName )
     {
@@ -52,20 +52,21 @@ public class TestSimpleLoad extends TestCase
     }
 
     /**
-     *  Description of the Method
-     *
-     *@param  args  Description of the Parameter
+     * Description of the Method
+     * 
+     * @param args
+     *            Description of the Parameter
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = {TestSimpleLoad.class.getName()};
+        String[] testCaseName = { TestSimpleLoad.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
     /**
-     *  A unit test suite for JUnit
-     *
-     *@return    The test suite
+     * A unit test suite for JUnit
+     * 
+     * @return The test suite
      */
     public static Test suite()
     {
@@ -73,17 +74,18 @@ public class TestSimpleLoad extends TestCase
     }
 
     /**
-     *  A unit test for JUnit
-     *
-     *@exception  Exception  Description of the Exception
+     * A unit test for JUnit
+     * 
+     * @exception Exception
+     *                Description of the Exception
      */
     public void testSimpleLoad()
         throws Exception
     {
         JCS jcs = JCS.getInstance( "testCache1" );
-//        ICompositeCacheAttributes cattr = jcs.getCacheAttributes();
-//        cattr.setMaxObjects( 20002 );
-//        jcs.setCacheAttributes( cattr );
+        //        ICompositeCacheAttributes cattr = jcs.getCacheAttributes();
+        //        cattr.setMaxObjects( 20002 );
+        //        jcs.setCacheAttributes( cattr );
 
         for ( int i = 1; i <= items; i++ )
         {
@@ -92,7 +94,7 @@ public class TestSimpleLoad extends TestCase
 
         for ( int i = items; i > 0; i-- )
         {
-            String res = ( String ) jcs.get( i + ":key" );
+            String res = (String) jcs.get( i + ":key" );
             if ( res == null )
             {
                 assertNotNull( "[" + i + ":key] should not be null", res );

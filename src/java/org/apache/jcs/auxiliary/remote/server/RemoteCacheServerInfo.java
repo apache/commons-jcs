@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.remote.server;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -17,20 +16,20 @@ package org.apache.jcs.auxiliary.remote.server;
  * limitations under the License.
  */
 
-
 import java.rmi.dgc.VMID;
 
 /**
  * A shared static variable holder for the server
- *
+ *  
  */
 public class RemoteCacheServerInfo
 {
 
     // shouldn't be instantiated
     /** Constructor for the RemoteCacheServerInfo object */
-    private RemoteCacheServerInfo() { }
-
+    private RemoteCacheServerInfo()
+    {
+    }
 
     /**
      * Shouldn't be used till after reconneting, after setting = thread safe
@@ -39,6 +38,7 @@ public class RemoteCacheServerInfo
      * rmi.
      */
     protected static VMID vmid = new VMID();
+
     /** Description of the Field */
     public static long listenerId = vmid.hashCode();
 
