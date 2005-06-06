@@ -65,6 +65,7 @@ public class UDPDiscoverySenderThread
      *            host name we can be found at
      * @param myPort
      *            port we are listening on
+     * @param cacheNames List of strings of the names of the regiond participating.
      */
     public UDPDiscoverySenderThread( String discoveryAddress, int discoveryPort, String myHostName, int myPort,
                                     ArrayList cacheNames )
@@ -83,12 +84,13 @@ public class UDPDiscoverySenderThread
                 + discoveryPort + "] myHostName = [" + myHostName + "] and port = [" + myPort + "]" );
         }
 
+        UDPDiscoverySender sender = null;
         try
         {
             // move this to the run method and determine how often to call it.
-            UDPDiscoverySender sender = new UDPDiscoverySender( discoveryAddress, discoveryPort );
+            sender = new UDPDiscoverySender( discoveryAddress, discoveryPort );
             sender.requestBroadcast();
-
+            
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Sent a request broadcast to the group" );
@@ -97,6 +99,20 @@ public class UDPDiscoverySenderThread
         catch ( Exception e )
         {
             log.error( "Problem sending a Request Broadcast", e );
+        }
+        finally
+        {
+            try
+            {
+                if ( sender != null )
+                {
+                    sender.destroy();                                    
+                }
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem closing Request Broadcast sender", e );
+            }
         }
     }
 
@@ -107,11 +123,12 @@ public class UDPDiscoverySenderThread
      */
     public void run()
     {
+        UDPDiscoverySender sender = null;
         try
         {
             // create this connection each time.
             // more robust
-            UDPDiscoverySender sender = new UDPDiscoverySender( discoveryAddress, discoveryPort );
+            sender = new UDPDiscoverySender( discoveryAddress, discoveryPort );
 
             sender.passiveBroadcast( myHostName, myPort, cacheNames );
 
@@ -127,6 +144,17 @@ public class UDPDiscoverySenderThread
         catch ( Exception e )
         {
             log.error( "Problem calling the UDP Discovery Sender", e );
+        }
+        finally
+        {
+            try
+            {
+                sender.destroy();                
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem closing Passive Broadcast sender", e );
+            }
         }
     }
 }

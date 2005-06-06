@@ -46,6 +46,10 @@ public class UDPDiscoverySender
 
     /**
      * Constructor for the UDPDiscoverySender object
+     * <p>
+     * This sender can be used to send multiple messages.
+     * <p>
+     * When you are done sending, you should destroy the socket sender.
      * 
      * @param host
      * @param port
@@ -74,6 +78,35 @@ public class UDPDiscoverySender
     }
 
     /**
+     * Closes the socket connection.
+     *
+     */
+    public void destroy()
+    {
+        try 
+        {
+            if ( this.m_localSocket != null && !this.m_localSocket.isClosed() )
+            {
+                this.m_localSocket.close();
+            }
+        }
+        catch( Exception e )
+        {
+            log.error( "Problem destrying sender", e );
+        }
+    }
+    
+    /**
+     * Just being careful about closing the socket.
+     */
+    public void finalize()
+    throws Throwable
+    {
+        super.finalize();
+        destroy();
+    }
+    
+    /**
      * Send messages.
      * 
      * @param message
@@ -82,6 +115,16 @@ public class UDPDiscoverySender
     public void send( UDPDiscoveryMessage message )
         throws IOException
     {
+        if ( this.m_localSocket == null) 
+        {
+            throw new IOException( "Socket is null, cannot send message." );            
+        }
+        
+        if (this.m_localSocket.isClosed() )
+        {
+            throw new IOException( "Socket is closed, cannot send message." );
+        }
+        
         if ( log.isDebugEnabled() )
         {
             log.debug( "sending UDPDiscoveryMessage, message = " + message );
