@@ -1,0 +1,56 @@
+package org.apache.jcs.utils.access;
+
+/*
+ * Copyright 2002-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License") you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+/**
+ * Interface for doing a piece of work which is expected to be cached. This is
+ * ment to be used in conjunction with JCSWorker. Implement doWork() to return
+ * the work being done. isFinished() should return false until setFinished(true)
+ * is called, after which time it should return true.
+ * 
+ * @author tsavo
+ */
+public interface JCSWorkerHelper
+{
+    /**
+     * Tells us weather or not the work has been completed. This will be called
+     * automatically by JCSWorker. You should not call it yourself.
+     * 
+     * @return True if the work has allready been done, otherwise false.
+     */
+    public boolean isFinished();
+
+    /**
+     * Sets weather or not the work has been done.
+     * 
+     * @param isFinished
+     *            True if the work has allready been done, otherwise false.
+     */
+    public void setFinished( boolean isFinished );
+
+    /**
+     * The method to implement to do the work that should be cached. JCSWorker
+     * will call this itself! You should not call this directly.
+     * 
+     * @return The result of doing the work to be cached.
+     * @throws Exception
+     *             If anything goes wrong while doing the work, an Exception
+     *             should be thrown.
+     */
+    public Object doWork()
+        throws Exception;
+}
