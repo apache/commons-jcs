@@ -20,9 +20,9 @@ jcs.default.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=RC
+jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=1000
+jcs.region.testCache1.cacheattributes.MaxObjects=1000000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
@@ -85,10 +85,11 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
-jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
-jcs.auxiliary.DC.attributes.MaxKeySize=10000
+jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.DC.attributes.MaxKeySize=1000000
 jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
+jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 
 # Disk Cache Using a Pooled Event Queue -- this allows you
 # to control the maximum number of threads it will use.
