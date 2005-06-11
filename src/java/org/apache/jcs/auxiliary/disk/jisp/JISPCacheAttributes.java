@@ -58,6 +58,22 @@ public class JISPCacheAttributes
         return clearOnStart;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getShutdownSpoolTimeLimit()
+     */
+    public int getShutdownSpoolTimeLimit()
+    {
+        return this.shutdownSpoolTimeLimit;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setShutdownSpoolTimeLimit(int)
+     */
+    public void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit )
+    {
+        this.shutdownSpoolTimeLimit = shutdownSpoolTimeLimit;
+    }     
+    
     /** Description of the Method */
     public AuxiliaryCacheAttributes copy()
     {

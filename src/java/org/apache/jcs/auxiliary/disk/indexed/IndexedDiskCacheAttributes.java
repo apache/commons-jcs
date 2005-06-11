@@ -29,11 +29,12 @@ public class IndexedDiskCacheAttributes
 
     private static final int DEFAULT_maxKeySize = 5000;
 
-    private static final int DEFAULT_maxRecycleBinSize = 5000;
-
-    /** -1 mean no limit. */
+    /** -1 means no limit. */
     private int maxKeySize = DEFAULT_maxKeySize;
+    
 
+    private static final int DEFAULT_maxRecycleBinSize = 5000;
+    
     /**
      * Cannot be larger than the max size. If max is less than 0, this will be
      * 5000
@@ -42,7 +43,7 @@ public class IndexedDiskCacheAttributes
 
     // default to -1, i.e., don't optimize until shutdown
     private int optimizeAtRemoveCount = -1;
-
+   
     /**
      * Constructor for the DiskCacheAttributes object
      */
@@ -120,9 +121,9 @@ public class IndexedDiskCacheAttributes
     {
         return maxRecycleBinSize;
     }
-
+   
     /**
-     * Description of the Method
+     * Returns a copy of the attributes.
      * 
      * @return AuxiliaryCacheAttributes
      */
@@ -137,7 +138,7 @@ public class IndexedDiskCacheAttributes
         }
         return this;
     }
-
+    
     /**
      * Description of the Method
      * 
@@ -152,6 +153,7 @@ public class IndexedDiskCacheAttributes
         str.append( "\n maxKeySize  = " + maxKeySize );
         str.append( "\n maxRecycleBinSize  = " + maxRecycleBinSize );
         str.append( "\n optimizeAtRemoveCount  = " + optimizeAtRemoveCount );
+        str.append( "\n shutdownSpoolTimeLimit  = " + shutdownSpoolTimeLimit );
         return str.toString();
     }
 

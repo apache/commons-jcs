@@ -106,6 +106,13 @@ public interface ICacheEventQueue
     public boolean isWorking();
 
     /**
+     * Are there elements in the queue.
+     * 
+     * @return true if there are stil elements.
+     */
+    public boolean isEmpty();
+    
+    /**
      * Returns the historical and statistical data for an event queue cache.
      * 
      * @return

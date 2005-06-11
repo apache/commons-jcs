@@ -328,14 +328,64 @@ public abstract class AbstractDiskCache
 
     /**
      * Adds a dispose request to the disk cache.
+     * <p>
+     * Disposal proceeds in several steps. 
+     * <ul>
+     * <li> 1.  Prior to this call the Composite cache dumped the memory
+     * into the disk cache.  If it is large then we need to wait for
+     * the event queue to finish.
+     * <li> 2.  Wait until the event queue is empty of until the configured ShutdownSpoolTimeLimit
+     * is reached.
+     * <li> 3.  Call doDispose on the concrete impl.   
+     * </ul>
+     * 
      */
     public final void dispose()
     {
 
+        Runnable disR = new Runnable()
+        {
+            public void run()
+            {
+                boolean keepGoing = true;
+                long total = 0;
+                long interval = 100;
+                while ( keepGoing )
+                {
+                    keepGoing = !cacheEventQueue.isEmpty();
+                    try
+                    {
+                        Thread.sleep( interval );
+                        total += interval;                        
+                        //log.info( "total = " + total );
+                    }
+                    catch ( InterruptedException e )
+                    {
+                        break;
+                    }
+                }
+                log.info( "No longer waiting for event queue to finish: " + cacheEventQueue.getStatistics() );
+            }
+        };
+        Thread t = new Thread( disR );
+        t.start();
+        // wait up to 60 seconds for dispose and then quit if not done.
+        try
+        {
+            t.join( this.dcattr.getShutdownSpoolTimeLimit() * 1000 );
+        }
+        catch ( InterruptedException ex )
+        {
+            log.error( ex );
+        }
+        
+        log.info( "In dispose, destroying event queue." );
         // This stops the processor thread.
         cacheEventQueue.destroy();
-
+        
+        
         // Invoke any implementation specific disposal code
+        // need to handle the disposal first.
         doDispose();
 
         alive = false;

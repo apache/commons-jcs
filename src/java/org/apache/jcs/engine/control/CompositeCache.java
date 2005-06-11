@@ -877,8 +877,12 @@ public class CompositeCache
                 {
                     Iterator itr = memCache.getIterator();
 
+                    log.info( "In dispose, " + this.cacheName + " memCache.size = " + memCache.getSize() );
+                    
+                    int cnt = 0;
                     while ( itr.hasNext() )
                     {
+                        cnt++;
                         Map.Entry entry = (Map.Entry) itr.next();
 
                         ICacheElement ce = (ICacheElement) entry.getValue();
@@ -896,8 +900,11 @@ public class CompositeCache
                             log.error( e );
                         }
                     }
-                }
 
+                    log.info( "In dispose, " + this.cacheName + " put " + cnt + " into auxiliary " + aux );
+
+                }
+                               
                 // Dispose of the auxiliary
 
                 aux.dispose();
@@ -907,17 +914,18 @@ public class CompositeCache
                 log.error( "Failure disposing of aux", ex );
             }
 
-            try
-            {
-                memCache.dispose();
-            }
-            catch ( IOException ex )
-            {
-                log.error( "Failure disposing of memCache", ex );
-            }
-
         }
 
+        log.info( "In dispose, " + this.cacheName + " disposing of memory cache." );
+        try
+        {
+            memCache.dispose();
+        }
+        catch ( IOException ex )
+        {
+            log.error( "Failure disposing of memCache", ex );
+        }
+               
         log.warn( "Called close for " + cacheName );
 
     }

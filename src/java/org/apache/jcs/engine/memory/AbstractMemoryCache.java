@@ -183,6 +183,7 @@ public abstract class AbstractMemoryCache
     public void dispose()
         throws IOException
     {
+        log.info( "Memory Cache dispose called.  Shutting down shrinker thread if it is running." );
         if ( shrinkerDaemon != null )
         {
             shrinkerDaemon.shutDown();

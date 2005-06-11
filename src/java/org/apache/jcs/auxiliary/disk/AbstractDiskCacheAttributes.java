@@ -37,6 +37,11 @@ public abstract class AbstractDiskCacheAttributes
     /** default to 5000 */
     protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFUALT;
 
+    private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
+    
+    protected int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
+        
+    
     /*
      * (non-Javadoc)
      * 
@@ -77,6 +82,22 @@ public abstract class AbstractDiskCacheAttributes
         this.maxPurgatorySize = maxPurgatorySize;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getShutdownSpoolTimeLimit()
+     */
+    public int getShutdownSpoolTimeLimit()
+    {
+        return this.shutdownSpoolTimeLimit;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setShutdownSpoolTimeLimit(int)
+     */
+    public void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit )
+    {
+        this.shutdownSpoolTimeLimit = shutdownSpoolTimeLimit;
+    }     
+    
     /**
      * Description of the Method
      * 
