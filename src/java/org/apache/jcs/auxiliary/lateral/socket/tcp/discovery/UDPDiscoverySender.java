@@ -85,7 +85,9 @@ public class UDPDiscoverySender
     {
         try 
         {
-            if ( this.m_localSocket != null && !this.m_localSocket.isClosed() )
+            // TODO when we move to jdk 1.4 reinstate the isClosed check
+            if ( this.m_localSocket != null )
+                //&& !this.m_localSocket.isClosed() )
             {
                 this.m_localSocket.close();
             }
@@ -120,10 +122,11 @@ public class UDPDiscoverySender
             throw new IOException( "Socket is null, cannot send message." );            
         }
         
-        if (this.m_localSocket.isClosed() )
-        {
-            throw new IOException( "Socket is closed, cannot send message." );
-        }
+        // TODO when we move to jdk 1.4 reinstate the isClosed check        
+        //if (this.m_localSocket.isClosed() )
+        //{
+        //    throw new IOException( "Socket is closed, cannot send message." );
+        //}
         
         if ( log.isDebugEnabled() )
         {

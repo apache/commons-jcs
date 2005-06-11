@@ -284,10 +284,19 @@ public class UDPDiscoveryReceiver
                 {
                     // get a cache and add it to the no waits
                     // the add method should not add the same.
-                    LateralCacheAttributes lac = new LateralCacheAttributes();
-                    lac.setTransmissionType( LateralCacheAttributes.TCP );
-                    lac.setTcpServer( message.getHost() + ":" + message.getPort() );
-                    LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
+                    // we need the listener port from the original config.
+                    LateralCacheAttributes lca = null;
+                    if ( service.getLca() != null )
+                    {
+                        lca = (LateralCacheAttributes) service.getLca().copy();
+                    }
+                    else
+                    {
+                        lca = new LateralCacheAttributes();
+                    }
+                    lca.setTransmissionType( LateralCacheAttributes.TCP );
+                    lca.setTcpServer( message.getHost() + ":" + message.getPort() );
+                    LateralCacheManager lcm = LateralCacheManager.getInstance( lca );
 
                     ArrayList regions = message.getCacheNames();
                     if ( regions != null )

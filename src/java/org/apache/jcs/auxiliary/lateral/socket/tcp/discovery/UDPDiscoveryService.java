@@ -61,7 +61,7 @@ public class UDPDiscoveryService
         //LateralCacheNoWaitFacade facade,
         //this.facade = facade;
 
-        this.lca = lca;
+        this.setLca( lca );
         
         try
         {
@@ -185,9 +185,9 @@ public class UDPDiscoveryService
         {
             // create this connection each time.
             // more robust
-            sender = new UDPDiscoverySender( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort() );
+            sender = new UDPDiscoverySender( getLca().getUdpDiscoveryAddr(), getLca().getUdpDiscoveryPort() );
 
-            sender.passiveBroadcast( hostAddress, lca.getTcpListenerPort(), this.getCacheNames() );
+            sender.passiveBroadcast( hostAddress, getLca().getTcpListenerPort(), this.getCacheNames() );
 
             // todo we should consider sending a request broadcast every so
             // often.
@@ -234,6 +234,22 @@ public class UDPDiscoveryService
             keys.add( key );
         }
         return keys;
+    }
+
+    /**
+     * @param lca The lca to set.
+     */
+    public void setLca( LateralCacheAttributes lca )
+    {
+        this.lca = lca;
+    }
+
+    /**
+     * @return Returns the lca.
+     */
+    public LateralCacheAttributes getLca()
+    {
+        return lca;
     }
 
     /**
