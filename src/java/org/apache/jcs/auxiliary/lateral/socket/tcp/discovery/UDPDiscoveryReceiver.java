@@ -35,6 +35,7 @@ import org.apache.jcs.engine.behavior.ICache;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * Receives UDP Discovery messages.
@@ -88,6 +89,7 @@ public class UDPDiscoveryReceiver
         pooledExecutor = new PooledExecutor( new BoundedBuffer( 100 ), maxPoolSize );
         pooledExecutor.discardOldestWhenBlocked();
         //pooledExecutor.setMinimumPoolSize(1);
+        pooledExecutor.setThreadFactory( new MyThreadFactory() );
 
         log.debug( "constructing listener, " + this.multicastAddressString + ":" + this.multicastPort );
 
@@ -206,7 +208,7 @@ public class UDPDiscoveryReceiver
         }
         catch ( Exception e )
         {
-            // nopt
+            log.error( "Unexpected exception in UDP receiver.", e );
         }
     }
 
@@ -347,5 +349,29 @@ public class UDPDiscoveryReceiver
         }
     }
 
+    /**
+     * Allows us to set the daemon status on the executor threads
+     * 
+     * @author aaronsm
+     *  
+     */
+    class MyThreadFactory
+        implements ThreadFactory
+    {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            t.setDaemon( true );
+            t.setPriority( Thread.MIN_PRIORITY );
+            return t;
+        }
+
+    }    
 }
 // end class

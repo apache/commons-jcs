@@ -157,36 +157,45 @@ public class CompositeCacheManager
      */
     public void configure( String propFile )
     {
-        log.debug( "Creating cache manager from config file: " + propFile );
+        log.info( "Creating cache manager from config file: " + propFile );
 
         Properties props = new Properties();
 
         InputStream is = getClass().getResourceAsStream( propFile );
 
-        try
-        {
-            props.load( is );
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "File contained " + props.size() + " properties" );
-            }
-        }
-        catch ( IOException ex )
-        {
-            log.error( "Failed to load properties", ex );
-            throw new IllegalStateException( ex.getMessage() );
-        }
-        finally
+        if ( is != null )
         {
             try
             {
-                is.close();
+                props.load( is );
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "File [" + propFile + "] contained " + props.size() + " properties" );
+                }
             }
-            catch ( Exception ignore )
+            catch ( IOException ex )
             {
-                // Ignored
+                log.error( "Failed to load properties for name [" + propFile + "]", ex );
+                throw new IllegalStateException( ex.getMessage() );
             }
+            finally
+            {
+                try
+                {
+                    is.close();
+                }
+                catch ( Exception ignore )
+                {
+                    // Ignored
+                }
+            }
+            
+        }
+        else
+        {
+            log.error( "Failed to load properties for name [" + propFile + "]" );
+            throw new IllegalStateException( "Failed to load properties for name [" + propFile + "]" );            
         }
 
         configure( props );
@@ -199,16 +208,23 @@ public class CompositeCacheManager
      */
     public void configure( Properties props )
     {
-        // set the props value and then configure the ThreadPoolManager
-        ThreadPoolManager.setProps( props );
-        ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
+        if ( props != null )
+        {
+            // set the props value and then configure the ThreadPoolManager
+            ThreadPoolManager.setProps( props );
+            ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
 
-        // configure the cache
-        CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
+            // configure the cache
+            CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
 
-        configurator.doConfigure( props );
+            configurator.doConfigure( props );
 
-        this.props = props;
+            this.props = props;
+        }
+        else
+        {
+            log.error( "No properties found.  Please configure the cache correctly." );
+        }
     }
 
     /**
@@ -282,6 +298,7 @@ public class CompositeCacheManager
     /**
      * If the cache is created the CacheAttributes and the element Attributes
      * will be ignored. Currently there is no overiding once it is set up.
+     * <p>
      * Overriding hte default elemental atributes will require cahnging the way
      * the atributes are assigned to elements. Get cache creates a cache with
      * defaults if none are specified. We might want to create separate method

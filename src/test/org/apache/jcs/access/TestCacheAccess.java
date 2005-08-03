@@ -66,7 +66,7 @@ public class TestCacheAccess
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem getting cache instance", e );
             p( e.toString() );
         }
     }
@@ -129,7 +129,8 @@ public class TestCacheAccess
                         CompositeCacheManager.getInstance().shutDown();
                         //cache_control.dispose();
                         notDone = false;
-                        System.exit( -1 );
+                        //System.exit( -1 );
+                        return;
                     }
                     else
 

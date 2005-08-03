@@ -259,9 +259,9 @@ public class LateralTCPListener
     public void handleDispose( String cacheName )
         throws IOException
     {
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( "handleDispose> cacheName=" + cacheName );
+            log.info( "handleDispose > cacheName=" + cacheName );
         }
 
         CompositeCacheManager cm = cacheMgr;

@@ -16,7 +16,6 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 

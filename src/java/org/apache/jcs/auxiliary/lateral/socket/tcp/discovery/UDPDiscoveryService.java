@@ -85,6 +85,7 @@ public class UDPDiscoveryService
             receiver = new UDPDiscoveryReceiver( this, lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort() );
             Thread t = new Thread(receiver);
             t.setDaemon(true);
+            //t.setName( t.getName() + "--UDPReceiver" );
             t.start();
         }
         catch ( Exception e )
