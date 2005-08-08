@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * @version 1.0
@@ -34,8 +34,13 @@ public class JISPCacheFactory
 
     private String name;
 
-    /** Description of the Method */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
+     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
+     */
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
         JISPCacheAttributes idca = (JISPCacheAttributes) iaca;
         JISPCacheManager dcm = JISPCacheManager.getInstance( idca );

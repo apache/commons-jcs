@@ -20,15 +20,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.control.CompositeCache;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * The RemoteCacheFactory creates remote caches for the cache hub. It returns a
@@ -47,15 +45,13 @@ public class RemoteCacheFactory
     /** store reference of facades to initiate failover */
     private final static HashMap facades = new HashMap();
 
-    /**
-     * Interface method. Allows classforname construction, making caches
-     * pluggable. Should be able to make this work for clusters and local caches
+    /*
+     * (non-Javadoc)
      * 
-     * @param iaca
-     * @param cache
-     * @return An AuxiliaryCache implementation
+     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
+     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
 
         RemoteCacheAttributes rca = (RemoteCacheAttributes) iaca;

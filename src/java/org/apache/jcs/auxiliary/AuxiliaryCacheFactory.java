@@ -16,28 +16,32 @@ package org.apache.jcs.auxiliary;
  * limitations under the License.
  */
 
-import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
- * Description of the Interface
+ * All auxiliary caches must have a factory that the cache configurator can
+ * use to create instances.
  *  
  */
 public interface AuxiliaryCacheFactory
 {
 
     /**
+     * 
      * @param attr
-     *            Attributes the factory will use to create the AuxiliaryCache
-     *            instance.
-     * @param cache
-     *            The CompositeCache which will contain the AuxiliaryCache
-     *            instance being created. Allows auxiliaries to retain a
-     *            reference to their associated CompositeCache.
+     * 
+     * @param cacheMgr
+     * 				This allows auxiliaries to reference the manager
+     * 				without assuming that it is a singleton.  This will
+     * 				allow JCS to be a nonsingleton.  Also, it makes it easier to test.
+     * 
+     * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, CompositeCache cache );
-
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr );
+    
     /**
-     * Sets the name attribute of the IAuxiliaryCacheFactory object
+     * Sets the name attribute of the AuxiliaryCacheFactory object
      * 
      * @param s
      *            The new name value
@@ -45,7 +49,7 @@ public interface AuxiliaryCacheFactory
     public void setName( String s );
 
     /**
-     * Gets the name attribute of the IAuxiliaryCacheFactory object
+     * Gets the name attribute of the AuxiliaryCacheFactory object
      * 
      * @return The name value
      */

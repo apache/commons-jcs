@@ -9,6 +9,8 @@ import org.apache.jcs.auxiliary.lateral.LateralCache;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * 
@@ -59,8 +61,10 @@ public class TestUDPDiscovery
         lac.setTransmissionType( LateralCacheAttributes.TCP );
         lac.setTcpServer( "localhost" + ":" + 1111 );
 
+        ICompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
+        
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( lac );
+        UDPDiscoveryService service = new UDPDiscoveryService( lac, cacheMgr );
 
         // create a no wait facade for the service
         ArrayList noWaits = new ArrayList();
@@ -71,7 +75,7 @@ public class TestUDPDiscovery
         service.addNoWaitFacade( lcnwf, "testCache1" );
 
         // create a receiver with the service
-        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, "228.5.6.7", 6789 );
+        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, "228.5.6.7", 6789, cacheMgr );
         Thread t = new Thread( receiver );
         t.start();
 

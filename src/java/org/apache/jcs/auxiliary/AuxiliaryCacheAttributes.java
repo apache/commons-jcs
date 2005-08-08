@@ -46,7 +46,7 @@ public interface AuxiliaryCacheAttributes
     public void setCacheName( String s );
 
     /**
-     * Gets the cacheName attribute of the IAuxiliaryCacheAttributes object
+     * Gets the cacheName attribute of the AuxiliaryCacheAttributes object
      * 
      * @return The cacheName value
      */
@@ -61,7 +61,7 @@ public interface AuxiliaryCacheAttributes
     public void setName( String s );
 
     /**
-     * Gets the name attribute of the IAuxiliaryCacheAttributes object
+     * Gets the name attribute of the AuxiliaryCacheAttributes object
      * 
      * @return The name value
      */

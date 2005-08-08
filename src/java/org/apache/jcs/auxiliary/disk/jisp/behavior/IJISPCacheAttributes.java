@@ -16,14 +16,14 @@ package org.apache.jcs.auxiliary.disk.jisp.behavior;
  * limitations under the License.
  */
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Description of the Interface
  *  
  */
 public interface IJISPCacheAttributes
-    extends IAuxiliaryCacheAttributes
+    extends AuxiliaryCacheAttributes
 {
 
     /**

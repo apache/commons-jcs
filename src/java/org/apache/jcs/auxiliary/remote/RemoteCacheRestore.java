@@ -43,7 +43,7 @@ public class RemoteCacheRestore
 
     private final RemoteCacheManager rcm;
 
-    //private final IAuxiliaryCacheManager rcm;
+    //private final AuxiliaryCacheManager rcm;
     private boolean canFix = true;
 
     private Object remoteObj;
@@ -55,7 +55,7 @@ public class RemoteCacheRestore
      */
     public RemoteCacheRestore( RemoteCacheManager rcm )
     {
-        //public RemoteCacheRestore(IAuxiliaryCacheManager rcm) {
+        //public RemoteCacheRestore(AuxiliaryCacheManager rcm) {
         this.rcm = rcm;
     }
 

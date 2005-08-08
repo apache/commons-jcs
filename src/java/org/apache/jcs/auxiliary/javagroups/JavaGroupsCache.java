@@ -23,6 +23,8 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
+import org.apache.jcs.engine.behavior.ICompositeCache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
@@ -79,18 +81,18 @@ public class JavaGroupsCache
 
     private boolean getFromPeers;
 
-    private CompositeCache cache;
+    private ICompositeCacheManager cacheMgr;
 
     private Channel channel;
 
     private MessageDispatcher dispatcher;
 
-    public JavaGroupsCache( CompositeCache cache, Channel channel, boolean getFromPeers )
+    public JavaGroupsCache( ICompositeCacheManager cache, String cacheName, Channel channel, boolean getFromPeers )
         throws Exception
     {
-        this.cache = cache;
+        this.cacheMgr = cacheMgr;
 
-        this.cacheName = cache.getCacheName();
+        this.cacheName = cacheName;
         this.channel = channel;
 
         this.getFromPeers = getFromPeers;
@@ -321,22 +323,22 @@ public class JavaGroupsCache
             {
                 case Request.GET:
 
-                    return cache.localGet( request.getCacheElement().getKey() );
+                    return getCompositeCache().localGet( request.getCacheElement().getKey() );
                 // break;
 
                 case Request.UPDATE:
 
-                    cache.localUpdate( request.getCacheElement() );
+                    getCompositeCache().localUpdate( request.getCacheElement() );
                     break;
 
                 case Request.REMOVE:
 
-                    cache.localRemove( request.getCacheElement().getKey() );
+                    getCompositeCache().localRemove( request.getCacheElement().getKey() );
                     break;
 
                 case Request.REMOVE_ALL:
 
-                    cache.localRemoveAll();
+                    getCompositeCache().localRemoveAll();
                     break;
 
                 default:
@@ -352,6 +354,16 @@ public class JavaGroupsCache
         return null;
     }
 
+    /**
+     * TODO speed this up. We don't want to ahve to go through the manager everytime.
+     * 
+     * @return ICompositeCache
+     */
+    private ICompositeCache getCompositeCache()
+    {
+        return cacheMgr.getCache( this.cacheName );
+    }
+    
     // ------------------------------------------- interface MembershipListener
 
     public void viewAccepted( View view )

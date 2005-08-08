@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * This manages UDPDiscovery Services. We should end up with one service per
@@ -44,7 +45,7 @@ public class UDPDiscoveryManager
      * @param lca
      * @return
      */
-    public synchronized UDPDiscoveryService getService( LateralCacheAttributes lca )
+    public synchronized UDPDiscoveryService getService( LateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         String key = lca.getTcpServer() + ":" + lca.getTcpListenerPort();
 
@@ -56,7 +57,7 @@ public class UDPDiscoveryManager
                 log.debug( "Creating service for " + key );
             }
 
-            service = new UDPDiscoveryService( lca );
+            service = new UDPDiscoveryService( lca, cacheMgr );
             services.put( key, service );
         }
 

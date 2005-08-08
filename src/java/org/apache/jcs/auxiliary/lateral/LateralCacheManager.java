@@ -33,6 +33,7 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
@@ -78,13 +79,16 @@ public class LateralCacheManager
      */
     private LateralCacheWatchRepairable lateralWatch;
 
+    private ICompositeCacheManager cacheMgr;
+    
     /**
-     * Gets the instance attribute of the LateralCacheManager class
+     * Returns an instance of the LateralCacheManager.
      * 
-     * @return The instance value
      * @param lca
+     * @param cacheMgr  this allows the auxiliary to be passed a cache manager.
+     * @return
      */
-    public static LateralCacheManager getInstance( ILateralCacheAttributes lca )
+    public static LateralCacheManager getInstance( ILateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         LateralCacheManager ins = (LateralCacheManager) instances.get( lca.toString() );
         synchronized ( instances )
@@ -96,7 +100,7 @@ public class LateralCacheManager
                 ins = (LateralCacheManager) instances.get( lca.toString() );
                 if ( ins == null )
                 {
-                    ins = new LateralCacheManager( lca );
+                    ins = new LateralCacheManager( lca, cacheMgr );
                     instances.put( lca.toString(), ins );
                 }
             }
@@ -123,10 +127,12 @@ public class LateralCacheManager
      * 
      * @param lcaA
      */
-    private LateralCacheManager( ILateralCacheAttributes lcaA )
+    private LateralCacheManager( ILateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr )
     {
         this.lca = lcaA;
 
+        this.cacheMgr = cacheMgr;
+        
         if ( log.isDebugEnabled() )
         {
             log.debug( "Creating lateral cache service, lca = " + this.lca );
@@ -247,7 +253,7 @@ public class LateralCacheManager
             {
                 if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
                 {
-                    addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca ) );
+                    addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca, cacheMgr ) );
                 }
                 else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
                 {
@@ -289,7 +295,7 @@ public class LateralCacheManager
     /**
      * Gets the stats attribute of the LateralCacheManager object
      * 
-     * @return The {3} value
+     * @return String
      */
     public String getStats()
     {

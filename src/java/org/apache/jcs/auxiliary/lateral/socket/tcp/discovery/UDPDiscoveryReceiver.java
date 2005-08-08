@@ -32,6 +32,7 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
@@ -68,6 +69,8 @@ public class UDPDiscoveryReceiver
 
     private int multicastPort = 0;
 
+    private ICompositeCacheManager cacheMgr; 
+    
     /**
      * Constructor for the LateralUDPReceiver object.
      * <p>
@@ -76,15 +79,18 @@ public class UDPDiscoveryReceiver
      * @param service
      * @param multicastAddressString
      * @param multicastPort
+     * @param cacheMgr
      * @exception IOException
      */
-    public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastAddressString, int multicastPort )
+    public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastAddressString, int multicastPort,
+                                ICompositeCacheManager cacheMgr )
         throws IOException
     {
         this.service = service;
         this.multicastAddressString = multicastAddressString;
         this.multicastPort = multicastPort;
-
+        this.cacheMgr = cacheMgr;
+        
         // create a small thread pool to handle a barage
         pooledExecutor = new PooledExecutor( new BoundedBuffer( 100 ), maxPoolSize );
         pooledExecutor.discardOldestWhenBlocked();
@@ -298,7 +304,7 @@ public class UDPDiscoveryReceiver
                     }
                     lca.setTransmissionType( LateralCacheAttributes.TCP );
                     lca.setTcpServer( message.getHost() + ":" + message.getPort() );
-                    LateralCacheManager lcm = LateralCacheManager.getInstance( lca );
+                    LateralCacheManager lcm = LateralCacheManager.getInstance( lca, cacheMgr );
 
                     ArrayList regions = message.getCacheNames();
                     if ( regions != null )
@@ -372,6 +378,6 @@ public class UDPDiscoveryReceiver
             return t;
         }
 
-    }    
+    }
 }
 // end class

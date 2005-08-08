@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.jgroups.Channel;
 import org.jgroups.ChannelFactory;
@@ -39,8 +40,16 @@ public class JavaGroupsCacheFactory
 
     private String name;
 
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
+     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
+     */
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
+        // ignore the maanger
+
         try
         {
             // Cast provided attributes to JavaGroupsCacheAttributes
@@ -59,7 +68,7 @@ public class JavaGroupsCacheFactory
 
             // Return a new JavaGroupsCache for the new channel.
 
-            return new JavaGroupsCache( cache, channel, attributes.isGetFromPeers() );
+            return new JavaGroupsCache( cacheMgr, attributes.getCacheName(), channel, attributes.isGetFromPeers() );
         }
         catch ( Exception e )
         {

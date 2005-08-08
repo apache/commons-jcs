@@ -24,6 +24,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +36,7 @@ import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.stats.CacheStats;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
@@ -42,7 +44,7 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
 /** Manages a composite cache. */
 public class CompositeCacheManager
-    implements IRemoteCacheConstants, Serializable
+    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager
 {
     private final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 
@@ -75,6 +77,10 @@ public class CompositeCacheManager
 
     /** The Singleton Instance */
     protected static CompositeCacheManager instance;
+
+    private static final String SYSTEM_PROPERTY_KEY_PREFIX = "jcs";
+
+    private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
 
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates
@@ -150,7 +156,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * Configure from specific properties file
+     * Configure from specific properties file.
      * 
      * @param propFile
      *            Path <u>within classpath </u> to load configuration from
@@ -190,26 +196,71 @@ public class CompositeCacheManager
                     // Ignored
                 }
             }
-            
+
         }
         else
         {
             log.error( "Failed to load properties for name [" + propFile + "]" );
-            throw new IllegalStateException( "Failed to load properties for name [" + propFile + "]" );            
+            throw new IllegalStateException( "Failed to load properties for name [" + propFile + "]" );
         }
 
         configure( props );
     }
 
     /**
-     * Configure from properties object
+     * Configure from properties object.
+     * <p>
+     * This method will call confiure, instructing it to use ssytem properties
+     * as a default.
      * 
      * @param props
      */
     public void configure( Properties props )
     {
+        configure( props, DEFAULT_USE_SYSTEM_PROPERTIES );
+    }
+
+    /**
+     * Configure from properties object, overriding with values from the system
+     * properteis if instructed.
+     * <p>
+     * You can override a specif value by passing in a ssytem property:
+     * <p>
+     * For example, you could override this value in the cache.ccf file by
+     * starting up your program with the argument:
+     * -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
+     * 
+     * 
+     * @param props
+     * @param useSystemProperties --
+     *            if true, values starting with jcs will be put into the props
+     *            file prior to configuring the cache.
+     */
+    public void configure( Properties props, boolean useSystemProperties )
+    {
         if ( props != null )
         {
+
+            if ( useSystemProperties )
+            {
+                // override any setting with values from the system properties.
+                Properties sysProps = System.getProperties();
+                Set keys = sysProps.keySet();
+                Iterator keyIt = keys.iterator();
+                while ( keyIt.hasNext() )
+                {
+                    String key = (String) keyIt.next();
+                    if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
+                    {
+                        if ( log.isInfoEnabled() )
+                        {
+                            log.info( "Using system property [[" + key + "] [" + sysProps.getProperty( key ) + "]]" );
+                        }
+                        props.put( key, sysProps.getProperty( key ) );
+                    }
+                }
+            }
+
             // set the props value and then configure the ThreadPoolManager
             ThreadPoolManager.setProps( props );
             ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();

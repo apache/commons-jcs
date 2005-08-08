@@ -18,11 +18,10 @@ package org.apache.jcs.auxiliary.disk.indexed;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * @version 1.0
@@ -42,13 +41,14 @@ public class IndexedDiskCacheFactory
      * <p>
      * One disk cache is returned per region fromt he maanger.
      * 
-     * @param iaca
-     *            The auxiliary attributes.
-     * @param cache
-     *            The CacheHub
+     * @param cacheMgr
+     *            This allows auxiliaries to reference the manager without
+     *            assuming that it is a singleton. This will allow JCS to be a
+     *            nonsingleton. Also, it makes it easier to test.
+     * 
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
         IndexedDiskCacheAttributes idca = (IndexedDiskCacheAttributes) iaca;
         if ( log.isDebugEnabled() )

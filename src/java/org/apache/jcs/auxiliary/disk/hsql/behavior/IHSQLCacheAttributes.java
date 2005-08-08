@@ -16,7 +16,7 @@ package org.apache.jcs.auxiliary.disk.hsql.behavior;
  * limitations under the License.
  */
 
-import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Title: Description:
@@ -25,7 +25,7 @@ import org.apache.jcs.auxiliary.behavior.IAuxiliaryCacheAttributes;
  */
 
 public interface IHSQLCacheAttributes
-    extends IAuxiliaryCacheAttributes
+    extends AuxiliaryCacheAttributes
 {
 
     /**

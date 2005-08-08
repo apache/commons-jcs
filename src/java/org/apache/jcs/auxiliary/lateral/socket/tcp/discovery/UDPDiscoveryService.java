@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
@@ -40,6 +41,8 @@ public class UDPDiscoveryService
      */
     private static ClockDaemon daemon;
 
+    private Thread udpReceiverThread;
+    
     private UDPDiscoveryReceiver receiver;
 
     private Map facades = new HashMap();
@@ -54,9 +57,10 @@ public class UDPDiscoveryService
      * 
      * @param facade
      * @param lca
+     * @param cacheMgr
      * @param receivingPort
      */
-    public UDPDiscoveryService( LateralCacheAttributes lca )
+    public UDPDiscoveryService( LateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         //LateralCacheNoWaitFacade facade,
         //this.facade = facade;
@@ -82,11 +86,11 @@ public class UDPDiscoveryService
             // todo need some kind of recovery here.
             //receiver = new UDPDiscoveryReceiver( facade,
             // lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort() );
-            receiver = new UDPDiscoveryReceiver( this, lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort() );
-            Thread t = new Thread(receiver);
-            t.setDaemon(true);
-            //t.setName( t.getName() + "--UDPReceiver" );
-            t.start();
+            receiver = new UDPDiscoveryReceiver( this, lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), cacheMgr );
+            udpReceiverThread = new Thread(receiver);
+            udpReceiverThread.setDaemon(true);
+            //udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
+            udpReceiverThread.start();
         }
         catch ( Exception e )
         {

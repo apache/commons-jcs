@@ -30,7 +30,7 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryManager;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryService;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each
@@ -47,22 +47,21 @@ public class LateralCacheFactory
 
     private String name;
 
-    /**
-     * Interface method. Allows classforname construction, making caches
-     * pluggable.
+    /*
+     * (non-Javadoc)
      * 
-     * @return AuxiliaryCache
-     * @param iaca
-     * @param cache
+     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
+     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, CompositeCache cache )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
+
         LateralCacheAttributes lac = (LateralCacheAttributes) iaca;
         ArrayList noWaits = new ArrayList();
 
         if ( lac.getTransmissionType() == LateralCacheAttributes.UDP )
         {
-            LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
+            LateralCacheManager lcm = LateralCacheManager.getInstance( lac, cacheMgr );
             ICache ic = lcm.getCache( lac.getCacheName() );
             if ( ic != null )
             {
@@ -71,7 +70,7 @@ public class LateralCacheFactory
         }
         else if ( lac.getTransmissionType() == LateralCacheAttributes.JAVAGROUPS )
         {
-            LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
+            LateralCacheManager lcm = LateralCacheManager.getInstance( lac, cacheMgr );
             ICache ic = lcm.getCache( lac.getCacheName() );
             if ( ic != null )
             {
@@ -100,7 +99,7 @@ public class LateralCacheFactory
                 }
                 LateralCacheAttributes lacC = (LateralCacheAttributes) lac.copy();
                 lacC.setTcpServer( server );
-                LateralCacheManager lcm = LateralCacheManager.getInstance( lacC );
+                LateralCacheManager lcm = LateralCacheManager.getInstance( lacC, cacheMgr );
                 ICache ic = lcm.getCache( lacC.getCacheName() );
                 if ( ic != null )
                 {
@@ -127,7 +126,7 @@ public class LateralCacheFactory
                 String server = (String) it.nextElement();
                 //p( "tcp server = " + server );
                 lac.setHttpServer( server );
-                LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
+                LateralCacheManager lcm = LateralCacheManager.getInstance( lac, cacheMgr );
                 ICache ic = lcm.getCache( lac.getCacheName() );
                 if ( ic != null )
                 {
@@ -147,7 +146,7 @@ public class LateralCacheFactory
             {
                 String server = (String) it.nextElement();
                 lac.setHttpServer( server );
-                LateralCacheManager lcm = LateralCacheManager.getInstance( lac );
+                LateralCacheManager lcm = LateralCacheManager.getInstance( lac, cacheMgr );
                 ICache ic = lcm.getCache( lac.getCacheName() );
                 if ( ic != null )
                 {
@@ -156,13 +155,13 @@ public class LateralCacheFactory
             }
         }
 
-        createListener( lac );
+        createListener( lac, cacheMgr );
 
         // create the no wait facade.
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
             .toArray( new LateralCacheNoWait[0] ), iaca.getCacheName() );
 
-        createDiscoveryService( lac, lcnwf );
+        createDiscoveryService( lac, lcnwf, cacheMgr );
 
         return lcnwf;
     }
@@ -173,7 +172,7 @@ public class LateralCacheFactory
      * 
      * @param lac
      */
-    private void createListener( LateralCacheAttributes lac )
+    private void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
         // don't create a listener if we are not receiving.
         if ( lac.isReceive() )
@@ -183,7 +182,7 @@ public class LateralCacheFactory
                 if ( lac.getTransmissionType() == ILateralCacheAttributes.TCP )
                 {
                     // make a listener. if one doesn't exist
-                    LateralTCPListener.getInstance( lac );
+                    LateralTCPListener.getInstance( lac, cacheMgr );
                 }
                 else if ( lac.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
                 {
@@ -213,7 +212,8 @@ public class LateralCacheFactory
      * @param lcnwf
      * @return null if none is created.
      */
-    private UDPDiscoveryService createDiscoveryService( LateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf )
+    private UDPDiscoveryService createDiscoveryService( LateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
+                                                       ICompositeCacheManager cacheMgr )
     {
         UDPDiscoveryService discovery = null;
 
@@ -228,7 +228,7 @@ public class LateralCacheFactory
 
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
-            discovery = UDPDiscoveryManager.getInstance().getService( lac );
+            discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr );
 
             discovery.addNoWaitFacade( lcnwf, lac.getCacheName() );
 

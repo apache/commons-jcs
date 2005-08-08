@@ -33,6 +33,7 @@ import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
@@ -78,7 +79,7 @@ public class LateralTCPListener
      * @param ilca
      * @return The instance value
      */
-    public synchronized static ILateralCacheListener getInstance( ILateralCacheAttributes ilca )
+    public synchronized static ILateralCacheListener getInstance( ILateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
     {
         ILateralCacheListener ins = (ILateralCacheListener) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
