@@ -16,8 +16,8 @@ package org.apache.jcs.auxiliary;
  * limitations under the License.
  */
 
-import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 
 /**
  * All auxiliary caches must have a factory that the cache configurator can

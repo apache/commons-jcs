@@ -16,7 +16,9 @@ package org.apache.jcs.auxiliary.lateral.behavior;
  * limitations under the License.
  */
 
+import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * Listens for lateral cache event notification.
@@ -28,5 +30,16 @@ public interface ILateralCacheListener
 
     /** Description of the Method */
     public void init();
+
+    /**
+     * @param cacheMgr The cacheMgr to set.
+     */
+    public void setCacheManager( ICompositeCacheManager cacheMgr );
+
+
+    /**
+     * @return Returns the cacheMgr.
+     */
+    public ICompositeCacheManager getCacheManager();
 
 }

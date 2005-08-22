@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.6.5</currentVersion>
+  <currentVersion>1.2.6.6</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -128,8 +128,9 @@
       <version>2.2</version>
     </dependency>
     <dependency>
-      <id>jgroups</id>
-      <version>2.2.5</version>
+      <groupId>jgroups</groupId>
+      <artifactId>jgroups-all</artifactId>
+      <version>2.2.8</version>
     </dependency>
     <dependency>
       <id>jisp</id>
@@ -190,8 +191,9 @@
         <include>**/TestDiskCacheConcurrent.java</include>
         <include>**/TestDiskCacheConcurrentForDeadLock.java</include>
         <include>**/TestTCPLateralCache.java</include>
+        <include>**/TestLateralTCPConcurrentForDeadLock</include>
         <!--
-	<include>**/TestJCSvHashtablePerf.java</include>
+		<include>**/TestJCSvHashtablePerf.java</include>
 		-->
         <include>**/TestEventQueueConcurrent.java</include>
         <include>**/TestSimpleEventHandling.java</include>

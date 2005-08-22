@@ -18,25 +18,19 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.rmi.RemoteException;
-
 import java.rmi.server.UnicastRemoteObject;
-
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
-// remove
 
 /**
  * This listener class is for inter cache commumication.

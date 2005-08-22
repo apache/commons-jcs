@@ -97,6 +97,7 @@ jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
 jcs.auxiliary.LTCP.attributes.Receive=false
         ]]></source>
       </subsection>
+                  
       <subsection name="Potential Issues">
         <p>
           The TCP Lateral Auxiliary Cache can provide a high level of

@@ -97,10 +97,15 @@ public class JGRpcOpener
             disp = new RpcDispatcher( rpcCh, null, null, ilcl );
             rpcCh.connect( groupName );
 
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Is Connected = " + rpcCh.isConnected() );
+            }
+            
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem getting dispatcher.", e );
         }
     }
 

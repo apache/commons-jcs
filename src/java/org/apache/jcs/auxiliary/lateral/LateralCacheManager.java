@@ -257,7 +257,7 @@ public class LateralCacheManager
                 }
                 else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
                 {
-                    addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( this.lca ) );
+                    addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( this.lca, cacheMgr ) );
                 }
             }
             catch ( IOException ioe )

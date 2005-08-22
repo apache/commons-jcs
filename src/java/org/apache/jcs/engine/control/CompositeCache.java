@@ -34,7 +34,6 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
@@ -64,7 +63,7 @@ import org.apache.jcs.engine.control.group.GroupId;
  * @version $Id$
  */
 public class CompositeCache
-    implements ICache, Serializable, ICompositeCache
+    implements ICache, Serializable
 {
     private final static Log log = LogFactory.getLog( CompositeCache.class );
 
@@ -75,7 +74,7 @@ public class CompositeCache
     public static IElementEventQueue elementEventQ = new ElementEventQueue( "AllRegionQueue" );
 
     // Auxiliary caches.
-    private AuxiliaryCache[] auxCaches;
+    private AuxiliaryCache[] auxCaches = new AuxiliaryCache[0];
 
     private boolean alive = true;
 
@@ -93,6 +92,9 @@ public class CompositeCache
     public ICompositeCacheAttributes cacheAttr;
 
     // Statistics
+    private int updateCount;
+
+    private int removeCount;
 
     /** Memory cache hit count */
     private int hitCountRam;
@@ -199,6 +201,9 @@ public class CompositeCache
         throws IOException
     {
 
+        // not thread safe, but just for debugging and testing.
+        updateCount++;
+        
         if ( ce.getKey() instanceof String && ce.getKey().toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             throw new IllegalArgumentException( "key must not end with " + CacheConstants.NAME_COMPONENT_DELIMITER
@@ -310,7 +315,7 @@ public class CompositeCache
     }
 
     /**
-     * Writes the specified element to any disk auxilliaries Might want to
+     * Writes the specified element to any disk auxilliaries .Might want to
      * rename this "overflow" incase the hub wants to do something else.
      * 
      * @param ce
@@ -510,6 +515,10 @@ public class CompositeCache
 
                                 missCountExpired++;
 
+                                // this will tell the remotes to remove the item based on this
+                                // local's expiration policy.  
+                                // This seems wrong.  
+                                //TODO We should call localRemove
                                 remove( key );
 
                                 element = null;
@@ -539,7 +548,7 @@ public class CompositeCache
                                 {
                                     if ( log.isDebugEnabled() )
                                     {
-                                        log.debug( "Skipping memory update since" + "no items are allowed in memory" );
+                                        log.debug( "Skipping memory update since no items are allowed in memory" );
                                     }
                                 }
                             }
@@ -698,6 +707,9 @@ public class CompositeCache
      */
     protected synchronized boolean remove( Serializable key, boolean localOnly )
     {
+        // not thread safe, but just for debugging and testing.
+        removeCount++;
+        
         boolean removed = false;
 
         try
@@ -763,6 +775,7 @@ public class CompositeCache
     }
 
     /**
+     * Will not pass the remove message remotely.  
      * 
      * @throws IOException
      */
@@ -775,7 +788,8 @@ public class CompositeCache
     /**
      * Removes all cached items.
      * 
-     * @param localOnly
+     * @param localOnly, must pass in false to get remote and lateral aux's updated.  This prevents
+     * looping.
      * @throws IOException
      */
     protected synchronized void removeAll( boolean localOnly )
@@ -838,7 +852,7 @@ public class CompositeCache
      * 
      * @param fromRemote
      */
-    protected synchronized void dispose( boolean fromRemote )
+    public synchronized void dispose( boolean fromRemote )
     {
         // If already disposed, return immediately
 
@@ -1228,6 +1242,9 @@ public class CompositeCache
     /**
      * If there are event handlers for the item, then create an event and queue
      * it up.
+     * <p>
+     * This does not call handle directly; instead the handler and the event are put into a queue.  
+     * This prevents the event handling from blocking normal cache operations.
      * 
      * @param ce
      * @param eventType
@@ -1261,7 +1278,7 @@ public class CompositeCache
     }
 
     /**
-     * Adds an ElementEvent to be handled
+     * Adds an ElementEvent to be handled tot he queue.
      * 
      * @param hand
      *            The IElementEventHandler
@@ -1278,5 +1295,37 @@ public class CompositeCache
             log.debug( "Adding event to Element Event Queue" );
         }
         elementEventQ.addElementEvent( hand, event );
+    }
+
+    /**
+     * @param updateCount The updateCount to set.
+     */
+    public void setUpdateCount( int updateCount )
+    {
+        this.updateCount = updateCount;
+    }
+
+    /**
+     * @return Returns the updateCount.
+     */
+    public int getUpdateCount()
+    {
+        return updateCount;
+    }
+
+    /**
+     * @param removeCount The removeCount to set.
+     */
+    public void setRemoveCount( int removeCount )
+    {
+        this.removeCount = removeCount;
+    }
+
+    /**
+     * @return Returns the removeCount.
+     */
+    public int getRemoveCount()
+    {
+        return removeCount;
     }
 }

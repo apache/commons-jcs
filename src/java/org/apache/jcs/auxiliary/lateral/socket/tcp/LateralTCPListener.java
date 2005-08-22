@@ -25,7 +25,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
@@ -37,10 +36,11 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
+
 /**
  * Listens for connections from other TCP lateral caches and handles them.
- * 
- * @version $Id$
+ *  
  */
 public class LateralTCPListener
     implements ILateralCacheListener, Serializable
@@ -51,7 +51,7 @@ public class LateralTCPListener
     private final static int acceptTimeOut = 0;
 
     /** The CacheHub this listener is associated with */
-    protected static transient CompositeCacheManager cacheMgr;
+    private transient ICompositeCacheManager cacheManager;
 
     /** Map of available instances, keyed by port */
     protected final static HashMap instances = new HashMap();
@@ -71,6 +71,12 @@ public class LateralTCPListener
 
     private int removeCnt = 0;
 
+    /**
+     * Use the vmid by default.  This can be set for testing. 
+     * If we ever need to run more than one per vm, then we need a new technique.
+     */
+    private long listenerId = LateralCacheInfo.listenerId;
+
     // -------------------------------------------------------- factory methods
 
     /**
@@ -79,7 +85,8 @@ public class LateralTCPListener
      * @param ilca
      * @return The instance value
      */
-    public synchronized static ILateralCacheListener getInstance( ILateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
+    public synchronized static ILateralCacheListener getInstance( ILateralCacheAttributes ilca,
+                                                                 ICompositeCacheManager cacheMgr )
     {
         ILateralCacheListener ins = (ILateralCacheListener) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
@@ -88,6 +95,8 @@ public class LateralTCPListener
             ins = new LateralTCPListener( ilca );
 
             ins.init();
+
+            ins.setCacheManager( cacheMgr );
 
             instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
 
@@ -141,6 +150,12 @@ public class LateralTCPListener
      * reconnect.
      * <p>
      * By default, the listener id is the vmid.
+     * <p>
+     * The service should set this value. This value will never be changed by a
+     * server we connect to. It needs to be non static, for unit tests.
+     * <p>
+     * The service will use the value it sets in all send requests to the
+     * sender.
      * 
      * @param id
      *            The new listenerId value
@@ -149,7 +164,7 @@ public class LateralTCPListener
     public void setListenerId( long id )
         throws IOException
     {
-        LateralCacheInfo.listenerId = id;
+        this.listenerId = id;
         if ( log.isDebugEnabled() )
         {
             log.debug( "set listenerId = " + id );
@@ -165,7 +180,7 @@ public class LateralTCPListener
     public long getListenerId()
         throws IOException
     {
-        return LateralCacheInfo.listenerId;
+        return this.listenerId;
     }
 
     /*
@@ -181,7 +196,7 @@ public class LateralTCPListener
         {
             if ( getPutCnt() % 100 == 0 )
             {
-                log.info( "Put Count = " + getPutCnt() );
+                log.info( "Put Count (port " + ilca.getTcpListenerPort() + ") = " + getPutCnt() );
             }
         }
 
@@ -265,34 +280,41 @@ public class LateralTCPListener
             log.info( "handleDispose > cacheName=" + cacheName );
         }
 
-        CompositeCacheManager cm = cacheMgr;
-        cm.freeCache( cacheName, true );
+        // TODO handle active deregistration, rather than passive detection
+        // through error
+        //getCacheManager().freeCache( cacheName, true );
     }
 
     /**
      * Gets the cacheManager attribute of the LateralCacheTCPListener object.
+     * <p>
+     * Normally this is set by the factory.  If it wasn't set the listener defaults
+     * to the expected singleton behavior of the cache amanger.
      * 
      * @param name
      * @return CompositeCache
      */
     protected CompositeCache getCache( String name )
     {
-        if ( cacheMgr == null )
+        if ( getCacheManager() == null )
         {
-            cacheMgr = CompositeCacheManager.getInstance();
+            // revert to singleton on failure
+            setCacheManager( CompositeCacheManager.getInstance() );
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "cacheMgr = " + cacheMgr );
+                log.debug( "cacheMgr = " + getCacheManager() );
             }
         }
 
-        return cacheMgr.getCache( name );
+        return getCacheManager().getCache( name );
     }
 
     // ---------------------------------------------------------- inner classes
 
     /**
+     * This is roughly the number of updates the lateral has received.
+     * 
      * @return Returns the putCnt.
      */
     public int getPutCnt()
@@ -306,6 +328,23 @@ public class LateralTCPListener
     public int getRemoveCnt()
     {
         return removeCnt;
+    }
+
+    /**
+     * @param cacheMgr
+     *            The cacheMgr to set.
+     */
+    public void setCacheManager( ICompositeCacheManager cacheMgr )
+    {
+        this.cacheManager = cacheMgr;
+    }
+
+    /**
+     * @return Returns the cacheMgr.
+     */
+    public ICompositeCacheManager getCacheManager()
+    {
+        return cacheManager;
     }
 
     /**
@@ -386,7 +425,7 @@ public class LateralTCPListener
             }
             catch ( Exception e )
             {
-                log.error( "Could not open ObjectInputStream to " + socket, e );
+                log.error( "Could not open ObjectInputStream on " + socket, e );
 
                 return;
             }
@@ -404,7 +443,7 @@ public class LateralTCPListener
                         log.debug( "LateralElementDescriptor is null" );
                         continue;
                     }
-                    if ( led.requesterId == LateralCacheInfo.listenerId )
+                    if ( led.requesterId == getListenerId() )
                     {
                         log.debug( "from self" );
                     }
@@ -430,7 +469,7 @@ public class LateralTCPListener
             }
             catch ( Exception e )
             {
-                log.error( "Unexpected exception. Closing conneciton", e );
+                log.error( "Unexpected exception.", e );
             }
 
             try
@@ -439,7 +478,7 @@ public class LateralTCPListener
             }
             catch ( Exception e )
             {
-                log.error( "Could not close connection", e );
+                log.error( "Could not close object input stream.", e );
             }
         }
 

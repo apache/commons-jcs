@@ -1,7 +1,7 @@
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
-jcs.default=DC,LJG
+jcs.default=LJG
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=250000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -20,7 +20,7 @@ jcs.default.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=DC,LJG
+jcs.region.testCache1=LJG
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=250000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -52,9 +52,17 @@ jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
+#jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP:PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:STATE_TRANSFER:QUEUE
+#jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=228.10.9.8;mcast_port=5678):PING:FD:FLUSH:GMS
+#jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
 jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=225.0.0.100;mcast_port=7777):PING(timeout=3000):AUTOCONF:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:STATE_TRANSFER:QUEUE
 jcs.auxiliary.LJG.attributes.EventQueueType=POOLED
 jcs.auxiliary.LJG.attributes.EventQueuePolName=lg_event_queue
+
+jcs.auxiliary.JG = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
+jcs.auxiliary.JG.attributes = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
+jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.jgroups.JChannelFactory
+jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE
 
 ##############################################################
 ################## OPTIONAL THREAD POOL CONFIGURATION ###################

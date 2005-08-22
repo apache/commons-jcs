@@ -54,37 +54,38 @@ public class TestBDBJEDiskCacheConcurrent
   public static Test suite() {
     ActiveTestSuite suite = new ActiveTestSuite();
 
-    suite.addTest(new TestBDBJE("testIndexedDiskCache1") {
+    suite.addTest(new TestBDBJE("testBDBJECache1") {
       public void runTest() throws Exception {
         runTestForRegion("indexedRegion4", 0, 200);
       }
     });
 
-    suite.addTest(new TestBDBJE("testIndexedDiskCache2") {
+    suite.addTest(new TestBDBJE("testBDBJECache2") {
       public void runTest() throws Exception {
         runTestForRegion("indexedRegion4", 1000, 1200);
       }
     });
 
-    suite.addTest(new TestBDBJE("testIndexedDiskCache3") {
+    suite.addTest(new TestBDBJE("testBDBJECache3") {
       public void runTest() throws Exception {
         runTestForRegion("indexedRegion4", 2000, 3200);
       }
     });
 
-    suite.addTest(new TestBDBJE("testIndexedDiskCache4") {
+    suite.addTest(new TestBDBJE("testBDBJECache4") {
       public void runTest() throws Exception {
         runTestForRegion("indexedRegion4", 2200, 5200);
       }
     });
 
-    suite.addTest(new TestBDBJE("testIndexedDiskCache5") {
+    /*
+    suite.addTest(new TestBDBJE("testBDBJECache5") {
       public void runTest() throws Exception {
         runTestForRegion("indexedRegion4", 0, 10000);
       }
     });
 
-    suite.addTest(new TestBDBJE("testIndexedDiskCache5") {
+    suite.addTest(new TestBDBJE("testBDBJECache6") {
       public void runTest() throws Exception {
         runTestForRegion("indexedRegion3", 0, 5000);
       }
@@ -101,7 +102,7 @@ public class TestBDBJEDiskCacheConcurrent
         runTestForRegion("indexedRegion1", 0, 5000);
       }
     });
-
+*/
     return suite;
   }
 
@@ -118,7 +119,7 @@ public class TestBDBJEDiskCacheConcurrent
   public void tearDown() {
     try {
       CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
-      cacheMgr.shutDown();
+      //cacheMgr.shutDown();
       /*
       String[] names = cacheMgr.getCacheNames();
       StringBuffer buf = new StringBuffer();

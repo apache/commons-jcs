@@ -20,9 +20,9 @@ import java.util.Set;
 
 import org.apache.jcs.access.behavior.IGroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupAttrName;

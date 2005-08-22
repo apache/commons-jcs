@@ -20,7 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.jgroups.Channel;
-import org.jgroups.JChannel;
+import org.jgroups.ChannelFactory;
+import org.jgroups.JChannelFactory;
 
 /**
  * Socket openere that will timeout on the initial connect rather than block
@@ -80,15 +81,27 @@ public class JGSocketOpener
         try
         {
 
-            javagroups = new JChannel( lca.getJGChannelProperties() );
+            ChannelFactory factory = new JChannelFactory();
+
+            // Create a channel based on 'channelProperties' from the config
+            Channel channel = factory.createChannel( lca.getJGChannelProperties() );
+
+            javagroups = channel; //new JChannel( lca.getJGChannelProperties()
+                                  // );
             // don't send local
             javagroups.setOpt( Channel.LOCAL, Boolean.FALSE );
+
             javagroups.connect( groupName );
+
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Is Connected = " + javagroups.isConnected() );
+            }
 
         }
         catch ( Exception e )
         {
-            log.error( " Problem connecting", e );
+            log.error( "Problem connecting to channel.", e );
         }
     }
 

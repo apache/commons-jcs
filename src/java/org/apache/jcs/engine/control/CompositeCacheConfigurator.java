@@ -101,17 +101,17 @@ public class CompositeCacheConfigurator
         doConfigure( props );
     }
 
-    /** 
+    /**
      * Configure cache for properties object.
      * <p>
      * This method proceeds in several steps:
      * <ul>
-     * <li> Store props for use by non configured caches.
-     * <li> Set default value list
-     * <li> Set default cache attr
-     * <li> Set default element attr
-     * <li> Setup system caches to be used
-     * <li> Setup preconfigured caches
+     * <li>Store props for use by non configured caches.
+     * <li>Set default value list
+     * <li>Set default cache attr
+     * <li>Set default element attr
+     * <li>Setup system caches to be used
+     * <li>Setup preconfigured caches
      * </ul>
      * 
      * @param properties
@@ -137,7 +137,7 @@ public class CompositeCacheConfigurator
 
     }
 
-    /** 
+    /**
      * Set the default aux list for new caches.
      * 
      * @param props
@@ -164,7 +164,7 @@ public class CompositeCacheConfigurator
         log.info( "setting defaultCompositeCacheAttributes to " + icca );
     }
 
-    /** 
+    /**
      * Set the default ElementAttributes for new caches.
      * 
      * @param props

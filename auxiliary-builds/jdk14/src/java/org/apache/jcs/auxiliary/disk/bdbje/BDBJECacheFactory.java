@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 
 /**
@@ -41,7 +42,7 @@ public class BDBJECacheFactory
    */
   public AuxiliaryCache createCache(
       AuxiliaryCacheAttributes attr,
-      CompositeCache cache )
+      ICompositeCacheManager cacheMgr )
   {
     BDBJECacheAttributes jeattr = ( BDBJECacheAttributes ) attr;
     BDBJECacheManager jecm = BDBJECacheManager.getInstance( jeattr );

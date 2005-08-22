@@ -94,7 +94,8 @@ public class LateralCache
         }
         catch ( NullPointerException npe )
         {
-            log.error( "Failure updating lateral", npe );
+            log.error( "Failure updating lateral. lateral = " + lateral, npe );
+            handleException( npe, "Failed to put " + ce.getKey() + " to " + ce.getCacheName() );
             return;
         }
         catch ( Exception ex )
@@ -296,7 +297,14 @@ public class LateralCache
      */
     public void fixCache( ILateralCacheService lateral )
     {
-        this.lateral = lateral;
+        if ( lateral != null )
+        {
+            this.lateral = lateral;            
+        }
+        else
+        {
+            log.warn( "Fix cache called with null lateral." );
+        }
         return;
     }
 

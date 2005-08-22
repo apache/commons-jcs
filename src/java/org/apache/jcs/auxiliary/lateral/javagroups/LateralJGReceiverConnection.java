@@ -63,9 +63,11 @@ public class LateralJGReceiverConnection
      */
     public void run()
     {
+        Object obj = null;
         try
         {
-            LateralElementDescriptor led = (LateralElementDescriptor) mes.getObject();
+            obj = mes.getObject();
+            LateralElementDescriptor led = (LateralElementDescriptor)obj;
             if ( led == null )
             {
                 log.warn( "LateralElementDescriptor is null! Can't do anything." );
@@ -102,15 +104,15 @@ public class LateralJGReceiverConnection
         }
         catch ( java.io.EOFException e )
         {
-            log.info( "Caught java.io.EOFException closing conneciton." );
+            log.info( "Caught java.io.EOFException closing connection." );
         }
         catch ( java.net.SocketException e )
         {
-            log.info( "Caught java.net.SocketException closing conneciton." );
+            log.info( "Caught java.net.SocketException closing connection." );
         }
         catch ( Exception e )
         {
-            log.error( "Unexpected exception.", e );
+            log.error( "Unexpected exception. obj = " + obj, e );
         }
     }
 

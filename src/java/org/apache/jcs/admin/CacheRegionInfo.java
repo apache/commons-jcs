@@ -16,8 +16,8 @@ package org.apache.jcs.admin;
  * limitations under the License.
  */
 
-import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.control.CompositeCache;
 
 /** Stores info on a cache region for the template */
 public class CacheRegionInfo

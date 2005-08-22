@@ -31,7 +31,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;

@@ -78,7 +78,7 @@ public class LateralGroupCacheJGListener
     /**
      * Gets the cacheManager attribute of the LateralGroupCacheJGListener object
      */
-    protected void getCacheManager()
+    protected void ensureCacheManager()
     {
         try
         {

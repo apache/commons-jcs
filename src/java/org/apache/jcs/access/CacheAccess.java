@@ -19,25 +19,20 @@ package org.apache.jcs.access;
 import java.io.IOException;
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.behavior.ICacheAccess;
-
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.InvalidHandleException;
 import org.apache.jcs.access.exception.ObjectExistsException;
-
-import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
-
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
-
+import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This class provides an interface for all types of access to the cache.
@@ -387,17 +382,6 @@ public class CacheAccess
         this.cacheControl.remove( (Serializable) name );
     }
 
-    /**
-     * If there are any auxiliary caches associated with this cache, save all
-     * objects to them.
-     * <p>
-     * This is mainly a testing method. Dispose should do what you want on
-     * shutdown in a safer manner.
-     */
-    public void save()
-    {
-        this.cacheControl.save();
-    }
 
     /**
      * ResetAttributes allows for some of the attributes of a region to be reset
@@ -455,7 +439,7 @@ public class CacheAccess
     public IElementAttributes getElementAttributes()
         throws CacheException
     {
-        return this.cacheControl.attr;
+        return this.cacheControl.getElementAttributes();
     }
 
     /**

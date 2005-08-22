@@ -3,6 +3,7 @@ package org.apache.jcs;
 import junit.framework.*;
 
 import org.apache.jcs.access.TestCacheAccess;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * This is used by other tests to generate a random load on the disk cache.

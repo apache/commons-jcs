@@ -4,7 +4,7 @@
   <extend>../../project-b4.xml</extend>  
   <id>jcs</id>
   <name>jdk14-ext</name>
-  <currentVersion>1.1-dev-jdk14-ext</currentVersion>
+  <currentVersion>jdk14-ext-1.2.6.6</currentVersion>
  
 
   <dependencies>
@@ -41,8 +41,9 @@
       <version>2.2</version>
     </dependency>
     <dependency>
-      <id>javagroups</id>
-      <jar>jgroups-all-2.2.jar</jar>
+      <groupId>jgroups</groupId>
+      <artifactId>jgroups-all</artifactId>
+      <version>2.2.8</version>
     </dependency>
     <dependency>
       <id>jisp</id>
@@ -83,12 +84,13 @@
     </dependency>
     <dependency>
       <id>berkeleydb</id>
-      <version>1.5.0</version>
+      <version>1.5.1</version>
     </dependency>
 
     <dependency>
 	<groupId>jcs</groupId>
 	<artifactId>jcs</artifactId>
+      <version>1.2.6.6</version>
     </dependency>
 
   </dependencies>

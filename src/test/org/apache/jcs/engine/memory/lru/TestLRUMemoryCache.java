@@ -20,10 +20,19 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.LateralCacheFactory;
+import org.apache.jcs.auxiliary.lateral.LateralCacheManager;
+import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCacheManagerMockImpl;
 
 /**
  * Test which exercises the LRUMemory cache. This one uses three different
@@ -157,4 +166,7 @@ public class TestLRUMemoryCache
             assertNull( "Removed key should be null: " + i + ":key", lru.get( i + ":key" ) );
         }
     }
+    
+    
+    
 }

@@ -53,6 +53,11 @@ public class LateralTCPService
     private LateralTCPSender sender;
 
     /**
+     * use the vmid by default
+     */
+    private long listenerId = LateralCacheInfo.listenerId;
+    
+    /**
      * Constructor for the LateralTCPService object
      * 
      * @param lca
@@ -87,7 +92,7 @@ public class LateralTCPService
     public void update( ICacheElement item )
         throws IOException
     {
-        update( item, LateralCacheInfo.listenerId );
+        update( item, getListenerId() );
     }
 
     /*
@@ -114,7 +119,7 @@ public class LateralTCPService
     public void remove( String cacheName, Serializable key )
         throws IOException
     {
-        remove( cacheName, key, LateralCacheInfo.listenerId );
+        remove( cacheName, key, getListenerId() );
     }
 
     /*
@@ -202,7 +207,7 @@ public class LateralTCPService
     public void removeAll( String cacheName )
         throws IOException
     {
-        removeAll( cacheName, LateralCacheInfo.listenerId );
+        removeAll( cacheName, getListenerId() );
     }
 
     /*
@@ -300,6 +305,22 @@ public class LateralTCPService
         throws IOException
     {
         // Empty
+    }
+
+    /**
+     * @param listernId The listernId to set.
+     */
+    protected void setListenerId( long listernId )
+    {
+        this.listenerId = listernId;
+    }
+
+    /**
+     * @return Returns the listernId.
+     */
+    protected long getListenerId()
+    {
+        return listenerId;
     }
 
 }

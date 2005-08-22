@@ -29,13 +29,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.group.GroupAttrName;
+import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
  * A SLOW AS HELL reference management system. The most recently used items move

@@ -18,7 +18,6 @@ package org.apache.jcs.engine.memory.behavior;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.util.Iterator;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -55,7 +54,6 @@ public interface IMemoryCache
      * @return The size value
      */
     //public void makeFirst( MemoryElementDescriptor me );
-
     //public void moveToMemory( ICacheElement ce );
     /**
      * Gets the size attribute of the IMemoryCache object

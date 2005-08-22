@@ -214,6 +214,7 @@ thread_pool.cache_event_queue.startUpSize=5
 
 # Disk Cache pool
 thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.remote_cache_client.maximumPoolSize=15
 thread_pool.disk_cache_event_queue.minimumPoolSize=1
 thread_pool.disk_cache_event_queue.keepAliveTime=3500
 thread_pool.disk_cache_event_queue.startUpSize=1

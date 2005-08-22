@@ -177,6 +177,12 @@ public class LateralCacheFactory
         // don't create a listener if we are not receiving.
         if ( lac.isReceive() )
         {
+     
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Creating listener for " + lac );
+            }
+            
             try
             {
                 if ( lac.getTransmissionType() == ILateralCacheAttributes.TCP )
@@ -186,7 +192,7 @@ public class LateralCacheFactory
                 }
                 else if ( lac.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
                 {
-                    LateralCacheJGListener.getInstance( lac );
+                    LateralCacheJGListener.getInstance( lac, cacheMgr );
                 }
 
             }
@@ -225,16 +231,18 @@ public class LateralCacheFactory
                 log
                     .warn( "UdpDiscoveryEnabled is set to true, but the Lateral cache type is not TCP.  Discovery will not be enabled." );
             }
-
-            // need a factory for this so it doesn't
-            // get dereferenced, also we don't want one for every region.
-            discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr );
-
-            discovery.addNoWaitFacade( lcnwf, lac.getCacheName() );
-
-            if ( log.isInfoEnabled() )
+            else
             {
-                log.info( "Created UDPDiscoveryService for TCP lateral cache." );
+                // need a factory for this so it doesn't
+                // get dereferenced, also we don't want one for every region.
+                discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr );
+
+                discovery.addNoWaitFacade( lcnwf, lac.getCacheName() );
+
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Created UDPDiscoveryService for TCP lateral cache." );
+                }                
             }
         }
         return discovery;

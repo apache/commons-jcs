@@ -16,6 +16,12 @@ package org.apache.jcs.auxiliary.javagroups;
  * limitations under the License.
  */
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
@@ -23,30 +29,21 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.ICompositeCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
+import org.jgroups.Address;
 import org.jgroups.Channel;
+import org.jgroups.MembershipListener;
 import org.jgroups.Message;
 import org.jgroups.View;
-import org.jgroups.Address;
-import org.jgroups.MembershipListener;
-import org.jgroups.util.RspList;
-import org.jgroups.blocks.RequestHandler;
 import org.jgroups.blocks.GroupRequest;
 import org.jgroups.blocks.MessageDispatcher;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import org.jgroups.blocks.RequestHandler;
+import org.jgroups.util.RspList;
 
 /**
  * Auxiliary cache using javagroups. Expects to be created with a Channel, the
@@ -355,15 +352,16 @@ public class JavaGroupsCache
     }
 
     /**
-     * TODO speed this up. We don't want to ahve to go through the manager everytime.
+     * TODO speed this up. We don't want to ahve to go through the manager
+     * everytime.
      * 
      * @return ICompositeCache
      */
-    private ICompositeCache getCompositeCache()
+    private CompositeCache getCompositeCache()
     {
         return cacheMgr.getCache( this.cacheName );
     }
-    
+
     // ------------------------------------------- interface MembershipListener
 
     public void viewAccepted( View view )

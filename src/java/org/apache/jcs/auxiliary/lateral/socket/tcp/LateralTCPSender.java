@@ -17,28 +17,20 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
 import java.net.InetAddress;
 import java.net.Socket;
 
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-
-import org.apache.jcs.auxiliary.lateral.socket.tcp.utils.SocketOpener;
-
-import org.apache.jcs.engine.CacheElement;
-
-import org.apache.jcs.engine.behavior.ICacheElement;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.utils.SocketOpener;
+import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
@@ -71,10 +63,10 @@ public class LateralTCPSender
     private final static int RESET_FREQUENCY = 70;
 
     /**
-     * Only block for 10 seconds before timing out on a read. TODO: make
-     * configurable. The default 10 it way too long.
+     * Only block for 1 second before timing out on a read. TODO: make
+     * configurable. The default 1 is way too long.
      */
-    private final static int timeOut = 10000;
+    private final static int timeOut = 1000;
 
     /** Only block for 5 seconds before timing out on startup. */
     private final static int openTimeOut = 5000;
@@ -91,22 +83,26 @@ public class LateralTCPSender
     public LateralTCPSender( ILateralCacheAttributes lca )
         throws IOException
     {
-        String p1 = lca.getTcpServer();
-        String h2 = p1.substring( 0, p1.indexOf( ":" ) );
-        int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "h2 = " + h2 );
-            log.debug( "po = " + po );
-        }
-
-        if ( h2 == null )
-        {
-            throw new IOException( "Cannot connect to invalid address " + h2 + ":" + po );
-        }
-
-        init( h2, po );
         this.ilca = lca;
+
+        String p1 = lca.getTcpServer();
+        if ( p1 != null )
+        {
+            String h2 = p1.substring( 0, p1.indexOf( ":" ) );
+            int po = Integer.parseInt( p1.substring( p1.indexOf( ":" ) + 1 ) );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "h2 = " + h2 );
+                log.debug( "po = " + po );
+            }
+
+            if ( h2 == null )
+            {
+                throw new IOException( "Cannot connect to invalid address " + h2 + ":" + po );
+            }
+
+            init( h2, po );
+        }
     }
 
     /** Description of the Method */
@@ -176,7 +172,7 @@ public class LateralTCPSender
         {
             if ( sendCnt % 100 == 0 )
             {
-                log.info( "Send Count = " + sendCnt );
+                log.info( "Send Count (port " + port + ") = " + sendCnt );
             }
         }
 
@@ -317,42 +313,6 @@ public class LateralTCPSender
 
     }// end sendAndReceive
 
-    // Service Methods //
-    /** Description of the Method */
-    public void update( ICacheElement item, long requesterId )
-        throws IOException
-    {
-        LateralElementDescriptor led = new LateralElementDescriptor( item );
-        led.requesterId = requesterId;
-        led.command = LateralElementDescriptor.UPDATE;
-        send( led );
-    }
-
-    /** Description of the Method */
-    public void remove( String cacheName, Serializable key )
-        throws IOException
-    {
-        remove( cacheName, key, LateralCacheInfo.listenerId );
-    }
-
-    /** Description of the Method */
-    public void remove( String cacheName, Serializable key, long requesterId )
-        throws IOException
-    {
-        CacheElement ce = new CacheElement( cacheName, key, null );
-        LateralElementDescriptor led = new LateralElementDescriptor( ce );
-        led.requesterId = requesterId;
-        led.command = LateralElementDescriptor.REMOVE;
-        send( led );
-    }
-
-    /** Description of the Method */
-    public void release()
-        throws IOException
-    {
-        // nothing needs to be done
-    }
-
     /**
      * Closes connection used by all LateralTCPSenders for this lateral
      * conneciton. Dispose request should come into the facade and be sent to
@@ -364,24 +324,6 @@ public class LateralTCPSender
     {
         // WILL CLOSE CONNECTION USED BY ALL
         oos.close();
-    }
-
-    /** Description of the Method */
-    public void removeAll( String cacheName )
-        throws IOException
-    {
-        removeAll( cacheName, LateralCacheInfo.listenerId );
-    }
-
-    /** Description of the Method */
-    public void removeAll( String cacheName, long requesterId )
-        throws IOException
-    {
-        CacheElement ce = new CacheElement( cacheName, "ALL", null );
-        LateralElementDescriptor led = new LateralElementDescriptor( ce );
-        led.requesterId = requesterId;
-        led.command = LateralElementDescriptor.REMOVEALL;
-        send( led );
     }
 
     /** Description of the Method */

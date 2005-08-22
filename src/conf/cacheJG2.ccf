@@ -1,7 +1,7 @@
 ##############################################################
 ################## DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
-jcs.default=DC,LJG
+jcs.default=LJG
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=250000
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -20,7 +20,7 @@ jcs.default.elementattributes.IsLateral=true
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
-jcs.region.testCache1=DC,LJG
+jcs.region.testCache1=LJG
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=250000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -52,6 +52,13 @@ jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
-jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=226.0.0.10;mcast_port=7070):PING(timeout=3000):pbcast.FD:pbcast.NAKACK:pbcast.STABLE:UNICAST:pbcast.GMS:FRAG
+jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=228.1.2.3;mcast_port=45566;ip_ttl=32):PING(timeout=3000;num_initial_members=6):FD(timeout=5000):VERIFY_SUSPECT(timeout=1500):pbcast.STABLE(desired_avg_gossip=10000):pbcast.NAKACK(gc_lag=10;retransmit_timeout=3000):UNICAST(timeout=5000;min_wait_time=2000):FRAG:pbcast.GMS(initial_mbrs_timeout=4000;join_timeout=5000;join_retry_timeout=2000;shun=false;print_local_addr=false)
+#UDP(mcast_addr=228.10.9.8;mcast_port=5678):PING:FD:FLUSH:GMS
+#UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
+#UDP(mcast_addr=225.0.0.100;mcast_port=7777):PING(timeout=3000):AUTOCONF:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:STATE_TRANSFER:QUEUE
+#UDP(mcast_addr=225.0.0.100;mcast_port=7777):PING(timeout=3000):pbcast.FD:pbcast.NAKACK:pbcast.STABLE:UNICAST:pbcast.GMS:FRAG
 
-
+jcs.auxiliary.JG = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheFactory
+jcs.auxiliary.JG.attributes = org.apache.jcs.auxiliary.javagroups.JavaGroupsCacheAttributes
+jcs.auxiliary.JG.attributes.ChannelFactoryClassName = org.jgroups.JChannelFactory
+jcs.auxiliary.JG.attributes.ChannelProperties = UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE

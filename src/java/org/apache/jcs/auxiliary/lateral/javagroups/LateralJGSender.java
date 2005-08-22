@@ -62,8 +62,6 @@ public class LateralJGSender
 
     private JGConnectionHolder holder;
 
-    //private ObjectOutputStream oos;
-    //private Socket socket;
     int counter = 0;
 
     /**
@@ -113,7 +111,7 @@ public class LateralJGSender
         }
         catch ( Exception e )
         {
-            log.debug( "Could not connect to channel" + ". Exception is " + e );
+            log.debug( "Could not connect to channel.", e );
             throw new IOException( e.getMessage() );
         }
 
@@ -207,7 +205,7 @@ public class LateralJGSender
         }
         catch ( Exception e )
         {
-            log.error( "Detected problem with connection: " + e );
+            log.error( "Detected problem with connection.", e );
             throw new IOException( e.getMessage() );
         }
         //        }
