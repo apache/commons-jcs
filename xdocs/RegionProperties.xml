@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Cache Region Configuration</title>
+    <author email="ASmuts@apache.org">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Cache Region Configuration">
+
+      <p>
+        The following properties apply to any cache region.  They can be specified as
+        default values and specified on a region by region basis.  There are three types
+        of settings: auxiliary, cache, and element.  The cache settings define the memory management for the region.
+        The element settings define default element behavior within the region.
+      </p>
+
+	  <subsection name="Region (Auxiliary) Properties">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Description</th>
+            <th>Required</th>
+            <th>Default Value</th>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              You can specify the list of auxiliaries that regions can use.  This has no attribute name.
+              The list can be empty, otherwise it should be comma delimited. 
+            </td>
+            <td>Y</td>
+            <td>n/a</td>
+          </tr>
+        </table>
+      </subsection>
+                
+	  <subsection name="Region (Cache) Properties">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Description</th>
+            <th>Required</th>
+            <th>Default Value</th>
+          </tr>
+          <tr>
+            <td>MaxObjects</td>
+            <td>
+			  The maximum number of items allowed in memory. Eviction of elements
+			  in excess of this number is determined by the memory cache.  By default
+			  JCS uses the LRU memory cache.	
+            </td>
+            <td>Y</td>
+            <td>n/a</td>
+          </tr>
+          <tr>
+            <td>MemoryCacheName</td>
+            <td>
+			  This property allows you to specify what memory manager you would like to use.
+			  You can create your own memory manager by implementing the org.apache.jcs.engine.memory.MemoryCache interface.
+			  Alternatively, you can extend the org.apache.jcs.engine.memory.AbstractMemoryCache class.  Several different
+			  memory caches are available: two LRU implementations, an LFU, and an adaptive replacement algorithm.
+            </td>
+            <td>N</td>
+            <td>org.apache.jcs.engine.memory.lru.LRUMemoryCache</td>
+          </tr>
+          <tr>
+            <td>UseMemoryShrinker</td>
+            <td>
+			  By default, the memory shrinker is shared by all regions thta use the
+			  LRU memory cache.  The memory shrinker iterates through the items in
+			  memory, looking for items that have expired or that have exceeded their max
+			  memory idle time.
+            </td>
+            <td>N</td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td>MaxMemoryIdleTimeSeconds</td>
+            <td>
+			  This is only used if you are using the memory shrinker.  If
+			  this value is set above -1, then if an item has not been accessed
+			  in this number of seconds, it will be spooled to disk if
+			  the disk is available.  You can register an event handler on this
+			  event.	
+            </td>
+            <td>N</td>
+            <td>-1</td>
+          </tr>    
+          <tr>
+            <td>ShrinkerIntervalSeconds</td>
+            <td>
+ 	          This specifies how often the shrinker should run, if it has
+ 	          been activated.  If you set UseMemoryShrinker to false, then this
+ 	          setting has no effect.
+            </td>
+            <td>N</td>
+            <td>60</td>
+          </tr>                 
+        </table>
+      </subsection>
+      
+	  <subsection name="Region (Element) Properties">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Description</th>
+            <th>Required</th>
+            <th>Default Value</th>
+          </tr>
+          <tr>
+            <td>IsEternal</td>
+            <td>
+			  If an element is specified as eternal, then it will never be subject to
+			  removal for exceeding its max life.  
+            </td>
+            <td>N</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td>MaxLifeSeconds</td>
+            <td>
+			  If you specify that elements within a region are not eternal, then
+			  you can set the max life seconds.  If this is exceeded the elmenets will
+			  be removed passively when a client tries to retrieve them.  If you
+			  are using a memory shrinker, then the items can be removed actively.			  
+            </td>
+            <td>N</td>
+            <td>-1</td>
+          </tr>
+          <tr>
+            <td>IsSpool</td>
+            <td>
+              By default, can elements in this region be sent to a disk cache
+              if one is available.
+            </td>
+            <td>N</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td>IsRemote</td>
+            <td>
+              By default, can elements in this region be sent to a lateral cache
+              if one is available.            
+            </td>
+            <td>N</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td>IsLateral</td>
+            <td>
+              By default, can elements in this region be sent to a remote cache
+              if one is available.            
+            </td>
+            <td>N</td>
+            <td>true</td>
+          </tr>
+        </table>
+      </subsection>      
+      
+      <subsection name="Example Configuration">
+              <source><![CDATA[
+jcs.default=
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=200001
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+# optional region "testCache1" specific configuration settings
+jcs.region.testCache1=
+jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes.MaxObjects=123456
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
+jcs.region.testCache1.elementattributes.IsSpool=true
+jcs.region.testCache1.elementattributes.IsLateral=true
+jcs.region.testCache1.elementattributes.IsRemote=true
+        ]]></source>
+      </subsection>
+      
+    </section>
+  </body>
+</document>      

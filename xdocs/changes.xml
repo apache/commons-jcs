@@ -1,0 +1,51 @@
+<document>
+  <properties>
+    <title>JCS Change Log</title>
+    <author email="asmuts@apache.org">Aaron Smuts</author>
+  </properties>
+  <body>
+
+    <release version="1.2.6.6" date="in CVS">
+      <action dev="asmuts" type="fix">
+        Properties are loaded using the current thread's classloader by default.
+      </action>   
+      <action dev="asmuts" type="fix">
+        When a config file is not found a descriptive error message is printed to the logs.
+      </action>               
+      <action dev="asmuts" type="update">
+        Made an interface for the cache manager to improve testability.
+      </action>              
+      <action dev="asmuts" type="update">
+        Auxiliaries are assigned a cache manager and the lateral TCP has
+        a settable source id, so it can be tested.
+      </action>              
+      <action dev="asmuts" type="update">
+		Increased JGroups version to 2.2.8.  It works again.  The old JGroups
+		didn't work for unknown reasons.
+      </action>              
+      <action dev="asmuts" type="update">
+		Cleaned up some javadocs.
+      </action>     
+      <action dev="asmuts" type="update">
+		Improved info level logging for TCP lateral.
+      </action>                 
+      <action dev="asmuts" type="update">
+		Added configuration properties xdocs for TCP lateral, indexed disk, and memory cache.
+      </action>              
+      <action dev="asmuts" type="update">
+		Created concurrent tests for TCP lateral to verify correct region behavior.
+      </action>              
+      <action dev="asmuts" type="update">
+		Made BDBJE work with new auxiliary changes.
+      </action>              
+      <action dev="asmuts" type="fix">
+		UDP discovery no longer activates if the lateral type isn't TCP.
+      </action>              
+      <action dev="asmuts" type="fix">
+		Reduced lateral get timeout to 1 second, rather than 10.  We still
+		need to disable gets when a timeout occurs.
+      </action>              
+    </release>
+
+  </body>
+</document>

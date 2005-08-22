@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Lateral TCP Auxiliary Cache Configuration</title>
+    <author email="ASmuts@apache.org">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Lateral TCP Auxiliary Cache Configuration">
+
+      <p>
+        The following properties apply to the TCP Lateral Cache plugin.
+      </p>
+
+	  <subsection name="TCP Configuration Properties">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Description</th>
+            <th>Required</th>
+            <th>Default Value</th>
+          </tr>
+          <tr>
+            <td>TransmissionTypeName</td>
+            <td>
+              This tells the lateral factory what kind of lateral
+              to create.
+            </td>
+            <td>Y</td>
+            <td>n/a</td>
+          </tr>
+          <tr>
+            <td>TcpServers</td>
+            <td>
+              This is the list of servers this cache should try to connect to.  
+              With UDP discovery this is not necessary.
+            </td>
+            <td>N</td>
+            <td>none</td>
+          </tr>
+          <tr>
+            <td>TcpListenerPort</td>
+            <td>
+              This is the port this cache should listen on.
+            </td>
+            <td>Y</td>
+            <td>n/a</td>
+          </tr>
+          <tr>
+            <td>PutOnlyMode</td>
+            <td>
+              Should this cache be allowed to get from other laterals.  True means
+              that it can only put, i.e. send updates and remove requests to other laterals.
+              Lateral gets are not recommended for performance reasons.
+            </td>
+            <td>N</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td>Receive</td>
+            <td>
+              Should this cache receive or only send to other laterals.  You may want to
+              set receive to false if you just need to broadcast to other caches.  If you
+              have a feed data parser, that doesn't need to receive updates, but you
+              do want it to send invalidation messages, then you would set receive to false.
+              If receive is false, teh discovery service, if enabled, will only listen.
+            </td>
+            <td>N</td>
+            <td>true</td>
+          </tr>    
+          <tr>
+            <td>UdpDiscoveryAddr</td>
+            <td>
+              The address the UDP discovery process should broadcast messages to.
+            </td>
+            <td>N</td>
+            <td>228.5.6.7</td>
+          </tr>       
+          <tr>
+            <td>UdpDiscoveryPort</td>
+            <td>
+              The port the UDP discovery process should send messages to.
+            </td>
+            <td>N</td>
+            <td>6789</td>
+          </tr>   
+          <tr>
+            <td>UdpDiscoveryEnabled</td>
+            <td>
+              Whether or not the UDP discovery service should be used to
+              locate other lateral caches.
+            </td>
+            <td>N</td>
+            <td>true</td>
+          </tr>                               
+        </table>
+      </subsection>
+      
+      <subsection name="Example Configuration">
+              <source><![CDATA[
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+#jcs.auxiliary.LTCP.attributes.TcpServers=
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1118
+jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
+jcs.auxiliary.LTCP.attributes.Receive=true
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+        ]]></source>
+      </subsection>
+      
+    </section>
+  </body>
+</document>      
