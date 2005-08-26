@@ -176,7 +176,7 @@ public interface ICompositeCacheAttributes
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space. This sets the maximum number of items to spool per run.
      * 
-     * @param seconds
+     * @param maxSpoolPerRun
      *            The new maxSpoolPerRun value
      */
     public void setMaxSpoolPerRun( int maxSpoolPerRun );

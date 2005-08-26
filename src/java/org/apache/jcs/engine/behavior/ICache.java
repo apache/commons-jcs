@@ -30,35 +30,49 @@ import java.io.Serializable;
 public interface ICache
     extends ICacheType
 {
-    /** Puts an item to the cache. */
+    /** Puts an item to the cache. 
+     * @param ce
+     * @throws IOException*/
     public void update( ICacheElement ce )
         throws IOException;
 
-    /** Gets an item from the cache. */
+    /** Gets an item from the cache. 
+     * @param key
+     * @return
+     * @throws IOException*/
     public ICacheElement get( Serializable key )
         throws IOException;
 
-    /** Removes an item from the cache. */
+    /** Removes an item from the cache. 
+     * @param key
+     * @return
+     * @throws IOException*/
     public boolean remove( Serializable key )
         throws IOException;
 
-    /** Removes all cached items from the cache. */
+    /** Removes all cached items from the cache. 
+     * @throws IOException*/
     public void removeAll()
         throws IOException;
 
-    /** Prepares for shutdown. */
+    /** Prepares for shutdown. 
+     * @throws IOException*/
     public void dispose()
         throws IOException;
 
-    /** Returns the current cache size. */
+    /** Returns the current cache size. 
+     * @return*/
     public int getSize();
 
-    /** Returns the cache status. */
+    /** Returns the cache status. 
+     * @return*/
     public int getStatus();
 
-    /** Returns the cache stats. */
+    /** Returns the cache stats. 
+     * @return*/
     public String getStats();
 
-    /** Returns the cache name. */
+    /** Returns the cache name. 
+     * @return*/
     public String getCacheName();
 }

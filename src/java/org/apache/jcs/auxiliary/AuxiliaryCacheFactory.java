@@ -17,11 +17,10 @@ package org.apache.jcs.auxiliary;
  */
 
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.control.CompositeCache;
 
 /**
- * All auxiliary caches must have a factory that the cache configurator can
- * use to create instances.
+ * All auxiliary caches must have a factory that the cache configurator can use
+ * to create instances.
  *  
  */
 public interface AuxiliaryCacheFactory
@@ -32,14 +31,14 @@ public interface AuxiliaryCacheFactory
      * @param attr
      * 
      * @param cacheMgr
-     * 				This allows auxiliaries to reference the manager
-     * 				without assuming that it is a singleton.  This will
-     * 				allow JCS to be a nonsingleton.  Also, it makes it easier to test.
+     *            This allows auxiliaries to reference the manager without
+     *            assuming that it is a singleton. This will allow JCS to be a
+     *            nonsingleton. Also, it makes it easier to test.
      * 
      * @return AuxiliaryCache
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr );
-    
+
     /**
      * Sets the name attribute of the AuxiliaryCacheFactory object
      * 

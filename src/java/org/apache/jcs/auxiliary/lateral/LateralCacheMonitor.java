@@ -47,8 +47,6 @@ public class LateralCacheMonitor
     // can be detected!
     private boolean alright = true;
 
-    private final static int TIME = 0;
-
     private final static int ERROR = 1;
 
     private static int mode = ERROR;

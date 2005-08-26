@@ -18,7 +18,6 @@ package org.apache.jcs.auxiliary.lateral.javagroups;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -33,8 +32,8 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.jgroups.Channel;
 import org.jgroups.Message;
 import org.jgroups.blocks.GroupRequest;
-import org.jgroups.blocks.RpcDispatcher;
 import org.jgroups.blocks.MethodCall;
+import org.jgroups.blocks.RpcDispatcher;
 import org.jgroups.util.RspList;
 
 /**
@@ -50,10 +49,6 @@ public class LateralJGSender
 
     private ILateralCacheAttributes ilca;
 
-    private String remoteHost;
-
-    private InetAddress address;
-
     int port = 1111;
 
     private Channel javagroups;
@@ -63,11 +58,6 @@ public class LateralJGSender
     private JGConnectionHolder holder;
 
     int counter = 0;
-
-    /**
-     * Only block for 5 seconds before timing out on startup.
-     */
-    private final static int openTimeOut = 5000;
 
     /**
      * Constructor for the LateralJGSender object

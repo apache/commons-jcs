@@ -30,6 +30,7 @@ import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.engine.behavior.ICacheServiceAdmin;
+import org.apache.jcs.utils.props.PropertyLoader;
 
 /**
  * Provides remote cache services.
@@ -54,6 +55,11 @@ public class RemoteCacheServerFactory
     /**
      * Starts up the remote cache server on this JVM, and binds it to the
      * registry on the given host and port.
+     * @param host
+     * @param port
+     * @param propFile
+     * @throws IOException
+     * @throws NotBoundException
      */
     public static void startup( String host, int port, String propFile )
         throws IOException, NotBoundException
@@ -79,7 +85,8 @@ public class RemoteCacheServerFactory
             rcsa.setConfigFileName( propFile );
 
             Properties prop = RemoteUtils.loadProps( propFile );
-
+            //Properties prop = PropertyLoader.loadProperties( propFile );
+            
             String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
             int servicePort = -1;
             try
@@ -188,6 +195,7 @@ public class RemoteCacheServerFactory
      * 
      * @param args
      *            The command line arguments
+     * @throws Exception
      */
     public static void main( String[] args )
         throws Exception

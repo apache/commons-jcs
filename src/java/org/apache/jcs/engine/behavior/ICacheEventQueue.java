@@ -51,6 +51,7 @@ public interface ICacheEventQueue
      * 
      * @param ce
      *            The feature to be added to the PutEvent attribute
+     * @throws IOException
      */
     public void addPutEvent( ICacheElement ce )
         throws IOException;
@@ -61,6 +62,7 @@ public interface ICacheEventQueue
      * 
      * @param key
      *            The feature to be added to the RemoveEvent attribute
+     * @throws IOException
      */
     public void addRemoveEvent( Serializable key )
         throws IOException;
@@ -68,6 +70,7 @@ public interface ICacheEventQueue
     /**
      * Adds a feature to the RemoveAllEvent attribute of the ICacheEventQueue
      * object
+     * @throws IOException
      */
     public void addRemoveAllEvent()
         throws IOException;
@@ -75,6 +78,7 @@ public interface ICacheEventQueue
     /**
      * Adds a feature to the DisposeEvent attribute of the ICacheEventQueue
      * object
+     * @throws IOException
      */
     public void addDisposeEvent()
         throws IOException;

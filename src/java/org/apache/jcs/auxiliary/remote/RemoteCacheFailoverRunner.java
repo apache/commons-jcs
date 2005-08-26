@@ -17,6 +17,7 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
@@ -52,16 +53,20 @@ public class RemoteCacheFailoverRunner
 
     private boolean alright = true;
 
+    private ICompositeCacheManager cacheMgr;
+    
     /**
      * Constructor for the RemoteCacheFailoverRunner object. This allows the
      * FailoverRunner to modify the facade that the CompositeCache references.
      * 
      * @param facade,
      *            the facade the CompositeCache talks to.
+     * @param cacheMgr
      */
-    public RemoteCacheFailoverRunner( RemoteCacheNoWaitFacade facade )
+    public RemoteCacheFailoverRunner( RemoteCacheNoWaitFacade facade, ICompositeCacheManager cacheMgr )
     {
         this.facade = facade;
+        this.cacheMgr = cacheMgr;
     }
 
     /**
@@ -182,7 +187,7 @@ public class RemoteCacheFailoverRunner
                         rca = (RemoteCacheAttributes) facade.rca.copy();
                         rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                         rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-                        RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
+                        RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
 
                         if ( log.isDebugEnabled() )
                         {
@@ -331,7 +336,7 @@ public class RemoteCacheFailoverRunner
             RemoteCacheAttributes rca = (RemoteCacheAttributes) facade.rca.copy();
             rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
             rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-            RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
+            RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
 
             // add a listener if there are none, need to tell rca what number it
             // is at
@@ -376,7 +381,7 @@ public class RemoteCacheFailoverRunner
                                     rcaOld.setRemoteHost( serverOld.substring( 0, serverOld.indexOf( ":" ) ) );
                                     rcaOld.setRemotePort( Integer.parseInt( serverOld.substring( serverOld
                                         .indexOf( ":" ) + 1 ) ) );
-                                    RemoteCacheManager rcmOld = RemoteCacheManager.getInstance( rcaOld );
+                                    RemoteCacheManager rcmOld = RemoteCacheManager.getInstance( rcaOld, cacheMgr );
 
                                     if ( rcmOld != null )
                                     {

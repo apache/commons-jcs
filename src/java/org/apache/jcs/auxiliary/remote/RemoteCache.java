@@ -396,7 +396,6 @@ public class RemoteCache
     public void dispose()
         throws IOException
     {
-        //    remote.freeCache(cacheName);
         log.debug( "disposing of remote cache" );
         try
         {
@@ -406,7 +405,6 @@ public class RemoteCache
         {
             log.error( "couldn't dispose" );
             handleException( ex, "Failed to dispose " + cacheName );
-            //remote = null;
         }
     }
 

@@ -126,6 +126,7 @@ public class LateralCacheManager
      * Constructor for the LateralCacheManager object
      * 
      * @param lcaA
+     * @param cacheMgr
      */
     private LateralCacheManager( ILateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr )
     {

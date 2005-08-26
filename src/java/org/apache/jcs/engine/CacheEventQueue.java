@@ -460,7 +460,7 @@ public class CacheEventQueue
     {
         Node next = null;
 
-        AbstractCacheEvent event = null;
+        CacheEventQueue.AbstractCacheEvent event = null;
     }
 
     /**

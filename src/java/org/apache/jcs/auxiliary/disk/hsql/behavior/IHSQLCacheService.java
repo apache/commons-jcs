@@ -30,15 +30,34 @@ public interface IHSQLCacheService
     extends ICacheService
 {
 
-    /** Puts a cache item to the cache. */
+    /**
+     * Puts a cache item to the cache.
+     * 
+     * @param item
+     * @param requesterId
+     * @throws IOException
+     */
     public void update( ICacheElement item, long requesterId )
         throws IOException;
 
-    /** Removes the given key from the specified cache. */
+    /**
+     * Removes the given key from the specified cache.
+     * 
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @throws IOException
+     */
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException;
 
-    /** Remove all keys from the sepcified cache. */
+    /**
+     * Remove all keys from the sepcified cache.
+     * 
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
     public void removeAll( String cacheName, long requesterId )
         throws IOException;
 

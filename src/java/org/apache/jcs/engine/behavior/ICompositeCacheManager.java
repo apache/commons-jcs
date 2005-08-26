@@ -25,6 +25,11 @@ import org.apache.jcs.engine.control.CompositeCache;
  */
 public interface ICompositeCacheManager
 {
-    /** Gets the cache attribute of the CacheHub object */
+    /**
+     * Gets the cache attribute of the CacheHub object
+     * 
+     * @param cacheName
+     * @return
+     */
     public abstract CompositeCache getCache( String cacheName );
 }

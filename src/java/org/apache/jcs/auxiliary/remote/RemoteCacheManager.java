@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
@@ -33,6 +32,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * An instance of RemoteCacheManager corresponds to one remote connection of a
@@ -78,6 +78,11 @@ public class RemoteCacheManager
     private RemoteCacheWatchRepairable remoteWatch;
 
     /**
+     * The cache manager listeners will need to use to get a cache.
+     */
+    private ICompositeCacheManager cacheMgr;
+    
+    /**
      * Constructs an instance to with the given remote connection parameters. If
      * the connection cannot be made, "zombie" services will be temporarily used
      * until a successful re-connection is made by the monitoring daemon.
@@ -85,13 +90,15 @@ public class RemoteCacheManager
      * @param host
      * @param port
      * @param service
+     * @param cacheMgr
      */
-    private RemoteCacheManager( String host, int port, String service )
+    private RemoteCacheManager( String host, int port, String service, ICompositeCacheManager cacheMgr )
     {
         this.host = host;
         this.port = port;
         this.service = service;
-
+        this.cacheMgr = cacheMgr;
+        
         String registry = "//" + host + ":" + port + "/" + service;
         if ( log.isDebugEnabled() )
         {
@@ -146,6 +153,7 @@ public class RemoteCacheManager
      *            The feature to be added to the RemoteCacheListener attribute
      * @param listener
      *            The feature to be added to the RemoteCacheListener attribute
+     * @throws IOException
      */
     public void addRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener listener )
         throws IOException
@@ -221,11 +229,13 @@ public class RemoteCacheManager
      * 
      * If the connection cannot be established, zombie objects will be used for
      * future recovery purposes.
+     * @param cattr
+     * @param cacheMgr
      * 
      * @return The instance value
      * @parma port port of the registry.
      */
-    public static RemoteCacheManager getInstance( IRemoteCacheAttributes cattr )
+    public static RemoteCacheManager getInstance( IRemoteCacheAttributes cattr, ICompositeCacheManager cacheMgr )
     {
 
         String host = cattr.getRemoteHost();
@@ -250,7 +260,7 @@ public class RemoteCacheManager
                 if ( ins == null )
                 {
                     // cahnge to use cattr and to set defaults
-                    ins = new RemoteCacheManager( host, port, service );
+                    ins = new RemoteCacheManager( host, port, service, cacheMgr );
                     ins.irca = cattr;
                     instances.put( loc, ins );
                 }
@@ -274,13 +284,10 @@ public class RemoteCacheManager
         return ins;
     }
 
+
     /**
      * Returns a remote cache for the given cache name.
-     * 
-     * @return The cache value
-     */
-    /**
-     * Returns a remote cache for the given cache name.
+     * @param cacheName
      * 
      * @return The cache value
      */
@@ -295,6 +302,7 @@ public class RemoteCacheManager
      * Gets a RemoteCacheNoWait from the RemoteCacheManager. The
      * RemoteCacheNoWait are identified by the cache name value of the
      * RemoteCacheAttributes object.
+     * @param cattr
      * 
      * @return The cache value
      */
@@ -312,7 +320,7 @@ public class RemoteCacheManager
                 RemoteCacheListener listener = null;
                 try
                 {
-                    listener = new RemoteCacheListener( cattr );
+                    listener = new RemoteCacheListener( cattr, cacheMgr );
                     addRemoteCacheListener( cattr, listener );
                 }
                 catch ( IOException ioe )
@@ -334,7 +342,9 @@ public class RemoteCacheManager
         return c;
     }
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param name
+     * @throws IOException*/
     public void freeCache( String name )
         throws IOException
     {
@@ -405,6 +415,8 @@ public class RemoteCacheManager
 
     /**
      * Fixes up all the caches managed by this cache manager.
+     * @param remoteService
+     * @param remoteWatch
      */
     public void fixCaches( IRemoteCacheService remoteService, IRemoteCacheObserver remoteWatch )
     {
@@ -454,7 +466,10 @@ public class RemoteCacheManager
             this.port = port;
         }
 
-        /** Description of the Method */
+        /*
+         *  (non-Javadoc)
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
         public boolean equals( Object obj )
         {
             if ( obj == this )
@@ -473,7 +488,10 @@ public class RemoteCacheManager
             return host.equals( l.host ) && port == l.port;
         }
 
-        /** Description of the Method */
+        /** 
+         * 
+         * @return int
+         */ 
         public int hashCode()
         {
             return host == null ? port : host.hashCode() ^ port;

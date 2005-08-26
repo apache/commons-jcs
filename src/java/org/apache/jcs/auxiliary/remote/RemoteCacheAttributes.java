@@ -18,7 +18,6 @@ package org.apache.jcs.auxiliary.remote;
 
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 
@@ -45,8 +44,6 @@ public class RemoteCacheAttributes
     private String failoverServers = "";
 
     private String clusterServers = "";
-
-    private boolean getFromCluster = true;
 
     private int localPort = 0;
 

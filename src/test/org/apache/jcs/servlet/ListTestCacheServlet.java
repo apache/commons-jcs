@@ -16,38 +16,7 @@ package org.apache.jcs.servlet;
  * limitations under the License.
  */
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Reader;
-
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.jcs.access.GroupCacheAccess;
-
-import org.apache.jcs.access.behavior.IGroupCacheAccess;
-
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-
-import org.apache.jcs.engine.control.CompositeCacheManager;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Description of the Class
@@ -56,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 public class ListTestCacheServlet
     extends HttpServlet
 {
-    private final static Log log = LogFactory.getLog( ListTestCacheServlet.class );
 
     //    /** Description of the Field */
     //    protected static CacheHub cacheMgr;

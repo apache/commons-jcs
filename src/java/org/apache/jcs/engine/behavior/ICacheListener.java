@@ -29,19 +29,28 @@ import java.io.Serializable;
  */
 public interface ICacheListener
 {
-    /** Notifies the subscribers for a cache entry update. */
+    /** Notifies the subscribers for a cache entry update. 
+     * @param item
+     * @throws IOException*/
     public void handlePut( ICacheElement item )
         throws IOException;
 
-    /** Notifies the subscribers for a cache entry removal. */
+    /** Notifies the subscribers for a cache entry removal. 
+     * @param cacheName
+     * @param key
+     * @throws IOException*/
     public void handleRemove( String cacheName, Serializable key )
         throws IOException;
 
-    /** Notifies the subscribers for a cache remove-all. */
+    /** Notifies the subscribers for a cache remove-all. 
+     * @param cacheName
+     * @throws IOException*/
     public void handleRemoveAll( String cacheName )
         throws IOException;
 
-    /** Notifies the subscribers for freeing up the named cache. */
+    /** Notifies the subscribers for freeing up the named cache. 
+     * @param cacheName
+     * @throws IOException*/
     public void handleDispose( String cacheName )
         throws IOException;
 
@@ -57,6 +66,7 @@ public interface ICacheListener
      * 
      * @param id
      *            The new listenerId value
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException;
@@ -65,6 +75,7 @@ public interface ICacheListener
      * Gets the listenerId attribute of the ICacheListener object
      * 
      * @return The listenerId value
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException;

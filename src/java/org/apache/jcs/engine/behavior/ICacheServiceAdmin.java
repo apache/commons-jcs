@@ -29,15 +29,20 @@ public interface ICacheServiceAdmin
      * Gets the stats attribute of the ICacheServiceAdmin object
      * 
      * @return The stats value
+     * @throws IOException
      */
     public String getStats()
         throws IOException;
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @throws IOException*/
     public void shutdown()
         throws IOException;
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param host
+     * @param port
+     * @throws IOException*/
     public void shutdown( String host, int port )
         throws IOException;
 }

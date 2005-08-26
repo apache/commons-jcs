@@ -27,6 +27,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
@@ -44,7 +45,7 @@ public class RemoteCacheListener
      * The cache manager used to put items in differnt regions. This is set
      * lazily and should not be sent to the remote server.
      */
-    protected static transient CompositeCacheManager cacheMgr;
+    protected transient ICompositeCacheManager cacheMgr;
 
     /** The remote cache configuration object. */
     protected IRemoteCacheAttributes irca;
@@ -69,11 +70,14 @@ public class RemoteCacheListener
      * was specified in the configurtion.
      * 
      * @param irca
+     * @param cacheMgr
      */
-    public RemoteCacheListener( IRemoteCacheAttributes irca )
+    public RemoteCacheListener( IRemoteCacheAttributes irca, ICompositeCacheManager cacheMgr )
     {
         this.irca = irca;
 
+        this.cacheMgr = cacheMgr;
+        
         // Export this remote object to make it available to receive incoming
         // calls,
         // using an anonymous port unless the local port is specified.
@@ -251,8 +255,10 @@ public class RemoteCacheListener
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
         }
-        CompositeCacheManager cm = cacheMgr;
-        cm.freeCache( cacheName, true );
+        // TODO consider what to do here, we really don't want to
+        // dispose, we just want to disconnect.
+        // just allow the cache to go into error recovery mode.
+        //getCacheManager().freeCache( cacheName, true );
     }
 
     /**

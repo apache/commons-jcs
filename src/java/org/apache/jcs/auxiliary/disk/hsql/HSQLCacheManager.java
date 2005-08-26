@@ -19,11 +19,10 @@ package org.apache.jcs.auxiliary.disk.hsql;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 
 /**
  * Description of the Class
@@ -65,6 +64,8 @@ public class HSQLCacheManager
     /**
      * Gets the instance attribute of the HSQLCacheManager class
      * 
+     * @param cattr
+     * 
      * @return The instance value
      */
     public static HSQLCacheManager getInstance( HSQLCacheAttributes cattr )
@@ -84,6 +85,8 @@ public class HSQLCacheManager
     /**
      * Gets the cache attribute of the HSQLCacheManager object
      * 
+     * @param cacheName
+     * 
      * @return The cache value
      */
     public AuxiliaryCache getCache( String cacheName )
@@ -95,6 +98,8 @@ public class HSQLCacheManager
 
     /**
      * Gets the cache attribute of the HSQLCacheManager object
+     * 
+     * @param cattr
      * 
      * @return The cache value
      */
@@ -115,10 +120,17 @@ public class HSQLCacheManager
             }
         }
 
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "HSQL cache = " + raf );
+        }
+        
         return raf;
     }
 
-    /** Description of the Method */
+    /*
+     *  
+     */
     public void freeCache( String name )
     {
         HSQLCache raf = (HSQLCache) caches.get( name );

@@ -79,6 +79,7 @@ public class JavaGroupsCacheFactory
 
     /**
      * Accessor for name property
+     * @return String
      */
     public String getName()
     {
@@ -87,6 +88,7 @@ public class JavaGroupsCacheFactory
 
     /**
      * Mutator for name property
+     * @param name
      */
     public void setName( String name )
     {

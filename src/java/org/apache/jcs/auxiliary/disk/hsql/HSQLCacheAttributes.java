@@ -55,7 +55,11 @@ public class HSQLCacheAttributes
         return this.diskPath;
     }
 
-    /** Description of the Method */
+    /** 
+     * Clone
+     * 
+     * @return
+     */
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -68,7 +72,11 @@ public class HSQLCacheAttributes
         return this;
     }
 
-    /** Description of the Method */
+    /** 
+     * For debugging only
+     * 
+     * @return String
+     */
     public String toString()
     {
         StringBuffer str = new StringBuffer();

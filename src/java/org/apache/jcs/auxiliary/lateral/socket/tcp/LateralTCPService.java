@@ -69,7 +69,7 @@ public class LateralTCPService
         this.ilca = lca;
         try
         {
-            log.debug( "creating sender" );
+            log.debug( "creating sender, attributes = " + ilca );
 
             sender = new LateralTCPSender( lca );
 
@@ -88,7 +88,11 @@ public class LateralTCPService
 
     // -------------------------------------------------------- Service Methods
 
-    /** */
+    /**
+     * @param item
+     * @throws IOException
+     * 
+     */
     public void update( ICacheElement item )
         throws IOException
     {
@@ -149,7 +153,10 @@ public class LateralTCPService
         // nothing needs to be done
     }
 
-    /** Will close the connection. */
+    /** Will close the connection. 
+     * @param cache
+     * @throws IOException
+     */
     public void dispose( String cache )
         throws IOException
     {
@@ -189,6 +196,9 @@ public class LateralTCPService
     /**
      * Gets the set of keys of objects currently in the group throws
      * UnsupportedOperationException
+     * @param cacheName
+     * @param group
+     * @return Set
      */
     public Set getGroupKeys( String cacheName, String group )
     {

@@ -44,6 +44,12 @@ public class JISPCacheFactory
     {
         JISPCacheAttributes idca = (JISPCacheAttributes) iaca;
         JISPCacheManager dcm = JISPCacheManager.getInstance( idca );
+        
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Created JISP, " + dcm );
+        }
+        
         return dcm.getCache( idca );
     }
 

@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.disk.hsql;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -55,16 +56,12 @@ public class HSQLCache
 
     private int numInstances = 0;
 
-    public boolean isAlive = false;
-
-    HSQLCacheAttributes cattr;
+    private HSQLCacheAttributes cattr;
 
     // for now use one statement per cache and keep it open
     // can move up to manager level or implement pooling if there are too many
     // caches
-    Connection cConn;
-
-    Statement sStatement;
+    private Connection cConn;
 
     /**
      * Constructor for the HSQLCache object
@@ -94,13 +91,26 @@ public class HSQLCache
                 log.error( e );
             }
         }
+        else
+        {
+            try
+            {
+                File dir = new File( rafroot );
+                dir.mkdir();
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem creating directory.", e );
+            }
+        }
 
         try
         {
             Properties p = new Properties();
             String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
             String url = p.getProperty( "url", "jdbc:hsqldb:" );
-            String database = p.getProperty( "database", "cache_hsql_db" );
+            // TODO trim trailling / from root
+            String database = p.getProperty( "database", rafroot + "/cache_hsql_db" );
             String user = p.getProperty( "user", "sa" );
             String password = p.getProperty( "password", "" );
             boolean test = p.getProperty( "test", "true" ).equalsIgnoreCase( "true" );
@@ -124,18 +134,32 @@ public class HSQLCache
                 Class.forName( driver ).newInstance();
 
                 cConn = DriverManager.getConnection( url + database, user, password );
-
+                Statement sStatement = null;
                 try
                 {
                     sStatement = cConn.createStatement();
-                    isAlive = true;
+                    alive = true;
                 }
                 catch ( SQLException e )
                 {
+                    log.error( "Problem creating statement.", e );
                     System.out.println( "Exception: " + e );
-                    isAlive = false;
+                    alive = false;
                 }
-
+                finally
+                {
+                    try
+                    {
+                        if ( sStatement != null )
+                        {
+                            sStatement.close();
+                        }
+                    }
+                    catch ( SQLException e1 )
+                    {
+                        log.error( "Problem closing statement.", e1 );
+                    }
+                }
                 setupTABLE();
             }
             catch ( Exception e )
@@ -145,7 +169,7 @@ public class HSQLCache
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem creating HSQL", e );
         }
     } // end constructor
 
@@ -156,9 +180,24 @@ public class HSQLCache
 
         String setup = "create table " + cacheName + " (KEY varchar(255) primary key, ELEMENT binary)";
 
+        Statement sStatement = null;
+        try
+        {
+            sStatement = cConn.createStatement();
+            alive = true;
+        }
+        catch ( SQLException e )
+        {
+            log.error( "Problem creating statement.", e );
+            //System.out.println( "Exception: " + e );
+            alive = false;
+            return;
+        }
+
         try
         {
             sStatement.executeQuery( setup );
+            sStatement.close();
         }
         catch ( SQLException e )
         {
@@ -166,7 +205,8 @@ public class HSQLCache
             {
                 newT = false;
             }
-            log.error( e );
+            // TODO figure out if it exists prior to trying to create it.
+            log.error( "Problem creating table.", e );
         }
 
         String setupData[] = { "create index iKEY on " + cacheName + " (KEY)" };
@@ -187,13 +227,36 @@ public class HSQLCache
         } // end ifnew
     }
 
-    /** Description of the Method */
-    public void doUpdate( ICacheElement ce )
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
+     */
+    public synchronized void doUpdate( ICacheElement ce )
     {
-        log.debug( "update" );
-
-        if ( !isAlive )
+        if ( log.isDebugEnabled() )
         {
+            log.debug( "updating, ce = " + ce );
+        }
+
+        Statement sStatement = null;
+        try
+        {
+            sStatement = cConn.createStatement();
+            alive = true;
+        }
+        catch ( SQLException e )
+        {
+            log.error( "Problem creating statement.", e );
+            alive = false;
+        }
+
+        if ( !alive )
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Disk is not alive, aborting put." );
+            }
             return;
         }
 
@@ -234,6 +297,17 @@ public class HSQLCache
         catch ( SQLException e )
         {
             log.error( e );
+        }
+        finally
+        {
+            try
+            {
+                sStatement.close();
+            }
+            catch ( SQLException e1 )
+            {
+                log.error( "Problem closing statement.", e1 );
+            }
         }
 
         // If it doesn't exist, insert it, otherwise update
@@ -279,20 +353,24 @@ public class HSQLCache
             }
             catch ( SQLException e2 )
             {
-                log.error( "e2 Exception: " + e2 );
+                log.error( "e2 Exception: ", e2 );
             }
         }
     }
 
-    /** Description of the Method */
-    public ICacheElement doGet( Serializable key )
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
+     */
+    public synchronized ICacheElement doGet( Serializable key )
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "getting " + key + " from disk" );
+            log.debug( "Getting " + key + " from disk" );
         }
 
-        if ( !isAlive )
+        if ( !alive )
         {
             return null;
         }
@@ -353,8 +431,11 @@ public class HSQLCache
     /**
      * Returns true if the removal was succesful; or false if there is nothing
      * to remove. Current implementation always result in a disk orphan.
+     * 
+     * @param key
+     * @return boolean
      */
-    public boolean doRemove( Serializable key )
+    public synchronized boolean doRemove( Serializable key )
     {
         // remove single item.
         String sql = "delete from " + cacheName + " where KEY = '" + key + "'";
@@ -367,14 +448,34 @@ public class HSQLCache
                 sql = "delete from " + cacheName + " where KEY = like '" + key + "%'";
             }
 
+            Statement sStatement = null;
             try
             {
+                sStatement = cConn.createStatement();
+                alive = true;
+
                 sStatement.executeQuery( sql );
             }
             catch ( SQLException e )
             {
-                log.error( e );
+                log.error( "Problem creating statement.", e );
+                alive = false;
             }
+            finally
+            {
+                try
+                {
+                    if ( sStatement != null )
+                    {
+                        sStatement.close();
+                    }
+                }
+                catch ( SQLException e1 )
+                {
+                    log.error( "Problem closing statement.", e1 );
+                }
+            }
+
         }
         catch ( Exception e )
         {
@@ -385,7 +486,7 @@ public class HSQLCache
     }
 
     /** Description of the Method */
-    public void doRemoveAll()
+    public synchronized void doRemoveAll()
     {
         try
         {
@@ -422,6 +523,10 @@ public class HSQLCache
 
     /**
      * Returns the serialized form of the given object in a byte array.
+     * 
+     * @param obj
+     * @return byte[]
+     * @throws IOException
      */
     static byte[] serialize( Serializable obj )
         throws IOException
@@ -439,6 +544,11 @@ public class HSQLCache
         return baos.toByteArray();
     }
 
+    /**
+     * @param groupName
+     * @return
+     *  
+     */
     public Set getGroupKeys( String groupName )
     {
         if ( true )

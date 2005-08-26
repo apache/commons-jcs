@@ -833,7 +833,8 @@ public class RemoteCacheServer
             }
             Map eventQMap = cacheDesc.eventQMap;
             cleanupEventQMap( eventQMap );
-
+            
+            //synchronized ( listenerId )
             synchronized ( ICacheListener.class )
             {
                 long id = 0;

@@ -17,7 +17,7 @@
      	the tempbuild directory of the repository.  
       </p>
       <p>      	
-        <a href="http://cvs.apache.org/viewcvs.cgi/jakarta-turbine-jcs/tempbuild/">HERE</a>
+        <a href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/tempbuild/">HERE</a>
       </p>
       <p> 
 	The core JCS jar is compiled using JDK 1.3.

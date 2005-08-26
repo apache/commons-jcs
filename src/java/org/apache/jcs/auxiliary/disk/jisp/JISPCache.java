@@ -30,6 +30,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import com.coyotegulch.jisp.BTreeIndex;
 import com.coyotegulch.jisp.IndexedObjectDatabase;
 import com.coyotegulch.jisp.KeyObject;
+import com.sun.rsasign.i;
 
 /**
  * JISP disk cache implementation. Slow as hell with this type of key.
@@ -46,21 +47,18 @@ public class JISPCache
 
     private int numInstances = 0;
 
-    /** Description of the Field */
-    public boolean isAlive = false;
-
-    JISPCacheAttributes cattr;
+    private JISPCacheAttributes cattr;
 
     //JISP ACCESS
-    IndexedObjectDatabase database;
+    private IndexedObjectDatabase database;
 
-    BTreeIndex index1;
+    private BTreeIndex index1;
 
     private static int s_order = 101;
 
-    String jispDataFileName = "default_this_is_BAD";
+    private String jispDataFileName = "default_this_is_BAD";
 
-    String jispIndexFileName = "default_this_is_BAD";
+    private String jispIndexFileName = "default_this_is_BAD";
 
     /**
      * Constructor for the JISPCache object
@@ -71,6 +69,8 @@ public class JISPCache
     {
         super( (IDiskCacheAttributes) cattr );
 
+        this.cattr = cattr;
+        
         numInstances++;
 
         String rafroot = cattr.getDiskPath();
@@ -81,8 +81,15 @@ public class JISPCache
             rafroot = "";
         }
 
-        jispDataFileName = rafroot + cacheName + "DATA.jisp";
-        jispIndexFileName = rafroot + cacheName + "INDEX.jisp";
+        // make the file
+        File dir = new File( rafroot );
+        if ( !dir.exists() )
+        {
+            dir.mkdir();
+        }
+
+        jispDataFileName = rafroot + "/" + cacheName + "DATA.jisp";
+        jispIndexFileName = rafroot + "/" + cacheName + "INDEX.jisp";
 
         log.debug( "jispDataFileName = " + jispDataFileName );
 
@@ -108,7 +115,7 @@ public class JISPCache
                 reset();
             }
 
-            isAlive = true;
+            alive = true;
 
         }
         catch ( Exception e )
@@ -135,14 +142,22 @@ public class JISPCache
             if ( killit.exists() )
             {
                 killit.delete();
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Removing old data file." );
+                }
             }
 
-            killit = new File( jispIndexFileName );
+            File killitIndex = new File( jispIndexFileName );
 
-            if ( killit.exists() )
+            if ( killitIndex.exists() )
             {
-                killit.delete();
-            }
+                killitIndex.delete();
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Removing old index file." );
+                }
+             }
         }
         catch ( Exception e )
         {
@@ -154,7 +169,12 @@ public class JISPCache
 
     // end setupTable
 
-    /** Description of the Method */
+    /**
+     * Create the datafiles.
+     * 
+     * @param clear
+     * @throws Exception
+     */
     public void createDB( boolean clear )
         throws Exception
     {
@@ -167,21 +187,26 @@ public class JISPCache
 
             index1 = new BTreeIndex( jispIndexFileName, s_order, new JISPKey(), false );
             database.attachIndex( index1 );
+            alive = true;
         }
         catch ( Exception e )
         {
             System.out.println( "Exception: " + e );
-            log.error( e );
+            log.error( "Problem creating table.", e );
             throw e;
         }
     }
 
-    /** Description of the Method */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
+     */
     protected void doUpdate( ICacheElement ce )
     {
-        if ( !isAlive )
+        if ( !alive )
         {
-            log.warn( "not alive" );
+            log.warn( "Jisp is not alive" );
             return;
         }
 
@@ -202,13 +227,18 @@ public class JISPCache
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem putting to jisp.", e );
+            reset();
         }
 
         return;
     }
 
-    /** Description of the Method */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
+     */
     protected ICacheElement doGet( Serializable key )
     {
         if ( log.isDebugEnabled() )
@@ -216,7 +246,7 @@ public class JISPCache
             log.debug( "getting " + key + " from disk" );
         }
 
-        if ( !isAlive )
+        if ( !alive )
         {
             return null;
         }
@@ -257,21 +287,25 @@ public class JISPCache
     /**
      * Returns true if the removal was succesful; or false if there is nothing
      * to remove. Current implementation always result in a disk orphan.
+     * 
+     * @param key
+     * @return boolean
      */
     protected boolean doRemove( Serializable key )
     {
         KeyObject[] keyArray = new JISPKey[1];
         keyArray[0] = new JISPKey( key );
-
+        
         try
         {
             // FIXME: Partial removal not yet implemented for JISP.
 
             database.remove( keyArray );
+            //database.remove( new JISPKey( key ) );
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem removing element from jisp", e );
             reset();
         }
         return false;
@@ -294,7 +328,10 @@ public class JISPCache
     /** Description of the Method */
     private void reset()
     {
-
+        alive = false;
+               
+        log.warn( "Resetting Jisp cache" );
+        
         try
         {
             setupTABLE();
@@ -323,7 +360,7 @@ public class JISPCache
     public void doDispose()
     {
 
-        if ( !isAlive )
+        if ( !alive )
         {
             log.error( "is not alive and close() was called -- " + this.jispDataFileName );
             return;
@@ -339,7 +376,7 @@ public class JISPCache
         }
         finally
         {
-            isAlive = false;
+            alive = false;
         }
 
         // TODO: can we defragment here?

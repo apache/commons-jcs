@@ -82,6 +82,7 @@ public class CacheStats
     /**
      * This returns data about the auxiliaries, such as hit count. Only the
      * composite cache knows what the hit count across all auxiliaries is.
+     * @return IStatElement[]
      */
     public IStatElement[] getStatElements()
     {

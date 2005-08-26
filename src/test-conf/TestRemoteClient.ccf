@@ -1,0 +1,30 @@
+##############################################################
+################## DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=RC
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=200001
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+
+jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
+jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101
+jcs.auxiliary.RC.attributes.LocalPort=1201
+jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
+#jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
+#-1 means no timeout, this is the default
+# if the timeout is -1, no threadpool will be used.
+jcs.auxiliary.RC.attributes.GetTimeoutMillis=-1
+#jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
+#jcs.auxiliary.RC.attributes.GetOnly=false

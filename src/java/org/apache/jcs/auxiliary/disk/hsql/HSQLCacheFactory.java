@@ -16,12 +16,17 @@ package org.apache.jcs.auxiliary.disk.hsql;
  * limitations under the License.
  */
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
+ * 
+ * HSQLCacheFactory creates HSQL caches via a manager.
+ * 
  * @version 1.0
  */
 
@@ -29,6 +34,8 @@ public class HSQLCacheFactory
     implements AuxiliaryCacheFactory
 {
     private String name;
+
+    private static final Log log = LogFactory.getLog( HSQLCacheFactory.class );
 
     /*
      * (non-Javadoc)
@@ -40,7 +47,20 @@ public class HSQLCacheFactory
     {
         HSQLCacheAttributes idca = (HSQLCacheAttributes) iaca;
         HSQLCacheManager dcm = HSQLCacheManager.getInstance( idca );
-        return dcm.getCache( idca );
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "HSQLCacheManager = " + dcm );
+        }
+
+        AuxiliaryCache cache = dcm.getCache( idca );
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "HSQL cache = " + cache );
+        }
+
+        return cache;
     }
 
     /**

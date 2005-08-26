@@ -58,8 +58,6 @@ public class LateralCacheJGListener
 
     private ILateralCacheAttributes ilca;
 
-    private boolean inited = false;
-
     private int puts = 0;
 
     /**
@@ -91,7 +89,6 @@ public class LateralCacheJGListener
             log.error( ex );
             throw new IllegalStateException( ex.getMessage() );
         }
-        inited = true;
     }
 
     /**
@@ -136,6 +133,7 @@ public class LateralCacheJGListener
      * 
      * @return The instance value
      * @param ilca
+     * @param cacheMgr
      */
     public static ILateralCacheListener getInstance( ILateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
     {
@@ -148,9 +146,9 @@ public class LateralCacheJGListener
             if ( ins == null )
             {
                 ins = new LateralCacheJGListener( ilca );
-                
+
                 ins.setCacheManager( cacheMgr );
-                
+
                 ins.init();
             }
             if ( log.isInfoEnabled() )
@@ -166,6 +164,7 @@ public class LateralCacheJGListener
     //////////////////////////// implements the ILateralCacheListener
     // interface. //////////////
     /**
+     * @param element
      * @param cb
      * @exception IOException
      */
@@ -257,13 +256,16 @@ public class LateralCacheJGListener
         if ( log.isDebugEnabled() )
         {
             log.debug( "handleDispose> cacheName=" + cacheName );
-        }    
+        }
         // TODO handle active disposal
         //this.getCacheManager().freeCache( cacheName, true );
     }
 
     /**
      * Gets the cacheManager attribute of the LateralCacheTCPListener object
+     * 
+     * @param name
+     * @return CompositeCache
      */
     protected CompositeCache getCache( String name )
     {
@@ -280,15 +282,19 @@ public class LateralCacheJGListener
         return cacheMgr.getCache( name );
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener#setCacheManager(org.apache.jcs.engine.behavior.ICompositeCacheManager)
      */
     public void setCacheManager( ICompositeCacheManager cacheMgr )
     {
-        this.cacheMgr = cacheMgr;        
+        this.cacheMgr = cacheMgr;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener#getCacheManager()
      */
     public ICompositeCacheManager getCacheManager()

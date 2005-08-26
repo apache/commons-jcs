@@ -16,15 +16,12 @@ package org.apache.jcs.auxiliary.disk.jisp;
  * limitations under the License.
  */
 
-import com.coyotegulch.jisp.KeyObject;
-
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.coyotegulch.jisp.KeyObject;
 
 /**
  * Description of the Class
@@ -33,9 +30,7 @@ import org.apache.commons.logging.LogFactory;
 public class JISPKey
     extends KeyObject
 {
-    private final static Log log = LogFactory.getLog( JISPKey.class );
-
-    /** Description of the Field */
+    /** The key for jisp */
     public Serializable m_key;
 
     /**
@@ -55,7 +50,11 @@ public class JISPKey
         m_key = "";
     }
 
-    /** Description of the Method */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.coyotegulch.jisp.KeyObject#compareTo(com.coyotegulch.jisp.KeyObject)
+     */
     public int compareTo( KeyObject key )
     {
 
@@ -82,7 +81,11 @@ public class JISPKey
         return KEY_ERROR;
     }
 
-    /** Description of the Method */
+    /**
+     * Description of the Method
+     * 
+     * @return
+     */
     public KeyObject makeNullKey()
     {
         JISPKey nullKey = new JISPKey();
@@ -90,32 +93,46 @@ public class JISPKey
         return nullKey;
     }
 
-    /** Description of the Method */
+    /**
+     * Description of the Method
+     * 
+     * @param out
+     * @throws IOException
+     */
     public void writeExternal( ObjectOutput out )
         throws IOException
     {
         out.writeObject( m_key );
     }
 
-    /** Description of the Method */
+    /**
+     * Description of the Method
+     * 
+     * @param in
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void readExternal( ObjectInput in )
         throws IOException, ClassNotFoundException
     {
         m_key = ( (Serializable) ( in.readObject() ) );
     }
 
-    //    public int intValue()
-    //    {
-    //        return m_key;
-    //    }
-
-    /** Description of the Method */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         return m_key.toString();
     }
 
-    /** Description of the Method */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     public boolean equals( Object obj )
     {
         if ( ( obj != null ) && ( obj instanceof JISPKey ) )
@@ -129,7 +146,11 @@ public class JISPKey
         return false;
     }
 
-    /** Description of the Method */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
     public int hashCode()
     {
         int hash = m_key.hashCode();

@@ -22,7 +22,11 @@ package org.apache.jcs.engine.behavior;
  */
 public interface ICacheRestore
 {
-    /** Description of the Method */
+    /** 
+     * Tries to fix the cache, returns true if successful.
+     * 
+     * @return true if fixed
+     */
     public boolean canFix();
 
     /** Description of the Method */

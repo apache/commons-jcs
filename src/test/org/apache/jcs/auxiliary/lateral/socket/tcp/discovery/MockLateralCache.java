@@ -27,9 +27,6 @@ public class MockLateralCache
         super( cattr );
     }
 
-    // generalize this, use another interface
-    private ILateralCacheAttributes cattr;
-
     /*
      * (non-Javadoc)
      * 

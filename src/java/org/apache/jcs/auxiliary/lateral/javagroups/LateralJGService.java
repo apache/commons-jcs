@@ -58,6 +58,7 @@ public class LateralJGService
         throws IOException
     {
         this.ilca = lca;
+        
         try
         {
             log.debug( "creating sender" );

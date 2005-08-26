@@ -26,6 +26,7 @@ public interface ICacheManager
 
     /**
      * methods to get a cache region from a maanger
+     * @param cacheName
      * 
      * @return The cache value
      */

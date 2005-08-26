@@ -117,6 +117,7 @@ public class ElementEventQueue
      *            The IElementEventHandler
      * @param event
      *            The IElementEventHandler IElementEvent event
+     * @throws IOException
      */
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException
@@ -210,7 +211,7 @@ public class ElementEventQueue
     {
         Node next = null;
 
-        AbstractElementEventRunner event = null;
+        ElementEventQueue.AbstractElementEventRunner event = null;
     }
 
     /**
@@ -320,8 +321,8 @@ public class ElementEventQueue
 
         /**
          * Constructor for the PutEvent object
-         * 
-         * @param ice
+         * @param hand
+         * @param event
          * @exception IOException
          */
         ElementEventRunner( IElementEventHandler hand, IElementEvent event )

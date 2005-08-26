@@ -27,13 +27,11 @@
   <siteDirectory>/www/jakarta.apache.org/turbine/jcs/</siteDirectory>
   <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-turbine-jcs/</distributionDirectory>
 
-
   <repository>
-    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-turbine-jcs</connection>
-    <developerConnection>scm:cvs:ext:${maven.username}@cvs.apache.org:/home/cvs:jakarta-turbine-jcs</developerConnection>
-    <url>http://cvs.apache.org/viewcvs/jakarta-turbine-jcs/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/jcs/trunk/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/jcs/trunk/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/</url>
   </repository>
-
 
   <mailingLists>
     <mailingList>
@@ -173,6 +171,22 @@
       <id>berkeleydb</id>
       <version>1.5.0</version>
     </dependency>
+    
+    <!-- Maven plugins -->
+    <!--
+    <dependency>
+  		<groupId>statcvs</groupId>
+  		<artifactId>maven-statcvs-plugin</artifactId>
+  		<version>2.7</version>
+  		<type>plugin</type>
+	</dependency>
+	-->
+	<dependency>
+  		<groupId>maven-plugins</groupId>
+  		<artifactId>maven-findbugs-plugin</artifactId>
+  		<version>0.9.1</version>
+  		<type>plugin</type>
+	</dependency>
   </dependencies>
 
 
@@ -191,7 +205,7 @@
         <include>**/TestDiskCacheConcurrent.java</include>
         <include>**/TestDiskCacheConcurrentForDeadLock.java</include>
         <include>**/TestTCPLateralCache.java</include>
-        <include>**/TestLateralTCPConcurrentForDeadLock</include>
+        <include>**/TestLateralTCPConcurrentForDeadLock.java</include>
         <!--
 		<include>**/TestJCSvHashtablePerf.java</include>
 		-->
@@ -220,14 +234,15 @@
     <report>maven-checkstyle-plugin</report>
     <report>maven-changes-plugin</report>
     <report>maven-changelog-plugin</report>
+    <!--
+    <report>maven-statcvs-plugin</report>
+    -->
     <report>maven-file-activity-plugin</report>
     <report>maven-developer-activity-plugin</report>
     <report>maven-javadoc-plugin</report>
     <report>maven-jxr-plugin</report>
     <report>maven-junit-report-plugin</report>
-    <!--
     <report>maven-jcoverage-plugin</report>
-     -->
     <report>maven-tasklist-plugin</report>
     <report>maven-pmd-plugin</report>
     <report>maven-simian-plugin</report>

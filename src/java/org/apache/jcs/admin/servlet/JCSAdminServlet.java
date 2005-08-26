@@ -81,7 +81,10 @@ public class JCSAdminServlet
 
     private static final String DETAIL_ACTION = "detail";
 
-    /** @see org.apache.velocity.servlet.VelocityServlet#handleRequest */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.velocity.servlet.VelocityServlet#handleRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, org.apache.velocity.context.Context)
+     */
     protected Template handleRequest( HttpServletRequest request, HttpServletResponse response, Context context )
         throws Exception
     {

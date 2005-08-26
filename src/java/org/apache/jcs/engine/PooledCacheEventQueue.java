@@ -62,7 +62,7 @@ public class PooledCacheEventQueue
     // time to wait for an event before snuffing the background thread
     // if the queue is empty.
     // make configurable later
-    private static int waitToDieMillis = 10000;
+    private int waitToDieMillis = 10000;
 
     private ICacheListener listener;
 
@@ -373,7 +373,7 @@ public class PooledCacheEventQueue
         elems.add( se );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[elems.size()] );
         stats.setStatElements( ses );
 
         return stats;

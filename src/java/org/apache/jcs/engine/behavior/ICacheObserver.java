@@ -18,8 +18,6 @@ package org.apache.jcs.engine.behavior;
 
 import java.io.IOException;
 
-import org.apache.jcs.engine.behavior.ICacheListener;
-
 /**
  * Used to register interest in receiving cache changes. <br>
  * <br>
@@ -37,6 +35,7 @@ public interface ICacheObserver
      *            the specified cache.
      * @param obj
      *            object to notify for cache changes.
+     * @throws IOException
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException;
@@ -48,15 +47,18 @@ public interface ICacheObserver
      * 
      * @param obj
      *            object to notify for all cache changes.
+     * @throws IOException
      */
     public void addCacheListener( ICacheListener obj )
         throws IOException;
 
     /**
      * Unsubscribes from the specified cache.
+     * @param cacheName
      * 
      * @param obj
      *            existing subscriber.
+     * @throws IOException
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException;
@@ -66,6 +68,7 @@ public interface ICacheObserver
      * 
      * @param obj
      *            existing subscriber.
+     * @throws IOException
      */
     public void removeCacheListener( ICacheListener obj )
         throws IOException;

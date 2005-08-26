@@ -32,30 +32,46 @@ import org.apache.jcs.access.exception.ObjectNotFoundException;
  */
 public interface ICacheService
 {
-    /** Puts a cache item to the cache. */
+    /** Puts a cache item to the cache. 
+     * @param item
+     * @throws ObjectExistsException
+     * @throws IOException*/
     public void update( ICacheElement item )
         throws ObjectExistsException, IOException;
 
     /**
      * Returns a cache bean from the specified cache; or null if the key does
      * not exist.
+     * @param cacheName
+     * @param key
+     * @return
+     * @throws ObjectNotFoundException
+     * @throws IOException
      */
     public ICacheElement get( String cacheName, Serializable key )
         throws ObjectNotFoundException, IOException;
 
-    /** Removes the given key from the specified cache. */
+    /** Removes the given key from the specified cache. 
+     * @param cacheName
+     * @param key
+     * @throws IOException*/
     public void remove( String cacheName, Serializable key )
         throws IOException;
 
-    /** Remove all keys from the sepcified cache. */
+    /** Remove all keys from the sepcified cache. 
+     * @param cacheName
+     * @throws IOException*/
     public void removeAll( String cacheName )
         throws IOException;
 
-    /** Frees the specified cache. */
+    /** Frees the specified cache. 
+     * @param cacheName
+     * @throws IOException*/
     public void dispose( String cacheName )
         throws IOException;
 
-    /** Frees all caches. */
+    /** Frees all caches. 
+     * @throws IOException*/
     public void release()
         throws IOException;
 }

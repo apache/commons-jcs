@@ -30,6 +30,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -52,8 +53,10 @@ public class RemoteCacheNoWaitFacade
     private String cacheName;
 
     // holds failover and cluster information
-    RemoteCacheAttributes rca;
+    protected RemoteCacheAttributes rca;
 
+    private ICompositeCacheManager cacheMgr;
+    
     /**
      * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade
      * object
@@ -83,8 +86,9 @@ public class RemoteCacheNoWaitFacade
      * 
      * @param noWaits
      * @param rca
+     * @param cacheMgr
      */
-    public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca )
+    public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca, ICompositeCacheManager cacheMgr )
     {
         if ( log.isDebugEnabled() )
         {
@@ -93,6 +97,7 @@ public class RemoteCacheNoWaitFacade
         this.noWaits = noWaits;
         this.rca = rca;
         this.cacheName = rca.getCacheName();
+        this.cacheMgr = cacheMgr;
     }
 
     /**
@@ -316,7 +321,7 @@ public class RemoteCacheNoWaitFacade
             if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
             {
                 // start failover, primary recovery process
-                RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this );
+                RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this, cacheMgr );
                 // If the returned monitor is null, it means it's already
                 // started elsewhere.
                 if ( runner != null )

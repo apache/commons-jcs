@@ -75,7 +75,7 @@ public class RemoteCacheFactory
 
                 failovers.add( rca.getRemoteHost() + ":" + rca.getRemotePort() );
 
-                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
+                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
                 ICache ic = rcm.getCache( rca );
                 if ( ic != null )
                 {
@@ -102,7 +102,7 @@ public class RemoteCacheFactory
 
                     rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                     rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-                    RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
+                    RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
                     // add a listener if there are none, need to tell rca what
                     // number it is at
                     if ( ( !primayDefined && fCnt == 1 ) || noWaits.size() <= 0 )
@@ -138,7 +138,7 @@ public class RemoteCacheFactory
                 //p( "tcp server = " + server );
                 rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                 rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca );
+                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
                 rca.setRemoteType( RemoteCacheAttributes.CLUSTER );
                 ICache ic = rcm.getCache( rca );
                 if ( ic != null )
@@ -155,7 +155,7 @@ public class RemoteCacheFactory
         // end if CLUSTER
 
         RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( (RemoteCacheNoWait[]) noWaits
-            .toArray( new RemoteCacheNoWait[0] ), rca );
+            .toArray( new RemoteCacheNoWait[0] ), rca, cacheMgr );
 
         getFacades().put( rca.getCacheName(), rcnwf );
 

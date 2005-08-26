@@ -58,7 +58,7 @@ public class TestTCPLateral
         // send to the listener
         LateralTCPSender lur = new LateralTCPSender( lac );
 
-        int numMes = 1000;
+        int numMes = 10;
         for ( int i = 0; i < numMes; i++ )
         {
             String message = "adsfasasfasfasdasf";
@@ -89,7 +89,7 @@ public class TestTCPLateral
         //.getInstance( lattr, cacheMgr );
         //LateralCacheNoWait nwait1 = (LateralCacheNoWait)lcMgr1.getCache(
         // "test" );
-        AuxiliaryCache nowait1 = fact.createCache( lattr, cacheMgr );
+        //AuxiliaryCache nowait1 = fact.createCache( lattr, cacheMgr );
 
         //nowait1.update( );
 

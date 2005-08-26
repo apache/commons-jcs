@@ -17,7 +17,6 @@ package org.apache.jcs.auxiliary;
  */
 
 import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * AuxiliaryCacheManager
@@ -28,7 +27,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public interface AuxiliaryCacheManager
     extends ICacheType
 {
-    
+
     /**
      * Return the approriate auxiliary cache for this region.
      * 
@@ -37,15 +36,15 @@ public interface AuxiliaryCacheManager
      */
     public AuxiliaryCache getCache( String cacheName );
 
-
     /**
-     * This allows the cache manager to be plugged into the auxiliary caches, 
-     * rather then ahving them get it themselves.  Cache maangers can be mocked
+     * This allows the cache manager to be plugged into the auxiliary caches,
+     * rather then ahving them get it themselves. Cache maangers can be mocked
      * out and the auxiliaries will be easier to test.
      * 
      * @param cacheName
      * @param cacheManager
      * @return AuxiliaryCache
      */
-    //public AuxiliaryCache getCache( String cacheName, ICompositeCacheManager cacheManager );
+    //public AuxiliaryCache getCache( String cacheName, ICompositeCacheManager
+    // cacheManager );
 }

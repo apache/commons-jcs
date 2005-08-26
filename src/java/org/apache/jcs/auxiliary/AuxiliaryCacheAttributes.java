@@ -108,7 +108,11 @@ public interface AuxiliaryCacheAttributes
      */
     public String getEventQueuePoolName();
 
-    /** Description of the Method */
+    /**
+     * Description of the Method
+     * 
+     * @return
+     */
     public AuxiliaryCacheAttributes copy();
 
 }

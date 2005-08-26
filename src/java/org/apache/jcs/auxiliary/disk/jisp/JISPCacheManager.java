@@ -63,6 +63,7 @@ public class JISPCacheManager
 
     /**
      * Gets the instance attribute of the JISPCacheManager class
+     * @param cattr
      * 
      * @return The instance value
      */
@@ -82,6 +83,7 @@ public class JISPCacheManager
 
     /**
      * Gets the cache attribute of the JISPCacheManager object
+     * @param cacheName
      * 
      * @return The cache value
      */
@@ -94,6 +96,7 @@ public class JISPCacheManager
 
     /**
      * Gets the cache attribute of the JISPCacheManager object
+     * @param cattr
      * 
      * @return The cache value
      */
@@ -118,7 +121,10 @@ public class JISPCacheManager
         return raf;
     }
 
-    /** Description of the Method */
+    /**
+     * 
+     * @param name
+     */
     public void freeCache( String name )
     {
         JISPCache raf = (JISPCache) caches.get( name );

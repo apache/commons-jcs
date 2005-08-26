@@ -87,6 +87,7 @@ public class CompositeCacheManager
      * the instance it will attempt to configure it with the default
      * configuration. If you want to configure from your own source, use
      * {@link #getUnconfiguredInstance}and then call {@link #configure}
+     * @return
      */
     public static synchronized CompositeCacheManager getInstance()
     {
@@ -123,6 +124,7 @@ public class CompositeCacheManager
     /**
      * Get a CacheHub instance which is not configured. If an instance already
      * exists, it will be returned.
+     * @return
      */
     public static synchronized CompositeCacheManager getUnconfiguredInstance()
     {
