@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
@@ -38,13 +39,18 @@ import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.ShutdownObservable;
+import org.apache.jcs.engine.behavior.ShutdownObserver;
 import org.apache.jcs.engine.stats.CacheStats;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
-/** Manages a composite cache. */
+/**
+ * Manages a composite cache. This provides access to caches and is the primary
+ * way to shutdown the caching system as a whole.
+ */
 public class CompositeCacheManager
-    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager
+    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, ShutdownObservable
 {
     private final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 
@@ -82,11 +88,14 @@ public class CompositeCacheManager
 
     private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
 
+    private Set shutdownObservers = new HashSet();
+
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates
      * the instance it will attempt to configure it with the default
      * configuration. If you want to configure from your own source, use
      * {@link #getUnconfiguredInstance}and then call {@link #configure}
+     * 
      * @return
      */
     public static synchronized CompositeCacheManager getInstance()
@@ -124,6 +133,7 @@ public class CompositeCacheManager
     /**
      * Get a CacheHub instance which is not configured. If an instance already
      * exists, it will be returned.
+     * 
      * @return
      */
     public static synchronized CompositeCacheManager getUnconfiguredInstance()
@@ -401,6 +411,21 @@ public class CompositeCacheManager
      */
     public void shutDown()
     {
+        // notify any observers
+        synchronized ( shutdownObservers )
+        {
+            // We don't need to worry about lcoking the set.
+            // since this is a shutdown command, nor do we need 
+            // to queue these up.
+            Iterator it = shutdownObservers.iterator();
+            while ( it.hasNext() )
+            {
+                ShutdownObserver observer = (ShutdownObserver)it.next();
+                observer.shutdown();
+            }
+        }
+        
+        // do the traditional shutdown of the regions.
         String[] names = getCacheNames();
         int len = names.length;
         for ( int i = 0; i < len; i++ )
@@ -534,6 +559,39 @@ public class CompositeCacheManager
         }
         ICacheStats[] stats = (ICacheStats[]) cacheStats.toArray( new CacheStats[0] );
         return stats;
+    }
+
+    /**
+     * Perhaps the composite cache itself should be the observable object. It
+     * doesn't make much of a difference. There are some problems with region by
+     * region shutdown. Some auxiliaries are glocal. They will need to track
+     * when every region has shutdown before doing things like closing the
+     * socket with a lateral.
+     * 
+     * @param observer
+     */
+    public void registerShutdownObserver( ShutdownObserver observer )
+    {
+        // synchronized to take care of iteration safety
+        // during shutdown.
+        synchronized ( shutdownObservers )
+        {
+            // the set will take care of duplication protection
+            shutdownObservers.add( observer );
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.engine.behavior.ShutdownObservable#deregisterShutdownObserver(org.apache.jcs.engine.behavior.ShutdownObserver)
+     */
+    public void deregisterShutdownObserver( ShutdownObserver observer )
+    {
+        synchronized ( shutdownObservers )
+        {
+            shutdownObservers.remove( observer );
+        }
     }
 
 }

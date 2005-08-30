@@ -6,6 +6,11 @@
   <body>
 
     <release version="1.2.6.7" date="in CVS">
+      <action dev="asmuts" type="fix" due-to="Adam Siefker">
+		Fixed shutdown for lateral.  Added shutdown observer framework.  Changed listener thread
+		to a daemon.  Made executor on listener use a daemon setting
+		thread factory.
+      </action>              
       <action dev="asmuts" type="fix" due-to="">
 		Fixed abstract inner class references for Jikes.
       </action>              

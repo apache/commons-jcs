@@ -33,6 +33,7 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.ShutdownObserver;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
@@ -42,7 +43,7 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * Receives UDP Discovery messages.
  */
 public class UDPDiscoveryReceiver
-    implements Runnable
+    implements Runnable, ShutdownObserver
 {
     private final static Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
 
@@ -59,7 +60,7 @@ public class UDPDiscoveryReceiver
 
     // number of messages received.
     private int cnt = 0;
-
+       
     /**
      * Service to get cache names and hande request broadcasts
      */
@@ -70,6 +71,8 @@ public class UDPDiscoveryReceiver
     private int multicastPort = 0;
 
     private ICompositeCacheManager cacheMgr; 
+    
+    private boolean shutdown = false;
     
     /**
      * Constructor for the LateralUDPReceiver object.
@@ -170,7 +173,7 @@ public class UDPDiscoveryReceiver
 
         try
         {
-            while ( true )
+            while ( !shutdown )
             {
 
                 Object obj = waitForMessage();
@@ -215,7 +218,18 @@ public class UDPDiscoveryReceiver
         catch ( Exception e )
         {
             log.error( "Unexpected exception in UDP receiver.", e );
+            try 
+            {                
+                Thread.sleep( 100 );
+                // TODO consider some failure count so we don't do this
+                // forever.
+            }
+            catch ( Exception e2 )
+            {
+                log.error( "Problem sleeping", e2 );
+            }
         }
+        return;
     }
 
     /**
@@ -378,6 +392,23 @@ public class UDPDiscoveryReceiver
             return t;
         }
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ShutdownObserver#shutdown()
+     */
+    public void shutdown()
+    {
+        try 
+        {
+            shutdown = true;
+            m_socket.close();      
+            pooledExecutor.shutdownNow();
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem closing socket" );
+        }
     }
 }
 // end class

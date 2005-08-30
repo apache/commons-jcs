@@ -37,6 +37,7 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * Listens for connections from other TCP lateral caches and handles them.
@@ -65,15 +66,15 @@ public class LateralTCPListener
 
     private int port;
 
-    private PooledExecutor pooledExecutor = new PooledExecutor();
+    private PooledExecutor pooledExecutor;
 
     private int putCnt = 0;
 
     private int removeCnt = 0;
 
     /**
-     * Use the vmid by default.  This can be set for testing. 
-     * If we ever need to run more than one per vm, then we need a new technique.
+     * Use the vmid by default. This can be set for testing. If we ever need to
+     * run more than one per vm, then we need a new technique.
      */
     private long listenerId = LateralCacheInfo.listenerId;
 
@@ -132,8 +133,12 @@ public class LateralTCPListener
             this.port = ilca.getTcpListenerPort();
 
             receiver = new ListenerThread();
-
+            receiver.setDaemon( true );
             receiver.start();
+
+            pooledExecutor = new PooledExecutor();
+            pooledExecutor.setThreadFactory( new MyThreadFactory() );
+
         }
         catch ( Exception ex )
         {
@@ -288,8 +293,8 @@ public class LateralTCPListener
     /**
      * Gets the cacheManager attribute of the LateralCacheTCPListener object.
      * <p>
-     * Normally this is set by the factory.  If it wasn't set the listener defaults
-     * to the expected singleton behavior of the cache amanger.
+     * Normally this is set by the factory. If it wasn't set the listener
+     * defaults to the expected singleton behavior of the cache amanger.
      * 
      * @param name
      * @return CompositeCache
@@ -520,5 +525,30 @@ public class LateralTCPListener
                 }
             }
         }
+    }
+
+    /**
+     * Allows us to set the daemon status on the executor threads
+     * 
+     * @author aaronsm
+     *  
+     */
+    class MyThreadFactory
+        implements ThreadFactory
+    {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            t.setDaemon( true );
+            t.setPriority( Thread.MIN_PRIORITY );
+            return t;
+        }
+
     }
 }

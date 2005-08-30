@@ -14,6 +14,8 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.ShutdownObservable;
+import org.apache.jcs.engine.behavior.ShutdownObserver;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
@@ -31,24 +33,25 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * @author Aaron Smuts
  *  
  */
-public class UDPDiscoveryService
+public class UDPDiscoveryService implements ShutdownObserver
 {
 
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
-    /**
-     * The background broadcaster.
-     */
-    private static ClockDaemon daemon;
+     //The background broadcaster.
+    private static ClockDaemon senderDaemon;
 
+    // thread that listens for messages
     private Thread udpReceiverThread;
     
+    // the runanble that the receiver thread runs
     private UDPDiscoveryReceiver receiver;
 
     private Map facades = new HashMap();
 
     private LateralCacheAttributes lca = null;
 
+    // the runanble that sends messages via the clock daemon
     private UDPDiscoverySenderThread sender = null;
     
     private String hostAddress = "unknown";
@@ -62,8 +65,8 @@ public class UDPDiscoveryService
      */
     public UDPDiscoveryService( LateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
-        //LateralCacheNoWaitFacade facade,
-        //this.facade = facade;
+        // register for shutdown notification
+        ((ShutdownObservable)cacheMgr).registerShutdownObserver( this );
 
         this.setLca( lca );
         
@@ -84,8 +87,6 @@ public class UDPDiscoveryService
         try
         {
             // todo need some kind of recovery here.
-            //receiver = new UDPDiscoveryReceiver( facade,
-            // lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort() );
             receiver = new UDPDiscoveryReceiver( this, lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), cacheMgr );
             udpReceiverThread = new Thread(receiver);
             udpReceiverThread.setDaemon(true);
@@ -99,17 +100,17 @@ public class UDPDiscoveryService
 
         // todo only do the passive if receive is inenabled, perhaps set the
         // myhost to null or something on the request
-        if ( daemon == null )
+        if ( senderDaemon == null )
         {
-            daemon = new ClockDaemon();
-            daemon.setThreadFactory( new MyThreadFactory() );
+            senderDaemon = new ClockDaemon();
+            senderDaemon.setThreadFactory( new MyThreadFactory() );
         }
         
         // create a sender thread
         sender = new UDPDiscoverySenderThread( lca.getUdpDiscoveryAddr(), lca
                                       .getUdpDiscoveryPort(), hostAddress, lca.getTcpListenerPort(), this.getCacheNames() );
         
-        daemon.executePeriodically( 30 * 1000, sender, false );
+        senderDaemon.executePeriodically( 30 * 1000, sender, false );
     }
 
     /**
@@ -280,5 +281,43 @@ public class UDPDiscoveryService
             return t;
         }
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ShutdownObserver#shutdown()
+     */
+    public void shutdown()
+    {   
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Shutting down UDP discovery service receiver." );
+        }
+        
+        try
+        {
+            // no good way to do this right now.
+            receiver.shutdown();                        
+            udpReceiverThread.interrupt();    
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem interrupting UDP receiver thread." );
+        }
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Shutting down UDP discovery service sender." );
+        }
+        
+        try
+        {            
+            // interrupt all the threads.
+            senderDaemon.shutDown();
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem shutting down UDP sender." );
+        }
+        
     }
 }

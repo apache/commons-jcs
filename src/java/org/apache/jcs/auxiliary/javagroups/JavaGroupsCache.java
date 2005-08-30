@@ -1,8 +1,8 @@
 package org.apache.jcs.auxiliary.javagroups;
 
-/*
+/* 
  * Copyright 2001-2004 The Apache Software Foundation.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -43,7 +43,7 @@ import org.jgroups.View;
 import org.jgroups.blocks.GroupRequest;
 import org.jgroups.blocks.MessageDispatcher;
 import org.jgroups.blocks.RequestHandler;
-import org.jgroups.util.RspList;
+import org.jgroups.util.RspList; 
 
 /**
  * Auxiliary cache using javagroups. Expects to be created with a Channel, the
