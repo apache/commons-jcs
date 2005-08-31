@@ -18,16 +18,18 @@
     <menu name="JCS User's Guide">
       <item name="Basic JCS Config"         href="/BasicJCSConfiguration.html"/>
       <item name="Element Config"           href="/ElementAttributes.html"/>
-      <item name="Region Properties"  href="/RegionProperties.html"/>
+      <item name="Region Properties"  		href="/RegionProperties.html"/>
       <item name="Basic Web Example"        href="/UsingJCSBasicWeb.html"/>
       <item name="Plugin Overview"          href="/Plugins.html"/>
       <item name="Local Cache"              href="/LocalCacheConfig.html"/>
       <item name="Indexed Disk Cache"       href="/IndexedDiskAuxCache.html"/>
       <item name="Indexed Disk Properties"  href="/IndexedDiskCacheProperties.html"/>
+      <item name="Berkeley DB Disk Cache"   href="/BDBJEDiskCache.html"/>
       <item name="Remote Cache"             href="/RemoteAuxCache.html"/>
       <item name="Lateral TCP Cache"        href="/LateralTCPAuxCache.html"/>
       <item name="Lateral TCP Properties"   href="/LateralTCPProperties.html"/>
       <item name="Lateral UDP Discovery"    href="/LateralUDPDiscovery.html"/>
+      <item name="Lateral JGroups Cache"    href="/LateralJavaGroupsAuxCache.html"/>
     </menu>
 
 

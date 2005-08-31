@@ -52,10 +52,10 @@ jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
+jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
 #jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP:PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:STATE_TRANSFER:QUEUE
 #jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=228.10.9.8;mcast_port=5678):PING:FD:FLUSH:GMS
-#jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
-jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=225.0.0.100;mcast_port=7777):PING(timeout=3000):AUTOCONF:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:STATE_TRANSFER:QUEUE
+#jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=225.0.0.100;mcast_port=7777):PING(timeout=3000):AUTOCONF:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:STATE_TRANSFER:QUEUE
 jcs.auxiliary.LJG.attributes.EventQueueType=POOLED
 jcs.auxiliary.LJG.attributes.EventQueuePolName=lg_event_queue
 

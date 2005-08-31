@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Berkeley DB Disk Auxiliary Cache</title>
+    <author email="ASmuts@yahoo.com">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Berkeley DB Disk Auxiliary Cache">
+      <p> 
+        The Berkeley DB Disk Auxiliary Cache is an optional plugin for the
+        JCS.  It is primarily intended to provide a secondary store to 
+        ease the memory burden of the cache.  When the memory cache 
+  	    exceeds its maximum size it tells the cache hub that the item
+	      to be removed from memory should be spooled to disk.  The cache 
+	      checks to see if any auxiliaries of type "disk" have been 
+	      configured for the region.  If the "Berkeley DB Disk Auxiliary Cache"  
+	      is used, the item will be spooled to disk.
+      </p>    
+      <p> 
+		The Berkeley DB is far slower than the Indexed Disk Cache, especially for puts.  
+		This is partially due to the fact that the BDB store its keys on disk.    
+		However, any items stored in the BDB will be available on restart, even if
+		the cache is not shutdown properly.
+      </p>        
+      <p> 
+		The Berkeley DB requires jdk1.4 and above.  As such, it is distributed
+		in the jdk14-ext jar.  
+      </p>    
+    
+      <subsection name="Configuration">
+        <p>
+          The simple configuration and is done in the auxiliary 
+          cache section of the <code>cache.ccf</code> configuration file.
+          In the example below, I created a Berkeley DB Auxiliary Cache 
+          referenced by <code>BDBDC</code>.  It uses files located in the 
+          "DiskPath" directory.
+         </p>
+  
+            <source><![CDATA[        
+##############################################################
+##### Default Region Configuration
+jcs.default=BDBDC
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+##############################################################
+##### CACHE REGIONS
+jcs.region.myRegion1=BDBDC
+jcs.region.myRegion1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.myRegion1.cacheattributes.MaxObjects=1000
+jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+##############################################################
+##### AUXILIARY CACHES
+# Berkeley DB JE
+jcs.auxiliary.BDBDC=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
+jcs.auxiliary.BDBDC.attributes=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
+jcs.auxiliary.BDBDC.attributes.DiskPath=target/
+jcs.auxiliary.BDBDC.attributes.MaxPurgatorySize=100000
+        ]]></source>
+          </subsection>
+          
+    </section>
+  </body>
+</document>

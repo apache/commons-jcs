@@ -19,6 +19,7 @@ set CLASSPATH=.
 set CLASSPATH=%CLASSPATH%;%CURDIR%\src\conf\
 set CLASSPATH=%CLASSPATH%;%CURDIR%\target\classes\
 set CLASSPATH=%CLASSPATH%;%CURDIR%\target\test-classes\
+set CLASSPATH=%CLASSPATH%;%CURDIR%\auxiliary-builds\jdk14\target\classes\
 goto jars
 
 :jars
