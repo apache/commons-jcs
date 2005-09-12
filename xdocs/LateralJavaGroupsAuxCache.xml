@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>Lateral JGroups Auxiliary Cache</title>
+    <author email="ASmuts@apache.org">Aaron Smuts</author>
+  </properties>
+
+  <body>
+    <section name="Lateral JGroups Auxiliary Cache">
+      <p> 
+        The Lateral JGroups Auxiliary Cache is an optional plug in for 
+        JCS.  It is primarily intended to broadcast puts and removals to
+        other local caches, though it can also get cached objects.  It uses JGroups
+        for distribution.       
+      </p> 
+      <p> 
+		The Lateral Lateral JGroups Auxiliary Cache is far slower than
+		that Lateral TCP Auxiliary Cache.  Since the Lateral TCP Auxiliary
+		is faster and has UDP discovery built in, the TCP auxiliary is the recommended form of lateral 
+		distribution.  However, the JGroups Auxiliary requires fewer socket connections than
+		the TCP lateral.
+      </p> 
+      <p> 
+		A functional configuration example is below:
+      </p> 
+      
+        <source><![CDATA[
+# Lateral JavaGroups Distribution
+jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
+jcs.auxiliary.LJG.attributes.PutOnlyMode=true
+jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=7501):PING:FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:QUEUE
+        ]]></source>
+              
+    
+    </section>
+  </body>
+</document>
