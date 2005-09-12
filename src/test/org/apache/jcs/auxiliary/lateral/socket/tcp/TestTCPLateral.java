@@ -3,9 +3,7 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.LateralCacheFactory;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
@@ -85,7 +83,7 @@ public class TestTCPLateral
         CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
-        LateralCacheFactory fact = new LateralCacheFactory();
+        LateralTCPCacheFactory fact = new LateralTCPCacheFactory();
         //.getInstance( lattr, cacheMgr );
         //LateralCacheNoWait nwait1 = (LateralCacheNoWait)lcMgr1.getCache(
         // "test" );
@@ -93,6 +91,10 @@ public class TestTCPLateral
 
         //nowait1.update( );
 
+        // start the listener
+        LateralTCPListener listener = (LateralTCPListener) LateralTCPListener.getInstance( lattr, cacheMgr );
+
+        
         ILateralCacheAttributes lattr2 = new LateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
