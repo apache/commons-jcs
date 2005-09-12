@@ -52,9 +52,8 @@ jcs.region.testCache2.elementattributes.IsRemote=true
 ################## AUXILIARY CACHES AVAILABLE ################
 
 # Lateral TCp with UDP discovery enabled
-jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
 jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
 jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
@@ -64,11 +63,10 @@ jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
 #jcs.auxiliary.LTCP.attributes.Receive=true
 
 # Lateral TCP with UDP discovery disabled
-jcs.auxiliary.LTCP2=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP2=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
 jcs.auxiliary.LTCP2.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LTCP2.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP2.attributes.TcpServers=
-jcs.auxiliary.LTCP2.attributes.TcpListenerPort=1111
+jcs.auxiliary.LTCP2.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP2.attributes.PutOnlyMode=true
 jcs.auxiliary.LTCP2.attributes.UdpDiscoveryHost=228.5.6.8
 jcs.auxiliary.LTCP2.attributes.UdpDiscoveryPort=6780

@@ -18,9 +18,8 @@ jcs.region.testTcpRegion1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.
 ##### AUXILIARY CACHES
 
 # simple Lateral TCP auxiliary
-jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
 jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP.attributes.PutOnlyMode=true

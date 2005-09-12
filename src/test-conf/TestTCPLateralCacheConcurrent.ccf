@@ -5,7 +5,7 @@ jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRU
 
 ##### AUXILIARY CACHES
 # simple Lateral TCP auxiliary
-jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
 jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 #jcs.auxiliary.LTCP.attributes.TcpServers=
