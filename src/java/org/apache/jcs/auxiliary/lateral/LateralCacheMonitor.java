@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 /**
@@ -36,8 +37,6 @@ public class LateralCacheMonitor
 {
     private final static Log log = LogFactory.getLog( LateralCacheMonitor.class );
 
-    private static LateralCacheMonitor instance;
-
     private static long idlePeriod = 20 * 1000;
 
     // minimum 20 seconds.
@@ -51,6 +50,8 @@ public class LateralCacheMonitor
 
     private static int mode = ERROR;
 
+    private ILateralCacheManager manager;
+    
     /**
      * Configures the idle period between repairs.
      * 
@@ -76,27 +77,15 @@ public class LateralCacheMonitor
         LateralCacheMonitor.idlePeriod = idlePeriod;
     }
 
-    /** Constructor for the LateralCacheMonitor object */
-    private LateralCacheMonitor()
+    /** Constructor for the LateralCacheMonitor object
+     * <p>
+     * It's the clients responsibility to decide how many
+     * of these there will be.
+     *  
+     * @param manager*/
+    public LateralCacheMonitor( ILateralCacheManager manager )
     {
-        // nop
-    }
-
-    /**
-     * Returns the singleton instance;
-     * 
-     * @return The instance value
-     */
-    static LateralCacheMonitor getInstance()
-    {
-        synchronized ( LateralCacheMonitor.class )
-        {
-            if ( instance == null )
-            {
-                return instance = new LateralCacheMonitor();
-            }
-        }
-        return instance;
+        this.manager = manager;
     }
 
     /**
@@ -176,14 +165,14 @@ public class LateralCacheMonitor
 
             // Monitor each LateralCacheManager instance one after the other.
             // Each LateralCacheManager corresponds to one lateral connection.
-            log.info( "LateralCacheManager.instances.size() = " + LateralCacheManager.instances.size() );
+            log.info( "LateralCacheManager.instances.size() = " + manager.getInstances().size() );
             //for
             int cnt = 0;
-            Iterator itr = LateralCacheManager.instances.values().iterator();
+            Iterator itr = manager.getInstances().values().iterator();
             while ( itr.hasNext() )
             {
                 cnt++;
-                LateralCacheManager mgr = (LateralCacheManager) itr.next();
+                ILateralCacheManager mgr = (ILateralCacheManager) itr.next();
                 try
                 {
                     // If any cache is in error, it strongly suggests all caches
@@ -191,10 +180,10 @@ public class LateralCacheMonitor
                     // same LateralCacheManager instance are in error. So we fix
                     // them once and for all.
                     //for
-                    log.info( "\n " + cnt + "- mgr.lca.getTcpServer() = " + mgr.lca.getTcpServer() + " mgr = " + mgr );
-                    log.info( "\n " + cnt + "- mgr.caches.size() = " + mgr.caches.size() );
+                    //log.info( "\n " + cnt + "- mgr.lca.getTcpServer() = " + mgr.lca.getTcpServer() + " mgr = " + mgr );
+                    log.info( "\n " + cnt + "- mgr.getCaches().size() = " + mgr.getCaches().size() );
 
-                    if ( mgr.caches.size() == 0 )
+                    if ( mgr.getCaches().size() == 0 )
                     {
                         // there is probably a problem.
                         // monitor may be running when we just started up and
@@ -208,7 +197,7 @@ public class LateralCacheMonitor
                         }
                     }
 
-                    Iterator itr2 = mgr.caches.values().iterator();
+                    Iterator itr2 = mgr.getCaches().values().iterator();
 
                     while ( itr2.hasNext() )
                     {

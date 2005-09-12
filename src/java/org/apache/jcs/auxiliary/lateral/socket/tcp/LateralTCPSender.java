@@ -105,7 +105,13 @@ public class LateralTCPSender
         }
     }
 
-    /** Description of the Method */
+    /**
+     * Creates a connection to a TCP server.
+     * 
+     * @param host
+     * @param port
+     * @throws IOException 
+     */
     protected void init( String host, int port )
         throws IOException
     {
@@ -122,7 +128,7 @@ public class LateralTCPSender
 
             if ( socket == null )
             {
-                throw new IOException( "Socket is null" );
+                throw new IOException( "Socket is null, cannot connect to " + host + ":" + port  );
             }
 
             socket.setSoTimeout( LateralTCPSender.timeOut );

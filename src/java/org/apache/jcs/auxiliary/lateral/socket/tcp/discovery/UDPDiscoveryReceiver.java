@@ -29,8 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheManager;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.ShutdownObserver;
@@ -60,7 +60,7 @@ public class UDPDiscoveryReceiver
 
     // number of messages received.
     private int cnt = 0;
-       
+
     /**
      * Service to get cache names and hande request broadcasts
      */
@@ -70,10 +70,10 @@ public class UDPDiscoveryReceiver
 
     private int multicastPort = 0;
 
-    private ICompositeCacheManager cacheMgr; 
-    
+    private ICompositeCacheManager cacheMgr;
+
     private boolean shutdown = false;
-    
+
     /**
      * Constructor for the LateralUDPReceiver object.
      * <p>
@@ -93,7 +93,7 @@ public class UDPDiscoveryReceiver
         this.multicastAddressString = multicastAddressString;
         this.multicastPort = multicastPort;
         this.cacheMgr = cacheMgr;
-        
+
         // create a small thread pool to handle a barage
         pooledExecutor = new PooledExecutor( new BoundedBuffer( 100 ), maxPoolSize );
         pooledExecutor.discardOldestWhenBlocked();
@@ -218,8 +218,8 @@ public class UDPDiscoveryReceiver
         catch ( Exception e )
         {
             log.error( "Unexpected exception in UDP receiver.", e );
-            try 
-            {                
+            try
+            {
                 Thread.sleep( 100 );
                 // TODO consider some failure count so we don't do this
                 // forever.
@@ -318,7 +318,7 @@ public class UDPDiscoveryReceiver
                     }
                     lca.setTransmissionType( LateralCacheAttributes.TCP );
                     lca.setTcpServer( message.getHost() + ":" + message.getPort() );
-                    LateralCacheManager lcm = LateralCacheManager.getInstance( lca, cacheMgr );
+                    LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr );
 
                     ArrayList regions = message.getCacheNames();
                     if ( regions != null )
@@ -394,15 +394,17 @@ public class UDPDiscoveryReceiver
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ShutdownObserver#shutdown()
      */
     public void shutdown()
     {
-        try 
+        try
         {
             shutdown = true;
-            m_socket.close();      
+            m_socket.close();
             pooledExecutor.shutdownNow();
         }
         catch ( Exception e )

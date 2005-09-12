@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
@@ -50,17 +49,21 @@ public class LateralCache
     /** either http, socket.udp, or socket.tcp can set in config */
     private ILateralCacheService lateral;
 
+    private LateralCacheMonitor monitor;
+    
     /**
      * Constructor for the LateralCache object
      * 
      * @param cattr
      * @param lateral
+     * @param monitor
      */
-    protected LateralCache( ILateralCacheAttributes cattr, ILateralCacheService lateral )
+    public LateralCache( ILateralCacheAttributes cattr, ILateralCacheService lateral, LateralCacheMonitor monitor )
     {
         this.cacheName = cattr.getCacheName();
         this.cattr = cattr;
         this.lateral = lateral;
+        this.monitor = monitor;
     }
 
     /**
@@ -280,7 +283,7 @@ public class LateralCache
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
         // process.
-        LateralCacheMonitor.getInstance().notifyError();
+        monitor.notifyError();
 
         // could stop the net serach if it is built and try to reconnect?
         if ( ex instanceof IOException )

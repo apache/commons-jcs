@@ -16,16 +16,12 @@ package org.apache.jcs.auxiliary.lateral;
  * limitations under the License.
  */
 
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-
-import org.apache.jcs.engine.behavior.ICacheRestore;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.engine.behavior.ICacheRestore;
 
 /**
  * Used to repair the lateral caches managed by the associated instance of
@@ -37,7 +33,7 @@ public class LateralCacheRestore
 {
     private final static Log log = LogFactory.getLog( LateralCacheRestore.class );
 
-    private final LateralCacheManager lcm;
+    private final ILateralCacheManager lcm;
 
     private boolean canFix = true;
 
@@ -48,7 +44,7 @@ public class LateralCacheRestore
      * 
      * @param lcm
      */
-    public LateralCacheRestore( LateralCacheManager lcm )
+    public LateralCacheRestore( ILateralCacheManager lcm )
     {
         this.lcm = lcm;
     }
@@ -68,10 +64,7 @@ public class LateralCacheRestore
 
         try
         {
-            if ( lcm.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
-            {
-                lateralObj = new LateralTCPService( lcm.lca );
-            }
+            lateralObj = lcm.fixService();
         }
         catch ( Exception ex )
         {
