@@ -27,7 +27,7 @@ import java.net.Socket;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.utils.SocketOpener;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -42,7 +42,7 @@ public class LateralTCPSender
 {
     private final static Log log = LogFactory.getLog( LateralTCPSender.class );
 
-    private ILateralCacheAttributes ilca;
+    private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
     private String remoteHost;
 
@@ -80,10 +80,10 @@ public class LateralTCPSender
      * @param lca
      * @exception IOException
      */
-    public LateralTCPSender( ILateralCacheAttributes lca )
+    public LateralTCPSender( ITCPLateralCacheAttributes lca )
         throws IOException
     {
-        this.ilca = lca;
+        this.setTcpLateralCacheAttributes( lca );
 
         String p1 = lca.getTcpServer();
         if ( p1 != null )
@@ -110,14 +110,14 @@ public class LateralTCPSender
      * 
      * @param host
      * @param port
-     * @throws IOException 
+     * @throws IOException
      */
     protected void init( String host, int port )
         throws IOException
     {
         this.port = port;
         this.address = getAddressByName( host );
-        this.remoteHost = host;
+        this.setRemoteHost( host );
 
         try
         {
@@ -128,7 +128,7 @@ public class LateralTCPSender
 
             if ( socket == null )
             {
-                throw new IOException( "Socket is null, cannot connect to " + host + ":" + port  );
+                throw new IOException( "Socket is null, cannot connect to " + host + ":" + port );
             }
 
             socket.setSoTimeout( LateralTCPSender.timeOut );
@@ -153,7 +153,10 @@ public class LateralTCPSender
     /**
      * Gets the addressByName attribute of the LateralTCPSender object
      * 
+     * @param host
+     * 
      * @return The addressByName value
+     * @throws IOException
      */
     private InetAddress getAddressByName( String host )
         throws IOException
@@ -169,7 +172,10 @@ public class LateralTCPSender
         }
     }
 
-    /** Sends commands to the lateral cache listener. */
+    /** Sends commands to the lateral cache listener. 
+     * @param led
+     * @throws IOException
+     */
     public void send( LateralElementDescriptor led )
         throws IOException
     {
@@ -226,6 +232,10 @@ public class LateralTCPSender
      * is not recommended for performance reasons. If you have 10 laterals, then
      * you have to make 10 failed gets to find out none of the caches have the
      * item.
+     * 
+     * @param led
+     * @return
+     * @throws IOException
      */
     public ICacheElement sendAndReceive( LateralElementDescriptor led )
         throws IOException
@@ -324,6 +334,8 @@ public class LateralTCPSender
      * conneciton. Dispose request should come into the facade and be sent to
      * all lateral cache sevices. The lateral cache service will then call this
      * method.
+     * @param cache
+     * @throws IOException
      */
     public void dispose( String cache )
         throws IOException
@@ -332,7 +344,40 @@ public class LateralTCPSender
         oos.close();
     }
 
-    /** Description of the Method */
+    /**
+     * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
+     */
+    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
+    {
+        this.tcpLateralCacheAttributes = tcpLateralCacheAttributes;
+    }
+
+    /**
+     * @return Returns the tcpLateralCacheAttributes.
+     */
+    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
+    {
+        return tcpLateralCacheAttributes;
+    }
+
+    /**
+     * @param remoteHost The remoteHost to set.
+     */
+    public void setRemoteHost( String remoteHost )
+    {
+        this.remoteHost = remoteHost;
+    }
+
+    /**
+     * @return Returns the remoteHost.
+     */
+    public String getRemoteHost()
+    {
+        return remoteHost;
+    }
+
+    /** testing Method 
+     * @param args*/
     public static void main( String args[] )
     {
         try

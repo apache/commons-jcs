@@ -31,6 +31,9 @@ public class LateralCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements Serializable, ILateralCacheAttributes
 {
+    
+    private static final boolean DEFAULT_RECEIVE = true;
+    
     String transmissionTypeName = "UDP";
 
     int transmissionType = UDP;
@@ -51,21 +54,6 @@ public class LateralCacheAttributes
 
     int httpListenerPort = 8080;
 
-    // TCP --------------------------------------------
-    String tcpServers = "";
-
-    // used to identify the service that this manager will be
-    // operating on
-    String tcpServer = "";
-
-    int tcpListenerPort = 0;
-
-    // udp discovery for tcp server
-    private String udpDiscoveryAddr = "228.5.6.7";
-
-    private int udpDiscoveryPort = 6789;
-
-    private boolean udpDiscoveryEnabled = true;
 
     // JAVAGROUPS -------------------------
     private String jgChannelProperties = null;
@@ -76,7 +64,7 @@ public class LateralCacheAttributes
 
     // do we receive and broadcast or only broadcast
     // this is useful when you don't want to get any notifications
-    private boolean receive = true;
+    private boolean receive = DEFAULT_RECEIVE;
 
     /**
      * Sets the httpServer attribute of the LateralCacheAttributes object
@@ -99,26 +87,7 @@ public class LateralCacheAttributes
         return httpServer;
     }
 
-    /**
-     * Sets the tcpServers attribute of the LateralCacheAttributes object
-     * 
-     * @param val
-     *            The new tcpServers value
-     */
-    public void setTcpServers( String val )
-    {
-        tcpServers = val;
-    }
 
-    /**
-     * Gets the tcpServers attribute of the LateralCacheAttributes object
-     * 
-     * @return The tcpServers value
-     */
-    public String getTcpServers()
-    {
-        return tcpServers;
-    }
 
     /**
      * Sets the httpServers attribute of the LateralCacheAttributes object
@@ -141,47 +110,7 @@ public class LateralCacheAttributes
         return httpServers;
     }
 
-    /**
-     * Sets the tcpServer attribute of the LateralCacheAttributes object
-     * 
-     * @param val
-     *            The new tcpServer value
-     */
-    public void setTcpServer( String val )
-    {
-        tcpServer = val;
-    }
-
-    /**
-     * Gets the tcpServer attribute of the LateralCacheAttributes object
-     * 
-     * @return The tcpServer value
-     */
-    public String getTcpServer()
-    {
-        return tcpServer;
-    }
-
-    /**
-     * Sets the tcpListenerPort attribute of the LateralCacheAttributes object
-     * 
-     * @param val
-     *            The new tcpListenerPort value
-     */
-    public void setTcpListenerPort( int val )
-    {
-        this.tcpListenerPort = val;
-    }
-
-    /**
-     * Gets the tcpListenerPort attribute of the LateralCacheAttributes object
-     * 
-     * @return The tcpListenerPort value
-     */
-    public int getTcpListenerPort()
-    {
-        return this.tcpListenerPort;
-    }
+    
 
     /**
      * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
@@ -380,40 +309,8 @@ public class LateralCacheAttributes
         return this;
     }
 
-    /**
-     * @param udpDiscoveryAddr
-     *            The udpDiscoveryAddr to set.
-     */
-    public void setUdpDiscoveryAddr( String udpDiscoveryAddr )
-    {
-        this.udpDiscoveryAddr = udpDiscoveryAddr;
-    }
-
-    /**
-     * @return Returns the udpDiscoveryAddr.
-     */
-    public String getUdpDiscoveryAddr()
-    {
-        return udpDiscoveryAddr;
-    }
-
-    /**
-     * @param udpDiscoveryPort
-     *            The udpDiscoveryPort to set.
-     */
-    public void setUdpDiscoveryPort( int udpDiscoveryPort )
-    {
-        this.udpDiscoveryPort = udpDiscoveryPort;
-    }
-
-    /**
-     * @return Returns the udpDiscoveryPort.
-     */
-    public int getUdpDiscoveryPort()
-    {
-        return udpDiscoveryPort;
-    }
-
+    
+    
     /**
      * @param receive
      *            The receive to set.
@@ -431,22 +328,7 @@ public class LateralCacheAttributes
         return receive;
     }
 
-    /**
-     * @param udpDiscoveryEnabled
-     *            The udpDiscoveryEnabled to set.
-     */
-    public void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled )
-    {
-        this.udpDiscoveryEnabled = udpDiscoveryEnabled;
-    }
-
-    /**
-     * @return Returns the udpDiscoveryEnabled.
-     */
-    public boolean isUdpDiscoveryEnabled()
-    {
-        return udpDiscoveryEnabled;
-    }
+    
 
     /*
      * (non-Javadoc)
@@ -461,8 +343,7 @@ public class LateralCacheAttributes
         //buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );
         //buf.append( "transmissionType=" + transmissionType + "\n" );
         //buf.append( "tcpServer=" + tcpServer + "\n" );
-        buf.append( transmissionTypeName + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort )
-            + tcpServer );
+        buf.append( transmissionTypeName + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) );
         return buf.toString();
     }
 

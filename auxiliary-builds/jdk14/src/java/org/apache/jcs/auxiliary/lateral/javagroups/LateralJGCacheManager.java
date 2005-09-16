@@ -35,7 +35,6 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
@@ -112,13 +111,11 @@ public class LateralJGCacheManager
             }
         }
 
-        
         createMonitor( ins );
-        
+
         return ins;
     }
 
-    
     /**
      * The monitor needs reference to one instance, acutally just a type.
      * 
@@ -128,7 +125,7 @@ public class LateralJGCacheManager
      */
     private static synchronized void createMonitor( ILateralCacheManager instance )
     {
-//      only want one monitor per lateral type
+        //      only want one monitor per lateral type
         // Fires up the monitoring daemon.
         if ( monitor == null )
         {
@@ -143,7 +140,7 @@ public class LateralJGCacheManager
         }
 
     }
-    
+
     /**
      * Constructor for the LateralCacheManager object
      * 
@@ -165,14 +162,7 @@ public class LateralJGCacheManager
 
         try
         {
-            if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
-            {
-                log.debug( "Creating TCP service" );
-                log.info( "Creating TCP service, lca = " + this.lca );
-
-                this.lateralService = new LateralTCPService( this.lca );
-            }
-            else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+            if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
             {
                 log.debug( "Creating JAVAGROUPS service" );
 
@@ -211,7 +201,7 @@ public class LateralJGCacheManager
 
             // Notify the cache monitor about the error, and kick off
             // the recovery process.
-            
+
             createMonitor( this );
             monitor.notifyError();
         }
@@ -312,8 +302,9 @@ public class LateralJGCacheManager
         return instances;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager#fixService()
      */
     public Object fixService()

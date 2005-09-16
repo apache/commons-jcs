@@ -9,6 +9,7 @@ import org.apache.jcs.auxiliary.lateral.LateralCache;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
@@ -57,7 +58,7 @@ public class TestUDPDiscovery
         throws Exception
     {
         // create the attributes for the service
-        LateralCacheAttributes lac = new LateralCacheAttributes();
+        TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
         lac.setTransmissionType( LateralCacheAttributes.TCP );
         lac.setTcpServer( "localhost" + ":" + 1111 );
 
@@ -153,7 +154,7 @@ public class TestUDPDiscovery
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
             .toArray( new LateralCacheNoWait[0] ), "testCache1" );
 
-        LateralCacheAttributes lac = new LateralCacheAttributes();
+        TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
         lac.setTransmissionType( LateralCacheAttributes.TCP );
         lac.setTcpServer( "localhost" + ":" + 1111 );
 

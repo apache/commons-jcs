@@ -25,9 +25,6 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryManager;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryService;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
@@ -37,7 +34,9 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * canl have multiple caches. The remote relationships are consolidated and
  * restored via these managers. The facade provides a front to the composite
  * cache so the implmenetation is transparent.
- *  
+ * 
+ * This can no longer create TCP laterals
+ * 
  * @deprecated use the new TYPE specific lateral factories.
  */
 public class LateralCacheFactory
@@ -76,40 +75,7 @@ public class LateralCacheFactory
             {
                 noWaits.add( ic );
             }
-        }
 
-        // for each server listed get the manager for that server.
-        // from that manager get the cache for this region name.
-        else if ( lac.getTransmissionType() == LateralCacheAttributes.TCP )
-        {
-
-            //pars up the tcp servers and set the tcpServer value and
-            // get the manager and then get the cache
-            StringTokenizer it = new StringTokenizer( lac.tcpServers, "," );
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Configured for " + it.countTokens() + "  servers." );
-            }
-            while ( it.hasMoreElements() )
-            {
-                String server = (String) it.nextElement();
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "tcp server = " + server );
-                }
-                LateralCacheAttributes lacC = (LateralCacheAttributes) lac.copy();
-                lacC.setTcpServer( server );
-                LateralCacheManager lcm = LateralCacheManager.getInstance( lacC, cacheMgr );
-                ICache ic = lcm.getCache( lacC.getCacheName() );
-                if ( ic != null )
-                {
-                    noWaits.add( ic );
-                }
-                else
-                {
-                    log.debug( "noWait is null, no lateral connection made" );
-                }
-            }
         }
         else if ( lac.getTransmissionType() == LateralCacheAttributes.XMLRPC )
         {
@@ -161,14 +127,14 @@ public class LateralCacheFactory
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
             .toArray( new LateralCacheNoWait[0] ), iaca.getCacheName() );
 
-        createDiscoveryService( lac, lcnwf, cacheMgr );
-
         return lcnwf;
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory#createListener(org.apache.jcs.auxiliary.lateral.LateralCacheAttributes, org.apache.jcs.engine.behavior.ICompositeCacheManager)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory#createListener(org.apache.jcs.auxiliary.lateral.LateralCacheAttributes,
+     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
      */
     public void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
@@ -183,12 +149,7 @@ public class LateralCacheFactory
 
             try
             {
-                if ( lac.getTransmissionType() == ILateralCacheAttributes.TCP )
-                {
-                    // make a listener. if one doesn't exist
-                    LateralTCPListener.getInstance( lac, cacheMgr );
-                }
-                else if ( lac.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+                if ( lac.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
                 {
                     LateralCacheJGListener.getInstance( lac, cacheMgr );
                 }
@@ -206,45 +167,6 @@ public class LateralCacheFactory
                 log.debug( "Not creating a listener since we are not receiving." );
             }
         }
-    }
-
-    /**
-     * Creates the discovery service. Only creates this for tcp laterals right
-     * now.
-     * 
-     * @param lac
-     * @param lcnwf
-     * @param cacheMgr
-     * @return null if none is created.
-     */
-    private UDPDiscoveryService createDiscoveryService( LateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
-                                                       ICompositeCacheManager cacheMgr )
-    {
-        UDPDiscoveryService discovery = null;
-
-        //      create the UDP discovery for the TCP lateral
-        if ( lac.isUdpDiscoveryEnabled() )
-        {
-            if ( lac.getTransmissionType() != LateralCacheAttributes.TCP )
-            {
-                log
-                    .warn( "UdpDiscoveryEnabled is set to true, but the Lateral cache type is not TCP.  Discovery will not be enabled." );
-            }
-            else
-            {
-                // need a factory for this so it doesn't
-                // get dereferenced, also we don't want one for every region.
-                discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr );
-
-                discovery.addNoWaitFacade( lcnwf, lac.getCacheName() );
-
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Created UDPDiscoveryService for TCP lateral cache." );
-                }
-            }
-        }
-        return discovery;
     }
 
     /**

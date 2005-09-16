@@ -19,10 +19,10 @@ jcs.region.testTcpRegion1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.
 
 # simple Lateral TCP auxiliary
 jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
-jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
+jcs.auxiliary.LTCP.attributes.AllowGet=false
 
 ##############################################################
 ################## THREAD POOL CONFIGURATION ###################

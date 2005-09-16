@@ -5,27 +5,26 @@ import java.util.Random;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * @author asmuts
  */
-public class TestLateralTCPConcurrentRandom
+public class TestLateralTCPIssueRemoveOnPut
     extends TestCase
 {
 
-    private static boolean isSysOut = false;
-    //private static boolean isSysOut = true;
+    //private static boolean isSysOut = false;
+
+    private static boolean isSysOut = true;
 
     /**
      * Constructor for the TestDiskCache object.
      * 
      * @param testName
      */
-    public TestLateralTCPConcurrentRandom( String testName )
+    public TestLateralTCPIssueRemoveOnPut( String testName )
     {
         super( testName );
     }
@@ -35,13 +34,22 @@ public class TestLateralTCPConcurrentRandom
      */
     public void setUp()
     {
-        JCS.setConfigFilename( "/TestTCPLateralCacheConcurrent.ccf" );
+        JCS.setConfigFilename( "/TestTCPLateralIssueRemoveCache.ccf" );
     }
 
     /**
-     * Randomly adds items to cache, gets them, and removes them. The range
-     * count is more than the size of the memory cache, so items should spool to
-     * disk.
+     * 
+     * @throws Exception
+     */
+    public void test()
+        throws Exception
+    {
+        this.runTestForRegion( "region1", 1, 200, 1 );
+    }
+
+    /**
+     * This tests issues tons of puts. It also check to see that a key that was
+     * put in was removed by the clients remove command.
      * 
      * @param region
      *            Name of the region to access
@@ -59,18 +67,29 @@ public class TestLateralTCPConcurrentRandom
         boolean show = true;//false;
 
         JCS cache = JCS.getInstance( region );
-        
-        
+
+        Thread.sleep( 100 );
+
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
-        lattr2.setTcpServer( "localhost:1102" );
+        lattr2.setTcpServer( "localhost:1110" );
+        lattr2.setIssueRemoveOnPut( true );
+        // should still try to remove
+        lattr2.setAllowPut( false );
 
         // this service will put and remove using the lateral to
         // the cache instance above
-        // the cache thinks it is different since the listenerid is different        
+        // the cache thinks it is different since the listenerid is different
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
+
+        String keyToBeRemovedOnPut = "test1";
+        cache.put( keyToBeRemovedOnPut, "this should get remvoed" );
+
+        ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+            + ":data-this shouldn't get there" );
+        service.update( element1 );
 
         try
         {
@@ -80,42 +99,13 @@ public class TestLateralTCPConcurrentRandom
                 int n = ran.nextInt( 4 );
                 int kn = ran.nextInt( range );
                 String key = "key" + kn;
-                if ( n == 1 )
+
+                ICacheElement element = new CacheElement( region, key, region + ":data" + i
+                    + " junk asdfffffffadfasdfasf " + kn + ":" + n );
+                service.update( element );
+                if ( show )
                 {
-                    ICacheElement element = new CacheElement( region, key, region + ":data" + i + " junk asdfffffffadfasdfasf "
-                        + kn + ":" + n );
-                    service.update( element );
-                    if ( show )
-                    {
-                        p( "put " + key );
-                    }
-                }
-                /**/
-                else if ( n == 2 )
-                {
-                   service.remove( region, key );
-                   if ( show )
-                    {
-                        p( "removed " + key );
-                    }
-                }
-                /**/
-                else
-                {
-                    // slightly greater chance of get
-                    try 
-                    {
-                        Object obj = service.get( region, key );
-                        if ( show && obj != null )
-                        {
-                            p( obj.toString() );
-                        }                        
-                    }
-                    catch( Exception e )
-                    {
-                        // consider failing, some timeouts are expected
-                        e.printStackTrace();
-                    }
+                    p( "put " + key );
                 }
 
                 if ( i % 100 == 0 )
@@ -124,7 +114,7 @@ public class TestLateralTCPConcurrentRandom
                 }
 
             }
-            p( "Finished random cycle of " + numOps );
+            p( "Finished cycle of " + numOps );
         }
         catch ( Exception e )
         {
@@ -132,36 +122,31 @@ public class TestLateralTCPConcurrentRandom
             e.printStackTrace( System.out );
             throw e;
         }
-        
+
         JCS jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );
         String value = (String) jcs.get( key );
         assertEquals( "Couldn't put normally.", data, value );
-        
+
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
         {
             String keyL = "key" + i;
-            String dataL = (String)jcs.get( keyL );
+            String dataL = (String) jcs.get( keyL );
             if ( dataL != null )
             {
                 assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
             }
-            
+
         }
 
-        //Thread.sleep( 1000 );
-
-        //ICacheElement element = new CacheElement( region, "abc", "testdata");
-        //service.update( element );
+        Thread.sleep( 200 );
         
-        //Thread.sleep( 2500 );
-        // could be too mcuh going on right now to get ti through, sot he test might fail.
-        //String value2 = (String) jcs.get( "abc" );
-        //assertEquals( "Couldn't put laterally, could be too much traffic in queue.", "testdata", value2 );
-                
+        Object testObj = cache.get( keyToBeRemovedOnPut );
+        p( "test object = " + testObj );
+        assertNull( "The test object should have been remvoed by a put.", testObj );
 
     }
 

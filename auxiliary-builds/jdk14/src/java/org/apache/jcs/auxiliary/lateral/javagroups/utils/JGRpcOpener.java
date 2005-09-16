@@ -47,12 +47,15 @@ public class JGRpcOpener
 
     private ILateralCacheAttributes ilca;
 
-    /** Constructor for the SocketOpener object 
+    /**
+     * Constructor for the SocketOpener object
+     * 
      * @param ilcl
      * @param ilca
      * @param timeOut
      * @param groupName
-     * @return*/
+     * @return
+     */
     public static RpcDispatcher openSocket( ILateralCacheJGListener ilcl, ILateralCacheAttributes ilca, int timeOut,
                                            String groupName )
     {
@@ -72,10 +75,11 @@ public class JGRpcOpener
 
     /**
      * Constructor for the SocketOpener object
+     * 
      * @param ilcl
      * @param ilca
      * @param groupName
-     * 
+     *  
      */
     public JGRpcOpener( ILateralCacheJGListener ilcl, ILateralCacheAttributes ilca, String groupName )
     {
@@ -103,7 +107,7 @@ public class JGRpcOpener
             {
                 log.info( "Is Connected = " + rpcCh.isConnected() );
             }
-            
+
         }
         catch ( Exception e )
         {
@@ -111,8 +115,11 @@ public class JGRpcOpener
         }
     }
 
-    /** Gets the socket attribute of the SocketOpener object 
-     * @return*/
+    /**
+     * Gets the socket attribute of the SocketOpener object
+     * 
+     * @return
+     */
     public RpcDispatcher getSocket()
     {
         return disp;

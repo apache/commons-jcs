@@ -31,6 +31,8 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheManager;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.ShutdownObserver;
@@ -307,14 +309,14 @@ public class UDPDiscoveryReceiver
                     // get a cache and add it to the no waits
                     // the add method should not add the same.
                     // we need the listener port from the original config.
-                    LateralCacheAttributes lca = null;
-                    if ( service.getLca() != null )
+                    ITCPLateralCacheAttributes lca = null;
+                    if ( service.getTcpLateralCacheAttributes() != null )
                     {
-                        lca = (LateralCacheAttributes) service.getLca().copy();
+                        lca = (ITCPLateralCacheAttributes) service.getTcpLateralCacheAttributes().copy();
                     }
                     else
                     {
-                        lca = new LateralCacheAttributes();
+                        lca = new TCPLateralCacheAttributes();
                     }
                     lca.setTransmissionType( LateralCacheAttributes.TCP );
                     lca.setTcpServer( message.getHost() + ":" + message.getPort() );

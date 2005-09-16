@@ -21,7 +21,7 @@ import java.io.Serializable;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * Description of the Class
+ * This class wraps command to other laterals.
  *  
  */
 public class LateralElementDescriptor
@@ -53,6 +53,8 @@ public class LateralElementDescriptor
     /** Description of the Field */
     public int command = UPDATE;
 
+    public int valHashCode = -1;
+    
     // for update command
     /** Constructor for the LateralElementDescriptor object */
     public LateralElementDescriptor()

@@ -10,9 +10,9 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.ShutdownObservable;
 import org.apache.jcs.engine.behavior.ShutdownObserver;
@@ -33,43 +33,45 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * @author Aaron Smuts
  *  
  */
-public class UDPDiscoveryService implements ShutdownObserver
+public class UDPDiscoveryService
+    implements ShutdownObserver
 {
 
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
-     //The background broadcaster.
+    //The background broadcaster.
     private static ClockDaemon senderDaemon;
 
     // thread that listens for messages
     private Thread udpReceiverThread;
-    
+
     // the runanble that the receiver thread runs
     private UDPDiscoveryReceiver receiver;
 
     private Map facades = new HashMap();
 
-    private LateralCacheAttributes lca = null;
+    private ITCPLateralCacheAttributes tcpLateralCacheAttributes = null;
 
     // the runanble that sends messages via the clock daemon
     private UDPDiscoverySenderThread sender = null;
-    
+
     private String hostAddress = "unknown";
-    
+
     /**
      * 
      * @param facade
      * @param lca
+     *            ITCPLateralCacheAttributes
      * @param cacheMgr
      * @param receivingPort
      */
-    public UDPDiscoveryService( LateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
+    public UDPDiscoveryService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         // register for shutdown notification
-        ((ShutdownObservable)cacheMgr).registerShutdownObserver( this );
+        ( (ShutdownObservable) cacheMgr ).registerShutdownObserver( this );
 
-        this.setLca( lca );
-        
+        this.setTcpLateralCacheAttributes( lca );
+
         try
         {
             // todo, you should be able to set this
@@ -88,8 +90,8 @@ public class UDPDiscoveryService implements ShutdownObserver
         {
             // todo need some kind of recovery here.
             receiver = new UDPDiscoveryReceiver( this, lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), cacheMgr );
-            udpReceiverThread = new Thread(receiver);
-            udpReceiverThread.setDaemon(true);
+            udpReceiverThread = new Thread( receiver );
+            udpReceiverThread.setDaemon( true );
             //udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
             udpReceiverThread.start();
         }
@@ -105,11 +107,11 @@ public class UDPDiscoveryService implements ShutdownObserver
             senderDaemon = new ClockDaemon();
             senderDaemon.setThreadFactory( new MyThreadFactory() );
         }
-        
+
         // create a sender thread
-        sender = new UDPDiscoverySenderThread( lca.getUdpDiscoveryAddr(), lca
-                                      .getUdpDiscoveryPort(), hostAddress, lca.getTcpListenerPort(), this.getCacheNames() );
-        
+        sender = new UDPDiscoverySenderThread( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), hostAddress, lca
+            .getTcpListenerPort(), this.getCacheNames() );
+
         senderDaemon.executePeriodically( 30 * 1000, sender, false );
     }
 
@@ -127,8 +129,8 @@ public class UDPDiscoveryService implements ShutdownObserver
      */
     public synchronized boolean addNoWaitFacade( LateralCacheNoWaitFacade facade, String cacheName )
     {
-        boolean isNew = !facades.containsKey(cacheName);
-        
+        boolean isNew = !facades.containsKey( cacheName );
+
         // override or put anew, it doesn't matter
         facades.put( cacheName, facade );
 
@@ -137,10 +139,10 @@ public class UDPDiscoveryService implements ShutdownObserver
             if ( sender != null )
             {
                 // need to reset the cache names since we have a new one
-                sender.setCacheNames( this.getCacheNames() );                            
+                sender.setCacheNames( this.getCacheNames() );
             }
         }
-        
+
         return isNew;
 
     }
@@ -179,10 +181,11 @@ public class UDPDiscoveryService implements ShutdownObserver
     }
 
     /**
-     * Send a passive broadcast in response to a request broadcast.  Never send a request for a request.
-     * We can respond to our own reques, since a request broadcast is not intended as a connection request.
-     * We might want to only send messages, so we would send a request, but never a passive broadcast.
-     *
+     * Send a passive broadcast in response to a request broadcast. Never send a
+     * request for a request. We can respond to our own reques, since a request
+     * broadcast is not intended as a connection request. We might want to only
+     * send messages, so we would send a request, but never a passive broadcast.
+     *  
      */
     protected void serviceRequestBroadcast()
     {
@@ -191,9 +194,11 @@ public class UDPDiscoveryService implements ShutdownObserver
         {
             // create this connection each time.
             // more robust
-            sender = new UDPDiscoverySender( getLca().getUdpDiscoveryAddr(), getLca().getUdpDiscoveryPort() );
+            sender = new UDPDiscoverySender( getTcpLateralCacheAttributes().getUdpDiscoveryAddr(),
+                                             getTcpLateralCacheAttributes().getUdpDiscoveryPort() );
 
-            sender.passiveBroadcast( hostAddress, getLca().getTcpListenerPort(), this.getCacheNames() );
+            sender.passiveBroadcast( hostAddress, getTcpLateralCacheAttributes().getTcpListenerPort(), this
+                .getCacheNames() );
 
             // todo we should consider sending a request broadcast every so
             // often.
@@ -207,23 +212,23 @@ public class UDPDiscoveryService implements ShutdownObserver
         catch ( Exception e )
         {
             log.error( "Problem calling the UDP Discovery Sender", e );
-        }      
+        }
         finally
         {
             try
             {
                 if ( sender != null )
                 {
-                    sender.destroy();                                    
+                    sender.destroy();
                 }
             }
             catch ( Exception e )
             {
                 log.error( "Problem closing Passive Broadcast sender, while servicing a request broadcast.", e );
             }
-        }        
+        }
     }
-    
+
     /**
      * Get all the cache names we have facades for.
      * 
@@ -243,19 +248,20 @@ public class UDPDiscoveryService implements ShutdownObserver
     }
 
     /**
-     * @param lca The lca to set.
+     * @param lca
+     *            The lca to set.
      */
-    public void setLca( LateralCacheAttributes lca )
+    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes lca )
     {
-        this.lca = lca;
+        this.tcpLateralCacheAttributes = lca;
     }
 
     /**
      * @return Returns the lca.
      */
-    public LateralCacheAttributes getLca()
+    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
     {
-        return lca;
+        return tcpLateralCacheAttributes;
     }
 
     /**
@@ -283,21 +289,23 @@ public class UDPDiscoveryService implements ShutdownObserver
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.jcs.engine.behavior.ShutdownObserver#shutdown()
      */
     public void shutdown()
-    {   
+    {
         if ( log.isInfoEnabled() )
         {
             log.info( "Shutting down UDP discovery service receiver." );
         }
-        
+
         try
         {
             // no good way to do this right now.
-            receiver.shutdown();                        
-            udpReceiverThread.interrupt();    
+            receiver.shutdown();
+            udpReceiverThread.interrupt();
         }
         catch ( Exception e )
         {
@@ -308,9 +316,9 @@ public class UDPDiscoveryService implements ShutdownObserver
         {
             log.info( "Shutting down UDP discovery service sender." );
         }
-        
+
         try
-        {            
+        {
             // interrupt all the threads.
             senderDaemon.shutDown();
         }
@@ -318,6 +326,6 @@ public class UDPDiscoveryService implements ShutdownObserver
         {
             log.error( "Problem shutting down UDP sender." );
         }
-        
+
     }
 }

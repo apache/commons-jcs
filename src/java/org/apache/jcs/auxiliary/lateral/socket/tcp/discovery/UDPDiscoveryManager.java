@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
@@ -43,9 +43,11 @@ public class UDPDiscoveryManager
      * Returns the UDP Discovery service associated with this instance.
      * 
      * @param lca
+     *            ITCPLateralCacheAttributes
+     * @param cacheMgr
      * @return
      */
-    public synchronized UDPDiscoveryService getService( LateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
+    public synchronized UDPDiscoveryService getService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         String key = lca.getTcpServer() + ":" + lca.getTcpListenerPort();
 

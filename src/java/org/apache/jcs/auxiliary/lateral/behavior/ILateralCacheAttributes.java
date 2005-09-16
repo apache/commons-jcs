@@ -21,7 +21,12 @@ import java.io.Serializable;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
- * Description of the Interface
+ * This interface defines configuration options common to lateral cache
+ * plugins.  
+ * 
+ * TODO it needs to be trimmed down.  The old version had features for
+ * every lateral.  Now, the individual laterals have their own specific
+ * attributes interfaces.
  *  
  */
 public interface ILateralCacheAttributes
@@ -53,51 +58,7 @@ public interface ILateralCacheAttributes
      */
     public String getHttpServer();
 
-    /**
-     * Sets the tcpServer attribute of the ILateralCacheAttributes object
-     * 
-     * @param val
-     *            The new tcpServer value
-     */
-    public void setTcpServer( String val );
-
-    /**
-     * Gets the tcpServer attribute of the ILateralCacheAttributes object
-     * 
-     * @return The tcpServer value
-     */
-    public String getTcpServer();
-
-    /**
-     * Sets the tcpServers attribute of the ILateralCacheAttributes object
-     * 
-     * @param val
-     *            The new tcpServers value
-     */
-    public void setTcpServers( String val );
-
-    /**
-     * Gets the tcpServers attribute of the ILateralCacheAttributes object
-     * 
-     * @return The tcpServers value
-     */
-    public String getTcpServers();
-
-    /**
-     * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * 
-     * @param val
-     *            The new tcpListenerPort value
-     */
-    public void setTcpListenerPort( int val );
-
-    /**
-     * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
-     * 
-     * @return The tcpListenerPort value
-     */
-    public int getTcpListenerPort();
-
+    
     /**
      * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
      * 
@@ -242,51 +203,5 @@ public interface ILateralCacheAttributes
      */
     public boolean isReceive();
 
-    /**
-     * Can setup UDP Discovery. This only works for TCp laterals right now. It
-     * allows TCP laterals to find each other by broadcasting to a multicast
-     * port.
-     * 
-     * @param udpDiscoveryEnabled
-     *            The udpDiscoveryEnabled to set.
-     */
-    public void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled );
-
-    /**
-     * Whether or not TCP laterals can try to find each other by multicast
-     * communication.
-     * 
-     * @return Returns the udpDiscoveryEnabled.
-     */
-    public boolean isUdpDiscoveryEnabled();
-
-    /**
-     * The port to use if UDPDiscovery is enabled.
-     * 
-     * @return Returns the udpDiscoveryPort.
-     */
-    public int getUdpDiscoveryPort();
-
-    /**
-     * Sets the port to use if UDPDiscovery is enabled.
-     * 
-     * @param udpDiscoveryPort
-     *            The udpDiscoveryPort to set.
-     */
-    public void setUdpDiscoveryPort( int udpDiscoveryPort );
-
-    /**
-     * The address to broadcast to if UDPDiscovery is enabled.
-     * 
-     * @return Returns the udpDiscoveryAddr.
-     */
-    public String getUdpDiscoveryAddr();
-
-    /**
-     * Sets the address to broadcast to if UDPDiscovery is enabled.
-     * 
-     * @param udpDiscoveryAddr
-     *            The udpDiscoveryAddr to set.
-     */
-    public void setUdpDiscoveryAddr( String udpDiscoveryAddr );
+    
 }

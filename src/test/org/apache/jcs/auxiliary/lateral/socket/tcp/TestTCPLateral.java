@@ -43,7 +43,7 @@ public class TestTCPLateral
 
         JCS jcs = JCS.getInstance( "test" );
 
-        LateralCacheAttributes lac = new LateralCacheAttributes();
+        TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
         lac.setTransmissionType( LateralCacheAttributes.TCP );
         lac.setTcpServer( "localhost" + ":" + 8111 );
         lac.setTcpListenerPort( 8111 );
@@ -77,7 +77,7 @@ public class TestTCPLateral
     public void testReceive()
         throws Exception
     {
-        ILateralCacheAttributes lattr = new LateralCacheAttributes();
+        TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1101 );
         lattr.setTransmissionTypeName( "TCP" );
         CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
@@ -95,7 +95,7 @@ public class TestTCPLateral
         LateralTCPListener listener = (LateralTCPListener) LateralTCPListener.getInstance( lattr, cacheMgr );
 
         
-        ILateralCacheAttributes lattr2 = new LateralCacheAttributes();
+        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:1101" );

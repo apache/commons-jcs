@@ -34,7 +34,7 @@ public class UDPDiscoveryMessage
     /** Description of the Field */
     private long requesterId;
 
-    private ArrayList cacheNames = new ArrayList();;
+    private ArrayList cacheNames = new ArrayList();
 
     /**
      * @param port

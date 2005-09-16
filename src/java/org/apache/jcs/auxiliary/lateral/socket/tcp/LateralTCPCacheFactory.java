@@ -27,6 +27,7 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryManager;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryService;
 import org.apache.jcs.engine.behavior.ICache;
@@ -54,7 +55,7 @@ public class LateralTCPCacheFactory
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
 
-        LateralCacheAttributes lac = (LateralCacheAttributes) iaca;
+        ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
         ArrayList noWaits = new ArrayList();
 
         //pars up the tcp servers and set the tcpServer value and
@@ -74,14 +75,14 @@ public class LateralTCPCacheFactory
                 {
                     log.debug( "tcp server = " + server );
                 }
-                LateralCacheAttributes lacC = (LateralCacheAttributes) lac.copy();
+                ITCPLateralCacheAttributes lacC = (ITCPLateralCacheAttributes) lac.copy();
                 lacC.setTcpServer( server );
                 LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lacC, cacheMgr );
                 ICache ic = lcm.getCache( lacC.getCacheName() );
                 if ( ic != null )
                 {
                     noWaits.add( ic );
-                }
+                } 
                 else
                 {
                     log.debug( "noWait is null, no lateral connection made" );
@@ -89,7 +90,7 @@ public class LateralTCPCacheFactory
             }
         }
 
-        createListener( lac, cacheMgr );
+        createListener( (LateralCacheAttributes)iaca, cacheMgr );
 
         // create the no wait facade.
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
@@ -109,8 +110,10 @@ public class LateralTCPCacheFactory
      */
     public void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
+        
+        ITCPLateralCacheAttributes attr = (ITCPLateralCacheAttributes)lac;
         // don't create a listener if we are not receiving.
-        if ( lac.isReceive() )
+        if ( attr.isReceive() )
         {
 
             if ( log.isInfoEnabled() )
@@ -122,7 +125,7 @@ public class LateralTCPCacheFactory
             {
 
                 // make a listener. if one doesn't exist
-                LateralTCPListener.getInstance( lac, cacheMgr );
+                LateralTCPListener.getInstance( attr, cacheMgr );
 
             }
             catch ( Exception e )
@@ -143,12 +146,12 @@ public class LateralTCPCacheFactory
      * Creates the discovery service. Only creates this for tcp laterals right
      * now.
      * 
-     * @param lac
+     * @param lac ITCPLateralCacheAttributes
      * @param lcnwf
      * @param cacheMgr
      * @return null if none is created.
      */
-    private UDPDiscoveryService createDiscoveryService( LateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
+    private UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
                                                        ICompositeCacheManager cacheMgr )
     {
         UDPDiscoveryService discovery = null;

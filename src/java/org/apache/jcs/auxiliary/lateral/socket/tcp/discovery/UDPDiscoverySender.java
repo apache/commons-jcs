@@ -100,6 +100,7 @@ public class UDPDiscoverySender
     
     /**
      * Just being careful about closing the socket.
+     * @throws Throwable
      */
     public void finalize()
     throws Throwable

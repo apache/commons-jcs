@@ -29,8 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
@@ -62,7 +62,7 @@ public class LateralTCPListener
     /** The socket listener */
     private ListenerThread receiver;
 
-    private ILateralCacheAttributes ilca;
+    private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
     private int port;
 
@@ -84,9 +84,11 @@ public class LateralTCPListener
      * Gets the instance attribute of the LateralCacheTCPListener class.
      * 
      * @param ilca
+     *            ITCPLateralCacheAttributes
+     * @param cacheMgr
      * @return The instance value
      */
-    public synchronized static ILateralCacheListener getInstance( ILateralCacheAttributes ilca,
+    public synchronized static ILateralCacheListener getInstance( ITCPLateralCacheAttributes ilca,
                                                                  ICompositeCacheManager cacheMgr )
     {
         ILateralCacheListener ins = (ILateralCacheListener) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
@@ -118,9 +120,9 @@ public class LateralTCPListener
      * 
      * @param ilca
      */
-    protected LateralTCPListener( ILateralCacheAttributes ilca )
+    protected LateralTCPListener( ITCPLateralCacheAttributes ilca )
     {
-        this.ilca = ilca;
+        this.setTcpLateralCacheAttributes( ilca );
     }
 
     /**
@@ -130,7 +132,7 @@ public class LateralTCPListener
     {
         try
         {
-            this.port = ilca.getTcpListenerPort();
+            this.port = getTcpLateralCacheAttributes().getTcpListenerPort();
 
             receiver = new ListenerThread();
             receiver.setDaemon( true );
@@ -201,7 +203,8 @@ public class LateralTCPListener
         {
             if ( getPutCnt() % 100 == 0 )
             {
-                log.info( "Put Count (port " + ilca.getTcpListenerPort() + ") = " + getPutCnt() );
+                log.info( "Put Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
+                    + getPutCnt() );
             }
         }
 
@@ -350,6 +353,23 @@ public class LateralTCPListener
     public ICompositeCacheManager getCacheManager()
     {
         return cacheManager;
+    }
+
+    /**
+     * @param tcpLateralCacheAttributes
+     *            The tcpLateralCacheAttributes to set.
+     */
+    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
+    {
+        this.tcpLateralCacheAttributes = tcpLateralCacheAttributes;
+    }
+
+    /**
+     * @return Returns the tcpLateralCacheAttributes.
+     */
+    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
+    {
+        return tcpLateralCacheAttributes;
     }
 
     /**
@@ -506,6 +526,34 @@ public class LateralTCPListener
             }
             else if ( led.command == LateralElementDescriptor.REMOVE )
             {
+                // if a hashcode was given and filtering is on
+                // check to see if they are the same
+                // if so, then don't remvoe, otherwise issue a remove
+                if ( led.valHashCode != -1 )
+                {
+                    if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
+                    {
+                        ICacheElement test = getCache( cacheName ).localGet( key );
+                        if ( test != null )
+                        {
+                            if ( test.getVal().hashCode() == led.valHashCode )
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( "Filtering detected identical hashCode [" + led.valHashCode + "], not issuing a remove for led " + led );
+                                }                                
+                                return;
+                            }
+                            else
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( "Different hashcodes, in cache [" + test.getVal().hashCode() + "] sent [" + led.valHashCode + "]" );
+                                }
+                            }
+                        }
+                    }        
+                }
                 handleRemove( cacheName, key );
             }
             else if ( led.command == LateralElementDescriptor.REMOVEALL )

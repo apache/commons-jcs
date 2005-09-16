@@ -31,10 +31,10 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheWatchRepairable;
 import org.apache.jcs.auxiliary.lateral.ZombieLateralCacheService;
 import org.apache.jcs.auxiliary.lateral.ZombieLateralCacheWatch;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
@@ -60,9 +60,9 @@ public class LateralTCPCacheManager
     protected static Map instances = new HashMap();
 
     /**
-     * Description of the Field
+     * ITCPLateralCacheAttributes
      */
-    protected ILateralCacheAttributes lca;
+    protected ITCPLateralCacheAttributes lca;
 
     private int clients;
 
@@ -88,7 +88,7 @@ public class LateralTCPCacheManager
      *            this allows the auxiliary to be passed a cache manager.
      * @return
      */
-    public static LateralTCPCacheManager getInstance( ILateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
+    public static LateralTCPCacheManager getInstance( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         LateralTCPCacheManager ins = (LateralTCPCacheManager) instances.get( lca.toString() );
         synchronized ( instances )
@@ -145,7 +145,7 @@ public class LateralTCPCacheManager
      * @param lcaA
      * @param cacheMgr
      */
-    private LateralTCPCacheManager( ILateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr )
+    private LateralTCPCacheManager( ITCPLateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr )
     {
         this.lca = lcaA;
 

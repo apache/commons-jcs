@@ -146,14 +146,7 @@ public class LateralCacheManager
 
         try
         {
-            if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
-            {
-                log.debug( "Creating TCP service" );
-                log.info( "Creating TCP service, lca = " + this.lca );
-
-                this.lateralService = new LateralTCPService( this.lca );
-            }
-            else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+            if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
             {
                 log.debug( "Creating JAVAGROUPS service" );
 
@@ -255,11 +248,7 @@ public class LateralCacheManager
         {
             try
             {
-                if ( this.lca.getTransmissionType() == ILateralCacheAttributes.TCP )
-                {
-                    addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca, cacheMgr ) );
-                }
-                else if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
+                if ( this.lca.getTransmissionType() == ILateralCacheAttributes.JAVAGROUPS )
                 {
                     addLateralCacheListener( cacheName, LateralCacheJGListener.getInstance( this.lca, cacheMgr ) );
                 }
@@ -359,10 +348,7 @@ public class LateralCacheManager
         Object service = null;
         try
         {
-            if ( lca.getTransmissionType() == lca.TCP )
-            {
-                service = new LateralTCPService( lca );                
-            }
+            // no op
         }
         catch ( Exception ex )
         {

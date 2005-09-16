@@ -17,26 +17,21 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-
-import org.apache.jcs.engine.CacheElement;
-
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheListener;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
@@ -48,7 +43,7 @@ public class LateralTCPService
 {
     private final static Log log = LogFactory.getLog( LateralTCPService.class );
 
-    private ILateralCacheAttributes ilca;
+    private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
     private LateralTCPSender sender;
 
@@ -56,20 +51,21 @@ public class LateralTCPService
      * use the vmid by default
      */
     private long listenerId = LateralCacheInfo.listenerId;
-    
+
     /**
      * Constructor for the LateralTCPService object
      * 
      * @param lca
+     *            ITCPLateralCacheAttributes
      * @exception IOException
      */
-    public LateralTCPService( ILateralCacheAttributes lca )
+    public LateralTCPService( ITCPLateralCacheAttributes lca )
         throws IOException
     {
-        this.ilca = lca;
+        this.setTcpLateralCacheAttributes( lca );
         try
         {
-            log.debug( "creating sender, attributes = " + ilca );
+            log.debug( "creating sender, attributes = " + getTcpLateralCacheAttributes() );
 
             sender = new LateralTCPSender( lca );
 
@@ -91,7 +87,7 @@ public class LateralTCPService
     /**
      * @param item
      * @throws IOException
-     * 
+     *  
      */
     public void update( ICacheElement item )
         throws IOException
@@ -108,10 +104,41 @@ public class LateralTCPService
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
-        LateralElementDescriptor led = new LateralElementDescriptor( item );
-        led.requesterId = requesterId;
-        led.command = LateralElementDescriptor.UPDATE;
-        sender.send( led );
+        
+        // if we don't allow put, see if we should remove on put
+        if ( !this.getTcpLateralCacheAttributes().isAllowPut() )
+        {
+            // if we can't remove on put, and we can't put then return
+            if ( !this.getTcpLateralCacheAttributes().isIssueRemoveOnPut() )
+            {
+                return;
+            }
+        }
+
+        // if we shouldn't remove on put, then put
+        if ( !this.getTcpLateralCacheAttributes().isIssueRemoveOnPut() )
+        {
+            LateralElementDescriptor led = new LateralElementDescriptor( item );
+            led.requesterId = requesterId;
+            led.command = LateralElementDescriptor.UPDATE;
+            sender.send( led );
+        }
+        // else issue a remove with the hashcode for remove check on
+        // on the other end, this will be a server config option
+        else
+        {            
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Issuing a remvoe for a put" );
+            }
+            // set the value to null so we don't send the item
+            CacheElement ce = new CacheElement( item.getCacheName(), item.getKey(), null );
+            LateralElementDescriptor led = new LateralElementDescriptor( ce );
+            led.requesterId = requesterId;
+            led.command = LateralElementDescriptor.REMOVE;
+            led.valHashCode = item.getVal().hashCode();
+            sender.send( led );
+        }
     }
 
     /*
@@ -153,7 +180,9 @@ public class LateralTCPService
         // nothing needs to be done
     }
 
-    /** Will close the connection. 
+    /**
+     * Will close the connection.
+     * 
      * @param cache
      * @throws IOException
      */
@@ -184,18 +213,26 @@ public class LateralTCPService
     public ICacheElement get( String cacheName, Serializable key )
         throws IOException
     {
-        CacheElement ce = new CacheElement( cacheName, key, null );
-        LateralElementDescriptor led = new LateralElementDescriptor( ce );
-        //led.requesterId = requesterId; // later
-        led.command = LateralElementDescriptor.GET;
-        return sender.sendAndReceive( led );
-        //return null;
-        // nothing needs to be done
+        // if get is not allowed return
+        if ( this.getTcpLateralCacheAttributes().isAllowGet() )
+        {
+            CacheElement ce = new CacheElement( cacheName, key, null );
+            LateralElementDescriptor led = new LateralElementDescriptor( ce );
+            //led.requesterId = requesterId; // later
+            led.command = LateralElementDescriptor.GET;
+            return sender.sendAndReceive( led );            
+        }
+        else
+        {
+            // nothing needs to be done
+            return null;            
+        }
     }
 
     /**
      * Gets the set of keys of objects currently in the group throws
      * UnsupportedOperationException
+     * 
      * @param cacheName
      * @param group
      * @return Set
@@ -244,7 +281,7 @@ public class LateralTCPService
     {
         try
         {
-            LateralTCPSender sender = new LateralTCPSender( new LateralCacheAttributes() );
+            LateralTCPSender sender = new LateralTCPSender( new TCPLateralCacheAttributes() );
 
             // process user input till done
             boolean notDone = true;
@@ -318,7 +355,8 @@ public class LateralTCPService
     }
 
     /**
-     * @param listernId The listernId to set.
+     * @param listernId
+     *            The listernId to set.
      */
     protected void setListenerId( long listernId )
     {
@@ -331,6 +369,23 @@ public class LateralTCPService
     protected long getListenerId()
     {
         return listenerId;
+    }
+
+    /**
+     * @param tcpLateralCacheAttributes
+     *            The tcpLateralCacheAttributes to set.
+     */
+    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
+    {
+        this.tcpLateralCacheAttributes = tcpLateralCacheAttributes;
+    }
+
+    /**
+     * @return Returns the tcpLateralCacheAttributes.
+     */
+    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
+    {
+        return tcpLateralCacheAttributes;
     }
 
 }
