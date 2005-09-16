@@ -205,6 +205,8 @@
         <include>**/TestDiskCacheConcurrent.java</include>
         <include>**/TestDiskCacheConcurrentForDeadLock.java</include>
         <include>**/TestTCPLateralCache.java</include>
+        <include>**/TestLateralTCPFilterRemoveHashCode.java</include>
+        <include>**/TestLateralTCPIssueRemoveOnPut.java</include>
         <include>**/TestLateralTCPConcurrentForDeadLock.java</include>
         <!--
 		<include>**/TestJCSvHashtablePerf.java</include>
