@@ -38,9 +38,9 @@ jcs.default.cacheattributes.MemoryCacheName=
           lines:
         </p>
         <source><![CDATA[
-jcs.default.cacheattributes.cacheattributes.UseMemoryShrinker=true
-jcs.default.cacheattributes.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.default.cacheattributes.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.cacheattributes.MaxSpoolPerRun=500
 jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
