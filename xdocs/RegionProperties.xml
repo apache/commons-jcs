@@ -68,7 +68,7 @@
           <tr>
             <td>UseMemoryShrinker</td>
             <td>
-			  By default, the memory shrinker is shared by all regions thta use the
+			  By default, the memory shrinker is shared by all regions that use the
 			  LRU memory cache.  The memory shrinker iterates through the items in
 			  memory, looking for items that have expired or that have exceeded their max
 			  memory idle time.
