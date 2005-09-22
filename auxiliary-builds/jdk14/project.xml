@@ -45,10 +45,7 @@
       <artifactId>jgroups-all</artifactId>
       <version>2.2.8</version>
     </dependency>
-    <dependency>
-      <id>jisp</id>
-      <version>2.5.1</version>
-    </dependency>
+
     <dependency>
       <id>tomcat</id>
       <version>3.2.1</version>
