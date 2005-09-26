@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>JCS</name>
   <id>jcs</id>
-  <currentVersion>1.2.6.7</currentVersion>
+  <currentVersion>1.2.6.8</currentVersion>
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://jakarta.apache.org/</url>
@@ -183,14 +183,14 @@
       <id>berkeleydb</id>
       <version>1.5.0</version>
     </dependency>
-    
+    <!--
 	<dependency>
   		<groupId>maven-plugins</groupId>
   		<artifactId>maven-findbugs-plugin</artifactId>
   		<version>0.9.1</version>
   		<type>plugin</type>
 	</dependency>
-
+    -->
   </dependencies>
 
 

@@ -22,15 +22,6 @@
             <th>Default Value</th>
           </tr>
           <tr>
-            <td>TransmissionTypeName</td>
-            <td>
-              This tells the lateral factory what kind of lateral
-              to create.
-            </td>
-            <td>Y</td>
-            <td>n/a</td>
-          </tr>
-          <tr>
             <td>TcpServers</td>
             <td>
               This is the list of servers this cache should try to connect to.  
@@ -48,11 +39,12 @@
             <td>n/a</td>
           </tr>
           <tr>
-            <td>PutOnlyMode</td>
+            <td>AllowGet</td>
             <td>
-              Should this cache be allowed to get from other laterals.  True means
+              Should this cache be allowed to get from other laterals.  False means
               that it can only put, i.e. send updates and remove requests to other laterals.
-              Lateral gets are not recommended for performance reasons.
+              Lateral gets are not recommended for performance reasons.  This used to be
+              controlled by the attribute PutOnlyMode.
             </td>
             <td>N</td>
             <td>true</td>
@@ -69,6 +61,27 @@
             <td>N</td>
             <td>true</td>
           </tr>    
+          <tr>
+            <td>IssueRemoveOnPut</td>
+            <td>
+              If this is set to true, then the lateral client will send a remove command
+              rather than a put command to any registered listeners.
+            </td>
+            <td>N</td>
+            <td>false</td>
+          </tr>   
+          <tr>
+            <td>FilterRemoveByHashCode</td>
+            <td>
+              If this is true, and IssueRemoveOnPut is true, the client
+              will include the hashCode of the element to remove.  If it is also true
+              on the receiving end, the receiver will check to see if the element exists.  
+              If the element exists, and the hashCodes are the same, the item will not be 
+              removed.
+            </td>
+            <td>N</td>
+            <td>false</td>
+          </tr>                    
           <tr>
             <td>UdpDiscoveryAddr</td>
             <td>
@@ -99,16 +112,17 @@
       
       <subsection name="Example Configuration">
               <source><![CDATA[
-jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
 #jcs.auxiliary.LTCP.attributes.TcpServers=
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1118
-jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
-jcs.auxiliary.LTCP.attributes.Receive=true
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+jcs.auxiliary.LTCP.attributes.Receive=true
+jcs.auxiliary.LTCP.attributes.AllowGet=false
+jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
+jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
         ]]></source>
       </subsection>
       

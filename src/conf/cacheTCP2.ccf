@@ -38,15 +38,14 @@ jcs.region.testCache1.elementattributes.IsRemote=true
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
 
-# almost complete
-jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
-#jcs.auxiliary.LTCP.attributes.TcpServers=
+# TCP
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1119
-jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
-jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=9780
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
-#jcs.auxiliary.LTCP.attributes.Receive=true
+jcs.auxiliary.LTCP.attributes.Receive=true
+jcs.auxiliary.LTCP.attributes.AllowGet=false
+jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
 

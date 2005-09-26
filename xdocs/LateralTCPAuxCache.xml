@@ -41,24 +41,20 @@
           Lateral Auxiliary Cache referenced by <code>LTCP</code>.  It
           connects to two servers defined in a comma separated list in
           the <code>TcpServers</code> attribute.  It listens to port
-          <code>1110</code> and does not run in
-          <code>PutOnlyMode</code>.  Setting <code>PutOnlyMode</code>
-          equal to <code>true</code> would cause the auxiliary cache to
+          <code>1110</code> and does <code>AllowGet</code>.  
+			Setting <code>AllowGet</code>
+          equal to <code>false</code> would cause the auxiliary cache to
           return <code>null</code> from any get request.  In most cases this
-          attribute should be set to <code>true</code>, since if the
+          attribute should be set to <code>false</code>, since if the
           lateral caches were properly configured, the elements in one
           would be present in all.
         </p>
         <source><![CDATA[
-jcs.auxiliary.LTCP=
-    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LTCP.attributes=
-    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
-jcs.auxiliary.LTCP.attributes.TcpServers=
-    localhost:1111,localhost:1112
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111,localhost:1112
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
-jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
+jcs.auxiliary.LTCP.attributes.AllowGet=true
         ]]></source>
         <p>
 		  A mostly configurationless mode is available for the TCP
@@ -82,19 +78,22 @@ jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
         </p>
         <p>
           The configuration below is the same as above, except the
-          <code>Receive</code> attribute is set to false.
+          <code>Receive</code> attribute is set to false.  It also uses UDP 
+          discovery to find the servers, rather than listing them in the
+          servers attribute.
         </p>
         <source><![CDATA[
-jcs.auxiliary.LTCP=
-    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LTCP.attributes=
-    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
-jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
-jcs.auxiliary.LTCP.attributes.TcpServers=
-    localhost:1111,localhost:1112
-jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
-jcs.auxiliary.LTCP.attributes.PutOnlyMode=false
-jcs.auxiliary.LTCP.attributes.Receive=false
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
+#jcs.auxiliary.LTCP.attributes.TcpServers=
+jcs.auxiliary.LTCP.attributes.TcpListenerPort=1118
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
+jcs.auxiliary.LTCP.attributes.Receive=true
+jcs.auxiliary.LTCP.attributes.AllowGet=false
+jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
+jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
         ]]></source>
       </subsection>
                   
@@ -126,14 +125,12 @@ jcs.auxiliary.LTCP.attributes.Receive=false
           any type of locking.
         </p>
       </subsection>
-      <subsection name="TODO">
+      <subsection name="Recent">
         <p>
-          I will be adding a <code>RemoveOnPut</code> attribute that
-          will cause the lateral cache to remove an element from the
-          cache rather than inserting it when a put command comes from
-          another lateral cache.  This will allow the local caches to
-          dictate their own memory usage pattern.  This setting should
-          be run with <code>PutOnlyMode</code> set to false.
+          I added a <code>IssueRemoveOnPut</code> attribute that
+          causes the lateral cache to remove an element from the
+          cache rather than inserting it when a put.  This allows the local caches to
+          dictate their own memory usage pattern. 
         </p>
       </subsection>
     </section>
