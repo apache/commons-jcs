@@ -25,12 +25,9 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
-import org.apache.jcs.engine.behavior.ICacheServiceAdmin;
-import org.apache.jcs.utils.props.PropertyLoader;
 
 /**
  * Provides remote cache services.
@@ -55,6 +52,7 @@ public class RemoteCacheServerFactory
     /**
      * Starts up the remote cache server on this JVM, and binds it to the
      * registry on the given host and port.
+     * 
      * @param host
      * @param port
      * @param propFile
@@ -86,7 +84,7 @@ public class RemoteCacheServerFactory
 
             Properties prop = RemoteUtils.loadProps( propFile );
             //Properties prop = PropertyLoader.loadProperties( propFile );
-            
+
             String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
             int servicePort = -1;
             try
@@ -160,7 +158,7 @@ public class RemoteCacheServerFactory
             {
                 return;
             }
-            log.debug( "Unbinding host=" + host + ", port=" + port + ", serviceName=" + serviceName );
+            log.info( "Unbinding host=" + host + ", port=" + port + ", serviceName=" + serviceName );
             try
             {
                 Naming.unbind( "//" + host + ":" + port + "/" + serviceName );
@@ -202,11 +200,21 @@ public class RemoteCacheServerFactory
     {
         Properties prop = args.length > 0 ? RemoteUtils.loadProps( args[args.length - 1] ) : new Properties();
 
+        int port;
+        try
+        {
+            port = Integer.parseInt( prop.getProperty( "registry.port" ) );
+        }
+        catch ( NumberFormatException ex )
+        {
+            port = Registry.REGISTRY_PORT;
+        }
+
         // shutdown
         if ( args.length > 0 && args[0].toLowerCase().indexOf( "-shutdown" ) != -1 )
         {
             String serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-            String registry = "//:" + Registry.REGISTRY_PORT + "/" + serviceName;
+            String registry = "//:" + port + "/" + serviceName;
 
             if ( log.isDebugEnabled() )
             {
@@ -217,14 +225,14 @@ public class RemoteCacheServerFactory
             {
                 log.debug( "server found" );
             }
-            ICacheServiceAdmin admin = (ICacheServiceAdmin) obj;
+            IRemoteCacheServiceAdmin admin = (IRemoteCacheServiceAdmin) obj;
             try
             {
                 admin.shutdown();
             }
             catch ( Exception ex )
             {
-                log.error( ex );
+                log.error( "Problem calling shutdown.", ex );
             }
             log.debug( "done." );
             System.exit( 0 );
@@ -238,13 +246,10 @@ public class RemoteCacheServerFactory
 
             try
             {
-
-                int port = Registry.REGISTRY_PORT;
-
-                if ( args.length > 1 )
-                {
-                    port = Integer.parseInt( args[1] );
-                }
+                //if ( args.length > 1 )
+                //{
+                //    port = Integer.parseInt( args[1] );
+                //}
 
                 String serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
                 String registry = "//:" + port + "/" + serviceName;
@@ -268,22 +273,13 @@ public class RemoteCacheServerFactory
             }
             catch ( Exception ex )
             {
-                log.error( ex );
+                log.error( "Problem getting stats.", ex );
             }
             log.debug( "done." );
             System.exit( 0 );
         }
 
         // startup.
-        int port;
-        try
-        {
-            port = Integer.parseInt( prop.getProperty( "registry.port" ) );
-        }
-        catch ( NumberFormatException ex )
-        {
-            port = Registry.REGISTRY_PORT;
-        }
         String host = prop.getProperty( "registry.host" );
 
         if ( host == null || host.trim().equals( "" ) || host.trim().equals( "localhost" ) )

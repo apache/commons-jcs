@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 
 import EDU.oswego.cs.dl.util.concurrent.Callable;
 import EDU.oswego.cs.dl.util.concurrent.FutureResult;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
@@ -109,17 +110,10 @@ public class RemoteCache
             if ( pool != null )
             {
                 usePoolForGet = true;
+                pool.getPool().setThreadFactory( new MyThreadFactory() );
             }
         }
 
-        /*
-         * TODO should be done by the remote cache, not the job of the hub
-         * manager Set up the idle period for the RemoteCacheMonitor. long
-         * monPeriod = 0; try { monPeriod =
-         * Long.parseLong(props.getProperty("remote.monitor.idle.period", "0")); }
-         * catch(NumberFormatException ex) { log.warn(ex.getMessage()); }
-         * RemoteCacheMonitor.setIdlePeriod(monPeriod);
-         */
     }
 
     /**
@@ -631,4 +625,27 @@ public class RemoteCache
         return "RemoteCache: " + cacheName + " attributes = " + irca;
     }
 
+    /**
+     * Allows us to set the daemon status on the clockdaemon
+     * 
+     * @author aaronsm
+     *  
+     */
+    class MyThreadFactory
+        implements ThreadFactory
+    {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            t.setDaemon( true );
+            return t;
+        }
+
+    }
 }

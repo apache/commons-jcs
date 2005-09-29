@@ -153,6 +153,7 @@ public class CompositeCacheManager
     /**
      * Simple factory method, must override in subclasses so getInstance creates /
      * returns the correct object.
+     * @return CompositeCacheManager
      */
     protected static CompositeCacheManager createInstance()
     {
@@ -481,7 +482,10 @@ public class CompositeCacheManager
         }
     }
 
-    /** Returns a list of the current cache names. */
+    /**
+     * Returns a list of the current cache names. 
+     * @return String[]
+     */
     public String[] getCacheNames()
     {
         String[] list = new String[caches.size()];
@@ -499,31 +503,42 @@ public class CompositeCacheManager
         return ICacheType.CACHE_HUB;
     }
 
-    /** */
+    /**
+     * @return  ICompositeCacheAttributes
+     */
     public ICompositeCacheAttributes getDefaultCattr()
     {
         return this.defaultCacheAttr;
     }
 
-    /** */
+    /** 
+     */
     void registryFacPut( AuxiliaryCacheFactory auxFac )
     {
         auxFacs.put( auxFac.getName(), auxFac );
     }
 
-    /** */
+    /**
+     * @param name
+     * @return AuxiliaryCacheFactory
+     */
     AuxiliaryCacheFactory registryFacGet( String name )
     {
         return (AuxiliaryCacheFactory) auxFacs.get( name );
     }
 
-    /** */
+    /**
+     * @param auxAttr 
+     */
     void registryAttrPut( AuxiliaryCacheAttributes auxAttr )
     {
         auxAttrs.put( auxAttr.getName(), auxAttr );
     }
 
-    /** */
+    /**
+     * @param name
+     * @return AuxiliaryCacheAttributes
+     */
     AuxiliaryCacheAttributes registryAttrGet( String name )
     {
         return (AuxiliaryCacheAttributes) auxAttrs.get( name );
@@ -536,11 +551,24 @@ public class CompositeCacheManager
      */
     public String getStats()
     {
-        return getStatistics().toString();
+        ICacheStats[] stats =  getStatistics();
+        if ( stats == null )
+        {
+            return "NONE";
+        }
+        
+        // force the array elements into a string.
+        StringBuffer buf = new StringBuffer();
+        int statsLen = stats.length;
+        for ( int i = 0; i < statsLen; i++ )
+        {
+            buf.append( stats[i] );
+        }
+        return buf.toString();
     }
 
     /**
-     * This returns data gathered for all region and all the auxiliaries they
+     * This returns data gathered for all regions and all the auxiliaries they
      * currently uses.
      * 
      * @return
@@ -564,7 +592,7 @@ public class CompositeCacheManager
     /**
      * Perhaps the composite cache itself should be the observable object. It
      * doesn't make much of a difference. There are some problems with region by
-     * region shutdown. Some auxiliaries are glocal. They will need to track
+     * region shutdown. Some auxiliaries are global. They will need to track
      * when every region has shutdown before doing things like closing the
      * socket with a lateral.
      * 

@@ -43,10 +43,14 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * A fast reference management system. The least recently used items move to the
  * end of the list and get spooled to disk if the cache hub is configured to use
  * a disk cache. Most of the cache bottelnecks are in IO. There are no io
- * bottlenecks here, it's all about processing power. Even though there are only
+ * bottlenecks here, it's all about processing power. 
+ * <p>
+ * Even though there are only
  * a few adjustments necessary to maintain the double linked list, we might want
- * to find a more efficient memory manager for large cache regions. The
- * LRUMemoryCache is most efficeint when the first element is selected. The
+ * to find a more efficient memory manager for large cache regions. 
+ * <p>
+ * The
+ * LRUMemoryCache is most efficient when the first element is selected. The
  * smaller the region, the better the chance that this will be the case. < .04
  * ms per put, p3 866, 1/10 of that per get
  * 
@@ -67,7 +71,7 @@ public class LRUMemoryCache
     int putCnt = 0;
 
     /**
-     * For post reflection creation initialization
+     * For post reflection creation initialization.
      * 
      * @param hub
      */
@@ -79,10 +83,13 @@ public class LRUMemoryCache
     }
 
     /**
-     * Puts an item to the cache.
+     * Puts an item to the cache.  Removes any pre-existing entries of the same key from the 
+     * linked list and adds this one first.
+     * <p>
+     * If the max size is reached, an element will be put to disk.
      * 
      * @param ce
-     *            Description of the Parameter
+     *            The cache element, or entry wrapper
      * @exception IOException
      */
     public void update( ICacheElement ce )
@@ -333,6 +340,7 @@ public class LRUMemoryCache
     /**
      * Remove all of the elements from both the Map and the linked list
      * implementation. Overrides base class.
+     * @throws IOException
      */
     public synchronized void removeAll()
         throws IOException
