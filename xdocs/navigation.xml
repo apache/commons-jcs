@@ -24,7 +24,6 @@
       <item name="Local Cache"              href="/LocalCacheConfig.html"/>
       <item name="Indexed Disk Cache"       href="/IndexedDiskAuxCache.html"/>
       <item name="Indexed Disk Properties"  href="/IndexedDiskCacheProperties.html"/>
-      <item name="Berkeley DB Disk Cache"   href="/BDBJEDiskCache.html"/>
       <item name="Remote Cache"             href="/RemoteAuxCache.html"/>
       <item name="Lateral TCP Cache"        href="/LateralTCPAuxCache.html"/>
       <item name="Lateral TCP Properties"   href="/LateralTCPProperties.html"/>
