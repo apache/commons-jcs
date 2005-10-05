@@ -79,10 +79,6 @@
       <version>1.1</version>
       <jar>struts-1.1.jar</jar>
     </dependency>
-    <dependency>
-      <id>berkeleydb</id>
-      <version>1.5.1</version>
-    </dependency>
 
     <dependency>
 	<groupId>jcs</groupId>
