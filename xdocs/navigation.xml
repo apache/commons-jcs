@@ -12,7 +12,7 @@
     <menu name="General Information">
       <item name="Overview"                 href="/index.html"/>
       <item name="JCS and JCACHE"           href="/JCSandJCACHE.html"/>
-      <item name="Downloads"                href="/Downloads.html"/>
+      <item name="Downloads"                href="/DownloadPage.html"/>
     </menu>
 
     <menu name="JCS User's Guide">
