@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+
+<faqs title="Frequently Asked Questions">
+
+  <part id="general-questions">
+    <title>General Questions</title>
+    
+    <faq id="required-jars">
+      <question>
+        What jars are required by JCS?
+      </question>
+      <answer>
+        <p>The core of JCS (the LRU memory cache, the indexed disk cache, the TCP lateral, and the RMI remote server) 
+        require only a few other jars.</p>        
+        <p><a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">concurrent</a></p>        
+        <p>commons-logging</p>        
+        <p>commons-collections</p>        
+        <p>commons-lang</p>        
+        <p>All of the other dependencies listed on the project info page are for optional plugins.</p>        
+      </answer>
+    </faq>
+    
+    <faq id="configuration-file">
+      <question>
+        How do I configure JCS?
+      </question>
+      <answer>
+        <p>By default JCS looks for a cache.ccf file in the classpath.  
+        You must have a configuration file on the classpath to use JCS.
+        The documentation describes how to configure the cache.</p>        
+      </answer>
+    </faq>
+    </part>
+</faqs>        

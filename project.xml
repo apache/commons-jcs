@@ -116,6 +116,7 @@
     <dependency>
       <id>concurrent</id>
       <version>1.0</version>
+      <url>http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</url>
     </dependency>
 
     <dependency>
@@ -253,6 +254,7 @@
     <report>maven-tasklist-plugin</report>
     <report>maven-pmd-plugin</report>
     <report>maven-simian-plugin</report>
+    <report>maven-faq-plugin</report>    
   </reports>
 
 </project>
