@@ -226,6 +226,7 @@ public class TestSortedPrefArray
         int maxSize = 25;
         SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
         array.setPreferLarge( true );
+       
         try
         {
             String taken = (String) array.takeNearestLargerOrEqual( null );
@@ -237,5 +238,85 @@ public class TestSortedPrefArray
         }
 
     }
+    
+    /**
+     * Verify that we don't get an npe when taking from an array of only one
+     * 
+     * @throws Exception
+     */
+    public void testSingleItemTake()
+        throws Exception
+    {
 
+        int maxSize = 25;
+        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        array.setPreferLarge( true );
+        
+        array.add( "10" );
+        System.out.println( array.dumpArray() );
+        
+        try
+        {
+            String taken = (String) array.takeNearestLargerOrEqual( "09" );
+            System.out.println( taken );
+            assertNotNull( "taken should not be null, since nothing was in the array", taken );
+        }
+        catch ( NullPointerException e )
+        {
+            fail( "Got a null pointer trying to take with a null" );
+        }
+
+    }
+    
+    /**
+     * Verify that we don't get an npe when taking from an array of only one
+     * 
+     * @throws Exception
+     */
+    public void testSingleItemTakeLarger()
+        throws Exception
+    {
+
+        int maxSize = 25;
+        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        array.setPreferLarge( true );
+        
+        array.add( "10" );
+        
+        try
+        {
+            String taken = (String) array.takeNearestLargerOrEqual( "11" );
+            assertNull( "taken should be null, since nothing smaller was in the array", taken );
+        }
+        catch ( NullPointerException e )
+        {
+            fail( "Got a null pointer trying to take with a null" );
+        }
+
+    }    
+
+    /**
+     * Verify that we don't get an npe when taking from an array of none
+     * 
+     * @throws Exception
+     */
+    public void testSingleItemTakeLargerEmpty()
+        throws Exception
+    {
+
+        int maxSize = 25;
+        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        array.setPreferLarge( true );
+        
+        try
+        {
+            String taken = (String) array.takeNearestLargerOrEqual( "11" );
+            assertNull( "taken should be null, since nothing was in the array", taken );
+        }
+        catch ( NullPointerException e )
+        {
+            fail( "Got a null pointer trying to take with a null" );
+        }
+
+    }      
 }

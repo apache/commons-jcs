@@ -294,7 +294,7 @@ public class SortedPreferentialArray
             }
             catch ( Exception e )
             {
-                log.error( e );
+                log.error( "Problem removing from array.", e );
             }
 
             if ( log.isDebugEnabled() )
@@ -574,6 +574,7 @@ public class SortedPreferentialArray
 
     /**
      * Debugging method to return a human readable display of array data.
+     * @return
      */
     protected String dumpArray()
     {
