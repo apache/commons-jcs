@@ -155,4 +155,45 @@ public class TestTCPLateral
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
 
+    
+    /**
+     * Send objects with the same key but different values.
+     * @throws Exception
+     */
+    public void testSameKeyObjectDifferentValueObject()
+        throws Exception
+    {
+        TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
+        lattr.setTcpListenerPort( 1101 );
+        lattr.setTransmissionTypeName( "TCP" );
+        CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
+        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
+
+        // get the listener started
+        // give it our mock cache manager
+        LateralTCPListener listener = (LateralTCPListener) LateralTCPListener.getInstance( lattr, cacheMgr );
+
+        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        lattr2.setTcpListenerPort( 1102 );
+        lattr2.setTransmissionTypeName( "TCP" );
+        lattr2.setTcpServer( "localhost:1101" );
+
+        LateralTCPService service = new LateralTCPService( lattr2 );
+        service.setListenerId( 123456 );
+
+        String key = "key";
+        ICacheElement element = new CacheElement( "test", key, "value1" );
+        service.update( element );
+
+        Thread.sleep( 300 );
+
+        ICacheElement element2 = new CacheElement( "test", key, "value2" );
+        service.update( element2 );
+
+        Thread.sleep( 1000 );
+
+        ICacheElement cacheElement = cacheMgr.getCache().get( "key" );
+        System.out.println( "cacheElement = " + cacheElement );
+        assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
+    }
 }

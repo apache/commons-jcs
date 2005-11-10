@@ -101,12 +101,8 @@ public class JCSWorker
     /**
      * Constructor which takes a region for the JCS cache.
      * 
-     * @param aName
+     * @param aRegion
      *            The Region to use for the JCS cache.
-     * @param aKey
-     *            The key to store the result under.
-     * @param aGroup
-     *            The group to store the result under.
      */
     public JCSWorker( final String aRegion )
     {
@@ -191,6 +187,9 @@ public class JCSWorker
      * work and subsequent calls to a CachedWorker with identical
      * region/key/group will wait on the results of this call. It will call the
      * JCSWorkerHelper.doWork() if the cache misses, and will put the result.
+     * @param aKey
+     * @param aGroup
+     * @param aHelper
      * 
      * @return Either the result of doing the work, or the cached result.
      * @throws Exception
@@ -201,8 +200,8 @@ public class JCSWorker
         throws Exception
     {
         Object result = null;
-        long start = 0;
-        long dbTime = 0;
+        //long start = 0;
+        //long dbTime = 0;
         JCSWorkerHelper helper = null;
 
         synchronized ( map )

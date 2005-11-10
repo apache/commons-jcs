@@ -74,7 +74,7 @@ public class HSQLCache
 
         this.cattr = cattr;
 
-        String rafroot = cattr.getDiskPath();
+        String rafroot = this.cattr.getDiskPath();
 
         numInstances++;
 

@@ -129,13 +129,21 @@ public class CacheElement
         return this.attr;
     }
 
-    /** Description of the Method */
+    /**
+     * @return a hash of the key only
+     * 
+     */
     public int hashCode()
     {
         return key.hashCode();
     }
 
-    /** Description of the Method */
+    /**
+     * For debuggin only.
+     * 
+     * @return String representation
+     *  
+     */
     public String toString()
     {
         return "[cacheName=" + cacheName + ", key=" + key + ", val=" + val + ", attr = " + attr + "]";
