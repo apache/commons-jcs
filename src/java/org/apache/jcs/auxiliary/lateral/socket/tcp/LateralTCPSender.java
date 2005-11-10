@@ -59,7 +59,13 @@ public class LateralTCPSender
     private int sendCnt = 0;
 
     // reset the ObjectOutputStream every 70 calls
-    //private static final int RESET_FREQUENCY = 70;
+    // private static final int RESET_FREQUENCY = 70;
+    // Perhaps we need to resett every time until we move to jdk 1.4
+    // then we can call writeUnshared to make sure
+    // that the object definetely gets across and not
+    // a stream cached version.
+    // I can't replicate an issue that was reported, so I'm not changing the
+    // reset frequency for now.
     private final static int RESET_FREQUENCY = 70;
 
     /**
