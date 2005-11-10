@@ -107,7 +107,7 @@ public class ElementAttributes
      * 
      * @param attr
      */
-    private ElementAttributes( ElementAttributes attr )
+    protected ElementAttributes( ElementAttributes attr )
     {
 
         IS_ETERNAL = attr.IS_ETERNAL;

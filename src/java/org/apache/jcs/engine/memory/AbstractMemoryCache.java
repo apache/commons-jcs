@@ -245,7 +245,7 @@ public abstract class AbstractMemoryCache
     /**
      * Puts an item to the cache.
      * 
-     * @param me
+     * @param ce
      * @exception IOException
      */
     public void waterfal( ICacheElement ce )

@@ -24,7 +24,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Description of the Class
+ * basic utility functions
+ * 
+ * TODO move to util
  *  
  */
 public class CacheUtils
@@ -35,7 +37,11 @@ public class CacheUtils
     {
     }
 
-    /** Returns a deeply cloned object. */
+    /** Returns a deeply cloned object. 
+     * @param obj
+     * @return
+     * @throws IOException
+     */
     public static Serializable dup( Serializable obj )
         throws IOException
     {
@@ -44,6 +50,9 @@ public class CacheUtils
 
     /**
      * Returns the serialized form of the given object in a byte array.
+     * @param obj
+     * @return
+     * @throws IOException
      */
     public static byte[] serialize( Serializable obj )
         throws IOException
@@ -61,7 +70,11 @@ public class CacheUtils
         return baos.toByteArray();
     }
 
-    /** Returns the object deserialized from the given byte array. */
+    /** Returns the object deserialized from the given byte array. 
+     * @param buf
+     * @return
+     * @throws IOException
+     */
     public static Serializable deserialize( byte[] buf )
         throws IOException
     {

@@ -206,7 +206,9 @@ public class CompositeCacheConfigurator
         }
     }
 
-    /** Parse region elements. */
+    /** Parse region elements. 
+     * @param props
+     */
     protected void parseRegions( Properties props )
     {
         Enumeration en = props.propertyNames();
@@ -227,7 +229,12 @@ public class CompositeCacheConfigurator
         }
     }
 
-    /** Create cache region. */
+    /** Create cache region. 
+     * @param props
+     * @param regName
+     * @param value
+     * @return CompositeCache
+     */
     protected CompositeCache parseRegion( Properties props, String regName, String value )
     {
         return parseRegion( props, regName, value, null, REGION_PREFIX );
@@ -323,7 +330,11 @@ public class CompositeCacheConfigurator
         return cache;
     }
 
-    /** Get an compositecacheattributes for the listed region. */
+    /** Get an compositecacheattributes for the listed region. 
+     * @param props
+     * @param regName
+     * @return
+     */
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( Properties props, String regName )
     {
         return parseCompositeCacheAttributes( props, regName, REGION_PREFIX );

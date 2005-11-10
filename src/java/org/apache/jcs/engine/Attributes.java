@@ -105,7 +105,7 @@ public class Attributes
      * 
      * @param attr
      */
-    private Attributes( Attributes attr )
+    protected Attributes( Attributes attr )
     {
 
         IS_NOFLUSH = attr.IS_NOFLUSH;
@@ -134,7 +134,10 @@ public class Attributes
     }
 
     //public Object clone () {
-    /** Description of the Method */
+    /**
+     * clone
+     * @return Attributes
+     */
     public Attributes copy()
     {
         try
@@ -149,7 +152,11 @@ public class Attributes
         }
     }
 
-    /** Description of the Method */
+    /**
+     * Deep clone
+     * 
+     * @return
+     */
     public Object clone2()
     {
 
@@ -309,7 +316,9 @@ public class Attributes
     //        return 5;
     //    }
 
-    /** Description of the Method */
+    /*
+     * 
+     */
     public String toString()
     {
         StringBuffer dump = new StringBuffer();

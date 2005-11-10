@@ -45,7 +45,7 @@ public class RemoteCacheServerAttributes
      */
     private String clusterServers = "";
 
-    private boolean getFromCluster = true;
+    //private boolean getFromCluster = true;
 
     private int servicePort = 0;
 
@@ -123,7 +123,10 @@ public class RemoteCacheServerAttributes
         this.remoteType = p;
     }
 
-    /** Description of the Method */
+    /** 
+     * clones
+     * @return AuxiliaryCacheAttributes clone
+     */
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -348,7 +351,10 @@ public class RemoteCacheServerAttributes
         configFileName = s;
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

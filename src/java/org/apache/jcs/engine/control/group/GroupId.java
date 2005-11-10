@@ -54,7 +54,10 @@ public class GroupId
         }
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     public boolean equals( Object obj )
     {
         if ( obj == null || !( obj instanceof GroupId ) )
@@ -65,13 +68,19 @@ public class GroupId
         return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     public int hashCode()
     {
         return cacheName.hashCode() + groupName.hashCode();
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         if ( toString == null )

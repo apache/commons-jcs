@@ -26,7 +26,7 @@ public class DoubleLinkedList
     /**
      * Adds a new node to the end of the link list.
      * 
-     * @param ce
+     * @param me
      *            The feature to be added to the Last
      */
     public void addLast( DoubleLinkedListNode me )
@@ -49,7 +49,7 @@ public class DoubleLinkedList
     /**
      * Adds a new node to the start of the link list.
      * 
-     * @param ce
+     * @param me
      *            The feature to be added to the First
      */
     public synchronized void addFirst( DoubleLinkedListNode me )
@@ -72,6 +72,7 @@ public class DoubleLinkedList
 
     /**
      * Removes the specified node from the link list.
+     * @return
      *  
      */
     public DoubleLinkedListNode getLast()
@@ -85,6 +86,7 @@ public class DoubleLinkedList
 
     /**
      * Removes the specified node from the link list.
+     * @return
      *  
      */
     public DoubleLinkedListNode getFirst()
@@ -99,7 +101,7 @@ public class DoubleLinkedList
     /**
      * Moves an existing node to the start of the link list.
      * 
-     * @param me
+     * @param ln
      *            Description of the Parameter
      */
     public synchronized void makeFirst( DoubleLinkedListNode ln )
@@ -154,6 +156,7 @@ public class DoubleLinkedList
      * 
      * @param me
      *            Description of the Parameter
+     * @return
      */
     public synchronized boolean remove( DoubleLinkedListNode me )
     {
@@ -205,6 +208,7 @@ public class DoubleLinkedList
 
     /**
      * Removes the specified node from the link list.
+     * @return
      *  
      */
     public DoubleLinkedListNode removeLast()

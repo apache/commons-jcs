@@ -73,7 +73,10 @@ public class RemoteCacheNoWait
         }
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
+     */
     public void update( ICacheElement ce )
         throws IOException
     {
@@ -89,7 +92,12 @@ public class RemoteCacheNoWait
         }
     }
 
-    /** Synchronously reads from the remote cache. */
+    /** 
+     * Synchronously reads from the remote cache. 
+     * @param key
+     * @return
+     * @throws IOException
+     */
     public ICacheElement get( Serializable key )
         throws IOException
     {
@@ -124,7 +132,11 @@ public class RemoteCacheNoWait
         return cache.getGroupKeys( groupName );
     }
 
-    /** Adds a remove request to the remote cache. */
+    /** Adds a remove request to the remote cache. 
+     * @param key
+     * @return
+     * @throws IOException
+     */
     public boolean remove( Serializable key )
         throws IOException
     {
@@ -141,7 +153,10 @@ public class RemoteCacheNoWait
         return false;
     }
 
-    /** Adds a removeAll request to the remote cache. */
+    /** 
+     * Adds a removeAll request to the remote cache. 
+     * @throws IOException
+     */
     public void removeAll()
         throws IOException
     {
@@ -217,6 +232,7 @@ public class RemoteCacheNoWait
     /**
      * Replaces the remote cache service handle with the given handle and reset
      * the event queue by starting up a new instance.
+     * @param remote
      */
     public void fixCache( IRemoteCacheService remote )
     {
@@ -251,7 +267,10 @@ public class RemoteCacheNoWait
         return cache;
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         return "RemoteCacheNoWait: " + cache.toString();
@@ -279,7 +298,7 @@ public class RemoteCacheNoWait
 
         ArrayList elems = new ArrayList();
 
-        IStatElement se = null;
+        //IStatElement se = null;
 
         // no data gathered here
 

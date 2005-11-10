@@ -77,7 +77,10 @@ public class GroupAttrName
         return groupId.hashCode() ^ attrName.hashCode();
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         if ( toString == null )

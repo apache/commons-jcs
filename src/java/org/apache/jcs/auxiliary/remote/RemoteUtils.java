@@ -46,6 +46,9 @@ public class RemoteUtils
 
     /**
      * Creates and exports a registry on the specified port of the local host.
+     * @param port
+     * @return
+     * @throws RemoteException
      */
     public static int createRegistry( int port )
         throws RemoteException
@@ -61,7 +64,11 @@ public class RemoteUtils
         return port;
     }
 
-    /** Description of the Method */
+    /** 
+     * Loads properties for the named props file.
+     * @param propFile
+     * @return
+     * @throws IOException*/
     public static Properties loadProps( String propFile )
         throws IOException
     {

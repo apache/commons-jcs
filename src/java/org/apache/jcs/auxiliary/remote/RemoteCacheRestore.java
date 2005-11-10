@@ -62,6 +62,7 @@ public class RemoteCacheRestore
     /**
      * Returns true if the connection to the remote host for the corresponding
      * cache manager can be successfully re-established.
+     * @return
      */
     public boolean canFix()
     {

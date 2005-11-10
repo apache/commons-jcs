@@ -264,7 +264,7 @@ public class CompositeCacheAttributes
      * If the value is -1, then there is no limit to the number of items to be
      * spooled.
      * 
-     * @param seconds
+     * @param maxSpoolPerRun
      *            The new maxSpoolPerRun value
      */
     public void setMaxSpoolPerRun( int maxSpoolPerRun )

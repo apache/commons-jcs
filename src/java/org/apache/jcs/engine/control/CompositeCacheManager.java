@@ -339,21 +339,33 @@ public class CompositeCacheManager
         return getCache( cacheName, this.defaultCacheAttr.copy() );
     }
 
-    /** Gets the cache attribute of the CacheHub object */
+    /** Gets the cache attribute of the CacheHub object 
+     * @param cacheName
+     * @param cattr
+     * @return*
+     */
     public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, this.defaultElementAttr );
     }
 
-    /** Gets the cache attribute of the CacheHub object */
+    /** Gets the cache attribute of the CacheHub object 
+     * @param cacheName
+     * @param cattr
+     * @param attr
+     * @return
+     */
     public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, this.defaultElementAttr );
     }
 
-    /** Gets the cache attribute of the CacheHub object */
+    /** Gets the cache attribute of the CacheHub object 
+     * @param cattr
+     * @return
+     */
     public CompositeCache getCache( ICompositeCacheAttributes cattr )
     {
         return getCache( cattr, this.defaultElementAttr );
@@ -367,6 +379,9 @@ public class CompositeCacheManager
      * the atributes are assigned to elements. Get cache creates a cache with
      * defaults if none are specified. We might want to create separate method
      * for creating/getting. . .
+     * @param cattr
+     * @param attr
+     * @return
      */
     public CompositeCache getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
@@ -390,13 +405,18 @@ public class CompositeCacheManager
         return cache;
     }
 
-    /** */
+    /**
+     * @param name 
+     */
     public void freeCache( String name )
     {
         freeCache( name, false );
     }
 
-    /** */
+    /**
+     * @param name
+     * @param fromRemote 
+     */
     public void freeCache( String name, boolean fromRemote )
     {
         CompositeCache cache = (CompositeCache) caches.remove( name );
@@ -448,7 +468,9 @@ public class CompositeCacheManager
         release( false );
     }
 
-    /** */
+    /**
+     * @param fromRemote 
+     */
     private void release( boolean fromRemote )
     {
         synchronized ( CompositeCacheManager.class )
@@ -497,7 +519,9 @@ public class CompositeCacheManager
         return list;
     }
 
-    /** */
+    /**
+     * @return 
+     */
     public int getCacheType()
     {
         return ICacheType.CACHE_HUB;
@@ -511,7 +535,8 @@ public class CompositeCacheManager
         return this.defaultCacheAttr;
     }
 
-    /** 
+    /**
+     * @param auxFac 
      */
     void registryFacPut( AuxiliaryCacheFactory auxFac )
     {

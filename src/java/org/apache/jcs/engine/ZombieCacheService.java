@@ -24,51 +24,78 @@ import org.apache.jcs.engine.behavior.ICacheService;
 import org.apache.jcs.engine.behavior.IZombie;
 
 /**
- * Description of the Class
+ * Zombie adapter for any cache service.  balks at every call.
  *  
  */
 public class ZombieCacheService
     implements ICacheService, IZombie
 {
 
-    /** Description of the Method */
+    /*
+     * 
+     */
     public void put( ICacheElement item )
     {
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#update(org.apache.jcs.engine.behavior.ICacheElement)
+     */
     public void update( ICacheElement item )
     {
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String, java.io.Serializable)
+     */
     public ICacheElement get( String cacheName, Serializable key )
     {
         return null;
     }
 
-    /** Description of the Method */
+
+    /**
+     * 
+     * @param cacheName
+     * @param key
+     * @param container
+     * @return
+     */
     public Serializable get( String cacheName, Serializable key, boolean container )
     {
         return null;
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String, java.io.Serializable)
+     */
     public void remove( String cacheName, Serializable key )
     {
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#removeAll(java.lang.String)
+     */
     public void removeAll( String cacheName )
     {
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#dispose(java.lang.String)
+     */
     public void dispose( String cacheName )
     {
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheService#release()
+     */
     public void release()
     {
     }

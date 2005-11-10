@@ -52,12 +52,18 @@ public class ZombieCacheWatch
     {
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String, org.apache.jcs.engine.behavior.ICacheListener)
+     */
     public void removeCacheListener( String cacheName, ICacheListener obj )
     {
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
+     */
     public void removeCacheListener( ICacheListener obj )
     {
     }

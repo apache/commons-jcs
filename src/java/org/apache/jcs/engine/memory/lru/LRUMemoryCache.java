@@ -350,10 +350,15 @@ public class LRUMemoryCache
     }
 
     // --------------------------- iteration mehods (iteration helpers)
+    /**
+     * 
+     * iteration aid
+     *
+     */
     public class IteratorWrapper
         implements Iterator
     {
-        private final Log log = LogFactory.getLog( LRUMemoryCache.class );
+        //private final Log log = LogFactory.getLog( LRUMemoryCache.class );
 
         private final Iterator i;
 
@@ -457,7 +462,7 @@ public class LRUMemoryCache
      * @param ce
      *            The feature to be added to the Last
      */
-    private void addLast( CacheElement ce )
+    protected void addLast( CacheElement ce )
     {
         MemoryElementDescriptor me = new MemoryElementDescriptor( ce );
         list.addLast( me );

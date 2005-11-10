@@ -45,6 +45,7 @@ public class CacheAdaptor
      * 
      * @param id
      *            The new listenerId value
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException
@@ -57,6 +58,7 @@ public class CacheAdaptor
      * Gets the listenerId attribute of the CacheAdaptor object
      * 
      * @return The listenerId value
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException
@@ -74,7 +76,12 @@ public class CacheAdaptor
         this.cache = cache;
     }
 
-    /** Description of the Method */
+    /** 
+     * Puts an item into the cache.
+     *  
+     * @param item
+     * @throws IOException
+     */
     public void handlePut( ICacheElement item )
         throws IOException
     {
@@ -91,21 +98,30 @@ public class CacheAdaptor
         }
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String, java.io.Serializable)
+     */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
         cache.remove( key );
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
+     */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
         cache.removeAll();
     }
 
-    /** Description of the Method */
+    /*
+     *  (non-Javadoc)
+     * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
+     */
     public void handleDispose( String cacheName )
         throws IOException
     {

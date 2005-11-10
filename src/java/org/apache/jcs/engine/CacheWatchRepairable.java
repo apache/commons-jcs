@@ -87,6 +87,7 @@ public class CacheWatchRepairable
      *            The feature to be added to the CacheListener attribute
      * @param obj
      *            The feature to be added to the CacheListener attribute
+     * @throws IOException
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -113,6 +114,7 @@ public class CacheWatchRepairable
      * 
      * @param obj
      *            The feature to be added to the CacheListener attribute
+     * @throws IOException
      */
     public void addCacheListener( ICacheListener obj )
         throws IOException
@@ -131,7 +133,11 @@ public class CacheWatchRepairable
         cacheWatch.addCacheListener( obj );
     }
 
-    /** Description of the Method */
+    /** 
+     * @param cacheName
+     * @param obj
+     * @throws IOException
+     */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
     {
@@ -149,7 +155,10 @@ public class CacheWatchRepairable
         cacheWatch.removeCacheListener( cacheName, obj );
     }
 
-    /** Description of the Method */
+    /**  
+     * @param obj
+     * @throws IOException
+     */
     public void removeCacheListener( ICacheListener obj )
         throws IOException
     {

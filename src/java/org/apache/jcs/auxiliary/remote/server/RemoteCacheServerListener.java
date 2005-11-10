@@ -102,6 +102,7 @@ public class RemoteCacheServerListener
      * 
      * @param id
      *            The new listenerId value
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException
@@ -117,6 +118,7 @@ public class RemoteCacheServerListener
      * Gets the listenerId attribute of the RemoteCacheServerListener object
      * 
      * @return The listenerId value
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException
@@ -137,6 +139,7 @@ public class RemoteCacheServerListener
      * Gets the remoteType attribute of the RemoteCacheServerListener object
      * 
      * @return The remoteType value
+     * @throws IOException
      */
     public int getRemoteType()
         throws IOException
@@ -150,6 +153,7 @@ public class RemoteCacheServerListener
 
     /**
      * Gets the instance attribute of the RemoteCacheServerListener class
+     * @param irca
      * 
      * @return The instance value
      */
@@ -177,6 +181,8 @@ public class RemoteCacheServerListener
      * incomplete for faster transmission. We don't want to pass data only
      * invalidation. The next time it is used the local cache will get the new
      * version from the remote store
+     * @param cb
+     * @throws IOException
      */
     public void handlePut( ICacheElement cb )
         throws IOException
@@ -194,7 +200,13 @@ public class RemoteCacheServerListener
         cache.localUpdate( cb );
     }
 
-    /** Description of the Method */
+    /** 
+     * Calls remove for the key on the named cache
+     *  
+     * @param cacheName
+     * @param key
+     * @throws IOException
+     */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
@@ -219,7 +231,12 @@ public class RemoteCacheServerListener
         cache.localRemove( key );
     }
 
-    /** Description of the Method */
+    /** 
+     * Calls removeAl on the named cache region.
+     * 
+     * @param cacheName
+     * @throws IOException
+     */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
@@ -232,7 +249,12 @@ public class RemoteCacheServerListener
         cache.removeAll();
     }
 
-    /** Description of the Method */
+    /** 
+     * Calls freeCache on the named region.
+     * 
+     * @param cacheName
+     * @throws IOException
+     */
     public void handleDispose( String cacheName )
         throws IOException
     {

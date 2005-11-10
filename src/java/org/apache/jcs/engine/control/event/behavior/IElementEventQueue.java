@@ -36,6 +36,7 @@ public interface IElementEventQueue
      *            The IElementEventHandler
      * @param event
      *            The IElementEventHandler IElementEvent event
+     * @throws IOException
      */
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException;

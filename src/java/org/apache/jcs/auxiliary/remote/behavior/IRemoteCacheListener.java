@@ -40,6 +40,7 @@ public interface IRemoteCacheListener
      * Get the id to be used by this manager.
      * 
      * @return long
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException;
@@ -50,6 +51,7 @@ public interface IRemoteCacheListener
      * remote cache listener.
      * 
      * @param id
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException;
@@ -58,6 +60,7 @@ public interface IRemoteCacheListener
      * Gets the remoteType attribute of the IRemoteCacheListener object
      * 
      * @return The remoteType value
+     * @throws IOException
      */
     public int getRemoteType()
         throws IOException;
