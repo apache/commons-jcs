@@ -339,21 +339,6 @@ public class LRUMap
     }
 
     /**
-     * Adds a new node to the end of the link list. Currently not used.
-     * 
-     * @param key
-     * @param val
-     *            The feature to be added to the Last
-     *  
-     */
-    private void addLast( Object key, Object val )
-    {
-        LRUElementDescriptor me = new LRUElementDescriptor( key, val );
-        list.addLast( me );
-        verifyCache( me.getKey() );
-    }
-
-    /**
      * Adds a new node to the start of the link list.
      * 
      * @param key
@@ -499,7 +484,7 @@ public class LRUMap
      * 
      * @param key
      */
-    private void verifyCache( Object key )
+    protected void verifyCache( Object key )
     {
         if ( !log.isDebugEnabled() )
         {

@@ -64,7 +64,7 @@ public class TestLateralTCPFilterRemoveHashCode
         throws Exception
     {
 
-        boolean show = true;//false;
+        //boolean show = true;//false;
 
         JCS cache = JCS.getInstance( region );
 

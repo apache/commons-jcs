@@ -68,7 +68,10 @@ public class PropertyGroups
         load( name );
     }
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param name
+     * @throws Exception
+     */
     public void load( String name )
         throws Exception
     {
@@ -76,7 +79,9 @@ public class PropertyGroups
         load();
     }
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @throws Exception
+     */
     public void load()
         throws Exception
     {
@@ -114,6 +119,7 @@ public class PropertyGroups
 
     /**
      * Gets the property attribute of the PropertyGroups object
+     * @param key
      * 
      * @return The property value
      */
@@ -129,6 +135,8 @@ public class PropertyGroups
 
     /**
      * Gets the property attribute of the PropertyGroups object
+     * @param key
+     * @param dflt
      * 
      * @return The property value
      */
@@ -144,6 +152,7 @@ public class PropertyGroups
 
     /**
      * Gets the properties attribute of the PropertyGroups object
+     * @param key
      * 
      * @return The properties value
      */
@@ -161,19 +170,26 @@ public class PropertyGroups
         return null;
     }
 
-    /** Description of the Method */
+    /** 
+     * @return Enumeration of the keys
+     */
     public Enumeration propertyKeys()
     {
         return new PropertyKeysEnum();
     }
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @return
+     */
     public Enumeration simpleKeys()
     {
         return new SimpleKeysEnum();
     }
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param sB
+     * @param key
+     */
     private void keyVal( StringBuffer sB, Object key )
     {
         String k = (String) key;
@@ -182,7 +198,10 @@ public class PropertyGroups
         sB.append( get( key ).toString() );
     }
 
-    /** Description of the Method */
+    /**
+     * @return String
+     * 
+     */
     public synchronized String toString()
     {
         StringBuffer sB = new StringBuffer();
@@ -227,13 +246,19 @@ public class PropertyGroups
             baseEnum = keys();
         }
 
-        /** Description of the Method */
+        /**
+         * @return  boolean true is has more
+         * 
+         */
         public boolean hasMoreElements()
         {
             return howMany > 0;
         }
 
-        /** Description of the Method */
+        /**
+         * @return Object
+         * 
+         */
         public Object nextElement()
         {
             while ( baseEnum.hasMoreElements() )
@@ -272,13 +297,19 @@ public class PropertyGroups
             baseEnum = keys();
         }
 
-        /** Description of the Method */
+        /**
+         * @return
+         * 
+         */
         public boolean hasMoreElements()
         {
             return howMany > 0;
         }
 
-        /** Description of the Method */
+        /**
+         * @return
+         * 
+         */
         public Object nextElement()
         {
             while ( baseEnum.hasMoreElements() )

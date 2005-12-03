@@ -48,7 +48,13 @@ public class OptionConverter
     {
     }
 
-    /** Description of the Method */
+    /** 
+     * Combines two arrays.
+     * 
+     * @param l
+     * @param r
+     * @return String[]
+     */
     public static String[] concatanateArrays( String[] l, String[] r )
     {
         int len = l.length + r.length;
@@ -60,7 +66,12 @@ public class OptionConverter
         return a;
     }
 
-    /** Description of the Method */
+    /** 
+     * Escapes special cahracters/
+     * 
+     * @param s
+     * @return  String
+     */
     public static String convertSpecialChars( String s )
     {
         char c;
@@ -139,7 +150,15 @@ public class OptionConverter
         }
     }
 
-    /** Description of the Method */
+    /**
+     * Creates an object for the className value of the key.
+     * 
+     * @param props
+     * @param key
+     * @param superClass
+     * @param defaultValue
+     * @return Object that was created
+     */
     public static Object instantiateByKey( Properties props, String key, Class superClass, Object defaultValue )
     {
 
@@ -161,6 +180,9 @@ public class OptionConverter
      * <p>
      * 
      * Case of value is unimportant.
+     * @param value
+     * @param dEfault
+     * @return  Object
      */
 
     public static boolean toBoolean( String value, boolean dEfault )
@@ -181,7 +203,11 @@ public class OptionConverter
         return dEfault;
     }
 
-    /** Description of the Method */
+    /** Description of the Method 
+     * @param value
+     * @param dEfault
+     * @return
+     */
     public static int toInt( String value, int dEfault )
     {
         if ( value != null )
@@ -200,7 +226,11 @@ public class OptionConverter
         return dEfault;
     }
 
-    /** Description of the Method */
+    /** 
+     * @param value
+     * @param dEfault
+     * @return
+     */
     public static long toFileSize( String value, long dEfault )
     {
         if ( value == null )
@@ -245,6 +275,9 @@ public class OptionConverter
     /**
      * Find the value corresponding to <code>key</code> in <code>props</code>.
      * Then perform variable substitution on the found value.
+     * @param key
+     * @param props
+     * @return
      */
 
     public static String findAndSubst( String key, Properties props )
@@ -278,6 +311,7 @@ public class OptionConverter
      *            The class to which the new object should belong.
      * @param defaultValue
      *            The object to return in case of non-fulfillment
+     * @return
      */
 
     public static Object instantiateByClassName( String className, Class superClass, Object defaultValue )
@@ -346,6 +380,8 @@ public class OptionConverter
      * 
      * @param val
      *            The string on which variable substitution is performed.
+     * @param props
+     * @return String
      * @throws IllegalArgumentException
      *             if <code>val</code> is malformed.
      */

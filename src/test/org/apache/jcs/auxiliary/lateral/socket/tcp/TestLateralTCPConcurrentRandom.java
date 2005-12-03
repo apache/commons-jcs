@@ -5,8 +5,6 @@ import java.util.Random;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
@@ -18,6 +16,7 @@ public class TestLateralTCPConcurrentRandom
 {
 
     private static boolean isSysOut = false;
+
     //private static boolean isSysOut = true;
 
     /**
@@ -59,8 +58,7 @@ public class TestLateralTCPConcurrentRandom
         boolean show = true;//false;
 
         JCS cache = JCS.getInstance( region );
-        
-        
+
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
@@ -68,7 +66,7 @@ public class TestLateralTCPConcurrentRandom
 
         // this service will put and remove using the lateral to
         // the cache instance above
-        // the cache thinks it is different since the listenerid is different        
+        // the cache thinks it is different since the listenerid is different
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
 
@@ -82,8 +80,8 @@ public class TestLateralTCPConcurrentRandom
                 String key = "key" + kn;
                 if ( n == 1 )
                 {
-                    ICacheElement element = new CacheElement( region, key, region + ":data" + i + " junk asdfffffffadfasdfasf "
-                        + kn + ":" + n );
+                    ICacheElement element = new CacheElement( region, key, region + ":data" + i
+                        + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                     service.update( element );
                     if ( show )
                     {
@@ -93,8 +91,8 @@ public class TestLateralTCPConcurrentRandom
                 /**/
                 else if ( n == 2 )
                 {
-                   service.remove( region, key );
-                   if ( show )
+                    service.remove( region, key );
+                    if ( show )
                     {
                         p( "removed " + key );
                     }
@@ -103,15 +101,15 @@ public class TestLateralTCPConcurrentRandom
                 else
                 {
                     // slightly greater chance of get
-                    try 
+                    try
                     {
                         Object obj = service.get( region, key );
                         if ( show && obj != null )
                         {
                             p( obj.toString() );
-                        }                        
+                        }
                     }
-                    catch( Exception e )
+                    catch ( Exception e )
                     {
                         // consider failing, some timeouts are expected
                         e.printStackTrace();
@@ -132,36 +130,37 @@ public class TestLateralTCPConcurrentRandom
             e.printStackTrace( System.out );
             throw e;
         }
-        
+
         JCS jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );
         String value = (String) jcs.get( key );
         assertEquals( "Couldn't put normally.", data, value );
-        
+
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
         {
             String keyL = "key" + i;
-            String dataL = (String)jcs.get( keyL );
+            String dataL = (String) jcs.get( keyL );
             if ( dataL != null )
             {
                 assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
             }
-            
+
         }
 
         //Thread.sleep( 1000 );
 
         //ICacheElement element = new CacheElement( region, "abc", "testdata");
         //service.update( element );
-        
+
         //Thread.sleep( 2500 );
-        // could be too mcuh going on right now to get ti through, sot he test might fail.
+        // could be too mcuh going on right now to get ti through, sot he test
+        // might fail.
         //String value2 = (String) jcs.get( "abc" );
-        //assertEquals( "Couldn't put laterally, could be too much traffic in queue.", "testdata", value2 );
-                
+        //assertEquals( "Couldn't put laterally, could be too much traffic in
+        // queue.", "testdata", value2 );
 
     }
 

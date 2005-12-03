@@ -356,6 +356,8 @@ public class ThreadPoolManager
 
     /**
      * Configures the default PoolConfiguration settings
+     * @param root
+     * @return PoolConfiguration
      *  
      */
     private PoolConfiguration loadConfig( String root )

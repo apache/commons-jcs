@@ -212,6 +212,7 @@ public class PropertySetter
      *            The named of the property to set.
      * @param value
      *            The value of the property.
+     * @throws PropertySetterException
      */
 
     public void setProperty( PropertyDescriptor prop, String name, String value )
@@ -255,6 +256,9 @@ public class PropertySetter
     /**
      * Convert <code>val</code> a String parameter to an object of a given
      * type.
+     * @param val
+     * @param type
+     * @return Object
      */
     protected Object convertArg( String val, Class type )
     {
@@ -292,6 +296,7 @@ public class PropertySetter
 
     /**
      * Gets the propertyDescriptor attribute of the PropertySetter object
+     * @param name
      * 
      * @return The propertyDescriptor value
      */

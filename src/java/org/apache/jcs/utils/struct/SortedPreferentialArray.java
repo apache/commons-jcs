@@ -26,7 +26,8 @@ import org.apache.commons.logging.LogFactory;
  * Insertion time is n, search is log(n)
  * 
  * 
- * Clients must manage thread safety.
+ * Clients must manage thread safety on previous version.  I synchronized the public methods to add
+ * easy thread safety.  I synchronized all public methods that make modifications.
  *  
  */
 public class SortedPreferentialArray
@@ -65,7 +66,7 @@ public class SortedPreferentialArray
      * @param obj
      *            Object
      */
-    public void add( Comparable obj )
+    public synchronized void add( Comparable obj )
     {
         if ( obj == null )
         {
@@ -115,7 +116,7 @@ public class SortedPreferentialArray
      * 
      * @return Comparable
      */
-    public Comparable getLargest()
+    public synchronized Comparable getLargest()
     {
         return array[curSize - 1];
     }
@@ -125,7 +126,7 @@ public class SortedPreferentialArray
      * 
      * @return Comparable
      */
-    public Comparable getSmallest()
+    public synchronized Comparable getSmallest()
     {
         return array[0];
     }
@@ -259,7 +260,7 @@ public class SortedPreferentialArray
      * @param pref
      *            boolean
      */
-    public void setPreferLarge( boolean pref )
+    public synchronized void setPreferLarge( boolean pref )
     {
         preferLarge = pref;
     }
@@ -271,7 +272,7 @@ public class SortedPreferentialArray
      *            Comparable
      * @return Comparable, null if arg is null or none was found.
      */
-    public Comparable takeNearestLargerOrEqual( Comparable obj )
+    public synchronized Comparable takeNearestLargerOrEqual( Comparable obj )
     {
         if ( obj == null )
         {

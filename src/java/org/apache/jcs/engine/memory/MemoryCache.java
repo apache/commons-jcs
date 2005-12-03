@@ -71,7 +71,7 @@ public interface MemoryCache
      * directly access items in the memory cache.
      * 
      * @return An iterator
-     * @deprecated
+     * 
      */
     public Iterator getIterator();
 

@@ -278,6 +278,11 @@ public class CompositeCacheManager
             ThreadPoolManager.setProps( props );
             ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
 
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "ThreadPoolManager = " + poolMgr );
+            }
+            
             // configure the cache
             CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
 
@@ -333,7 +338,11 @@ public class CompositeCacheManager
         return this.defaultElementAttr.copy();
     }
 
-    /** Gets the cache attribute of the CacheHub object */
+    /** 
+     * Gets the cache attribute of the CacheHub object 
+     * @param cacheName
+     * @return CompositeCache -- the cache region controller
+     */
     public CompositeCache getCache( String cacheName )
     {
         return getCache( cacheName, this.defaultCacheAttr.copy() );
@@ -570,7 +579,8 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets stats for debugging.
+     * Gets stats for debugging.  This calls gets statistics and then
+     * puts all the results in a string.  This returns data for all regions.
      * 
      * @return String
      */
@@ -587,6 +597,7 @@ public class CompositeCacheManager
         int statsLen = stats.length;
         for ( int i = 0; i < statsLen; i++ )
         {
+            buf.append( "\n" ); 
             buf.append( stats[i] );
         }
         return buf.toString();

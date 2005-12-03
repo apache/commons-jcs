@@ -122,8 +122,12 @@ public class LRUMemoryCache
         {
             return;
         }
-        log.debug( "In memory limit reached, spooling" );
-
+        
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "In memory limit reached, spooling" );
+        }
+        
         // Write the last 'chunkSize' items to disk.
         int chunkSizeCorrected = Math.min( size, chunkSize );
 
@@ -170,18 +174,22 @@ public class LRUMemoryCache
                     verifyCache();
                     throw new Error( "update: last is null!" );
                 }
+                
+                // If this is out of the sync block it can detect a mismatch where there is none.
+                if ( map.size() != dumpCacheSize() )
+                {
+                    log.warn( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
+                        + dumpCacheSize() );
+                }                
             }
         }
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "update: After spool map size: " + map.size() );
+            log.debug( "update: After spool map size: " + map.size() + " linked list size = "
+                + dumpCacheSize());
         }
-        if ( map.size() != dumpCacheSize() )
-        {
-            log.error( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
-                + dumpCacheSize() );
-        }
+        
     }
 
     /**

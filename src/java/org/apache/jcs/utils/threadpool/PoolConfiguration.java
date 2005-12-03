@@ -74,15 +74,16 @@ public class PoolConfiguration
 
     /**
      * 
+     * @param useBoundary
      * @param boundarySize
      * @param maximumPoolSize
      * @param minimumPoolSize
      * @param keepAliveTime
-     * @param abortWhenlocked
+     * @param whenBlockedPolicy
      * @param startUpSize
      */
     public PoolConfiguration( boolean useBoundary, int boundarySize, int maximumPoolSize, int minimumPoolSize,
-                             int keepAliveTime, String henBlockedPolicy, int startUpSize )
+                             int keepAliveTime, String whenBlockedPolicy, int startUpSize )
     {
     }
 
@@ -223,6 +224,7 @@ public class PoolConfiguration
 
     /**
      * To string for debugging purposes.
+     * @return String
      */
     public String toString()
     {
@@ -239,6 +241,7 @@ public class PoolConfiguration
 
     /**
      * Copies the instance variables to another instance.
+     * @return PoolConfiguration
      */
     public Object clone()
     {

@@ -51,6 +51,9 @@ public class BasicHttpAuthenticator
 
     /**
      * Authenticates the http <code>"Authorization"</code> header information.
+     * @param req
+     * @param res
+     * @return boolean
      */
     public final boolean authenticate( HttpServletRequest req, HttpServletResponse res )
     {
@@ -75,6 +78,9 @@ public class BasicHttpAuthenticator
     /**
      * Returns true iff the given "Authorization" http request header contains
      * authorized user id and password.
+     * @param authHeader
+     * @return
+     * @throws IOException
      */
     private boolean authorized( String authHeader )
         throws IOException
@@ -106,6 +112,8 @@ public class BasicHttpAuthenticator
 
     /**
      * Default implementation of checking the password.
+     * @param userid
+     * @param password
      * 
      * @return true iff the given user id and password is valid.
      */
