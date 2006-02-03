@@ -31,6 +31,8 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 public class PurgatoryElement
     implements ICacheElement, Serializable
 {
+    private static final long serialVersionUID = -8152034342684135628L;
+
     /**
      * Is the element ready to be spooled?
      */

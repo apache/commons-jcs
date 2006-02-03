@@ -19,13 +19,18 @@ package org.apache.jcs.access.exception;
 import org.apache.commons.lang.exception.NestableException;
 
 /**
- * Description of the Class
+ * This is the most general exception the cache throws.
  *  
  */
 public class CacheException
     extends NestableException
 {
-    /** Constructor for the CacheException object */
+
+    private static final long serialVersionUID = 8725795372935590265L;
+
+    /** 
+     * Default 
+     */
     public CacheException()
     {
         super();

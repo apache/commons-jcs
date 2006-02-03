@@ -24,6 +24,8 @@ public class NotARetrievableObjectException
     extends CacheException
 {
 
+    private static final long serialVersionUID = 4501711027054012410L;
+
     /** Constructor for the NotARetrievableObjectException object */
     public NotARetrievableObjectException()
     {

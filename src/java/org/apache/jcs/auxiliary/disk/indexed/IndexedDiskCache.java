@@ -60,6 +60,8 @@ import org.apache.jcs.utils.struct.SortedPreferentialArray;
 public class IndexedDiskCache
     extends AbstractDiskCache
 {
+    private static final long serialVersionUID = -265035607729729629L;
+
     private static final Log log = LogFactory.getLog( IndexedDiskCache.class );
 
     private String fileName;
@@ -688,6 +690,7 @@ public class IndexedDiskCache
         }
         finally
         {
+            //swallow
         }
     }
 
@@ -1324,6 +1327,7 @@ public class IndexedDiskCache
         extends LRUMapJCS
     {
 
+        private static final long serialVersionUID = 4955079991472142198L;
         /**
          * <code>tag</code> tells us which map we are working on.
          */

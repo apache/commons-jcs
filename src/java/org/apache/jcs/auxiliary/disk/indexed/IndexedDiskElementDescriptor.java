@@ -27,6 +27,8 @@ public class IndexedDiskElementDescriptor
     implements Serializable, Comparable
 {
 
+    private static final long serialVersionUID = -3029163572847659450L;
+
     /** Position of the cache data entry on disk. */
     long pos;
 
@@ -49,6 +51,7 @@ public class IndexedDiskElementDescriptor
     /** Constructor for the DiskElementDescriptor object */
     public IndexedDiskElementDescriptor()
     {
+        super();
     }
 
     public String toString()

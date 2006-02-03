@@ -27,11 +27,16 @@ public class HSQLCacheAttributes
     extends AbstractDiskCacheAttributes
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2422326369995086555L;
     private String diskPath;
 
     /** Constructor for the HSQLCacheAttributes object */
     public HSQLCacheAttributes()
     {
+        super();
     }
 
     /**
@@ -68,6 +73,7 @@ public class HSQLCacheAttributes
         }
         catch ( Exception e )
         {
+            // swallow
         }
         return this;
     }

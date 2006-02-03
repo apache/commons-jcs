@@ -33,14 +33,29 @@ public interface ILateralCacheAttributes
     extends Serializable, AuxiliaryCacheAttributes
 {
 
+    /**
+     * HTTP type
+     */
     final static int HTTP = 1;
 
+    /**
+     * UDP type
+     */
     final static int UDP = 2;
 
+    /**
+     * TCP type
+     */
     final static int TCP = 3;
 
+    /**
+     * XMLRPC type
+     */
     final static int XMLRPC = 4;
 
+    /**
+     * JGROUPS type
+     */
     final static int JAVAGROUPS = 5;
 
     /**

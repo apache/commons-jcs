@@ -33,9 +33,9 @@ public interface IGroupCacheAccess
      * Gets the g attribute of the IGroupCacheAccess object
      * 
      * @param name
-     * @param group,
+     * @param group
      *            the name of the group to associate this with.
-     * @return The g value
+     * @return The teh object that is keyed by the name in the group
      */
     Object getFromGroup( Object name, String group );
 

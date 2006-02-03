@@ -36,6 +36,9 @@ import org.apache.jcs.engine.CacheConstants;
 public class MonitorAccess
     implements Serializable
 {
+
+    private static final long serialVersionUID = 1002037665133774391L;
+
     private static final Log log = LogFactory.getLog( MonitorAccess.class );
 
     /** Description of the Field */

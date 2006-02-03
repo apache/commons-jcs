@@ -282,6 +282,7 @@ class IndexedDisk
             }
             catch ( InterruptedException ex )
             {
+                // swallow
             }
             log.warn( "Failed to delete " + f.getName() + " " + i );
         }

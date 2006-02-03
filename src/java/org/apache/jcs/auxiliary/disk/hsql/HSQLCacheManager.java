@@ -31,6 +31,9 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 public class HSQLCacheManager
     implements AuxiliaryCacheManager
 {
+
+    private static final long serialVersionUID = -8258856770927857896L;
+
     private static final Log log = LogFactory.getLog( HSQLCacheManager.class );
 
     private static int clients;
@@ -128,8 +131,9 @@ public class HSQLCacheManager
         return raf;
     }
 
-    /*
-     *  
+    /**
+     * 
+     * @param name
      */
     public void freeCache( String name )
     {

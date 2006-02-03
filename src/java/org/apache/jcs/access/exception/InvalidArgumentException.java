@@ -24,6 +24,8 @@ public class InvalidArgumentException
     extends CacheException
 {
 
+    private static final long serialVersionUID = -6058373692208755562L;
+
     /** Constructor for the InvalidArgumentException object */
     public InvalidArgumentException()
     {

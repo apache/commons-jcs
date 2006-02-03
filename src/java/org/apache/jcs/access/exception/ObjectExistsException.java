@@ -28,6 +28,8 @@ public class ObjectExistsException
     extends CacheException
 {
 
+    private static final long serialVersionUID = -3779745827993383872L;
+
     /** Constructor for the ObjectExistsException object */
     public ObjectExistsException()
     {

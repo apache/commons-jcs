@@ -24,6 +24,8 @@ public class NullObjectException
     extends CacheException
 {
 
+    private static final long serialVersionUID = 827922769279844194L;
+
     /** Constructor for the NullObjectException object */
     public NullObjectException()
     {

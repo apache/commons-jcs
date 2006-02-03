@@ -24,6 +24,8 @@ public class InvalidGroupException
     extends CacheException
 {
 
+    private static final long serialVersionUID = -5219807114008843480L;
+
     /** Constructor for the InvalidGroupException object */
     public InvalidGroupException()
     {

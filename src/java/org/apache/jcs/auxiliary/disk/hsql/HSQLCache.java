@@ -36,7 +36,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
-import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.data.PropertyGroups;
@@ -52,6 +51,9 @@ import org.apache.jcs.utils.data.PropertyGroups;
 public class HSQLCache
     extends AbstractDiskCache
 {
+
+    private static final long serialVersionUID = 1L;
+
     private final static Log log = LogFactory.getLog( HSQLCache.class );
 
     private int numInstances = 0;
@@ -70,7 +72,7 @@ public class HSQLCache
      */
     public HSQLCache( HSQLCacheAttributes cattr )
     {
-        super( (IDiskCacheAttributes) cattr );
+        super( cattr );
 
         this.cattr = cattr;
 
@@ -503,11 +505,13 @@ public class HSQLCache
     /** Description of the Method */
     public void reset()
     {
+        // nothing
     }
 
     /** Description of the Method */
     public void doDispose()
     {
+        // nothing
     }
 
     /**

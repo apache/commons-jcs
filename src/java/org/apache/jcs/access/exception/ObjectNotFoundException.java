@@ -24,6 +24,8 @@ public class ObjectNotFoundException
     extends CacheException
 {
 
+    private static final long serialVersionUID = 5684353421076546842L;
+
     /** Constructor for the ObjectNotFoundException object */
     public ObjectNotFoundException()
     {

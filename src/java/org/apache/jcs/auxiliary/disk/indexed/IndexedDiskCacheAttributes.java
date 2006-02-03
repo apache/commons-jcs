@@ -27,6 +27,8 @@ public class IndexedDiskCacheAttributes
     extends AbstractDiskCacheAttributes
 {
 
+    private static final long serialVersionUID = -2190863599358782950L;
+
     private static final int DEFAULT_maxKeySize = 5000;
 
     /** -1 means no limit. */
@@ -49,6 +51,7 @@ public class IndexedDiskCacheAttributes
      */
     public IndexedDiskCacheAttributes()
     {
+        super();
     }
 
     /**
@@ -135,6 +138,7 @@ public class IndexedDiskCacheAttributes
         }
         catch ( Exception e )
         {
+            // swallow
         }
         return this;
     }

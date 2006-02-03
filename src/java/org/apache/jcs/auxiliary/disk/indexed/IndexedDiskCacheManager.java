@@ -34,6 +34,8 @@ import java.util.Hashtable;
 public class IndexedDiskCacheManager
     implements AuxiliaryCacheManager
 {
+    private static final long serialVersionUID = -4153287154512274626L;
+
     private final static Log log = LogFactory.getLog( IndexedDiskCacheManager.class );
 
     private static int clients;

@@ -39,6 +39,10 @@ public abstract class AbstractDiskCacheAttributes
 
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
     
+    /**
+     * This default determines how long the shutdown will wait
+     * for the key spool and data defrag to finish.
+     */
     protected int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
         
     
@@ -111,6 +115,7 @@ public abstract class AbstractDiskCacheAttributes
         }
         catch ( Exception e )
         {
+            // swallow
         }
         return this;
     }

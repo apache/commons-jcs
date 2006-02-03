@@ -24,9 +24,13 @@ public class InvalidHandleException
     extends CacheException
 {
 
+    private static final long serialVersionUID = -5947822454839845924L;
+
     /** Constructor for the InvalidHandleException object */
     public InvalidHandleException()
     {
+        // nothing
+        super();
     }
 
     /**

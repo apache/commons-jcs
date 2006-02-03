@@ -57,6 +57,9 @@ import org.apache.velocity.servlet.VelocityServlet;
 public class JCSAdminServlet
     extends VelocityServlet
 {
+
+    private static final long serialVersionUID = -5519844149238645275L;
+
     private static final String DEFAULT_TEMPLATE_NAME = "/org/apache/jcs/admin/servlet/JCSAdminServletDefault.vm";
 
     private static final String REGION_DETAIL_TEMPLATE_NAME = "/org/apache/jcs/admin/servlet/JCSAdminServletRegionDetail.vm";

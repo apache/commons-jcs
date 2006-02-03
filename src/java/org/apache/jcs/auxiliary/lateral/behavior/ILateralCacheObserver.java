@@ -25,5 +25,5 @@ import org.apache.jcs.engine.behavior.ICacheObserver;
 public interface ILateralCacheObserver
     extends ICacheObserver
 {
-
+    // nothing
 }

@@ -12,6 +12,8 @@ public class LRUMapJCS
     extends LRUMap
 {
 
+    private static final long serialVersionUID = 776964015449842672L;
+
     private static final Log log = LogFactory.getLog( LRUMapJCS.class );
 
     /**

@@ -26,6 +26,11 @@ public interface IDiskCacheAttributes
     extends AuxiliaryCacheAttributes
 {
 
+    /**
+     * This is the default purgatory size limit.  Purgatory is the area
+     * where items to be spooled are temporarily stored.  It basically provides 
+     * access to items on the to-be-spooled queue.
+     */
     public static final int MAX_PURGATORY_SIZE_DEFUALT = 5000;
 
     /**
