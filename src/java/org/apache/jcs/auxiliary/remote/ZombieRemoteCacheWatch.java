@@ -28,4 +28,5 @@ public class ZombieRemoteCacheWatch
     extends ZombieCacheWatch
     implements IRemoteCacheObserver
 {
+    // nothing
 }

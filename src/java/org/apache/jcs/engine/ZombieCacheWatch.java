@@ -39,6 +39,7 @@ public class ZombieCacheWatch
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
     {
+        return;
     }
 
     /**
@@ -50,6 +51,7 @@ public class ZombieCacheWatch
      */
     public void addCacheListener( ICacheListener obj )
     {
+        return;
     }
 
     /*
@@ -58,6 +60,7 @@ public class ZombieCacheWatch
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
     {
+        return;
     }
 
     /*
@@ -66,5 +69,6 @@ public class ZombieCacheWatch
      */
     public void removeCacheListener( ICacheListener obj )
     {
+        return;
     }
 }

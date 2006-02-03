@@ -43,9 +43,10 @@ public class OptionConverter
 
     static StringBuffer sbuf = new StringBuffer();
 
-    /** OptionConverter is a static class. */
+    /** No instances please. */
     private OptionConverter()
     {
+        super();
     }
 
     /** 

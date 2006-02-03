@@ -18,18 +18,20 @@ package org.apache.jcs.engine.control.event;
 
 import java.util.EventObject;
 
-import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
+import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 
 /**
  * Element events will trigger the creation of Element Event objects. This is a
  * wrapper around the cache element that indicates the event triggered.
- *  
+ * 
  */
 public class ElementEvent
     extends EventObject
     implements IElementEventConstants, IElementEvent
 {
+
+    private static final long serialVersionUID = -5364117411457467056L;
 
     private int elementEvent = ElementEvent.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND;
 

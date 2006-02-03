@@ -32,9 +32,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
-
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.engine.CacheConstants;
@@ -47,6 +44,8 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.SortedPreferentialArray;
+
+import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory.
@@ -517,8 +516,8 @@ public class IndexedDiskCache
 
             for ( Iterator itr = keyHash.keySet().iterator(); itr.hasNext(); )
             {
-                //Map.Entry entry = (Map.Entry) itr.next();
-                //Object k = entry.getKey();
+                // Map.Entry entry = (Map.Entry) itr.next();
+                // Object k = entry.getKey();
                 Object k = itr.next();
                 if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
                 {
@@ -658,7 +657,7 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem removing element.", e );
             reset = true;
         }
         finally
@@ -690,7 +689,7 @@ public class IndexedDiskCache
         }
         finally
         {
-            //swallow
+            // swallow
         }
     }
 
@@ -712,13 +711,19 @@ public class IndexedDiskCache
         {
             storageLock.writeLock().acquire();
 
-            dataFile.close();
-            File file = new File( rafDir, fileName + ".data" );
-            file.delete();
+            if ( dataFile != null )
+            {
+                dataFile.close();
+            }
+            File dataFileTemp = new File( rafDir, fileName + ".data" );
+            dataFileTemp.delete();
 
-            keyFile.close();
-            File file2 = new File( rafDir, fileName + ".key" );
-            file2.delete();
+            if ( keyFile != null )
+            {
+                keyFile.close();
+            }
+            File keyFileTemp = new File( rafDir, fileName + ".key" );
+            keyFileTemp.delete();
 
             dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ) );
 
@@ -766,7 +771,7 @@ public class IndexedDiskCache
 
     /**
      * Create the map for keys that contain the index position on disk.
-     *  
+     * 
      */
     private void initKeyMap()
     {
@@ -873,7 +878,7 @@ public class IndexedDiskCache
 
     }
 
-    /////////////////////////////////////////////////////////////////////////////////
+    // ///////////////////////////////////////////////////////////////////////////////
     // OPTIMIZATION METHODS
 
     /**
@@ -913,7 +918,7 @@ public class IndexedDiskCache
      * put. 4. Write the element for the key copy to disk in the normal
      * proceedure. 5. All gets will be serviced by the new file. 6. All puts are
      * made on the new file.
-     *  
+     * 
      */
     private void optimizeRealTime()
     {
@@ -941,13 +946,13 @@ public class IndexedDiskCache
             LRUMap keyHashTemp = new LRUMap( this.maxKeySize );
             keyHashTemp.tag = "Round=" + timesOptimized;
             IndexedDisk dataFileTemp = new IndexedDisk( new File( rafDir, fileName + "Temp.data" ) );
-            //dataFileTemp.reset();
+            // dataFileTemp.reset();
 
             // make sure flag is set to true
             isOptomizing = true;
 
             int len = keys.length;
-            //while ( itr.hasNext() )
+            // while ( itr.hasNext() )
             if ( log.isInfoEnabled() )
             {
                 log.info( "Optimizing RT -- TempKeys, length = " + len );
@@ -955,17 +960,17 @@ public class IndexedDiskCache
             for ( int i = 0; i < len; i++ )
             {
                 // lock so no more gets to the queue -- optimizingPutList
-                //storageLock.writeLock();
+                // storageLock.writeLock();
                 storageLock.writeLock().acquire();
                 try
                 {
-                    //Serializable key = ( Serializable ) itr.next();
+                    // Serializable key = ( Serializable ) itr.next();
                     Serializable key = (Serializable) keys[i];
                     this.moveKeyDataToTemp( key, keyHashTemp, dataFileTemp );
                 }
                 finally
                 {
-                    //storageLock.done();
+                    // storageLock.done();
                     storageLock.writeLock().release();
                 }
             }
@@ -1034,14 +1039,14 @@ public class IndexedDiskCache
             LRUMap keyHashTemp = new LRUMap( this.maxKeySize );
 
             IndexedDisk dataFileTemp = new IndexedDisk( new File( rafDir, fileName + "Temp.data" ) );
-            //dataFileTemp.reset();
+            // dataFileTemp.reset();
 
             if ( log.isInfoEnabled() )
             {
                 log.info( "Optomizing file keyHash.size()=" + keyHash.size() );
             }
 
-            //Iterator itr = keyHash.keySet().iterator();
+            // Iterator itr = keyHash.keySet().iterator();
 
             Object[] keys = keyHash.keySet().toArray();
             int len = keys.length;
@@ -1049,10 +1054,10 @@ public class IndexedDiskCache
             try
             {
 
-                //while ( itr.hasNext() )
+                // while ( itr.hasNext() )
                 for ( int i = 0; i < len; i++ )
                 {
-                    //Serializable key = ( Serializable ) itr.next();
+                    // Serializable key = ( Serializable ) itr.next();
                     Serializable key = (Serializable) keys[i];
                     this.moveKeyDataToTemp( key, keyHashTemp, dataFileTemp );
                 }
@@ -1096,14 +1101,14 @@ public class IndexedDiskCache
         catch ( IOException e )
         {
             log.error( "Failed to get orinigal off disk cache: " + fileName + ", key: " + key + "" );
-            //reset();
+            // reset();
             throw e;
         }
 
         try
         {
-            //IndexedDiskElementDescriptor de =
-            //    dataFileTemp.appendObject( tempDe );
+            // IndexedDiskElementDescriptor de =
+            // dataFileTemp.appendObject( tempDe );
 
             IndexedDiskElementDescriptor ded = new IndexedDiskElementDescriptor();
             byte[] data = IndexedDisk.serialize( tempDe );
@@ -1194,7 +1199,7 @@ public class IndexedDiskCache
 
     }
 
-    ///////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////
     // DEBUG
     /**
      * Returns the current cache size.
@@ -1318,7 +1323,7 @@ public class IndexedDiskCache
         return stats;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////
     // RECYLCE INNER CLASS
     /**
      * class for recylcing and lru
@@ -1328,13 +1333,14 @@ public class IndexedDiskCache
     {
 
         private static final long serialVersionUID = 4955079991472142198L;
+
         /**
          * <code>tag</code> tells us which map we are working on.
          */
         public String tag = "orig";
 
         /**
-         *  
+         * 
          */
         public LRUMap()
         {

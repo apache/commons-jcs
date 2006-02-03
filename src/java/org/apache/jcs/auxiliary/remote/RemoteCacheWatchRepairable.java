@@ -28,4 +28,5 @@ public class RemoteCacheWatchRepairable
     extends CacheWatchRepairable
     implements IRemoteCacheObserver
 {
+    // nothing
 }

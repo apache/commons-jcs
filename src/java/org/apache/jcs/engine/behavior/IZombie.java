@@ -22,4 +22,6 @@ package org.apache.jcs.engine.behavior;
  */
 public interface IZombie
 {
+    // Zombies have no inner life.
+    // No qaulia found.
 }

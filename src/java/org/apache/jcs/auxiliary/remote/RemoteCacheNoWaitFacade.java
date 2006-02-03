@@ -45,6 +45,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class RemoteCacheNoWaitFacade
     implements AuxiliaryCache
 {
+    private static final long serialVersionUID = -4529970797620747110L;
+
     private final static Log log = LogFactory.getLog( RemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
@@ -52,7 +54,7 @@ public class RemoteCacheNoWaitFacade
 
     private String cacheName;
 
-    // holds failover and cluster information
+    /** holds failover and cluster information */
     protected RemoteCacheAttributes rca;
 
     private ICompositeCacheManager cacheMgr;

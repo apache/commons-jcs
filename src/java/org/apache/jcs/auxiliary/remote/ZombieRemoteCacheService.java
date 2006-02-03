@@ -41,6 +41,8 @@ public class ZombieRemoteCacheService
      */
     public void update( ICacheElement item, long listenerId )
     {
+        // Zombies have no inner life
+        return;
     }
 
     /*
@@ -49,6 +51,8 @@ public class ZombieRemoteCacheService
      */
     public void remove( String cacheName, Serializable key, long listenerId )
     {
+        // Zombies have no inner life
+        return;
     }
 
     /*
@@ -57,6 +61,8 @@ public class ZombieRemoteCacheService
      */
     public void removeAll( String cacheName, long listenerId )
     {
+        // Zombies have no inner life
+        return;
     }
 
     public Set getGroupKeys( String cacheName, String groupName )

@@ -39,9 +39,10 @@ public class RemoteUtils
 {
     private final static Log log = LogFactory.getLog( RemoteUtils.class );
 
-    /** Constructor for the RemoteUtils object */
+    /** No instances please. */
     private RemoteUtils()
     {
+        super();
     }
 
     /**

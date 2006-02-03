@@ -26,9 +26,14 @@ import java.io.Serializable;
 public class GroupId
     implements Serializable
 {
+    private static final long serialVersionUID = 4626368486444860133L;
+
     /** Description of the Field */
     public final String groupName;
 
+    /**
+     * the name of the region.
+     */
     public final String cacheName;
 
     private String toString;

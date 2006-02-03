@@ -25,10 +25,12 @@ import java.io.Serializable;
 public class GroupAttrName
     implements Serializable
 {
-    //final GroupId groupId;
+    private static final long serialVersionUID = 1586079686300744198L;
+
     /** Description of the Field */
     public final GroupId groupId;
 
+    /** the name of the attribute */
     public final Object attrName;
 
     private String toString;

@@ -47,6 +47,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class RemoteCacheNoWait
     implements AuxiliaryCache
 {
+    private static final long serialVersionUID = -3104089136003714717L;
+
     private final static Log log = LogFactory.getLog( RemoteCacheNoWait.class );
 
     private final RemoteCache cache;
