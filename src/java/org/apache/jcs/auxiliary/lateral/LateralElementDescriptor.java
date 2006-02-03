@@ -22,43 +22,52 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * This class wraps command to other laterals.
- *  
+ * 
  */
 public class LateralElementDescriptor
     implements Serializable
 {
 
+    private static final long serialVersionUID = 5268222498076063575L;
+
     // command types
-    /** Description of the Field */
+    /** The int for updates */
     public final static int UPDATE = 1;
 
-    /** Description of the Field */
+    /** The int for removes */
     public final static int REMOVE = 2;
 
-    /** Description of the Field */
+    /** The int instructing us to remove all */
     public final static int REMOVEALL = 3;
 
-    /** Description of the Field */
+    /** The int for disposing the cache. */
     public final static int DISPOSE = 4;
 
     /** Command to return an object. */
     public final static int GET = 5;
 
-    /** Description of the Field */
+    /** The Cache Element that we are distributing. */
     public ICacheElement ce;
 
-    /** Description of the Field */
+    /**
+     * The id of the the source of the request. This is use to prevent infinite
+     * loops.
+     */
     public long requesterId;
 
     /** Description of the Field */
     public int command = UPDATE;
 
+    /**
+     * the hashcode value for this element.
+     */
     public int valHashCode = -1;
-    
+
     // for update command
     /** Constructor for the LateralElementDescriptor object */
     public LateralElementDescriptor()
     {
+        super();
     }
 
     /**

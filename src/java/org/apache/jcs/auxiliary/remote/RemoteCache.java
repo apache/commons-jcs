@@ -53,6 +53,8 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 public class RemoteCache
     implements ICache
 {
+    private static final long serialVersionUID = -5329231850422826460L;
+
     private final static Log log = LogFactory.getLog( RemoteCache.class );
 
     final String cacheName;
@@ -495,7 +497,7 @@ public class RemoteCache
     /**
      * Replaces the current remote cache service handle with the given handle.
      * 
-     * @param remote,
+     * @param remote
      *            IRemoteCacheService -- the remote server or proxy to the
      *            remote server
      */

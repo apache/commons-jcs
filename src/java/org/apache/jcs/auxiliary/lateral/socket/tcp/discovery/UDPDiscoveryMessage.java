@@ -13,6 +13,8 @@ public class UDPDiscoveryMessage
     implements Serializable
 {
 
+    private static final long serialVersionUID = -5332377899560951794L;
+
     /**
      * This is the periodic broadcast of a servers location. This type of
      * message is also sent in response to a REQUEST_BROADCAST.

@@ -73,7 +73,7 @@ public class LateralTCPService
         }
         catch ( IOException e )
         {
-            //log.error( "Could not create sender", e );
+            // log.error( "Could not create sender", e );
             // This gets thrown over and over in recovery mode.
             // The stack trace isn't useful here.
             log.error( "Could not create sender to [" + lca.getTcpServer() + "] -- " + e.getMessage() );
@@ -87,7 +87,7 @@ public class LateralTCPService
     /**
      * @param item
      * @throws IOException
-     *  
+     * 
      */
     public void update( ICacheElement item )
         throws IOException
@@ -104,7 +104,7 @@ public class LateralTCPService
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
-        
+
         // if we don't allow put, see if we should remove on put
         if ( !this.getTcpLateralCacheAttributes().isAllowPut() )
         {
@@ -126,7 +126,7 @@ public class LateralTCPService
         // else issue a remove with the hashcode for remove check on
         // on the other end, this will be a server config option
         else
-        {            
+        {
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Issuing a remvoe for a put" );
@@ -192,14 +192,22 @@ public class LateralTCPService
         sender.dispose( cache );
     }
 
-    /*
-     *  
+    /**
+     * The service does not get via this method, so this return null
+     * 
+     * @param key
+     * @return always null.
+     * @throws IOException
      */
     public Serializable get( String key )
         throws IOException
     {
-        //p( "junk get" );
-        //return get( cattr.cacheName, key, true );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "balking at get for key [" + key + "]" );
+        }
+        // p( "junk get" );
+        // return get( cattr.cacheName, key, true );
         return null;
         // nothing needs to be done
     }
@@ -218,14 +226,14 @@ public class LateralTCPService
         {
             CacheElement ce = new CacheElement( cacheName, key, null );
             LateralElementDescriptor led = new LateralElementDescriptor( ce );
-            //led.requesterId = requesterId; // later
+            // led.requesterId = requesterId; // later
             led.command = LateralElementDescriptor.GET;
-            return sender.sendAndReceive( led );            
+            return sender.sendAndReceive( led );
         }
         else
         {
             // nothing needs to be done
-            return null;            
+            return null;
         }
     }
 

@@ -65,9 +65,11 @@ public class RemoteCacheServer
     extends UnicastRemoteObject
     implements IRemoteCacheService, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
 {
+    private static final long serialVersionUID = -8072345435941473116L;
+
     private final static Log log = LogFactory.getLog( RemoteCacheServer.class );
 
-    /** Description of the Field */
+    /** timing -- if we should record operation times. */
     protected final static boolean timing = true;
 
     //true;
@@ -363,6 +365,7 @@ public class RemoteCacheServer
                 }
                 catch ( Exception oee )
                 {
+                    // swallow
                 }
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER

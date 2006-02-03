@@ -28,4 +28,5 @@ public class ZombieLateralCacheWatch
     extends ZombieCacheWatch
     implements ILateralCacheObserver
 {
+    // nothing
 }

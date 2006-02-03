@@ -31,7 +31,9 @@ public class LateralCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements Serializable, ILateralCacheAttributes
 {
-    
+
+    private static final long serialVersionUID = -3408449508837393660L;
+
     private static final boolean DEFAULT_RECEIVE = true;
     
     String transmissionTypeName = "UDP";

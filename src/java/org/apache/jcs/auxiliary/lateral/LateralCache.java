@@ -39,6 +39,8 @@ import org.apache.jcs.engine.behavior.IZombie;
 public class LateralCache
     implements ICache
 {
+    private static final long serialVersionUID = 6274549256562382782L;
+
     private final static Log log = LogFactory.getLog( LateralCache.class );
 
     // generalize this, use another interface

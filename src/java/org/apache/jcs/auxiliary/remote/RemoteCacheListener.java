@@ -39,6 +39,8 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 public class RemoteCacheListener
     implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     private final static Log log = LogFactory.getLog( RemoteCacheListener.class );
 
     /**

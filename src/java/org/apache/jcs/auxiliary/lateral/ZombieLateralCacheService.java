@@ -17,20 +17,18 @@ package org.apache.jcs.auxiliary.lateral;
  */
 
 import java.io.Serializable;
-import java.util.Set;
 import java.util.Collections;
+import java.util.Set;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-
 import org.apache.jcs.engine.ZombieCacheService;
-
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * The ZombieLateralCacheService is used a facade when the lateral is not
  * available. It balks when the lateral is in error. When lateral service is
  * restored, this is replaced by a live facade.
- *  
+ * 
  */
 public class ZombieLateralCacheService
     extends ZombieCacheService
@@ -45,6 +43,7 @@ public class ZombieLateralCacheService
      */
     public void update( ICacheElement item, long listenerId )
     {
+        // zombies have no inner life
     }
 
     /*
@@ -55,6 +54,7 @@ public class ZombieLateralCacheService
      */
     public void remove( String cacheName, Serializable key, long listenerId )
     {
+        // zombies have no inner life
     }
 
     /*
@@ -65,6 +65,7 @@ public class ZombieLateralCacheService
      */
     public void removeAll( String cacheName, long listenerId )
     {
+        // zombies have no inner life
     }
 
     /*

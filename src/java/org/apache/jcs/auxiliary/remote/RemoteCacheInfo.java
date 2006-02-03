@@ -25,11 +25,10 @@ package org.apache.jcs.auxiliary.remote;
  */
 public class RemoteCacheInfo
 {
-
-    // shouldn't be instantiated
-    /** Constructor for the RemoteCacheInfo object */
+    /** shouldn't be instantiated */
     private RemoteCacheInfo()
     {
+        super();
     }
 
     /**

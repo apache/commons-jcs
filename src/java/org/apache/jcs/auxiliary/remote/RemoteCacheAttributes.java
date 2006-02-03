@@ -29,6 +29,8 @@ public class RemoteCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements IRemoteCacheAttributes
 {
+    private static final long serialVersionUID = -1555143736942374000L;
+
     private String remoteServiceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
 
     private String remoteHost;
@@ -69,6 +71,7 @@ public class RemoteCacheAttributes
     /** Constructor for the RemoteCacheAttributes object */
     public RemoteCacheAttributes()
     {
+        super();
     }
 
     /**
@@ -183,6 +186,7 @@ public class RemoteCacheAttributes
         }
         catch ( Exception e )
         {
+            // swallow
         }
         return this;
     }

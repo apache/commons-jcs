@@ -10,12 +10,24 @@ public abstract class AbstractAuxiliaryCacheAttributes
     implements AuxiliaryCacheAttributes
 {
 
+    /**
+     * cacheName
+     */
     protected String cacheName;
 
+    /**
+     * name
+     */
     protected String name;
 
+    /**
+     * eventQueueType -- pooled or single threaded
+     */
     protected int eventQueueType;
 
+    /**
+     * Named when pooled
+     */
     protected String eventQueuePoolName;
 
     /*

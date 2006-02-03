@@ -59,7 +59,7 @@ public class RemoteCacheFailoverRunner
      * Constructor for the RemoteCacheFailoverRunner object. This allows the
      * FailoverRunner to modify the facade that the CompositeCache references.
      * 
-     * @param facade,
+     * @param facade
      *            the facade the CompositeCache talks to.
      * @param cacheMgr
      */

@@ -32,6 +32,8 @@ public class TCPLateralCacheAttributes
     implements ITCPLateralCacheAttributes
 {
 
+    private static final long serialVersionUID = 1077889204513905220L;
+
     private static final String DEFAULT_UDP_DISCOVERY_ADDRESS = "228.5.6.7";
 
     private static final int DEFAULT_UDP_DISCOVERY_PORT = 6789;

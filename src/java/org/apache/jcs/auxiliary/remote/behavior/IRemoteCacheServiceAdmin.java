@@ -27,4 +27,5 @@ import org.apache.jcs.engine.behavior.ICacheServiceAdmin;
 public interface IRemoteCacheServiceAdmin
     extends Remote, ICacheServiceAdmin
 {
+    // nothing
 }

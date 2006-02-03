@@ -39,15 +39,17 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 public class RemoteCacheServerListener
     implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
 {
+    private static final long serialVersionUID = -8780933366946138971L;
+
     private final static Log log = LogFactory.getLog( RemoteCacheServerListener.class );
 
-    /** Description of the Field */
+    /** cacheMgr */
     protected static transient CompositeCacheManager cacheMgr;
 
-    /** Description of the Field */
+    /** Singleton instance of the listner */
     protected static IRemoteCacheListener instance;
 
-    /** Description of the Field */
+    /** configuration attributes. */
     protected IRemoteCacheAttributes irca;
 
     /** Description of the Field */

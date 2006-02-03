@@ -33,7 +33,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
  * laterally configured caches. Non laterally configured cache regions should
- * still bea ble to participate in removal. But if there is a non laterally
+ * still be able to participate in removal. But if there is a non laterally
  * configured cache hub, then lateral removals may be necessary. For flat
  * webserver production environments, without a strong machine at the app server
  * level, distribution and search may need to occur at the lateral cache level.
@@ -48,7 +48,9 @@ public abstract class LateralCacheAbstractManager
 {
     private final static Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
-    // each manager instance has caches
+    /** 
+     * Each manager instance has caches.
+     */
     protected final Map caches = new HashMap();
 
     /**

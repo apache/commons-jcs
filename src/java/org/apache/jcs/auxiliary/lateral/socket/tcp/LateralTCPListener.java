@@ -46,6 +46,8 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 public class LateralTCPListener
     implements ILateralCacheListener, Serializable
 {
+    private static final long serialVersionUID = -9107062664967131738L;
+
     private final static Log log = LogFactory.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinte. */

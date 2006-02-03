@@ -52,7 +52,7 @@ public abstract class LateralCacheAbstractFactory
      * <p>
      * This should be called by create cache.
      * 
-     * @param lac, LateralCacheAttributes
+     * @param lac  LateralCacheAttributes
      * @param cacheMgr
      */
     public abstract void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr );

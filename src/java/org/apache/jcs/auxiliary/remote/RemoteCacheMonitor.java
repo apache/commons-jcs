@@ -72,6 +72,7 @@ public class RemoteCacheMonitor
     /** Constructor for the RemoteCacheMonitor object */
     private RemoteCacheMonitor()
     {
+        super();
     }
 
     /**
@@ -137,6 +138,7 @@ public class RemoteCacheMonitor
                             }
                             catch ( InterruptedException ignore )
                             {
+                                // swallow
                             }
                         }
                     }

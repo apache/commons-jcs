@@ -55,7 +55,7 @@ public class SocketOpener
         }
         catch ( InterruptedException ire )
         {
-
+            // swallow
         }
         return opener.getSocket();
     }
@@ -82,6 +82,7 @@ public class SocketOpener
         }
         catch ( IOException ioe )
         {
+            // swallow
         }
     }
 

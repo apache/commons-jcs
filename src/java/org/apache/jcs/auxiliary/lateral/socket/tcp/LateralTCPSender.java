@@ -346,6 +346,10 @@ public class LateralTCPSender
     public void dispose( String cache )
         throws IOException
     {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Dispose called for cache [" + cache + "]" );
+        }
         // WILL CLOSE CONNECTION USED BY ALL
         oos.close();
     }
@@ -382,8 +386,11 @@ public class LateralTCPSender
         return remoteHost;
     }
 
-    /** testing Method 
-     * @param args*/
+    /** 
+     * This is a Testing Method.  It should be moved to a unit test.
+     *  
+     * @param args
+     */
     public static void main( String args[] )
     {
         try

@@ -28,4 +28,5 @@ public class LateralCacheWatchRepairable
     extends CacheWatchRepairable
     implements ILateralCacheObserver
 {
+    //nothing
 }

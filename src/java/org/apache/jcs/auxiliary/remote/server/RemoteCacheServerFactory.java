@@ -46,6 +46,7 @@ public class RemoteCacheServerFactory
     /** Constructor for the RemoteCacheServerFactory object */
     private RemoteCacheServerFactory()
     {
+        super();
     }
 
     /////////////////////// Statup/shutdown methods. //////////////////
@@ -182,6 +183,7 @@ public class RemoteCacheServerFactory
             }
             catch ( InterruptedException ex )
             {
+                // swallow
             }
             System.exit( 0 );
         }

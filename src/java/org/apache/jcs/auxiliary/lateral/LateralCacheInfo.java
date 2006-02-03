@@ -29,6 +29,7 @@ public class LateralCacheInfo
     /** Constructor for the LateralCacheInfo object */
     private LateralCacheInfo()
     {
+        super();
     }
 
     /**

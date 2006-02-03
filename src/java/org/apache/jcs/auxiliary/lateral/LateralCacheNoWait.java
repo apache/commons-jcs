@@ -47,6 +47,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class LateralCacheNoWait
     implements AuxiliaryCache
 {
+    private static final long serialVersionUID = -7251187566116178475L;
+
     private final static Log log = LogFactory.getLog( LateralCacheNoWait.class );
 
     private final LateralCache cache;

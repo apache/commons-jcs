@@ -44,6 +44,8 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public class RemoteCacheManager
     implements AuxiliaryCacheManager
 {
+    private static final long serialVersionUID = 798077557166389498L;
+
     private final static Log log = LogFactory.getLog( RemoteCacheManager.class );
 
     // Contains mappings of Location instance to RemoteCacheManager instance.

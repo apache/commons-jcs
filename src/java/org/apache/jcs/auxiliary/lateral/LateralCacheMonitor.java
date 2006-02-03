@@ -82,7 +82,8 @@ public class LateralCacheMonitor
      * It's the clients responsibility to decide how many
      * of these there will be.
      *  
-     * @param manager*/
+     * @param manager
+     */
     public LateralCacheMonitor( ILateralCacheManager manager )
     {
         this.manager = manager;

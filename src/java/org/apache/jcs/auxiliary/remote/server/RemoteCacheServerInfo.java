@@ -29,6 +29,7 @@ public class RemoteCacheServerInfo
     /** Constructor for the RemoteCacheServerInfo object */
     private RemoteCacheServerInfo()
     {
+        super();
     }
 
     /**

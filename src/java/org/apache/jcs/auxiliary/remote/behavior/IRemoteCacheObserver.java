@@ -27,5 +27,5 @@ import org.apache.jcs.engine.behavior.ICacheObserver;
 public interface IRemoteCacheObserver
     extends Remote, ICacheObserver
 {
-
+    // nothing
 }
