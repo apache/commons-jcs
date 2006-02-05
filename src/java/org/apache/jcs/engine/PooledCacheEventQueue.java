@@ -612,12 +612,12 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * @param b,
+     * @param isWorkingArg
      *            whether the queue is functional
      */
-    public void setWorking( boolean b )
+    public void setWorking( boolean isWorkingArg )
     {
-        working = b;
+        working = isWorkingArg;
     }
 
     /**

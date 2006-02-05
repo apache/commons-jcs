@@ -52,6 +52,8 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 public class CompositeCacheManager
     implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, ShutdownObservable
 {
+    private static final long serialVersionUID = 7598584393134401756L;
+
     private final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 
     /** Caches managed by this cache manager */
@@ -114,11 +116,20 @@ public class CompositeCacheManager
         return instance;
     }
 
+    /**
+     * Initializes the cache manager using the props file for the given name.
+     * 
+     * @param propsFilename
+     * @return CompositeCacheManager configured from the give propsFileName
+     */
     public static synchronized CompositeCacheManager getInstance( String propsFilename )
     {
         if ( instance == null )
         {
-            log.debug( "Instance is null, creating with default config" );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Instance is null, creating with default config [" + propsFilename + "]" );                
+            }
 
             instance = createInstance();
 
@@ -140,8 +151,11 @@ public class CompositeCacheManager
     {
         if ( instance == null )
         {
-            log.debug( "Instance is null, creating with provided config" );
-
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Instance is null, creating with provided config" );
+            }
+            
             instance = createInstance();
         }
 
@@ -351,7 +365,7 @@ public class CompositeCacheManager
     /** Gets the cache attribute of the CacheHub object 
      * @param cacheName
      * @param cattr
-     * @return*
+     * @return
      */
     public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr )
     {
@@ -368,7 +382,7 @@ public class CompositeCacheManager
     public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         cattr.setCacheName( cacheName );
-        return getCache( cattr, this.defaultElementAttr );
+        return getCache( cattr, attr );
     }
 
     /** Gets the cache attribute of the CacheHub object 
@@ -395,6 +409,11 @@ public class CompositeCacheManager
     public CompositeCache getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         CompositeCache cache;
+        
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "attr = " + attr );
+        }
 
         synchronized ( caches )
         {

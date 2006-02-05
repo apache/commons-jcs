@@ -26,6 +26,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class Stats
     implements IStats
 {
+    private static final long serialVersionUID = 227327902875154010L;
 
     private IStatElement[] stats = null;
 

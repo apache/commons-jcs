@@ -22,13 +22,13 @@ import java.rmi.dgc.VMID;
  * A shared static variable holder for the lateral cache
  *  
  */
-public class CacheInfo
+public final class CacheInfo
 {
 
-    // shouldn't be instantiated
-    /** Constructor for the CacheInfo object */
+    /** shouldn't be instantiated */
     private CacheInfo()
     {
+        super();
     }
 
     /**

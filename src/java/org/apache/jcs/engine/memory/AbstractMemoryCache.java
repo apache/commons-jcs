@@ -42,6 +42,10 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * Some common code for the LRU and MRU caches.
+ * <p>
+ * This keeps a static reference to a memory shrinker clock daemon. If this
+ * region is configured to use the shrinker, the clock daemon will be setup to
+ * run the shrinker on this region.
  * 
  * @version $Id$
  */
@@ -50,6 +54,9 @@ public abstract class AbstractMemoryCache
 {
     private final static Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
+    private static final int DEFAULT_CHUNK_SIZE = 2;
+
+    /** The region name. This defines a namespace of sorts. */
     protected String cacheName;
 
     /**
@@ -72,11 +79,11 @@ public abstract class AbstractMemoryCache
      */
     protected CompositeCache cache;
 
-    // status
+    /** status */
     protected int status;
 
-    // make configurable
-    protected int chunkSize = 2;
+    /** How many to spool at a time. TODO make configurable */
+    protected int chunkSize = DEFAULT_CHUNK_SIZE;
 
     /**
      * The background memory shrinker, one for all regions.
@@ -229,7 +236,6 @@ public abstract class AbstractMemoryCache
     public int getStatus()
     {
         return this.status;
-        //return this.STATUS_ALIVE;
     }
 
     /**
@@ -291,8 +297,8 @@ public abstract class AbstractMemoryCache
      * @return The cache value
      */
     public CompositeCache getCompositeCache()
-    { 
-        return this.cache; 
+    {
+        return this.cache;
     }
 
     public Set getGroupKeys( String groupName )
@@ -319,7 +325,7 @@ public abstract class AbstractMemoryCache
      * Allows us to set the daemon status on the clockdaemon
      * 
      * @author aaronsm
-     *  
+     * 
      */
     class MyThreadFactory
         implements ThreadFactory

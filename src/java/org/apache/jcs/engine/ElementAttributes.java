@@ -38,6 +38,8 @@ public class ElementAttributes
     implements IElementAttributes, Serializable, Cloneable
 {
 
+    private static final long serialVersionUID = 7814990748035017441L;
+
     /**
      * can this item be flushed to disk
      */
@@ -183,6 +185,7 @@ public class ElementAttributes
         }
         catch ( Exception e )
         {
+            // swallow
         }
         return null;
     }

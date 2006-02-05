@@ -47,23 +47,25 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class MRUMemoryCache
     extends AbstractMemoryCache
 {
+    private static final long serialVersionUID = 5013101678192336129L;
+
     private final static Log log = LogFactory.getLog( MRUMemoryCache.class );
 
-    int hitCnt = 0;
+    private int hitCnt = 0;
 
-    int missCnt = 0;
+    private int missCnt = 0;
 
-    int putCnt = 0;
+    private int putCnt = 0;
 
     /**
      * Object to lock on the Field
      */
-    protected int[] lockMe = new int[0];
+    private int[] lockMe = new int[0];
 
     /**
      * MRU list.
      */
-    protected LinkedList mrulist = new LinkedList();
+    private LinkedList mrulist = new LinkedList();
 
     /**
      * For post reflection creation initialization
@@ -234,11 +236,7 @@ public class MRUMemoryCache
                 log.debug( "ce =" + ce );
             }
 
-            if ( ce == null )
-            {
-
-            }
-            else
+            if ( ce != null )
             {
                 found = true;
                 ce.getElementAttributes().setLastAccessTimeNow();
@@ -257,7 +255,6 @@ public class MRUMemoryCache
 
         try
         {
-
             if ( !found )
             {
                 // Item not found in cache.

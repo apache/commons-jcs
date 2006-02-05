@@ -6,15 +6,19 @@ package org.apache.jcs.utils.threadpool.behavior;
  */
 public interface IPoolConfiguration
 {
-
+    /** abort when queue is full and max threads is reached. */
     public static final String POLICY_ABORT = "ABORT";
 
+    /** block when queue is full and max threads is reached. */
     public static final String POLICY_BLOCK = "BLOCK";
 
+    /** run in current thread when queue is full and max threads is reached. */
     public static final String POLICY_RUN = "RUN";
 
+    /** wait when queue is full and max threads is reached. */
     public static final String POLICY_WAIT = "WAIT";
 
+    /** discard oldest when queue is full and max threads is reached. */
     public static final String POLICY_DISCARDOLDEST = "DISCARDOLDEST";
 
     /**

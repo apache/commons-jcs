@@ -28,12 +28,9 @@ import org.apache.jcs.engine.behavior.ICache;
 public class CacheDescriptor
 {
 
-    /** Description of the Field */
+    /** This is the auxiliary that will do the work. */
     public final ICache cache;
 
-    /*
-     * Map ICacheListener to ICacheEventQueue.
-     */
     /** Description of the Field */
     public final Map eventQMap = new Hashtable();
 
@@ -52,4 +49,3 @@ public class CacheDescriptor
     }
 
 }
-// end class

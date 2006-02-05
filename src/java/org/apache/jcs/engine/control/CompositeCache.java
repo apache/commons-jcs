@@ -65,6 +65,8 @@ import org.apache.jcs.engine.control.group.GroupId;
 public class CompositeCache
     implements ICache, Serializable
 {
+    private static final long serialVersionUID = -2838097410378294960L;
+
     private final static Log log = LogFactory.getLog( CompositeCache.class );
 
     /**
@@ -190,33 +192,33 @@ public class CompositeCache
      * Put an item into the cache. If it is localOnly, then do no notify remote
      * or lateral auxiliaries.
      * 
-     * @param ce,
+     * @param cacheElement
      *            the ICacheElement
-     * @param localOnly,
+     * @param localOnly
      *            Whether the operation should be restricted to local
      *            auxiliaries.
      * @exception IOException
      */
-    protected synchronized void update( ICacheElement ce, boolean localOnly )
+    protected synchronized void update( ICacheElement cacheElement, boolean localOnly )
         throws IOException
     {
 
         // not thread safe, but just for debugging and testing.
         updateCount++;
         
-        if ( ce.getKey() instanceof String && ce.getKey().toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
+        if ( cacheElement.getKey() instanceof String && cacheElement.getKey().toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             throw new IllegalArgumentException( "key must not end with " + CacheConstants.NAME_COMPONENT_DELIMITER
                 + " for a put operation" );
         }
-        else if ( ce.getKey() instanceof GroupId )
+        else if ( cacheElement.getKey() instanceof GroupId )
         {
             throw new IllegalArgumentException( "key cannot be a GroupId " + " for a put operation" );
         }
 
         log.debug( "Updating memory cache" );
 
-        memCache.update( ce );
+        memCache.update( cacheElement );
 
         // Updates to all auxiliary caches -- remote and laterals, can add as
         // many of each
@@ -257,20 +259,20 @@ public class CompositeCache
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "ce.getElementAttributes().getIsRemote() = " + ce.getElementAttributes().getIsRemote() );
+                    log.debug( "ce.getElementAttributes().getIsRemote() = " + cacheElement.getElementAttributes().getIsRemote() );
                 }
 
-                if ( ce.getElementAttributes().getIsRemote() && !localOnly )
+                if ( cacheElement.getElementAttributes().getIsRemote() && !localOnly )
                 {
                     try
                     {
                         // need to make sure the group cache understands that
                         // the
                         // key is a group attribute on update
-                        aux.update( ce );
+                        aux.update( cacheElement );
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Updated remote store for " + ce.getKey() + ce );
+                            log.debug( "Updated remote store for " + cacheElement.getKey() + cacheElement );
                         }
                     }
                     catch ( IOException ex )
@@ -289,7 +291,7 @@ public class CompositeCache
                 {
                     log.debug( "lateralcache in aux list: cattr " + cacheAttr.getUseLateral() );
                 }
-                if ( cacheAttr.getUseLateral() && ce.getElementAttributes().getIsLateral() && !localOnly )
+                if ( cacheAttr.getUseLateral() && cacheElement.getElementAttributes().getIsLateral() && !localOnly )
                 {
                     // later if we want a multicast, possibly delete abnormal
                     // broadcaster
@@ -297,10 +299,10 @@ public class CompositeCache
                     // Currently always multicast even if the value is
                     // unchanged,
                     // just to cause the cache item to move to the front.
-                    aux.update( ce );
+                    aux.update( cacheElement );
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "updated lateral cache for " + ce.getKey() );
+                        log.debug( "updated lateral cache for " + cacheElement.getKey() );
                     }
                 }
             }
@@ -359,6 +361,7 @@ public class CompositeCache
                 }
                 catch ( Exception oee )
                 {
+                    // swallow
                 }
                 if ( log.isDebugEnabled() )
                 {
@@ -788,7 +791,7 @@ public class CompositeCache
     /**
      * Removes all cached items.
      * 
-     * @param localOnly, must pass in false to get remote and lateral aux's updated.  This prevents
+     * @param localOnly  must pass in false to get remote and lateral aux's updated.  This prevents
      * looping.
      * @throws IOException
      */

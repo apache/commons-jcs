@@ -85,6 +85,13 @@ public class PoolConfiguration
     public PoolConfiguration( boolean useBoundary, int boundarySize, int maximumPoolSize, int minimumPoolSize,
                              int keepAliveTime, String whenBlockedPolicy, int startUpSize )
     {
+        setUseBoundary( useBoundary ) ;
+        setBoundarySize( boundarySize );
+        setMaximumPoolSize( maximumPoolSize );
+        setMinimumPoolSize( minimumPoolSize );
+        setKeepAliveTime( keepAliveTime );
+        setWhenBlockedPolicy( whenBlockedPolicy );
+        setStartUpSize( startUpSize );
     }
 
     /**

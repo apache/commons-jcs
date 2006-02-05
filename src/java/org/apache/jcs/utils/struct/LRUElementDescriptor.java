@@ -4,11 +4,13 @@ import org.apache.jcs.engine.memory.util.DoubleLinkedListNode;
 
 /**
  * @author aaronsm
- *  
+ * 
  */
 public class LRUElementDescriptor
     extends DoubleLinkedListNode
 {
+
+    private static final long serialVersionUID = 8249555756363020156L;
 
     /**
      * <code>key</code>

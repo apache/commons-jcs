@@ -25,6 +25,8 @@ public class MemoryElementDescriptor
     extends DoubleLinkedListNode
 {
 
+    private static final long serialVersionUID = -1905161209035522460L;
+
     /** The CacheElement wrapped by this descriptor */
     public ICacheElement ce;
 

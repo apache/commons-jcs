@@ -18,32 +18,33 @@ package org.apache.jcs.engine;
 
 import java.io.Serializable;
 
-import org.apache.jcs.engine.behavior.IElementAttributes;
-
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Generic element wrapper. Often stuffed inside another.
- *  
+ * 
  */
 public class CacheElement
     implements ICacheElement, Serializable
 {
 
-    /** Description of the Field */
+    private static final long serialVersionUID = -6062305728297627263L;
+
+    /** The name of the cache region. This is a namespace. */
     public final String cacheName;
 
-    /** Description of the Field */
+    /** This is the cache key by which the value can be referenced. */
     public final Serializable key;
 
-    /** Description of the Field */
+    /** This is the cached value, reference by the key. */
     public final Serializable val;
 
-    /** Description of the Field */
+    /**
+     * These attributes hold information about the element and what it is
+     * allowed to do.
+     */
     public ElementAttributes attr;
-
-    // make sure it is open for spooling?
-    //public boolean isLocked = false;
 
     /**
      * Constructor for the CacheElement object
@@ -139,16 +140,15 @@ public class CacheElement
     }
 
     /**
-     * For debuggin only.
+     * For debugging only.
      * 
      * @return String representation
-     *  
+     * 
      */
     public String toString()
     {
-        return "[cacheName=" + cacheName + ", key=" + key + ", val=" + val + ", attr = " + attr + "]";
+        return "[CacheElement: cacheName [" + cacheName + "], key [" + key + "], val [" + val + "], attr [" + attr
+            + "]";
     }
 
 }
-// end class
-

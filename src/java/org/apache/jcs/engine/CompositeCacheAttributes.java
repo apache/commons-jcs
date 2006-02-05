@@ -19,40 +19,67 @@ package org.apache.jcs.engine;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 
 /**
- * Description of the Class
- *  
+ * The CompositeCacheAttributes defines the general cache region settings. If a
+ * region is not explicitly defined in the cache.ccf then it inherits the cache
+ * default settings.
+ * <p>
+ * If all the default attributes are not defined in the default region
+ * definition in the cache.ccf, the hard coded defaults will be used.
+ * 
  */
 public class CompositeCacheAttributes
     implements ICompositeCacheAttributes, Cloneable
 {
 
+    private static final long serialVersionUID = 6754049978134196787L;
+
     // Allows for programmatic stopping of configuration information. Shouldn't
     // use.
     // cannot turn on service if it is not set in props. Only stop.
-    private boolean useLateral = true;
+    private static final boolean DEFAULT_USE_LATERAL = true;
 
-    private boolean useRemote = true;
+    private static final boolean DEFAULT_USE_REMOTE = true;
 
-    private boolean useDisk = true;
+    private static final boolean DEFAULT_USE_DISK = true;
 
-    private boolean useMemoryShrinker = false;
+    private static final boolean DEFAULT_USE_SHRINKER = false;
 
-    private int maxObjs = 100;
+    private static final int DEFAULT_MAX_OBJECTS = 100;
 
-    /**
-     * maxMemoryIdleTimeSeconds
-     */
-    protected long maxMemoryIdleTimeSeconds = 60 * 120; // 2 hours
+    private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120; // 2 hours
 
-    /**
-     * shrinkerIntervalSeconds
-     */
-    protected long shrinkerIntervalSeconds = 30;
+    private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 30; 
 
-    protected int maxSpoolPerRun = -1;
+    private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1; 
 
+    private static final String DEFAULT_MEMORY_CACHE_NAME = "org.apache.jcs.engine.memory.lru.LRUMemoryCache";
+    
+    private boolean useLateral = DEFAULT_USE_LATERAL;
+
+    private boolean useRemote = DEFAULT_USE_REMOTE;
+
+    /** Whether we should use a disk cache if it is configured. */
+    private boolean useDisk = DEFAULT_USE_DISK;
+
+    /** Whether or not we should run the memory shrinker thread. */
+    private boolean useMemoryShrinker = DEFAULT_USE_SHRINKER;
+
+    /** The maximum objects that the memory cache will be allowed to hold. */
+    private int maxObjs = DEFAULT_MAX_OBJECTS;
+
+    /** maxMemoryIdleTimeSeconds */
+    private long maxMemoryIdleTimeSeconds = DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS;
+
+    /** shrinkerIntervalSeconds  */
+    private long shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
+
+    /** The maximum number the shrinker will spool to disk per run. */
+    private int maxSpoolPerRun = DEFAULT_MAX_SPOOL_PER_RUN;
+
+    /** The name of this cache region. */
     private String cacheName;
 
+    /** The name of the memory cache implementation class. */
     private String memoryCacheName;
 
     /**
@@ -60,8 +87,9 @@ public class CompositeCacheAttributes
      */
     public CompositeCacheAttributes()
     {
+        super();
         // set this as the default so the configuration is a bit simpler
-        memoryCacheName = "org.apache.jcs.engine.memory.lru.LRUMemoryCache";
+        memoryCacheName = DEFAULT_MEMORY_CACHE_NAME;
     }
 
     /**
@@ -293,11 +321,10 @@ public class CompositeCacheAttributes
         try
         {
             ICompositeCacheAttributes cattr = (CompositeCacheAttributes) this.clone();
-            //System.out.println( "cattr = " + cattr );
             return cattr;
         }
         catch ( Exception e )
-        {
+        {            
             System.err.println( e.toString() );
             return new CompositeCacheAttributes();
         }

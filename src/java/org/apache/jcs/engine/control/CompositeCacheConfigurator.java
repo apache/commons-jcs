@@ -428,16 +428,23 @@ public class CompositeCacheConfigurator
     /**
      * Get an aux cache for the listed aux for a region.
      * 
-     * @param cache
-     * @param props
-     * @param auxName
-     * @param regName
+     * @param cache the cache manager
+     * @param props the configuration propeties
+     * @param auxName the name of the auxiliary cache
+     * @param regName the name of the region.
      * @return AuxiliaryCache
      */
     protected AuxiliaryCache parseAuxiliary( CompositeCache cache, Properties props, String auxName, String regName )
     {
         AuxiliaryCache auxCache;
 
+        if ( log.isDebugEnabled() )
+        {
+            // cache isn't used.
+            // TODO change method signature if is isn't needed.
+            log.debug( "parseAuxiliary, Cache = " + cache );
+        }
+        
         // GET FACTORY
         AuxiliaryCacheFactory auxFac = compositeCacheManager.registryFacGet( auxName );
         if ( auxFac == null )

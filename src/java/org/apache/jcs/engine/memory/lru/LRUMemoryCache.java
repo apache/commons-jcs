@@ -59,16 +59,18 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class LRUMemoryCache
     extends AbstractMemoryCache
 {
+    private static final long serialVersionUID = 6403738094136424201L;
+
     private final static Log log = LogFactory.getLog( LRUMemoryCache.class );
 
     // double linked list for lru
     private DoubleLinkedList list;
 
-    int hitCnt = 0;
+    private int hitCnt = 0;
 
-    int missCnt = 0;
+    private int missCnt = 0;
 
-    int putCnt = 0;
+    private int putCnt = 0;
 
     /**
      * For post reflection creation initialization.
@@ -107,7 +109,7 @@ public class LRUMemoryCache
             addFirst( ce );
             // this must be synchronized
             old = (MemoryElementDescriptor) map.put( ( (MemoryElementDescriptor) list.getFirst() ).ce.getKey(),
-                                                     (MemoryElementDescriptor) list.getFirst() );
+                                                     list.getFirst() );
             // If the node was the same as an existing node, remove it.
             if ( old != null && ( (MemoryElementDescriptor) list.getFirst() ).ce.getKey().equals( old.ce.getKey() ) )
             {
@@ -401,6 +403,12 @@ public class LRUMemoryCache
         }
     }
 
+    /**
+     * 
+     *
+     * @author Aaron Smuts
+     *
+     */
     public class MapEntryWrapper
         implements Map.Entry
     {

@@ -70,6 +70,7 @@ public interface IUtilConstants
                     }
                     catch ( IOException ignore )
                     {
+                        // swallow
                     }
                 }
             }
@@ -77,9 +78,10 @@ public interface IUtilConstants
             ADMIN_PASSWORD = props.getProperty( "admin.password", "system" );
         }
 
-        /** Constructor for the Config object */
+        /** No instances please. */
         private Config()
         {
+            super();
         }
     }
 }

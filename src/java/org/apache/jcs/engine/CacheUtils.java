@@ -24,17 +24,20 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
+ * This will be superceded by the new pluggable serializer infastructure.
+ * 
  * basic utility functions
  * 
  * TODO move to util
  *  
  */
-public class CacheUtils
+public final class CacheUtils
 {
 
-    /** Constructor for the CacheUtils object */
+    /** No instances please. */
     private CacheUtils()
     {
+        super();
     }
 
     /** Returns a deeply cloned object. 

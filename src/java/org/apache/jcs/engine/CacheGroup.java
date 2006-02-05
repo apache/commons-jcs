@@ -25,13 +25,13 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 public class CacheGroup
 {
 
-    //private Atrributes attr;
-    /** Description of the Field */
+    /** Element configuration. */
     public IElementAttributes attr;
 
     /** Constructor for the CacheGroup object */
     public CacheGroup()
     {
+        super();
     }
 
     /**

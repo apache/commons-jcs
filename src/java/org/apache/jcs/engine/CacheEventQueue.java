@@ -47,14 +47,14 @@ public class CacheEventQueue
 {
     private static final Log log = LogFactory.getLog( CacheEventQueue.class );
 
-    // private LinkedQueue queue = new LinkedQueue();
-
     private static final int queueType = SINGLE_QUEUE_TYPE;
 
+    private static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
+    
     // time to wait for an event before snuffing the background thread
     // if the queue is empty.
     // make configurable later
-    private int waitToDieMillis = 10000;
+    private int waitToDieMillis = DEFAULT_WAIT_TO_DIE_MILLIS;
 
     private ICacheListener listener;
 
@@ -73,11 +73,7 @@ public class CacheEventQueue
 
     private Thread processorThread;
 
-    // Internal queue implementation
-
     private Object queueLock = new Object();
-
-    // Dummy node
 
     private Node head = new Node();
 
@@ -159,7 +155,7 @@ public class CacheEventQueue
     /**
      * Sets the time to wait for events before killing the background thread.
      * 
-     * @param wtdm,
+     * @param wtdm
      *            the ms for the q to sit idle.
      */
     public void setWaitToDieMillis( int wtdm )
@@ -475,12 +471,11 @@ public class CacheEventQueue
         /**
          * Constructor for the QProcessor object
          * 
-         * @param aQueue,
+         * @param aQueue
          *            the event queue to take items from.
          */
         QProcessor( CacheEventQueue aQueue )
         {
-
             super( "CacheEventQueue.QProcessor-" + aQueue.cacheName );
 
             setDaemon( true );

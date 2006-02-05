@@ -33,44 +33,25 @@ public class Attributes
     implements IAttributes, Serializable, Cloneable
 {
 
+    private static final long serialVersionUID = 2245148271982787250L;
+
     // too slow to be private
-    // need direct access
-    // remove
-    /** Description of the Field */
+    // need direct access for performance.
+    
+    /** Can this be send over a lateral or remote service. */
     public boolean IS_DISTRIBUTE = false;
 
-    // lateral
-
-    /** Description of the Field */
+    /** Can the element be set laterally */
     public boolean IS_LATERAL = false;
 
-    // lateral
-    /** Description of the Field */
-    public boolean IS_NOFLUSH = false;
-
-    /** Description of the Field */
-    public boolean IS_REPLY = false;
-
-    /** Description of the Field */
-    public boolean IS_SYNCHRONIZE = false;
-
-    /** Description of the Field */
+    /** Can the element be spooled to disk. */
     public boolean IS_SPOOL = false;
-
-    /** Description of the Field */
-    public boolean IS_GROUP_TTL_DESTROY = false;
-
-    /** Description of the Field */
-    public boolean IS_ORIGINAL = false;
 
     /** Description of the Field */
     public boolean IS_REMOTE = false;
 
-    // central rmi store
-    /** Description of the Field */
+    /** Is the attribute above the max life law. */
     public boolean IS_ETERNAL = true;
-
-    //false; // can turn off expiration
 
     /** Description of the Field */
     public long version = 0;
@@ -78,7 +59,6 @@ public class Attributes
     /** Description of the Field */
     public long ttl = 0;
 
-    // timetolive
     /** Description of the Field */
     public long default_ttl = 0;
 
@@ -94,7 +74,9 @@ public class Attributes
     /** Description of the Field */
     public long createTime = 0;
 
-    /** Constructor for the Attributes object */
+    /** 
+     * Set the create time.
+     */
     public Attributes()
     {
         this.createTime = System.currentTimeMillis();
@@ -107,14 +89,7 @@ public class Attributes
      */
     protected Attributes( Attributes attr )
     {
-
-        IS_NOFLUSH = attr.IS_NOFLUSH;
-        IS_REPLY = attr.IS_REPLY;
-        IS_SYNCHRONIZE = attr.IS_SYNCHRONIZE;
-        IS_GROUP_TTL_DESTROY = attr.IS_GROUP_TTL_DESTROY;
         IS_ETERNAL = attr.IS_ETERNAL;
-        // central rmi store
-        IS_ORIGINAL = attr.IS_ORIGINAL;
 
         IS_SPOOL = attr.IS_SPOOL;
         // waterfal onto disk, for pure disk set memory to 0
@@ -133,7 +108,6 @@ public class Attributes
 
     }
 
-    //public Object clone () {
     /**
      * clone
      * @return Attributes
@@ -159,7 +133,6 @@ public class Attributes
      */
     public Object clone2()
     {
-
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream( 100 );
@@ -169,7 +142,6 @@ public class Attributes
             oos.close();
 
             // deserialize byte array into ArrayList
-
             ByteArrayInputStream bais = new ByteArrayInputStream( buf );
             ObjectInputStream ois = new ObjectInputStream( bais );
             Attributes attr = (Attributes) ois.readObject();
@@ -180,12 +152,9 @@ public class Attributes
         }
         catch ( Exception e )
         {
+            // swallow
         }
         return null;
-        /*
-         * System.out.println( "cloning" ); Attributes attr = new Attributes(
-         * this ); return attr;
-         */
     }
 
     /**
@@ -210,16 +179,6 @@ public class Attributes
         this.ttl = ttl;
     }
 
-    //    /**
-    //     * Sets the defaultTimeToLive attribute of the Attributes object
-    //     *
-    //     * @param ttl The new defaultTimeToLive value
-    //     */
-    //    public void setDefaultTimeToLive( long ttl )
-    //    {
-    //        this.default_ttl = ttl;
-    //    }
-
     /**
      * Sets the idleTime attribute of the Attributes object
      * 
@@ -230,8 +189,6 @@ public class Attributes
     {
         this.idle = idle;
     }
-
-    //public void setListener( int event, CacheEventListener listerner) {}
 
     /**
      * Size in bytes.
@@ -307,15 +264,6 @@ public class Attributes
         return this.ttl;
     }
 
-    // NOT NECESSARY will be using max life not time left pattern
-    //    /** Description of the Method */
-    //    public long timeToSeconds( int days, int hours, int minutes, int seconds
-    // )
-    //        throws InvalidArgumentException
-    //    {
-    //        return 5;
-    //    }
-
     /*
      * 
      */
@@ -329,11 +277,5 @@ public class Attributes
             .append( String.valueOf( createTime ) ).append( " ]" );
 
         return dump.toString();
-        //dump.append( " IS_NOFLUSH = " + IS_NOFLUSH + "\n");
-        //dump.append( " IS_REPLY = " + IS_REPLY + "\n");
-        //dump.append( " IS_SYNCHRONIZE = " + IS_SYNCHRONIZE + "\n");
-        //dump.append( " IS_GROUP_TTL_DESTROY = " + IS_GROUP_TTL_DESTROY +
-        // "\n");
-        //dump.append( " IS_ORIGINAL = " + IS_ORIGINAL + "\n");
     }
 }

@@ -38,6 +38,7 @@ import java.util.Properties;
 public class PropertyGroups
     extends Hashtable
 {
+    private static final long serialVersionUID = -8722890143331210706L;
 
     private Properties props = null;
 

@@ -132,6 +132,7 @@ public abstract class PropertyLoader
                 }
                 catch ( Throwable ignore )
                 {
+                    // swallow
                 }
         }
 
@@ -156,8 +157,13 @@ public abstract class PropertyLoader
         return loadProperties( name, Thread.currentThread().getContextClassLoader() );
     }
 
+    /**
+     * Can't use this one.
+     *
+     */
     private PropertyLoader()
     {
+        super();
     } // this class is not extentible
 
 }

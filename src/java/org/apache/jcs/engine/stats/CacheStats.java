@@ -32,6 +32,7 @@ public class CacheStats
     extends Stats
     implements ICacheStats
 {
+    private static final long serialVersionUID = 529914708798168590L;
 
     private String regionName = null;
 

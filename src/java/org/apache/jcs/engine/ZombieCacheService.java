@@ -18,6 +18,8 @@ package org.apache.jcs.engine;
 
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheService;
 
@@ -31,11 +33,20 @@ public class ZombieCacheService
     implements ICacheService, IZombie
 {
 
-    /*
+    private static final Log log = LogFactory.getLog( ZombieCacheService.class );
+
+    
+    /**
      * 
+     * @param item
      */
     public void put( ICacheElement item )
     {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Zombie put for item " + item );
+        }
+        // zombies have no inner life
     }
 
     /*
@@ -44,6 +55,7 @@ public class ZombieCacheService
      */
     public void update( ICacheElement item )
     {
+        // zombies have no inner life
     }
 
     /*
@@ -64,7 +76,12 @@ public class ZombieCacheService
      * @return
      */
     public Serializable get( String cacheName, Serializable key, boolean container )
-    {
+    {        
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Zombie get for key [" + key + "] cacheName [" + cacheName + "] container [" + container + "]" );
+        }        
+        // zombies have no inner life
         return null;
     }
 
@@ -74,6 +91,7 @@ public class ZombieCacheService
      */
     public void remove( String cacheName, Serializable key )
     {
+        // zombies have no inner life
     }
 
     /*
@@ -82,6 +100,7 @@ public class ZombieCacheService
      */
     public void removeAll( String cacheName )
     {
+        // zombies have no inner life
     }
 
     /*
@@ -90,6 +109,8 @@ public class ZombieCacheService
      */
     public void dispose( String cacheName )
     {
+        // zombies have no inner life
+        return;
     }
 
     /*
@@ -98,6 +119,8 @@ public class ZombieCacheService
      */
     public void release()
     {
+        // zombies have no inner life
+        return;
     }
 
 }

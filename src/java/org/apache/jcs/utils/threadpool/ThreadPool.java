@@ -47,6 +47,11 @@ public class ThreadPool
         return queue;
     }
 
+    /**
+     * 
+     * @param run
+     * @throws InterruptedException
+     */
     public void execute( Runnable run )
         throws InterruptedException
     {

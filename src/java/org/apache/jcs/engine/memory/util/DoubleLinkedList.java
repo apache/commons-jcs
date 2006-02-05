@@ -10,7 +10,7 @@ public class DoubleLinkedList
 {
 
     // record size to avoid having to iterate
-    int size = 0;
+    private int size = 0;
 
     private final static Log log = LogFactory.getLog( DoubleLinkedList.class );
 
@@ -19,8 +19,13 @@ public class DoubleLinkedList
 
     private DoubleLinkedListNode last;
 
+    /**
+     * Default constructor.
+     *
+     */
     public DoubleLinkedList()
     {
+        super();
     }
 
     /**
@@ -244,7 +249,7 @@ public class DoubleLinkedList
         log.debug( "dumping Entries" );
         for ( DoubleLinkedListNode me = first; me != null; me = me.next )
         {
-            log.debug( "dump Entries> payload= '" + me.payload + "'" );
+            log.debug( "dump Entries> payload= '" + me.getPayload() + "'" );
         }
     }
 

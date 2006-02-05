@@ -31,6 +31,8 @@ package org.apache.jcs.config;
 public class PropertySetterException
     extends Exception
 {
+    private static final long serialVersionUID = -210271658004609028L;
+
     /** Description of the Field */
     protected Throwable rootCause;
 

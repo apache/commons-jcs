@@ -246,7 +246,7 @@ public class ThreadPoolManager
             Iterator it = names.iterator();
             while ( it.hasNext() )
             {
-                poolNames.add( (String) it.next() );
+                poolNames.add( it.next() );
             }
         }
         return poolNames;
