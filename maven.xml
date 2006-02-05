@@ -2,26 +2,19 @@
 	xmlns:deploy="deploy" xmlns:u="jelly:util" xmlns:maven="jelly:maven">
 
   <preGoal name="test:test">
-
     <!-- Work area for unit tests -->
-
     <mkdir dir="target/test-sandbox/logs"/>
     <copy todir="target/test-classes">
         <fileset dir="src/test-conf"/>
     </copy>
-
   </preGoal>
 
-
   <preGoal name="test:single">
-
     <!-- Work area for unit tests -->
-
     <mkdir dir="target/test-sandbox/logs"/>
     <copy todir="target/test-classes">
         <fileset dir="src/test-conf"/>
     </copy>
-
   </preGoal>
 
   <postGoal name="java:compile" >
@@ -30,7 +23,6 @@
 
 
   <goal name="rmic" xmlns:j="jelly:core" xmlns:u="jelly:util">
-
     <rmic base="${maven.build.dest}" classname="org.apache.jcs.auxiliary.remote.RemoteCacheListener">
       <classpath>
         <path refid="maven.dependency.classpath"/>
@@ -48,7 +40,6 @@
         <path refid="maven.dependency.classpath"/>
       </classpath>
     </rmic> 
-
   </goal>
 
   <goal name="copyjars">
@@ -57,9 +48,16 @@
     </j:forEach>
   </goal>
 
-
   <postGoal name="site">
     <attainGoal name="pdf"/>
   </postGoal>
-
+  
+  <!-- The eclipse goal runs .project and .classpath generation -->
+  <!-- I want to prevent the .project file genreation, so -->
+  <!-- the ant external tool builder will not get wiped out. -->
+  <goal name="eclipse:generate-project">
+    <!-- do nothing -->
+    <ant:echo>Not generating the .project file.</ant:echo>	  
+  </goal>
+  
 </project>
