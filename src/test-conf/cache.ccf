@@ -16,7 +16,7 @@ jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memo
 ################## THREAD POOL CONFIGURATION ###################
 # Default thread pool config
 thread_pool.default.boundarySize=2000
-thread_pool.default.maximumPoolSize=150
+thread_pool.default.maximumPoolSize=151
 thread_pool.default.minimumPoolSize=4
 thread_pool.default.keepAliveTime=350000
 #RUN ABORT WAIT BLOCK DISCARDOLDEST

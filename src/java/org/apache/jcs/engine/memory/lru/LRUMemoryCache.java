@@ -32,12 +32,12 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
-import org.apache.jcs.engine.memory.util.DoubleLinkedList;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.jcs.utils.struct.DoubleLinkedList;
 
 /**
  * A fast reference management system. The least recently used items move to the

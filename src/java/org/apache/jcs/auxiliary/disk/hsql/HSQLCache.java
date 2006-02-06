@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.utils.data.PropertyGroups;
+import org.apache.jcs.utils.props.PropertyLoader;
 
 /**
  * HSQLDB Based Local Persistence.
@@ -80,13 +80,13 @@ public class HSQLCache
 
         numInstances++;
 
-        //String rafroot = cattr.getDiskPath();
+        // String rafroot = cattr.getDiskPath();
         if ( rafroot == null )
         {
             try
             {
-                PropertyGroups pg = new PropertyGroups( "/cache.properties" );
-                rafroot = pg.getProperty( "diskPath" );
+                Properties props = PropertyLoader.loadProperties( "/cache.ccf" );
+                rafroot = props.getProperty( "diskPath" );
             }
             catch ( Exception e )
             {
@@ -191,7 +191,7 @@ public class HSQLCache
         catch ( SQLException e )
         {
             log.error( "Problem creating statement.", e );
-            //System.out.println( "Exception: " + e );
+            // System.out.println( "Exception: " + e );
             alive = false;
             return;
         }
@@ -325,7 +325,7 @@ public class HSQLCache
                 psInsert.setBytes( 2, element );
                 psInsert.execute();
                 psInsert.close();
-                //sStatement.executeUpdate(sql);
+                // sStatement.executeUpdate(sql);
             }
             catch ( SQLException e )
             {
@@ -418,9 +418,9 @@ public class HSQLCache
                     log.error( e );
                 }
             }
-            //else {
-            //return null;
-            //}
+            // else {
+            // return null;
+            // }
         }
         catch ( SQLException sqle )
         {
@@ -492,12 +492,12 @@ public class HSQLCache
     {
         try
         {
-            //reset();
+            // reset();
         }
         catch ( RuntimeException e )
         {
             log.error( e );
-            //reset();
+            // reset();
         }
     }
 
@@ -551,7 +551,7 @@ public class HSQLCache
     /**
      * @param groupName
      * @return
-     *  
+     * 
      */
     public Set getGroupKeys( String groupName )
     {

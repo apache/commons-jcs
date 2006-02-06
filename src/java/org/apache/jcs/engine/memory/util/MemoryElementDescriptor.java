@@ -17,6 +17,7 @@ package org.apache.jcs.engine.memory.util;
  */
 
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.utils.struct.DoubleLinkedListNode;
 
 /**
  * This wrapper is needed for double linked lists.

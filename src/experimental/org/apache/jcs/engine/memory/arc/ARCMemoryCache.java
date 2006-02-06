@@ -29,7 +29,7 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
-import org.apache.jcs.engine.memory.util.DoubleLinkedList;
+import org.apache.jcs.utils.struct.DoubleLinkedList;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;

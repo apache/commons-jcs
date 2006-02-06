@@ -47,5 +47,27 @@
         The documentation describes how to configure the cache.</p>        
       </answer>
     </faq>
+        
+    <faq id="manual-configuration">
+      <question>
+      	How can I configure JCS with my own properties?
+      </question>	
+    </faq>
+      <answer>
+        <p>
+		You don't have to put the cache.ccf file in the classpath; instead you can do the following:
+        </p>
+		<code>
+CompositeCacheManager ccm =
+CompositeCacheManager.getUnconfiguredInstance();
+
+Properties props = new Properties();
+
+props.load(/* load properties from some location defined by your app
+*/);
+
+ccm.configure(props);    
+       </code>
+       </answer>
     </part>
 </faqs>        

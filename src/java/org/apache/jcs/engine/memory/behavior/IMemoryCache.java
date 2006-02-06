@@ -33,9 +33,8 @@ public interface IMemoryCache
     extends ICacheType
 {
 
-    // for initialization
     /**
-     * Description of the Method
+     * Initialize the memory cache.
      * 
      * @param cacheName
      *            Description of the Parameter
