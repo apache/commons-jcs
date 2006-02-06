@@ -2,259 +2,297 @@
 
 <project>
 
-  <pomVersion>3</pomVersion>
-  <name>JCS</name>
-  <id>jcs</id>
-  <currentVersion>1.2.6.8</currentVersion>
-  <organization>
-    <name>Apache Software Foundation</name>
-    <url>http://jakarta.apache.org/</url>
-    <logo>/images/jakarta.png</logo>
-  </organization>
-  <inceptionYear>2002</inceptionYear>
-  <package>org.apache.jcs</package>
-  <logo></logo>
+	<pomVersion>3</pomVersion>
+	<name>JCS</name>
+	<id>jcs</id>
+	<currentVersion>1.2.6.8</currentVersion>
+	<organization>
+		<name>Apache Software Foundation</name>
+		<url>http://jakarta.apache.org/</url>
+		<logo>/images/jakarta.png</logo>
+	</organization>
+	<inceptionYear>2002</inceptionYear>
+	<package>org.apache.jcs</package>
+	<logo></logo>
 
 
-  <gumpRepositoryId>jakarta</gumpRepositoryId>
+	<gumpRepositoryId>jakarta</gumpRepositoryId>
 
 
-  <shortDescription>Cache</shortDescription>
-  <description>Comprehensive Caching System</description>
-  <url>http://jakarta.apache.org/turbine/jcs/</url>
-  <issueTrackingUrl>http://issues.apache.org/scarab/servlet/scarab/</issueTrackingUrl>
-  <siteAddress>minotaur.apache.org</siteAddress>
-  <siteDirectory>/www/jakarta.apache.org/turbine/jcs/</siteDirectory>
-  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-turbine-jcs/</distributionDirectory>
+	<shortDescription>Cache</shortDescription>
+	<description>Comprehensive Caching System</description>
+	<url>http://jakarta.apache.org/turbine/jcs/</url>
+	<issueTrackingUrl>
+		http://issues.apache.org/scarab/servlet/scarab/
+	</issueTrackingUrl>
+	<siteAddress>minotaur.apache.org</siteAddress>
+	<siteDirectory>/www/jakarta.apache.org/turbine/jcs/</siteDirectory>
+	<distributionDirectory>
+		/www/jakarta.apache.org/builds/jakarta-turbine-jcs/
+	</distributionDirectory>
 
-  <repository>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/jcs/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/jcs/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/</url>
-  </repository>
+	<repository>
+		<connection>
+			scm:svn:http://svn.apache.org/repos/asf/jakarta/jcs/trunk/
+		</connection>
+		<developerConnection>
+			scm:svn:https://svn.apache.org/repos/asf/jakarta/jcs/trunk/
+		</developerConnection>
+		<url>http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/</url>
+	</repository>
 
-  <mailingLists>
-    <mailingList>
-      <name>JCS User List</name>
-      <subscribe>jcs-users-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>jcs-users-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/</archive>
-    </mailingList>
-    <mailingList>
-      <name>JCS Developer List</name>
-      <subscribe>jcs-dev-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/</archive>
-    </mailingList>
-    <mailingList>
-      <name>OLD User list</name>
-      <subscribe></subscribe>
-      <unsubscribe></unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-user/</archive>
-    </mailingList>
-    <mailingList>
-      <name>OLD Developer list</name>
-      <subscribe></subscribe>
-      <unsubscribe></unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-dev/</archive>
-    </mailingList>
-  </mailingLists>
-
-
-  <developers>
-    <developer>
-      <name>Aaron Smuts</name>
-      <id>asmuts</id>
-      <email>asmuts@apache.org</email>
-      <organization/>
-    </developer>
-    <developer>
-      <name>James Taylor</name>
-      <id>jtaylor</id>
-      <email>james@jamestaylor.org</email>
-      <organization/>
-    </developer>
-    <developer>
-      <name>Hanson Char</name>
-      <id>hchar</id>
-      <email>hchar@apache.org</email>
-      <organization/>
-    </developer>
-    <developer>
-      <name>Travis Savo</name>
-      <id>tsavo</id>
-      <email>tsavo@ifilm.com</email>
-      <organization>IFilm</organization>
-    </developer>
-  </developers>
-
-  <contributors>
-  </contributors>
+	<mailingLists>
+		<mailingList>
+			<name>JCS User List</name>
+			<subscribe>
+				jcs-users-subscribe@jakarta.apache.org
+			</subscribe>
+			<unsubscribe>
+				jcs-users-unsubscribe@jakarta.apache.org
+			</unsubscribe>
+			<archive>
+				http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name>JCS Developer List</name>
+			<subscribe>jcs-dev-subscribe@jakarta.apache.org</subscribe>
+			<unsubscribe>
+				jcs-dev-unsubscribe@jakarta.apache.org
+			</unsubscribe>
+			<archive>
+				http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name>OLD User list</name>
+			<subscribe></subscribe>
+			<unsubscribe></unsubscribe>
+			<archive>
+				http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-user/
+			</archive>
+		</mailingList>
+		<mailingList>
+			<name>OLD Developer list</name>
+			<subscribe></subscribe>
+			<unsubscribe></unsubscribe>
+			<archive>
+				http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-dev/
+			</archive>
+		</mailingList>
+	</mailingLists>
 
 
-  <dependencies>
-    <dependency>
-      <id>commons-collections</id>
-      <version>3.0</version>
-    </dependency>
+	<developers>
+		<developer>
+			<name>Aaron Smuts</name>
+			<id>asmuts</id>
+			<email>asmuts@apache.org</email>
+			<organization />
+		</developer>
+		<developer>
+			<name>James Taylor</name>
+			<id>jtaylor</id>
+			<email>james@jamestaylor.org</email>
+			<organization />
+		</developer>
+		<developer>
+			<name>Hanson Char</name>
+			<id>hchar</id>
+			<email>hchar@apache.org</email>
+			<organization />
+		</developer>
+		<developer>
+			<name>Travis Savo</name>
+			<id>tsavo</id>
+			<email>tsavo@ifilm.com</email>
+			<organization>IFilm</organization>
+		</developer>
+	</developers>
 
-    <dependency>
-      <id>commons-configuration</id>
-      <version>20030706.202021</version>
-    </dependency>
-
-    <dependency>
-      <id>commons-logging</id>
-      <version>1.0.3</version>
-    </dependency>
-
-    <dependency>
-      <id>commons-lang</id>
-      <version>2.0</version>
-    </dependency>
-
-    <dependency>
-      <id>concurrent</id>
-      <version>1.0</version>
-      <url>http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</url>
-    </dependency>
-
-    <dependency>
-      <id>hsqldb</id>
-      <version>1.7.1</version>
-    </dependency>
-
-    <dependency>
-      <id>log4j</id>
-      <version>1.2.8</version>
-    </dependency>
-
-    <dependency>
-      <id>servletapi</id>
-      <version>2.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>jgroups</groupId>
-      <artifactId>jgroups-all</artifactId>
-      <version>2.2.8</version>
-    </dependency>
-
-    <dependency>
-      <id>tomcat</id>
-      <version>3.2.1</version>
-      <jar>tomcat-util-3.2.1.jar</jar>
-    </dependency>
-
-    <dependency>
-      <id>velocity</id>
-      <version>1.4</version>
-    </dependency>
-
-    <dependency>
-      <id>junit</id>
-      <version>3.8.1</version>
-    </dependency>
-
-    <dependency>
-      <id>xmlrpc</id>
-      <version>1.2-b1</version>
-      <url>http://xml.apache.org/xmlrpc/</url>
-    </dependency>
-
-    <dependency>
-      <id>xerces:xercesImpl</id>
-      <version>2.6.2</version>
-      <url>http://xml.apache.org/xerces2-j/</url>
-    </dependency>
-
-    <dependency>
-      <id>xml-apis</id>
-      <version>2.0.2</version>
-      <url>http://xml.apache.org/commons/</url>
-    </dependency>
-
-    <dependency>
-      <id>struts</id>
-      <version>1.1</version>
-      <jar>struts-1.1.jar</jar>
-    </dependency>
-
-    <dependency>
-      <id>berkeleydb</id>
-      <version>1.5.0</version>
-    </dependency>
-    <!--
-	<dependency>
-  		<groupId>maven-plugins</groupId>
-  		<artifactId>maven-findbugs-plugin</artifactId>
-  		<version>0.9.1</version>
-  		<type>plugin</type>
-	</dependency>
-    -->
-  </dependencies>
+	<contributors></contributors>
 
 
-  <build>
-    <sourceDirectory>src/java</sourceDirectory>
-    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
-    <aspectSourceDirectories></aspectSourceDirectories>
-    <resources/>
-    <unitTest>
-      <includes>
-        <include>**/TestCacheElementRetrieval.java</include>
-        <include>**/TestDiskCacheNoMemory.java</include>
-        <include>**/TestJCS.java</include>
-        <include>**/TestSimpleLoad.java</include>
-        <include>**/TestDiskCache.java</include>
-        <include>**/TestDiskCacheConcurrent.java</include>
-        <include>**/TestDiskCacheConcurrentForDeadLock.java</include>
-        <include>**/TestTCPLateralCache.java</include>
-        <include>**/TestLateralTCPFilterRemoveHashCode.java</include>
-        <include>**/TestLateralTCPIssueRemoveOnPut.java</include>
-        <include>**/TestLateralTCPConcurrentForDeadLock.java</include>
-        <!--
-		<include>**/TestJCSvHashtablePerf.java</include>
+	<dependencies>
+		<dependency>
+			<id>commons-collections</id>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<id>commons-configuration</id>
+			<version>20030706.202021</version>
+		</dependency>
+
+		<dependency>
+			<id>commons-logging</id>
+			<version>1.0.3</version>
+		</dependency>
+
+		<dependency>
+			<id>commons-lang</id>
+			<version>2.0</version>
+		</dependency>
+
+		<dependency>
+			<id>concurrent</id>
+			<version>1.0</version>
+			<url>
+				http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html
+			</url>
+		</dependency>
+
+		<dependency>
+			<id>hsqldb</id>
+			<version>1.7.1</version>
+		</dependency>
+
+		<dependency>
+			<id>log4j</id>
+			<version>1.2.8</version>
+		</dependency>
+
+		<dependency>
+			<id>servletapi</id>
+			<version>2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jgroups</groupId>
+			<artifactId>jgroups-all</artifactId>
+			<version>2.2.8</version>
+		</dependency>
+
+		<dependency>
+			<id>tomcat</id>
+			<version>3.2.1</version>
+			<jar>tomcat-util-3.2.1.jar</jar>
+		</dependency>
+
+		<dependency>
+			<id>velocity</id>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<id>junit</id>
+			<version>3.8.1</version>
+		</dependency>
+
+		<dependency>
+			<id>xmlrpc</id>
+			<version>1.2-b1</version>
+			<url>http://xml.apache.org/xmlrpc/</url>
+		</dependency>
+
+		<dependency>
+			<id>xerces:xercesImpl</id>
+			<version>2.6.2</version>
+			<url>http://xml.apache.org/xerces2-j/</url>
+		</dependency>
+
+		<dependency>
+			<id>xml-apis</id>
+			<version>2.0.2</version>
+			<url>http://xml.apache.org/commons/</url>
+		</dependency>
+
+		<dependency>
+			<id>struts</id>
+			<version>1.1</version>
+			<jar>struts-1.1.jar</jar>
+		</dependency>
+
+		<dependency>
+			<id>berkeleydb</id>
+			<version>1.5.0</version>
+		</dependency>
+		<!--
+			<dependency>
+			<groupId>maven-plugins</groupId>
+			<artifactId>maven-findbugs-plugin</artifactId>
+			<version>0.9.1</version>
+			<type>plugin</type>
+			</dependency>
 		-->
-        <include>**/TestEventQueueConcurrent.java</include>
-        <include>**/TestSimpleEventHandling.java</include>
-        <include>**/TestLRUArray.java</include>
-        <include>**/TestSortedPrefArray.java</include>
-        <include>**/TestRemovalConcurrent.java</include>
-        <include>**/TestRemovalSimple.java</include>
-        <include>**/TestUDPDiscovery.java</include>
-        <include>**/TestSystemPropertyUsage.java</include>
-        <include>**/TestCacheManagerStats.java</include>
-      </includes>
-      <resources>
-        <includes>
-          <include>**/*.properties</include>
-          <include>**/*.ccf</include>
-        </includes>
-      </resources>
-    </unitTest>
-    <jars></jars>
-  </build>
+	</dependencies>
 
 
-  <reports>
-    <report>maven-jdepend-plugin</report>
-    <report>maven-checkstyle-plugin</report>
-    <report>maven-changes-plugin</report>
-    <!--
-    <report>maven-changelog-plugin</report>
-    <report>maven-statcvs-plugin</report>
-    <report>maven-file-activity-plugin</report>
-    <report>maven-developer-activity-plugin</report>
-    <report>maven-jcoverage-plugin</report>
-    -->
-    <report>maven-javadoc-plugin</report>
-    <report>maven-jxr-plugin</report>
-    <report>maven-junit-report-plugin</report>
-    <report>maven-tasklist-plugin</report>
-    <report>maven-pmd-plugin</report>
-    <report>maven-simian-plugin</report>
-    <report>maven-faq-plugin</report>    
-  </reports>
+	<build>
+		<sourceDirectory>src/java</sourceDirectory>
+		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+		<aspectSourceDirectories></aspectSourceDirectories>
+
+		<unitTest>
+			<includes>
+				<include>**/*${test}Test.java</include>
+
+				<include>**/TestCacheElementRetrieval.java</include>
+				<include>**/TestDiskCacheNoMemory.java</include>
+				<include>**/TestJCS.java</include>
+				<include>**/TestSimpleLoad.java</include>
+				<include>**/TestDiskCache.java</include>
+				<include>**/TestDiskCacheConcurrent.java</include>
+				<include>
+					**/TestDiskCacheConcurrentForDeadLock.java
+				</include>
+				<include>**/TestTCPLateralCache.java</include>
+				<include>
+					**/TestLateralTCPFilterRemoveHashCode.java
+				</include>
+				<include>
+					**/TestLateralTCPIssueRemoveOnPut.java
+				</include>
+				<include>
+					**/TestLateralTCPConcurrentForDeadLock.java
+				</include>
+				<!--
+					<include>**/TestJCSvHashtablePerf.java</include>
+				-->
+				<include>**/TestEventQueueConcurrent.java</include>
+				<include>**/TestSimpleEventHandling.java</include>
+				<include>**/TestLRUArray.java</include>
+				<include>**/TestSortedPrefArray.java</include>
+				<include>**/TestRemovalConcurrent.java</include>
+				<include>**/TestRemovalSimple.java</include>
+				<include>**/TestUDPDiscovery.java</include>
+				<include>**/TestSystemPropertyUsage.java</include>
+				<include>**/TestCacheManagerStats.java</include>
+			</includes>
+
+			<resources>
+				<resource>
+					<directory>src/test-conf</directory>
+					<includes>
+						<include>**/*.properties</include>
+						<include>**/*.ccf</include>
+					</includes>
+				</resource>
+			</resources>
+
+		</unitTest>
+
+	</build>
+
+
+	<reports>
+		<report>maven-jdepend-plugin</report>
+		<report>maven-checkstyle-plugin</report>
+		<report>maven-changes-plugin</report>
+		<!-- 
+			<report>maven-changelog-plugin</report>
+			<report>maven-file-activity-plugin</report>
+			<report>maven-statcvs-plugin</report>
+			<report>maven-developer-activity-plugin</report>
+			<report>maven-jcoverage-plugin</report>
+		-->
+		<report>maven-javadoc-plugin</report>
+		<report>maven-jxr-plugin</report>
+		<report>maven-junit-report-plugin</report>
+		<report>maven-tasklist-plugin</report>
+		<report>maven-pmd-plugin</report>
+		<report>maven-simian-plugin</report>
+		<report>maven-faq-plugin</report>
+	</reports>
 
 </project>

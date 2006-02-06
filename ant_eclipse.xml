@@ -2,38 +2,38 @@
 
 <project name="ant_eclipse" basedir="." default="default">
 
-  <!-- bring in the environmental properties -->
-  <property environment="env"/>
-  <property name="maven.home" value="${env.MAVEN_HOME}"/>
+	<!-- bring in the environmental properties -->
+	<property environment="env" />
+	<property name="maven.home" value="${env.MAVEN_HOME}" />
 
-  <!-- make sure we have maven -->
-  <target name="check-env" description="Check if environment variables are set">
-    <echo>maven.home = ${maven.home}</echo>
-    <fail unless="env.MAVEN_HOME" message="You MUST set MAVEN_HOME first"/>
-  </target>
+	<!-- make sure we have maven -->
+	<target name="check-env" description="Check if environment variables are set">
+		<echo>maven.home = ${maven.home}</echo>
+		<fail unless="env.MAVEN_HOME" message="You MUST set MAVEN_HOME first" />
+	</target>
 
-  <target name="default" depends="check-env">
-  
-       <condition property="maven.script" value="maven.bat">
-         <and>
-            <os family="windows" />
-            <equals arg1="${maven.script}" arg2="$${maven.script}" />
-          <not>
-            <isset property="cygwin.home" />
-          </not>
-        </and>
-        </condition>
-        
-       <condition property="maven.script" value="maven">
-          <equals arg1="${maven.script}" arg2="$${maven.script}" />
-       </condition>  
-  
-    <!-- call maven test:test-resources -->
-    <exec executable="${maven.script}" failonerror="true">
-      <arg value="java:jar-resources"/>
-      <arg value="test:test-resources"/>    	
-    </exec>
-    
-  </target>
+	<target name="default" depends="check-env">
+
+		<condition property="maven.script" value="maven.bat">
+			<and>
+				<os family="windows" />
+				<equals arg1="${maven.script}" arg2="$${maven.script}" />
+				<not>
+					<isset property="cygwin.home" />
+				</not>
+			</and>
+		</condition>
+
+		<condition property="maven.script" value="maven">
+			<equals arg1="${maven.script}" arg2="$${maven.script}" />
+		</condition>
+
+		<!-- call maven test:test-resources -->
+		<exec executable="${maven.script}" failonerror="true">
+			<arg value="java:jar-resources" />
+			<arg value="test:test-resources" />
+		</exec>
+
+	</target>
 
 </project>
