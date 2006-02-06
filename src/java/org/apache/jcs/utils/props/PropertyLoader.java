@@ -31,7 +31,7 @@ import java.util.Properties;
  * @author (C) <a
  *         href="http://www.javaworld.com/columns/jw-qna-index.shtml">Vlad
  *         Roubtsov </a>, 2003
- *  
+ * 
  */
 public abstract class PropertyLoader
 {
@@ -40,31 +40,33 @@ public abstract class PropertyLoader
 
     private static final String SUFFIX = ".ccf";
 
+    private static final String SUFFIX_PROPERTIES = ".properties";
+
     /**
      * Looks up a resource named 'name' in the classpath. The resource must map
      * to a file with .ccf extention. The name is assumed to be absolute and can
      * use either "/" or "." for package segment separation with an optional
      * leading "/" and optional ".ccf" suffix.
      * <p>
-     * The suffix ".ccf" will be appended if it is not set.
+     * The suffix ".ccf" will be appended if it is not set.  This can also handle .properties files
      * 
      * Thus, the following names refer to the same resource:
      * 
      * <pre>
-     * 
      *  
      *   
      *    
-     *     some.pkg.Resource
-     *     some.pkg.Resource.ccf
-     *     some/pkg/Resource
-     *     some/pkg/Resource.ccf
-     *     /some/pkg/Resource
-     *     /some/pkg/Resource.ccf
+     *     
+     *      some.pkg.Resource
+     *      some.pkg.Resource.ccf
+     *      some/pkg/Resource
+     *      some/pkg/Resource.ccf
+     *      /some/pkg/Resource
+     *      /some/pkg/Resource.ccf
+     *      
      *     
      *    
      *   
-     *  
      * </pre>
      * 
      * @param name
@@ -81,6 +83,8 @@ public abstract class PropertyLoader
      */
     public static Properties loadProperties( String name, ClassLoader loader )
     {
+        boolean isCCFSuffix = true;
+
         if ( name == null )
             throw new IllegalArgumentException( "null input: name" );
 
@@ -89,26 +93,36 @@ public abstract class PropertyLoader
             name = name.substring( 1 );
         }
 
-        if (name.endsWith (SUFFIX))
-        {            
-            name = name.substring (0, name.length () - SUFFIX.length ());
+        if ( name.endsWith( SUFFIX ) )
+        {
+            name = name.substring( 0, name.length() - SUFFIX.length() );
         }
-        
+
+        if ( name.endsWith( SUFFIX_PROPERTIES ) )
+        {
+            name = name.substring( 0, name.length() - SUFFIX_PROPERTIES.length() );
+            isCCFSuffix = false;
+        }
+
         Properties result = null;
 
         InputStream in = null;
         try
         {
             if ( loader == null )
-            {                
+            {
                 loader = ClassLoader.getSystemClassLoader();
             }
 
             name = name.replace( '.', '/' );
 
-            if ( !name.endsWith( SUFFIX ) )
+            if ( !name.endsWith( SUFFIX ) && isCCFSuffix )
             {
                 name = name.concat( SUFFIX );
+            }
+            else if ( !name.endsWith( SUFFIX_PROPERTIES ) && !isCCFSuffix )
+            {
+                name = name.concat( SUFFIX_PROPERTIES );
             }
 
             // returns null on lookup failures:
@@ -149,6 +163,7 @@ public abstract class PropertyLoader
      * that uses the current thread's context classloader. A better strategy
      * would be to use techniques shown in
      * http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html
+     * 
      * @param name
      * @return Properties
      */
@@ -159,7 +174,7 @@ public abstract class PropertyLoader
 
     /**
      * Can't use this one.
-     *
+     * 
      */
     private PropertyLoader()
     {

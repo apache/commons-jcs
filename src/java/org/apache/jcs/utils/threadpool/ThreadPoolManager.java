@@ -16,8 +16,6 @@ package org.apache.jcs.utils.threadpool;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +24,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.utils.props.PropertyLoader;
 import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
@@ -292,14 +291,12 @@ public class ThreadPoolManager
         return props;
     }
 
-    //-------------------------- Private Methods ----------
-
     /**
      * Intialize the ThreadPoolManager and create all the pools defined in the
      * configuration.
      *  
      */
-    private void configure()
+    protected void configure()
     {
         if ( log.isDebugEnabled() )
         {
@@ -308,36 +305,21 @@ public class ThreadPoolManager
 
         if ( props == null )
         {
-
-            InputStream is = getClass().getResourceAsStream( "/" + propsFileName );
-
             try
             {
-                props.load( is );
+            props = PropertyLoader.loadProperties( propsFileName );
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "File contained " + props.size() + " properties" );
-                }
-            }
-            catch ( IOException ex )
+            if ( log.isDebugEnabled() )
             {
-                log.error( "Failed to load properties", ex );
-                throw new IllegalStateException( ex.getMessage() );
+                log.debug( "File contained " + props.size() + " properties" );
             }
-            finally
+            }
+            catch( Exception e )
             {
-                try
-                {
-                    is.close();
-                }
-                catch ( Exception ignore )
-                {
-                    // Ignored
-                }
+                log.error( "Problem loading properties. propsFileName [" + propsFileName + "]", e );
             }
-
         }
+        
         if ( props == null )
         {
             log.warn( "No configuration settings found.  Using hardcoded default values for all pools." );
@@ -360,7 +342,7 @@ public class ThreadPoolManager
      * @return PoolConfiguration
      *  
      */
-    private PoolConfiguration loadConfig( String root )
+    protected PoolConfiguration loadConfig( String root )
     {
 
         PoolConfiguration config = (PoolConfiguration) defaultConfig.clone();

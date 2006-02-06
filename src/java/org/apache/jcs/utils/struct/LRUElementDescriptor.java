@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.struct;
 
-import org.apache.jcs.engine.memory.util.DoubleLinkedListNode;
 
 /**
  * @author aaronsm

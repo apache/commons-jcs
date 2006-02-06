@@ -13,7 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.memory.util.DoubleLinkedList;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -394,7 +393,7 @@ public class LRUMap
      * consistency between List and map.
      *  
      */
-    private void verifyCache()
+    protected void verifyCache()
     {
         if ( !log.isDebugEnabled() )
         {

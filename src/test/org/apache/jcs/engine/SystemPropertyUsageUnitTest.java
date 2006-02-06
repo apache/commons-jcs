@@ -11,7 +11,7 @@ import org.apache.jcs.utils.props.PropertyLoader;
 /**
  * Verify that system properties can override.
  */
-public class TestSystemPropertyUsage
+public class SystemPropertyUsageUnitTest
     extends TestCase
 {
 

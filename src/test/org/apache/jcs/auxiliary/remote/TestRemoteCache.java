@@ -23,7 +23,10 @@ public class TestRemoteCache
 
     private final static Log log = LogFactory.getLog( TestRemoteCache.class );
 
-    
+    /**
+     * 
+     *
+     */
     public TestRemoteCache()
     {
         super();

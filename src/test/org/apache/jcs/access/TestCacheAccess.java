@@ -29,7 +29,7 @@ import org.apache.jcs.JCS;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.control.event.TestElementEventHandler;
+import org.apache.jcs.engine.control.event.ElementEventHandlerMockImpl;
 
 /**
  * Allows the user to run common cache commands from the command line for a test
@@ -447,7 +447,7 @@ public class TestCacheAccess
                             for ( int n = 0; n < num; n++ )
                             {
                                 IElementAttributes attrp = cache_control.getElementAttributes();
-                                TestElementEventHandler hand = new TestElementEventHandler();
+                                ElementEventHandlerMockImpl hand = new ElementEventHandlerMockImpl();
                                 attrp.addElementEventHandler( hand );
                                 cache_control.put( "key" + n, "data" + n + " put from ta = junk", attrp );
                             }
