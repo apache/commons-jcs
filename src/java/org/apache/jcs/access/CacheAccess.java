@@ -242,7 +242,7 @@ public class CacheAccess
     {
         if ( this.cacheControl.get( (Serializable) key ) != null )
         {
-            throw new ObjectExistsException( "Object exists for key " + key );
+            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key +"].  Remove first or use a non-safe put to override the value." );
         }
         put( key, value );
     }

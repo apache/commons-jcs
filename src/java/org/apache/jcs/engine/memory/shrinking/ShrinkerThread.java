@@ -68,7 +68,7 @@ public class ShrinkerThread
 
         long maxMemoryIdleTimeSeconds = cache.getCacheAttributes().getMaxMemoryIdleTimeSeconds();
 
-        if ( maxMemoryIdleTimeSeconds == -1 )
+        if ( maxMemoryIdleTimeSeconds < 0 )
         {
             this.maxMemoryIdleTime = -1;
         }
@@ -116,7 +116,10 @@ public class ShrinkerThread
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Shrinking memory cache for: " + this.cache.getCompositeCache().getCacheName() );
+            if ( this.cache.getCompositeCache() != null )
+            {
+                log.debug( "Shrinking memory cache for: " + this.cache.getCompositeCache().getCacheName() );
+            }
         }
 
         try
@@ -155,10 +158,10 @@ public class ShrinkerThread
                 //
                 // if ( log.isDebugEnabled() )
                 // {
-                //     log.debug( "IsEternal: " + attributes.getIsEternal() );
-                //     log.debug( "MaxLifeSeconds: "
-                //                + attributes.getMaxLifeSeconds() );
-                //     log.debug( "CreateTime:" + attributes.getCreateTime() );
+                // log.debug( "IsEternal: " + attributes.getIsEternal() );
+                // log.debug( "MaxLifeSeconds: "
+                // + attributes.getMaxLifeSeconds() );
+                // log.debug( "CreateTime:" + attributes.getCreateTime() );
                 // }
 
                 // If the element is not eternal, check if it should be
@@ -179,7 +182,7 @@ public class ShrinkerThread
 
                 if ( !remove && ( maxMemoryIdleTime != -1 ) )
                 {
-                    if ( !spoolLimit || ( spoolCount <= this.maxSpoolPerRun ) )
+                    if ( !spoolLimit || ( spoolCount < this.maxSpoolPerRun ) )
                     {
 
                         final long lastAccessTime = attributes.getLastAccessTime();
@@ -191,8 +194,11 @@ public class ShrinkerThread
                                 log.debug( "Exceeded memory idle time: " + cacheElement.getKey() );
                             }
 
-                            // FIXME: Shouldn't we ensure that the element is
-                            //        spooled before removing it from memory?
+                            // Shouldn't we ensure that the element is
+                            // spooled before removing it from memory?
+                            // No the disk caches have a purgatory. If it fails
+                            // to spool that does not affect the
+                            // responsibilities of the memory cache.
 
                             spoolCount++;
 
@@ -231,7 +237,7 @@ public class ShrinkerThread
             // concurrent modifications should no longer be a problem
             // It is up to the IMemoryCache to return an array of keys
 
-            //stop for now
+            // stop for now
             return;
         }
 
