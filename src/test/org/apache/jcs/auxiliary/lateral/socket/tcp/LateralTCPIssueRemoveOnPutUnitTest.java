@@ -9,14 +9,13 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
+ * Tests the issue remove on put fuctionality.
+ * 
  * @author asmuts
  */
-public class TestLateralTCPIssueRemoveOnPut
+public class LateralTCPIssueRemoveOnPutUnitTest
     extends TestCase
 {
-
-    //private static boolean isSysOut = false;
-
     private static boolean isSysOut = true;
 
     /**
@@ -24,7 +23,7 @@ public class TestLateralTCPIssueRemoveOnPut
      * 
      * @param testName
      */
-    public TestLateralTCPIssueRemoveOnPut( String testName )
+    public LateralTCPIssueRemoveOnPutUnitTest( String testName )
     {
         super( testName );
     }
@@ -150,18 +149,14 @@ public class TestLateralTCPIssueRemoveOnPut
 
     }
 
+    /**
+     * @param s String to be printed
+     */
     public static void p( String s )
     {
         if ( isSysOut )
         {
             System.out.println( s );
-        }
-        else
-        {
-            //if ( log.isInfoEnabled() )
-            //{
-            //    log.info( s );
-            //}
         }
     }
 }

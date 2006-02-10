@@ -18,7 +18,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * @author Aaron Smuts
  *  
  */
-public class TestUDPDiscovery
+public class UDPDiscoveryUnitTest
     extends TestCase
 {
 

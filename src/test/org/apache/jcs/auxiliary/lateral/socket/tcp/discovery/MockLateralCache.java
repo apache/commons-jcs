@@ -18,6 +18,7 @@ public class MockLateralCache
     extends LateralCache
     implements ICache
 {
+    private static final long serialVersionUID = 1L;
 
     /**
      * @param cattr

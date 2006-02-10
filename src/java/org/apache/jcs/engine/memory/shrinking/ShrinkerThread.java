@@ -327,7 +327,14 @@ public class ShrinkerThread
             {
                 IElementEventHandler hand = (IElementEventHandler) handlerIter.next();
 
-                cache.getCompositeCache().addElementEvent( hand, event );
+                // extra safety
+                // TODO we shouldn't be operating on a variable of another class.
+                // we did this to get away from the singelton composite cache.
+                // we will need to create an event manager and pass it around instead.
+                if ( cache.getCompositeCache() != null )
+                {
+                    cache.getCompositeCache().addElementEvent( hand, event );                    
+                }
             }
         }
     }

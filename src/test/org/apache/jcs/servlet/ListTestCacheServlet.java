@@ -26,6 +26,8 @@ public class ListTestCacheServlet
     extends HttpServlet
 {
 
+    private static final long serialVersionUID = 1L;
+
     //    /** Description of the Field */
     //    protected static CacheHub cacheMgr;
     //    /** Description of the Field */

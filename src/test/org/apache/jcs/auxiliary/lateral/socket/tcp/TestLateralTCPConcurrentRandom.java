@@ -164,6 +164,9 @@ public class TestLateralTCPConcurrentRandom
 
     }
 
+    /**
+     * @param s string to print
+     */
     public static void p( String s )
     {
         if ( isSysOut )

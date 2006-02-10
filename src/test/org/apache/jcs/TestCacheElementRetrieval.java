@@ -28,6 +28,10 @@ public class TestCacheElementRetrieval
     extends TestCase
 {
 
+    /**
+     * 
+     * @throws Exception
+     */
     public void testSimpleElementRetrieval()
         throws Exception
     {
@@ -40,7 +44,7 @@ public class TestCacheElementRetrieval
         assertEquals( "Name wasn't right", "testCache1", elem.getCacheName() );
 
         long diff = elem.getElementAttributes().getCreateTime() - now;
-        assertTrue( "Create time should have been at or after the call", now >= 0 );
+        assertTrue( "Create time should have been at or after the call", diff >= 0 );
 
     }
 

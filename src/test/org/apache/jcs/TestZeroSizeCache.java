@@ -26,6 +26,7 @@ public class TestZeroSizeCache
     /**
      * Verify that a 0 size cache does not result in errors. You should be able
      * to disable a region this way.
+     * @throws Exception 
      *  
      */
     public void testPutGetRemove()
@@ -38,6 +39,7 @@ public class TestZeroSizeCache
             jcs.put( i + ":key", "data" + i );
         }
 
+        // all the gets should be null
         for ( int i = items; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );

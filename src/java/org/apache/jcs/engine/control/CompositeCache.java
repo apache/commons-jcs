@@ -1281,7 +1281,7 @@ public class CompositeCache
     }
 
     /**
-     * Adds an ElementEvent to be handled tot he queue.
+     * Adds an ElementEvent to be handled to the queue.
      * 
      * @param hand
      *            The IElementEventHandler

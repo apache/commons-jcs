@@ -158,6 +158,9 @@ public class TestLateralTCPFilterRemoveHashCode
 
     }
 
+    /**
+     * @param s String to print
+     */
     public static void p( String s )
     {
         if ( isSysOut )

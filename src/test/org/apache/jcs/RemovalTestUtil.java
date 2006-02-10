@@ -38,7 +38,11 @@ public class RemovalTestUtil
     }
 
     /**
-     * A unit test for JUnit
+     * Adds elements in the range specified and then removes them using the
+     * categorical or substring removal method.
+     * 
+     * @param start 
+     * @param end 
      * 
      * @exception Exception
      *                Description of the Exception
