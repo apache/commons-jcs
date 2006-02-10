@@ -56,7 +56,7 @@ public class TestCacheAccess
     }
 
     /**
-     * @param ccfFileName
+     * @param regionName the name of the region.
      */
     public TestCacheAccess( String regionName )
     {
