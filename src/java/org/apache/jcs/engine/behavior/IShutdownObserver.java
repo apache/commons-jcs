@@ -1,6 +1,5 @@
 package org.apache.jcs.engine.behavior;
 
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -18,36 +17,24 @@ package org.apache.jcs.engine.behavior;
  */
 
 /**
- * ShutdownObservers can observer ShutdownObservable objects.  
- * The CacheManager is the primary observable that this is intended for.
+ * This interface is required of all shutdown observers.  These observers
+ * can observer ShutdownObservable objects.  The CacheManager is the primary
+ * observable that this is intended for.
  * <p>
  * Most shutdown operations will occur outside this framework for now.  The initial
  * goal is to allow background threads that are not reachable through any reference
  * that the cahe manager maintains to be killed on shutdown.
- * <p>
- * Perhaps the composite cache itself should be the observable object.
- * It doesn't make much of a difference.  There are some problems with
- * region by region shutdown.  Some auxiliaries are glocal.  They will
- * need to track when every region has shutdown before doing things like
- * closing the socket with a lateral.  
  * 
  * @author Aaron Smuts
  *
  */
-public interface ShutdownObservable
+public interface IShutdownObserver
 {
 
     /**
-     * Registers an observer with the observable object.
-     * @param observer
+     * Tells the observer that the observable has received a shutdown command.
+     *
      */
-    abstract void registerShutdownObserver( ShutdownObserver observer );
-
-    /**
-     * Deregisters the observer with the observable.
-     * 
-     * @param observer
-     */
-    abstract void deregisterShutdownObserver( ShutdownObserver observer );
-
+    abstract void shutdown();
+    
 }

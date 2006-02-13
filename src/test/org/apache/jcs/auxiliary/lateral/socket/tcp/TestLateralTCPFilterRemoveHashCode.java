@@ -167,12 +167,5 @@ public class TestLateralTCPFilterRemoveHashCode
         {
             System.out.println( s );
         }
-        else
-        {
-            //if ( log.isInfoEnabled() )
-            //{
-            //    log.info( s );
-            //}
-        }
     }
 }

@@ -19,20 +19,21 @@ package org.apache.jcs.auxiliary.remote.behavior;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
- * Description of the Interface
- *  
+ * This specifies what a remote cache configuration object should look like.
+ * 
  */
 public interface IRemoteCacheAttributes
     extends AuxiliaryCacheAttributes
 {
 
-    /*
+    /**
      * A remote cache is either a local cache or a cluster cache.
      */
-    /** Description of the Field */
     public static int LOCAL = 0;
 
-    /** Description of the Field */
+    /**
+     * A remote cache is either a local cache or a cluster cache.
+     */
     public static int CLUSTER = 1;
 
     /**
@@ -65,11 +66,12 @@ public interface IRemoteCacheAttributes
      */
     public void setRemoteType( int p );
 
-    // specifies which server in the list we are listening to
-    // if the number is greater than 0 we will try to move to 0 position
-    // the primary is added as position 1 if it is present
     /**
-     * Gets the failoverIndex attribute of the IRemoteCacheAttributes object
+     * Gets the failoverIndex attribute of the IRemoteCacheAttributes object.
+     * <p>
+     * This specifies which server in the list we are listening to if the number
+     * is greater than 0 we will try to move to 0 position the primary is added
+     * as position 1 if it is present
      * 
      * @return The failoverIndex value
      */

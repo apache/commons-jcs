@@ -72,10 +72,6 @@ public class RemoteCacheServer
     /** timing -- if we should record operation times. */
     protected final static boolean timing = true;
 
-    //true;
-    /** Description of the Field */
-    public String className;
-
     private int puts = 0;
 
     // Maps cache name to CacheListeners object.
@@ -120,10 +116,6 @@ public class RemoteCacheServer
     protected void init( String prop )
         throws IOException, NotBoundException
     {
-
-        String s = this.getClass().getName();
-        int idx = s.lastIndexOf( "." );
-        this.className = s.substring( idx + 1 );
 
         cacheManager = createCacheManager( prop );
 
@@ -256,12 +248,12 @@ public class RemoteCacheServer
      * An update can come from either a local cache's remote auxiliary, or it
      * can come from a remote server. A remote server is considered a a source
      * of type cluster.
-     * 
+     * <p>
      * If the update came from a cluster, then we should tell the cache manager
      * that this was a remote put. This way, any lateral and remote auxiliaries
      * configured for the region will not be updated. This is basically how a
      * remote listener works when plugged into a local cache.
-     * 
+     * <p>
      * If the cluster is configured to keep local cluster consistency, then all
      * listeners will be updated. This allows cluster server A to update cluster
      * server B and then B to update its clients if it is told to keep local
@@ -271,7 +263,7 @@ public class RemoteCacheServer
      * the leavess. The remote cluster, with local cluster consistency, allows
      * you to update leaves. This basically allows you to have a failover remote
      * server.
-     * 
+     * <p>
      * Since currently a cluster will not try to get from other cluster servers,
      * you can scale a bit with a cluster configuration. Puts and removes will
      * be broadcasted to all clients, but the get load on a remote server can be
@@ -370,7 +362,6 @@ public class RemoteCacheServer
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-
                 if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
                 {
 
@@ -793,7 +784,7 @@ public class RemoteCacheServer
                 if ( !q.isWorking() )
                 {
                     itr.remove();
-                    p1( "Cache event queue " + q + " is not working and removed from cache server." );
+                    print( "Cache event queue " + q + " is not working and removed from cache server." );
                 }
             }
         }
@@ -857,7 +848,7 @@ public class RemoteCacheServer
                         id = listenerIdB;
                         // in case it needs synchronization
                         log.info( "adding vm listener under new id = " + listenerIdB );
-                        p1( "adding vm listener under new id = " + listenerIdB );
+                        print( "adding vm listener under new id = " + listenerIdB );
                     }
                     else
                     {
@@ -1099,7 +1090,7 @@ public class RemoteCacheServer
      * 
      * @param s
      */
-    private static void p1( String s )
+    private static void print( String s )
     {
         System.out.println( "RemoteCacheServer:" + s + " >" + Thread.currentThread().getName() );
     }

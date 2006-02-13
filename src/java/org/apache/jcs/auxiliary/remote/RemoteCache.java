@@ -24,11 +24,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import EDU.oswego.cs.dl.util.concurrent.Callable;
-import EDU.oswego.cs.dl.util.concurrent.FutureResult;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
-
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
@@ -37,18 +32,26 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IZombie;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.jcs.utils.serialization.SerializationConversionUtil;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 import org.apache.jcs.utils.threadpool.ThreadPool;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
+import EDU.oswego.cs.dl.util.concurrent.Callable;
+import EDU.oswego.cs.dl.util.concurrent.FutureResult;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+
 /**
  * Client proxy for an RMI remote cache.
- *  
+ * 
  */
 public class RemoteCache
     implements ICache
@@ -70,6 +73,8 @@ public class RemoteCache
     private ThreadPool pool = null;
 
     private boolean usePoolForGet = false;
+
+    private IElementSerializer elementSerializer = new StandardSerializer();
 
     /**
      * Constructor for the RemoteCache object. This object communicates with a
@@ -158,7 +163,11 @@ public class RemoteCache
                     {
                         log.debug( "sending item to remote server" );
                     }
-                    remote.update( ce, getListenerId() );
+                    
+                    // convert so we don't have to know about the object on the other end.
+                    ICacheElementSerialized serialized = SerializationConversionUtil.getSerializedCacheElement( ce, this.elementSerializer );                    
+                    
+                    remote.update( serialized, getListenerId() );
                 }
                 catch ( NullPointerException npe )
                 {
@@ -206,6 +215,14 @@ public class RemoteCache
             {
                 retVal = remote.get( cacheName, sanitized( key ) );
             }
+
+            // Eventually the instance of will not be necessary.
+            if ( retVal != null && retVal instanceof ICacheElementSerialized )
+            {
+                retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) retVal,
+                                                                                 this.elementSerializer );
+            }
+
         }
         catch ( ObjectNotFoundException one )
         {
@@ -215,7 +232,6 @@ public class RemoteCache
         catch ( Exception ex )
         {
             handleException( ex, "Failed to get " + key + " from " + cacheName );
-            // never executes; just keep the compiler happy.
         }
 
         return retVal;
@@ -317,7 +333,7 @@ public class RemoteCache
         // we again wrap
         // it into a new MarsahlledObject for "escape" purposes during the get
         // operation.
-        //return s.getClass().getName().startsWith("java.") && !(s instanceof
+        // return s.getClass().getName().startsWith("java.") && !(s instanceof
         // MarshalledObject) ? s : new MarshalledObject(s);
 
         // avoid this step for now, [problem with group id wrapper]
@@ -520,7 +536,7 @@ public class RemoteCache
     {
         log.error( "Disabling remote cache due to error " + msg );
         log.error( ex );
-        //log.error( ex.toString() );
+        // log.error( ex.toString() );
 
         remote = new ZombieRemoteCacheService();
         // may want to flush if region specifies
@@ -618,6 +634,23 @@ public class RemoteCache
     }
 
     /**
+     * @param elementSerializer
+     *            The elementSerializer to set.
+     */
+    public void setElementSerializer( IElementSerializer elementSerializer )
+    {
+        this.elementSerializer = elementSerializer;
+    }
+
+    /**
+     * @return Returns the elementSerializer.
+     */
+    public IElementSerializer getElementSerializer()
+    {
+        return elementSerializer;
+    }
+
+    /**
      * Debugging info.
      * 
      * @return basic info about the RemoteCache
@@ -631,7 +664,7 @@ public class RemoteCache
      * Allows us to set the daemon status on the clockdaemon
      * 
      * @author aaronsm
-     *  
+     * 
      */
     class MyThreadFactory
         implements ThreadFactory

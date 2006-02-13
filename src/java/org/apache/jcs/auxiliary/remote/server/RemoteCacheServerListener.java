@@ -31,10 +31,9 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
-
 /**
- * This listener class is for inter cache commumication.
- *  
+ * This listener class is for inter remote cache commumication.
+ * 
  */
 public class RemoteCacheServerListener
     implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
@@ -43,25 +42,29 @@ public class RemoteCacheServerListener
 
     private final static Log log = LogFactory.getLog( RemoteCacheServerListener.class );
 
-    /** cacheMgr */
+    /** The hub, the cache manager, the master controller . . . */
     protected static transient CompositeCacheManager cacheMgr;
 
-    /** Singleton instance of the listner */
+    /** Singleton instance of the listener */
     protected static IRemoteCacheListener instance;
 
-    /** configuration attributes. */
+    /** Remote cache configuration attributes. */
     protected IRemoteCacheAttributes irca;
 
-    /** Description of the Field */
+    /** How many times update was called. Used for debugging only. */
     private int puts = 0;
 
+    /** The number of times removed was called. Used for debugging only. */
     private int removes = 0;
 
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
+     * <p>
+     * Exports this remote object to make it available to receive incoming
+     * calls, using an anonymous port if none is specified.
      * 
-     * @param irca
+     * @param irca the atttributes, the LocalPort specifies the receiving port.
      */
     protected RemoteCacheServerListener( IRemoteCacheAttributes irca )
     {
@@ -70,14 +73,13 @@ public class RemoteCacheServerListener
         // may need to add to ICacheManager interface to handle
         // the source arument extended update and remove methods
 
-        // causes circular reference, unfortunate, becasue the
+        // causes circular reference, unfortunately, becasue the
         // the overhead is higer
         // will need to pass a refernce thru
-        //cacheMgr = CacheManagerFactory.getInstance();
+        // cacheMgr = CacheManagerFactory.getInstance();
 
         // Export this remote object to make it available to receive incoming
-        // calls,
-        // using an anonymous port.
+        // calls, using an anonymous port if none is specified.
         try
         {
             if ( irca.getLocalPort() != 0 )
@@ -98,7 +100,7 @@ public class RemoteCacheServerListener
     }
 
     /**
-     * let the remote cache set a listener_id. Since there is only one listerenr
+     * Let the remote cache set a listener_id. Since there is only one listerenr
      * for all the regions and every region gets registered? the id shouldn't be
      * set if it isn't zero. If it is we assume that it is a reconnect.
      * 
@@ -127,9 +129,8 @@ public class RemoteCacheServerListener
     {
 
         // set the manager since we are in use
-        //getCacheManager();
+        // getCacheManager();
 
-        //p( "get listenerId" );
         if ( log.isDebugEnabled() )
         {
             log.debug( "get listenerId = " + RemoteCacheServerInfo.listenerId );
@@ -155,13 +156,14 @@ public class RemoteCacheServerListener
 
     /**
      * Gets the instance attribute of the RemoteCacheServerListener class
+     * 
      * @param irca
      * 
      * @return The instance value
      */
     public static IRemoteCacheListener getInstance( IRemoteCacheAttributes irca )
     {
-        //throws IOException, NotBoundException
+        // throws IOException, NotBoundException
         if ( instance == null )
         {
             synchronized ( RemoteCacheServerListener.class )
@@ -172,26 +174,28 @@ public class RemoteCacheServerListener
                 }
             }
         }
-        //instance.incrementClients();
+        // instance.incrementClients();
         return instance;
     }
 
-    //////////////////////////// implements the IRemoteCacheListener interface.
+    // ////////////////////////// implements the IRemoteCacheListener interface.
     // //////////////
     /**
      * Just remove the element since it has been updated elsewhere cd should be
      * incomplete for faster transmission. We don't want to pass data only
      * invalidation. The next time it is used the local cache will get the new
      * version from the remote store
+     * 
      * @param cb
      * @throws IOException
      */
     public void handlePut( ICacheElement cb )
         throws IOException
     {
+        // not a thread safe increment, but that doesn't matter yet.
+        puts++;
         if ( log.isInfoEnabled() )
         {
-            puts++;
             if ( puts % 100 == 0 )
             {
                 log.info( "puts from remote server = " + puts );
@@ -202,9 +206,9 @@ public class RemoteCacheServerListener
         cache.localUpdate( cb );
     }
 
-    /** 
+    /**
      * Calls remove for the key on the named cache
-     *  
+     * 
      * @param cacheName
      * @param key
      * @throws IOException
@@ -212,9 +216,10 @@ public class RemoteCacheServerListener
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
+        // not a thread safe increment, but that doesn't matter yet.
+        removes++;
         if ( log.isInfoEnabled() )
         {
-            removes++;
             if ( removes % 100 == 0 )
             {
                 log.info( "removes = " + removes );
@@ -233,7 +238,7 @@ public class RemoteCacheServerListener
         cache.localRemove( key );
     }
 
-    /** 
+    /**
      * Calls removeAl on the named cache region.
      * 
      * @param cacheName
@@ -251,7 +256,7 @@ public class RemoteCacheServerListener
         cache.removeAll();
     }
 
-    /** 
+    /**
      * Calls freeCache on the named region.
      * 
      * @param cacheName

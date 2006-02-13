@@ -23,7 +23,7 @@ import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttribu
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 
 /**
- * Description of the Class
+ * These attributes are used to configure the remote cache server.
  *  
  */
 public class RemoteCacheServerAttributes
@@ -39,8 +39,8 @@ public class RemoteCacheServerAttributes
 
     private int remotePort;
 
-    /*
-     * failover servers will be used by local caches one at a time. Listeners
+    /**
+     * Failover servers will be used by local caches one at a time. Listeners
      * will be registered with all cluster servers. If we add a get from cluster
      * attribute we will have the ability to chain clusters and have them get
      * from each other.
@@ -63,7 +63,7 @@ public class RemoteCacheServerAttributes
 
     private String configFileName = "";
 
-    /** Constructor for the RemoteCacheAttributes object */
+    /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheServerAttributes()
     {
         super();

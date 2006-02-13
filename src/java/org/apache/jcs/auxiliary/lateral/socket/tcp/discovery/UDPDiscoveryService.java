@@ -14,8 +14,8 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.behavior.ShutdownObservable;
-import org.apache.jcs.engine.behavior.ShutdownObserver;
+import org.apache.jcs.engine.behavior.IShutdownObservable;
+import org.apache.jcs.engine.behavior.IShutdownObserver;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
@@ -34,7 +34,7 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  *  
  */
 public class UDPDiscoveryService
-    implements ShutdownObserver
+    implements IShutdownObserver
 {
 
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
@@ -68,7 +68,7 @@ public class UDPDiscoveryService
     public UDPDiscoveryService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         // register for shutdown notification
-        ( (ShutdownObservable) cacheMgr ).registerShutdownObserver( this );
+        ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( this );
 
         this.setTcpLateralCacheAttributes( lca );
 

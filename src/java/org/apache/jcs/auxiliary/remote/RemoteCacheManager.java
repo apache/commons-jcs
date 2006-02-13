@@ -302,8 +302,9 @@ public class RemoteCacheManager
 
     /**
      * Gets a RemoteCacheNoWait from the RemoteCacheManager. The
-     * RemoteCacheNoWait are identified by the cache name value of the
+     * RemoteCacheNoWait objects are identified by the cache name value of the
      * RemoteCacheAttributes object.
+     * 
      * @param cattr
      * 
      * @return The cache value

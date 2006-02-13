@@ -35,7 +35,7 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.behavior.ShutdownObserver;
+import org.apache.jcs.engine.behavior.IShutdownObserver;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
@@ -45,7 +45,7 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * Receives UDP Discovery messages.
  */
 public class UDPDiscoveryReceiver
-    implements Runnable, ShutdownObserver
+    implements Runnable, IShutdownObserver
 {
     private final static Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
 

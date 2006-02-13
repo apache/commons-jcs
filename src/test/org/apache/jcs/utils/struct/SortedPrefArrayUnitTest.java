@@ -24,7 +24,7 @@ import junit.framework.TestCase;
  * @author aaronsm
  *  
  */
-public class TestSortedPrefArray
+public class SortedPrefArrayUnitTest
     extends TestCase
 {
 
@@ -34,7 +34,7 @@ public class TestSortedPrefArray
      * @param testName
      *            Description of the Parameter
      */
-    public TestSortedPrefArray( String testName )
+    public SortedPrefArrayUnitTest( String testName )
     {
         super( testName );
     }
@@ -47,7 +47,7 @@ public class TestSortedPrefArray
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { TestSortedPrefArray.class.getName() };
+        String[] testCaseName = { SortedPrefArrayUnitTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 

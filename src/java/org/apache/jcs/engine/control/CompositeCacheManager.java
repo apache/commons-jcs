@@ -39,8 +39,8 @@ import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.behavior.ShutdownObservable;
-import org.apache.jcs.engine.behavior.ShutdownObserver;
+import org.apache.jcs.engine.behavior.IShutdownObservable;
+import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.stats.CacheStats;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
@@ -50,7 +50,7 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
  * way to shutdown the caching system as a whole.
  */
 public class CompositeCacheManager
-    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, ShutdownObservable
+    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, IShutdownObservable
 {
     private static final long serialVersionUID = 7598584393134401756L;
 
@@ -469,7 +469,7 @@ public class CompositeCacheManager
             Iterator it = shutdownObservers.iterator();
             while ( it.hasNext() )
             {
-                ShutdownObserver observer = (ShutdownObserver)it.next();
+                IShutdownObserver observer = (IShutdownObserver)it.next();
                 observer.shutdown();
             }
         }
@@ -653,7 +653,7 @@ public class CompositeCacheManager
      * 
      * @param observer
      */
-    public void registerShutdownObserver( ShutdownObserver observer )
+    public void registerShutdownObserver( IShutdownObserver observer )
     {
         // synchronized to take care of iteration safety
         // during shutdown.
@@ -669,7 +669,7 @@ public class CompositeCacheManager
      * 
      * @see org.apache.jcs.engine.behavior.ShutdownObservable#deregisterShutdownObserver(org.apache.jcs.engine.behavior.ShutdownObserver)
      */
-    public void deregisterShutdownObserver( ShutdownObserver observer )
+    public void deregisterShutdownObserver( IShutdownObserver observer )
     {
         synchronized ( shutdownObservers )
         {

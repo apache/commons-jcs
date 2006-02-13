@@ -40,7 +40,8 @@ public class TestTCPLateral
         throws Exception
     {
 
-        JCS jcs = JCS.getInstance( "test" );
+        // force initialization
+        JCS.getInstance( "test" );
 
         TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
         lac.setTransmissionType( LateralCacheAttributes.TCP );
@@ -73,6 +74,10 @@ public class TestTCPLateral
 
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     public void testReceive()
         throws Exception
     {
@@ -82,7 +87,8 @@ public class TestTCPLateral
         CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
-        LateralTCPCacheFactory fact = new LateralTCPCacheFactory();
+        // force initialization
+        //LateralTCPCacheFactory fact = new LateralTCPCacheFactory();
         //.getInstance( lattr, cacheMgr );
         //LateralCacheNoWait nwait1 = (LateralCacheNoWait)lcMgr1.getCache(
         // "test" );
@@ -91,7 +97,8 @@ public class TestTCPLateral
         //nowait1.update( );
 
         // start the listener
-        LateralTCPListener listener = (LateralTCPListener) LateralTCPListener.getInstance( lattr, cacheMgr );
+        //LateralTCPListener listener = (LateralTCPListener) 
+        LateralTCPListener.getInstance( lattr, cacheMgr );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
@@ -130,7 +137,8 @@ public class TestTCPLateral
 
         // get the listener started
         // give it our mock cache manager
-        LateralTCPListener listener = (LateralTCPListener) LateralTCPListener.getInstance( lattr, cacheMgr );
+        //LateralTCPListener listener = (LateralTCPListener) 
+        LateralTCPListener.getInstance( lattr, cacheMgr );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
@@ -171,7 +179,8 @@ public class TestTCPLateral
 
         // get the listener started
         // give it our mock cache manager
-        LateralTCPListener listener = (LateralTCPListener) LateralTCPListener.getInstance( lattr, cacheMgr );
+        //LateralTCPListener listener = (LateralTCPListener) 
+        LateralTCPListener.getInstance( lattr, cacheMgr );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );

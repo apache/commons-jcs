@@ -22,7 +22,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 
 /**
- * Description of the Class
+ * These objects are used to configure the remote cache client.  
  *  
  */
 public class RemoteCacheAttributes
@@ -37,7 +37,7 @@ public class RemoteCacheAttributes
 
     private int remotePort;
 
-    /*
+    /**
      * failover servers will be used by local caches one at a time. Listeners
      * will be registered with all cluster servers. If we add a get from cluster
      * attribute we will have the ability to chain clusters and have them get
@@ -68,7 +68,7 @@ public class RemoteCacheAttributes
     // must be greater than 0 for a pool to be used.
     private int getTimeoutMillis = -1;
 
-    /** Constructor for the RemoteCacheAttributes object */
+    /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheAttributes()
     {
         super();
@@ -428,15 +428,16 @@ public class RemoteCacheAttributes
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
-        buf.append( "\n remoteHost = " + this.remoteHost );
-        buf.append( "\n remotePort = " + this.remotePort );
-        buf.append( "\n cacheName = " + this.cacheName );
-        buf.append( "\n removeUponRemotePut = " + this.removeUponRemotePut );
-        buf.append( "\n getOnly = " + getOnly );
-        buf.append( "\n getTimeoutMillis = " + getTimeoutMillis );
-        buf.append( "\n threadPoolName = " + threadPoolName );
-        buf.append( "\n remoteType = " + remoteType );
-        buf.append( "\n localClusterConsistency = " + localClusterConsistency );
+        buf.append( "\n RemoteCacheAttributes " );
+        buf.append( "\n remoteHost = [" + this.remoteHost + "]" );
+        buf.append( "\n remotePort = [" + this.remotePort + "]" );
+        buf.append( "\n cacheName = [" + this.cacheName + "]" );
+        buf.append( "\n removeUponRemotePut = [" + this.removeUponRemotePut + "]" );
+        buf.append( "\n getOnly = [" + getOnly + "]" );
+        buf.append( "\n getTimeoutMillis = [" + getGetTimeoutMillis() + "]" );
+        buf.append( "\n threadPoolName = [" + getThreadPoolName() + "]" );
+        buf.append( "\n remoteType = [" + remoteType + "]" );
+        buf.append( "\n localClusterConsistency = [" + getLocalClusterConsistency() + "]" );
         return buf.toString();
     }
 

@@ -27,14 +27,21 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.utils.serialization.SerializationConversionUtil;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  * Registered with RemoteCache server. The server updates the local caches via
  * this listener. Each server asings a unique listener id for a listener.
- *  
+ * <p>
+ * One listener is used per remote cache server. The same listener is used for
+ * all the regions that talk to a particular server.
+ * 
  */
 public class RemoteCacheListener
     implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
@@ -52,21 +59,21 @@ public class RemoteCacheListener
     /** The remote cache configuration object. */
     protected IRemoteCacheAttributes irca;
 
-    /** Number of put requests received */
+    /** Number of put requests received. For debugging only. */
     protected int puts = 0;
 
-    /** Number of remove requests received */
+    /** Number of remove requests received. For debugging only. */
     protected int removes = 0;
 
-    /**
-     * This is set by the remote cache server.
-     */
+    /** This is set by the remote cache server. */
     protected long listenerId = 0;
 
+    private transient IElementSerializer elementSerializer = new StandardSerializer();
+    
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
-     * 
+     * <p>
      * The constructor exports this object, making it available to receive
      * incoming calls. The calback port is anonymous unless a local port vlaue
      * was specified in the configurtion.
@@ -79,7 +86,7 @@ public class RemoteCacheListener
         this.irca = irca;
 
         this.cacheMgr = cacheMgr;
-        
+
         // Export this remote object to make it available to receive incoming
         // calls,
         // using an anonymous port unless the local port is specified.
@@ -157,13 +164,16 @@ public class RemoteCacheListener
         return irca.getRemoteType();
     }
 
-    //////////////////////////// implements the IRemoteCacheListener interface.
+    // ////////////////////////// implements the IRemoteCacheListener interface.
     // //////////////
     /**
-     * Just remove the element since it has been updated elsewhere cd should be
-     * incomplete for faster transmission. We don't want to pass data only
-     * invalidation. The next time it is used the local cache will get the new
-     * version from the remote store.
+     * If this is configured to remove on put, then remove the element since it
+     * has been updated elsewhere. cd should be incomplete for faster
+     * transmission. We don't want to pass data only invalidation. The next time
+     * it is used the local cache will get the new version from the remote
+     * store.
+     * <p>
+     * If remove on put is not ocnfigured, then update the item.
      * 
      * @param cb
      * @throws IOException
@@ -181,21 +191,47 @@ public class RemoteCacheListener
         }
         else
         {
+            puts++;
             if ( log.isDebugEnabled() )
             {
                 log.debug( "PUTTING ELEMENT FROM REMOTE, ( updating ) " );
                 log.debug( "cb = " + cb );
 
-                puts++;
                 if ( puts % 100 == 0 )
                 {
                     log.debug( "puts = " + puts );
                 }
             }
 
-            getCacheManager();
+            ensureCacheManager();
             CompositeCache cache = cacheMgr.getCache( cb.getCacheName() );
 
+            // Eventually the instance of will not be necessary.
+            if ( cb != null && cb instanceof ICacheElementSerialized )
+            {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Object needs to be deserialized." );
+                }
+                try
+                {
+                    cb = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) cb,
+                                                                                     this.elementSerializer );
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Deserialized result = " + cb );
+                    }
+                }
+                catch ( IOException e )
+                {
+                    throw e;
+                }
+                catch ( ClassNotFoundException e )
+                {
+                    log.error( "Received a serialized version of a class that we don't know about.", e );
+                }
+            }            
+            
             cache.localUpdate( cb );
         }
 
@@ -211,9 +247,9 @@ public class RemoteCacheListener
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
+        removes++;
         if ( log.isDebugEnabled() )
         {
-            removes++;
             if ( removes % 100 == 0 )
             {
                 log.debug( "removes = " + removes );
@@ -222,7 +258,7 @@ public class RemoteCacheListener
             log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );
         }
 
-        getCacheManager();
+        ensureCacheManager();
         CompositeCache cache = cacheMgr.getCache( cacheName );
 
         cache.localRemove( key );
@@ -240,7 +276,7 @@ public class RemoteCacheListener
         {
             log.debug( "handleRemoveAll> cacheName=" + cacheName );
         }
-        getCacheManager();
+        ensureCacheManager();
         CompositeCache cache = cacheMgr.getCache( cacheName );
         cache.localRemoveAll();
     }
@@ -260,14 +296,14 @@ public class RemoteCacheListener
         // TODO consider what to do here, we really don't want to
         // dispose, we just want to disconnect.
         // just allow the cache to go into error recovery mode.
-        //getCacheManager().freeCache( cacheName, true );
+        // getCacheManager().freeCache( cacheName, true );
     }
 
     /**
      * Gets the cacheManager attribute of the RemoteCacheListener object. This
      * is one of the few places that force the cache to be a singleton.
      */
-    protected void getCacheManager()
+    protected void ensureCacheManager()
     {
         if ( cacheMgr == null )
         {

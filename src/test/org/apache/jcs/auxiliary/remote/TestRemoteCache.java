@@ -53,6 +53,7 @@ public class TestRemoteCache
     }
     
     /**
+     * @throws Exception 
      * 
      *
      */
@@ -75,6 +76,9 @@ public class TestRemoteCache
     }
     
     
+    /**
+     * @throws Exception
+     */
     public void testService() throws Exception 
     {
 
