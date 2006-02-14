@@ -1,83 +1,90 @@
 package org.apache.jcs.utils.struct;
 
+import java.util.Map;
+
+import org.apache.jcs.utils.struct.LRUMap;
+
 import junit.framework.TestCase;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
 /**
- * Test basic functionality.
- * 
+ * Basic unit tests for the LRUMap
+ *
  * @author Aaron Smuts
- * 
+ *
  */
 public class LRUMapUnitTest
     extends TestCase
 {
-    private Level origLevel = Level.INFO;
-
-    public void setUp()
-    {
-        Logger logger = Logger.getLogger( LRUMap.class );
-        origLevel = logger.getLevel();
-        logger.setLevel( Level.DEBUG );
-    }
-
-    public void tearDown()
-    {
-        Logger logger = Logger.getLogger( LRUMap.class );
-        logger.setLevel( origLevel );
-    }
 
     /**
-     * Verify that we can put, get, and remove and item.
-     * 
+     * Put up to the size limit and then make sure they are all there.
+     *
      */
-    public void testPutGetRemove()
+    public void testPutWithSizeLimit()
     {
-        int max = 100;
-        LRUMap map = new LRUMap( max );
-
-        String key = "MyKey";
-        String data = "testdata";
-
-        map.put( key, data );
-        assertEquals( "Data is wrong.", data, map.get( key ) );
-
-        map.verifyCache( key );
-
-        map.remove( key );
-        assertNull( "Data should have been removed.", map.get( key ) );
+        int size = 10;
+        Map cache = new LRUMap( size );
+        
+        for ( int i = 0; i < size; i++ )
+        {
+            cache.put( "key:" + i, "data:" + i );
+        }
+        
+        for ( int i = 0; i < size; i++ )
+        {
+            String data = (String)cache.get( "key:" + i );
+            assertEquals( "Data is wrong.", "data:" + i, data );
+        }        
     }
-
+ 
     /**
-     * Just test that we can put, get and remove as expected.
-     * 
-     * @exception Exception
-     *                Description of the Exception
+     * Put into the lru with no limit and then make sure they are all there.
+     *
      */
-    public void testSimpleLoad()
-        throws Exception
+    public void testPutWithNoSizeLimit()
     {
-        int items = 2000;
-        LRUMap map = new LRUMap( items );
-
-        for ( int i = 0; i < items; i++ )
+        int size = 10;
+        Map cache = new LRUMap( );
+        
+        for ( int i = 0; i < size; i++ )
         {
-            map.put( i + ":key", "data" + i );
+            cache.put( "key:" + i, "data:" + i );
         }
-
-        for ( int i = items - 1; i >= 0; i-- )
+        
+        for ( int i = 0; i < size; i++ )
         {
-            String res = (String) map.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
-        }
-
-        // verify that this passes.
-        map.verifyCache();
-
+            String data = (String)cache.get( "key:" + i );
+            assertEquals( "Data is wrong.", "data:" + i, data );
+        }       
     }
+    
+    /**
+     * Put and then remove.  Make sure the element is returned.
+     *
+     */
+    public void testPutAndRemove()
+    {
+        int size = 10;
+        Map cache = new LRUMap( size );
+        
+        cache.put( "key:" + 1, "data:" + 1 );
+        String data = (String)cache.remove( "key:" + 1 );
+        assertEquals( "Data is wrong.", "data:" + 1, data );
+    }
+    
+    /**
+     * Call remove on an empty map
+     *
+     */
+    public void testRemoveEmpty()
+    {
+        int size = 10;
+        Map cache = new LRUMap( size );
+        
+        Object returned = cache.remove( "key:" + 1 );
+        assertNull( "Shouldn't hvae anything.", returned );
+    }
+    
+    
+    
 }
