@@ -44,7 +44,7 @@ public class TestLateralTCPFilterRemoveHashCode
     public void test()
         throws Exception
     {
-        this.runTestForRegion( "region1", 1, 200, 1 );
+        this.runTestForRegion( "region1", 200, 1 );
     }
 
     /**
@@ -53,19 +53,18 @@ public class TestLateralTCPFilterRemoveHashCode
      * 
      * @param region
      *            Name of the region to access
-     * @param range
      * @param numOps
      * @param testNum
      * 
      * @exception Exception
      *                If an error occurs
      */
-    public void runTestForRegion( String region, int range, int numOps, int testNum )
+    public void runTestForRegion( String region, int numOps, int testNum )
         throws Exception
     {
 
         //boolean show = true;//false;
-
+       
         JCS cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
@@ -90,6 +89,8 @@ public class TestLateralTCPFilterRemoveHashCode
 
         Serializable dataToPassHashCodeCompare = new Serializable()
         {
+            private static final long serialVersionUID = 1L;
+
             public int hashCode()
             {
                 return 1;

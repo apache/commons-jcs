@@ -135,6 +135,7 @@ public class RemoteCacheClientTest
         {
             // use already exported object; remember exception
             ee = e;
+            ee.printStackTrace();
         }
         String service = System.getProperty( REMOTE_CACHE_SERVICE_NAME );
 
@@ -190,6 +191,7 @@ public class RemoteCacheClientTest
                 }
                 catch ( ObjectNotFoundException onfe )
                 {
+                    // nothing
                 }
             }
         }
@@ -231,6 +233,7 @@ public class RemoteCacheClientTest
      * 
      * @param args
      *            The command line arguments
+     * @throws Exception 
      */
     public static void main( String[] args )
         throws Exception
@@ -262,7 +265,7 @@ public class RemoteCacheClientTest
                 count = Integer.parseInt( args[i] );
             }
         }
-        RemoteCacheClientTest client = new RemoteCacheClientTest( count, write, read, delete );
+        new RemoteCacheClientTest( count, write, read, delete );
     }
 
     /**
@@ -289,7 +292,9 @@ public class RemoteCacheClientTest
         return listenerId;
     }
 
-    /** Helper for output, this is an user run test class */
+    /** Helper for output, this is an user run test class 
+     * @param s
+     */
     private static void p( String s )
     {
         System.out.println( s );
