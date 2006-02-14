@@ -6,7 +6,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.jcs.TestJCSvHashtablePerf;
+import org.apache.jcs.JCSvsHashtablePerformanceTest;
 import org.apache.jcs.utils.struct.LRUMap;
 
 /**
@@ -178,7 +178,7 @@ public class LRUMapPerformanceTest
      */
     public static void main( String args[] )
     {
-        TestJCSvHashtablePerf test = new TestJCSvHashtablePerf( "command" );
+        JCSvsHashtablePerformanceTest test = new JCSvsHashtablePerformanceTest( "command" );
         test.doWork();
     }
 

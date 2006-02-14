@@ -6,14 +6,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
+
 /**
  * This test ensures that basic memory operations are with a speficified order
  * of magnitude of the java.util.Hashtable.
  * <p>
  * Currenlty JCS is un 2x a hashtable for gets, and under 1.2x for puts.
- *  
+ * 
  */
-public class TestJCSvHashtablePerf
+public class JCSvsHashtablePerformanceTest
     extends TestCase
 {
 
@@ -30,7 +34,7 @@ public class TestJCSvHashtablePerf
     /**
      * @param testName
      */
-    public TestJCSvHashtablePerf( String testName )
+    public JCSvsHashtablePerformanceTest( String testName )
     {
         super( testName );
     }
@@ -42,7 +46,7 @@ public class TestJCSvHashtablePerf
      */
     public static Test suite()
     {
-        return new TestSuite( TestJCSvHashtablePerf.class );
+        return new TestSuite( JCSvsHashtablePerformanceTest.class );
     }
 
     /**
@@ -54,13 +58,25 @@ public class TestJCSvHashtablePerf
     public void testSimpleLoad()
         throws Exception
     {
+        Log log1 = LogFactory.getLog( LRUMemoryCache.class );
+        if ( log1.isDebugEnabled() )
+        {
+            System.out.println( "The log level must be at info or above for the a performance test." );
+            return;
+        }
+        Log log2 = LogFactory.getLog( JCS.class );
+        if ( log2.isDebugEnabled() )
+        {
+            System.out.println( "The log level must be at info or above for the a performance test." );
+            return;
+        }
         doWork();
         assertTrue( this.ratioPut < target );
         assertTrue( this.ratioGet < target );
     }
 
     /**
-     *  
+     * 
      */
     public void doWork()
     {
@@ -107,7 +123,7 @@ public class TestJCSvHashtablePerf
                 tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
                 System.out.println( name + " get time for " + tries + " = " + time + "; millis per = " + tPer );
 
-                ///////////////////////////////////////////////////////////////
+                // /////////////////////////////////////////////////////////////
                 name = "Hashtable";
                 Hashtable cache2 = new Hashtable();
                 start = System.currentTimeMillis();
@@ -168,7 +184,7 @@ public class TestJCSvHashtablePerf
      */
     public static void main( String args[] )
     {
-        TestJCSvHashtablePerf test = new TestJCSvHashtablePerf( "command" );
+        JCSvsHashtablePerformanceTest test = new JCSvsHashtablePerformanceTest( "command" );
         test.doWork();
     }
 

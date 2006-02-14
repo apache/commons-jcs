@@ -6,7 +6,9 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.jcs.TestJCSvHashtablePerf;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.JCSvsHashtablePerformanceTest;
 import org.apache.jcs.utils.struct.LRUMap;
 
 /**
@@ -14,9 +16,9 @@ import org.apache.jcs.utils.struct.LRUMap;
  * version. It has been testing at .6 to .7 times the commons LRU.
  * 
  * @author aaronsm
- *  
+ * 
  */
-public class TestLRUMapPerf
+public class JCSvsCommonsLRUMapPerformanceTest
     extends TestCase
 {
 
@@ -33,7 +35,7 @@ public class TestLRUMapPerf
     /**
      * @param testName
      */
-    public TestLRUMapPerf( String testName )
+    public JCSvsCommonsLRUMapPerformanceTest( String testName )
     {
         super( testName );
     }
@@ -45,7 +47,7 @@ public class TestLRUMapPerf
      */
     public static Test suite()
     {
-        return new TestSuite( TestLRUMapPerf.class );
+        return new TestSuite( JCSvsCommonsLRUMapPerformanceTest.class );
     }
 
     /**
@@ -57,13 +59,20 @@ public class TestLRUMapPerf
     public void testSimpleLoad()
         throws Exception
     {
+        Log log = LogFactory.getLog( LRUMap.class );
+        if ( log.isDebugEnabled() )
+        {
+            System.out.println( "The log level must be at info or above for the a performance test." );
+            return;
+        }
+
         doWork();
         assertTrue( this.ratioPut < target );
         assertTrue( this.ratioGet < target );
     }
 
     /**
-     *  
+     * 
      */
     public void doWork()
     {
@@ -112,12 +121,12 @@ public class TestLRUMapPerf
                 tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
                 System.out.println( name + " get time for " + tries + " = " + time + "; millis per = " + tPer );
 
-                ///////////////////////////////////////////////////////////////
-                cache2Name = "LRUMapJCS (commons)";
-                //or LRUMapJCS
+                // /////////////////////////////////////////////////////////////
+                cache2Name = "Commons  ";
+                // or LRUMapJCS
                 Map cache2 = new org.apache.commons.collections.map.LRUMap( tries );
-                //cache2Name = "Hashtable";
-                //Hashtable cache2 = new Hashtable();
+                // cache2Name = "Hashtable";
+                // Hashtable cache2 = new Hashtable();
                 start = System.currentTimeMillis();
                 for ( int i = 0; i < tries; i++ )
                 {
@@ -178,7 +187,7 @@ public class TestLRUMapPerf
      */
     public static void main( String args[] )
     {
-        TestJCSvHashtablePerf test = new TestJCSvHashtablePerf( "command" );
+        JCSvsHashtablePerformanceTest test = new JCSvsHashtablePerformanceTest( "command" );
         test.doWork();
     }
 

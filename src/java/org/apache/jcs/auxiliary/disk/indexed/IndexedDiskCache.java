@@ -348,6 +348,9 @@ public class IndexedDiskCache
 
         IndexedDiskElementDescriptor ded = null;
 
+        // old element with same key
+        IndexedDiskElementDescriptor old = null;
+        
         try
         {
             ded = new IndexedDiskElementDescriptor();
@@ -361,7 +364,7 @@ public class IndexedDiskCache
             try
             {
 
-                IndexedDiskElementDescriptor old = (IndexedDiskElementDescriptor) keyHash.put( ce.getKey(), ded );
+                old = (IndexedDiskElementDescriptor) keyHash.put( ce.getKey(), ded );
 
                 // Item with the same key already exists in file.
                 // Try to reuse the location if possible.
@@ -426,7 +429,7 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( "Failure updating element, cacheName: " + cacheName + ", key: " + ce.getKey(), e );
+            log.error( "Failure updating element, cacheName: " + cacheName + ", key: " + ce.getKey() + " old: " + old, e );
         }
         return;
     }

@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
@@ -21,9 +20,17 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 /**
  * This is a simple LRUMap. It implements most of the map methods. It is not
  * recommended that you use any but put, get, remove, and clear.
+ * <p>
+ * Children can implement the processRemovedLRU method if they want to handle
+ * the removal of the lest recently used item.
+ * <p>
+ * This class was abstracted out of the LRU Memory cache. Put, remove, and get
+ * should be thread safe. It uses a hashtable and our own double linked list.
+ * <p>
+ * Locking is done on the instance.
  * 
  * @author aaronsm
- *  
+ * 
  */
 public class LRUMap
     implements Map
@@ -45,19 +52,37 @@ public class LRUMap
 
     int putCnt = 0;
 
+    // if the max is less than 0, there is no limit!
     int maxObjects = -1;
 
     // make configurable
     private int chunkSize = 1;
 
     /**
+     * This creates an unbounded version. Setting the max objects will result in
+     * spooling on subsequent puts.
+     * 
+     * @param maxObjects
+     */
+    public LRUMap()
+    {
+        list = new DoubleLinkedList();
+        
+        // normal hshtable is faster for
+        // sequential keys.
+        map = new Hashtable();
+        //map = new ConcurrentHashMap();
+    }
+
+    /**
+     * This sets the size limit.
+     * 
      * @param maxObjects
      */
     public LRUMap( int maxObjects )
     {
+        this();
         this.maxObjects = maxObjects;
-        list = new DoubleLinkedList();
-        map = new Hashtable();
     }
 
     /*
@@ -151,6 +176,7 @@ public class LRUMap
      */
     public Set keySet()
     {
+        // TODO fix this, it needs to return the keys inside the wrappers.
         return map.keySet();
     }
 
@@ -188,7 +214,7 @@ public class LRUMap
             log.debug( "LRUMap miss for " + key );
         }
 
-        //verifyCache();
+        // verifyCache();
         return retVal;
     }
 
@@ -236,9 +262,11 @@ public class LRUMap
         if ( me != null )
         {
             list.remove( me );
+
+            return me.getPayload();
         }
 
-        return me;
+        return null;
     }
 
     /*
@@ -268,73 +296,79 @@ public class LRUMap
         int size = map.size();
         // If the element limit is reached, we need to spool
 
-        if ( size <= this.maxObjects )
+        if ( this.maxObjects >= 0 && size > this.maxObjects )
         {
-            return old;
-        }
-        log.debug( "In memory limit reached, spooling" );
-
-        // Write the last 'chunkSize' items to disk.
-        int chunkSizeCorrected = Math.min( size, getChunkSize() );
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "About to spool to disk cache, map size: " + size + ", max objects: " + this.maxObjects
-                + ", items to spool: " + chunkSizeCorrected );
-        }
-
-        // The spool will put them in a disk event queue, so there is no
-        // need to pre-queue the queuing. This would be a bit wasteful
-        // and wouldn't save much time in this synchronous call.
-
-        for ( int i = 0; i < chunkSizeCorrected; i++ )
-        {
-            synchronized ( this )
+            if ( log.isDebugEnabled() )
             {
-                if ( list.getLast() != null )
+                log.debug( "In memory limit reached, removing least recently used." );
+            }
+
+            // Write the last 'chunkSize' items to disk.
+            int chunkSizeCorrected = Math.min( size, getChunkSize() );
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "About to remove the least recently used. map size: " + size + ", max objects: "
+                    + this.maxObjects + ", items to spool: " + chunkSizeCorrected );
+            }
+
+            // The spool will put them in a disk event queue, so there is no
+            // need to pre-queue the queuing. This would be a bit wasteful
+            // and wouldn't save much time in this synchronous call.
+
+            for ( int i = 0; i < chunkSizeCorrected; i++ )
+            {
+                synchronized ( this )
                 {
-                    if ( ( (LRUElementDescriptor) list.getLast() ) != null )
+                    if ( list.getLast() != null )
                     {
-                        //cache.spoolToDisk( ( (LRUElementDescriptor)
-                        // list.getLast()).ce);
-                        if ( !map.containsKey( ( (LRUElementDescriptor) list.getLast() ).getKey() ) )
+                        if ( ( (LRUElementDescriptor) list.getLast() ) != null )
                         {
-                            log.error( "update: map does not contain key: "
-                                + ( (LRUElementDescriptor) list.getLast() ).getKey() );
-                            verifyCache();
+                            processRemovedLRU( ( (LRUElementDescriptor) list.getLast() ).getKey(),
+                                               ( (LRUElementDescriptor) list.getLast() ).getPayload() );
+                            if ( !map.containsKey( ( (LRUElementDescriptor) list.getLast() ).getKey() ) )
+                            {
+                                log.error( "update: map does not contain key: "
+                                    + ( (LRUElementDescriptor) list.getLast() ).getKey() );
+                                verifyCache();
+                            }
+                            if ( map.remove( ( (LRUElementDescriptor) list.getLast() ).getKey() ) == null )
+                            {
+                                log.warn( "update: remove failed for key: "
+                                    + ( (LRUElementDescriptor) list.getLast() ).getKey() );
+                                verifyCache();
+                            }
                         }
-                        if ( map.remove( ( (LRUElementDescriptor) list.getLast() ).getKey() ) == null )
+                        else
                         {
-                            log.warn( "update: remove failed for key: "
-                                + ( (LRUElementDescriptor) list.getLast() ).getKey() );
-                            verifyCache();
+                            throw new Error( "update: last.ce is null!" );
                         }
+                        list.removeLast();
                     }
                     else
                     {
-                        throw new Error( "update: last.ce is null!" );
+                        verifyCache();
+                        throw new Error( "update: last is null!" );
                     }
-                    list.removeLast();
                 }
-                else
-                {
-                    verifyCache();
-                    throw new Error( "update: last is null!" );
-                }
+            }
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "update: After spool map size: " + map.size() );
+            }
+            if ( map.size() != dumpCacheSize() )
+            {
+                log.error( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
+                    + dumpCacheSize() );
             }
         }
 
-        if ( log.isDebugEnabled() )
+        if ( old != null )
         {
-            log.debug( "update: After spool map size: " + map.size() );
+            return old.getPayload();
         }
-        if ( map.size() != dumpCacheSize() )
-        {
-            log.error( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
-                + dumpCacheSize() );
-        }
-
-        return old;
+        return null;
     }
 
     /**
@@ -370,7 +404,10 @@ public class LRUMap
         log.debug( "dumpingCacheEntries" );
         for ( LRUElementDescriptor me = (LRUElementDescriptor) list.getFirst(); me != null; me = (LRUElementDescriptor) me.next )
         {
-            log.debug( "dumpCacheEntries> key=" + me.getKey() + ", val=" + me.getPayload() );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "dumpCacheEntries> key=" + me.getKey() + ", val=" + me.getPayload() );
+            }
         }
     }
 
@@ -384,14 +421,17 @@ public class LRUMap
         {
             Map.Entry e = (Map.Entry) itr.next();
             LRUElementDescriptor me = (LRUElementDescriptor) e.getValue();
-            log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.getPayload() );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.getPayload() );
+            }
         }
     }
 
     /**
      * Checks to see if all the items that should be in the cache are. Checks
      * consistency between List and map.
-     *  
+     * 
      */
     protected void verifyCache()
     {
@@ -505,6 +545,24 @@ public class LRUMap
         if ( !found )
         {
             log.error( "verifycache(key), couldn't find key! : " + key );
+        }
+    }
+
+    /**
+     * This is called when an item is removed from the LRU. We just log some
+     * information.
+     * <p>
+     * Children can implement this method for special behavior.
+     * 
+     * @param key
+     * @param value
+     */
+    protected void processRemovedLRU( Object key, Object value )
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Removing key: [" + key + "] from LRUMap store, value = [" + value + "]" );
+            log.debug( "LRUMap store size: '" + this.size() + "'." );
         }
     }
 

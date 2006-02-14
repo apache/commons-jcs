@@ -24,7 +24,7 @@ import junit.framework.TestCase;
  * @author Aaron Smuts
  *  
  */
-public class TestCacheElementRetrieval
+public class JCSCacheElementRetrievalUnitTest
     extends TestCase
 {
 

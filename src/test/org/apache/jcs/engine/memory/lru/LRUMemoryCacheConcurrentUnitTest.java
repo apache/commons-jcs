@@ -1,4 +1,4 @@
-package org.apache.jcs;
+package org.apache.jcs.engine.memory.lru;
 
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
@@ -20,13 +20,18 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.control.CompositeCacheManager;
+
 /**
- * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads.
+ * Test which exercises the LRUMemory cache. This one uses three different
+ * regions for three threads.
  * 
  * @version $Id$
  */
-public class TestDiskCache
+public class LRUMemoryCacheConcurrentUnitTest
     extends TestCase
 {
     /**
@@ -40,7 +45,7 @@ public class TestDiskCache
      * 
      * @param testName
      */
-    public TestDiskCache( String testName )
+    public LRUMemoryCacheConcurrentUnitTest( String testName )
     {
         super( testName );
     }
@@ -52,7 +57,7 @@ public class TestDiskCache
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { TestDiskCache.class.getName() };
+        String[] testCaseName = { LRUMemoryCacheConcurrentUnitTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -65,7 +70,7 @@ public class TestDiskCache
     {
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new TestDiskCache( "testIndexedDiskCache1" )
+        suite.addTest( new LRUMemoryCacheConcurrentUnitTest( "testLRUMemoryCache" )
         {
             public void runTest()
                 throws Exception
@@ -74,24 +79,15 @@ public class TestDiskCache
             }
         } );
 
-        suite.addTest( new TestDiskCache( "testIndexedDiskCache2" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                this.runTestForRegion( "indexedRegion2" );
-            }
-        } );
-
-        suite.addTest( new TestDiskCache( "testIndexedDiskCache3" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                this.runTestForRegion( "indexedRegion3" );
-            }
-        } );
-
+        /*
+         * suite.addTest( new TestDiskCache( "testIndexedDiskCache2" ) { public
+         * void runTest() throws Exception { this.runTestForRegion(
+         * "indexedRegion2" ); } } );
+         * 
+         * suite.addTest( new TestDiskCache( "testIndexedDiskCache3" ) { public
+         * void runTest() throws Exception { this.runTestForRegion(
+         * "indexedRegion3" ); } } );
+         */
         return suite;
     }
 
@@ -100,12 +96,12 @@ public class TestDiskCache
      */
     public void setUp()
     {
-        JCS.setConfigFilename( "/TestDiskCache.ccf" );
+        //JCS.setConfigFilename( "/TestDiskCache.ccf" );
     }
 
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
+     * than the size of the memory cache, so items should be dumped.
      * 
      * @param region
      *            Name of the region to access
@@ -116,36 +112,50 @@ public class TestDiskCache
     public void runTestForRegion( String region )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( region );
+        CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+        cacheMgr.configure( "/TestDiskCache.ccf" );
+        CompositeCache cache = cacheMgr.getCache( region );
+
+        LRUMemoryCache lru = new LRUMemoryCache();
+        lru.initialize( cache );
 
         // Add items to cache
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
-            jcs.put( i + ":key", region + " data " + i );
+            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", region + " data " + i );
+            ice.setElementAttributes( cache.getElementAttributes().copy() );
+            lru.update( ice );
         }
 
-        // Test that all items are in cache
+        // Test that initial items have been purged
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < 102; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            assertNull( lru.get( i + ":key" ) );
+        }
 
+        // Test that last items are in cache
+
+        for ( int i = 102; i < items; i++ )
+        {
+            String value = (String) lru.get( i + ":key" ).getVal();
             assertEquals( region + " data " + i, value );
         }
 
         // Remove all the items
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
-            jcs.remove( i + ":key" );
+            lru.remove( i + ":key" );
         }
 
         // Verify removal
 
-        for ( int i = 0; i <= items; i++ )
+        for ( int i = 0; i < items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( "Removed key should be null: " + i + ":key", lru.get( i + ":key" ) );
         }
     }
+
 }

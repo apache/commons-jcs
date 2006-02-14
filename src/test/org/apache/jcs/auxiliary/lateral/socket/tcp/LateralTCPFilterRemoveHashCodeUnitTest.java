@@ -11,7 +11,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * @author asmuts
  */
-public class TestLateralTCPFilterRemoveHashCode
+public class LateralTCPFilterRemoveHashCodeUnitTest
     extends TestCase
 {
 
@@ -24,7 +24,7 @@ public class TestLateralTCPFilterRemoveHashCode
      * 
      * @param testName
      */
-    public TestLateralTCPFilterRemoveHashCode( String testName )
+    public LateralTCPFilterRemoveHashCodeUnitTest( String testName )
     {
         super( testName );
     }

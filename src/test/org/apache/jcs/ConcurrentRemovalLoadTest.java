@@ -20,16 +20,10 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.apache.jcs.engine.control.CompositeCacheManager;
-
 /**
- * Test which exercises the indexed disk cache. Runs three threads against the
- * same region.
- * 
- * @version $Id: TestDiskCacheConcurrentForDeadLock.java,v 1.2 2005/02/01
- *          00:01:59 asmuts Exp $
+ * Test which exercises the hierarchical removal when the cache is active.
  */
-public class TestDiskCacheConcurrentForDeadLock
+public class ConcurrentRemovalLoadTest
     extends TestCase
 {
     /**
@@ -37,7 +31,7 @@ public class TestDiskCacheConcurrentForDeadLock
      * 
      * @param testName
      */
-    public TestDiskCacheConcurrentForDeadLock( String testName )
+    public ConcurrentRemovalLoadTest( String testName )
     {
         super( testName );
     }
@@ -49,12 +43,13 @@ public class TestDiskCacheConcurrentForDeadLock
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { TestDiskCacheConcurrentForDeadLock.class.getName() };
+        String[] testCaseName = { RemovalTestUtil.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
     /**
-     * A unit test suite for JUnit
+     * A unit test suite for JUnit. This verfies that we can remove
+     * hierarchically while the region is active.
      * 
      * @return The test suite
      */
@@ -62,76 +57,82 @@ public class TestDiskCacheConcurrentForDeadLock
     {
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new TestDiskCacheConcurrentRandom( "testIndexedDiskCache1" )
+        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 0, 200, 1 );
+                runTestPutThenRemoveCategorical( 0, 200 );
             }
         } );
 
-        suite.addTest( new TestDiskCacheConcurrentRandom( "testIndexedDiskCache2" )
+        suite.addTest( new RemovalTestUtil( "testPutCache1" )
         {
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 2 );
+                runPutInRange( 300, 400 );
             }
         } );
 
-        suite.addTest( new TestDiskCacheConcurrentRandom( "testIndexedDiskCache3" )
+        suite.addTest( new RemovalTestUtil( "testPutCache2" )
         {
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 3 );
+                runPutInRange( 401, 600 );
             }
         } );
 
-        suite.addTest( new TestDiskCacheConcurrentRandom( "testIndexedDiskCache4" )
+        // stomp on previous put
+        suite.addTest( new RemovalTestUtil( "testPutCache3" )
         {
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 4 );
+                runPutInRange( 401, 600 );
             }
         } );
 
-        suite.addTest( new TestDiskCacheConcurrentRandom( "testIndexedDiskCache5" )
+        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 10000, 50000, 5 );
+                runTestPutThenRemoveCategorical( 601, 700 );
             }
         } );
 
+        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runTestPutThenRemoveCategorical( 701, 800 );
+            }
+        } );
+
+        suite.addTest( new RemovalTestUtil( "testPutCache2" )
+        {
+            // verify that there are no errors with concurrent gets.
+            public void runTest()
+                throws Exception
+            {
+                runGetInRange( 0, 1000, false );
+            }
+        } );
         return suite;
+
     }
 
     /**
      * Test setup
      */
     public void setUp()
+        throws Exception
     {
-        JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
-    }
-
-    /**
-     * Test tearDown. Dispose of the cache.
-     */
-    public void tearDown()
-    {
-        try
-        {
-            CompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
-            cacheMgr.shutDown();
-        }
-        catch ( Exception e )
-        {
-            //log.error(e);
-        }
+        JCS.setConfigFilename( "/TestRemoval.ccf" );
+        JCS.getInstance( "testCache1" );
     }
 
 }

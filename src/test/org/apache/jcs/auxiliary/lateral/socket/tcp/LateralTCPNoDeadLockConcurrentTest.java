@@ -28,7 +28,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * same region and two against other regions.
  * 
  */
-public class TestLateralTCPConcurrentForDeadLock
+public class LateralTCPNoDeadLockConcurrentTest
     extends TestCase
 {
     /**
@@ -36,7 +36,7 @@ public class TestLateralTCPConcurrentForDeadLock
      * 
      * @param testName
      */
-    public TestLateralTCPConcurrentForDeadLock( String testName )
+    public LateralTCPNoDeadLockConcurrentTest( String testName )
     {
         super( testName );
     }
@@ -48,7 +48,7 @@ public class TestLateralTCPConcurrentForDeadLock
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { TestLateralTCPConcurrentForDeadLock.class.getName() };
+        String[] testCaseName = { LateralTCPNoDeadLockConcurrentTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -64,7 +64,7 @@ public class TestLateralTCPConcurrentForDeadLock
         
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new TestLateralTCPConcurrentRandom( "testLateralTCPCache1" )
+        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache1" )
         {
             public void runTest()
                 throws Exception
@@ -73,7 +73,7 @@ public class TestLateralTCPConcurrentForDeadLock
             }
         } );
 
-        suite.addTest( new TestLateralTCPConcurrentRandom( "testLateralTCPCache2" )
+        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache2" )
         {
             public void runTest()
                 throws Exception
@@ -82,7 +82,7 @@ public class TestLateralTCPConcurrentForDeadLock
             }
         } );
 
-        suite.addTest( new TestLateralTCPConcurrentRandom( "testLateralTCPCache3" )
+        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache3" )
         {
             public void runTest()
                 throws Exception
@@ -91,7 +91,7 @@ public class TestLateralTCPConcurrentForDeadLock
             }
         } );
 
-        suite.addTest( new TestLateralTCPConcurrentRandom( "testLateralTCPCache4" )
+        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache4" )
         {
             public void runTest()
                 throws Exception
@@ -100,7 +100,7 @@ public class TestLateralTCPConcurrentForDeadLock
             }
         } );
 
-        suite.addTest( new TestLateralTCPConcurrentRandom( "testLateralTCPCache5" )
+        suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache5" )
         {
             public void runTest()
                 throws Exception

@@ -16,14 +16,15 @@ package org.apache.jcs.access.exception;
  * limitations under the License.
  */
 
-import org.apache.commons.lang.exception.NestableException;
+//import org.apache.commons.lang.exception.NestableException;
 
 /**
  * This is the most general exception the cache throws.
  *  
  */
 public class CacheException
-    extends NestableException
+    extends Exception
+    //extends NestableException
 {
 
     private static final long serialVersionUID = 8725795372935590265L;

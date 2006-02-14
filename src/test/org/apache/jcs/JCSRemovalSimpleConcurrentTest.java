@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 /**
  * Verify that basic removal functionality works.
  */
-public class TestRemovalSimple
+public class JCSRemovalSimpleConcurrentTest
     extends TestCase
 {
     /**
@@ -29,7 +29,7 @@ public class TestRemovalSimple
      * 
      * @param testName
      */
-    public TestRemovalSimple( String testName )
+    public JCSRemovalSimpleConcurrentTest( String testName )
     {
         super( testName );
     }
@@ -51,7 +51,7 @@ public class TestRemovalSimple
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { TestRemovalSimple.class.getName() };
+        String[] testCaseName = { JCSRemovalSimpleConcurrentTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 

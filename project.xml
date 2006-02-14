@@ -226,38 +226,6 @@
 		<unitTest>
 			<includes>
 				<include>**/*${test}Test.java</include>
-
-				<include>**/TestCacheElementRetrieval.java</include>
-				<include>**/TestDiskCacheNoMemory.java</include>
-				<include>**/TestJCS.java</include>
-				<include>**/TestSimpleLoad.java</include>
-				<include>**/TestDiskCache.java</include>
-				<include>**/TestDiskCacheConcurrent.java</include>
-				<include>
-					**/TestDiskCacheConcurrentForDeadLock.java
-				</include>
-				<include>**/TestTCPLateralCache.java</include>
-				<include>
-					**/TestLateralTCPFilterRemoveHashCode.java
-				</include>
-				<include>
-					**/TestLateralTCPIssueRemoveOnPut.java
-				</include>
-				<include>
-					**/TestLateralTCPConcurrentForDeadLock.java
-				</include>
-				<!--
-					<include>**/TestJCSvHashtablePerf.java</include>
-				-->
-				<include>**/TestEventQueueConcurrent.java</include>
-				<include>**/TestSimpleEventHandling.java</include>
-				<include>**/TestLRUArray.java</include>
-				<include>**/TestSortedPrefArray.java</include>
-				<include>**/TestRemovalConcurrent.java</include>
-				<include>**/TestRemovalSimple.java</include>
-				<include>**/TestUDPDiscovery.java</include>
-				<include>**/TestSystemPropertyUsage.java</include>
-				<include>**/TestCacheManagerStats.java</include>
 			</includes>
 
 			<resources>

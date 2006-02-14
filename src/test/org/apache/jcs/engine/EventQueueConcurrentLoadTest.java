@@ -33,7 +33,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
  * 
  * @author Aaron Smuts
  */
-public class EventQueueConcurrentUnitTest
+public class EventQueueConcurrentLoadTest
     extends TestCase
 {
 
@@ -53,7 +53,7 @@ public class EventQueueConcurrentUnitTest
      * 
      * @param testName
      */
-    public EventQueueConcurrentUnitTest( String testName )
+    public EventQueueConcurrentLoadTest( String testName )
     {
         super( testName );
     }
@@ -65,7 +65,7 @@ public class EventQueueConcurrentUnitTest
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { EventQueueConcurrentUnitTest.class.getName() };
+        String[] testCaseName = { EventQueueConcurrentLoadTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -79,7 +79,7 @@ public class EventQueueConcurrentUnitTest
 
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testRunPutTest1" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest1" )
         {
             public void runTest()
                 throws Exception
@@ -88,7 +88,7 @@ public class EventQueueConcurrentUnitTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testRunPutTest2" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest2" )
         {
             public void runTest()
                 throws Exception
@@ -97,7 +97,7 @@ public class EventQueueConcurrentUnitTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testRunRemoveTest1" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testRunRemoveTest1" )
         {
             public void runTest()
                 throws Exception
@@ -106,7 +106,7 @@ public class EventQueueConcurrentUnitTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testStopProcessing1" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testStopProcessing1" )
         {
             public void runTest()
                 throws Exception
@@ -115,7 +115,7 @@ public class EventQueueConcurrentUnitTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testRunPutTest4" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest4" )
         {
             public void runTest()
                 throws Exception
@@ -124,7 +124,7 @@ public class EventQueueConcurrentUnitTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testRunRemoveTest2" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testRunRemoveTest2" )
         {
             public void runTest()
                 throws Exception
@@ -133,7 +133,7 @@ public class EventQueueConcurrentUnitTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testStopProcessing2" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testStopProcessing2" )
         {
             public void runTest()
                 throws Exception
@@ -142,7 +142,7 @@ public class EventQueueConcurrentUnitTest
             }
         } );
 
-        suite.addTest( new EventQueueConcurrentUnitTest( "testRunPutDelayTest" )
+        suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutDelayTest" )
         {
             public void runTest()
                 throws Exception

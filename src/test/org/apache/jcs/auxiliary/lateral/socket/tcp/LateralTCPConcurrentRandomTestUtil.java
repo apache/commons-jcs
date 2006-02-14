@@ -11,7 +11,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * @author asmuts
  */
-public class TestLateralTCPConcurrentRandom
+public class LateralTCPConcurrentRandomTestUtil
     extends TestCase
 {
 
@@ -24,7 +24,7 @@ public class TestLateralTCPConcurrentRandom
      * 
      * @param testName
      */
-    public TestLateralTCPConcurrentRandom( String testName )
+    public LateralTCPConcurrentRandomTestUtil( String testName )
     {
         super( testName );
     }

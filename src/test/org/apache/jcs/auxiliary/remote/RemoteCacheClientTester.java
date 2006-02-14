@@ -40,7 +40,7 @@ import org.apache.jcs.engine.behavior.ICacheService;
  * @author asmuts
  * @created January 15, 2002
  */
-public class RemoteCacheClientTest
+public class RemoteCacheClientTester
     implements IRemoteCacheListener, IRemoteCacheConstants
 {
 
@@ -78,7 +78,7 @@ public class RemoteCacheClientTest
      * @exception NotBoundException
      * @exception IOException
      */
-    public RemoteCacheClientTest( int count )
+    public RemoteCacheClientTester( int count )
         throws MalformedURLException, NotBoundException, IOException
     {
         this( count, true, true, false );
@@ -95,7 +95,7 @@ public class RemoteCacheClientTest
      * @exception NotBoundException
      * @exception IOException
      */
-    public RemoteCacheClientTest( int count, boolean write, boolean read, boolean delete )
+    public RemoteCacheClientTester( int count, boolean write, boolean read, boolean delete )
         throws MalformedURLException, NotBoundException, IOException
     {
         this( "", Registry.REGISTRY_PORT, count, write, read, delete );
@@ -114,7 +114,7 @@ public class RemoteCacheClientTest
      * @exception NotBoundException
      * @exception IOException
      */
-    public RemoteCacheClientTest( String host, int port, int count, boolean write, boolean read, boolean delete )
+    public RemoteCacheClientTester( String host, int port, int count, boolean write, boolean read, boolean delete )
         throws MalformedURLException, NotBoundException, IOException
     {
         this.count = count;
@@ -265,7 +265,7 @@ public class RemoteCacheClientTest
                 count = Integer.parseInt( args[i] );
             }
         }
-        new RemoteCacheClientTest( count, write, read, delete );
+        new RemoteCacheClientTester( count, write, read, delete );
     }
 
     /**

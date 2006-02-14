@@ -31,7 +31,7 @@ import java.util.Random;
  * 
  * @version $Id$
  */
-public class TestJCS
+public class JCSUniTest
     extends TestCase
 {
     Random random = new Random();
@@ -39,7 +39,7 @@ public class TestJCS
     /**
      * @param testName
      */
-    public TestJCS( String testName )
+    public JCSUniTest( String testName )
     {
         super( testName );
     }
@@ -49,7 +49,7 @@ public class TestJCS
      */
     public static Test suite()
     {
-        return new TestSuite( TestJCS.class );
+        return new TestSuite( JCSUniTest.class );
     }
 
     /**
@@ -57,7 +57,7 @@ public class TestJCS
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { TestJCS.class.getName() };
+        String[] testCaseName = { JCSUniTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
