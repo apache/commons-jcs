@@ -43,7 +43,7 @@ public class TestCacheElementRetrieval
         ICacheElement elem = jcs.getCacheElement( "test_key" );
         assertEquals( "Name wasn't right", "testCache1", elem.getCacheName() );
 
-        long diff = elem.getElementAttributes().getCreateTime() - now;
+        long diff = now - elem.getElementAttributes().getCreateTime();
         assertTrue( "Create time should have been at or after the call", diff >= 0 );
 
     }
