@@ -1,65 +1,102 @@
 <document>
-  <properties>
-    <title>JCS Change Log</title>
-    <author email="asmuts@apache.org">Aaron Smuts</author>
-  </properties>
-  <body>
+	<properties>
+		<title>JCS Change Log</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+	</properties>
+	<body>
 
-    <release version="1.2.6.7" date="in CVS">
-      <action dev="asmuts" type="fix" due-to="Adam Siefker">
-		Fixed shutdown for lateral.  Added shutdown observer framework.  Changed listener thread
-		to a daemon.  Made executor on listener use a daemon setting
-		thread factory.
-      </action>              
-      <action dev="asmuts" type="fix" due-to="">
-		Fixed abstract inner class references for Jikes.
-      </action>              
-      <action dev="asmuts" type="update" due-to="">
-		IMproved Javadocs throughout.
-      </action>              
-    </release>
+		<release version="1.2.6.9" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				The remote cache now sends a byte array to the server instead of the class.  This
+				allows you to run the remote server without copies of your objects in its classpath.
+				This makes the remote server far easier to use.  
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Created an interface for cache element serializers and made a default
+				implementation.  This will allow use to use other serialization mechanisms in 
+				the future.  I converted the remote cache to use the standard serializer.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added several new unit tests.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved Javadocs throughout.
+			</action>
+		</release>
+		
+		<release version="1.2.6.8" date="in CVS">
+			<action dev="asmuts" type="fix" due-to="">
+				Moved synchronization from the client to the sorted preferential array.
+				This solved the index out of bounds exception that appeared periodically on
+				disk cleanup.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved Javadocs throughout.
+			</action>			
+		</release>
+				
+		<release version="1.2.6.7" date="in CVS">
+			<action dev="asmuts" type="fix" due-to="Adam Siefker">
+				Fixed shutdown for lateral. Added shutdown observer
+				framework. Changed listener thread to a daemon. Made
+				executor on listener use a daemon setting thread
+				factory.
+			</action>
+			<action dev="asmuts" type="fix" due-to="">
+				Fixed abstract inner class references for Jikes.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved Javadocs throughout.
+			</action>
+		</release>
 
-    <release version="1.2.6.6" date="in CVS">
-      <action dev="asmuts" type="fix">
-        Properties are loaded using the current thread's classloader by default.
-      </action>   
-      <action dev="asmuts" type="fix">
-        When a config file is not found a descriptive error message is printed to the logs.
-      </action>               
-      <action dev="asmuts" type="update">
-        Made an interface for the cache manager to improve testability.
-      </action>              
-      <action dev="asmuts" type="update">
-        Auxiliaries are assigned a cache manager and the lateral TCP has
-        a settable source id, so it can be tested.
-      </action>              
-      <action dev="asmuts" type="update">
-		Increased JGroups version to 2.2.8.  It works again.  The old JGroups
-		didn't work for unknown reasons.
-      </action>              
-      <action dev="asmuts" type="update">
-		Cleaned up some javadocs.
-      </action>     
-      <action dev="asmuts" type="update">
-		Improved info level logging for TCP lateral.
-      </action>                 
-      <action dev="asmuts" type="update">
-		Added configuration properties xdocs for TCP lateral, indexed disk, and memory cache.
-      </action>              
-      <action dev="asmuts" type="update">
-		Created concurrent tests for TCP lateral to verify correct region behavior.
-      </action>              
-      <action dev="asmuts" type="update">
-		Made BDBJE work with new auxiliary changes.
-      </action>              
-      <action dev="asmuts" type="fix">
-		UDP discovery no longer activates if the lateral type isn't TCP.
-      </action>              
-      <action dev="asmuts" type="fix">
-		Reduced lateral get timeout to 1 second, rather than 10.  We still
-		need to disable gets when a timeout occurs.
-      </action>              
-    </release>
+		<release version="1.2.6.6" date="in CVS">
+			<action dev="asmuts" type="fix">
+				Properties are loaded using the current thread's
+				classloader by default.
+			</action>
+			<action dev="asmuts" type="fix">
+				When a config file is not found a descriptive error
+				message is printed to the logs.
+			</action>
+			<action dev="asmuts" type="update">
+				Made an interface for the cache manager to improve
+				testability.
+			</action>
+			<action dev="asmuts" type="update">
+				Auxiliaries are assigned a cache manager and the lateral
+				TCP has a settable source id, so it can be tested.
+			</action>
+			<action dev="asmuts" type="update">
+				Increased JGroups version to 2.2.8. It works again. The
+				old JGroups didn't work for unknown reasons.
+			</action>
+			<action dev="asmuts" type="update">
+				Cleaned up some javadocs.
+			</action>
+			<action dev="asmuts" type="update">
+				Improved info level logging for TCP lateral.
+			</action>
+			<action dev="asmuts" type="update">
+				Added configuration properties xdocs for TCP lateral,
+				indexed disk, and memory cache.
+			</action>
+			<action dev="asmuts" type="update">
+				Created concurrent tests for TCP lateral to verify
+				correct region behavior.
+			</action>
+			<action dev="asmuts" type="update">
+				Made BDBJE work with new auxiliary changes.
+			</action>
+			<action dev="asmuts" type="fix">
+				UDP discovery no longer activates if the lateral type
+				isn't TCP.
+			</action>
+			<action dev="asmuts" type="fix">
+				Reduced lateral get timeout to 1 second, rather than 10.
+				We still need to disable gets when a timeout occurs.
+			</action>
+		</release>
 
-  </body>
+	</body>
 </document>

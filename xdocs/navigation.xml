@@ -1,37 +1,60 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="jcs" href="http://jakarta.apache.org/jcs/">
 
-  <title>JCS</title>
+	<title>JCS</title>
 
-  <body>
+	<body>
 
-    <links>
-      <item name="PDF Documentation"                   href="/jcs.pdf" img="/images/pdf.gif"/>
-	</links>
-	
-    <menu name="General Information">
-      <item name="Overview"                 href="/index.html"/>
-      <item name="JCS and JCACHE"           href="/JCSandJCACHE.html"/>
-      <item name="Downloads"                href="/DownloadPage.html"/>
-      <item name="FAQ"                      href="/faq.html"/>
-    </menu>
+		<links>
+			<item name="PDF Documentation" href="/jcs.pdf"
+				img="/images/pdf.gif" />
+		</links>
 
-    <menu name="JCS User's Guide">
-      <item name="Basic JCS Config"         href="/BasicJCSConfiguration.html"/>
-      <item name="Element Config"           href="/ElementAttributes.html"/>
-      <item name="Region Properties"  		href="/RegionProperties.html"/>
-      <item name="Basic Web Example"        href="/UsingJCSBasicWeb.html"/>
-      <item name="Plugin Overview"          href="/Plugins.html"/>
-      <item name="Local Cache"              href="/LocalCacheConfig.html"/>
-      <item name="Indexed Disk Cache"       href="/IndexedDiskAuxCache.html"/>
-      <item name="Indexed Disk Properties"  href="/IndexedDiskCacheProperties.html"/>
-      <item name="Remote Cache"             href="/RemoteAuxCache.html"/>
-      <item name="Lateral TCP Cache"        href="/LateralTCPAuxCache.html"/>
-      <item name="Lateral TCP Properties"   href="/LateralTCPProperties.html"/>
-      <item name="Lateral UDP Discovery"    href="/LateralUDPDiscovery.html"/>
-      <item name="Lateral JGroups Cache"    href="/LateralJavaGroupsAuxCache.html"/>
-    </menu>
+		<menu name="General Information">
+			<item name="Overview" href="/index.html" />
+			<item name="JCS and JCACHE" href="/JCSandJCACHE.html" />
+			<item name="Downloads" href="/DownloadPage.html" />
+			<item name="FAQ" href="/faq.html" />
+		</menu>
+
+		<menu name="Getting Started">
+			<item name="Overview" href="/getting_started/intro.html" />
+			<item name="Basic JCS Config"
+				href="/BasicJCSConfiguration.html" />
+			<item name="Plugin Overview" href="/Plugins.html" />
+			<item name="Basic Web Example"
+				href="/UsingJCSBasicWeb.html" />
+		</menu>
+
+		<menu name="JCS User's Guide">
+			<item name="Core" href="/LocalCacheConfig.html" collapse="true">
+				<item name="Basic JCS Config"
+					href="/BasicJCSConfiguration.html" />
+				<item name="Element Config"
+					href="/ElementAttributes.html" />
+				<item name="Region Properties"
+					href="/RegionProperties.html" />
+				<item name="Basic Web Example"
+					href="/UsingJCSBasicWeb.html" />
+			</item>
+			<item name="Auxiliary" href="/Plugins.html"
+				collapse="true">
+				<item name="Indexed Disk Cache"
+					href="/IndexedDiskAuxCache.html" />
+				<item name="Indexed Disk Properties"
+					href="/IndexedDiskCacheProperties.html" />
+				<item name="Remote Cache" href="/RemoteAuxCache.html" />
+				<item name="Lateral TCP Cache"
+					href="/LateralTCPAuxCache.html" />
+				<item name="Lateral TCP Properties"
+					href="/LateralTCPProperties.html" />
+				<item name="Lateral UDP Discovery"
+					href="/LateralUDPDiscovery.html" />
+				<item name="Lateral JGroups Cache"
+					href="/LateralJavaGroupsAuxCache.html" />
+			</item>
+		</menu>
 
 
-  </body>
+	</body>
 </project>
