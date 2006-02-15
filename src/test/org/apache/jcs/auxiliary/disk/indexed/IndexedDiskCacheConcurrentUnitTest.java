@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.indexed;
+package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
@@ -24,26 +24,25 @@ import org.apache.jcs.JCS;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads. It uses a config file that specifies 0 items in
- * memory.
+ * regions for thre threads.
  * 
- * @version $Id: TestDiskCacheNoMemory.java 224346 2005-06-04 02:01:59Z asmuts $
+ * @version $Id: TestDiskCache.java 224346 2005-06-04 02:01:59Z asmuts $
  */
-public class IndexedDiskCacheNoMemoryUnitTest
+public class IndexedDiskCacheConcurrentUnitTest
     extends TestCase
 {
     /**
-     * Number of items to cache; the configured maxObjects for the memory cache
-     * regions is 0.
+     * Number of items to cache, twice the configured maxObjects for the memory
+     * cache regions.
      */
-    private static int items = 2000;
+    private static int items = 200;
 
     /**
      * Constructor for the TestDiskCache object.
      * 
      * @param testName
      */
-    public IndexedDiskCacheNoMemoryUnitTest( String testName )
+    public IndexedDiskCacheConcurrentUnitTest( String testName )
     {
         super( testName );
     }
@@ -55,7 +54,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { IndexedDiskCacheNoMemoryUnitTest.class.getName() };
+        String[] testCaseName = { IndexedDiskCacheConcurrentUnitTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -68,7 +67,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
     {
         ActiveTestSuite suite = new ActiveTestSuite();
 
-        suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache1" )
+        suite.addTest( new IndexedDiskCacheConcurrentUnitTest( "testIndexedDiskCache1" )
         {
             public void runTest()
                 throws Exception
@@ -77,7 +76,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
             }
         } );
 
-        suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache2" )
+        suite.addTest( new IndexedDiskCacheConcurrentUnitTest( "testIndexedDiskCache2" )
         {
             public void runTest()
                 throws Exception
@@ -86,7 +85,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
             }
         } );
 
-        suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache3" )
+        suite.addTest( new IndexedDiskCacheConcurrentUnitTest( "testIndexedDiskCache3" )
         {
             public void runTest()
                 throws Exception
@@ -103,7 +102,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
      */
     public void setUp()
     {
-        JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );
+        JCS.setConfigFilename( "/TestDiskCache.ccf" );
     }
 
     /**
@@ -150,8 +149,5 @@ public class IndexedDiskCacheNoMemoryUnitTest
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
-
-        // dump the stats tot he report
-        System.out.println( jcs.getStats() );
     }
 }

@@ -87,7 +87,7 @@ public class IndexedDiskCache
     // RECYLCE BIN -- array of empty spots
     private SortedPreferentialArray recycle;
 
-    IndexedDiskCacheAttributes cattr;
+    private IndexedDiskCacheAttributes cattr;
 
     // used for counting the number of requests
     private int optCnt = 0;
@@ -183,14 +183,14 @@ public class IndexedDiskCache
      * 
      * @throws InterruptedException
      */
-    private void loadKeys()
+    protected void loadKeys()
         throws InterruptedException
     {
         storageLock.writeLock().acquire();
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "loading keys for " + keyFile.toString() );
+            log.info( "Loading keys for " + keyFile.toString() );
         }
 
         try
@@ -203,6 +203,11 @@ public class IndexedDiskCache
 
             if ( keys != null )
             {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Found " + keys.size() + " in keys file." );
+                }
+
                 keyHash.putAll( keys );
 
                 if ( log.isInfoEnabled() )
@@ -228,7 +233,7 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( fileName, e );
+            log.error( "Problem loading keys for file " + fileName, e );
         }
         finally
         {
@@ -289,7 +294,7 @@ public class IndexedDiskCache
      * Saves key file to disk. This converts the LRUMap to a HashMap for
      * deserialzation.
      */
-    private void saveKeys()
+    protected void saveKeys()
     {
         try
         {
@@ -317,7 +322,7 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem storing keys.", e );
         }
     }
 
@@ -350,7 +355,7 @@ public class IndexedDiskCache
 
         // old element with same key
         IndexedDiskElementDescriptor old = null;
-        
+
         try
         {
             ded = new IndexedDiskElementDescriptor();
@@ -429,7 +434,8 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( "Failure updating element, cacheName: " + cacheName + ", key: " + ce.getKey() + " old: " + old, e );
+            log.error( "Failure updating element, cacheName: " + cacheName + ", key: " + ce.getKey() + " old: " + old,
+                       e );
         }
         return;
     }
@@ -912,18 +918,24 @@ public class IndexedDiskCache
     private int timesOptimized = 0;
 
     /**
-     * Realtime optimization is handled by this method. It works in this way:
+     * Realtime optimization is handled by this method.
      * 
-     * 1. lock the active file, create a new file 2. copy the keys for iteration
-     * 3. for each key in the copy, make sure it is still in the active keyhasH
-     * to prevent putting items on disk that have been removed. It also checks
-     * the new keyHash to make sure that a newer version hasn't already been
-     * put. 4. Write the element for the key copy to disk in the normal
-     * proceedure. 5. All gets will be serviced by the new file. 6. All puts are
-     * made on the new file.
+     * It works in this way:
+     * <ul>
+     * <li>1. Lock the active file, create a new file.</li>
+     * <li>2. Copy the keys for iteration.</li>
+     * <li>3. For each key in the copy, make sure it is still in the active
+     * keyhash to prevent putting items on disk that have been removed. It also
+     * checks the new keyHash to make sure that a newer version hasn't already
+     * been put.</li>
+     * <li>4. Write the element for the key copy to disk in the normal
+     * proceedure.</li>
+     * <li>5. All gets will be serviced by the new file. </li>
+     * <li>6. All puts are made on the new file.</li>
+     * </ul>
      * 
      */
-    private void optimizeRealTime()
+    protected void optimizeRealTime()
     {
 
         long start = System.currentTimeMillis();
@@ -1030,10 +1042,10 @@ public class IndexedDiskCache
     }
 
     /**
-     * Note: synchronization currently managed by the only caller method -
+     * Note: synchronization currently must be managed by the caller method--
      * dispose.
      */
-    private void optimizeFile()
+    protected void optimizeFile()
     {
         try
         {
@@ -1212,6 +1224,41 @@ public class IndexedDiskCache
     public int getSize()
     {
         return keyHash.size();
+    }
+
+    /**
+     * This is for debugging and testing.
+     * 
+     * @return the length of the data file.
+     * @throws IOException 
+     */
+    protected long getDataFileSize() throws IOException
+    {
+        long size = 0;
+
+        try
+        {
+            storageLock.readLock().acquire();
+            
+            try
+            {
+                if ( dataFile != null )
+                {
+                    size = dataFile.length();
+                }
+            }
+            finally
+            {
+                storageLock.readLock().release();
+            }            
+        }
+        catch ( InterruptedException e )
+        {
+            // nothing
+        }
+
+
+        return size;
     }
 
     /**

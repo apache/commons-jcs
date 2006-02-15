@@ -44,7 +44,7 @@ public class CacheElement
      * These attributes hold information about the element and what it is
      * allowed to do.
      */
-    public ElementAttributes attr;
+    public IElementAttributes attr;
 
     /**
      * Constructor for the CacheElement object
@@ -58,6 +58,22 @@ public class CacheElement
         this.cacheName = cacheName;
         this.key = key;
         this.val = val;
+    }
+
+    /**
+     * Constructor for the CacheElement object
+     * 
+     * @param cacheName
+     * @param key
+     * @param val
+     * @param attrArg
+     */
+    public CacheElement( String cacheName, Serializable key, Serializable val, IElementAttributes attrArg )
+    {
+        this.cacheName = cacheName;
+        this.key = key;
+        this.val = val;
+        this.attr = attrArg;
     }
 
     /**

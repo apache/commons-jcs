@@ -26,7 +26,6 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.InvalidHandleException;
 import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -109,7 +108,7 @@ public class CacheAccess
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
-    public static CacheAccess defineRegion( String name, CompositeCacheAttributes cattr )
+    public static CacheAccess defineRegion( String name, ICompositeCacheAttributes cattr )
         throws CacheException
     {
         ensureCacheManager();
@@ -130,7 +129,7 @@ public class CacheAccess
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
-    public static CacheAccess defineRegion( String name, CompositeCacheAttributes cattr, IElementAttributes attr )
+    public static CacheAccess defineRegion( String name, ICompositeCacheAttributes cattr, IElementAttributes attr )
         throws CacheException
     {
         ensureCacheManager();
@@ -242,7 +241,8 @@ public class CacheAccess
     {
         if ( this.cacheControl.get( (Serializable) key ) != null )
         {
-            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key +"].  Remove first or use a non-safe put to override the value." );
+            throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
+                + "].  Remove first or use a non-safe put to override the value." );
         }
         put( key, value );
     }
@@ -382,15 +382,22 @@ public class CacheAccess
         this.cacheControl.remove( (Serializable) name );
     }
 
-
     /**
      * ResetAttributes allows for some of the attributes of a region to be reset
      * in particular expiration time attriubtes, time to live, default time to
      * live and idle time, and event handlers. Changing default settings on
      * groups and regions will not affect existing objects. Only object loaded
      * after the reset will use the new defaults. If no name argument is
-     * provided, the reset is applied to the region. NOTE: this method is
-     * currently not implemented.
+     * provided, the reset is applied to the region.
+     * 
+     * NOTE: this method is does not reset the attributes for items already in
+     * the cache. It could potentially do this for items in memory, and maybe on
+     * disk (which would be slow) but not remote items. Rather than have
+     * unpredicatble behavior, this method just sets the default attributes.
+     * TODO is should be renamed "setDefaultElementAttributes"
+     * 
+     * @deprecated As of release 1.3
+     * @see setDefaultElementAttributes
      * 
      * @param attr
      *            New attributes for this region.
@@ -399,6 +406,26 @@ public class CacheAccess
      */
     public void resetElementAttributes( IElementAttributes attr )
         throws CacheException, InvalidHandleException
+    {
+        this.cacheControl.setElementAttributes( attr );
+    }
+
+    /**
+     * This method is does not reset the attributes for items already in the
+     * cache. It could potentially do this for items in memory, and maybe on
+     * disk (which would be slow) but not remote items. Rather than have
+     * unpredicatble behavior, this method just sets the default attributes.
+     * Items subsequently put into the cache will use these defaults if they do
+     * not specify specific attributes.
+     * 
+     * 
+     * @param attr
+     *            the default attributes.
+     * @throws CacheException
+     *             if something goes wrong.
+     */
+    public void setDefaultElementAttributes( IElementAttributes attr )
+        throws CacheException
     {
         this.cacheControl.setElementAttributes( attr );
     }
@@ -413,6 +440,7 @@ public class CacheAccess
      *            New attributes for the object
      * @exception CacheException
      * @exception InvalidHandleException
+     *                if the item does not exist.
      */
     public void resetElementAttributes( Object name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
@@ -423,8 +451,10 @@ public class CacheAccess
             throw new InvalidHandleException( "Object for name [" + name + "] is not in the cache" );
         }
 
-        // don't assume pass by reference here, i.e. don't do this:
-        //element.setElementAttributes( attr );
+        // Although it will work currently, don't assume pass by reference here,
+        // i.e. don't do this:
+        // element.setElementAttributes( attr );
+        // Another reason to call put is to force the changes to be distributed.
         put( element.getKey(), element.getVal(), attr );
 
     }
@@ -432,11 +462,31 @@ public class CacheAccess
     /**
      * GetElementAttributes will return an attribute object describing the
      * current attributes associated with the object name.
+     * <p>
+     * This was confusing, so I created a new method with a clear name.
+     * 
+     * @deprecated As of release 1.3
+     * @see getDefaultElementAttributes
      * 
      * @return Attributes for this region
      * @exception CacheException
      */
     public IElementAttributes getElementAttributes()
+        throws CacheException
+    {
+        return this.cacheControl.getElementAttributes();
+    }
+
+    /**
+     * Retrieves the default element attributes used by this region.
+     * <p>
+     * Each time an element is added to the cache without element attributes,
+     * the default element attributes are cloned.
+     * 
+     * @return the deafualt element attributes used by this region.
+     * @throws CacheException
+     */
+    public IElementAttributes getDefaultElementAttributes()
         throws CacheException
     {
         return this.cacheControl.getElementAttributes();

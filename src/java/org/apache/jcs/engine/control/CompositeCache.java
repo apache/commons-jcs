@@ -617,7 +617,8 @@ public class CompositeCache
                 long lastAccessTime = attributes.getLastAccessTime();
 
                 // Remove if maxIdleTime exceeded
-                // FIXME: Does this really belong here?
+                // If you have a 0 size memory cache, then the last access will not get updated.
+                // you will need to set the idle time to -1.
 
                 if ( ( idleTime != -1 ) && ( now - lastAccessTime ) > ( idleTime * 1000 ) )
                 {
@@ -1331,4 +1332,13 @@ public class CompositeCache
     {
         return removeCount;
     }
+    
+    /*
+     *  (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {      
+        return getStats();        
+    }    
 }

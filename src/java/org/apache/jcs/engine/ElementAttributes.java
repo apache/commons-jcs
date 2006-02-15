@@ -21,16 +21,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
-import org.apache.jcs.engine.behavior.IElementAttributes;
-
 /**
- * Element attribute descriptor class.
+ * This it the element attribute descriptor class. Each element in the cache has
+ * an ElementAttribute object associated with it. An ElementAttributes object
+ * can be associated with an element in 3 ways:
+ * <ul>
+ * <li>1. When the item is put into the cache, you can associate an element
+ * attributes object.</li>
+ * <li>2. If not attributes object is include when the element is put into the
+ * cache, then the default attributes for the region will be used.</li>
+ * <li>3. The element attributes can be reset. This effectively results in a
+ * retrieval followed by a put. Hence, this is the same as 1.</li>
+ * </ul>
  * 
  * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
@@ -41,7 +49,7 @@ public class ElementAttributes
     private static final long serialVersionUID = 7814990748035017441L;
 
     /**
-     * can this item be flushed to disk
+     * Can this item be flushed to disk
      */
     public boolean IS_SPOOL = true;
 
@@ -56,24 +64,25 @@ public class ElementAttributes
     public boolean IS_REMOTE = true;
 
     /**
-     * can turn off expiration
+     * You can turn off expiration by setting this to true.  This causes the cache
+     * to bypass both max life and idle time expiration.
      */
     public boolean IS_ETERNAL = true;
 
     /**
-     * Description of the Field
+     * The object version. This is currently not used.
      */
     public long version = 0;
 
     /**
      * Max life seconds
      */
-    public long mls = -1;
+    public long maxLifeSeconds = -1;
 
     /**
-     * Description of the Field
+     * The maximum time an entry can be idle.  Setting this to -1 causes the idle time check to be ignored.
      */
-    public long idle = -1;
+    public long maxIdleTimeSeconds = -1;
 
     /**
      * The byte size of teh field. Must be manually set.
@@ -81,17 +90,23 @@ public class ElementAttributes
     public int size = 0;
 
     /**
-     * The creation time
+     * The creation time. This is used to enforce the max life.
      */
     public long createTime = 0;
 
     /**
-     * The last access time
+     * The last access time. This is used to enforce the max idel time.
      */
     public long lastAccessTime = 0;
 
     /**
-     * The list of Event handlers to use.
+     * The list of Event handlers to use. This is transient, since the event
+     * handlers cannot usually be serialized. This means that you cannot attach
+     * a post serialization event to an item.
+     * 
+     * TODO we need to check that when an item is passed to a non-local cache
+     * that if the local cache had a copy with event handlers, that those
+     * handlers are used.
      */
     public transient ArrayList eventHandlers;
 
@@ -111,7 +126,6 @@ public class ElementAttributes
      */
     protected ElementAttributes( ElementAttributes attr )
     {
-
         IS_ETERNAL = attr.IS_ETERNAL;
 
         // waterfal onto disk, for pure disk set memory to 0
@@ -123,11 +137,10 @@ public class ElementAttributes
         // central rmi store
         IS_REMOTE = attr.IS_REMOTE;
 
-        mls = attr.mls;
+        maxLifeSeconds = attr.maxLifeSeconds;
         // timetolive
-        idle = attr.idle;
+        maxIdleTimeSeconds = attr.maxIdleTimeSeconds;
         size = attr.size;
-
     }
 
     /**
@@ -207,7 +220,7 @@ public class ElementAttributes
      */
     public void setMaxLifeSeconds( long mls )
     {
-        this.mls = mls;
+        this.maxLifeSeconds = mls;
     }
 
     /*
@@ -217,7 +230,7 @@ public class ElementAttributes
      */
     public long getMaxLifeSeconds()
     {
-        return this.mls;
+        return this.maxLifeSeconds;
     }
 
     /*
@@ -227,7 +240,7 @@ public class ElementAttributes
      */
     public void setIdleTime( long idle )
     {
-        this.idle = idle;
+        this.maxIdleTimeSeconds = idle;
     }
 
     /*
@@ -285,7 +298,7 @@ public class ElementAttributes
      */
     public long getIdleTime()
     {
-        return this.idle;
+        return this.maxIdleTimeSeconds;
     }
 
     /*
@@ -362,7 +375,7 @@ public class ElementAttributes
     /**
      * Can this item be sent to the remote cache
      * 
-     * @return The {3} value
+     * @return true if the item can be sent to a remote auxiliary
      */
     public boolean getIsRemote()
     {
@@ -381,9 +394,10 @@ public class ElementAttributes
     }
 
     /**
-     * can turn off expiration
+     * You can turn off expiration by setting this to true. The max life value
+     * will be ignored.
      * 
-     * @return The {3} value
+     * @return true if the item cannot expire.
      */
     public boolean getIsEternal()
     {
@@ -391,7 +405,10 @@ public class ElementAttributes
     }
 
     /**
-     * Sets the isEternal attribute of the ElementAttributes object
+     * Sets the isEternal attribute of the ElementAttributes object. True means
+     * that the item should never expire. If can still be removed if it is the
+     * least recently used, and you are using the LRUMemory cache. it just will
+     * not be filtered for expiration by the cache hub.
      * 
      * @param val
      *            The new isEternal value
@@ -423,7 +440,10 @@ public class ElementAttributes
     }
 
     /**
-     * Sets the eventHandlers of the IElementAttributes object
+     * Sets the eventHandlers of the IElementAttributes object.
+     * <p>
+     * This add the references to the local list. Subsequent changes in the
+     * caller's list will not be reflected.
      * 
      * @param eventHandlers
      *            value

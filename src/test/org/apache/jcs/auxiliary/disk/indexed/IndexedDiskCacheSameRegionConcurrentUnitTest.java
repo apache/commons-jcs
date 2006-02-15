@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.indexed;
+package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
  * Copyright 2001-2004 The Apache Software Foundation.

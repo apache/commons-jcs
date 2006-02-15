@@ -1,6 +1,8 @@
 package org.apache.jcs.utils.struct;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.jcs.utils.struct.LRUMap;
 
@@ -85,6 +87,32 @@ public class LRUMapUnitTest
         assertNull( "Shouldn't hvae anything.", returned );
     }
     
+    
+    /**
+     * Add items to the map and then test to see that they come back in the entry set.
+     *
+     */
+    public void testGetEntrySet()
+    {
+        int size = 10;
+        Map cache = new LRUMap( size );
+        
+        for ( int i = 0; i < size; i++ )
+        {
+            cache.put( "key:" + i, "data:" + i );
+        }
+        
+        Set entries = cache.entrySet();
+        assertEquals( "Set contains the wrong number of items.", size, entries.size() );
+        
+        // check minimal correctness
+        Object[] entryArray = entries.toArray();
+        for ( int i = 0; i < size; i++ )
+        {
+            Entry data = (Entry)entryArray[i];
+            assertTrue( "Data is wrong.", data.getValue().toString().indexOf( "data:") != -1  );
+        }        
+    }    
     
     
 }

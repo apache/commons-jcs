@@ -95,7 +95,7 @@ public class SimpleEventHandlingUnitTest
 
         JCS jcs = JCS.getInstance( "WithDisk" );
         // this should add the event handler to all items as they are created.
-        jcs.getElementAttributes().addElementEventHandler( meh );
+        jcs.getDefaultElementAttributes().addElementEventHandler( meh );
 
         // put them in
         for ( int i = 0; i <= items; i++ )
@@ -124,7 +124,7 @@ public class SimpleEventHandlingUnitTest
 
         JCS jcs = JCS.getInstance( "NoDisk" );
         // this should add the event handler to all items as they are created.
-        jcs.getElementAttributes().addElementEventHandler( meh );
+        jcs.getDefaultElementAttributes().addElementEventHandler( meh );
 
         // put them in
         for ( int i = 0; i <= items; i++ )
@@ -153,7 +153,7 @@ public class SimpleEventHandlingUnitTest
 
         JCS jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
-        jcs.getElementAttributes().addElementEventHandler( meh );
+        jcs.getDefaultElementAttributes().addElementEventHandler( meh );
 
         // put them in
         for ( int i = 0; i <= items; i++ )

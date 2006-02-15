@@ -68,4 +68,23 @@ public class CacheRegionInfo
         return this.cache.getStats();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "\nCacheRegionInfo " );
+        if ( getCache() != null )
+        {
+            buf.append( "\n CacheName [" + getCache().getCacheName() + "]" );
+            buf.append( "\n Status [" + getStatus() + "]" );
+        }
+        buf.append( "\n ByteCount [" + getByteCount() + "]" );
+
+        return buf.toString();
+    }
+
 }

@@ -3,6 +3,7 @@ package org.apache.jcs.utils.struct;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -67,11 +68,11 @@ public class LRUMap
     public LRUMap()
     {
         list = new DoubleLinkedList();
-        
+
         // normal hshtable is faster for
         // sequential keys.
         map = new Hashtable();
-        //map = new ConcurrentHashMap();
+        // map = new ConcurrentHashMap();
     }
 
     /**
@@ -151,10 +152,18 @@ public class LRUMap
      * 
      * @see java.util.Map#putAll(java.util.Map)
      */
-    public void putAll( Map t )
+    public void putAll( Map source )
     {
-        // TODO Auto-generated method stub
-
+        if ( source != null )
+        {
+            Set entries = source.entrySet();
+            Iterator it = entries.iterator();
+            while ( it.hasNext() )
+            {
+                Entry entry = (Entry) it.next();
+                this.put( entry.getKey(), entry.getValue() );
+            }
+        }
     }
 
     /*
@@ -166,7 +175,21 @@ public class LRUMap
     {
         // todo, we should return a defensive copy
         // this is not thread safe.
-        return map.entrySet();
+        Set entries = map.entrySet();
+
+        Set unWrapped = new HashSet();
+
+        Iterator it = entries.iterator();
+        while ( it.hasNext() )
+        {
+            Entry pre = (Entry) it.next();
+
+            Entry post = new LRUMapEntry( pre.getKey(), ( (LRUElementDescriptor) pre.getValue() ).getPayload() );
+
+            unWrapped.add( post );
+        }
+
+        return unWrapped;
     }
 
     /*

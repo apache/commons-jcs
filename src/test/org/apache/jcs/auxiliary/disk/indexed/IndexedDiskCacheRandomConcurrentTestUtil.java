@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.indexed;
+package org.apache.jcs.auxiliary.disk.indexed;
 
 import junit.framework.TestCase;
 

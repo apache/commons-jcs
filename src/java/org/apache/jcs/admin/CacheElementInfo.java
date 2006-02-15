@@ -72,4 +72,22 @@ public class CacheElementInfo
     {
         return this.expiresInSeconds;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "\nCacheElementInfo " );
+        buf.append( "\n Key [" + getKey() + "]" );
+        buf.append( "\n Eternal [" + isEternal() + "]" );
+        buf.append( "\n CreateTime [" + getCreateTime() + "]" );
+        buf.append( "\n MaxLifeSeconds [" + getMaxLifeSeconds() + "]" );
+        buf.append( "\n ExpiresInSeconds [" + getExpiresInSeconds() + "]" );
+
+        return buf.toString();
+    }
 }

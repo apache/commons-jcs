@@ -15,10 +15,17 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.me
 
 ##############################################################
 ################## CACHE REGIONS AVAILABLE ###################
-jcs.region.testCache1=RC
+jcs.region.testCache1=DC,RC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.testCache1.cacheattributes.MaxObjects=200000
+jcs.region.testCache1.cacheattributes.MaxObjects=10
 jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes.IsEternal=false
+jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
 jcs.region.testCache1.elementattributes.IsLateral=true
 jcs.region.testCache1.elementattributes.IsRemote=true
 
@@ -42,13 +49,13 @@ jcs.auxiliary.HC.attributes.DiskPath=@project_home@/hsql
 # standard disk cache
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox
 
 # need to make put or invalidate an option
 # just a remove lock to add
 jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
-jcs.auxiliary.RC.attributes.FailoverServers=localhost:1102,localhost:1101
+jcs.auxiliary.RC.attributes.FailoverServers=localhost:1101
 jcs.auxiliary.RC.attributes.LocalPort=1202
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000

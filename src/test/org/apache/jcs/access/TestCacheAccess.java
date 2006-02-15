@@ -446,7 +446,7 @@ public class TestCacheAccess
                             long n_start = System.currentTimeMillis();
                             for ( int n = 0; n < num; n++ )
                             {
-                                IElementAttributes attrp = cache_control.getElementAttributes();
+                                IElementAttributes attrp = cache_control.getDefaultElementAttributes();
                                 ElementEventHandlerMockImpl hand = new ElementEventHandlerMockImpl();
                                 attrp.addElementEventHandler( hand );
                                 cache_control.put( "key" + n, "data" + n + " put from ta = junk", attrp );
@@ -518,7 +518,7 @@ public class TestCacheAccess
                     }
                     else if ( message.startsWith( "deattr" ) )
                     {
-                        IElementAttributes ae = cache_control.getElementAttributes();
+                        IElementAttributes ae = cache_control.getDefaultElementAttributes();
                         p( "Default IElementAttributes " + ae );
                     }
                     else if ( message.startsWith( "cloneattr" ) )

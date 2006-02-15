@@ -38,7 +38,7 @@ import org.apache.jcs.engine.memory.MemoryCache;
  * provides the ability to remove items (any number of key arguments can be
  * provided with action 'remove'). Should be initialized with a properties file
  * that provides at least a classpath resource loader.
- *  
+ * 
  */
 public class JCSAdminBean
 {
@@ -49,7 +49,7 @@ public class JCSAdminBean
      * Builds up info about each element in a region.
      * 
      * @param cacheName
-     * @return
+     * @return List of CacheElementInfo objects
      * @throws Exception
      */
     public LinkedList buildElementInfo( String cacheName )
@@ -160,18 +160,19 @@ public class JCSAdminBean
         ObjectOutputStream out = new ObjectOutputStream( counter );
 
         // non serializable objects will cause problems here
+        // stop at the first non serializable exception. 
         try
         {
             while ( iter.hasNext() )
             {
                 ICacheElement ce = (ICacheElement) ( (Map.Entry) iter.next() ).getValue();
-
+                    
                 out.writeObject( ce.getVal() );
             }
         }
         catch ( Exception e )
         {
-            //log later
+            // log later
         }
 
         // 4 bytes lost for the serialization header
