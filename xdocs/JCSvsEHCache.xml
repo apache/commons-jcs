@@ -31,8 +31,10 @@
 				reached, JCS and EHCache perform similarly for puts and
 				gets. Although JCS gets are significantly faster when
 				the items are present, they are almost exactly the same
-				when the items are not in the cache. My tests revealed a
-				less than 1% difference.
+				when the items are not in the cache. My initial tests
+				revealed a less than 1% difference, but subsequent runs
+				showed JCS as 20% faster. More tests are needed before
+				the results are conclusive.
 			</p>
 			<p>
 				Since, neither cache will be a relevant bottleneck in

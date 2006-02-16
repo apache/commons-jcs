@@ -17,20 +17,21 @@ package org.apache.jcs.access.exception;
  */
 
 //import org.apache.commons.lang.exception.NestableException;
-
 /**
  * This is the most general exception the cache throws.
- *  
+ * 
+ * TODO make nested with no external dependencies.
+ * 
  */
 public class CacheException
     extends Exception
-    //extends NestableException
+// extends NestableException
 {
 
     private static final long serialVersionUID = 8725795372935590265L;
 
-    /** 
-     * Default 
+    /**
+     * Default
      */
     public CacheException()
     {
@@ -44,7 +45,7 @@ public class CacheException
      */
     public CacheException( Throwable nested )
     {
-        super( nested );
+        super( nested.getMessage() );
     }
 
     /**
@@ -57,18 +58,4 @@ public class CacheException
         super( message );
     }
 
-    /**
-     * Constructs a new <code>CacheException</code> with specified detail
-     * message and nested <code>Throwable</code>.
-     * 
-     * @param msg
-     *            the error message.
-     * @param nested
-     *            the exception or error that caused this exception to be
-     *            thrown.
-     */
-    public CacheException( String msg, Throwable nested )
-    {
-        super( msg, nested );
-    }
 }
