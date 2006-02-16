@@ -26,9 +26,9 @@
 			<question>What jars are required by JCS?</question>
 			<answer>
 				<p>
-					The core of JCS (the LRU memory cache, the indexed
+					As of verison 1.2.7.0, the core of JCS (the LRU memory cache, the indexed
 					disk cache, the TCP lateral, and the RMI remote
-					server) require only a few other jars.
+					server) requires only two other jars.
 				</p>
 				<p>
 					<a
@@ -37,6 +37,9 @@
 					</a>
 				</p>
 				<p>commons-logging</p>
+				
+				<p>Versions 1.2.6.9 and below also require the following two additional jars:</p>
+				
 				<p>commons-collections</p>
 				<p>commons-lang</p>
 				<p>
@@ -89,12 +92,26 @@
 				<p>
 					Yes. JCS will look for a system property for any
 					name inside the delimiters ${}. Also, JCS will check
-					to see if any property key in the cache.ccf is defined 
-					in the system properties.  If so, the system value will 
-					be used.
+					to see if any property key in the cache.ccf is
+					defined in the system properties. If so, the system
+					value will be used.
 				</p>
 			</answer>
 		</faq>
 
+		<faq id="jcs-vs-ehcache">
+			<question>Is JCS faster than EHCache?</question>
+			<answer>
+				<p>
+					Yes. JCS is almost twice as fast as EHCache. JCS
+					1.2.7.0, using the default LRU Memory Cache, has
+					proven to be nearly twice as fast as EHCache
+					1.2-beta4 at gets and puts. The EHCache benchmark
+					data is unsubstantiated and very old. As such the
+					EHCache site benchmark data is completely
+					inaccurate.  <a href="JCSvsEHCache.html">Read More</a>
+				</p>
+			</answer>
+		</faq>
 	</part>
-</faqs>      
+</faqs>

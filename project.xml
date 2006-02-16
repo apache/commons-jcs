@@ -5,7 +5,7 @@
 	<pomVersion>3</pomVersion>
 	<name>JCS</name>
 	<id>jcs</id>
-	<currentVersion>1.2.6.9</currentVersion>
+	<currentVersion>1.2.7.0</currentVersion>
 	<organization>
 		<name>Apache Software Foundation</name>
 		<url>http://jakarta.apache.org/</url>
@@ -252,8 +252,8 @@
 			<report>maven-file-activity-plugin</report>
 			<report>maven-statcvs-plugin</report>
 			<report>maven-developer-activity-plugin</report>
-			<report>maven-jcoverage-plugin</report>
 		-->
+		<report>maven-jcoverage-plugin</report>
 		<report>maven-javadoc-plugin</report>
 		<report>maven-jxr-plugin</report>
 		<report>maven-junit-report-plugin</report>

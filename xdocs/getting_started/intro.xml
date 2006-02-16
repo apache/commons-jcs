@@ -77,9 +77,9 @@
 
 		<section name="STEP 3: Get the Required Dependencies">
 			<p>
-				The core of JCS (the LRU memory cache, the indexed disk
-				cache, the TCP lateral, and the RMI remote server)
-				require only a few other jars.
+				As of version 1.2.7.0, the core of JCS (the LRU memory
+				cache, the indexed disk cache, the TCP lateral, and the
+				RMI remote server) requires only two other jars.
 			</p>
 			<p>
 				<a
@@ -88,6 +88,10 @@
 				</a>
 			</p>
 			<p>commons-logging</p>
+			<p>
+				Versions 1.2.6.9 and below also require the following
+				two additional jars:
+			</p>
 			<p>commons-collections</p>
 			<p>commons-lang</p>
 			<p>

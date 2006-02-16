@@ -1,0 +1,367 @@
+<?xml version="1.0"?>
+
+<document>
+	<properties>
+		<title>JCS vs EHCache Performance</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="Results">
+			<p>
+				I just built both EHCache and JCS from head, configured
+				both similarly and ran multiple put / get rounds of
+				50,000. JCS, using the default LRU Memory Cache, was
+				nearly twice as fast as EHCache in multiple trials for
+				both puts and gets. I have the log levels for both set
+				at info. I would like to verify my results, since they
+				completely contradict the information on the EHCache
+				site. From what I can tell so far, JCS is significantly
+				faster than EHCache.
+			</p>
+			<p>
+				Since, neither will be a relevant bottleneck, it may be
+				beside the point.
+			</p>
+			<p>
+				Here is the data:
+			</p>
+			<p>
+				JCS put time for 50000 = 651; millis per = 0.01302 JCS
+				get time for 50000 = 160; millis per = 0.0032 EHCache
+				put time for 50000 = 481; millis per = 0.00962 EHCache
+				get time for 50000 = 110; millis per = 0.0022
+			</p>
+			<p>
+				JCS put time for 50000 = 240; millis per = 0.0048 JCS
+				get time for 50000 = 90; millis per = 0.0018 EHCache put
+				time for 50000 = 491; millis per = 0.00982 EHCache get
+				time for 50000 = 120; millis per = 0.0024
+			</p>
+			<p>
+				JCS put time for 50000 = 241; millis per = 0.00482 JCS
+				get time for 50000 = 80; millis per = 0.0016 EHCache put
+				time for 50000 = 551; millis per = 0.01102 EHCache get
+				time for 50000 = 110; millis per = 0.0022
+			</p>
+			<p>
+				JCS put time for 50000 = 240; millis per = 0.0048 JCS
+				get time for 50000 = 90; millis per = 0.0018 EHCache put
+				time for 50000 = 481; millis per = 0.00962 EHCache get
+				time for 50000 = 130; millis per = 0.0026
+			</p>
+			<p>
+				JCS put time for 50000 = 230; millis per = 0.0046 JCS
+				get time for 50000 = 181; millis per = 0.00362 EHCache
+				put time for 50000 = 520; millis per = 0.0104 EHCache
+				get time for 50000 = 101; millis per = 0.00202
+			</p>
+			<p>
+				JCS put time for 50000 = 220; millis per = 0.0044 JCS
+				get time for 50000 = 90; millis per = 0.0018 EHCache put
+				time for 50000 = 641; millis per = 0.01282 EHCache get
+				time for 50000 = 110; millis per = 0.0022
+			</p>
+			<p>
+				JCS put time for 50000 = 250; millis per = 0.0050 JCS
+				get time for 50000 = 121; millis per = 0.00242 EHCache
+				put time for 50000 = 590; millis per = 0.0118 EHCache
+				get time for 50000 = 101; millis per = 0.00202
+			</p>
+			<p>
+				JCS put time for 50000 = 260; millis per = 0.0052 JCS
+				get time for 50000 = 100; millis per = 0.0020 EHCache
+				put time for 50000 = 581; millis per = 0.01162 EHCache
+				get time for 50000 = 100; millis per = 0.0020
+			</p>
+			<p>
+				JCS put time for 50000 = 290; millis per = 0.0058 JCS
+				get time for 50000 = 121; millis per = 0.00242 EHCache
+				put time for 50000 = 570; millis per = 0.0114 EHCache
+				get time for 50000 = 121; millis per = 0.00242
+			</p>
+			<p>
+				JCS put time for 50000 = 210; millis per = 0.0042 JCS
+				get time for 50000 = 120; millis per = 0.0024 EHCache
+				put time for 50000 = 561; millis per = 0.01122 EHCache
+				get time for 50000 = 130; millis per = 0.0026
+			</p>
+			<p>
+				JCS put time for 50000 = 250; millis per = 0.0050 JCS
+				get time for 50000 = 151; millis per = 0.00302 EHCache
+				put time for 50000 = 560; millis per = 0.0112 EHCache
+				get time for 50000 = 111; millis per = 0.00222
+			</p>
+			<p>
+				JCS put time for 50000 = 250; millis per = 0.0050 JCS
+				get time for 50000 = 100; millis per = 0.0020 EHCache
+				put time for 50000 = 711; millis per = 0.01422 EHCache
+				get time for 50000 = 100; millis per = 0.0020
+			</p>
+			<p>
+				JCS put time for 50000 = 251; millis per = 0.00502 JCS
+				get time for 50000 = 90; millis per = 0.0018 EHCache put
+				time for 50000 = 511; millis per = 0.01022 EHCache get
+				time for 50000 = 90; millis per = 0.0018
+			</p>
+			<p>
+				JCS put time for 50000 = 220; millis per = 0.0044 JCS
+				get time for 50000 = 100; millis per = 0.0020 EHCache
+				put time for 50000 = 491; millis per = 0.00982 EHCache
+				get time for 50000 = 90; millis per = 0.0018
+			</p>
+			<p>
+				JCS put time for 50000 = 230; millis per = 0.0046 JCS
+				get time for 50000 = 80; millis per = 0.0016 EHCache put
+				time for 50000 = 201; millis per = 0.00402 EHCache get
+				time for 50000 = 390; millis per = 0.0078
+			</p>
+			<p>
+				JCS put time for 50000 = 201; millis per = 0.00402 JCS
+				get time for 50000 = 120; millis per = 0.0024 EHCache
+				put time for 50000 = 180; millis per = 0.0036 EHCache
+				get time for 50000 = 411; millis per = 0.00822
+			</p>
+			<p>
+				JCS put time for 50000 = 210; millis per = 0.0042 JCS
+				get time for 50000 = 100; millis per = 0.0020 EHCache
+				put time for 50000 = 210; millis per = 0.0042 EHCache
+				get time for 50000 = 381; millis per = 0.00762
+			</p>
+			<p>
+				JCS put time for 50000 = 240; millis per = 0.0048 JCS
+				get time for 50000 = 90; millis per = 0.0018 EHCache put
+				time for 50000 = 211; millis per = 0.00422 EHCache get
+				time for 50000 = 410; millis per = 0.0082
+			</p>
+			<p>
+				JCS put time for 50000 = 221; millis per = 0.00442 JCS
+				get time for 50000 = 80; millis per = 0.0016 EHCache put
+				time for 50000 = 210; millis per = 0.0042 EHCache get
+				time for 50000 = 411; millis per = 0.00822
+			</p>
+			<p>
+				JCS put time for 50000 = 220; millis per = 0.0044 JCS
+				get time for 50000 = 80; millis per = 0.0016 EHCache put
+				time for 50000 = 190; millis per = 0.0038 EHCache get
+				time for 50000 = 411; millis per = 0.00822
+			</p>
+			<p>
+				Finished 20 loops of 50000 gets and puts
+			</p>
+			<p>
+				Put average for JCS = 256 Put average for EHCache = 447
+				JCS puts took 0.57270694 times the EHCache , the goal is
+				less than 1.0x
+			</p>
+			<p>
+				Get average for JCS = 107 Get average for EHCache = 196
+				JCS gets took 0.54591835 times the EHCache , the goal is
+				less than 1.0x
+			</p>
+		</section>
+
+		<section name="Results">
+			<p>Here is the test class:</p>
+
+			<source>
+				<![CDATA[
+package org.apache.jcs;
+
+import junit.framework.TestCase;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.CompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.utils.struct.LRUMap;
+
+/**
+ * Compare JCS vs ehcache performance.
+ * 
+ * @author Aaron Smuts
+ * 
+ */
+public class JCSvsEHCachePerformanceTest
+    extends TestCase
+{
+
+    float ratioPut = 0;
+
+    float ratioGet = 0;
+
+    // the jcs to competitor
+    float target = 1.0f;
+
+    int loops = 20;
+
+    int tries = 50000;
+
+    /**
+     * Compare performance between JCS and EHCache. Fail if JCS is not as fast.
+     * Print the ratio.
+     * 
+     * @throws Exception
+     * 
+     */
+    public void testJCSvsEHCache()
+        throws Exception
+    {
+
+        Log log = LogFactory.getLog( LRUMap.class );
+        if ( log.isDebugEnabled() )
+        {
+            System.out.println( "The log level must be at info or above for the a performance test." );
+            return;
+        }
+
+        doWork();
+        
+        assertTrue( this.ratioPut < target );
+        assertTrue( this.ratioGet < target );
+
+    }
+
+    /**
+     * This runs a series of gets and puts for both JCS and EHCache. The test
+     * will fail if JCS is not faster.
+     * 
+     * @throws Exception
+     * 
+     */
+    public void doWork()
+        throws Exception
+    {
+
+        int maxSize = 1000000;
+
+        // create the two caches.
+        CacheManager ehMgr = CacheManager.getInstance();
+        // Create an ehcache with a max size of maxSize, no swap, with items
+        // that can expire, with maximum idle time to live of 500 seconds, and
+        // maximum idel time of 500 seconds.
+        Cache eh = new Cache( "testJCSvsEHCache", maxSize, false, false, 500, 500 );
+        ehMgr.addCache( eh );
+
+        // Create a similarly configured JCS that uses the LRU memory cache.
+        // maxSize elements that are not eternal. No disk cache is configured.
+        ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setMaxObjects( maxSize );
+        JCS jcs = JCS.getInstance( "testJCSvsEHCache" );
+
+        // run settings
+        long start = 0;
+        long end = 0;
+        long time = 0;
+        float tPer = 0;
+
+        long putTotalJCS = 0;
+        long getTotalJCS = 0;
+        long putTotalEHCache = 0;
+        long getTotalEHCache = 0;
+
+        String jcsDisplayName = "JCS";
+        String ehCacheDisplayName = "";
+
+        try
+        {
+            for ( int j = 0; j < loops; j++ )
+            {
+
+                jcsDisplayName = "JCS      ";
+                start = System.currentTimeMillis();
+                for ( int i = 0; i < tries; i++ )
+                {
+                    jcs.put( "key:" + i, "data" + i );
+                }
+                end = System.currentTimeMillis();
+                time = end - start;
+                putTotalJCS += time;
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out
+                    .println( jcsDisplayName + " put time for " + tries + " = " + time + "; millis per = " + tPer );
+
+                start = System.currentTimeMillis();
+                for ( int i = 0; i < tries; i++ )
+                {
+                    jcs.get( "key:" + i );
+                }
+                end = System.currentTimeMillis();
+                time = end - start;
+                getTotalJCS += time;
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out
+                    .println( jcsDisplayName + " get time for " + tries + " = " + time + "; millis per = " + tPer );
+
+                // /////////////////////////////////////////////////////////////
+                ehCacheDisplayName = "EHCache  ";
+
+                start = System.currentTimeMillis();
+                for ( int i = 0; i < tries; i++ )
+                {
+                    Element ehElm = new Element( "key:" + i, "data" + i );
+
+                    eh.put( ehElm );
+                }
+                end = System.currentTimeMillis();
+                time = end - start;
+                putTotalEHCache += time;
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out.println( ehCacheDisplayName + " put time for " + tries + " = " + time + "; millis per = "
+                    + tPer );
+
+                start = System.currentTimeMillis();
+                for ( int i = 0; i < tries; i++ )
+                {
+                    eh.get( "key:" + i );
+                }
+                end = System.currentTimeMillis();
+                time = end - start;
+                getTotalEHCache += time;
+                tPer = Float.intBitsToFloat( (int) time ) / Float.intBitsToFloat( tries );
+                System.out.println( ehCacheDisplayName + " get time for " + tries + " = " + time + "; millis per = "
+                    + tPer );
+
+                System.out.println( "\n" );
+            }
+
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace( System.out );
+            System.out.println( e );
+        }
+
+        long putAvJCS = putTotalJCS / loops;
+        long getAvJCS = getTotalJCS / loops;
+        long putAvHashtable = putTotalEHCache / loops;
+        long getAvHashtable = getTotalEHCache / loops;
+
+        System.out.println( "Finished " + loops + " loops of " + tries + " gets and puts" );
+
+        System.out.println( "\n" );
+        System.out.println( "Put average for " + jcsDisplayName + "  = " + putAvJCS );
+        System.out.println( "Put average for " + ehCacheDisplayName + " = " + putAvHashtable );
+        ratioPut = Float.intBitsToFloat( (int) putAvJCS ) / Float.intBitsToFloat( (int) putAvHashtable );
+        System.out.println( jcsDisplayName + " puts took " + ratioPut + " times the " + ehCacheDisplayName
+            + ", the goal is <" + target + "x" );
+
+        System.out.println( "\n" );
+        System.out.println( "Get average for  " + jcsDisplayName + "  = " + getAvJCS );
+        System.out.println( "Get average for " + ehCacheDisplayName + " = " + getAvHashtable );
+        ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
+        System.out.println( jcsDisplayName + " gets took " + ratioGet + " times the " + ehCacheDisplayName
+            + ", the goal is <" + target + "x" );
+
+    }
+
+}
+				        
+        ]]>
+			</source>
+		</section>
+	</body>
+</document>
