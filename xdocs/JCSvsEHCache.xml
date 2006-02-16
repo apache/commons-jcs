@@ -7,25 +7,49 @@
 	</properties>
 
 	<body>
-		<section name="Results">
+		<section name="Initial Results">
 			<p>
-				I just built both EHCache and JCS from head, configured
-				both similarly and ran multiple put / get rounds of
-				50,000. JCS, using the default LRU Memory Cache, was
-				nearly twice as fast as EHCache in multiple trials for
-				both puts and gets. I have the log levels for both set
-				at info. I would like to verify my results, since they
-				completely contradict the information on the EHCache
-				site. From what I can tell so far, JCS is significantly
-				faster than EHCache.
+				I just built both EHCache (1.2-beta4) and JCS (1.2.7.0)
+				from head, configured both similarly and ran 20 rounds
+				of 50,000 puts and gets, that is 1,000,000 puts and gets
+				in total. Using the default LRU Memory Cache, the same
+				algorithm that EHCache uses by default,
+				<b>JCS proved to be nearly twice as fast as EHCache</b>
+				in multiple trials for both puts and gets. I have the
+				log levels for both set at info. I would like to further
+				verify my results, since they completely contradict the
+				information on the EHCache site.
 			</p>
 			<p>
-				Since, neither will be a relevant bottleneck, it may be
-				beside the point.
+				From what I can tell so far, JCS is significantly faster
+				than EHCache when you are retrieving items that exist in
+				the cache and when you are putting items into a cache
+				that has not reached its size limit.
 			</p>
 			<p>
-				Here is the data:
+				Additional testing shows that when the size limit it
+				reached, JCS and EHCache perform similarly for puts and
+				gets. Although JCS gets are significantly faster when
+				the items are present, they are almost exactly the same
+				when the items are not in the cache. My tests revealed a
+				less than 1% difference.
 			</p>
+			<p>
+				Since, neither cache will be a relevant bottleneck in
+				any application where a cache would be useful, the
+				differences in performance may be beside the point.
+				Nevertheless, it is important to note that the EHCache
+				web site provides, what appears to be, false test data.
+			</p>
+			<p>
+				The peculiar result is that a few years back EHCache
+				took the JCS source code, removed most of its features,
+				and ended up with something that performs worse.
+			</p>
+		</section>
+
+		<section name="Test Data">
+			<p>Here is the data from the first test:</p>
 			<p>
 				JCS put time for 50000 = 651; millis per = 0.01302 JCS
 				get time for 50000 = 160; millis per = 0.0032 EHCache
@@ -146,9 +170,7 @@
 				time for 50000 = 190; millis per = 0.0038 EHCache get
 				time for 50000 = 411; millis per = 0.00822
 			</p>
-			<p>
-				Finished 20 loops of 50000 gets and puts
-			</p>
+			<p>Finished 20 loops of 50000 gets and puts</p>
 			<p>
 				Put average for JCS = 256 Put average for EHCache = 447
 				JCS puts took 0.57270694 times the EHCache , the goal is
@@ -161,7 +183,7 @@
 			</p>
 		</section>
 
-		<section name="Results">
+		<section name="A Test Class">
 			<p>Here is the test class:</p>
 
 			<source>
@@ -250,7 +272,7 @@ public class JCSvsEHCachePerformanceTest
         // maxSize elements that are not eternal. No disk cache is configured.
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMaxObjects( maxSize );
-        JCS jcs = JCS.getInstance( "testJCSvsEHCache" );
+        JCS jcs = JCS.getInstance( "testJCSvsEHCache", cattr );
 
         // run settings
         long start = 0;
