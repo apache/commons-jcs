@@ -43,14 +43,13 @@ import org.apache.jcs.utils.struct.DoubleLinkedList;
  * A fast reference management system. The least recently used items move to the
  * end of the list and get spooled to disk if the cache hub is configured to use
  * a disk cache. Most of the cache bottelnecks are in IO. There are no io
- * bottlenecks here, it's all about processing power. 
+ * bottlenecks here, it's all about processing power.
  * <p>
- * Even though there are only
- * a few adjustments necessary to maintain the double linked list, we might want
- * to find a more efficient memory manager for large cache regions. 
+ * Even though there are only a few adjustments necessary to maintain the double
+ * linked list, we might want to find a more efficient memory manager for large
+ * cache regions.
  * <p>
- * The
- * LRUMemoryCache is most efficient when the first element is selected. The
+ * The LRUMemoryCache is most efficient when the first element is selected. The
  * smaller the region, the better the chance that this will be the case. < .04
  * ms per put, p3 866, 1/10 of that per get
  * 
@@ -85,8 +84,8 @@ public class LRUMemoryCache
     }
 
     /**
-     * Puts an item to the cache.  Removes any pre-existing entries of the same key from the 
-     * linked list and adds this one first.
+     * Puts an item to the cache. Removes any pre-existing entries of the same
+     * key from the linked list and adds this one first.
      * <p>
      * If the max size is reached, an element will be put to disk.
      * 
@@ -108,8 +107,8 @@ public class LRUMemoryCache
             // TODO address double synchronization of addFirst, use write lock
             addFirst( ce );
             // this must be synchronized
-            old = (MemoryElementDescriptor) map.put( ( (MemoryElementDescriptor) list.getFirst() ).ce.getKey(),
-                                                     list.getFirst() );
+            old = (MemoryElementDescriptor) map.put( ( (MemoryElementDescriptor) list.getFirst() ).ce.getKey(), list
+                .getFirst() );
             // If the node was the same as an existing node, remove it.
             if ( old != null && ( (MemoryElementDescriptor) list.getFirst() ).ce.getKey().equals( old.ce.getKey() ) )
             {
@@ -124,12 +123,12 @@ public class LRUMemoryCache
         {
             return;
         }
-        
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "In memory limit reached, spooling" );
         }
-        
+
         // Write the last 'chunkSize' items to disk.
         int chunkSizeCorrected = Math.min( size, chunkSize );
 
@@ -176,22 +175,22 @@ public class LRUMemoryCache
                     verifyCache();
                     throw new Error( "update: last is null!" );
                 }
-                
-                // If this is out of the sync block it can detect a mismatch where there is none.
+
+                // If this is out of the sync block it can detect a mismatch
+                // where there is none.
                 if ( map.size() != dumpCacheSize() )
                 {
-                    log.warn( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
-                        + dumpCacheSize() );
-                }                
+                    log.warn( "update: After spool, size mismatch: map.size() = " + map.size()
+                        + ", linked list size = " + dumpCacheSize() );
+                }
             }
         }
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "update: After spool map size: " + map.size() + " linked list size = "
-                + dumpCacheSize());
+            log.debug( "update: After spool map size: " + map.size() + " linked list size = " + dumpCacheSize() );
         }
-        
+
     }
 
     /**
@@ -262,7 +261,10 @@ public class LRUMemoryCache
         else
         {
             missCnt++;
-            log.debug( cacheName + ": LRUMemoryCache miss for " + key );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( cacheName + ": LRUMemoryCache miss for " + key );
+            }
         }
 
         verifyCache();
@@ -350,6 +352,7 @@ public class LRUMemoryCache
     /**
      * Remove all of the elements from both the Map and the linked list
      * implementation. Overrides base class.
+     * 
      * @throws IOException
      */
     public synchronized void removeAll()
@@ -363,12 +366,12 @@ public class LRUMemoryCache
     /**
      * 
      * iteration aid
-     *
+     * 
      */
     public class IteratorWrapper
         implements Iterator
     {
-        //private final Log log = LogFactory.getLog( LRUMemoryCache.class );
+        // private final Log log = LogFactory.getLog( LRUMemoryCache.class );
 
         private final Iterator i;
 
@@ -405,9 +408,9 @@ public class LRUMemoryCache
 
     /**
      * 
-     *
+     * 
      * @author Aaron Smuts
-     *
+     * 
      */
     public class MapEntryWrapper
         implements Map.Entry
@@ -540,7 +543,7 @@ public class LRUMemoryCache
     /**
      * Checks to see if all the items that should be in the cache are. Checks
      * consistency between List and map.
-     *  
+     * 
      */
     private void verifyCache()
     {
@@ -702,7 +705,7 @@ public class LRUMemoryCache
         stats.setStatElements( ses );
 
         // int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
-        //buf.append("\n Hit Rate = " + rate + " %" );
+        // buf.append("\n Hit Rate = " + rate + " %" );
 
         return stats;
     }
