@@ -38,11 +38,13 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * A SLOW AS HELL reference management system. The most recently used items move
+ * A SLOW reference management system. The most recently used items move
  * to the front of the list and get spooled to disk if the cache hub is
  * configured to use a disk cache.
+ * <p>
+ * This class is mainly for testing the hub. It also shows that use the
+ * Collection LinkedList is far slower than JCS' own double linked list.
  * 
- * @version $Id$
  */
 public class MRUMemoryCache
     extends AbstractMemoryCache
@@ -75,7 +77,7 @@ public class MRUMemoryCache
     public synchronized void initialize( CompositeCache hub )
     {
         super.initialize( hub );
-        log.info( "initialized MRUMemoryCache for " + cacheName );
+        log.info( "Initialized MRUMemoryCache for " + cacheName );
     }
 
     /**
@@ -118,13 +120,16 @@ public class MRUMemoryCache
         }
         // SPOOL LAST -- need to make this a grouping in a queue
 
-        log.debug( "In RAM overflow" );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "In RAM overflow" );
+        }
 
         // write the last item to disk.
         try
         {
-
-            // PUSH 5 TO DISK TO MINIMIZE THE TYPICAL
+            // PUSH more than 1 TO DISK TO MINIMIZE THE TYPICAL spool at each
+            // put.
             int chunkSizeCorrected = Math.min( size, chunkSize );
 
             if ( log.isDebugEnabled() )
@@ -139,18 +144,19 @@ public class MRUMemoryCache
             // and wouldn't save much time in this synchronous call.
             for ( int i = 0; i < chunkSizeCorrected; i++ )
             {
+
+                ICacheElement toSpool = null;
+                
+                // need a more fine grained locking here
+                synchronized ( lockMe )
+                {
+                    Serializable last = (Serializable) mrulist.removeLast();
+                    toSpool = (ICacheElement) map.get( last );
+                    map.remove( last );
+                }
                 // Might want to rename this "overflow" incase the hub
                 // wants to do something else.
-                Serializable last = (Serializable) mrulist.getLast();
-                ICacheElement ceL = (ICacheElement) map.get( last );
-                cache.spoolToDisk( ceL );
-
-                // need a more fine grained locking here
-                synchronized ( map )
-                {
-                    map.remove( last );
-                    mrulist.remove( last );
-                }
+                cache.spoolToDisk( toSpool );
             }
 
             if ( log.isDebugEnabled() )
@@ -163,7 +169,7 @@ public class MRUMemoryCache
         catch ( Exception ex )
         {
             // impossible case.
-            ex.printStackTrace();
+            log.error( "Problem updating MRU.", ex );
             throw new IllegalStateException( ex.getMessage() );
         }
     }
@@ -184,7 +190,6 @@ public class MRUMemoryCache
 
         try
         {
-
             ce = (ICacheElement) map.get( key );
             if ( ce != null )
             {
@@ -192,24 +197,24 @@ public class MRUMemoryCache
                 {
                     log.debug( cacheName + ": MRUMemoryCache quiet hit for " + key );
                 }
-
             }
             else
             {
                 log.debug( cacheName + ": MRUMemoryCache quiet miss for " + key );
             }
-
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem getting quietly from MRU.", e );
         }
 
         return ce;
     }
 
+       
     /**
-     * Description of the Method
+     * Gets an item out of the map. If it finds an item, it is removed from the
+     * list and then added to the first position in the linked list.
      * 
      * @return
      * @param key
@@ -223,7 +228,6 @@ public class MRUMemoryCache
 
         try
         {
-
             if ( log.isDebugEnabled() )
             {
                 log.debug( "get> key=" + key );
@@ -246,11 +250,10 @@ public class MRUMemoryCache
                     log.debug( cacheName + " -- RAM-HIT for " + key );
                 }
             }
-
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem getting element.", e );
         }
 
         try
@@ -289,8 +292,6 @@ public class MRUMemoryCache
         return ce;
     }
 
-    // end get
-
     /**
      * Removes an item from the cache.
      * 
@@ -304,17 +305,15 @@ public class MRUMemoryCache
         if ( log.isDebugEnabled() )
         {
             log.debug( "remove> key=" + key );
-            //+, nonLocal="+nonLocal);
         }
 
-        //p("remove> key="+key+", nonLocal="+nonLocal);
         boolean removed = false;
 
         // handle partial removal
         if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             // remove all keys of the same name hierarchy.
-            synchronized ( map )
+            synchronized ( lockMe )
             {
                 for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
                 {
@@ -323,8 +322,8 @@ public class MRUMemoryCache
                     if ( k instanceof String && k.toString().startsWith( key.toString() ) )
                     {
                         itr.remove();
-                        Serializable keyR = (ICacheElement) entry.getKey();
-                        map.remove( keyR );
+                        Serializable keyR = (Serializable) entry.getKey();
+                        //map.remove( keyR );
                         mrulist.remove( keyR );
                         removed = true;
                     }
@@ -334,7 +333,7 @@ public class MRUMemoryCache
         else if ( key instanceof GroupId )
         {
             // remove all keys of the same name hierarchy.
-            synchronized ( map )
+            synchronized ( lockMe )
             {
                 for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
                 {
@@ -357,7 +356,6 @@ public class MRUMemoryCache
             {
                 synchronized ( lockMe )
                 {
-
                     map.remove( key );
                     mrulist.remove( key );
                 }
@@ -375,9 +373,9 @@ public class MRUMemoryCache
      */
     public Object[] getKeyArray()
     {
+        // need to lock to map here?
         synchronized ( lockMe )
         {
-            // may need to lock to map here?
             return map.keySet().toArray();
         }
     }
@@ -390,7 +388,7 @@ public class MRUMemoryCache
         log.debug( "dumpingMap" );
         for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
         {
-            //for ( Iterator itr = memCache.getIterator(); itr.hasNext();) {
+            // for ( Iterator itr = memCache.getIterator(); itr.hasNext();) {
             Map.Entry e = (Map.Entry) itr.next();
             ICacheElement ce = (ICacheElement) e.getValue();
             log.debug( "dumpMap> key=" + e.getKey() + ", val=" + ce.getVal() );

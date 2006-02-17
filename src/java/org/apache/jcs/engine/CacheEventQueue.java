@@ -39,8 +39,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * for a specified period, now set to 1 minute. If something comes in after that
  * a new processor thread should be created.
  * 
- * I didn't get all of Hanson's changes in yet, but I did add the
- * syncronization.
  */
 public class CacheEventQueue
     implements ICacheEventQueue
@@ -50,12 +48,14 @@ public class CacheEventQueue
     private static final int queueType = SINGLE_QUEUE_TYPE;
 
     private static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
-    
+
     // time to wait for an event before snuffing the background thread
     // if the queue is empty.
     // make configurable later
     private int waitToDieMillis = DEFAULT_WAIT_TO_DIE_MILLIS;
 
+    // When the events are pulled off the queue, the tell the listener to handle
+    // the specific event type. The work is done by the listener.
     private ICacheListener listener;
 
     private long listenerId;
@@ -67,16 +67,23 @@ public class CacheEventQueue
     // in milliseconds
     private int waitBeforeRetry;
 
+    // this is true if there is no worker thread.
     private boolean destroyed = true;
 
+    // This means that the queue is functional.
+    // If we reached the max number of failures, the queue is marked as
+    // non functional and will never work again.
     private boolean working = true;
 
+    // the thread that works the queue.
     private Thread processorThread;
 
     private Object queueLock = new Object();
 
+    // the head of the queue
     private Node head = new Node();
 
+    // the end of the queue
     private Node tail = head;
 
     /**
@@ -136,10 +143,8 @@ public class CacheEventQueue
      */
     public synchronized void stopProcessing()
     {
-
         destroyed = true;
         processorThread = null;
-
     }
 
     /**
@@ -172,6 +177,8 @@ public class CacheEventQueue
     }
 
     /**
+     * If they queue has an active thread it is considered alive.
+     * 
      * @return The alive value
      */
     public boolean isAlive()
@@ -191,7 +198,7 @@ public class CacheEventQueue
     }
 
     /**
-     * @return The {3} value
+     * @return The listenerId value
      */
     public long getListenerId()
     {
@@ -200,6 +207,8 @@ public class CacheEventQueue
 
     /**
      * Event Q is emtpy.
+     * 
+     * Calling destroy interupts the processor thread.
      */
     public synchronized void destroy()
     {
@@ -281,6 +290,9 @@ public class CacheEventQueue
     }
 
     /**
+     * This adds a remove all event to the queue. When it is processed, all
+     * elements will be removed from the cache.
+     * 
      * @exception IOException
      */
     public synchronized void addRemoveAllEvent()
@@ -357,9 +369,15 @@ public class CacheEventQueue
     /**
      * Returns the next cache event from the queue or null if there are no
      * events in the queue.
+     * <p>
+     * We have an empty node at the head and the tail. When we take an item from
+     * the queue we move the next node to the head and then clear the value from
+     * that node. This value is returned.
+     * <p>
+     * When the queue is empty the head node is the same as the tail node.
      * 
      * @return An event to process.
-     *  
+     * 
      */
     private AbstractCacheEvent take()
     {
@@ -450,7 +468,7 @@ public class CacheEventQueue
         return stats;
     }
 
-    ///////////////////////////// Inner classes /////////////////////////////
+    // /////////////////////////// Inner classes /////////////////////////////
 
     private static class Node
     {
@@ -460,6 +478,8 @@ public class CacheEventQueue
     }
 
     /**
+     * This is the thread that works the queue.
+     * 
      * @author asmuts
      * @created January 15, 2002
      */
@@ -491,18 +511,18 @@ public class CacheEventQueue
          */
         public void run()
         {
-            AbstractCacheEvent r = null;
+            AbstractCacheEvent event = null;
 
             while ( queue.isAlive() )
             {
-                r = queue.take();
+                event = queue.take();
 
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Event from queue = " + r );
+                    log.debug( "Event from queue = " + event );
                 }
 
-                if ( r == null )
+                if ( event == null )
                 {
                     synchronized ( queueLock )
                     {
@@ -515,21 +535,21 @@ public class CacheEventQueue
                             log.warn( "Interrupted while waiting for another event to come in before we die." );
                             return;
                         }
-                        r = queue.take();
+                        event = queue.take();
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Event from queue after sleep = " + r );
+                            log.debug( "Event from queue after sleep = " + event );
                         }
                     }
-                    if ( r == null )
+                    if ( event == null )
                     {
                         queue.stopProcessing();
                     }
                 }
 
-                if ( queue.isWorking() && queue.isAlive() && r != null )
+                if ( queue.isWorking() && queue.isAlive() && event != null )
                 {
-                    r.run();
+                    event.run();
                 }
             }
             if ( log.isInfoEnabled() )
@@ -593,6 +613,8 @@ public class CacheEventQueue
                     {
                         log.warn( "Interrupted while sleeping for retry on event " + this + "." );
                     }
+                    // TODO consider if this is best. maybe we shoudl just
+                    // destroy
                     setWorking( false );
                     setAlive( false );
                 }
@@ -607,6 +629,8 @@ public class CacheEventQueue
     }
 
     /**
+     * An element should be put in the cache.
+     * 
      * @author asmuts
      * @created January 15, 2002
      */
@@ -626,10 +650,6 @@ public class CacheEventQueue
             throws IOException
         {
             this.ice = ice;
-            /*
-             * this.key = key; this.obj = CacheUtils.dup(obj); this.attr = attr;
-             * this.groupName = groupName;
-             */
         }
 
         /**
@@ -640,13 +660,12 @@ public class CacheEventQueue
         protected void doRun()
             throws IOException
         {
-            /*
-             * CacheElement ce = new CacheElement(cacheName, key, obj);
-             * ce.setElementAttributes( attr ); ce.setGroupName( groupName );
-             */
             listener.handlePut( ice );
         }
 
+        /**
+         * For debugging.
+         */
         public String toString()
         {
             return new StringBuffer( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
@@ -656,7 +675,7 @@ public class CacheEventQueue
     }
 
     /**
-     * Description of the Class
+     * An element should be removed from the cache.
      * 
      * @author asmuts
      * @created January 15, 2002
@@ -702,7 +721,8 @@ public class CacheEventQueue
     }
 
     /**
-     * Description of the Class
+     * All elements should be removed from the cache when this event is
+     * processed.
      * 
      * @author asmuts
      * @created January 15, 2002
@@ -735,7 +755,7 @@ public class CacheEventQueue
     }
 
     /**
-     * Description of the Class
+     * The cache should be disposed when this event is processed.
      * 
      * @author asmuts
      * @created January 15, 2002
@@ -770,6 +790,10 @@ public class CacheEventQueue
     }
 
     /**
+     * This means that the queue is functional. If we reached the max number of
+     * failures, the queue is marked as non functional and will never work
+     * again.
+     * 
      * @param b
      */
     public void setWorking( boolean b )
