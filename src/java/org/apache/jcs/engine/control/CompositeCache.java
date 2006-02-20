@@ -19,10 +19,10 @@ package org.apache.jcs.engine.control;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,7 +36,13 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-
+import org.apache.jcs.engine.control.event.ElementEvent;
+import org.apache.jcs.engine.control.event.ElementEventQueue;
+import org.apache.jcs.engine.control.event.behavior.IElementEvent;
+import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
+import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
+import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
+import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 import org.apache.jcs.engine.stats.CacheStats;
@@ -45,14 +51,6 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-
-import org.apache.jcs.engine.control.event.ElementEvent;
-import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
-import org.apache.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
-import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
-import org.apache.jcs.engine.control.event.ElementEventQueue;
-import org.apache.jcs.engine.control.group.GroupId;
 
 /**
  * This is the primary hub for a single cache/region. It controls the flow of
@@ -86,12 +84,12 @@ public class CompositeCache
     /**
      * Region Elemental Attributes, default
      */
-    public IElementAttributes attr;
+    private IElementAttributes attr;
 
     /**
      * Cache Attributes, for hub and memory auxiliary
      */
-    public ICompositeCacheAttributes cacheAttr;
+    private ICompositeCacheAttributes cacheAttr;
 
     // Statistics
     private int updateCount;
@@ -205,8 +203,9 @@ public class CompositeCache
 
         // not thread safe, but just for debugging and testing.
         updateCount++;
-        
-        if ( cacheElement.getKey() instanceof String && cacheElement.getKey().toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
+
+        if ( cacheElement.getKey() instanceof String
+            && cacheElement.getKey().toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
         {
             throw new IllegalArgumentException( "key must not end with " + CacheConstants.NAME_COMPONENT_DELIMITER
                 + " for a put operation" );
@@ -259,7 +258,8 @@ public class CompositeCache
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "ce.getElementAttributes().getIsRemote() = " + cacheElement.getElementAttributes().getIsRemote() );
+                    log.debug( "ce.getElementAttributes().getIsRemote() = "
+                        + cacheElement.getElementAttributes().getIsRemote() );
                 }
 
                 if ( cacheElement.getElementAttributes().getIsRemote() && !localOnly )
@@ -329,7 +329,7 @@ public class CompositeCache
         // if the item is not spoolable, return
         if ( !ce.getElementAttributes().getIsSpool() )
         {
-            //TODO define an event for this.
+            // there is an event defined for this.
             handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_NOT_ALLOWED );
             return;
         }
@@ -518,10 +518,11 @@ public class CompositeCache
 
                                 missCountExpired++;
 
-                                // this will tell the remotes to remove the item based on this
-                                // local's expiration policy.  
-                                // This seems wrong.  
-                                //TODO We should call localRemove
+                                // this will tell the remotes to remove the item
+                                // based on this
+                                // local's expiration policy.
+                                // This seems wrong.
+                                // TODO We should call localRemove
                                 remove( key );
 
                                 element = null;
@@ -617,7 +618,8 @@ public class CompositeCache
                 long lastAccessTime = attributes.getLastAccessTime();
 
                 // Remove if maxIdleTime exceeded
-                // If you have a 0 size memory cache, then the last access will not get updated.
+                // If you have a 0 size memory cache, then the last access will
+                // not get updated.
                 // you will need to set the idle time to -1.
 
                 if ( ( idleTime != -1 ) && ( now - lastAccessTime ) > ( idleTime * 1000 ) )
@@ -662,7 +664,7 @@ public class CompositeCache
                 }
                 catch ( IOException e )
                 {
-                    //ignore
+                    // ignore
                 }
             }
         }
@@ -713,7 +715,7 @@ public class CompositeCache
     {
         // not thread safe, but just for debugging and testing.
         removeCount++;
-        
+
         boolean removed = false;
 
         try
@@ -779,7 +781,7 @@ public class CompositeCache
     }
 
     /**
-     * Will not pass the remove message remotely.  
+     * Will not pass the remove message remotely.
      * 
      * @throws IOException
      */
@@ -792,8 +794,9 @@ public class CompositeCache
     /**
      * Removes all cached items.
      * 
-     * @param localOnly  must pass in false to get remote and lateral aux's updated.  This prevents
-     * looping.
+     * @param localOnly
+     *            must pass in false to get remote and lateral aux's updated.
+     *            This prevents looping.
      * @throws IOException
      */
     protected synchronized void removeAll( boolean localOnly )
@@ -877,9 +880,9 @@ public class CompositeCache
                 ICache aux = auxCaches[i];
 
                 // Skip this auxilliary if:
-                //   - The auxilliary is null
-                //   - The auxilliary is not alive
-                //   - The auxilliary is remote and the invocation was remote
+                // - The auxilliary is null
+                // - The auxilliary is not alive
+                // - The auxilliary is remote and the invocation was remote
 
                 if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE || fromRemote
                     && aux.getCacheType() == REMOTE_CACHE )
@@ -891,13 +894,13 @@ public class CompositeCache
                 // have 'getUseLateral' set, all the elements currently in
                 // memory are written to the lateral before disposing
 
-                //TODO make sure disk gets a change to finish
+                // TODO make sure disk gets a change to finish
                 if ( aux.getCacheType() != ICacheType.LATERAL_CACHE || this.cacheAttr.getUseLateral() )
                 {
                     Iterator itr = memCache.getIterator();
 
                     log.info( "In dispose, " + this.cacheName + " memCache.size = " + memCache.getSize() );
-                    
+
                     int cnt = 0;
                     while ( itr.hasNext() )
                     {
@@ -923,7 +926,7 @@ public class CompositeCache
                     log.info( "In dispose, " + this.cacheName + " put " + cnt + " into auxiliary " + aux );
 
                 }
-                               
+
                 // Dispose of the auxiliary
 
                 aux.dispose();
@@ -944,15 +947,19 @@ public class CompositeCache
         {
             log.error( "Failure disposing of memCache", ex );
         }
-               
+
         log.warn( "Called close for " + cacheName );
 
     }
 
     /**
+     * Calling save cause the entire contents of the memory cache to be flushed
+     * to all auxiliaries.
+     * 
      * Though this put is extremely fast, this could bog the cache and should be
      * avoided. The dispose method should call a version of this. Good for
      * testing.
+     * 
      */
     public void save()
     {
@@ -1098,13 +1105,17 @@ public class CompositeCache
     /**
      * Gets the default element attribute of the Cache object
      * 
-     * Should this return a copy?
+     * This returna a copy. It does not return a reference to the attributes.
      * 
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes()
     {
-        return attr;
+        if ( attr != null )
+        {
+            return attr.copy();
+        }
+        return null;
     }
 
     /**
@@ -1247,8 +1258,9 @@ public class CompositeCache
      * If there are event handlers for the item, then create an event and queue
      * it up.
      * <p>
-     * This does not call handle directly; instead the handler and the event are put into a queue.  
-     * This prevents the event handling from blocking normal cache operations.
+     * This does not call handle directly; instead the handler and the event are
+     * put into a queue. This prevents the event handling from blocking normal
+     * cache operations.
      * 
      * @param ce
      * @param eventType
@@ -1302,7 +1314,8 @@ public class CompositeCache
     }
 
     /**
-     * @param updateCount The updateCount to set.
+     * @param updateCount
+     *            The updateCount to set.
      */
     public void setUpdateCount( int updateCount )
     {
@@ -1318,7 +1331,8 @@ public class CompositeCache
     }
 
     /**
-     * @param removeCount The removeCount to set.
+     * @param removeCount
+     *            The removeCount to set.
      */
     public void setRemoveCount( int removeCount )
     {
@@ -1332,13 +1346,14 @@ public class CompositeCache
     {
         return removeCount;
     }
-    
+
     /*
-     *  (non-Javadoc)
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     public String toString()
-    {      
-        return getStats();        
-    }    
+    {
+        return getStats();
+    }
 }

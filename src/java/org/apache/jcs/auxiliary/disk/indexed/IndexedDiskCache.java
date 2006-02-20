@@ -317,7 +317,10 @@ public class IndexedDiskCache
             }
             finally
             {
-                // noopt
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Finished saving keys." );
+                }
             }
         }
         catch ( Exception e )
@@ -431,13 +434,17 @@ public class IndexedDiskCache
         {
             // do nothing, this means it has gone back to memory mid
             // serialization
+            if ( log.isInfoEnabled() )
+            {
+                // this shouldn't be possible
+                log.info( "Caught ConcurrentModificationException." + cme );
+            }
         }
         catch ( Exception e )
         {
             log.error( "Failure updating element, cacheName: " + cacheName + ", key: " + ce.getKey() + " old: " + old,
                        e );
         }
-        return;
     }
 
     /**
@@ -683,7 +690,7 @@ public class IndexedDiskCache
     }
 
     /**
-     * Remove all the items fromt he disk cache by reseting everything.
+     * Remove all the items from the disk cache by reseting everything.
      */
     public void doRemoveAll()
     {
@@ -693,12 +700,8 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem removing all.", e );
             reset();
-        }
-        finally
-        {
-            // swallow
         }
     }
 

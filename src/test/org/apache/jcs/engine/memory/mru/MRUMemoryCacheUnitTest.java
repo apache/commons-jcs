@@ -227,7 +227,7 @@ public class MRUMemoryCacheUnitTest
         for ( int i = 0; i < items; i++ )
         {
             ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
-            ice.setElementAttributes( cache.getElementAttributes().copy() );
+            ice.setElementAttributes( cache.getElementAttributes() );
             mru.update( ice );
         }
 

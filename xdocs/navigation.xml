@@ -32,6 +32,8 @@
 					href="/BasicJCSConfiguration.html" />
 				<item name="Element Config"
 					href="/ElementAttributes.html" />
+				<item name="Element Event Handling"
+					href="/ElementEventHandling.html" />										
 				<item name="Region Properties"
 					href="/RegionProperties.html" />
 				<item name="Basic Web Example"

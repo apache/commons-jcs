@@ -124,7 +124,7 @@ public class LRUMemoryCacheConcurrentUnitTest
         for ( int i = 0; i < items; i++ )
         {
             ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", region + " data " + i );
-            ice.setElementAttributes( cache.getElementAttributes().copy() );
+            ice.setElementAttributes( cache.getElementAttributes() );
             lru.update( ice );
         }
 

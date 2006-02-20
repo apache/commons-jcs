@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
@@ -42,6 +44,8 @@ import org.apache.jcs.engine.memory.MemoryCache;
  */
 public class JCSAdminBean
 {
+
+    private static final Log log = LogFactory.getLog( JCSAdminBean.class );
 
     private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
@@ -160,19 +164,19 @@ public class JCSAdminBean
         ObjectOutputStream out = new ObjectOutputStream( counter );
 
         // non serializable objects will cause problems here
-        // stop at the first non serializable exception. 
+        // stop at the first non serializable exception.
         try
         {
             while ( iter.hasNext() )
             {
                 ICacheElement ce = (ICacheElement) ( (Map.Entry) iter.next() ).getValue();
-                    
+
                 out.writeObject( ce.getVal() );
             }
         }
         catch ( Exception e )
         {
-            // log later
+            log.info( "Problem getting byte count.  Likley cause is a non serilizable object." + e.getMessage() );
         }
 
         // 4 bytes lost for the serialization header

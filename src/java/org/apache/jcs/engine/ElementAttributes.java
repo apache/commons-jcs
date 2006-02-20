@@ -85,7 +85,7 @@ public class ElementAttributes
     public long maxIdleTimeSeconds = -1;
 
     /**
-     * The byte size of teh field. Must be manually set.
+     * The byte size of the field. Must be manually set.
      */
     public int size = 0;
 
@@ -446,7 +446,7 @@ public class ElementAttributes
      * caller's list will not be reflected.
      * 
      * @param eventHandlers
-     *            value
+     *            List of IElementEventHandler objects
      */
     public void addElementEventHandlers( ArrayList eventHandlers )
     {
@@ -465,7 +465,7 @@ public class ElementAttributes
      * Gets the elementEventHandlers. Returns null if none exist. Makes checking
      * easy.
      * 
-     * @return The elementEventHandlers value
+     * @return The elementEventHandlers List of IElementEventHandler objects
      */
     public ArrayList getElementEventHandlers()
     {

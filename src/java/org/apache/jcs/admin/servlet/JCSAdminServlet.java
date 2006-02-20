@@ -112,11 +112,7 @@ public class JCSAdminServlet
             }
             else if ( action.equals( CLEAR_REGION_ACTION ) )
             {
-                if ( cacheName == null )
-                {
-                    // Not Allowed
-                }
-                else
+                if ( cacheName != null )
                 {
                     admin.clearRegion( cacheName );
                 }

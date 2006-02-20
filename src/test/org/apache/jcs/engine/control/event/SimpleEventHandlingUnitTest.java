@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.apache.jcs.JCS;
+import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
@@ -95,7 +96,9 @@ public class SimpleEventHandlingUnitTest
 
         JCS jcs = JCS.getInstance( "WithDisk" );
         // this should add the event handler to all items as they are created.
-        jcs.getDefaultElementAttributes().addElementEventHandler( meh );
+        IElementAttributes attributes = jcs.getDefaultElementAttributes();
+        attributes.addElementEventHandler( meh );
+        jcs.setDefaultElementAttributes( attributes );
 
         // put them in
         for ( int i = 0; i <= items; i++ )
@@ -120,11 +123,14 @@ public class SimpleEventHandlingUnitTest
     public void testSpoolNoDiskEvent()
         throws Exception
     {
+        JCS jcs = JCS.getInstance( "NoDisk" );
+
         MyEventHandler meh = new MyEventHandler();
 
-        JCS jcs = JCS.getInstance( "NoDisk" );
         // this should add the event handler to all items as they are created.
-        jcs.getDefaultElementAttributes().addElementEventHandler( meh );
+        IElementAttributes attributes = jcs.getDefaultElementAttributes();
+        attributes.addElementEventHandler( meh );
+        jcs.setDefaultElementAttributes( attributes );
 
         // put them in
         for ( int i = 0; i <= items; i++ )
@@ -153,7 +159,9 @@ public class SimpleEventHandlingUnitTest
 
         JCS jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
-        jcs.getDefaultElementAttributes().addElementEventHandler( meh );
+        IElementAttributes attributes = jcs.getDefaultElementAttributes();
+        attributes.addElementEventHandler( meh );
+        jcs.setDefaultElementAttributes( attributes );
 
         // put them in
         for ( int i = 0; i <= items; i++ )
@@ -170,6 +178,39 @@ public class SimpleEventHandlingUnitTest
 
     }
 
+    
+    /**
+     * Test the ELEMENT_EVENT_SPOOLED_NOT_ALLOWED event.
+     * 
+     * @throws Exception
+     */
+    public void testSpoolNotAllowedEventOnItem()
+        throws Exception
+    {
+        MyEventHandler meh = new MyEventHandler();
+
+        JCS jcs = JCS.getInstance( "DiskButNotAllowed" );
+        // this should add the event handler to all items as they are created.
+        //IElementAttributes attributes = jcs.getDefaultElementAttributes();
+        //attributes.addElementEventHandler( meh );
+        //jcs.setDefaultElementAttributes( attributes );
+
+        // put them in
+        for ( int i = 0; i <= items; i++ )
+        {
+            IElementAttributes attributes = jcs.getDefaultElementAttributes();
+            attributes.addElementEventHandler( meh );
+            jcs.put( i + ":key", "data" + i, attributes );
+        }
+
+        // wait a bit for it to finish
+        Thread.sleep( items / 20 );
+
+        // test to see if the count is right
+        assertTrue( "The number of ELEMENT_EVENT_SPOOLED_NOT_ALLOWED events [" + meh.getSpoolNotAllowedCount()
+            + "] does not equal the number expected.", meh.getSpoolNotAllowedCount() >= items );
+
+    }
     /**
      * Simple event counter used to verify test results.
      * 

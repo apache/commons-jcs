@@ -19,7 +19,7 @@ package org.apache.jcs.engine.control.event.behavior;
 import java.io.Serializable;
 
 /**
- * Defines how an element event object should behave
+ * Defines how an element event object should behave.
  *  
  */
 public interface IElementEvent

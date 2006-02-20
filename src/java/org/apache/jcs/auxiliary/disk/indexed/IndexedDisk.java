@@ -258,7 +258,6 @@ class IndexedDisk
         throws IOException
     {
         raf.close();
-        return;
     }
 
     /**
@@ -293,7 +292,6 @@ class IndexedDisk
             throw ex;
         }
         raf = new RandomAccessFile( filepath, "rw" );
-        return;
     }
 
     /**

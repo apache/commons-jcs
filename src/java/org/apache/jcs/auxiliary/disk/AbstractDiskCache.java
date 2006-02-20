@@ -27,7 +27,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;

@@ -1,31 +1,32 @@
 <?xml version="1.0"?>
 
 <document>
-  <properties>
-    <title>Element Attribute Configuration</title>
-    <author email="ASmuts@apache.org">Aaron Smuts</author>
-  </properties>
+	<properties>
+		<title>Element Attribute Configuration</title>
+		<author email="ASmuts@apache.org">Aaron Smuts</author>
+	</properties>
 
-  <body>
-    <section name="Element Attribute Configuration"> 
-      <p>
-        The following document describes the various
-        configuration options available for cache elements.
-        Each element put into the cache can be configured 
-        independently.  You can define element behavior in
-        three ways: as a default setting, as a region setting,
-        or at the element level.
-      </p>
-        
-      <subsection name="Setting the defaults">
-        <p>
-	  The configuration below can be put in the cache.ccf
-	  configuration file.  It establishes the default behavior
-	  for all regions.  A region can override these defaults and
-	  an individual element can overide these defaults and
-	  the region settings.
-        </p>
-        <source><![CDATA[
+	<body>
+		<section name="Element Attribute Configuration">
+			<p>
+				The following document describes the various
+				configuration options available for cache elements. Each
+				element put into the cache can be configured
+				independently. You can define element behavior in three
+				ways: as a default setting, as a region setting, or at
+				the element level.
+			</p>
+
+			<subsection name="Setting the defaults">
+				<p>
+					The configuration below can be put in the cache.ccf
+					configuration file. It establishes the default
+					behavior for all regions. A region can override
+					these defaults and an individual element can overide
+					these defaults and the region settings.
+				</p>
+				<source>
+					<![CDATA[
 # DEFAULT CACHE REGION   
 
 jcs.default=DC
@@ -44,56 +45,122 @@ jcs.default.elementattributes.IdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true    
-        ]]></source>
-    	  <p>
-    	    The default and region configuration settings have three
-    	    components.  They define what auxiliaries are available, 
-    	    how the cache should control the memory, and how the elements
-    	    should behave.  This configuration tells all regions to use
-    	    an auxiliary called DC by default.  It also establishes
-    	    several settings for memory management (see <a
-            href="BasicJCSConfiguration.html">Basic JCS Configuration</a> 
-            for more information on the cacheattribute settings).  In addition, 
-            by default all regions will take these element configuration 
-    	    settings.  
-    	  </p>
-    	  <p>
-    	    These settings specify that elements are not eternal, i.e. they 
-    	    can expire.  By default elements are considered eternal.  
-    	  </p>    
-    	  <p>
-    	    You can define the maximum life of an item by setting the
-    	    <code>MaxLifeSeconds</code> parameter.  If an item has been in 
-    	    the cache for longer than the set number of seconds it will
-    	    not be retrieved on a get request.  If you use the memory shrinker
-    	    the item will be actively removed from memory.  Currently there is 
-    	    no background disk shrinker, but the disk cache does allow for
-    	    a maximum number of keys (see <a
-            href="IndexedDiskAuxCache.html">Indexed Disk Cache</a> 
-            for more information on the disk cache settings).  
-    	  </p>    
-    	  <p>
-    	    You can define the maximum time an item can live without being accessed
-    	    by setting the <code>IdleTime</code> parameter.  This is different than
-    	    the <code>MaxMemoryIdleTimeSeconds</code> parameter, which just specifies
-    	    how long an object can be in memory before it is subjected to removal or
-    	    being spooled to a disk cache if it is available.  Note: the <code>IdleTime</code> 
-    	    parameter may not function properly for items retrieved from disk,
-    	    if you have a memory size of 0.
-    	  </p>    
-    	  </subsection>
-    	  <p>
-    	    <code>IsSpool</code> determines whether or not the element can go to disk,
-    	    if a disk cache is configured for the region.
-    	  </p>    
-    	  <p>
-    	    <code>IsRemote</code> determines whether or not the element can be sent
-    	    to a remote server, if one is configured for the region.
-    	  </p>    
-    	  <p>
-    	    <code>IsLateral</code> determines whether or not the element can be laterally
-    	    distributed, if a lateral auxiliary is configured for the region.
-    	  </p>    
-        </section>
-      </body>
+        ]]>
+				</source>
+				<p>
+					The default and region configuration settings have
+					three components. They define what auxiliaries are
+					available, how the cache should control the memory,
+					and how the elements should behave. This
+					configuration tells all regions to use an auxiliary
+					called DC by default. It also establishes several
+					settings for memory management (see
+					<a href="BasicJCSConfiguration.html">
+						Basic JCS Configuration
+					</a>
+					for more information on the cacheattribute
+					settings). In addition, by default all regions will
+					take these element configuration settings.
+				</p>
+				<p>
+					These settings specify that elements are not
+					eternal, i.e. they can expire. By default elements
+					are considered eternal.
+				</p>
+				<p>
+					You can define the maximum life of an item by
+					setting the
+					<code>MaxLifeSeconds</code>
+					parameter. If an item has been in the cache for
+					longer than the set number of seconds it will not be
+					retrieved on a get request. If you use the memory
+					shrinker the item will be actively removed from
+					memory. Currently there is no background disk
+					shrinker, but the disk cache does allow for a
+					maximum number of keys (see
+					<a href="IndexedDiskAuxCache.html">
+						Indexed Disk Cache
+					</a>
+					for more information on the disk cache settings).
+				</p>
+				<p>
+					You can define the maximum time an item can live
+					without being accessed by setting the
+					<code>IdleTime</code>
+					parameter. This is different than the
+					<code>MaxMemoryIdleTimeSeconds</code>
+					parameter, which just specifies how long an object
+					can be in memory before it is subjected to removal
+					or being spooled to a disk cache if it is available.
+					Note: the
+					<code>IdleTime</code>
+					parameter may not function properly for items
+					retrieved from disk, if you have a memory size of 0.
+				</p>
+			</subsection>
+
+			<p>
+				<code>IsSpool</code>
+				determines whether or not the element can go to disk, if
+				a disk cache is configured for the region.
+			</p>
+			<p>
+				<code>IsRemote</code>
+				determines whether or not the element can be sent to a
+				remote server, if one is configured for the region.
+			</p>
+			<p>
+				<code>IsLateral</code>
+				determines whether or not the element can be laterally
+				distributed, if a lateral auxiliary is configured for
+				the region.
+			</p>
+
+
+			<subsection name="Programmatic Configuration">
+				<p>
+					Every element put into the cache has its own set of
+					attributes. By default elements are given a copy of
+					the default element attributes associated with a
+					region. You can also specify the attributes to use
+					for an element when you put it in the cache.
+				</p>
+				<source>
+				<![CDATA[	
+    JCS jcs = JCS.getInstance( "myregion" );
+
+    . . .
+    
+    // jcs.getDefaultElementAttributes returns a copy not a reference
+    IElementAttributes attributes = jcs.getDefaultElementAttributes();
+
+    // set some special value
+    attributes.setIsEternal( true );
+    jcs.put( "key", "data", attributes );
+        		]]>
+				</source>
+
+				<p>
+					You can also programmatically modify the default
+					element attributes.
+				</p>
+
+				<source>
+					<![CDATA[	
+    JCS jcs = JCS.getInstance( "myregion" );
+
+    . . .
+    
+    // jcs.getDefaultElementAttributes returns a copy not a reference
+    IElementAttributes attributes = jcs.getDefaultElementAttributes();
+
+    // set some special value
+    attributes.setIsEternal( true );
+    jcs.setDefaultElementAttributes( attributes );
+        		]]>
+				</source>
+			</subsection>
+
+		</section>
+	</body>
 </document>

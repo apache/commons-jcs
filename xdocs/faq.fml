@@ -19,16 +19,17 @@
 
 <faqs title="Frequently Asked Questions">
 
-	<part id="general-questions">
-		<title>General Questions</title>
+	<part id="configuration">
+		<title>Configuration</title>
 
 		<faq id="required-jars">
 			<question>What jars are required by JCS?</question>
 			<answer>
 				<p>
-					As of verison 1.2.7.0, the core of JCS (the LRU memory cache, the indexed
-					disk cache, the TCP lateral, and the RMI remote
-					server) requires only two other jars.
+					As of verison 1.2.7.0, the core of JCS (the LRU
+					memory cache, the indexed disk cache, the TCP
+					lateral, and the RMI remote server) requires only
+					two other jars.
 				</p>
 				<p>
 					<a
@@ -37,9 +38,12 @@
 					</a>
 				</p>
 				<p>commons-logging</p>
-				
-				<p>Versions 1.2.6.9 and below also require the following two additional jars:</p>
-				
+
+				<p>
+					Versions 1.2.6.9 and below also require the
+					following two additional jars:
+				</p>
+
 				<p>commons-collections</p>
 				<p>commons-lang</p>
 				<p>
@@ -65,24 +69,25 @@
 			<question>
 				How can I configure JCS with my own properties?
 			</question>
+
+			<answer>
+				<p>
+					You don't have to put the cache.ccf file in the
+					classpath; instead you can do the following:
+				</p>
+				<code>
+					CompositeCacheManager ccm =
+					CompositeCacheManager.getUnconfiguredInstance();
+
+					Properties props = new Properties();
+
+					props.load(/* load properties from some location
+					defined by your app */);
+
+					ccm.configure(props);
+				</code>
+			</answer>
 		</faq>
-		<answer>
-			<p>
-				You don't have to put the cache.ccf file in the
-				classpath; instead you can do the following:
-			</p>
-			<code>
-				CompositeCacheManager ccm =
-				CompositeCacheManager.getUnconfiguredInstance();
-
-				Properties props = new Properties();
-
-				props.load(/* load properties from some location defined
-				by your app */);
-
-				ccm.configure(props);
-			</code>
-		</answer>
 
 		<faq id="configuration-system-properties">
 			<question>
@@ -98,6 +103,10 @@
 				</p>
 			</answer>
 		</faq>
+	</part>
+
+	<part id="general-questions">
+		<title>General Questions</title>
 
 		<faq id="jcs-vs-ehcache">
 			<question>Is JCS faster than EHCache?</question>
@@ -109,9 +118,102 @@
 					1.2-beta4 at gets and puts. The EHCache benchmark
 					data is unsubstantiated and very old. As such the
 					EHCache site benchmark data is completely
-					inaccurate.  <a href="JCSvsEHCache.html">Read More</a>
+					inaccurate.
+					<a href="JCSvsEHCache.html">Read More</a>
+				</p>
+			</answer>
+		</faq>
+		
+		<faq id="admin-jsp">
+			<question>Where can I get the admin jsp?</question>
+			<answer>
+				<p>		
+				You can download the admin jsp 
+		<a href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/src/java/org/apache/jcs/admin/JCSAdmin.jsp">here</a>.
+			  </p>
+			</answer>
+		</faq>
+	</part>
+
+	<part id="elements">
+		<title>Elements</title>
+
+		<faq id="element-attributes">
+			<question>How do I set the element attributes?</question>
+			<answer>
+				<p>
+					Every element put into the cache has its own set of
+					attributes. By default elements are given a copy of
+					the default element attributes associated with a
+					region. You can also specify the attributes to use
+					for an element when you put it in the cache. See
+					<a href="ElementAttributes.html">
+						Element Attributes
+					</a>
+					for more information on the attributes that are
+					available.
+				</p>
+			</answer>
+		</faq>
+
+		<faq id="element-events">
+			<question>How do I register an element event?</question>
+			<answer>
+				<p>
+					Element event handlers must be added to the element
+					attributes. See
+					<a href="ElementEventHandling.html">
+						Element Event Handling
+					</a>
+					for more information on how to handle element
+					events.
 				</p>
 			</answer>
 		</faq>
 	</part>
+
+	<part id="indexed-disk-cache">
+		<title>Indexed Disk Cache</title>
+
+		<faq id="thread-pool">
+			<question>
+				How do I limit the number of threads used by the disk
+				cache?
+			</question>
+			<answer>
+				<p>
+					The indexed disk cache uses an event queue for each
+					region. By default these queues are worked by their
+					own dedicated threads. Hence, you will have one
+					thread per disk cache region. Although the queues
+					kill off idle threads, you may want to limit the
+					overall number of threads used by the queues. You
+					can do this by telling the disk cache to use a
+					thread pool. The configuration is described
+					<a href="IndexedDiskAuxCache.html">
+						on the disk cache configuration page
+					</a>
+					.
+				</p>
+			</answer>
+		</faq>
+	</part>
+
+
+	<part id="remote-cache-server">
+		<title>Remote Cache Server</title>
+
+		<faq id="classes">
+			<question>
+				Do I need to put my jars in the classpath of the 
+				remote server?
+			</question>
+			<answer>
+				<p>
+				No.  The remote server never deserializes your classes.
+				</p>
+			</answer>
+		</faq>
+	</part>
+					
 </faqs>
