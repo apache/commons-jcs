@@ -33,7 +33,6 @@ public class TestRemoteCache
             RemoteUtils.createRegistry( 1101 );
 
             RemoteCacheServerFactory.startup( "localhost", 1101, "/TestRemoteServer.ccf" );
-
         }
         catch ( Exception e )
         {

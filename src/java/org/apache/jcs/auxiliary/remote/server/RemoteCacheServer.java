@@ -59,7 +59,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * several clients to use one remote server and several to use another. The get
  * locad will be distributed between the two servers. Since caches are usually
  * high get and low put, this should allow you to scale.
- *  
+ * 
  */
 public class RemoteCacheServer
     extends UnicastRemoteObject
@@ -85,10 +85,10 @@ public class RemoteCacheServer
     // relates listener id with a type
     private final Hashtable idTypeMap = new Hashtable();
 
-    //private transient int listenerId = 0;
+    // private transient int listenerId = 0;
     private int[] listenerId = new int[1];
 
-    /** Description of the Field */
+    /** Configuration settings. */
     protected IRemoteCacheServerAttributes rcsa;
 
     /**
@@ -212,7 +212,7 @@ public class RemoteCacheServer
         return cacheListeners;
     }
 
-    /////////////////////// Implements the ICacheService interface.
+    // ///////////////////// Implements the ICacheService interface.
     // //////////////////
     /**
      * Puts a cache bean to the remote cache and notifies all listeners which
@@ -225,7 +225,7 @@ public class RemoteCacheServer
      * 
      * @param item
      * @throws IOException
-     *  
+     * 
      */
     public void put( ICacheElement item )
         throws IOException
@@ -322,10 +322,8 @@ public class RemoteCacheServer
                     CompositeCache c = (CompositeCache) cacheDesc.cache;
 
                     // If the source of this request was not from a cluster,
-                    // then
-                    // consider it a local update. The cache manager will try to
-                    // update all
-                    // auxiliaries.
+                    // then consider it a local update. The cache manager will try to
+                    // update all auxiliaries.
                     //
                     // This requires that two local caches not be connected to
                     // two clustered remote caches. The failover runner will
@@ -390,7 +388,7 @@ public class RemoteCacheServer
         }
         catch ( NotBoundException ex )
         {
-            ex.printStackTrace( System.out );
+            log.error( "NotBoundException caught in update.", ex );
             throw new IllegalStateException( ex.getMessage() );
         }
         catch ( Exception e )
@@ -451,6 +449,7 @@ public class RemoteCacheServer
             // All qualified.
             return list;
         }
+
         // Returns only the qualified.
         ICacheEventQueue[] qq = new ICacheEventQueue[count];
         count = 0;
@@ -488,7 +487,7 @@ public class RemoteCacheServer
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem getting listeners.", e );
         }
 
         if ( cacheDesc == null )
@@ -516,7 +515,7 @@ public class RemoteCacheServer
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem getting listeners.", e );
         }
 
         if ( cacheDesc == null )
@@ -606,7 +605,6 @@ public class RemoteCacheServer
 
                 if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
                 {
-
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
                     for ( int i = 0; i < qlist.length; i++ )
@@ -656,7 +654,6 @@ public class RemoteCacheServer
             // notification.
             synchronized ( cacheDesc )
             {
-
                 // No need to broadcast, or notify if it was not cached.
                 CompositeCache c = (CompositeCache) cacheDesc.cache;
 
@@ -687,7 +684,6 @@ public class RemoteCacheServer
                     {
                         qlist[i].addRemoveAllEvent();
                     }
-
                 }
             }
         }
@@ -761,10 +757,10 @@ public class RemoteCacheServer
         return;
     }
 
-    /////////////////////// Implements the ICacheObserver interface.
+    // ///////////////////// Implements the ICacheObserver interface.
     // //////////////////
     /**
-     * Removes dead event queues. SHould clean out deregistered listeners.
+     * Removes dead event queues. Should clean out deregistered listeners.
      * 
      * @param eventQMap
      */
@@ -810,9 +806,7 @@ public class RemoteCacheServer
         try
         {
             CacheListeners cacheDesc;
-            //if ( cacheName.equals("SYSTEM_CLUSTER") || listener instanceof
-            // org.apache.jcs.auxiliary.remote.server.RemoteCacheServerListener
-            // ) {
+
             IRemoteCacheListener ircl = (IRemoteCacheListener) listener;
             int remoteType = ircl.getRemoteType();
             if ( remoteType == IRemoteCacheAttributes.CLUSTER )
@@ -827,8 +821,8 @@ public class RemoteCacheServer
             }
             Map eventQMap = cacheDesc.eventQMap;
             cleanupEventQMap( eventQMap );
-            
-            //synchronized ( listenerId )
+
+            // synchronized ( listenerId )
             synchronized ( ICacheListener.class )
             {
                 long id = 0;
@@ -846,13 +840,20 @@ public class RemoteCacheServer
                         }
                         listener.setListenerId( listenerIdB );
                         id = listenerIdB;
+
                         // in case it needs synchronization
-                        log.info( "adding vm listener under new id = " + listenerIdB );
+                        if ( log.isInfoEnabled() )
+                        {
+                            log.info( "adding vm listener under new id = " + listenerIdB );
+                        }
                         print( "adding vm listener under new id = " + listenerIdB );
                     }
                     else
                     {
-                        log.info( "adding listener under existing id = " + id );
+                        if ( log.isInfoEnabled() )
+                        {
+                            log.info( "adding listener under existing id = " + id );
+                        }
                         // should confirm the the host is the same as we have on
                         // record, just in case
                         // a client has made a mistake.
@@ -864,7 +865,7 @@ public class RemoteCacheServer
                 }
                 catch ( IOException ioe )
                 {
-                    log.error( "Problem setting listener id", ioe );
+                    log.error( "Problem setting listener id.", ioe );
                 }
 
                 CacheEventQueueFactory fact = new CacheEventQueueFactory();
@@ -972,6 +973,7 @@ public class RemoteCacheServer
         }
         catch ( NotBoundException ex )
         {
+            log.error( "NotBoundException", ex );
             ex.printStackTrace();
             throw new IllegalStateException( ex.getMessage() );
         }
@@ -999,7 +1001,7 @@ public class RemoteCacheServer
         return;
     }
 
-    /////////////////////// Implements the ICacheServiceAdmin interface.
+    // ///////////////////// Implements the ICacheServiceAdmin interface.
     // //////////////////
 
     /**
@@ -1023,11 +1025,14 @@ public class RemoteCacheServer
     public void shutdown( String host, int port )
         throws IOException
     {
-        log.debug( "received shutdown request" );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Received shutdown request.  Shutting down server." );
+        }
         RemoteCacheServerFactory.shutdownImpl( host, port );
     }
 
-    /////////////////////// Implements the Unreferenced interface.
+    // ///////////////////// Implements the Unreferenced interface.
     // //////////////////
 
     /**
@@ -1070,7 +1075,7 @@ public class RemoteCacheServer
                 id = ++listenerId[0];
             }
         }
-        return id; //( long ) ( id & 0xff );
+        return id; // ( long ) ( id & 0xff );
     }
 
     /**

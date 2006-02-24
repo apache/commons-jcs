@@ -16,15 +16,12 @@ package org.apache.jcs.auxiliary.remote;
  * limitations under the License.
  */
 
-import java.io.InputStream;
 import java.io.IOException;
-
-import java.rmi.RemoteException;
+import java.io.InputStream;
 import java.rmi.RMISecurityManager;
-
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -32,8 +29,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Description of the Class
- *  
+ * This class provides some basic utilities for doing things such as starting
+ * the registry properly.
+ * 
  */
 public class RemoteUtils
 {
@@ -47,6 +45,7 @@ public class RemoteUtils
 
     /**
      * Creates and exports a registry on the specified port of the local host.
+     * 
      * @param port
      * @return
      * @throws RemoteException
@@ -54,22 +53,36 @@ public class RemoteUtils
     public static int createRegistry( int port )
         throws RemoteException
     {
-        log.debug( "createRegistry> setting security manager" );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "createRegistry> setting security manager" );
+        }
         System.setSecurityManager( new RMISecurityManager() );
+        
         if ( port < 1024 )
         {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Port chosen was less than 1024, will use default [" + Registry.REGISTRY_PORT + "] instead." );
+            }            
             port = Registry.REGISTRY_PORT;
         }
-        log.debug( "createRegistry> creating registry" );
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "createRegistry> creating registry on port [" + port + "]" );
+        }
         LocateRegistry.createRegistry( port );
         return port;
     }
 
-    /** 
+    /**
      * Loads properties for the named props file.
+     * 
      * @param propFile
      * @return
-     * @throws IOException*/
+     * @throws IOException
+     */
     public static Properties loadProps( String propFile )
         throws IOException
     {
@@ -105,7 +118,6 @@ public class RemoteUtils
         }
         catch ( Exception ex )
         {
-
             log.error( "Error loading remote properties, for file name [" + propFile + "]", ex );
             // ignore;
         }

@@ -43,7 +43,7 @@ public class RemoteCacheServerFactory
 
     private static String serviceName;
 
-    /** Constructor for the RemoteCacheServerFactory object */
+    /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()
     {
         super();
@@ -248,11 +248,6 @@ public class RemoteCacheServerFactory
 
             try
             {
-                //if ( args.length > 1 )
-                //{
-                //    port = Integer.parseInt( args[1] );
-                //}
-
                 String serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
                 String registry = "//:" + port + "/" + serviceName;
                 log.debug( "looking up server " + registry );
