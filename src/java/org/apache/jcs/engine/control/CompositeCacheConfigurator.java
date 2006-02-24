@@ -38,11 +38,10 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 /**
  * This class configures JCS based on a properties object.
  * <p>
- * 
  * This class is based on the log4j class org.apache.log4j.PropertyConfigurator
  * which was made by: "Luke Blanshard" <Luke@quiq.com>"Mark DONSZELMANN"
  * <Mark.Donszelmann@cern.ch>"Anders Kristensen" <akristensen@dynamicsoft.com>
- *  
+ * 
  */
 public class CompositeCacheConfigurator
 {
@@ -118,6 +117,7 @@ public class CompositeCacheConfigurator
      */
     public void doConfigure( Properties properties )
     {
+        long start = System.currentTimeMillis();
 
         // store props for use by non configured caches
         compositeCacheManager.props = properties;
@@ -135,6 +135,12 @@ public class CompositeCacheConfigurator
         // setup preconfigured caches
         parseRegions( properties );
 
+        long end = System.currentTimeMillis();
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Finished configuration in " + ( end - start ) + " ms." );
+        }
+        
     }
 
     /**
@@ -147,7 +153,10 @@ public class CompositeCacheConfigurator
         String value = OptionConverter.findAndSubst( DEFAULT_REGION, props );
         compositeCacheManager.defaultAuxValues = value;
 
-        log.info( "setting defaults to " + value );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Setting default auxiliaries to " + value );
+        }
     }
 
     /**
@@ -206,11 +215,15 @@ public class CompositeCacheConfigurator
         }
     }
 
-    /** Parse region elements. 
+    /**
+     * Parse region elements.
+     * 
      * @param props
      */
     protected void parseRegions( Properties props )
     {
+        List regionNames = new ArrayList();
+        
         Enumeration en = props.propertyNames();
         while ( en.hasMoreElements() )
         {
@@ -218,6 +231,9 @@ public class CompositeCacheConfigurator
             if ( key.startsWith( REGION_PREFIX ) && ( key.indexOf( "attributes" ) == -1 ) )
             {
                 String regionName = key.substring( REGION_PREFIX.length() );
+                
+                regionNames.add( regionName );
+                
                 String value = OptionConverter.findAndSubst( key, props );
                 ICache cache;
                 synchronized ( regionName )
@@ -227,9 +243,17 @@ public class CompositeCacheConfigurator
                 compositeCacheManager.caches.put( regionName, cache );
             }
         }
+        
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Parsed regions " + regionNames );
+        }
+        
     }
 
-    /** Create cache region. 
+    /**
+     * Create cache region.
+     * 
      * @param props
      * @param regName
      * @param value
@@ -285,7 +309,10 @@ public class CompositeCacheConfigurator
 
         List auxList = new ArrayList();
 
-        log.debug( "Parsing region name '" + regName + "', value '" + value + "'" );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Parsing region name '" + regName + "', value '" + value + "'" );
+        }
 
         // We must skip over ',' but not white space
         StringTokenizer st = new StringTokenizer( value, "," );
@@ -330,7 +357,9 @@ public class CompositeCacheConfigurator
         return cache;
     }
 
-    /** Get an compositecacheattributes for the listed region. 
+    /**
+     * Get an compositecacheattributes for the listed region.
+     * 
      * @param props
      * @param regName
      * @return
@@ -356,13 +385,16 @@ public class CompositeCacheConfigurator
         String attrName = regionPrefix + regName + CACHE_ATTRIBUTE_PREFIX;
 
         // auxFactory was not previously initialized.
-        //String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
+        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
         ccAttr = (ICompositeCacheAttributes) OptionConverter
             .instantiateByKey( props, attrName, org.apache.jcs.engine.behavior.ICompositeCacheAttributes.class, null );
 
         if ( ccAttr == null )
         {
-            log.warn( "Could not instantiate ccAttr named '" + attrName + "', using defaults." );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "No special CompositeCacheAttributes class defined for key [" + attrName + "], using default class." );
+            }
 
             ICompositeCacheAttributes ccAttr2 = compositeCacheManager.getDefaultCacheAttributes();
             ccAttr = ccAttr2.copy();
@@ -402,36 +434,49 @@ public class CompositeCacheConfigurator
         String attrName = regionPrefix + regName + CompositeCacheConfigurator.ELEMENT_ATTRIBUTE_PREFIX;
 
         // auxFactory was not previously initialized.
-        //String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
+        // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
         eAttr = (IElementAttributes) OptionConverter
             .instantiateByKey( props, attrName, org.apache.jcs.engine.behavior.IElementAttributes.class, null );
         if ( eAttr == null )
         {
-            log.warn( "Could not instantiate eAttr named '" + attrName + "', using defaults." );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "No special ElementAttribute class defined for key [" + attrName + "], using default class." );
+            }
 
             IElementAttributes eAttr2 = compositeCacheManager.getDefaultElementAttributes();
             eAttr = eAttr2.copy();
         }
 
-        log.debug( "Parsing options for '" + attrName + "'" );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Parsing options for '" + attrName + "'" );
+        }
 
         PropertySetter.setProperties( eAttr, props, attrName + "." );
-        //eAttr.setCacheName( regName );
+        // eAttr.setCacheName( regName );
 
-        log.debug( "End of parsing for \"" + attrName + "\"." );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "End of parsing for \"" + attrName + "\"." );
+        }
 
         // GET CACHE FROM FACTORY WITH ATTRIBUTES
-        //eAttr.setCacheName( regName );
+        // eAttr.setCacheName( regName );
         return eAttr;
     }
 
     /**
      * Get an aux cache for the listed aux for a region.
      * 
-     * @param cache the cache manager
-     * @param props the configuration propeties
-     * @param auxName the name of the auxiliary cache
-     * @param regName the name of the region.
+     * @param cache
+     *            the cache manager
+     * @param props
+     *            the configuration propeties
+     * @param auxName
+     *            the name of the auxiliary cache
+     * @param regName
+     *            the name of the region.
      * @return AuxiliaryCache
      */
     protected AuxiliaryCache parseAuxiliary( CompositeCache cache, Properties props, String auxName, String regName )
@@ -444,7 +489,7 @@ public class CompositeCacheConfigurator
             // TODO change method signature if is isn't needed.
             log.debug( "parseAuxiliary, Cache = " + cache );
         }
-        
+
         // GET FACTORY
         AuxiliaryCacheFactory auxFac = compositeCacheManager.registryFacGet( auxName );
         if ( auxFac == null )

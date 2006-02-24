@@ -32,6 +32,7 @@
 		<exec executable="${maven.script}" failonerror="true">
 			<arg value="java:jar-resources" />
 			<arg value="test:test-resources" />
+			<arg value="rmic" />
 		</exec>
 
 	</target>

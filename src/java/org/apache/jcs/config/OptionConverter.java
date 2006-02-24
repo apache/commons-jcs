@@ -167,7 +167,10 @@ public class OptionConverter
         String className = findAndSubst( key, props );
         if ( className == null )
         {
-            log.warn( "Could not find value for key " + key );
+            if ( log.isTraceEnabled() )
+            {
+                log.info( "Could not find value for key " + key );
+            }
             return defaultValue;
         }
         // Trim className to avoid trailing spaces that cause problems.
