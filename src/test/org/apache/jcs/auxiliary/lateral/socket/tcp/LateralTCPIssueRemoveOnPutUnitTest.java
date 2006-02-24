@@ -40,10 +40,55 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * 
      * @throws Exception
      */
-    public void test()
+    public void testPutLocalPutRemoteGetBusyVerifyRemoved()
         throws Exception
     {
         this.runTestForRegion( "region1", 1, 200, 1 );
+    }
+
+    /**
+     * Verify that a standard put works.
+     * 
+     * Get the cache configured from a file. Create a tcp service to talk to
+     * that cache. Put via the servive. Verify that the cache got the data.
+     * 
+     * @throws Exception
+     * 
+     */
+    public void testStandardPut()
+        throws Exception
+    {
+        String region = "region1";
+
+        JCS cache = JCS.getInstance( region );
+
+        Thread.sleep( 100 );
+
+        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        lattr2.setTcpListenerPort( 1102 );
+        lattr2.setTransmissionTypeName( "TCP" );
+        lattr2.setTcpServer( "localhost:1110" );
+        lattr2.setIssueRemoveOnPut( false );
+        // should still try to remove
+        // lattr2.setAllowPut( false );
+
+        // Using the lateral, this service will put to and remove from
+        // the cache instance above.
+        // The cache thinks it is different since the listenerid is different
+        LateralTCPService service = new LateralTCPService( lattr2 );
+        service.setListenerId( 123456 );
+
+        String keyToBeRemovedOnPut = "test1_notremoved";
+
+        ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+            + ":data-this shouldn't get removed, it should get to the cache." );
+        service.update( element1 );
+
+        Thread.sleep( 1000 );
+
+        Object testObj = cache.get( keyToBeRemovedOnPut );
+        p( "testStandardPut, test object = " + testObj );
+        assertNotNull( "The test object should not have been removed by a put.", testObj );
     }
 
     /**
@@ -63,7 +108,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         throws Exception
     {
 
-        boolean show = true;//false;
+        boolean show = true;// false;
 
         JCS cache = JCS.getInstance( region );
 
@@ -77,14 +122,14 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // should still try to remove
         lattr2.setAllowPut( false );
 
-        // this service will put and remove using the lateral to
-        // the cache instance above
-        // the cache thinks it is different since the listenerid is different
+        // Using the lateral, this service will put to and remove from
+        // the cache instance above.
+        // The cache thinks it is different since the listenerid is different
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
 
         String keyToBeRemovedOnPut = "test1";
-        cache.put( keyToBeRemovedOnPut, "this should get remvoed" );
+        cache.put( keyToBeRemovedOnPut, "this should get removed." );
 
         ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
@@ -142,15 +187,16 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         }
 
         Thread.sleep( 200 );
-        
+
         Object testObj = cache.get( keyToBeRemovedOnPut );
-        p( "test object = " + testObj );
-        assertNull( "The test object should have been remvoed by a put.", testObj );
+        p( "runTestForRegion, test object = " + testObj );
+        assertNull( "The test object should have been removed by a put.", testObj );
 
     }
 
     /**
-     * @param s String to be printed
+     * @param s
+     *            String to be printed
      */
     public static void p( String s )
     {
