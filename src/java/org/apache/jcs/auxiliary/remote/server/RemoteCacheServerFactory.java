@@ -31,7 +31,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 
 /**
  * Provides remote cache services.
- *  
+ * 
  */
 public class RemoteCacheServerFactory
     implements IRemoteCacheConstants
@@ -39,7 +39,7 @@ public class RemoteCacheServerFactory
     private final static Log log = LogFactory.getLog( RemoteCacheServerFactory.class );
 
     /** The single instance of the RemoteCacheServer object. */
-    private static RemoteCacheServer instance;
+    private static RemoteCacheServer remoteCacheServer;
 
     private static String serviceName;
 
@@ -49,7 +49,18 @@ public class RemoteCacheServerFactory
         super();
     }
 
-    /////////////////////// Statup/shutdown methods. //////////////////
+    /**
+     * This will allow you to get stats from the server, etc. Perhaps we should
+     * provide methods on the factory to do this instead.
+     * 
+     * @return Returns the remoteCacheServer.
+     */
+    public static RemoteCacheServer getRemoteCacheServer()
+    {
+        return remoteCacheServer;
+    }
+
+    // ///////////////////// Statup/shutdown methods. //////////////////
     /**
      * Starts up the remote cache server on this JVM, and binds it to the
      * registry on the given host and port.
@@ -63,13 +74,14 @@ public class RemoteCacheServerFactory
     public static void startup( String host, int port, String propFile )
         throws IOException, NotBoundException
     {
-        if ( instance != null )
+        if ( remoteCacheServer != null )
         {
             throw new IllegalArgumentException( "Server already started." );
         }
+
         synchronized ( RemoteCacheServer.class )
         {
-            if ( instance != null )
+            if ( remoteCacheServer != null )
             {
                 return;
             }
@@ -84,7 +96,7 @@ public class RemoteCacheServerFactory
             rcsa.setConfigFileName( propFile );
 
             Properties prop = RemoteUtils.loadProps( propFile );
-            //Properties prop = PropertyLoader.loadProperties( propFile );
+            // Properties prop = PropertyLoader.loadProperties( propFile );
 
             String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
             int servicePort = -1;
@@ -118,7 +130,7 @@ public class RemoteCacheServerFactory
             rcsa.setAllowClusterGet( acg );
 
             // CREATE SERVER
-            instance = new RemoteCacheServer( rcsa );
+            remoteCacheServer = new RemoteCacheServer( rcsa );
 
             if ( host == null )
             {
@@ -126,10 +138,14 @@ public class RemoteCacheServerFactory
             }
             // Register the RemoteCacheServer remote object in the registry.
             serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-            log.debug( "main> binding server to " + host + ":" + port + " with the name " + serviceName );
+
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Binding server to " + host + ":" + port + " with the name " + serviceName );
+            }
             try
             {
-                Naming.rebind( "//" + host + ":" + port + "/" + serviceName, instance );
+                Naming.rebind( "//" + host + ":" + port + "/" + serviceName, remoteCacheServer );
             }
             catch ( MalformedURLException ex )
             {
@@ -149,13 +165,13 @@ public class RemoteCacheServerFactory
     static void shutdownImpl( String host, int port )
         throws IOException
     {
-        if ( instance == null )
+        if ( remoteCacheServer == null )
         {
             return;
         }
         synchronized ( RemoteCacheServer.class )
         {
-            if ( instance == null )
+            if ( remoteCacheServer == null )
             {
                 return;
             }
@@ -172,10 +188,10 @@ public class RemoteCacheServerFactory
             }
             catch ( NotBoundException ex )
             {
-                //ignore.
+                // ignore.
             }
-            instance.release();
-            instance = null;
+            remoteCacheServer.release();
+            remoteCacheServer = null;
             // TODO: safer exit ?
             try
             {

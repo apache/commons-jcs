@@ -310,7 +310,7 @@ public class RemoteCacheServer
             }
 
             boolean fromCluster = false;
-            if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+            if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
             {
                 fromCluster = true;
             }
@@ -339,7 +339,7 @@ public class RemoteCacheServer
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region." );
+                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region. requesterId [" + requesterId + "]" );
                         }
 
                         c.localUpdate( item );
@@ -348,7 +348,7 @@ public class RemoteCacheServer
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Put NOT from cluster, updating other auxiliaries for region." );
+                            log.debug( "Put NOT from cluster, updating other auxiliaries for region. requesterId [" + requesterId + "]" );
                         }
 
                         c.update( item );
@@ -359,7 +359,7 @@ public class RemoteCacheServer
                     // swallow
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "Exception caught updating item. " + ce.getMessage() );
+                        log.info( "Exception caught updating item. requesterId [" + requesterId + "] " + ce.getMessage() );
                     }
                 }
 
@@ -398,7 +398,7 @@ public class RemoteCacheServer
         }
         catch ( Exception e )
         {
-            log.error( "Trouble in Update", e );
+            log.error( "Trouble in Update. requesterId [" + requesterId + "]", e );
         }
 
         // TODO use JAMON for timing
@@ -1008,7 +1008,7 @@ public class RemoteCacheServer
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "Removing listener for cache region = [" + cacheName + "] and listenerId = " + listenerId );
+            log.info( "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]" );
         }
 
         try
@@ -1022,7 +1022,7 @@ public class RemoteCacheServer
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Found queue for cache region = [" + cacheName + "] and listenerId = " + listenerId );
+                    log.debug( "Found queue for cache region = [" + cacheName + "] and listenerId  [" + listenerId + "]" );
                 }
                 q.destroy();
                 cleanupEventQMap( eventQMap );
@@ -1031,15 +1031,15 @@ public class RemoteCacheServer
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Did not find queue for cache region = [" + cacheName + "] and listenerId = "
-                        + listenerId );
+                    log.debug( "Did not find queue for cache region = [" + cacheName + "] and listenerId ["
+                        + listenerId + "]" );
                 }
             }
 
             if ( log.isInfoEnabled() )
             {
-                log.info( "After removing listener " + listenerId + " cache region " + cacheName
-                    + "'s listener size = " + cacheDesc.eventQMap.size() );
+                log.info( "After removing listener [" + listenerId + "] cache region " + cacheName
+                    + "'s listener size [" + cacheDesc.eventQMap.size() + "]");
             }
         }
         catch ( NotBoundException ex )
@@ -1066,7 +1066,7 @@ public class RemoteCacheServer
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "removing listener for cache " + cacheName );
+                log.debug( "Removing listener for cache " + cacheName );
             }
         }
         return;
