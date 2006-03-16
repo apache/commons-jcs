@@ -94,6 +94,15 @@ public class IndexedDiskCacheConcurrentUnitTest
             }
         } );
 
+        suite.addTest( new IndexedDiskCacheConcurrentUnitTest( "testIndexedDiskCache4" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                this.runTestForRegionInRange( "indexedRegion3", 300, 600 );
+            }
+        } );
+
         return suite;
     }
 
@@ -121,14 +130,12 @@ public class IndexedDiskCacheConcurrentUnitTest
         JCS jcs = JCS.getInstance( region );
 
         // Add items to cache
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
         // Test that all items are in cache
-
         for ( int i = 0; i <= items; i++ )
         {
             String value = (String) jcs.get( i + ":key" );
@@ -137,17 +144,65 @@ public class IndexedDiskCacheConcurrentUnitTest
         }
 
         // Remove all the items
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-
+        // another thread may have inserted since
         for ( int i = 0; i <= items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( "Removed key should be null: " + i + ":key" + "\n stats " + jcs.getStats(), jcs
+                .get( i + ":key" ) );
+        }
+    }
+
+    /**
+     * Adds items to cache, gets them, and removes them. The item count is more
+     * than the size of the memory cache, so items should spool to disk.
+     * 
+     * @param region
+     *            Name of the region to access
+     * @param start
+     * @param end
+     * 
+     * @exception Exception
+     *                If an error occurs
+     */
+    public void runTestForRegionInRange( String region, int start, int end )
+        throws Exception
+    {
+        JCS jcs = JCS.getInstance( region );
+
+        // Add items to cache
+        for ( int i = start; i <= end; i++ )
+        {
+            jcs.put( i + ":key", region + " data " + i );
+        }
+
+        // Test that all items are in cache
+        for ( int i = start; i <= end; i++ )
+        {
+            String value = (String) jcs.get( i + ":key" );
+
+            assertEquals( region + " data " + i, value );
+        }
+
+        // Remove all the items
+        for ( int i = start; i <= end; i++ )
+        {
+            jcs.remove( i + ":key" );
+        }
+
+        System.out.println( jcs.getStats() );
+
+        // Verify removal
+        // another thread may have inserted since
+        for ( int i = start; i <= end; i++ )
+        {
+            assertNull( "Removed key should be null: " + i + ":key " + "\n stats " + jcs.getStats(), jcs.get( i
+                + ":key" ) );
         }
     }
 }

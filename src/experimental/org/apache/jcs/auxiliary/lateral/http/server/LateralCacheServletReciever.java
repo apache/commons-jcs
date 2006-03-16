@@ -41,14 +41,14 @@ import org.apache.commons.logging.LogFactory;
  * @created January 15, 2002
  * @version 1.0
  */
-public class LateralCacheServletReciever extends HttpServlet
+public class LateralCacheServletReciever
+    extends HttpServlet
 {
-    private final static Log log =
-        LogFactory.getLog( LateralCacheServletReciever.class );
+    private final static Log log = LogFactory.getLog( LateralCacheServletReciever.class );
 
     private static CompositeCacheManager cacheMgr;
 
-    /** Description of the Method */
+    /** Initializes the cache. */
     public void init( ServletConfig config )
         throws ServletException
     {
@@ -58,17 +58,13 @@ public class LateralCacheServletReciever extends HttpServlet
     }
 
     /** SERVICE THE REQUEST */
-    public void service( HttpServletRequest request,
-                         HttpServletResponse response )
+    public void service( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
 
-        log.debug( "The LateralCacheServlet has been called.\n" );
-
-        if ( cacheMgr == null )
+        if ( log.isDebugEnabled() )
         {
-            cacheMgr = CompositeCacheManager.getInstance();
-            log.debug( "cacheMgr was null in LateralCacheServlet" );
+            log.debug( "The LateralCacheServlet has been called.\n" );
         }
 
         ICacheElement item = null;
@@ -78,13 +74,15 @@ public class LateralCacheServletReciever extends HttpServlet
 
             // Create the ObjectInputStream with
             // the Request InputStream.
-            ObjectInputStream ois =
-                new ObjectInputStream( request.getInputStream() );
+            ObjectInputStream ois = new ObjectInputStream( request.getInputStream() );
 
-            log.debug( "after getting input stream and before reading it" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "after getting input stream and before reading it" );
+            }
 
             // READ POLLOBJ
-            item = ( ICacheElement ) ois.readObject();
+            item = (ICacheElement) ois.readObject();
             ois.close();
 
         }
@@ -95,7 +93,10 @@ public class LateralCacheServletReciever extends HttpServlet
 
         if ( item == null )
         {
-            log.debug( "item is null in LateralCacheServlet" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "item is null in LateralCacheServlet" );
+            }
         }
         else
         {
@@ -106,7 +107,7 @@ public class LateralCacheServletReciever extends HttpServlet
             log.debug( "item read in = " + item );
             log.debug( "item.getKey = " + item.getKey() );
 
-            CompositeCache cache = ( CompositeCache ) cacheMgr.getCache( hashtableName );
+            CompositeCache cache = (CompositeCache) cacheMgr.getCache( hashtableName );
             try
             {
                 // need to set as from lateral
@@ -114,7 +115,7 @@ public class LateralCacheServletReciever extends HttpServlet
             }
             catch ( Exception e )
             {
-                // Ignored -- log it?
+                log.error( "Problem putting item in cache " + item, e );
             }
         }
 
@@ -124,33 +125,61 @@ public class LateralCacheServletReciever extends HttpServlet
             // BEGIN RESPONSE
             response.setContentType( "application/octet-stream" );
 
-            ObjectOutputStream oos =
-                new ObjectOutputStream( response.getOutputStream() );
+            ObjectOutputStream oos = new ObjectOutputStream( response.getOutputStream() );
 
-            log.debug( "Opened output stream.\n" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Opened output stream.\n" );
+            }
 
             String result = "Completed transfer";
 
-            // ECHO THE OBJECT TO THE RESPONSE
+            // echo a message to the client
             oos.writeObject( result );
 
-            log.debug( "Wrote object to output stream" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Wrote object to output stream" );
+            }
 
             oos.flush();
 
-            log.debug( "Flushed output stream.\n" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Flushed output stream.\n" );
+            }
 
             oos.close();
 
-            log.debug( "Closed output stream.\n" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Closed output stream.\n" );
+            }
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem writing response.", e );
         }
     }
 
-    /** */
+    /**
+     * Make sure we have a cache manager. This should have happened in the init
+     * method.
+     * 
+     */
+    protected synchronized void ensureCacheManager()
+    {
+        if ( cacheMgr == null )
+        {
+            cacheMgr = CompositeCacheManager.getInstance();
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "cacheMgr was null in LateralCacheServlet" );
+            }
+        }
+    }
+
+    /** Release the cache manager. */
     public void destroy()
     {
         cacheMgr.release();
@@ -162,4 +191,3 @@ public class LateralCacheServletReciever extends HttpServlet
         return "LateralCacheServlet v1";
     }
 }
-

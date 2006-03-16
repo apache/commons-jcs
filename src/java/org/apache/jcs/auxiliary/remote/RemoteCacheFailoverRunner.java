@@ -129,13 +129,11 @@ public class RemoteCacheFailoverRunner
     {
         do
         {
-
             log.info( "Remote cache FAILOVER RUNNING." );
 
             // there is no active listener
             if ( !alright )
             {
-
                 // Monitor each RemoteCacheManager instance one after the other.
                 // Each RemoteCacheManager corresponds to one remote connection.
                 String[] failovers = facade.rca.getFailovers();
@@ -183,7 +181,6 @@ public class RemoteCacheFailoverRunner
                     RemoteCacheAttributes rca = null;
                     try
                     {
-
                         rca = (RemoteCacheAttributes) facade.rca.copy();
                         rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                         rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
@@ -310,7 +307,7 @@ public class RemoteCacheFailoverRunner
     }
 
     /**
-     * Try to resotre the primary server.
+     * Try to restore the primary server.
      * <p>
      * Once primary is restored the failover listener must be deregistered.
      * <p>
@@ -332,7 +329,6 @@ public class RemoteCacheFailoverRunner
 
         try
         {
-
             RemoteCacheAttributes rca = (RemoteCacheAttributes) facade.rca.copy();
             rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
             rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
@@ -352,7 +348,6 @@ public class RemoteCacheFailoverRunner
             {
                 if ( ic.getStatus() == CacheConstants.STATUS_ALIVE )
                 {
-
                     try
                     {
                         // we could have more than one listener registered right
@@ -433,7 +428,6 @@ public class RemoteCacheFailoverRunner
                         log.info( "Successfully reconnected to PRIMARY remote server." );
                     }
                     return true;
-
                 }
 
                 // else alright
@@ -452,7 +446,6 @@ public class RemoteCacheFailoverRunner
                     log.debug( "Primary server is null, not connected." );
                 }
             }
-
         }
         catch ( Exception ex )
         {

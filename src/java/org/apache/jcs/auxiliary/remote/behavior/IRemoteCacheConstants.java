@@ -17,7 +17,7 @@ package org.apache.jcs.auxiliary.remote.behavior;
  */
 
 /**
- * Description of the Interface
+ * This holds contants that are used by the remote cache.
  *  
  */
 public interface IRemoteCacheConstants

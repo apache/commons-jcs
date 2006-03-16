@@ -23,6 +23,7 @@ import java.util.Set;
 import java.rmi.Remote;
 
 import org.apache.jcs.access.exception.ObjectExistsException;
+import org.apache.jcs.access.exception.ObjectNotFoundException;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheService;
@@ -67,6 +68,22 @@ public interface IRemoteCacheService
     public void removeAll( String cacheName, long requesterId )
         throws IOException;
 
+    /**
+     * Returns a cache bean from the specified cache; or null if the key does
+     * not exist.
+     * <p>
+     * Adding the requestor id, allows the cache to determine the sournce of the get.
+     * 
+     * @param cacheName
+     * @param key
+     * @param requesterId 
+     * @return ICacheElement
+     * @throws ObjectNotFoundException
+     * @throws IOException
+     */
+    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+        throws IOException;
+    
     /**
      * @param cacheName
      * @param groupName

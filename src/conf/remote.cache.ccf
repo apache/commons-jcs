@@ -19,7 +19,6 @@ jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRU
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=7000
@@ -43,7 +42,7 @@ jcs.auxiliary.RCluster=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RCluster.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RCluster.attributes.RemoteTypeName=CLUSTER
 jcs.auxiliary.RCluster.attributes.RemoveUponRemotePut=false
-#jcs.auxiliary.RCluster.attributes.ClusterServers=localhost:1102
+jcs.auxiliary.RCluster.attributes.ClusterServers=localhost:1102
 jcs.auxiliary.RCluster.attributes.GetOnly=false
 jcs.auxiliary.RCluster.attributes.LocalClusterConsistency=true
 

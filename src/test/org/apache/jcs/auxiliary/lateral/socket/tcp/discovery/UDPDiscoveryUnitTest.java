@@ -65,7 +65,8 @@ public class UDPDiscoveryUnitTest
         ICompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
         
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( lac, cacheMgr );
+        UDPDiscoveryService service = new UDPDiscoveryService( lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(), lac.getTcpListenerPort(), cacheMgr );
+        service.setTcpLateralCacheAttributes( lac );
 
         // create a no wait facade for the service
         ArrayList noWaits = new ArrayList();

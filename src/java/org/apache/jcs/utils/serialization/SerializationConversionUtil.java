@@ -42,23 +42,31 @@ public class SerializationConversionUtil
 
         byte[] serialzedValue = null;
 
-        if ( elementSerializer != null )
+        // if it has already been serialized, don't do it again.
+        if ( element instanceof ICacheElementSerialized )
         {
-            try
-            {
-                serialzedValue = elementSerializer.serialize( element.getVal() );
-            }
-            catch ( IOException e )
-            {
-                log.error( "Problem serializing object.", e );
-                throw e;
-            }
+            serialzedValue = ( (ICacheElementSerialized) element ).getSerializedValue();
         }
         else
         {
-            // we could just use the default.
-            log.warn( "ElementSerializer is null.  Could not serialize object." );
-            throw new IOException( "Could not serialize object.  The ElementSerializer is null." );
+            if ( elementSerializer != null )
+            {
+                try
+                {
+                    serialzedValue = elementSerializer.serialize( element.getVal() );
+                }
+                catch ( IOException e )
+                {
+                    log.error( "Problem serializing object.", e );
+                    throw e;
+                }
+            }
+            else
+            {
+                // we could just use the default.
+                log.warn( "ElementSerializer is null.  Could not serialize object." );
+                throw new IOException( "Could not serialize object.  The ElementSerializer is null." );
+            }
         }
         ICacheElementSerialized serialized = new CacheElementSerialized( element.getCacheName(), element.getKey(),
                                                                          serialzedValue, element.getElementAttributes() );

@@ -312,7 +312,6 @@ public class RemoteCacheNoWaitFacade
      */
     protected void failover( int i )
     {
-
         if ( log.isDebugEnabled() )
         {
             log.info( "in failover for " + i );
@@ -336,7 +335,10 @@ public class RemoteCacheNoWaitFacade
             }
             else
             {
-                log.info( "the noWait is not in error" );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "The noWait is not in error" );
+                }
             }
         }
     }

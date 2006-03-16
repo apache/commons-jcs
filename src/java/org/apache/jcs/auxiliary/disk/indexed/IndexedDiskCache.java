@@ -334,7 +334,7 @@ public class IndexedDiskCache
      * been retireved from purgatory while in queue for disk. Remove items from
      * purgatory when they go to disk.
      * 
-     * @param ce,
+     * @param ce
      *            The ICacheElement to put to disk.
      */
     public void doUpdate( ICacheElement ce )
@@ -365,12 +365,10 @@ public class IndexedDiskCache
             byte[] data = IndexedDisk.serialize( ce );
 
             // make sure this only locks for one particular cache region
-            storageLock.writeLock().acquire();
-
-            ded.init( dataFile.length(), data );
-
+            storageLock.writeLock().acquire();            
             try
             {
+                ded.init( dataFile.length(), data );
 
                 old = (IndexedDiskElementDescriptor) keyHash.put( ce.getKey(), ded );
 
@@ -420,7 +418,7 @@ public class IndexedDiskCache
 
             }
             finally
-            {
+            {   
                 storageLock.writeLock().release();
             }
 
@@ -494,6 +492,13 @@ public class IndexedDiskCache
         return object;
     }
 
+    /**
+     * Reads the item from disk.
+     * 
+     * @param key
+     * @return
+     * @throws IOException
+     */
     private CacheElement readElement( Serializable key )
         throws IOException
     {
@@ -646,12 +651,6 @@ public class IndexedDiskCache
             }
             else
             {
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Disk removal: Removed from key hash, key " + key );
-                }
-
                 if ( doRecycle )
                 {
                     // reuse the spot
@@ -661,14 +660,20 @@ public class IndexedDiskCache
                         recycle.add( ded );
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "recycling ded " + ded );
+                            log.debug( "Adding to recycle bin: " + ded );
                         }
                     }
                 }
 
                 // remove single item.
-                return keyHash.remove( key ) != null;
+                removed = keyHash.remove( key ) != null;
 
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Disk removal: Removed from key hash, key " + key + " removed = " + removed );
+                }
+
+                return removed;
             }
         }
         catch ( Exception e )
@@ -799,6 +804,7 @@ public class IndexedDiskCache
         else
         {
             keyHash = new HashMap();
+            // keyHash = Collections.synchronizedMap( new HashMap() );
             if ( log.isInfoEnabled() )
             {
                 log.info( "Set maxKeySize to unlimited'" );
@@ -830,7 +836,7 @@ public class IndexedDiskCache
         }
         catch ( InterruptedException ex )
         {
-            log.error( ex );
+            log.error( "Interrupted while waiting for disposal thread to finish.", ex );
         }
     }
 
@@ -1233,16 +1239,17 @@ public class IndexedDiskCache
      * This is for debugging and testing.
      * 
      * @return the length of the data file.
-     * @throws IOException 
+     * @throws IOException
      */
-    protected long getDataFileSize() throws IOException
+    protected long getDataFileSize()
+        throws IOException
     {
         long size = 0;
 
         try
         {
             storageLock.readLock().acquire();
-            
+
             try
             {
                 if ( dataFile != null )
@@ -1253,13 +1260,12 @@ public class IndexedDiskCache
             finally
             {
                 storageLock.readLock().release();
-            }            
+            }
         }
         catch ( InterruptedException e )
         {
             // nothing
         }
-
 
         return size;
     }
@@ -1348,7 +1354,7 @@ public class IndexedDiskCache
         }
 
         se = new StatElement();
-        se.setName( "Optimize Opertaion Count" );
+        se.setName( "Optimize Operation Count" );
         se.setData( "" + this.optCnt );
         elems.add( se );
 

@@ -73,7 +73,6 @@ public abstract class AbstractDiskCache
      * memory cache while the are still in purgatory, writing to disk can be
      * cancelled.
      */
-    //protected Hashtable purgatory = new Hashtable();
     protected Map purgatory = new HashMap();
 
     /**
@@ -131,7 +130,7 @@ public abstract class AbstractDiskCache
      *       must have been plucked. We should make 0 work, a way to not use
      *       purgatory.
      * 
-     *  
+     * 
      */
     private void initPurgatory()
     {
@@ -174,13 +173,11 @@ public abstract class AbstractDiskCache
         try
         {
             // Wrap the CacheElement in a PurgatoryElement
-
             PurgatoryElement pe = new PurgatoryElement( cacheElement );
 
             // Indicates the the element is eligable to be spooled to disk,
             // this will remain true unless the item is pulled back into
             // memory.
-
             pe.setSpoolable( true );
 
             // Add the element to purgatory
@@ -188,13 +185,13 @@ public abstract class AbstractDiskCache
             {
                 purgatory.put( pe.getKey(), pe );
             }
-            // Queue element for serialization
 
+            // Queue element for serialization
             cacheEventQueue.addPutEvent( pe );
         }
         catch ( IOException ex )
         {
-            log.error( ex );
+            log.error( "Problem adding put event to queue.", ex );
 
             cacheEventQueue.destroy();
         }
@@ -225,7 +222,6 @@ public abstract class AbstractDiskCache
         }
 
         // If the element was found in purgatory
-
         if ( pe != null )
         {
             purgHits++;
@@ -239,29 +235,28 @@ public abstract class AbstractDiskCache
             }
 
             // Since the element will go back to the memory cache, we could set
-            // spoolableto false, which will prevent the queue listener from
-            // serializing
-            // the element. This would nto match the disk cache behavior and the
-            // behavior of other auxiliaries. Gets never remove items from
-            // auxiliaries.
+            // spoolable to false, which will prevent the queue listener from
+            // serializing the element. This would not match the disk cache
+            // behavior and the behavior of other auxiliaries. Gets never remove
+            // items from auxiliaries.
             // Beyond consistency, the items should stay in purgatory and get
-            // spooled
-            // since the mem cache may be set to 0. If an item is active, it
-            // will keep
-            // getting put into purgatory and removed. The CompositeCache now
-            // does
-            // not put an item to memory from disk ifthe size is 0;
+            // spooled since the mem cache may be set to 0. If an item is
+            // active, it will keep getting put into purgatory and removed. The
+            // CompositeCache now does not put an item to memory from disk if
+            // the size is 0.
             // Do not set spoolable to false. Just let it go to disk. This
             // will allow the memory size = 0 setting to work well.
 
-            log.debug( "Found element in purgatory, cacheName: " + cacheName + ", key: " + key );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Found element in purgatory, cacheName: " + cacheName + ", key: " + key );
+            }
 
             return pe.cacheElement;
         }
 
         // If we reach this point, element was not found in purgatory, so get
         // it from the cache.
-
         try
         {
             return doGet( key );
@@ -288,25 +283,37 @@ public abstract class AbstractDiskCache
      */
     public final boolean remove( Serializable key )
     {
-        //String keyAsString = key.toString();
-
         PurgatoryElement pe = null;
+
         synchronized ( purgatory )
         {
+            // I'm getting the object, so I can lock on the element
             // Remove element from purgatory if it is there
-            pe = (PurgatoryElement) purgatory.remove( key );
+            pe = (PurgatoryElement) purgatory.get( key );
         }
 
         if ( pe != null )
         {
-            // no way to remove from queue, just make sure it doesn't get on
-            // disk
-            // and then removed right afterwards
-            pe.setSpoolable( false );
-        }
-        // Remove from persistent store immediately
+            synchronized ( pe.getCacheElement() )
+            {
+                synchronized ( purgatory )
+                {
+                    purgatory.remove( key );
+                }
+                
+                // no way to remove from queue, just make sure it doesn't get on
+                // disk and then removed right afterwards
+                pe.setSpoolable( false );
 
-        doRemove( key );
+                // Remove from persistent store immediately
+                doRemove( key );
+            }
+        }
+        else
+        {
+            // Remove from persistent store immediately
+            doRemove( key );
+        }
 
         return false;
     }
@@ -317,25 +324,23 @@ public abstract class AbstractDiskCache
     public final void removeAll()
     {
         // Replace purgatory with a new empty hashtable
-
         initPurgatory();
 
         // Remove all from persistent store immediately
-
         doRemoveAll();
     }
 
     /**
      * Adds a dispose request to the disk cache.
      * <p>
-     * Disposal proceeds in several steps. 
+     * Disposal proceeds in several steps.
      * <ul>
-     * <li> 1.  Prior to this call the Composite cache dumped the memory
-     * into the disk cache.  If it is large then we need to wait for
-     * the event queue to finish.
-     * <li> 2.  Wait until the event queue is empty of until the configured ShutdownSpoolTimeLimit
-     * is reached.
-     * <li> 3.  Call doDispose on the concrete impl.   
+     * <li> 1. Prior to this call the Composite cache dumped the memory into the
+     * disk cache. If it is large then we need to wait for the event queue to
+     * finish.
+     * <li> 2. Wait until the event queue is empty of until the configured
+     * ShutdownSpoolTimeLimit is reached.
+     * <li> 3. Call doDispose on the concrete impl.
      * </ul>
      * 
      */
@@ -355,8 +360,8 @@ public abstract class AbstractDiskCache
                     try
                     {
                         Thread.sleep( interval );
-                        total += interval;                        
-                        //log.info( "total = " + total );
+                        total += interval;
+                        // log.info( "total = " + total );
                     }
                     catch ( InterruptedException e )
                     {
@@ -377,12 +382,11 @@ public abstract class AbstractDiskCache
         {
             log.error( ex );
         }
-        
+
         log.info( "In dispose, destroying event queue." );
         // This stops the processor thread.
         cacheEventQueue.destroy();
-        
-        
+
         // Invoke any implementation specific disposal code
         // need to handle the disposal first.
         doDispose();
@@ -521,39 +525,40 @@ public abstract class AbstractDiskCache
             {
                 // If the element is a PurgatoryElement we must check to see
                 // if it is still spoolable, and remove it from purgatory.
-
                 if ( element instanceof PurgatoryElement )
                 {
                     PurgatoryElement pe = (PurgatoryElement) element;
 
-                    //String keyAsString = element.getKey().toString();
-
-                    synchronized ( purgatory )
+                    synchronized ( pe.getCacheElement() )
                     {
-                        // If the element has already been removed from
-                        // purgatory do nothing
-
-                        if ( !purgatory.containsKey( pe.getKey() ) )
+                        // String keyAsString = element.getKey().toString();
+                        synchronized ( purgatory )
                         {
-                            return;
+                            // If the element has already been removed from
+                            // purgatory do nothing
+                            if ( !purgatory.containsKey( pe.getKey() ) )
+                            {
+                                return;
+                            }
+
+                            element = pe.getCacheElement();
                         }
 
-                        element = pe.getCacheElement();
-
+                        // I took this out of the sync block. 
                         // If the element is still eligable, spool it.
-
                         if ( pe.isSpoolable() )
                         {
                             doUpdate( element );
                         }
 
-                        // After the update has completed, it is safe to remove
-                        // the element from purgatory.
-
-                        purgatory.remove( element.getKey() );
-
+                        synchronized ( purgatory )
+                        {
+                            // After the update has completed, it is safe to
+                            // remove
+                            // the element from purgatory.
+                            purgatory.remove( element.getKey() );
+                        }
                     }
-
                 }
                 else
                 {
@@ -571,13 +576,12 @@ public abstract class AbstractDiskCache
                 // queue. This block handles the case where the disk cache fails
                 // during normal opertations.
 
-                //String keyAsString = element.getKey().toString();
+                // String keyAsString = element.getKey().toString();
 
                 synchronized ( purgatory )
                 {
                     purgatory.remove( element.getKey() );
                 }
-
             }
         }
 

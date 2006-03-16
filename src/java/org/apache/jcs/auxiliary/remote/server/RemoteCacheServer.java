@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
@@ -92,7 +93,8 @@ public class RemoteCacheServer
     protected IRemoteCacheServerAttributes rcsa;
 
     /**
-     * Constructor for the RemoteCacheServer object
+     * Constructor for the RemoteCacheServer object. Thiks initializes the
+     * server with the values from the config file.
      * 
      * @param rcsa
      * @exception IOException
@@ -131,7 +133,7 @@ public class RemoteCacheServer
     }
 
     /**
-     * Subclass can overrdie this method to create the specific cache manager.
+     * Subclass can override this method to create the specific cache manager.
      * 
      * @param prop
      *            The anem of the configuration file.
@@ -173,8 +175,6 @@ public class RemoteCacheServer
                 cacheListeners = (CacheListeners) cacheListenersMap.get( cacheName );
                 if ( cacheListeners == null )
                 {
-                    // NEED TO CONVERT TO USE THE FACTORY ND GET A FACADE? No it
-                    // is the hub
                     cacheListeners = new CacheListeners( cacheManager.getCache( cacheName ) );
                     cacheListenersMap.put( cacheName, cacheListeners );
                 }
@@ -285,7 +285,7 @@ public class RemoteCacheServer
 
         if ( log.isInfoEnabled() )
         {
-            // not thread safe, but it doesn't ahve to be accurate
+            // not thread safe, but it doesn't have to be accurate
             puts++;
             if ( puts % 100 == 0 )
             {
@@ -306,7 +306,7 @@ public class RemoteCacheServer
             Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
             if ( log.isDebugEnabled() )
             {
-                log.debug( "in update, requesterId = [" + requesterId + "] remoteType = " + remoteTypeL );
+                log.debug( "In update, requesterId = [" + requesterId + "] remoteType = " + remoteTypeL );
             }
 
             boolean fromCluster = false;
@@ -322,7 +322,8 @@ public class RemoteCacheServer
                     CompositeCache c = (CompositeCache) cacheDesc.cache;
 
                     // If the source of this request was not from a cluster,
-                    // then consider it a local update. The cache manager will try to
+                    // then consider it a local update. The cache manager will
+                    // try to
                     // update all auxiliaries.
                     //
                     // This requires that two local caches not be connected to
@@ -353,9 +354,13 @@ public class RemoteCacheServer
                         c.update( item );
                     }
                 }
-                catch ( Exception oee )
+                catch ( Exception ce )
                 {
                     // swallow
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "Exception caught updating item. " + ce.getMessage() );
+                    }
                 }
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
@@ -469,15 +474,44 @@ public class RemoteCacheServer
      * 
      * @param cacheName
      * @param key
-     * @return
+     * @return ICacheElement
      * @throws IOException
      */
     public ICacheElement get( String cacheName, Serializable key )
         throws IOException
     {
+        return this.get( cacheName, key, 0 );
+    }
+
+    /**
+     * Returns a cache bean from the specified cache; or null if the key does
+     * not exist.
+     * <p>
+     * Adding the requestor id, allows the cache to determine the sournce of the
+     * get.
+     * 
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @return ICacheElement
+     * @throws ObjectNotFoundException
+     * @throws IOException
+     */
+    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+        throws IOException
+    {
+        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
+
         if ( log.isDebugEnabled() )
         {
-            log.debug( "get " + key + " from cache " + cacheName );
+            log.debug( "get " + key + " from cache " + cacheName + " requesterId = [" + requesterId + "] remoteType = "
+                + remoteTypeL );
+        }
+
+        boolean fromCluster = false;
+        if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        {
+            fromCluster = true;
         }
 
         CacheListeners cacheDesc = null;
@@ -496,7 +530,41 @@ public class RemoteCacheServer
         }
         CompositeCache c = (CompositeCache) cacheDesc.cache;
 
-        return c.localGet( key );
+        ICacheElement element = null;
+
+        // If we have a get come in from a client and we don't have the item
+        // locally, we will allow the cache to look in other non local sources,
+        // such as a remote cache or a lateral.
+        //
+        // Since remote servers never get from clients and clients never go
+        // remote from a remote call, this
+        // will not result in any loops.
+        //
+        // This is the only instance I can think of where we allow a remote get
+        // from a remote call. The putpose is to allow remote cache servers to
+        // talk to each other. If one goes down, you want it to be able to get
+        // data from those that were up when the failed server comes back o
+        // line.
+        if ( !fromCluster && this.rcsa.getAllowClusterGet() )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Get NOT from cluster, NOT allowing a get from other auxiliaries for the region." );
+            }
+            element = c.get( key );
+        }
+        else
+        {
+            // Gets from cluster type remote will end up here.
+            // Gets from all clients will end up here if allow cluster get is false.
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Allowing a get from other auxiliaries for the region." );
+            }
+            element = c.localGet( key );
+        }
+
+        return element;
     }
 
     /**
@@ -602,7 +670,6 @@ public class RemoteCacheServer
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-
                 if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
@@ -712,6 +779,11 @@ public class RemoteCacheServer
     public void dispose( String cacheName, long requesterId )
         throws IOException
     {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Dispose request received from listener [" + requesterId + "]" );
+        }
+        
         CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
 
         // this is dangerous
@@ -861,7 +933,6 @@ public class RemoteCacheServer
 
                     // relate the type to an id
                     this.idTypeMap.put( new Long( id ), new Integer( remoteType ) );
-
                 }
                 catch ( IOException ioe )
                 {

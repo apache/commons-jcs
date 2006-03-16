@@ -55,11 +55,11 @@ public class LateralElementDescriptor
      */
     public long requesterId;
 
-    /** Description of the Field */
+    /** The operation has been requested by the client. */
     public int command = UPDATE;
 
     /**
-     * the hashcode value for this element.
+     * The hashcode value for this element.
      */
     public int valHashCode = -1;
 

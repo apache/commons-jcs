@@ -16,6 +16,7 @@ package org.apache.jcs.auxiliary.remote;
  * limitations under the License.
  */
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.Collections;
@@ -27,8 +28,8 @@ import org.apache.jcs.engine.ZombieCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * Zombie adapter for the remote cache service.  It just balks.
- *  
+ * Zombie adapter for the remote cache service. It just balks.
+ * 
  */
 public class ZombieRemoteCacheService
     extends ZombieCacheService
@@ -36,8 +37,10 @@ public class ZombieRemoteCacheService
 {
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#update(org.apache.jcs.engine.behavior.ICacheElement, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
+     *      long)
      */
     public void update( ICacheElement item, long listenerId )
     {
@@ -46,8 +49,10 @@ public class ZombieRemoteCacheService
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#remove(java.lang.String, java.io.Serializable, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#remove(java.lang.String,
+     *      java.io.Serializable, long)
      */
     public void remove( String cacheName, Serializable key, long listenerId )
     {
@@ -56,8 +61,10 @@ public class ZombieRemoteCacheService
     }
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#removeAll(java.lang.String, long)
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#removeAll(java.lang.String,
+     *      long)
      */
     public void removeAll( String cacheName, long listenerId )
     {
@@ -65,6 +72,25 @@ public class ZombieRemoteCacheService
         return;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#get(java.lang.String,
+     *      java.io.Serializable, long)
+     */
+    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+        throws IOException
+    {
+        // Zombies have no inner life
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#getGroupKeys(java.lang.String,
+     *      java.lang.String)
+     */
     public Set getGroupKeys( String cacheName, String groupName )
     {
         return Collections.EMPTY_SET;

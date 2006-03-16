@@ -31,7 +31,7 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * addresses.
  * 
  * @author Aaron Smuts
- *  
+ * 
  */
 public class UDPDiscoveryService
     implements IShutdownObserver
@@ -39,7 +39,7 @@ public class UDPDiscoveryService
 
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
-    //The background broadcaster.
+    // The background broadcaster.
     private static ClockDaemon senderDaemon;
 
     // thread that listens for messages
@@ -50,27 +50,41 @@ public class UDPDiscoveryService
 
     private Map facades = new HashMap();
 
-    private ITCPLateralCacheAttributes tcpLateralCacheAttributes = null;
-
     // the runanble that sends messages via the clock daemon
     private UDPDiscoverySenderThread sender = null;
 
     private String hostAddress = "unknown";
 
+    private String discoveryAddress;
+
+    private int discoveryPort;
+
+    // the port this service runs on, the service we are telling other about
+    // we should have a service info object instead
+    private int servicePort;
+
+    private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
+    
     /**
      * 
-     * @param facade
-     * @param lca
-     *            ITCPLateralCacheAttributes
+     * @param discoveryAddress
+     *            address to multicast to
+     * @param discoveryPort
+     *            port to multicast to
+     * @param servicePort
+     *            the port this service runs on, the service we are telling
+     *            other about
      * @param cacheMgr
-     * @param receivingPort
      */
-    public UDPDiscoveryService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
+    public UDPDiscoveryService( String discoveryAddress, int discoveryPort, int servicePort,
+                               ICompositeCacheManager cacheMgr )
     {
         // register for shutdown notification
         ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( this );
 
-        this.setTcpLateralCacheAttributes( lca );
+        this.setDiscoveryAddress( discoveryAddress );
+        this.setDiscoveryPort( discoveryPort );
+        this.setServicePort( servicePort );
 
         try
         {
@@ -89,10 +103,10 @@ public class UDPDiscoveryService
         try
         {
             // todo need some kind of recovery here.
-            receiver = new UDPDiscoveryReceiver( this, lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), cacheMgr );
+            receiver = new UDPDiscoveryReceiver( this, getDiscoveryAddress(), getDiscoveryPort(), cacheMgr );
             udpReceiverThread = new Thread( receiver );
             udpReceiverThread.setDaemon( true );
-            //udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
+            // udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
             udpReceiverThread.start();
         }
         catch ( Exception e )
@@ -109,8 +123,8 @@ public class UDPDiscoveryService
         }
 
         // create a sender thread
-        sender = new UDPDiscoverySenderThread( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), hostAddress, lca
-            .getTcpListenerPort(), this.getCacheNames() );
+        sender = new UDPDiscoverySenderThread( getDiscoveryAddress(), getDiscoveryPort(), hostAddress, this
+            .getServicePort(), this.getCacheNames() );
 
         senderDaemon.executePeriodically( 30 * 1000, sender, false );
     }
@@ -185,7 +199,7 @@ public class UDPDiscoveryService
      * request for a request. We can respond to our own reques, since a request
      * broadcast is not intended as a connection request. We might want to only
      * send messages, so we would send a request, but never a passive broadcast.
-     *  
+     * 
      */
     protected void serviceRequestBroadcast()
     {
@@ -194,11 +208,9 @@ public class UDPDiscoveryService
         {
             // create this connection each time.
             // more robust
-            sender = new UDPDiscoverySender( getTcpLateralCacheAttributes().getUdpDiscoveryAddr(),
-                                             getTcpLateralCacheAttributes().getUdpDiscoveryPort() );
+            sender = new UDPDiscoverySender( getDiscoveryAddress(), getDiscoveryPort() );
 
-            sender.passiveBroadcast( hostAddress, getTcpLateralCacheAttributes().getTcpListenerPort(), this
-                .getCacheNames() );
+            sender.passiveBroadcast( hostAddress, this.getServicePort(), this.getCacheNames() );
 
             // todo we should consider sending a request broadcast every so
             // often.
@@ -248,27 +260,10 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param lca
-     *            The lca to set.
-     */
-    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes lca )
-    {
-        this.tcpLateralCacheAttributes = lca;
-    }
-
-    /**
-     * @return Returns the lca.
-     */
-    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
-    {
-        return tcpLateralCacheAttributes;
-    }
-
-    /**
      * Allows us to set the daemon status on the clockdaemon
      * 
      * @author aaronsm
-     *  
+     * 
      */
     class MyThreadFactory
         implements ThreadFactory
@@ -327,5 +322,72 @@ public class UDPDiscoveryService
             log.error( "Problem shutting down UDP sender." );
         }
 
+    }
+
+    /**
+     * @param discoveryAddress
+     *            The discoveryAddress to set.
+     */
+    protected void setDiscoveryAddress( String discoveryAddress )
+    {
+        this.discoveryAddress = discoveryAddress;
+    }
+
+    /**
+     * @return Returns the discoveryAddress.
+     */
+    protected String getDiscoveryAddress()
+    {
+        return discoveryAddress;
+    }
+
+    /**
+     * @param discoveryPort
+     *            The discoveryPort to set.
+     */
+    protected void setDiscoveryPort( int discoveryPort )
+    {
+        this.discoveryPort = discoveryPort;
+    }
+
+    /**
+     * @return Returns the discoveryPort.
+     */
+    protected int getDiscoveryPort()
+    {
+        return discoveryPort;
+    }
+
+    /**
+     * @param servicePort
+     *            The servicePort to set.
+     */
+    protected void setServicePort( int servicePort )
+    {
+        this.servicePort = servicePort;
+    }
+
+    /**
+     * @return Returns the servicePort.
+     */
+    protected int getServicePort()
+    {
+        return servicePort;
+    }
+
+    /**
+     * @param tCPLateralCacheAttributes The tCPLateralCacheAttributes to set.
+     */
+    public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tCPLateralCacheAttributes )
+    {
+        tcpLateralCacheAttributes = tCPLateralCacheAttributes;
+    }
+
+    /**
+     * @return Returns the tCPLateralCacheAttributes.
+     */
+    public ITCPLateralCacheAttributes getTcpLateralCacheAttributes()
+    {
+        return tcpLateralCacheAttributes;
     }
 }

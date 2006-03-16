@@ -138,20 +138,18 @@ public class IndexedDiskCacheNoMemoryUnitTest
         }
 
         // Remove all the items
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.remove( i + ":key" );
         }
 
         // Verify removal
-
         for ( int i = 0; i <= items; i++ )
         {
-            assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
+            assertNull( "Removed key should be null: " + i + ":key" + "\n stats " + jcs.getStats(), jcs.get( i + ":key" ) );
         }
 
-        // dump the stats tot he report
+        // dump the stats to the report
         System.out.println( jcs.getStats() );
     }
 }

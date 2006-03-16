@@ -335,13 +335,13 @@ public class PooledCacheEventQueue
         se.setData( "" + this.working );
         elems.add( se );
 
-        se.setName( "Destroyed" );
         se = new StatElement();
+        se.setName( "Destroyed" );
         se.setData( "" + this.isAlive() );
         elems.add( se );
 
-        se.setName( "Empty" );
         se = new StatElement();
+        se.setName( "Empty" );
         se.setData( "" + this.isEmpty() );
         elems.add( se );
 
@@ -350,25 +350,25 @@ public class PooledCacheEventQueue
             if ( pool.getQueue() instanceof BoundedBuffer )
             {
                 BoundedBuffer bb = (BoundedBuffer) pool.getQueue();
-                se.setName( "Queue Size" );
                 se = new StatElement();
+                se.setName( "Queue Size" );
                 se.setData( "" + bb.size() );
                 elems.add( se );
 
-                se.setName( "Queue Capacity" );
                 se = new StatElement();
+                se.setName( "Queue Capacity" );
                 se.setData( "" + bb.capacity() );
                 elems.add( se );
             }
         }
 
-        se.setName( "Pool Size" );
         se = new StatElement();
+        se.setName( "Pool Size" );
         se.setData( "" + pool.getPool().getPoolSize() );
         elems.add( se );
 
-        se.setName( "Maximum Pool Size" );
         se = new StatElement();
+        se.setName( "Maximum Pool Size" );
         se.setData( "" + pool.getPool().getMaximumPoolSize() );
         elems.add( se );
 

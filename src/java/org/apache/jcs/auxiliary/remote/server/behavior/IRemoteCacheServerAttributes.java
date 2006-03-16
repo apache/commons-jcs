@@ -18,11 +18,10 @@ package org.apache.jcs.auxiliary.remote.server.behavior;
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
-//import org.apache.jcs.auxiliary.*;
-
 /**
- * Description of the Interface
- *  
+ * This defeines the minimal behavior for the objects that are used to configure
+ * the remote cache server.
+ * 
  */
 public interface IRemoteCacheServerAttributes
     extends AuxiliaryCacheAttributes
@@ -175,7 +174,12 @@ public interface IRemoteCacheServerAttributes
     public void setLocalClusterConsistency( boolean r );
 
     /**
-     * Should cluster updates be propogated to the locals
+     * Should we try to get remotely when the request does not come in from a
+     * cluster. If local L1 asks remote server R1 for element A and R1 doesn't
+     * have it, should R1 look remotely? The difference is between a local and a
+     * remote update. The local update stays local. Normal updates, removes,
+     * etc, stay local when they come from a client. If this is set to true,
+     * then they can go remote.
      * 
      * @return The localClusterConsistency value
      */

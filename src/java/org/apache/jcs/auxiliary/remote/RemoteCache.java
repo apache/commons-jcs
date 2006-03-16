@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
@@ -50,7 +49,8 @@ import EDU.oswego.cs.dl.util.concurrent.FutureResult;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- * Client proxy for an RMI remote cache.
+ * Client proxy for an RMI remote cache. This handles gets, updates, and
+ * removes. It also initiates failover recovery when an error is encountered.
  * 
  */
 public class RemoteCache
@@ -107,6 +107,7 @@ public class RemoteCache
         {
             log.debug( "GetTimeoutMillis() = " + irca.getGetTimeoutMillis() );
         }
+
         if ( irca.getGetTimeoutMillis() > 0 )
         {
             pool = ThreadPoolManager.getInstance().getPool( irca.getThreadPoolName() );
@@ -120,7 +121,6 @@ public class RemoteCache
                 pool.getPool().setThreadFactory( new MyThreadFactory() );
             }
         }
-
     }
 
     /**
@@ -154,7 +154,6 @@ public class RemoteCache
     {
         if ( true )
         {
-
             if ( !this.irca.getGetOnly() )
             {
                 try
@@ -163,10 +162,12 @@ public class RemoteCache
                     {
                         log.debug( "sending item to remote server" );
                     }
-                    
-                    // convert so we don't have to know about the object on the other end.
-                    ICacheElementSerialized serialized = SerializationConversionUtil.getSerializedCacheElement( ce, this.elementSerializer );                    
-                    
+
+                    // convert so we don't have to know about the object on the
+                    // other end.
+                    ICacheElementSerialized serialized = SerializationConversionUtil
+                        .getSerializedCacheElement( ce, this.elementSerializer );
+
                     remote.update( serialized, getListenerId() );
                 }
                 catch ( NullPointerException npe )
@@ -202,7 +203,6 @@ public class RemoteCache
     public ICacheElement get( Serializable key )
         throws IOException
     {
-
         ICacheElement retVal = null;
 
         try
@@ -213,21 +213,15 @@ public class RemoteCache
             }
             else
             {
-                retVal = remote.get( cacheName, sanitized( key ) );
+                retVal = remote.get( cacheName, sanitized( key ), getListenerId() );
             }
 
             // Eventually the instance of will not be necessary.
             if ( retVal != null && retVal instanceof ICacheElementSerialized )
             {
                 retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) retVal,
-                                                                                 this.elementSerializer );
+                                                                                  this.elementSerializer );
             }
-
-        }
-        catch ( ObjectNotFoundException one )
-        {
-            log.debug( "didn't find element " + key + " in remote" );
-            return null;
         }
         catch ( Exception ex )
         {
@@ -257,18 +251,7 @@ public class RemoteCache
                 public Object call()
                     throws IOException
                 {
-                    try
-                    {
-                        return remote.get( cacheName, key );
-                    }
-                    catch ( ObjectNotFoundException onf )
-                    {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "getusingPool, Didin't find object" );
-                        }
-                        return null;
-                    }
+                    return remote.get( cacheName, key, getListenerId() );
                 }
             } );
 
@@ -384,7 +367,6 @@ public class RemoteCache
     {
         if ( true )
         {
-
             if ( !this.irca.getGetOnly() )
             {
                 try
@@ -408,14 +390,17 @@ public class RemoteCache
     public void dispose()
         throws IOException
     {
-        log.debug( "disposing of remote cache" );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Disposing of remote cache" );
+        }
         try
         {
             remote.dispose( cacheName );
         }
         catch ( Exception ex )
         {
-            log.error( "couldn't dispose" );
+            log.error( "couldn't dispose", ex );
             handleException( ex, "Failed to dispose " + cacheName );
         }
     }
@@ -454,7 +439,23 @@ public class RemoteCache
 
         IStatElement se = null;
 
+        se = new StatElement();
+        se.setName( "Remote Host:Port" );
+        se.setData( this.irca.getRemoteHost() + ":" + this.irca.getRemotePort() );
+        elems.add( se );
+
+        se = new StatElement();
+        se.setName( "Remote Type" );
+        se.setData( this.irca.getRemoteTypeName() + "" );
+        elems.add( se );
+
+        if ( this.irca.getRemoteType() == IRemoteCacheAttributes.CLUSTER )
+        {
+            // somethign cluster specific
+        }
+
         // no data gathered here
+
         se = new StatElement();
         se.setName( "UsePoolForGet" );
         se.setData( "" + usePoolForGet );
@@ -536,7 +537,6 @@ public class RemoteCache
     {
         log.error( "Disabling remote cache due to error " + msg );
         log.error( ex );
-        // log.error( ex.toString() );
 
         remote = new ZombieRemoteCacheService();
         // may want to flush if region specifies
@@ -547,14 +547,20 @@ public class RemoteCache
         // initiate failover if local
         RemoteCacheNoWaitFacade rcnwf = (RemoteCacheNoWaitFacade) RemoteCacheFactory.getFacades()
             .get( irca.getCacheName() );
-        log.debug( "Initiating failover, rcnf = " + rcnwf );
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Initiating failover, rcnf = " + rcnwf );
+        }
 
         if ( rcnwf != null && rcnwf.rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
-            log.debug( "found facade, calling failover" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Found facade, calling failover" );
+            }
             // may need to remove the noWait index here. It will be 0 if it is
-            // local
-            // since there is only 1 possible listener.
+            // local since there is only 1 possible listener.
             rcnwf.failover( 0 );
         }
 
@@ -591,13 +597,11 @@ public class RemoteCache
             {
                 log.debug( "set listenerId = " + id );
             }
-
         }
         catch ( Exception e )
         {
             log.error( "Problem setting listenerId", e );
         }
-
     }
 
     /**
@@ -669,7 +673,6 @@ public class RemoteCache
     class MyThreadFactory
         implements ThreadFactory
     {
-
         /*
          * (non-Javadoc)
          * 
@@ -681,6 +684,5 @@ public class RemoteCache
             t.setDaemon( true );
             return t;
         }
-
     }
 }
