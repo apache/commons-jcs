@@ -134,6 +134,28 @@
 			<version>2.0</version>
 		</dependency>
 
+		<!--  JDBC DISK CACHE -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.2</version>
+			<url>http://jakarta.apache.org/commons</url>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+		</dependency>
+
+		<!--  JDBC DISK CACHE -->
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.2</version>
+			<url>http://jakarta.apache.org/commons</url>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+		</dependency>
+
 		<dependency>
 			<id>concurrent</id>
 			<version>1.0</version>
@@ -207,18 +229,12 @@
 			<id>berkeleydb</id>
 			<version>1.5.0</version>
 		</dependency>
-		<!--
-			<dependency>
-			<groupId>maven-plugins</groupId>
-			<artifactId>maven-findbugs-plugin</artifactId>
-			<version>0.9.1</version>
-			<type>plugin</type>
-			</dependency>
-		-->
+
 	</dependencies>
 
 
 	<build>
+	
 		<sourceDirectory>src/java</sourceDirectory>
 		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
 		<aspectSourceDirectories></aspectSourceDirectories>
@@ -242,17 +258,10 @@
 
 	</build>
 
-
 	<reports>
 		<report>maven-jdepend-plugin</report>
 		<report>maven-checkstyle-plugin</report>
 		<report>maven-changes-plugin</report>
-		<!-- 
-			<report>maven-changelog-plugin</report>
-			<report>maven-file-activity-plugin</report>
-			<report>maven-statcvs-plugin</report>
-			<report>maven-developer-activity-plugin</report>
-		-->
 		<report>maven-jcoverage-plugin</report>
 		<report>maven-javadoc-plugin</report>
 		<report>maven-jxr-plugin</report>
