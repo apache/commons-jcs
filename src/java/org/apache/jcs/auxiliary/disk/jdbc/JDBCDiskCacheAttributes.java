@@ -1,0 +1,188 @@
+package org.apache.jcs.auxiliary.disk.jdbc;
+
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
+
+/**
+ * The configurator will set these values based on what is in the cache.ccf
+ * file.
+ * 
+ * @author Aaron Smuts
+ * 
+ */
+public class JDBCDiskCacheAttributes
+    extends AbstractDiskCacheAttributes
+{
+    private static final long serialVersionUID = -6535808344813320062L;
+
+    private static final String DEFAULT_TABLE_NAME = "JCS_STORE";
+
+    private String userName;
+
+    private String password;
+
+    private String url;
+
+    private String driverClassName;
+
+    private String tableName = DEFAULT_TABLE_NAME;
+
+    private boolean testBeforeInsert = true;
+
+    private static final int DEFAULT_MAX_ACTIVE = 10;
+    
+    private int maxActive = DEFAULT_MAX_ACTIVE;
+    
+    /**
+     * @param userName
+     *            The userName to set.
+     */
+    public void setUserName( String userName )
+    {
+        this.userName = userName;
+    }
+
+    /**
+     * @return Returns the userName.
+     */
+    public String getUserName()
+    {
+        return userName;
+    }
+
+    /**
+     * @param password
+     *            The password to set.
+     */
+    public void setPassword( String password )
+    {
+        this.password = password;
+    }
+
+    /**
+     * @return Returns the password.
+     */
+    public String getPassword()
+    {
+        return password;
+    }
+
+    /**
+     * @param url
+     *            The url to set.
+     */
+    public void setUrl( String url )
+    {
+        this.url = url;
+    }
+
+    /**
+     * @return Returns the url.
+     */
+    public String getUrl()
+    {
+        return url;
+    }
+
+    /**
+     * @param driverClassName
+     *            The driverClassName to set.
+     */
+    public void setDriverClassName( String driverClassName )
+    {
+        this.driverClassName = driverClassName;
+    }
+
+    /**
+     * @return Returns the driverClassName.
+     */
+    public String getDriverClassName()
+    {
+        return driverClassName;
+    }
+
+    /**
+     * @param tableName
+     *            The tableName to set.
+     */
+    public void setTableName( String tableName )
+    {
+        this.tableName = tableName;
+    }
+
+    /**
+     * @return Returns the tableName.
+     */
+    public String getTableName()
+    {
+        return tableName;
+    }
+
+    /**
+     * If this is true then the disk cache will check to see if the item already exists in the database.
+     * If it is false, it will try to insert.  If the isnert fails it will try to update.
+     * 
+     * @param testBeforeInsert
+     *            The testBeforeInsert to set.
+     */
+    public void setTestBeforeInsert( boolean testBeforeInsert )
+    {
+        this.testBeforeInsert = testBeforeInsert;
+    }
+
+    /**
+     * @return Returns the testBeforeInsert.
+     */
+    public boolean isTestBeforeInsert()
+    {
+        return testBeforeInsert;
+    }
+
+    /**
+     * @param maxActive The maxActive to set.
+     */
+    public void setMaxActive( int maxActive )
+    {
+        this.maxActive = maxActive;
+    }
+
+    /**
+     * @return Returns the maxActive.
+     */
+    public int getMaxActive()
+    {
+        return maxActive;
+    }
+
+    /**
+     * For debugging.
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "\nJDBCCacheAttributes" );
+        buf.append( "\nUserName [" + getUserName() + "]" );
+        buf.append( "\nUrl [" + getUrl() + "]" );
+        buf.append( "\nDriverClassName [" + getDriverClassName() + "]" );
+        buf.append( "\nTableName [" + getTableName() + "]" );
+        buf.append( "\nTestBeforeInsert [" + isTestBeforeInsert() + "]" );
+        buf.append( "\nMaxActive [" + getMaxActive() + "]" );
+        return buf.toString();
+    }
+
+}
