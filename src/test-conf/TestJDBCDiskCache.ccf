@@ -28,6 +28,7 @@ jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
 jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE2
 jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC.attributes.maxActive=15
+jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
 jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queue
