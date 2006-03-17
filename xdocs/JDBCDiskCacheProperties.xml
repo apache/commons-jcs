@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+
+<document>
+	<properties>
+		<title>JDBC Disk Cache Configuration</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="JDBC Disk Auxiliary Cache Configuration">
+
+			<p>
+				The following properties apply to the JDBC Disk Cache
+				plugin.
+			</p>
+
+			<subsection name="JDBC Disk Configuration Properties">
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>MaxPurgatorySize</td>
+						<td>
+							The maximum number of items allowed in the
+							queue of items to be written to disk.
+						</td>
+						<td>N</td>
+						<td>5000</td>
+					</tr>
+
+					<tr>
+						<td>url</td>
+						<td>
+							The database url. The database name will be
+							added to this value to create the full
+							database url.
+						</td>
+						<td>Y</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>database</td>
+						<td>
+							This is appended to the url.
+						</td>
+						<td>Y</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>driverClassName</td>
+						<td>
+							The class name of the driver to talk to your
+							database.
+						</td>
+						<td>Y</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>tableName</td>
+						<td>The name of the table.</td>
+						<td>N</td>
+						<td>JCS_STORE</td>
+					</tr>
+
+					<tr>
+						<td>testBeforeInsert</td>
+						<td>
+							Should the disk cache do a select before
+							trying to insert new element on update, or
+							should it try to insert and handle the
+							error.
+						</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+
+					<tr>
+						<td>maxActive</td>
+						<td>
+							This sets the maximum number of connections
+							allowed.
+						</td>
+						<td>Y</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>allowRemoveAll</td>
+						<td>
+							Should the disk cache honor remove all (i.e.
+							clear) requests. You might set this to false
+							to prevent someone from accidentally
+							clearing out an entire database.
+						</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+
+				</table>
+			</subsection>
+
+			<subsection name="Example Configuration">
+				<source>
+					<![CDATA[
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+# JDBC disk cache
+jcs.auxiliary.JDBC=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC.attributes.userName=sa
+jcs.auxiliary.JDBC.attributes.password=
+jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:
+jcs.auxiliary.JDBC.attributes.database=target/cache_hsql_db
+jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE2
+jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
+jcs.auxiliary.JDBC.attributes.maxActive=15
+jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
+jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
+        ]]>
+				</source>
+			</subsection>
+
+			<subsection name="JDBC Disk Event Queue Configuration">
+
+				<table>
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+						<th>Required</th>
+						<th>Default Value</th>
+					</tr>
+					<tr>
+						<td>EventQueueType</td>
+						<td>
+							This should be either SINGLE or POOLED. By
+							default the single style pool is used. The
+							single style pool uses a single thread per
+							event queue. That thread is killed whenever
+							the queue is inactive for 30 seconds. Since
+							the disk cache uses an event queue for every
+							region, if you have many regions and they
+							are all active, you will be using many
+							threads. To limit the number of threads, you
+							can configure the disk cache to use the
+							pooled event queue. Using more threads than
+							regions will not add any benefit for the
+							indexed disk cache, since only one thread
+							can read or write at a time for a single
+							region.
+						</td>
+						<td>N</td>
+						<td>SINGLE</td>
+					</tr>
+					<tr>
+						<td>EventQueuePoolName</td>
+						<td>
+							This is the name of the pool to use. It is
+							required if you choose the POOLED event
+							queue type, otherwise it is ignored.
+						</td>
+						<td>Y</td>
+						<td>n/a</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection
+				name="Example Configuration Using Thread Pool">
+				<source>
+					<![CDATA[      
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################					
+# JDBC disk cache
+jcs.auxiliary.JDBC=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC.attributes.userName=sa
+jcs.auxiliary.JDBC.attributes.password=
+jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:
+jcs.auxiliary.JDBC.attributes.database=target/cache_hsql_db
+jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE2
+jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
+jcs.auxiliary.JDBC.attributes.maxActive=15
+jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
+jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
+jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queueue
+
+##############################################################
+################## OPTIONAL THREAD POOL CONFIGURATION #########
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.disk_cache_event_queue.boundarySize=500
+thread_pool.disk_cache_event_queue.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=10
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.disk_cache_event_queue.startUpSize=10 
+        ]]>
+				</source>
+			</subsection>
+			
+		</section>
+	</body>
+</document>
