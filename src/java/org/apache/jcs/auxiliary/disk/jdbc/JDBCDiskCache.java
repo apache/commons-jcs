@@ -55,23 +55,24 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * configurable.
  * 
  * <pre>
- *         drop TABLE JCS_STORE;
- *        
- *         CREATE TABLE JCS_STORE
- *         (
- *         CACHE_KEY             VARCHAR(250)          NOT NULL,
- *         REGION                VARCHAR(250)          NOT NULL,
- *         ELEMENT               BLOB,
- *         CREATE_TIME           DATE,
- *         CREATE_TIME_SECONDS   BIGINT,
- *         MAX_LIFE_SECONDS      BIGINT,
- *         IS_ETERNAL            CHAR(1),
- *         PRIMARY KEY (CACHE_KEY, REGION)
- *         );
+ *          drop TABLE JCS_STORE;
+ *         
+ *          CREATE TABLE JCS_STORE
+ *          (
+ *          CACHE_KEY             VARCHAR(250)          NOT NULL,
+ *          REGION                VARCHAR(250)          NOT NULL,
+ *          ELEMENT               BLOB,
+ *          CREATE_TIME           DATE,
+ *          CREATE_TIME_SECONDS   BIGINT,
+ *          MAX_LIFE_SECONDS      BIGINT,
+ *          IS_ETERNAL            CHAR(1),
+ *          PRIMARY KEY (CACHE_KEY, REGION)
+ *          );
  * </pre>
  * 
  * 
- * The cleanup thread will delete non eternal items where (now - create time) > max life seconds * 1000
+ * The cleanup thread will delete non eternal items where (now - create time) >
+ * max life seconds * 1000
  * 
  * @author Aaron Smuts
  * 
@@ -131,7 +132,8 @@ public class JDBCDiskCache
                 log.error( "Couldn't find class for driver [" + cattr.getDriverClassName() + "]", e );
             }
 
-            setupDriver( cattr.getUrl(), cattr.getUserName(), cattr.getPassword(), cattr.getMaxActive() );
+            setupDriver( cattr.getUrl() + cattr.getDatabase(), cattr.getUserName(), cattr.getPassword(), cattr
+                .getMaxActive() );
 
             logDriverStats();
         }
@@ -236,7 +238,8 @@ public class JDBCDiskCache
 
                 try
                 {
-                    String sqlI = "insert into " + getJdbcDiskCacheAttributes().getTableName()
+                    String sqlI = "insert into "
+                        + getJdbcDiskCacheAttributes().getTableName()
                         + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, CREATE_TIME_SECONDS) values (?, ?, ?, ?, ?, ?, ?)";
 
                     PreparedStatement psInsert = con.prepareStatement( sqlI );
@@ -246,11 +249,11 @@ public class JDBCDiskCache
                     psInsert.setLong( 4, ce.getElementAttributes().getMaxLifeSeconds() );
                     if ( ce.getElementAttributes().getIsEternal() )
                     {
-                        psInsert.setString( 5, "T" );                        
+                        psInsert.setString( 5, "T" );
                     }
                     else
                     {
-                        psInsert.setString( 5, "F" );                        
+                        psInsert.setString( 5, "F" );
                     }
                     Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
                     psInsert.setDate( 6, createTime );
@@ -574,47 +577,58 @@ public class JDBCDiskCache
         return false;
     }
 
-    /** This should remove all elements. For now this is not implemented. */
+    /** This should remove all elements. */
     public void doRemoveAll()
     {
-        try
+        // it should never get here formt he abstract dis cache.
+        if ( this.jdbcDiskCacheAttributes.isAllowRemoveAll() )
         {
-            String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                + this.getCacheName() + "'";
-            Connection con = DriverManager.getConnection( getPoolUrl() );
-            Statement sStatement = null;
             try
             {
-                sStatement = con.createStatement();
-                alive = true;
-
-                sStatement.executeUpdate( sql );
-            }
-            catch ( SQLException e )
-            {
-                log.error( "Problem creating statement.", e );
-                alive = false;
-            }
-            finally
-            {
+                String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
+                    + this.getCacheName() + "'";
+                Connection con = DriverManager.getConnection( getPoolUrl() );
+                Statement sStatement = null;
                 try
                 {
-                    if ( sStatement != null )
-                    {
-                        sStatement.close();
-                    }
-                    con.close();
+                    sStatement = con.createStatement();
+                    alive = true;
+
+                    sStatement.executeUpdate( sql );
                 }
-                catch ( SQLException e1 )
+                catch ( SQLException e )
                 {
-                    log.error( "Problem closing statement.", e1 );
+                    log.error( "Problem creating statement.", e );
+                    alive = false;
+                }
+                finally
+                {
+                    try
+                    {
+                        if ( sStatement != null )
+                        {
+                            sStatement.close();
+                        }
+                        con.close();
+                    }
+                    catch ( SQLException e1 )
+                    {
+                        log.error( "Problem closing statement.", e1 );
+                    }
                 }
             }
+            catch ( Exception e )
+            {
+                log.error( "Problem removing all.", e );
+                reset();
+            }
         }
-        catch ( Exception e )
+        else
         {
-            log.error( "Problem removing all.", e );
-            reset();
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
+            }
         }
     }
 
@@ -622,7 +636,7 @@ public class JDBCDiskCache
      * Removed the expired.
      * 
      * (now - create time) > max life seconds * 1000
-     *
+     * 
      */
     protected void deleteExpired()
     {
@@ -665,7 +679,7 @@ public class JDBCDiskCache
         {
             log.error( "Problem removing all.", e );
             reset();
-        }        
+        }
     }
 
     /**
@@ -700,7 +714,8 @@ public class JDBCDiskCache
         int size = 0;
 
         // region, key
-        String selectString = "select count(*) from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = ?";
+        String selectString = "select count(*) from " + getJdbcDiskCacheAttributes().getTableName()
+            + " where REGION = ?";
 
         Connection con;
         try
@@ -814,7 +829,8 @@ public class JDBCDiskCache
      * @param connectURI
      * @param userName
      * @param password
-     * @param maxActive max connetions
+     * @param maxActive
+     *            max connetions
      * @throws Exception
      */
     public void setupDriver( String connectURI, String userName, String password, int maxActive )
@@ -883,7 +899,6 @@ public class JDBCDiskCache
         }
     }
 
-    
     /**
      * How many are idle in the pool.
      * 
@@ -908,8 +923,8 @@ public class JDBCDiskCache
             log.error( e );
         }
         return numIdle;
-    }   
-    
+    }
+
     /**
      * How many are active in the pool.
      * 
@@ -985,7 +1000,8 @@ public class JDBCDiskCache
     }
 
     /**
-     * @param jdbcDiskCacheAttributes The jdbcDiskCacheAttributes to set.
+     * @param jdbcDiskCacheAttributes
+     *            The jdbcDiskCacheAttributes to set.
      */
     protected void setJdbcDiskCacheAttributes( JDBCDiskCacheAttributes jdbcDiskCacheAttributes )
     {

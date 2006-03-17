@@ -94,6 +94,8 @@ public class IndexedDiskCache
 
     private int recycleCnt = 0;
 
+    private int startupSize = 0;
+    
     /**
      * use this lock to synchronize reads and writes to the underlying storage
      * mechansism.
@@ -149,6 +151,10 @@ public class IndexedDiskCache
                         dataFile.reset();
                         log.warn( "Corruption detected.  Reset data and keys files." );
                     }
+                    else
+                    {
+                        startupSize = keyHash.size();
+                    }
                 }
             }
 
@@ -175,6 +181,9 @@ public class IndexedDiskCache
         {
             log.error( "Failure initializing for fileName: " + fileName + " and root directory: " + rootDirName, e );
         }
+        
+        ShutdownHook shutdownHook = new ShutdownHook();
+        Runtime.getRuntime().addShutdownHook( shutdownHook );
     }
 
     /**
@@ -1368,6 +1377,11 @@ public class IndexedDiskCache
         se.setData( "" + this.recycleCnt );
         elems.add( se );
 
+        se = new StatElement();
+        se.setName( "Startup Size" );
+        se.setData( "" + this.startupSize );
+        elems.add( se );
+
         // get the stats from the super too
         // get as array, convert to list, add list to our outer list
         IStats sStats = super.getStatistics();
@@ -1439,5 +1453,25 @@ public class IndexedDiskCache
 
         }
     }
-
+    
+    /**
+     * Called on shutdown
+     *
+     * @author Aaron Smuts
+     *
+     */
+    class ShutdownHook extends Thread
+    {
+        
+        public void run()
+        {
+            if ( alive )
+            {
+                log.info( "Disk cache was not shutdown properly.  Will try to dispose." );
+                
+                doDispose();
+            }            
+        }
+        
+    }
 }

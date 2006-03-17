@@ -33,7 +33,6 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 public class JDBCDiskCacheManager
     implements AuxiliaryCacheManager
 {
-
     private static final long serialVersionUID = -8258856770927857896L;
 
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManager.class );

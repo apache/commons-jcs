@@ -84,5 +84,19 @@ public interface IDiskCacheAttributes
      */
     public void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit );
 
+    /**
+     * If this is true then remove all is not prohibited.
+     * 
+     * @return
+     */
+    public boolean isAllowRemoveAll();
+    
+    /**
+     * If this is false, then remove all requests will not be honored.
+     * <p>
+     * This provides a safety mechanism for the persistent store.
+     * @param allowRemoveAll
+     */
+    public void setAllowRemoveAll( boolean allowRemoveAll );
 }
 //   end interface

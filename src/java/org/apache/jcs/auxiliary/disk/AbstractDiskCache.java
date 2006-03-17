@@ -41,6 +41,8 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
+import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
+
 /**
  * Abstract class providing a base implementation of a disk cache, which can be
  * easily extended to implement a disk cache for a specific perstistence
@@ -98,6 +100,10 @@ public abstract class AbstractDiskCache
      */
     protected int purgHits = 0;
 
+    // we lock here, so that we cannot get an update after a remove all
+    // an individual removeal locks the item.
+    private WriterPreferenceReadWriteLock removeAllLock = new WriterPreferenceReadWriteLock();
+
     // ----------------------------------------------------------- constructors
 
     /**
@@ -134,15 +140,45 @@ public abstract class AbstractDiskCache
      */
     private void initPurgatory()
     {
-        purgatory = null;
+        try
+        {
+            // we need this so we can stop the updates from happening after a
+            // removeall
+            removeAllLock.writeLock().acquire();
 
-        if ( dcattr.getMaxPurgatorySize() >= 0 )
-        {
-            purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
+            if ( purgatory != null )
+            {
+                synchronized ( purgatory )
+                {
+                    if ( dcattr.getMaxPurgatorySize() >= 0 )
+                    {
+                        purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
+                    }
+                    else
+                    {
+                        purgatory = new HashMap();
+                    }
+                }
+            }
+            else
+            {
+                if ( dcattr.getMaxPurgatorySize() >= 0 )
+                {
+                    purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
+                }
+                else
+                {
+                    purgatory = new HashMap();
+                }
+            }
         }
-        else
+        catch ( InterruptedException e )
         {
-            purgatory = new HashMap();
+            log.error( "problem encountered resseting purgatory.", e );
+        }
+        finally
+        {
+            removeAllLock.writeLock().release();
         }
     }
 
@@ -300,7 +336,7 @@ public abstract class AbstractDiskCache
                 {
                     purgatory.remove( key );
                 }
-                
+
                 // no way to remove from queue, just make sure it doesn't get on
                 // disk and then removed right afterwards
                 pe.setSpoolable( false );
@@ -323,11 +359,21 @@ public abstract class AbstractDiskCache
      */
     public final void removeAll()
     {
-        // Replace purgatory with a new empty hashtable
-        initPurgatory();
+        if ( this.dcattr.isAllowRemoveAll() )
+        {
+            // Replace purgatory with a new empty hashtable
+            initPurgatory();
 
-        // Remove all from persistent store immediately
-        doRemoveAll();
+            // Remove all from persistent store immediately
+            doRemoveAll();
+        }
+        else
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "RemoveAll was requested but the request was not fulfilled: allowRemoveAll is set to false." );
+            }
+        }
     }
 
     /**
@@ -531,24 +577,43 @@ public abstract class AbstractDiskCache
 
                     synchronized ( pe.getCacheElement() )
                     {
-                        // String keyAsString = element.getKey().toString();
-                        synchronized ( purgatory )
+                        try
                         {
-                            // If the element has already been removed from
-                            // purgatory do nothing
-                            if ( !purgatory.containsKey( pe.getKey() ) )
+                            // TODO consider a timeout.
+                            // we need this so that we can have multiple update
+                            // threads
+                            // and still have removeAll request come in that
+                            // always win
+                            removeAllLock.readLock().acquire();
+
+                            // TODO consider changing purgatory sync
+                            // String keyAsString = element.getKey().toString();
+                            synchronized ( purgatory )
                             {
-                                return;
+                                // If the element has already been removed from
+                                // purgatory do nothing
+                                if ( !purgatory.containsKey( pe.getKey() ) )
+                                {
+                                    return;
+                                }
+
+                                element = pe.getCacheElement();
                             }
 
-                            element = pe.getCacheElement();
+                            // I took this out of the purgatory sync block.
+                            // If the element is still eligable, spool it.
+                            if ( pe.isSpoolable() )
+                            {
+                                doUpdate( element );
+                            }
                         }
-
-                        // I took this out of the sync block. 
-                        // If the element is still eligable, spool it.
-                        if ( pe.isSpoolable() )
+                        catch ( InterruptedException e )
                         {
-                            doUpdate( element );
+                            log.error( e );
+                        }
+                        finally
+                        {
+                            removeAllLock.readLock().release();
                         }
 
                         synchronized ( purgatory )
@@ -577,7 +642,6 @@ public abstract class AbstractDiskCache
                 // during normal opertations.
 
                 // String keyAsString = element.getKey().toString();
-
                 synchronized ( purgatory )
                 {
                     purgatory.remove( element.getKey() );

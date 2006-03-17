@@ -25,13 +25,13 @@ public class IndexDiskCacheUnitTest
     {
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testSimplePutAndGet" );
-        cattr.setMaxKeySize( 100 );
+        cattr.setMaxKeySize( 1000 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
         IndexedDiskCache disk = new IndexedDiskCache( cattr );
 
         disk.doRemoveAll();
 
-        int cnt = 25;
+        int cnt = 999;
         for ( int i = 0; i < cnt; i++ )
         {
             IElementAttributes eAttr = new ElementAttributes();
@@ -47,6 +47,8 @@ public class IndexDiskCacheUnitTest
             assertNotNull( "Should have recevied an element.", element );
             assertEquals( "Element is wrong.", "data:" + i, element.getVal() );
         }
+        
+        System.out.println( disk.getStats() );
     }
 
     /**

@@ -30,8 +30,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public class JDBCDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
-
-    private String name = "MysqlDiskCacheFactory";
+    private String name = "JDBCDiskCacheFactory";
 
     /**
      * This factory method should create an instance of the mysqlcache.
@@ -57,5 +56,4 @@ public class JDBCDiskCacheFactory
     {
         return name;
     }
-
 }

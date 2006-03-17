@@ -34,6 +34,9 @@ public abstract class AbstractDiskCacheAttributes
     /** path to disk */
     protected String diskPath;
 
+    // if this is false, we will not execute remove all
+    private boolean allowRemoveAll = true;
+    
     /** default to 5000 */
     protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFUALT;
 
@@ -121,6 +124,22 @@ public abstract class AbstractDiskCacheAttributes
     }
 
     /**
+     * @param allowRemoveAll The allowRemoveAll to set.
+     */
+    public void setAllowRemoveAll( boolean allowRemoveAll )
+    {
+        this.allowRemoveAll = allowRemoveAll;
+    }
+
+    /**
+     * @return Returns the allowRemoveAll.
+     */
+    public boolean isAllowRemoveAll()
+    {
+        return allowRemoveAll;
+    }
+    
+    /**
      * Description of the Method
      * 
      * @return String
@@ -131,6 +150,7 @@ public abstract class AbstractDiskCacheAttributes
         str.append( "AbstractDiskCacheAttributes " );
         str.append( "\n diskPath = " + diskPath );
         str.append( "\n maxPurgatorySize   = " + maxPurgatorySize );
+        str.append( "\n allowRemoveAll   = " + allowRemoveAll );
         return str.toString();
     }
 

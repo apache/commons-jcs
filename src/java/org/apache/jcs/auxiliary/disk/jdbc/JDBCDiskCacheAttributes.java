@@ -38,6 +38,8 @@ public class JDBCDiskCacheAttributes
 
     private String url;
 
+    private String database = "";
+    
     private String driverClassName;
 
     private String tableName = DEFAULT_TABLE_NAME;
@@ -46,7 +48,7 @@ public class JDBCDiskCacheAttributes
 
     private static final int DEFAULT_MAX_ACTIVE = 10;
     
-    private int maxActive = DEFAULT_MAX_ACTIVE;
+    private int maxActive = DEFAULT_MAX_ACTIVE;   
     
     /**
      * @param userName
@@ -97,6 +99,23 @@ public class JDBCDiskCacheAttributes
     public String getUrl()
     {
         return url;
+    }
+
+    /**
+     * This is appended to the url.
+     * @param database The database to set.
+     */
+    public void setDatabase( String database )
+    {
+        this.database = database;
+    }
+
+    /**
+     * @return Returns the database.
+     */
+    public String getDatabase()
+    {
+        return database;
     }
 
     /**
@@ -178,10 +197,12 @@ public class JDBCDiskCacheAttributes
         buf.append( "\nJDBCCacheAttributes" );
         buf.append( "\nUserName [" + getUserName() + "]" );
         buf.append( "\nUrl [" + getUrl() + "]" );
+        buf.append( "\nDatabase [" + getDatabase() + "]" );
         buf.append( "\nDriverClassName [" + getDriverClassName() + "]" );
         buf.append( "\nTableName [" + getTableName() + "]" );
         buf.append( "\nTestBeforeInsert [" + isTestBeforeInsert() + "]" );
         buf.append( "\nMaxActive [" + getMaxActive() + "]" );
+        buf.append( "\nAllowRemoveAll [" + isAllowRemoveAll() + "]" );
         return buf.toString();
     }
 
