@@ -27,7 +27,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.List;
 import java.util.Set;
 
@@ -55,19 +54,19 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * configurable.
  * 
  * <pre>
- *          drop TABLE JCS_STORE;
- *         
- *          CREATE TABLE JCS_STORE
- *          (
- *          CACHE_KEY             VARCHAR(250)          NOT NULL,
- *          REGION                VARCHAR(250)          NOT NULL,
- *          ELEMENT               BLOB,
- *          CREATE_TIME           DATE,
- *          CREATE_TIME_SECONDS   BIGINT,
- *          MAX_LIFE_SECONDS      BIGINT,
- *          IS_ETERNAL            CHAR(1),
- *          PRIMARY KEY (CACHE_KEY, REGION)
- *          );
+ *           drop TABLE JCS_STORE;
+ *          
+ *           CREATE TABLE JCS_STORE
+ *           (
+ *           CACHE_KEY             VARCHAR(250)          NOT NULL,
+ *           REGION                VARCHAR(250)          NOT NULL,
+ *           ELEMENT               BLOB,
+ *           CREATE_TIME           DATE,
+ *           CREATE_TIME_SECONDS   BIGINT,
+ *           MAX_LIFE_SECONDS      BIGINT,
+ *           IS_ETERNAL            CHAR(1),
+ *           PRIMARY KEY (CACHE_KEY, REGION)
+ *           );
  * </pre>
  * 
  * 
@@ -637,14 +636,18 @@ public class JDBCDiskCache
      * 
      * (now - create time) > max life seconds * 1000
      * 
+     * @return the number deleted
+     * 
      */
-    protected void deleteExpired()
+    protected int deleteExpired()
     {
+        int deleted = 0;
+
         try
         {
             long now = System.currentTimeMillis() / 1000;
             String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                + this.getCacheName() + "' and IS_ETERNAL = 'F' and (" + now + " - CREATE_TIME_SECONDS) > MAX_LIFE";
+                + this.getCacheName() + "' and IS_ETERNAL = 'F' and (" + now + " - CREATE_TIME_SECONDS) > MAX_LIFE_SECONDS";
             Connection con = DriverManager.getConnection( getPoolUrl() );
             Statement sStatement = null;
             try
@@ -652,7 +655,7 @@ public class JDBCDiskCache
                 sStatement = con.createStatement();
                 alive = true;
 
-                sStatement.executeUpdate( sql );
+                deleted = sStatement.executeUpdate( sql );
             }
             catch ( SQLException e )
             {
@@ -680,6 +683,8 @@ public class JDBCDiskCache
             log.error( "Problem removing all.", e );
             reset();
         }
+
+        return deleted;
     }
 
     /**

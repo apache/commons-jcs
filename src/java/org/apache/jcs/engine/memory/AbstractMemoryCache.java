@@ -343,7 +343,5 @@ public abstract class AbstractMemoryCache
             t.setPriority( Thread.MIN_PRIORITY );
             return t;
         }
-
     }
-
 }

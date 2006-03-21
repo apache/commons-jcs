@@ -45,9 +45,7 @@
 
 					<tr>
 						<td>database</td>
-						<td>
-							This is appended to the url.
-						</td>
+						<td>This is appended to the url.</td>
 						<td>Y</td>
 						<td></td>
 					</tr>
@@ -103,6 +101,23 @@
 						<td>true</td>
 					</tr>
 
+					<tr>
+						<td>UseDiskShrinker</td>
+						<td>
+							Should the disk cache try to delete expired
+							items from the database.
+						</td>
+						<td>N</td>
+						<td>true</td>
+					</tr>
+
+					<tr>
+						<td>ShrinkerIntervalSeconds</td>
+						<td>How often should the disk shrinker run.</td>
+						<td>N</td>
+						<td>300</td>
+					</tr>
+
 				</table>
 			</subsection>
 
@@ -124,6 +139,8 @@ jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC.attributes.maxActive=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
+jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=300
         ]]>
 				</source>
 			</subsection>
@@ -191,6 +208,8 @@ jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
 jcs.auxiliary.JDBC.attributes.maxActive=15
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
 jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
+jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=300
 jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
 jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queueue
 
@@ -207,7 +226,7 @@ thread_pool.disk_cache_event_queue.startUpSize=10
         ]]>
 				</source>
 			</subsection>
-			
+
 		</section>
 	</body>
 </document>

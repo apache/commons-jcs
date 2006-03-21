@@ -1,0 +1,69 @@
+# Cache configuration for the 'TestHSQLDiskCache' test. The memory cache has a
+# a maximum of 100 objects, so objects should get pushed into the disk cache
+
+jcs.default=JDBC
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=false
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+##############################################################
+################## REGIONS ###################################
+jcs.region.expire1Second=JDBC
+jcs.region.expire1Second.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.expire1Second.cacheattributes.MaxObjects=0
+jcs.region.expire1Second.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.expire1Second.elementattributes.MaxLifeSeconds=1
+
+jcs.region.expire100Second=JDBC
+jcs.region.expire100Second.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.expire100Second.cacheattributes.MaxObjects=0
+jcs.region.expire100Second.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.expire100Second.elementattributes.MaxLifeSeconds=100
+
+jcs.region.eternal=JDBC
+jcs.region.eternal.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.eternal.cacheattributes.MaxObjects=0
+jcs.region.eternal.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.eternal.elementattributes.MaxLifeSeconds=1
+jcs.region.eternal.elementattributes.IsEternal=true
+
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+# JDBC disk cache
+jcs.auxiliary.JDBC=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC.attributes.userName=sa
+jcs.auxiliary.JDBC.attributes.password=
+jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:target/cache_hsql_db
+jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE_SHRINK
+jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
+jcs.auxiliary.JDBC.attributes.maxActive=15
+jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
+jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
+jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=1
+jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
+jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queue
+
+
+##############################################################
+################## OPTIONAL THREAD POOL CONFIGURATION #########
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.disk_cache_event_queue.boundarySize=500
+thread_pool.disk_cache_event_queue.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=10
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.disk_cache_event_queue.startUpSize=10

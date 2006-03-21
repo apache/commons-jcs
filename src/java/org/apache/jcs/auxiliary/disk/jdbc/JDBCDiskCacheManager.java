@@ -24,6 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 
+import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+
 /**
  * This manages instances of the jdbc disk cache. It maintains one for each
  * region. One for all regions would work, but this gives us more detailed stats
@@ -43,7 +46,14 @@ public class JDBCDiskCacheManager
 
     private static JDBCDiskCacheManager instance;
 
-    private static JDBCDiskCacheAttributes defaultCattr;
+    private JDBCDiskCacheAttributes defaultCattr;
+
+    /**
+     * The background disk shrinker, one for all regions.
+     */
+    private ClockDaemon shrinkerDaemon;
+
+    private ShrinkerThread shrinkerThread;
 
     /**
      * Constructor for the HSQLCacheManager object
@@ -129,6 +139,23 @@ public class JDBCDiskCacheManager
             log.debug( "JDBC cache = " + raf );
         }
 
+        // add cache to shrinker.
+        if ( cattr.isUseDiskShrinker() )
+        {
+            if ( shrinkerDaemon == null )
+            {
+                shrinkerDaemon = new ClockDaemon();
+                shrinkerDaemon.setThreadFactory( new MyThreadFactory() );
+            }
+
+            if ( shrinkerThread == null )
+            {
+                shrinkerThread = new ShrinkerThread();
+                shrinkerDaemon.executePeriodically( cattr.getShrinkerIntervalSeconds() * 1000, shrinkerThread, false );
+            }
+            shrinkerThread.addDiskCacheToShrinkList( (JDBCDiskCache) raf );
+        }
+
         return raf;
     }
 
@@ -177,6 +204,30 @@ public class JDBCDiskCacheManager
                     raf.dispose();
                 }
             }
+        }
+    }
+
+    /**
+     * Allows us to set the daemon status on the clockdaemon
+     * 
+     * @author aaronsm
+     * 
+     */
+    class MyThreadFactory
+        implements ThreadFactory
+    {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            t.setDaemon( true );
+            t.setPriority( Thread.MIN_PRIORITY );
+            return t;
         }
     }
 }

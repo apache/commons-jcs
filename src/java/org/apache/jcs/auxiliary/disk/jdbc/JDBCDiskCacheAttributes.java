@@ -39,7 +39,7 @@ public class JDBCDiskCacheAttributes
     private String url;
 
     private String database = "";
-    
+
     private String driverClassName;
 
     private String tableName = DEFAULT_TABLE_NAME;
@@ -47,9 +47,15 @@ public class JDBCDiskCacheAttributes
     private boolean testBeforeInsert = true;
 
     private static final int DEFAULT_MAX_ACTIVE = 10;
-    
-    private int maxActive = DEFAULT_MAX_ACTIVE;   
-    
+
+    private int maxActive = DEFAULT_MAX_ACTIVE;
+
+    private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 300;
+
+    private int shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
+
+    private boolean UseDiskShrinker = true;
+
     /**
      * @param userName
      *            The userName to set.
@@ -103,7 +109,9 @@ public class JDBCDiskCacheAttributes
 
     /**
      * This is appended to the url.
-     * @param database The database to set.
+     * 
+     * @param database
+     *            The database to set.
      */
     public void setDatabase( String database )
     {
@@ -153,8 +161,9 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * If this is true then the disk cache will check to see if the item already exists in the database.
-     * If it is false, it will try to insert.  If the isnert fails it will try to update.
+     * If this is true then the disk cache will check to see if the item already
+     * exists in the database. If it is false, it will try to insert. If the
+     * isnert fails it will try to update.
      * 
      * @param testBeforeInsert
      *            The testBeforeInsert to set.
@@ -173,7 +182,8 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param maxActive The maxActive to set.
+     * @param maxActive
+     *            The maxActive to set.
      */
     public void setMaxActive( int maxActive )
     {
@@ -186,6 +196,43 @@ public class JDBCDiskCacheAttributes
     public int getMaxActive()
     {
         return maxActive;
+    }
+
+    /**
+     * @param shrinkerIntervalSecondsArg
+     *            The shrinkerIntervalSeconds to set.
+     */
+    public void setShrinkerIntervalSeconds( int shrinkerIntervalSecondsArg )
+    {
+        if ( shrinkerIntervalSecondsArg > 1 )
+        {
+            this.shrinkerIntervalSeconds = shrinkerIntervalSecondsArg;
+        }
+    }
+
+    /**
+     * @return Returns the shrinkerIntervalSeconds.
+     */
+    public int getShrinkerIntervalSeconds()
+    {
+        return shrinkerIntervalSeconds;
+    }
+
+    /**
+     * @param useDiskShrinker
+     *            The useDiskShrinker to set.
+     */
+    public void setUseDiskShrinker( boolean useDiskShrinker )
+    {
+        UseDiskShrinker = useDiskShrinker;
+    }
+
+    /**
+     * @return Returns the useDiskShrinker.
+     */
+    public boolean isUseDiskShrinker()
+    {
+        return UseDiskShrinker;
     }
 
     /**
@@ -203,6 +250,8 @@ public class JDBCDiskCacheAttributes
         buf.append( "\nTestBeforeInsert [" + isTestBeforeInsert() + "]" );
         buf.append( "\nMaxActive [" + getMaxActive() + "]" );
         buf.append( "\nAllowRemoveAll [" + isAllowRemoveAll() + "]" );
+        buf.append( "\nShrinkerIntervalSeconds [" + getShrinkerIntervalSeconds() + "]" );
+        buf.append( "\nUseDiskShrinker [" + isUseDiskShrinker() + "]" );
         return buf.toString();
     }
 
