@@ -616,7 +616,7 @@ public class CompositeCacheManager
         int statsLen = stats.length;
         for ( int i = 0; i < statsLen; i++ )
         {
-            buf.append( "\n" ); 
+            buf.append( "\n---------------------------\n" ); 
             buf.append( stats[i] );
         }
         return buf.toString();
