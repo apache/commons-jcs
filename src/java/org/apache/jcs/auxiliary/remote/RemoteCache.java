@@ -125,7 +125,7 @@ public class RemoteCache
                 pool.getPool().setThreadFactory( new MyThreadFactory() );
             }
         }
-        
+
         try
         {
             // TODO make configurable.
@@ -150,8 +150,10 @@ public class RemoteCache
         }
         catch ( Exception e )
         {
-            log.error( "Problem setting custom RMI Socket Factory.", e );
-        }        
+            // TODO change this so that we only try to do it once. Otherwise we
+            // genreate errors for each region on construction.
+            log.info( e.getMessage() );
+        }
     }
 
     /**
@@ -304,7 +306,7 @@ public class RemoteCache
             }
             return ice;
         }
-        catch( TimeoutException te )
+        catch ( TimeoutException te )
         {
             log.warn( "TimeoutException, Get Request timed out after " + timeout );
             throw new IOException( "Get Request timed out after " + timeout );
