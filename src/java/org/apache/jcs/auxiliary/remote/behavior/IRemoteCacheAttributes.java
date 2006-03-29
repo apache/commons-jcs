@@ -36,6 +36,9 @@ public interface IRemoteCacheAttributes
      */
     public static int CLUSTER = 1;
 
+    /** The default timeout for the custom RMI socket facfory */
+    public static final int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS = 10000;
+
     /**
      * Gets the remoteTypeName attribute of the IRemoteCacheAttributes object
      * 
@@ -271,4 +274,22 @@ public interface IRemoteCacheAttributes
      * @param millis
      */
     public abstract void setGetTimeoutMillis( int millis );
+
+    /**
+     * This sets a general timeout on the rmi socket factory. By default the
+     * socket factory will block forever.
+     * <p>
+     * We have a default setting.  The default rmi behavior should never be used.
+     * 
+     * @return int milliseconds
+     */
+    public abstract int getRmiSocketFactoryTimeoutMillis();
+
+    /**
+     * This sets a general timeout on the rmi socket factory. By default the
+     * socket factory will block forever.
+     * 
+     * @param rmiSocketFactoryTimeoutMillis
+     */
+    public abstract void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis );
 }
