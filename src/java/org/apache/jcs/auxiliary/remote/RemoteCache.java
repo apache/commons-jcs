@@ -19,6 +19,9 @@ package org.apache.jcs.auxiliary.remote;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.rmi.server.RMISocketFactory;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -47,6 +50,7 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 import EDU.oswego.cs.dl.util.concurrent.Callable;
 import EDU.oswego.cs.dl.util.concurrent.FutureResult;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
 
 /**
  * Client proxy for an RMI remote cache. This handles gets, updates, and
@@ -121,6 +125,33 @@ public class RemoteCache
                 pool.getPool().setThreadFactory( new MyThreadFactory() );
             }
         }
+        
+        try
+        {
+            // TODO make configurable.
+            // use this socket factory to add a timeout.
+            RMISocketFactory.setSocketFactory( new RMISocketFactory()
+            {
+                public Socket createSocket( String host, int port )
+                    throws IOException
+                {
+                    Socket socket = new Socket( host, port );
+                    socket.setSoTimeout( irca.getRmiSocketFactoryTimeoutMillis() );
+                    socket.setSoLinger( false, 0 );
+                    return socket;
+                }
+
+                public ServerSocket createServerSocket( int port )
+                    throws IOException
+                {
+                    return new ServerSocket( port );
+                }
+            } );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem setting custom RMI Socket Factory.", e );
+        }        
     }
 
     /**
@@ -273,15 +304,20 @@ public class RemoteCache
             }
             return ice;
         }
+        catch( TimeoutException te )
+        {
+            log.warn( "TimeoutException, Get Request timed out after " + timeout );
+            throw new IOException( "Get Request timed out after " + timeout );
+        }
         catch ( InterruptedException ex )
         {
-            log.warn( "Get Request timed out after " + timeout );
+            log.warn( "InterruptedException, Get Request timed out after " + timeout );
             throw new IOException( "Get Request timed out after " + timeout );
         }
         catch ( InvocationTargetException ex )
         {
             // assume that this is an IOException thrown by the callable.
-            log.error( "Assuming an IO exception thrown in the backfground.", ex );
+            log.error( "InvocationTargetException, Assuming an IO exception thrown in the background.", ex );
             throw new IOException( "Get Request timed out after " + timeout );
         }
     }

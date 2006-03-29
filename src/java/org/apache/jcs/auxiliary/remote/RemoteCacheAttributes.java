@@ -68,6 +68,8 @@ public class RemoteCacheAttributes
     // must be greater than 0 for a pool to be used.
     private int getTimeoutMillis = -1;
 
+    private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
+    
     /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheAttributes()
     {
@@ -420,6 +422,22 @@ public class RemoteCacheAttributes
     public void setGetTimeoutMillis( int millis )
     {
         getTimeoutMillis = millis;
+    }
+
+    /**
+     * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
+     */
+    public void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis )
+    {
+        this.rmiSocketFactoryTimeoutMillis = rmiSocketFactoryTimeoutMillis;
+    }
+
+    /**
+     * @return Returns the rmiSocketFactoryTimeoutMillis.
+     */
+    public int getRmiSocketFactoryTimeoutMillis()
+    {
+        return rmiSocketFactoryTimeoutMillis;
     }
 
     /**
