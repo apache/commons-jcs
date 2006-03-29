@@ -18,9 +18,12 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.registry.Registry;
+import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -42,6 +45,8 @@ public class RemoteCacheServerFactory
     private static RemoteCacheServer remoteCacheServer;
 
     private static String serviceName;
+
+    private static int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS = 10000;
 
     /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()
@@ -89,6 +94,33 @@ public class RemoteCacheServerFactory
             if ( log.isInfoEnabled() )
             {
                 log.info( "ConfigFileName = [" + propFile + "]" );
+            }
+
+            try
+            {
+                // TODO make configurable.
+                // use this socket factory to add a timeout.
+                RMISocketFactory.setSocketFactory( new RMISocketFactory()
+                {
+                    public Socket createSocket( String host, int port )
+                        throws IOException
+                    {
+                        Socket socket = new Socket( host, port );
+                        socket.setSoTimeout( DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS );
+                        socket.setSoLinger( false, 0 );
+                        return socket;
+                    }
+
+                    public ServerSocket createServerSocket( int port )
+                        throws IOException
+                    {
+                        return new ServerSocket( port );
+                    }
+                } );
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem setting custom RMI Socket Factory.", e );
             }
 
             // TODO: make automatic

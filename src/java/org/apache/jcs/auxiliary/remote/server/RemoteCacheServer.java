@@ -509,7 +509,7 @@ public class RemoteCacheServer
         }
 
         boolean fromCluster = false;
-        if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
         {
             fromCluster = true;
         }
