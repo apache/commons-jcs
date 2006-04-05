@@ -18,6 +18,7 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.Unreferenced;
@@ -61,7 +62,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * high get and low put, this should allow you to scale.
  * 
  */
-public class RemoteCacheServer
+class RemoteCacheServer
     extends UnicastRemoteObject
     implements IRemoteCacheService, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
 {
@@ -96,10 +97,11 @@ public class RemoteCacheServer
      * server with the values from the config file.
      * 
      * @param rcsa
+     * @throws RemoteException 
      * @exception IOException
      */
-    protected RemoteCacheServer( IRemoteCacheServerAttributes rcsa )
-        throws IOException
+    RemoteCacheServer( IRemoteCacheServerAttributes rcsa ) 
+        throws RemoteException
     {
         super( rcsa.getServicePort() );
         this.rcsa = rcsa;
@@ -111,9 +113,8 @@ public class RemoteCacheServer
      * 
      * @param prop
      */
-    protected void init( String prop )
+    private void init( String prop )
     {
-
         cacheManager = createCacheManager( prop );
 
         // cacheManager would have created a number of ICache objects.
@@ -134,7 +135,7 @@ public class RemoteCacheServer
      *            The anem of the configuration file.
      * @return The cache hub configured with this configuration file.
      */
-    protected CompositeCacheManager createCacheManager( String prop )
+    private CompositeCacheManager createCacheManager( String prop )
     {
         CompositeCacheManager hub = CompositeCacheManager.getUnconfiguredInstance();
 
