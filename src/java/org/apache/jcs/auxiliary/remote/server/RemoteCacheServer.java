@@ -18,7 +18,6 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.NotBoundException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.Unreferenced;
@@ -98,10 +97,9 @@ public class RemoteCacheServer
      * 
      * @param rcsa
      * @exception IOException
-     * @exception NotBoundException
      */
     protected RemoteCacheServer( IRemoteCacheServerAttributes rcsa )
-        throws IOException, NotBoundException
+        throws IOException
     {
         super( rcsa.getServicePort() );
         this.rcsa = rcsa;
@@ -112,11 +110,8 @@ public class RemoteCacheServer
      * Initialize the RMI Cache Server from a proeprties file.
      * 
      * @param prop
-     * @throws IOException
-     * @throws NotBoundException
      */
     protected void init( String prop )
-        throws IOException, NotBoundException
     {
 
         cacheManager = createCacheManager( prop );
@@ -161,11 +156,8 @@ public class RemoteCacheServer
      * 
      * @param cacheName
      * @return The cacheListeners value
-     * @throws IOException
-     * @throws NotBoundException
      */
     private CacheListeners getCacheListeners( String cacheName )
-        throws IOException, NotBoundException
     {
         CacheListeners cacheListeners = (CacheListeners) cacheListenersMap.get( cacheName );
         synchronized ( cacheListenersMap )
@@ -190,11 +182,8 @@ public class RemoteCacheServer
      * 
      * @param cacheName
      * @return The clusterListeners value
-     * @throws IOException
-     * @throws NotBoundException
      */
     private CacheListeners getClusterListeners( String cacheName )
-        throws IOException, NotBoundException
     {
         CacheListeners cacheListeners = (CacheListeners) clusterListenersMap.get( cacheName );
         synchronized ( clusterListenersMap )
@@ -390,11 +379,6 @@ public class RemoteCacheServer
                     }
                 }
             }
-        }
-        catch ( NotBoundException ex )
-        {
-            log.error( "NotBoundException caught in update.", ex );
-            throw new IllegalStateException( ex.getMessage() );
         }
         catch ( Exception e )
         {
@@ -875,87 +859,79 @@ public class RemoteCacheServer
         {
             throw new IllegalArgumentException( "cacheName and listener must not be null" );
         }
-        try
+        CacheListeners cacheDesc;
+
+        IRemoteCacheListener ircl = (IRemoteCacheListener) listener;
+        int remoteType = ircl.getRemoteType();
+        if ( remoteType == IRemoteCacheAttributes.CLUSTER )
         {
-            CacheListeners cacheDesc;
-
-            IRemoteCacheListener ircl = (IRemoteCacheListener) listener;
-            int remoteType = ircl.getRemoteType();
-            if ( remoteType == IRemoteCacheAttributes.CLUSTER )
-            {
-                log.debug( "adding cluster listener" );
-                cacheDesc = getClusterListeners( cacheName );
-            }
-            else
-            {
-                log.debug( "adding normal listener" );
-                cacheDesc = getCacheListeners( cacheName );
-            }
-            Map eventQMap = cacheDesc.eventQMap;
-            cleanupEventQMap( eventQMap );
-
-            // synchronized ( listenerId )
-            synchronized ( ICacheListener.class )
-            {
-                long id = 0;
-                try
-                {
-                    id = listener.getListenerId();
-                    // clients problably shouldn't do this.
-                    if ( id == 0 )
-                    {
-                        // must start at one so the next gets recognized
-                        long listenerIdB = nextListenerId();
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache " + cacheName );
-                        }
-                        listener.setListenerId( listenerIdB );
-                        id = listenerIdB;
-
-                        // in case it needs synchronization
-                        if ( log.isInfoEnabled() )
-                        {
-                            log.info( "adding vm listener under new id = " + listenerIdB );
-                        }
-                    }
-                    else
-                    {
-                        if ( log.isInfoEnabled() )
-                        {
-                            log.info( "adding listener under existing id = " + id );
-                        }
-                        // should confirm the the host is the same as we have on
-                        // record, just in case
-                        // a client has made a mistake.
-                    }
-
-                    // relate the type to an id
-                    this.idTypeMap.put( new Long( id ), new Integer( remoteType ) );
-                }
-                catch ( IOException ioe )
-                {
-                    log.error( "Problem setting listener id.", ioe );
-                }
-
-                CacheEventQueueFactory fact = new CacheEventQueueFactory();
-                ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, rcsa.getEventQueuePoolName(),
-                                                                 rcsa.getEventQueueTypeFactoryCode() );
-
-                eventQMap.put( new Long( listener.getListenerId() ), q );
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "****** Cache " + cacheName + "'s listener size=" + cacheDesc.eventQMap.size() );
-                }
-            }
-            // end sync
+            log.debug( "adding cluster listener" );
+            cacheDesc = getClusterListeners( cacheName );
         }
-        catch ( NotBoundException ex )
+        else
         {
-            ex.printStackTrace();
-            throw new IllegalStateException( ex.getMessage() );
+            log.debug( "adding normal listener" );
+            cacheDesc = getCacheListeners( cacheName );
         }
+        Map eventQMap = cacheDesc.eventQMap;
+        cleanupEventQMap( eventQMap );
+
+        // synchronized ( listenerId )
+        synchronized ( ICacheListener.class )
+        {
+            long id = 0;
+            try
+            {
+                id = listener.getListenerId();
+                // clients problably shouldn't do this.
+                if ( id == 0 )
+                {
+                    // must start at one so the next gets recognized
+                    long listenerIdB = nextListenerId();
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache " + cacheName );
+                    }
+                    listener.setListenerId( listenerIdB );
+                    id = listenerIdB;
+
+                    // in case it needs synchronization
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "adding vm listener under new id = " + listenerIdB );
+                    }
+                }
+                else
+                {
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "adding listener under existing id = " + id );
+                    }
+                    // should confirm the the host is the same as we have on
+                    // record, just in case
+                    // a client has made a mistake.
+                }
+
+                // relate the type to an id
+                this.idTypeMap.put( new Long( id ), new Integer( remoteType ) );
+            }
+            catch ( IOException ioe )
+            {
+                log.error( "Problem setting listener id.", ioe );
+            }
+
+            CacheEventQueueFactory fact = new CacheEventQueueFactory();
+            ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, rcsa.getEventQueuePoolName(),
+                                                             rcsa.getEventQueueTypeFactoryCode() );
+
+            eventQMap.put( new Long( listener.getListenerId() ), q );
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "****** Cache " + cacheName + "'s listener size=" + cacheDesc.eventQMap.size() );
+            }
+        }
+        // end sync
         return;
     }
 
@@ -999,10 +975,8 @@ public class RemoteCacheServer
      * 
      * @param cacheName
      * @param listenerId
-     * @throws IOException
      */
     public void removeCacheListener( String cacheName, long listenerId )
-        throws IOException
     {
 
         if ( log.isInfoEnabled() )
@@ -1010,42 +984,33 @@ public class RemoteCacheServer
             log.info( "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]" );
         }
 
-        try
+        CacheListeners cacheDesc = getCacheListeners( cacheName );
+        Map eventQMap = cacheDesc.eventQMap;
+        cleanupEventQMap( eventQMap );
+        ICacheEventQueue q = (ICacheEventQueue) eventQMap.remove( new Long( listenerId ) );
+
+        if ( q != null )
         {
-            CacheListeners cacheDesc = getCacheListeners( cacheName );
-            Map eventQMap = cacheDesc.eventQMap;
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Found queue for cache region = [" + cacheName + "] and listenerId  [" + listenerId + "]" );
+            }
+            q.destroy();
             cleanupEventQMap( eventQMap );
-            ICacheEventQueue q = (ICacheEventQueue) eventQMap.remove( new Long( listenerId ) );
-
-            if ( q != null )
+        }
+        else
+        {
+            if ( log.isDebugEnabled() )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Found queue for cache region = [" + cacheName + "] and listenerId  [" + listenerId + "]" );
-                }
-                q.destroy();
-                cleanupEventQMap( eventQMap );
-            }
-            else
-            {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Did not find queue for cache region = [" + cacheName + "] and listenerId ["
-                        + listenerId + "]" );
-                }
-            }
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "After removing listener [" + listenerId + "] cache region " + cacheName
-                    + "'s listener size [" + cacheDesc.eventQMap.size() + "]");
+                log.debug( "Did not find queue for cache region = [" + cacheName + "] and listenerId ["
+                    + listenerId + "]" );
             }
         }
-        catch ( NotBoundException ex )
+
+        if ( log.isInfoEnabled() )
         {
-            log.error( "NotBoundException", ex );
-            ex.printStackTrace();
-            throw new IllegalStateException( ex.getMessage() );
+            log.info( "After removing listener [" + listenerId + "] cache region " + cacheName
+                + "'s listener size [" + cacheDesc.eventQMap.size() + "]");
         }
     }
 
