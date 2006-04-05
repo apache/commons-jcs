@@ -74,10 +74,9 @@ public class RemoteCacheServerFactory
      * @param port
      * @param propFile
      * @throws IOException
-     * @throws NotBoundException
      */
     public static void startup( String host, int port, String propFile )
-        throws IOException, NotBoundException
+        throws IOException
     {
         if ( remoteCacheServer != null )
         {
