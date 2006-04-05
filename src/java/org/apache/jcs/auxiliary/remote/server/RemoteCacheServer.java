@@ -852,7 +852,7 @@ public class RemoteCacheServer
                 if ( !q.isWorking() )
                 {
                     itr.remove();
-                    print( "Cache event queue " + q + " is not working and removed from cache server." );
+                    log.warn( "Cache event queue " + q + " is not working and removed from cache server." );
                 }
             }
         }
@@ -918,7 +918,6 @@ public class RemoteCacheServer
                         {
                             log.info( "adding vm listener under new id = " + listenerIdB );
                         }
-                        print( "adding vm listener under new id = " + listenerIdB );
                     }
                     else
                     {
@@ -1159,15 +1158,5 @@ public class RemoteCacheServer
         throws IOException
     {
         return cacheManager.getStats();
-    }
-
-    /**
-     * Short cut for writing to system out.
-     * 
-     * @param s
-     */
-    private static void print( String s )
-    {
-        System.out.println( "RemoteCacheServer:" + s + " >" + Thread.currentThread().getName() );
     }
 }
