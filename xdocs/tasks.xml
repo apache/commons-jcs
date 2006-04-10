@@ -16,36 +16,18 @@
         coding guidelines</a> established for Turbine family of projects.
       </p>
       <ul>
-        <li>Turbine service for JCS</li>
-        <li>XML-RPC lateral cache completion</li>
-        <li>Javagroups lateral cache</li>
-        <li>Applet or command line XML-RPC monitor client</li>
-        <li>Session distribution testing</li>
         <li>Examples</li>
         <li>XML config</li>
         <li>
           Run-time auxiliary selection (establish all lateral
-          available and choose via access)</li> <li>Idle time check in
+          available and choose via access)</li> 
+        <li>Idle time check in
           hub on get  ( only check maxLife expiration now) 
         </li>
-        <li>Memory shrinker improvements</li>
-        <li>More structured documentation</li>
-        <li>
-          Rename Composite cache to CacheHub and
-          CompositeCacheAttributes</li>
-        <li>
-          ElementAttributes copy -- maybe create new constructor, avoid
-          methods 
-        </li>
-        <li>Torque JCS integration</li>
         <li>LFU memory cache</li>
-        <li>Lateral Token ring locking</li>
-        <li>Cluster architecture proposals</li>
         <li>JUnit tests</li>
         <li>Embedded servlet options</li>
         <li>JMS lateral cache</li>
-        <li>Disk and lateral cache refactoring</li>
-        <li>Profile LinkedQueue -- the faster the better</li>
       </ul>
     </section>
   </body>

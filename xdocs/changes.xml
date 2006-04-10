@@ -5,6 +5,45 @@
 	</properties>
 	<body>
 
+		<release version="1.2.7.3" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				You can now configure the remote cache client to not
+				receive from the remote server.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added a new xdoc for the Remote Cache properties.
+			</action>
+		</release>
+
+		<release version="1.2.7.2" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				You can configure the remote cache to use a custom RMI
+				Socket Factory with socket timeouts.
+			</action>
+			<action dev="hchar" type="fix" due-to="">
+				Removed redundant system out logging from remote cache
+				server.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added additional stats for remote cache.
+			</action>
+		</release>
+
+		<release version="1.2.7.1" date="in CVS">
+			<action dev="asmuts" type="update" due-to="">
+				Added a JDBC disk cache. It has been tested with MYSql
+				and HSQL.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added a special HSQL implementation of the JDBC disk
+				cache. This replaces the previous experimental HSQL
+				implementation.
+			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Added a new xdoc for the JDBC Disk Cache properties.
+			</action>
+		</release>
+
 		<release version="1.2.7.0" date="in CVS">
 			<action dev="asmuts" type="update" due-to="">
 				Removed dependencies on commons-lang and on
