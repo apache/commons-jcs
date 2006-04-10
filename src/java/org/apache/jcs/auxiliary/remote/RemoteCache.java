@@ -128,25 +128,29 @@ public class RemoteCache
 
         try
         {
-            // TODO make configurable.
-            // use this socket factory to add a timeout.
-            RMISocketFactory.setSocketFactory( new RMISocketFactory()
+            // Don't set a socket factory if the setting is -1
+            if ( irca.getRmiSocketFactoryTimeoutMillis() > 0 )
             {
-                public Socket createSocket( String host, int port )
-                    throws IOException
+                // TODO make configurable.
+                // use this socket factory to add a timeout.
+                RMISocketFactory.setSocketFactory( new RMISocketFactory()
                 {
-                    Socket socket = new Socket( host, port );
-                    socket.setSoTimeout( irca.getRmiSocketFactoryTimeoutMillis() );
-                    socket.setSoLinger( false, 0 );
-                    return socket;
-                }
+                    public Socket createSocket( String host, int port )
+                        throws IOException
+                    {
+                        Socket socket = new Socket( host, port );
+                        socket.setSoTimeout( irca.getRmiSocketFactoryTimeoutMillis() );
+                        socket.setSoLinger( false, 0 );
+                        return socket;
+                    }
 
-                public ServerSocket createServerSocket( int port )
-                    throws IOException
-                {
-                    return new ServerSocket( port );
-                }
-            } );
+                    public ServerSocket createServerSocket( int port )
+                        throws IOException
+                    {
+                        return new ServerSocket( port );
+                    }
+                } );
+            }
         }
         catch ( Exception e )
         {
