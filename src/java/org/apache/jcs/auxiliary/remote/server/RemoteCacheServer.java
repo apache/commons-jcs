@@ -97,10 +97,10 @@ class RemoteCacheServer
      * server with the values from the config file.
      * 
      * @param rcsa
-     * @throws RemoteException 
+     * @throws RemoteException
      * @exception IOException
      */
-    RemoteCacheServer( IRemoteCacheServerAttributes rcsa ) 
+    RemoteCacheServer( IRemoteCacheServerAttributes rcsa )
         throws RemoteException
     {
         super( rcsa.getServicePort() );
@@ -329,7 +329,8 @@ class RemoteCacheServer
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region. requesterId [" + requesterId + "]" );
+                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region. requesterId ["
+                                + requesterId + "]" );
                         }
 
                         c.localUpdate( item );
@@ -338,7 +339,8 @@ class RemoteCacheServer
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Put NOT from cluster, updating other auxiliaries for region. requesterId [" + requesterId + "]" );
+                            log.debug( "Put NOT from cluster, updating other auxiliaries for region. requesterId ["
+                                + requesterId + "]" );
                         }
 
                         c.update( item );
@@ -349,7 +351,8 @@ class RemoteCacheServer
                     // swallow
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "Exception caught updating item. requesterId [" + requesterId + "] " + ce.getMessage() );
+                        log.info( "Exception caught updating item. requesterId [" + requesterId + "] "
+                            + ce.getMessage() );
                     }
                 }
 
@@ -493,6 +496,11 @@ class RemoteCacheServer
                 + remoteTypeL );
         }
 
+        // Since a non-receiving remote cache client will not register a
+        // listener, it will not have a listener id assigned from the server. As
+        // such the remote server cannot determine if it is a cluster or a
+        // normal client. It will assume that it is a normal client.
+
         boolean fromCluster = false;
         if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
         {
@@ -526,7 +534,7 @@ class RemoteCacheServer
         // will not result in any loops.
         //
         // This is the only instance I can think of where we allow a remote get
-        // from a remote call. The putpose is to allow remote cache servers to
+        // from a remote call. The purpose is to allow remote cache servers to
         // talk to each other. If one goes down, you want it to be able to get
         // data from those that were up when the failed server comes back o
         // line.
@@ -541,7 +549,8 @@ class RemoteCacheServer
         else
         {
             // Gets from cluster type remote will end up here.
-            // Gets from all clients will end up here if allow cluster get is false.
+            // Gets from all clients will end up here if allow cluster get is
+            // false.
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Allowing a get from other auxiliaries for the region." );
@@ -613,7 +622,7 @@ class RemoteCacheServer
 
         Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
         boolean fromCluster = false;
-        if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
         {
             fromCluster = true;
         }
@@ -695,7 +704,7 @@ class RemoteCacheServer
 
         Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
         boolean fromCluster = false;
-        if ( remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
         {
             fromCluster = true;
         }
@@ -768,7 +777,7 @@ class RemoteCacheServer
         {
             log.info( "Dispose request received from listener [" + requesterId + "]" );
         }
-        
+
         CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
 
         // this is dangerous
@@ -1003,15 +1012,15 @@ class RemoteCacheServer
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Did not find queue for cache region = [" + cacheName + "] and listenerId ["
-                    + listenerId + "]" );
+                log.debug( "Did not find queue for cache region = [" + cacheName + "] and listenerId [" + listenerId
+                    + "]" );
             }
         }
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "After removing listener [" + listenerId + "] cache region " + cacheName
-                + "'s listener size [" + cacheDesc.eventQMap.size() + "]");
+            log.info( "After removing listener [" + listenerId + "] cache region " + cacheName + "'s listener size ["
+                + cacheDesc.eventQMap.size() + "]" );
         }
     }
 

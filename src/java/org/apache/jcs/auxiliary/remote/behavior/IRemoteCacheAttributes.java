@@ -29,15 +29,27 @@ public interface IRemoteCacheAttributes
     /**
      * A remote cache is either a local cache or a cluster cache.
      */
-    public static int LOCAL = 0;
+    public static final int LOCAL = 0;
 
     /**
      * A remote cache is either a local cache or a cluster cache.
      */
-    public static int CLUSTER = 1;
+    public static final int CLUSTER = 1;
 
     /** The default timeout for the custom RMI socket facfory */
     public static final int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS = 10000;
+
+    /**
+     * If RECEIVE is false then the remote cache will not register a listener
+     * with the remote server. This allows you to configure a remote server as a
+     * repository from which you can get and to which you put, but from which
+     * you do not reveive any notifications. That is, you will not receive
+     * updates or removes.
+     * <p>
+     * If you set this option to false, you should set your locl memory size to
+     * 0.
+     */
+    public static final boolean DEFAULT_RECEIVE = true;
 
     /**
      * Gets the remoteTypeName attribute of the IRemoteCacheAttributes object
@@ -279,7 +291,7 @@ public interface IRemoteCacheAttributes
      * This sets a general timeout on the rmi socket factory. By default the
      * socket factory will block forever.
      * <p>
-     * We have a default setting.  The default rmi behavior should never be used.
+     * We have a default setting. The default rmi behavior should never be used.
      * 
      * @return int milliseconds
      */
@@ -292,4 +304,36 @@ public interface IRemoteCacheAttributes
      * @param rmiSocketFactoryTimeoutMillis
      */
     public abstract void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis );
+
+    /**
+     * By default this option is true. If you set it to false, you will not
+     * receive updates or removes from the remote server.
+     * 
+     * @param receive
+     */
+    public void setReceive( boolean receive );
+
+    /**
+     * If RECEIVE is false then the remote cache will not register a listener
+     * with the remote server. This allows you to configure a remote server as a
+     * repository from which you can get and to which you put, but from which
+     * you do not reveive any notifications. That is, you will not receive
+     * updates or removes.
+     * <p>
+     * If you set this option to false, you should set your locl memory size to
+     * 0.
+     * <p>
+     * The remote cache manager uses this value to decide whether or not to
+     * register a listener.
+     * <p>
+     * It makes no sense to configure a cluster remote cache to no receive.
+     * <p>
+     * Since a non-receiving remote cache client will not register a listener,
+     * it will not have a listener id assigned from the server. As such the
+     * remote server cannot determine if it is a cluster or a normal client. It
+     * will assume that it is a normal client.
+     * 
+     * @return the receive value.
+     */
+    public boolean isReceive();
 }

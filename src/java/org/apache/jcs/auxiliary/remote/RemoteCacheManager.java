@@ -39,7 +39,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * specific host and port. All RemoteCacheManager instances are monitored by the
  * singleton RemoteCacheMonitor monitoring daemon for error detection and
  * recovery.
- *  
+ * 
  */
 public class RemoteCacheManager
     implements AuxiliaryCacheManager
@@ -83,7 +83,7 @@ public class RemoteCacheManager
      * The cache manager listeners will need to use to get a cache.
      */
     private ICompositeCacheManager cacheMgr;
-    
+
     /**
      * Constructs an instance to with the given remote connection parameters. If
      * the connection cannot be made, "zombie" services will be temporarily used
@@ -100,7 +100,7 @@ public class RemoteCacheManager
         this.port = port;
         this.service = service;
         this.cacheMgr = cacheMgr;
-        
+
         String registry = "//" + host + ":" + port + "/" + service;
         if ( log.isDebugEnabled() )
         {
@@ -160,9 +160,26 @@ public class RemoteCacheManager
     public void addRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener listener )
         throws IOException
     {
-        synchronized ( caches )
+        if ( cattr.isReceive() )
         {
-            remoteWatch.addCacheListener( cattr.getCacheName(), listener );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "The remote cache is configured to receive events from the remote server.  "
+                    + "We will register a listener." );
+            }
+
+            synchronized ( caches )
+            {
+                remoteWatch.addCacheListener( cattr.getCacheName(), listener );
+            }
+        }
+        else
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "The remote cache is configured to NOT receive events from the remote server.  "
+                    + "We will NOT register a listener." );
+            }
         }
         return;
     }
@@ -199,7 +216,6 @@ public class RemoteCacheManager
     {
         synchronized ( caches )
         {
-
             RemoteCacheNoWait cache = (RemoteCacheNoWait) caches.get( cattr.getCacheName() );
             if ( cache != null )
             {
@@ -214,7 +230,18 @@ public class RemoteCacheManager
             }
             else
             {
-                log.warn( "Trying to deregister Cache Listener that was never registered." );
+                if ( cattr.isReceive() )
+                {
+                    log.warn( "Trying to deregister Cache Listener that was never registered." );
+                }
+                else
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Since the remote cache is configured to not receive, "
+                            + "there is no listener to deregister." );
+                    }
+                }
             }
         }
         return;
@@ -231,6 +258,7 @@ public class RemoteCacheManager
      * 
      * If the connection cannot be established, zombie objects will be used for
      * future recovery purposes.
+     * 
      * @param cattr
      * @param cacheMgr
      * 
@@ -286,9 +314,9 @@ public class RemoteCacheManager
         return ins;
     }
 
-
     /**
      * Returns a remote cache for the given cache name.
+     * 
      * @param cacheName
      * 
      * @return The cache value
@@ -345,9 +373,12 @@ public class RemoteCacheManager
         return c;
     }
 
-    /** Description of the Method 
+    /**
+     * Description of the Method
+     * 
      * @param name
-     * @throws IOException*/
+     * @throws IOException
+     */
     public void freeCache( String name )
         throws IOException
     {
@@ -377,8 +408,8 @@ public class RemoteCacheManager
             ICache c = (ICache) allCaches.next();
             if ( c != null )
             {
-                //need to add getStats to ICache
-                //stats.append( "<br>&nbsp;&nbsp;&nbsp;" + c.getStats() );
+                // need to add getStats to ICache
+                // stats.append( "<br>&nbsp;&nbsp;&nbsp;" + c.getStats() );
                 stats.append( c.getCacheName() );
             }
         }
@@ -414,10 +445,11 @@ public class RemoteCacheManager
         }
     }
 
-    //end release()
+    // end release()
 
     /**
      * Fixes up all the caches managed by this cache manager.
+     * 
      * @param remoteService
      * @param remoteWatch
      */
@@ -447,7 +479,7 @@ public class RemoteCacheManager
 
     /**
      * Location of the RMI registry.
-     *  
+     * 
      */
     private final static class Location
     {
@@ -470,7 +502,8 @@ public class RemoteCacheManager
         }
 
         /*
-         *  (non-Javadoc)
+         * (non-Javadoc)
+         * 
          * @see java.lang.Object#equals(java.lang.Object)
          */
         public boolean equals( Object obj )
@@ -491,10 +524,10 @@ public class RemoteCacheManager
             return host.equals( l.host ) && port == l.port;
         }
 
-        /** 
+        /**
          * 
          * @return int
-         */ 
+         */
         public int hashCode()
         {
             return host == null ? port : host.hashCode() ^ port;

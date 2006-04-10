@@ -38,7 +38,7 @@ public class RemoteCacheAttributes
     private int remotePort;
 
     /**
-     * failover servers will be used by local caches one at a time. Listeners
+     * Failover servers will be used by local caches one at a time. Listeners
      * will be registered with all cluster servers. If we add a get from cluster
      * attribute we will have the ability to chain clusters and have them get
      * from each other.
@@ -69,6 +69,8 @@ public class RemoteCacheAttributes
     private int getTimeoutMillis = -1;
 
     private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
+    
+    private boolean receive = DEFAULT_RECEIVE;
     
     /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheAttributes()
@@ -441,6 +443,36 @@ public class RemoteCacheAttributes
     }
 
     /**
+     * By default this option is true. If you set it to false, you will not
+     * receive updates or removes from the remote server.
+     * 
+     * @param receive 
+     */
+    public void setReceive( boolean receive )
+    {
+        this.receive = receive;
+    }
+
+    /**
+     * If RECEIVE is false then the remote cache will not register a listener
+     * with the remote server. This allows you to configure a remote server as a
+     * repository from which you can get and to which you put, but from which
+     * you do not reveive any notifications. That is, you will not receive
+     * updates or removes.
+     * <p>
+     * If you set this option to false, you should set your locl memory size to
+     * 0.
+     * <p>
+     * The remote cache manager uses this value to decide whether or not to register a listener.
+     * 
+     * @return the receive value.
+     */
+    public boolean isReceive()
+    {
+        return this.receive;
+    }
+    
+    /**
      * @return String, all the important values that can be configured
      */
     public String toString()
@@ -452,6 +484,7 @@ public class RemoteCacheAttributes
         buf.append( "\n cacheName = [" + this.cacheName + "]" );
         buf.append( "\n removeUponRemotePut = [" + this.removeUponRemotePut + "]" );
         buf.append( "\n getOnly = [" + getOnly + "]" );
+        buf.append( "\n receive = [" + isReceive() + "]" );
         buf.append( "\n getTimeoutMillis = [" + getGetTimeoutMillis() + "]" );
         buf.append( "\n threadPoolName = [" + getThreadPoolName() + "]" );
         buf.append( "\n remoteType = [" + remoteType + "]" );
