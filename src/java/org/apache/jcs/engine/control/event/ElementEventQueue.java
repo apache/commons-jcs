@@ -181,7 +181,6 @@ public class ElementEventQueue
                 {
                     log.debug( "Something came into the Q" );
                 }
-
             }
 
             // we have the lock, and the list is not empty
@@ -344,9 +343,7 @@ public class ElementEventQueue
         protected void doRun()
             throws IOException
         {
-
             hand.handleElementEvent( event );
         }
     }
-
 }

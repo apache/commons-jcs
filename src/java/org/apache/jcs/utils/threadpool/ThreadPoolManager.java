@@ -52,16 +52,27 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * If a value is not set for a particular pool, the hard coded defaults will be
  * used.
  * 
- * int boundarySize_DEFAULT = 75; int maximumPoolSize_DEFAULT = 150; int
- * minimumPoolSize_DEFAULT = 4; int keepAliveTime_DEFAULT = 1000 * 60 * 5;
- * boolean abortWhenBlocked = false; int startUpSize_DEFAULT = 4;
+ * <pre>
+ * int boundarySize_DEFAULT = 2000;
  * 
+ * int maximumPoolSize_DEFAULT = 150;
+ * 
+ * int minimumPoolSize_DEFAULT = 4;
+ * 
+ * int keepAliveTime_DEFAULT = 1000 * 60 * 5;
+ * 
+ * boolean abortWhenBlocked = false;
+ * 
+ * String whenBlockedPolicy_DEFAULT = IPoolConfiguration.POLICY_RUN;
+ * 
+ * int startUpSize_DEFAULT = 4;
+ * </pre>
  * 
  * You can configure default settings by specifying a default pool in the
  * properties, ie "cache.ccf"
  * 
  * @author Aaron Smuts
- *  
+ * 
  */
 public class ThreadPoolManager
 {
@@ -107,7 +118,7 @@ public class ThreadPoolManager
 
     /**
      * No instances please. This is a singleton.
-     *  
+     * 
      */
     private ThreadPoolManager()
     {
@@ -294,7 +305,7 @@ public class ThreadPoolManager
     /**
      * Intialize the ThreadPoolManager and create all the pools defined in the
      * configuration.
-     *  
+     * 
      */
     protected void configure()
     {
@@ -307,19 +318,19 @@ public class ThreadPoolManager
         {
             try
             {
-            props = PropertyLoader.loadProperties( propsFileName );
+                props = PropertyLoader.loadProperties( propsFileName );
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "File contained " + props.size() + " properties" );
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "File contained " + props.size() + " properties" );
+                }
             }
-            }
-            catch( Exception e )
+            catch ( Exception e )
             {
                 log.error( "Problem loading properties. propsFileName [" + propsFileName + "]", e );
             }
         }
-        
+
         if ( props == null )
         {
             log.warn( "No configuration settings found.  Using hardcoded default values for all pools." );
@@ -338,9 +349,10 @@ public class ThreadPoolManager
 
     /**
      * Configures the default PoolConfiguration settings
+     * 
      * @param root
      * @return PoolConfiguration
-     *  
+     * 
      */
     protected PoolConfiguration loadConfig( String root )
     {
@@ -430,12 +442,11 @@ public class ThreadPoolManager
             }
         }
 
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( root + " PoolConfiguration = " + config );
+            log.info( root + " PoolConfiguration = " + config );
         }
 
         return config;
     }
-
 }

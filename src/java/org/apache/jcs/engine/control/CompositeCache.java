@@ -56,7 +56,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * This is the primary hub for a single cache/region. It controls the flow of
  * items through the cache. The auxiliary and memory caches are plugged in here.
  * <p>
- * This is the core of a JCS region.
+ * This is the core of a JCS region.  Hence, this simple class is the core of JCS.
  * 
  * @version $Id$
  */
@@ -218,13 +218,6 @@ public class CompositeCache
         log.debug( "Updating memory cache" );
 
         memCache.update( cacheElement );
-
-        // Updates to all auxiliary caches -- remote and laterals, can add as
-        // many of each
-        // as necessary.
-        // could put the update criteria in each but it would a bit cumbersome
-        // the disk cache would have to check the cache size, the lateral
-        // would have to check the region cattr configuration
 
         // UPDATE AUXILLIARY CACHES
         // There are 3 types of auxiliary caches: remote, lateral, and disk
@@ -564,11 +557,10 @@ public class CompositeCache
                     }
                 }
             }
-
         }
         catch ( Exception e )
         {
-            log.error( e );
+            log.error( "Problem encountered getting element.", e );
         }
 
         if ( !found )
@@ -696,8 +688,8 @@ public class CompositeCache
      * fromRemote: If a remove call was made on a cache with both, then the
      * remote should have been called. If it wasn't then the remote is down.
      * we'll assume it is down for all. If it did come from the remote then the
-     * caceh is remotely configured and lateral removal is unncessary. If it
-     * came laterally then lateral removal is unnecessary. Does this assumes
+     * cache is remotely configured and lateral removal is unncessary. If it
+     * came laterally then lateral removal is unnecessary. Does this assume
      * that there is only one lateral and remote for the cache? Not really, the
      * intial removal should take care of the problem if the source cache was
      * similiarly configured. Otherwise the remote cache, if it had no laterals,
@@ -802,14 +794,13 @@ public class CompositeCache
     protected synchronized void removeAll( boolean localOnly )
         throws IOException
     {
-
         try
         {
             memCache.removeAll();
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Removed All keys from mem cache." );
+                log.debug( "Removed All keys from the memory cache." );
             }
         }
         catch ( IOException ex )
@@ -935,7 +926,6 @@ public class CompositeCache
             {
                 log.error( "Failure disposing of aux", ex );
             }
-
         }
 
         log.info( "In dispose, " + this.cacheName + " disposing of memory cache." );
@@ -949,7 +939,6 @@ public class CompositeCache
         }
 
         log.warn( "Called close for " + cacheName );
-
     }
 
     /**
@@ -1290,7 +1279,6 @@ public class CompositeCache
                 }
             }
         }
-
     }
 
     /**

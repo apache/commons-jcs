@@ -48,6 +48,14 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 /**
  * Manages a composite cache. This provides access to caches and is the primary
  * way to shutdown the caching system as a whole.
+ * <p>
+ * The composite cache manager is responsible for creating / configuring cache
+ * regions. It serves as a factory for the ComositeCache class. The
+ * CompositeCache is the core of JCS, the hub for various auxiliaries.
+ * <p>
+ * It is recommended that you use the JCS convenience class for all cache
+ * access.
+ * 
  */
 public class CompositeCacheManager
     implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, IShutdownObservable
@@ -128,7 +136,7 @@ public class CompositeCacheManager
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Instance is null, creating with default config [" + propsFilename + "]" );                
+                log.info( "Instance is null, creating with default config [" + propsFilename + "]" );
             }
 
             instance = createInstance();
@@ -155,7 +163,7 @@ public class CompositeCacheManager
             {
                 log.info( "Instance is null, creating with provided config" );
             }
-            
+
             instance = createInstance();
         }
 
@@ -167,6 +175,7 @@ public class CompositeCacheManager
     /**
      * Simple factory method, must override in subclasses so getInstance creates /
      * returns the correct object.
+     * 
      * @return CompositeCacheManager
      */
     protected static CompositeCacheManager createInstance()
@@ -223,7 +232,6 @@ public class CompositeCacheManager
                     // Ignored
                 }
             }
-
         }
         else
         {
@@ -296,7 +304,7 @@ public class CompositeCacheManager
             {
                 log.debug( "ThreadPoolManager = " + poolMgr );
             }
-            
+
             // configure the cache
             CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
 
@@ -352,8 +360,9 @@ public class CompositeCacheManager
         return this.defaultElementAttr.copy();
     }
 
-    /** 
-     * Gets the cache attribute of the CacheHub object 
+    /**
+     * Gets the cache attribute of the CacheHub object
+     * 
      * @param cacheName
      * @return CompositeCache -- the cache region controller
      */
@@ -362,7 +371,9 @@ public class CompositeCacheManager
         return getCache( cacheName, this.defaultCacheAttr.copy() );
     }
 
-    /** Gets the cache attribute of the CacheHub object 
+    /**
+     * Gets the cache attribute of the CacheHub object
+     * 
      * @param cacheName
      * @param cattr
      * @return
@@ -373,7 +384,9 @@ public class CompositeCacheManager
         return getCache( cattr, this.defaultElementAttr );
     }
 
-    /** Gets the cache attribute of the CacheHub object 
+    /**
+     * Gets the cache attribute of the CacheHub object
+     * 
      * @param cacheName
      * @param cattr
      * @param attr
@@ -385,7 +398,9 @@ public class CompositeCacheManager
         return getCache( cattr, attr );
     }
 
-    /** Gets the cache attribute of the CacheHub object 
+    /**
+     * Gets the cache attribute of the CacheHub object
+     * 
      * @param cattr
      * @return
      */
@@ -395,21 +410,24 @@ public class CompositeCacheManager
     }
 
     /**
-     * If the cache is created the CacheAttributes and the element Attributes
-     * will be ignored. Currently there is no overiding once it is set up.
+     * If the cache has already been created, then the CacheAttributes and the
+     * element Attributes will be ignored. Currently there is no overiding the
+     * CacheAttributes once it is set up. You can change the default
+     * ElementAttributes for a region later.
      * <p>
-     * Overriding hte default elemental atributes will require cahnging the way
+     * Overriding the default elemental atributes will require changing the way
      * the atributes are assigned to elements. Get cache creates a cache with
      * defaults if none are specified. We might want to create separate method
      * for creating/getting. . .
+     * 
      * @param cattr
      * @param attr
-     * @return
+     * @return CompositeCache
      */
     public CompositeCache getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         CompositeCache cache;
-        
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "attr = " + attr );
@@ -434,7 +452,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @param name 
+     * @param name
      */
     public void freeCache( String name )
     {
@@ -443,7 +461,7 @@ public class CompositeCacheManager
 
     /**
      * @param name
-     * @param fromRemote 
+     * @param fromRemote
      */
     public void freeCache( String name, boolean fromRemote )
     {
@@ -464,16 +482,16 @@ public class CompositeCacheManager
         synchronized ( shutdownObservers )
         {
             // We don't need to worry about lcoking the set.
-            // since this is a shutdown command, nor do we need 
+            // since this is a shutdown command, nor do we need
             // to queue these up.
             Iterator it = shutdownObservers.iterator();
             while ( it.hasNext() )
             {
-                IShutdownObserver observer = (IShutdownObserver)it.next();
+                IShutdownObserver observer = (IShutdownObserver) it.next();
                 observer.shutdown();
             }
         }
-        
+
         // do the traditional shutdown of the regions.
         String[] names = getCacheNames();
         int len = names.length;
@@ -497,7 +515,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @param fromRemote 
+     * @param fromRemote
      */
     private void release( boolean fromRemote )
     {
@@ -533,7 +551,8 @@ public class CompositeCacheManager
     }
 
     /**
-     * Returns a list of the current cache names. 
+     * Returns a list of the current cache names.
+     * 
      * @return String[]
      */
     public String[] getCacheNames()
@@ -548,7 +567,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @return 
+     * @return
      */
     public int getCacheType()
     {
@@ -556,7 +575,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @return  ICompositeCacheAttributes
+     * @return ICompositeCacheAttributes
      */
     public ICompositeCacheAttributes getDefaultCattr()
     {
@@ -564,7 +583,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @param auxFac 
+     * @param auxFac
      */
     void registryFacPut( AuxiliaryCacheFactory auxFac )
     {
@@ -581,7 +600,7 @@ public class CompositeCacheManager
     }
 
     /**
-     * @param auxAttr 
+     * @param auxAttr
      */
     void registryAttrPut( AuxiliaryCacheAttributes auxAttr )
     {
@@ -598,25 +617,25 @@ public class CompositeCacheManager
     }
 
     /**
-     * Gets stats for debugging.  This calls gets statistics and then
-     * puts all the results in a string.  This returns data for all regions.
+     * Gets stats for debugging. This calls gets statistics and then puts all
+     * the results in a string. This returns data for all regions.
      * 
      * @return String
      */
     public String getStats()
     {
-        ICacheStats[] stats =  getStatistics();
+        ICacheStats[] stats = getStatistics();
         if ( stats == null )
         {
             return "NONE";
         }
-        
+
         // force the array elements into a string.
         StringBuffer buf = new StringBuffer();
         int statsLen = stats.length;
         for ( int i = 0; i < statsLen; i++ )
         {
-            buf.append( "\n---------------------------\n" ); 
+            buf.append( "\n---------------------------\n" );
             buf.append( stats[i] );
         }
         return buf.toString();
@@ -676,5 +695,4 @@ public class CompositeCacheManager
             shutdownObservers.remove( observer );
         }
     }
-
 }
