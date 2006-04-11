@@ -847,6 +847,10 @@ public class JDBCDiskCache
         // any ObjectPool implementation will suffice.
         ObjectPool connectionPool = new GenericObjectPool( null, maxActive );
 
+        // TODO make configurable
+        // By dfault the size is 8!!!!!!!  
+        ((GenericObjectPool)connectionPool).setMaxIdle( -1 );
+        
         // Next, we'll create a ConnectionFactory that the
         // pool will use to create Connections.
         // We'll use the DriverManagerConnectionFactory,
