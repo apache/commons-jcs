@@ -13,6 +13,10 @@
 			<action dev="asmuts" type="update" due-to="">
 				Added a new xdoc for the Remote Cache properties.
 			</action>
+			<action dev="asmuts" type="update" due-to="">
+				Improved the jcs admin jsp: added stats details, better
+				navigation, item lookup, and remove confirmation.
+			</action>
 		</release>
 
 		<release version="1.2.7.2" date="in CVS">
