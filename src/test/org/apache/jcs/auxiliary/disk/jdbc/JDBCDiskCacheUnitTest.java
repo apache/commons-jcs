@@ -128,6 +128,7 @@ public class JDBCDiskCacheUnitTest
         createSql.append( "CREATE_TIME           DATE, " );
         createSql.append( "CREATE_TIME_SECONDS   BIGINT, " );
         createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
+        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );        
         createSql.append( "IS_ETERNAL            CHAR(1), " );
         createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
         createSql.append( ");" );

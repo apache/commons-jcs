@@ -54,24 +54,30 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * configurable.
  * 
  * <pre>
- *           drop TABLE JCS_STORE;
- *          
- *           CREATE TABLE JCS_STORE
- *           (
- *           CACHE_KEY             VARCHAR(250)          NOT NULL,
- *           REGION                VARCHAR(250)          NOT NULL,
- *           ELEMENT               BLOB,
- *           CREATE_TIME           DATE,
- *           CREATE_TIME_SECONDS   BIGINT,
- *           MAX_LIFE_SECONDS      BIGINT,
- *           IS_ETERNAL            CHAR(1),
- *           PRIMARY KEY (CACHE_KEY, REGION)
- *           );
+ *                 drop TABLE JCS_STORE;
+ *                
+ *                 CREATE TABLE JCS_STORE
+ *                 (
+ *                 CACHE_KEY                  VARCHAR(250)          NOT NULL,
+ *                 REGION                     VARCHAR(250)          NOT NULL,
+ *                 ELEMENT                    BLOB,
+ *                 CREATE_TIME                DATE,
+ *                 CREATE_TIME_SECONDS        BIGINT,
+ *                 MAX_LIFE_SECONDS           BIGINT,
+ *                 SYSTEM_EXPIRE_TIME_SECONDS BIGINT,
+ *                 IS_ETERNAL                 CHAR(1),
+ *                 PRIMARY KEY (CACHE_KEY, REGION)
+ *                 );
  * </pre>
  * 
  * 
  * The cleanup thread will delete non eternal items where (now - create time) >
  * max life seconds * 1000
+ * <p>
+ * To speed up the deletion the SYSTEM_EXPIRE_TIME_SECONDS is used instead. It
+ * is recommended that an index be created on this column is you will have over
+ * a million records.
+ * 
  * 
  * @author Aaron Smuts
  * 
@@ -239,7 +245,8 @@ public class JDBCDiskCache
                 {
                     String sqlI = "insert into "
                         + getJdbcDiskCacheAttributes().getTableName()
-                        + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, CREATE_TIME_SECONDS) values (?, ?, ?, ?, ?, ?, ?)";
+                        + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, CREATE_TIME_SECONDS, SYSTEM_EXPIRE_TIME_SECONDS) "
+                        + " values (?, ?, ?, ?, ?, ?, ?, ?)";
 
                     PreparedStatement psInsert = con.prepareStatement( sqlI );
                     psInsert.setString( 1, (String) ce.getKey() );
@@ -256,8 +263,12 @@ public class JDBCDiskCache
                     }
                     Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
                     psInsert.setDate( 6, createTime );
+
                     long now = System.currentTimeMillis() / 1000;
                     psInsert.setLong( 7, now );
+
+                    long expireTime = now + ce.getElementAttributes().getMaxLifeSeconds();
+                    psInsert.setLong( 8, expireTime );
 
                     psInsert.execute();
                     psInsert.close();
@@ -290,11 +301,22 @@ public class JDBCDiskCache
                 try
                 {
                     sqlU = "update " + getJdbcDiskCacheAttributes().getTableName()
-                        + " set ELEMENT  = ? where CACHE_KEY = ? and REGION = ? ";
+                        + " set ELEMENT  = ?, CREATE_TIME = ?, CREATE_TIME_SECONDS = ?, "
+                        + " SYSTEM_EXPIRE_TIME_SECONDS = ? " + " where CACHE_KEY = ? and REGION = ?";
                     PreparedStatement psUpdate = con.prepareStatement( sqlU );
                     psUpdate.setBytes( 1, element );
-                    psUpdate.setString( 2, (String) ce.getKey() );
-                    psUpdate.setString( 3, this.getCacheName() );
+
+                    Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
+                    psUpdate.setDate( 2, createTime );
+
+                    long now = System.currentTimeMillis() / 1000;
+                    psUpdate.setLong( 3, now );
+
+                    long expireTime = now + ce.getElementAttributes().getMaxLifeSeconds();
+                    psUpdate.setLong( 4, expireTime );
+
+                    psUpdate.setString( 5, (String) ce.getKey() );
+                    psUpdate.setString( 6, this.getCacheName() );
                     psUpdate.execute();
                     psUpdate.close();
 
@@ -646,8 +668,16 @@ public class JDBCDiskCache
         try
         {
             long now = System.currentTimeMillis() / 1000;
+
+            // This is to slow when we push over a million records
+            // String sql = "delete from " +
+            // getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
+            // + this.getCacheName() + "' and IS_ETERNAL = 'F' and (" + now
+            // + " - CREATE_TIME_SECONDS) > MAX_LIFE_SECONDS";
+
             String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                + this.getCacheName() + "' and IS_ETERNAL = 'F' and (" + now + " - CREATE_TIME_SECONDS) > MAX_LIFE_SECONDS";
+                + this.getCacheName() + "' and IS_ETERNAL = 'F' and " + now + " > SYSTEM_EXPIRE_TIME_SECONDS";
+
             Connection con = DriverManager.getConnection( getPoolUrl() );
             Statement sStatement = null;
             try
@@ -848,9 +878,9 @@ public class JDBCDiskCache
         ObjectPool connectionPool = new GenericObjectPool( null, maxActive );
 
         // TODO make configurable
-        // By dfault the size is 8!!!!!!!  
-        ((GenericObjectPool)connectionPool).setMaxIdle( -1 );
-        
+        // By dfault the size is 8!!!!!!!
+        ( (GenericObjectPool) connectionPool ).setMaxIdle( -1 );
+
         // Next, we'll create a ConnectionFactory that the
         // pool will use to create Connections.
         // We'll use the DriverManagerConnectionFactory,
