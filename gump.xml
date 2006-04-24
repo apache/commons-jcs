@@ -1,15 +1,15 @@
-<module name="jakarta-turbine-jcs">
+<module name="jakarta-jcs">
 
 
   <description>Cache</description>
-  <url href="http://jakarta.apache.org/turbine/jcs/"/>
+  <url href="http://jakarta.apache.org/jcs/"/>
   
   <cvs repository="jakarta"/>
   
   <!-- This is really the cvs module. We need to change this but -->
   <!-- I will leave this for now until everything works.         -->
   
-  <project name="jakarta-turbine-jcs">
+  <project name="jakarta-jcs">
     
     <!-- Standard Maven target to produce Javadocs, source -->
     <!-- and binary distributions.                         -->
