@@ -114,6 +114,8 @@
 
 
 	<dependencies>
+	
+	    <!--  For comparitive performance tests only -->
 		<dependency>
 			<id>commons-collections</id>
 			<version>3.0</version>
@@ -124,6 +126,7 @@
 			<version>20030706.202021</version>
 		</dependency>
 
+		<!--  REQUIRED FOR JCS CORE -->
 		<dependency>
 			<id>commons-logging</id>
 			<version>1.0.3</version>
@@ -156,6 +159,7 @@
 			</properties>
 		</dependency>
 
+		<!--  REQUIRED FOR JCS CORE -->
 		<dependency>
 			<id>concurrent</id>
 			<version>1.0</version>
@@ -217,12 +221,6 @@
 			<id>xml-apis</id>
 			<version>2.0.2</version>
 			<url>http://xml.apache.org/commons/</url>
-		</dependency>
-
-		<dependency>
-			<id>struts</id>
-			<version>1.1</version>
-			<jar>struts-1.1.jar</jar>
 		</dependency>
 
 		<dependency>
