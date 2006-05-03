@@ -16,12 +16,11 @@ package org.apache.jcs.auxiliary.remote;
  * limitations under the License.
  */
 
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.CacheConstants;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * The RemoteCacheFailoverRunner tries to establish a connection with a failover
@@ -40,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * its connection to the primary server, it will attempt to restore that
  * connectin in the background. If failovers are defined, the Failover runner
  * will try to connect to a failover until the primary is restored.
- *  
+ * 
  */
 public class RemoteCacheFailoverRunner
     implements Runnable
@@ -54,7 +53,7 @@ public class RemoteCacheFailoverRunner
     private boolean alright = true;
 
     private ICompositeCacheManager cacheMgr;
-    
+
     /**
      * Constructor for the RemoteCacheFailoverRunner object. This allows the
      * FailoverRunner to modify the facade that the CompositeCache references.
@@ -94,7 +93,7 @@ public class RemoteCacheFailoverRunner
      * <p>
      * The primary server is the first server defines in the FailoverServers
      * list.
-     *  
+     * 
      */
     public void run()
     {
@@ -123,7 +122,7 @@ public class RemoteCacheFailoverRunner
      * This is the main loop. If there are failovers define, then this will
      * continue until the primary is re-connected. If no failovers are defined,
      * this will exit automatically.
-     *  
+     * 
      */
     private void connectAndRestore()
     {
@@ -175,7 +174,7 @@ public class RemoteCacheFailoverRunner
                     String server = failovers[i];
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "trying server [" + server + "] at failover index i = " + i );
+                        log.debug( "Trying server [" + server + "] at failover index i = " + i );
                     }
 
                     RemoteCacheAttributes rca = null;
@@ -217,8 +216,8 @@ public class RemoteCacheFailoverRunner
                                         {
                                             if ( log.isInfoEnabled() )
                                             {
-                                                log
-                                                    .info( "No need to connect to failover, the primary server is back up." );
+                                                String message = "No need to connect to failover, the primary server is back up.";
+                                                log.info( message );
                                             }
                                         }
                                     }
@@ -231,14 +230,12 @@ public class RemoteCacheFailoverRunner
                                             + rca.getRemotePort() + "]" );
                                     }
                                 }
-
                             }
                         }
                         else
                         {
                             log.info( "noWait is null" );
                         }
-
                     }
                     catch ( Exception ex )
                     {
@@ -253,13 +250,11 @@ public class RemoteCacheFailoverRunner
                         }
                         else
                         {
-                            log.error( "FAILED to connect to failover" + rca.getRemoteHost() + ":"
-                                + rca.getRemotePort(), ex );
+                            log.error( "FAILED to connect to failover [" + rca.getRemoteHost() + ":"
+                                + rca.getRemotePort() + "]", ex );
                         }
-
                     }
                 }
-
             }
             // end if !alright
             // get here if while index >0 and alright, meaning that we are
@@ -277,26 +272,31 @@ public class RemoteCacheFailoverRunner
                 }
             }
 
+            boolean primaryRestoredSuccessfully = false;
             // if we are not connected to the primary, try.
             if ( facade.rca.getFailoverIndex() > 0 )
             {
-                boolean success = restorePrimary();
+                primaryRestoredSuccessfully = restorePrimary();
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Primary recovery success state = " + success );
+                    log.debug( "Primary recovery success state = " + primaryRestoredSuccessfully );
                 }
             }
 
-            // Time driven mode: sleep between each round of recovery attempt.
-            try
+            if ( !primaryRestoredSuccessfully )
             {
-                log.warn( "Failed to reconnect to primary server. Cache failover runner is going to sleep for "
-                    + idlePeriod + " milliseconds." );
-                Thread.sleep( idlePeriod );
-            }
-            catch ( InterruptedException ex )
-            {
-                // ignore;
+                // Time driven mode: sleep between each round of recovery
+                // attempt.
+                try
+                {
+                    log.warn( "Failed to reconnect to primary server. Cache failover runner is going to sleep for "
+                        + idlePeriod + " milliseconds." );
+                    Thread.sleep( idlePeriod );
+                }
+                catch ( InterruptedException ex )
+                {
+                    // ignore;
+                }
             }
 
             // try to bring the listener back to the primary
@@ -318,7 +318,7 @@ public class RemoteCacheFailoverRunner
      */
     private boolean restorePrimary()
     {
-        //      try to move back to the primary
+        // try to move back to the primary
         String[] failovers = facade.rca.getFailovers();
         String server = failovers[0];
 
@@ -397,7 +397,7 @@ public class RemoteCacheFailoverRunner
                                 // failovers this shouldn't get called.
                                 if ( log.isDebugEnabled() )
                                 {
-                                    log.debug( "No need to resotre primary, it is already restored." );
+                                    log.debug( "No need to restore primary, it is already restored." );
                                     return true;
                                 }
                             }
@@ -406,7 +406,6 @@ public class RemoteCacheFailoverRunner
                                 // this should never happen
                                 log.warn( "Failover index is less than 0, this shouldn't happen" );
                             }
-
                         }
                     }
                     catch ( Exception e )
