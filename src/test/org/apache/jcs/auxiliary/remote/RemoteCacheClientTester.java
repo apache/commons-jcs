@@ -299,4 +299,11 @@ public class RemoteCacheClientTester
     {
         System.out.println( s );
     }
+
+    public String getLocalHostAddress()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -92,6 +92,9 @@ class RemoteCacheServer
     /** Configuration settings. */
     protected IRemoteCacheServerAttributes rcsa;
 
+    /** The interval at which we will log updates. */
+    private int logInterval = 100;
+
     /**
      * Constructor for the RemoteCacheServer object. Thiks initializes the
      * server with the values from the config file.
@@ -125,7 +128,6 @@ class RemoteCacheServer
             String name = list[i];
             cacheListenersMap.put( name, new CacheListeners( cacheManager.getCache( name ) ) );
         }
-
     }
 
     /**
@@ -147,7 +149,6 @@ class RemoteCacheServer
         {
             hub.configure( prop );
         }
-
         return hub;
     }
 
@@ -277,7 +278,7 @@ class RemoteCacheServer
         {
             // not thread safe, but it doesn't have to be accurate
             puts++;
-            if ( puts % 100 == 0 )
+            if ( puts % logInterval == 0 )
             {
                 log.info( "puts = " + puts );
             }
@@ -285,7 +286,7 @@ class RemoteCacheServer
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "in update, put " + item.getKey() + " in " + item.getCacheName() );
+            log.debug( "In update, put " + item.getKey() + " in " + item.getCacheName() );
         }
 
         try
@@ -329,20 +330,18 @@ class RemoteCacheServer
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region. requesterId ["
-                                + requesterId + "]" );
+                            log.debug( "Put FROM cluster, NOT updating other auxiliaries for region. "
+                                + " requesterId [" + requesterId + "]" );
                         }
-
                         c.localUpdate( item );
                     }
                     else
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Put NOT from cluster, updating other auxiliaries for region. requesterId ["
-                                + requesterId + "]" );
+                            log.debug( "Put NOT from cluster, updating other auxiliaries for region. "
+                                + " requesterId [" + requesterId + "]" );
                         }
-
                         c.update( item );
                     }
                 }
@@ -360,7 +359,6 @@ class RemoteCacheServer
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
                 if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
                 {
-
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
                     if ( qlist != null )
@@ -538,6 +536,7 @@ class RemoteCacheServer
         // talk to each other. If one goes down, you want it to be able to get
         // data from those that were up when the failed server comes back o
         // line.
+
         if ( !fromCluster && this.rcsa.getAllowClusterGet() )
         {
             if ( log.isDebugEnabled() )
@@ -551,6 +550,7 @@ class RemoteCacheServer
             // Gets from cluster type remote will end up here.
             // Gets from all clients will end up here if allow cluster get is
             // false.
+
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Allowing a get from other auxiliaries for the region." );
@@ -854,6 +854,9 @@ class RemoteCacheServer
 
     /**
      * Subscribes to the specified remote cache.
+     * <p>
+     * If the client id is 0, then the remote cache server will increment it's
+     * local count and assign an id to the client.
      * 
      * @param cacheName
      *            the specified remote cache.
@@ -872,15 +875,18 @@ class RemoteCacheServer
         CacheListeners cacheDesc;
 
         IRemoteCacheListener ircl = (IRemoteCacheListener) listener;
+
+        String listenerAddress = ircl.getLocalHostAddress();
+
         int remoteType = ircl.getRemoteType();
         if ( remoteType == IRemoteCacheAttributes.CLUSTER )
         {
-            log.debug( "adding cluster listener" );
+            log.debug( "adding cluster listener, listenerAddress [" + listenerAddress + "]" );
             cacheDesc = getClusterListeners( cacheName );
         }
         else
         {
-            log.debug( "adding normal listener" );
+            log.debug( "adding normal listener, listenerAddress [" + listenerAddress + "]" );
             cacheDesc = getCacheListeners( cacheName );
         }
         Map eventQMap = cacheDesc.eventQMap;
@@ -900,7 +906,8 @@ class RemoteCacheServer
                     long listenerIdB = nextListenerId();
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache " + cacheName );
+                        log.debug( "listener id=" + ( listenerIdB & 0xff ) + " addded for cache [" + cacheName
+                            + "], listenerAddress [" + listenerAddress + "]" );
                     }
                     listener.setListenerId( listenerIdB );
                     id = listenerIdB;
@@ -908,14 +915,16 @@ class RemoteCacheServer
                     // in case it needs synchronization
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "adding vm listener under new id = " + listenerIdB );
+                        log.info( "adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
+                            + listenerAddress + "]" );
                     }
                 }
                 else
                 {
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "adding listener under existing id = " + id );
+                        log.info( "adding listener under existing id = [" + id + "], listenerAddress ["
+                            + listenerAddress + "]" );
                     }
                     // should confirm the the host is the same as we have on
                     // record, just in case
@@ -927,7 +936,7 @@ class RemoteCacheServer
             }
             catch ( IOException ioe )
             {
-                log.error( "Problem setting listener id.", ioe );
+                log.error( "Problem setting listener id, listenerAddress [" + listenerAddress + "]", ioe );
             }
 
             CacheEventQueueFactory fact = new CacheEventQueueFactory();
@@ -936,9 +945,9 @@ class RemoteCacheServer
 
             eventQMap.put( new Long( listener.getListenerId() ), q );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "****** Cache " + cacheName + "'s listener size=" + cacheDesc.eventQMap.size() );
+                log.info( "Region " + cacheName + "'s listener size = " + cacheDesc.eventQMap.size() );
             }
         }
         // end sync
@@ -962,7 +971,7 @@ class RemoteCacheServer
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "adding listener for cache " + cacheName );
+                log.debug( "Adding listener for cache [" + cacheName + "]" );
             }
         }
         return;
@@ -981,7 +990,8 @@ class RemoteCacheServer
     }
 
     /**
-     * Unsibscribe this region.
+     * Unsibscribe this listener from this region. If the listener is
+     * registered, it will be removed from the event queue map list.
      * 
      * @param cacheName
      * @param listenerId
@@ -1088,7 +1098,10 @@ class RemoteCacheServer
     // TODO: test out the DGC.
     public void unreferenced()
     {
-        log.debug( "*** Warning: Server now unreferenced and subject to GC. ***" );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "*** Server now unreferenced and subject to GC. ***" );
+        }
     }
 
     /**
@@ -1120,7 +1133,8 @@ class RemoteCacheServer
                 id = ++listenerId[0];
             }
         }
-        return id; // ( long ) ( id & 0xff );
+        // ( long ) ( id & 0xff );
+        return id;
     }
 
     /**

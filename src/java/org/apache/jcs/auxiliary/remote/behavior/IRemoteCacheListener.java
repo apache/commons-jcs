@@ -24,7 +24,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * Listens for remote cache event notification ( rmi callback ).
- *  
+ * 
  */
 public interface IRemoteCacheListener
     extends ICacheListener, Remote
@@ -63,6 +63,16 @@ public interface IRemoteCacheListener
      * @throws IOException
      */
     public int getRemoteType()
+        throws IOException;
+
+    /**
+     * This is for debugging. It allows the remote cache server to log the
+     * address of any listeners that regiser.
+     * 
+     * @return the local host address.
+     * @throws IOException 
+     */
+    public String getLocalHostAddress()
         throws IOException;
 
 }

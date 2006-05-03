@@ -32,6 +32,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.utils.net.HostNameUtil;
 import org.apache.jcs.utils.serialization.SerializationConversionUtil;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 
@@ -49,6 +50,8 @@ public class RemoteCacheListener
     private static final long serialVersionUID = 1L;
 
     private final static Log log = LogFactory.getLog( RemoteCacheListener.class );
+
+    private static String localHostName = HostNameUtil.getLocalHostAddress();
 
     /**
      * The cache manager used to put items in differnt regions. This is set
@@ -69,7 +72,7 @@ public class RemoteCacheListener
     protected long listenerId = 0;
 
     private transient IElementSerializer elementSerializer = new StandardSerializer();
-    
+
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
@@ -216,7 +219,7 @@ public class RemoteCacheListener
                 try
                 {
                     cb = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) cb,
-                                                                                     this.elementSerializer );
+                                                                                  this.elementSerializer );
                     if ( log.isDebugEnabled() )
                     {
                         log.debug( "Deserialized result = " + cb );
@@ -230,8 +233,8 @@ public class RemoteCacheListener
                 {
                     log.error( "Received a serialized version of a class that we don't know about.", e );
                 }
-            }            
-            
+            }
+
             cache.localUpdate( cb );
         }
 
@@ -324,6 +327,16 @@ public class RemoteCacheListener
     }
 
     /**
+     * This is for debugging. It allows the remote server to log the address of
+     * clients.
+     */
+    public String getLocalHostAddress()
+        throws IOException
+    {
+        return localHostName;
+    }
+
+    /**
      * For easier debugging.
      * 
      * @return Basic info on this listener.
@@ -337,5 +350,4 @@ public class RemoteCacheListener
         buf.append( "\n ListenerId = " + listenerId );
         return buf.toString();
     }
-
 }
