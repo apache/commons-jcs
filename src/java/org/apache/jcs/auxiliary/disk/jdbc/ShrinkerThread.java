@@ -77,11 +77,15 @@ public class ShrinkerThread
             for ( int i = 0; i < caches.length; i++ )
             {
                 JDBCDiskCache cache = (JDBCDiskCache) caches[i];
+
+                long start = System.currentTimeMillis();
                 int deleted = cache.deleteExpired();
+                long end = System.currentTimeMillis();
 
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "]" );
+                    log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "] in "
+                        + ( end - start ) + " ms." );
                 }
 
                 // don't pause after the last call to delete expired.

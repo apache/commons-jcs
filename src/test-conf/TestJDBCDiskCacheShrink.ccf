@@ -48,9 +48,9 @@ jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:target/cache_hsql_db
 jcs.auxiliary.JDBC.attributes.driverClassName=org.hsqldb.jdbcDriver
 jcs.auxiliary.JDBC.attributes.tableName=JCS_STORE_SHRINK
 jcs.auxiliary.JDBC.attributes.testBeforeInsert=false
-jcs.auxiliary.JDBC.attributes.maxActive=15
+jcs.auxiliary.JDBC.attributes.maxActive=14
 jcs.auxiliary.JDBC.attributes.allowRemoveAll=true
-jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.JDBC.attributes.MaxPurgatorySize=9999
 jcs.auxiliary.JDBC.attributes.UseDiskShrinker=true
 jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=1
 jcs.auxiliary.JDBC.attributes.EventQueueType=POOLED
@@ -61,9 +61,9 @@ jcs.auxiliary.JDBC.attributes.EventQueuePoolName=disk_cache_event_queue
 ################## OPTIONAL THREAD POOL CONFIGURATION #########
 # Disk Cache pool
 thread_pool.disk_cache_event_queue.useBoundary=false
-thread_pool.disk_cache_event_queue.boundarySize=500
-thread_pool.disk_cache_event_queue.maximumPoolSize=15
-thread_pool.disk_cache_event_queue.minimumPoolSize=10
-thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.boundarySize=501
+thread_pool.disk_cache_event_queue.maximumPoolSize=13
+thread_pool.disk_cache_event_queue.minimumPoolSize=11
+thread_pool.disk_cache_event_queue.keepAliveTime=35010
 thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
-thread_pool.disk_cache_event_queue.startUpSize=10
+thread_pool.disk_cache_event_queue.startUpSize=9

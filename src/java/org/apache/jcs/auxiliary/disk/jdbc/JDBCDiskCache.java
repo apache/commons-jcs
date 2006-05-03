@@ -1110,4 +1110,13 @@ public class JDBCDiskCache
 
         return stats;
     }
+    
+    
+    /**
+     * For debugging.
+     */
+    public String toString()
+    {
+       return this.getStats();
+    }        
 }

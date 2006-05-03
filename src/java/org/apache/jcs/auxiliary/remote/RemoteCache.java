@@ -256,8 +256,16 @@ public class RemoteCache
             // Eventually the instance of will not be necessary.
             if ( retVal != null && retVal instanceof ICacheElementSerialized )
             {
-                retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) retVal,
-                                                                                  this.elementSerializer );
+                // Never try to deserialize if you are a cluster client. Cluster
+                // clients
+                // intra-remote cache communicators. Remote caches are assumed
+                // to have no
+                // ability to deserialze the objects.
+                if ( this.irca.getRemoteType() != IRemoteCacheAttributes.CLUSTER )
+                {
+                    retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) retVal,
+                                                                                      this.elementSerializer );
+                }
             }
         }
         catch ( Exception ex )

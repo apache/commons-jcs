@@ -162,7 +162,7 @@ public class JDBCDiskCacheUnitTest
             }
         }
 
-        String setupData[] = { "create index iKEY on JCS_STORE (CACHE_KEY, REGION)" };
+        String setupData[] = { "create index iKEY on JCS_STORE2 (CACHE_KEY, REGION)" };
 
         if ( newT )
         {

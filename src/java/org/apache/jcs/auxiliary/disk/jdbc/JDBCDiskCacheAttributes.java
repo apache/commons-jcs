@@ -204,10 +204,7 @@ public class JDBCDiskCacheAttributes
      */
     public void setShrinkerIntervalSeconds( int shrinkerIntervalSecondsArg )
     {
-        if ( shrinkerIntervalSecondsArg > 1 )
-        {
-            this.shrinkerIntervalSeconds = shrinkerIntervalSecondsArg;
-        }
+        this.shrinkerIntervalSeconds = shrinkerIntervalSecondsArg;
     }
 
     /**

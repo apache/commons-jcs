@@ -62,6 +62,10 @@ public class JDBCDiskCacheManager
      */
     private JDBCDiskCacheManager( JDBCDiskCacheAttributes cattr )
     {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Creating JDBCDiskCacheManager with " + cattr );
+        }
         defaultCattr = cattr;
     }
 
@@ -151,7 +155,12 @@ public class JDBCDiskCacheManager
             if ( shrinkerThread == null )
             {
                 shrinkerThread = new ShrinkerThread();
-                shrinkerDaemon.executePeriodically( cattr.getShrinkerIntervalSeconds() * 1000, shrinkerThread, false );
+                long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms." );
+                }
+                shrinkerDaemon.executePeriodically( intervalMillis, shrinkerThread, false );
             }
             shrinkerThread.addDiskCacheToShrinkList( (JDBCDiskCache) raf );
         }

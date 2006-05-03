@@ -77,7 +77,7 @@ public class JDBCDiskCacheShrinkUnitTest
         System.out.println( jcsExpire.getStats() );
 
         // the shrinker is supposed to run every second
-        Thread.sleep( 2000 );
+        Thread.sleep( 3000 );
 
         System.out.println( jcsExpire.getStats() );
 
