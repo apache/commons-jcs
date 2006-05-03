@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Calls delete expired on the disk caches. The shrinker is run by a clock
- * daemon.
+ * daemon. The shrinker calls delete on each region. It pauses between calls.
  * 
  * @author Aaron Smuts
  * 
@@ -19,9 +19,20 @@ public class ShrinkerThread
 {
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
+    /** A set of JDBCDiskCache objects to call deleteExpired on. */
     private Set shrinkSet = Collections.synchronizedSet( new HashSet() );
 
     /**
+     * How long should we wait between calls to deleteExpired when we are
+     * iterating through the list of regions. Delete can lock the table. We want
+     * to give clients a chance to get some work done.
+     */
+    private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
+
+    private long pauseBetweenRegionCallsMillis = DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS;
+
+    /**
+     * Does nothing special.
      * 
      * @param diskCache
      */
@@ -45,7 +56,7 @@ public class ShrinkerThread
     }
 
     /**
-     * Calls deleteExpired on each item in the set.
+     * Calls deleteExpired on each item in the set. It pauses between each call.
      */
     public void run()
     {
@@ -72,7 +83,49 @@ public class ShrinkerThread
                 {
                     log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "]" );
                 }
+
+                // don't pause after the last call to delete expired.
+                if ( i < caches.length - 1 )
+                {
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "Pausing for [" + this.getPauseBetweenRegionCallsMillis()
+                            + "] ms. before shinker the next region." );
+                    }
+
+                    try
+                    {
+                        Thread.sleep( this.getPauseBetweenRegionCallsMillis() );
+                    }
+                    catch ( InterruptedException e )
+                    {
+                        log.warn( "Interrupted while waiting to delete expired for the enxt region." );
+                    }
+                }
             }
         }
+    }
+
+    /**
+     * How long should we wait between calls to deleteExpired when we are
+     * iterating through the list of regions.
+     * 
+     * @param pauseBetweenRegionCallsMillis
+     *            The pauseBetweenRegionCallsMillis to set.
+     */
+    public void setPauseBetweenRegionCallsMillis( long pauseBetweenRegionCallsMillis )
+    {
+        this.pauseBetweenRegionCallsMillis = pauseBetweenRegionCallsMillis;
+    }
+
+    /**
+     * How long should we wait between calls to deleteExpired when we are
+     * iterating through the list of regions.
+     * 
+     * @return Returns the pauseBetweenRegionCallsMillis.
+     */
+    public long getPauseBetweenRegionCallsMillis()
+    {
+        return pauseBetweenRegionCallsMillis;
     }
 }
