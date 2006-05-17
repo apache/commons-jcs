@@ -1111,6 +1111,21 @@ public class JDBCDiskCache
         return stats;
     }
     
+    /**
+     * Returns the name of the table.
+     * 
+     * @return the table name or UNDEFINED
+     */
+    protected String getTableName()
+    {
+        String name = "UNDEFINED";
+        if ( this.getJdbcDiskCacheAttributes() != null )
+        {
+            name = this.getJdbcDiskCacheAttributes() .getTableName();
+        }
+        return name;
+    }
+    
     
     /**
      * For debugging.

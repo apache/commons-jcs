@@ -84,8 +84,8 @@ public class ShrinkerThread
 
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "] in "
-                        + ( end - start ) + " ms." );
+                    log.info( "Deleted [" + deleted + "] expired for region [" + cache.getCacheName() + "] for table ["
+                        + cache.getTableName() + "] in " + ( end - start ) + " ms." );
                 }
 
                 // don't pause after the last call to delete expired.

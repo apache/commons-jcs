@@ -18,6 +18,7 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +54,12 @@ public class JDBCDiskCacheManager
      */
     private ClockDaemon shrinkerDaemon;
 
-    private ShrinkerThread shrinkerThread;
+    /**
+     * A map of table name to shrinker threads. This allows each table to have a
+     * different setting. It assumes that there is only one jdbc disk cache
+     * auxiliary defined per table.
+     */
+    private Map shrinkerThreadMap = new Hashtable();
 
     /**
      * Constructor for the HSQLCacheManager object
@@ -152,13 +158,17 @@ public class JDBCDiskCacheManager
                 shrinkerDaemon.setThreadFactory( new MyThreadFactory() );
             }
 
+            ShrinkerThread shrinkerThread = (ShrinkerThread) shrinkerThreadMap.get( cattr.getTableName() );
             if ( shrinkerThread == null )
             {
                 shrinkerThread = new ShrinkerThread();
+                shrinkerThreadMap.put( cattr.getTableName(), shrinkerThread );
+
                 long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms." );
+                    log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms. for table ["
+                        + cattr.getTableName() + "]" );
                 }
                 shrinkerDaemon.executePeriodically( intervalMillis, shrinkerThread, false );
             }
@@ -177,9 +187,7 @@ public class JDBCDiskCacheManager
         JDBCDiskCache raf = (JDBCDiskCache) caches.get( name );
         if ( raf != null )
         {
-
             raf.dispose();
-
         }
     }
 
@@ -225,7 +233,6 @@ public class JDBCDiskCacheManager
     class MyThreadFactory
         implements ThreadFactory
     {
-
         /*
          * (non-Javadoc)
          * 
