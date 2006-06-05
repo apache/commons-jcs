@@ -35,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
@@ -95,7 +94,7 @@ public class IndexedDiskCache
     private int recycleCnt = 0;
 
     private int startupSize = 0;
-    
+
     /**
      * use this lock to synchronize reads and writes to the underlying storage
      * mechansism.
@@ -181,7 +180,7 @@ public class IndexedDiskCache
         {
             log.error( "Failure initializing for fileName: " + fileName + " and root directory: " + rootDirName, e );
         }
-        
+
         ShutdownHook shutdownHook = new ShutdownHook();
         Runtime.getRuntime().addShutdownHook( shutdownHook );
     }
@@ -374,7 +373,7 @@ public class IndexedDiskCache
             byte[] data = IndexedDisk.serialize( ce );
 
             // make sure this only locks for one particular cache region
-            storageLock.writeLock().acquire();            
+            storageLock.writeLock().acquire();
             try
             {
                 ded.init( dataFile.length(), data );
@@ -427,7 +426,7 @@ public class IndexedDiskCache
 
             }
             finally
-            {   
+            {
                 storageLock.writeLock().release();
             }
 
@@ -508,10 +507,10 @@ public class IndexedDiskCache
      * @return
      * @throws IOException
      */
-    private CacheElement readElement( Serializable key )
+    private ICacheElement readElement( Serializable key )
         throws IOException
     {
-        CacheElement object = null;
+        ICacheElement object = null;
 
         IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
 
@@ -523,14 +522,18 @@ public class IndexedDiskCache
             }
             try
             {
-                object = (CacheElement) dataFile.readObject( ded.pos );
+                object = (ICacheElement) dataFile.readObject( ded.pos );
             }
             catch ( IOException e )
             {
-                log.error( "Problem reading object from file" );
+                log.error( "IO Exception, Problem reading object from file", e );
                 throw e;
             }
-
+            catch ( Exception e )
+            {
+                log.error( "Exception, Problem reading object from file", e );
+                throw new IOException( "Problem reading object from disk. " + e.getMessage() );
+            }
         }
 
         return object;
@@ -1126,7 +1129,7 @@ public class IndexedDiskCache
         throws Exception
     {
 
-        CacheElement tempDe = null;
+        ICacheElement tempDe = null;
         try
         {
             tempDe = readElement( key );
@@ -1453,25 +1456,26 @@ public class IndexedDiskCache
 
         }
     }
-    
+
     /**
      * Called on shutdown
-     *
+     * 
      * @author Aaron Smuts
-     *
+     * 
      */
-    class ShutdownHook extends Thread
+    class ShutdownHook
+        extends Thread
     {
-        
+
         public void run()
         {
             if ( alive )
             {
                 log.info( "Disk cache was not shutdown properly.  Will try to dispose." );
-                
+
                 doDispose();
-            }            
+            }
         }
-        
+
     }
 }
