@@ -29,12 +29,6 @@
       </classpath>
     </rmic> 
 
-    <rmic base="${maven.build.dest}" classname="org.apache.jcs.auxiliary.remote.server.RemoteCacheServerListener"> 
-      <classpath>
-        <path refid="maven.dependency.classpath"/>
-      </classpath>
-    </rmic> 
-
     <rmic base="${maven.build.dest}" classname="org.apache.jcs.auxiliary.remote.server.RemoteCacheServer"> 
       <classpath>
         <path refid="maven.dependency.classpath"/>
