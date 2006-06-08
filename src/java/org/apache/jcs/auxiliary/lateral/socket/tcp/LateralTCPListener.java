@@ -142,7 +142,6 @@ public class LateralTCPListener
 
             pooledExecutor = new PooledExecutor();
             pooledExecutor.setThreadFactory( new MyThreadFactory() );
-
         }
         catch ( Exception ex )
         {
@@ -422,7 +421,7 @@ public class LateralTCPListener
     }
 
     /**
-     * Separate thread run when a command comes into the LateralTCPReceiver.
+     * A Separate thread taht runs when a command comes into the LateralTCPReceiver.
      */
     public class ConnectionHandler
         implements Runnable
@@ -488,11 +487,11 @@ public class LateralTCPListener
             }
             catch ( java.io.EOFException e )
             {
-                log.info( "Caught java.io.EOFException closing conneciton." );
+                log.info( "Caught java.io.EOFException closing connection." );
             }
             catch ( java.net.SocketException e )
             {
-                log.info( "Caught java.net.SocketException closing conneciton." );
+                log.info( "Caught java.net.SocketException closing connection." );
             }
             catch ( Exception e )
             {
@@ -586,7 +585,6 @@ public class LateralTCPListener
     class MyThreadFactory
         implements ThreadFactory
     {
-
         /*
          * (non-Javadoc)
          * 
@@ -599,6 +597,5 @@ public class LateralTCPListener
             t.setPriority( Thread.MIN_PRIORITY );
             return t;
         }
-
     }
 }

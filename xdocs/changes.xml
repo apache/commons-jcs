@@ -6,6 +6,20 @@
 	<body>
 
 		<release version="1.2.7.3" date="in CVS">
+			<action dev="asmuts" type="fix"
+				due-to="Rick Szeto @vizible.com">
+				Fixed UDP discovery configuration problem. The discovery
+				address was not being used. It was broken in the last
+				release.
+			</action>
+			<action dev="asmuts" type="fix" due-to="Alistair Forbes">
+				Fixed disk cache class cast problem when running inside
+				the remote cache. The disk cache was casting to an
+				instance and not the ICacheElement interface.
+			</action>
+		</release>
+
+		<release version="1.2.7.3" date="in CVS">
 			<action dev="asmuts" type="update" due-to="">
 				You can now configure the remote cache client to not
 				receive from the remote server.
@@ -95,7 +109,8 @@
 		</release>
 
 		<release version="1.2.6.7" date="in CVS">
-			<action dev="asmuts" type="fix" due-to="Adam Siefker">
+			<action dev="asmuts" type="fix"
+				due-to="Adam Siefker @amazon.com">
 				Fixed shutdown for lateral. Added shutdown observer
 				framework. Changed listener thread to a daemon. Made
 				executor on listener use a daemon setting thread

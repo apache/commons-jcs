@@ -36,7 +36,6 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 public class UDPDiscoveryService
     implements IShutdownObserver
 {
-
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
     // The background broadcaster.
@@ -64,7 +63,7 @@ public class UDPDiscoveryService
     private int servicePort;
 
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
-    
+
     /**
      * 
      * @param discoveryAddress
@@ -111,7 +110,8 @@ public class UDPDiscoveryService
         }
         catch ( Exception e )
         {
-            log.error( "Problem creating UDPDiscoveryReceiver, we won't be able to find any other caches", e );
+            log.error( "Problem creating UDPDiscoveryReceiver, address [" + getDiscoveryAddress() + "] port [" + getDiscoveryPort()
+                + "] we won't be able to find any other caches", e );
         }
 
         // todo only do the passive if receive is inenabled, perhaps set the
@@ -158,7 +158,6 @@ public class UDPDiscoveryService
         }
 
         return isNew;
-
     }
 
     /**
@@ -219,11 +218,11 @@ public class UDPDiscoveryService
             {
                 log.debug( "Called sender to issue a passive broadcast" );
             }
-
         }
         catch ( Exception e )
         {
-            log.error( "Problem calling the UDP Discovery Sender", e );
+            log.error( "Problem calling the UDP Discovery Sender. address [" + getDiscoveryAddress() + "] port ["
+                + getDiscoveryPort() + "]", e );
         }
         finally
         {
@@ -268,7 +267,6 @@ public class UDPDiscoveryService
     class MyThreadFactory
         implements ThreadFactory
     {
-
         /*
          * (non-Javadoc)
          * 
@@ -281,7 +279,6 @@ public class UDPDiscoveryService
             t.setPriority( Thread.MIN_PRIORITY );
             return t;
         }
-
     }
 
     /*
@@ -321,7 +318,6 @@ public class UDPDiscoveryService
         {
             log.error( "Problem shutting down UDP sender." );
         }
-
     }
 
     /**
@@ -376,7 +372,8 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param tCPLateralCacheAttributes The tCPLateralCacheAttributes to set.
+     * @param tCPLateralCacheAttributes
+     *            The tCPLateralCacheAttributes to set.
      */
     public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tCPLateralCacheAttributes )
     {

@@ -45,6 +45,8 @@
 					href="/IndexedDiskAuxCache.html" />
 				<item name="Indexed Disk Properties"
 					href="/IndexedDiskCacheProperties.html" />
+				<item name="JDBC Disk Cache"
+					href="/JDBCDiskCache.html" />
 				<item name="JDBC Disk Properties"
 					href="/JDBCDiskCacheProperties.html" />
 				<item name="Remote Cache" href="/RemoteAuxCache.html" />

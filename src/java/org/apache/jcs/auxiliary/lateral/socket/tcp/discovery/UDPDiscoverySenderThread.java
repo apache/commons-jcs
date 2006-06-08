@@ -10,12 +10,11 @@ import org.apache.commons.logging.LogFactory;
  * listening.
  * 
  * @author Aaron Smuts
- *  
+ * 
  */
 public class UDPDiscoverySenderThread
     implements Runnable
 {
-
     private final static Log log = LogFactory.getLog( UDPDiscoverySenderThread.class );
 
     // the UDP multicast port
@@ -65,7 +64,8 @@ public class UDPDiscoverySenderThread
      *            host name we can be found at
      * @param myPort
      *            port we are listening on
-     * @param cacheNames List of strings of the names of the regiond participating.
+     * @param cacheNames
+     *            List of strings of the names of the regiond participating.
      */
     public UDPDiscoverySenderThread( String discoveryAddress, int discoveryPort, String myHostName, int myPort,
                                     ArrayList cacheNames )
@@ -90,7 +90,7 @@ public class UDPDiscoverySenderThread
             // move this to the run method and determine how often to call it.
             sender = new UDPDiscoverySender( discoveryAddress, discoveryPort );
             sender.requestBroadcast();
-            
+
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Sent a request broadcast to the group" );
@@ -106,7 +106,7 @@ public class UDPDiscoverySenderThread
             {
                 if ( sender != null )
                 {
-                    sender.destroy();                                    
+                    sender.destroy();
                 }
             }
             catch ( Exception e )
@@ -143,13 +143,13 @@ public class UDPDiscoverySenderThread
         }
         catch ( Exception e )
         {
-            log.error( "Problem calling the UDP Discovery Sender", e );
+            log.error( "Problem calling the UDP Discovery Sender [" + discoveryAddress + ":" + discoveryPort + "]", e );
         }
         finally
         {
             try
             {
-                sender.destroy();                
+                sender.destroy();
             }
             catch ( Exception e )
             {

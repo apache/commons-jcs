@@ -53,21 +53,16 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public class LateralTCPCacheManager
     extends LateralCacheAbstractManager
 {
-
     private static final long serialVersionUID = -9213011856644392480L;
 
     private final static Log log = LogFactory.getLog( LateralTCPCacheManager.class );
 
     private static LateralCacheMonitor monitor;
 
-    /**
-     * Address to instance map.
-     */
+    /** Address to instance map.  */
     protected static Map instances = new HashMap();
 
-    /**
-     * ITCPLateralCacheAttributes
-     */
+    /** ITCPLateralCacheAttributes  */
     protected ITCPLateralCacheAttributes lca;
 
     private int clients;
@@ -84,6 +79,7 @@ public class LateralTCPCacheManager
      */
     private LateralCacheWatchRepairable lateralWatch;
 
+    /** This is set in the constructor.  */
     private ICompositeCacheManager cacheMgr;
 
     /**
@@ -110,11 +106,8 @@ public class LateralTCPCacheManager
                     instances.put( lca.toString(), ins );
                 }
             }
-
             createMonitor( ins );
-
         }
-
         ins.clients++;
 
         return ins;
@@ -129,7 +122,7 @@ public class LateralTCPCacheManager
      */
     private static synchronized void createMonitor( ILateralCacheManager instance )
     {
-        //      only want one monitor per lateral type
+        // only want one monitor per lateral type
         // Fires up the monitoring daemon.
         if ( monitor == null )
         {
@@ -142,11 +135,10 @@ public class LateralTCPCacheManager
                 t.start();
             }
         }
-
     }
 
     /**
-     * Constructor for the LateralCacheManager object
+     * Constructor for the LateralCacheManager object.
      * 
      * @param lcaA
      * @param cacheMgr
@@ -162,33 +154,29 @@ public class LateralTCPCacheManager
             log.debug( "Creating lateral cache service, lca = " + this.lca );
         }
 
-        // need to create the service based on the type
-
+        // Create the service
         try
         {
-
-            log.debug( "Creating TCP service" );
-            log.info( "Creating TCP service, lca = " + this.lca );
-
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Creating TCP service, lca = " + this.lca );
+            }
             this.lateralService = new LateralTCPService( this.lca );
 
             if ( this.lateralService == null )
             {
                 log.error( "No service created, must zombie" );
-
                 throw new Exception( "No service created for lateral cache." );
             }
 
             this.lateralWatch = new LateralCacheWatchRepairable();
             this.lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
-
         }
         catch ( Exception ex )
         {
             // Failed to connect to the lateral server.
             // Configure this LateralCacheManager instance to use the
             // "zombie" services.
-
             log.error( "Failure, lateral instance will use zombie service", ex );
 
             this.lateralService = new ZombieLateralCacheService();
@@ -236,23 +224,28 @@ public class LateralTCPCacheManager
      */
     public AuxiliaryCache getCache( String cacheName )
     {
-        LateralCacheNoWait c = null;
+        LateralCacheNoWait lateralNoWait = null;
         synchronized ( this.caches )
         {
-            c = (LateralCacheNoWait) this.caches.get( cacheName );
-            if ( c == null )
+            lateralNoWait = (LateralCacheNoWait) this.caches.get( cacheName );
+            if ( lateralNoWait == null )
             {
                 LateralCacheAttributes attr = (LateralCacheAttributes) lca.copy();
                 attr.setCacheName( cacheName );
+                
                 LateralCache cache = new LateralCache( attr, this.lateralService, monitor );
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Created cache for noWait, cache = [" + cache + "]" );
+                    log.debug( "Created cache for noWait, cache [" + cache + "]" );
                 }
-                c = new LateralCacheNoWait( cache );
-                this.caches.put( cacheName, c );
+                lateralNoWait = new LateralCacheNoWait( cache );
+                this.caches.put( cacheName, lateralNoWait );
 
-                log.info( "Created LateralCacheNoWait for " + this.lca + " LateralCacheNoWait = [" + c + "]" );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Created LateralCacheNoWait for [" + this.lca + "] LateralCacheNoWait = ["
+                        + lateralNoWait + "]" );
+                }
             }
         }
 
@@ -261,9 +254,7 @@ public class LateralTCPCacheManager
         {
             try
             {
-
                 addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca, cacheMgr ) );
-
             }
             catch ( IOException ioe )
             {
@@ -281,10 +272,9 @@ public class LateralTCPCacheManager
                 log.debug( "Not creating a listener since we are not receiving." );
             }
         }
-
         // TODO: need listener repair
 
-        return c;
+        return lateralNoWait;
     }
 
     /*
@@ -317,5 +307,4 @@ public class LateralTCPCacheManager
         }
         return service;
     }
-
 }

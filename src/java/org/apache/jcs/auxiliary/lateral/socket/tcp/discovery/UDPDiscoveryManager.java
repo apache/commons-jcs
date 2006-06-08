@@ -49,7 +49,7 @@ public class UDPDiscoveryManager
      */
     public synchronized UDPDiscoveryService getService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
-        UDPDiscoveryService service = getService( lca.getTcpServer(), lca.getUdpDiscoveryPort(), lca.getTcpListenerPort(), cacheMgr );
+        UDPDiscoveryService service = getService( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), lca.getTcpListenerPort(), cacheMgr );
         
         // TODO find a way to remote these attributes from the service, the manager needs it on disocvery.
         service.setTcpLateralCacheAttributes( lca );
@@ -75,9 +75,9 @@ public class UDPDiscoveryManager
         UDPDiscoveryService service = (UDPDiscoveryService) services.get( key );
         if ( service == null )
         {
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "Creating service for " + key );
+                log.info( "Creating service for address:port [" + key + "]" );
             }
 
             service = new UDPDiscoveryService( discoveryAddress, discoveryPort, servicePort, cacheMgr );

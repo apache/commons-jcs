@@ -102,7 +102,10 @@ public class UDPDiscoveryReceiver
         //pooledExecutor.setMinimumPoolSize(1);
         pooledExecutor.setThreadFactory( new MyThreadFactory() );
 
-        log.debug( "constructing listener, " + this.multicastAddressString + ":" + this.multicastPort );
+        if ( log.isInfoEnabled() )
+        {           
+            log.info( "constructing listener, [" + this.multicastAddressString + ":" + this.multicastPort + "]" );
+        }
 
         try
         {
@@ -133,7 +136,7 @@ public class UDPDiscoveryReceiver
         }
         catch ( IOException e )
         {
-            log.error( "Could not bind to multicast address " + multicastAddressString + ":" + multicastPort, e );
+            log.error( "Could not bind to multicast address [" + multicastAddressString + ":" + multicastPort + "]", e );
             throw e;
         }
     }
@@ -172,12 +175,10 @@ public class UDPDiscoveryReceiver
     /** Main processing method for the LateralUDPReceiver object */
     public void run()
     {
-
         try
         {
             while ( !shutdown )
             {
-
                 Object obj = waitForMessage();
 
                 // not thread safe, but just for debugging
@@ -209,7 +210,6 @@ public class UDPDiscoveryReceiver
                     {
                         log.warn( "message is null" );
                     }
-
                 }
                 catch ( ClassCastException cce )
                 {
@@ -257,7 +257,6 @@ public class UDPDiscoveryReceiver
     public class MessageHandler
         implements Runnable
     {
-
         private UDPDiscoveryMessage message = null;
 
         /**
@@ -275,7 +274,6 @@ public class UDPDiscoveryReceiver
          */
         public void run()
         {
-
             // consider comparing ports here instead.
             if ( message.getRequesterId() == LateralCacheInfo.listenerId )
             {
@@ -333,7 +331,6 @@ public class UDPDiscoveryReceiver
 
                             try
                             {
-
                                 ICache ic = lcm.getCache( cacheName );
 
                                 if ( log.isDebugEnabled() )
@@ -355,7 +352,8 @@ public class UDPDiscoveryReceiver
                             {
                                 log.error( "Problem creating no wait", e );
                             }
-                        } // end while
+                        } 
+                        // end while
                     }
                     else
                     {
@@ -366,7 +364,6 @@ public class UDPDiscoveryReceiver
                 {
                     log.error( "Problem getting lateral maanger", e );
                 }
-
             }
         }
     }
@@ -380,7 +377,6 @@ public class UDPDiscoveryReceiver
     class MyThreadFactory
         implements ThreadFactory
     {
-
         /*
          * (non-Javadoc)
          * 
@@ -393,7 +389,6 @@ public class UDPDiscoveryReceiver
             t.setPriority( Thread.MIN_PRIORITY );
             return t;
         }
-
     }
 
     /*

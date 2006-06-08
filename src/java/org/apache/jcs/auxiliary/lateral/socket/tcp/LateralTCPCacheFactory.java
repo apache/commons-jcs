@@ -36,10 +36,12 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each
  * lateral service / local relationship is managed by one manager. This manager
- * canl have multiple caches. The remote relationships are consolidated and
- * restored via these managers. The facade provides a front to the composite
- * cache so the implmenetation is transparent.
- *  
+ * can have multiple caches. The remote relationships are consolidated and
+ * restored via these managers.
+ * 
+ * The facade provides a front to the composite cache so the implmentation is
+ * transparent.
+ * 
  */
 public class LateralTCPCacheFactory
     extends LateralCacheAbstractFactory
@@ -54,11 +56,10 @@ public class LateralTCPCacheFactory
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
-
         ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
         ArrayList noWaits = new ArrayList();
 
-        //pars up the tcp servers and set the tcpServer value and
+        // pars up the tcp servers and set the tcpServer value and
         // get the manager and then get the cache
         // no servers are required.
         if ( lac.getTcpServers() != null )
@@ -66,7 +67,7 @@ public class LateralTCPCacheFactory
             StringTokenizer it = new StringTokenizer( lac.getTcpServers(), "," );
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Configured for " + it.countTokens() + "  servers." );
+                log.debug( "Configured for [" + it.countTokens() + "]  servers." );
             }
             while ( it.hasMoreElements() )
             {
@@ -82,15 +83,18 @@ public class LateralTCPCacheFactory
                 if ( ic != null )
                 {
                     noWaits.add( ic );
-                } 
+                }
                 else
                 {
-                    log.debug( "noWait is null, no lateral connection made" );
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "noWait is null, no lateral connection made" );
+                    }
                 }
             }
         }
 
-        createListener( (LateralCacheAttributes)iaca, cacheMgr );
+        createListener( (LateralCacheAttributes) iaca, cacheMgr );
 
         // create the no wait facade.
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
@@ -110,12 +114,10 @@ public class LateralTCPCacheFactory
      */
     public void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
-        
-        ITCPLateralCacheAttributes attr = (ITCPLateralCacheAttributes)lac;
+        ITCPLateralCacheAttributes attr = (ITCPLateralCacheAttributes) lac;
         // don't create a listener if we are not receiving.
         if ( attr.isReceive() )
         {
-
             if ( log.isInfoEnabled() )
             {
                 log.info( "Creating listener for " + lac );
@@ -123,10 +125,8 @@ public class LateralTCPCacheFactory
 
             try
             {
-
                 // make a listener. if one doesn't exist
                 LateralTCPListener.getInstance( attr, cacheMgr );
-
             }
             catch ( Exception e )
             {
@@ -146,7 +146,8 @@ public class LateralTCPCacheFactory
      * Creates the discovery service. Only creates this for tcp laterals right
      * now.
      * 
-     * @param lac ITCPLateralCacheAttributes
+     * @param lac
+     *            ITCPLateralCacheAttributes
      * @param lcnwf
      * @param cacheMgr
      * @return null if none is created.
@@ -156,10 +157,9 @@ public class LateralTCPCacheFactory
     {
         UDPDiscoveryService discovery = null;
 
-        //      create the UDP discovery for the TCP lateral
+        // create the UDP discovery for the TCP lateral
         if ( lac.isUdpDiscoveryEnabled() )
         {
-
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
             discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr );
@@ -170,9 +170,7 @@ public class LateralTCPCacheFactory
             {
                 log.info( "Created UDPDiscoveryService for TCP lateral cache." );
             }
-
         }
         return discovery;
     }
-
 }

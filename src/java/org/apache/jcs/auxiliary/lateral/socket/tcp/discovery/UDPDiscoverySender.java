@@ -32,7 +32,7 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
  * This is a generic sender for the UDPDiscovery process.
  * 
  * @author Aaron Smuts
- *  
+ * 
  */
 public class UDPDiscoverySender
 {
@@ -61,7 +61,6 @@ public class UDPDiscoverySender
     {
         try
         {
-
             m_localSocket = new MulticastSocket();
 
             // Remote address.
@@ -79,36 +78,37 @@ public class UDPDiscoverySender
 
     /**
      * Closes the socket connection.
-     *
+     * 
      */
     public void destroy()
     {
-        try 
+        try
         {
             // TODO when we move to jdk 1.4 reinstate the isClosed check
             if ( this.m_localSocket != null )
-                //&& !this.m_localSocket.isClosed() )
+            // && !this.m_localSocket.isClosed() )
             {
                 this.m_localSocket.close();
             }
         }
-        catch( Exception e )
+        catch ( Exception e )
         {
             log.error( "Problem destrying sender", e );
         }
     }
-    
+
     /**
      * Just being careful about closing the socket.
+     * 
      * @throws Throwable
      */
     public void finalize()
-    throws Throwable
+        throws Throwable
     {
         super.finalize();
         destroy();
     }
-    
+
     /**
      * Send messages.
      * 
@@ -118,17 +118,17 @@ public class UDPDiscoverySender
     public void send( UDPDiscoveryMessage message )
         throws IOException
     {
-        if ( this.m_localSocket == null) 
+        if ( this.m_localSocket == null )
         {
-            throw new IOException( "Socket is null, cannot send message." );            
+            throw new IOException( "Socket is null, cannot send message." );
         }
-        
-        // TODO when we move to jdk 1.4 reinstate the isClosed check        
-        //if (this.m_localSocket.isClosed() )
-        //{
-        //    throw new IOException( "Socket is closed, cannot send message." );
-        //}
-        
+
+        // TODO when we move to jdk 1.4 reinstate the isClosed check
+        // if (this.m_localSocket.isClosed() )
+        // {
+        // throw new IOException( "Socket is closed, cannot send message." );
+        // }
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "sending UDPDiscoveryMessage, message = " + message );
@@ -151,7 +151,6 @@ public class UDPDiscoverySender
         catch ( IOException e )
         {
             log.error( "Error sending message", e );
-
             throw e;
         }
     }
@@ -206,7 +205,6 @@ public class UDPDiscoverySender
     protected void passiveBroadcast( String host, int port, ArrayList cacheNames, long listenerId )
         throws IOException
     {
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "sending passiveBroadcast " );
@@ -220,7 +218,6 @@ public class UDPDiscoverySender
         message.setMessageType( UDPDiscoveryMessage.PASSIVE_BROADCAST );
         send( message );
     }
-
 }
 
 /**
@@ -233,7 +230,6 @@ public class UDPDiscoverySender
 class MyByteArrayOutputStream
     extends ByteArrayOutputStream
 {
-
     /**
      * Gets the bytes attribute of the MyByteArrayOutputStream object
      * 
@@ -245,4 +241,3 @@ class MyByteArrayOutputStream
     }
 }
 // end class
-

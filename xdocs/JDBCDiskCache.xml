@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+
+<document>
+	<properties>
+		<title>JDBC Disk Cache</title>
+		<author email="asmuts@apache.org">Aaron Smuts</author>
+	</properties>
+
+	<body>
+		<section name="JDBC Disk Auxiliary Cache">
+			<p>
+				The JDBC disk cache uses a relational database such as
+				MySQL as a persistent store. It works with Oracle, MySQL
+				and HSQL. The cache elements are serialized and written
+				into a BLOB. Mutliple regions can share a single table.
+				You can define multiple, differently configured JDBC
+				disk caches in one JCS instance. This allows you to use
+				different tables for different cache regions.
+			</p>
+
+			<subsection name="Example cache.ccf (MySQL)">
+				<source>
+					<![CDATA[
+##############################################################
+################## DEFAULT CACHE REGION  #####################
+# sets the default aux value for any non configured caches
+jcs.default=MYSQL,RCluster
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=5000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=true
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=7200
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=14400
+jcs.default.elementattributes.IdleTime=14400
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+##############################################################
+################## CACHE REGIONS AVAILABLE ###################
+
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################
+# MYSQL disk cache used for flight options
+jcs.auxiliary.MYSQL=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.MYSQL.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.MYSQL.attributes.userName=myUsername
+jcs.auxiliary.MYSQL.attributes.password=myPassword
+jcs.auxiliary.MYSQL.attributes.url=${MYSQL}
+jcs.auxiliary.MYSQL.attributes.driverClassName=org.gjt.mm.mysql.Driver
+jcs.auxiliary.MYSQL.attributes.tableName=JCS_STORE
+jcs.auxiliary.MYSQL.attributes.testBeforeInsert=false
+jcs.auxiliary.MYSQL.attributes.maxActive=100
+jcs.auxiliary.MYSQL.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.MYSQL.attributes.UseDiskShrinker=true
+jcs.auxiliary.MYSQL.attributes.ShrinkerIntervalSeconds=1800
+jcs.auxiliary.MYSQL.attributes.allowRemoveAll=false
+jcs.auxiliary.MYSQL.attributes.EventQueueType=POOLED
+jcs.auxiliary.MYSQL.attributes.EventQueuePoolName=disk_cache_event_queue
+
+##############################################################
+################## OPTIONAL THREAD POOL CONFIGURATION #########
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=true
+thread_pool.disk_cache_event_queue.boundarySize=1000
+thread_pool.disk_cache_event_queue.maximumPoolSize=50
+thread_pool.disk_cache_event_queue.minimumPoolSize=10
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.disk_cache_event_queue.startUpSize=10
+        ]]>
+				</source>
+			</subsection>
+			
+			
+			<subsection name="Table Creation Script (MySQL)">
+				<source>
+					<![CDATA[
+drop TABLE JCS_STORE;
+
+CREATE TABLE JCS_STORE
+(
+  CACHE_KEY                   VARCHAR(250)          NOT NULL,
+  REGION                      VARCHAR(250)          NOT NULL,
+  ELEMENT                     BLOB,
+  CREATE_TIME                 DATETIME,
+  CREATE_TIME_SECONDS         BIGINT,
+  MAX_LIFE_SECONDS            BIGINT,
+  SYSTEM_EXPIRE_TIME_SECONDS  BIGINT,
+  IS_ETERNAL                  CHAR(1),
+  PRIMARY KEY (CACHE_KEY, REGION)
+);
+
+alter table JCS_STORE MAX_ROWS = 10000000;
+
+alter table JCS_STORE AVG_ROW_LENGTH = 2100;
+
+create index JCS_STORE_DELETE_IDX on JCS_STORE (SYSTEM_EXPIRE_TIME_SECONDS,IS_ETERNAL,REGION);					
+        ]]>
+				</source>
+			</subsection>
+		</section>
+	</body>
+</document>
