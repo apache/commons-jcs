@@ -51,7 +51,7 @@ public class HSQLDiskCacheUnitTest
     public void testBasicPutRemove()
         throws Exception
     {
-        int items = 200;
+        int items = 20;
 
         String region = "testCache";
 
@@ -107,7 +107,7 @@ public class HSQLDiskCacheUnitTest
         String region = "removeAllAllowed";
         JCS jcs = JCS.getInstance( region );
 
-        int items = 200;
+        int items = 20;
 
         // Add items to cache
 
@@ -147,7 +147,7 @@ public class HSQLDiskCacheUnitTest
         String region = "noRemoveAll";
         JCS jcs = JCS.getInstance( region );
 
-        int items = 200;
+        int items = 20;
 
         // Add items to cache
 

@@ -28,7 +28,7 @@ import org.apache.jcs.utils.props.PropertyLoader;
  *  <servlet>
         <servlet-name>JCSRemoteCacheStartupServlet</servlet-name>
         <servlet-class>
-            com.travelocity.lmd.jcs.JCSRemoteCacheStartupServlet
+             org.apache.jcs.auxiliary.remote.server.RemoteCacheStartupServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>

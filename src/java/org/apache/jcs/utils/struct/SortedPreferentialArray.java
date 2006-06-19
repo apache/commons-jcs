@@ -26,13 +26,13 @@ import org.apache.commons.logging.LogFactory;
  * Insertion time is n, search is log(n)
  * 
  * 
- * Clients must manage thread safety on previous version.  I synchronized the public methods to add
- * easy thread safety.  I synchronized all public methods that make modifications.
- *  
+ * Clients must manage thread safety on previous version. I synchronized the
+ * public methods to add easy thread safety. I synchronized all public methods
+ * that make modifications.
+ * 
  */
 public class SortedPreferentialArray
 {
-
     private static final Log log = LogFactory.getLog( SortedPreferentialArray.class );
 
     // prefer large means that the smallest will be removed when full.
@@ -295,7 +295,7 @@ public class SortedPreferentialArray
             }
             catch ( Exception e )
             {
-                log.error( "Problem removing from array.", e );
+                log.error( "Problem removing from array. pos [" + pos + "] " + obj, e );
             }
 
             if ( log.isDebugEnabled() )
@@ -340,7 +340,7 @@ public class SortedPreferentialArray
         int pos = findNearestLargerOrEqualPosition( obj );
         // see if the previous will do to handle the empty insert spot position
         if ( pos == curSize )
-        { //&& curSize < maxSize ) {
+        { // && curSize < maxSize ) {
             // pos will be > 0 if it equals curSize, we check for this above.
             if ( obj.compareTo( array[pos - 1] ) <= 0 )
             {
@@ -382,7 +382,6 @@ public class SortedPreferentialArray
      */
     private int findNearestLargerOrEqualPosition( Comparable obj )
     {
-
         // do nothing if a null was passed in
         if ( obj == null )
         {
@@ -412,18 +411,18 @@ public class SortedPreferentialArray
             // do with this, depending on the preference setting
             if ( obj.compareTo( getSmallest() ) <= 0 )
             {
-                //LESS THAN OR EQUAL TO SMALLEST
+                // LESS THAN OR EQUAL TO SMALLEST
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( obj + " is smaller than or equal to " + getSmallest() );
                 }
                 greaterPos = 0;
                 done = true;
-                //return greaterPos;
+                // return greaterPos;
             }
             else
             {
-                //GREATER THAN SMALLEST
+                // GREATER THAN SMALLEST
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( obj + " is bigger than " + getSmallest() );
@@ -457,7 +456,7 @@ public class SortedPreferentialArray
                 }
             }
 
-            ///////////////////////////////////////////////////////////////////////
+            // /////////////////////////////////////////////////////////////////////
             // begin binary search for insertion spot
             while ( !done )
             {
@@ -519,7 +518,7 @@ public class SortedPreferentialArray
                     if ( ( greaterPos != -1 ) && greaterPos - curPos < 0 )
                     {
                         done = true;
-                        break; //return greaterPos;
+                        break; // return greaterPos;
                     }
                     else
                     {
@@ -537,7 +536,7 @@ public class SortedPreferentialArray
                     }
                 }
             } // end while
-            ///////////////////////////////////////////////////////////////////////
+            // /////////////////////////////////////////////////////////////////////
 
             if ( log.isDebugEnabled() )
             {
@@ -565,16 +564,41 @@ public class SortedPreferentialArray
     private void remove( int position )
     {
         if ( position >= curSize || position < 0 )
+        {
             throw new IndexOutOfBoundsException( "position=" + position + " must be less than curSize=" + curSize );
-        curSize--;
+        }
+        //curSize--;
 
         if ( position < curSize )
-            System.arraycopy( array, position + 1, array, position, curSize );
+        {
+            try
+            {
+                // this didn't work, I'm leaving it here for now.
+                //System.arraycopy( array, position + 1, array, position, curSize );
+
+                // suffle left from removal point
+                int end = curSize - 1;
+                for (int i = position; i < end; i++)
+                {
+                  array[i] = array[i + 1];
+                }
+                curSize--;
+            }
+            catch ( IndexOutOfBoundsException ibe )
+            {
+                // throw this, log details for debugging.  This shouldn't happen.
+                log.warn( "Caught index out of bounds exception. "
+                    + "called 'System.arraycopy( array, position + 1, array, position, curSize );'  "
+                    + "array.lengh [" + array.length + "] position [" + position + "] curSize [" + curSize + "]" );
+                throw ibe;
+            }
+        }
         return;
     }
 
     /**
      * Debugging method to return a human readable display of array data.
+     * 
      * @return
      */
     protected String dumpArray()
@@ -591,5 +615,4 @@ public class SortedPreferentialArray
         }
         return buf.toString();
     }
-
 }
