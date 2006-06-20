@@ -6,7 +6,8 @@
 	<body>
 
 		<release version="1.2.7.7" date="in CVS">
-			<action dev="asmuts" type="fix">
+			<action dev="asmuts" type="fix"
+			due-to="Brian Crow  @noteworthyms.com">
 				Fixed the array index out of bounds exception in the Sorted
 				Preferential Array.  
 			</action>

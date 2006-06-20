@@ -567,28 +567,19 @@ public class SortedPreferentialArray
         {
             throw new IndexOutOfBoundsException( "position=" + position + " must be less than curSize=" + curSize );
         }
-        //curSize--;
+        curSize--;
 
         if ( position < curSize )
         {
             try
             {
-                // this didn't work, I'm leaving it here for now.
-                //System.arraycopy( array, position + 1, array, position, curSize );
-
-                // suffle left from removal point
-                int end = curSize - 1;
-                for (int i = position; i < end; i++)
-                {
-                  array[i] = array[i + 1];
-                }
-                curSize--;
+                System.arraycopy( array, position + 1, array, position, ( curSize - position ) );
             }
             catch ( IndexOutOfBoundsException ibe )
             {
-                // throw this, log details for debugging.  This shouldn't happen.
+                // throw this, log details for debugging. This shouldn't happen.
                 log.warn( "Caught index out of bounds exception. "
-                    + "called 'System.arraycopy( array, position + 1, array, position, curSize );'  "
+                    + "called 'System.arraycopy( array, position + 1, array, position, (curSize - position) );'  "
                     + "array.lengh [" + array.length + "] position [" + position + "] curSize [" + curSize + "]" );
                 throw ibe;
             }
