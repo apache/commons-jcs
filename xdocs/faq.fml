@@ -123,14 +123,49 @@
 				</p>
 			</answer>
 		</faq>
-		
+
 		<faq id="admin-jsp">
 			<question>Where can I get the admin jsp?</question>
 			<answer>
-				<p>		
-				You can download the admin jsp 
-		<a href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/src/java/org/apache/jcs/admin/JCSAdmin.jsp">here</a>.
-			  </p>
+				<p>
+					You can download the admin jsp
+					<a
+						href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/src/java/org/apache/jcs/admin/JCSAdmin.jsp">
+						here
+					</a>
+					.
+				</p>
+			</answer>
+		</faq>
+
+		<faq id="source-code">
+			<question>Where can I get the source?</question>
+			<answer>
+				<p>
+					You can view the source
+					<a
+						href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/">
+						here
+					</a>
+					or get the source code from subversion with svn co
+					http://svn.apache.org/repos/asf/jakarta/jcs/trunk.
+					The tagged releases are available with svn co.  ex.
+					http://svn.apache.org/repos/asf/jakarta/jcs/tags/jcs_1_2_7_0
+				</p>
+			</answer>
+		</faq>
+		<faq id="compiling-source">
+			<question>How do I compile the source?</question>
+			<answer>
+				<p>
+					You first need to install
+					<a href="http://maven.apache.org/">Maven 1.0.2</a>
+					The download is available at
+					http://maven.apache.org/maven-1.x/start/download.html.
+					Maven 2.0 is not supported yet. After installing run
+					"maven" which compiles and tests the entire package.
+					To build a jar run "maven jar".
+				</p>
 			</answer>
 		</faq>
 	</part>
@@ -199,21 +234,21 @@
 		</faq>
 	</part>
 
-
 	<part id="remote-cache-server">
 		<title>Remote Cache Server</title>
 
 		<faq id="classes">
 			<question>
-				Do I need to put my jars in the classpath of the 
-				remote server?
+				Do I need to put my jars in the classpath of the remote
+				server?
 			</question>
 			<answer>
 				<p>
-				No.  The remote server never deserializes your classes.
+					No. The remote server never deserializes your
+					classes.
 				</p>
 			</answer>
 		</faq>
 	</part>
-					
+
 </faqs>
