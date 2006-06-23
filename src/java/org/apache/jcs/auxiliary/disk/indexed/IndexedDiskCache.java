@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.File;
@@ -47,12 +42,9 @@ import org.apache.jcs.utils.struct.SortedPreferentialArray;
 import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
- * Disk cache that uses a RandomAccessFile with keys stored in memory.
- * 
- * The maximum number of keys stored in memory is configurable.
- * 
- * The disk cache tries to recycle spots on disk to limit file expansion.
- * 
+ * Disk cache that uses a RandomAccessFile with keys stored in memory. The
+ * maximum number of keys stored in memory is configurable. The disk cache tries
+ * to recycle spots on disk to limit file expansion.
  * @version $Id$
  */
 public class IndexedDiskCache
@@ -103,7 +95,6 @@ public class IndexedDiskCache
 
     /**
      * Constructor for the DiskCache object
-     * 
      * @param cattr
      */
     public IndexedDiskCache( IndexedDiskCacheAttributes cattr )
@@ -188,7 +179,6 @@ public class IndexedDiskCache
     /**
      * Loads the keys from the .key file. The keys are stored in a HashMap on
      * disk. This is converted into a LRUMap.
-     * 
      * @throws InterruptedException
      */
     protected void loadKeys()
@@ -255,7 +245,6 @@ public class IndexedDiskCache
      * <p>
      * The caller should take the appropriate action if the keys and data are
      * not consistent.
-     * 
      * @return True if the test passes
      */
     private boolean checkKeyDataConsistency()
@@ -341,13 +330,12 @@ public class IndexedDiskCache
      * Update the disk cache. Called from the Queue. Makes sure the Item has not
      * been retireved from purgatory while in queue for disk. Remove items from
      * purgatory when they go to disk.
-     * 
+     * <p>
      * @param ce
      *            The ICacheElement to put to disk.
      */
     public void doUpdate( ICacheElement ce )
     {
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "Storing element on disk, key: " + ce.getKey() );
@@ -409,7 +397,6 @@ public class IndexedDiskCache
                             {
                                 log.debug( "no ded to recycle" );
                             }
-
                         }
                     }
                 }
@@ -423,7 +410,6 @@ public class IndexedDiskCache
                         log.debug( "added to optimizing put list." + optimizingPutList.size() );
                     }
                 }
-
             }
             finally
             {
@@ -460,14 +446,12 @@ public class IndexedDiskCache
      */
     protected ICacheElement doGet( Serializable key )
     {
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "Trying to get from disk: " + key );
         }
 
         ICacheElement object = null;
-
         try
         {
             storageLock.readLock().acquire();
@@ -502,7 +486,7 @@ public class IndexedDiskCache
 
     /**
      * Reads the item from disk.
-     * 
+     * <p>
      * @param key
      * @return
      * @throws IOException
@@ -539,6 +523,11 @@ public class IndexedDiskCache
         return object;
     }
 
+    /**
+     * Gets the group keys from the disk.
+     * <p>
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+     */
     public Set getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( cacheName, groupName );
@@ -573,13 +562,12 @@ public class IndexedDiskCache
     /**
      * Returns true if the removal was succesful; or false if there is nothing
      * to remove. Current implementation always result in a disk orphan.
-     * 
+     * <p>
      * @return
      * @param key
      */
     public boolean doRemove( Serializable key )
     {
-
         optCnt++;
         if ( !this.isOptomizing && optCnt == this.cattr.getOptimizeAtRemoveCount() )
         {
@@ -655,7 +643,6 @@ public class IndexedDiskCache
                                 }
                             }
                         }
-
                         iter.remove();
                         removed = true;
                     }
@@ -800,7 +787,6 @@ public class IndexedDiskCache
 
     /**
      * Create the map for keys that contain the index position on disk.
-     * 
      */
     private void initKeyMap()
     {
@@ -827,7 +813,7 @@ public class IndexedDiskCache
     /**
      * Dispose of the disk cache in a background thread. Joins against this
      * thread to put a cap on the disposal time.
-     * 
+     * <p>
      * @todo make dispose window configurable.
      */
     public void doDispose()
@@ -939,9 +925,7 @@ public class IndexedDiskCache
     private int timesOptimized = 0;
 
     /**
-     * Realtime optimization is handled by this method.
-     * 
-     * It works in this way:
+     * Realtime optimization is handled by this method. It works in this way:
      * <ul>
      * <li>1. Lock the active file, create a new file.</li>
      * <li>2. Copy the keys for iteration.</li>
@@ -954,11 +938,9 @@ public class IndexedDiskCache
      * <li>5. All gets will be serviced by the new file. </li>
      * <li>6. All puts are made on the new file.</li>
      * </ul>
-     * 
      */
     protected void optimizeRealTime()
     {
-
         long start = System.currentTimeMillis();
         if ( log.isInfoEnabled() )
         {
@@ -1044,7 +1026,6 @@ public class IndexedDiskCache
             {
                 storageLock.writeLock().release();
             }
-
         }
         catch ( Exception e )
         {
@@ -1059,7 +1040,6 @@ public class IndexedDiskCache
         {
             log.info( "Finished #" + timesOptimized + " Real Time Optimization in " + time + " millis." );
         }
-
     }
 
     /**
@@ -1089,7 +1069,6 @@ public class IndexedDiskCache
 
             try
             {
-
                 // while ( itr.hasNext() )
                 for ( int i = 0; i < len; i++ )
                 {
@@ -1100,13 +1079,11 @@ public class IndexedDiskCache
 
                 // main
                 tempToPrimary( keyHashTemp, dataFileTemp );
-
             }
             catch ( IOException e )
             {
                 log.error( "Problem in optimization, abandoning attempt" );
             }
-
         }
         catch ( Exception e )
         {
@@ -1117,7 +1094,7 @@ public class IndexedDiskCache
     /**
      * Copies data for a key from main file to temp file and key to temp keyhash
      * Clients must manage locking.
-     * 
+     * <p>
      * @param key
      *            Serializable
      * @param keyHashTemp
@@ -1128,7 +1105,6 @@ public class IndexedDiskCache
     private void moveKeyDataToTemp( Serializable key, LRUMap keyHashTemp, IndexedDisk dataFileTemp )
         throws Exception
     {
-
         ICacheElement tempDe = null;
         try
         {
@@ -1169,13 +1145,11 @@ public class IndexedDiskCache
             log.debug( fileName + " -- keyHashTemp.size(): " + keyHashTemp.size() + ", keyHash.size(): "
                 + keyHash.size() );
         }
-
     }
 
     /**
      * Replaces current keyHash, data file, and recylce bin. Temp file passed in
      * must follow Temp.data naming convention.
-     * 
      * @param keyHashTemp
      *            LRUMap
      * @param dataFileTemp
@@ -1183,7 +1157,6 @@ public class IndexedDiskCache
      */
     private void tempToPrimary( LRUMap keyHashTemp, IndexedDisk dataFileTemp )
     {
-
         try
         {
             // Make dataFileTemp to become dataFile on disk.
@@ -1232,14 +1205,13 @@ public class IndexedDiskCache
         {
             log.error( "Failed to put to temp disk cache", e );
         }
-
     }
 
     // /////////////////////////////////////////////////////////////////////////////
     // DEBUG
     /**
      * Returns the current cache size.
-     * 
+     * <p>
      * @return The size value
      */
     public int getSize()
@@ -1249,7 +1221,7 @@ public class IndexedDiskCache
 
     /**
      * This is for debugging and testing.
-     * 
+     * <p>
      * @return the length of the data file.
      * @throws IOException
      */
@@ -1261,7 +1233,6 @@ public class IndexedDiskCache
         try
         {
             storageLock.readLock().acquire();
-
             try
             {
                 if ( dataFile != null )
@@ -1278,7 +1249,6 @@ public class IndexedDiskCache
         {
             // nothing
         }
-
         return size;
     }
 
@@ -1287,6 +1257,8 @@ public class IndexedDiskCache
      */
     public void dump()
     {
+        if ( log.isDebugEnabled() )
+        {
         log.debug( "[dump] Number of keys: " + keyHash.size() );
 
         Iterator itr = keyHash.entrySet().iterator();
@@ -1303,11 +1275,12 @@ public class IndexedDiskCache
 
             log.debug( "[dump] Disk element, key: " + key + ", val: " + val + ", pos: " + ded.pos );
         }
+        }
     }
 
     /**
      * Gets basic stats for the disk cache.
-     * 
+     * <p>
      * @return String
      */
     public String getStats()
@@ -1317,7 +1290,6 @@ public class IndexedDiskCache
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()
@@ -1407,7 +1379,6 @@ public class IndexedDiskCache
     public class LRUMap
         extends LRUMapJCS
     {
-
         private static final long serialVersionUID = 4955079991472142198L;
 
         /**
@@ -1433,7 +1404,6 @@ public class IndexedDiskCache
 
         protected void processRemovedLRU( Object key, Object value )
         {
-
             if ( doRecycle )
             {
                 // reuse the spot
@@ -1453,20 +1423,17 @@ public class IndexedDiskCache
                 log.debug( "Removing key: '" + key + "' from key store." );
                 log.debug( "Key store size: '" + this.size() + "'." );
             }
-
         }
     }
 
     /**
      * Called on shutdown
-     * 
+     * <p>
      * @author Aaron Smuts
-     * 
      */
     class ShutdownHook
         extends Thread
     {
-
         public void run()
         {
             if ( alive )
@@ -1476,6 +1443,5 @@ public class IndexedDiskCache
                 doDispose();
             }
         }
-
     }
 }

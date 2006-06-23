@@ -10,9 +10,8 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Calls delete expired on the disk caches. The shrinker is run by a clock
  * daemon. The shrinker calls delete on each region. It pauses between calls.
- * 
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class ShrinkerThread
     implements Runnable
@@ -33,7 +32,7 @@ public class ShrinkerThread
 
     /**
      * Does nothing special.
-     * 
+     * <p>
      * @param diskCache
      */
     protected ShrinkerThread()
@@ -43,7 +42,7 @@ public class ShrinkerThread
 
     /**
      * Adds a JDBC disk cache to the set of disk cache to shrink.
-     * 
+     * <p>
      * @param diskCache
      */
     public void addDiskCacheToShrinkList( JDBCDiskCache diskCache )
@@ -113,7 +112,7 @@ public class ShrinkerThread
     /**
      * How long should we wait between calls to deleteExpired when we are
      * iterating through the list of regions.
-     * 
+     * <p>
      * @param pauseBetweenRegionCallsMillis
      *            The pauseBetweenRegionCallsMillis to set.
      */
@@ -125,7 +124,7 @@ public class ShrinkerThread
     /**
      * How long should we wait between calls to deleteExpired when we are
      * iterating through the list of regions.
-     * 
+     * <p>
      * @return Returns the pauseBetweenRegionCallsMillis.
      */
     public long getPauseBetweenRegionCallsMillis()

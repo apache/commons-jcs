@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
@@ -21,22 +16,19 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
  * Configuration class for the Indexed Disk Cache
- *  
  */
 public class IndexedDiskCacheAttributes
     extends AbstractDiskCacheAttributes
 {
-
     private static final long serialVersionUID = -2190863599358782950L;
 
     private static final int DEFAULT_maxKeySize = 5000;
 
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_maxKeySize;
-    
 
     private static final int DEFAULT_maxRecycleBinSize = 5000;
-    
+
     /**
      * Cannot be larger than the max size. If max is less than 0, this will be
      * 5000
@@ -45,7 +37,7 @@ public class IndexedDiskCacheAttributes
 
     // default to -1, i.e., don't optimize until shutdown
     private int optimizeAtRemoveCount = -1;
-   
+
     /**
      * Constructor for the DiskCacheAttributes object
      */
@@ -56,7 +48,7 @@ public class IndexedDiskCacheAttributes
 
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object
-     * 
+     * <p>
      * @return The maxKeySize value
      */
     public int getMaxKeySize()
@@ -66,7 +58,7 @@ public class IndexedDiskCacheAttributes
 
     /**
      * Sets the maxKeySize attribute of the DiskCacheAttributes object
-     * 
+     * <p>
      * @param maxKeySize
      *            The new maxKeySize value
      */
@@ -81,7 +73,7 @@ public class IndexedDiskCacheAttributes
     /**
      * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes
      * object
-     * 
+     * <p>
      * @return The optimizeAtRemoveCount value
      */
     public int getOptimizeAtRemoveCount()
@@ -93,7 +85,7 @@ public class IndexedDiskCacheAttributes
      * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes
      * object This number determines how often the disk cache should run real
      * time optimizations.
-     * 
+     * <p>
      * @param cnt
      *            The new optimizeAtRemoveCount value
      */
@@ -106,9 +98,9 @@ public class IndexedDiskCacheAttributes
      * This cannot be larger than the maxKeySize. It wouldn't hurt anything, but
      * it makes the config necessary. The recycle bin entry willbe at least as
      * large as a key.
-     * 
+     * <p>
      * If the maxKeySize is -1 this will be set tot he default, which is 5000.
-     * 
+     * <p>
      * @param maxRecycleBinSize
      *            The maxRecycleBinSize to set.
      */
@@ -124,10 +116,10 @@ public class IndexedDiskCacheAttributes
     {
         return maxRecycleBinSize;
     }
-   
+
     /**
      * Returns a copy of the attributes.
-     * 
+     * <p>
      * @return AuxiliaryCacheAttributes
      */
     public AuxiliaryCacheAttributes copy()
@@ -142,10 +134,10 @@ public class IndexedDiskCacheAttributes
         }
         return this;
     }
-    
+
     /**
-     * Description of the Method
-     * 
+     * Write out the values for debugging purposes.
+     * <p>
      * @return String
      */
     public String toString()

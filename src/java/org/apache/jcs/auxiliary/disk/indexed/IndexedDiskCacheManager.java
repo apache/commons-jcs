@@ -1,35 +1,28 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.engine.behavior.ICache;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.engine.behavior.ICache;
+
 /**
- * Cache manager for IndexedDiskCaches.
- * 
- * @version $Id: IndexedDiskCacheManager.java,v 1.7 2005/01/29 00:40:02 asmuts
- *          Exp $
+ * Cache manager for IndexedDiskCaches. This manages the instances of the disk
+ * cache.
  */
 public class IndexedDiskCacheManager
     implements AuxiliaryCacheManager
@@ -48,7 +41,7 @@ public class IndexedDiskCacheManager
 
     /**
      * Constructor for the IndexedDiskCacheManager object
-     * 
+     * <p>
      * @param defaultCacheAttributes
      *            Default attributes for caches managed by the instance.
      */
@@ -59,7 +52,7 @@ public class IndexedDiskCacheManager
 
     /**
      * Gets the singleton instance of the manager
-     * 
+     * <p>
      * @param defaultCacheAttributes
      *            If the instance has not yet been created, it will be
      *            initialized with this set of default attributes.
@@ -83,7 +76,7 @@ public class IndexedDiskCacheManager
     /**
      * Gets an IndexedDiskCache for the supplied name using the default
      * attributes.
-     * 
+     * <p>
      * @param cacheName
      *            Name that will be used when creating attributes.
      * @return A cache.
@@ -101,11 +94,10 @@ public class IndexedDiskCacheManager
      * Get an IndexedDiskCache for the supplied attributes. Will provide an
      * existing cache for the name attribute if one has been created, or will
      * create a new cache.
-     * 
+     * <p>
      * @param cacheAttributes
      *            Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
-     *  
      */
     public AuxiliaryCache getCache( IndexedDiskCacheAttributes cacheAttributes )
     {
@@ -139,7 +131,7 @@ public class IndexedDiskCacheManager
     /**
      * Disposes the cache with the given name, if found in the set of managed
      * caches.
-     * 
+     * <p>
      * @param cacheName
      *            Name of cache to dispose.
      */
@@ -162,7 +154,7 @@ public class IndexedDiskCacheManager
 
     /**
      * Gets the cacheType attribute of the DiskCacheManager object
-     * 
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType()

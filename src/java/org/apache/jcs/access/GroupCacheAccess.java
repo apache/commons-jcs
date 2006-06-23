@@ -1,19 +1,14 @@
 package org.apache.jcs.access;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.util.Set;
@@ -30,7 +25,6 @@ import org.apache.jcs.engine.control.group.GroupId;
 
 /**
  * Access for groups.
- *  
  */
 public class GroupCacheAccess
     extends CacheAccess
@@ -40,7 +34,7 @@ public class GroupCacheAccess
 
     /**
      * Constructor for the GroupCacheAccess object
-     * 
+     * <p>
      * @param cacheControl
      */
     public GroupCacheAccess( CompositeCache cacheControl )
@@ -50,7 +44,7 @@ public class GroupCacheAccess
 
     /**
      * Gets the groupAccess attribute of the GroupCacheAccess class.
-     * 
+     * <p>
      * @param region
      * @return The groupAccess value
      * @throws CacheException
@@ -70,7 +64,7 @@ public class GroupCacheAccess
 
     /**
      * Gets the groupAccess attribute of the GroupCacheAccess class.
-     * 
+     * <p>
      * @param region
      * @param icca
      * @return The groupAccess value
@@ -92,7 +86,7 @@ public class GroupCacheAccess
 
     /**
      * Gets an item out of the cache that is in a specified group.
-     * 
+     * <p>
      * @param name
      *            The key name.
      * @param group
@@ -105,6 +99,13 @@ public class GroupCacheAccess
         return ( element != null ) ? element.getVal() : null;
     }
 
+    /**
+     * Internal method used for group functionality.
+     * <p>
+     * @param group
+     * @param name
+     * @return GroupAttrName
+     */
     private GroupAttrName getGroupAttrName( String group, Object name )
     {
         GroupId gid = new GroupId( this.cacheControl.getCacheName(), group );
@@ -115,7 +116,7 @@ public class GroupCacheAccess
      * Allows the user to put an object into a group within a particular cache
      * region. This method sets the object's attributes to the default for the
      * region.
-     * 
+     * <p>
      * @param name
      *            The key name.
      * @param groupName
@@ -134,7 +135,7 @@ public class GroupCacheAccess
      * Allows the user to put an object into a group within a particular cache
      * region. This method allows the object's attributes to be individually
      * specified.
-     * 
+     * <p>
      * @param name
      *            The key name.
      * @param groupName
@@ -164,7 +165,6 @@ public class GroupCacheAccess
     /**
      * @param name
      * @param group
-     *  
      */
     public void remove( Object name, String group )
     {
@@ -174,7 +174,7 @@ public class GroupCacheAccess
 
     /**
      * Gets the set of keys of objects currently in the group.
-     * 
+     * <p>
      * @param group
      * @return A Set of keys.
      */
@@ -185,7 +185,7 @@ public class GroupCacheAccess
 
     /**
      * Invalidates a group: remove all the group members
-     * 
+     * <p>
      * @param group
      *            The name of the group to invalidate
      */

@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.BufferedInputStream;
@@ -27,14 +22,12 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 
-import org.apache.jcs.engine.CacheElement;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.CacheElement;
 
 /**
  * Provides thread safe access to the underlying random access file.
- *  
  */
 class IndexedDisk
 {
@@ -46,11 +39,11 @@ class IndexedDisk
 
     /**
      * Constructor for the Disk object
-     * 
+     * <p>
      * @param file
      * @exception FileNotFoundException
      */
-    IndexedDisk( File file )
+    public IndexedDisk( File file )
         throws FileNotFoundException
     {
         this.filepath = file.getAbsolutePath();
@@ -63,12 +56,12 @@ class IndexedDisk
      * The firt four bytes of the record should tell us how long it is. The data
      * is read into a byte array and then an object is constructed from the byte
      * array.
-     * 
+     * <p>
      * @return Serializable
      * @param pos
      * @throws IOException
      */
-    Serializable readObject( long pos )
+    protected Serializable readObject( long pos )
         throws IOException
     {
         String message = null;
@@ -102,7 +95,7 @@ class IndexedDisk
             {
                 log.warn( "\n The dataFile is corrupted!" + "\n " + message + "\n raf.length() = " + raf.length()
                     + "\n pos = " + pos );
-                //reset();
+                // reset();
                 throw new IOException( "The Data File Is Corrupt, need to reset" );
                 // return null;
             }
@@ -131,11 +124,11 @@ class IndexedDisk
 
     /**
      * Appends byte array to the Disk.
-     * 
+     * <p>
      * @return
      * @param data
      */
-    boolean append( byte[] data )
+    protected boolean append( byte[] data )
     {
         try
         {
@@ -153,12 +146,12 @@ class IndexedDisk
 
     /**
      * Writes the given byte array to the Disk at the specified position.
-     * 
-     * @return
+     * <p>
      * @param data
      * @param pos
+     * @return true if we wrote successfully
      */
-    boolean write( byte[] data, long pos )
+    protected boolean write( byte[] data, long pos )
     {
         if ( log.isDebugEnabled() )
         {
@@ -177,19 +170,19 @@ class IndexedDisk
         }
         catch ( IOException ex )
         {
-            ex.printStackTrace();
+            log.error( "Problem writing object to disk.", ex );
         }
         return false;
     }
 
     /**
-     * Description of the Method
-     * 
+     * Serializes the object and write it out to the given position.
+     * <p>
      * @return
      * @param obj
      * @param pos
      */
-    boolean writeObject( Serializable obj, long pos )
+    protected boolean writeObject( Serializable obj, long pos )
     {
         try
         {
@@ -197,24 +190,23 @@ class IndexedDisk
         }
         catch ( IOException ex )
         {
-            ex.printStackTrace();
+            log.error( "Problem writing object to disk.", ex );
         }
         return false;
     }
 
     /**
-     * Description of the Method
-     * 
+     * Writes an object to the end of the file.
+     * <p>
      * @return
      * @param obj
      */
-    IndexedDiskElementDescriptor appendObject( CacheElement obj )
+    protected IndexedDiskElementDescriptor appendObject( CacheElement obj )
     {
         long pos = -1;
         boolean success = false;
         try
         {
-
             IndexedDiskElementDescriptor ded = new IndexedDiskElementDescriptor();
             byte[] data = serialize( obj );
 
@@ -224,23 +216,23 @@ class IndexedDisk
                 ded.init( pos, data );
                 success = write( data, pos );
             }
-            //return success ? new DiskElement(pos, data) : null;
+            // return success ? new DiskElement(pos, data) : null;
             return success ? ded : null;
         }
         catch ( IOException ex )
         {
-            ex.printStackTrace();
+            log.error( "Problem writing object to disk.", ex );
         }
         return null;
     }
 
     /**
      * Returns the raf length.
-     * 
+     * <p>
      * @return
      * @exception IOException
      */
-    long length()
+    protected long length()
         throws IOException
     {
         synchronized ( this )
@@ -251,10 +243,10 @@ class IndexedDisk
 
     /**
      * Closes the raf.
-     * 
+     * <p>
      * @exception IOException
      */
-    synchronized void close()
+    protected synchronized void close()
         throws IOException
     {
         raf.close();
@@ -262,13 +254,12 @@ class IndexedDisk
 
     /**
      * Sets the raf to empty.
-     * 
+     * <p>
      * @exception IOException
      */
-    synchronized void reset()
+    protected synchronized void reset()
         throws IOException
     {
-
         log.warn( "Resetting data file" );
         raf.close();
         File f = new File( filepath );
@@ -296,12 +287,14 @@ class IndexedDisk
 
     /**
      * Returns the serialized form of the given object in a byte array.
-     * 
-     * @return
+     * <p>
+     * Use the Serilizer abstraction layer.
+     * <p>
+     * @return a byte array of the serialized object.
      * @param obj
      * @exception IOException
      */
-    static byte[] serialize( Serializable obj )
+    protected static byte[] serialize( Serializable obj )
         throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -23,7 +23,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 /**
  * This interface defines configuration options common to lateral cache
  * plugins.  
- * 
+ * <p>
  * TODO it needs to be trimmed down.  The old version had features for
  * every lateral.  Now, the individual laterals have their own specific
  * attributes interfaces.
@@ -60,7 +60,7 @@ public interface ILateralCacheAttributes
 
     /**
      * Sets the httpServer attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @param val
      *            The new httpServer value
      */
@@ -68,7 +68,7 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the httpServer attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @return The httpServer value
      */
     public String getHttpServer();
@@ -76,7 +76,7 @@ public interface ILateralCacheAttributes
     
     /**
      * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @param val
      *            The new tcpListenerPort value
      */
@@ -84,14 +84,14 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @return The httpListenerPort value
      */
     public int getHttpListenerPort();
 
     /**
      * Sets the httpServers attribute of the LateralCacheAttributes object
-     * 
+     * <p>
      * @param val
      *            The new httpServers value
      */
@@ -99,15 +99,14 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the httpSrvers attribute of the LateralCacheAttributes object
-     * 
+     * <p>
      * @return The httpServers value
      */
     public String getHttpServers();
 
-    // configure udp multicast parameters
     /**
      * Sets the udpMulticastAddr attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @param val
      *            The new udpMulticastAddr value
      */
@@ -115,14 +114,14 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the udpMulticastAddr attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @return The udpMulticastAddr value
      */
     public String getUdpMulticastAddr();
 
     /**
      * Sets the udpMulticastPort attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @param val
      *            The new udpMulticastPort value
      */
@@ -130,14 +129,14 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the udpMulticastPort attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @return The udpMulticastPort value
      */
     public int getUdpMulticastPort();
 
     /**
      * Sets the transmissionType attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @param val
      *            The new transmissionType value
      */
@@ -145,7 +144,7 @@ public interface ILateralCacheAttributes
 
     /**
      * Gets the transmissionType attribute of the ILateralCacheAttributes object
-     * 
+     * <p>
      * @return The transmissionType value
      */
     public int getTransmissionType();
@@ -153,7 +152,7 @@ public interface ILateralCacheAttributes
     /**
      * Sets the transmissionTypeName attribute of the ILateralCacheAttributes
      * object
-     * 
+     * <p>
      * @param val
      *            The new transmissionTypeName value
      */
@@ -162,7 +161,7 @@ public interface ILateralCacheAttributes
     /**
      * Gets the transmissionTypeName attribute of the ILateralCacheAttributes
      * object
-     * 
+     * <p>
      * @return The transmissionTypeName value
      */
     public String getTransmissionTypeName();
@@ -171,7 +170,7 @@ public interface ILateralCacheAttributes
      * Sets the putOnlyMode attribute of the ILateralCacheAttributes. When this
      * is true the lateral cache will only issue put and remove order and will
      * not try to retrieve elements from other lateral caches.
-     * 
+     * <p>
      * @param val
      *            The new transmissionTypeName value
      */

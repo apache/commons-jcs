@@ -1,19 +1,14 @@
 package org.apache.jcs.access.behavior;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import org.apache.jcs.access.exception.CacheException;
@@ -21,23 +16,13 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
- * Description of the Interface
- *  
+ * ICacheAccess defines the behavior for client access.
  */
 public interface ICacheAccess
 {
-
-    // Static methods that should be implemented
-    //public static void defineRegion( String name, CacheAttributes cattr,
-    //                                 Attributes attr ) throws CacheException;
-    //public static void defineRegion( String name, CacheAttributes cattr )
-    //    throws CacheException;
-    //public static void defineRegion( String name ) throws CacheException;
-    //public static CacheAccess getAccess( String region );
-
     /**
      * Basic get method.
-     * 
+     * <p>
      * @param name
      * @return Object or null if not found.
      */
@@ -45,7 +30,7 @@ public interface ICacheAccess
 
     /**
      * Puts in cache if an item does not exist with the name in that region.
-     * 
+     * <p>
      * @param name
      * @param obj
      * @throws CacheException
@@ -55,7 +40,7 @@ public interface ICacheAccess
 
     /**
      * Puts and/or overides an element with the name in that region.
-     * 
+     * <p>
      * @param name
      * @param obj
      * @throws CacheException
@@ -65,7 +50,7 @@ public interface ICacheAccess
 
     /**
      * Description of the Method
-     * 
+     * <p>
      * @param name
      * @param obj
      * @param attr
@@ -76,9 +61,8 @@ public interface ICacheAccess
 
     /**
      * Removes an item or all items. Should be called remove.
-     * 
+     * <p>
      * @throws CacheException
-     * 
      * @deprecated
      * @see #remove
      */
@@ -87,7 +71,6 @@ public interface ICacheAccess
 
     /**
      * Old remove all method.
-     * 
      * @throws CacheException
      */
     void remove()
@@ -95,10 +78,9 @@ public interface ICacheAccess
 
     /**
      * The older removeall method.
-     * 
+     * <p>
      * @param name
      * @throws CacheException
-     * 
      * @deprecated
      * @see #remove
      */
@@ -107,7 +89,7 @@ public interface ICacheAccess
 
     /**
      * Remove an object for this key if one exists, else do nothing.
-     * 
+     * <p>
      * @param name
      * @throws CacheException
      */
@@ -123,7 +105,7 @@ public interface ICacheAccess
      * default settings on groups and regions will not affect existing objects.
      * Only object loaded after the reset will use the new defaults. If no name
      * argument is provided, the reset is applied to the region.
-     * 
+     * <p>
      * @param attr
      * @throws CacheException
      */
@@ -132,7 +114,7 @@ public interface ICacheAccess
 
     /**
      * Reset the attributes on the object matching this key name.
-     * 
+     * <p>
      * @param name
      * @param attr
      * @throws CacheException
@@ -145,7 +127,7 @@ public interface ICacheAccess
      * current attributes associated with the object name. If no name parameter
      * is available, the attributes for the region will be returned. The name
      * object must override the Object.equals and Object.hashCode methods.
-     * 
+     * <p>
      * @return The elementAttributes value
      * @throws CacheException
      */
@@ -154,9 +136,8 @@ public interface ICacheAccess
 
     /**
      * Gets the elementAttributes attribute of the ICacheAccess object
-     * 
+     * <p>
      * @param name
-     * 
      * @return The elementAttributes value
      * @throws CacheException
      */
@@ -165,14 +146,14 @@ public interface ICacheAccess
 
     /**
      * Gets the ICompositeCacheAttributes of the cache region
-     * 
-     * @return
+     * <p>
+     * @return ICompositeCacheAttributes
      */
     public ICompositeCacheAttributes getCacheAttributes();
 
     /**
      * Sets the ICompositeCacheAttributes of the cache region
-     * 
+     * <p>
      * @param cattr
      *            The new ICompositeCacheAttribute value
      */

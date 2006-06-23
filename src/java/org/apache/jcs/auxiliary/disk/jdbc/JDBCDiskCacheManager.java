@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk.jdbc;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.util.Enumeration;
@@ -32,7 +27,6 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * This manages instances of the jdbc disk cache. It maintains one for each
  * region. One for all regions would work, but this gives us more detailed stats
  * by region.
- * 
  */
 public class JDBCDiskCacheManager
     implements AuxiliaryCacheManager
@@ -63,7 +57,7 @@ public class JDBCDiskCacheManager
 
     /**
      * Constructor for the HSQLCacheManager object
-     * 
+     * <p>
      * @param cattr
      */
     private JDBCDiskCacheManager( JDBCDiskCacheAttributes cattr )
@@ -77,7 +71,7 @@ public class JDBCDiskCacheManager
 
     /**
      * Gets the defaultCattr attribute of the HSQLCacheManager object
-     * 
+     * <p>
      * @return The defaultCattr value
      */
     public JDBCDiskCacheAttributes getDefaultCattr()
@@ -87,9 +81,8 @@ public class JDBCDiskCacheManager
 
     /**
      * Gets the instance attribute of the HSQLCacheManager class
-     * 
+     * <p>
      * @param cattr
-     * 
      * @return The instance value
      */
     public static JDBCDiskCacheManager getInstance( JDBCDiskCacheAttributes cattr )
@@ -108,9 +101,8 @@ public class JDBCDiskCacheManager
 
     /**
      * Gets the cache attribute of the HSQLCacheManager object
-     * 
+     * <p>
      * @param cacheName
-     * 
      * @return The cache value
      */
     public AuxiliaryCache getCache( String cacheName )
@@ -122,9 +114,8 @@ public class JDBCDiskCacheManager
 
     /**
      * Gets the cache attribute of the HSQLCacheManager object
-     * 
+     * <p>
      * @param cattr
-     * 
      * @return The cache value
      */
     public AuxiliaryCache getCache( JDBCDiskCacheAttributes cattr )
@@ -179,7 +170,6 @@ public class JDBCDiskCacheManager
     }
 
     /**
-     * 
      * @param name
      */
     public void freeCache( String name )
@@ -193,7 +183,7 @@ public class JDBCDiskCacheManager
 
     /**
      * Gets the cacheType attribute of the HSQLCacheManager object
-     * 
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType()
@@ -226,16 +216,14 @@ public class JDBCDiskCacheManager
 
     /**
      * Allows us to set the daemon status on the clockdaemon
-     * 
+     * <p>
      * @author aaronsm
-     * 
      */
     class MyThreadFactory
         implements ThreadFactory
     {
         /*
          * (non-Javadoc)
-         * 
          * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
          */
         public Thread newThread( Runnable runner )

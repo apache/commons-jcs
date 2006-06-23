@@ -1,6 +1,5 @@
 package org.apache.jcs.auxiliary.disk;
 
-//import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.utils.struct.LRUMap;
@@ -12,7 +11,6 @@ import org.apache.jcs.utils.struct.LRUMap;
 public class LRUMapJCS
     extends LRUMap
 {
-
     private static final long serialVersionUID = 776964015449842672L;
 
     private static final Log log = LogFactory.getLog( LRUMapJCS.class );
@@ -33,7 +31,7 @@ public class LRUMapJCS
      * boundary is requested.
      * <p>
      * The LRU memory cache uses its own LRU implementation.
-     * 
+     * <p>
      * @param maxKeySize
      */
     public LRUMapJCS( int maxKeySize )
@@ -44,7 +42,7 @@ public class LRUMapJCS
     /**
      * This is called when an item is removed from the LRU. We just log some
      * information.
-     * 
+     * <p>
      * @param key
      * @param value
      */
@@ -52,8 +50,8 @@ public class LRUMapJCS
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Removing key: [" + key + "] from key store, value = [" + value + "]" );
-            log.debug( "Key store size: '" + this.size() + "'." );
+            log.debug( "Removing key [" + key + "] from key store, value [" + value + "]" );
+            log.debug( "Key store size [" + this.size() + "]" );
         }
 
     }

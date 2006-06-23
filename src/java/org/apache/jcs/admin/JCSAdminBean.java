@@ -1,19 +1,14 @@
 package org.apache.jcs.admin;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -40,18 +35,15 @@ import org.apache.jcs.engine.memory.MemoryCache;
  * provides the ability to remove items (any number of key arguments can be
  * provided with action 'remove'). Should be initialized with a properties file
  * that provides at least a classpath resource loader.
- * 
  */
 public class JCSAdminBean
 {
-
     private static final Log log = LogFactory.getLog( JCSAdminBean.class );
 
     private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
     /**
-     * Builds up info about each element in a region.
-     * 
+     * Builds up info about each element in a region. int
      * @param cacheName
      * @return List of CacheElementInfo objects
      * @throws Exception
@@ -109,11 +101,9 @@ public class JCSAdminBean
     }
 
     /**
-     * Builds up data on every region.
-     * 
+     * Builds up data on every region. int
      * @TODO we need a most light weight method that does not count bytes. The
      *       byte counting can really swamp a server.
-     * 
      * @return list of CacheRegionInfo objects
      * @throws Exception
      */
@@ -147,8 +137,7 @@ public class JCSAdminBean
     /**
      * Tries to estimate how much data is in a region. This is expensive. If
      * there are any non serializable objects in the region, the count will stop
-     * when it encouters the first one.
-     * 
+     * when it encouters the first one. int
      * @param cache
      * @return
      * @throws Exception
@@ -185,8 +174,7 @@ public class JCSAdminBean
     }
 
     /**
-     * Clears all regions in the cache.
-     * 
+     * Clears all regions in the cache. int
      * @throws IOException
      */
     public void clearAllRegions()
@@ -201,8 +189,7 @@ public class JCSAdminBean
     }
 
     /**
-     * Clears a particular cache region.
-     * 
+     * Clears a particular cache region. int
      * @param cacheName
      * @throws IOException
      */
@@ -213,8 +200,7 @@ public class JCSAdminBean
     }
 
     /**
-     * Removes a particular item from a particular region.
-     * 
+     * Removes a particular item from a particular region. int
      * @param cacheName
      * @param key
      * @throws IOException

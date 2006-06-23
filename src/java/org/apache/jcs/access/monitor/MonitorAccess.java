@@ -1,19 +1,14 @@
 package org.apache.jcs.access.monitor;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.Serializable;
@@ -25,18 +20,16 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.GroupCacheAccess;
+import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.CacheConstants;
 
 /**
  * Exposes the simple monitoring methods to the public in a simple manner.
- *  
  */
 public class MonitorAccess
     implements Serializable
 {
-
     private static final long serialVersionUID = 1002037665133774391L;
 
     private static final Log log = LogFactory.getLog( MonitorAccess.class );
@@ -58,20 +51,18 @@ public class MonitorAccess
 
     /**
      * Removes all.
-     * 
+     * <p>
      * @param cacheName
      * @param key
-     * @return
+     * @return an informative message about what was deleted.
      */
     public String delete( String cacheName, String key )
     {
-
         // some junk to return for a synchronous call
         String result = "";
 
         try
         {
- 
             ICache cache = this.cacheMgr.getCache( cacheName );
 
             if ( key != null )
@@ -123,12 +114,11 @@ public class MonitorAccess
 
     /**
      * Gives basic info on all the regions. Better to use getStats.
-     * 
+     * <p>
      * @return list of hashtables with keys (name,size,stat)
      */
     public ArrayList overview()
     {
-
         ArrayList data = new ArrayList();
 
         String[] list = this.cacheMgr.getCacheNames();
@@ -157,5 +147,4 @@ public class MonitorAccess
         }
         return data;
     }
-
 }

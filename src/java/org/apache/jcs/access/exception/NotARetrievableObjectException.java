@@ -17,8 +17,10 @@ package org.apache.jcs.access.exception;
  */
 
 /**
- * Description of the Class
- *  
+ * This would be thrown if the object could not be retrieved from a method that
+ * throws exceptions rather than null.
+ * <p>
+ * TODO check to see if we can get rid of this.
  */
 public class NotARetrievableObjectException
     extends CacheException

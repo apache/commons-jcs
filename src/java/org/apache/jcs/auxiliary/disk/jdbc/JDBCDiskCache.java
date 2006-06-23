@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk.jdbc;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -52,35 +47,34 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * <p>
  * It expects a table created by the following script. The table name is
  * configurable.
+ * <p>
  * 
  * <pre>
- *                 drop TABLE JCS_STORE;
- *                
- *                 CREATE TABLE JCS_STORE
- *                 (
- *                 CACHE_KEY                  VARCHAR(250)          NOT NULL,
- *                 REGION                     VARCHAR(250)          NOT NULL,
- *                 ELEMENT                    BLOB,
- *                 CREATE_TIME                DATE,
- *                 CREATE_TIME_SECONDS        BIGINT,
- *                 MAX_LIFE_SECONDS           BIGINT,
- *                 SYSTEM_EXPIRE_TIME_SECONDS BIGINT,
- *                 IS_ETERNAL                 CHAR(1),
- *                 PRIMARY KEY (CACHE_KEY, REGION)
- *                 );
+ *                     drop TABLE JCS_STORE;
+ *                    
+ *                     CREATE TABLE JCS_STORE
+ *                     (
+ *                     CACHE_KEY                  VARCHAR(250)          NOT NULL,
+ *                     REGION                     VARCHAR(250)          NOT NULL,
+ *                     ELEMENT                    BLOB,
+ *                     CREATE_TIME                DATE,
+ *                     CREATE_TIME_SECONDS        BIGINT,
+ *                     MAX_LIFE_SECONDS           BIGINT,
+ *                     SYSTEM_EXPIRE_TIME_SECONDS BIGINT,
+ *                     IS_ETERNAL                 CHAR(1),
+ *                     PRIMARY KEY (CACHE_KEY, REGION)
+ *                     );
  * </pre>
  * 
- * 
+ * <p>
  * The cleanup thread will delete non eternal items where (now - create time) >
  * max life seconds * 1000
  * <p>
  * To speed up the deletion the SYSTEM_EXPIRE_TIME_SECONDS is used instead. It
  * is recommended that an index be created on this column is you will have over
  * a million records.
- * 
- * 
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class JDBCDiskCache
     extends AbstractDiskCache
@@ -107,7 +101,6 @@ public class JDBCDiskCache
     private static final int LOG_INTERVAL = 100;
 
     /**
-     * 
      * @param cattr
      */
     public JDBCDiskCache( JDBCDiskCacheAttributes cattr )
@@ -153,12 +146,10 @@ public class JDBCDiskCache
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void doUpdate( ICacheElement ce )
     {
-
         incrementUpdateCount();
 
         if ( log.isDebugEnabled() )
@@ -240,7 +231,6 @@ public class JDBCDiskCache
             // If it doesn't exist, insert it, otherwise update
             if ( !exists )
             {
-
                 try
                 {
                     String sqlI = "insert into "
@@ -355,9 +345,9 @@ public class JDBCDiskCache
 
     /**
      * Does an element exist for this key?
-     * 
+     * <p>
      * @param ce
-     * @return
+     * @return boolean
      */
     protected boolean doesElementExist( ICacheElement ce )
     {
@@ -430,14 +420,14 @@ public class JDBCDiskCache
         return exists;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Queries the database for the value. If it gets a result, the value is
+     * deserialized.
+     * <p>
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
     public ICacheElement doGet( Serializable key )
     {
-
         incrementGetCount();
 
         if ( log.isDebugEnabled() )
@@ -483,7 +473,6 @@ public class JDBCDiskCache
                             {
                                 // USE THE SERIALIZER
                                 obj = (ICacheElement) getElementSerializer().deSerialize( data );
-
                             }
                             catch ( IOException ioe )
                             {
@@ -541,7 +530,7 @@ public class JDBCDiskCache
     /**
      * Returns true if the removal was succesful; or false if there is nothing
      * to remove. Current implementation always result in a disk orphan.
-     * 
+     * <p>
      * @param key
      * @return boolean
      */
@@ -654,12 +643,9 @@ public class JDBCDiskCache
     }
 
     /**
-     * Removed the expired.
-     * 
-     * (now - create time) > max life seconds * 1000
-     * 
+     * Removed the expired. (now - create time) > max life seconds * 1000
+     * <p>
      * @return the number deleted
-     * 
      */
     protected int deleteExpired()
     {
@@ -740,8 +726,8 @@ public class JDBCDiskCache
     }
 
     /**
-     * Returns the current cache size.
-     * 
+     * Returns the current cache size. Just does a count(*) for the region.
+     * <p>
      * @return The size value
      */
     public int getSize()
@@ -817,7 +803,7 @@ public class JDBCDiskCache
 
     /**
      * Returns the serialized form of the given object in a byte array.
-     * 
+     * <p>
      * @param obj
      * @return byte[]
      * @throws IOException
@@ -831,7 +817,6 @@ public class JDBCDiskCache
     /**
      * @param groupName
      * @return
-     * 
      */
     public Set getGroupKeys( String groupName )
     {
@@ -860,7 +845,6 @@ public class JDBCDiskCache
     }
 
     /**
-     * 
      * @param connectURI
      * @param userName
      * @param password
@@ -910,7 +894,6 @@ public class JDBCDiskCache
     }
 
     /**
-     * 
      * @throws Exception
      */
     public void logDriverStats()
@@ -940,7 +923,6 @@ public class JDBCDiskCache
 
     /**
      * How many are idle in the pool.
-     * 
      * @return
      */
     public int getNumIdleInPool()
@@ -966,7 +948,6 @@ public class JDBCDiskCache
 
     /**
      * How many are active in the pool.
-     * 
      * @return
      */
     public int getNumActiveInPool()
@@ -991,7 +972,6 @@ public class JDBCDiskCache
     }
 
     /**
-     * 
      * @throws Exception
      */
     public void shutdownDriver()
@@ -1110,10 +1090,10 @@ public class JDBCDiskCache
 
         return stats;
     }
-    
+
     /**
      * Returns the name of the table.
-     * 
+     * <p>
      * @return the table name or UNDEFINED
      */
     protected String getTableName()
@@ -1121,17 +1101,16 @@ public class JDBCDiskCache
         String name = "UNDEFINED";
         if ( this.getJdbcDiskCacheAttributes() != null )
         {
-            name = this.getJdbcDiskCacheAttributes() .getTableName();
+            name = this.getJdbcDiskCacheAttributes().getTableName();
         }
         return name;
     }
-    
-    
+
     /**
      * For debugging.
      */
     public String toString()
     {
-       return this.getStats();
-    }        
+        return this.getStats();
+    }
 }

@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk.jdbc.hsql;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.sql.Connection;
@@ -35,9 +30,8 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * This factory should create mysql disk caches.
- * 
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class HSQLDiskCacheFactory
     implements AuxiliaryCacheFactory
@@ -53,9 +47,7 @@ public class HSQLDiskCacheFactory
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1 )
     {
-
         JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr );
-
         try
         {
             setupDatabase( (JDBCDiskCacheAttributes) rawAttr );
@@ -65,7 +57,6 @@ public class HSQLDiskCacheFactory
             // TODO we may not want to try and get the cache at this point.
             log.error( "Problem setting up database.", e );
         }
-
         return mgr.getCache( (JDBCDiskCacheAttributes) rawAttr );
     }
 
@@ -88,14 +79,13 @@ public class HSQLDiskCacheFactory
     /**
      * Creates the database if it doesn't exist, registers the driver class,
      * etc.
-     * 
+     * <p>
      * @param attributes
      * @throws Exception
      */
     protected void setupDatabase( JDBCDiskCacheAttributes attributes )
         throws Exception
     {
-
         if ( attributes == null )
         {
             throw new Exception( "The attributes are null." );
@@ -147,7 +137,7 @@ public class HSQLDiskCacheFactory
 
     /**
      * SETUP TABLE FOR CACHE
-     * 
+     * <p>
      * @param cConn
      * @param tableName
      */
@@ -165,7 +155,7 @@ public class HSQLDiskCacheFactory
         createSql.append( "CREATE_TIME           DATE, " );
         createSql.append( "CREATE_TIME_SECONDS   BIGINT, " );
         createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
-        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );        
+        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
         createSql.append( "IS_ETERNAL            CHAR(1), " );
         createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
         createSql.append( ");" );
@@ -197,7 +187,7 @@ public class HSQLDiskCacheFactory
             }
         }
 
-        //TODO create an index on SYSTEM_EXPIRE_TIME_SECONDS
+        // TODO create an index on SYSTEM_EXPIRE_TIME_SECONDS
         String setupData[] = { "create index iKEY on " + tableName + " (CACHE_KEY, REGION)" };
 
         if ( newT )
@@ -213,6 +203,6 @@ public class HSQLDiskCacheFactory
                     log.error( "Exception caught when creating index." + e );
                 }
             }
-        } // end ifnew
+        }
     }
 }

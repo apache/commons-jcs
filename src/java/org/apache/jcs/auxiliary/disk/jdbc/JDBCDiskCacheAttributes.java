@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk.jdbc;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
@@ -21,9 +16,8 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 /**
  * The configurator will set these values based on what is in the cache.ccf
  * file.
- * 
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class JDBCDiskCacheAttributes
     extends AbstractDiskCacheAttributes
@@ -109,7 +103,6 @@ public class JDBCDiskCacheAttributes
 
     /**
      * This is appended to the url.
-     * 
      * @param database
      *            The database to set.
      */
@@ -164,7 +157,6 @@ public class JDBCDiskCacheAttributes
      * If this is true then the disk cache will check to see if the item already
      * exists in the database. If it is false, it will try to insert. If the
      * isnert fails it will try to update.
-     * 
      * @param testBeforeInsert
      *            The testBeforeInsert to set.
      */

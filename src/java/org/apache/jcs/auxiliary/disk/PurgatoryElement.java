@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.disk;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.Serializable;
@@ -25,8 +20,6 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
  * Wrapper for cache elements in purgatory. Elements are stored in purgatory
  * when they are spooled to the auxilliary cache, but have not yet been written
  * to disk.
- * 
- * @version $Id$
  */
 public class PurgatoryElement
     implements ICacheElement, Serializable
@@ -45,7 +38,7 @@ public class PurgatoryElement
 
     /**
      * Constructor for the PurgatoryElement object
-     * 
+     * <p>
      * @param cacheElement
      *            CacheElement to wrap.
      */
@@ -56,7 +49,7 @@ public class PurgatoryElement
 
     /**
      * Gets the spoolable property.
-     * 
+     * <p>
      * @return The spoolable value
      */
     public boolean isSpoolable()
@@ -66,7 +59,7 @@ public class PurgatoryElement
 
     /**
      * Sets the spoolable property.
-     * 
+     * <p>
      * @param spoolable
      *            The new spoolable value
      */
@@ -77,7 +70,7 @@ public class PurgatoryElement
 
     /**
      * Get the wrapped cache element.
-     * 
+     * <p>
      * @return ICacheElement
      */
     public ICacheElement getCacheElement()
@@ -121,7 +114,6 @@ public class PurgatoryElement
 
     /**
      * @param attr
-     * 
      * @see ICacheElement#setElementAttributes
      */
     public void setElementAttributes( IElementAttributes attr )

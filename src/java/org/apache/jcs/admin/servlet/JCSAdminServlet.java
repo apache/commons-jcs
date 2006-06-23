@@ -1,19 +1,14 @@
 package org.apache.jcs.admin.servlet;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,32 +27,32 @@ import org.apache.velocity.servlet.VelocityServlet;
  * that provides at least a classpath resource loader. Since this extends
  * VelocityServlet, which uses the singleton model for velocity, it will share
  * configuration with any other Velocity in the same JVM.
- * 
+ * <p>
  * Initialization in a webapp will look something like this:
+ * <p>
  * 
  * <pre>
- * 
- *   [servlet]
- *       [servlet-name]JCSAdminServlet[/servlet-name]
- *       [servlet-class]org.apache.jcs.admin.servlet.JCSAdminServlet[/servlet-class]
- *       [init-param]
- *           [param-name]properties[/param-name]
- *           [param-value]WEB-INF/conf/JCSAdminServlet.velocity.properties[/param-value]
- *       [/init-param]
- *   [/servlet]
  *  
+ *    [servlet]
+ *        [servlet-name]JCSAdminServlet[/servlet-name]
+ *        [servlet-class]org.apache.jcs.admin.servlet.JCSAdminServlet[/servlet-class]
+ *        [init-param]
+ *            [param-name]properties[/param-name]
+ *            [param-value]WEB-INF/conf/JCSAdminServlet.velocity.properties[/param-value]
+ *        [/init-param]
+ *    [/servlet]
+ *   
  * </pre>
  * 
+ * <p>
  * FIXME: It would be nice to use the VelocityEngine model so this can be truly
  * standalone. Right now if you run it in the same container as, say, turbine,
  * turbine must be run first to ensure it's config takes precedence.
- * 
- * @version $Id$
+ * <p>
  */
 public class JCSAdminServlet
     extends VelocityServlet
 {
-
     private static final long serialVersionUID = -5519844149238645275L;
 
     private static final String DEFAULT_TEMPLATE_NAME = "/org/apache/jcs/admin/servlet/JCSAdminServletDefault.vm";
@@ -85,13 +80,14 @@ public class JCSAdminServlet
     private static final String DETAIL_ACTION = "detail";
 
     /*
-     *  (non-Javadoc)
-     * @see org.apache.velocity.servlet.VelocityServlet#handleRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, org.apache.velocity.context.Context)
+     * (non-Javadoc)
+     * @see org.apache.velocity.servlet.VelocityServlet#handleRequest(javax.servlet.http.HttpServletRequest,
+     *      javax.servlet.http.HttpServletResponse,
+     *      org.apache.velocity.context.Context)
      */
     protected Template handleRequest( HttpServletRequest request, HttpServletResponse response, Context context )
         throws Exception
     {
-
         JCSAdminBean admin = new JCSAdminBean();
 
         String templateName = DEFAULT_TEMPLATE_NAME;
@@ -154,5 +150,4 @@ public class JCSAdminServlet
 
         return getTemplate( templateName );
     }
-
 }

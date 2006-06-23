@@ -25,8 +25,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.ObjectExistsException;
-import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.engine.CacheElement;
@@ -189,7 +189,7 @@ public class RemoteCacheClientTester
                     Object val = cache.get( cb.getCacheName(), cb.getKey() );
                     p( "get " + cb.getKey() + " returns " + val );
                 }
-                catch ( ObjectNotFoundException onfe )
+                catch ( CacheException onfe )
                 {
                     // nothing
                 }
