@@ -15,9 +15,7 @@
 	<package>org.apache.jcs</package>
 	<logo></logo>
 
-
 	<gumpRepositoryId>jakarta</gumpRepositoryId>
-
 
 	<shortDescription>Cache</shortDescription>
 	<description>Comprehensive Caching System</description>
@@ -82,7 +80,6 @@
 		</mailingList>
 	</mailingLists>
 
-
 	<developers>
 		<developer>
 			<name>Aaron Smuts</name>
@@ -112,10 +109,8 @@
 
 	<contributors></contributors>
 
-
 	<dependencies>
-	
-	    <!--  For comparitive performance tests only -->
+		<!--  For comparitive performance tests only -->
 		<dependency>
 			<id>commons-collections</id>
 			<version>3.0</version>
@@ -132,6 +127,7 @@
 			<version>1.0.3</version>
 		</dependency>
 
+		<!--  REQUIRED FOR JCS CORE -->
 		<dependency>
 			<id>commons-lang</id>
 			<version>2.0</version>
@@ -227,21 +223,16 @@
 			<id>berkeleydb</id>
 			<version>1.5.0</version>
 		</dependency>
-
 	</dependencies>
 
-
 	<build>
-	
 		<sourceDirectory>src/java</sourceDirectory>
 		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
 		<aspectSourceDirectories></aspectSourceDirectories>
-
 		<unitTest>
 			<includes>
 				<include>**/*${test}Test.java</include>
 			</includes>
-
 			<resources>
 				<resource>
 					<directory>src/test-conf</directory>
@@ -251,9 +242,7 @@
 					</includes>
 				</resource>
 			</resources>
-
 		</unitTest>
-
 	</build>
 
 	<reports>
