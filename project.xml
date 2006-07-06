@@ -21,12 +21,12 @@
 	<description>Comprehensive Caching System</description>
 	<url>http://jakarta.apache.org/turbine/jcs/</url>
 	<issueTrackingUrl>
-		http://issues.apache.org/scarab/servlet/scarab/
+		http://issues.apache.org/jira/browse/JCS
 	</issueTrackingUrl>
-	<siteAddress>minotaur.apache.org</siteAddress>
-	<siteDirectory>/www/jakarta.apache.org/turbine/jcs/</siteDirectory>
+	<siteAddress>people.apache.org</siteAddress>
+	<siteDirectory>/www/jakarta.apache.org/jcs/</siteDirectory>
 	<distributionDirectory>
-		/www/jakarta.apache.org/builds/jakarta-turbine-jcs/
+		/www/jakarta.apache.org/builds/jakarta-jcs/
 	</distributionDirectory>
 
 	<repository>
