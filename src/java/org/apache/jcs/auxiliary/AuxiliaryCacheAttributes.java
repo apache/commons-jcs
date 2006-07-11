@@ -53,7 +53,7 @@ public interface AuxiliaryCacheAttributes
     public String getCacheName();
 
     /**
-     * Name know by by configurator
+     * Name known by by configurator
      * 
      * @param s
      *            The new name value

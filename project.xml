@@ -5,7 +5,7 @@
 	<pomVersion>3</pomVersion>
 	<name>JCS</name>
 	<id>jcs</id>
-	<currentVersion>1.2.7.7</currentVersion>
+	<currentVersion>1.2.7.8</currentVersion>
 	<organization>
 		<name>Apache Software Foundation</name>
 		<url>http://jakarta.apache.org/</url>
@@ -162,6 +162,13 @@
 			<url>
 				http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html
 			</url>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>3.0.10</version>
+			<url></url>
 		</dependency>
 
 		<dependency>

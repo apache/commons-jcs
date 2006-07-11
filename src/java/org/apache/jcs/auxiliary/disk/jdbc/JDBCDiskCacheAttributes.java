@@ -40,11 +40,13 @@ public class JDBCDiskCacheAttributes
 
     private boolean testBeforeInsert = true;
 
-    private static final int DEFAULT_MAX_ACTIVE = 10;
+    /** This is the default limit on the maximum number of active connections. */
+    public static final int DEFAULT_MAX_ACTIVE = 10;
 
     private int maxActive = DEFAULT_MAX_ACTIVE;
 
-    private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 300;
+    /** This is the default setting for the cleanup routine. */
+    public static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 300;
 
     private int shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
 
@@ -231,17 +233,16 @@ public class JDBCDiskCacheAttributes
     {
         StringBuffer buf = new StringBuffer();
         buf.append( "\nJDBCCacheAttributes" );
-        buf.append( "\nUserName [" + getUserName() + "]" );
-        buf.append( "\nUrl [" + getUrl() + "]" );
-        buf.append( "\nDatabase [" + getDatabase() + "]" );
-        buf.append( "\nDriverClassName [" + getDriverClassName() + "]" );
-        buf.append( "\nTableName [" + getTableName() + "]" );
-        buf.append( "\nTestBeforeInsert [" + isTestBeforeInsert() + "]" );
-        buf.append( "\nMaxActive [" + getMaxActive() + "]" );
-        buf.append( "\nAllowRemoveAll [" + isAllowRemoveAll() + "]" );
-        buf.append( "\nShrinkerIntervalSeconds [" + getShrinkerIntervalSeconds() + "]" );
-        buf.append( "\nUseDiskShrinker [" + isUseDiskShrinker() + "]" );
+        buf.append( "\n UserName [" + getUserName() + "]" );
+        buf.append( "\n Url [" + getUrl() + "]" );
+        buf.append( "\n Database [" + getDatabase() + "]" );
+        buf.append( "\n DriverClassName [" + getDriverClassName() + "]" );
+        buf.append( "\n TableName [" + getTableName() + "]" );
+        buf.append( "\n TestBeforeInsert [" + isTestBeforeInsert() + "]" );
+        buf.append( "\n MaxActive [" + getMaxActive() + "]" );
+        buf.append( "\n AllowRemoveAll [" + isAllowRemoveAll() + "]" );
+        buf.append( "\n ShrinkerIntervalSeconds [" + getShrinkerIntervalSeconds() + "]" );
+        buf.append( "\n UseDiskShrinker [" + isUseDiskShrinker() + "]" );
         return buf.toString();
     }
-
 }

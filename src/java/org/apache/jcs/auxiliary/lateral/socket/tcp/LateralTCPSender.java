@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.BufferedReader;
@@ -35,7 +30,6 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
  * repair structure, so it is significant;y different.
- * 
  * @version $Id$
  */
 public class LateralTCPSender
@@ -81,8 +75,8 @@ public class LateralTCPSender
     private Object getLock = new int[0];
 
     /**
-     * Constructor for the LateralTCPSender object
-     * 
+     * Constructor for the LateralTCPSender object.
+     * <p>
      * @param lca
      * @exception IOException
      */
@@ -113,7 +107,7 @@ public class LateralTCPSender
 
     /**
      * Creates a connection to a TCP server.
-     * 
+     * <p>
      * @param host
      * @param port
      * @throws IOException
@@ -129,7 +123,7 @@ public class LateralTCPSender
         {
             log.debug( "Attempting connection to " + address.getHostName() );
 
-            //  have time out socket open do this for us
+            // have time out socket open do this for us
             socket = SocketOpener.openSocket( host, port, openTimeOut );
 
             if ( socket == null )
@@ -157,10 +151,9 @@ public class LateralTCPSender
     }
 
     /**
-     * Gets the addressByName attribute of the LateralTCPSender object
-     * 
+     * Gets the addressByName attribute of the LateralTCPSender object.
+     * <p>
      * @param host
-     * 
      * @return The addressByName value
      * @throws IOException
      */
@@ -178,7 +171,9 @@ public class LateralTCPSender
         }
     }
 
-    /** Sends commands to the lateral cache listener. 
+    /**
+     * Sends commands to the lateral cache listener.
+     * <p>
      * @param led
      * @throws IOException
      */
@@ -194,7 +189,10 @@ public class LateralTCPSender
             }
         }
 
-        log.debug( "sending LateralElementDescriptor" );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "sending LateralElementDescriptor" );
+        }
 
         if ( led == null )
         {
@@ -204,7 +202,7 @@ public class LateralTCPSender
         if ( address == null )
         {
             throw new IOException( "No remote host is set for LateralTCPSender." );
-            //return;
+            // return;
         }
 
         if ( oos != null )
@@ -218,7 +216,10 @@ public class LateralTCPSender
                     counter = 0;
                     // Failing to reset the object output stream every now and
                     // then creates a serious memory leak.
-                    log.debug( "Doing oos.reset()" );
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Doing oos.reset()" );
+                    }
                     oos.reset();
                 }
             }
@@ -238,7 +239,7 @@ public class LateralTCPSender
      * is not recommended for performance reasons. If you have 10 laterals, then
      * you have to make 10 failed gets to find out none of the caches have the
      * item.
-     * 
+     * <p>
      * @param led
      * @return
      * @throws IOException
@@ -260,7 +261,6 @@ public class LateralTCPSender
 
         if ( oos != null )
         {
-
             // Synchronized to insure that the get requests to server from this
             // sender and the responses are processed in order, else you could
             // return the wrong item from the cache.
@@ -274,7 +274,7 @@ public class LateralTCPSender
 
                     try
                     {
-                        //  clean up input stream, nothing should be there yet.
+                        // clean up input stream, nothing should be there yet.
                         if ( socket.getInputStream().available() > 0 )
                         {
                             socket.getInputStream().read( new byte[socket.getInputStream().available()] );
@@ -297,10 +297,9 @@ public class LateralTCPSender
                         ice = (ICacheElement) obj;
                         if ( ice == null )
                         {
-                            //p( "ice is null" );
+                            // p( "ice is null" );
                             // TODO: count misses
                         }
-
                     }
                     catch ( IOException ioe )
                     {
@@ -329,17 +328,19 @@ public class LateralTCPSender
                     throw e;
                 }
             }
-        } // end synchronized block
+        } 
+        // end synchronized block
 
         return ice;
 
-    }// end sendAndReceive
+    }
 
     /**
      * Closes connection used by all LateralTCPSenders for this lateral
      * conneciton. Dispose request should come into the facade and be sent to
      * all lateral cache sevices. The lateral cache service will then call this
      * method.
+     * <p>
      * @param cache
      * @throws IOException
      */
@@ -355,7 +356,8 @@ public class LateralTCPSender
     }
 
     /**
-     * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
+     * @param tcpLateralCacheAttributes
+     *            The tcpLateralCacheAttributes to set.
      */
     public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
     {
@@ -371,7 +373,8 @@ public class LateralTCPSender
     }
 
     /**
-     * @param remoteHost The remoteHost to set.
+     * @param remoteHost
+     *            The remoteHost to set.
      */
     public void setRemoteHost( String remoteHost )
     {
@@ -386,9 +389,8 @@ public class LateralTCPSender
         return remoteHost;
     }
 
-    /** 
-     * This is a Testing Method.  It should be moved to a unit test.
-     *  
+    /**
+     * This is a Testing Method. It should be moved to a unit test.
      * @param args
      */
     public static void main( String args[] )
@@ -396,7 +398,7 @@ public class LateralTCPSender
         try
         {
             LateralTCPSender lur = null;
-            //new LateralTCPSender( "localhost", 1111 );
+            // new LateralTCPSender( "localhost", 1111 );
 
             // process user input till done
             boolean notDone = true;

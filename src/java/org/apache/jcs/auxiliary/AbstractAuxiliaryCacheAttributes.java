@@ -3,13 +3,14 @@ package org.apache.jcs.auxiliary;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 
 /**
+ * This has common attributes used by all auxiliaries.
+ * <p>
  * @author aaronsm
  *  
  */
 public abstract class AbstractAuxiliaryCacheAttributes
     implements AuxiliaryCacheAttributes
 {
-
     /**
      * cacheName
      */
@@ -50,9 +51,9 @@ public abstract class AbstractAuxiliaryCacheAttributes
         return this.cacheName;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * This is the name of the auxiliary in configuration file.
+     * <p>
      * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#setName(java.lang.String)
      */
     public void setName( String s )

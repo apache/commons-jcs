@@ -11,17 +11,9 @@ package org.apache.jcs.auxiliary.disk.jdbc;
  * governing permissions and limitations under the License.
  */
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
-
-import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This manages instances of the jdbc disk cache. It maintains one for each
@@ -29,31 +21,15 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * by region.
  */
 public class JDBCDiskCacheManager
-    implements AuxiliaryCacheManager
+    extends JDBCDiskCacheManagerAbstractTemplate
 {
     private static final long serialVersionUID = -8258856770927857896L;
 
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManager.class );
 
-    private static int clients;
-
-    private static Hashtable caches = new Hashtable();
-
     private static JDBCDiskCacheManager instance;
 
-    private JDBCDiskCacheAttributes defaultCattr;
-
-    /**
-     * The background disk shrinker, one for all regions.
-     */
-    private ClockDaemon shrinkerDaemon;
-
-    /**
-     * A map of table name to shrinker threads. This allows each table to have a
-     * different setting. It assumes that there is only one jdbc disk cache
-     * auxiliary defined per table.
-     */
-    private Map shrinkerThreadMap = new Hashtable();
+    private JDBCDiskCacheAttributes defaultJDBCDiskCacheAttributes;
 
     /**
      * Constructor for the HSQLCacheManager object
@@ -66,7 +42,7 @@ public class JDBCDiskCacheManager
         {
             log.info( "Creating JDBCDiskCacheManager with " + cattr );
         }
-        defaultCattr = cattr;
+        defaultJDBCDiskCacheAttributes = cattr;
     }
 
     /**
@@ -74,9 +50,9 @@ public class JDBCDiskCacheManager
      * <p>
      * @return The defaultCattr value
      */
-    public JDBCDiskCacheAttributes getDefaultCattr()
+    public JDBCDiskCacheAttributes getDefaultJDBCDiskCacheAttributes()
     {
-        return defaultCattr;
+        return defaultJDBCDiskCacheAttributes;
     }
 
     /**
@@ -94,7 +70,6 @@ public class JDBCDiskCacheManager
                 instance = new JDBCDiskCacheManager( cattr );
             }
         }
-
         clients++;
         return instance;
     }
@@ -107,131 +82,21 @@ public class JDBCDiskCacheManager
      */
     public AuxiliaryCache getCache( String cacheName )
     {
-        JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) defaultCattr.copy();
+        JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
         return getCache( cattr );
     }
 
     /**
-     * Gets the cache attribute of the HSQLCacheManager object
+     * Creates a JDBCDiskCache using the supplied attributes.
      * <p>
      * @param cattr
-     * @return The cache value
+     * @return
      */
-    public AuxiliaryCache getCache( JDBCDiskCacheAttributes cattr )
+    protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
-        AuxiliaryCache raf = null;
-
-        log.debug( "cacheName = " + cattr.getCacheName() );
-
-        synchronized ( caches )
-        {
-            raf = (AuxiliaryCache) caches.get( cattr.getCacheName() );
-
-            if ( raf == null )
-            {
-                raf = new JDBCDiskCache( cattr );
-                caches.put( cattr.getCacheName(), raf );
-            }
-        }
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "JDBC cache = " + raf );
-        }
-
-        // add cache to shrinker.
-        if ( cattr.isUseDiskShrinker() )
-        {
-            if ( shrinkerDaemon == null )
-            {
-                shrinkerDaemon = new ClockDaemon();
-                shrinkerDaemon.setThreadFactory( new MyThreadFactory() );
-            }
-
-            ShrinkerThread shrinkerThread = (ShrinkerThread) shrinkerThreadMap.get( cattr.getTableName() );
-            if ( shrinkerThread == null )
-            {
-                shrinkerThread = new ShrinkerThread();
-                shrinkerThreadMap.put( cattr.getTableName(), shrinkerThread );
-
-                long intervalMillis = Math.max( 999, cattr.getShrinkerIntervalSeconds() * 1000 );
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms. for table ["
-                        + cattr.getTableName() + "]" );
-                }
-                shrinkerDaemon.executePeriodically( intervalMillis, shrinkerThread, false );
-            }
-            shrinkerThread.addDiskCacheToShrinkList( (JDBCDiskCache) raf );
-        }
-
+        AuxiliaryCache raf;
+        raf = new JDBCDiskCache( cattr, tableState );
         return raf;
-    }
-
-    /**
-     * @param name
-     */
-    public void freeCache( String name )
-    {
-        JDBCDiskCache raf = (JDBCDiskCache) caches.get( name );
-        if ( raf != null )
-        {
-            raf.dispose();
-        }
-    }
-
-    /**
-     * Gets the cacheType attribute of the HSQLCacheManager object
-     * <p>
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return DISK_CACHE;
-    }
-
-    /** Disposes of all regions. */
-    public void release()
-    {
-        // Wait until called by the last client
-        if ( --clients != 0 )
-        {
-            return;
-        }
-        synchronized ( caches )
-        {
-            Enumeration allCaches = caches.elements();
-
-            while ( allCaches.hasMoreElements() )
-            {
-                JDBCDiskCache raf = (JDBCDiskCache) allCaches.nextElement();
-                if ( raf != null )
-                {
-                    raf.dispose();
-                }
-            }
-        }
-    }
-
-    /**
-     * Allows us to set the daemon status on the clockdaemon
-     * <p>
-     * @author aaronsm
-     */
-    class MyThreadFactory
-        implements ThreadFactory
-    {
-        /*
-         * (non-Javadoc)
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
-         */
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            return t;
-        }
     }
 }

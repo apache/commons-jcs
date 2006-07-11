@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,14 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.dbcp.ConnectionFactory;
-import org.apache.commons.dbcp.DriverManagerConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDriver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pool.ObjectPool;
-import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -50,20 +43,20 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * <p>
  * 
  * <pre>
- *                     drop TABLE JCS_STORE;
- *                    
- *                     CREATE TABLE JCS_STORE
- *                     (
- *                     CACHE_KEY                  VARCHAR(250)          NOT NULL,
- *                     REGION                     VARCHAR(250)          NOT NULL,
- *                     ELEMENT                    BLOB,
- *                     CREATE_TIME                DATE,
- *                     CREATE_TIME_SECONDS        BIGINT,
- *                     MAX_LIFE_SECONDS           BIGINT,
- *                     SYSTEM_EXPIRE_TIME_SECONDS BIGINT,
- *                     IS_ETERNAL                 CHAR(1),
- *                     PRIMARY KEY (CACHE_KEY, REGION)
- *                     );
+ *                       drop TABLE JCS_STORE;
+ *                      
+ *                       CREATE TABLE JCS_STORE
+ *                       (
+ *                       CACHE_KEY                  VARCHAR(250)          NOT NULL,
+ *                       REGION                     VARCHAR(250)          NOT NULL,
+ *                       ELEMENT                    BLOB,
+ *                       CREATE_TIME                DATE,
+ *                       CREATE_TIME_SECONDS        BIGINT,
+ *                       MAX_LIFE_SECONDS           BIGINT,
+ *                       SYSTEM_EXPIRE_TIME_SECONDS BIGINT,
+ *                       IS_ETERNAL                 CHAR(1),
+ *                       PRIMARY KEY (CACHE_KEY, REGION)
+ *                       );
  * </pre>
  * 
  * <p>
@@ -87,12 +80,6 @@ public class JDBCDiskCache
 
     private JDBCDiskCacheAttributes jdbcDiskCacheAttributes;
 
-    private static final String DEFAULT_POOL_NAME = "jcs";
-
-    private String poolName = DEFAULT_POOL_NAME;
-
-    private static final String DRIVER_NAME = "jdbc:apache:commons:dbcp:";
-
     private int updateCount = 0;
 
     private int getCount = 0;
@@ -100,12 +87,22 @@ public class JDBCDiskCache
     // if count % interval == 0 then log
     private static final int LOG_INTERVAL = 100;
 
+    private JDBCDiskCachePoolAccess poolAccess = null;
+
+    private TableState tableState;
+
     /**
+     * Constructs a JDBC Disk Cache for the provided cache attributes. The table
+     * state object is used to mark deletions.
+     * <p>
      * @param cattr
+     * @param tableState
      */
-    public JDBCDiskCache( JDBCDiskCacheAttributes cattr )
+    public JDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
         super( cattr );
+
+        this.setTableState( tableState );
 
         setJdbcDiskCacheAttributes( cattr );
 
@@ -114,10 +111,21 @@ public class JDBCDiskCache
             log.info( "jdbcDiskCacheAttributes = " + getJdbcDiskCacheAttributes() );
         }
 
-        // WE SHOULD HAVE A DIFFERENT POOL FOR EACH DB NO REGION
-        // THE SAME TABLE CAN BE USED BY MULTIPLE REGIONS
-        // this.setPoolName( jdbcDiskCacheAttributes.getCacheName() );
+        /**
+         * This initializes the pool access.
+         */
+        initializePoolAccess( cattr );
 
+        // Initialization finished successfully, so set alive to true.
+        alive = true;
+    }
+
+    /**
+     * Registers the driver and creates a poolAccess class.
+     * @param cattr
+     */
+    protected void initializePoolAccess( JDBCDiskCacheAttributes cattr )
+    {
         try
         {
             try
@@ -130,18 +138,17 @@ public class JDBCDiskCache
                 log.error( "Couldn't find class for driver [" + cattr.getDriverClassName() + "]", e );
             }
 
-            setupDriver( cattr.getUrl() + cattr.getDatabase(), cattr.getUserName(), cattr.getPassword(), cattr
-                .getMaxActive() );
+            poolAccess = new JDBCDiskCachePoolAccess( cattr.getName() );
 
-            logDriverStats();
+            poolAccess.setupDriver( cattr.getUrl() + cattr.getDatabase(), cattr.getUserName(), cattr.getPassword(),
+                                    cattr.getMaxActive() );
+
+            poolAccess.logDriverStats();
         }
         catch ( Exception e )
         {
             log.error( "Problem getting connection.", e );
         }
-
-        // Initialization finished successfully, so set alive to true.
-        alive = true;
     }
 
     /*
@@ -160,7 +167,7 @@ public class JDBCDiskCache
         Connection con;
         try
         {
-            con = DriverManager.getConnection( getPoolUrl() );
+            con = poolAccess.getConnection();
         }
         catch ( SQLException e )
         {
@@ -356,7 +363,7 @@ public class JDBCDiskCache
         Connection con;
         try
         {
-            con = DriverManager.getConnection( getPoolUrl() );
+            con = poolAccess.getConnection();
         }
         catch ( SQLException e )
         {
@@ -449,7 +456,7 @@ public class JDBCDiskCache
             String selectString = "select ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
                 + " where REGION = ? and CACHE_KEY = ?";
 
-            Connection con = DriverManager.getConnection( getPoolUrl() );
+            Connection con = poolAccess.getConnection();
             try
             {
                 PreparedStatement psSelect = null;
@@ -457,7 +464,7 @@ public class JDBCDiskCache
                 {
                     psSelect = con.prepareStatement( selectString );
                     psSelect.setString( 1, this.getCacheName() );
-                    psSelect.setString( 2, (String) key );
+                    psSelect.setString( 2, key.toString() );
                     ResultSet rs = null;
 
                     rs = psSelect.executeQuery();
@@ -548,7 +555,7 @@ public class JDBCDiskCache
                 sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
                     + this.getCacheName() + "' and CACHE_KEY = like '" + key + "%'";
             }
-            Connection con = DriverManager.getConnection( getPoolUrl() );
+            Connection con = poolAccess.getConnection();
             Statement sStatement = null;
             try
             {
@@ -597,7 +604,7 @@ public class JDBCDiskCache
             {
                 String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
                     + this.getCacheName() + "'";
-                Connection con = DriverManager.getConnection( getPoolUrl() );
+                Connection con = poolAccess.getConnection();
                 Statement sStatement = null;
                 try
                 {
@@ -653,6 +660,8 @@ public class JDBCDiskCache
 
         try
         {
+            getTableState().setState( TableState.DELETE_RUNNING );
+
             long now = System.currentTimeMillis() / 1000;
 
             // This is to slow when we push over a million records
@@ -664,7 +673,7 @@ public class JDBCDiskCache
             String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
                 + this.getCacheName() + "' and IS_ETERNAL = 'F' and " + now + " > SYSTEM_EXPIRE_TIME_SECONDS";
 
-            Connection con = DriverManager.getConnection( getPoolUrl() );
+            Connection con = poolAccess.getConnection();
             Statement sStatement = null;
             try
             {
@@ -696,8 +705,12 @@ public class JDBCDiskCache
         }
         catch ( Exception e )
         {
-            log.error( "Problem removing all.", e );
+            log.error( "Problem removing expired elements from the table.", e );
             reset();
+        }
+        finally
+        {
+            getTableState().setState( TableState.FREE );
         }
 
         return deleted;
@@ -717,7 +730,7 @@ public class JDBCDiskCache
     {
         try
         {
-            shutdownDriver();
+            poolAccess.shutdownDriver();
         }
         catch ( Exception e )
         {
@@ -741,7 +754,7 @@ public class JDBCDiskCache
         Connection con;
         try
         {
-            con = DriverManager.getConnection( getPoolUrl() );
+            con = poolAccess.getConnection();
         }
         catch ( SQLException e1 )
         {
@@ -844,168 +857,6 @@ public class JDBCDiskCache
         return elementSerializer;
     }
 
-    /**
-     * @param connectURI
-     * @param userName
-     * @param password
-     * @param maxActive
-     *            max connetions
-     * @throws Exception
-     */
-    public void setupDriver( String connectURI, String userName, String password, int maxActive )
-        throws Exception
-    {
-        // First, we'll need a ObjectPool that serves as the
-        // actual pool of connections.
-        // We'll use a GenericObjectPool instance, although
-        // any ObjectPool implementation will suffice.
-        ObjectPool connectionPool = new GenericObjectPool( null, maxActive );
-
-        // TODO make configurable
-        // By dfault the size is 8!!!!!!!
-        ( (GenericObjectPool) connectionPool ).setMaxIdle( -1 );
-
-        // Next, we'll create a ConnectionFactory that the
-        // pool will use to create Connections.
-        // We'll use the DriverManagerConnectionFactory,
-        // using the connect string passed in the command line
-        // arguments.
-        // Properties props = new Properties();
-        // props.setProperty( "user", userName );
-        // props.setProperty( "password", password );
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory( connectURI, userName, password );
-
-        // Now we'll create the PoolableConnectionFactory, which wraps
-        // the "real" Connections created by the ConnectionFactory with
-        // the classes that implement the pooling functionality.
-        // PoolableConnectionFactory poolableConnectionFactory =
-        new PoolableConnectionFactory( connectionFactory, connectionPool, null, null, false, true );
-
-        // Finally, we create the PoolingDriver itself...
-        Class.forName( "org.apache.commons.dbcp.PoolingDriver" );
-        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
-
-        // ...and register our pool with it.
-        driver.registerPool( this.getPoolName(), connectionPool );
-
-        // Now we can just use the connect string
-        // "jdbc:apache:commons:dbcp:jcs"
-        // to access our pool of Connections.
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void logDriverStats()
-        throws Exception
-    {
-        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
-        ObjectPool connectionPool = driver.getConnectionPool( this.getPoolName() );
-
-        if ( connectionPool != null )
-        {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( connectionPool );
-            }
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "NumActive: " + getNumActiveInPool() );
-                log.info( "NumIdle: " + getNumIdleInPool() );
-            }
-        }
-        else
-        {
-            log.warn( "Could not find pool." );
-        }
-    }
-
-    /**
-     * How many are idle in the pool.
-     * @return
-     */
-    public int getNumIdleInPool()
-    {
-        int numIdle = 0;
-        try
-        {
-            PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
-            ObjectPool connectionPool = driver.getConnectionPool( this.getPoolName() );
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( connectionPool );
-            }
-            numIdle = connectionPool.getNumIdle();
-        }
-        catch ( Exception e )
-        {
-            log.error( e );
-        }
-        return numIdle;
-    }
-
-    /**
-     * How many are active in the pool.
-     * @return
-     */
-    public int getNumActiveInPool()
-    {
-        int numActive = 0;
-        try
-        {
-            PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
-            ObjectPool connectionPool = driver.getConnectionPool( this.getPoolName() );
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( connectionPool );
-            }
-            numActive = connectionPool.getNumActive();
-        }
-        catch ( Exception e )
-        {
-            log.error( e );
-        }
-        return numActive;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void shutdownDriver()
-        throws Exception
-    {
-        PoolingDriver driver = (PoolingDriver) DriverManager.getDriver( DRIVER_NAME );
-        driver.closePool( this.getPoolName() );
-    }
-
-    /**
-     * @return Returns the poolUrl.
-     */
-    public String getPoolUrl()
-    {
-        return DRIVER_NAME + this.getPoolName();
-    }
-
-    /**
-     * @param poolName
-     *            The poolName to set.
-     */
-    public void setPoolName( String poolName )
-    {
-        this.poolName = poolName;
-    }
-
-    /**
-     * @return Returns the poolName.
-     */
-    public String getPoolName()
-    {
-        return poolName;
-    }
-
     /** safely increment */
     private synchronized void incrementUpdateCount()
     {
@@ -1065,12 +916,12 @@ public class JDBCDiskCache
 
         se = new StatElement();
         se.setName( "Active DB Connections" );
-        se.setData( "" + getNumActiveInPool() );
+        se.setData( "" + poolAccess.getNumActiveInPool() );
         elems.add( se );
 
         se = new StatElement();
         se.setName( "Idle DB Connections" );
-        se.setData( "" + getNumIdleInPool() );
+        se.setData( "" + poolAccess.getNumIdleInPool() );
         elems.add( se );
 
         se = new StatElement();
@@ -1104,6 +955,22 @@ public class JDBCDiskCache
             name = this.getJdbcDiskCacheAttributes().getTableName();
         }
         return name;
+    }
+
+    /**
+     * @param tableState The tableState to set.
+     */
+    public void setTableState( TableState tableState )
+    {
+        this.tableState = tableState;
+    }
+
+    /**
+     * @return Returns the tableState.
+     */
+    public TableState getTableState()
+    {
+        return tableState;
     }
 
     /**
