@@ -191,6 +191,10 @@ public class MySQLTableOptimizer
                             // try to repair the table.
                             success = repairTable( sStatement );
                         }
+                        else
+                        {
+                            success = true;
+                        }
                     }
 
                     // log the table status
