@@ -49,6 +49,8 @@
 					href="/JDBCDiskCache.html" />
 				<item name="JDBC Disk Properties"
 					href="/JDBCDiskCacheProperties.html" />
+				<item name="MySQL Disk Properties"
+					href="/MySQLDiskCacheProperties.html" />
 				<item name="Remote Cache" href="/RemoteAuxCache.html" />
 				<item name="Remote Cache Properties"
 					href="/RemoteCacheProperties.html" />
