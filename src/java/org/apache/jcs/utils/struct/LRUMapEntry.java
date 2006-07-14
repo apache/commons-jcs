@@ -5,9 +5,8 @@ import java.util.Map.Entry;
 
 /**
  * Entry for the LRUMap.
- * 
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class LRUMapEntry
     implements Entry, Serializable
@@ -31,7 +30,6 @@ public class LRUMapEntry
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map$Entry#getKey()
      */
     public Object getKey()
@@ -41,7 +39,6 @@ public class LRUMapEntry
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map$Entry#getValue()
      */
     public Object getValue()
@@ -51,7 +48,6 @@ public class LRUMapEntry
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map$Entry#setValue(java.lang.Object)
      */
     public Object setValue( Object valueArg )
@@ -60,5 +56,4 @@ public class LRUMapEntry
         this.value = valueArg;
         return old;
     }
-
 }

@@ -1,19 +1,14 @@
 package org.apache.jcs.engine;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -33,12 +28,11 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 /**
  * An event queue is used to propagate ordered cache events to one and only one
  * target listener.
- * 
+ * <p>
  * This is a modified version of the experimental version. It should lazy
  * initilaize the processor thread, and kill the thread if the queue goes emtpy
  * for a specified period, now set to 1 minute. If something comes in after that
  * a new processor thread should be created.
- * 
  */
 public class CacheEventQueue
     implements ICacheEventQueue
@@ -88,7 +82,7 @@ public class CacheEventQueue
 
     /**
      * Constructs with the specified listener and the cache name.
-     * 
+     * <p>
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -100,7 +94,7 @@ public class CacheEventQueue
 
     /**
      * Constructor for the CacheEventQueue object
-     * 
+     * <p>
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -129,7 +123,6 @@ public class CacheEventQueue
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getQueueType()
      */
     public int getQueueType()
@@ -149,7 +142,6 @@ public class CacheEventQueue
 
     /**
      * Returns the time to wait for events before killing the background thread.
-     * 
      * @return int
      */
     public int getWaitToDieMillis()
@@ -159,7 +151,7 @@ public class CacheEventQueue
 
     /**
      * Sets the time to wait for events before killing the background thread.
-     * 
+     * <p>
      * @param wtdm
      *            the ms for the q to sit idle.
      */
@@ -178,7 +170,7 @@ public class CacheEventQueue
 
     /**
      * If they queue has an active thread it is considered alive.
-     * 
+     * <p>
      * @return The alive value
      */
     public boolean isAlive()
@@ -189,7 +181,7 @@ public class CacheEventQueue
     /**
      * Sets whether the queue is actively processing -- if there are working
      * threads.
-     * 
+     * <p>
      * @param aState
      */
     public void setAlive( boolean aState )
@@ -207,7 +199,7 @@ public class CacheEventQueue
 
     /**
      * Event Q is emtpy.
-     * 
+     * <p>
      * Calling destroy interupts the processor thread.
      */
     public synchronized void destroy()
@@ -292,7 +284,7 @@ public class CacheEventQueue
     /**
      * This adds a remove all event to the queue. When it is processed, all
      * elements will be removed from the cache.
-     * 
+     * <p>
      * @exception IOException
      */
     public synchronized void addRemoveAllEvent()
@@ -332,7 +324,7 @@ public class CacheEventQueue
 
     /**
      * Adds an event to the queue.
-     * 
+     * <p>
      * @param event
      */
     private void put( AbstractCacheEvent event )
@@ -375,9 +367,8 @@ public class CacheEventQueue
      * that node. This value is returned.
      * <p>
      * When the queue is empty the head node is the same as the tail node.
-     * 
+     * <p>
      * @return An event to process.
-     * 
      */
     private AbstractCacheEvent take()
     {
@@ -410,7 +401,6 @@ public class CacheEventQueue
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getStatistics()
      */
     public IStats getStatistics()
@@ -479,7 +469,7 @@ public class CacheEventQueue
 
     /**
      * This is the thread that works the queue.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -490,7 +480,6 @@ public class CacheEventQueue
 
         /**
          * Constructor for the QProcessor object
-         * 
          * @param aQueue
          *            the event queue to take items from.
          */
@@ -504,7 +493,7 @@ public class CacheEventQueue
 
         /**
          * Main processing method for the QProcessor object.
-         * 
+         * <p>
          * Waits for a specified time (waitToDieMillis) for something to come in
          * and if no new events come in during that period the run method can
          * exit and the thread is dereferenced.
@@ -561,7 +550,7 @@ public class CacheEventQueue
 
     /**
      * Retries before declaring failure.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -630,7 +619,7 @@ public class CacheEventQueue
 
     /**
      * An element should be put in the cache.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -642,7 +631,6 @@ public class CacheEventQueue
 
         /**
          * Constructor for the PutEvent object
-         * 
          * @param ice
          * @exception IOException
          */
@@ -654,7 +642,6 @@ public class CacheEventQueue
 
         /**
          * Description of the Method
-         * 
          * @exception IOException
          */
         protected void doRun()
@@ -676,7 +663,7 @@ public class CacheEventQueue
 
     /**
      * An element should be removed from the cache.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -687,7 +674,6 @@ public class CacheEventQueue
 
         /**
          * Constructor for the RemoveEvent object
-         * 
          * @param key
          * @exception IOException
          */
@@ -699,7 +685,7 @@ public class CacheEventQueue
 
         /**
          * Description of the Method
-         * 
+         * <p>
          * @exception IOException
          */
         protected void doRun()
@@ -710,7 +696,6 @@ public class CacheEventQueue
 
         /*
          * (non-Javadoc)
-         * 
          * @see java.lang.Object#toString()
          */
         public String toString()
@@ -723,7 +708,7 @@ public class CacheEventQueue
     /**
      * All elements should be removed from the cache when this event is
      * processed.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -733,7 +718,6 @@ public class CacheEventQueue
 
         /**
          * Description of the Method
-         * 
          * @exception IOException
          */
         protected void doRun()
@@ -744,7 +728,6 @@ public class CacheEventQueue
 
         /*
          * (non-Javadoc)
-         * 
          * @see java.lang.Object#toString()
          */
         public String toString()
@@ -756,7 +739,7 @@ public class CacheEventQueue
 
     /**
      * The cache should be disposed when this event is processed.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -766,7 +749,7 @@ public class CacheEventQueue
 
         /**
          * Called when gets to the end of the queue
-         * 
+         * <p>
          * @exception IOException
          */
         protected void doRun()
@@ -793,7 +776,7 @@ public class CacheEventQueue
      * This means that the queue is functional. If we reached the max number of
      * failures, the queue is marked as non functional and will never work
      * again.
-     * 
+     * <p>
      * @param b
      */
     public void setWorking( boolean b )
@@ -802,7 +785,6 @@ public class CacheEventQueue
     }
 
     /**
-     * 
      * @return whether there are any items in the queue.
      */
     public boolean isEmpty()

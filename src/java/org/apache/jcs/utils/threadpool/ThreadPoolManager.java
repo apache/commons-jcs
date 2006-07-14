@@ -1,19 +1,14 @@
 package org.apache.jcs.utils.threadpool;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.util.ArrayList;
@@ -36,19 +31,19 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This manages threadpools for an application using Doug Lea's Util Concurrent
  * package.
  * http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html
- * 
+ * <p>
  * It is a singleton since threads need to be managed vm wide.
- * 
- * This managers force you to use a bounded queue. By default it uses the
+ * <p>
+ * This manager forces you to use a bounded queue. By default it uses the
  * current thread for execuion when the buffer is full and no free threads can
  * be created.
- * 
+ * <p>
  * You can specify the props file to use or pass in a properties object prior to
  * configuration. By default it looks for configuration information in
  * thread_pool.properties.
- * 
- * If set the Properties object will take precedence.
- * 
+ * <p>
+ * If set, the Properties object will take precedence.
+ * <p>
  * If a value is not set for a particular pool, the hard coded defaults will be
  * used.
  * 
@@ -70,13 +65,11 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * 
  * You can configure default settings by specifying a default pool in the
  * properties, ie "cache.ccf"
- * 
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class ThreadPoolManager
 {
-
     private static final Log log = LogFactory.getLog( ThreadPoolManager.class );
 
     // DEFAULT SETTINGS, these are not final since they can be set
@@ -118,7 +111,6 @@ public class ThreadPoolManager
 
     /**
      * No instances please. This is a singleton.
-     * 
      */
     private ThreadPoolManager()
     {
@@ -127,7 +119,7 @@ public class ThreadPoolManager
 
     /**
      * Creates a pool based on the configuration info.
-     * 
+     * <p>
      * @param config
      * @return A ThreadPoll wrapper
      */
@@ -188,8 +180,8 @@ public class ThreadPoolManager
      * Returns a configured instance of the ThreadPoolManger To specify a
      * configuation file or Properties object to use call the appropriate setter
      * prior to calling getInstance.
-     * 
-     * @return
+     * <p>
+     * @return The single instance of the ThreadPoolManager
      */
     public static synchronized ThreadPoolManager getInstance()
     {
@@ -204,12 +196,11 @@ public class ThreadPoolManager
      * Returns a pool by name. If a pool by this name does not exist in the
      * configuration file or properties, one will be created using the default
      * values.
-     * 
+     * <p>
      * Pools are lazily created.
-     * 
-     * 
+     * <p>
      * @param name
-     * @return
+     * @return The thread pool configured for the name.
      */
     public ThreadPool getPool( String name )
     {
@@ -243,8 +234,8 @@ public class ThreadPoolManager
     }
 
     /**
-     * returns the names of all configured pools.
-     * 
+     * Returns the names of all configured pools.
+     * <p>
      * @return ArrayList of string names
      */
     public ArrayList getPoolNames()
@@ -264,7 +255,7 @@ public class ThreadPoolManager
 
     /**
      * Setting this post initialization will have no effect.
-     * 
+     * <p>
      * @param propsFileName
      *            The propsFileName to set.
      */
@@ -274,7 +265,10 @@ public class ThreadPoolManager
     }
 
     /**
-     * 
+     * Returns the name of the properties file that we used to initialize the
+     * pools. If the value was set post-initialization, then it may not be the
+     * file used.
+     * <p>
      * @return Returns the propsFileName.
      */
     public static String getPropsFileName()
@@ -285,7 +279,7 @@ public class ThreadPoolManager
     /**
      * This will be used if it is not null on initialzation. Setting this post
      * initialization will have no effect.
-     * 
+     * <p>
      * @param props
      *            The props to set.
      */
@@ -305,7 +299,6 @@ public class ThreadPoolManager
     /**
      * Intialize the ThreadPoolManager and create all the pools defined in the
      * configuration.
-     * 
      */
     protected void configure()
     {
@@ -344,19 +337,16 @@ public class ThreadPoolManager
                                                whenBlockedPolicy_DEFAULT, startUpSize_DEFAULT );
 
         defaultConfig = loadConfig( DEFAULT_PROP_NAME_ROOT );
-
     }
 
     /**
-     * Configures the default PoolConfiguration settings
-     * 
+     * Configures the default PoolConfiguration settings.
+     * <p>
      * @param root
      * @return PoolConfiguration
-     * 
      */
     protected PoolConfiguration loadConfig( String root )
     {
-
         PoolConfiguration config = (PoolConfiguration) defaultConfig.clone();
 
         if ( props.containsKey( root + ".useBoundary" ) )

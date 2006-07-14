@@ -12,10 +12,8 @@ import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
  * Performs default serialization and de-serialization.
- * 
- *
+ * <p>
  * @author Aaron Smuts
- *
  */
 public class StandardSerializer
     implements IElementSerializer
@@ -23,7 +21,6 @@ public class StandardSerializer
 
     /**
      * Serializes an object using default serilaization.
-     * 
      */
     public byte[] serialize( Serializable obj )
         throws IOException
@@ -42,8 +39,8 @@ public class StandardSerializer
     }
 
     /**
-     * Uses default de-serialization to turn a byte array into an object.  All exceptions are converted into 
-     * IOExceptions.
+     * Uses default de-serialization to turn a byte array into an object. All
+     * exceptions are converted into IOExceptions.
      */
     public Object deSerialize( byte[] data )
         throws IOException, ClassNotFoundException
@@ -71,5 +68,4 @@ public class StandardSerializer
             ois.close();
         }
     }
-
 }

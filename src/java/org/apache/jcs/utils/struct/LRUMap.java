@@ -29,22 +29,18 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * should be thread safe. It uses a hashtable and our own double linked list.
  * <p>
  * Locking is done on the instance.
- * 
+ * <p>
  * @author aaronsm
- * 
  */
 public class LRUMap
     implements Map
 {
-
     private final static Log log = LogFactory.getLog( LRUMap.class );
 
     // double linked list for lru
     private DoubleLinkedList list;
 
-    /**
-     * Map where items are stored by key
-     */
+    /** Map where items are stored by key. */
     protected Map map;
 
     int hitCnt = 0;
@@ -62,7 +58,7 @@ public class LRUMap
     /**
      * This creates an unbounded version. Setting the max objects will result in
      * spooling on subsequent puts.
-     * 
+     * <p>
      * @param maxObjects
      */
     public LRUMap()
@@ -77,7 +73,7 @@ public class LRUMap
 
     /**
      * This sets the size limit.
-     * 
+     * <p>
      * @param maxObjects
      */
     public LRUMap( int maxObjects )
@@ -86,9 +82,9 @@ public class LRUMap
         this.maxObjects = maxObjects;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * This simply returned the number of elements in the map.
+     * <p>
      * @see java.util.Map#size()
      */
     public int size()
@@ -96,9 +92,9 @@ public class LRUMap
         return map.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * This removes all the items. It clears the map and the double linked list.
+     * <p>
      * @see java.util.Map#clear()
      */
     public void clear()
@@ -107,9 +103,9 @@ public class LRUMap
         list.removeAll();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Returns true if the map is empty.
+     * <p>
      * @see java.util.Map#isEmpty()
      */
     public boolean isEmpty()
@@ -117,9 +113,9 @@ public class LRUMap
         return map.size() == 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Returns true if the map contains an element for the supplied key.
+     * <p>
      * @see java.util.Map#containsKey(java.lang.Object)
      */
     public boolean containsKey( Object key )
@@ -127,9 +123,10 @@ public class LRUMap
         return map.containsKey( key );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * This is an expensive operation that determines if the object supplied is
+     * mapped to any key.
+     * <p>
      * @see java.util.Map#containsValue(java.lang.Object)
      */
     public boolean containsValue( Object value )
@@ -139,7 +136,6 @@ public class LRUMap
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map#values()
      */
     public Collection values()
@@ -149,7 +145,6 @@ public class LRUMap
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map#putAll(java.util.Map)
      */
     public void putAll( Map source )
@@ -166,9 +161,12 @@ public class LRUMap
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * This returns a set of entries. Our LRUMapEntry is used since the value
+     * stored in the underlying map is a node in the double linked list. We
+     * wouldn't want to return this to the client, so we construct a new entry
+     * with the payload of the node.
+     * <p>
      * @see java.util.Map#entrySet()
      */
     public Set entrySet()
@@ -194,7 +192,6 @@ public class LRUMap
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map#keySet()
      */
     public Set keySet()
@@ -205,7 +202,6 @@ public class LRUMap
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map#get(java.lang.Object)
      */
     public Object get( Object key )
@@ -242,6 +238,11 @@ public class LRUMap
     }
 
     /**
+     * This gets an element out of the map without adjusting it's posisiton in
+     * the LRU. In other words, this does not count as being used. If the
+     * element is the last item in the list, it will still be the last itme in
+     * the list.
+     * <p>
      * @param key
      * @return Object
      */
@@ -269,7 +270,6 @@ public class LRUMap
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map#remove(java.lang.Object)
      */
     public Object remove( Object key )
@@ -294,7 +294,6 @@ public class LRUMap
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     public Object put( Object key, Object value )
@@ -396,7 +395,7 @@ public class LRUMap
 
     /**
      * Adds a new node to the start of the link list.
-     * 
+     * <p>
      * @param key
      * @param val
      *            The feature to be added to the First
@@ -411,7 +410,7 @@ public class LRUMap
 
     /**
      * Returns the size of the list.
-     * 
+     * <p>
      * @return int
      */
     private int dumpCacheSize()
@@ -454,7 +453,6 @@ public class LRUMap
     /**
      * Checks to see if all the items that should be in the cache are. Checks
      * consistency between List and map.
-     * 
      */
     protected void verifyCache()
     {
@@ -543,7 +541,7 @@ public class LRUMap
 
     /**
      * Logs an error is an element that should be in the cache is not.
-     * 
+     * <p>
      * @param key
      */
     protected void verifyCache( Object key )
@@ -576,7 +574,6 @@ public class LRUMap
      * information.
      * <p>
      * Children can implement this method for special behavior.
-     * 
      * @param key
      * @param value
      */
@@ -592,7 +589,7 @@ public class LRUMap
     /**
      * The chunk size is the number of items to remove when the max is reached.
      * By default it is 1.
-     * 
+     * <p>
      * @param chunkSize
      *            The chunkSize to set.
      */
@@ -610,7 +607,6 @@ public class LRUMap
     }
 
     /**
-     * 
      * @return IStats
      */
     public IStats getStatistics()
@@ -653,5 +649,4 @@ public class LRUMap
 
         return stats;
     }
-
 }

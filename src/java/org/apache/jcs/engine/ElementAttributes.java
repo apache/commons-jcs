@@ -1,19 +1,14 @@
 package org.apache.jcs.engine;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.ByteArrayInputStream;
@@ -31,21 +26,19 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
  * This it the element attribute descriptor class. Each element in the cache has
  * an ElementAttribute object associated with it. An ElementAttributes object
  * can be associated with an element in 3 ways:
- * <ul>
- * <li>1. When the item is put into the cache, you can associate an element
+ * <ol>
+ * <li>When the item is put into the cache, you can associate an element
  * attributes object.</li>
- * <li>2. If not attributes object is include when the element is put into the
+ * <li>If not attributes object is include when the element is put into the
  * cache, then the default attributes for the region will be used.</li>
- * <li>3. The element attributes can be reset. This effectively results in a
+ * <li>The element attributes can be reset. This effectively results in a
  * retrieval followed by a put. Hence, this is the same as 1.</li>
- * </ul>
- * 
+ * </ol>
  * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
 public class ElementAttributes
     implements IElementAttributes, Serializable, Cloneable
 {
-
     private static final long serialVersionUID = 7814990748035017441L;
 
     /**
@@ -64,8 +57,8 @@ public class ElementAttributes
     public boolean IS_REMOTE = true;
 
     /**
-     * You can turn off expiration by setting this to true.  This causes the cache
-     * to bypass both max life and idle time expiration.
+     * You can turn off expiration by setting this to true. This causes the
+     * cache to bypass both max life and idle time expiration.
      */
     public boolean IS_ETERNAL = true;
 
@@ -80,7 +73,8 @@ public class ElementAttributes
     public long maxLifeSeconds = -1;
 
     /**
-     * The maximum time an entry can be idle.  Setting this to -1 causes the idle time check to be ignored.
+     * The maximum time an entry can be idle. Setting this to -1 causes the idle
+     * time check to be ignored.
      */
     public long maxIdleTimeSeconds = -1;
 
@@ -103,7 +97,7 @@ public class ElementAttributes
      * The list of Event handlers to use. This is transient, since the event
      * handlers cannot usually be serialized. This means that you cannot attach
      * a post serialization event to an item.
-     * 
+     * <p>
      * TODO we need to check that when an item is passed to a non-local cache
      * that if the local cache had a copy with event handlers, that those
      * handlers are used.
@@ -121,7 +115,7 @@ public class ElementAttributes
 
     /**
      * Constructor for the IElementAttributes object
-     * 
+     * <p>
      * @param attr
      */
     protected ElementAttributes( ElementAttributes attr )
@@ -145,7 +139,7 @@ public class ElementAttributes
 
     /**
      * Copies the attributes, including references to event handlers.
-     * 
+     * <p>
      * @return a copy of the Attributes
      */
     public IElementAttributes copy()
@@ -172,12 +166,11 @@ public class ElementAttributes
 
     /**
      * Deep clone the attributes.
-     * 
+     * <p>
      * @return a clone of these attributes
      */
     public Object clone2()
     {
-
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream( 100 );
@@ -205,7 +198,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setVersion(long)
      */
     public void setVersion( long version )
@@ -215,7 +207,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setMaxLifeSeconds(long)
      */
     public void setMaxLifeSeconds( long mls )
@@ -225,7 +216,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getMaxLifeSeconds()
      */
     public long getMaxLifeSeconds()
@@ -235,7 +225,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setIdleTime(long)
      */
     public void setIdleTime( long idle )
@@ -245,7 +234,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setSize(int)
      */
     public void setSize( int size )
@@ -255,7 +243,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getSize()
      */
     public int getSize()
@@ -265,7 +252,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getCreateTime()
      */
     public long getCreateTime()
@@ -283,7 +269,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getVersion()
      */
     public long getVersion()
@@ -293,7 +278,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getIdleTime()
      */
     public long getIdleTime()
@@ -303,7 +287,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getTimeToLiveSeconds()
      */
     public long getTimeToLiveSeconds()
@@ -314,7 +297,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getLastAccessTime()
      */
     public long getLastAccessTime()
@@ -324,7 +306,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setLastAccessTimeNow()
      */
     public void setLastAccessTimeNow()
@@ -334,7 +315,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsSpool()
      */
     public boolean getIsSpool()
@@ -344,7 +324,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsSpool(boolean)
      */
     public void setIsSpool( boolean val )
@@ -354,7 +333,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsLateral()
      */
     public boolean getIsLateral()
@@ -364,7 +342,6 @@ public class ElementAttributes
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsLateral(boolean)
      */
     public void setIsLateral( boolean val )
@@ -374,7 +351,6 @@ public class ElementAttributes
 
     /**
      * Can this item be sent to the remote cache
-     * 
      * @return true if the item can be sent to a remote auxiliary
      */
     public boolean getIsRemote()
@@ -384,7 +360,6 @@ public class ElementAttributes
 
     /**
      * Sets the isRemote attribute of the ElementAttributes object
-     * 
      * @param val
      *            The new isRemote value
      */
@@ -396,7 +371,7 @@ public class ElementAttributes
     /**
      * You can turn off expiration by setting this to true. The max life value
      * will be ignored.
-     * 
+     * <p>
      * @return true if the item cannot expire.
      */
     public boolean getIsEternal()
@@ -409,7 +384,7 @@ public class ElementAttributes
      * that the item should never expire. If can still be removed if it is the
      * least recently used, and you are using the LRUMemory cache. it just will
      * not be filtered for expiration by the cache hub.
-     * 
+     * <p>
      * @param val
      *            The new isEternal value
      */
@@ -421,11 +396,11 @@ public class ElementAttributes
     /**
      * Adds a ElementEventHandler. Handler's can be registered for multiple
      * events. A registered handler will be called at every recognized event.
-     * 
+     * <p>
      * The alternative would be to register handlers for each event. Or maybe
      * The handler interface should have a method to return whether it cares
      * about certain events.
-     * 
+     * <p>
      * @param eventHandler
      *            The ElementEventHandler to be added to the list.
      */
@@ -444,7 +419,7 @@ public class ElementAttributes
      * <p>
      * This add the references to the local list. Subsequent changes in the
      * caller's list will not be reflected.
-     * 
+     * <p>
      * @param eventHandlers
      *            List of IElementEventHandler objects
      */
@@ -464,7 +439,7 @@ public class ElementAttributes
     /**
      * Gets the elementEventHandlers. Returns null if none exist. Makes checking
      * easy.
-     * 
+     * <p>
      * @return The elementEventHandlers List of IElementEventHandler objects
      */
     public ArrayList getElementEventHandlers()
@@ -474,20 +449,23 @@ public class ElementAttributes
 
     /**
      * For logging and debugging the element IElementAttributes.
-     * 
+     * <p>
      * @return String info about the values.
      */
     public String toString()
     {
         StringBuffer dump = new StringBuffer();
 
-        dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL ).append( ", IS_SPOOL = " ).append( IS_SPOOL )
-            .append( ", IS_REMOTE = " ).append( IS_REMOTE ).append( ", IS_ETERNAL = " ).append( IS_ETERNAL )
-            .append( ", MaxLifeSeconds = " ).append( this.getMaxLifeSeconds() ).append( ", IdleTime = " )
-            .append( this.getIdleTime() ).append( ", CreateTime = " ).append( this.getCreateTime() )
-            .append( ", LastAccessTime = " ).append( this.getLastAccessTime() ).append( ", getTimeToLiveSeconds() = " )
-            .append( String.valueOf( getTimeToLiveSeconds() ) ).append( ", createTime = " )
-            .append( String.valueOf( createTime ) ).append( " ]" );
+        dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL );
+        dump.append( ", IS_SPOOL = " ).append( IS_SPOOL );
+        dump.append( ", IS_REMOTE = " ).append( IS_REMOTE );
+        dump.append( ", IS_ETERNAL = " ).append( IS_ETERNAL );
+        dump.append( ", MaxLifeSeconds = " ).append( this.getMaxLifeSeconds() );
+        dump.append( ", IdleTime = " ).append( this.getIdleTime() );
+        dump.append( ", CreateTime = " ).append( this.getCreateTime() );
+        dump.append( ", LastAccessTime = " ).append( this.getLastAccessTime() );
+        dump.append( ", getTimeToLiveSeconds() = " ).append( String.valueOf( getTimeToLiveSeconds() ) );
+        dump.append( ", createTime = " ).append( String.valueOf( createTime ) ).append( " ]" );
 
         return dump.toString();
     }

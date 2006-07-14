@@ -1,19 +1,14 @@
 package org.apache.jcs.utils.props;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.InputStream;
@@ -22,20 +17,18 @@ import java.util.Properties;
 /**
  * I modified this class to work with .ccf files in particular. I also removed
  * the resource bundle functionality.
- * 
+ * <p>
  * A simple class for loading java.util.Properties backed by .ccf files deployed
  * as classpath resources. See individual methods for details.
  * <p>
  * The original source is from:
- * 
+ * <p>
  * @author (C) <a
  *         href="http://www.javaworld.com/columns/jw-qna-index.shtml">Vlad
  *         Roubtsov </a>, 2003
- * 
  */
 public abstract class PropertyLoader
 {
-
     private static final boolean THROW_ON_LOAD_FAILURE = true;
 
     private static final String SUFFIX = ".ccf";
@@ -48,25 +41,19 @@ public abstract class PropertyLoader
      * use either "/" or "." for package segment separation with an optional
      * leading "/" and optional ".ccf" suffix.
      * <p>
-     * The suffix ".ccf" will be appended if it is not set.  This can also handle .properties files
-     * 
+     * The suffix ".ccf" will be appended if it is not set. This can also handle
+     * .properties files
+     * <p>
      * Thus, the following names refer to the same resource:
      * 
      * <pre>
-     *  
      *   
-     *    
-     *     
-     *      some.pkg.Resource
-     *      some.pkg.Resource.ccf
-     *      some/pkg/Resource
-     *      some/pkg/Resource.ccf
-     *      /some/pkg/Resource
-     *      /some/pkg/Resource.ccf
-     *      
-     *     
-     *    
-     *   
+     *       some.pkg.Resource
+     *       some.pkg.Resource.ccf
+     *       some/pkg/Resource
+     *       some/pkg/Resource.ccf
+     *       /some/pkg/Resource
+     *       /some/pkg/Resource.ccf
      * </pre>
      * 
      * @param name
@@ -74,7 +61,6 @@ public abstract class PropertyLoader
      * @param loader
      *            classloader through which to load the resource [null is
      *            equivalent to the application loader]
-     * 
      * @return resource converted to java.util.properties [may be null if the
      *         resource was not found and THROW_ON_LOAD_FAILURE is false]
      * @throws IllegalArgumentException
@@ -163,7 +149,7 @@ public abstract class PropertyLoader
      * that uses the current thread's context classloader. A better strategy
      * would be to use techniques shown in
      * http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html
-     * 
+     * <p>
      * @param name
      * @return Properties
      */
@@ -174,7 +160,6 @@ public abstract class PropertyLoader
 
     /**
      * Can't use this one.
-     * 
      */
     private PropertyLoader()
     {

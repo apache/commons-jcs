@@ -3,31 +3,24 @@ package org.apache.jcs.utils.threadpool;
 import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 /**
  * This object holds configuration data for a thread pool.
- * 
+ * <p>
  * @author Aaron Smuts
- *  
  */
 public class PoolConfiguration
     implements Cloneable, IPoolConfiguration
 {
-
     private boolean useBoundary = true;
 
     private int boundarySize = 2000;
@@ -41,7 +34,7 @@ public class PoolConfiguration
 
     private int keepAliveTime = 1000 * 60 * 5;
 
-    //should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST,
+    // should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST,
     private String whenBlockedPolicy = POLICY_RUN;
 
     private int startUpSize = 4;
@@ -65,7 +58,6 @@ public class PoolConfiguration
 
     /**
      * Default
-     *  
      */
     public PoolConfiguration()
     {
@@ -73,7 +65,8 @@ public class PoolConfiguration
     }
 
     /**
-     * 
+     * Construct a completely configured instance.
+     * <p>
      * @param useBoundary
      * @param boundarySize
      * @param maximumPoolSize
@@ -85,7 +78,7 @@ public class PoolConfiguration
     public PoolConfiguration( boolean useBoundary, int boundarySize, int maximumPoolSize, int minimumPoolSize,
                              int keepAliveTime, String whenBlockedPolicy, int startUpSize )
     {
-        setUseBoundary( useBoundary ) ;
+        setUseBoundary( useBoundary );
         setBoundarySize( boundarySize );
         setMaximumPoolSize( maximumPoolSize );
         setMinimumPoolSize( minimumPoolSize );
@@ -170,6 +163,8 @@ public class PoolConfiguration
     {
         if ( whenBlockedPolicy != null )
         {
+            whenBlockedPolicy = whenBlockedPolicy.trim();
+
             if ( whenBlockedPolicy.equalsIgnoreCase( POLICY_ABORT ) )
             {
                 this.whenBlockedPolicy = POLICY_ABORT;
@@ -201,7 +196,6 @@ public class PoolConfiguration
             // the value is null, dfault to RUN
             this.whenBlockedPolicy = POLICY_RUN;
         }
-
     }
 
     /**
@@ -236,18 +230,19 @@ public class PoolConfiguration
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
-        buf.append( "useBoundary = [" + isUseBoundary() + "]" );
-        buf.append( "boundarySize = [" + boundarySize + "]" );
-        buf.append( "maximumPoolSize = [" + maximumPoolSize + "]" );
-        buf.append( "minimumPoolSize = [" + minimumPoolSize + "]" );
-        buf.append( "keepAliveTime = [" + keepAliveTime + "]" );
-        buf.append( "whenBlockedPolicy = [" + getWhenBlockedPolicy() + "]" );
+        buf.append( "useBoundary = [" + isUseBoundary() + "] " );
+        buf.append( "boundarySize = [" + boundarySize + "] " );
+        buf.append( "maximumPoolSize = [" + maximumPoolSize + "] " );
+        buf.append( "minimumPoolSize = [" + minimumPoolSize + "] " );
+        buf.append( "keepAliveTime = [" + keepAliveTime + "] " );
+        buf.append( "whenBlockedPolicy = [" + getWhenBlockedPolicy() + "] " );
         buf.append( "startUpSize = [" + startUpSize + "]" );
         return buf.toString();
     }
 
     /**
      * Copies the instance variables to another instance.
+     * <p>
      * @return PoolConfiguration
      */
     public Object clone()

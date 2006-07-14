@@ -1,19 +1,14 @@
 package org.apache.jcs.utils.struct;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import org.apache.commons.logging.Log;
@@ -22,14 +17,12 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This maintains a sorted array with a preferential replacement policy when
  * full.
- * 
+ * <p>
  * Insertion time is n, search is log(n)
- * 
- * 
+ * <p>
  * Clients must manage thread safety on previous version. I synchronized the
  * public methods to add easy thread safety. I synchronized all public methods
  * that make modifications.
- * 
  */
 public class SortedPreferentialArray
 {
@@ -48,7 +41,7 @@ public class SortedPreferentialArray
 
     /**
      * Consruct the array with the maximum size.
-     * 
+     * <p>
      * @param maxSize
      *            int
      */
@@ -62,7 +55,7 @@ public class SortedPreferentialArray
      * If the array is full this will remove the smallest if preferLarge==true
      * and if obj is bigger, or the largest if preferLarge=false and obj is
      * smaller than the largest.
-     * 
+     * <p>
      * @param obj
      *            Object
      */
@@ -113,7 +106,7 @@ public class SortedPreferentialArray
 
     /**
      * Returns the largest without removing it from the array.
-     * 
+     * <p>
      * @return Comparable
      */
     public synchronized Comparable getLargest()
@@ -123,7 +116,7 @@ public class SortedPreferentialArray
 
     /**
      * Returns the smallest element without removing it from the array.
-     * 
+     * <p>
      * @return Comparable
      */
     public synchronized Comparable getSmallest()
@@ -134,7 +127,7 @@ public class SortedPreferentialArray
     /**
      * Insert looks for the nearest largest. It then determines which way to
      * shuffle depending on the preference.
-     * 
+     * <p>
      * @param obj
      *            Comparable
      */
@@ -251,12 +244,11 @@ public class SortedPreferentialArray
                 log.debug( this.dumpArray() );
             }
         }
-
-    } // end insert
+    }
 
     /**
      * Determines whether the preference is for large or small.
-     * 
+     * <p>
      * @param pref
      *            boolean
      */
@@ -267,7 +259,7 @@ public class SortedPreferentialArray
 
     /**
      * Returns and removes the nearer larger or equal object from the aray.
-     * 
+     * <p>
      * @param obj
      *            Comparable
      * @return Comparable, null if arg is null or none was found.
@@ -312,7 +304,7 @@ public class SortedPreferentialArray
 
     /**
      * Returns the current size of the array.
-     * 
+     * <p>
      * @return int
      */
     public int size()
@@ -323,7 +315,7 @@ public class SortedPreferentialArray
     /**
      * This determines the position in the array that is occupied by an object
      * that is larger or equal to the argument. If none exists, -1 is returned.
-     * 
+     * <p>
      * @param obj
      *            Object
      * @return Object
@@ -358,24 +350,24 @@ public class SortedPreferentialArray
      * This method determines the position where an insert should take place for
      * a given object. With some additional checking, this can also be used to
      * find an object matching or greater than the argument.
-     * 
+     * <p>
      * If the array is not full and the current object is larger than all the
      * rest the first open slot at the end will be returned.
-     * 
+     * <p>
      * If the object is larger than the largest and it is full, it will return
      * the last position.
-     * 
+     * <p>
      * If the array is empty, the first spot is returned.
-     * 
+     * <p>
      * If the object is smaller than all the rests, the first position is
      * returned. The caller must decide what to do given the preference.
-     * 
+     * <p>
      * Returns the position of the object nearest to or equal to the larger
      * object.
-     * 
+     * <p>
      * If you want to find the takePosition, you have to calculate it.
      * findNearestOccupiedLargerOrEqualPosition will calculate this for you
-     * 
+     * <p>
      * @param obj
      *            Comparable
      * @return int
@@ -501,6 +493,8 @@ public class SortedPreferentialArray
                     greaterPos = curPos;
                     // set the current position to
                     // set the previous position to the current position
+                    // We could have an integer overflow, but this array could
+                    // never get that large.
                     int newPos = Math.min( curPos, ( curPos + prevPos ) / 2 );
                     prevPos = curPos;
                     curPos = newPos;
@@ -556,7 +550,7 @@ public class SortedPreferentialArray
     /**
      * Removes the item from the array at the specified position. The remaining
      * items to the right are shifted left.
-     * 
+     * <p>
      * @param position
      *            int
      * @throw IndexOutOfBoundsException if position is out of range.
@@ -589,7 +583,7 @@ public class SortedPreferentialArray
 
     /**
      * Debugging method to return a human readable display of array data.
-     * 
+     * <p>
      * @return
      */
     protected String dumpArray()

@@ -6,20 +6,18 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 /**
  * This is simply a wrapper around the Pooled Excutor that allows clients to
  * access the queue.
- * 
+ * <p>
  * @author aaronsm
- *  
  */
 public class ThreadPool
 {
-
     private PooledExecutor pool = null;
 
     private Channel queue = null;
 
     /**
      * Create the wrapper.
-     * 
+     * <p>
      * @param pool
      * @param queue
      */
@@ -31,7 +29,7 @@ public class ThreadPool
 
     /**
      * This is intended to give the client access to the PooledExecutor itself.
-     * 
+     * <p>
      * @return Returns the pool.
      */
     public PooledExecutor getPool()
@@ -48,7 +46,8 @@ public class ThreadPool
     }
 
     /**
-     * 
+     * Delegates execution to the pooled executor.
+     * <p>
      * @param run
      * @throws InterruptedException
      */
@@ -57,5 +56,4 @@ public class ThreadPool
     {
         pool.execute( run );
     }
-
 }

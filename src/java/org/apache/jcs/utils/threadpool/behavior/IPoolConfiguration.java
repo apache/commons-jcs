@@ -1,8 +1,9 @@
 package org.apache.jcs.utils.threadpool.behavior;
 
 /**
+ * This provides values to use for the when-blocked-policy.
+ * <p>
  * @author aaronsm
- *  
  */
 public interface IPoolConfiguration
 {
@@ -78,9 +79,9 @@ public interface IPoolConfiguration
 
     /**
      * should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST.
-     * 
-     * If an incorrect value is returned, run will be used.
-     * 
+     * <p>
+     * If an incorrect value is returned, RUN will be used.
+     * <p>
      * @param whenBlockedPolicy
      *            The whenBlockedPolicy to set.
      */

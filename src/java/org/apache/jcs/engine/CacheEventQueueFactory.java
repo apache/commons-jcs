@@ -8,9 +8,8 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 /**
  * This class hands out event Queues. This allows us to change the
  * implementation more easily.
- * 
+ * <p>
  * @author aaronsm
- *  
  */
 public class CacheEventQueueFactory
 {
@@ -19,7 +18,7 @@ public class CacheEventQueueFactory
 
     /**
      * The most commonly used factory method.
-     * 
+     * <p>
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -35,7 +34,7 @@ public class CacheEventQueueFactory
 
     /**
      * Fully configured event queue.
-     * 
+     * <p>
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -51,7 +50,6 @@ public class CacheEventQueueFactory
                                                   int maxFailure, int waitBeforeRetry, String threadPoolName,
                                                   int poolType )
     {
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "threadPoolName = [" + threadPoolName + "] poolType = " + poolType + " " );

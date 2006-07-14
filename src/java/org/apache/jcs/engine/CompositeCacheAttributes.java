@@ -1,19 +1,14 @@
 package org.apache.jcs.engine;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
@@ -25,17 +20,12 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
  * <p>
  * If all the default attributes are not defined in the default region
  * definition in the cache.ccf, the hard coded defaults will be used.
- * 
  */
 public class CompositeCacheAttributes
     implements ICompositeCacheAttributes, Cloneable
 {
-
     private static final long serialVersionUID = 6754049978134196787L;
 
-    // Allows for programmatic stopping of configuration information. Shouldn't
-    // use.
-    // cannot turn on service if it is not set in props. Only stop.
     private static final boolean DEFAULT_USE_LATERAL = true;
 
     private static final boolean DEFAULT_USE_REMOTE = true;
@@ -46,14 +36,14 @@ public class CompositeCacheAttributes
 
     private static final int DEFAULT_MAX_OBJECTS = 100;
 
-    private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120; // 2 hours
+    private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120;
 
-    private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 30; 
+    private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 30;
 
-    private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1; 
+    private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1;
 
     private static final String DEFAULT_MEMORY_CACHE_NAME = "org.apache.jcs.engine.memory.lru.LRUMemoryCache";
-    
+
     private boolean useLateral = DEFAULT_USE_LATERAL;
 
     private boolean useRemote = DEFAULT_USE_REMOTE;
@@ -70,7 +60,7 @@ public class CompositeCacheAttributes
     /** maxMemoryIdleTimeSeconds */
     private long maxMemoryIdleTimeSeconds = DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS;
 
-    /** shrinkerIntervalSeconds  */
+    /** shrinkerIntervalSeconds */
     private long shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
 
     /** The maximum number the shrinker will spool to disk per run. */
@@ -94,7 +84,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the maxObjects attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @param maxObjs
      *            The new maxObjects value
      */
@@ -105,7 +95,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the maxObjects attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @return The maxObjects value
      */
     public int getMaxObjects()
@@ -115,7 +105,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the useDisk attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @param useDisk
      *            The new useDisk value
      */
@@ -126,7 +116,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the useDisk attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @return The useDisk value
      */
     public boolean getUseDisk()
@@ -136,7 +126,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the useLateral attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @param b
      *            The new useLateral value
      */
@@ -147,7 +137,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the useLateral attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @return The useLateral value
      */
     public boolean getUseLateral()
@@ -157,7 +147,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the useRemote attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @param useRemote
      *            The new useRemote value
      */
@@ -168,7 +158,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the useRemote attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @return The useRemote value
      */
     public boolean getUseRemote()
@@ -178,7 +168,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the cacheName attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @param s
      *            The new cacheName value
      */
@@ -189,7 +179,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the cacheName attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -199,7 +189,7 @@ public class CompositeCacheAttributes
 
     /**
      * Sets the memoryCacheName attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @param s
      *            The new memoryCacheName value
      */
@@ -210,7 +200,7 @@ public class CompositeCacheAttributes
 
     /**
      * Gets the memoryCacheName attribute of the CompositeCacheAttributes object
-     * 
+     * <p>
      * @return The memoryCacheName value
      */
     public String getMemoryCacheName()
@@ -220,7 +210,7 @@ public class CompositeCacheAttributes
 
     /**
      * Whether the memory cache should perform background memory shrinkage.
-     * 
+     * <p>
      * @param useShrinker
      *            The new UseMemoryShrinker value
      */
@@ -231,7 +221,7 @@ public class CompositeCacheAttributes
 
     /**
      * Whether the memory cache should perform background memory shrinkage.
-     * 
+     * <p>
      * @return The UseMemoryShrinker value
      */
     public boolean getUseMemoryShrinker()
@@ -242,7 +232,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space.
-     * 
+     * <p>
      * @param seconds
      *            The new MaxMemoryIdleTimeSeconds value
      */
@@ -254,7 +244,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space.
-     * 
+     * <p>
      * @return The MaxMemoryIdleTimeSeconds value
      */
     public long getMaxMemoryIdleTimeSeconds()
@@ -265,7 +255,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space. This sets the shrinker interval.
-     * 
+     * <p>
      * @param seconds
      *            The new ShrinkerIntervalSeconds value
      */
@@ -277,7 +267,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space. This gets the shrinker interval.
-     * 
+     * <p>
      * @return The ShrinkerIntervalSeconds value
      */
     public long getShrinkerIntervalSeconds()
@@ -288,10 +278,10 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space. This sets the maximum number of items to spool per run.
-     * 
+     * <p>
      * If the value is -1, then there is no limit to the number of items to be
      * spooled.
-     * 
+     * <p>
      * @param maxSpoolPerRun
      *            The new maxSpoolPerRun value
      */
@@ -303,7 +293,7 @@ public class CompositeCacheAttributes
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
      * to reclaim space. This gets the maximum number of items to spool per run.
-     * 
+     * <p>
      * @return The maxSpoolPerRun value
      */
     public int getMaxSpoolPerRun()
@@ -313,7 +303,7 @@ public class CompositeCacheAttributes
 
     /**
      * Description of the Method
-     * 
+     * <p>
      * @return
      */
     public ICompositeCacheAttributes copy()
@@ -324,7 +314,7 @@ public class CompositeCacheAttributes
             return cattr;
         }
         catch ( Exception e )
-        {            
+        {
             System.err.println( e.toString() );
             return new CompositeCacheAttributes();
         }
@@ -332,16 +322,20 @@ public class CompositeCacheAttributes
 
     /**
      * Description of the Method
-     * 
+     * <p>
      * @return
      */
     public String toString()
     {
         StringBuffer dump = new StringBuffer();
 
-        dump.append( "[ " ).append( "useLateral = " ).append( useLateral ).append( ", useRemote = " )
-            .append( useRemote ).append( ", useDisk = " ).append( useDisk ).append( ", maxObjs = " ).append( maxObjs )
-            .append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun ).append( " ]" );
+        dump.append( "[ " );
+        dump.append( "useLateral = " ).append( useLateral );
+        dump.append( ", useRemote = " ).append( useRemote );
+        dump.append( ", useDisk = " ).append( useDisk );
+        dump.append( ", maxObjs = " ).append( maxObjs );
+        dump.append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun );
+        dump.append( " ]" );
 
         return dump.toString();
     }

@@ -7,10 +7,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Simple utility for getting hte local host name.
- * 
+ * Simple utility for getting the local host name.
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class HostNameUtil
 {
@@ -18,8 +17,7 @@ public class HostNameUtil
 
     /**
      * Gets the address for the local machine.
-     * 
-     * 
+     * <p>
      * @return InetAddress.getLocalHost().getHostAddress(), or unknown if there
      *         is an error.
      */

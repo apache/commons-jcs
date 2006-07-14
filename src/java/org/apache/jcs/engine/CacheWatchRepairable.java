@@ -50,7 +50,7 @@ public class CacheWatchRepairable
     /**
      * Replaces the underlying cache watch service and reattached all existing
      * listeners to the new cache watch.
-     * 
+     * <p>
      * @param cacheWatch
      *            The new cacheWatch value
      */
@@ -72,7 +72,7 @@ public class CacheWatchRepairable
                     }
                     catch ( IOException ex )
                     {
-                        log.error( ex );
+                        log.error( "Problem adding listener.", ex );
                     }
                 }
             }
@@ -82,7 +82,7 @@ public class CacheWatchRepairable
     /**
      * Adds a feature to the CacheListener attribute of the CacheWatchRepairable
      * object
-     * 
+     * <p>
      * @param cacheName
      *            The feature to be added to the CacheListener attribute
      * @param obj
@@ -111,7 +111,7 @@ public class CacheWatchRepairable
     /**
      * Adds a feature to the CacheListener attribute of the CacheWatchRepairable
      * object
-     * 
+     * <p>
      * @param obj
      *            The feature to be added to the CacheListener attribute
      * @throws IOException
@@ -163,8 +163,7 @@ public class CacheWatchRepairable
         throws IOException
     {
         // Record the removal locally, regardless of whether the remote
-        // remove-listener
-        // operation succeeds or fails.
+        // remove-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
             for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext(); )

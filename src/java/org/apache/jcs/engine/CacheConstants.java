@@ -18,7 +18,7 @@ package org.apache.jcs.engine;
 
 /**
  * Constants used throughout the JCS cache engine
- * 
+ * <p>
  * @version $Id$
  */
 public interface CacheConstants

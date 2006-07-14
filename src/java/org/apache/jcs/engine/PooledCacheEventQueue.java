@@ -1,19 +1,14 @@
 package org.apache.jcs.engine;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -37,24 +32,22 @@ import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 /**
  * An event queue is used to propagate ordered cache events to one and only one
  * target listener.
- * 
+ * <p>
  * This is a modified version of the experimental version. It uses a
  * PooledExecutor and a BoundedBuffer to queue up events and execute them as
  * threads become available.
- * 
+ * <p>
  * The PooledExecutor is static, because presumably these processes will be IO
  * bound, so throwing more than a few threads at them will serve no purpose
  * other than to saturate the IO interface. In light of this, having one thread
  * per region seems unnecessary. This may prove to be false.
- * 
+ * <p>
  * @author Aaron Smuts
  * @author Travis Savo <tsavo@ifilm.com>
- *  
  */
 public class PooledCacheEventQueue
     implements ICacheEventQueue
 {
-
     private static final int queueType = POOLED_QUEUE_TYPE;
 
     private static final Log log = LogFactory.getLog( PooledCacheEventQueue.class );
@@ -79,12 +72,12 @@ public class PooledCacheEventQueue
 
     private boolean working = true;
 
-    //The Thread Pool to execute events with.
+    // The Thread Pool to execute events with.
     private ThreadPool pool = null;
 
     /**
      * Constructor for the CacheEventQueue object
-     * 
+     * <p>
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -113,11 +106,6 @@ public class PooledCacheEventQueue
         }
         pool = ThreadPoolManager.getInstance().getPool( threadPoolName );
 
-        //When our pool is filling up too fast, we should ditch the oldest
-        // event in favor of the newer ones.
-        //TODO: Make this configurable as a generic option.
-        //pool.getPool().discardOldestWhenBlocked();
-
         if ( log.isDebugEnabled() )
         {
             log.debug( "Constructed: " + this );
@@ -126,7 +114,6 @@ public class PooledCacheEventQueue
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getQueueType()
      */
     public int getQueueType()
@@ -146,7 +133,7 @@ public class PooledCacheEventQueue
 
     /**
      * Returns the time to wait for events before killing the background thread.
-     * 
+     * <p>
      * @return the time to wait before shutting down in ms.
      */
     public int getWaitToDieMillis()
@@ -156,7 +143,7 @@ public class PooledCacheEventQueue
 
     /**
      * Sets the time to wait for events before killing the background thread.
-     * 
+     * <p>
      * @param wtdm
      */
     public void setWaitToDieMillis( int wtdm )
@@ -173,7 +160,7 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * @return The {3} value
+     * @return true if not destroyed.
      */
     public boolean isAlive()
     {
@@ -212,6 +199,8 @@ public class PooledCacheEventQueue
     }
 
     /**
+     * Constructs a PutEvent for the object and passes it to the event queue.
+     * <p>
      * @param ce
      *            The feature to be added to the PutEvent attribute
      * @exception IOException
@@ -293,7 +282,7 @@ public class PooledCacheEventQueue
 
     /**
      * Adds an event to the queue.
-     * 
+     * <p>
      * @param event
      */
     private void put( AbstractCacheEvent event )
@@ -318,7 +307,6 @@ public class PooledCacheEventQueue
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getStatistics()
      */
     public IStats getStatistics()
@@ -379,11 +367,11 @@ public class PooledCacheEventQueue
         return stats;
     }
 
-    ///////////////////////////// Inner classes /////////////////////////////
+    // /////////////////////////// Inner classes /////////////////////////////
 
     /**
      * Retries before declaring failure.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -395,7 +383,8 @@ public class PooledCacheEventQueue
         boolean done = false;
 
         /**
-         * Main processing method for the AbstractCacheEvent object
+         * Main processing method for the AbstractCacheEvent object. It calls
+         * the abstract doRun method that all concrete instances must implement.
          */
         public void run()
         {
@@ -449,18 +438,18 @@ public class PooledCacheEventQueue
     }
 
     /**
+     * An event that puts an item to a ICacheListener
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
     private class PutEvent
         extends AbstractCacheEvent
     {
-
         private ICacheElement ice;
 
         /**
          * Constructor for the PutEvent object
-         * 
          * @param ice
          * @exception IOException
          */
@@ -468,24 +457,16 @@ public class PooledCacheEventQueue
             throws IOException
         {
             this.ice = ice;
-            /*
-             * this.key = key; this.obj = CacheUtils.dup(obj); this.attr = attr;
-             * this.groupName = groupName;
-             */
         }
 
         /**
-         * Description of the Method
-         * 
+         * Tells the ICacheListener to handle the put.
+         * <p>
          * @exception IOException
          */
         protected void doRun()
             throws IOException
         {
-            /*
-             * CacheElement ce = new CacheElement(cacheName, key, obj);
-             * ce.setElementAttributes( attr ); ce.setGroupName( groupName );
-             */
             listener.handlePut( ice );
         }
 
@@ -498,8 +479,8 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * Description of the Class
-     * 
+     * An event that knows how to call remove on an ICacheListener
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -510,7 +491,6 @@ public class PooledCacheEventQueue
 
         /**
          * Constructor for the RemoveEvent object
-         * 
          * @param key
          * @exception IOException
          */
@@ -521,8 +501,8 @@ public class PooledCacheEventQueue
         }
 
         /**
-         * Description of the Method
-         * 
+         * Calls remove on the listner.
+         * <p>
          * @exception IOException
          */
         protected void doRun()
@@ -533,7 +513,6 @@ public class PooledCacheEventQueue
 
         /*
          * (non-Javadoc)
-         * 
          * @see java.lang.Object#toString()
          */
         public String toString()
@@ -544,18 +523,17 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * Description of the Class
-     * 
+     * An event that knows how to call remove all on an ICacheListener
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
     private class RemoveAllEvent
         extends AbstractCacheEvent
     {
-
         /**
-         * Description of the Method
-         * 
+         * Call removeAll on the listener.
+         * <p>
          * @exception IOException
          */
         protected void doRun()
@@ -566,7 +544,6 @@ public class PooledCacheEventQueue
 
         /*
          * (non-Javadoc)
-         * 
          * @see java.lang.Object#toString()
          */
         public String toString()
@@ -578,7 +555,7 @@ public class PooledCacheEventQueue
 
     /**
      * The Event put into the queue for dispose requests.
-     * 
+     * <p>
      * @author asmuts
      * @created January 15, 2002
      */
@@ -588,7 +565,7 @@ public class PooledCacheEventQueue
 
         /**
          * Called when gets to the end of the queue
-         * 
+         * <p>
          * @exception IOException
          */
         protected void doRun()
@@ -623,7 +600,7 @@ public class PooledCacheEventQueue
     /**
      * If the Queue is using a bounded channel we can determine the size. If it
      * is zero or we can't determine the size, we return true.
-     * 
+     * <p>
      * @return whether or not there are items in the queue
      */
     public boolean isEmpty()
@@ -645,5 +622,4 @@ public class PooledCacheEventQueue
             }
         }
     }
-
 }

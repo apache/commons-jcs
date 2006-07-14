@@ -4,11 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This is a generic thread safe double linked list.
+ * This is a generic thread safe double linked list. It's very simple and all
+ * the operations are so quick that course grained synchronization is more than
+ * acceptible.
  */
 public class DoubleLinkedList
 {
-
     // record size to avoid having to iterate
     private int size = 0;
 
@@ -21,7 +22,6 @@ public class DoubleLinkedList
 
     /**
      * Default constructor.
-     *
      */
     public DoubleLinkedList()
     {
@@ -30,13 +30,12 @@ public class DoubleLinkedList
 
     /**
      * Adds a new node to the end of the link list.
-     * 
+     * <p>
      * @param me
      *            The feature to be added to the Last
      */
     public void addLast( DoubleLinkedListNode me )
     {
-
         if ( first == null )
         {
             // empty list.
@@ -53,13 +52,12 @@ public class DoubleLinkedList
 
     /**
      * Adds a new node to the start of the link list.
-     * 
+     * <p>
      * @param me
      *            The feature to be added to the First
      */
     public synchronized void addFirst( DoubleLinkedListNode me )
     {
-
         if ( last == null )
         {
             // empty list.
@@ -76,9 +74,9 @@ public class DoubleLinkedList
     }
 
     /**
-     * Removes the specified node from the link list.
-     * @return
-     *  
+     * Returns the last node from the link list, if there are any nodes.
+     * <p>
+     * @return The last node.
      */
     public DoubleLinkedListNode getLast()
     {
@@ -91,8 +89,8 @@ public class DoubleLinkedList
 
     /**
      * Removes the specified node from the link list.
+     * <p>
      * @return
-     *  
      */
     public DoubleLinkedListNode getFirst()
     {
@@ -105,13 +103,12 @@ public class DoubleLinkedList
 
     /**
      * Moves an existing node to the start of the link list.
-     * 
+     * <p>
      * @param ln
      *            Description of the Parameter
      */
     public synchronized void makeFirst( DoubleLinkedListNode ln )
     {
-
         if ( ln.prev == null )
         {
             // already the first node. or not a node
@@ -141,7 +138,6 @@ public class DoubleLinkedList
      */
     public synchronized void removeAll()
     {
-
         for ( DoubleLinkedListNode me = first; me != null; )
         {
             if ( me.prev != null )
@@ -158,10 +154,10 @@ public class DoubleLinkedList
 
     /**
      * Removes the specified node from the link list.
-     * 
+     * <p>
      * @param me
      *            Description of the Parameter
-     * @return
+     * @return true if an element was removed.
      */
     public synchronized boolean remove( DoubleLinkedListNode me )
     {
@@ -213,8 +209,8 @@ public class DoubleLinkedList
 
     /**
      * Removes the specified node from the link list.
-     * @return
-     *  
+     * <p>
+     * @return The last node if there was one to remove.
      */
     public DoubleLinkedListNode removeLast()
     {
@@ -232,7 +228,7 @@ public class DoubleLinkedList
 
     /**
      * Returns the size of the list.
-     * 
+     * <p>
      * @return int
      */
     public int size()
@@ -240,7 +236,7 @@ public class DoubleLinkedList
         return size;
     }
 
-    /////////////////////////////////////////////////////////////////////
+    // ///////////////////////////////////////////////////////////////////
     /**
      * Dump the cache entries from first to list for debugging.
      */

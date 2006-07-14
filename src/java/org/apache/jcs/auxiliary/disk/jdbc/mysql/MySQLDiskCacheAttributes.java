@@ -13,7 +13,7 @@ public class MySQLDiskCacheAttributes
     private static final long serialVersionUID = -6535808344813320061L;    
     
     /**
-     * For now this is a simpel comma delimited list of HH:MM times to optimize
+     * For now this is a simple comma delimited list of HH:MM:SS times to optimize
      * the table. If none is supplied, then no optimizations will be performed.
      * <p>
      * In the future we can add a chron like scheduling system. This is to meet
