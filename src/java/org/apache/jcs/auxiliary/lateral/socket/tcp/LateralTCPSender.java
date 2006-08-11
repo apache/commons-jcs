@@ -29,7 +29,8 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
- * repair structure, so it is significant;y different.
+ * repair structure, so it is significantly different.
+ * <p>
  * @version $Id$
  */
 public class LateralTCPSender
@@ -98,7 +99,7 @@ public class LateralTCPSender
 
             if ( h2 == null )
             {
-                throw new IOException( "Cannot connect to invalid address " + h2 + ":" + po );
+                throw new IOException( "Cannot connect to invalid address [" + h2 + ":" + po + "]" );
             }
 
             init( h2, po );
@@ -121,7 +122,10 @@ public class LateralTCPSender
 
         try
         {
-            log.debug( "Attempting connection to " + address.getHostName() );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Attempting connection to [" + address.getHostName() + "]" );
+            }
 
             // have time out socket open do this for us
             socket = SocketOpener.openSocket( host, port, openTimeOut );
@@ -139,15 +143,14 @@ public class LateralTCPSender
         }
         catch ( java.net.ConnectException e )
         {
-            log.debug( "Remote host " + address.getHostName() + " refused connection." );
+            log.debug( "Remote host [" + address.getHostName() + "] refused connection." );
             throw e;
         }
         catch ( IOException e )
         {
-            log.debug( "Could not connect to " + address.getHostName() + ". Exception is " + e );
+            log.debug( "Could not connect to [" + address.getHostName() + "]. Exception is " + e );
             throw e;
         }
-
     }
 
     /**
@@ -202,7 +205,6 @@ public class LateralTCPSender
         if ( address == null )
         {
             throw new IOException( "No remote host is set for LateralTCPSender." );
-            // return;
         }
 
         if ( oos != null )
@@ -271,7 +273,6 @@ public class LateralTCPSender
             {
                 try
                 {
-
                     try
                     {
                         // clean up input stream, nothing should be there yet.
@@ -292,6 +293,8 @@ public class LateralTCPSender
 
                     try
                     {
+                        // TODO make configurable
+                        //socket.setSoTimeout( 2000 );
                         ObjectInputStream ois = new ObjectInputStream( socket.getInputStream() );
                         Object obj = ois.readObject();
                         ice = (ICacheElement) obj;
@@ -303,7 +306,12 @@ public class LateralTCPSender
                     }
                     catch ( IOException ioe )
                     {
-                        log.error( "Could not open ObjectInputStream to " + socket, ioe );
+                        String message = "Could not open ObjectInputStream to " + socket;
+                        if ( socket!= null )
+                        {
+                            message += " SoTimeout [" + socket.getSoTimeout() +"] Connected [" + socket.isConnected() + "]";
+                        }
+                        log.error( message, ioe );
                         throw ioe;
                     }
                     catch ( Exception e )
@@ -329,10 +337,8 @@ public class LateralTCPSender
                 }
             }
         } 
-        // end synchronized block
 
         return ice;
-
     }
 
     /**
@@ -420,5 +426,4 @@ public class LateralTCPSender
             System.out.println( e.toString() );
         }
     }
-
 }

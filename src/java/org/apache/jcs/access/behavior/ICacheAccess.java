@@ -159,4 +159,17 @@ public interface ICacheAccess
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr );
 
+    /**
+     * This instructs the memory cache to remove the <i>numberToFree</i>
+     * according to its eviction policy. For example, the LRUMemoryCache will
+     * remove the <i>numberToFree</i> least recently used items. These will be
+     * spooled to disk if a disk auxiliary is available.
+     * <p>
+     * @param numberToFree
+     * @return the number that were removed. if you ask to free 5, but there are
+     *         only 3, you will get 3.
+     * @throws CacheException
+     */
+    public int freeMemoryElements( int numberToFree )
+        throws CacheException;
 }

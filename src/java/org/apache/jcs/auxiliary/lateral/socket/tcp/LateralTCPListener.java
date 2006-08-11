@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -40,8 +35,10 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- * Listens for connections from other TCP lateral caches and handles them.
- *  
+ * Listens for connections from other TCP lateral caches and handles them. The
+ * initialization method starts a listening thread, which creates a socket
+ * server. When messages are received they are passed to a pooled executor which
+ * then calls the appropriate handle method.
  */
 public class LateralTCPListener
     implements ILateralCacheListener, Serializable
@@ -59,8 +56,6 @@ public class LateralTCPListener
     /** Map of available instances, keyed by port */
     protected final static HashMap instances = new HashMap();
 
-    // ----------------------------------------------------- instance variables
-
     /** The socket listener */
     private ListenerThread receiver;
 
@@ -74,17 +69,17 @@ public class LateralTCPListener
 
     private int removeCnt = 0;
 
+    private int getCnt = 0;
+
     /**
      * Use the vmid by default. This can be set for testing. If we ever need to
      * run more than one per vm, then we need a new technique.
      */
     private long listenerId = LateralCacheInfo.listenerId;
 
-    // -------------------------------------------------------- factory methods
-
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
-     * 
+     * <p>
      * @param ilca
      *            ITCPLateralCacheAttributes
      * @param cacheMgr
@@ -114,12 +109,10 @@ public class LateralTCPListener
         return ins;
     }
 
-    // ------------------------------------------------------- instance methods
-
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
-     * 
+     * <p>
      * @param ilca
      */
     protected LateralTCPListener( ITCPLateralCacheAttributes ilca )
@@ -152,7 +145,7 @@ public class LateralTCPListener
     }
 
     /**
-     * let the lateral cache set a listener_id. Since there is only one
+     * Let the lateral cache set a listener_id. Since there is only one
      * listerenr for all the regions and every region gets registered? the id
      * shouldn't be set if it isn't zero. If it is we assume that it is a
      * reconnect.
@@ -164,7 +157,7 @@ public class LateralTCPListener
      * <p>
      * The service will use the value it sets in all send requests to the
      * sender.
-     * 
+     * <p>
      * @param id
      *            The new listenerId value
      * @throws IOException
@@ -181,7 +174,7 @@ public class LateralTCPListener
 
     /**
      * Gets the listenerId attribute of the LateralCacheTCPListener object
-     * 
+     * <p>
      * @return The listenerId value
      * @throws IOException
      */
@@ -191,9 +184,10 @@ public class LateralTCPListener
         return this.listenerId;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Increments the put count. Gets the cache that was injected by the lateral
+     * factory. Calls put on the cache.
+     * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void handlePut( ICacheElement element )
@@ -217,9 +211,10 @@ public class LateralTCPListener
         getCache( element.getCacheName() ).localUpdate( element );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Increments the remove count. Gets the cache that was injected by the
+     * lateral factory. Calls remove on the cache.
+     * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
      *      java.io.Serializable)
      */
@@ -243,14 +238,15 @@ public class LateralTCPListener
         getCache( cacheName ).localRemove( key );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Gets the cache that was injected by the lateral factory. Calls removeAll
+     * on the cache.
+     * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
      */
     public void handleRemoveAll( String cacheName )
         throws IOException
-    {
+    {       
         if ( log.isDebugEnabled() )
         {
             log.debug( "handleRemoveAll> cacheName=" + cacheName );
@@ -260,6 +256,9 @@ public class LateralTCPListener
     }
 
     /**
+     * Gets the cache that was injected by the lateral factory. Calls get on the
+     * cache.
+     * <p>
      * @param cacheName
      * @param key
      * @return Serializable
@@ -268,6 +267,16 @@ public class LateralTCPListener
     public Serializable handleGet( String cacheName, Serializable key )
         throws IOException
     {
+        getCnt++;
+        if ( log.isInfoEnabled() )
+        {
+            if ( getGetCnt() % 100 == 0 )
+            {
+                log.info( "Get Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
+                    + getGetCnt() );
+            }
+        }
+        
         if ( log.isDebugEnabled() )
         {
             log.debug( "handleGet> cacheName=" + cacheName + ", key = " + key );
@@ -276,9 +285,9 @@ public class LateralTCPListener
         return getCache( cacheName ).localGet( key );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Right now this does nothing.
+     * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
      */
     public void handleDispose( String cacheName )
@@ -291,7 +300,7 @@ public class LateralTCPListener
 
         // TODO handle active deregistration, rather than passive detection
         // through error
-        //getCacheManager().freeCache( cacheName, true );
+        // getCacheManager().freeCache( cacheName, true );
     }
 
     /**
@@ -299,7 +308,7 @@ public class LateralTCPListener
      * <p>
      * Normally this is set by the factory. If it wasn't set the listener
      * defaults to the expected singleton behavior of the cache amanger.
-     * 
+     * <p>
      * @param name
      * @return CompositeCache
      */
@@ -319,16 +328,22 @@ public class LateralTCPListener
         return getCacheManager().getCache( name );
     }
 
-    // ---------------------------------------------------------- inner classes
-
     /**
      * This is roughly the number of updates the lateral has received.
-     * 
+     * <p>
      * @return Returns the putCnt.
      */
     public int getPutCnt()
     {
         return putCnt;
+    }
+
+    /**
+     * @return Returns the getCnt.
+     */
+    public int getGetCnt()
+    {
+        return getCnt;
     }
 
     /**
@@ -338,7 +353,7 @@ public class LateralTCPListener
     {
         return removeCnt;
     }
-
+    
     /**
      * @param cacheMgr
      *            The cacheMgr to set.
@@ -421,7 +436,8 @@ public class LateralTCPListener
     }
 
     /**
-     * A Separate thread taht runs when a command comes into the LateralTCPReceiver.
+     * A Separate thread taht runs when a command comes into the
+     * LateralTCPReceiver.
      */
     public class ConnectionHandler
         implements Runnable
@@ -430,7 +446,6 @@ public class LateralTCPListener
 
         /**
          * Construct for a given socket
-         * 
          * @param socket
          */
         public ConnectionHandler( Socket socket )
@@ -511,7 +526,7 @@ public class LateralTCPListener
         /**
          * This calls the appropriate method, based on the command sent in the
          * Lateral element descriptor.
-         * 
+         * <p>
          * @param led
          * @throws IOException
          */
@@ -541,19 +556,21 @@ public class LateralTCPListener
                             {
                                 if ( log.isDebugEnabled() )
                                 {
-                                    log.debug( "Filtering detected identical hashCode [" + led.valHashCode + "], not issuing a remove for led " + led );
-                                }                                
+                                    log.debug( "Filtering detected identical hashCode [" + led.valHashCode
+                                        + "], not issuing a remove for led " + led );
+                                }
                                 return;
                             }
                             else
                             {
                                 if ( log.isDebugEnabled() )
                                 {
-                                    log.debug( "Different hashcodes, in cache [" + test.getVal().hashCode() + "] sent [" + led.valHashCode + "]" );
+                                    log.debug( "Different hashcodes, in cache [" + test.getVal().hashCode()
+                                        + "] sent [" + led.valHashCode + "]" );
                                 }
                             }
                         }
-                    }        
+                    }
                 }
                 handleRemove( cacheName, key );
             }
@@ -578,16 +595,14 @@ public class LateralTCPListener
 
     /**
      * Allows us to set the daemon status on the executor threads
-     * 
+     * <p>
      * @author aaronsm
-     *  
      */
     class MyThreadFactory
         implements ThreadFactory
     {
         /*
          * (non-Javadoc)
-         * 
          * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
          */
         public Thread newThread( Runnable runner )

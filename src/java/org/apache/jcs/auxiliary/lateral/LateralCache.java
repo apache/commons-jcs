@@ -34,7 +34,6 @@ import org.apache.jcs.engine.behavior.IZombie;
 /**
  * Lateral distributor. Returns null on get by default. Net search not
  * implemented.
- *  
  */
 public class LateralCache
     implements ICache
@@ -55,7 +54,7 @@ public class LateralCache
     
     /**
      * Constructor for the LateralCache object
-     * 
+     * <p>
      * @param cattr
      * @param lateral
      * @param monitor
@@ -70,7 +69,7 @@ public class LateralCache
 
     /**
      * Constructor for the LateralCache object
-     * 
+     * <p>
      * @param cattr
      */
     protected LateralCache( ILateralCacheAttributes cattr )
@@ -81,7 +80,7 @@ public class LateralCache
 
     /**
      * Update lateral.
-     * 
+     * <p>
      * @param ce
      * @throws IOException
      */
@@ -92,7 +91,7 @@ public class LateralCache
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "update: lateral = " + lateral + ", " + "LateralCacheInfo.listenerId = "
+                log.debug( "update: lateral = [" + lateral + "], " + "LateralCacheInfo.listenerId = "
                     + LateralCacheInfo.listenerId );
             }
             lateral.update( ce, LateralCacheInfo.listenerId );
@@ -100,21 +99,19 @@ public class LateralCache
         catch ( NullPointerException npe )
         {
             log.error( "Failure updating lateral. lateral = " + lateral, npe );
-            handleException( npe, "Failed to put " + ce.getKey() + " to " + ce.getCacheName() );
+            handleException( npe, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
             return;
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to put " + ce.getKey() + " to " + ce.getCacheName() );
+            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
         }
     }
-
-    // end update
 
     /**
      * The performace costs are too great. It is not recommended that you enable
      * lateral gets.
-     * 
+     * <p>
      * @param key
      * @return
      * @throws IOException
@@ -153,7 +150,7 @@ public class LateralCache
     /**
      * Synchronously remove from the remote cache; if failed, replace the remote
      * handle with a zombie.
-     * 
+     * <p>
      * @param key
      * @return
      * @throws IOException
@@ -165,10 +162,6 @@ public class LateralCache
 
         try
         {
-            //DeleteLateralCacheMulticaster dlcm = new
-            // DeleteLateralCacheMulticaster( cattr.getCacheName(), (String)key,
-            // cattr.getLateralCacheAddrs(), cattr.getLateralDeleteServlet() );
-            //dlcm.multicast();
             lateral.remove( cacheName, key, LateralCacheInfo.listenerId );
         }
         catch ( Exception ex )
@@ -181,7 +174,7 @@ public class LateralCache
     /**
      * Synchronously removeAll from the remote cache; if failed, replace the
      * remote handle with a zombie.
-     * 
+     * <p>
      * @throws IOException
      */
     public void removeAll()
@@ -189,10 +182,6 @@ public class LateralCache
     {
         try
         {
-            //DeleteLateralCacheMulticaster dlcm = new
-            // DeleteLateralCacheMulticaster( cattr.getCacheName(), "ALL",
-            // cattr.getLateralCacheAddrs(), cattr.getLateralDeleteServlet() );
-            //dlcm.multicast();
             lateral.removeAll( cacheName, LateralCacheInfo.listenerId );
         }
         catch ( Exception ex )
@@ -230,7 +219,7 @@ public class LateralCache
 
     /**
      * Returns the cache status.
-     * 
+     * <p>
      * @return The status value
      */
     public int getStatus()
@@ -240,7 +229,7 @@ public class LateralCache
 
     /**
      * Returns the current cache size.
-     * 
+     * <p>
      * @return The size value
      */
     public int getSize()
@@ -250,7 +239,7 @@ public class LateralCache
 
     /**
      * Gets the cacheType attribute of the LateralCache object
-     * 
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType()
@@ -260,7 +249,7 @@ public class LateralCache
 
     /**
      * Gets the cacheName attribute of the LateralCache object
-     * 
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -270,7 +259,7 @@ public class LateralCache
 
     /**
      * Not yet sure what to do here.
-     * 
+     * <p>
      * @param ex
      * @param msg
      * @throws IOException
@@ -278,7 +267,6 @@ public class LateralCache
     private void handleException( Exception ex, String msg )
         throws IOException
     {
-
         log.error( "Disabling lateral cache due to error " + msg, ex );
 
         lateral = new ZombieLateralCacheService();
@@ -297,7 +285,7 @@ public class LateralCache
 
     /**
      * Replaces the current remote cache service handle with the given handle.
-     * 
+     * <p>
      * @param lateral
      */
     public void fixCache( ILateralCacheService lateral )
@@ -315,7 +303,7 @@ public class LateralCache
 
     /**
      * getStats
-     * 
+     * <p>
      * @return String
      */
     public String getStats()

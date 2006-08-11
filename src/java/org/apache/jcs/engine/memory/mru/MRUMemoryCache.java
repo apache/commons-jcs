@@ -1,19 +1,14 @@
 package org.apache.jcs.engine.memory.mru;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -38,13 +33,12 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * A SLOW reference management system. The most recently used items move
- * to the front of the list and get spooled to disk if the cache hub is
- * configured to use a disk cache.
+ * A SLOW reference management system. The most recently used items move to the
+ * front of the list and get spooled to disk if the cache hub is configured to
+ * use a disk cache.
  * <p>
  * This class is mainly for testing the hub. It also shows that use the
  * Collection LinkedList is far slower than JCS' own double linked list.
- * 
  */
 public class MRUMemoryCache
     extends AbstractMemoryCache
@@ -71,7 +65,6 @@ public class MRUMemoryCache
 
     /**
      * For post reflection creation initialization
-     * 
      * @param hub
      */
     public synchronized void initialize( CompositeCache hub )
@@ -82,7 +75,6 @@ public class MRUMemoryCache
 
     /**
      * Puts an item to the cache.
-     * 
      * @param ce
      * @exception IOException
      */
@@ -144,19 +136,8 @@ public class MRUMemoryCache
             // and wouldn't save much time in this synchronous call.
             for ( int i = 0; i < chunkSizeCorrected; i++ )
             {
-
-                ICacheElement toSpool = null;
-                
-                // need a more fine grained locking here
-                synchronized ( lockMe )
-                {
-                    Serializable last = (Serializable) mrulist.removeLast();
-                    toSpool = (ICacheElement) map.get( last );
-                    map.remove( last );
-                }
-                // Might want to rename this "overflow" incase the hub
-                // wants to do something else.
-                cache.spoolToDisk( toSpool );
+                // remove the last
+                spoolLastElement();
             }
 
             if ( log.isDebugEnabled() )
@@ -175,9 +156,63 @@ public class MRUMemoryCache
     }
 
     /**
+     * This removes the last elemement in the list.
+     * <p>
+     * @return ICacheElement if there was a last element, else null.
+     */
+    protected ICacheElement spoolLastElement()
+    {
+        ICacheElement toSpool = null;
+
+        // need a more fine grained locking here
+        synchronized ( lockMe )
+        {
+            Serializable last = (Serializable) mrulist.removeLast();
+            if ( last != null )
+            {
+                toSpool = (ICacheElement) map.get( last );
+                map.remove( last );
+            }
+        }
+        // Might want to rename this "overflow" incase the hub
+        // wants to do something else.
+        if ( toSpool != null )
+        {
+            cache.spoolToDisk( toSpool );
+        }
+
+        return toSpool;
+    }
+
+    /**
+     * This instructs the memory cache to remove the <i>numberToFree</i>
+     * according to its eviction policy. For example, the LRUMemoryCache will
+     * remove the <i>numberToFree</i> least recently used items. These will be
+     * spooled to disk if a disk auxiliary is available.
+     * <p>
+     * @param numberToFree
+     * @return the number that were removed. if you ask to free 5, but there are
+     *         only 3, you will get 3.
+     * @throws IOException
+     */
+    public int freeElements( int numberToFree )
+        throws IOException
+    {
+        int freed = 0;
+        for ( ; freed < numberToFree; freed++ )
+        {
+            ICacheElement element = spoolLastElement();
+            if ( element == null )
+            {
+                break;
+            }
+        }
+        return freed;
+    }
+
+    /**
      * Get an item from the cache without affecting its last access time or
      * position.
-     * 
      * @return Element mathinh key if found, or null
      * @param key
      *            Identifies item to find
@@ -211,11 +246,9 @@ public class MRUMemoryCache
         return ce;
     }
 
-       
     /**
      * Gets an item out of the map. If it finds an item, it is removed from the
      * list and then added to the first position in the linked list.
-     * 
      * @return
      * @param key
      * @exception IOException
@@ -294,7 +327,6 @@ public class MRUMemoryCache
 
     /**
      * Removes an item from the cache.
-     * 
      * @return
      * @param key
      * @exception IOException
@@ -323,7 +355,7 @@ public class MRUMemoryCache
                     {
                         itr.remove();
                         Serializable keyR = (Serializable) entry.getKey();
-                        //map.remove( keyR );
+                        // map.remove( keyR );
                         mrulist.remove( keyR );
                         removed = true;
                     }
@@ -368,7 +400,6 @@ public class MRUMemoryCache
 
     /**
      * Get an Array of the keys for all elements in the memory cache
-     * 
      * @return Object[]
      */
     public Object[] getKeyArray()
@@ -411,7 +442,6 @@ public class MRUMemoryCache
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
      */
     public IStats getStatistics()

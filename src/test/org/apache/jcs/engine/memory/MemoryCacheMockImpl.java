@@ -37,7 +37,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class MemoryCacheMockImpl
     implements MemoryCache
 {
-
     private ICompositeCacheAttributes cacheAttr;
 
     private HashMap map = new HashMap();
@@ -152,4 +151,13 @@ public class MemoryCacheMockImpl
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.jcs.engine.memory.MemoryCache#freeElements(int)
+     */
+    public int freeElements( int numberToFree )
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

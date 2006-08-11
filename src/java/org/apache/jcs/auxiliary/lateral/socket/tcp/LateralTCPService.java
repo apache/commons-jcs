@@ -1,19 +1,14 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.BufferedReader;
@@ -35,7 +30,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
- * 
+ * <p>
  * @version $Id$
  */
 public class LateralTCPService
@@ -54,7 +49,7 @@ public class LateralTCPService
 
     /**
      * Constructor for the LateralTCPService object
-     * 
+     * <p>
      * @param lca
      *            ITCPLateralCacheAttributes
      * @exception IOException
@@ -69,7 +64,10 @@ public class LateralTCPService
 
             sender = new LateralTCPSender( lca );
 
-            log.debug( "created sender" );
+            if ( log.isInfoEnabled() )
+            {
+                log.debug( "Created sender to [" + lca.getTcpServer() + "]" );                
+            }
         }
         catch ( IOException e )
         {
@@ -82,12 +80,9 @@ public class LateralTCPService
         }
     }
 
-    // -------------------------------------------------------- Service Methods
-
     /**
      * @param item
      * @throws IOException
-     * 
      */
     public void update( ICacheElement item )
         throws IOException
@@ -95,16 +90,18 @@ public class LateralTCPService
         update( item, getListenerId() );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * If put is allowed, we will issue a put. If issue put on remove
+     * is configured, we will issue a remove. Either way, we create a lateral
+     * element descriptor, which is essentially a JCS TCP packet. It describes
+     * what operation the receiver should take when it gets the packet.
+     * <p>
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
      *      long)
      */
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
-
         // if we don't allow put, see if we should remove on put
         if ( !this.getTcpLateralCacheAttributes().isAllowPut() )
         {
@@ -129,7 +126,7 @@ public class LateralTCPService
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Issuing a remvoe for a put" );
+                log.debug( "Issuing a remove for a put" );
             }
             // set the value to null so we don't send the item
             CacheElement ce = new CacheElement( item.getCacheName(), item.getKey(), null );
@@ -141,9 +138,9 @@ public class LateralTCPService
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Uses the default listener id and calls the next remove method.
+     * <p>
      * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String,
      *      java.io.Serializable)
      */
@@ -153,9 +150,9 @@ public class LateralTCPService
         remove( cacheName, key, getListenerId() );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Wraps the key in a LateralElementDescriptor.
+     * <p>
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String,
      *      java.io.Serializable, long)
      */
@@ -171,7 +168,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheService#release()
      */
     public void release()
@@ -182,7 +178,7 @@ public class LateralTCPService
 
     /**
      * Will close the connection.
-     * 
+     * <p>
      * @param cache
      * @throws IOException
      */
@@ -193,8 +189,8 @@ public class LateralTCPService
     }
 
     /**
-     * The service does not get via this method, so this return null
-     * 
+     * The service does not get via this method, so this return null.
+     * <p>
      * @param key
      * @return always null.
      * @throws IOException
@@ -214,7 +210,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String,
      *      java.io.Serializable)
      */
@@ -240,7 +235,7 @@ public class LateralTCPService
     /**
      * Gets the set of keys of objects currently in the group throws
      * UnsupportedOperationException
-     * 
+     * <p>
      * @param cacheName
      * @param group
      * @return Set
@@ -256,7 +251,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheService#removeAll(java.lang.String)
      */
     public void removeAll( String cacheName )
@@ -267,7 +261,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String,
      *      long)
      */
@@ -282,7 +275,6 @@ public class LateralTCPService
     }
 
     /**
-     * 
      * @param args
      */
     public static void main( String args[] )
@@ -318,7 +310,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(java.lang.String,
      *      org.apache.jcs.engine.behavior.ICacheListener)
      */
@@ -330,7 +321,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
      */
     public void addCacheListener( ICacheListener obj )
@@ -341,7 +331,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String,
      *      org.apache.jcs.engine.behavior.ICacheListener)
      */
@@ -353,7 +342,6 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
      */
     public void removeCacheListener( ICacheListener obj )

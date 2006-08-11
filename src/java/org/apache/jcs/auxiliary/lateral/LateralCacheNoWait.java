@@ -42,7 +42,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 /**
  * Used to queue up update requests to the underlying cache. These requests will
  * be processed in their order of arrival via the cache event queue processor.
- *  
  */
 public class LateralCacheNoWait
     implements AuxiliaryCache
@@ -107,13 +106,12 @@ public class LateralCacheNoWait
 
     /**
      * Synchronously reads from the lateral cache.
-     * 
+     * <p>
      * @param key
      * @return ICacheElement if found, else null
      */
     public ICacheElement get( Serializable key )
     {
-
         if ( this.getStatus() != CacheConstants.STATUS_ERROR )
         {
             try

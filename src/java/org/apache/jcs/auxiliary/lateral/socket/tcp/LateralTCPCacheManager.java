@@ -84,7 +84,7 @@ public class LateralTCPCacheManager
 
     /**
      * Returns an instance of the LateralCacheManager.
-     * 
+     * <p>
      * @param lca
      * @param cacheMgr
      *            this allows the auxiliary to be passed a cache manager.
@@ -115,9 +115,9 @@ public class LateralTCPCacheManager
 
     /**
      * The monitor needs reference to one instance, acutally just a type.
-     * 
-     * refactor this.
-     * 
+     * <p>
+     * TODO refactor this.
+     * <p>
      * @param instance
      */
     private static synchronized void createMonitor( ILateralCacheManager instance )
@@ -139,7 +139,7 @@ public class LateralTCPCacheManager
 
     /**
      * Constructor for the LateralCacheManager object.
-     * 
+     * <p>
      * @param lcaA
      * @param cacheMgr
      */
@@ -192,7 +192,7 @@ public class LateralTCPCacheManager
 
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.
-     * 
+     * <p>
      * @param cacheName
      *            The feature to be added to the LateralCacheListener attribute
      * @param listener
@@ -218,7 +218,7 @@ public class LateralTCPCacheManager
      * <p>
      * There should be one manager per server and one cache per region per
      * manager.
-     * 
+     * <p>
      * @return AuxiliaryCache
      * @param cacheName
      */

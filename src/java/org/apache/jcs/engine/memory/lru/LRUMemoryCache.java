@@ -1,19 +1,14 @@
 package org.apache.jcs.engine.memory.lru;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -52,7 +47,7 @@ import org.apache.jcs.utils.struct.DoubleLinkedList;
  * The LRUMemoryCache is most efficient when the first element is selected. The
  * smaller the region, the better the chance that this will be the case. < .04
  * ms per put, p3 866, 1/10 of that per get
- * 
+ * <p>
  * @version $Id$
  */
 public class LRUMemoryCache
@@ -73,7 +68,6 @@ public class LRUMemoryCache
 
     /**
      * For post reflection creation initialization.
-     * 
      * @param hub
      */
     public synchronized void initialize( CompositeCache hub )
@@ -88,7 +82,7 @@ public class LRUMemoryCache
      * key from the linked list and adds this one first.
      * <p>
      * If the max size is reached, an element will be put to disk.
-     * 
+     * <p>
      * @param ce
      *            The cache element, or entry wrapper
      * @exception IOException
@@ -144,46 +138,7 @@ public class LRUMemoryCache
 
         for ( int i = 0; i < chunkSizeCorrected; i++ )
         {
-            synchronized ( this )
-            {
-                if ( list.getLast() != null )
-                {
-                    if ( ( (MemoryElementDescriptor) list.getLast() ).ce != null )
-                    {
-                        cache.spoolToDisk( ( (MemoryElementDescriptor) list.getLast() ).ce );
-                        if ( !map.containsKey( ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() ) )
-                        {
-                            log.error( "update: map does not contain key: "
-                                + ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() );
-                            verifyCache();
-                        }
-                        if ( map.remove( ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() ) == null )
-                        {
-                            log.warn( "update: remove failed for key: "
-                                + ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() );
-                            verifyCache();
-                        }
-                    }
-                    else
-                    {
-                        throw new Error( "update: last.ce is null!" );
-                    }
-                    list.removeLast();
-                }
-                else
-                {
-                    verifyCache();
-                    throw new Error( "update: last is null!" );
-                }
-
-                // If this is out of the sync block it can detect a mismatch
-                // where there is none.
-                if ( map.size() != dumpCacheSize() )
-                {
-                    log.warn( "update: After spool, size mismatch: map.size() = " + map.size()
-                        + ", linked list size = " + dumpCacheSize() );
-                }
-            }
+            spoolLastElement();
         }
 
         if ( log.isDebugEnabled() )
@@ -194,9 +149,89 @@ public class LRUMemoryCache
     }
 
     /**
+     * This spools the last element in the LRU, if one exists.
+     * <p>
+     * @return ICacheElement if there was a last element, else null.
+     * @throws Error
+     */
+    protected ICacheElement spoolLastElement()
+        throws Error
+    {
+        ICacheElement toSpool = null;
+        synchronized ( this )
+        {
+            if ( list.getLast() != null )
+            {
+                toSpool = ( (MemoryElementDescriptor) list.getLast() ).ce;
+                if ( toSpool != null )
+                {
+                    cache.spoolToDisk( ( (MemoryElementDescriptor) list.getLast() ).ce );
+                    if ( !map.containsKey( ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() ) )
+                    {
+                        log.error( "update: map does not contain key: "
+                            + ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() );
+                        verifyCache();
+                    }
+                    if ( map.remove( ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() ) == null )
+                    {
+                        log.warn( "update: remove failed for key: "
+                            + ( (MemoryElementDescriptor) list.getLast() ).ce.getKey() );
+                        verifyCache();
+                    }
+                }
+                else
+                {
+                    throw new Error( "update: last.ce is null!" );
+                }
+                list.removeLast();
+            }
+            else
+            {
+                verifyCache();
+                throw new Error( "update: last is null!" );
+            }
+
+            // If this is out of the sync block it can detect a mismatch
+            // where there is none.
+            if ( map.size() != dumpCacheSize() )
+            {
+                log.warn( "update: After spool, size mismatch: map.size() = " + map.size() + ", linked list size = "
+                    + dumpCacheSize() );
+            }
+        }
+        return toSpool;
+    }
+
+    /**
+     * This instructs the memory cache to remove the <i>numberToFree</i>
+     * according to its eviction policy. For example, the LRUMemoryCache will
+     * remove the <i>numberToFree</i> least recently used items. These will be
+     * spooled to disk if a disk auxiliary is available.
+     * <p>
+     * @param numberToFree
+     * @return the number that were removed. if you ask to free 5, but there are
+     *         only 3, you will get 3.
+     * @throws IOException
+     */
+    public int freeElements( int numberToFree )
+        throws IOException
+    {
+        int freed = 0;
+        for ( ; freed < numberToFree; freed++ )
+        {
+            ICacheElement element = spoolLastElement();
+            if ( element == null )
+            {
+                break;
+            }
+        }
+        return freed;
+    }
+    
+    /**
      * Get an item from the cache without affecting its last access time or
      * position.
-     * 
+     * <p>
      * @param key
      *            Identifies item to find
      * @return Element mathinh key if found, or null
@@ -227,7 +262,7 @@ public class LRUMemoryCache
 
     /**
      * Get an item from the cache
-     * 
+     * <p>
      * @param key
      *            Identifies item to find
      * @return ICacheElement if found, else null
@@ -276,7 +311,7 @@ public class LRUMemoryCache
      * If the key is a String and ends with the
      * CacheConstants.NAME_COMPONENT_DELIMITER, then all items with keys
      * starting with the argument String will be removed.
-     * 
+     * <p>
      * @param key
      * @return
      * @exception IOException
@@ -352,7 +387,7 @@ public class LRUMemoryCache
     /**
      * Remove all of the elements from both the Map and the linked list
      * implementation. Overrides base class.
-     * 
+     * <p>
      * @throws IOException
      */
     public synchronized void removeAll()
@@ -364,9 +399,7 @@ public class LRUMemoryCache
 
     // --------------------------- iteration mehods (iteration helpers)
     /**
-     * 
      * iteration aid
-     * 
      */
     public class IteratorWrapper
         implements Iterator
@@ -407,10 +440,7 @@ public class LRUMemoryCache
     }
 
     /**
-     * 
-     * 
      * @author Aaron Smuts
-     * 
      */
     public class MapEntryWrapper
         implements Map.Entry
@@ -451,7 +481,7 @@ public class LRUMemoryCache
 
     /**
      * Gets the iterator attribute of the LRUMemoryCache object
-     * 
+     * <p>
      * @return The iterator value
      */
     public Iterator getIterator()
@@ -461,7 +491,6 @@ public class LRUMemoryCache
 
     /**
      * Get an Array of the keys for all elements in the memory cache
-     * 
      * @return An Object[]
      */
     public Object[] getKeyArray()
@@ -477,7 +506,7 @@ public class LRUMemoryCache
     // --------------------------- internal mehods (linked list implementation)
     /**
      * Adds a new node to the end of the link list. Currently not used.
-     * 
+     * <p>
      * @param ce
      *            The feature to be added to the Last
      */
@@ -490,7 +519,7 @@ public class LRUMemoryCache
 
     /**
      * Adds a new node to the start of the link list.
-     * 
+     * <p>
      * @param ce
      *            The feature to be added to the First
      */
@@ -532,7 +561,6 @@ public class LRUMemoryCache
 
     /**
      * Returns the size of the list.
-     * 
      * @return
      */
     private int dumpCacheSize()
@@ -543,7 +571,6 @@ public class LRUMemoryCache
     /**
      * Checks to see if all the items that should be in the cache are. Checks
      * consistency between List and map.
-     * 
      */
     private void verifyCache()
     {
@@ -633,7 +660,7 @@ public class LRUMemoryCache
 
     /**
      * Logs an error is an element that should be in the cache is not.
-     * 
+     * <p>
      * @param key
      */
     private void verifyCache( Serializable key )
@@ -663,7 +690,6 @@ public class LRUMemoryCache
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
      */
     public IStats getStatistics()

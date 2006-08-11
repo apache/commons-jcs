@@ -1,19 +1,14 @@
 package org.apache.jcs.engine.memory;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
+ * License, Version 2.0 (the "License") you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -46,7 +41,6 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * This keeps a static reference to a memory shrinker clock daemon. If this
  * region is configured to use the shrinker, the clock daemon will be setup to
  * run the shrinker on this region.
- * 
  * @version $Id$
  */
 public abstract class AbstractMemoryCache
@@ -101,7 +95,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * For post reflection creation initialization
-     * 
      * @param hub
      */
     public synchronized void initialize( CompositeCache hub )
@@ -127,7 +120,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Removes an item from the cache
-     * 
      * @param key
      *            Identifies item to be removed
      * @return Description of the Return Value
@@ -139,7 +131,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Get an item from the cache
-     * 
      * @param key
      *            Description of the Parameter
      * @return Description of the Return Value
@@ -152,7 +143,6 @@ public abstract class AbstractMemoryCache
     /**
      * Get an item from the cache without effecting its order or last access
      * time
-     * 
      * @param key
      *            Description of the Parameter
      * @return The quiet value
@@ -164,7 +154,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Puts an item to the cache.
-     * 
      * @param ce
      *            Description of the Parameter
      * @exception IOException
@@ -175,14 +164,12 @@ public abstract class AbstractMemoryCache
 
     /**
      * Get an Array of the keys for all elements in the memory cache
-     * 
      * @return An Object[]
      */
     public abstract Object[] getKeyArray();
 
     /**
      * Removes all cached items from the cache.
-     * 
      * @exception IOException
      */
     public void removeAll()
@@ -193,7 +180,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Prepares for shutdown.
-     * 
      * @exception IOException
      */
     public void dispose()
@@ -208,7 +194,6 @@ public abstract class AbstractMemoryCache
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
      */
     public IStats getStatistics()
@@ -220,7 +205,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the current cache size.
-     * 
      * @return The size value
      */
     public int getSize()
@@ -230,7 +214,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the cache status.
-     * 
      * @return The status value
      */
     public int getStatus()
@@ -240,7 +223,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the cache name.
-     * 
      * @return The cacheName value
      */
     public String getCacheName()
@@ -250,7 +232,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Puts an item to the cache.
-     * 
      * @param ce
      * @exception IOException
      */
@@ -262,7 +243,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Gets the iterator attribute of the LRUMemoryCache object
-     * 
      * @return The iterator value
      */
     public Iterator getIterator()
@@ -272,7 +252,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the CacheAttributes.
-     * 
      * @return The CacheAttributes value
      */
     public ICompositeCacheAttributes getCacheAttributes()
@@ -282,7 +261,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Sets the CacheAttributes.
-     * 
      * @param cattr
      *            The new CacheAttributes value
      */
@@ -293,7 +271,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Gets the cache hub / region taht the MemoryCache is used by
-     * 
      * @return The cache value
      */
     public CompositeCache getCompositeCache()
@@ -323,9 +300,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Allows us to set the daemon status on the clockdaemon
-     * 
      * @author aaronsm
-     * 
      */
     class MyThreadFactory
         implements ThreadFactory
@@ -333,7 +308,6 @@ public abstract class AbstractMemoryCache
 
         /*
          * (non-Javadoc)
-         * 
          * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
          */
         public Thread newThread( Runnable runner )

@@ -16,7 +16,6 @@ public class LateralTCPConcurrentRandomTestUtil
 {
 
     private static boolean isSysOut = false;
-
     //private static boolean isSysOut = true;
 
     /**
@@ -41,7 +40,7 @@ public class LateralTCPConcurrentRandomTestUtil
      * Randomly adds items to cache, gets them, and removes them. The range
      * count is more than the size of the memory cache, so items should spool to
      * disk.
-     * 
+     * <p>
      * @param region
      *            Name of the region to access
      * @param range
@@ -54,13 +53,12 @@ public class LateralTCPConcurrentRandomTestUtil
     public void runTestForRegion( String region, int range, int numOps, int testNum )
         throws Exception
     {
-
         boolean show = true;//false;
 
         JCS cache = JCS.getInstance( region );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
-        lattr2.setTcpListenerPort( 1102 );
+        lattr2.setTcpListenerPort( 1103 );
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:1102" );
 

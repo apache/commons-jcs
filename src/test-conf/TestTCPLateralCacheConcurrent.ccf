@@ -10,6 +10,6 @@ jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLat
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 #jcs.auxiliary.LTCP.attributes.TcpServers=
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1102
-jcs.auxiliary.LTCP.attributes.AllowGet=false
+jcs.auxiliary.LTCP.attributes.AllowGet=true
 
 

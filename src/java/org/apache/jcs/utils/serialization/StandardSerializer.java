@@ -18,7 +18,6 @@ import org.apache.jcs.engine.behavior.IElementSerializer;
 public class StandardSerializer
     implements IElementSerializer
 {
-
     /**
      * Serializes an object using default serilaization.
      */

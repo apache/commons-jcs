@@ -26,7 +26,6 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 /**
  * Test which exercises the tcp lateral cache. Runs two threads against the
  * same region and two against other regions.
- * 
  */
 public class LateralTCPNoDeadLockConcurrentTest
     extends TestCase
@@ -135,5 +134,4 @@ public class LateralTCPNoDeadLockConcurrentTest
             e.printStackTrace();
         }
     }
-
 }
