@@ -309,7 +309,8 @@ public class LateralTCPSender
                         String message = "Could not open ObjectInputStream to " + socket;
                         if ( socket!= null )
                         {
-                            message += " SoTimeout [" + socket.getSoTimeout() +"] Connected [" + socket.isConnected() + "]";
+                            message += " SoTimeout [" + socket.getSoTimeout() +"]"; 
+                            // this is 1.4 specific -- Connected [" + socket.isConnected() + "]";
                         }
                         log.error( message, ioe );
                         throw ioe;
