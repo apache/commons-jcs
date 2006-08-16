@@ -386,7 +386,6 @@ public class IndexedDiskCache
                             recycleCnt++;
                             if ( log.isDebugEnabled() )
                             {
-
                                 log.debug( "using recycled ded " + ded.pos + " rep.len = " + rep.len + " ded.len = "
                                     + ded.len );
                             }

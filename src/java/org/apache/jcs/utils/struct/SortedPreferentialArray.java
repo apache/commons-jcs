@@ -1,28 +1,24 @@
 package org.apache.jcs.utils.struct;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This maintains a sorted array with a preferential replacement policy when
- * full.
+ * This maintains a sorted array with a preferential replacement policy when full.
  * <p>
  * Insertion time is n, search is log(n)
  * <p>
- * Clients must manage thread safety on previous version. I synchronized the
- * public methods to add easy thread safety. I synchronized all public methods
- * that make modifications.
+ * Clients must manage thread safety on previous version. I synchronized the public methods to add
+ * easy thread safety. I synchronized all public methods that make modifications.
  */
 public class SortedPreferentialArray
 {
@@ -42,8 +38,7 @@ public class SortedPreferentialArray
     /**
      * Consruct the array with the maximum size.
      * <p>
-     * @param maxSize
-     *            int
+     * @param maxSize int
      */
     public SortedPreferentialArray( int maxSize )
     {
@@ -52,12 +47,10 @@ public class SortedPreferentialArray
     }
 
     /**
-     * If the array is full this will remove the smallest if preferLarge==true
-     * and if obj is bigger, or the largest if preferLarge=false and obj is
-     * smaller than the largest.
+     * If the array is full this will remove the smallest if preferLarge==true and if obj is bigger,
+     * or the largest if preferLarge=false and obj is smaller than the largest.
      * <p>
-     * @param obj
-     *            Object
+     * @param obj Object
      */
     public synchronized void add( Comparable obj )
     {
@@ -125,17 +118,16 @@ public class SortedPreferentialArray
     }
 
     /**
-     * Insert looks for the nearest largest. It then determines which way to
-     * shuffle depending on the preference.
+     * Insert looks for the nearest largest. It then determines which way to shuffle depending on
+     * the preference.
      * <p>
-     * @param obj
-     *            Comparable
+     * @param obj Comparable
      */
     private void insert( Comparable obj )
     {
         try
         {
-            int nLar = findNearestLargerOrEqualPosition( obj );
+            int nLar = findNearestLargerEqualOrLastPosition( obj );
             if ( log.isDebugEnabled() )
             {
                 log.debug( "nLar = " + nLar + " obj = " + obj );
@@ -249,8 +241,7 @@ public class SortedPreferentialArray
     /**
      * Determines whether the preference is for large or small.
      * <p>
-     * @param pref
-     *            boolean
+     * @param pref boolean
      */
     public synchronized void setPreferLarge( boolean pref )
     {
@@ -260,8 +251,7 @@ public class SortedPreferentialArray
     /**
      * Returns and removes the nearer larger or equal object from the aray.
      * <p>
-     * @param obj
-     *            Comparable
+     * @param obj Comparable
      * @return Comparable, null if arg is null or none was found.
      */
     public synchronized Comparable takeNearestLargerOrEqual( Comparable obj )
@@ -313,11 +303,10 @@ public class SortedPreferentialArray
     }
 
     /**
-     * This determines the position in the array that is occupied by an object
-     * that is larger or equal to the argument. If none exists, -1 is returned.
+     * This determines the position in the array that is occupied by an object that is larger or
+     * equal to the argument. If none exists, -1 is returned.
      * <p>
-     * @param obj
-     *            Object
+     * @param obj Object
      * @return Object
      */
     private int findNearestOccupiedLargerOrEqualPosition( Comparable obj )
@@ -329,7 +318,8 @@ public class SortedPreferentialArray
         }
 
         // this gives us an insert position.
-        int pos = findNearestLargerOrEqualPosition( obj );
+        int pos = findNearestLargerEqualOrLastPosition( obj );
+
         // see if the previous will do to handle the empty insert spot position
         if ( pos == curSize )
         { // && curSize < maxSize ) {
@@ -343,36 +333,42 @@ public class SortedPreferentialArray
                 pos = -1;
             }
         }
+        else
+        {
+            // the find nearest, returns the last, since it is used by insertion.
+            if ( obj.compareTo( array[pos] ) > 0 )
+            {
+                return -1;
+            }
+        }
+
         return pos;
     }
 
     /**
-     * This method determines the position where an insert should take place for
-     * a given object. With some additional checking, this can also be used to
-     * find an object matching or greater than the argument.
+     * This method determines the position where an insert should take place for a given object.
+     * With some additional checking, this can also be used to find an object matching or greater
+     * than the argument.
      * <p>
-     * If the array is not full and the current object is larger than all the
-     * rest the first open slot at the end will be returned.
+     * If the array is not full and the current object is larger than all the rest the first open
+     * slot at the end will be returned.
      * <p>
-     * If the object is larger than the largest and it is full, it will return
-     * the last position.
+     * NOTE: If the object is larger than the largest and it is full, it will return the last position.
      * <p>
      * If the array is empty, the first spot is returned.
      * <p>
-     * If the object is smaller than all the rests, the first position is
-     * returned. The caller must decide what to do given the preference.
+     * If the object is smaller than all the rests, the first position is returned. The caller must
+     * decide what to do given the preference.
      * <p>
-     * Returns the position of the object nearest to or equal to the larger
-     * object.
+     * Returns the position of the object nearest to or equal to the larger object.
      * <p>
      * If you want to find the takePosition, you have to calculate it.
-     * findNearestOccupiedLargerOrEqualPosition will calculate this for you
+     * findNearestOccupiedLargerOrEqualPosition will calculate this for you.
      * <p>
-     * @param obj
-     *            Comparable
+     * @param obj Comparable
      * @return int
      */
-    private int findNearestLargerOrEqualPosition( Comparable obj )
+    private int findNearestLargerEqualOrLastPosition( Comparable obj )
     {
         // do nothing if a null was passed in
         if ( obj == null )
@@ -441,9 +437,8 @@ public class SortedPreferentialArray
                 }
                 else
                 {
-                    // the obj is less than the largest, so we know that the
-                    // last
-                    // item is larger
+                    // the obj is less than or equal to the largest, so we know that the
+                    // last item is larger or equal
                     greaterPos = curSize - 1;
                 }
             }
@@ -548,11 +543,10 @@ public class SortedPreferentialArray
     }
 
     /**
-     * Removes the item from the array at the specified position. The remaining
-     * items to the right are shifted left.
+     * Removes the item from the array at the specified position. The remaining items to the right
+     * are shifted left.
      * <p>
-     * @param position
-     *            int
+     * @param position int
      * @throw IndexOutOfBoundsException if position is out of range.
      */
     private void remove( int position )

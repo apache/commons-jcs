@@ -1,28 +1,19 @@
 package org.apache.jcs.utils.struct;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import junit.framework.TestCase;
 
 /**
  * Tests the SortedPrefArray used by the recycle bin.
- * 
  * @author aaronsm
- * 
  */
 public class SortedPrefArrayUnitTest
     extends TestCase
@@ -30,9 +21,7 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Constructor for the TestSimpleLoad object
-     * 
-     * @param testName
-     *            Description of the Parameter
+     * @param testName Description of the Parameter
      */
     public SortedPrefArrayUnitTest( String testName )
     {
@@ -41,9 +30,7 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Description of the Method
-     * 
-     * @param args
-     *            Description of the Parameter
+     * @param args Description of the Parameter
      */
     public static void main( String args[] )
     {
@@ -52,8 +39,6 @@ public class SortedPrefArrayUnitTest
     }
 
     /**
-     * 
-     * 
      * @exception Exception
      */
     public void testLargePref()
@@ -125,7 +110,6 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Verify that we don't get an error when taking from an empty array.
-     * 
      * @throws Exception
      */
     public void testEmptyTake()
@@ -143,7 +127,6 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Verify that we don't get a null pointer if we insert a null.
-     * 
      * @throws Exception
      */
     public void testNullInsertion()
@@ -211,7 +194,6 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Verify that we don't get an npe when taking with a null
-     * 
      * @throws Exception
      */
     public void testNullTake()
@@ -234,7 +216,6 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Verify that we don't get an npe when taking from an array of only one
-     * 
      * @throws Exception
      */
     public void testSingleItemTake()
@@ -261,7 +242,6 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Verify that we don't get an npe when taking from an array of only one
-     * 
      * @throws Exception
      */
     public void testSingleItemTakeLarger()
@@ -286,7 +266,6 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Verify that we don't get an npe when taking from an array of none
-     * 
      * @throws Exception
      */
     public void testSingleItemTakeLargerEmpty()
@@ -309,7 +288,6 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Test taking the largest item.
-     * 
      * @exception Exception
      */
     public void testTakeLargestItem()
@@ -320,16 +298,7 @@ public class SortedPrefArrayUnitTest
         SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
-        String[] elem = {
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "08",
-            "07",
-            "06",
-            "09",};
+        String[] elem = { "01", "02", "03", "04", "05", "08", "07", "06", "09", };
 
         // put more than the max in a random order
         for ( int i = 0; i < elem.length; i++ )
@@ -357,7 +326,7 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Test taking every last item.
-     * 
+     * <p>
      * @exception Exception
      */
     public void testTakeEveryLastItem()
@@ -368,16 +337,7 @@ public class SortedPrefArrayUnitTest
         SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
-        String[] elem = {
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "08",
-            "07",
-            "06",
-            "09",};
+        String[] elem = { "01", "02", "03", "04", "05", "08", "07", "06", "09", };
 
         // put more than the max in a random order
         for ( int i = 0; i < elem.length; i++ )
@@ -398,18 +358,46 @@ public class SortedPrefArrayUnitTest
         // this should take 96;
         String taken = (String) array.takeNearestLargerOrEqual( "09" );
         assertEquals( "Taken is not as expected", "09", taken );
-        assertEquals( "Size was not as expected.", ( maxSize - 1 ), array.size() );
+        assertEquals( "Size was not as expected. " + array.dumpArray(), ( maxSize - 1 ), array.size() );
 
         System.out.println( "testTakeEveryLastItem" + array.dumpArray() );
 
         // take the rest
-        // put more than the max in a random order
-        for ( int i = elem.length -1; i >= 0; i-- )
+        // take more than the max in a reverse order
+        for ( int i = elem.length - 1; i >= 0; i-- )
         {
             array.takeNearestLargerOrEqual( elem[i] );
-        }        
+        }
         System.out.println( "testTakeEveryLastItem" + array.dumpArray() );
-        
-        assertEquals( "There should nothing left.", 0, array.size() );
-    }    
+
+        assertEquals( "There should nothing left. " + array.dumpArray(), 0, array.size() );
+    }
+
+    /**
+     * Try taking an item larger than the greatest.
+     */
+    public void testTakeLargerThanGreatest()
+    {
+        int maxSize = 3;
+
+        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        // array.setPreferLarge( false );
+        array.setPreferLarge( true );
+        String[] elem = { "01", "02", "03" };
+
+        // put more than the max in a random order
+        for ( int i = 0; i < elem.length; i++ )
+        {
+            array.add( elem[i] );
+            System.out.println( array.dumpArray() );
+        }
+
+        // DO WORK
+        Comparable taken = array.takeNearestLargerOrEqual( "04" );
+        System.out.println( "testTakeLargerThanGreatest" + array.dumpArray() );
+
+        assertNull( "We should have nothing since the largest element was smaller than what we asked for. "
+            + " Instead we got " + taken, taken );
+    }
+
 }

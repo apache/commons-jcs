@@ -5,11 +5,31 @@
 	</properties>
 	<body>
 
+		<release version="1.2.7.9" date="in CVS">
+			<action dev="asmuts" type="update" issue="JCS-5">
+				Added the ability to send all items to disk or to use
+				the disk merely as a swap. This is done by setting the
+				DiskUsagePattern on the cache attributes for a region.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-1">
+				Fixed last element too small recycle bin bug.
+			</action>
+		</release>
+
+		<release version="1.2.7.8" date="in CVS">
+			<action dev="asmuts" type="update">
+				Added the ability to schedule optimizations for the
+				MySQL disk cache. It can also recover from optimization
+				failure and repair the table. It's been tested and is
+				running in a production environment.
+			</action>
+		</release>
+
 		<release version="1.2.7.7" date="in CVS">
 			<action dev="asmuts" type="fix"
-			due-to="Brian Crow  @noteworthyms.com">
-				Fixed the array index out of bounds exception in the Sorted
-				Preferential Array.  
+				due-to="Brian Crow  @noteworthyms.com">
+				Fixed the array index out of bounds exception in the
+				Sorted Preferential Array.
 			</action>
 		</release>
 
