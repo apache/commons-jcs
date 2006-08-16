@@ -1,25 +1,22 @@
 package org.apache.jcs.engine;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 
 /**
- * The CompositeCacheAttributes defines the general cache region settings. If a
- * region is not explicitly defined in the cache.ccf then it inherits the cache
- * default settings.
+ * The CompositeCacheAttributes defines the general cache region settings. If a region is not
+ * explicitly defined in the cache.ccf then it inherits the cache default settings.
  * <p>
- * If all the default attributes are not defined in the default region
- * definition in the cache.ccf, the hard coded defaults will be used.
+ * If all the default attributes are not defined in the default region definition in the cache.ccf,
+ * the hard coded defaults will be used.
  */
 public class CompositeCacheAttributes
     implements ICompositeCacheAttributes, Cloneable
@@ -72,6 +69,8 @@ public class CompositeCacheAttributes
     /** The name of the memory cache implementation class. */
     private String memoryCacheName;
 
+    private short diskUsagePattern = DISK_USAGE_PATTERN_SWAP;
+
     /**
      * Constructor for the CompositeCacheAttributes object
      */
@@ -85,8 +84,7 @@ public class CompositeCacheAttributes
     /**
      * Sets the maxObjects attribute of the CompositeCacheAttributes object
      * <p>
-     * @param maxObjs
-     *            The new maxObjects value
+     * @param maxObjs The new maxObjects value
      */
     public void setMaxObjects( int maxObjs )
     {
@@ -106,8 +104,7 @@ public class CompositeCacheAttributes
     /**
      * Sets the useDisk attribute of the CompositeCacheAttributes object
      * <p>
-     * @param useDisk
-     *            The new useDisk value
+     * @param useDisk The new useDisk value
      */
     public void setUseDisk( boolean useDisk )
     {
@@ -127,8 +124,7 @@ public class CompositeCacheAttributes
     /**
      * Sets the useLateral attribute of the CompositeCacheAttributes object
      * <p>
-     * @param b
-     *            The new useLateral value
+     * @param b The new useLateral value
      */
     public void setUseLateral( boolean b )
     {
@@ -148,8 +144,7 @@ public class CompositeCacheAttributes
     /**
      * Sets the useRemote attribute of the CompositeCacheAttributes object
      * <p>
-     * @param useRemote
-     *            The new useRemote value
+     * @param useRemote The new useRemote value
      */
     public void setUseRemote( boolean useRemote )
     {
@@ -169,8 +164,7 @@ public class CompositeCacheAttributes
     /**
      * Sets the cacheName attribute of the CompositeCacheAttributes object
      * <p>
-     * @param s
-     *            The new cacheName value
+     * @param s The new cacheName value
      */
     public void setCacheName( String s )
     {
@@ -190,8 +184,7 @@ public class CompositeCacheAttributes
     /**
      * Sets the memoryCacheName attribute of the CompositeCacheAttributes object
      * <p>
-     * @param s
-     *            The new memoryCacheName value
+     * @param s The new memoryCacheName value
      */
     public void setMemoryCacheName( String s )
     {
@@ -211,8 +204,7 @@ public class CompositeCacheAttributes
     /**
      * Whether the memory cache should perform background memory shrinkage.
      * <p>
-     * @param useShrinker
-     *            The new UseMemoryShrinker value
+     * @param useShrinker The new UseMemoryShrinker value
      */
     public void setUseMemoryShrinker( boolean useShrinker )
     {
@@ -230,11 +222,9 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
      * <p>
-     * @param seconds
-     *            The new MaxMemoryIdleTimeSeconds value
+     * @param seconds The new MaxMemoryIdleTimeSeconds value
      */
     public void setMaxMemoryIdleTimeSeconds( long seconds )
     {
@@ -242,8 +232,7 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
      * <p>
      * @return The MaxMemoryIdleTimeSeconds value
      */
@@ -253,11 +242,10 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This sets the shrinker interval.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This sets the shrinker interval.
      * <p>
-     * @param seconds
-     *            The new ShrinkerIntervalSeconds value
+     * @param seconds The new ShrinkerIntervalSeconds value
      */
     public void setShrinkerIntervalSeconds( long seconds )
     {
@@ -265,8 +253,8 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This gets the shrinker interval.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This gets the shrinker interval.
      * <p>
      * @return The ShrinkerIntervalSeconds value
      */
@@ -276,14 +264,12 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This sets the maximum number of items to spool per run.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This sets the maximum number of items to spool per run.
      * <p>
-     * If the value is -1, then there is no limit to the number of items to be
-     * spooled.
+     * If the value is -1, then there is no limit to the number of items to be spooled.
      * <p>
-     * @param maxSpoolPerRun
-     *            The new maxSpoolPerRun value
+     * @param maxSpoolPerRun The new maxSpoolPerRun value
      */
     public void setMaxSpoolPerRun( int maxSpoolPerRun )
     {
@@ -291,14 +277,55 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * If UseMemoryShrinker is true the memory cache should auto-expire elements
-     * to reclaim space. This gets the maximum number of items to spool per run.
+     * If UseMemoryShrinker is true the memory cache should auto-expire elements to reclaim space.
+     * This gets the maximum number of items to spool per run.
      * <p>
      * @return The maxSpoolPerRun value
      */
     public int getMaxSpoolPerRun()
     {
         return this.maxSpoolPerRun;
+    }
+
+    /**
+     * By default this is SWAP_ONLY.
+     * <p>
+     * @param diskUsagePattern The diskUsagePattern to set.
+     */
+    public void setDiskUsagePattern( short diskUsagePattern )
+    {
+        this.diskUsagePattern = diskUsagePattern;
+    }
+
+    /**
+     * Translates the name to the disk usage pattern short value.
+     * <p>
+     * The allowed values are SWAP and UPDATE.
+     * <p>
+     * @param diskUsagePatternName The diskUsagePattern to set.
+     */
+    public void setDiskUsagePatternName( String diskUsagePatternName )
+    {
+        if ( diskUsagePatternName != null )
+        {
+            diskUsagePatternName = diskUsagePatternName.toUpperCase().trim();
+            if ( diskUsagePatternName.startsWith( "SWAP" ) )
+            {
+                this.setDiskUsagePattern( DISK_USAGE_PATTERN_SWAP );
+            }
+            else if ( diskUsagePatternName.startsWith( "UPDATE" ) )
+            {
+                this.setDiskUsagePattern( DISK_USAGE_PATTERN_UPDATE );
+            }
+        }
+    }
+
+    /**
+     * @return Returns the diskUsagePattern.
+     */
+    public short getDiskUsagePattern()
+    {
+        return diskUsagePattern;
     }
 
     /**
@@ -321,9 +348,9 @@ public class CompositeCacheAttributes
     }
 
     /**
-     * Description of the Method
+     * Dumps the core attributes.
      * <p>
-     * @return
+     * @return For debugging.
      */
     public String toString()
     {
@@ -335,10 +362,9 @@ public class CompositeCacheAttributes
         dump.append( ", useDisk = " ).append( useDisk );
         dump.append( ", maxObjs = " ).append( maxObjs );
         dump.append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun );
+        dump.append( ", diskUsagePattern = " ).append( diskUsagePattern );
         dump.append( " ]" );
 
         return dump.toString();
     }
-
 }
-// end class

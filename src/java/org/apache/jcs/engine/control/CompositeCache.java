@@ -210,11 +210,13 @@ public class CompositeCache
      * <p>
      * This is called by update( cacheElement, localOnly ) after it updates the memory cache.
      * <p>
+     * This is protected to make it testable.
+     * <p>
      * @param cacheElement
      * @param localOnly
      * @throws IOException
      */
-    private void updateAuxiliaries( ICacheElement cacheElement, boolean localOnly )
+    protected void updateAuxiliaries( ICacheElement cacheElement, boolean localOnly )
         throws IOException
     {
         // UPDATE AUXILLIARY CACHES
@@ -280,8 +282,7 @@ public class CompositeCache
             else if ( aux.getCacheType() == ICache.LATERAL_CACHE )
             {
                 // lateral can't do the checking since it is dependent on the
-                // cache region
-                // restrictions
+                // cache region restrictions
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "lateralcache in aux list: cattr " + cacheAttr.getUseLateral() );
@@ -301,17 +302,33 @@ public class CompositeCache
                     }
                 }
             }
+            // update disk if the usage pattern permits
             else if ( aux.getCacheType() == ICache.DISK_CACHE )
             {
-                // do nothing, the memory manager will call spool where necesary
-                // TODO: add option to put all element on disk
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "diskcache in aux list: cattr " + cacheAttr.getUseDisk() );
+                }
+                if ( cacheAttr.getUseDisk()
+                    && ( cacheAttr.getDiskUsagePattern() == ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE )
+                    && cacheElement.getElementAttributes().getIsSpool() )
+                {
+                    aux.update( cacheElement );
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "updated disk cache for " + cacheElement.getKey() );
+                    }
+                }
             }
         }
     }
 
     /**
-     * Writes the specified element to any disk auxilliaries .Might want to rename this "overflow"
+     * Writes the specified element to any disk auxilliaries. Might want to rename this "overflow"
      * incase the hub wants to do something else.
+     * <p>
+     * If JCS is not configured to use the disk as a swap, that is if the the
+     * CompositeCacheAttribute diskUsagePattern is not SWAP_ONLY, then the item will not be spooled.
      * <p>
      * @param ce The CacheElement
      */
@@ -336,26 +353,36 @@ public class CompositeCache
             {
                 diskAvailable = true;
 
-                // write the last items to disk.2
-                try
+                if ( cacheAttr.getDiskUsagePattern() == ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP )
                 {
-                    handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE );
+                    // write the last items to disk.2
+                    try
+                    {
+                        handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE );
 
-                    aux.update( ce );
+                        aux.update( ce );
+                    }
+                    catch ( IOException ex )
+                    {
+                        // impossible case.
+                        log.error( "Problem spooling item to disk cache.", ex );
+                        throw new IllegalStateException( ex.getMessage() );
+                    }
+                    catch ( Exception oee )
+                    {
+                        // swallow
+                    }
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "spoolToDisk done for: " + ce.getKey() + " on disk cache[" + i + "]" );
+                    }
                 }
-                catch ( IOException ex )
+                else
                 {
-                    // impossible case.
-                    ex.printStackTrace();
-                    throw new IllegalStateException( ex.getMessage() );
-                }
-                catch ( Exception oee )
-                {
-                    // swallow
-                }
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "spoolToDisk done for: " + ce.getKey() + " on disk cache[" + i + "]" );
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "DiskCache avaialbe, but JCS is not configured to use the DiskCache as a swap." );
+                    }
                 }
             }
         }
@@ -901,7 +928,7 @@ public class CompositeCache
 
                     log.info( "In dispose, " + this.cacheName + " put " + cnt + " into auxiliary " + aux );
                 }
-                
+
                 // Dispose of the auxiliary
                 aux.dispose();
             }
