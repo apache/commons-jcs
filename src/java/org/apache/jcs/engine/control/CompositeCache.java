@@ -1,19 +1,12 @@
 package org.apache.jcs.engine.control;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -53,12 +46,10 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * This is the primary hub for a single cache/region. It controls the flow of
- * items through the cache. The auxiliary and memory caches are plugged in here.
+ * This is the primary hub for a single cache/region. It controls the flow of items through the
+ * cache. The auxiliary and memory caches are plugged in here.
  * <p>
- * This is the core of a JCS region.  Hence, this simple class is the core of JCS.
- * 
- * @version $Id$
+ * This is the core of a JCS region. Hence, this simple class is the core of JCS.
  */
 public class CompositeCache
     implements ICache, Serializable
@@ -68,8 +59,8 @@ public class CompositeCache
     private final static Log log = LogFactory.getLog( CompositeCache.class );
 
     /**
-     * EventQueue for handling element events. 1 should be enough for all the
-     * regions. Else should create as needed per region.
+     * EventQueue for handling element events. 1 should be enough for all the regions. Else should
+     * create as needed per region.
      */
     public static IElementEventQueue elementEventQ = new ElementEventQueue( "AllRegionQueue" );
 
@@ -81,14 +72,10 @@ public class CompositeCache
     // this is in the cacheAttr, shouldn't be used, remove
     final String cacheName;
 
-    /**
-     * Region Elemental Attributes, default
-     */
+    /** Region Elemental Attributes, default. */
     private IElementAttributes attr;
 
-    /**
-     * Cache Attributes, for hub and memory auxiliary
-     */
+    /** Cache Attributes, for hub and memory auxiliary. */
     private ICompositeCacheAttributes cacheAttr;
 
     // Statistics
@@ -102,54 +89,45 @@ public class CompositeCache
     /** Auxiliary cache hit count (number of times found in ANY auxiliary) */
     private int hitCountAux;
 
-    /** Auxiliary hit counts broken down by auxiliary */
+    /** Auxiliary hit counts broken down by auxiliary. */
     private int[] auxHitCountByIndex;
 
-    /** Count of misses where element was not found */
+    /** Count of misses where element was not found. */
     private int missCountNotFound = 0;
 
-    /** Count of misses where element was expired */
+    /** Count of misses where element was expired. */
     private int missCountExpired = 0;
 
     /**
-     * The cache hub can only have one memory cache. This could be made more
-     * flexible in the future, but they are tied closely together. More than one
-     * doesn't make much sense.
+     * The cache hub can only have one memory cache. This could be made more flexible in the future,
+     * but they are tied closely together. More than one doesn't make much sense.
      */
-    MemoryCache memCache;
+    private MemoryCache memCache;
 
     /**
      * Constructor for the Cache object
-     * 
-     * @param cacheName
-     *            The name of the region
-     * @param cattr
-     *            The cache attribute
-     * @param attr
-     *            The default element attributes
+     * <p>
+     * @param cacheName The name of the region
+     * @param cattr The cache attribute
+     * @param attr The default element attributes
      */
     public CompositeCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         this.cacheName = cacheName;
-
         this.attr = attr;
         this.cacheAttr = cattr;
 
         createMemoryCache( cattr );
 
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( "Constructed cache with name " + cacheName + " and cache attributes: " + cattr );
-        }
-        else if ( log.isInfoEnabled() )
-        {
-            log.info( "Constructed cache with name: " + cacheName );
+            log.info( "Constructed cache with name [" + cacheName + "] and cache attributes " + cattr );
         }
     }
 
     /**
      * This sets the list of auxiliary caches for this region.
-     * 
+     * <p>
      * @param auxCaches
      */
     public void setAuxCaches( AuxiliaryCache[] auxCaches )
@@ -163,8 +141,8 @@ public class CompositeCache
     }
 
     /**
-     * Standard update method
-     * 
+     * Standard update method.
+     * <p>
      * @param ce
      * @exception IOException
      */
@@ -175,8 +153,8 @@ public class CompositeCache
     }
 
     /**
-     * Standard update method
-     * 
+     * Standard update method.
+     * <p>
      * @param ce
      * @exception IOException
      */
@@ -187,20 +165,16 @@ public class CompositeCache
     }
 
     /**
-     * Put an item into the cache. If it is localOnly, then do no notify remote
-     * or lateral auxiliaries.
-     * 
-     * @param cacheElement
-     *            the ICacheElement
-     * @param localOnly
-     *            Whether the operation should be restricted to local
-     *            auxiliaries.
+     * Put an item into the cache. If it is localOnly, then do no notify remote or lateral
+     * auxiliaries.
+     * <p>
+     * @param cacheElement the ICacheElement
+     * @param localOnly Whether the operation should be restricted to local auxiliaries.
      * @exception IOException
      */
     protected synchronized void update( ICacheElement cacheElement, boolean localOnly )
         throws IOException
     {
-
         // not thread safe, but just for debugging and testing.
         updateCount++;
 
@@ -215,10 +189,34 @@ public class CompositeCache
             throw new IllegalArgumentException( "key cannot be a GroupId " + " for a put operation" );
         }
 
-        log.debug( "Updating memory cache" );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Updating memory cache" );
+        }
 
         memCache.update( cacheElement );
 
+        updateAuxiliaries( cacheElement, localOnly );
+    }
+
+    /**
+     * This method is responsible for updating the auxiliaries if they are present. If it is local
+     * only, any lateral and remote auxiliaries will not be updated.
+     * <p>
+     * Before updating an auxiliary it checks to see if the element attributes permit the operation.
+     * <p>
+     * Disk auxiliaries are only updated if the disk cache is not merely used as a swap. If the disk
+     * cache is merely a swap, then items will only go to disk when they overflow from memory.
+     * <p>
+     * This is called by update( cacheElement, localOnly ) after it updates the memory cache.
+     * <p>
+     * @param cacheElement
+     * @param localOnly
+     * @throws IOException
+     */
+    private void updateAuxiliaries( ICacheElement cacheElement, boolean localOnly )
+        throws IOException
+    {
         // UPDATE AUXILLIARY CACHES
         // There are 3 types of auxiliary caches: remote, lateral, and disk
         // more can be added if future auxiliary caches don't fit the model
@@ -246,8 +244,13 @@ public class CompositeCache
                 log.debug( "Auxilliary cache type: " + aux.getCacheType() );
             }
 
+            if ( aux == null )
+            {
+                continue;
+            }
+
             // SEND TO REMOTE STORE
-            if ( aux != null && aux.getCacheType() == ICache.REMOTE_CACHE )
+            if ( aux.getCacheType() == ICache.REMOTE_CACHE )
             {
                 if ( log.isDebugEnabled() )
                 {
@@ -260,8 +263,7 @@ public class CompositeCache
                     try
                     {
                         // need to make sure the group cache understands that
-                        // the
-                        // key is a group attribute on update
+                        // the key is a group attribute on update
                         aux.update( cacheElement );
                         if ( log.isDebugEnabled() )
                         {
@@ -275,7 +277,7 @@ public class CompositeCache
                 }
                 // SEND LATERALLY
             }
-            else if ( aux != null && aux.getCacheType() == ICache.LATERAL_CACHE )
+            else if ( aux.getCacheType() == ICache.LATERAL_CACHE )
             {
                 // lateral can't do the checking since it is dependent on the
                 // cache region
@@ -299,26 +301,22 @@ public class CompositeCache
                     }
                 }
             }
-            else if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
+            else if ( aux.getCacheType() == ICache.DISK_CACHE )
             {
                 // do nothing, the memory manager will call spool where necesary
                 // TODO: add option to put all element on disk
             }
         }
-
-        return;
     }
 
     /**
-     * Writes the specified element to any disk auxilliaries .Might want to
-     * rename this "overflow" incase the hub wants to do something else.
-     * 
-     * @param ce
-     *            The CacheElement
+     * Writes the specified element to any disk auxilliaries .Might want to rename this "overflow"
+     * incase the hub wants to do something else.
+     * <p>
+     * @param ce The CacheElement
      */
     public void spoolToDisk( ICacheElement ce )
     {
-
         // if the item is not spoolable, return
         if ( !ce.getElementAttributes().getIsSpool() )
         {
@@ -336,7 +334,6 @@ public class CompositeCache
 
             if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
             {
-
                 diskAvailable = true;
 
                 // write the last items to disk.2
@@ -365,25 +362,23 @@ public class CompositeCache
 
         if ( !diskAvailable )
         {
-
             try
             {
-
                 handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE );
-
             }
             catch ( Exception e )
             {
                 log.error( "Trouble handling the ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE  element event", e );
             }
-
         }
-
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Gets an item from the cache.
+     * <p>
+     * @param key
+     * @return
+     * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#get(java.io.Serializable)
      */
     public ICacheElement get( Serializable key )
@@ -393,7 +388,7 @@ public class CompositeCache
 
     /**
      * Do not try to go remote or laterally for this get.
-     * 
+     * <p>
      * @param key
      * @return ICacheElement
      */
@@ -403,13 +398,12 @@ public class CompositeCache
     }
 
     /**
-     * Look in memory, then disk, remote, or laterally for this item. The order
-     * is dependent on the order in the cache.ccf file.
+     * Look in memory, then disk, remote, or laterally for this item. The order is dependent on the
+     * order in the cache.ccf file.
      * <p>
-     * Do not try to go remote or laterally for this get if it is localOnly.
-     * Otherwise try to go remote or lateral if such an auxiliary is configured
-     * for this region.
-     * 
+     * Do not try to go remote or laterally for this get if it is localOnly. Otherwise try to go
+     * remote or lateral if such an auxiliary is configured for this region.
+     * <p>
      * @param key
      * @param localOnly
      * @return ICacheElement
@@ -428,13 +422,11 @@ public class CompositeCache
         try
         {
             // First look in memory cache
-
             element = memCache.get( key );
 
             if ( element != null )
             {
                 // Found in memory cache
-
                 if ( isExpired( element ) )
                 {
                     if ( log.isDebugEnabled() )
@@ -456,7 +448,6 @@ public class CompositeCache
                     }
 
                     // Update counters
-
                     hitCountRam++;
                 }
 
@@ -479,7 +470,7 @@ public class CompositeCache
                         {
                             if ( log.isDebugEnabled() )
                             {
-                                log.debug( "Attempting to get from aux: " + aux.getCacheName() + " which is of type: "
+                                log.debug( "Attempting to get from aux [" + aux.getCacheName() + "] which is of type: "
                                     + cacheType );
                             }
 
@@ -506,16 +497,15 @@ public class CompositeCache
                             {
                                 if ( log.isDebugEnabled() )
                                 {
-                                    log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired" );
+                                    log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
                                 }
 
                                 missCountExpired++;
 
-                                // this will tell the remotes to remove the item
-                                // based on this
-                                // local's expiration policy.
-                                // This seems wrong.
-                                // TODO We should call localRemove
+                                // This will tell the remotes to remove the item
+                                // based on the element's expiration policy. The elements attributes
+                                // associated with the item when it created govern its behavior
+                                // everywhere.
                                 remove( key );
 
                                 element = null;
@@ -534,8 +524,7 @@ public class CompositeCache
 
                                 // Spool the item back into memory
                                 // only spool if the mem cache size is greater
-                                // than
-                                // 0, else the item will immediately get put
+                                // than 0, else the item will immediately get put
                                 // into purgatory
                                 if ( memCache.getCacheAttributes().getMaxObjects() > 0 )
                                 {
@@ -578,7 +567,7 @@ public class CompositeCache
 
     /**
      * Determine if the element has exceeded its max life.
-     * 
+     * <p>
      * @param element
      * @return true if the element is expired, else false.
      */
@@ -636,8 +625,8 @@ public class CompositeCache
     }
 
     /**
-     * Gets the set of keys of objects currently in the group
-     * 
+     * Gets the set of keys of objects currently in the group.
+     * <p>
      * @param group
      * @return A Set of keys, or null.
      */
@@ -663,9 +652,12 @@ public class CompositeCache
         return allKeys;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Removes an item from the cache.
+     * <p>
+     * @param key
+     * @return
+     * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#remove(java.io.Serializable)
      */
     public boolean remove( Serializable key )
@@ -675,7 +667,7 @@ public class CompositeCache
 
     /**
      * Do not propogate removeall laterally or remotely.
-     * 
+     * <p>
      * @param key
      * @return true if the item was already in the cache.
      */
@@ -685,20 +677,18 @@ public class CompositeCache
     }
 
     /**
-     * fromRemote: If a remove call was made on a cache with both, then the
-     * remote should have been called. If it wasn't then the remote is down.
-     * we'll assume it is down for all. If it did come from the remote then the
-     * cache is remotely configured and lateral removal is unncessary. If it
-     * came laterally then lateral removal is unnecessary. Does this assume
-     * that there is only one lateral and remote for the cache? Not really, the
-     * intial removal should take care of the problem if the source cache was
-     * similiarly configured. Otherwise the remote cache, if it had no laterals,
-     * would remove all the elements from remotely configured caches, but if
-     * those caches had some other wierd laterals that were not remotely
-     * configured, only laterally propagated then they would go out of synch.
-     * The same could happen for multiple remotes. If this looks necessary we
-     * will need to build in an identifier to specify the source of a removal.
-     * 
+     * fromRemote: If a remove call was made on a cache with both, then the remote should have been
+     * called. If it wasn't then the remote is down. we'll assume it is down for all. If it did come
+     * from the remote then the cache is remotely configured and lateral removal is unncessary. If
+     * it came laterally then lateral removal is unnecessary. Does this assume that there is only
+     * one lateral and remote for the cache? Not really, the intial removal should take care of the
+     * problem if the source cache was similiarly configured. Otherwise the remote cache, if it had
+     * no laterals, would remove all the elements from remotely configured caches, but if those
+     * caches had some other wierd laterals that were not remotely configured, only laterally
+     * propagated then they would go out of synch. The same could happen for multiple remotes. If
+     * this looks necessary we will need to build in an identifier to specify the source of a
+     * removal.
+     * <p>
      * @param key
      * @param localOnly
      * @return true if the item was in the cache, else false
@@ -739,7 +729,6 @@ public class CompositeCache
             }
             try
             {
-
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Removing " + key + " from cacheType" + cacheType );
@@ -761,9 +750,10 @@ public class CompositeCache
         return removed;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
+     * Clears the region. This command will be sent to all auxiliaries. Some auxiliaries, such as
+     * the JDBC disk cache, can be configured to not honor removeAll requests.
+     * <p>
      * @see org.apache.jcs.engine.behavior.ICache#removeAll()
      */
     public void removeAll()
@@ -774,7 +764,7 @@ public class CompositeCache
 
     /**
      * Will not pass the remove message remotely.
-     * 
+     * <p>
      * @throws IOException
      */
     public void localRemoveAll()
@@ -785,10 +775,9 @@ public class CompositeCache
 
     /**
      * Removes all cached items.
-     * 
-     * @param localOnly
-     *            must pass in false to get remote and lateral aux's updated.
-     *            This prevents looping.
+     * <p>
+     * @param localOnly must pass in false to get remote and lateral aux's updated. This prevents
+     *            looping.
      * @throws IOException
      */
     protected synchronized void removeAll( boolean localOnly )
@@ -819,7 +808,6 @@ public class CompositeCache
             {
                 try
                 {
-
                     if ( log.isDebugEnabled() )
                     {
                         log.debug( "Removing All keys from cacheType" + cacheType );
@@ -837,8 +825,7 @@ public class CompositeCache
     }
 
     /**
-     * Flushes all cache items from memory to auxilliary caches and close the
-     * auxilliary caches.
+     * Flushes all cache items from memory to auxilliary caches and close the auxilliary caches.
      */
     public void dispose()
     {
@@ -846,19 +833,17 @@ public class CompositeCache
     }
 
     /**
-     * invoked only by CacheManager.
-     * 
+     * Invoked only by CacheManager.
+     * <p>
      * @param fromRemote
      */
     public synchronized void dispose( boolean fromRemote )
     {
         // If already disposed, return immediately
-
         if ( !alive )
         {
             return;
         }
-
         alive = false;
 
         // Dispose of each auxilliary cache, Remote auxilliaries will be
@@ -915,16 +900,14 @@ public class CompositeCache
                     }
 
                     log.info( "In dispose, " + this.cacheName + " put " + cnt + " into auxiliary " + aux );
-
                 }
-
+                
                 // Dispose of the auxiliary
-
                 aux.dispose();
             }
             catch ( IOException ex )
             {
-                log.error( "Failure disposing of aux", ex );
+                log.error( "Failure disposing of aux.", ex );
             }
         }
 
@@ -938,17 +921,13 @@ public class CompositeCache
             log.error( "Failure disposing of memCache", ex );
         }
 
-        log.warn( "Called close for " + cacheName );
+        log.warn( "Called close for [" + cacheName + "]" );
     }
 
     /**
-     * Calling save cause the entire contents of the memory cache to be flushed
-     * to all auxiliaries.
-     * 
-     * Though this put is extremely fast, this could bog the cache and should be
-     * avoided. The dispose method should call a version of this. Good for
-     * testing.
-     * 
+     * Calling save cause the entire contents of the memory cache to be flushed to all auxiliaries.
+     * Though this put is extremely fast, this could bog the cache and should be avoided. The
+     * dispose method should call a version of this. Good for testing.
      */
     public void save()
     {
@@ -987,20 +966,20 @@ public class CompositeCache
                 }
                 catch ( IOException ex )
                 {
-                    log.error( "Failure saving aux caches", ex );
+                    log.error( "Failure saving aux caches.", ex );
                 }
             }
         }
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Called save for " + cacheName );
+            log.debug( "Called save for [" + cacheName + "]" );
         }
     }
 
     /**
-     * Gets the size attribute of the Cache object. This return the number of
-     * elements, not the byte size.
-     * 
+     * Gets the size attribute of the Cache object. This return the number of elements, not the byte
+     * size.
+     * <p>
      * @return The size value
      */
     public int getSize()
@@ -1009,8 +988,8 @@ public class CompositeCache
     }
 
     /**
-     * Gets the cacheType attribute of the Cache object
-     * 
+     * Gets the cacheType attribute of the Cache object.
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType()
@@ -1019,8 +998,8 @@ public class CompositeCache
     }
 
     /**
-     * Gets the status attribute of the Cache object
-     * 
+     * Gets the status attribute of the Cache object.
+     * <p>
      * @return The status value
      */
     public int getStatus()
@@ -1030,7 +1009,7 @@ public class CompositeCache
 
     /**
      * Gets stats for debugging.
-     * 
+     * <p>
      * @return String
      */
     public String getStats()
@@ -1039,9 +1018,8 @@ public class CompositeCache
     }
 
     /**
-     * This returns data gathered for this region and all the auxiliaries it
-     * currently uses.
-     * 
+     * This returns data gathered for this region and all the auxiliaries it currently uses.
+     * <p>
      * @return Statistics and Info on the Region.
      */
     public ICacheStats getStatistics()
@@ -1081,9 +1059,8 @@ public class CompositeCache
     }
 
     /**
-     * Gets the cacheName attribute of the Cache object. This is also known as
-     * the region name.
-     * 
+     * Gets the cacheName attribute of the Cache object. This is also known as the region name.
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -1092,10 +1069,9 @@ public class CompositeCache
     }
 
     /**
-     * Gets the default element attribute of the Cache object
-     * 
-     * This returna a copy. It does not return a reference to the attributes.
-     * 
+     * Gets the default element attribute of the Cache object This returna a copy. It does not
+     * return a reference to the attributes.
+     * <p>
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes()
@@ -1108,8 +1084,8 @@ public class CompositeCache
     }
 
     /**
-     * Sets the default element attribute of the Cache object
-     * 
+     * Sets the default element attribute of the Cache object.
+     * <p>
      * @param attr
      */
     public void setElementAttributes( IElementAttributes attr )
@@ -1118,8 +1094,8 @@ public class CompositeCache
     }
 
     /**
-     * Gets the ICompositeCacheAttributes attribute of the Cache object
-     * 
+     * Gets the ICompositeCacheAttributes attribute of the Cache object.
+     * <p>
      * @return The ICompositeCacheAttributes value
      */
     public ICompositeCacheAttributes getCacheAttributes()
@@ -1128,10 +1104,9 @@ public class CompositeCache
     }
 
     /**
-     * Sets the ICompositeCacheAttributes attribute of the Cache object
-     * 
-     * @param cattr
-     *            The new ICompositeCacheAttributes value
+     * Sets the ICompositeCacheAttributes attribute of the Cache object.
+     * <p>
+     * @param cattr The new ICompositeCacheAttributes value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
@@ -1141,8 +1116,8 @@ public class CompositeCache
     }
 
     /**
-     * Gets the elementAttributes attribute of the Cache object
-     * 
+     * Gets the elementAttributes attribute of the Cache object.
+     * <p>
      * @param key
      * @return The elementAttributes value
      * @exception CacheException
@@ -1160,11 +1135,10 @@ public class CompositeCache
     }
 
     /**
-     * Create the MemoryCache based on the config parameters. TODO: consider
-     * making this an auxiliary, despite its close tie to the CacheHub. TODO:
-     * might want to create a memory cache config file separate from that of the
-     * hub -- ICompositeCacheAttributes
-     * 
+     * Create the MemoryCache based on the config parameters. TODO: consider making this an
+     * auxiliary, despite its close tie to the CacheHub. TODO: might want to create a memory cache
+     * config file separate from that of the hub -- ICompositeCacheAttributes
+     * <p>
      * @param cattr
      */
     private void createMemoryCache( ICompositeCacheAttributes cattr )
@@ -1191,11 +1165,9 @@ public class CompositeCache
         }
     }
 
-    // ---------------------------------------------------- For Instrumentation
-
     /**
      * Access to the memory cache for instrumentation.
-     * 
+     * <p>
      * @return the MemoryCache implementation
      */
     public MemoryCache getMemoryCache()
@@ -1205,7 +1177,7 @@ public class CompositeCache
 
     /**
      * Number of times a requested item was found in the memory cache.
-     * 
+     * <p>
      * @return number of hits in memory
      */
     public int getHitCountRam()
@@ -1215,7 +1187,6 @@ public class CompositeCache
 
     /**
      * Number of times a requested item was found in and auxiliary cache.
-     * 
      * @return number of auxiliary hits.
      */
     public int getHitCountAux()
@@ -1225,7 +1196,6 @@ public class CompositeCache
 
     /**
      * Number of times a requested element was not found.
-     * 
      * @return number of misses.
      */
     public int getMissCountNotFound()
@@ -1235,7 +1205,6 @@ public class CompositeCache
 
     /**
      * Number of times a requested element was found but was expired.
-     * 
      * @return number of found but expired gets.
      */
     public int getMissCountExpired()
@@ -1244,13 +1213,10 @@ public class CompositeCache
     }
 
     /**
-     * If there are event handlers for the item, then create an event and queue
-     * it up.
+     * If there are event handlers for the item, then create an event and queue it up.
      * <p>
-     * This does not call handle directly; instead the handler and the event are
-     * put into a queue. This prevents the event handling from blocking normal
-     * cache operations.
-     * 
+     * This does not call handle directly; instead the handler and the event are put into a queue.
+     * This prevents the event handling from blocking normal cache operations.
      * @param ce
      * @param eventType
      */
@@ -1283,13 +1249,9 @@ public class CompositeCache
 
     /**
      * Adds an ElementEvent to be handled to the queue.
-     * 
-     * @param hand
-     *            The IElementEventHandler
-     * @param event
-     *            The IElementEventHandler IElementEvent event
-     * @exception IOException
-     *                Description of the Exception
+     * @param hand The IElementEventHandler
+     * @param event The IElementEventHandler IElementEvent event
+     * @exception IOException Description of the Exception
      */
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException
@@ -1302,8 +1264,7 @@ public class CompositeCache
     }
 
     /**
-     * @param updateCount
-     *            The updateCount to set.
+     * @param updateCount The updateCount to set.
      */
     public void setUpdateCount( int updateCount )
     {
@@ -1319,8 +1280,7 @@ public class CompositeCache
     }
 
     /**
-     * @param removeCount
-     *            The removeCount to set.
+     * @param removeCount The removeCount to set.
      */
     public void setRemoveCount( int removeCount )
     {
@@ -1335,9 +1295,10 @@ public class CompositeCache
         return removeCount;
     }
 
-    /*
+    /**
+     * This returns the stats.
+     * <p>
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#toString()
      */
     public String toString()
