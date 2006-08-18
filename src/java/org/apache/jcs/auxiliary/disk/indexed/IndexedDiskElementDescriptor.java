@@ -1,21 +1,19 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.Serializable;
 
 /**
- * Disk objects are located by descriptor entries. These are saved on shutdown
- * and loaded into memory on startup.
+ * Disk objects are located by descriptor entries. These are saved on shutdown and loaded into
+ * memory on startup.
  */
 public class IndexedDiskElementDescriptor
     implements Serializable, Comparable
@@ -47,20 +45,32 @@ public class IndexedDiskElementDescriptor
         super();
     }
 
+    /**
+     * Constructs a usable disk element descriptor.
+     * <p>
+     * @param pos
+     * @param len
+     */
+    public IndexedDiskElementDescriptor( long pos, int len )
+    {
+        this.pos = pos;
+        this.len = len;
+    }
+
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
-        buf.append( "DED: " );
+        buf.append( "[DED: " );
         buf.append( " pos = " + pos );
         buf.append( " len = " + len );
+        buf.append( "]" );
         return buf.toString();
     }
 
     /**
      * Compares based on length.
      * <p>
-     * @param o
-     *            Object
+     * @param o Object
      * @return int
      */
     public int compareTo( Object o )

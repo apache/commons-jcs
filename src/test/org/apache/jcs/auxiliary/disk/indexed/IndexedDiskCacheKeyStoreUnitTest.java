@@ -40,7 +40,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( "testStoreKeys", "key:" + i, "data:" + i );
+            ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.doUpdate( element );
         }
@@ -82,7 +82,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         throws Exception
     {
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
-        cattr.setCacheName( "testOptiimize" );
+        cattr.setCacheName( "testOptimize" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/KeyStoreUnitTest" );
         IndexedDiskCache disk = new IndexedDiskCache( cattr );
@@ -94,7 +94,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( "testOptiimize", "key:" + i, "data:" + i );
+            ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.doUpdate( element );
         }
@@ -103,7 +103,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         
         IElementAttributes eAttr = new ElementAttributes();
         eAttr.setIsSpool( true );
-        ICacheElement elementSetup = new CacheElement( "testOptiimize", "key:" + "A", "data:" + "A" );
+        ICacheElement elementSetup = new CacheElement( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
         elementSetup.setElementAttributes( eAttr );
         disk.doUpdate( elementSetup );
                 
@@ -115,7 +115,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         long preSize = disk.getDataFileSize();
         // synchronous versoin
-        disk.optimizeRealTime();
+        disk.optimizeFile(); //deoptimizeRealTime();
         long postSize = disk.getDataFileSize();
         
         System.out.println( "preAddRemoveSize " + preAddRemoveSize );
@@ -130,11 +130,6 @@ public class IndexedDiskCacheKeyStoreUnitTest
             ICacheElement element = disk.doGet( "key:" + i );
             assertNotNull( "postsave, Should have recevied an element.", element );
             assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
-        }
-        
-        
-        
-    }
-        
-        
+        }                     
+    }             
 }

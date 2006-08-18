@@ -1,41 +1,43 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  * Provides thread safe access to the underlying random access file.
  */
 class IndexedDisk
 {
+    /**
+     * The size of the header in bytes. The header describes the length of the entry.
+     */
+    public static final int RECORD_HEADER = 4;
+
+    private static final StandardSerializer SERIALIZER = new StandardSerializer();
+
     private static final Log log = LogFactory.getLog( IndexedDisk.class );
 
     private final String filepath;
 
     private RandomAccessFile raf;
+
+    private final byte[] buffer = new byte[16384]; // 16K
 
     /**
      * Constructor for the Disk object
@@ -53,177 +55,150 @@ class IndexedDisk
     /**
      * This reads an object from the given starting position on the file.
      * <p>
-     * The firt four bytes of the record should tell us how long it is. The data
-     * is read into a byte array and then an object is constructed from the byte
-     * array.
+     * The firt four bytes of the record should tell us how long it is. The data is read into a byte
+     * array and then an object is constructed from the byte array.
      * <p>
      * @return Serializable
-     * @param pos
+     * @param ded
      * @throws IOException
+     * @throws ClassNotFoundException
      */
-    protected Serializable readObject( long pos )
-        throws IOException
+    protected Serializable readObject( IndexedDiskElementDescriptor ded )
+        throws IOException, ClassNotFoundException
     {
-        String message = null;
         byte[] data = null;
-        boolean corrupted = false;
-        try
+        synchronized ( this )
         {
-            synchronized ( this )
+            String message = null;
+            boolean corrupted = false;
+            long fileLength = raf.length();
+            if ( ded.pos > fileLength )
             {
-                if ( pos > raf.length() )
+                corrupted = true;
+                message = "Record " + ded + " starts past EOF.";
+            }
+            else
+            {
+                raf.seek( ded.pos );
+                int datalen = raf.readInt();
+                if ( ded.len != datalen )
                 {
                     corrupted = true;
-                    message = "Postion is greater than raf length";
+                    message = "Record " + ded + " does not match data length on disk (" + datalen + ")";
                 }
-                else
+                else if ( ded.pos + ded.len > fileLength )
                 {
-                    raf.seek( pos );
-                    int datalen = raf.readInt();
-                    if ( datalen > raf.length() )
-                    {
-                        corrupted = true;
-                        message = "Postion(" + pos + ") + datalen (" + datalen + ") is greater than raf length";
-                    }
-                    else
-                    {
-                        raf.readFully( data = new byte[datalen] );
-                    }
+                    corrupted = true;
+                    message = "Record " + ded + " exceeds file length.";
                 }
             }
+
             if ( corrupted )
             {
-                log.warn( "\n The dataFile is corrupted!" + "\n " + message + "\n raf.length() = " + raf.length()
-                    + "\n pos = " + pos );
-                // reset();
-                throw new IOException( "The Data File Is Corrupt, need to reset" );
-                // return null;
+                log.warn( "\n The file is corrupt: " + "\n " + message );
+                throw new IOException( "The File Is Corrupt, need to reset" );
             }
-            ByteArrayInputStream bais = new ByteArrayInputStream( data );
-            BufferedInputStream bis = new BufferedInputStream( bais );
-            ObjectInputStream ois = new ObjectInputStream( bis );
-            try
-            {
-                return (Serializable) ois.readObject();
-            }
-            finally
-            {
-                ois.close();
-            }
+
+            raf.readFully( data = new byte[ded.len] );
         }
-        catch ( Exception e )
-        {
-            log.error( raf, e );
-            if ( e instanceof IOException )
-            {
-                throw (IOException) e;
-            }
-        }
-        return null;
+
+        return (Serializable) SERIALIZER.deSerialize( data );
     }
 
     /**
-     * Appends byte array to the Disk.
+     * Moves the data stored from one position to another. The descriptor's position is updated.
      * <p>
-     * @return
-     * @param data
+     * @param ded
+     * @param newPosition
+     * @throws IOException
      */
-    protected boolean append( byte[] data )
+    protected void move( final IndexedDiskElementDescriptor ded, final long newPosition )
+        throws IOException
     {
-        try
+        synchronized ( this )
         {
-            synchronized ( this )
+            raf.seek( ded.pos );
+            int length = raf.readInt();
+
+            if ( length != ded.len )
             {
-                return write( data, raf.length() );
+                throw new IOException( "Mismatched memory and disk length (" + length + ") for " + ded );
             }
+
+            // TODO: more checks?
+
+            long readPos = ded.pos;
+            long writePos = newPosition;
+
+            // header len + data len
+            int remaining = RECORD_HEADER + length;
+
+            while ( remaining > 0 )
+            {
+                // chunk it
+                int chunkSize = Math.min( remaining, buffer.length );
+                raf.seek( readPos );
+                raf.readFully( buffer, 0, chunkSize );
+
+                raf.seek( writePos );
+                raf.write( buffer, 0, chunkSize );
+
+                writePos += chunkSize;
+                readPos += chunkSize;
+                remaining -= chunkSize;
+            }
+
+            ded.pos = newPosition;
         }
-        catch ( IOException ex )
-        {
-            ex.printStackTrace();
-        }
-        return false;
     }
 
     /**
      * Writes the given byte array to the Disk at the specified position.
      * <p>
      * @param data
-     * @param pos
+     * @param ded
      * @return true if we wrote successfully
+     * @throws IOException
      */
-    protected boolean write( byte[] data, long pos )
+    protected boolean write( IndexedDiskElementDescriptor ded, byte[] data )
+        throws IOException
     {
-        if ( log.isDebugEnabled() )
+        long pos = ded.pos;
+        if ( log.isTraceEnabled() )
         {
-            log.debug( "write> pos=" + pos );
-            log.debug( raf + " -- data.length = " + data.length );
+            log.trace( "write> pos=" + pos );
+            log.trace( raf + " -- data.length = " + data.length );
         }
-        try
+
+        if ( data.length != ded.len )
         {
-            synchronized ( this )
-            {
-                raf.seek( pos );
-                raf.writeInt( data.length );
-                raf.write( data );
-            }
-            return true;
+            throw new IOException( "Mismatched descriptor and data lengths" );
         }
-        catch ( IOException ex )
+
+        synchronized ( this )
         {
-            log.error( "Problem writing object to disk.", ex );
+            raf.seek( pos );
+            raf.writeInt( data.length );
+            raf.write( data, 0, ded.len );
         }
-        return false;
+        return true;
     }
 
     /**
      * Serializes the object and write it out to the given position.
      * <p>
+     * TODO: make this take a ded as well.
      * @return
      * @param obj
      * @param pos
+     * @throws IOException
      */
     protected boolean writeObject( Serializable obj, long pos )
+        throws IOException
     {
-        try
-        {
-            return write( serialize( obj ), pos );
-        }
-        catch ( IOException ex )
-        {
-            log.error( "Problem writing object to disk.", ex );
-        }
-        return false;
-    }
-
-    /**
-     * Writes an object to the end of the file.
-     * <p>
-     * @return
-     * @param obj
-     */
-    protected IndexedDiskElementDescriptor appendObject( CacheElement obj )
-    {
-        long pos = -1;
-        boolean success = false;
-        try
-        {
-            IndexedDiskElementDescriptor ded = new IndexedDiskElementDescriptor();
-            byte[] data = serialize( obj );
-
-            synchronized ( this )
-            {
-                pos = raf.length();
-                ded.init( pos, data );
-                success = write( data, pos );
-            }
-            // return success ? new DiskElement(pos, data) : null;
-            return success ? ded : null;
-        }
-        catch ( IOException ex )
-        {
-            log.error( "Problem writing object to disk.", ex );
-        }
-        return null;
+        byte[] data = SERIALIZER.serialize( obj );
+        write( new IndexedDiskElementDescriptor( pos, data.length ), data );
+        return true;
     }
 
     /**
@@ -260,7 +235,10 @@ class IndexedDisk
     protected synchronized void reset()
         throws IOException
     {
-        log.warn( "Resetting data file" );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Resetting Indexed File [" + filepath + "]" );
+        }
         raf.close();
         File f = new File( filepath );
         int i = 0;
@@ -297,16 +275,22 @@ class IndexedDisk
     protected static byte[] serialize( Serializable obj )
         throws IOException
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream( baos );
-        try
+        return SERIALIZER.serialize( obj );
+    }
+
+    /**
+     * Truncates the file to a given length.
+     * <p>
+     * @param length the new length of the file
+     * @throws IOException
+     */
+    protected void truncate( long length )
+        throws IOException
+    {
+        if ( log.isInfoEnabled() )
         {
-            oos.writeObject( obj );
+            log.info( "Trucating file [" + filepath + "] to " + length );
         }
-        finally
-        {
-            oos.close();
-        }
-        return baos.toByteArray();
+        raf.setLength( length );
     }
 }

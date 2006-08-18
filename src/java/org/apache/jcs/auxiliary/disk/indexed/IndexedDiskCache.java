@@ -1,14 +1,12 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.File;
@@ -16,6 +14,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,14 +37,14 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.SortedPreferentialArray;
+import org.apache.jcs.utils.timing.StopWatch;
 
-import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
+import EDU.oswego.cs.dl.util.concurrent.ReentrantWriterPreferenceReadWriteLock;
 
 /**
- * Disk cache that uses a RandomAccessFile with keys stored in memory. The
- * maximum number of keys stored in memory is configurable. The disk cache tries
- * to recycle spots on disk to limit file expansion.
- * @version $Id$
+ * Disk cache that uses a RandomAccessFile with keys stored in memory. The maximum number of keys
+ * stored in memory is configurable. The disk cache tries to recycle spots on disk to limit file
+ * expansion.
  */
 public class IndexedDiskCache
     extends AbstractDiskCache
@@ -53,6 +52,8 @@ public class IndexedDiskCache
     private static final long serialVersionUID = -265035607729729629L;
 
     private static final Log log = LogFactory.getLog( IndexedDiskCache.class );
+
+    private final String logCacheName;
 
     private String fileName;
 
@@ -68,51 +69,67 @@ public class IndexedDiskCache
 
     boolean doRecycle = true;
 
-    // are we currenlty optimizing the files
-    boolean isOptomizing = false;
+    boolean isRealTimeOptimizationEnabled = true;
 
-    // list where puts made during optimization are made, may need a removeList
-    // too
-    private LinkedList optimizingPutList = new LinkedList();
+    boolean isShutdownOptimizationEnabled = true;
+
+    // are we currenlty optimizing the files
+    boolean isOptimizing = false;
+
+    private int timesOptimized = 0;
+
+    private volatile Thread currentOptimizationThread;
+
+    // used for counting the number of requests
+    private int removeCount = 0;
+
+    private boolean queueInput = false;
+
+    // list where puts made during optimization are made
+    private LinkedList queuedPutList = new LinkedList();
 
     // RECYLCE BIN -- array of empty spots
     private SortedPreferentialArray recycle;
 
     private IndexedDiskCacheAttributes cattr;
 
-    // used for counting the number of requests
-    private int optCnt = 0;
-
     private int recycleCnt = 0;
 
     private int startupSize = 0;
 
     /**
-     * use this lock to synchronize reads and writes to the underlying storage
-     * mechansism.
+     * Use this lock to synchronize reads and writes to the underlying storage mechansism.
      */
-    protected WriterPreferenceReadWriteLock storageLock = new WriterPreferenceReadWriteLock();
+    protected ReentrantWriterPreferenceReadWriteLock storageLock = new ReentrantWriterPreferenceReadWriteLock();
 
     /**
-     * Constructor for the DiskCache object
+     * Constructor for the DiskCache object.
+     * <p>
      * @param cattr
      */
     public IndexedDiskCache( IndexedDiskCacheAttributes cattr )
     {
         super( cattr );
 
-        String cacheName = cattr.getCacheName();
         String rootDirName = cattr.getDiskPath();
         maxKeySize = cattr.getMaxKeySize();
 
+        // TODO: These should be separate configuration attributes
+        isRealTimeOptimizationEnabled = cattr.getOptimizeAtRemoveCount() > 0;
+        isShutdownOptimizationEnabled = cattr.getOptimizeAtRemoveCount() >= 0;
+
         this.cattr = cattr;
 
-        this.fileName = cacheName;
+        this.logCacheName = "Region [" + getCacheName() + "] ";
+        this.fileName = getCacheName();
 
         rafDir = new File( rootDirName );
         rafDir.mkdirs();
 
-        log.info( "Cache file root directory: " + rootDirName );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( logCacheName + "Cache file root directory: " + rootDirName );
+        }
 
         try
         {
@@ -133,13 +150,13 @@ public class IndexedDiskCache
                 }
                 else
                 {
-                    boolean isOk = checkKeyDataConsistency();
+                    boolean isOk = checkKeyDataConsistency( false );
                     if ( !isOk )
                     {
                         keyHash.clear();
                         keyFile.reset();
                         dataFile.reset();
-                        log.warn( "Corruption detected.  Reset data and keys files." );
+                        log.warn( logCacheName + "Corruption detected.  Reset data and keys files." );
                     }
                     else
                     {
@@ -166,19 +183,31 @@ public class IndexedDiskCache
 
             // Initialization finished successfully, so set alive to true.
             alive = true;
+            if ( log.isInfoEnabled() )
+            {
+                log.info( logCacheName + "Indexed Disk Cache is alive." );
+            }
         }
         catch ( Exception e )
         {
-            log.error( "Failure initializing for fileName: " + fileName + " and root directory: " + rootDirName, e );
+            log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and root directory: "
+                + rootDirName, e );
         }
 
+        // TODO: Should we improve detection of whether or not the file should be optimized.
+        if ( isRealTimeOptimizationEnabled && keyHash.size() > 0 )
+        {
+            // Kick off a real time optimization, in case we didn't do a final optimization.
+            doOptimizeRealTime();
+        }
         ShutdownHook shutdownHook = new ShutdownHook();
         Runtime.getRuntime().addShutdownHook( shutdownHook );
     }
 
     /**
-     * Loads the keys from the .key file. The keys are stored in a HashMap on
-     * disk. This is converted into a LRUMap.
+     * Loads the keys from the .key file. The keys are stored in a HashMap on disk. This is
+     * converted into a LRUMap.
+     * <p>
      * @throws InterruptedException
      */
     protected void loadKeys()
@@ -186,52 +215,43 @@ public class IndexedDiskCache
     {
         storageLock.writeLock().acquire();
 
-        if ( log.isInfoEnabled() )
+        if ( log.isDebugEnabled() )
         {
-            log.info( "Loading keys for " + keyFile.toString() );
+            log.debug( logCacheName + "Loading keys for " + keyFile.toString() );
         }
 
         try
         {
-
             // create a key map to use.
             initKeyMap();
 
-            HashMap keys = (HashMap) keyFile.readObject( 0 );
+            HashMap keys = (HashMap) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
+                - IndexedDisk.RECORD_HEADER ) );
 
             if ( keys != null )
             {
-                if ( log.isInfoEnabled() )
+                if ( log.isDebugEnabled() )
                 {
-                    log.info( "Found " + keys.size() + " in keys file." );
+                    log.debug( logCacheName + "Found " + keys.size() + " in keys file." );
                 }
 
                 keyHash.putAll( keys );
 
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "Loaded keys from: " + fileName + ", key count: " + keyHash.size() + "; upto "
-                        + maxKeySize + " will be available." );
+                    log.info( logCacheName + "Loaded keys from [" + fileName + "], key count: " + keyHash.size()
+                        + "; up to " + maxKeySize + " will be available." );
                 }
-
             }
 
             if ( log.isDebugEnabled() )
             {
-                Iterator itr = keyHash.entrySet().iterator();
-                while ( itr.hasNext() )
-                {
-                    Map.Entry e = (Map.Entry) itr.next();
-                    String key = (String) e.getKey();
-                    IndexedDiskElementDescriptor de = (IndexedDiskElementDescriptor) e.getValue();
-                    log.debug( "key entry: " + key + ", ded.pos" + de.pos + ", ded.len" + de.len );
-                }
+                dump( false );
             }
-
         }
         catch ( Exception e )
         {
-            log.error( "Problem loading keys for file " + fileName, e );
+            log.error( logCacheName + "Problem loading keys for file " + fileName, e );
         }
         finally
         {
@@ -240,56 +260,97 @@ public class IndexedDiskCache
     }
 
     /**
-     * Check for minimal consitency between the keys and the datafile. Makes
-     * sure no starting positions in the keys exceed the file length.
+     * Check for minimal consitency between the keys and the datafile. Makes sure no starting
+     * positions in the keys exceed the file length.
      * <p>
-     * The caller should take the appropriate action if the keys and data are
-     * not consistent.
-     * @return True if the test passes
+     * The caller should take the appropriate action if the keys and data are not consistent.
+     * @param checkForDedOverlaps if <code>true</code>, do a more thorough check by checking for
+     *            data overlap
+     * @return <code>true</code> if the test passes
      */
-    private boolean checkKeyDataConsistency()
+    private boolean checkKeyDataConsistency( boolean checkForDedOverlaps )
     {
-
-        log.info( "Performing inital consistency check" );
+        StopWatch timer = new StopWatch();
+        log.debug( logCacheName + "Performing inital consistency check" );
 
         boolean isOk = true;
-        long len = 0;
+        long fileLength = 0;
         try
         {
-            len = dataFile.length();
+            fileLength = dataFile.length();
+
+            Iterator itr = keyHash.entrySet().iterator();
+            while ( itr.hasNext() )
+            {
+                Map.Entry e = (Map.Entry) itr.next();
+                IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) e.getValue();
+
+                isOk = ( ded.pos + IndexedDisk.RECORD_HEADER + ded.len <= fileLength );
+
+                if ( !isOk )
+                {
+                    log.warn( logCacheName + "The dataFile is corrupted!" + "\n raf.length() = " + fileLength
+                        + "\n ded.pos = " + ded.pos );
+                    break;
+                }
+            }
+
+            if ( isOk && checkForDedOverlaps )
+            {
+                isOk = checkForDedOverlaps( createPositionSortedDescriptorList() );
+            }
         }
         catch ( Exception e )
         {
             log.error( e );
+            isOk = false;
         }
 
-        Iterator itr = keyHash.entrySet().iterator();
-        while ( itr.hasNext() )
+        if ( log.isInfoEnabled() )
         {
-            Map.Entry e = (Map.Entry) itr.next();
-            IndexedDiskElementDescriptor de = (IndexedDiskElementDescriptor) e.getValue();
-            long pos = de.pos;
-
-            if ( pos > len )
-            {
-                isOk = false;
-            }
-
-            if ( !isOk )
-            {
-                log.warn( "\n The dataFile is corrupted!" + "\n raf.length() = " + len + "\n pos = " + pos );
-                return isOk;
-            }
+            log.info( logCacheName + "Finished inital consistency check, isOk = " + isOk + " in "
+                + timer.getElapsedTimeString() );
         }
-
-        log.info( "Finished inital consistency check, isOk = " + isOk );
 
         return isOk;
     }
 
     /**
-     * Saves key file to disk. This converts the LRUMap to a HashMap for
-     * deserialzation.
+     * Detects any overlapping elements. This expects a sorted list.
+     * <p>
+     * @param sortedDescriptors
+     * @return false if there are overlaps.
+     */
+    private boolean checkForDedOverlaps( IndexedDiskElementDescriptor[] sortedDescriptors )
+    {
+        long start = System.currentTimeMillis();
+        boolean isOk = true;
+        long expectedNextPos = 0;
+        for ( int i = 0; i < sortedDescriptors.length; i++ )
+        {
+            IndexedDiskElementDescriptor ded = sortedDescriptors[i];
+            if ( expectedNextPos > ded.pos )
+            {
+                log.error( logCacheName + "Corrupt file: overlapping deds " + ded );
+                isOk = false;
+                break;
+            }
+            else
+            {
+                expectedNextPos = ded.pos + IndexedDisk.RECORD_HEADER + ded.len;
+            }
+        }
+        long end = System.currentTimeMillis();
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( logCacheName + "Check for DED overlaps took " + ( end - start ) + " ms." );
+        }
+
+        return isOk;
+    }
+
+    /**
+     * Saves key file to disk. This converts the LRUMap to a HashMap for deserialzation.
      */
     protected void saveKeys()
     {
@@ -297,57 +358,47 @@ public class IndexedDiskCache
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Saving keys to: " + fileName + ", key count: " + keyHash.size() );
+                log.debug( logCacheName + "Saving keys to: " + fileName + ", key count: " + keyHash.size() );
             }
 
-            try
+            keyFile.reset();
+
+            HashMap keys = new HashMap();
+            keys.putAll( keyHash );
+
+            if ( keys.size() > 0 )
             {
-                keyFile.reset();
-
-                HashMap keys = new HashMap();
-                keys.putAll( keyHash );
-
-                if ( keys.size() > 0 )
-                {
-                    keyFile.writeObject( keys, 0 );
-                }
+                keyFile.writeObject( keys, 0 );
             }
-            finally
+
+            if ( log.isDebugEnabled() )
             {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Finished saving keys." );
-                }
+                log.debug( logCacheName + "Finished saving keys." );
             }
         }
         catch ( Exception e )
         {
-            log.error( "Problem storing keys.", e );
+            log.error( logCacheName + "Problem storing keys.", e );
         }
     }
 
     /**
-     * Update the disk cache. Called from the Queue. Makes sure the Item has not
-     * been retireved from purgatory while in queue for disk. Remove items from
-     * purgatory when they go to disk.
+     * Update the disk cache. Called from the Queue. Makes sure the Item has not been retireved from
+     * purgatory while in queue for disk. Remove items from purgatory when they go to disk.
      * <p>
-     * @param ce
-     *            The ICacheElement to put to disk.
+     * @param ce The ICacheElement to put to disk.
      */
     public void doUpdate( ICacheElement ce )
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Storing element on disk, key: " + ce.getKey() );
-        }
-
         if ( !alive )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Disk is not alive, aborting put." );
-            }
+            log.error( logCacheName + "No longer alive; aborting put of key = " + ce.getKey() );
             return;
+        }
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( logCacheName + "Storing element on disk, key: " + ce.getKey() );
         }
 
         IndexedDiskElementDescriptor ded = null;
@@ -357,22 +408,22 @@ public class IndexedDiskCache
 
         try
         {
-            ded = new IndexedDiskElementDescriptor();
             byte[] data = IndexedDisk.serialize( ce );
 
             // make sure this only locks for one particular cache region
             storageLock.writeLock().acquire();
             try
             {
-                ded.init( dataFile.length(), data );
-
-                old = (IndexedDiskElementDescriptor) keyHash.put( ce.getKey(), ded );
+                old = (IndexedDiskElementDescriptor) keyHash.get( ce.getKey() );
 
                 // Item with the same key already exists in file.
                 // Try to reuse the location if possible.
-                if ( old != null && ded.len <= old.len )
+                if ( old != null && data.length <= old.len )
                 {
-                    ded.pos = old.pos;
+                    // Reuse the old ded. The defrag relies on ded updates by reference, not
+                    // replacement.
+                    ded = old;
+                    ded.len = data.length;
                 }
                 else
                 {
@@ -382,33 +433,37 @@ public class IndexedDiskCache
                             .takeNearestLargerOrEqual( ded );
                         if ( rep != null )
                         {
-                            ded.pos = rep.pos;
+                            ded = rep;
+                            ded.len = data.length;
                             recycleCnt++;
                             if ( log.isDebugEnabled() )
                             {
-                                log.debug( "using recycled ded " + ded.pos + " rep.len = " + rep.len + " ded.len = "
-                                    + ded.len );
-                            }
-                        }
-                        else
-                        {
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( "no ded to recycle" );
+                                log.debug( logCacheName + "using recycled ded " + ded.pos + " rep.len = " + rep.len
+                                    + " ded.len = " + ded.len );
                             }
                         }
                     }
-                }
-                dataFile.write( data, ded.pos );
 
-                if ( this.isOptomizing )
-                {
-                    optimizingPutList.addLast( ce.getKey() );
-                    if ( log.isDebugEnabled() )
+                    // We couldn't replace or update anything so it is ok to create a new one.
+                    if ( ded == null )
                     {
-                        log.debug( "added to optimizing put list." + optimizingPutList.size() );
+                        ded = new IndexedDiskElementDescriptor( dataFile.length(), data.length );
+                    }
+
+                    // Put it in the map
+                    keyHash.put( ce.getKey(), ded );
+
+                    if ( queueInput )
+                    {
+                        queuedPutList.add( ded );
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( logCacheName + "added to queued put list." + queuedPutList.size() );
+                        }
                     }
                 }
+
+                dataFile.write( ded, data );
             }
             finally
             {
@@ -417,24 +472,23 @@ public class IndexedDiskCache
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Put to file: " + fileName + ", key: " + ce.getKey() + ", position: " + ded.pos + ", size: "
-                    + ded.len );
+                log.debug( logCacheName + "Put to file: " + fileName + ", key: " + ce.getKey() + ", position: "
+                    + ded.pos + ", size: " + ded.len );
             }
         }
         catch ( ConcurrentModificationException cme )
         {
             // do nothing, this means it has gone back to memory mid
             // serialization
-            if ( log.isInfoEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 // this shouldn't be possible
-                log.info( "Caught ConcurrentModificationException." + cme );
+                log.debug( logCacheName + "Caught ConcurrentModificationException." + cme );
             }
         }
         catch ( Exception e )
         {
-            log.error( "Failure updating element, cacheName: " + cacheName + ", key: " + ce.getKey() + " old: " + old,
-                       e );
+            log.error( logCacheName + "Failure updating element, key: " + ce.getKey() + " old: " + old, e );
         }
     }
 
@@ -445,9 +499,16 @@ public class IndexedDiskCache
      */
     protected ICacheElement doGet( Serializable key )
     {
+        if ( !alive )
+        {
+            log.error( logCacheName + "No longer alive so returning null for key = " + key );
+
+            return null;
+        }
+
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Trying to get from disk: " + key );
+            log.debug( logCacheName + "Trying to get from disk: " + key );
         }
 
         ICacheElement object = null;
@@ -456,13 +517,6 @@ public class IndexedDiskCache
             storageLock.readLock().acquire();
             try
             {
-                if ( !alive )
-                {
-                    log.debug( "No longer alive so returning null, cacheName: " + cacheName + ", key = " + key );
-
-                    return null;
-                }
-
                 object = readElement( key );
             }
             finally
@@ -472,12 +526,12 @@ public class IndexedDiskCache
         }
         catch ( IOException ioe )
         {
-            log.error( "Failure getting from disk, cacheName: " + cacheName + ", key = " + key, ioe );
+            log.error( logCacheName + "Failure getting from disk, key = " + key, ioe );
             reset();
         }
         catch ( Exception e )
         {
-            log.error( "Failure getting from disk, cacheName: " + cacheName + ", key = " + key, e );
+            log.error( logCacheName + "Failure getting from disk, key = " + key, e );
         }
 
         return object;
@@ -501,21 +555,21 @@ public class IndexedDiskCache
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Found on disk, key: " + key );
+                log.debug( logCacheName + "Found on disk, key: " + key );
             }
             try
             {
-                object = (ICacheElement) dataFile.readObject( ded.pos );
+                object = (ICacheElement) dataFile.readObject( ded );
             }
             catch ( IOException e )
             {
-                log.error( "IO Exception, Problem reading object from file", e );
+                log.error( logCacheName + "IO Exception, Problem reading object from file", e );
                 throw e;
             }
             catch ( Exception e )
             {
-                log.error( "Exception, Problem reading object from file", e );
-                throw new IOException( "Problem reading object from disk. " + e.getMessage() );
+                log.error( logCacheName + "Exception, Problem reading object from file", e );
+                throw new IOException( logCacheName + "Problem reading object from disk. " + e.getMessage() );
             }
         }
 
@@ -548,7 +602,7 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( "Failure getting from disk, cacheName: " + cacheName + ", group = " + groupName, e );
+            log.error( logCacheName + "Failure getting from disk, group = " + groupName, e );
         }
         finally
         {
@@ -559,22 +613,18 @@ public class IndexedDiskCache
     }
 
     /**
-     * Returns true if the removal was succesful; or false if there is nothing
-     * to remove. Current implementation always result in a disk orphan.
+     * Returns true if the removal was succesful; or false if there is nothing to remove. Current
+     * implementation always result in a disk orphan.
      * <p>
      * @return
      * @param key
      */
     public boolean doRemove( Serializable key )
     {
-        optCnt++;
-        if ( !this.isOptomizing && optCnt == this.cattr.getOptimizeAtRemoveCount() )
+        if ( !alive )
         {
-            doOptimizeRealTime();
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "optCnt = " + optCnt );
-            }
+            log.error( logCacheName + "No longer alive so returning false for key = " + key );
+            return false;
         }
 
         boolean reset = false;
@@ -597,26 +647,12 @@ public class IndexedDiskCache
 
                     if ( k instanceof String && k.toString().startsWith( key.toString() ) )
                     {
-
-                        if ( doRecycle )
-                        {
-                            // reuse the spot
-                            IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
-                            if ( ded != null )
-                            {
-                                recycle.add( ded );
-                                if ( log.isDebugEnabled() )
-                                {
-                                    log.debug( "recycling ded " + ded );
-                                }
-                            }
-                        }
-
+                        IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
+                        addToRecycleBin( ded );
                         iter.remove();
                         removed = true;
                     }
                 }
-                return removed;
             }
             else if ( key instanceof GroupId )
             {
@@ -629,19 +665,8 @@ public class IndexedDiskCache
 
                     if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
                     {
-                        if ( doRecycle )
-                        {
-                            // reuse the spot
-                            IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
-                            if ( ded != null )
-                            {
-                                recycle.add( ded );
-                                if ( log.isDebugEnabled() )
-                                {
-                                    log.debug( "recycling ded " + ded );
-                                }
-                            }
-                        }
+                        IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
+                        addToRecycleBin( ded );
                         iter.remove();
                         removed = true;
                     }
@@ -649,34 +674,21 @@ public class IndexedDiskCache
             }
             else
             {
-                if ( doRecycle )
-                {
-                    // reuse the spot
-                    IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
-                    if ( ded != null )
-                    {
-                        recycle.add( ded );
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Adding to recycle bin: " + ded );
-                        }
-                    }
-                }
-
                 // remove single item.
-                removed = keyHash.remove( key ) != null;
+                IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.remove( key );
+                removed = ( ded != null );
+                addToRecycleBin( ded );
 
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Disk removal: Removed from key hash, key " + key + " removed = " + removed );
+                    log.debug( logCacheName + "Disk removal: Removed from key hash, key [" + key + "] removed = "
+                        + removed );
                 }
-
-                return removed;
             }
         }
         catch ( Exception e )
         {
-            log.error( "Problem removing element.", e );
+            log.error( logCacheName + "Problem removing element.", e );
             reset = true;
         }
         finally
@@ -689,7 +701,10 @@ public class IndexedDiskCache
             reset();
         }
 
-        return false;
+        // this increments the removecount
+        doOptimizeRealTime();
+
+        return removed;
     }
 
     /**
@@ -703,23 +718,21 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( "Problem removing all.", e );
+            log.error( logCacheName + "Problem removing all.", e );
             reset();
         }
     }
 
     /**
-     * Reset effectively clears the disk cache, creating new files, recyclebins,
-     * and keymaps.
+     * Reset effectively clears the disk cache, creating new files, recyclebins, and keymaps.
      * <p>
-     * It can be used to handle errors by last resort, force content update, or
-     * removeall.
+     * It can be used to handle errors by last resort, force content update, or removeall.
      */
     private void reset()
     {
-        if ( log.isInfoEnabled() )
+        if ( log.isWarnEnabled() )
         {
-            log.info( "Reseting cache" );
+            log.warn( logCacheName + "Reseting cache" );
         }
 
         try
@@ -750,7 +763,7 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( "Failure reseting state", e );
+            log.error( logCacheName + "Failure reseting state", e );
         }
         finally
         {
@@ -759,28 +772,16 @@ public class IndexedDiskCache
     }
 
     /**
-     * If the maxKeySize is < 0, use 5000, no way to have an unlimted recycle
-     * bin right now, or one less than the mazKeySize.
+     * If the maxKeySize is < 0, use 5000, no way to have an unlimted recycle bin right now, or one
+     * less than the mazKeySize.
      */
     private void initRecycleBin()
     {
-        recycle = null;
-        if ( cattr.getMaxRecycleBinSize() >= 0 )
+        int recycleBinSize = cattr.getMaxRecycleBinSize() >= 0 ? cattr.getMaxRecycleBinSize() : 0;
+        recycle = new SortedPreferentialArray( recycleBinSize );
+        if ( log.isDebugEnabled() )
         {
-            recycle = new SortedPreferentialArray( cattr.getMaxRecycleBinSize() );
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Set recycle max Size to MaxRecycleBinSize: '" + cattr.getMaxRecycleBinSize() + "'" );
-            }
-        }
-        else
-        {
-            // this is a fail safetly. Will no
-            recycle = new SortedPreferentialArray( 0 );
-            if ( log.isInfoEnabled() )
-            {
-                log.warn( "Set recycle maxSize to 0, will not try to recycle, MaxRecycleBinSize was less than 0" );
-            }
+            log.debug( logCacheName + "Set recycle max Size to MaxRecycleBinSize: '" + recycleBinSize + "'" );
         }
     }
 
@@ -792,26 +793,28 @@ public class IndexedDiskCache
         keyHash = null;
         if ( maxKeySize >= 0 )
         {
-            keyHash = new LRUMapJCS( maxKeySize );
+            keyHash = new LRUMap( maxKeySize );
             if ( log.isInfoEnabled() )
             {
-                log.info( "Set maxKeySize to: '" + maxKeySize + "'" );
+                log.info( logCacheName + "Set maxKeySize to: '" + maxKeySize + "'" );
             }
         }
         else
         {
+            // If no max size, use a plain map for memory and processing efficiency.
             keyHash = new HashMap();
             // keyHash = Collections.synchronizedMap( new HashMap() );
             if ( log.isInfoEnabled() )
             {
-                log.info( "Set maxKeySize to unlimited'" );
+                log.info( logCacheName + "Set maxKeySize to unlimited'" );
             }
         }
+
     }
 
     /**
-     * Dispose of the disk cache in a background thread. Joins against this
-     * thread to put a cap on the disposal time.
+     * Dispose of the disk cache in a background thread. Joins against this thread to put a cap on
+     * the disposal time.
      * <p>
      * @todo make dispose window configurable.
      */
@@ -824,7 +827,7 @@ public class IndexedDiskCache
                 disposeInternal();
             }
         };
-        Thread t = new Thread( disR );
+        Thread t = new Thread( disR, "IndexedDiskCache-DisposalThread" );
         t.start();
         // wait up to 60 seconds for dispose and then quit if not done.
         try
@@ -833,7 +836,7 @@ public class IndexedDiskCache
         }
         catch ( InterruptedException ex )
         {
-            log.error( "Interrupted while waiting for disposal thread to finish.", ex );
+            log.error( logCacheName + "Interrupted while waiting for disposal thread to finish.", ex );
         }
     }
 
@@ -842,372 +845,309 @@ public class IndexedDiskCache
      */
     private void disposeInternal()
     {
+        if ( !alive )
+        {
+            log.error( logCacheName + "Not alive and dispose was called, filename: " + fileName );
+            return;
+        }
+
+        // Prevents any interaction with the cache while we're shutting down.
+        alive = false;
+
+        Thread optimizationThread = currentOptimizationThread;
+        if ( isRealTimeOptimizationEnabled && optimizationThread != null )
+        {
+            // Join with the current optimization thread.
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( logCacheName + "In dispose, optimization already " + "in progress; waiting for completion." );
+            }
+            try
+            {
+                optimizationThread.join();
+            }
+            catch ( InterruptedException e )
+            {
+                log.error( logCacheName + "Unable to join current optimization thread.", e );
+            }
+        }
+        else if ( isShutdownOptimizationEnabled )
+        {
+            optimizeFile();
+        }
+
+        saveKeys();
+
+        try
+        {
+            log.debug( logCacheName + "Closing files, base filename: " + fileName );
+            dataFile.close();
+            dataFile = null;
+            keyFile.close();
+            keyFile = null;
+        }
+        catch ( IOException e )
+        {
+            log.error( logCacheName + "Failure closing files in dispose, filename: " + fileName, e );
+        }
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( logCacheName + "Shutdown complete." );
+        }
+    }
+
+    /**
+     * Add descfriptor to recycle bin.
+     * <p>
+     * @param ded
+     */
+    private void addToRecycleBin( IndexedDiskElementDescriptor ded )
+    {
+        if ( doRecycle )
+        {
+            // reuse the spot
+            if ( ded != null )
+            {
+                recycle.add( ded );
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( logCacheName + "recycled ded" + ded );
+                }
+            }
+        }
+    }
+
+    /**
+     * Performs the check for optimization, and if it is required, do it.
+     */
+    private void doOptimizeRealTime()
+    {
+        if ( isRealTimeOptimizationEnabled && !isOptimizing && ( removeCount++ >= cattr.getOptimizeAtRemoveCount() ) )
+        {
+            isOptimizing = true;
+
+            if ( log.isInfoEnabled() )
+            {
+                log.info( logCacheName + "Optimizing file. removeCount [" + removeCount + "] OptimizeAtRemoveCount ["
+                    + cattr.getOptimizeAtRemoveCount() + "]" );
+            }
+
+            if ( currentOptimizationThread == null )
+            {
+                try
+                {
+                    storageLock.writeLock().acquire();
+                    if ( currentOptimizationThread == null )
+                    {
+                        currentOptimizationThread = new Thread( new Runnable()
+                        {
+                            public void run()
+                            {
+                                optimizeFile();
+
+                                currentOptimizationThread = null;
+                            }
+                        }, "IndexedDiskCache-OptimizationThread" );
+                    }
+                }
+                catch ( InterruptedException e )
+                {
+                    log.error( logCacheName + "Unable to aquire storage write lock.", e );
+                }
+                finally
+                {
+                    storageLock.writeLock().release();
+                }
+
+                if ( currentOptimizationThread != null )
+                {
+                    currentOptimizationThread.start();
+                }
+            }
+        }
+    }
+
+    /**
+     * File optimization is handled by this method. It works as follows:
+     * <ol>
+     * <li>Shutdown recycling and turn on queuing of puts. </li>
+     * <li>Take a snapshot of the current descriptors. If there are any removes, ignore them, as
+     * they will be compacted during the next optimization.</li>
+     * <li>Optimize the snapshot. For each descriptor:
+     * <ol>
+     * <li>Obtain the write-lock.</li>
+     * <li>Shift the element on the disk, in order to compact out the free space. </li>
+     * <li>Release the write-lock. This allows elements to still be accessible during optimization.</li>
+     * </ol>
+     * <li>Obtain the write-lock.</li>
+     * <li>All queued puts are made at the end of the file. Optimize these under a single
+     * write-lock.</li>
+     * <li>Truncate the file.</li>
+     * <li>Release the write-lock.</li>
+     * <li>Restore system to standard operation.</li>
+     * </ol>
+     */
+    protected void optimizeFile()
+    {
+        StopWatch timer = new StopWatch();
+        timesOptimized++;
+        if ( log.isInfoEnabled() )
+        {
+            log.info( logCacheName + "Beginning Optimization #" + timesOptimized );
+        }
+
+        // CREATE SNAPSHOT
+        IndexedDiskElementDescriptor[] defragList = null;
+        try
+        {
+            storageLock.writeLock().acquire();
+            queueInput = true;
+            // shut off recycle while we're optimizing,
+            doRecycle = false;
+            defragList = createPositionSortedDescriptorList();
+            // Release iff I aquired.
+            storageLock.writeLock().release();
+        }
+        catch ( InterruptedException e )
+        {
+            log.error( logCacheName + "Error setting up optimization.", e );
+            return;
+        }
+
+        // Defrag the file outside of the write lock. This allows a move to be made,
+        // and yet have the element still accessible for reading or writing.
+        long expectedNextPos = defragFile( defragList, 0 );
+
+        // ADD THE QUEUED ITEMS to the end and then truncate
         try
         {
             storageLock.writeLock().acquire();
 
-            if ( !alive )
+            if ( !queuedPutList.isEmpty() )
             {
-                log.debug( "Not alive and dispose was called, filename: " + fileName );
-                return;
-            }
+                // This is perhaps unecessary, but the list might not be as sorted as we think.
+                defragList = new IndexedDiskElementDescriptor[queuedPutList.size()];
+                queuedPutList.toArray( defragList );
+                Arrays.sort( defragList, new PositionComparator() );
 
-            try
-            {
-                optimizeFile();
+                // pack them at the end
+                expectedNextPos = defragFile( defragList, expectedNextPos );
             }
-            catch ( Exception e )
-            {
-                log.error( fileName, e );
-            }
-            try
-            {
-                log.warn( "Closing files, base filename: " + fileName );
-                dataFile.close();
-                dataFile = null;
-                keyFile.close();
-                keyFile = null;
-            }
-            catch ( Exception e )
-            {
-                log.error( "Failure closing files in dispose, filename: " + fileName, e );
-            }
+            // TRUNCATE THE FILE
+            dataFile.truncate( expectedNextPos );
         }
         catch ( Exception e )
         {
-            log.error( "Failure in dispose", e );
+            log.error( logCacheName + "Error optimizing queued puts.", e );
         }
         finally
         {
-            alive = false;
+            // RESTORE NORMAL OPERATION
+            removeCount = 0;
+            initRecycleBin();
+            queuedPutList.clear();
+            queueInput = false;
+            // turn recycle back on.
+            doRecycle = true;
+            isOptimizing = false;
 
-            try
-            {
-                storageLock.writeLock().release();
-            }
-            catch ( Exception e )
-            {
-                log.error( "Failure releasing lock on shutdown " + e );
-            }
+            storageLock.writeLock().release();
         }
 
-    }
-
-    // ///////////////////////////////////////////////////////////////////////////////
-    // OPTIMIZATION METHODS
-
-    /**
-     * Dispose of the disk cache in a background thread. Joins against this
-     * thread to put a cap on the disposal time.
-     */
-    public synchronized void doOptimizeRealTime()
-    {
-        if ( !this.isOptomizing )
-        {
-            this.isOptomizing = true;
-            Runnable optR = new Runnable()
-            {
-                public void run()
-                {
-                    optimizeRealTime();
-                }
-            };
-            Thread t = new Thread( optR );
-            t.start();
-        }
-        /*
-         * // wait up to 60 seconds for dispose and then quit if not done. try {
-         * t.join(60 * 1000); } catch (InterruptedException ex) { log.error(ex); }
-         */
-    }
-
-    private int timesOptimized = 0;
-
-    /**
-     * Realtime optimization is handled by this method. It works in this way:
-     * <ul>
-     * <li>1. Lock the active file, create a new file.</li>
-     * <li>2. Copy the keys for iteration.</li>
-     * <li>3. For each key in the copy, make sure it is still in the active
-     * keyhash to prevent putting items on disk that have been removed. It also
-     * checks the new keyHash to make sure that a newer version hasn't already
-     * been put.</li>
-     * <li>4. Write the element for the key copy to disk in the normal
-     * proceedure.</li>
-     * <li>5. All gets will be serviced by the new file. </li>
-     * <li>6. All puts are made on the new file.</li>
-     * </ul>
-     */
-    protected void optimizeRealTime()
-    {
-        long start = System.currentTimeMillis();
         if ( log.isInfoEnabled() )
         {
-            log.info( "Beginning Real Time Optimization #" + ++timesOptimized );
+            log.info( logCacheName + "Finished #" + timesOptimized + " Optimization took "
+                + timer.getElapsedTimeString() );
         }
+    }
 
-        Object[] keys = null;
-
+    /**
+     * Defragments the file inplace by compacting out the free space (i.e., moving records forward).
+     * If there were no gaps the resulting file would be the same size as the previous file. This
+     * must be supplied an ordered defragList.
+     * <p>
+     * @param defragList sorted list of descriptors for optimization
+     * @param startingPos the start position in the file
+     * @return this is the potential new file end
+     */
+    private long defragFile( IndexedDiskElementDescriptor[] defragList, long startingPos )
+    {
+        StopWatch timer = new StopWatch();
+        long preFileSize = 0;
+        long postFileSize = 0;
+        long expectedNextPos = 0;
         try
         {
-            storageLock.readLock().acquire();
-            try
+            preFileSize = this.dataFile.length();
+            // find the first gap in the disk and start defragging.
+            expectedNextPos = startingPos;
+            for ( int i = 0; i < defragList.length; i++ )
             {
-                keys = keyHash.keySet().toArray();
-            }
-            finally
-            {
-                storageLock.readLock().release();
-            }
-
-            LRUMap keyHashTemp = new LRUMap( this.maxKeySize );
-            keyHashTemp.tag = "Round=" + timesOptimized;
-            IndexedDisk dataFileTemp = new IndexedDisk( new File( rafDir, fileName + "Temp.data" ) );
-            // dataFileTemp.reset();
-
-            // make sure flag is set to true
-            isOptomizing = true;
-
-            int len = keys.length;
-            // while ( itr.hasNext() )
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Optimizing RT -- TempKeys, length = " + len );
-            }
-            for ( int i = 0; i < len; i++ )
-            {
-                // lock so no more gets to the queue -- optimizingPutList
-                // storageLock.writeLock();
                 storageLock.writeLock().acquire();
                 try
                 {
-                    // Serializable key = ( Serializable ) itr.next();
-                    Serializable key = (Serializable) keys[i];
-                    this.moveKeyDataToTemp( key, keyHashTemp, dataFileTemp );
+                    if ( expectedNextPos != defragList[i].pos )
+                    {
+                        dataFile.move( defragList[i], expectedNextPos );
+                    }
+                    expectedNextPos = defragList[i].pos + IndexedDisk.RECORD_HEADER + defragList[i].len;
                 }
                 finally
                 {
-                    // storageLock.done();
                     storageLock.writeLock().release();
                 }
             }
 
-            // potentially, this will cause the longest delay
-            // lock so no more gets to the queue -- optimizingPutList
-            storageLock.writeLock().acquire();
-            try
-            {
-                // switch primary and do the same for those on the list
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Optimizing RT -- PutList, size = " + optimizingPutList.size() );
-                }
+            postFileSize = this.dataFile.length();
 
-                while ( optimizingPutList.size() > 0 )
-                {
-                    Serializable key = (Serializable) optimizingPutList.removeFirst();
-                    this.moveKeyDataToTemp( key, keyHashTemp, dataFileTemp );
-                }
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "keyHashTemp, size = " + keyHashTemp.size() );
-                }
-
-                // switch files.
-                // main
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Optimizing RT -- Replacing Files" );
-                }
-                tempToPrimary( keyHashTemp, dataFileTemp );
-            }
-            finally
-            {
-                storageLock.writeLock().release();
-            }
-        }
-        catch ( Exception e )
-        {
-            log.error( "Failure Optimizing RealTime, cacheName: " + cacheName, e );
-        }
-        optCnt = 0;
-        isOptomizing = false;
-
-        long end = System.currentTimeMillis();
-        long time = end - start;
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Finished #" + timesOptimized + " Real Time Optimization in " + time + " millis." );
-        }
-    }
-
-    /**
-     * Note: synchronization currently must be managed by the caller method--
-     * dispose.
-     */
-    protected void optimizeFile()
-    {
-        try
-        {
-            // Migrate from keyHash to keyHshTemp in memory,
-            // and from dataFile to dataFileTemp on disk.
-            LRUMap keyHashTemp = new LRUMap( this.maxKeySize );
-
-            IndexedDisk dataFileTemp = new IndexedDisk( new File( rafDir, fileName + "Temp.data" ) );
-            // dataFileTemp.reset();
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Optomizing file keyHash.size()=" + keyHash.size() );
-            }
-
-            // Iterator itr = keyHash.keySet().iterator();
-
-            Object[] keys = keyHash.keySet().toArray();
-            int len = keys.length;
-
-            try
-            {
-                // while ( itr.hasNext() )
-                for ( int i = 0; i < len; i++ )
-                {
-                    // Serializable key = ( Serializable ) itr.next();
-                    Serializable key = (Serializable) keys[i];
-                    this.moveKeyDataToTemp( key, keyHashTemp, dataFileTemp );
-                }
-
-                // main
-                tempToPrimary( keyHashTemp, dataFileTemp );
-            }
-            catch ( IOException e )
-            {
-                log.error( "Problem in optimization, abandoning attempt" );
-            }
-        }
-        catch ( Exception e )
-        {
-            log.error( fileName, e );
-        }
-    }
-
-    /**
-     * Copies data for a key from main file to temp file and key to temp keyhash
-     * Clients must manage locking.
-     * <p>
-     * @param key
-     *            Serializable
-     * @param keyHashTemp
-     * @param dataFileTemp
-     *            IndexedDisk
-     * @throws Exception
-     */
-    private void moveKeyDataToTemp( Serializable key, LRUMap keyHashTemp, IndexedDisk dataFileTemp )
-        throws Exception
-    {
-        ICacheElement tempDe = null;
-        try
-        {
-            tempDe = readElement( key );
+            // this is the potential new file end
+            return expectedNextPos;
         }
         catch ( IOException e )
         {
-            log.error( "Failed to get orinigal off disk cache: " + fileName + ", key: " + key + "" );
-            // reset();
-            throw e;
+            log.error( logCacheName + "Error occurred during defragmentation.", e );
         }
-
-        try
+        catch ( InterruptedException e )
         {
-            // IndexedDiskElementDescriptor de =
-            // dataFileTemp.appendObject( tempDe );
-
-            IndexedDiskElementDescriptor ded = new IndexedDiskElementDescriptor();
-            byte[] data = IndexedDisk.serialize( tempDe );
-            ded.init( dataFileTemp.length(), data );
-            dataFileTemp.write( data, ded.pos );
-
-            if ( log.isDebugEnabled() )
+            log.error( logCacheName + "Threading problem", e );
+        }
+        finally
+        {
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "Optomize: Put to temp disk cache: " + fileName + ", key: " + key + ", ded.pos:" + ded.pos
-                    + ", ded.len:" + ded.len );
+                log.info( logCacheName + "Defragmentation took " + timer.getElapsedTimeString()
+                    + ". File Size (before=" + preFileSize + ") (after=" + postFileSize + ") (truncating to "
+                    + expectedNextPos + ")" );
             }
-
-            keyHashTemp.put( key, ded );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Failed to put to temp disk cache: " + fileName + ", key: " + key, e );
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( fileName + " -- keyHashTemp.size(): " + keyHashTemp.size() + ", keyHash.size(): "
-                + keyHash.size() );
-        }
+        return 0;
     }
 
     /**
-     * Replaces current keyHash, data file, and recylce bin. Temp file passed in
-     * must follow Temp.data naming convention.
-     * @param keyHashTemp
-     *            LRUMap
-     * @param dataFileTemp
-     *            IndexedDisk
+     * Creates a snapshot of the IndexedDiskElementDescriptors in the keyHash and returns them
+     * sorted by position in the dataFile.
+     * <p>
+     * TODO fix values() method on the LRU map.
+     * <p>
+     * @return IndexedDiskElementDescriptor[]
      */
-    private void tempToPrimary( LRUMap keyHashTemp, IndexedDisk dataFileTemp )
+    private IndexedDiskElementDescriptor[] createPositionSortedDescriptorList()
     {
-        try
+        IndexedDiskElementDescriptor[] defragList = new IndexedDiskElementDescriptor[keyHash.size()];
+        Iterator iterator = keyHash.entrySet().iterator();
+        for ( int i = 0; iterator.hasNext(); i++ )
         {
-            // Make dataFileTemp to become dataFile on disk.
-            dataFileTemp.close();
-            dataFile.close();
-            File oldData = new File( rafDir, fileName + ".data" );
-            if ( oldData.exists() )
-            {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( fileName + " -- oldData.length() = " + oldData.length() );
-                }
-                oldData.delete();
-            }
-            File newData = new File( rafDir, fileName + "Temp.data" );
-            File newFileName = new File( rafDir, fileName + ".data" );
-            if ( newData.exists() )
-            {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( fileName + " -- newData.length() = " + newData.length() );
-                }
-
-                boolean success = newData.renameTo( newFileName );
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( " rename success = " + success );
-                }
-            }
-            dataFile = new IndexedDisk( newFileName );
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "1 dataFile.length() " + dataFile.length() );
-            }
-
-            keyHash = keyHashTemp;
-            keyFile.reset();
-            saveKeys();
-
-            // clean up the recycle store
-            recycle = null;
-            recycle = new SortedPreferentialArray( maxKeySize );
+            Object next = iterator.next();
+            defragList[i] = (IndexedDiskElementDescriptor) ( (Map.Entry) next ).getValue();
         }
-        catch ( Exception e )
-        {
-            log.error( "Failed to put to temp disk cache", e );
-        }
+
+        Arrays.sort( defragList, new PositionComparator() );
+
+        return defragList;
     }
 
-    // /////////////////////////////////////////////////////////////////////////////
-    // DEBUG
     /**
      * Returns the current cache size.
      * <p>
@@ -1232,48 +1172,51 @@ public class IndexedDiskCache
         try
         {
             storageLock.readLock().acquire();
-            try
+            if ( dataFile != null )
             {
-                if ( dataFile != null )
-                {
-                    size = dataFile.length();
-                }
-            }
-            finally
-            {
-                storageLock.readLock().release();
+                size = dataFile.length();
             }
         }
         catch ( InterruptedException e )
         {
             // nothing
         }
+        finally
+        {
+            storageLock.readLock().release();
+        }
         return size;
     }
 
     /**
-     * For debugging.
+     * For debugging. This dumps the values by defualt.
      */
     public void dump()
     {
+        dump( true );
+    }
+
+    /**
+     * For debugging.
+     * @param dumpValues A boolean indicating if values should be dumped.
+     */
+    public void dump( boolean dumpValues )
+    {
         if ( log.isDebugEnabled() )
         {
-        log.debug( "[dump] Number of keys: " + keyHash.size() );
+            log.debug( logCacheName + "[dump] Number of keys: " + keyHash.size() );
 
-        Iterator itr = keyHash.entrySet().iterator();
+            Iterator itr = keyHash.entrySet().iterator();
 
-        while ( itr.hasNext() )
-        {
-            Map.Entry e = (Map.Entry) itr.next();
+            while ( itr.hasNext() )
+            {
+                Map.Entry e = (Map.Entry) itr.next();
+                Serializable key = (Serializable) e.getKey();
+                IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) e.getValue();
 
-            Serializable key = (Serializable) e.getKey();
-
-            IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) e.getValue();
-
-            Serializable val = get( key );
-
-            log.debug( "[dump] Disk element, key: " + key + ", val: " + val + ", pos: " + ded.pos );
-        }
+                log.debug( logCacheName + "[dump] Disk element, key: " + key + ", pos: " + ded.pos + ", ded.len"
+                    + ded.len + ( ( dumpValues ) ? ( ", val: " + get( key ) ) : "" ) );
+            }
         }
     }
 
@@ -1287,7 +1230,9 @@ public class IndexedDiskCache
         return getStatistics().toString();
     }
 
-    /*
+    /**
+     * Returns info about the disk cache.
+     * <p>
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
@@ -1338,7 +1283,7 @@ public class IndexedDiskCache
 
         se = new StatElement();
         se.setName( "Optimize Operation Count" );
-        se.setData( "" + this.optCnt );
+        se.setData( "" + this.removeCount );
         elems.add( se );
 
         se = new StatElement();
@@ -1370,10 +1315,46 @@ public class IndexedDiskCache
         return stats;
     }
 
-    // /////////////////////////////////////////////////////////////////////////////
-    // RECYLCE INNER CLASS
     /**
-     * class for recylcing and lru
+     * This is exposed for testing.
+     * <p>
+     * @return Returns the timesOptimized.
+     */
+    protected int getTimesOptimized()
+    {
+        return timesOptimized;
+    }
+
+    /**
+     * Compares IndexedDiskElementDescriptor based on their position.
+     * <p>
+     */
+    private static final class PositionComparator
+        implements Comparator
+    {
+        public int compare( Object o1, Object o2 )
+        {
+            IndexedDiskElementDescriptor ded1 = (IndexedDiskElementDescriptor) o1;
+            IndexedDiskElementDescriptor ded2 = (IndexedDiskElementDescriptor) o2;
+
+            if ( ded1.pos < ded2.pos )
+            {
+                return -1;
+            }
+            else if ( ded1.pos == ded2.pos )
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
+
+    /**
+     * Class for recylcing and lru. This implments the LRU overflow callback, so we can add items to
+     * the recycle bin.
      */
     public class LRUMap
         extends LRUMapJCS
@@ -1386,7 +1367,7 @@ public class IndexedDiskCache
         public String tag = "orig";
 
         /**
-         * 
+         * Default
          */
         public LRUMap()
         {
@@ -1401,34 +1382,27 @@ public class IndexedDiskCache
             super( maxKeySize );
         }
 
+        /**
+         * This is called when the may key size is reaced. The least recently used item will be
+         * passed here. We will store the position and size of the spot on disk in the recycle bin.
+         */
         protected void processRemovedLRU( Object key, Object value )
         {
-            if ( doRecycle )
-            {
-                // reuse the spot
-                IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) value;
-                if ( ded != null )
-                {
-                    recycle.add( ded );
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "recycled ded in LRU" + ded );
-                    }
-                }
-            }
-
+            addToRecycleBin( (IndexedDiskElementDescriptor) value );
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Removing key: '" + key + "' from key store." );
-                log.debug( "Key store size: '" + this.size() + "'." );
+                log.debug( logCacheName + "Removing key: [" + key + "] from key store." );
+                log.debug( logCacheName + "Key store size: [" + this.size() + "]." );
             }
+
+            doOptimizeRealTime();
         }
+
     }
 
     /**
-     * Called on shutdown
-     * <p>
-     * @author Aaron Smuts
+     * Called on shutdown. This gives use a chance to store the keys and to optimize even if the
+     * cache manager's shutdown method was not called.
      */
     class ShutdownHook
         extends Thread
@@ -1437,8 +1411,7 @@ public class IndexedDiskCache
         {
             if ( alive )
             {
-                log.info( "Disk cache was not shutdown properly.  Will try to dispose." );
-
+                log.warn( logCacheName + "Disk cache not shutdown properly, shutting down now." );
                 doDispose();
             }
         }

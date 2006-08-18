@@ -40,7 +40,7 @@ public class IndexedDiskDumper
         attr.setDiskPath( args[0] );
 
         final IndexedDiskCache dc = new IndexedDiskCache( attr );
-        dc.dump();
+        dc.dump( true );
         System.exit( 0 );
     }
 }
