@@ -12,9 +12,9 @@ package org.apache.jcs.utils.timing;
 /**
  * This is a simple timer utility.
  */
-public class StopWatch
+public class ElapsedTimer
 {
-    private static final String SUFFIX = "millis";
+    private static final String SUFFIX = "ms.";
 
     /**
      * Sets the start time when created.

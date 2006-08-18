@@ -1,5 +1,7 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
+import java.io.IOException;
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.engine.CacheElement;
@@ -15,7 +17,6 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 public class IndexDiskCacheUnitTest
     extends TestCase
 {
-
     /**
      * Simply verify that we can put items in the disk cache and retrieve them.
      */
@@ -156,6 +157,99 @@ public class IndexDiskCacheUnitTest
         }
 
         disk.removeAll();
+    }
+
+    /**
+     * Verify that the overlap check returns true when there are no overlaps.
+     */
+    public void testCheckForDedOverlaps_noOverlap()
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testCheckForDedOverlaps_noOverlap" );
+        cattr.setDiskPath( "target/test-sandbox/UnitTest" );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        int numDescriptors = 5;
+        int pos = 0;
+        IndexedDiskElementDescriptor[] sortedDescriptors = new IndexedDiskElementDescriptor[numDescriptors];
+        for ( int i = 0; i < numDescriptors; i++ )
+        {
+            IndexedDiskElementDescriptor descriptor = new IndexedDiskElementDescriptor( pos, i * 2 );
+            pos = pos + ( i * 2 ) + IndexedDisk.RECORD_HEADER;
+            sortedDescriptors[i] = descriptor;
+        }
+
+        // DO WORK
+        boolean result = disk.checkForDedOverlaps( sortedDescriptors );
+
+        // VERIFY
+        assertTrue( "There should be no overlap. it should be ok", result );
+    }
+
+    /**
+     * Verify that the overlap check returns false when there are overlaps.
+     */
+    public void testCheckForDedOverlaps_overlaps()
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testCheckForDedOverlaps_overlaps" );
+        cattr.setDiskPath( "target/test-sandbox/UnitTest" );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        int numDescriptors = 5;
+        int pos = 0;
+        IndexedDiskElementDescriptor[] sortedDescriptors = new IndexedDiskElementDescriptor[numDescriptors];
+        for ( int i = 0; i < numDescriptors; i++ )
+        {
+            IndexedDiskElementDescriptor descriptor = new IndexedDiskElementDescriptor( pos, i * 2 );
+            // don't add the header + IndexedDisk.RECORD_HEADER;
+            pos = pos + ( i * 2 );
+            sortedDescriptors[i] = descriptor;
+        }
+
+        // DO WORK
+        boolean result = disk.checkForDedOverlaps( sortedDescriptors );
+
+        // VERIFY
+        assertFalse( "There should be overlaps. it should be not ok", result );
+    }
+
+    /**
+     * Verify that the file size is as expected.
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void testFileSize()
+        throws IOException, InterruptedException
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testFileSize" );
+        cattr.setDiskPath( "target/test-sandbox/UnitTest" );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        int numberToInsert = 20;
+        int bytes = 24;
+        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+            .getCacheName() );
+
+        for ( int i = 0; i < elements.length; i++ )
+        {
+            disk.doUpdate( elements[i] );
+        }
+
+        Thread.yield();
+        Thread.sleep( 100 );
+        Thread.yield();
+
+        long expectedSize = DiskTestObjectUtil.totalSize( elements, numberToInsert );
+        long resultSize = disk.getDataFileSize();
+
+        System.out.println( "testFileSize stats " + disk.getStats() );
+
+        assertEquals( "Wrong file size", expectedSize, resultSize );
     }
 
 }

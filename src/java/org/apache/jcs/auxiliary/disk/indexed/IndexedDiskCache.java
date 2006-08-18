@@ -37,7 +37,7 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.SortedPreferentialArray;
-import org.apache.jcs.utils.timing.StopWatch;
+import org.apache.jcs.utils.timing.ElapsedTimer;
 
 import EDU.oswego.cs.dl.util.concurrent.ReentrantWriterPreferenceReadWriteLock;
 
@@ -270,7 +270,7 @@ public class IndexedDiskCache
      */
     private boolean checkKeyDataConsistency( boolean checkForDedOverlaps )
     {
-        StopWatch timer = new StopWatch();
+        ElapsedTimer timer = new ElapsedTimer();
         log.debug( logCacheName + "Performing inital consistency check" );
 
         boolean isOk = true;
@@ -318,10 +318,12 @@ public class IndexedDiskCache
     /**
      * Detects any overlapping elements. This expects a sorted list.
      * <p>
+     * The total length of an item is IndexedDisk.RECORD_HEADER + ded.len.
+     * <p>
      * @param sortedDescriptors
      * @return false if there are overlaps.
      */
-    private boolean checkForDedOverlaps( IndexedDiskElementDescriptor[] sortedDescriptors )
+    protected boolean checkForDedOverlaps( IndexedDiskElementDescriptor[] sortedDescriptors )
     {
         long start = System.currentTimeMillis();
         boolean isOk = true;
@@ -990,7 +992,7 @@ public class IndexedDiskCache
      */
     protected void optimizeFile()
     {
-        StopWatch timer = new StopWatch();
+        ElapsedTimer timer = new ElapsedTimer();
         timesOptimized++;
         if ( log.isInfoEnabled() )
         {
@@ -1073,7 +1075,7 @@ public class IndexedDiskCache
      */
     private long defragFile( IndexedDiskElementDescriptor[] defragList, long startingPos )
     {
-        StopWatch timer = new StopWatch();
+        ElapsedTimer timer = new ElapsedTimer();
         long preFileSize = 0;
         long postFileSize = 0;
         long expectedNextPos = 0;
