@@ -53,6 +53,5 @@ public class LRUMapJCS
             log.debug( "Removing key [" + key + "] from key store, value [" + value + "]" );
             log.debug( "Key store size [" + this.size() + "]" );
         }
-
     }
 }

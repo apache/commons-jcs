@@ -19,14 +19,14 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * This is a simple LRUMap. It implements most of the map methods. It is not
- * recommended that you use any but put, get, remove, and clear.
+ * This is a simple LRUMap. It implements most of the map methods. It is not recommended that you
+ * use any but put, get, remove, and clear.
  * <p>
- * Children can implement the processRemovedLRU method if they want to handle
- * the removal of the lest recently used item.
+ * Children can implement the processRemovedLRU method if they want to handle the removal of the
+ * lest recently used item.
  * <p>
- * This class was abstracted out of the LRU Memory cache. Put, remove, and get
- * should be thread safe. It uses a hashtable and our own double linked list.
+ * This class was abstracted out of the LRU Memory cache. Put, remove, and get should be thread
+ * safe. It uses a hashtable and our own double linked list.
  * <p>
  * Locking is done on the instance.
  * <p>
@@ -56,8 +56,8 @@ public class LRUMap
     private int chunkSize = 1;
 
     /**
-     * This creates an unbounded version. Setting the max objects will result in
-     * spooling on subsequent puts.
+     * This creates an unbounded version. Setting the max objects will result in spooling on
+     * subsequent puts.
      * <p>
      * @param maxObjects
      */
@@ -124,8 +124,7 @@ public class LRUMap
     }
 
     /**
-     * This is an expensive operation that determines if the object supplied is
-     * mapped to any key.
+     * This is an expensive operation that determines if the object supplied is mapped to any key.
      * <p>
      * @see java.util.Map#containsValue(java.lang.Object)
      */
@@ -162,10 +161,12 @@ public class LRUMap
     }
 
     /**
-     * This returns a set of entries. Our LRUMapEntry is used since the value
-     * stored in the underlying map is a node in the double linked list. We
-     * wouldn't want to return this to the client, so we construct a new entry
-     * with the payload of the node.
+     * This returns a set of entries. Our LRUMapEntry is used since the value stored in the
+     * underlying map is a node in the double linked list. We wouldn't want to return this to the
+     * client, so we construct a new entry with the payload of the node.
+     * <p>
+     * TODO we should return out own set wrapper, so we can avoid the extra object creation if it
+     * isn't necessary.
      * <p>
      * @see java.util.Map#entrySet()
      */
@@ -238,10 +239,9 @@ public class LRUMap
     }
 
     /**
-     * This gets an element out of the map without adjusting it's posisiton in
-     * the LRU. In other words, this does not count as being used. If the
-     * element is the last item in the list, it will still be the last itme in
-     * the list.
+     * This gets an element out of the map without adjusting it's posisiton in the LRU. In other
+     * words, this does not count as being used. If the element is the last item in the list, it
+     * will still be the last itme in the list.
      * <p>
      * @param key
      * @return Object
@@ -397,8 +397,7 @@ public class LRUMap
      * Adds a new node to the start of the link list.
      * <p>
      * @param key
-     * @param val
-     *            The feature to be added to the First
+     * @param val The feature to be added to the First
      */
     private synchronized void addFirst( Object key, Object val )
     {
@@ -451,8 +450,8 @@ public class LRUMap
     }
 
     /**
-     * Checks to see if all the items that should be in the cache are. Checks
-     * consistency between List and map.
+     * Checks to see if all the items that should be in the cache are. Checks consistency between
+     * List and map.
      */
     protected void verifyCache()
     {
@@ -570,8 +569,7 @@ public class LRUMap
     }
 
     /**
-     * This is called when an item is removed from the LRU. We just log some
-     * information.
+     * This is called when an item is removed from the LRU. We just log some information.
      * <p>
      * Children can implement this method for special behavior.
      * @param key
@@ -587,11 +585,9 @@ public class LRUMap
     }
 
     /**
-     * The chunk size is the number of items to remove when the max is reached.
-     * By default it is 1.
+     * The chunk size is the number of items to remove when the max is reached. By default it is 1.
      * <p>
-     * @param chunkSize
-     *            The chunkSize to set.
+     * @param chunkSize The chunkSize to set.
      */
     public void setChunkSize( int chunkSize )
     {

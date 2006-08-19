@@ -38,6 +38,11 @@ public class IndexedDiskCacheAttributes
     // default to -1, i.e., don't optimize until shutdown
     private int optimizeAtRemoveCount = -1;
 
+    /** Should we optimize on shutdown. */
+    public static final boolean DEFAULT_OPTIMIZE_ON_SHUTDOWN = true;
+    
+    private boolean optimizeOnShutdown = DEFAULT_OPTIMIZE_ON_SHUTDOWN;
+    
     /**
      * Constructor for the DiskCacheAttributes object
      */
@@ -118,6 +123,22 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
+     * @param optimizeOnShutdown The optimizeOnShutdown to set.
+     */
+    public void setOptimizeOnShutdown( boolean optimizeOnShutdown )
+    {
+        this.optimizeOnShutdown = optimizeOnShutdown;
+    }
+
+    /**
+     * @return Returns the optimizeOnShutdown.
+     */
+    public boolean isOptimizeOnShutdown()
+    {
+        return optimizeOnShutdown;
+    }
+
+    /**
      * Returns a copy of the attributes.
      * <p>
      * @return AuxiliaryCacheAttributes
@@ -150,6 +171,7 @@ public class IndexedDiskCacheAttributes
         str.append( "\n maxRecycleBinSize  = " + maxRecycleBinSize );
         str.append( "\n optimizeAtRemoveCount  = " + optimizeAtRemoveCount );
         str.append( "\n shutdownSpoolTimeLimit  = " + shutdownSpoolTimeLimit );
+        str.append( "\n optimizeOnShutdown  = " + optimizeOnShutdown );
         return str.toString();
     }
 

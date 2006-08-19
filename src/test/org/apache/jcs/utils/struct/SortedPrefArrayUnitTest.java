@@ -400,4 +400,55 @@ public class SortedPrefArrayUnitTest
             + " Instead we got " + taken, taken );
     }
 
+    /**
+     * Try taking an item equal to the greatest.  Make the last two the same size
+     */
+    public void testEqualToGreatest_LastTwoSameSize()
+    {
+        int maxSize = 3;
+
+        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        // array.setPreferLarge( false );
+        array.setPreferLarge( true );
+        String[] elem = { "01", "02", "03", "03" };
+
+        // put more than the max in a random order
+        for ( int i = 0; i < elem.length; i++ )
+        {
+            array.add( elem[i] );
+            System.out.println( array.dumpArray() );
+        }
+
+        // DO WORK
+        Comparable taken = array.takeNearestLargerOrEqual( "03" );
+        System.out.println( "testEqualToGreatest_LastTwoSameSize" + array.dumpArray() );
+
+        assertNotNull( "We should have something since the largest element was equal to what we asked for.", taken );
+    }
+    
+    /**
+     * Try taking an item equal to the greatest.  The second to last should be smaller. This verifies the most basic funtionality.
+     */
+    public void testEqualToGreatest()
+    {
+        int maxSize = 3;
+
+        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        // array.setPreferLarge( false );
+        array.setPreferLarge( true );
+        String[] elem = { "01", "02", "03" };
+
+        // put more than the max in a random order
+        for ( int i = 0; i < elem.length; i++ )
+        {
+            array.add( elem[i] );
+            System.out.println( array.dumpArray() );
+        }
+
+        // DO WORK
+        Comparable taken = array.takeNearestLargerOrEqual( "03" );
+        System.out.println( "testEqualToGreatest" + array.dumpArray() );
+
+        assertNotNull( "We should have something since the largest element was equal to what we asked for.", taken );
+    }
 }

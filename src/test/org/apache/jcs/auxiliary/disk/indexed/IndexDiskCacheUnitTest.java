@@ -252,4 +252,161 @@ public class IndexDiskCacheUnitTest
         assertEquals( "Wrong file size", expectedSize, resultSize );
     }
 
+    /**
+     * Verify that items are added to the recyle bin on removal.
+     * <p>
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void testRecyleBinSize()
+        throws IOException, InterruptedException
+    {
+        // SETUP
+        int numberToInsert = 20;
+
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testRecyleBinSize" );
+        cattr.setDiskPath( "target/test-sandbox/UnitTest" );
+        cattr.setMaxRecycleBinSize( numberToInsert );
+        cattr.setOptimizeAtRemoveCount( numberToInsert );
+        cattr.setMaxKeySize( numberToInsert * 2 );
+        cattr.setMaxPurgatorySize( numberToInsert );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        int bytes = 24;
+        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+            .getCacheName() );
+
+        for ( int i = 0; i < elements.length; i++ )
+        {
+            disk.doUpdate( elements[i] );
+        }
+
+        Thread.yield();
+        Thread.sleep( 100 );
+        Thread.yield();
+
+        // remove half
+        int numberToRemove = elements.length / 2;
+        for ( int i = 0; i < numberToRemove; i++ )
+        {
+            disk.doRemove( elements[i].getKey() );
+        }
+
+        // verify that the recyle bin has the correct amount.
+        assertEquals( "The recycle bin should have the number removed.", numberToRemove, disk.getRecyleBinSize() );
+    }
+
+    /**
+     * Verify that items of the same size use recyle bin spots. Setup the receyle bin by removing
+     * some items. Add some of the same size. Verify that the recyle count is the number added.
+     * <p>
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void testRecyleBinUsage()
+        throws IOException, InterruptedException
+    {
+        // SETUP
+        int numberToInsert = 20;
+
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testRecyleBinUsage" );
+        cattr.setDiskPath( "target/test-sandbox/UnitTest" );
+        cattr.setMaxRecycleBinSize( numberToInsert );
+        cattr.setOptimizeAtRemoveCount( numberToInsert );
+        cattr.setMaxKeySize( numberToInsert * 2 );
+        cattr.setMaxPurgatorySize( numberToInsert );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        // we will reuse these
+        int bytes = 24;
+        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+            .getCacheName() );
+
+        // Add some to the disk
+        for ( int i = 0; i < elements.length; i++ )
+        {
+            disk.doUpdate( elements[i] );
+        }
+
+        Thread.yield();
+        Thread.sleep( 100 );
+        Thread.yield();
+
+        // remove half of those added
+        int numberToRemove = elements.length / 2;
+        for ( int i = 0; i < numberToRemove; i++ )
+        {
+            disk.doRemove( elements[i].getKey() );
+        }
+
+        // verify that the recyle bin has the correct amount.
+        assertEquals( "The recycle bin should have the number removed.", numberToRemove, disk.getRecyleBinSize() );
+        
+        // add half as many as we removed.  These should all use spots in the recycle bin.
+        int numberToAdd = numberToRemove / 2;
+        for ( int i = 0; i < numberToAdd; i++ )
+        {
+            disk.doUpdate( elements[i] );
+        }
+        
+        // verify that we used the correct number of spots
+        assertEquals( "The recycle bin should have the number removed." + disk.getStats(), numberToAdd, disk.getRecyleCount() );
+    }
+    
+    /**
+     * Verify that the data size is as expected after a remove and after a put that should use the spots.
+     * <p>
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void testBytesFreeSize()
+        throws IOException, InterruptedException
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testBytesFreeSize" );
+        cattr.setDiskPath( "target/test-sandbox/UnitTest" );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        int numberToInsert = 20;
+        int bytes = 24;
+        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+            .getCacheName() );
+
+        for ( int i = 0; i < elements.length; i++ )
+        {
+            disk.doUpdate( elements[i] );
+        }
+
+        Thread.yield();
+        Thread.sleep( 100 );
+        Thread.yield();
+
+        // remove half of those added
+        int numberToRemove = elements.length / 2;
+        for ( int i = 0; i < numberToRemove; i++ )
+        {
+            disk.doRemove( elements[i].getKey() );
+        }
+        
+        long expectedSize = DiskTestObjectUtil.totalSize( elements, numberToRemove );
+        long resultSize = disk.getBytesFree();
+
+        System.out.println( "testBytesFreeSize stats " + disk.getStats() );
+
+        assertEquals( "Wrong bytes free size" + disk.getStats(), expectedSize, resultSize );
+        
+        // add half as many as we removed.  These should all use spots in the recycle bin.
+        int numberToAdd = numberToRemove / 2;
+        for ( int i = 0; i < numberToAdd; i++ )
+        {
+            disk.doUpdate( elements[i] );
+        }        
+        
+        long expectedSize2 = DiskTestObjectUtil.totalSize( elements, numberToAdd );
+        long resultSize2 = disk.getBytesFree();
+        assertEquals( "Wrong bytes free size" + disk.getStats(), expectedSize2, resultSize2 );        
+    }    
 }

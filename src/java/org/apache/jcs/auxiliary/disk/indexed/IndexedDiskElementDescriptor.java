@@ -18,7 +18,6 @@ import java.io.Serializable;
 public class IndexedDiskElementDescriptor
     implements Serializable, Comparable
 {
-
     private static final long serialVersionUID = -3029163572847659450L;
 
     /** Position of the cache data entry on disk. */

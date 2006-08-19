@@ -94,8 +94,8 @@ public abstract class AbstractDiskCache
      */
     protected int purgHits = 0;
 
-    // we lock here, so that we cannot get an update after a remove all
-    // an individual removeal locks the item.
+    // we lock here, so that we cannot get an update after a remove all.
+    // an individual removal locks the item.
     private WriterPreferenceReadWriteLock removeAllLock = new WriterPreferenceReadWriteLock();
 
     // ----------------------------------------------------------- constructors

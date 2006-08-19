@@ -1,0 +1,130 @@
+package org.apache.jcs.auxiliary.disk.indexed;
+
+import java.text.DecimalFormat;
+import java.util.Random;
+
+import junit.framework.TestCase;
+
+import org.apache.jcs.JCS;
+import org.apache.jcs.utils.timing.ElapsedTimer;
+
+/**
+ * This allows you to put thousands of large objects into the disk cache and to force removes to
+ * trigger optimizations along the way.
+ * <p>
+ * @author Aaron Smuts
+ */
+public class IndexedDiskCacheSteadyLoadTest
+    extends TestCase
+{
+    private static final String LOG_DIVIDER = "---------------------------";
+
+    private static Runtime rt = Runtime.getRuntime();
+
+    private static DecimalFormat format = new DecimalFormat( "#,###" );
+
+    /**
+     * Insert 2000 wait 1 second, repeat. Average 1000 / sec.
+     * <p>
+     * @throws Exception
+     */
+    public void testRunSteadyLoadTest()
+        throws Exception
+    {
+        JCS.setConfigFilename( "/TestDiskCacheSteadyLoad.ccf" );
+
+        System.out.println( "runSteadyLoadTest" );
+
+        logMemoryUsage();
+
+        int numPerRun = 200;
+        long pauseBetweenRuns = 1000;
+        int runCount = 0;
+        int runs = 1000;
+        int upperKB = 50;
+
+        JCS jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
+
+        ElapsedTimer timer = new ElapsedTimer();
+        int numToGet = numPerRun * ( runs / 10 );
+        for ( int i = 0; i < numToGet; i++ )
+        {
+            jcs.get( String.valueOf( i ) );
+        }
+        System.out.println( LOG_DIVIDER );
+        System.out.println( "After getting " + numToGet );
+        System.out.println( "Elapsed " + timer.getElapsedTimeString() );
+        logMemoryUsage();
+
+        jcs.clear();
+        Thread.sleep( 3000 );
+        System.out.println( LOG_DIVIDER );
+        System.out.println( "Start putting" );
+
+        long totalSize = 0;
+        int totalPut = 0;
+
+        Random random = new Random( 89 );
+        while ( runCount < runs )
+        {
+            runCount++;
+            for ( int i = 0; i < numPerRun; i++ )
+            {
+                // 1/2 upper to upperKB-4 KB
+                int kiloBytes = Math.max( upperKB / 2, random.nextInt( upperKB ) );
+                int bytes = ( kiloBytes ) * 1024;
+                totalSize += bytes;
+                totalPut++;
+                DiskTestObject object = new DiskTestObject( new Integer( i ), new byte[bytes] );
+                jcs.put( String.valueOf( totalPut ), object );
+            }
+
+            // remove half of those inserted the previous run
+            if ( runCount > 1 )
+            {
+                for ( int j = ( ( totalPut - numPerRun ) - ( numPerRun / 2 ) ); j < ( totalPut - numPerRun ); j++ )
+                {
+                    jcs.remove( String.valueOf( j ) );
+                }
+            }
+
+            Thread.sleep( pauseBetweenRuns );
+            if ( runCount % 1 == 0 )
+            {
+                System.out.println( LOG_DIVIDER );
+                System.out.println( "Elapsed " + timer.getElapsedTimeString() );
+                System.out.println( "Run count: " + runCount + " Average size: " + ( totalSize / totalPut ) + "\n"
+                    + jcs.getStats() );
+                logMemoryUsage();
+            }
+        }
+
+        Thread.sleep( 3000 );
+        System.out.println( jcs.getStats() );
+        logMemoryUsage();
+
+        Thread.sleep( 10000 );
+        System.out.println( jcs.getStats() );
+        logMemoryUsage();
+
+        System.gc();
+        Thread.sleep( 3000 );
+        System.gc();
+        System.out.println( jcs.getStats() );
+        logMemoryUsage();
+    }
+
+    /**
+     * Logs the memory usage.
+     */
+    private static void logMemoryUsage()
+    {
+        long byte2MB = 1024 * 1024;
+        long total = rt.totalMemory() / byte2MB;
+        long free = rt.freeMemory() / byte2MB;
+        long used = total - free;
+        System.out.println( LOG_DIVIDER );
+        System.out.println( "Memory:" + " Used:" + format.format( used ) + "MB" + " Free:" + format.format( free )
+            + "MB" + " Total:" + format.format( total ) + "MB" );
+    }
+}

@@ -97,6 +97,9 @@ public class IndexedDiskCache
 
     private int startupSize = 0;
 
+    // the number of bytes free on disk.
+    private long bytesFree = 0;
+
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechansism.
      */
@@ -112,19 +115,18 @@ public class IndexedDiskCache
         super( cattr );
 
         String rootDirName = cattr.getDiskPath();
-        maxKeySize = cattr.getMaxKeySize();
+        this.maxKeySize = cattr.getMaxKeySize();
 
-        // TODO: These should be separate configuration attributes
-        isRealTimeOptimizationEnabled = cattr.getOptimizeAtRemoveCount() > 0;
-        isShutdownOptimizationEnabled = cattr.getOptimizeAtRemoveCount() >= 0;
+        this.isRealTimeOptimizationEnabled = cattr.getOptimizeAtRemoveCount() > 0;
+        this.isShutdownOptimizationEnabled = cattr.isOptimizeOnShutdown();
 
         this.cattr = cattr;
 
         this.logCacheName = "Region [" + getCacheName() + "] ";
         this.fileName = getCacheName();
 
-        rafDir = new File( rootDirName );
-        rafDir.mkdirs();
+        this.rafDir = new File( rootDirName );
+        this.rafDir.mkdirs();
 
         if ( log.isInfoEnabled() )
         {
@@ -133,9 +135,9 @@ public class IndexedDiskCache
 
         try
         {
-            dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ) );
+            this.dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ) );
 
-            keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ) );
+            this.keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ) );
 
             // If the key file has contents, try to initialize the keys
             // from it. In no keys are loaded reset the data file.
@@ -429,6 +431,9 @@ public class IndexedDiskCache
                 }
                 else
                 {
+                    // we need this to compare in the recycle bin
+                    ded = new IndexedDiskElementDescriptor( dataFile.length(), data.length );
+
                     if ( doRecycle )
                     {
                         IndexedDiskElementDescriptor rep = (IndexedDiskElementDescriptor) recycle
@@ -438,18 +443,13 @@ public class IndexedDiskCache
                             ded = rep;
                             ded.len = data.length;
                             recycleCnt++;
+                            this.adjustBytesFree( ded, false );
                             if ( log.isDebugEnabled() )
                             {
                                 log.debug( logCacheName + "using recycled ded " + ded.pos + " rep.len = " + rep.len
                                     + " ded.len = " + ded.len );
                             }
                         }
-                    }
-
-                    // We couldn't replace or update anything so it is ok to create a new one.
-                    if ( ded == null )
-                    {
-                        ded = new IndexedDiskElementDescriptor( dataFile.length(), data.length );
                     }
 
                     // Put it in the map
@@ -653,6 +653,7 @@ public class IndexedDiskCache
                         addToRecycleBin( ded );
                         iter.remove();
                         removed = true;
+                        // TODO this needs to update the rmove count separately
                     }
                 }
             }
@@ -703,8 +704,12 @@ public class IndexedDiskCache
             reset();
         }
 
-        // this increments the removecount
-        doOptimizeRealTime();
+        // this increments the removecount.
+        // there is no reason to call this if an item was not removed.
+        if ( removed )
+        {
+            doOptimizeRealTime();
+        }
 
         return removed;
     }
@@ -882,7 +887,10 @@ public class IndexedDiskCache
 
         try
         {
-            log.debug( logCacheName + "Closing files, base filename: " + fileName );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( logCacheName + "Closing files, base filename: " + fileName );
+            }
             dataFile.close();
             dataFile = null;
             keyFile.close();
@@ -900,22 +908,27 @@ public class IndexedDiskCache
     }
 
     /**
-     * Add descfriptor to recycle bin.
+     * Add descriptor to recycle bin if it is not null. Adds the length of the item to the bytes
+     * free.
      * <p>
      * @param ded
      */
     private void addToRecycleBin( IndexedDiskElementDescriptor ded )
     {
-        if ( doRecycle )
+        // reuse the spot
+        if ( ded != null )
         {
-            // reuse the spot
-            if ( ded != null )
+            this.adjustBytesFree( ded, true );
+
+            if ( doRecycle )
             {
+
                 recycle.add( ded );
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( logCacheName + "recycled ded" + ded );
                 }
+
             }
         }
     }
@@ -1047,6 +1060,7 @@ public class IndexedDiskCache
         {
             // RESTORE NORMAL OPERATION
             removeCount = 0;
+            bytesFree = 0;
             initRecycleBin();
             queuedPutList.clear();
             queueInput = false;
@@ -1158,6 +1172,60 @@ public class IndexedDiskCache
     public int getSize()
     {
         return keyHash.size();
+    }
+
+    /**
+     * Returns the size of the recyclebin in number of elements.
+     * <p>
+     * @return The number of items in the bin.
+     */
+    protected int getRecyleBinSize()
+    {
+        return this.recycle.size();
+    }
+
+    /**
+     * Returns the number of times we have used spots from the recycle bin.
+     * <p>
+     * @return The number of spots used.
+     */
+    protected int getRecyleCount()
+    {
+        return this.recycleCnt;
+    }
+
+    /**
+     * Returns the number of bytes that are free. When an item is removed, its length is recorded.
+     * When a spot is used form the recycle bin, the length of the item stored is recorded.
+     * <p>
+     * @return The number bytes free on the disk file.
+     */
+    protected long getBytesFree()
+    {
+        return this.bytesFree;
+    }
+
+    /**
+     * To subtract you can pass in false for add..
+     * <p>
+     * @param ded 
+     * @param add 
+     */
+    private synchronized void adjustBytesFree( IndexedDiskElementDescriptor ded, boolean add )
+    {
+        if ( ded != null )
+        {
+            int amount = ded.len + IndexedDisk.RECORD_HEADER;
+
+            if ( add )
+            {
+                this.bytesFree += amount;
+            }
+            else
+            {
+                this.bytesFree -= amount;
+            }
+        }
     }
 
     /**
@@ -1284,6 +1352,11 @@ public class IndexedDiskCache
         }
 
         se = new StatElement();
+        se.setName( "Bytes Free" );
+        se.setData( "" + this.bytesFree );
+        elems.add( se );
+
+        se = new StatElement();
         se.setName( "Optimize Operation Count" );
         se.setData( "" + this.removeCount );
         elems.add( se );
@@ -1296,6 +1369,11 @@ public class IndexedDiskCache
         se = new StatElement();
         se.setName( "Recycle Count" );
         se.setData( "" + this.recycleCnt );
+        elems.add( se );
+
+        se = new StatElement();
+        se.setName( "Recycle Bin Size" );
+        se.setData( "" + this.recycle.size() );
         elems.add( se );
 
         se = new StatElement();
@@ -1399,7 +1477,6 @@ public class IndexedDiskCache
 
             doOptimizeRealTime();
         }
-
     }
 
     /**
