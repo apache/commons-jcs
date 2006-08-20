@@ -878,7 +878,7 @@ public class IndexedDiskCache
                 log.error( logCacheName + "Unable to join current optimization thread.", e );
             }
         }
-        else if ( isShutdownOptimizationEnabled )
+        else if ( isShutdownOptimizationEnabled && this.getBytesFree() > 0 )
         {
             optimizeFile();
         }
