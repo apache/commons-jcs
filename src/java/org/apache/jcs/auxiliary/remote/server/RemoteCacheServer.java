@@ -751,7 +751,7 @@ class RemoteCacheServer
 
     /**
      * Frees the specified remote cache.
-     * 
+     * <p>
      * @param cacheName
      * @throws IOException
      */
@@ -763,7 +763,7 @@ class RemoteCacheServer
 
     /**
      * Frees the specified remote cache.
-     * 
+     * <p>
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -925,8 +925,7 @@ class RemoteCacheServer
                             + listenerAddress + "]" );
                     }
                     // should confirm the the host is the same as we have on
-                    // record, just in case
-                    // a client has made a mistake.
+                    // record, just in case a client has made a mistake.
                 }
 
                 // relate the type to an id
@@ -948,13 +947,11 @@ class RemoteCacheServer
                 log.info( "Region " + cacheName + "'s listener size = " + cacheDesc.eventQMap.size() );
             }
         }
-        // end sync
-        return;
     }
 
     /**
      * Subscribes to all remote caches.
-     * 
+     * <p>
      * @param listener
      *            The feature to be added to the CacheListener attribute
      * @throws IOException
@@ -972,14 +969,14 @@ class RemoteCacheServer
                 log.debug( "Adding listener for cache [" + cacheName + "]" );
             }
         }
-        return;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String,
-     *      org.apache.jcs.engine.behavior.ICacheListener)
+    /**
+     * Unsibscribe this listener from this region. If the listener is
+     * registered, it will be removed from the event queue map list.
+     * <p>
+     * @param cacheName
+     * @param listenerId
      */
     public void removeCacheListener( String cacheName, ICacheListener listener )
         throws IOException
@@ -990,13 +987,12 @@ class RemoteCacheServer
     /**
      * Unsibscribe this listener from this region. If the listener is
      * registered, it will be removed from the event queue map list.
-     * 
+     * <p>
      * @param cacheName
      * @param listenerId
      */
     public void removeCacheListener( String cacheName, long listenerId )
     {
-
         if ( log.isInfoEnabled() )
         {
             log.info( "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]" );
@@ -1034,7 +1030,7 @@ class RemoteCacheServer
 
     /**
      * Unsubscribes from all remote caches.
-     * 
+     * <p>
      * @param listener
      * @throws IOException
      */
@@ -1046,9 +1042,9 @@ class RemoteCacheServer
             String cacheName = (String) en.nextElement();
             removeCacheListener( cacheName, listener );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "Removing listener for cache " + cacheName );
+                log.info( "Removing listener for cache [" + cacheName + "]" );
             }
         }
         return;
@@ -1059,7 +1055,7 @@ class RemoteCacheServer
 
     /**
      * Shuts down the remote server.
-     * 
+     * <p>
      * @throws IOException
      */
     public void shutdown()

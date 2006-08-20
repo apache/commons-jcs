@@ -134,6 +134,8 @@ public class CacheWatchRepairable
     }
 
     /** 
+     * Tell the server to release us.
+     * <p>
      * @param cacheName
      * @param obj
      * @throws IOException
@@ -141,6 +143,10 @@ public class CacheWatchRepairable
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
     {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "removeCacheListener, cacheName [" + cacheName + "]" );
+        }
         // Record the removal locally, regardless of whether the remote
         // remove-listener
         // operation succeeds or fails.
@@ -162,6 +168,11 @@ public class CacheWatchRepairable
     public void removeCacheListener( ICacheListener obj )
         throws IOException
     {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "removeCacheListener, ICacheListener [" + obj + "]" );
+        }
+        
         // Record the removal locally, regardless of whether the remote
         // remove-listener operation succeeds or fails.
         synchronized ( cacheMap )

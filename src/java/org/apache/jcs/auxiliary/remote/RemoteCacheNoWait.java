@@ -217,8 +217,8 @@ public class RemoteCacheNoWait
     /**
      * Returns the asyn cache status. An error status indicates either the
      * remote connection is not available, or the asyn queue has been
-     * unexpectedly destroyed. No remote invokation.
-     * 
+     * unexpectedly destroyed. No remote invocation.
+     * <p>
      * @return The status value
      */
     public int getStatus()
@@ -228,7 +228,7 @@ public class RemoteCacheNoWait
 
     /**
      * Gets the cacheName attribute of the RemoteCacheNoWait object
-     * 
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -239,7 +239,7 @@ public class RemoteCacheNoWait
     /**
      * Replaces the remote cache service handle with the given handle and reset
      * the event queue by starting up a new instance.
-     * 
+     * <p>
      * @param remote
      */
     public void fixCache( IRemoteCacheService remote )

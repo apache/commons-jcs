@@ -866,6 +866,11 @@ public class CompositeCache
      */
     public synchronized void dispose( boolean fromRemote )
     {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "In DISPOSE, [" + this.cacheName + "] fromRemote [" + fromRemote + "]" );
+        }
+        
         // If already disposed, return immediately
         if ( !alive )
         {
@@ -887,9 +892,13 @@ public class CompositeCache
                 // - The auxilliary is not alive
                 // - The auxilliary is remote and the invocation was remote
 
-                if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE || fromRemote
-                    && aux.getCacheType() == REMOTE_CACHE )
+                if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE || ( fromRemote
+                    && aux.getCacheType() == REMOTE_CACHE ) )
                 {
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "In DISPOSE, [" + this.cacheName + "] SKIPPING auxiliary [" + aux + "] fromRemote [" + fromRemote + "]" );
+                    }
                     continue;
                 }
 
@@ -902,7 +911,10 @@ public class CompositeCache
                 {
                     Iterator itr = memCache.getIterator();
 
-                    log.info( "In dispose, " + this.cacheName + " memCache.size = " + memCache.getSize() );
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "In DISPOSE, [" + this.cacheName + "] memCache.size = " + memCache.getSize() + " auxiliary [" + aux + "]" );
+                    }
 
                     int cnt = 0;
                     while ( itr.hasNext() )
@@ -926,7 +938,10 @@ public class CompositeCache
                         }
                     }
 
-                    log.info( "In dispose, " + this.cacheName + " put " + cnt + " into auxiliary " + aux );
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "In DISPOSE, [" + this.cacheName + "] put " + cnt + " into auxiliary " + aux );
+                    }
                 }
 
                 // Dispose of the auxiliary
@@ -938,7 +953,10 @@ public class CompositeCache
             }
         }
 
-        log.info( "In dispose, " + this.cacheName + " disposing of memory cache." );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "In DISPOSE, [" + this.cacheName + "] disposing of memory cache." );
+        }
         try
         {
             memCache.dispose();

@@ -93,11 +93,9 @@ public class RemoteCacheFailoverRunner
      * <p>
      * The primary server is the first server defines in the FailoverServers
      * list.
-     * 
      */
     public void run()
     {
-
         // start the main work of connecting to a failover and then restoring
         // the primary.
         connectAndRestore();
@@ -122,7 +120,6 @@ public class RemoteCacheFailoverRunner
      * This is the main loop. If there are failovers define, then this will
      * continue until the primary is re-connected. If no failovers are defined,
      * this will exit automatically.
-     * 
      */
     private void connectAndRestore()
     {

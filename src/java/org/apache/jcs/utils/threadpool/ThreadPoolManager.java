@@ -26,6 +26,7 @@ import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.Channel;
 import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This manages threadpools for an application using Doug Lea's Util Concurrent
@@ -135,6 +136,7 @@ public class ThreadPoolManager
             }
             queue = new BoundedBuffer( config.getBoundarySize() );
             pool = new PooledExecutor( queue, config.getMaximumPoolSize() );
+            pool.setThreadFactory( new MyThreadFactory() );
         }
         else
         {
@@ -439,4 +441,25 @@ public class ThreadPoolManager
 
         return config;
     }
+    
+    /**
+     * Allows us to set the daemon status on the threads.
+     * <p>
+     * @author aaronsm
+     */
+    class MyThreadFactory
+        implements ThreadFactory
+    {
+        /*
+         * (non-Javadoc)
+         * 
+         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            t.setDaemon( true );
+            return t;
+        }
+    }      
 }

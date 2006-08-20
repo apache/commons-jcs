@@ -306,4 +306,14 @@ public class RemoteCacheClientTester
         // TODO Auto-generated method stub
         return null;
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener#dispose()
+     */
+    public void dispose()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }

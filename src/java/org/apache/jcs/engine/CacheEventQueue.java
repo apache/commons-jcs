@@ -541,9 +541,9 @@ public class CacheEventQueue
                     event.run();
                 }
             }
-            if ( log.isInfoEnabled() )
+            if ( log.isDebugEnabled() )
             {
-                log.info( "QProcessor exiting for " + queue );
+                log.debug( "QProcessor exiting for " + queue );
             }
         }
     }

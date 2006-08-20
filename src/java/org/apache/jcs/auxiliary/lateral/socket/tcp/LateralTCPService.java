@@ -1,14 +1,12 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.BufferedReader;
@@ -50,8 +48,7 @@ public class LateralTCPService
     /**
      * Constructor for the LateralTCPService object
      * <p>
-     * @param lca
-     *            ITCPLateralCacheAttributes
+     * @param lca ITCPLateralCacheAttributes
      * @exception IOException
      */
     public LateralTCPService( ITCPLateralCacheAttributes lca )
@@ -66,7 +63,7 @@ public class LateralTCPService
 
             if ( log.isInfoEnabled() )
             {
-                log.debug( "Created sender to [" + lca.getTcpServer() + "]" );                
+                log.debug( "Created sender to [" + lca.getTcpServer() + "]" );
             }
         }
         catch ( IOException e )
@@ -91,10 +88,9 @@ public class LateralTCPService
     }
 
     /**
-     * If put is allowed, we will issue a put. If issue put on remove
-     * is configured, we will issue a remove. Either way, we create a lateral
-     * element descriptor, which is essentially a JCS TCP packet. It describes
-     * what operation the receiver should take when it gets the packet.
+     * If put is allowed, we will issue a put. If issue put on remove is configured, we will issue a
+     * remove. Either way, we create a lateral element descriptor, which is essentially a JCS TCP
+     * packet. It describes what operation the receiver should take when it gets the packet.
      * <p>
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
      *      long)
@@ -179,13 +175,13 @@ public class LateralTCPService
     /**
      * Will close the connection.
      * <p>
-     * @param cache
+     * @param cacheName
      * @throws IOException
      */
-    public void dispose( String cache )
+    public void dispose( String cacheName )
         throws IOException
     {
-        sender.dispose( cache );
+        sender.dispose( cacheName );
     }
 
     /**
@@ -210,8 +206,7 @@ public class LateralTCPService
 
     /*
      * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String,
-     *      java.io.Serializable)
+     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String, java.io.Serializable)
      */
     public ICacheElement get( String cacheName, Serializable key )
         throws IOException
@@ -233,8 +228,7 @@ public class LateralTCPService
     }
 
     /**
-     * Gets the set of keys of objects currently in the group throws
-     * UnsupportedOperationException
+     * Gets the set of keys of objects currently in the group throws UnsupportedOperationException
      * <p>
      * @param cacheName
      * @param group
@@ -351,8 +345,7 @@ public class LateralTCPService
     }
 
     /**
-     * @param listernId
-     *            The listernId to set.
+     * @param listernId The listernId to set.
      */
     protected void setListenerId( long listernId )
     {
@@ -368,8 +361,7 @@ public class LateralTCPService
     }
 
     /**
-     * @param tcpLateralCacheAttributes
-     *            The tcpLateralCacheAttributes to set.
+     * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
      */
     public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
     {

@@ -669,7 +669,7 @@ public class CompositeCacheManager
      * region shutdown. Some auxiliaries are global. They will need to track
      * when every region has shutdown before doing things like closing the
      * socket with a lateral.
-     * 
+     * <p>
      * @param observer
      */
     public void registerShutdownObserver( IShutdownObserver observer )

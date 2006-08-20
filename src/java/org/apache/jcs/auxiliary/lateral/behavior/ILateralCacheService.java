@@ -24,7 +24,6 @@ import org.apache.jcs.engine.behavior.ICacheService;
 public interface ILateralCacheService
     extends ICacheService
 {
-
     /**
      * Puts a cache item to the cache.
      * <p>

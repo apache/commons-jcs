@@ -1,19 +1,12 @@
 package org.apache.jcs.auxiliary.remote;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -49,13 +42,11 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
 import EDU.oswego.cs.dl.util.concurrent.Callable;
 import EDU.oswego.cs.dl.util.concurrent.FutureResult;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
 
 /**
- * Client proxy for an RMI remote cache. This handles gets, updates, and
- * removes. It also initiates failover recovery when an error is encountered.
- * 
+ * Client proxy for an RMI remote cache. This handles gets, updates, and removes. It also initiates
+ * failover recovery when an error is encountered.
  */
 public class RemoteCache
     implements ICache
@@ -72,7 +63,7 @@ public class RemoteCache
 
     private IRemoteCacheListener listener;
 
-    IElementAttributes attr = null;
+    private IElementAttributes attr = null;
 
     private ThreadPool pool = null;
 
@@ -81,12 +72,11 @@ public class RemoteCache
     private IElementSerializer elementSerializer = new StandardSerializer();
 
     /**
-     * Constructor for the RemoteCache object. This object communicates with a
-     * remote cache server. One of these exists for each region. This also holds
-     * a reference to a listener. The same listener is used for all regions for
-     * one remote server. Holding a reference to the listener allows this object
-     * to know the listener id assigned by the remote cache.
-     * 
+     * Constructor for the RemoteCache object. This object communicates with a remote cache server.
+     * One of these exists for each region. This also holds a reference to a listener. The same
+     * listener is used for all regions for one remote server. Holding a reference to the listener
+     * allows this object to know the listener id assigned by the remote cache.
+     * <p>
      * @param cattr
      * @param remote
      * @param listener
@@ -122,7 +112,6 @@ public class RemoteCache
             if ( pool != null )
             {
                 usePoolForGet = true;
-                pool.getPool().setThreadFactory( new MyThreadFactory() );
             }
         }
 
@@ -161,10 +150,9 @@ public class RemoteCache
     }
 
     /**
-     * Sets the attributes attribute of the RemoteCache object
-     * 
-     * @param attr
-     *            The new attributes value
+     * Sets the attributes attribute of the RemoteCache object.
+     * <p>
+     * @param attr The new attributes value
      */
     public void setElementAttributes( IElementAttributes attr )
     {
@@ -172,8 +160,8 @@ public class RemoteCache
     }
 
     /**
-     * Gets the attributes attribute of the RemoteCache object
-     * 
+     * Gets the attributes attribute of the RemoteCache object.
+     * <p>
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes()
@@ -181,9 +169,12 @@ public class RemoteCache
         return this.attr;
     }
 
-    /*
+    /**
+     * Serializes the object and then calls update on the remote server with the byte array. The
+     * byte array is wrapped in a ICacheElementSerialized. This allows the remote server to operate
+     * without any knowledge of caches classes.
+     * <p>
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void update( ICacheElement ce )
@@ -214,7 +205,7 @@ public class RemoteCache
                 }
                 catch ( Exception ex )
                 {
-                    handleException( ex, "Failed to put " + ce.getKey() + " to " + ce.getCacheName() );
+                    handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
                 }
             }
             else
@@ -228,11 +219,14 @@ public class RemoteCache
     }
 
     /**
-     * Synchronously get from the remote cache; if failed, replace the remote
-     * handle with a zombie.
-     * 
+     * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
+     * <p>
      * Use threadpool to timeout is a value is set for GetTimeoutMillis
-     * 
+     * <p>
+     * If we are a cluster client, we need to leave the Element in its serilaized form. Cluster
+     * cients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
+     * other remote servers.
+     * <p>
      * @param key
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
@@ -246,21 +240,19 @@ public class RemoteCache
         {
             if ( usePoolForGet )
             {
-                retVal = getUsingPool( sanitized( key ) );
+                retVal = getUsingPool( key );
             }
             else
             {
-                retVal = remote.get( cacheName, sanitized( key ), getListenerId() );
+                retVal = remote.get( cacheName, key, getListenerId() );
             }
 
             // Eventually the instance of will not be necessary.
             if ( retVal != null && retVal instanceof ICacheElementSerialized )
             {
                 // Never try to deserialize if you are a cluster client. Cluster
-                // clients
-                // intra-remote cache communicators. Remote caches are assumed
-                // to have no
-                // ability to deserialze the objects.
+                // clients are merely intra-remote cache communicators. Remote caches are assumed
+                // to have no ability to deserialze the objects.
                 if ( this.irca.getRemoteType() != IRemoteCacheAttributes.CLUSTER )
                 {
                     retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) retVal,
@@ -270,7 +262,7 @@ public class RemoteCache
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to get " + key + " from " + cacheName );
+            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]" );
         }
 
         return retVal;
@@ -278,7 +270,7 @@ public class RemoteCache
 
     /**
      * This allows gets to timeout in case of remote server machine shutdown.
-     * 
+     * <p>
      * @param key
      * @return
      * @throws IOException
@@ -338,7 +330,7 @@ public class RemoteCache
 
     /**
      * Returns all the keys for a group.
-     * 
+     * <p>
      * @param groupName
      * @return
      * @throws java.rmi.RemoteException
@@ -350,33 +342,9 @@ public class RemoteCache
     }
 
     /**
-     * Wraps a non JDK object into a MarshalledObject, so that we can avoid
-     * unmarshalling the real object on the remote side. This technique offers
-     * the benefit of surviving incompatible class versions without the need to
-     * restart the remote cache server.
-     * 
-     * @param s
-     * @return A sanitized version of the key.
-     * @throws IOException
-     */
-    private Serializable sanitized( Serializable s )
-        throws IOException
-    {
-        // In the unlikely case when the passed in object is a MarshalledObjct,
-        // we again wrap
-        // it into a new MarsahlledObject for "escape" purposes during the get
-        // operation.
-        // return s.getClass().getName().startsWith("java.") && !(s instanceof
-        // MarshalledObject) ? s : new MarshalledObject(s);
-
-        // avoid this step for now, [problem with group id wrapper]
-        return s;
-    }
-
-    /**
-     * Synchronously remove from the remote cache; if failed, replace the remote
-     * handle with a zombie.
-     * 
+     * Synchronously remove from the remote cache; if failed, replace the remote handle with a
+     * zombie.
+     * <p>
      * @param key
      * @return boolean, whether or not the item was removed
      * @throws IOException
@@ -386,7 +354,6 @@ public class RemoteCache
     {
         if ( true )
         {
-
             if ( !this.irca.getGetOnly() )
             {
                 if ( log.isDebugEnabled() )
@@ -395,7 +362,7 @@ public class RemoteCache
                 }
                 try
                 {
-                    remote.remove( cacheName, sanitized( key ), getListenerId() );
+                    remote.remove( cacheName, key, getListenerId() );
                 }
                 catch ( Exception ex )
                 {
@@ -407,9 +374,9 @@ public class RemoteCache
     }
 
     /**
-     * Synchronously removeAll from the remote cache; if failed, replace the
-     * remote handle with a zombie.
-     * 
+     * Synchronously removeAll from the remote cache; if failed, replace the remote handle with a
+     * zombie.
+     * <p>
      * @throws IOException
      */
     public void removeAll()
@@ -432,9 +399,8 @@ public class RemoteCache
     }
 
     /**
-     * Synchronously dispose the remote cache; if failed, replace the remote
-     * handle with a zombie.
-     * 
+     * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.
+     * <p>
      * @throws IOException
      */
     public void dispose()
@@ -446,19 +412,18 @@ public class RemoteCache
         }
         try
         {
-            remote.dispose( cacheName );
+            listener.dispose();
         }
         catch ( Exception ex )
         {
-            log.error( "couldn't dispose", ex );
-            handleException( ex, "Failed to dispose " + cacheName );
+            log.error( "Couldn't dispose", ex );
+            handleException( ex, "Failed to dispose [" + cacheName + "]" );
         }
     }
 
     /**
-     * Returns the cache status. An error status indicates the remote connection
-     * is not available.
-     * 
+     * Returns the cache status. An error status indicates the remote connection is not available.
+     * <p>
      * @return The status value
      */
     public int getStatus()
@@ -467,8 +432,8 @@ public class RemoteCache
     }
 
     /**
-     * Gets the stats attribute of the RemoteCache object
-     * 
+     * Gets the stats attribute of the RemoteCache object.
+     * <p>
      * @return The stats value
      */
     public String getStats()
@@ -477,7 +442,6 @@ public class RemoteCache
     }
 
     /**
-     * 
      * @return IStats object
      */
     public IStats getStatistics()
@@ -533,7 +497,6 @@ public class RemoteCache
 
     /**
      * Returns the current cache size.
-     * 
      * @return The size value
      */
     public int getSize()
@@ -543,7 +506,6 @@ public class RemoteCache
 
     /**
      * Gets the cacheType attribute of the RemoteCache object
-     * 
      * @return The cacheType value
      */
     public int getCacheType()
@@ -552,8 +514,8 @@ public class RemoteCache
     }
 
     /**
-     * Gets the cacheName attribute of the RemoteCache object
-     * 
+     * Gets the cacheName attribute of the RemoteCache object.
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -563,10 +525,8 @@ public class RemoteCache
 
     /**
      * Replaces the current remote cache service handle with the given handle.
-     * 
-     * @param remote
-     *            IRemoteCacheService -- the remote server or proxy to the
-     *            remote server
+     * <p>
+     * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
      */
     public void fixCache( IRemoteCacheService remote )
     {
@@ -575,9 +535,9 @@ public class RemoteCache
     }
 
     /**
-     * Handles exception by disabling the remote cache service before
-     * re-throwing the exception in the form of an IOException.
-     * 
+     * Handles exception by disabling the remote cache service before re-throwing the exception in
+     * the form of an IOException.
+     * <p>
      * @param ex
      * @param msg
      * @throws IOException
@@ -630,12 +590,10 @@ public class RemoteCache
     }
 
     /**
-     * let the remote cache set a listener_id. Since there is only one listerenr
-     * for all the regions and every region gets registered? the id shouldn't be
-     * set if it isn't zero. If it is we assume that it is a reconnect.
-     * 
-     * @param id
-     *            The new listenerId value
+     * let the remote cache set a listener_id. Since there is only one listerenr for all the regions
+     * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
+     * assume that it is a reconnect.
+     * @param id The new listenerId value
      */
     public void setListenerId( long id )
     {
@@ -656,7 +614,6 @@ public class RemoteCache
 
     /**
      * Gets the listenerId attribute of the RemoteCacheListener object
-     * 
      * @return The listenerId value
      */
     public long getListenerId()
@@ -677,9 +634,8 @@ public class RemoteCache
     }
 
     /**
-     * Allows other member of this package to access the listerner. This is
-     * mainly needed for deregistering alistener.
-     * 
+     * Allows other member of this package to access the listerner. This is mainly needed for
+     * deregistering alistener.
      * @return IRemoteCacheListener, the listener for this remote server
      */
     protected IRemoteCacheListener getListener()
@@ -688,8 +644,7 @@ public class RemoteCache
     }
 
     /**
-     * @param elementSerializer
-     *            The elementSerializer to set.
+     * @param elementSerializer The elementSerializer to set.
      */
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
@@ -706,33 +661,10 @@ public class RemoteCache
 
     /**
      * Debugging info.
-     * 
      * @return basic info about the RemoteCache
      */
     public String toString()
     {
         return "RemoteCache: " + cacheName + " attributes = " + irca;
-    }
-
-    /**
-     * Allows us to set the daemon status on the clockdaemon
-     * 
-     * @author aaronsm
-     * 
-     */
-    class MyThreadFactory
-        implements ThreadFactory
-    {
-        /*
-         * (non-Javadoc)
-         * 
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
-         */
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            t.setDaemon( true );
-            return t;
-        }
     }
 }

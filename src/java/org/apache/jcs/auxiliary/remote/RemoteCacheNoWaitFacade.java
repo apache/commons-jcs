@@ -1,28 +1,21 @@
 package org.apache.jcs.auxiliary.remote;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,10 +30,9 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * Used to provide access to multiple services under nowait protection. factory
- * should construct NoWaitFacade to give to the composite cache out of caches it
- * constructs from the varies manager to lateral services.
- *  
+ * Used to provide access to multiple services under nowait protection. factory should construct
+ * NoWaitFacade to give to the composite cache out of caches it constructs from the varies manager
+ * to lateral services.
  */
 public class RemoteCacheNoWaitFacade
     implements AuxiliaryCache
@@ -58,11 +50,9 @@ public class RemoteCacheNoWaitFacade
     protected RemoteCacheAttributes rca;
 
     private ICompositeCacheManager cacheMgr;
-    
+
     /**
-     * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade
-     * object
-     * 
+     * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object
      * @return The remoteCacheAttributes value
      */
     public RemoteCacheAttributes getRemoteCacheAttributes()
@@ -71,11 +61,8 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Sets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade
-     * object
-     * 
-     * @param rca
-     *            The new remoteCacheAttributes value
+     * Sets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object
+     * @param rca The new remoteCacheAttributes value
      */
     public void setRemoteCacheAttributes( RemoteCacheAttributes rca )
     {
@@ -83,14 +70,14 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Constructs with the given remote cache, and fires events to any
-     * listeners.
-     * 
+     * Constructs with the given remote cache, and fires events to any listeners.
+     * <p>
      * @param noWaits
      * @param rca
      * @param cacheMgr
      */
-    public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca, ICompositeCacheManager cacheMgr )
+    public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca,
+                                   ICompositeCacheManager cacheMgr )
     {
         if ( log.isDebugEnabled() )
         {
@@ -104,7 +91,7 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Put an element in the cache.
-     * 
+     * <p>
      * @param ce
      * @throws IOException
      */
@@ -146,7 +133,6 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Synchronously reads from the remote cache.
-     * 
      * @param key
      * @return Either an ICacheElement or null if it is not found.
      */
@@ -173,7 +159,6 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Gets the set of keys of objects currently in the group.
-     * 
      * @param group
      * @return
      * @throws IOException
@@ -195,7 +180,6 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Adds a remove request to the remote cache.
-     * 
      * @param key
      * @return wether or not it was removed, right now it return false.
      */
@@ -245,24 +229,22 @@ public class RemoteCacheNoWaitFacade
         }
         catch ( Exception ex )
         {
-            log.error( ex );
+            log.error( "Problem in dispose.", ex );
         }
     }
 
     /**
      * No lateral invokation.
-     * 
      * @return The size value
      */
     public int getSize()
     {
         return 0;
-        //cache.getSize();
+        // cache.getSize();
     }
 
     /**
      * Gets the cacheType attribute of the RemoteCacheNoWaitFacade object
-     * 
      * @return The cacheType value
      */
     public int getCacheType()
@@ -272,7 +254,6 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object
-     * 
      * @return The cacheName value
      */
     public String getCacheName()
@@ -282,20 +263,25 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Gets the status attribute of the RemoteCacheNoWaitFacade object
-     * 
-     * @todo need to do something with this
-     * 
+     * <p>
+     * Return ALIVE if any are alive.
+     * <p>
      * @return The status value
      */
     public int getStatus()
     {
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            if ( noWaits[i].getStatus() == CacheConstants.STATUS_ALIVE )
+            {
+                return CacheConstants.STATUS_ALIVE;
+            }
+        }
         return 0;
-        //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
     }
 
     /**
      * String form of some of the configuratin information for the remote cache.
-     * 
      * @return Some info for logging.
      */
     public String toString()
@@ -304,11 +290,8 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Begin the failover process if this is a local cache. Clustered remote
-     * caches do not failover.
-     * 
-     * @param i
-     *            The no wait in error.
+     * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
+     * @param i The no wait in error.
      */
     protected void failover( int i )
     {
@@ -345,7 +328,6 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * getStats
-     * 
      * @return String
      */
     public String getStats()
@@ -355,7 +337,6 @@ public class RemoteCacheNoWaitFacade
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()

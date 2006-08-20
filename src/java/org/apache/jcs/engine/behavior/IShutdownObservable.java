@@ -30,7 +30,7 @@ package org.apache.jcs.engine.behavior;
  * region by region shutdown.  Some auxiliaries are glocal.  They will
  * need to track when every region has shutdown before doing things like
  * closing the socket with a lateral.  
- * 
+ * <p>
  * @author Aaron Smuts
  *
  */
