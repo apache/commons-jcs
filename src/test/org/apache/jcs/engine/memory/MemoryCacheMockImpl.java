@@ -30,9 +30,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 /**
  * Mock implementation of a memory cache for testing things like the memory
  * shrinker.
- * 
+ * <p>
  * @author Aaron Smuts
- * 
  */
 public class MemoryCacheMockImpl
     implements MemoryCache
@@ -46,6 +45,11 @@ public class MemoryCacheMockImpl
      */
     public int waterfallCallCount = 0;
 
+    /**
+     * The number passed to the last call of free elements.
+     */
+    public int lastNumberOfFreedElements = 0;
+    
     public void initialize( CompositeCache cache )
     {
         // TODO Auto-generated method stub
@@ -157,7 +161,7 @@ public class MemoryCacheMockImpl
     public int freeElements( int numberToFree )
         throws IOException
     {
-        // TODO Auto-generated method stub
+        lastNumberOfFreedElements = numberToFree;
         return 0;
     }
 }

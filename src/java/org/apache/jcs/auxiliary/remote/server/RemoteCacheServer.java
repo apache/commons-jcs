@@ -49,17 +49,17 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * This class provides remote cache services. The remote cache server propagates
  * events from local caches to other local caches. It can also store cached
  * data, making it available to new clients.
- * 
+ * <p>
  * Remote cache servers can be clustered. If the cache used by this remote cache
  * is configured to use a remote cache of type cluster, the two remote caches
  * will communicate with each other. Remote and put requests can be sent from
  * one remote to another. If they are configured to broadcast such event to
  * their client, then remove an puts can be sent to all locals in the cluster.
- * However, get requests are not made between clustered servers. You can setup
+ * <p>
+ * Get requests are made between clustered servers if AllowClusterGet is true. You can setup
  * several clients to use one remote server and several to use another. The get
  * locad will be distributed between the two servers. Since caches are usually
  * high get and low put, this should allow you to scale.
- * 
  */
 class RemoteCacheServer
     extends UnicastRemoteObject
@@ -97,7 +97,7 @@ class RemoteCacheServer
     /**
      * Constructor for the RemoteCacheServer object. Thiks initializes the
      * server with the values from the config file.
-     * 
+     * <p>
      * @param rcsa
      * @throws RemoteException
      * @exception IOException
@@ -111,8 +111,8 @@ class RemoteCacheServer
     }
 
     /**
-     * Initialize the RMI Cache Server from a proeprties file.
-     * 
+     * Initialize the RMI Cache Server from a properties file.
+     * <p>
      * @param prop
      */
     private void init( String prop )
@@ -131,7 +131,7 @@ class RemoteCacheServer
 
     /**
      * Subclass can override this method to create the specific cache manager.
-     * 
+     * <p>
      * @param prop
      *            The anem of the configuration file.
      * @return The cache hub configured with this configuration file.
@@ -154,7 +154,7 @@ class RemoteCacheServer
     /**
      * Returns the cache lsitener for the specified cache. Creates the cache and
      * the cache descriptor if they do not already exist.
-     * 
+     * <p>
      * @param cacheName
      * @return The cacheListeners value
      */
@@ -178,7 +178,7 @@ class RemoteCacheServer
 
     /**
      * Gets the clusterListeners attribute of the RemoteCacheServer object.
-     * 
+     * <p>
      * @todo may be able to remove this
      * 
      * @param cacheName
@@ -202,17 +202,14 @@ class RemoteCacheServer
         return cacheListeners;
     }
 
-    // ///////////////////// Implements the ICacheService interface.
-    // //////////////////
     /**
      * Puts a cache bean to the remote cache and notifies all listeners which
      * <br>
-     * 
      * <ol>
      * <li>have a different listener id than the originating host;
      * <li>are currently subscribed to the related cache.
      * </ol>
-     * 
+     * <p>
      * @param item
      * @throws IOException
      * 
@@ -258,7 +255,7 @@ class RemoteCacheServer
      * you can scale a bit with a cluster configuration. Puts and removes will
      * be broadcasted to all clients, but the get load on a remote server can be
      * reduced.
-     * 
+     * <p>
      * @param item
      * @param requesterId
      * @throws IOException
@@ -407,8 +404,7 @@ class RemoteCacheServer
      * Basically, this makes sure that a request from a particular local cache,
      * identified by its listener id, does not result in a call to that same
      * listener.
-     * 
-     * 
+     * <p> 
      * @param cacheListeners
      * @param requesterId
      * @return The eventQList value
@@ -456,7 +452,7 @@ class RemoteCacheServer
     /**
      * Returns a cache value from the specified remote cache; or null if the
      * cache or key does not exist.
-     * 
+     * <p>
      * @param cacheName
      * @param key
      * @return ICacheElement
@@ -474,7 +470,7 @@ class RemoteCacheServer
      * <p>
      * Adding the requestor id, allows the cache to determine the sournce of the
      * get.
-     * 
+     * <p>
      * @param cacheName
      * @param key
      * @param requesterId
@@ -539,7 +535,7 @@ class RemoteCacheServer
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Get NOT from cluster, NOT allowing a get from other auxiliaries for the region." );
+                log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet [" + this.rcsa.getAllowClusterGet() + "]"  );
             }
             element = c.get( key );
         }
@@ -551,7 +547,7 @@ class RemoteCacheServer
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Allowing a get from other auxiliaries for the region." );
+                log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet [" + this.rcsa.getAllowClusterGet() + "]" );
             }
             element = c.localGet( key );
         }
@@ -561,7 +557,7 @@ class RemoteCacheServer
 
     /**
      * Gets the set of keys of objects currently in the group.
-     * 
+     * <p>
      * @param cacheName
      * @param group
      * @return A Set of group keys
@@ -589,7 +585,7 @@ class RemoteCacheServer
     /**
      * Removes the given key from the specified remote cache. Defaults the
      * listener id to 0.
-     * 
+     * <p>
      * @param cacheName
      * @param key
      * @throws IOException
@@ -603,7 +599,7 @@ class RemoteCacheServer
     /**
      * Remove the key from the cache region and don't tell the source listener
      * about it.
-     * 
+     * <p>
      * @param cacheName
      * @param key
      * @param requesterId
@@ -678,7 +674,7 @@ class RemoteCacheServer
 
     /**
      * Remove all keys from the sepcified remote cache.
-     * 
+     * <p>
      * @param cacheName
      * @throws IOException
      */
@@ -690,7 +686,7 @@ class RemoteCacheServer
 
     /**
      * Remove all keys from the sepcified remote cache.
-     * 
+     * <p>
      * @param cacheName
      * @param requesterId
      * @throws IOException
@@ -798,7 +794,7 @@ class RemoteCacheServer
 
     /**
      * Frees all remote caches.
-     * 
+     * <p>
      * @throws IOException
      */
     public void release()
@@ -821,11 +817,9 @@ class RemoteCacheServer
         return;
     }
 
-    // ///////////////////// Implements the ICacheObserver interface.
-    // //////////////////
     /**
      * Removes dead event queues. Should clean out deregistered listeners.
-     * 
+     * <p>
      * @param eventQMap
      */
     private static void cleanupEventQMap( Map eventQMap )
@@ -855,7 +849,7 @@ class RemoteCacheServer
      * <p>
      * If the client id is 0, then the remote cache server will increment it's
      * local count and assign an id to the client.
-     * 
+     * <p>
      * @param cacheName
      *            the specified remote cache.
      * @param listener
@@ -1050,9 +1044,6 @@ class RemoteCacheServer
         return;
     }
 
-    // ///////////////////// Implements the ICacheServiceAdmin interface.
-    // //////////////////
-
     /**
      * Shuts down the remote server.
      * <p>
@@ -1065,8 +1056,8 @@ class RemoteCacheServer
     }
 
     /**
-     * Shuts down a server at a particular host and port.
-     * 
+     * Shuts down a server at a particular host and port.  Then it calls shutdown on the cache itself.
+     * <p>
      * @param host
      * @param port
      * @throws IOException
@@ -1079,10 +1070,8 @@ class RemoteCacheServer
             log.info( "Received shutdown request.  Shutting down server." );
         }
         RemoteCacheServerFactory.shutdownImpl( host, port );
+        this.cacheManager.shutDown();
     }
-
-    // ///////////////////// Implements the Unreferenced interface.
-    // //////////////////
 
     /**
      * Called by the RMI runtime sometime after the runtime determines that the
@@ -1100,7 +1089,7 @@ class RemoteCacheServer
 
     /**
      * Returns the next generated listener id [0,255].
-     * 
+     * <p>
      * @return the listener id of a client. This should be unique for this
      *         server.
      */
@@ -1127,13 +1116,12 @@ class RemoteCacheServer
                 id = ++listenerId[0];
             }
         }
-        // ( long ) ( id & 0xff );
         return id;
     }
 
     /**
-     * Gets the stats attribute of the RemoteCacheServer object
-     * 
+     * Gets the stats attribute of the RemoteCacheServer object.
+     * <p>
      * @return The stats value
      * @throws IOException
      */

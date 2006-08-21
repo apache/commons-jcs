@@ -49,6 +49,6 @@ jcs.auxiliary.RCluster.attributes.LocalClusterConsistency=true
 # disk cache
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
-jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf/remote
+jcs.auxiliary.DC.attributes.DiskPath=@project_home@/raf/remote-rc2
 
 

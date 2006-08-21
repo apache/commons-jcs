@@ -175,14 +175,6 @@ jcs.region.testCache1.cacheattributes.MemoryCacheName=
 					<code>1102</code>
 					.
 				</p>
-				<p>
-					The tomcat configuration section is evolving. If
-					<code>remote.tomcat.on</code>
-					is set to
-					<code>true</code>
-					an embedded tomcat server will run within the remote
-					cache, allowing the use of management servlets.
-				</p>
 				<source>
 					<![CDATA[
 # Registry used to register and provide the 
@@ -193,10 +185,11 @@ registry.port=1102
 remote.cache.service.port=1102
 # cluster setting
 remote.cluster.LocalClusterConsistency=true
+remote.cluster.AllowClusterGet=true
         ]]>
 				</source>
 				<p>
-					Remote servers can be chainied (or clustered). This
+					Remote servers can be chained (or clustered). This
 					allows gets from local caches to be distributed
 					between multiple remote servers. Since gets are the
 					most common operation for caches, remote server
@@ -208,6 +201,20 @@ remote.cluster.LocalClusterConsistency=true
 					setting tells the remote cache server if it should
 					broadcast updates received from other cluster
 					servers to registered local caches.
+				</p>
+				<p>
+					The
+					<code>AllowClusterGet</code>
+					setting tells the remote cache server whether it
+					should allow the cache to look in non-local
+					auxiliaries for items if they are not present.
+					Basically, if the get request is not from a cluster
+					server, the cache will treat it as if it originated
+					locally. If the get request originated from a
+					cluster client, then the get will be restricted to
+					local (i.e. memory and disk) auxiliaries. Hence,
+					cluster gets can only go one server deep. They
+					cannot be chained.  By default this setting is true.
 				</p>
 				<p>
 					To use remote server clustering, the remote cache
@@ -287,6 +294,43 @@ jcs.auxiliary.RCluster1.attributes.GetOnly=false
 	        ]]>
 				</source>
 			</subsection>
+			<subsection name="Server Startup / Shutdown">
+				<p>
+					It is highly recommended that you embed the Remote
+					Cache Server in a Servlet container such as Tomcat.
+					Running inside Tomcat allows you to use the
+					JCSAdmin.jsp page. It also takes care of the
+					complexity of creating working startup and shutdown
+					scripts.
+				</p>
+				<p>
+					JCS provides a convenient startup servlet for this
+					purpose. It will start the registery and bind the
+					JCS server to the registry. To use the startup
+					servlet, add the following to the web.xml file add
+					make sure you have the remote.cache.ccf file in the
+					WEB-INF/classes directly of your war file.
+				</p>
+				<source>
+					<![CDATA[
+    <servlet>
+        <servlet-name>JCSRemoteCacheStartupServlet</servlet-name>
+        <servlet-class>
+             org.apache.jcs.auxiliary.remote.server.RemoteCacheStartupServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    
+    <servlet-mapping>
+        <servlet-name>JCSRemoteCacheStartupServlet</servlet-name>
+        <url-pattern>/jcs</url-pattern>
+    </servlet-mapping>
+]]>
+				</source>
+
+			</subsection>
 		</section>
+
 	</body>
 </document>

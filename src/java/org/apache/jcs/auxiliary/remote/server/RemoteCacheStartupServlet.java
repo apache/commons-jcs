@@ -60,7 +60,6 @@ public class RemoteCacheStartupServlet
      * <p>
      * Gets the port from a props file. Uses the local host name for the rgistry
      * host. Tries to start the registry, ignoreing failure. Starts the server.
-     * 
      */
     public void init()
         throws ServletException

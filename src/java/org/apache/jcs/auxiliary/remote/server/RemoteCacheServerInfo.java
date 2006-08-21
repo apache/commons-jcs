@@ -19,28 +19,25 @@ package org.apache.jcs.auxiliary.remote.server;
 import java.rmi.dgc.VMID;
 
 /**
- * A shared static variable holder for the server
- *  
+ * A shared static variable holder for the server.
  */
 public class RemoteCacheServerInfo
 {
-
-    // shouldn't be instantiated
-    /** Constructor for the RemoteCacheServerInfo object */
+    /** shouldn't be instantiated */
     private RemoteCacheServerInfo()
     {
         super();
     }
 
     /**
-     * Shouldn't be used till after reconneting, after setting = thread safe
+     * Shouldn't be used until after reconnecting, after setting = thread safe
      * Used to identify a client, so we can run multiple clients off one host.
      * Need since there is no way to identify a client other than by host in
      * rmi.
      */
     protected static VMID vmid = new VMID();
 
-    /** Description of the Field */
+    /** By default it is the VMID. */
     public static long listenerId = vmid.hashCode();
 
 }

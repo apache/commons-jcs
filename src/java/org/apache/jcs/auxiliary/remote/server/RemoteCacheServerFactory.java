@@ -1,19 +1,12 @@
 package org.apache.jcs.auxiliary.remote.server;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -33,8 +26,8 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 
 /**
- * Provides remote cache services.
- * 
+ * Provides remote cache services. This creates remote cache servers and can proxy command line
+ * requests to a running server.
  */
 public class RemoteCacheServerFactory
     implements IRemoteCacheConstants
@@ -55,9 +48,9 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * This will allow you to get stats from the server, etc. Perhaps we should
-     * provide methods on the factory to do this instead.
-     * 
+     * This will allow you to get stats from the server, etc. Perhaps we should provide methods on
+     * the factory to do this instead.
+     * A remote cache is either a local cache or a cluster cache
      * @return Returns the remoteCacheServer.
      */
     public static RemoteCacheServer getRemoteCacheServer()
@@ -67,9 +60,9 @@ public class RemoteCacheServerFactory
 
     // ///////////////////// Statup/shutdown methods. //////////////////
     /**
-     * Starts up the remote cache server on this JVM, and binds it to the
-     * registry on the given host and port.
-     * 
+     * Starts up the remote cache server on this JVM, and binds it to the registry on the given host
+     * and port.
+     * A remote cache is either a local cache or a cluster cache
      * @param host
      * @param port
      * @param propFile
@@ -187,8 +180,8 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * put your documentation comment here
-     * 
+     * Unbinds the remote server.
+     * <p>
      * @param host
      * @param port
      * @exception IOException
@@ -237,11 +230,10 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * Creates an local RMI registry on the default port, starts up the remote
-     * cache server, and binds it to the registry.
-     * 
-     * @param args
-     *            The command line arguments
+     * Creates an local RMI registry on the default port, starts up the remote cache server, and
+     * binds it to the registry.
+     * A remote cache is either a local cache or a cluster cache
+     * @param args The command line arguments
      * @throws Exception
      */
     public static void main( String[] args )

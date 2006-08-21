@@ -860,7 +860,9 @@ public class CompositeCache
     }
 
     /**
-     * Invoked only by CacheManager.
+     * Invoked only by CacheManager. This method disposes of the auxiliaries one by one. For the disk cache, the items in memory
+     * are freed, meaning that they will be sent through the overflow chanel to disk.  After the
+     * auxiliaries are disposed, the memory cache is dispposed.
      * <p>
      * @param fromRemote
      */
@@ -868,9 +870,9 @@ public class CompositeCache
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "In DISPOSE, [" + this.cacheName + "] fromRemote [" + fromRemote + "]" );
+            log.info( "In DISPOSE, [" + this.cacheName + "] fromRemote [" + fromRemote + "] \n" + this.getStats() );
         }
-        
+
         // If already disposed, return immediately
         if ( !alive )
         {
@@ -892,55 +894,38 @@ public class CompositeCache
                 // - The auxilliary is not alive
                 // - The auxilliary is remote and the invocation was remote
 
-                if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE || ( fromRemote
-                    && aux.getCacheType() == REMOTE_CACHE ) )
+                if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE
+                    || ( fromRemote && aux.getCacheType() == REMOTE_CACHE ) )
                 {
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "In DISPOSE, [" + this.cacheName + "] SKIPPING auxiliary [" + aux + "] fromRemote [" + fromRemote + "]" );
+                        log.info( "In DISPOSE, [" + this.cacheName + "] SKIPPING auxiliary [" + aux + "] fromRemote ["
+                            + fromRemote + "]" );
                     }
                     continue;
                 }
 
-                // If the auxilliary is not a lateral, or the cache attributes
-                // have 'getUseLateral' set, all the elements currently in
-                // memory are written to the lateral before disposing
-
-                // TODO make sure disk gets a change to finish
-                if ( aux.getCacheType() != ICacheType.LATERAL_CACHE || this.cacheAttr.getUseLateral() )
+                if ( log.isInfoEnabled() )
                 {
-                    Iterator itr = memCache.getIterator();
+                    log.info( "In DISPOSE, [" + this.cacheName + "] auxiliary [" + aux + "]" );
+                }
+
+                // IT USED TO BE THE CASE THAT (If the auxilliary is not a lateral, or the cache
+                // attributes
+                // have 'getUseLateral' set, all the elements currently in
+                // memory are written to the lateral before disposing)
+                // I changed this. It was excessive. Only the disk cache needs the items, since only
+                // the disk cache
+                // is in a situation to not get items on a put.
+
+                if ( aux.getCacheType() == ICacheType.DISK_CACHE )
+                {
+                    int numToFree = memCache.getSize();
+                    memCache.freeElements( numToFree );
 
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "In DISPOSE, [" + this.cacheName + "] memCache.size = " + memCache.getSize() + " auxiliary [" + aux + "]" );
-                    }
-
-                    int cnt = 0;
-                    while ( itr.hasNext() )
-                    {
-                        cnt++;
-                        Map.Entry entry = (Map.Entry) itr.next();
-
-                        ICacheElement ce = (ICacheElement) entry.getValue();
-                        try
-                        {
-                            if ( aux.getCacheType() == ICacheType.LATERAL_CACHE
-                                && !ce.getElementAttributes().getIsLateral() )
-                            {
-                                continue;
-                            }
-                            aux.update( ce );
-                        }
-                        catch ( Exception e )
-                        {
-                            log.error( e );
-                        }
-                    }
-
-                    if ( log.isInfoEnabled() )
-                    {
-                        log.info( "In DISPOSE, [" + this.cacheName + "] put " + cnt + " into auxiliary " + aux );
+                        log.info( "In DISPOSE, [" + this.cacheName + "] put " + numToFree + " into auxiliary " + aux );
                     }
                 }
 
@@ -965,8 +950,6 @@ public class CompositeCache
         {
             log.error( "Failure disposing of memCache", ex );
         }
-
-        log.warn( "Called close for [" + cacheName + "]" );
     }
 
     /**

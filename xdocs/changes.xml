@@ -6,13 +6,28 @@
 	<body>
 
 		<release version="1.2.7.9" date="in CVS">
-			<action dev="asmuts" type="update" issue="JCS-5">
+			<action dev="asmuts" type="fix" issue="JCS-1">
+				Fixed last element too small recycle bin bug.
+			</action>
+			<action dev="asmuts" type="update" issue="JCS-2">
 				Added the ability to send all items to disk or to use
 				the disk merely as a swap. This is done by setting the
 				DiskUsagePattern on the cache attributes for a region.
 			</action>
-			<action dev="asmuts" type="fix" issue="JCS-1">
-				Fixed last element too small recycle bin bug.
+			<action dev="asmuts" type="fix" issue="JCS-3"
+				due-to="Peter Schwarz">
+				Disk optimization now occurs in place, without using
+				additional files. It is far more efficient.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-4">
+				The disk cache will not optimize on shutdown if the
+				freedata size is 0.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-8">
+				Remote cache client will now shutdown properly.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-9">
+				Only send memory items to disk auxiliaries on shutdown.
 			</action>
 		</release>
 

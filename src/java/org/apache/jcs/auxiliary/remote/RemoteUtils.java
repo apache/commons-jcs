@@ -31,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This class provides some basic utilities for doing things such as starting
  * the registry properly.
- * 
  */
 public class RemoteUtils
 {
@@ -45,9 +44,9 @@ public class RemoteUtils
 
     /**
      * Creates and exports a registry on the specified port of the local host.
-     * 
+     * <p>
      * @param port
-     * @return
+     * @return the port the registry was started on
      * @throws RemoteException
      */
     public static int createRegistry( int port )
@@ -78,9 +77,9 @@ public class RemoteUtils
 
     /**
      * Loads properties for the named props file.
-     * 
+     * <p>
      * @param propFile
-     * @return
+     * @return The properties object for the file
      * @throws IOException
      */
     public static Properties loadProps( String propFile )
@@ -119,7 +118,6 @@ public class RemoteUtils
         catch ( Exception ex )
         {
             log.error( "Error loading remote properties, for file name [" + propFile + "]", ex );
-            // ignore;
         }
         finally
         {
