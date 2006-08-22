@@ -50,9 +50,9 @@ public class IndexedDiskCacheOptimizationUnitTest
             disk.doRemove( new Integer( i ) );
         }
 
-        Thread.sleep( 100 );
+        Thread.sleep( 500 );
         Thread.yield();
-        Thread.sleep( 100 );
+        Thread.sleep( 500 );
         long sizeAfterRemove = disk.getDataFileSize();
         System.out.println( "file sizeAfterRemove " + sizeAfterRemove );
         long expectedSizeAfterRemove = DiskTestObjectUtil.totalSize( elements, removeCount, elements.length );

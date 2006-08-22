@@ -1,19 +1,12 @@
 package org.apache.jcs.auxiliary.remote;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -40,9 +33,21 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * Used to queue up update requests to the underlying cache. These requests will
- * be processed in their order of arrival via the cache event queue processor.
- * 
+ * Used to queue up update requests to the underlying cache. These requests will be processed in
+ * their order of arrival via the cache event queue processor.
+ * <p>
+ * Typically errors will be handled down stream. We only need to kill the queue if an error makes it
+ * to this level from the queue. That can only happen if the queue is damaged, since the events are
+ * procesed asynchronously.
+ * <p>
+ * There is no reason to create a queue on startup if the remote is not healthy.
+ * <p>
+ * If the remote cache encounters an error it will zombie--create a blaking facade for the service.
+ * The Zombie will queue up items until the conenction is restored. An alternative way to accomplish
+ * the same thing would be to stop, not destroy the queue at this level. That way items would be
+ * added to the queue and then when the connection is restored, we could start the worker threads
+ * again. This is a better long term solution, but it requires some significnat changes to the
+ * complicated worker queues.
  */
 public class RemoteCacheNoWait
     implements AuxiliaryCache
@@ -56,9 +61,9 @@ public class RemoteCacheNoWait
     private ICacheEventQueue q;
 
     /**
-     * Constructs with the given remote cache, and fires up an event queue for
-     * aysnchronous processing.
-     * 
+     * Constructs with the given remote cache, and fires up an event queue for aysnchronous
+     * processing.
+     * <p>
      * @param cache
      */
     public RemoteCacheNoWait( RemoteCache cache )
@@ -75,9 +80,10 @@ public class RemoteCacheNoWait
         }
     }
 
-    /*
+    /**
+     * Adds a put event to the queue.
+     * <p>
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void update( ICacheElement ce )
@@ -89,7 +95,7 @@ public class RemoteCacheNoWait
         }
         catch ( IOException ex )
         {
-            log.error( ex );
+            log.error( "Problem adding putEvent to queue.", ex );
             q.destroy();
             throw ex;
         }
@@ -97,7 +103,7 @@ public class RemoteCacheNoWait
 
     /**
      * Synchronously reads from the remote cache.
-     * 
+     * <p>
      * @param key
      * @return
      * @throws IOException
@@ -111,20 +117,27 @@ public class RemoteCacheNoWait
         }
         catch ( UnmarshalException ue )
         {
-            log.debug( "Retrying the get owing to UnmarshalException..." );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Retrying the get owing to UnmarshalException..." );
+            }
             try
             {
                 return cache.get( key );
             }
             catch ( IOException ex )
             {
-                log.debug( "Failed in retrying the get for the second time." );
-                q.destroy();
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Failed in retrying the get for the second time. " + ex.getMessage() );
+                }
             }
         }
         catch ( IOException ex )
         {
-            q.destroy();
+            // We don't want to destroy the queue on a get failure.
+            // The RemoteCache will Zombie and queue.
+            // Since get does not use the queue, I dont want to killing the queue.
             throw ex;
         }
         return null;
@@ -138,7 +151,7 @@ public class RemoteCacheNoWait
 
     /**
      * Adds a remove request to the remote cache.
-     * 
+     * <p>
      * @param key
      * @return
      * @throws IOException
@@ -152,7 +165,7 @@ public class RemoteCacheNoWait
         }
         catch ( IOException ex )
         {
-            log.error( ex );
+            log.error( "Problem adding RemoveEvent to queue.", ex );
             q.destroy();
             throw ex;
         }
@@ -161,7 +174,6 @@ public class RemoteCacheNoWait
 
     /**
      * Adds a removeAll request to the remote cache.
-     * 
      * @throws IOException
      */
     public void removeAll()
@@ -173,7 +185,7 @@ public class RemoteCacheNoWait
         }
         catch ( IOException ex )
         {
-            log.error( ex );
+            log.error( "Problem adding RemoveAllEvent to queue.", ex );
             q.destroy();
             throw ex;
         }
@@ -188,15 +200,14 @@ public class RemoteCacheNoWait
         }
         catch ( IOException ex )
         {
-            log.error( ex );
-            // not clear that we should destroy the q here.
+            log.error( "Problem adding DisposeEvent to queue.", ex );
             q.destroy();
         }
     }
 
     /**
-     * No remote invokation.
-     * 
+     * No remote invocation.
+     * <p>
      * @return The size value
      */
     public int getSize()
@@ -206,7 +217,7 @@ public class RemoteCacheNoWait
 
     /**
      * No remote invokation.
-     * 
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType()
@@ -215,9 +226,8 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * Returns the asyn cache status. An error status indicates either the
-     * remote connection is not available, or the asyn queue has been
-     * unexpectedly destroyed. No remote invocation.
+     * Returns the asyn cache status. An error status indicates either the remote connection is not
+     * available, or the asyn queue has been unexpectedly destroyed. No remote invocation.
      * <p>
      * @return The status value
      */
@@ -237,8 +247,8 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * Replaces the remote cache service handle with the given handle and reset
-     * the event queue by starting up a new instance.
+     * Replaces the remote cache service handle with the given handle and reset the event queue by
+     * starting up a new instance.
      * <p>
      * @param remote
      */
@@ -250,8 +260,9 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * Resets the event q by first destroying the existing one and starting up
-     * new one.
+     * Resets the event q by first destroying the existing one and starting up new one.
+     * <p>
+     * TODO rethink this.  There may be no good reason to kill the existing queue.
      */
     public void resetEventQ()
     {
@@ -266,8 +277,8 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * This is temporary. It allows the amanger to get the lister.
-     * 
+     * This is temporary. It allows the manager to get the lister.
+     * <p>
      * @return
      */
     protected RemoteCache getRemoteCache()
@@ -277,7 +288,6 @@ public class RemoteCacheNoWait
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#toString()
      */
     public String toString()
@@ -287,7 +297,6 @@ public class RemoteCacheNoWait
 
     /**
      * getStats
-     * 
      * @return String
      */
     public String getStats()
@@ -297,7 +306,6 @@ public class RemoteCacheNoWait
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()

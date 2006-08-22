@@ -1,19 +1,12 @@
 package org.apache.jcs.auxiliary.remote;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.rmi.Naming;
@@ -27,14 +20,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Used to repair the remote caches managed by the associated instance of
- * RemoteCacheManager. When there is an error the monitor kicks off. The
- * Failover runner starts looks for a manager with a connection to a remote
- * cache that is not in error. If a manager's connection to a remote cache is
- * found to be in error, the restorer kicks off and tries to reconnect. When it
- * is succesful, the status of the manager changes. When the failover runner
- * finds that the primary is in good shape, it will switch back.
- *  
+ * Used to repair the remote caches managed by the associated instance of RemoteCacheManager.
+ * <p>
+ * When there is an error the monitor kicks off. The Failover runner starts looks for a manager with
+ * a connection to a remote cache that is not in error. If a manager's connection to a remote cache
+ * is found to be in error, the restorer kicks off and tries to reconnect. When it is succesful, the
+ * status of the manager changes. When the failover runner finds that the primary is in good shape,
+ * it will switch back.
  */
 public class RemoteCacheRestore
     implements ICacheRestore
@@ -43,26 +35,26 @@ public class RemoteCacheRestore
 
     private final RemoteCacheManager rcm;
 
-    //private final AuxiliaryCacheManager rcm;
+    // private final AuxiliaryCacheManager rcm;
     private boolean canFix = true;
 
     private Object remoteObj;
 
     /**
      * Constructs with the given instance of RemoteCacheManager.
-     * 
      * @param rcm
      */
     public RemoteCacheRestore( RemoteCacheManager rcm )
     {
-        //public RemoteCacheRestore(AuxiliaryCacheManager rcm) {
+        // public RemoteCacheRestore(AuxiliaryCacheManager rcm) {
         this.rcm = rcm;
     }
 
     /**
-     * Returns true if the connection to the remote host for the corresponding
-     * cache manager can be successfully re-established.
-     * @return
+     * Returns true if the connection to the remote host for the corresponding cache manager can be
+     * successfully re-established.
+     * <p>
+     * @return true if we found a failover server
      */
     public boolean canFix()
     {
@@ -71,16 +63,20 @@ public class RemoteCacheRestore
             return canFix;
         }
         String registry = "//" + rcm.host + ":" + rcm.port + "/" + rcm.service;
-        log.info( "looking up server " + registry );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "looking up server " + registry );
+        }
         try
         {
             remoteObj = Naming.lookup( registry );
-            log.info( "looking up server " + registry );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "looking up server " + registry );
+            }
         }
         catch ( Exception ex )
         {
-            //log.error(ex, "host=" + rcm.host + "; port" + rcm.port + ";
-            // service=" + rcm.service );
             log.error( "host=" + rcm.host + "; port" + rcm.port + "; service=" + rcm.service );
             canFix = false;
         }
@@ -97,7 +93,11 @@ public class RemoteCacheRestore
             return;
         }
         rcm.fixCaches( (IRemoteCacheService) remoteObj, (IRemoteCacheObserver) remoteObj );
-        String msg = "Remote connection to " + "//" + rcm.host + ":" + rcm.port + "/" + rcm.service + " resumed.";
-        log.info( msg );
+
+        if ( log.isInfoEnabled() )
+        {
+            String msg = "Remote connection to " + "//" + rcm.host + ":" + rcm.port + "/" + rcm.service + " resumed.";
+            log.info( msg );
+        }
     }
 }

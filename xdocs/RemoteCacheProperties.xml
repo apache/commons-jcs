@@ -61,11 +61,12 @@
 							will remove any local copy it has of the
 							object rather than storing the new version.
 							If you have sticky load balancing across
-							your client servers, then it would make sense
-							to set RemoveUponRemotePut to true if the
-							data is mostly client specific. If the data
-							is re-usable, the you should most likely set
-							this option to false, which is the default.
+							your client servers, then it would make
+							sense to set RemoveUponRemotePut to true if
+							the data is mostly client specific. If the
+							data is re-usable, the you should most
+							likely set this option to false, which is
+							the default.
 						</td>
 						<td>N</td>
 						<td>false</td>
@@ -113,6 +114,16 @@
 						</td>
 						<td>N</td>
 						<td>true</td>
+					</tr>
+					<tr>
+						<td>ZombieQueueMaxSize</td>
+						<td>
+							The number of elements the zombie queue will
+							hold. This queue is used to store events if
+							we * loose our conenction with the server.
+						</td>
+						<td>N</td>
+						<td>1000</td>
 					</tr>
 				</table>
 			</subsection>

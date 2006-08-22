@@ -28,7 +28,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  */
 public interface ICacheEventQueue
 {
-
     /**
      * Does not use a thread pool.
      */

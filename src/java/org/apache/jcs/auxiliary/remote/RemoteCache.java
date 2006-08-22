@@ -586,7 +586,7 @@ public class RemoteCache
         if ( remote == null || !(remote instanceof ZombieRemoteCacheService) )
         {
             // TODO make configurable
-            remote = new ZombieRemoteCacheService( 1000 );
+            remote = new ZombieRemoteCacheService( irca.getZombieQueueMaxSize() );
         }
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery

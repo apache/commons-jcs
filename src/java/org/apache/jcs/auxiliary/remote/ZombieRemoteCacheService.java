@@ -12,7 +12,6 @@ package org.apache.jcs.auxiliary.remote;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -20,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.ZombieCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.utils.struct.BoundedQueue;
 import org.apache.jcs.utils.timing.ElapsedTimer;
 
 /**
@@ -40,15 +40,14 @@ public class ZombieRemoteCacheService
 
     private int maxQueueSize = 0;
 
-    // substitute the BoundedQueue tomorrow.
-    private LinkedList queue = new LinkedList();
+    private BoundedQueue queue;
 
     /**
      * Default.
      */
     public ZombieRemoteCacheService()
     {
-        // nothing
+        queue = new BoundedQueue( 0 );
     }
 
     /**
@@ -59,6 +58,7 @@ public class ZombieRemoteCacheService
     public ZombieRemoteCacheService( int maxQueueSize )
     {
         this.maxQueueSize = maxQueueSize;
+        queue = new BoundedQueue( maxQueueSize );
     }
 
     /**
@@ -70,7 +70,7 @@ public class ZombieRemoteCacheService
     {
         return queue.size();
     }
-    
+
     /**
      * Adds an update event to the queue if the maxSize is greater than 0;
      * <p>
@@ -83,7 +83,7 @@ public class ZombieRemoteCacheService
         if ( maxQueueSize > 0 )
         {
             PutEvent event = new PutEvent( item, listenerId );
-            queue.addLast( event );
+            queue.add( event );
         }
         // Zombies have no inner life
         return;
@@ -101,7 +101,7 @@ public class ZombieRemoteCacheService
         if ( maxQueueSize > 0 )
         {
             RemoveEvent event = new RemoveEvent( cacheName, key, listenerId );
-            queue.addLast( event );
+            queue.add( event );
         }
         // Zombies have no inner life
         return;
@@ -119,7 +119,7 @@ public class ZombieRemoteCacheService
         if ( maxQueueSize > 0 )
         {
             RemoveAllEvent event = new RemoveAllEvent( cacheName, listenerId );
-            queue.addLast( event );
+            queue.add( event );
         }
         // Zombies have no inner life
         return;
@@ -155,6 +155,7 @@ public class ZombieRemoteCacheService
      * Walk the queue, calling the service for each queue operation.
      * <p>
      * @param service
+     * @throws Exception
      */
     protected void propagateEvents( IRemoteCacheService service )
         throws Exception
@@ -168,9 +169,9 @@ public class ZombieRemoteCacheService
         while ( !queue.isEmpty() )
         {
             cnt++;
-            
+
             // for each item, call the appropriate service method
-            ZombieEvent event = (ZombieEvent) queue.removeFirst();
+            ZombieEvent event = (ZombieEvent) queue.take();
 
             if ( event instanceof PutEvent )
             {
