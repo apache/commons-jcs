@@ -184,6 +184,7 @@ public class RemoteCache
         {
             if ( !this.irca.getGetOnly() )
             {
+                ICacheElementSerialized serialized = null;
                 try
                 {
                     if ( log.isDebugEnabled() )
@@ -193,7 +194,7 @@ public class RemoteCache
 
                     // convert so we don't have to know about the object on the
                     // other end.
-                    ICacheElementSerialized serialized = SerializationConversionUtil
+                    serialized = SerializationConversionUtil
                         .getSerializedCacheElement( ce, this.elementSerializer );
 
                     remote.update( serialized, getListenerId() );
@@ -205,6 +206,7 @@ public class RemoteCache
                 }
                 catch ( Exception ex )
                 {
+                    // event queue will wait and retry
                     handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
                 }
             }
@@ -221,7 +223,7 @@ public class RemoteCache
     /**
      * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
      * <p>
-     * Use threadpool to timeout is a value is set for GetTimeoutMillis
+     * Use threadpool to timeout if a value is set for GetTimeoutMillis
      * <p>
      * If we are a cluster client, we need to leave the Element in its serilaized form. Cluster
      * cients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
@@ -272,7 +274,7 @@ public class RemoteCache
      * This allows gets to timeout in case of remote server machine shutdown.
      * <p>
      * @param key
-     * @return
+     * @return ICacheElement
      * @throws IOException
      */
     public ICacheElement getUsingPool( final Serializable key )
@@ -332,7 +334,7 @@ public class RemoteCache
      * Returns all the keys for a group.
      * <p>
      * @param groupName
-     * @return
+     * @return Set
      * @throws java.rmi.RemoteException
      */
     public Set getGroupKeys( String groupName )
@@ -465,7 +467,7 @@ public class RemoteCache
 
         if ( this.irca.getRemoteType() == IRemoteCacheAttributes.CLUSTER )
         {
-            // somethign cluster specific
+            // something cluster specific
         }
 
         // no data gathered here
@@ -488,6 +490,14 @@ public class RemoteCache
             elems.add( se );
         }
 
+        if ( remote instanceof ZombieRemoteCacheService )
+        {
+            se = new StatElement();
+            se.setName( "Zombie Queue Size" );
+            se.setData( "" + ((ZombieRemoteCacheService)remote).getQueueSize() );
+            elems.add( se );            
+        }
+        
         // get an array and put them in the Stats object
         IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
@@ -524,13 +534,38 @@ public class RemoteCache
     }
 
     /**
-     * Replaces the current remote cache service handle with the given handle.
+     * Replaces the current remote cache service handle with the given handle.  
+     * If the current remote is a Zombie, the propagate teh events that may be 
+     * queued to the restored service.
      * <p>
      * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
      */
     public void fixCache( IRemoteCacheService remote )
     {
-        this.remote = remote;
+        if ( this.remote != null && this.remote instanceof ZombieRemoteCacheService )
+        {
+            ZombieRemoteCacheService zombie = (ZombieRemoteCacheService)this.remote;
+            this.remote = remote;
+            try
+            {
+                zombie.propagateEvents(  remote );
+            }
+            catch ( Exception e )
+            {
+                try
+                {
+                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service." );
+                }
+                catch ( IOException e1 )
+                {
+                    // swallow, since this is just expected kick back.  Handle always throws
+                }
+            }
+        }
+        else
+        {
+            this.remote = remote;
+        }
         return;
     }
 
@@ -545,10 +580,14 @@ public class RemoteCache
     private void handleException( Exception ex, String msg )
         throws IOException
     {
-        log.error( "Disabling remote cache due to error " + msg );
-        log.error( ex );
+        log.error( "Disabling remote cache due to error: " + msg , ex );
 
-        remote = new ZombieRemoteCacheService();
+        // we should not switch if the existing is a zombie.
+        if ( remote == null || !(remote instanceof ZombieRemoteCacheService) )
+        {
+            // TODO make configurable
+            remote = new ZombieRemoteCacheService( 1000 );
+        }
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
         // process.
