@@ -13,14 +13,17 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * For testing.
  * <p>
- * @author admin
+ * @author Aaron Smuts
  */
 public class RemoteCacheListenerMockImpl
     implements IRemoteCacheListener
@@ -28,6 +31,21 @@ public class RemoteCacheListenerMockImpl
     /** Setup the listener id that this will return. */
     private long listenerId;
 
+    /** Number of times handlePut was called. */
+    public int putCount;
+    
+    /** List of ICacheElements passed to handlePut. */
+    public List putItems = new LinkedList();
+
+    /** List of Serializable objects passed to handleRemove. */
+    public List removedKeys = new LinkedList();
+
+    /** Number of times handleRemote was called. */
+    public int removeCount;
+    
+    /** The type of remote listener */
+    public int remoteType = IRemoteCacheAttributes.LOCAL;
+    
     public void dispose()
         throws IOException
     {
@@ -50,11 +68,13 @@ public class RemoteCacheListenerMockImpl
         return null;
     }
 
+    /**
+     * Return the setup remoteType.
+     */
     public int getRemoteType()
         throws IOException
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return remoteType;
     }
 
     /**
@@ -73,18 +93,24 @@ public class RemoteCacheListenerMockImpl
 
     }
 
+    /**
+     * This increments the put count and adds the item to the putItem list.
+     */
     public void handlePut( ICacheElement item )
         throws IOException
     {
-        // TODO Auto-generated method stub
-
+        putCount++;
+        this.putItems.add( item );
     }
 
+    /**
+     * Increments the remove count and adds the key to the removedKeys list.
+     */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
-        // TODO Auto-generated method stub
-
+        removeCount++;
+        removedKeys.add( key );
     }
 
     public void handleRemoveAll( String cacheName )

@@ -152,13 +152,13 @@ class RemoteCacheServer
     }
 
     /**
-     * Returns the cache lsitener for the specified cache. Creates the cache and
+     * Returns the cache listener for the specified cache. Creates the cache and
      * the cache descriptor if they do not already exist.
      * <p>
      * @param cacheName
      * @return The cacheListeners value
      */
-    private CacheListeners getCacheListeners( String cacheName )
+    protected CacheListeners getCacheListeners( String cacheName )
     {
         CacheListeners cacheListeners = (CacheListeners) cacheListenersMap.get( cacheName );
         synchronized ( cacheListenersMap )
@@ -184,7 +184,7 @@ class RemoteCacheServer
      * @param cacheName
      * @return The clusterListeners value
      */
-    private CacheListeners getClusterListeners( String cacheName )
+    protected CacheListeners getClusterListeners( String cacheName )
     {
         CacheListeners cacheListeners = (CacheListeners) clusterListenersMap.get( cacheName );
         synchronized ( clusterListenersMap )
@@ -282,7 +282,7 @@ class RemoteCacheServer
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "In update, put " + item.getKey() + " in " + item.getCacheName() );
+            log.debug( "In update, put [" + item.getKey() + "] in [" + item.getCacheName() + "]" );
         }
 
         try
@@ -484,7 +484,7 @@ class RemoteCacheServer
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "get " + key + " from cache " + cacheName + " requesterId = [" + requesterId + "] remoteType = "
+            log.debug( "get [" + key + "] from cache [" + cacheName + "] requesterId = [" + requesterId + "] remoteType = "
                 + remoteTypeL );
         }
 
@@ -610,7 +610,7 @@ class RemoteCacheServer
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "remove " + key + " from cache " + cacheName );
+            log.debug( "remove [" + key + "] from cache [" + cacheName + "]" );
         }
         CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
 
@@ -627,7 +627,6 @@ class RemoteCacheServer
             // notification.
             synchronized ( cacheDesc )
             {
-
                 boolean removeSuccess = false;
 
                 // No need to notify if it was not cached.
@@ -652,7 +651,7 @@ class RemoteCacheServer
 
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "remove " + key + " from cache " + cacheName + " success (was it found) = "
+                    log.debug( "remove [" + key + "] from cache [" + cacheName + "] success (was it found) = "
                         + removeSuccess );
                 }
 
@@ -685,7 +684,7 @@ class RemoteCacheServer
     }
 
     /**
-     * Remove all keys from the sepcified remote cache.
+     * Remove all keys from the specified remote cache.
      * <p>
      * @param cacheName
      * @param requesterId
@@ -732,7 +731,6 @@ class RemoteCacheServer
                 // update registered listeners
                 if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
                 {
-
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
                     for ( int i = 0; i < qlist.length; i++ )
@@ -966,7 +964,7 @@ class RemoteCacheServer
     }
 
     /**
-     * Unsibscribe this listener from this region. If the listener is
+     * Unsubscribe this listener from this region. If the listener is
      * registered, it will be removed from the event queue map list.
      * <p>
      * @param cacheName
@@ -979,7 +977,7 @@ class RemoteCacheServer
     }
 
     /**
-     * Unsibscribe this listener from this region. If the listener is
+     * Unsubscribe this listener from this region. If the listener is
      * registered, it will be removed from the event queue map list.
      * <p>
      * @param cacheName
@@ -992,7 +990,23 @@ class RemoteCacheServer
             log.info( "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]" );
         }
 
-        CacheListeners cacheDesc = getCacheListeners( cacheName );
+        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( listenerId ) );
+        boolean isClusterListener = false;
+        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        {
+            isClusterListener = true;
+        }
+        
+        CacheListeners cacheDesc = null;
+        
+        if ( isClusterListener )
+        {
+            cacheDesc = getClusterListeners( cacheName );            
+        }
+        else
+        {
+            cacheDesc = getCacheListeners( cacheName );
+        }
         Map eventQMap = cacheDesc.eventQMap;
         cleanupEventQMap( eventQMap );
         ICacheEventQueue q = (ICacheEventQueue) eventQMap.remove( new Long( listenerId ) );

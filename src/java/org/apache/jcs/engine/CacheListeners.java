@@ -25,10 +25,7 @@ public class CacheListeners
     /** Description of the Field */
     public final ICache cache;
 
-    /*
-     * Map ICacheListener to ICacheEventQueue.
-     */
-    /** Description of the Field */
+    /** Map ICacheListener to ICacheEventQueue */
     public final Map eventQMap = new Hashtable();
 
     /**

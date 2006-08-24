@@ -15,14 +15,13 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  * Tests for the remote cache listener.
- * 
+ * <p>
  * @author Aaron Smuts
  * 
  */
 public class RemoteCacheListenerUnitTest
     extends TestCase
 {
-
     /**
      * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to false.
      * Create a serialized element.  Call put on the listener.

@@ -336,13 +336,14 @@ public class RemoteCacheServerAttributes
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
-        buf.append( "\n remoteHost = " + this.remoteHost );
-        buf.append( "\n remotePort = " + this.remotePort );
-        buf.append( "\n cacheName = " + this.cacheName );
-        buf.append( "\n removeUponRemotePut = " + this.removeUponRemotePut );
-        buf.append( "\n getOnly = " + getOnly );
-        buf.append( "\n allowClusterGet = " + allowClusterGet );
-        buf.append( "\n localClusterConsistency = " + localClusterConsistency );
+        buf.append( "\n remoteHost = " + this.getRemoteHost() );
+        buf.append( "\n remotePort = " + this.getRemotePort() );
+        buf.append( "\n cacheName = " + this.getCacheName() );
+        buf.append( "\n removeUponRemotePut = " + this.getRemoveUponRemotePut() );
+        buf.append( "\n getOnly = " + this.getGetOnly() );
+        buf.append( "\n allowClusterGet = " + this.getAllowClusterGet() );
+        buf.append( "\n localClusterConsistency = " + this.getLocalClusterConsistency() );
+        buf.append( "\n getConfigFileName = " + this.getConfigFileName() );
         return buf.toString();
     }
 }
