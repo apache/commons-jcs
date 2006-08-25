@@ -3,6 +3,7 @@ package org.apache.jcs.auxiliary.lateral;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /*
@@ -31,9 +32,8 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * old factory could no longer import it.  This motivated the change.
  * <p>
  * This abstraction layer should keep things cleaner.  
- * 
+ * <p>
  * @author Aaron Smuts
- *
  */
 public abstract class LateralCacheAbstractFactory
 	implements AuxiliaryCacheFactory
@@ -51,16 +51,15 @@ public abstract class LateralCacheAbstractFactory
      * is used.
      * <p>
      * This should be called by create cache.
-     * 
-     * @param lac  LateralCacheAttributes
+     * <p>
+     * @param lac  ILateralCacheAttributes
      * @param cacheMgr
      */
-    public abstract void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr );
-    
-    
+    public abstract void createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr );
+        
     /**
      * Gets the name attribute of the LateralCacheFactory object
-     * 
+     * <p>
      * @return The name value
      */
     public String getName()
@@ -70,7 +69,7 @@ public abstract class LateralCacheAbstractFactory
 
     /**
      * Sets the name attribute of the LateralCacheFactory object
-     * 
+     * <p>
      * @param name
      *            The new name value
      */
@@ -78,5 +77,4 @@ public abstract class LateralCacheAbstractFactory
     {
         this.name = name;
     }
-
 }

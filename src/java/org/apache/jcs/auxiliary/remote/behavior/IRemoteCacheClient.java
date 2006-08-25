@@ -1,0 +1,50 @@
+package org.apache.jcs.auxiliary.remote.behavior;
+
+/*
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
+ */
+
+import org.apache.jcs.auxiliary.AuxiliaryCache;
+
+/**
+ * This defines the behavior expected of a remote cache client. This extends Auxiliary cache which
+ * in turn extends ICache.
+ * <p>
+ * I'd like generalize this a bit.
+ * <p>
+ * @author Aaron Smuts
+ */
+public interface IRemoteCacheClient
+    extends AuxiliaryCache
+{
+    /**
+     * Replaces the current remote cache service handle with the given handle. If the current remote
+     * is a Zombie, the propagate teh events that may be queued to the restored service.
+     * <p>
+     * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
+     */
+    public void fixCache( IRemoteCacheService remote );
+
+    /**
+     * Gets the listenerId attribute of the RemoteCacheListener object.
+     * <p>
+     * All requests to the remote cache must include a listener id. This allows the server to avoid
+     * sending updates the the listener associated with this client.
+     * <p>
+     * @return The listenerId value
+     */
+    public long getListenerId();
+
+    /**
+     * This returns the listener associated with this remote cache. TODO we should try to get this
+     * out of the interface.
+     * <p>
+     * @return IRemoteCacheListener
+     */
+    public IRemoteCacheListener getListener();
+}

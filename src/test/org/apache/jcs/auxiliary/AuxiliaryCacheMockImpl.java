@@ -150,4 +150,11 @@ public class AuxiliaryCacheMockImpl
         return cacheType;
     }
 
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return null;
+    }    
 }

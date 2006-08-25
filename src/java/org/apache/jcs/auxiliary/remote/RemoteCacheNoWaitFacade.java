@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
@@ -49,7 +50,7 @@ public class RemoteCacheNoWaitFacade
     private String cacheName;
 
     /** holds failover and cluster information */
-    protected RemoteCacheAttributes rca;
+    protected RemoteCacheAttributes remoteCacheAttributes;
 
     private ICompositeCacheManager cacheMgr;
 
@@ -60,7 +61,7 @@ public class RemoteCacheNoWaitFacade
      */
     public RemoteCacheAttributes getRemoteCacheAttributes()
     {
-        return rca;
+        return remoteCacheAttributes;
     }
 
     /**
@@ -70,7 +71,7 @@ public class RemoteCacheNoWaitFacade
      */
     public void setRemoteCacheAttributes( RemoteCacheAttributes rca )
     {
-        this.rca = rca;
+        this.remoteCacheAttributes = rca;
     }
 
     /**
@@ -88,7 +89,7 @@ public class RemoteCacheNoWaitFacade
             log.debug( "CONSTRUCTING NO WAIT FACADE" );
         }
         this.noWaits = noWaits;
-        this.rca = rca;
+        this.remoteCacheAttributes = rca;
         this.cacheName = rca.getCacheName();
         this.cacheMgr = cacheMgr;
     }
@@ -267,7 +268,7 @@ public class RemoteCacheNoWaitFacade
      */
     public String getCacheName()
     {
-        return rca.getCacheName();
+        return remoteCacheAttributes.getCacheName();
     }
 
     /**
@@ -296,7 +297,7 @@ public class RemoteCacheNoWaitFacade
      */
     public String toString()
     {
-        return "RemoteCacheNoWaitFacade: " + cacheName + ", rca = " + rca;
+        return "RemoteCacheNoWaitFacade: " + cacheName + ", rca = " + remoteCacheAttributes;
     }
 
     /**
@@ -311,7 +312,7 @@ public class RemoteCacheNoWaitFacade
             log.info( "in failover for " + i );
         }
 
-        if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
+        if ( remoteCacheAttributes.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
             if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
             {
@@ -337,6 +338,14 @@ public class RemoteCacheNoWaitFacade
         }
     }
 
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return this.remoteCacheAttributes;
+    }
+    
     /**
      * getStats
      * @return String

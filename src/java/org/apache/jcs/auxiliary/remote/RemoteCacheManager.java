@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
@@ -99,7 +100,11 @@ public class RemoteCacheManager
         this.cacheMgr = cacheMgr;
 
         // register shutdown observer
-        ( (CompositeCacheManager) this.cacheMgr ).registerShutdownObserver( this );
+        // TODO add the shutdown observable methods to the interface
+        if ( this.cacheMgr instanceof CompositeCacheManager )
+        {
+            ( (CompositeCacheManager) this.cacheMgr ).registerShutdownObserver( this );
+        }
 
         this.registry = "//" + host + ":" + port + "/" + service;
         if ( log.isDebugEnabled() )
@@ -216,7 +221,7 @@ public class RemoteCacheManager
             RemoteCacheNoWait cache = (RemoteCacheNoWait) caches.get( cattr.getCacheName() );
             if ( cache != null )
             {
-                RemoteCache rc = cache.getRemoteCache();
+                IRemoteCacheClient rc = cache.getRemoteCache();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Found cache for[ " + cattr.getCacheName() + "], deregistering listener." );
@@ -258,7 +263,7 @@ public class RemoteCacheManager
             RemoteCacheNoWait cache = (RemoteCacheNoWait) caches.get( cacheName );
             if ( cache != null )
             {
-                RemoteCache rc = cache.getRemoteCache();
+                IRemoteCacheClient rc = cache.getRemoteCache();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Found cache for [" + cacheName + "], deregistering listener." );

@@ -19,7 +19,7 @@ package org.apache.jcs.engine.behavior;
 import java.io.Serializable;
 
 /**
- * Inteface implemented by a specific cache.
+ * Interface implemented by a specific cache.
  *  
  */
 public interface ICacheType
@@ -39,7 +39,7 @@ public interface ICacheType
 
     /**
      * Returns the cache type.
-     * 
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType();

@@ -27,6 +27,8 @@ import java.util.HashSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.stats.StatElement;
@@ -48,27 +50,34 @@ public class LateralCacheNoWaitFacade
 
     private final static Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
 
-    /** Description of the Field */
+    /** The queuing facade to the client. */
     public LateralCacheNoWait[] noWaits;
 
     private String cacheName;
 
+    private ILateralCacheAttributes lateralCacheAttributes;
+    
     /**
      * Constructs with the given lateral cache, and fires events to any
      * listeners.
      * 
      * @param noWaits
-     * @param cacheName
+     * @param cattr
      */
-    public LateralCacheNoWaitFacade( LateralCacheNoWait[] noWaits, String cacheName )
+    public LateralCacheNoWaitFacade( LateralCacheNoWait[] noWaits, ILateralCacheAttributes cattr )
     {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "CONSTRUCTING NO WAIT FACADE" );
+        }        
         this.noWaits = noWaits;
-        this.cacheName = cacheName;
+        this.cacheName = cattr.getCacheName();
+        this.lateralCacheAttributes = cattr;
     }
 
     /**
      * Adds a no wait to the list if it isn't already in the list.
-     * 
+     * <p>
      * @param noWait
      * @return true if it wasn't alreay contained
      */
@@ -132,7 +141,7 @@ public class LateralCacheNoWaitFacade
 
     /**
      * Synchronously reads from the lateral cache.
-     * 
+     * <p>
      * @param key
      * @return ICacheElement
      */
@@ -189,7 +198,7 @@ public class LateralCacheNoWaitFacade
 
     /**
      * Adds a remove request to the lateral cache.
-     * 
+     * <p>
      * @param key
      * @return always false.
      */
@@ -287,6 +296,14 @@ public class LateralCacheNoWaitFacade
         //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
     }
 
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return this.lateralCacheAttributes;
+    }
+    
     /*
      * (non-Javadoc)
      * 

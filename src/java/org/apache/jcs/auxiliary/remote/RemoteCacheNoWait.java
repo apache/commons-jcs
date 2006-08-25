@@ -20,6 +20,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheConstants;
@@ -56,9 +58,9 @@ public class RemoteCacheNoWait
 
     private final static Log log = LogFactory.getLog( RemoteCacheNoWait.class );
 
-    private final RemoteCache cache;
+    private final IRemoteCacheClient cache;
 
-    private ICacheEventQueue q;
+    private ICacheEventQueue cacheEventQueue;
 
     /**
      * Constructs with the given remote cache, and fires up an event queue for aysnchronous
@@ -66,17 +68,17 @@ public class RemoteCacheNoWait
      * <p>
      * @param cache
      */
-    public RemoteCacheNoWait( RemoteCache cache )
+    public RemoteCacheNoWait( IRemoteCacheClient cache )
     {
         this.cache = cache;
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache.getCacheName(),
+        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache.getCacheName(),
                                              cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
                                                  .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
 
         if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
         {
-            q.destroy();
+            cacheEventQueue.destroy();
         }
     }
 
@@ -91,12 +93,12 @@ public class RemoteCacheNoWait
     {
         try
         {
-            q.addPutEvent( ce );
+            cacheEventQueue.addPutEvent( ce );
         }
         catch ( IOException ex )
         {
             log.error( "Problem adding putEvent to queue.", ex );
-            q.destroy();
+            cacheEventQueue.destroy();
             throw ex;
         }
     }
@@ -161,12 +163,12 @@ public class RemoteCacheNoWait
     {
         try
         {
-            q.addRemoveEvent( key );
+            cacheEventQueue.addRemoveEvent( key );
         }
         catch ( IOException ex )
         {
             log.error( "Problem adding RemoveEvent to queue.", ex );
-            q.destroy();
+            cacheEventQueue.destroy();
             throw ex;
         }
         return false;
@@ -174,6 +176,7 @@ public class RemoteCacheNoWait
 
     /**
      * Adds a removeAll request to the remote cache.
+     * <p>
      * @throws IOException
      */
     public void removeAll()
@@ -181,12 +184,12 @@ public class RemoteCacheNoWait
     {
         try
         {
-            q.addRemoveAllEvent();
+            cacheEventQueue.addRemoveAllEvent();
         }
         catch ( IOException ex )
         {
             log.error( "Problem adding RemoveAllEvent to queue.", ex );
-            q.destroy();
+            cacheEventQueue.destroy();
             throw ex;
         }
     }
@@ -196,12 +199,12 @@ public class RemoteCacheNoWait
     {
         try
         {
-            q.addDisposeEvent();
+            cacheEventQueue.addDisposeEvent();
         }
         catch ( IOException ex )
         {
             log.error( "Problem adding DisposeEvent to queue.", ex );
-            q.destroy();
+            cacheEventQueue.destroy();
         }
     }
 
@@ -233,7 +236,7 @@ public class RemoteCacheNoWait
      */
     public int getStatus()
     {
-        return q.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
+        return cacheEventQueue.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
     }
 
     /**
@@ -268,10 +271,10 @@ public class RemoteCacheNoWait
      */
     public void resetEventQ()
     {
-        ICacheEventQueue previousQueue = q;
+        ICacheEventQueue previousQueue = cacheEventQueue;
 
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache.getCacheName(),
+        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache.getCacheName(),
                                              cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
                                                  .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
 
@@ -282,7 +285,6 @@ public class RemoteCacheNoWait
             {
                 log.info( "resetEventQ, previous queue has [" + previousQueue.size() + "] items queued up." );
             }
-            // TODO consider waiting.
             previousQueue.destroy();
         }
     }
@@ -292,11 +294,29 @@ public class RemoteCacheNoWait
      * <p>
      * @return
      */
-    protected RemoteCache getRemoteCache()
+    protected IRemoteCacheClient getRemoteCache()
     {
         return cache;
     }
 
+    /**
+     * @return Returns the AuxiliaryCacheAttributes.
+     */
+    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+    {
+        return cache.getAuxiliaryCacheAttributes();
+    }
+
+    /**
+     * This is for testing only.  It allows you to take a look at the event queue.
+     * <p>
+     * @return ICacheEventQueue
+     */
+    protected ICacheEventQueue getCacheEventQueue()
+    {
+        return this.cacheEventQueue;
+    }
+    
     /**
      * Returns the stats and the cache.toString().
      * <p>
@@ -309,7 +329,8 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * getStats
+     * Returns the statistics in String form.
+     * <p>
      * @return String
      */
     public String getStats()
@@ -356,13 +377,16 @@ public class RemoteCacheNoWait
         // get the stats from the cache queue too
         // get as array, convert to list, add list to our outer list
         IStats cStats = this.cache.getStatistics();
-        IStatElement[] cSEs = cStats.getStatElements();
-        List cL = Arrays.asList( cSEs );
-        elems.addAll( cL );
+        if ( cStats != null )
+        {
+            IStatElement[] cSEs = cStats.getStatElements();
+            List cL = Arrays.asList( cSEs );
+            elems.addAll( cL );
+        }
 
         // get the stats from the event queue too
         // get as array, convert to list, add list to our outer list
-        IStats eqStats = this.q.getStatistics();
+        IStats eqStats = this.cacheEventQueue.getStatistics();
         IStatElement[] eqSEs = eqStats.getStatElements();
         List eqL = Arrays.asList( eqSEs );
         elems.addAll( eqL );

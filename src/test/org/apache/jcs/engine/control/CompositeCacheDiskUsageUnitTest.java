@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
@@ -416,6 +417,13 @@ public class CompositeCacheDiskUsageUnitTest
             return cacheType;
         }
 
+        /**
+         * @return Returns the AuxiliaryCacheAttributes.
+         */
+        public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
+        {
+            return null;
+        }
     }
 
 }

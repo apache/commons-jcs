@@ -22,10 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -49,7 +49,7 @@ import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
  * failover recovery when an error is encountered.
  */
 public class RemoteCache
-    implements ICache
+    implements IRemoteCacheClient
 {
     private static final long serialVersionUID = -5329231850422826460L;
 
@@ -602,7 +602,7 @@ public class RemoteCache
             log.debug( "Initiating failover, rcnf = " + rcnwf );
         }
 
-        if ( rcnwf != null && rcnwf.rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
+        if ( rcnwf != null && rcnwf.remoteCacheAttributes.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
             if ( log.isDebugEnabled() )
             {
@@ -675,9 +675,10 @@ public class RemoteCache
     /**
      * Allows other member of this package to access the listerner. This is mainly needed for
      * deregistering alistener.
+     * <p>
      * @return IRemoteCacheListener, the listener for this remote server
      */
-    protected IRemoteCacheListener getListener()
+    public IRemoteCacheListener getListener()
     {
         return listener;
     }

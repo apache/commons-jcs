@@ -744,6 +744,16 @@ class RemoteCacheServer
     }
 
     /**
+     * How many put events have we received.
+     * <p>
+     * @return puts
+     */
+    protected int getPutCount()
+    {
+        return puts;
+    }
+    
+    /**
      * Frees the specified remote cache.
      * <p>
      * @param cacheName

@@ -24,9 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryManager;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryService;
@@ -38,7 +38,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * lateral service / local relationship is managed by one manager. This manager
  * can have multiple caches. The remote relationships are consolidated and
  * restored via these managers.
- * 
+ * <p>
  * The facade provides a front to the composite cache so the implmentation is
  * transparent.
  * 
@@ -94,11 +94,11 @@ public class LateralTCPCacheFactory
             }
         }
 
-        createListener( (LateralCacheAttributes) iaca, cacheMgr );
+        createListener( (ILateralCacheAttributes) iaca, cacheMgr );
 
         // create the no wait facade.
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
-            .toArray( new LateralCacheNoWait[0] ), iaca.getCacheName() );
+            .toArray( new LateralCacheNoWait[0] ), (ILateralCacheAttributes)iaca );
 
         // create udp discovery if available.
         createDiscoveryService( lac, lcnwf, cacheMgr );
@@ -112,7 +112,7 @@ public class LateralTCPCacheFactory
      * @see org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory#createListener(org.apache.jcs.auxiliary.lateral.LateralCacheAttributes,
      *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
      */
-    public void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
+    public void createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
         ITCPLateralCacheAttributes attr = (ITCPLateralCacheAttributes) lac;
         // don't create a listener if we are not receiving.

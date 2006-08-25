@@ -153,6 +153,11 @@ public class RemoteCacheServerFactory
             boolean acg = Boolean.valueOf( acgStr ).booleanValue();
             rcsa.setAllowClusterGet( acg );
 
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Creating server with these attributes " + rcsa );
+            }
+            
             // CREATE SERVER
             remoteCacheServer = new RemoteCacheServer( rcsa );
 

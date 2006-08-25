@@ -1,0 +1,20 @@
+##############################################################
+################## REMOTE SERVER CONFIG  #####################
+# Registry used to register and provide the IRmiCacheService service.
+registry.host=localhost
+registry.port=1101
+# call back port to local caches.
+remote.cache.service.port=1101
+# cluster setting
+remote.cluster.LocalClusterConsistency=true
+
+##############################################################
+################## DEFAULT CACHE REGION  #####################
+jcs.default=
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=1000
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+
+##############################################################
+################## AUXILIARY CACHES AVAILABLE ################

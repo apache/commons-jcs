@@ -9,6 +9,7 @@ import org.apache.jcs.auxiliary.lateral.LateralCache;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCacheManager;
@@ -70,8 +71,11 @@ public class UDPDiscoveryUnitTest
 
         // create a no wait facade for the service
         ArrayList noWaits = new ArrayList();
+        ILateralCacheAttributes attr = new LateralCacheAttributes();
+        attr.setCacheName( "testCache1" );
+        
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
-            .toArray( new LateralCacheNoWait[0] ), "testCache1" );
+            .toArray( new LateralCacheNoWait[0] ), attr );
 
         // add the facade to the service under the name testCache1
         service.addNoWaitFacade( lcnwf, "testCache1" );
@@ -145,15 +149,17 @@ public class UDPDiscoveryUnitTest
 
     /**
      * Make sure the no wait facade doesn't add dupes.
-     * 
+     * <p>
      * @throws Exception
      */
     public void testNoWaitFacadeAdd()
         throws Exception
     {
         ArrayList noWaits = new ArrayList();
+        ILateralCacheAttributes attr = new LateralCacheAttributes();
+        attr.setCacheName( "testCache1" );        
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
-            .toArray( new LateralCacheNoWait[0] ), "testCache1" );
+            .toArray( new LateralCacheNoWait[0] ), attr );
 
         TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
         lac.setTransmissionType( LateralCacheAttributes.TCP );

@@ -27,7 +27,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.memory.MemoryCache;
+import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
 /**
  * A servlet which provides HTTP access to JCS. Allows a summary of regions to
@@ -145,7 +145,7 @@ public class JCSAdminBean
     public int getByteCount( CompositeCache cache )
         throws Exception
     {
-        MemoryCache memCache = cache.getMemoryCache();
+        IMemoryCache memCache = cache.getMemoryCache();
 
         Iterator iter = memCache.getIterator();
 
