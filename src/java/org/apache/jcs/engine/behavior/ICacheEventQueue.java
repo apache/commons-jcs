@@ -24,7 +24,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 /**
  * Interface for a cache event queue. An event queue is used to propagate
  * ordered cache events to one and only one target listener.
- *  
  */
 public interface ICacheEventQueue
 {
@@ -39,15 +38,15 @@ public interface ICacheEventQueue
     public static final int POOLED_QUEUE_TYPE = 1;
 
     /**
-     * Returnt he type of event queue we are using, either single or pooled.
-     * 
+     * Return the type of event queue we are using, either single or pooled.
+     * <p>
      * @return
      */
     public abstract int getQueueType();
 
     /**
      * Adds a feature to the PutEvent attribute of the ICacheEventQueue object
-     * 
+     * <p>
      * @param ce
      *            The feature to be added to the PutEvent attribute
      * @throws IOException
@@ -58,7 +57,7 @@ public interface ICacheEventQueue
     /**
      * Adds a feature to the RemoveEvent attribute of the ICacheEventQueue
      * object
-     * 
+     * <p>
      * @param key
      *            The feature to be added to the RemoveEvent attribute
      * @throws IOException
@@ -69,6 +68,7 @@ public interface ICacheEventQueue
     /**
      * Adds a feature to the RemoveAllEvent attribute of the ICacheEventQueue
      * object
+     * <p>
      * @throws IOException
      */
     public void addRemoveAllEvent()
@@ -77,6 +77,7 @@ public interface ICacheEventQueue
     /**
      * Adds a feature to the DisposeEvent attribute of the ICacheEventQueue
      * object
+     * <p>
      * @throws IOException
      */
     public void addDisposeEvent()
@@ -96,28 +97,36 @@ public interface ICacheEventQueue
      * Gets the alive attribute of the ICacheEventQueue object. Alive just
      * indicates that there are active threads. This is less important that if
      * the queue is working.
-     * 
+     * <p>
      * @return The alive value
      */
     public boolean isAlive();
 
     /**
      * A Queue is working unless it has reached its max failure count.
-     * 
+     * <p>
      * @return boolean
      */
     public boolean isWorking();
 
     /**
+     * Returns the number of elements in the queue.  If the queue cannot
+     * determine the size accurately it will return 1.
+     * <p>
+     * @return number of items in the queue.
+     */
+    public int size();
+    
+    /**
      * Are there elements in the queue.
-     * 
+     * <p>
      * @return true if there are stil elements.
      */
     public boolean isEmpty();
     
     /**
      * Returns the historical and statistical data for an event queue cache.
-     * 
+     * <p>
      * @return
      */
     public IStats getStatistics();

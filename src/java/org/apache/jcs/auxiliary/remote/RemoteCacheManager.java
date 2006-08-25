@@ -33,6 +33,9 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * An instance of RemoteCacheManager corresponds to one remote connection of a specific host and
  * port. All RemoteCacheManager instances are monitored by the singleton RemoteCacheMonitor
  * monitoring daemon for error detection and recovery.
+ * <p>
+ * Getting an instance of the remote cache has the effect of getting a handle on the remote server.
+ * Listeners are not registered with the server until a cache is requested from the manager.
  */
 public class RemoteCacheManager
     implements AuxiliaryCacheManager, IShutdownObserver
@@ -82,6 +85,7 @@ public class RemoteCacheManager
      * Constructs an instance to with the given remote connection parameters. If the connection
      * cannot be made, "zombie" services will be temporarily used until a successful re-connection
      * is made by the monitoring daemon.
+     * <p>
      * @param host
      * @param port
      * @param service
@@ -135,7 +139,8 @@ public class RemoteCacheManager
     }
 
     /**
-     * Gets the defaultCattr attribute of the RemoteCacheManager object
+     * Gets the defaultCattr attribute of the RemoteCacheManager object.
+     * <p>
      * @return The defaultCattr value
      */
     public IRemoteCacheAttributes getDefaultCattr()
@@ -145,6 +150,7 @@ public class RemoteCacheManager
 
     /**
      * Adds the remote cache listener to the underlying cache-watch service.
+     * <p>
      * @param cattr The feature to be added to the RemoteCacheListener attribute
      * @param listener The feature to be added to the RemoteCacheListener attribute
      * @throws IOException
@@ -344,6 +350,10 @@ public class RemoteCacheManager
     /**
      * Gets a RemoteCacheNoWait from the RemoteCacheManager. The RemoteCacheNoWait objects are
      * identified by the cache name value of the RemoteCacheAttributes object.
+     * <p>
+     * If the client is configured to register a listener, this call results on a listener being
+     * created if one isn't already registered with the remote cache for this region.
+     * <p>
      * @param cattr
      * @return The cache value
      */

@@ -1,19 +1,12 @@
 package org.apache.jcs.auxiliary.remote;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.util.ArrayList;
@@ -29,11 +22,10 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
- * The RemoteCacheFactory creates remote caches for the cache hub. It returns a
- * no wait facade which is a wrapper around a no wait. The no wait object is
- * either an active connection to a remote cache or a balking zombie if the
- * remote cache is not accessible. It should be transparent to the clients.
- *  
+ * The RemoteCacheFactory creates remote caches for the cache hub. It returns a no wait facade which
+ * is a wrapper around a no wait. The no wait object is either an active connection to a remote
+ * cache or a balking zombie if the remote cache is not accessible. It should be transparent to the
+ * clients.
  */
 public class RemoteCacheFactory
     implements AuxiliaryCacheFactory
@@ -45,15 +37,18 @@ public class RemoteCacheFactory
     /** store reference of facades to initiate failover */
     private final static HashMap facades = new HashMap();
 
-    /*
+    /**
+     * For LOCAL clients we get a handle to all the failovers, but we do not register a listener
+     * with them. We create the RemoteCacheManager, but we do not get a cache. The failover runner
+     * will get a cache from the manager. When the primary is restored it will tell the manager for
+     * the failover to deregister the listener.
+     * <p>
      * (non-Javadoc)
-     * 
      * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
      *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
-
         RemoteCacheAttributes rca = (RemoteCacheAttributes) iaca;
 
         ArrayList noWaits = new ArrayList();
@@ -61,7 +56,6 @@ public class RemoteCacheFactory
         // if LOCAL
         if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
-
             // a list toi be turned into an array of failover server information
             ArrayList failovers = new ArrayList();
 
@@ -128,14 +122,13 @@ public class RemoteCacheFactory
         }
         else if ( rca.getRemoteType() == RemoteCacheAttributes.CLUSTER )
         {
-
             // REGISTER LISTENERS FOR EACH SYSTEM CLUSTERED CACHEs
             StringTokenizer it = new StringTokenizer( rca.getClusterServers(), "," );
             while ( it.hasMoreElements() )
             {
-                //String server = (String)it.next();
+                // String server = (String)it.next();
                 String server = (String) it.nextElement();
-                //p( "tcp server = " + server );
+                // p( "tcp server = " + server );
                 rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                 rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
                 RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
@@ -166,7 +159,6 @@ public class RemoteCacheFactory
 
     /**
      * Gets the name attribute of the RemoteCacheFactory object
-     * 
      * @return The name value
      */
     public String getName()
@@ -176,9 +168,7 @@ public class RemoteCacheFactory
 
     /**
      * Sets the name attribute of the RemoteCacheFactory object
-     * 
-     * @param name
-     *            The new name value
+     * @param name The new name value
      */
     public void setName( String name )
     {
@@ -187,7 +177,6 @@ public class RemoteCacheFactory
 
     /**
      * The facades are what the cache hub talks to.
-     * 
      * @return Returns the facades.
      */
     public static HashMap getFacades()

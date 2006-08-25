@@ -262,18 +262,29 @@ public class RemoteCacheNoWait
     /**
      * Resets the event q by first destroying the existing one and starting up new one.
      * <p>
-     * TODO rethink this.  There may be no good reason to kill the existing queue.
+     * There may be no good reason to kill the existing queue. We will sometimes need to set a new
+     * listener id, so we should create a new queue. We should let the old queue drain. If we were
+     * conencted to the failover, it would be best to finish sending items.
      */
     public void resetEventQ()
     {
-        if ( q.isWorking() )
-        {
-            q.destroy();
-        }
+        ICacheEventQueue previousQueue = q;
+
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache.getCacheName(),
                                              cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
                                                  .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+
+        if ( previousQueue.isWorking() )
+        {
+            // we don't expect anything, it would have all gone to the zombie
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "resetEventQ, previous queue has [" + previousQueue.size() + "] items queued up." );
+            }
+            // TODO consider waiting.
+            previousQueue.destroy();
+        }
     }
 
     /**
@@ -286,13 +297,15 @@ public class RemoteCacheNoWait
         return cache;
     }
 
-    /*
+    /**
+     * Returns the stats and the cache.toString().
+     * <p>
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     public String toString()
     {
-        return "RemoteCacheNoWait: " + cache.toString();
+        return getStats() + "\n" + cache.toString();
     }
 
     /**

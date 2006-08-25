@@ -80,6 +80,8 @@ public class CacheEventQueue
     // the end of the queue
     private Node tail = head;
 
+    private int size = 0;
+    
     /**
      * Constructs with the specified listener and the cache name.
      * <p>
@@ -339,6 +341,7 @@ public class CacheEventQueue
 
         synchronized ( queueLock )
         {
+            size++;
             tail.next = newNode;
             tail = newNode;
             if ( isWorking() )
@@ -348,7 +351,10 @@ public class CacheEventQueue
                     destroyed = false;
                     processorThread = new QProcessor( this );
                     processorThread.start();
-                    log.info( "Cache event queue created: " + this );
+                    if ( log.isInfoEnabled() )
+                    {
+                        log.info( "Cache event queue created: " + this );
+                    }
                 }
                 else
                 {
@@ -395,6 +401,7 @@ public class CacheEventQueue
             node.event = null;
             head = node;
 
+            size--;
             return value;
         }
     }
@@ -626,7 +633,6 @@ public class CacheEventQueue
     private class PutEvent
         extends AbstractCacheEvent
     {
-
         private ICacheElement ice;
 
         /**
@@ -715,7 +721,6 @@ public class CacheEventQueue
     private class RemoveAllEvent
         extends AbstractCacheEvent
     {
-
         /**
          * Description of the Method
          * @exception IOException
@@ -746,7 +751,6 @@ public class CacheEventQueue
     private class DisposeEvent
         extends AbstractCacheEvent
     {
-
         /**
          * Called when gets to the end of the queue
          * <p>
@@ -792,4 +796,13 @@ public class CacheEventQueue
         return tail == head;
     }
 
+    /**
+     * Returns the number of elements in the queue. 
+     * <p>
+     * @return number of items in the queue.
+     */
+    public int size()
+    {
+        return size;
+    }
 }

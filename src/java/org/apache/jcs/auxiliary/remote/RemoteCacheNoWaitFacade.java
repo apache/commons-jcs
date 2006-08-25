@@ -30,9 +30,11 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * Used to provide access to multiple services under nowait protection. factory should construct
+ * Used to provide access to multiple services under nowait protection. Factory should construct
  * NoWaitFacade to give to the composite cache out of caches it constructs from the varies manager
  * to lateral services.
+ * <p>
+ * Typically, we only connect to one remote server per facade.  We use a list of one RemoteCacheNoWait.
  */
 public class RemoteCacheNoWaitFacade
     implements AuxiliaryCache
@@ -53,6 +55,7 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object
+     * <p>
      * @return The remoteCacheAttributes value
      */
     public RemoteCacheAttributes getRemoteCacheAttributes()
@@ -61,7 +64,8 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Sets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object
+     * Sets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object.
+     * <p>
      * @param rca The new remoteCacheAttributes value
      */
     public void setRemoteCacheAttributes( RemoteCacheAttributes rca )
@@ -133,6 +137,7 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Synchronously reads from the remote cache.
+     * <p>
      * @param key
      * @return Either an ICacheElement or null if it is not found.
      */
@@ -159,6 +164,7 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Gets the set of keys of objects currently in the group.
+     * <p>
      * @param group
      * @return
      * @throws IOException
@@ -180,6 +186,7 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Adds a remove request to the remote cache.
+     * <p>
      * @param key
      * @return wether or not it was removed, right now it return false.
      */
@@ -234,7 +241,7 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * No lateral invokation.
+     * No lateral invocation.
      * @return The size value
      */
     public int getSize()
@@ -244,7 +251,8 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Gets the cacheType attribute of the RemoteCacheNoWaitFacade object
+     * Gets the cacheType attribute of the RemoteCacheNoWaitFacade object.
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType()
@@ -253,7 +261,8 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object
+     * Gets the cacheName attribute of the RemoteCacheNoWaitFacade object.
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -282,6 +291,7 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * String form of some of the configuratin information for the remote cache.
+     * <p>
      * @return Some info for logging.
      */
     public String toString()
@@ -291,6 +301,7 @@ public class RemoteCacheNoWaitFacade
 
     /**
      * Begin the failover process if this is a local cache. Clustered remote caches do not failover.
+     * <p>
      * @param i The no wait in error.
      */
     protected void failover( int i )
@@ -364,7 +375,6 @@ public class RemoteCacheNoWaitFacade
                 List sL = Arrays.asList( sSEs );
                 elems.addAll( sL );
             }
-
         }
 
         // get an array and put them in the Stats object
@@ -373,5 +383,4 @@ public class RemoteCacheNoWaitFacade
 
         return stats;
     }
-
 }

@@ -1,14 +1,12 @@
 package org.apache.jcs.engine;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -30,17 +28,14 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 
 /**
- * An event queue is used to propagate ordered cache events to one and only one
- * target listener.
+ * An event queue is used to propagate ordered cache events to one and only one target listener.
  * <p>
- * This is a modified version of the experimental version. It uses a
- * PooledExecutor and a BoundedBuffer to queue up events and execute them as
- * threads become available.
+ * This is a modified version of the experimental version. It uses a PooledExecutor and a
+ * BoundedBuffer to queue up events and execute them as threads become available.
  * <p>
- * The PooledExecutor is static, because presumably these processes will be IO
- * bound, so throwing more than a few threads at them will serve no purpose
- * other than to saturate the IO interface. In light of this, having one thread
- * per region seems unnecessary. This may prove to be false.
+ * The PooledExecutor is static, because presumably these processes will be IO bound, so throwing
+ * more than a few threads at them will serve no purpose other than to saturate the IO interface. In
+ * light of this, having one thread per region seems unnecessary. This may prove to be false.
  * <p>
  * @author Aaron Smuts
  * @author Travis Savo <tsavo@ifilm.com>
@@ -126,9 +121,7 @@ public class PooledCacheEventQueue
      */
     public synchronized void stopProcessing()
     {
-
         destroyed = true;
-
     }
 
     /**
@@ -194,15 +187,17 @@ public class PooledCacheEventQueue
             // TODO decide whether to shutdown or interrupt
             // pool.getPool().shutdownNow();
             pool.getPool().interruptAll();
-            log.info( "Cache event queue destroyed: " + this );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Cache event queue destroyed: " + this );
+            }
         }
     }
 
     /**
      * Constructs a PutEvent for the object and passes it to the event queue.
      * <p>
-     * @param ce
-     *            The feature to be added to the PutEvent attribute
+     * @param ce The feature to be added to the PutEvent attribute
      * @exception IOException
      */
     public synchronized void addPutEvent( ICacheElement ce )
@@ -222,8 +217,7 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * @param key
-     *            The feature to be added to the RemoveEvent attribute
+     * @param key The feature to be added to the RemoveEvent attribute
      * @exception IOException
      */
     public synchronized void addRemoveEvent( Serializable key )
@@ -383,8 +377,8 @@ public class PooledCacheEventQueue
         boolean done = false;
 
         /**
-         * Main processing method for the AbstractCacheEvent object. It calls
-         * the abstract doRun method that all concrete instances must implement.
+         * Main processing method for the AbstractCacheEvent object. It calls the abstract doRun
+         * method that all concrete instances must implement.
          */
         public void run()
         {
@@ -562,7 +556,6 @@ public class PooledCacheEventQueue
     private class DisposeEvent
         extends AbstractCacheEvent
     {
-
         /**
          * Called when gets to the end of the queue
          * <p>
@@ -589,8 +582,7 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * @param isWorkingArg
-     *            whether the queue is functional
+     * @param isWorkingArg whether the queue is functional
      */
     public void setWorking( boolean isWorkingArg )
     {
@@ -598,8 +590,8 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * If the Queue is using a bounded channel we can determine the size. If it
-     * is zero or we can't determine the size, we return true.
+     * If the Queue is using a bounded channel we can determine the size. If it is zero or we can't
+     * determine the size, we return true.
      * <p>
      * @return whether or not there are items in the queue
      */
@@ -621,5 +613,31 @@ public class PooledCacheEventQueue
                 return true;
             }
         }
-    }    
+    }
+
+    /**
+     * Returns the number of elements in the queue. If the queue cannot determine the size
+     * accurately it will return 1.
+     * <p>
+     * @return number of items in the queue.
+     */
+    public int size()
+    {
+        if ( pool.getQueue() == null )
+        {
+            return pool.getQueue().peek() == null ? 0 : 1;
+        }
+        else
+        {
+            if ( pool.getQueue() instanceof BoundedBuffer )
+            {
+                BoundedBuffer bb = (BoundedBuffer) pool.getQueue();
+                return bb.size();
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
 }

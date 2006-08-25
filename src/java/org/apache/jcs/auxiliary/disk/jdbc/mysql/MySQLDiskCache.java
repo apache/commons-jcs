@@ -11,9 +11,8 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * The MySQLDiskCache extends the core JDBCDiskCache.
  * <p>
- * Although the generic JDBC Disk Cache can be used for MySQL, the MySQL JDBC
- * Disk Cache has additional features, such as table optimization that are
- * particular to MySQL.
+ * Although the generic JDBC Disk Cache can be used for MySQL, the MySQL JDBC Disk Cache has
+ * additional features, such as table optimization that are particular to MySQL.
  * <p>
  * @author Aaron Smuts
  */
@@ -27,8 +26,8 @@ public class MySQLDiskCache
     MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
 
     /**
-     * Delegates to the super and makes use of the MySQL specific parameters
-     * used for scheduled optimization.
+     * Delegates to the super and makes use of the MySQL specific parameters used for scheduled
+     * optimization.
      * <p>
      * @param attributes
      * @param tableState
@@ -46,11 +45,10 @@ public class MySQLDiskCache
     }
 
     /**
-     * This delegates to the generic JDBC disk cache. If we are currently
-     * optimizing, then this method will balk and return null.
+     * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
+     * method will balk and return null.
      * <p>
-     * @param key
-     *            Key to locate value for.
+     * @param key Key to locate value for.
      * @return An object matching key, or null.
      */
     public ICacheElement doGet( Serializable key )
@@ -66,8 +64,8 @@ public class MySQLDiskCache
     }
 
     /**
-     * This delegates to the generic JDBC disk cache. If we are currently
-     * optimizing, then this method will balk and do nothing. A
+     * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
+     * method will balk and do nothing.
      * <p>
      * @param element
      */
@@ -83,4 +81,24 @@ public class MySQLDiskCache
         super.doUpdate( element );
     }
 
+    /**
+     * Removed the expired. (now - create time) > max life seconds * 1000
+     * <p>
+     * If we are currently optimizing, then this method will balk and do nothing.
+     * <p>
+     * TODO consider blocking and trying again.
+     * <p>
+     * @return the number deleted
+     */
+    protected int deleteExpired()
+    {
+        if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
+        {
+            if ( this.mySQLDiskCacheAttributes.isBalkDuringOptimization() )
+            {
+                return -1;
+            }
+        }
+        return super.deleteExpired();
+    }
 }

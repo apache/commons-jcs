@@ -11,13 +11,11 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.rmi.Naming;
 
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
-
-import org.apache.jcs.engine.behavior.ICacheRestore;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
+import org.apache.jcs.engine.behavior.ICacheRestore;
 
 /**
  * Used to repair the remote caches managed by the associated instance of RemoteCacheManager.
@@ -25,8 +23,10 @@ import org.apache.commons.logging.LogFactory;
  * When there is an error the monitor kicks off. The Failover runner starts looks for a manager with
  * a connection to a remote cache that is not in error. If a manager's connection to a remote cache
  * is found to be in error, the restorer kicks off and tries to reconnect. When it is succesful, the
- * status of the manager changes. When the failover runner finds that the primary is in good shape,
- * it will switch back.
+ * status of the manager changes.
+ * <p>
+ * When the failover runner finds that the primary is in good shape, it will switch back. Switching
+ * back invovles setting the first no wait on the no wait facade.
  */
 public class RemoteCacheRestore
     implements ICacheRestore

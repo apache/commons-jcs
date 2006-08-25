@@ -117,7 +117,7 @@ public class RemoteCacheFailoverRunner
     }
 
     /**
-     * This is the main loop. If there are failovers define, then this will
+     * This is the main loop. If there are failovers defined, then this will
      * continue until the primary is re-connected. If no failovers are defined,
      * this will exit automatically.
      */
@@ -321,7 +321,7 @@ public class RemoteCacheFailoverRunner
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "Trying to restore conncetion to primary remopte server [" + server + "]" );
+            log.info( "Trying to restore connection to primary remote server [" + server + "]" );
         }
 
         try
@@ -414,14 +414,17 @@ public class RemoteCacheFailoverRunner
                     }
 
                     // Restore primary
-                    // may need to do this more gracefully
+                    // may need to do this more gracefully, letting the failover finish in the background
+                    RemoteCacheNoWait failoverNoWait = facade.noWaits[0];
+                    
+                    // swap in a new one
                     facade.noWaits = new RemoteCacheNoWait[1];
                     facade.noWaits[0] = (RemoteCacheNoWait) ic;
                     facade.rca.setFailoverIndex( 0 );
 
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "Successfully reconnected to PRIMARY remote server." );
+                        log.info( "Successfully reconnected to PRIMARY remote server.  Substituted primary for failoverNoWait [" + failoverNoWait + "]" );
                     }
                     return true;
                 }
