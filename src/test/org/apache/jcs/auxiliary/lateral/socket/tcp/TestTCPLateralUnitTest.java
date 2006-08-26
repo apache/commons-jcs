@@ -17,7 +17,7 @@ import org.apache.jcs.engine.control.CompositeCacheManagerMockImpl;
  * @author Aaron Smuts
  *  
  */
-public class TestTCPLateral
+public class TestTCPLateralUnitTest
     extends TestCase
 {
 
