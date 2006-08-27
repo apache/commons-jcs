@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.disk.indexed;
+package org.apache.jcs.auxiliary.disk.block;
 
 import java.text.DecimalFormat;
 import java.util.Random;
@@ -15,7 +15,7 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
  * <p>
  * @author Aaron Smuts
  */
-public class IndexedDiskCacheSteadyLoadTest
+public class BlockDiskCacheSteadyLoadTest
     extends TestCase
 {
     private static final String LOG_DIVIDER = "---------------------------";
@@ -32,13 +32,13 @@ public class IndexedDiskCacheSteadyLoadTest
     public void testRunSteadyLoadTest()
         throws Exception
     {
-        JCS.setConfigFilename( "/TestDiskCacheSteadyLoad.ccf" );
+        JCS.setConfigFilename( "/TestBlockDiskCacheSteadyLoad.ccf" );
 
         System.out.println( "runSteadyLoadTest" );
 
         logMemoryUsage();
 
-        int numPerRun = 200;
+        int numPerRun = 250;
         long pauseBetweenRuns = 1000;
         int runCount = 0;
         int runs = 1000;
@@ -80,6 +80,15 @@ public class IndexedDiskCacheSteadyLoadTest
                 jcs.put( String.valueOf( totalPut ), object );
             }
 
+            // get half of those inserted the previous run
+            if ( runCount > 1 )
+            {
+                for ( int j = ( ( totalPut - numPerRun ) - ( numPerRun / 2 ) ); j < ( totalPut - numPerRun ); j++ )
+                {
+                    jcs.get( String.valueOf( j ) );
+                }
+            } 
+            
             // remove half of those inserted the previous run
             if ( runCount > 1 )
             {
@@ -88,6 +97,7 @@ public class IndexedDiskCacheSteadyLoadTest
                     jcs.remove( String.valueOf( j ) );
                 }
             }
+           
 
             Thread.sleep( pauseBetweenRuns );
             if ( runCount % 1 == 0 )

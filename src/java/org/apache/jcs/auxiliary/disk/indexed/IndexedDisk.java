@@ -55,7 +55,7 @@ class IndexedDisk
     /**
      * This reads an object from the given starting position on the file.
      * <p>
-     * The firt four bytes of the record should tell us how long it is. The data is read into a byte
+     * The first four bytes of the record should tell us how long it is. The data is read into a byte
      * array and then an object is constructed from the byte array.
      * <p>
      * @return Serializable

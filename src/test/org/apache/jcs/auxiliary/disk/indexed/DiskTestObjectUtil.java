@@ -12,6 +12,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
 import java.io.IOException;
 import java.util.Random;
 
+import org.apache.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.serialization.StandardSerializer;

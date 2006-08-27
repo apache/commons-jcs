@@ -1,0 +1,16 @@
+# Java Caching System configuration file
+
+# DEFAULT CACHE REGION   
+jcs.default=DC
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.DiskUsagePatternName=UPDATE
+
+
+# AVAILABLE AUXILIARY CACHES   
+jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/block-steady-load
+jcs.auxiliary.DC.attributes.maxKeySize=20000
+jcs.auxiliary.DC.attributes.blockSizeBytes=5000

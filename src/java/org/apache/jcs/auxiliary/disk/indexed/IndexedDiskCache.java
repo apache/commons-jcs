@@ -817,7 +817,6 @@ public class IndexedDiskCache
                 log.info( logCacheName + "Set maxKeySize to unlimited'" );
             }
         }
-
     }
 
     /**
