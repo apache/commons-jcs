@@ -11,12 +11,15 @@ package org.apache.jcs.auxiliary.disk.block;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +49,7 @@ public class BlockDiskKeyStore
 
     private int maxKeySize;
 
+    // we need this so we can communicate free blocks to the data store when keys fall off the LRU
     private BlockDiskCache blockDiskCache;
 
     private File rootDirectory;
@@ -72,10 +76,15 @@ public class BlockDiskKeyStore
 
         if ( log.isInfoEnabled() )
         {
-            log.info( logCacheName + "Cache file root directory: " + rootDirName );
+            log.info( logCacheName + "Cache file root directory [" + rootDirName + "]" );
         }
 
         this.keyFile = new File( rootDirectory, fileName + ".key" );
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( logCacheName + "Key File [" + this.keyFile.getAbsolutePath() + "]" );
+        }
 
         if ( keyFile.length() > 0 )
         {
@@ -89,7 +98,8 @@ public class BlockDiskKeyStore
     }
 
     /**
-     * Saves key file to disk. This converts the LRUMap to a HashMap for deserialzation.
+     * Saves key file to disk. This gets the LRUMap entry set and write the entries out one by one
+     * after putting them in a wrapper.
      */
     protected void saveKeys()
     {
@@ -99,34 +109,40 @@ public class BlockDiskKeyStore
             int numKeys = keyHash.size();
             if ( log.isInfoEnabled() )
             {
-                log.info( logCacheName + "Saving keys to: " + fileName + ", key count: " + numKeys );
+                log.info( logCacheName + "Saving keys to [" + this.keyFile.getAbsolutePath() + "], key count ["
+                    + numKeys + "]" );
             }
 
             keyFile.delete();
 
-            HashMap keys = new HashMap();
-            keys.putAll( keyHash );
-
-            if ( keys.size() > 0 )
+            keyFile = new File( rootDirectory, fileName + ".key" );
+            FileOutputStream fos = new FileOutputStream( keyFile );
+            BufferedOutputStream bos = new BufferedOutputStream( fos, 1024 );
+            ObjectOutputStream oos = new ObjectOutputStream( bos );
+            try
             {
-                FileOutputStream fos = new FileOutputStream( keyFile );
-                BufferedOutputStream bos = new BufferedOutputStream( fos );
-                ObjectOutputStream oos = new ObjectOutputStream( bos );
-                try
+                // don't need to synchronize, since the underlying collection makes a copy
+                Iterator keyIt = keyHash.entrySet().iterator();
+                while ( keyIt.hasNext() )
                 {
-                    oos.writeObject( keys );
-                    oos.flush();
+                    Map.Entry entry = (Map.Entry) keyIt.next();
+                    BlockDiskElementDescriptor descriptor = new BlockDiskElementDescriptor();
+                    descriptor.setKey( (Serializable) entry.getKey() );
+                    descriptor.setBlocks( (int[]) entry.getValue() );
+                    // stream these out in the loop.
+                    oos.writeObject( descriptor );
                 }
-                finally
-                {
-                    oos.close();
-                }
+            }
+            finally
+            {
+                oos.flush();
+                oos.close();
             }
 
             if ( log.isInfoEnabled() )
             {
                 log.info( logCacheName + "Finished saving keys. It took " + timer.getElapsedTimeString() + " to store "
-                    + numKeys + " keys." );
+                    + numKeys + " keys.  Key file length [" + keyFile.length() + "]" );
             }
         }
         catch ( Exception e )
@@ -146,6 +162,14 @@ public class BlockDiskKeyStore
         keyFile = new File( this.rootDirectory, fileName + ".key" );
 
         initKeyMap();
+    }
+
+    /**
+     * This is mainly used for testing. It leave the disk in tact, and just clears memory.
+     */
+    protected void clearMemoryMap()
+    {
+        this.keyHash.clear();
     }
 
     /**
@@ -175,17 +199,17 @@ public class BlockDiskKeyStore
     }
 
     /**
-     * Loads the keys from the .key file. The keys are stored in a HashMap on disk. This is
-     * converted into a LRUMap.
+     * Loads the keys from the .key file. The keys are stored individually on disk. They are added
+     * one by one to an LRUMap..
      * <p>
      * @throws InterruptedException
      */
     protected void loadKeys()
         throws InterruptedException
     {
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( logCacheName + "Loading keys for " + keyFile.toString() );
+            log.info( logCacheName + "Loading keys for " + keyFile.toString() );
         }
 
         try
@@ -193,21 +217,32 @@ public class BlockDiskKeyStore
             // create a key map to use.
             initKeyMap();
 
-            HashMap keys = null;
+            HashMap keys = new HashMap();
 
             FileInputStream fis = new FileInputStream( keyFile );
             BufferedInputStream bis = new BufferedInputStream( fis );
             ObjectInputStream ois = new ObjectInputStream( bis );
             try
             {
-                keys = (HashMap) ois.readObject();// 0, keyFile.length() );
+                while ( true )
+                {
+                    BlockDiskElementDescriptor descriptor = (BlockDiskElementDescriptor) ois.readObject();
+                    if ( descriptor != null )
+                    {
+                        keys.put( descriptor.getKey(), descriptor.getBlocks() );
+                    }
+                }
+            }
+            catch ( EOFException eof )
+            {
+                // nothing
             }
             finally
             {
                 ois.close();
             }
 
-            if ( keys != null )
+            if ( !keys.isEmpty() )
             {
                 if ( log.isDebugEnabled() )
                 {
@@ -260,23 +295,23 @@ public class BlockDiskKeyStore
     }
 
     /**
-     * gets the object fot he key.
+     * gets the object for the key.
      * <p>
      * @param key
      * @return Object
      */
-    public BlockDiskElementDescriptor get( Object key )
+    public int[] get( Object key )
     {
-        return (BlockDiskElementDescriptor) this.keyHash.get( key );
+        return (int[]) this.keyHash.get( key );
     }
 
     /**
-     * Puts a BlockDiskElementDescriptor in the keyStore.
+     * Puts a int[] in the keyStore.
      * <p>
      * @param key
      * @param value
      */
-    public void put( Object key, BlockDiskElementDescriptor value )
+    public void put( Object key, int[] value )
     {
         this.keyHash.put( key, value );
     }
@@ -287,9 +322,9 @@ public class BlockDiskKeyStore
      * @param key
      * @return BlockDiskElementDescriptor if it was present, else null
      */
-    public BlockDiskElementDescriptor remove( Object key )
+    public int[] remove( Object key )
     {
-        return (BlockDiskElementDescriptor) this.keyHash.remove( key );
+        return (int[]) this.keyHash.remove( key );
     }
 
     /**
@@ -328,7 +363,7 @@ public class BlockDiskKeyStore
          */
         protected void processRemovedLRU( Object key, Object value )
         {
-            blockDiskCache.freeBlocks( ( (BlockDiskElementDescriptor) value ).getBlocks() );
+            blockDiskCache.freeBlocks( (int[]) value );
             if ( log.isDebugEnabled() )
             {
                 log.debug( logCacheName + "Removing key: [" + key + "] from key store." );

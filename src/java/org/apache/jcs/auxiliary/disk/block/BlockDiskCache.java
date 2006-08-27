@@ -205,10 +205,10 @@ public class BlockDiskCache
             storageLock.readLock().acquire();
             try
             {
-                BlockDiskElementDescriptor ded = this.keyStore.get( key );
+                int[] ded = this.keyStore.get( key );
                 if ( ded != null )
                 {
-                    object = (ICacheElement) this.dataFile.read( ded.getBlocks() );
+                    object = (ICacheElement) this.dataFile.read( ded );
                 }
             }
             finally
@@ -253,7 +253,7 @@ public class BlockDiskCache
             return;
         }
 
-        BlockDiskElementDescriptor old = null;
+        int[] old = null;
         try
         {
             // make sure this only locks for one particular cache region
@@ -264,16 +264,12 @@ public class BlockDiskCache
 
                 if ( old != null )
                 {
-                    this.dataFile.freeBlocks( old.getBlocks() );
+                    this.dataFile.freeBlocks( old );
                 }
 
                 int[] blocks = this.dataFile.write( element );
 
-                BlockDiskElementDescriptor newElement = new BlockDiskElementDescriptor();
-                newElement.setKey( element.getKey() );
-                newElement.setBlocks( blocks );
-
-                this.keyStore.put( element.getKey(), newElement );
+                this.keyStore.put( element.getKey(), blocks );
             }
             finally
             {
@@ -333,8 +329,8 @@ public class BlockDiskCache
 
                     if ( k instanceof String && k.toString().startsWith( key.toString() ) )
                     {
-                        BlockDiskElementDescriptor ded = this.keyStore.get( key );
-                        this.dataFile.freeBlocks( ded.getBlocks() );
+                        int[] ded = this.keyStore.get( key );
+                        this.dataFile.freeBlocks( ded );
                         iter.remove();
                         removed = true;
                         // TODO this needs to update the rmove count separately
@@ -352,8 +348,8 @@ public class BlockDiskCache
 
                     if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
                     {
-                        BlockDiskElementDescriptor ded = this.keyStore.get( key );
-                        this.dataFile.freeBlocks( ded.getBlocks() );
+                        int[] ded = this.keyStore.get( key );
+                        this.dataFile.freeBlocks( ded );
                         iter.remove();
                         removed = true;
                     }
@@ -362,11 +358,11 @@ public class BlockDiskCache
             else
             {
                 // remove single item.
-                BlockDiskElementDescriptor ded = this.keyStore.remove( key );
+                int[] ded = this.keyStore.remove( key );
                 removed = ( ded != null );
                 if ( ded != null )
                 {
-                    this.dataFile.freeBlocks( ded.getBlocks() );
+                    this.dataFile.freeBlocks( ded );
                 }
 
                 if ( log.isDebugEnabled() )
@@ -450,9 +446,10 @@ public class BlockDiskCache
 
     /**
      * Internal method that handles the disposal.
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
-    private void disposeInternal() throws InterruptedException
+    private void disposeInternal()
+        throws InterruptedException
     {
         if ( !alive )
         {

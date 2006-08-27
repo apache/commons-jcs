@@ -170,10 +170,9 @@ public class LRUMap
      * <p>
      * @see java.util.Map#entrySet()
      */
-    public Set entrySet()
+    public synchronized Set entrySet()
     {
         // todo, we should return a defensive copy
-        // this is not thread safe.
         Set entries = map.entrySet();
 
         Set unWrapped = new HashSet();
@@ -182,9 +181,7 @@ public class LRUMap
         while ( it.hasNext() )
         {
             Entry pre = (Entry) it.next();
-
             Entry post = new LRUMapEntry( pre.getKey(), ( (LRUElementDescriptor) pre.getValue() ).getPayload() );
-
             unWrapped.add( post );
         }
 
