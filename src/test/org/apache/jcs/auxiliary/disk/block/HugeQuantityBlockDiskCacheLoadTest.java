@@ -3,6 +3,8 @@ package org.apache.jcs.auxiliary.disk.block;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
+import org.apache.jcs.utils.timing.ElapsedTimer;
+import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Put a few hundred thousand entries in the block disk cache.
@@ -38,15 +40,19 @@ public class HugeQuantityBlockDiskCacheLoadTest
         int items = 300000;
         String region = "testCache1";
 
-        JCS jcs = JCS.getInstance( region );
+        System.out.println( "--------------------------" );
+        long initialMemory = measureMemoryUse();
+        System.out.println( "Before getting JCS: " + initialMemory );
 
+        JCS jcs = JCS.getInstance( region );
+        jcs.clear();
+        
         try
         {
-
+            ElapsedTimer timer = new ElapsedTimer();            
             System.out.println( "Start: " + measureMemoryUse() );
 
             // Add items to cache
-
             for ( int i = 0; i <= items; i++ )
             {
                 jcs.put( i + ":key", region + " data " + i );
@@ -61,24 +67,40 @@ public class HugeQuantityBlockDiskCacheLoadTest
             System.out.println( jcs.getStats() );
             System.out.println( "--------------------------" );
             System.out.println( "After wait: " + measureMemoryUse() );
-
-            // Test that all items are in cache
-
-            for ( int i = 0; i <= items; i++ )
+            
+            for ( int i = 0; i < 10; i++ )
             {
-                String value = (String) jcs.get( i + ":key" );
-
-                assertEquals( region + " data " + i, value );
+                SleepUtil.sleepAtLeast( 3000 );
+                System.out.println( "--------------------------" );
+                System.out.println( "After sleep. " + timer.getElapsedTimeString() + " memory used = " + measureMemoryUse() );
+                System.out.println( jcs.getStats() );                
             }
 
-            System.out.println( "After get: " + measureMemoryUse() );
+            // Test that all items are in cache
+            System.out.println( "--------------------------" );
+            System.out.println( "Retrieving all." );
+            for ( int i = 0; i <= items; i++ )
+            {
+                //System.out.print(  "\033[s" );
+                String value = (String) jcs.get( i + ":key" );
+                if( i % 1000 == 0 )
+                {
+                    //System.out.print(  "\033[r" );
+                    System.out.println(  i + " ");
+                }
+                assertEquals( "Wrong value returned.", region + " data " + i, value );
+            }
+            long aftetGet = measureMemoryUse();
+            System.out.println( "After get: " + aftetGet + " diff = " + (aftetGet - initialMemory));
+        
         }
         finally
         {
             // dump the stats to the report
             System.out.println( jcs.getStats() );
             System.out.println( "--------------------------" );
-            System.out.println( "End: " + measureMemoryUse() );
+            long endMemory = measureMemoryUse();
+            System.out.println( "End: " + endMemory + " diff = " + (endMemory - initialMemory) );
         }
     }
 

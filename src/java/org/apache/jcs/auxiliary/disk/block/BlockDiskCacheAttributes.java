@@ -19,6 +19,12 @@ public class BlockDiskCacheAttributes
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_MAX_KEY_SIZE;
     
+    private static final long DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS = 5 * 60;
+    
+    /** The keys will be persisted at this interval.  -1 mean never. */
+    private long keyPersistenceIntervalSeconds = DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS;
+    
+    
     /**
      * The size of the blocks. All blocks are the same size.
      * <p>
@@ -54,6 +60,22 @@ public class BlockDiskCacheAttributes
     }
 
     /**
+     * @param keyPersistenceIntervalSeconds The keyPersistenceIntervalSeconds to set.
+     */
+    public void setKeyPersistenceIntervalSeconds( long keyPersistenceIntervalSeconds )
+    {
+        this.keyPersistenceIntervalSeconds = keyPersistenceIntervalSeconds;
+    }
+
+    /**
+     * @return Returns the keyPersistenceIntervalSeconds.
+     */
+    public long getKeyPersistenceIntervalSeconds()
+    {
+        return keyPersistenceIntervalSeconds;
+    }
+
+    /**
      * Write out the values for debugging purposes.
      * <p>
      * @return String
@@ -66,6 +88,7 @@ public class BlockDiskCacheAttributes
         str.append( "\n MaxKeySize [" + this.getMaxKeySize() + "]" );
         str.append( "\n MaxPurgatorySize [" + this.getMaxPurgatorySize() + "]" );
         str.append( "\n BlockSizeBytes [" + this.getBlockSizeBytes() + "]" );
+        str.append( "\n KeyPersistenceIntervalSeconds [" + this.getKeyPersistenceIntervalSeconds() + "]" );
         return str.toString();
     }
 }

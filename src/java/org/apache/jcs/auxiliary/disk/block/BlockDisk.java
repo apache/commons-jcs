@@ -64,8 +64,13 @@ public class BlockDisk
      */
     public BlockDisk( File file )
         throws FileNotFoundException
-    {
+    {        
         this( file, DEFAULT_BLOCK_SIZE_BYTES );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Used default block size [" + DEFAULT_BLOCK_SIZE_BYTES + "]" );
+        }
+        
     }
 
     /**

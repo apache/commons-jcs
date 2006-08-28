@@ -92,10 +92,9 @@ public class BlockDiskCache
 
         try
         {
-            if ( cacheAttributes.getBlockSizeBytes() > 0 )
+            if ( this.blockDiskCacheAttributes.getBlockSizeBytes() > 0 )
             {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), cacheAttributes
-                    .getBlockSizeBytes() );
+                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), this.blockDiskCacheAttributes.getBlockSizeBytes() );
             }
             else
             {
@@ -104,7 +103,9 @@ public class BlockDiskCache
 
             keyStore = new BlockDiskKeyStore( this.blockDiskCacheAttributes, this );
 
-            if ( keyStore.size() == 0 )
+            boolean alright = verifyDisk();
+
+            if ( keyStore.size() == 0 || !alright )
             {
                 this.reset();
             }
@@ -113,7 +114,7 @@ public class BlockDiskCache
             alive = true;
             if ( log.isInfoEnabled() )
             {
-                log.info( logCacheName + "Indexed Disk Cache is alive." );
+                log.info( logCacheName + "Block Disk Cache is alive." );
             }
         }
         catch ( Exception e )
@@ -123,6 +124,43 @@ public class BlockDiskCache
         }
         ShutdownHook shutdownHook = new ShutdownHook();
         Runtime.getRuntime().addShutdownHook( shutdownHook );
+    }
+
+    /**
+     * We need to verify that the file on disk uses the same block size and that the file is the
+     * proper size.
+     * <p>
+     * @return true if it looks ok
+     */
+    protected boolean verifyDisk()
+    {
+        boolean alright = false;
+        // simply try to read a few. If it works, then the file is probably ok.
+        // TODO add more.
+        try
+        {
+            int maxToTest = 100;
+            int count = 0;
+            Set keySet = this.keyStore.entrySet();
+            Iterator it = keySet.iterator();
+            while ( it.hasNext() && count < maxToTest )
+            {
+                count++;
+                Map.Entry entry = (Map.Entry) it.next();
+                Object data = this.dataFile.read( (int[]) entry.getValue() );
+                if ( data == null )
+                {
+                    throw new Exception( "Couldn't find data for key [" + entry.getKey() + "]" );
+                }
+            }
+            alright = true;
+        }
+        catch ( Exception e )
+        {
+            log.warn( "Problem verifying disk.  Message [" +  e.getMessage() + "]" );
+            alright = false;
+        }
+        return alright;
     }
 
     /**
@@ -459,7 +497,6 @@ public class BlockDiskCache
         storageLock.writeLock().acquire();
         try
         {
-
             // Prevents any interaction with the cache while we're shutting down.
             alive = false;
 
@@ -472,7 +509,7 @@ public class BlockDiskCache
                     log.debug( logCacheName + "Closing files, base filename: " + fileName );
                 }
                 dataFile.close();
-                dataFile = null;
+                // dataFile = null;
 
                 // TOD make a close
                 // keyFile.close();
@@ -527,8 +564,15 @@ public class BlockDiskCache
             File dataFileTemp = new File( this.rootDirectory, fileName + ".data" );
             dataFileTemp.delete();
 
-            dataFile = new BlockDisk( new File( this.rootDirectory, fileName + ".data" ) );
-
+            if ( this.blockDiskCacheAttributes.getBlockSizeBytes() > 0 )
+            {
+                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), this.blockDiskCacheAttributes.getBlockSizeBytes() );
+            }
+            else
+            {
+                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ) );
+            }
+            
             this.keyStore.reset();
         }
         catch ( Exception e )

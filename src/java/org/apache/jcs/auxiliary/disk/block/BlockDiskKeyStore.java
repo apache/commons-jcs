@@ -28,6 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.utils.timing.ElapsedTimer;
 
+import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+
 /**
  * This is responsible for storing the keys.
  * <p>
@@ -35,7 +38,7 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
  */
 public class BlockDiskKeyStore
 {
-    private static final Log log = LogFactory.getLog( BlockDiskCache.class );
+    private static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );
 
     private BlockDiskCacheAttributes blockDiskCacheAttributes;
 
@@ -53,6 +56,11 @@ public class BlockDiskKeyStore
     private BlockDiskCache blockDiskCache;
 
     private File rootDirectory;
+
+    /**
+     * The background key persister, one for all regions.
+     */
+    private static ClockDaemon persistenceDaemon;
 
     /**
      * Set the configuration options.
@@ -94,6 +102,26 @@ public class BlockDiskKeyStore
         else
         {
             initKeyMap();
+        }
+
+        // add this region to the persistence thread.
+        // TODO we might need to stagger this a bit.
+        if ( this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds() > 0 )
+        {
+            if ( persistenceDaemon == null )
+            {
+                persistenceDaemon = new ClockDaemon();
+                persistenceDaemon.setThreadFactory( new MyThreadFactory() );
+            }
+            persistenceDaemon
+                .executePeriodically( this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds() * 1000,
+                                      new Runnable()
+                                      {
+                                          public void run()
+                                          {
+                                              saveKeys();
+                                          }
+                                      }, false );
         }
     }
 
@@ -369,6 +397,27 @@ public class BlockDiskKeyStore
                 log.debug( logCacheName + "Removing key: [" + key + "] from key store." );
                 log.debug( logCacheName + "Key store size: [" + this.size() + "]." );
             }
+        }
+    }
+
+    /**
+     * Allows us to set the daemon status on the clockdaemon
+     * @author aaronsm
+     */
+    class MyThreadFactory
+        implements ThreadFactory
+    {
+
+        /*
+         * (non-Javadoc)
+         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            t.setDaemon( true );
+            t.setPriority( Thread.MIN_PRIORITY );
+            return t;
         }
     }
 }
