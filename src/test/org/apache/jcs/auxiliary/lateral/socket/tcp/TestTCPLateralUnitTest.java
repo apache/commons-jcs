@@ -10,6 +10,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCacheManagerMockImpl;
+import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.
@@ -67,7 +68,7 @@ public class TestTCPLateralUnitTest
             lur.send( led );
         }
 
-        Thread.sleep( numMes );
+        SleepUtil.sleepAtLeast( numMes );
 
         System.out.println( "PutCount = " + listener.getPutCnt() );
         assertEquals( "Should have received " + numMes + " by now.", numMes, listener.getPutCnt() );
