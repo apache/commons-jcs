@@ -3,6 +3,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
 import junit.framework.TestCase;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * @author Aaron Smuts
@@ -53,6 +54,8 @@ public class IndexedDiskCacheOptimizationUnitTest
         Thread.sleep( 500 );
         Thread.yield();
         Thread.sleep( 500 );
+        SleepUtil.sleepAtLeast( 750 );
+        
         long sizeAfterRemove = disk.getDataFileSize();
         System.out.println( "file sizeAfterRemove " + sizeAfterRemove );
         long expectedSizeAfterRemove = DiskTestObjectUtil.totalSize( elements, removeCount, elements.length );
