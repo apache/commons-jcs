@@ -45,6 +45,8 @@
 					href="/IndexedDiskAuxCache.html" />
 				<item name="Indexed Disk Properties"
 					href="/IndexedDiskCacheProperties.html" />
+				<item name="Block Disk Cache"
+					href="/BlockDiskCache.html" />
 				<item name="JDBC Disk Cache"
 					href="/JDBCDiskCache.html" />
 				<item name="JDBC Disk Properties"
@@ -64,7 +66,6 @@
 					href="/LateralJavaGroupsAuxCache.html" />
 			</item>
 		</menu>
-
-
+		
 	</body>
 </project>
