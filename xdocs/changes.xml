@@ -13,7 +13,14 @@
 			<action dev="asmuts" type="update">
 				Added get, put, and remove counts to the lateral and
 				remote stats. Added hit count to disk cache stats.
-			</action>			
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-12"
+				due-to="John Klame">
+				Fixed non thread safe OOS writes in the TCP Lateral
+				Sender. This was causing endless loops deep down in the
+				OOS code.
+			</action>
+
 		</release>
 
 		<release version="1.2.7.9" date="in CVS">

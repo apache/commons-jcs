@@ -1,14 +1,12 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.BufferedReader;
@@ -28,10 +26,8 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * This class is based on the log4j SocketAppender class. I'm using a differnet
- * repair structure, so it is significantly different.
- * <p>
- * @version $Id$
+ * This class is based on the log4j SocketAppender class. I'm using a differnet repair structure, so
+ * it is significantly different.
  */
 public class LateralTCPSender
 {
@@ -64,8 +60,8 @@ public class LateralTCPSender
     private final static int RESET_FREQUENCY = 70;
 
     /**
-     * Only block for 1 second before timing out on a read. TODO: make
-     * configurable. The default 1 is way too long.
+     * Only block for 1 second before timing out on a read. TODO: make configurable. The default 1
+     * is way too long.
      */
     private final static int timeOut = 1000;
 
@@ -209,38 +205,39 @@ public class LateralTCPSender
 
         if ( oos != null )
         {
-            try
+            synchronized ( this.getLock )
             {
-                oos.writeObject( led );
-                oos.flush();
-                if ( ++counter >= RESET_FREQUENCY )
+                try
                 {
-                    counter = 0;
-                    // Failing to reset the object output stream every now and
-                    // then creates a serious memory leak.
-                    if ( log.isDebugEnabled() )
+                    oos.writeObject( led );
+                    oos.flush();
+                    if ( ++counter >= RESET_FREQUENCY )
                     {
-                        log.debug( "Doing oos.reset()" );
+                        counter = 0;
+                        // Failing to reset the object output stream every now and
+                        // then creates a serious memory leak.
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "Doing oos.reset()" );
+                        }
+                        oos.reset();
                     }
-                    oos.reset();
                 }
-            }
-            catch ( IOException e )
-            {
-                oos = null;
-                log.error( "Detected problem with connection: " + e );
-                throw e;
+                catch ( IOException e )
+                {
+                    oos = null;
+                    log.error( "Detected problem with connection: " + e );
+                    throw e;
+                }
             }
         }
     }
 
     /**
-     * Sends commands to the lateral cache listener and gets a response. I'm
-     * afraid that we could get into a pretty bad blocking situation here. This
-     * needs work. I just wanted to get some form of get working. However, get
-     * is not recommended for performance reasons. If you have 10 laterals, then
-     * you have to make 10 failed gets to find out none of the caches have the
-     * item.
+     * Sends commands to the lateral cache listener and gets a response. I'm afraid that we could
+     * get into a pretty bad blocking situation here. This needs work. I just wanted to get some
+     * form of get working. However, get is not recommended for performance reasons. If you have 10
+     * laterals, then you have to make 10 failed gets to find out none of the caches have the item.
      * <p>
      * @param led
      * @return
@@ -294,7 +291,7 @@ public class LateralTCPSender
                     try
                     {
                         // TODO make configurable
-                        //socket.setSoTimeout( 2000 );
+                        // socket.setSoTimeout( 2000 );
                         ObjectInputStream ois = new ObjectInputStream( socket.getInputStream() );
                         Object obj = ois.readObject();
                         ice = (ICacheElement) obj;
@@ -307,9 +304,9 @@ public class LateralTCPSender
                     catch ( IOException ioe )
                     {
                         String message = "Could not open ObjectInputStream to " + socket;
-                        if ( socket!= null )
+                        if ( socket != null )
                         {
-                            message += " SoTimeout [" + socket.getSoTimeout() +"]"; 
+                            message += " SoTimeout [" + socket.getSoTimeout() + "]";
                             // this is 1.4 specific -- Connected [" + socket.isConnected() + "]";
                         }
                         log.error( message, ioe );
@@ -337,16 +334,15 @@ public class LateralTCPSender
                     throw e;
                 }
             }
-        } 
+        }
 
         return ice;
     }
 
     /**
-     * Closes connection used by all LateralTCPSenders for this lateral
-     * conneciton. Dispose request should come into the facade and be sent to
-     * all lateral cache sevices. The lateral cache service will then call this
-     * method.
+     * Closes connection used by all LateralTCPSenders for this lateral conneciton. Dispose request
+     * should come into the facade and be sent to all lateral cache sevices. The lateral cache
+     * service will then call this method.
      * <p>
      * @param cache
      * @throws IOException
@@ -363,8 +359,7 @@ public class LateralTCPSender
     }
 
     /**
-     * @param tcpLateralCacheAttributes
-     *            The tcpLateralCacheAttributes to set.
+     * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
      */
     public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
     {
@@ -380,8 +375,7 @@ public class LateralTCPSender
     }
 
     /**
-     * @param remoteHost
-     *            The remoteHost to set.
+     * @param remoteHost The remoteHost to set.
      */
     public void setRemoteHost( String remoteHost )
     {
