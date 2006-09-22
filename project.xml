@@ -5,7 +5,7 @@
 	<pomVersion>3</pomVersion>
 	<name>JCS</name>
 	<id>jcs</id>
-	<currentVersion>1.2.7.9</currentVersion>
+	<currentVersion>1.2.7.9.2</currentVersion>
 	<organization>
 		<name>Apache Software Foundation</name>
 		<url>http://jakarta.apache.org/</url>
