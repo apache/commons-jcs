@@ -33,6 +33,7 @@
 		 	String CLEAR_REGION_ACTION = "clearRegion";
 		 	String REMOVE_ACTION = "remove";
 		 	String DETAIL_ACTION = "detail";			
+		 	String REGION_SUMMARY_ACTION = "regionSummary";			
 		 	String ITEM_ACTION = "item";			
 			String KEY_PARAM = "key";
 			String SILENT_PARAM = "silent";
@@ -40,6 +41,7 @@
      		String DEFAULT_TEMPLATE_NAME = "DEFAULT";
      		String REGION_DETAIL_TEMPLATE_NAME = "DETAIL";
      		String ITEM_TEMPLATE_NAME = "ITEM";
+     		String REGION_SUMMARY_TEMPLATE_NAME = "SUMMARY";
      		
 			String templateName = DEFAULT_TEMPLATE_NAME;
 			
@@ -92,6 +94,10 @@
 				{
 					templateName = ITEM_TEMPLATE_NAME;
 				}
+				else if ( action.equals( REGION_SUMMARY_ACTION ) )
+				{
+					templateName = REGION_SUMMARY_TEMPLATE_NAME;
+				}
 			}
 
 			if ( request.getParameter( SILENT_PARAM ) != null )
@@ -137,6 +143,29 @@
   <pre>
 	<%=element%>
   </pre>	
+<%
+			}    
+			else
+			if ( templateName == REGION_SUMMARY_TEMPLATE_NAME ) 
+			{
+%>
+
+<h1> Summary for region [<%=cacheName%>] </h1>
+
+<a href="JCSAdmin.jsp">All Regions</a>
+
+<%    
+    JCS cache = JCS.getInstance( cacheName );
+    String stats = cache.getStats();
+%>  
+   
+    <br>
+<b> Stats for region [<%=cacheName%>] </b>
+
+    <pre>
+    	<%=stats%>
+    </pre>   
+
 <%
 			}    
 			else
@@ -253,8 +282,9 @@ which empties the entire cache.
             <td> <%=record.getCache().getMissCountNotFound()%> </td>
             <td> <%=record.getCache().getMissCountExpired()%> </td>
             <td>   
-                <a href="JCSAdmin.jsp?action=detail&cacheName=<%=record.getCache().getCacheName()%>"> Detail </a>
-                | <a href="javascript:decision('Clicking OK will remove all the data from the region [<%=record.getCache().getCacheName()%>]!','JCSAdmin.jsp?action=clearRegion&cacheName=<%=record.getCache().getCacheName()%>')"> Remove all </a>
+                <a href="JCSAdmin.jsp?action=regionSummary&cacheName=<%=record.getCache().getCacheName()%>"> Summary </a>
+                | <a href="JCSAdmin.jsp?action=detail&cacheName=<%=record.getCache().getCacheName()%>"> Detail </a>
+                | <a href="javascript:decision('Clicking OK will remove all the data from the region [<%=record.getCache().getCacheName()%>]!','JCSAdmin.jsp?action=clearRegion&cacheName=<%=record.getCache().getCacheName()%>')"> Clear </a>
             </td>
         </tr>
 <%  

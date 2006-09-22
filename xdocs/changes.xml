@@ -5,6 +5,13 @@
 	</properties>
 	<body>
 
+		<release version="1.2.7.9.2" date="in CVS">
+			<action dev="asmuts" type="update">
+				Added a summary page to the JCSAdmin.jsp that just dumps
+				the stats for a region. It doesn't display all the keys.
+			</action>
+		</release>
+
 		<release version="1.2.7.9" date="in CVS">
 			<action dev="asmuts" type="fix" issue="JCS-1">
 				Fixed last element too small recycle bin bug.
