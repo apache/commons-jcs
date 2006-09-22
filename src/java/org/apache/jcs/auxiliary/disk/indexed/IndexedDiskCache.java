@@ -101,6 +101,8 @@ public class IndexedDiskCache
     // the number of bytes free on disk.
     private long bytesFree = 0;
 
+    private int hitCount = 0;
+    
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechansism.
      */
@@ -520,11 +522,16 @@ public class IndexedDiskCache
             storageLock.readLock().acquire();
             try
             {
-                object = readElement( key );
+                object = readElement( key );               
             }
             finally
             {
                 storageLock.readLock().release();
+            }
+            
+            if ( object != null )
+            {
+                incrementHitCount();
             }
         }
         catch ( IOException ioe )
@@ -1268,6 +1275,7 @@ public class IndexedDiskCache
 
     /**
      * For debugging.
+     * <p>
      * @param dumpValues A boolean indicating if values should be dumped.
      */
     public void dump( boolean dumpValues )
@@ -1296,6 +1304,15 @@ public class IndexedDiskCache
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.cattr;
+    }
+    
+    /**
+     * Increments the hit count in a thread safe manner.
+     *
+     */
+    private synchronized void incrementHitCount()
+    {
+        hitCount++;
     }
     
     /**
@@ -1358,6 +1375,11 @@ public class IndexedDiskCache
         {
             log.error( e );
         }
+
+        se = new StatElement();
+        se.setName( "Hit Count" );
+        se.setData( "" + this.hitCount );
+        elems.add( se );
 
         se = new StatElement();
         se.setName( "Bytes Free" );

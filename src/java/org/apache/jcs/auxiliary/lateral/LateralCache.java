@@ -51,7 +51,7 @@ public class LateralCache
     private ILateralCacheService lateral;
 
     private LateralCacheMonitor monitor;
-    
+        
     /**
      * Constructor for the LateralCache object
      * <p>

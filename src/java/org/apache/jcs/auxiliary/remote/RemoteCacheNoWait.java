@@ -62,6 +62,12 @@ public class RemoteCacheNoWait
 
     private ICacheEventQueue cacheEventQueue;
 
+    private int getCount = 0;
+
+    private int removeCount = 0;
+
+    private int putCount = 0;
+    
     /**
      * Constructs with the given remote cache, and fires up an event queue for aysnchronous
      * processing.
@@ -91,6 +97,7 @@ public class RemoteCacheNoWait
     public void update( ICacheElement ce )
         throws IOException
     {
+        putCount++;
         try
         {
             cacheEventQueue.addPutEvent( ce );
@@ -113,6 +120,7 @@ public class RemoteCacheNoWait
     public ICacheElement get( Serializable key )
         throws IOException
     {
+        getCount++;
         try
         {
             return cache.get( key );
@@ -161,6 +169,7 @@ public class RemoteCacheNoWait
     public boolean remove( Serializable key )
         throws IOException
     {
+        removeCount++;
         try
         {
             cacheEventQueue.addRemoveEvent( key );
@@ -391,8 +400,23 @@ public class RemoteCacheNoWait
         List eqL = Arrays.asList( eqSEs );
         elems.addAll( eqL );
 
+        se = new StatElement();
+        se.setName( "Get Count" );
+        se.setData( "" + this.getCount );
+        elems.add( se );
+
+        se = new StatElement();
+        se.setName( "Remove Count" );
+        se.setData( "" + this.removeCount );
+        elems.add( se );
+
+        se = new StatElement();
+        se.setName( "Put Count" );
+        se.setData( "" + this.putCount );
+        elems.add( se );
+        
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[elems.size()] );
         stats.setStatElements( ses );
 
         return stats;

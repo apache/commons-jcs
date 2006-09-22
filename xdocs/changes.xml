@@ -10,6 +10,10 @@
 				Added a summary page to the JCSAdmin.jsp that just dumps
 				the stats for a region. It doesn't display all the keys.
 			</action>
+			<action dev="asmuts" type="update">
+				Added get, put, and remove counts to the lateral and
+				remote stats. Added hit count to disk cache stats.
+			</action>			
 		</release>
 
 		<release version="1.2.7.9" date="in CVS">
