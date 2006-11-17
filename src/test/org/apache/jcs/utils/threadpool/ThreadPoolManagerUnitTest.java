@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.utils.props.PropertyLoader;
 
+import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
 
 /**
@@ -159,6 +160,23 @@ public class ThreadPoolManagerUnitTest
         assertNotNull( "Should have gotten back a pool.", pool );
 
         assertTrue( "Should have a linked queue and not a bounded buffer.", pool.getQueue() instanceof LinkedQueue );
-
     }
+    
+    /**
+     * Verify that if we specify useBoundary=true that we get a BoundedBuffer.
+     *
+     */
+    public void testWithBoundary()
+    {
+        ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
+        ThreadPoolManager mgr = ThreadPoolManager.getInstance();
+        // force config from new props file
+        mgr.configure();
+        assertNotNull( mgr );
+
+        ThreadPool pool = mgr.getPool( "withbound" );
+        assertNotNull( "Should have gotten back a pool.", pool );
+
+        assertTrue( "Should have a BoundedBuffer and not a linked queue.", pool.getQueue() instanceof BoundedBuffer );
+    }    
 }
