@@ -140,7 +140,7 @@ public class LateralCache
     /**
      * 
      * @param groupName
-     * @return A set og group keys.
+     * @return A set of group keys.
      */
     public Set getGroupKeys( String groupName )
     {

@@ -33,7 +33,7 @@ public class LateralCacheInfo
     }
 
     /**
-     * Shouldn't be used till after reconneting, after setting = thread safe
+     * Shouldn't be used till after reconnecting, after setting = thread safe
      * Used to identify a client, so we can run multiple clients off one host.
      * Need since there is no way to identify a client other than by host in
      * rmi.

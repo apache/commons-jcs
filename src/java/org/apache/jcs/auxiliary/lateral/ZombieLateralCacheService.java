@@ -25,7 +25,7 @@ import org.apache.jcs.engine.ZombieCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * The ZombieLateralCacheService is used a facade when the lateral is not
+ * The ZombieLateralCacheService is used as a facade when the lateral is not
  * available. It balks when the lateral is in error. When lateral service is
  * restored, this is replaced by a live facade.
  * 

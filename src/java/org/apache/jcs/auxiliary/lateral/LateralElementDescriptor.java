@@ -44,7 +44,7 @@ public class LateralElementDescriptor
     public ICacheElement ce;
 
     /**
-     * The id of the the source of the request. This is use to prevent infinite
+     * The id of the the source of the request. This is used to prevent infinite
      * loops.
      */
     public long requesterId;

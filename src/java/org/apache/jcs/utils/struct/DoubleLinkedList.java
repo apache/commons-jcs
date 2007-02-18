@@ -96,7 +96,7 @@ public class DoubleLinkedList
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "returning fist node" );
+            log.debug( "returning first node" );
         }
         return first;
     }

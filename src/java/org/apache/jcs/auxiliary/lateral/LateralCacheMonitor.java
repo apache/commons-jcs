@@ -67,7 +67,7 @@ public class LateralCacheMonitor
     }
 
     /**
-     * Allows close classes, ie testers to set the idel period to somethin
+     * Allows close classes, ie testers to set the idle period to something
      * testable.
      * 
      * @param idlePeriod
