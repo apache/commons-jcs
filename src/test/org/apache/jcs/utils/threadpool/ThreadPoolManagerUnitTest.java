@@ -168,15 +168,18 @@ public class ThreadPoolManagerUnitTest
      */
     public void testWithBoundary()
     {
+        // SETUP
         ThreadPoolManager.setPropsFileName( "thread_pool.properties" );
         ThreadPoolManager mgr = ThreadPoolManager.getInstance();
         // force config from new props file
         mgr.configure();
         assertNotNull( mgr );
 
+        // DO WORK
         ThreadPool pool = mgr.getPool( "withbound" );
+        
+        // VERIFY
         assertNotNull( "Should have gotten back a pool.", pool );
-
         assertTrue( "Should have a BoundedBuffer and not a linked queue.", pool.getQueue() instanceof BoundedBuffer );
     }    
 }

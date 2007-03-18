@@ -355,7 +355,7 @@ public class ThreadPoolManager
         {
             try
             {
-                config.setUseBoundary( Boolean.valueOf( (String) props.get( root + ".useBoundary" ) ) );
+                config.setUseBoundary( Boolean.valueOf( (String) props.get( root + ".useBoundary" ) ).booleanValue() );
             }
             catch ( NumberFormatException nfe )
             {
