@@ -5,6 +5,14 @@
 	</properties>
 	<body>
 
+		<release version="1.2.7.9.3" date="in CVS">
+			<action dev="asmuts" type="fix" issue="JCS-20"
+				due-to="Alistair Forbes">
+				Fixed partial key removal SQL syntax problem with the
+				JDBC disk cache.
+			</action>
+		</release>
+
 		<release version="1.2.7.9.2" date="in CVS">
 			<action dev="asmuts" type="update">
 				Added a summary page to the JCSAdmin.jsp that just dumps
