@@ -36,23 +36,29 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheMonitor
     implements Runnable
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheMonitor.class );
 
+    /** The remote cache that we are monitoring */
     private static RemoteCacheMonitor instance;
 
+    /** Time between checks */
     private static long idlePeriod = 30 * 1000;
 
     // minimum 30 seconds.
     //private static long idlePeriod = 3*1000; // for debugging.
 
-    // Must make sure RemoteCacheMonitor is started before any remote error can
-    // be detected!
+    /** Must make sure RemoteCacheMonitor is started before any remote error can
+    * be detected! */
     private boolean alright = true;
 
+    /** Time driven mode */
     final static int TIME = 0;
 
+    /** Error driven mode -- only check on health if there is an error */
     final static int ERROR = 1;
 
+    /** The mode to use */
     static int mode = ERROR;
 
     /**
@@ -118,35 +124,37 @@ public class RemoteCacheMonitor
         log.debug( "Monitoring daemon started" );
         do
         {
-
             if ( mode == ERROR )
             {
-                if ( alright )
+                synchronized ( this )
                 {
-                    synchronized ( this )
+                    if ( alright )
                     {
-                        if ( alright )
+                        // make this configurable, comment out wait to enter
+                        // time driven mode
+                        // Failure driven mode.
+                        try
                         {
-                            // make this configurable, comment out wait to enter
-                            // time driven mode
-                            // Failure driven mode.
-                            try
+                            if ( log.isDebugEnabled() )
                             {
-                                log.debug( "FAILURE DRIVEN MODE: cache monitor waiting for error" );
-                                wait();
-                                // wake up only if there is an error.
+                                log.debug( "FAILURE DRIVEN MODE: cache monitor waiting for error" );                                
                             }
-                            catch ( InterruptedException ignore )
-                            {
-                                // swallow
-                            }
+                            wait();
+                            // wake up only if there is an error.
+                        }
+                        catch ( InterruptedException ignore )
+                        {
+                            // swallow
                         }
                     }
                 }
             }
             else
             {
-                log.debug( "TIME DRIVEN MODE: cache monitor sleeping for " + idlePeriod );
+                if ( log.isDebugEnabled() )
+                {                
+                    log.debug( "TIME DRIVEN MODE: cache monitor sleeping for " + idlePeriod );
+                }
                 // Time driven mode: sleep between each round of recovery
                 // attempt.
                 // will need to test not just check status
@@ -216,14 +224,8 @@ public class RemoteCacheMonitor
     }
 
     /** Sets the "alright" flag to false in a critial section. */
-    private void bad()
+    private synchronized void bad()
     {
-        if ( alright )
-        {
-            synchronized ( this )
-            {
-                alright = false;
-            }
-        }
+        alright = false;
     }
 }

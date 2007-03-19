@@ -551,7 +551,7 @@ public class IndexedDiskCache
      * Reads the item from disk.
      * <p>
      * @param key
-     * @return
+     * @return ICacheElement
      * @throws IOException
      */
     private ICacheElement readElement( Serializable key )
@@ -1207,7 +1207,7 @@ public class IndexedDiskCache
      * <p>
      * @return The number bytes free on the disk file.
      */
-    protected long getBytesFree()
+    protected synchronized long getBytesFree()
     {
         return this.bytesFree;
     }
@@ -1331,7 +1331,7 @@ public class IndexedDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
-    public IStats getStatistics()
+    public synchronized IStats getStatistics()
     {
         IStats stats = new Stats();
         stats.setTypeName( "Indexed Disk Cache" );

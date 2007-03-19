@@ -10,14 +10,16 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DoubleLinkedList
 {
-    // record size to avoid having to iterate
+    /** record size to avoid having to iterate */
     private int size = 0;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( DoubleLinkedList.class );
 
-    // LRU double linked list head/tail nodes
+    /** LRU double linked list head node */
     private DoubleLinkedListNode first;
 
+    /** LRU double linked list tail node */
     private DoubleLinkedListNode last;
 
     /**
@@ -34,7 +36,7 @@ public class DoubleLinkedList
      * @param me
      *            The feature to be added to the Last
      */
-    public void addLast( DoubleLinkedListNode me )
+    public synchronized void addLast( DoubleLinkedListNode me )
     {
         if ( first == null )
         {
@@ -78,7 +80,7 @@ public class DoubleLinkedList
      * <p>
      * @return The last node.
      */
-    public DoubleLinkedListNode getLast()
+    public synchronized DoubleLinkedListNode getLast()
     {
         if ( log.isDebugEnabled() )
         {
@@ -90,9 +92,9 @@ public class DoubleLinkedList
     /**
      * Removes the specified node from the link list.
      * <p>
-     * @return
+     * @return DoubleLinkedListNode, the first node.
      */
-    public DoubleLinkedListNode getFirst()
+    public synchronized DoubleLinkedListNode getFirst()
     {
         if ( log.isDebugEnabled() )
         {
@@ -105,7 +107,7 @@ public class DoubleLinkedList
      * Moves an existing node to the start of the link list.
      * <p>
      * @param ln
-     *            Description of the Parameter
+     *            The node to set as the head.
      */
     public synchronized void makeFirst( DoubleLinkedListNode ln )
     {
@@ -212,7 +214,7 @@ public class DoubleLinkedList
      * <p>
      * @return The last node if there was one to remove.
      */
-    public DoubleLinkedListNode removeLast()
+    public synchronized DoubleLinkedListNode removeLast()
     {
         if ( log.isDebugEnabled() )
         {
@@ -231,7 +233,7 @@ public class DoubleLinkedList
      * <p>
      * @return int
      */
-    public int size()
+    public synchronized int size()
     {
         return size;
     }
@@ -240,7 +242,7 @@ public class DoubleLinkedList
     /**
      * Dump the cache entries from first to list for debugging.
      */
-    public void debugDumpEntries()
+    public synchronized void debugDumpEntries()
     {
         log.debug( "dumping Entries" );
         for ( DoubleLinkedListNode me = first; me != null; me = me.next )
@@ -248,5 +250,4 @@ public class DoubleLinkedList
             log.debug( "dump Entries> payload= '" + me.getPayload() + "'" );
         }
     }
-
 }

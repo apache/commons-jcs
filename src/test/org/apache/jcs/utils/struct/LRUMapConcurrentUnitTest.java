@@ -10,19 +10,19 @@ import org.apache.jcs.utils.struct.LRUMap;
 
 /**
  * Tests the LRUMap
- * 
- * @author aaronsm
+ * <p>
+ * @author aaron smuts
  *  
  */
 public class LRUMapConcurrentUnitTest
     extends TestCase
 {
-
+    /** number to test with */
     private static int items = 20000;
 
     /**
      * Constructor for the TestSimpleLoad object
-     * 
+     * <p>
      * @param testName
      *            Description of the Parameter
      */
@@ -32,20 +32,8 @@ public class LRUMapConcurrentUnitTest
     }
 
     /**
-     * Description of the Method
-     * 
-     * @param args
-     *            Description of the Parameter
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { LRUMapConcurrentUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-    }
-
-    /**
      * A unit test suite for JUnit
-     * 
+     * <p>
      * @return The test suite
      */
     public static Test suite()
@@ -105,7 +93,7 @@ public class LRUMapConcurrentUnitTest
 
     /**
      * Just test that we can put, get and remove as expected.
-     * 
+     * <p>
      * @exception Exception
      *                Description of the Exception
      */
@@ -245,7 +233,7 @@ public class LRUMapConcurrentUnitTest
     /**
      * Put, get, and remove from a range. This should occur at a range that is
      * not touched by other tests.
-     * 
+     * <p>
      * @param map
      * @param start
      * @param end
@@ -271,7 +259,5 @@ public class LRUMapConcurrentUnitTest
         // test removal
         map.remove( start + ":key" );
         assertNull( map.get( start + ":key" ) );
-
     }
-
 }

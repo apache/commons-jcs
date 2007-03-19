@@ -128,9 +128,10 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
         for ( int i = start; i <= end; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String key = i + ":key";
+            String value = (String) jcs.get( key );
 
-            assertEquals( region + " data " + i, value );
+            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i, value );
         }
     }
 }

@@ -12,22 +12,29 @@ import org.apache.jcs.utils.struct.LRUMap;
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
  * version. It has been testing at .6 to .7 times the commons LRU.
- * 
+ * <p>
  * @author aaronsm
  *  
  */
 public class LRUMapPerformanceTest
     extends TestCase
 {
-
+    /** The put put ration after the test */
     float ratioPut = 0;
 
+    /** The ratio after the test */
     float ratioGet = 0;
 
-    float target = 1.0f;
+    /** put jcs / commons ratio */
+    float targetPut = 1.2f;
 
+    /** get jcs / commons ratio */
+    float targetGet = .5f;
+
+    /** Time to loop */
     int loops = 20;
 
+    /** items to put and get per loop */
     int tries = 50000;
 
     /**
@@ -40,7 +47,7 @@ public class LRUMapPerformanceTest
 
     /**
      * A unit test suite for JUnit
-     * 
+     * <p>
      * @return The test suite
      */
     public static Test suite()
@@ -58,8 +65,8 @@ public class LRUMapPerformanceTest
         throws Exception
     {
         doWork();
-        assertTrue( this.ratioPut < target );
-        assertTrue( this.ratioGet < target );
+        assertTrue( this.ratioPut < targetPut );
+        assertTrue( this.ratioGet < targetGet );
     }
 
     /**
@@ -67,7 +74,6 @@ public class LRUMapPerformanceTest
      */
     public void doWork()
     {
-
         long start = 0;
         long end = 0;
         long time = 0;
@@ -83,12 +89,10 @@ public class LRUMapPerformanceTest
 
         try
         {
-
             Map cache = new LRUMap( tries );
 
             for ( int j = 0; j < loops; j++ )
             {
-
                 name = "JCS      ";
                 start = System.currentTimeMillis();
                 for ( int i = 0; i < tries; i++ )
@@ -142,7 +146,6 @@ public class LRUMapPerformanceTest
 
                 System.out.println( "\n" );
             }
-
         }
         catch ( Exception e )
         {
@@ -161,16 +164,15 @@ public class LRUMapPerformanceTest
         System.out.println( "Put average for LRUMap       = " + putAvJCS );
         System.out.println( "Put average for " + cache2Name + " = " + putAvHashtable );
         ratioPut = Float.intBitsToFloat( (int) putAvJCS ) / Float.intBitsToFloat( (int) putAvHashtable );
-        System.out.println( name + " puts took " + ratioPut + " times the " + cache2Name + ", the goal is <" + target
+        System.out.println( name + " puts took " + ratioPut + " times the " + cache2Name + ", the goal is <" + targetPut
             + "x" );
 
         System.out.println( "\n" );
         System.out.println( "Get average for LRUMap       = " + getAvJCS );
         System.out.println( "Get average for " + cache2Name + " = " + getAvHashtable );
         ratioGet = Float.intBitsToFloat( (int) getAvJCS ) / Float.intBitsToFloat( (int) getAvHashtable );
-        System.out.println( name + " gets took " + ratioGet + " times the " + cache2Name + ", the goal is <" + target
+        System.out.println( name + " gets took " + ratioGet + " times the " + cache2Name + ", the goal is <" + targetGet
             + "x" );
-
     }
 
     /**

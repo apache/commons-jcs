@@ -22,17 +22,22 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SortedPreferentialArray
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( SortedPreferentialArray.class );
 
-    // prefer large means that the smallest will be removed when full.
+    /** prefer large means that the smallest will be removed when full. */
     private boolean preferLarge = true;
 
+    /** maximum number allowed */
     private int maxSize = 0;
 
+    /** The currency number */
     private int curSize = 0;
 
+    /** The primary array */
     private Comparable[] array;
 
+    /** the number that have been inserted. */
     private int insertCnt = 0;
 
     /**
@@ -297,7 +302,7 @@ public class SortedPreferentialArray
      * <p>
      * @return int
      */
-    public int size()
+    public synchronized int size()
     {
         return this.curSize;
     }
@@ -578,9 +583,9 @@ public class SortedPreferentialArray
     /**
      * Debugging method to return a human readable display of array data.
      * <p>
-     * @return
+     * @return String representation of the contents.  
      */
-    protected String dumpArray()
+    protected synchronized String dumpArray()
     {
         StringBuffer buf = new StringBuffer();
         buf.append( "\n ---------------------------" );

@@ -1,14 +1,12 @@
 package org.apache.jcs.engine.memory.lru;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -35,39 +33,42 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.DoubleLinkedList;
 
 /**
- * A fast reference management system. The least recently used items move to the
- * end of the list and get spooled to disk if the cache hub is configured to use
- * a disk cache. Most of the cache bottelnecks are in IO. There are no io
- * bottlenecks here, it's all about processing power.
+ * A fast reference management system. The least recently used items move to the end of the list and
+ * get spooled to disk if the cache hub is configured to use a disk cache. Most of the cache
+ * bottelnecks are in IO. There are no io bottlenecks here, it's all about processing power.
  * <p>
- * Even though there are only a few adjustments necessary to maintain the double
- * linked list, we might want to find a more efficient memory manager for large
- * cache regions.
+ * Even though there are only a few adjustments necessary to maintain the double linked list, we
+ * might want to find a more efficient memory manager for large cache regions.
  * <p>
- * The LRUMemoryCache is most efficient when the first element is selected. The
- * smaller the region, the better the chance that this will be the case. < .04
- * ms per put, p3 866, 1/10 of that per get
+ * The LRUMemoryCache is most efficient when the first element is selected. The smaller the region,
+ * the better the chance that this will be the case. < .04 ms per put, p3 866, 1/10 of that per get
  * <p>
  * @version $Id$
  */
 public class LRUMemoryCache
     extends AbstractMemoryCache
 {
+    /** Don't change */
     private static final long serialVersionUID = 6403738094136424201L;
 
+    /** The logger. */
     private final static Log log = LogFactory.getLog( LRUMemoryCache.class );
 
-    // double linked list for lru
+    /** thread-safe double linked list for lru */
     private DoubleLinkedList list;
 
+    /** number of hits */
     private int hitCnt = 0;
 
+    /** number of misses */
     private int missCnt = 0;
 
+    /** number of puts */
     private int putCnt = 0;
 
     /**
      * For post reflection creation initialization.
+     * <p>
      * @param hub
      */
     public synchronized void initialize( CompositeCache hub )
@@ -78,13 +79,12 @@ public class LRUMemoryCache
     }
 
     /**
-     * Puts an item to the cache. Removes any pre-existing entries of the same
-     * key from the linked list and adds this one first.
+     * Puts an item to the cache. Removes any pre-existing entries of the same key from the linked
+     * list and adds this one first.
      * <p>
      * If the max size is reached, an element will be put to disk.
      * <p>
-     * @param ce
-     *            The cache element, or entry wrapper
+     * @param ce The cache element, or entry wrapper
      * @exception IOException
      */
     public void update( ICacheElement ce )
@@ -203,14 +203,13 @@ public class LRUMemoryCache
     }
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i>
-     * according to its eviction policy. For example, the LRUMemoryCache will
-     * remove the <i>numberToFree</i> least recently used items. These will be
-     * spooled to disk if a disk auxiliary is available.
+     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
      * <p>
      * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are
-     *         only 3, you will get 3.
+     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
      * @throws IOException
      */
     public int freeElements( int numberToFree )
@@ -227,13 +226,11 @@ public class LRUMemoryCache
         }
         return freed;
     }
-    
+
     /**
-     * Get an item from the cache without affecting its last access time or
-     * position.
+     * Get an item from the cache without affecting its last access time or position.
      * <p>
-     * @param key
-     *            Identifies item to find
+     * @param key Identifies item to find
      * @return Element matching key if found, or null
      * @exception IOException
      */
@@ -263,8 +260,7 @@ public class LRUMemoryCache
     /**
      * Get an item from the cache
      * <p>
-     * @param key
-     *            Identifies item to find
+     * @param key Identifies item to find
      * @return ICacheElement if found, else null
      * @exception IOException
      */
@@ -307,13 +303,12 @@ public class LRUMemoryCache
     }
 
     /**
-     * Removes an item from the cache. This method handles hierarchical removal.
-     * If the key is a String and ends with the
-     * CacheConstants.NAME_COMPONENT_DELIMITER, then all items with keys
+     * Removes an item from the cache. This method handles hierarchical removal. If the key is a
+     * String and ends with the CacheConstants.NAME_COMPONENT_DELIMITER, then all items with keys
      * starting with the argument String will be removed.
      * <p>
      * @param key
-     * @return
+     * @return true if the removal was successful
      * @exception IOException
      */
     public synchronized boolean remove( Serializable key )
@@ -385,8 +380,8 @@ public class LRUMemoryCache
     }
 
     /**
-     * Remove all of the elements from both the Map and the linked list
-     * implementation. Overrides base class.
+     * Remove all of the elements from both the Map and the linked list implementation. Overrides
+     * base class.
      * <p>
      * @throws IOException
      */
@@ -507,8 +502,7 @@ public class LRUMemoryCache
     /**
      * Adds a new node to the end of the link list. Currently not used.
      * <p>
-     * @param ce
-     *            The feature to be added to the Last
+     * @param ce The feature to be added to the Last
      */
     protected void addLast( CacheElement ce )
     {
@@ -520,8 +514,7 @@ public class LRUMemoryCache
     /**
      * Adds a new node to the start of the link list.
      * <p>
-     * @param ce
-     *            The feature to be added to the First
+     * @param ce The feature to be added to the First
      */
     private synchronized void addFirst( ICacheElement ce )
     {
@@ -561,7 +554,8 @@ public class LRUMemoryCache
 
     /**
      * Returns the size of the list.
-     * @return
+     * <p>
+     * @return the number of items in the map.
      */
     private int dumpCacheSize()
     {
@@ -569,8 +563,8 @@ public class LRUMemoryCache
     }
 
     /**
-     * Checks to see if all the items that should be in the cache are. Checks
-     * consistency between List and map.
+     * Checks to see if all the items that should be in the cache are. Checks consistency between
+     * List and map.
      */
     private void verifyCache()
     {
@@ -688,11 +682,13 @@ public class LRUMemoryCache
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * This returns semi-structured information on the memory cache, such as the size, put count,
+     * hit count, and miss count.
+     * <p>
      * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
      */
-    public IStats getStatistics()
+    public synchronized IStats getStatistics()
     {
         IStats stats = new Stats();
         stats.setTypeName( "LRU Memory Cache" );
@@ -735,5 +731,4 @@ public class LRUMemoryCache
 
         return stats;
     }
-
 }

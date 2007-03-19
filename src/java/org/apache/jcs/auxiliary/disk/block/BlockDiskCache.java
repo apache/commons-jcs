@@ -55,6 +55,7 @@ public class BlockDiskCache
 
     private File rootDirectory;
 
+    /** Store, loads, and persists the keys */
     private BlockDiskKeyStore keyStore;
 
     // public Object lock = new Object();
@@ -87,7 +88,7 @@ public class BlockDiskCache
 
         if ( log.isInfoEnabled() )
         {
-            log.info( logCacheName + "Cache file root directory: " + rootDirName );
+            log.info( logCacheName + "Cache file root directory: [" + rootDirName + "]" );
         }
 
         try
