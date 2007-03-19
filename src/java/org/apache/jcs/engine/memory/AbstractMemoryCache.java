@@ -141,7 +141,7 @@ public abstract class AbstractMemoryCache
         throws IOException;
 
     /**
-     * Get an item from the cache without effecting its order or last access
+     * Get an item from the cache without affecting its order or last access
      * time
      * @param key
      *            Description of the Parameter
@@ -270,7 +270,7 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     * Gets the cache hub / region taht the MemoryCache is used by
+     * Gets the cache hub / region that the MemoryCache is used by
      * @return The cache value
      */
     public CompositeCache getCompositeCache()

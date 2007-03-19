@@ -51,7 +51,7 @@ public class UDPDiscoverySenderThread
     }
 
     /**
-     * Constructs the sender with the port to tell others to conenct to.
+     * Constructs the sender with the port to tell others to connect to.
      * <p>
      * On construction the sender will request that the other caches let it know
      * their addresses.

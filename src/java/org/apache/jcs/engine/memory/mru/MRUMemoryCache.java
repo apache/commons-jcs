@@ -37,7 +37,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * front of the list and get spooled to disk if the cache hub is configured to
  * use a disk cache.
  * <p>
- * This class is mainly for testing the hub. It also shows that use the
+ * This class is mainly for testing the hub. It also shows that use of the
  * Collection LinkedList is far slower than JCS' own double linked list.
  */
 public class MRUMemoryCache
@@ -213,7 +213,7 @@ public class MRUMemoryCache
     /**
      * Get an item from the cache without affecting its last access time or
      * position.
-     * @return Element mathinh key if found, or null
+     * @return Element matching key if found, or null
      * @param key
      *            Identifies item to find
      * @exception IOException

@@ -29,7 +29,7 @@ public interface AuxiliaryCacheManager
 {
 
     /**
-     * Return the approriate auxiliary cache for this region.
+     * Return the appropriate auxiliary cache for this region.
      * 
      * @param cacheName
      * @return AuxiliaryCache
@@ -38,7 +38,7 @@ public interface AuxiliaryCacheManager
 
     /**
      * This allows the cache manager to be plugged into the auxiliary caches,
-     * rather then ahving them get it themselves. Cache maangers can be mocked
+     * rather then having them get it themselves. Cache maangers can be mocked
      * out and the auxiliaries will be easier to test.
      * 
      * @param cacheName

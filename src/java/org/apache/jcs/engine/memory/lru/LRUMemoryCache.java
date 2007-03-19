@@ -92,7 +92,7 @@ public class LRUMemoryCache
     {
         putCnt++;
 
-        // Asynchronisly create a MemoryElement
+        // Asynchronously create a MemoryElement
 
         ce.getElementAttributes().setLastAccessTimeNow();
         MemoryElementDescriptor old = null;
@@ -234,7 +234,7 @@ public class LRUMemoryCache
      * <p>
      * @param key
      *            Identifies item to find
-     * @return Element mathinh key if found, or null
+     * @return Element matching key if found, or null
      * @exception IOException
      */
     public ICacheElement getQuiet( Serializable key )
@@ -503,7 +503,7 @@ public class LRUMemoryCache
         }
     }
 
-    // --------------------------- internal mehods (linked list implementation)
+    // --------------------------- internal methods (linked list implementation)
     /**
      * Adds a new node to the end of the link list. Currently not used.
      * <p>
@@ -659,7 +659,7 @@ public class LRUMemoryCache
     }
 
     /**
-     * Logs an error is an element that should be in the cache is not.
+     * Logs an error if an element that should be in the cache is not.
      * <p>
      * @param key
      */

@@ -13,9 +13,9 @@ import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
 /**
  * For the framework. Insures methods a MemoryCache needs to access. Not sure why we use this.
- * Should use the IMemeoryCache interface. I'll change it later.
+ * Should use the IMemoryCache interface. I'll change it later.
  * <p>
- * This extends IMemoryCache. There was an aborted attemopt to change the interface naming
+ * This extends IMemoryCache. There was an aborted attempt to change the interface naming
  * convention to not use the "I" prefix. At this point, there are too many "I" interfaces to get rid
  * of.
  * <p>

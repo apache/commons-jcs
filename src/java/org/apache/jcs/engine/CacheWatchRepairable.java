@@ -31,7 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Interceps the requests to the underlying ICacheObserver object so that the
+ * Intercepts the requests to the underlying ICacheObserver object so that the
  * listeners can be recorded locally for remote connection recovery purposes.
  * (Durable subscription like those in JMS is not implemented at this stage for
  * it can be too expensive on the runtime.)

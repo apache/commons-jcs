@@ -40,7 +40,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
  * laterally configured caches. Non laterally configured cache regions should
- * still bea ble to participate in removal. But if there is a non laterally
+ * still be able to participate in removal. But if there is a non laterally
  * configured cache hub, then lateral removals may be necessary. For flat
  * webserver production environments, without a strong machine at the app server
  * level, distribution and search may need to occur at the lateral cache level.
@@ -48,7 +48,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * <p>
  * 
  * @TODO: - need freeCache, release, getStats - need to find an interface
- *        acceptible for all - cache managers or a manager within a type
+ *        acceptable for all - cache managers or a manager within a type
  */
 public class LateralTCPCacheManager
     extends LateralCacheAbstractManager
@@ -114,7 +114,7 @@ public class LateralTCPCacheManager
     }
 
     /**
-     * The monitor needs reference to one instance, acutally just a type.
+     * The monitor needs reference to one instance, actually just a type.
      * <p>
      * TODO refactor this.
      * <p>

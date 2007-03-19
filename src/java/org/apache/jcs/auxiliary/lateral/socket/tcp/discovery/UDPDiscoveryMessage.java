@@ -22,7 +22,7 @@ public class UDPDiscoveryMessage
     public static final int PASSIVE_BROADCAST = 0;
 
     /**
-     * This is asks recipients to broadcast their location. This is used on
+     * This asks recipients to broadcast their location. This is used on
      * startup.
      */
     public static final int REQUEST_BROADCAST = 1;

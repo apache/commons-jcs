@@ -19,7 +19,7 @@ package org.apache.jcs.auxiliary;
 import java.io.Serializable;
 
 /**
- * This is a nominal interface that auxilliary cache attributes should
+ * This is a nominal interface that auxiliary cache attributes should
  * implement. This allows the auxiliary mangers to share a common interface.
  *  
  */

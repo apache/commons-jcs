@@ -39,7 +39,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * can have multiple caches. The remote relationships are consolidated and
  * restored via these managers.
  * <p>
- * The facade provides a front to the composite cache so the implmentation is
+ * The facade provides a front to the composite cache so the implementation is
  * transparent.
  * 
  */
