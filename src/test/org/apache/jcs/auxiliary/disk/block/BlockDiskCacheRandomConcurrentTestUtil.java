@@ -11,7 +11,6 @@ import org.apache.jcs.access.TestCacheAccess;
 public class BlockDiskCacheRandomConcurrentTestUtil
     extends TestCase
 {
-
     /**
      * Constructor for the TestDiskCache object.
      * 
@@ -26,7 +25,7 @@ public class BlockDiskCacheRandomConcurrentTestUtil
      * Randomly adds items to cache, gets them, and removes them. The range
      * count is more than the size of the memory cache, so items should spool to
      * disk.
-     * 
+     * <p>
      * @param region
      *            Name of the region to access
      * @param range
@@ -52,7 +51,6 @@ public class BlockDiskCacheRandomConcurrentTestUtil
         jcs.put( key, data );
         String value = (String) jcs.get( key );
         assertEquals( data, value );
-
     }
 
     /**
@@ -62,5 +60,4 @@ public class BlockDiskCacheRandomConcurrentTestUtil
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
     }
-
 }

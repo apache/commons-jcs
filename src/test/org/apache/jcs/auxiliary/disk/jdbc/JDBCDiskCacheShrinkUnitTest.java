@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -77,7 +78,7 @@ public class JDBCDiskCacheShrinkUnitTest
         System.out.println( jcsExpire.getStats() );
 
         // the shrinker is supposed to run every second
-        Thread.sleep( 3000 );
+        SleepUtil.sleepAtLeast( 3000 );
 
         System.out.println( jcsExpire.getStats() );
 
@@ -113,7 +114,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
         System.out.println( jcs.getStats() );
 
-        Thread.sleep( 1000 );
+        SleepUtil.sleepAtLeast( 1000 );
 
         System.out.println( jcs.getStats() );
 
@@ -166,7 +167,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
         System.out.println( jcs.getStats() );
 
-        Thread.sleep( 1000 );
+        SleepUtil.sleepAtLeast( 1000 );
 
         System.out.println( jcs.getStats() );
 

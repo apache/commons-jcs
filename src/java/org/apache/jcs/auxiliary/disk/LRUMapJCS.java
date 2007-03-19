@@ -5,14 +5,16 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.utils.struct.LRUMap;
 
 /**
- * Extension of LRUMap for logging of removals. Can switch this back to a
- * HashMap easily.
+ * Extension of LRUMap for logging of removals. Can switch this back to a HashMap easily. This
+ * provides some abstraction. It also makes it easy to log overflow.
  */
 public class LRUMapJCS
     extends LRUMap
 {
+    /** Don't change */
     private static final long serialVersionUID = 776964015449842672L;
 
+    /** The logger */
     private static final Log log = LogFactory.getLog( LRUMapJCS.class );
 
     /**
@@ -24,11 +26,11 @@ public class LRUMapJCS
     }
 
     /**
-     * This creates a list bounded by the max key size argument. The Boundary is
-     * enforces by an LRU eviction policy.
+     * This creates a list bounded by the max key size argument. The Boundary is enforces by an LRU
+     * eviction policy.
      * <p>
-     * This is used in the Disk cache to store keys and purgatory elements if a
-     * boundary is requested.
+     * This is used in the Disk cache to store keys and purgatory elements if a boundary is
+     * requested.
      * <p>
      * The LRU memory cache uses its own LRU implementation.
      * <p>
@@ -40,8 +42,7 @@ public class LRUMapJCS
     }
 
     /**
-     * This is called when an item is removed from the LRU. We just log some
-     * information.
+     * This is called when an item is removed from the LRU. We just log some information.
      * <p>
      * @param key
      * @param value

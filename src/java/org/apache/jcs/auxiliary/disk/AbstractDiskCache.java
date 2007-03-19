@@ -1,14 +1,12 @@
 package org.apache.jcs.auxiliary.disk;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.IOException;
@@ -39,53 +37,50 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
- * Abstract class providing a base implementation of a disk cache, which can be
- * easily extended to implement a disk cache for a specific perstistence
- * mechanism.
+ * Abstract class providing a base implementation of a disk cache, which can be easily extended to
+ * implement a disk cache for a specific perstistence mechanism.
  * <p>
- * When implementing the abstract methods note that while this base class
- * handles most things, it does not acquire or release any locks.
- * Implementations should do so as neccesary. This is mainly done to minimize
- * the time speant in critical sections.
+ * When implementing the abstract methods note that while this base class handles most things, it
+ * does not acquire or release any locks. Implementations should do so as neccesary. This is mainly
+ * done to minimize the time speant in critical sections.
  * <p>
- * Error handling in this class needs to be addressed. Currently if an exception
- * is thrown by the persistence mechanism, this class destroys the event queue.
- * Should it also destory purgatory? Should it dispose itself?
+ * Error handling in this class needs to be addressed. Currently if an exception is thrown by the
+ * persistence mechanism, this class destroys the event queue. Should it also destory purgatory?
+ * Should it dispose itself?
  */
 public abstract class AbstractDiskCache
     implements AuxiliaryCache, Serializable
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( AbstractDiskCache.class );
 
     /** Generic disk cache attributes */
     private IDiskCacheAttributes dcattr = null;
 
     /**
-     * Map where elements are stored between being added to this cache and
-     * actually spooled to disk. This allows puts to the disk cache to return
-     * quickly, and the more expensive operation of serializing the elements to
-     * persistent storage queued for later.
+     * Map where elements are stored between being added to this cache and actually spooled to disk.
+     * This allows puts to the disk cache to return quickly, and the more expensive operation of
+     * serializing the elements to persistent storage queued for later.
      * <p>
-     * If the elements are pulled into the memory cache while the are still in
-     * purgatory, writing to disk can be cancelled.
+     * If the elements are pulled into the memory cache while the are still in purgatory, writing to
+     * disk can be cancelled.
      */
     protected Map purgatory = new HashMap();
 
     /**
-     * The CacheEventQueue where changes will be queued for asynchronous
-     * updating of the persistent storage.
+     * The CacheEventQueue where changes will be queued for asynchronous updating of the persistent
+     * storage.
      */
     protected ICacheEventQueue cacheEventQueue;
 
     /**
-     * Indicates whether the cache is 'alive', defined as having been
-     * initialized, but not yet disposed.
+     * Indicates whether the cache is 'alive', defined as having been initialized, but not yet
+     * disposed.
      */
     protected boolean alive = false;
 
     /**
-     * Every cache will have a name, subclasses must set this when they are
-     * initialized.
+     * Every cache will have a name, subclasses must set this when they are initialized.
      */
     protected String cacheName;
 
@@ -94,8 +89,10 @@ public abstract class AbstractDiskCache
      */
     protected int purgHits = 0;
 
-    // we lock here, so that we cannot get an update after a remove all.
-    // an individual removal locks the item.
+    /**
+     * We lock here, so that we cannot get an update after a remove all. an individual removal locks
+     * the item.
+     */
     private WriterPreferenceReadWriteLock removeAllLock = new WriterPreferenceReadWriteLock();
 
     // ----------------------------------------------------------- constructors
@@ -122,13 +119,12 @@ public abstract class AbstractDiskCache
     }
 
     /**
-     * Purgatory size of -1 means to use a HashMap with no size limit. Anything
-     * greater will use an LRU map of some sort.
+     * Purgatory size of -1 means to use a HashMap with no size limit. Anything greater will use an
+     * LRU map of some sort.
      * <p>
-     * @TODO Currently setting this to 0 will cause nothing to be put to disk,
-     *       since it will assume that if an item is not in purgatory, then it
-     *       must have been plucked. We should make 0 work, a way to not use
-     *       purgatory.
+     * @TODO Currently setting this to 0 will cause nothing to be put to disk, since it will assume
+     *       that if an item is not in purgatory, then it must have been plucked. We should make 0
+     *       work, a way to not use purgatory.
      */
     private void initPurgatory()
     {
@@ -177,13 +173,11 @@ public abstract class AbstractDiskCache
     // ------------------------------------------------------- interface ICache
 
     /**
-     * Adds the provided element to the cache. Element will be added to
-     * purgatory, and then queued for later writing to the serialized storage
-     * mechanism.
+     * Adds the provided element to the cache. Element will be added to purgatory, and then queued
+     * for later writing to the serialized storage mechanism.
      * <p>
-     * An update results in a put event being created. The put event will call
-     * the handlePut method defined here. The handlePut method calls the
-     * implemented doPut on the child.
+     * An update results in a put event being created. The put event will call the handlePut method
+     * defined here. The handlePut method calls the implemented doPut on the child.
      * <p>
      * @param cacheElement
      * @throws IOException
@@ -225,8 +219,8 @@ public abstract class AbstractDiskCache
     }
 
     /**
-     * Check to see if the item is in purgatory. If so, return it. If not, check
-     * to see if we have it on disk.
+     * Check to see if the item is in purgatory. If so, return it. If not, check to see if we have
+     * it on disk.
      * <p>
      * @param key
      * @return ICacheElement or null
@@ -297,6 +291,12 @@ public abstract class AbstractDiskCache
         return null;
     }
 
+    /**
+     * The keys in a group.
+     * <p>
+     * (non-Javadoc)
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+     */
     public abstract Set getGroupKeys( String groupName );
 
     /**
@@ -370,11 +370,10 @@ public abstract class AbstractDiskCache
      * <p>
      * Disposal proceeds in several steps.
      * <ol>
-     * <li> Prior to this call the Composite cache dumped the memory into the
-     * disk cache. If it is large then we need to wait for the event queue to
-     * finish.
-     * <li> Wait until the event queue is empty of until the configured
-     * ShutdownSpoolTimeLimit is reached.
+     * <li> Prior to this call the Composite cache dumped the memory into the disk cache. If it is
+     * large then we need to wait for the event queue to finish.
+     * <li> Wait until the event queue is empty of until the configured ShutdownSpoolTimeLimit is
+     * reached.
      * <li> Call doDispose on the concrete impl.
      * </ol>
      */
@@ -428,6 +427,7 @@ public abstract class AbstractDiskCache
     }
 
     /**
+     * @return the region name.
      * @see ICache#getCacheName
      */
     public String getCacheName()
@@ -445,8 +445,9 @@ public abstract class AbstractDiskCache
         return getStatistics().toString();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Returns semi-structured data.
+     * <p>
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()
@@ -483,6 +484,7 @@ public abstract class AbstractDiskCache
     }
 
     /**
+     * @return the status -- alive or disposed from CacheConstants
      * @see ICache#getStatus
      */
     public int getStatus()
@@ -491,17 +493,17 @@ public abstract class AbstractDiskCache
     }
 
     /**
-     * Size cannot be determined without knowledge of the cache implementation,
-     * so subclasses will need to implement this method.
+     * Size cannot be determined without knowledge of the cache implementation, so subclasses will
+     * need to implement this method.
      * <p>
+     * @return the number of items.
      * @see ICache#getSize
      */
     public abstract int getSize();
 
     /**
      * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType
-     * @return Always returns DISK_CACHE since subclasses should all be of that
-     *         type.
+     * @return Always returns DISK_CACHE since subclasses should all be of that type.
      */
     public int getCacheType()
     {
@@ -509,15 +511,18 @@ public abstract class AbstractDiskCache
     }
 
     /**
-     * Cache that implements the CacheListener interface, and calls appropriate
-     * methods in its parent class.
+     * Cache that implements the CacheListener interface, and calls appropriate methods in its
+     * parent class.
      */
     private class MyCacheListener
         implements ICacheListener
     {
+        /** Id of the listener */
         private long listenerId = 0;
 
         /**
+         * @return cacheElement.getElementAttributes();
+         * @throws IOException
          * @see ICacheListener#getListenerId
          */
         public long getListenerId()
@@ -540,10 +545,9 @@ public abstract class AbstractDiskCache
         /**
          * @param element
          * @throws IOException
-         * @see ICacheListener#handlePut NOTE: This checks if the element is a
-         *      puratory element and behaves differently depending. However
-         *      since we have control over how elements are added to the cache
-         *      event queue, that may not be needed ( they are always
+         * @see ICacheListener#handlePut NOTE: This checks if the element is a puratory element and
+         *      behaves differently depending. However since we have control over how elements are
+         *      added to the cache event queue, that may not be needed ( they are always
          *      PurgatoryElements ).
          */
         public void handlePut( ICacheElement element )
@@ -616,10 +620,9 @@ public abstract class AbstractDiskCache
             else
             {
                 /*
-                 * The cache is not alive, hence the element should be removed
-                 * from purgatory. All elements should be removed eventually.
-                 * Perhaps, the alive check should have been done before it went
-                 * in the queue. This block handles the case where the disk
+                 * The cache is not alive, hence the element should be removed from purgatory. All
+                 * elements should be removed eventually. Perhaps, the alive check should have been
+                 * done before it went in the queue. This block handles the case where the disk
                  * cache fails during normal opertations.
                  */
                 synchronized ( purgatory )
@@ -680,8 +683,7 @@ public abstract class AbstractDiskCache
 
     /**
      * Get a value from the persistent store.
-     * @param key
-     *            Key to locate value for.
+     * @param key Key to locate value for.
      * @return An object matching key, or null.
      */
     protected abstract ICacheElement doGet( Serializable key );
@@ -694,8 +696,7 @@ public abstract class AbstractDiskCache
 
     /**
      * Remove an object from the persistent store if found.
-     * @param key
-     *            Key of object to remove.
+     * @param key Key of object to remove.
      * @return whether or no the item was present when removed
      */
     protected abstract boolean doRemove( Serializable key );
@@ -706,8 +707,8 @@ public abstract class AbstractDiskCache
     protected abstract void doRemoveAll();
 
     /**
-     * Dispose of the persistent store. Note that disposal of purgatory and
-     * setting alive to false does NOT need to be done by this method.
+     * Dispose of the persistent store. Note that disposal of purgatory and setting alive to false
+     * does NOT need to be done by this method.
      */
     protected abstract void doDispose();
 

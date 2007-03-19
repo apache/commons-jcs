@@ -39,8 +39,9 @@ public class BlockDiskCacheConcurrentUnitTest
      * Constructor for the TestDiskCache object.
      * 
      * @param testName
+     * @throws Exception 
      */
-    public BlockDiskCacheConcurrentUnitTest( String testName )
+    public BlockDiskCacheConcurrentUnitTest( String testName ) throws Exception
     {
         super( testName );
     }
@@ -60,11 +61,17 @@ public class BlockDiskCacheConcurrentUnitTest
      * A unit test suite for JUnit
      * 
      * @return The test suite
+     * @throws Exception 
      */
-    public static Test suite()
+    public static Test suite() throws Exception
     {
         ActiveTestSuite suite = new ActiveTestSuite();
 
+        JCS.setConfigFilename( "/TestBlockDiskCache.ccf" );
+        JCS.getInstance( "indexedRegion1" ).clear();
+        JCS.getInstance( "indexedRegion2" ).clear();
+        JCS.getInstance( "indexedRegion3" ).clear();
+        
         suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache1" )
         {
             public void runTest()

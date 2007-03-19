@@ -27,16 +27,22 @@ import org.apache.jcs.engine.behavior.ICache;
 public class BlockDiskCacheManager
     implements AuxiliaryCacheManager
 {
+    /** Don't change */
     private static final long serialVersionUID = -4153287154512274626L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( BlockDiskCacheManager.class );
 
+    /** ? */
     private static int clients;
 
+    /** The singleton instance */
     private static BlockDiskCacheManager instance;
 
+    /** block disks for a region. */
     private Hashtable caches = new Hashtable();
 
+    /** Attributes. */
     private BlockDiskCacheAttributes defaultCacheAttributes;
 
     /**

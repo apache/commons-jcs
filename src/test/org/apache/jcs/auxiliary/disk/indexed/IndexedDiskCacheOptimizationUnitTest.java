@@ -6,12 +6,13 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
+ * Tests for the optimization routine.
+ * <p>
  * @author Aaron Smuts
  */
 public class IndexedDiskCacheOptimizationUnitTest
     extends TestCase
 {
-
     /**
      * Set the optimize at remove count to 10. Add 20. Check the file size. Remove 10. Check the
      * times optimized. Check the file size.
@@ -20,6 +21,7 @@ public class IndexedDiskCacheOptimizationUnitTest
     public void testBasicOptimization()
         throws Exception
     {
+        // SETUP
         int removeCount = 50;
 
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
@@ -46,23 +48,27 @@ public class IndexedDiskCacheOptimizationUnitTest
         System.out.println( "file sizeBeforeRemove " + sizeBeforeRemove );
         System.out.println( "totalSize inserted " + DiskTestObjectUtil.totalSize( elements, numberToInsert ) );
 
+        // DO WORK
         for ( int i = 0; i < removeCount; i++ )
         {
             disk.doRemove( new Integer( i ) );
         }
 
-        Thread.sleep( 500 );
-        Thread.yield();
-        Thread.sleep( 500 );
-        SleepUtil.sleepAtLeast( 750 );
+        SleepUtil.sleepAtLeast( 1000 );
         
+        // VERIFY
         long sizeAfterRemove = disk.getDataFileSize();
         System.out.println( "file sizeAfterRemove " + sizeAfterRemove );
         long expectedSizeAfterRemove = DiskTestObjectUtil.totalSize( elements, removeCount, elements.length );
         System.out.println( "totalSize expected after remove " + expectedSizeAfterRemove );
 
+        // test is prone to failure for timing reasons.
+        if ( expectedSizeAfterRemove != sizeAfterRemove )
+        {
+            SleepUtil.sleepAtLeast( 2000 ); 
+        }
+        
         assertTrue( "The post optimization size should be smaller.", sizeAfterRemove < sizeBeforeRemove );
-
         assertEquals( "The file size is not as expected size.", expectedSizeAfterRemove, sizeAfterRemove );
     }
 }

@@ -33,36 +33,47 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
-import EDU.oswego.cs.dl.util.concurrent.ReentrantWriterPreferenceReadWriteLock;
+import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
+ * There is one BlockDiskCache per region. It manages the key and data store.
+ * <p>
  * @author Aaron Smuts
  */
 public class BlockDiskCache
     extends AbstractDiskCache
 {
+    /** Don't change */
     private static final long serialVersionUID = 1L;
 
+    /** The logger. */
     private static final Log log = LogFactory.getLog( BlockDiskCache.class );
 
+    /** The name to prefix all log messages with. */
     private final String logCacheName;
 
+    /** The name of the file to store data. */
     private String fileName;
 
+    /** The data access object */
     private BlockDisk dataFile;
 
+    /** Attributes governing the behavior of the block disk cache. */
     private BlockDiskCacheAttributes blockDiskCacheAttributes;
 
+    /** The root directory for keys and data. */
     private File rootDirectory;
 
     /** Store, loads, and persists the keys */
     private BlockDiskKeyStore keyStore;
 
-    // public Object lock = new Object();
     /**
-     * Use this lock to synchronize reads and writes to the underlying storage mechansism.
+     * Use this lock to synchronize reads and writes to the underlying storage mechansism. We don't
+     * need a reentrant lock, since we only lock one level.
      */
-    protected ReentrantWriterPreferenceReadWriteLock storageLock = new ReentrantWriterPreferenceReadWriteLock();
+    // private ReentrantWriterPreferenceReadWriteLock storageLock = new
+    // ReentrantWriterPreferenceReadWriteLock();
+    private WriterPreferenceReadWriteLock storageLock = new WriterPreferenceReadWriteLock();
 
     /**
      * Constructs the BlockDisk after setting up the root directory.
@@ -95,7 +106,8 @@ public class BlockDiskCache
         {
             if ( this.blockDiskCacheAttributes.getBlockSizeBytes() > 0 )
             {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), this.blockDiskCacheAttributes.getBlockSizeBytes() );
+                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ),
+                                               this.blockDiskCacheAttributes.getBlockSizeBytes() );
             }
             else
             {
@@ -158,7 +170,7 @@ public class BlockDiskCache
         }
         catch ( Exception e )
         {
-            log.warn( "Problem verifying disk.  Message [" +  e.getMessage() + "]" );
+            log.warn( "Problem verifying disk.  Message [" + e.getMessage() + "]" );
             alright = false;
         }
         return alright;
@@ -532,7 +544,9 @@ public class BlockDiskCache
         }
     }
 
-    /*
+    /**
+     * Returns the attributes.
+     * <p>
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getAuxiliaryCacheAttributes()
      */
@@ -567,13 +581,14 @@ public class BlockDiskCache
 
             if ( this.blockDiskCacheAttributes.getBlockSizeBytes() > 0 )
             {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), this.blockDiskCacheAttributes.getBlockSizeBytes() );
+                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ),
+                                               this.blockDiskCacheAttributes.getBlockSizeBytes() );
             }
             else
             {
                 this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ) );
             }
-            
+
             this.keyStore.reset();
         }
         catch ( Exception e )
@@ -603,6 +618,7 @@ public class BlockDiskCache
     class ShutdownHook
         extends Thread
     {
+        /** Disposes of the cache. This will result force the keys to be persisted. */
         public void run()
         {
             if ( alive )

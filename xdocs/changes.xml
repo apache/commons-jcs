@@ -6,10 +6,18 @@
 	<body>
 
 		<release version="1.2.7.9.3" date="in CVS">
+			<action dev="asmuts" type="fix" issue="JCS-15"
+				due-to="Kevin Preece">
+				Fixed partial key and group id removal bug in indexed disk cache.
+			</action>
 			<action dev="asmuts" type="fix" issue="JCS-20"
 				due-to="Alistair Forbes">
 				Fixed partial key removal SQL syntax problem with the
 				JDBC disk cache.
+			</action>
+			<action dev="asmuts" type="fix" issue="JCS-21"
+				due-to="Michael Stevens">
+				Fixed a few minor missing locks.
 			</action>
 		</release>
 

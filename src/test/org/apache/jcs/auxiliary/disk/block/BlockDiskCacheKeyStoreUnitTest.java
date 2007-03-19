@@ -9,8 +9,6 @@ package org.apache.jcs.auxiliary.disk.block;
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-import java.util.Random;
-
 import junit.framework.TestCase;
 
 /**
@@ -21,6 +19,7 @@ import junit.framework.TestCase;
 public class BlockDiskCacheKeyStoreUnitTest
     extends TestCase
 {
+    /** Directory name */
     private String rootDirName = "target/test-sandbox/block";
 
     /**
@@ -89,11 +88,12 @@ public class BlockDiskCacheKeyStoreUnitTest
 
         // DO WORK
         int numElements = 1000;
-        Random random = new Random( 89 );
+        //Random random = new Random( 89 );
         for ( int i = 0; i < numElements; i++ )
         {
-            int blocks = random.nextInt( 10 );
+            int blocks = i;//random.nextInt( 10 );
             keyStore.put( String.valueOf( i ), new int[blocks] );
+            keyStore.put( String.valueOf( i ), new int[i] );            
         }
         System.out.println( "testSaveLoadKeys " + keyStore );
 
@@ -112,5 +112,10 @@ public class BlockDiskCacheKeyStoreUnitTest
 
         // VERIFY
         assertEquals( "Wrong number of keys after loading", numElements, keyStore.size() );
+        for ( int i = 0; i < numElements; i++ )
+        {
+            int[] result = keyStore.get( String.valueOf( i ) );
+            assertEquals( "Wrong array returned.", i, result.length );
+        }        
     }
 }

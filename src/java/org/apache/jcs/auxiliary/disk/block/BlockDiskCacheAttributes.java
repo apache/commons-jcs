@@ -10,21 +10,24 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 public class BlockDiskCacheAttributes
     extends AbstractDiskCacheAttributes
 {
+    /** Don't change */
     private static final long serialVersionUID = 6568840097657265989L;
 
+    /** The size per block in bytes. */
     private int blockSizeBytes;
 
+    /** Maximum number of keys to be kept in memory */
     private static final int DEFAULT_MAX_KEY_SIZE = 5000;
 
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_MAX_KEY_SIZE;
     
+    /** How often should we persist the keys. */
     private static final long DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS = 5 * 60;
     
     /** The keys will be persisted at this interval.  -1 mean never. */
     private long keyPersistenceIntervalSeconds = DEFAULT_KEY_PERSISTENCE_INTERVAL_SECONDS;
-    
-    
+        
     /**
      * The size of the blocks. All blocks are the same size.
      * <p>

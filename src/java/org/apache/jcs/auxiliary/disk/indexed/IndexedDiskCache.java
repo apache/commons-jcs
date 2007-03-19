@@ -50,8 +50,10 @@ import EDU.oswego.cs.dl.util.concurrent.ReentrantWriterPreferenceReadWriteLock;
 public class IndexedDiskCache
     extends AbstractDiskCache
 {
+    /** Don't change */
     private static final long serialVersionUID = -265035607729729629L;
 
+    /** The logger */
     private static final Log log = LogFactory.getLog( IndexedDiskCache.class );
 
     private final String logCacheName;
@@ -74,22 +76,22 @@ public class IndexedDiskCache
 
     boolean isShutdownOptimizationEnabled = true;
 
-    // are we currenlty optimizing the files
+    /** are we currenlty optimizing the files */
     boolean isOptimizing = false;
 
     private int timesOptimized = 0;
 
     private volatile Thread currentOptimizationThread;
 
-    // used for counting the number of requests
+    /** used for counting the number of requests */
     private int removeCount = 0;
 
     private boolean queueInput = false;
 
-    // list where puts made during optimization are made
+    /** list where puts made during optimization are made */
     private LinkedList queuedPutList = new LinkedList();
 
-    // RECYLCE BIN -- array of empty spots
+    /** RECYLCE BIN -- array of empty spots */
     private SortedPreferentialArray recycle;
 
     private IndexedDiskCacheAttributes cattr;
@@ -98,11 +100,11 @@ public class IndexedDiskCache
 
     private int startupSize = 0;
 
-    // the number of bytes free on disk.
+    /** the number of bytes free on disk. */
     private long bytesFree = 0;
 
     private int hitCount = 0;
-    
+
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechansism.
      */
@@ -522,13 +524,13 @@ public class IndexedDiskCache
             storageLock.readLock().acquire();
             try
             {
-                object = readElement( key );               
+                object = readElement( key );
             }
             finally
             {
                 storageLock.readLock().release();
             }
-            
+
             if ( object != null )
             {
                 incrementHitCount();
@@ -626,7 +628,7 @@ public class IndexedDiskCache
      * Returns true if the removal was succesful; or false if there is nothing to remove. Current
      * implementation always result in a disk orphan.
      * <p>
-     * @return
+     * @return true if at least one item was removed.
      * @param key
      */
     public boolean doRemove( Serializable key )
@@ -634,6 +636,11 @@ public class IndexedDiskCache
         if ( !alive )
         {
             log.error( logCacheName + "No longer alive so returning false for key = " + key );
+            return false;
+        }
+        
+        if ( key == null )
+        {
             return false;
         }
 
@@ -645,56 +652,15 @@ public class IndexedDiskCache
 
             if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
-                // remove all keys of the same name group.
-
-                Iterator iter = keyHash.entrySet().iterator();
-
-                while ( iter.hasNext() )
-                {
-                    Map.Entry entry = (Map.Entry) iter.next();
-
-                    Object k = entry.getKey();
-
-                    if ( k instanceof String && k.toString().startsWith( key.toString() ) )
-                    {
-                        IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
-                        addToRecycleBin( ded );
-                        iter.remove();
-                        removed = true;
-                        // TODO this needs to update the rmove count separately
-                    }
-                }
+                removed = performPartialKeyRemoval( (String) key );
             }
             else if ( key instanceof GroupId )
             {
-                // remove all keys of the same name hierarchy.
-                Iterator iter = keyHash.entrySet().iterator();
-                while ( iter.hasNext() )
-                {
-                    Map.Entry entry = (Map.Entry) iter.next();
-                    Object k = entry.getKey();
-
-                    if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
-                    {
-                        IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
-                        addToRecycleBin( ded );
-                        iter.remove();
-                        removed = true;
-                    }
-                }
+                removed = performGroupRemoval( (GroupId) key );
             }
             else
             {
-                // remove single item.
-                IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.remove( key );
-                removed = ( ded != null );
-                addToRecycleBin( ded );
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( logCacheName + "Disk removal: Removed from key hash, key [" + key + "] removed = "
-                        + removed );
-                }
+                removed = performSingleKeyRemoval( key );
             }
         }
         catch ( Exception e )
@@ -719,6 +685,113 @@ public class IndexedDiskCache
             doOptimizeRealTime();
         }
 
+        return removed;
+    }
+
+    /**
+     * Iterates over the keyset. Builds a list of matches. Removes all the keys in the list . Does
+     * not remove via the iterator, since the map impl may not support it.
+     * <p>
+     * This operates under a lock obtained in doRemove().
+     * <p>
+     * @param key
+     * @return true if there was a match
+     */
+    private boolean performPartialKeyRemoval( String key )
+    {
+        boolean removed = false;
+
+        // remove all keys of the same name hierarchy.
+        List itemsToRemove = new LinkedList();
+
+        Iterator iter = keyHash.entrySet().iterator();
+        while ( iter.hasNext() )
+        {
+            Map.Entry entry = (Map.Entry) iter.next();
+            Object k = entry.getKey();
+            if ( k instanceof String && k.toString().startsWith( key.toString() ) )
+            {
+                itemsToRemove.add( k );
+            }
+        }
+
+        // remove matches.
+        Iterator itToRemove = itemsToRemove.iterator();
+        while ( itToRemove.hasNext() )
+        {
+            String fullKey = (String) itToRemove.next();
+            IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( fullKey );
+            addToRecycleBin( ded );
+            performSingleKeyRemoval( fullKey );
+            removed = true;
+            // TODO this needs to update the remove count separately
+        }
+
+        return removed;
+    }
+
+    /**
+     * Remove all elements from the group. This does not use the iterator to remove. It builds a
+     * list of group elemetns and then removes them one by one.
+     * <p>
+     * This operates under a lock obtained in doRemove().
+     * <p>
+     * @param key
+     * @return true if an element was removed
+     */
+    private boolean performGroupRemoval( GroupId key )
+    {
+        boolean removed = false;
+
+        // remove all keys of the same name group.
+        List itemsToRemove = new LinkedList();
+
+        // remove all keys of the same name hierarchy.
+        Iterator iter = keyHash.entrySet().iterator();
+        while ( iter.hasNext() )
+        {
+            Map.Entry entry = (Map.Entry) iter.next();
+            Object k = entry.getKey();
+
+            if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
+            {
+                itemsToRemove.add( k );
+            }
+        }
+
+        // remove matches.
+        Iterator itToRemove = itemsToRemove.iterator();
+        while ( itToRemove.hasNext() )
+        {
+            GroupAttrName keyToRemove = (GroupAttrName) itToRemove.next();
+            IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( keyToRemove );
+            addToRecycleBin( ded );
+            performSingleKeyRemoval( keyToRemove );
+            removed = true;
+        }
+        return removed;
+    }
+
+    /**
+     * Removes an individual key from the cache.
+     * <p>
+     * This operates under a lock obtained in doRemove().
+     * <p>
+     * @param key 
+     * @return true if an item was removed.
+     */
+    private boolean performSingleKeyRemoval( Serializable key )
+    {
+        boolean removed;
+        // remove single item.
+        IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.remove( key );
+        removed = ( ded != null );
+        addToRecycleBin( ded );
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( logCacheName + "Disk removal: Removed from key hash, key [" + key + "] removed = " + removed );
+        }
         return removed;
     }
 
@@ -1215,8 +1288,8 @@ public class IndexedDiskCache
     /**
      * To subtract you can pass in false for add..
      * <p>
-     * @param ded 
-     * @param add 
+     * @param ded
+     * @param add
      */
     private synchronized void adjustBytesFree( IndexedDiskElementDescriptor ded, boolean add )
     {
@@ -1305,16 +1378,15 @@ public class IndexedDiskCache
     {
         return this.cattr;
     }
-    
+
     /**
      * Increments the hit count in a thread safe manner.
-     *
      */
     private synchronized void incrementHitCount()
     {
         hitCount++;
     }
-    
+
     /**
      * Gets basic stats for the disk cache.
      * <p>
@@ -1442,6 +1514,11 @@ public class IndexedDiskCache
     private static final class PositionComparator
         implements Comparator
     {
+        /**
+         * Compares two descriptors based on position.
+         * <p>
+         * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+         */
         public int compare( Object o1, Object o2 )
         {
             IndexedDiskElementDescriptor ded1 = (IndexedDiskElementDescriptor) o1;
@@ -1469,6 +1546,7 @@ public class IndexedDiskCache
     public class LRUMap
         extends LRUMapJCS
     {
+        /** Don't change */
         private static final long serialVersionUID = 4955079991472142198L;
 
         /**
@@ -1495,6 +1573,9 @@ public class IndexedDiskCache
         /**
          * This is called when the may key size is reaced. The least recently used item will be
          * passed here. We will store the position and size of the spot on disk in the recycle bin.
+         * <p>
+         * @param key
+         * @param value
          */
         protected void processRemovedLRU( Object key, Object value )
         {
@@ -1516,6 +1597,11 @@ public class IndexedDiskCache
     class ShutdownHook
         extends Thread
     {
+        /**
+         * This will persist the keys on shutdown.
+         * <p>
+         * @see java.lang.Thread#run()
+         */
         public void run()
         {
             if ( alive )

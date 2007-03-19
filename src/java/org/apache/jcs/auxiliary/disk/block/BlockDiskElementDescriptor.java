@@ -25,10 +25,13 @@ import java.io.Serializable;
 public class BlockDiskElementDescriptor
     implements Serializable, Externalizable
 {
+    /** Don't change */
     private static final long serialVersionUID = -1400659301208101411L;
 
+    /** The key */
     private Serializable key;
 
+    /** The array of block numbers */
     private int[] blocks;
 
     /**
@@ -67,6 +70,8 @@ public class BlockDiskElementDescriptor
 
     /**
      * For debugging.
+     * <p>
+     * @return Info on the descriptor. 
      */
     public String toString()
     {

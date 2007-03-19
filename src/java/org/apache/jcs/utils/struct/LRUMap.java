@@ -160,44 +160,6 @@ public class LRUMap
         }
     }
 
-    /**
-     * This returns a set of entries. Our LRUMapEntry is used since the value stored in the
-     * underlying map is a node in the double linked list. We wouldn't want to return this to the
-     * client, so we construct a new entry with the payload of the node.
-     * <p>
-     * TODO we should return out own set wrapper, so we can avoid the extra object creation if it
-     * isn't necessary.
-     * <p>
-     * @see java.util.Map#entrySet()
-     */
-    public synchronized Set entrySet()
-    {
-        // todo, we should return a defensive copy
-        Set entries = map.entrySet();
-
-        Set unWrapped = new HashSet();
-
-        Iterator it = entries.iterator();
-        while ( it.hasNext() )
-        {
-            Entry pre = (Entry) it.next();
-            Entry post = new LRUMapEntry( pre.getKey(), ( (LRUElementDescriptor) pre.getValue() ).getPayload() );
-            unWrapped.add( post );
-        }
-
-        return unWrapped;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map#keySet()
-     */
-    public Set keySet()
-    {
-        // TODO fix this, it needs to return the keys inside the wrappers.
-        return map.keySet();
-    }
-
     /*
      * (non-Javadoc)
      * @see java.util.Map#get(java.lang.Object)
@@ -641,5 +603,43 @@ public class LRUMap
         stats.setStatElements( ses );
 
         return stats;
+    }
+
+    /**
+     * This returns a set of entries. Our LRUMapEntry is used since the value stored in the
+     * underlying map is a node in the double linked list. We wouldn't want to return this to the
+     * client, so we construct a new entry with the payload of the node.
+     * <p>
+     * TODO we should return out own set wrapper, so we can avoid the extra object creation if it
+     * isn't necessary.
+     * <p>
+     * @see java.util.Map#entrySet()
+     */
+    public synchronized Set entrySet()
+    {
+        // todo, we should return a defensive copy
+        Set entries = map.entrySet();
+
+        Set unWrapped = new HashSet();
+
+        Iterator it = entries.iterator();
+        while ( it.hasNext() )
+        {
+            Entry pre = (Entry) it.next();
+            Entry post = new LRUMapEntry( pre.getKey(), ( (LRUElementDescriptor) pre.getValue() ).getPayload() );
+            unWrapped.add( post );
+        }
+
+        return unWrapped;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.Map#keySet()
+     */
+    public Set keySet()
+    {
+        // TODO fix this, it needs to return the keys inside the wrappers.
+        return map.keySet();
     }
 }

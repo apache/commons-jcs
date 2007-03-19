@@ -97,11 +97,14 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
     }
 
     /**
-     * Test setup
+     * Test setup.  Sets the config name and clears the region.
+     * <p>
+     * @throws Exception 
      */
-    public void setUp()
+    public void setUp() throws Exception
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
+        JCS.getInstance( "blockRegion4" ).clear();
     }
 
     /**
@@ -121,7 +124,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
         for ( int i = start; i <= end; i++ )
         {
-            jcs.put( i + ":key", region + " data " + i );
+            jcs.put( i + ":key", region + " data " + i + "-" + region );
         }
 
         // Test that all items are in cache
@@ -131,7 +134,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
             String key = i + ":key";
             String value = (String) jcs.get( key );
 
-            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i, value );
+            assertEquals( "Wrong value for key [" + key + "]", region + " data " + i + "-" + region, value );
         }
     }
 }

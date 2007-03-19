@@ -8,6 +8,8 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.control.group.GroupAttrName;
+import org.apache.jcs.engine.control.group.GroupId;
 
 /**
  * Tests for common functionality.
@@ -343,20 +345,22 @@ public class IndexDiskCacheUnitTest
 
         // verify that the recyle bin has the correct amount.
         assertEquals( "The recycle bin should have the number removed.", numberToRemove, disk.getRecyleBinSize() );
-        
-        // add half as many as we removed.  These should all use spots in the recycle bin.
+
+        // add half as many as we removed. These should all use spots in the recycle bin.
         int numberToAdd = numberToRemove / 2;
         for ( int i = 0; i < numberToAdd; i++ )
         {
             disk.doUpdate( elements[i] );
         }
-        
+
         // verify that we used the correct number of spots
-        assertEquals( "The recycle bin should have the number removed." + disk.getStats(), numberToAdd, disk.getRecyleCount() );
+        assertEquals( "The recycle bin should have the number removed." + disk.getStats(), numberToAdd, disk
+            .getRecyleCount() );
     }
-    
+
     /**
-     * Verify that the data size is as expected after a remove and after a put that should use the spots.
+     * Verify that the data size is as expected after a remove and after a put that should use the
+     * spots.
      * <p>
      * @throws IOException
      * @throws InterruptedException
@@ -390,23 +394,131 @@ public class IndexDiskCacheUnitTest
         {
             disk.doRemove( elements[i].getKey() );
         }
-        
+
         long expectedSize = DiskTestObjectUtil.totalSize( elements, numberToRemove );
         long resultSize = disk.getBytesFree();
 
         System.out.println( "testBytesFreeSize stats " + disk.getStats() );
 
         assertEquals( "Wrong bytes free size" + disk.getStats(), expectedSize, resultSize );
-        
-        // add half as many as we removed.  These should all use spots in the recycle bin.
+
+        // add half as many as we removed. These should all use spots in the recycle bin.
         int numberToAdd = numberToRemove / 2;
         for ( int i = 0; i < numberToAdd; i++ )
         {
             disk.doUpdate( elements[i] );
-        }        
-        
+        }
+
         long expectedSize2 = DiskTestObjectUtil.totalSize( elements, numberToAdd );
         long resultSize2 = disk.getBytesFree();
-        assertEquals( "Wrong bytes free size" + disk.getStats(), expectedSize2, resultSize2 );        
-    }    
+        assertEquals( "Wrong bytes free size" + disk.getStats(), expectedSize2, resultSize2 );
+    }
+
+    /**
+     * Add some items to the disk cache and then remove them one by one.
+     */
+    public void testRemove_PartialKey()
+    {
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testRemove_PartialKey" );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        disk.doRemoveAll();
+
+        int cnt = 25;
+        for ( int i = 0; i < cnt; i++ )
+        {
+            IElementAttributes eAttr = new ElementAttributes();
+            eAttr.setIsSpool( true );
+            ICacheElement element = new CacheElement( "testRemove_PartialKey", i + ":key", "data:" + i );
+            element.setElementAttributes( eAttr );
+            disk.doUpdate( element );
+        }
+
+        // verif each
+        for ( int i = 0; i < cnt; i++ )
+        {
+            ICacheElement element = disk.doGet( i + ":key" );
+            assertNotNull( "Shoulds have recevied an element.", element );
+        }
+
+        // remove each
+        for ( int i = 0; i < cnt; i++ )
+        {
+            disk.remove( i + ":" );
+            ICacheElement element = disk.doGet( i + ":key" );
+            assertNull( "Should not have recevied an element.", element );
+        }
+    }
+
+    /**
+     * Verify that group members are removed if we call remove with a group.
+     */
+    public void testRemove_Group()
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testRemove_Group" );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+
+        disk.doRemoveAll();
+
+        String cacheName = "testRemove_Group_Region";
+        String groupName = "testRemove_Group";
+
+        int cnt = 25;
+        for ( int i = 0; i < cnt; i++ )
+        {
+            GroupAttrName groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
+
+            CacheElement element = new CacheElement( cacheName, groupAttrName, "data:" + i );
+
+            IElementAttributes eAttr = new ElementAttributes();
+            eAttr.setIsSpool( true );
+            element.setElementAttributes( eAttr );
+
+            disk.doUpdate( element );
+        }
+
+        // verify each
+        for ( int i = 0; i < cnt; i++ )
+        {
+            GroupAttrName groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
+            ICacheElement element = disk.doGet( groupAttrName );
+            assertNotNull( "Should have recevied an element.", element );
+        }
+
+        // DO WORK
+        // remove the group
+        GroupId gid = new GroupId( cacheName, groupName );
+        disk.remove( gid );
+
+        for ( int i = 0; i < cnt; i++ )
+        {
+            GroupAttrName groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
+            ICacheElement element = disk.doGet( groupAttrName );
+
+            // VERIFY
+            assertNull( "Should not have recevied an element.", element );
+        }
+
+    }
+
+    /**
+     * Internal method used for group functionality.
+     * <p>
+     * @param cacheName 
+     * @param group
+     * @param name
+     * @return GroupAttrName
+     */
+    private GroupAttrName getGroupAttrName( String cacheName, String group, Object name )
+    {
+        GroupId gid = new GroupId( cacheName, group );
+        return new GroupAttrName( gid, name );
+    }
 }

@@ -1,14 +1,12 @@
 package org.apache.jcs.auxiliary.disk;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
+ * 2.0 (the "License") you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
+ * the License for the specific language governing permissions and limitations under the License.
  */
 
 import java.io.Serializable;
@@ -17,30 +15,27 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
- * Wrapper for cache elements in purgatory. Elements are stored in purgatory
- * when they are spooled to the auxilliary cache, but have not yet been written
- * to disk.
+ * Wrapper for cache elements in purgatory.
+ * <p>
+ * Elements are stored in purgatory when they are spooled to the auxilliary cache, but have not yet
+ * been written to disk.
  */
 public class PurgatoryElement
     implements ICacheElement, Serializable
 {
+    /** Don't change */
     private static final long serialVersionUID = -8152034342684135628L;
 
-    /**
-     * Is the element ready to be spooled?
-     */
+    /** Is the element ready to be spooled? */
     protected boolean spoolable = false;
 
-    /**
-     * Wrapped cache Element
-     */
+    /** Wrapped cache Element */
     protected ICacheElement cacheElement;
 
     /**
      * Constructor for the PurgatoryElement object
      * <p>
-     * @param cacheElement
-     *            CacheElement to wrap.
+     * @param cacheElement CacheElement to wrap.
      */
     public PurgatoryElement( ICacheElement cacheElement )
     {
@@ -60,8 +55,7 @@ public class PurgatoryElement
     /**
      * Sets the spoolable property.
      * <p>
-     * @param spoolable
-     *            The new spoolable value
+     * @param spoolable The new spoolable value
      */
     public void setSpoolable( boolean spoolable )
     {
@@ -81,6 +75,7 @@ public class PurgatoryElement
     // ------------------------------------------------ interface ICacheElement
 
     /**
+     * @return cacheElement.getCacheName();
      * @see ICacheElement#getCacheName
      */
     public String getCacheName()
@@ -89,6 +84,7 @@ public class PurgatoryElement
     }
 
     /**
+     * @return cacheElement.getKey();
      * @see ICacheElement#getKey
      */
     public Serializable getKey()
@@ -97,6 +93,7 @@ public class PurgatoryElement
     }
 
     /**
+     * @return cacheElement.getVal();
      * @see ICacheElement#getVal
      */
     public Serializable getVal()
@@ -105,6 +102,7 @@ public class PurgatoryElement
     }
 
     /**
+     * @return cacheElement.getElementAttributes();
      * @see ICacheElement#getElementAttributes
      */
     public IElementAttributes getElementAttributes()

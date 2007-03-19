@@ -38,23 +38,31 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  */
 public class BlockDiskKeyStore
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );
 
+    /** Attributes governing the behavior of the block disk cache. */
     private BlockDiskCacheAttributes blockDiskCacheAttributes;
 
+    /** The key to block map */
     private Map keyHash;
 
+    /** The file where we persist the keys */
     private File keyFile;
 
+    /** The name to prefix log messages with. */
     private final String logCacheName;
 
+    /** Name of the file where we persist the keys */
     private String fileName;
 
+    /** The maximum number of keys to store in memory */
     private int maxKeySize;
 
-    // we need this so we can communicate free blocks to the data store when keys fall off the LRU
+    /** we need this so we can communicate free blocks to the data store when keys fall off the LRU */
     private BlockDiskCache blockDiskCache;
 
+    /** The root directory in which the keyFile lives */
     private File rootDirectory;
 
     /**
@@ -362,6 +370,7 @@ public class BlockDiskKeyStore
     public class LRUMap
         extends LRUMapJCS
     {
+        /** Don't change */
         private static final long serialVersionUID = 4955079991472142198L;
 
         /**
@@ -388,6 +397,9 @@ public class BlockDiskKeyStore
         /**
          * This is called when the may key size is reaced. The least recently used item will be
          * passed here. We will store the position and size of the spot on disk in the recycle bin.
+         * <p>
+         * @param key 
+         * @param value 
          */
         protected void processRemovedLRU( Object key, Object value )
         {
@@ -408,7 +420,9 @@ public class BlockDiskKeyStore
         implements ThreadFactory
     {
 
-        /*
+        /**
+         * Ensures that we create daemon threads.
+         * <p>
          * (non-Javadoc)
          * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
          */

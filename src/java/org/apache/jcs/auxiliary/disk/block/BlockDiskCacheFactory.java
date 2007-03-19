@@ -22,8 +22,10 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public class BlockDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( BlockDiskCacheFactory.class );
 
+    /** The auxiliary name */
     private String name;
 
     /**

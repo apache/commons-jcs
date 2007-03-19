@@ -28,14 +28,16 @@ import org.apache.jcs.utils.struct.SingleLinkedList;
  */
 public class BlockDisk
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( BlockDisk.class );
 
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;
 
-    // defaults to 4kb
+    /** defaults to 4kb */
     private static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
 
+    /** Size of the blocks */
     private int blockSizeBytes = DEFAULT_BLOCK_SIZE_BYTES;
 
     /**
@@ -44,16 +46,22 @@ public class BlockDisk
      */
     private int numberOfBlocks = 0;
 
+    /** Empty blocks that can be reused. */
     private SingleLinkedList emptyBlocks = new SingleLinkedList();
 
+    /** Handles serializing the objects */
     private static final StandardSerializer SERIALIZER = new StandardSerializer();
 
+    /** Location of the spot on disk */
     private final String filepath;
 
+    /** The file handle. */
     private RandomAccessFile raf;
 
+    /** How many bytes have we put to disk */
     private long putBytes = 0;
 
+    /** How many items have we put to disk */
     private long putCount = 0;
 
     /**
@@ -342,7 +350,7 @@ public class BlockDisk
      * Calcuates the file offset for a particular block.
      * <p>
      * @param block
-     * @return
+     * @return the offset for this block
      */
     protected int calculateByteOffsetForBlock( int block )
     {
@@ -353,7 +361,7 @@ public class BlockDisk
      * The number of blocks needed.
      * <p>
      * @param data
-     * @return
+     * @return the number of blocks needed to store the byte array
      */
     protected int calculateTheNumberOfBlocksNeeded( byte[] data )
     {
@@ -379,7 +387,7 @@ public class BlockDisk
     /**
      * Returns the raf length.
      * <p>
-     * @return
+     * @return the size of the file.
      * @exception IOException
      */
     protected long length()
@@ -438,6 +446,10 @@ public class BlockDisk
      */
     protected long getAveragePutSizeBytes()
     {
+        if ( this.putCount == 0 )
+        {
+            return 0;
+        }
         return this.putBytes / this.putCount;
     }
 
@@ -451,6 +463,8 @@ public class BlockDisk
 
     /**
      * For debugging only.
+     * <p>
+     * @return String with details.
      */
     public String toString()
     {

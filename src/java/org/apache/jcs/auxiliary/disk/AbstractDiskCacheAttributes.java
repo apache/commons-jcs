@@ -24,16 +24,16 @@ public abstract class AbstractDiskCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements IDiskCacheAttributes
 {
-
     /** path to disk */
     protected String diskPath;
 
-    // if this is false, we will not execute remove all
+    /** if this is false, we will not execute remove all */
     private boolean allowRemoveAll = true;
 
     /** default to 5000 */
     protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFUALT;
 
+    /** Default amount of time to allow for keypersistence on shutdown */
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
 
     /**
@@ -144,5 +144,4 @@ public abstract class AbstractDiskCacheAttributes
         str.append( "\n allowRemoveAll   = " + allowRemoveAll );
         return str.toString();
     }
-
 }
