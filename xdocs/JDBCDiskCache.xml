@@ -12,7 +12,7 @@
 				The JDBC disk cache uses a relational database such as
 				MySQL as a persistent store. It works with Oracle, MySQL
 				and HSQL. The cache elements are serialized and written
-				into a BLOB. Mutliple regions can share a single table.
+				into a BLOB. Multiple regions can share a single table.
 				You can define multiple, differently configured JDBC
 				disk caches in one JCS instance. This allows you to use
 				different tables for different cache regions.

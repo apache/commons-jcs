@@ -12,7 +12,7 @@
 			<p>
 				The MySQL Disk Cache uses all of the JDBC Disk Cache
 				properties. It adds a few of its own. The following
-				properties on apply to the MySQL Disk Cache plugin.
+				properties only apply to the MySQL Disk Cache plugin.
 			</p>
 
 			<subsection name="MySQL Disk Configuration Properties">
@@ -31,7 +31,7 @@
 							table. If none is supplied, then no
 							optimizations will be performed.
 
-							In the future we can add a chron like
+							In the future we can add a cron like
 							scheduling system. This was created to meet
 							a pressing need to optimize fragmented
 							MyISAM tables. When the table becomes

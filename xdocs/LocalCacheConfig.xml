@@ -64,7 +64,7 @@ jcs.default.cacheattributes.MaxObjects=1000
         <p>
           The most important line is
           <code>jcs.default=DC,Rfailover</code>. This tells the cache
-          what auxiliary caches should be used.  Auxialiary caches are
+          what auxiliary caches should be used.  Auxiliary caches are
           configured in the third section of the <code>cache.ccf</code>
           and are referenced in a comma separated list.  You can add as
           many auxiliary caches as you want, but the behavior of remote

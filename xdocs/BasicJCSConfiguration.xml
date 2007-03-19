@@ -111,7 +111,7 @@ jcs.region.testCache1=DC,LTCP
       </subsection>
       <subsection name="A few comments on configuration">
         <p>
-          Auxiliary definitions are like log4j appenders, they are defines
+          Auxiliary definitions are like log4j appenders, they are defined
           and then associated with a region like a log4j category.
         </p>
         <p>

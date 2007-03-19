@@ -45,7 +45,7 @@
 						<td>
 							This is the port on which the client will
 							receive callbacks from the remote server. If
-							it is not spedified, then some port in the
+							it is not specified, then some port in the
 							default range used by RMI will be the
 							callback port.
 						</td>
@@ -120,7 +120,7 @@
 						<td>
 							The number of elements the zombie queue will
 							hold. This queue is used to store events if
-							we * loose our conenction with the server.
+							we lose our connection with the server.
 						</td>
 						<td>N</td>
 						<td>1000</td>

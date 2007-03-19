@@ -22,7 +22,7 @@
 					The configuration below can be put in the cache.ccf
 					configuration file. It establishes the default
 					behavior for all regions. A region can override
-					these defaults and an individual element can overide
+					these defaults and an individual element can override
 					these defaults and the region settings.
 				</p>
 				<source>

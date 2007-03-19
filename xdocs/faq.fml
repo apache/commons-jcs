@@ -91,7 +91,7 @@
 
 		<faq id="configuration-system-properties">
 			<question>
-				Can JCS use system propeties during configuration?
+				Can JCS use system properties during configuration?
 			</question>
 			<answer>
 				<p>
@@ -147,9 +147,9 @@
 						href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/">
 						here
 					</a>
-					or get the source code from subversion with svn co
-					http://svn.apache.org/repos/asf/jakarta/jcs/trunk.
-					The tagged releases are available with svn co. ex.
+					or get the source code from subversion with <code>svn co
+					http://svn.apache.org/repos/asf/jakarta/jcs/trunk</code>.
+					The tagged releases are available with <code>svn co.</code> ex.
 					http://svn.apache.org/repos/asf/jakarta/jcs/tags/jcs_1_2_7_0
 				</p>
 			</answer>
@@ -208,7 +208,7 @@
 
 		<faq id="hierarchical-removal">
 			<question>
-				Can I remove all items begging with part of a key?
+				Can I remove all items beginning with part of a key?
 			</question>
 			<answer>
 				<p>
@@ -216,7 +216,7 @@
 					auxiliaries will have to iterate over their keysets.
 					Although all the auxiliaries honor this, it is not
 					part of the auxiliary API. There is no method along
-					the lins of "removeStartingWith", but all the remove
+					the lines of "removeStartingWith", but all the remove
 					methods can do it.
 				</p>
 				<p>

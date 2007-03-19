@@ -321,7 +321,7 @@ public class BookVObjManager
         <p>
           The next step will be to select an appropriate
           distribution layer.  If you have a back-end server
-          running an apserver or scripts or are running multiple
+          running an appserver or scripts or are running multiple
           webserver VMs on one machine, you might want to use
           the centralized <a href="RemoteAuxCache.html">remote
           cache</a>.  The lateral cache would be fine, but since

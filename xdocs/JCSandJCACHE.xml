@@ -87,7 +87,7 @@
           I started to support <code>ObjectNotFoundExceptions</code> for
           failed gets but the overhead and cumbersome coding needed to
           surround a simple get method is ridiculous.  Instead the JCS
-          return null.
+          returns null.
         </p>
       </subsection>
       <subsection name="Cache Loaders">

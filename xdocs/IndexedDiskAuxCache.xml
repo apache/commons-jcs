@@ -74,7 +74,7 @@
 
 			<subsection name="Configuration">
 				<p>
-					The simple configuration and is done in the
+					Configuration is simple and is done in the
 					auxiliary cache section of the
 					<code>cache.ccf</code>
 					configuration file. In the example below, I created

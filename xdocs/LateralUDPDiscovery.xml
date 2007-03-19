@@ -16,7 +16,7 @@
   	  </p>
 	  <p>	
 		On startup each lateral will issue a special message requesting a 
-		broadcast from the others caches.  Normal broadcasts occur every 
+		broadcast from the other caches.  Normal broadcasts occur every 
 		30 seconds. (This is to be made configurable.)  Regions that don't 
 		receive, are running in send only mode, don't broadcast anything but requests.
   	  </p>

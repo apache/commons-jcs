@@ -14,8 +14,8 @@
 	</p>
       <p> 
 	There are four types of auxiliaries: (1) memory, (2) disk, (3) lateral, 	and (4) remote.  Each region is required to have one and only one memory 	auxiliary.  No other auxiliaries are required and any possible 	combination of disk, lateral, and remote auxiliaries is allowed. If you 
-	Do not want to store items in memory, then the maximum size for the memory
-	Caches can be set to 0 on a per region basis.
+	do not want to store items in memory, then the maximum size for the memory
+	caches can be set to 0 on a per region basis.
 	</p>
    </section>
 
@@ -42,11 +42,11 @@
 
     <section name="Lateral Plugins"> 
       <p> 
-	JCS provides two recommended lateral distribution options: TCP socket 	server distribution and JGroups (or JavaGroups).  There are also several 	other experiemental lateral distribution auxiliaries using servlets, UDP, 	and xmlrpc.
+	JCS provides two recommended lateral distribution options: TCP socket 	server distribution and JGroups (or JavaGroups).  There are also several 	other experimental lateral distribution auxiliaries using servlets, UDP, 	and xmlrpc.
 	</p>
    </section>
 
-    <section name="Remote Plugins"> 
+    <section name="Remote Plugins">
       <p> 
 	JCS also provides an RMI based remote server to manage distribution of 	cached data.
 	</p>

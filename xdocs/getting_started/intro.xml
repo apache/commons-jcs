@@ -59,7 +59,7 @@
 
 		<section name="STEP 2: Download JCS">
 			<p>
-				Download the latest version of JCS. The latests JCS
+				Download the latest version of JCS. The latest JCS
 				builds are located
 				<a
 					href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/tempbuild/">
@@ -188,7 +188,7 @@ jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 		<section name="STEP 5: Programming to JCS">
 			<p>
 				JCS provides a convenient class that should meet all
-				your needs. It is called, appropriately engough,
+				your needs. It is called, appropriately enough,
 				<code>org.apache.jcs.JCS</code>
 			</p>
 			<p>

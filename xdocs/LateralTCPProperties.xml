@@ -56,7 +56,7 @@
               set receive to false if you just need to broadcast to other caches.  If you
               have a feed data parser, that doesn't need to receive updates, but you
               do want it to send invalidation messages, then you would set receive to false.
-              If receive is false, teh discovery service, if enabled, will only listen.
+              If receive is false, the discovery service, if enabled, will only listen.
             </td>
             <td>N</td>
             <td>true</td>

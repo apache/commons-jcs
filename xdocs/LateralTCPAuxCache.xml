@@ -13,7 +13,7 @@
         The TCP Lateral Auxiliary Cache is an optional plug in for the
         JCS.  It is primarily intended to broadcast puts and removals to
         other local caches, though it can also get cached objects.  It
-        functions by opening up a <code> SocketServer</code> that
+        functions by opening up a <code>SocketServer</code> that
         listens to a configurable port and by creating
         <code>Socket</code> connections with other local cache
         <code>SocketServers</code>.  It can be configured to connect to
@@ -65,7 +65,7 @@ jcs.auxiliary.LTCP.attributes.AllowGet=true
       <subsection name="Send Only Configuration">
         <p>
           You can configure the TCP lateral cache to operate
-          in send only more by setting the <code>Receive</code> attribute
+          in send only mode by setting the <code>Receive</code> attribute
           to false.  By default the receive attribute is true.
           When it is set to false, the lateral cache will not
           establish a socket server.    

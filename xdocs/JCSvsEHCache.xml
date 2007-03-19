@@ -450,7 +450,7 @@ public class JCSvsEHCachePerformanceTest
 				The ehcache disk version is very simple. It puts an
 				unlimited number of items in a temporary store. You can
 				easily fill this up and run out of memory. You can put
-				items into JCS prugatory faster than they can be gc's
+				items into JCS purgatory faster than they can be gc'd
 				but it is much more difficult. The EH store is then
 				flushed to disk every 200ms. While EH is flushing the
 				entire disk cache blocks!

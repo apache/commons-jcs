@@ -31,7 +31,7 @@
     
       <subsection name="Configuration">
         <p>
-          The simple configuration and is done in the auxiliary 
+          The configuration is simple and is done in the auxiliary 
           cache section of the <code>cache.ccf</code> configuration file.
           In the example below, I created a Berkeley DB Auxiliary Cache 
           referenced by <code>BDBDC</code>.  It uses files located in the 

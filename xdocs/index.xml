@@ -70,7 +70,7 @@
 			</p>
 			<p>
 				The JCS jar provides production ready implementations of
-				each of the four types of caches. In addtion to the core
+				each of the four types of caches. In addition to the core
 				four, JCS also provides additional plugins of each type.
 			</p>
 
@@ -181,7 +181,7 @@
 				provided by JCS can scale into the tens of servers. In a
 				well-designed service oriented architecture, JCS can be
 				used in a high demand service with numerous nodes. This
-				would not be possible is the distribution mechanism were
+				would not be possible if the distribution mechanism were
 				transactional.
 			</p>
 			<p>
@@ -190,7 +190,7 @@
 				so it can just send a field or two fewer over the wire.
 			</p>
 			<p>
-				JCS is not fork, an offshoot, a branch, or any other
+				JCS is not a fork, an offshoot, a branch, or any other
 				derivation of JCS. Nor is JCS named after another
 				library. JCS is a mature project that has been under
 				development and in use since 2001. Over the years JCS
