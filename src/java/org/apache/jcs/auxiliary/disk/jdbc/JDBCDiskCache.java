@@ -554,7 +554,7 @@ public class JDBCDiskCache
             {
                 // remove all keys of the same name group.
                 sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                    + this.getCacheName() + "' and CACHE_KEY = like '" + key + "%'";
+                    + this.getCacheName() + "' and CACHE_KEY like '" + key + "%'";
             }
             Connection con = poolAccess.getConnection();
             Statement sStatement = null;
@@ -567,7 +567,7 @@ public class JDBCDiskCache
             }
             catch ( SQLException e )
             {
-                log.error( "Problem creating statement.", e );
+                log.error( "Problem creating statement. sql [" + sql + "]", e );
                 alive = false;
             }
             finally
