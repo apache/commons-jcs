@@ -372,21 +372,18 @@ public class JDBCDiskCache
             return exists;
         }
 
-        Statement sStatement = null;
+        PreparedStatement psSelect = null;
         try
         {
-            sStatement = con.createStatement();
-
             // don't select the element, since we want this to be fast.
-            String sqlS = "select CACHE_KEY from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                + this.getCacheName() + "' and CACHE_KEY = '" + (String) ce.getKey() + "'";
+            String sqlS = "select CACHE_KEY from " + getJdbcDiskCacheAttributes().getTableName()
+                + " where REGION = ? and CACHE_KEY = ?";
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( sqlS );
-            }
+            psSelect = con.prepareStatement( sqlS );
+            psSelect.setString( 1, this.getCacheName() );
+            psSelect.setString( 2, (String) ce.getKey() );
 
-            ResultSet rs = sStatement.executeQuery( sqlS );
+            ResultSet rs = psSelect.executeQuery();
 
             if ( rs.next() )
             {
@@ -408,7 +405,11 @@ public class JDBCDiskCache
         {
             try
             {
-                sStatement.close();
+                if ( psSelect != null )
+                {
+                    psSelect.close();
+                }
+                psSelect.close();
             }
             catch ( SQLException e1 )
             {
@@ -466,9 +467,8 @@ public class JDBCDiskCache
                     psSelect = con.prepareStatement( selectString );
                     psSelect.setString( 1, this.getCacheName() );
                     psSelect.setString( 2, key.toString() );
-                    ResultSet rs = null;
 
-                    rs = psSelect.executeQuery();
+                    ResultSet rs = psSelect.executeQuery();
                     try
                     {
                         if ( rs.next() )
@@ -545,25 +545,37 @@ public class JDBCDiskCache
     public boolean doRemove( Serializable key )
     {
         // remove single item.
-        String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where CACHE_KEY = '" + key
-            + "' and REGION = '" + this.getCacheName() + "'";
+        String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
+            + " where REGION = ? and CACHE_KEY = ?";
 
         try
         {
+            boolean partial = false;
             if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
-                sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                    + this.getCacheName() + "' and CACHE_KEY like '" + key + "%'";
+                sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
+                    + " where REGION = ? and CACHE_KEY like ?";
+                partial = true;
             }
             Connection con = poolAccess.getConnection();
-            Statement sStatement = null;
+            PreparedStatement psSelect = null;
             try
             {
-                sStatement = con.createStatement();
-                alive = true;
+                psSelect = con.prepareStatement( sql );
+                psSelect.setString( 1, this.getCacheName() );
+                if ( partial )
+                {
+                    psSelect.setString( 2, key.toString() + "%" );
+                }
+                else
+                {
+                    psSelect.setString( 2, key.toString() );
+                }
 
-                sStatement.executeUpdate( sql );
+                psSelect.executeUpdate( );
+
+                alive = true;
             }
             catch ( SQLException e )
             {
@@ -574,9 +586,9 @@ public class JDBCDiskCache
             {
                 try
                 {
-                    if ( sStatement != null )
+                    if ( psSelect != null )
                     {
-                        sStatement.close();
+                        psSelect.close();
                     }
                     con.close();
                 }
@@ -603,16 +615,15 @@ public class JDBCDiskCache
         {
             try
             {
-                String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                    + this.getCacheName() + "'";
+                String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = ?";
                 Connection con = poolAccess.getConnection();
-                Statement sStatement = null;
+                PreparedStatement psDelete = null;
                 try
                 {
-                    sStatement = con.createStatement();
+                    psDelete = con.prepareStatement( sql );
+                    psDelete.setString( 1, this.getCacheName() );
                     alive = true;
-
-                    sStatement.executeUpdate( sql );
+                    psDelete.executeUpdate( );
                 }
                 catch ( SQLException e )
                 {
@@ -623,9 +634,9 @@ public class JDBCDiskCache
                 {
                     try
                     {
-                        if ( sStatement != null )
+                        if ( psDelete != null )
                         {
-                            sStatement.close();
+                            psDelete.close();
                         }
                         con.close();
                     }
@@ -671,17 +682,21 @@ public class JDBCDiskCache
             // + this.getCacheName() + "' and IS_ETERNAL = 'F' and (" + now
             // + " - CREATE_TIME_SECONDS) > MAX_LIFE_SECONDS";
 
-            String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
-                + this.getCacheName() + "' and IS_ETERNAL = 'F' and " + now + " > SYSTEM_EXPIRE_TIME_SECONDS";
+            String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
+                + " where IS_ETERNAL = ? and REGION = ? and ? > SYSTEM_EXPIRE_TIME_SECONDS";
 
             Connection con = poolAccess.getConnection();
-            Statement sStatement = null;
+            PreparedStatement psDelete = null;
             try
             {
-                sStatement = con.createStatement();
+                psDelete = con.prepareStatement( sql );
+                psDelete.setString( 1, "F" );
+                psDelete.setString( 2, this.getCacheName() );
+                psDelete.setLong( 3, now );
+
                 alive = true;
 
-                deleted = sStatement.executeUpdate( sql );
+                deleted = psDelete.executeUpdate( );
             }
             catch ( SQLException e )
             {
@@ -692,9 +707,9 @@ public class JDBCDiskCache
             {
                 try
                 {
-                    if ( sStatement != null )
+                    if ( psDelete != null )
                     {
-                        sStatement.close();
+                        psDelete.close();
                     }
                     con.close();
                 }
@@ -894,7 +909,7 @@ public class JDBCDiskCache
     {
         return this.getJdbcDiskCacheAttributes();
     }
-    
+
     /**
      * Extends the parent stats.
      */
