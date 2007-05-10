@@ -1,14 +1,22 @@
 package org.apache.jcs.utils.threadpool;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.util.ArrayList;
@@ -47,23 +55,23 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * <p>
  * If a value is not set for a particular pool, the hard coded defaults will be
  * used.
- * 
+ *
  * <pre>
  * int boundarySize_DEFAULT = 2000;
- * 
+ *
  * int maximumPoolSize_DEFAULT = 150;
- * 
+ *
  * int minimumPoolSize_DEFAULT = 4;
- * 
+ *
  * int keepAliveTime_DEFAULT = 1000 * 60 * 5;
- * 
+ *
  * boolean abortWhenBlocked = false;
- * 
+ *
  * String whenBlockedPolicy_DEFAULT = IPoolConfiguration.POLICY_RUN;
- * 
+ *
  * int startUpSize_DEFAULT = 4;
  * </pre>
- * 
+ *
  * You can configure default settings by specifying a default pool in the
  * properties, ie "cache.ccf"
  * <p>
@@ -441,7 +449,7 @@ public class ThreadPoolManager
 
         return config;
     }
-    
+
     /**
      * Allows us to set the daemon status on the threads.
      * <p>
@@ -452,7 +460,7 @@ public class ThreadPoolManager
     {
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
          */
         public Thread newThread( Runnable runner )
@@ -461,5 +469,5 @@ public class ThreadPoolManager
             t.setDaemon( true );
             return t;
         }
-    }      
+    }
 }

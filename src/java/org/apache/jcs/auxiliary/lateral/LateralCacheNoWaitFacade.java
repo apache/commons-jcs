@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -41,7 +44,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * Composite factory should construct LateralCacheNoWaitFacade to give to the
  * composite cache out of caches it constructs from the varies manager to
  * lateral services. Perhaps the lateralcache factory should be able to do this.
- *  
+ *
  */
 public class LateralCacheNoWaitFacade
     implements AuxiliaryCache
@@ -56,11 +59,11 @@ public class LateralCacheNoWaitFacade
     private String cacheName;
 
     private ILateralCacheAttributes lateralCacheAttributes;
-    
+
     /**
      * Constructs with the given lateral cache, and fires events to any
      * listeners.
-     * 
+     *
      * @param noWaits
      * @param cattr
      */
@@ -69,7 +72,7 @@ public class LateralCacheNoWaitFacade
         if ( log.isDebugEnabled() )
         {
             log.debug( "CONSTRUCTING NO WAIT FACADE" );
-        }        
+        }
         this.noWaits = noWaits;
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttributes = cattr;
@@ -116,7 +119,7 @@ public class LateralCacheNoWaitFacade
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void update( ICacheElement ce )
@@ -172,7 +175,7 @@ public class LateralCacheNoWaitFacade
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
     public Set getGroupKeys( String group )
@@ -254,7 +257,7 @@ public class LateralCacheNoWaitFacade
 
     /**
      * No lateral invokation.
-     * 
+     *
      * @return The size value
      */
     public int getSize()
@@ -265,7 +268,7 @@ public class LateralCacheNoWaitFacade
 
     /**
      * Gets the cacheType attribute of the LateralCacheNoWaitFacade object
-     * 
+     *
      * @return The cacheType value
      */
     public int getCacheType()
@@ -275,7 +278,7 @@ public class LateralCacheNoWaitFacade
 
     /**
      * Gets the cacheName attribute of the LateralCacheNoWaitFacade object
-     * 
+     *
      * @return The cacheName value
      */
     public String getCacheName()
@@ -287,7 +290,7 @@ public class LateralCacheNoWaitFacade
     // need to do something with this
     /**
      * Gets the status attribute of the LateralCacheNoWaitFacade object
-     * 
+     *
      * @return The status value
      */
     public int getStatus()
@@ -303,10 +306,10 @@ public class LateralCacheNoWaitFacade
     {
         return this.lateralCacheAttributes;
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     public String toString()
@@ -316,7 +319,7 @@ public class LateralCacheNoWaitFacade
 
     /**
      * getStats
-     * 
+     *
      * @return String
      */
     public String getStats()
@@ -326,7 +329,7 @@ public class LateralCacheNoWaitFacade
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()

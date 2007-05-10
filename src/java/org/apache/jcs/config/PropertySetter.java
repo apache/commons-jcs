@@ -1,19 +1,22 @@
 package org.apache.jcs.config;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.beans.BeanInfo;
@@ -44,20 +47,20 @@ import org.apache.commons.logging.LogFactory;
  * Object specified in the constructor. This class relies on the JavaBeans
  * {@link Introspector}to analyze the given Object Class using reflection.
  * <p>
- * 
+ *
  * Usage:
- * 
+ *
  * <pre>
  * PropertySetter ps = new PropertySetter( anObject );
  * ps.set( &quot;name&quot;, &quot;Joe&quot; );
  * ps.set( &quot;age&quot;, &quot;32&quot; );
  * ps.set( &quot;isMale&quot;, &quot;true&quot; );
  * </pre>
- * 
+ *
  * will cause the invocations anObject.setName("Joe"), anObject.setAge(32), and
  * setMale(true) if such methods exist with those signatures. Otherwise an
  * {@link IntrospectionException}are thrown.
- * 
+ *
  * @since 1.1
  */
 public class PropertySetter
@@ -73,7 +76,7 @@ public class PropertySetter
     /**
      * Create a new PropertySetter for the specified Object. This is done in
      * prepartion for invoking {@link #setProperty}one or more times.
-     * 
+     *
      * @param obj
      *            the object for which to set properties
      */
@@ -103,7 +106,7 @@ public class PropertySetter
     /**
      * Set the properties of an object passed as a parameter in one go. The
      * <code>properties</code> are parsed relative to a <code>prefix</code>.
-     * 
+     *
      * @param obj
      *            The object to configure.
      * @param properties
@@ -119,7 +122,7 @@ public class PropertySetter
     /**
      * Set the properites for the object that match the <code>prefix</code>
      * passed as parameter.
-     * 
+     *
      * @param properties
      *            The new properties value
      * @param prefix
@@ -161,12 +164,12 @@ public class PropertySetter
      * partly from the setter argument type and partly from the value specified
      * in the call to this method.
      * <p>
-     * 
+     *
      * If the setter expects a String no conversion is necessary. If it expects
      * an int, then an attempt is made to convert 'value' to an int using new
      * Integer(value). If the setter expects a boolean, the conversion is by new
      * Boolean(value).
-     * 
+     *
      * @param name
      *            name of the property
      * @param value
@@ -204,7 +207,7 @@ public class PropertySetter
 
     /**
      * Set the named property given a {@link PropertyDescriptor}.
-     * 
+     *
      * @param prop
      *            A PropertyDescriptor describing the characteristics of the
      *            property to set.
@@ -297,7 +300,7 @@ public class PropertySetter
     /**
      * Gets the propertyDescriptor attribute of the PropertySetter object
      * @param name
-     * 
+     *
      * @return The propertyDescriptor value
      */
     protected PropertyDescriptor getPropertyDescriptor( String name )

@@ -1,19 +1,22 @@
 package org.apache.jcs.engine.memory.shrinking;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -35,7 +38,7 @@ import org.apache.jcs.engine.memory.MemoryCache;
  * A background memory shrinker. Memory problems and concurrent modification
  * exception caused by acting directly on an iterator of the underlying memory
  * cache should have been solved.
- * 
+ *
  * @version $Id$
  */
 public class ShrinkerThread
@@ -56,7 +59,7 @@ public class ShrinkerThread
 
     /**
      * Constructor for the ShrinkerThread object.
-     * 
+     *
      * @param cache
      *            The MemoryCache which the new shrinker should watch.
      */
@@ -108,7 +111,7 @@ public class ShrinkerThread
      * so, remove it. If there are event listeners registered for the cache
      * element, they will be called.</li>
      * </ol>
-     * 
+     *
      * @todo Change element event handling to use the queue, then move the queue
      *       to the region and access via the Cache.
      */
@@ -246,7 +249,7 @@ public class ShrinkerThread
     /**
      * Check if either lifetime or idletime has expired for the provided event,
      * and remove it from the cache if so.
-     * 
+     *
      * @param cacheElement
      *            Element to check for expiration
      * @param now
@@ -297,7 +300,7 @@ public class ShrinkerThread
     /**
      * Handle any events registered for the given element of the given event
      * type.
-     * 
+     *
      * @param cacheElement
      *            Element to handle events for
      * @param eventType
@@ -333,7 +336,7 @@ public class ShrinkerThread
                 // we will need to create an event manager and pass it around instead.
                 if ( cache.getCompositeCache() != null )
                 {
-                    cache.getCompositeCache().addElementEvent( hand, event );                    
+                    cache.getCompositeCache().addElementEvent( hand, event );
                 }
             }
         }

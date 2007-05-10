@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.util.Iterator;
@@ -30,7 +33,7 @@ import org.apache.jcs.engine.CacheConstants;
  * connection error, the monitor changes to operate in a time driven mode. That
  * is, it attempts to recover the connections on a periodic basis. When all
  * failed connections are restored, it changes back to the failure driven mode.
- *  
+ *
  */
 public class LateralCacheMonitor
     implements Runnable
@@ -51,10 +54,10 @@ public class LateralCacheMonitor
     private static int mode = ERROR;
 
     private ILateralCacheManager manager;
-    
+
     /**
      * Configures the idle period between repairs.
-     * 
+     *
      * @param idlePeriod
      *            The new idlePeriod value
      */
@@ -69,7 +72,7 @@ public class LateralCacheMonitor
     /**
      * Allows close classes, ie testers to set the idle period to something
      * testable.
-     * 
+     *
      * @param idlePeriod
      */
     protected static void forceShortIdlePeriod( long idlePeriod )
@@ -81,7 +84,7 @@ public class LateralCacheMonitor
      * <p>
      * It's the clients responsibility to decide how many
      * of these there will be.
-     *  
+     *
      * @param manager
      */
     public LateralCacheMonitor( ILateralCacheManager manager )

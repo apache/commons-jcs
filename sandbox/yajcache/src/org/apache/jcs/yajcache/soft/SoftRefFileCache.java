@@ -1,20 +1,23 @@
+package org.apache.jcs.yajcache.soft;
 
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.apache.jcs.yajcache.soft;
 
 import java.io.Serializable;
 import java.lang.ref.ReferenceQueue;
@@ -64,7 +67,7 @@ import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
  */
 @CopyRightApache
 @TODO("Annotate the thread-safetyness of the methods")
-public class SoftRefFileCache<V> implements ICache<V> 
+public class SoftRefFileCache<V> implements ICache<V>
 {
     private static final boolean debug = true;
     private Log log = debug ? LogFactory.getLog(this.getClass()) : null;
@@ -73,23 +76,23 @@ public class SoftRefFileCache<V> implements ICache<V>
     private final @NonNullable Class<V> valueType;
     private final @NonNullable ConcurrentMap<String,KeyedSoftReference<String,V>> map;
     private PerCacheConfig config;
-    
+
     private final @NonNullable KeyedRefCollector<String> collector;
     private final IKeyedReadWriteLock<String> keyedRWLock = new KeyedReadWriteLock<String>();
-    
-    private final @NonNullable CacheChangeSupport<V> cacheChangeSupport = 
+
+    private final @NonNullable CacheChangeSupport<V> cacheChangeSupport =
             new CacheChangeSupport<V>(this);
-    
+
     private AtomicInteger countGet = new AtomicInteger(0);
-    
+
     private AtomicInteger countGetHitMemory = new AtomicInteger(0);
     private AtomicInteger countGetHitFile = new AtomicInteger(0);
-    
+
     private AtomicInteger countGetMissMemory = new AtomicInteger(0);
     private AtomicInteger countGetMiss = new AtomicInteger(0);
     private AtomicInteger countGetCorruptedFile = new AtomicInteger(0);
     private AtomicInteger countGetEmptyRef = new AtomicInteger(0);
-    
+
     private AtomicInteger countPut = new AtomicInteger(0);
     private AtomicInteger countPutClearRef = new AtomicInteger(0);
     private AtomicInteger countPutMissMemory = new AtomicInteger(0);
@@ -100,7 +103,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     private AtomicInteger countPutWriteFile = new AtomicInteger(0);
 
     private AtomicInteger countRemove = new AtomicInteger(0);
-    
+
     public @NonNullable String getName() {
         return this.name;
     }
@@ -109,7 +112,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public SoftRefFileCache(
             @NonNullable String name, @NonNullable Class<V> valueType,
-            int initialCapacity,float loadFactor, int concurrencyLevel) 
+            int initialCapacity,float loadFactor, int concurrencyLevel)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity, loadFactor, concurrencyLevel);
         this.collector = new KeyedRefCollector<String>(refq, map);
@@ -119,7 +122,7 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public SoftRefFileCache(
             @NonNullable String name, @NonNullable Class<V> valueType,
-            int initialCapacity) 
+            int initialCapacity)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap(initialCapacity);
         this.collector = new KeyedRefCollector<String>(refq, map);
@@ -127,9 +130,9 @@ public class SoftRefFileCache<V> implements ICache<V>
         this.valueType = valueType;
         CacheFileUtils.inst.mkCacheDirs(this.name);
     }
-    
+
     public SoftRefFileCache(@NonNullable String name,
-            @NonNullable Class<V> valueType) 
+            @NonNullable Class<V> valueType)
     {
         this.map = CollectionUtils.inst.newConcurrentHashMap();
         this.collector = new KeyedRefCollector<String>(refq, map);
@@ -170,7 +173,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             cacheLock.unlock();
         }
     }
-    
+
     // @tothink: SoftReference.get() doesn't seem to be thread-safe.
     // But do we really want to synchronize upon invoking get() ?
     // It's not thread-safe, but what's the worst consequence ?
@@ -195,10 +198,10 @@ public class SoftRefFileCache<V> implements ICache<V>
     private V doGet(String key) {
         KeyedSoftReference<String,V> ref = map.get(key);
         V val = null;
-        
+
         if (ref != null) {
             val = ref.get();
-            
+
             if (debug) {
                 if (val == null)
                     this.countGetEmptyRef.incrementAndGet();
@@ -209,14 +212,14 @@ public class SoftRefFileCache<V> implements ICache<V>
                 this.countGetMissMemory.incrementAndGet();
         }
         if (val == null) {
-            // Not in memory.  
+            // Not in memory.
             if (ref != null) {
                 // Rarely gets here, if ever.
                 // GC'd.  So try to clean up the key/ref pair.
                 this.map.remove(key,  ref);
             }
             CacheFileContent cfc = CacheFileDAO.inst.readCacheItem(this.name, key);
-            
+
             if (cfc == null) {
                 // Not in file system.
                 if (debug)
@@ -227,7 +230,7 @@ public class SoftRefFileCache<V> implements ICache<V>
             if (debug)
                 this.countGetHitFile.incrementAndGet();
             val = (V)cfc.deserialize();
-            
+
             if (val == null) {
                 // Corrupted file.  Try remove it from file system.
                 if (debug)
@@ -286,13 +289,13 @@ public class SoftRefFileCache<V> implements ICache<V>
     //        }
     //        return;
     //    }
-    
+
     public V get(@NonNullable Object key) {
         return this.get(key.toString());
     }
     public V put(@NonNullable String key, @NonNullable V value) {
         this.collector.run();
-        
+
         if (debug)
             this.countPut.incrementAndGet();
         Lock cacheLock = CacheManager.inst.readLock(this);
@@ -313,11 +316,11 @@ public class SoftRefFileCache<V> implements ICache<V>
         KeyedSoftReference<String,V> oldRef =
                 map.put(key, new KeyedSoftReference<String,V>(key, value, refq));
         V ret = null;
-        
+
         if (oldRef != null) {
             ret = oldRef.get();
             oldRef.clear();
-            
+
             if (debug)
                 this.countPutClearRef.incrementAndGet();
         }
@@ -337,7 +340,7 @@ public class SoftRefFileCache<V> implements ICache<V>
                     ret = (V)cfc.deserialize();
                 }
                 if (!EqualsUtils.inst.equals(value, ret)) {
-                    // Considered new value being put to memory.  
+                    // Considered new value being put to memory.
                     // So persist to file system.
                     if (debug) {
                         this.countPutNewFileValue.incrementAndGet();
@@ -376,14 +379,14 @@ public class SoftRefFileCache<V> implements ICache<V>
     )
     private void publishFlushKey(@NonNullable String key) {
     }
-    
+
     public void putAll(@NonNullable Map<? extends String, ? extends V> map) {
         for (final Map.Entry<? extends String, ? extends V> e : map.entrySet())
             this.put(e.getKey(), e.getValue());
     }
     public V remove(@NonNullable String key) {
         this.collector.run();
-        
+
         if (debug)
             this.countRemove.incrementAndGet();
         Lock cacheLock = CacheManager.inst.readLock(this);
@@ -457,11 +460,11 @@ public class SoftRefFileCache<V> implements ICache<V>
 //        this.collector.run();
         Set<Map.Entry<String,KeyedSoftReference<String,V>>> fromSet = map.entrySet();
         Set<Map.Entry<String,V>> toSet = new HashSet<Map.Entry<String,V>>();
-        
+
         for (final Map.Entry<String, KeyedSoftReference<String,V>> item : fromSet) {
             KeyedSoftReference<String,V> ref = item.getValue();
             V val = ref.get();
-            
+
             if (val != null) {
                 Map.Entry<String,V> e = new CacheEntry<V>(item.getKey(), val);
                 toSet.add(e);
@@ -476,10 +479,10 @@ public class SoftRefFileCache<V> implements ICache<V>
     public @NonNullable Collection<V> memoryValues() {
         Collection<KeyedSoftReference<String,V>> fromSet = map.values();
         List<V> toCol = new ArrayList<V>(fromSet.size());
-        
+
         for (final KeyedSoftReference<String,V> ref : fromSet) {
             V val = ref.get();
-            
+
             if (val != null) {
                 toCol.add(val);
             }
@@ -495,10 +498,10 @@ public class SoftRefFileCache<V> implements ICache<V>
     }
     public boolean memoryContainsValue(@NonNullable Object value) {
         Collection<KeyedSoftReference<String,V>> fromSet = map.values();
-        
+
         for (final KeyedSoftReference<String,V> ref : fromSet) {
             V val = ref.get();
-            
+
             if (EqualsUtils.inst.equals(value, val))
                 return true;
         }

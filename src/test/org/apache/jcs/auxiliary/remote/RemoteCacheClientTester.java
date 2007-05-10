@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.remote;
 
 /*
- * Copyright 2002-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -36,7 +39,7 @@ import org.apache.jcs.engine.behavior.ICacheService;
 
 /**
  * Description of the Class
- * 
+ *
  * @author asmuts
  * @created January 15, 2002
  */
@@ -61,7 +64,7 @@ public class RemoteCacheClientTester
 
     /**
      * Gets the remoteType attribute of the RemoteCacheClientTest object
-     * 
+     *
      * @return The remoteType value
      */
     public int getRemoteType()
@@ -72,7 +75,7 @@ public class RemoteCacheClientTester
 
     /**
      * Constructor for the RemoteCacheClientTest object
-     * 
+     *
      * @param count
      * @exception MalformedURLException
      * @exception NotBoundException
@@ -86,7 +89,7 @@ public class RemoteCacheClientTester
 
     /**
      * Constructor for the RemoteCacheClientTest object
-     * 
+     *
      * @param count
      * @param write
      * @param read
@@ -103,7 +106,7 @@ public class RemoteCacheClientTester
 
     /**
      * Constructor for the RemoteCacheClientTest object
-     * 
+     *
      * @param host
      * @param port
      * @param count
@@ -230,10 +233,10 @@ public class RemoteCacheClientTester
      */
     /**
      * The main program for the RemoteCacheClientTest class
-     * 
+     *
      * @param args
      *            The command line arguments
-     * @throws Exception 
+     * @throws Exception
      */
     public static void main( String[] args )
         throws Exception
@@ -270,7 +273,7 @@ public class RemoteCacheClientTester
 
     /**
      * Sets the listenerId attribute of the RemoteCacheClientTest object
-     * 
+     *
      * @param id
      *            The new listenerId value
      */
@@ -283,7 +286,7 @@ public class RemoteCacheClientTester
 
     /**
      * Gets the listenerId attribute of the RemoteCacheClientTest object
-     * 
+     *
      * @return The listenerId value
      */
     public long getListenerId()
@@ -292,7 +295,7 @@ public class RemoteCacheClientTester
         return listenerId;
     }
 
-    /** Helper for output, this is an user run test class 
+    /** Helper for output, this is an user run test class
      * @param s
      */
     private static void p( String s )
@@ -314,6 +317,6 @@ public class RemoteCacheClientTester
         throws IOException
     {
         // TODO Auto-generated method stub
-        
+
     }
 }

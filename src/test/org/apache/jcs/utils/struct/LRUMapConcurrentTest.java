@@ -1,5 +1,24 @@
 package org.apache.jcs.utils.struct;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.Iterator;
 
 import junit.framework.Test;
@@ -10,9 +29,9 @@ import org.apache.jcs.utils.struct.LRUMap;
 
 /**
  * Tests the LRUMap
- * 
+ *
  * @author aaronsm
- *  
+ *
  */
 public class LRUMapConcurrentTest
     extends TestCase
@@ -22,7 +41,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Constructor for the TestSimpleLoad object
-     * 
+     *
      * @param testName
      *            Description of the Parameter
      */
@@ -33,7 +52,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Description of the Method
-     * 
+     *
      * @param args
      *            Description of the Parameter
      */
@@ -45,7 +64,7 @@ public class LRUMapConcurrentTest
 
     /**
      * A unit test suite for JUnit
-     * 
+     *
      * @return The test suite
      */
     public static Test suite()
@@ -105,7 +124,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Just test that we can put, get and remove as expected.
-     * 
+     *
      * @exception Exception
      *                Description of the Exception
      */
@@ -136,7 +155,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Just make sure that the LRU functions int he most simple case.
-     * 
+     *
      * @exception Exception
      *                Description of the Exception
      */
@@ -218,7 +237,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Just make sure that we can put and get concurrently
-     * 
+     *
      * @param map
      * @param items
      * @throws Exception
@@ -245,7 +264,7 @@ public class LRUMapConcurrentTest
     /**
      * Put, get, and remove from a range. This should occur at a range that is
      * not touched by other tests.
-     * 
+     *
      * @param map
      * @param start
      * @param end

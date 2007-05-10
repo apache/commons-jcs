@@ -1,12 +1,22 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache License, Version
- * 2.0 (the "License") you may not use this file except in compliance with the License. You may
- * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
- * applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
- * the License for the specific language governing permissions and limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
@@ -45,7 +55,7 @@ public interface IRemoteCacheAttributes
      * loose our conenction with the server.
      */
     public static final int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
-        
+
     /**
      * Gets the remoteTypeName attribute of the IRemoteCacheAttributes object
      * <p>
@@ -308,7 +318,7 @@ public interface IRemoteCacheAttributes
      * @return the receive value.
      */
     public boolean isReceive();
-    
+
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our conenction with the server.
@@ -323,5 +333,5 @@ public interface IRemoteCacheAttributes
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */
-    public int getZombieQueueMaxSize();   
+    public int getZombieQueueMaxSize();
 }

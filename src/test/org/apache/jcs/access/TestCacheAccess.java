@@ -1,19 +1,22 @@
 package org.apache.jcs.access;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.BufferedReader;
@@ -34,9 +37,9 @@ import org.apache.jcs.engine.control.event.ElementEventHandlerMockImpl;
 /**
  * Allows the user to run common cache commands from the command line for a test
  * cache.
- * 
+ *
  * This also provide basic methods for use in unit tests.
- *  
+ *
  */
 public class TestCacheAccess
 {
@@ -48,7 +51,7 @@ public class TestCacheAccess
 
     /**
      * Construct and initialize the cachecontrol based on the config file.
-     *  
+     *
      */
     public TestCacheAccess()
     {
@@ -629,7 +632,7 @@ public class TestCacheAccess
 
     /**
      * Test harness.
-     * 
+     *
      * @param args
      *            The command line arguments
      */
@@ -651,7 +654,7 @@ public class TestCacheAccess
     /**
      * Gets multiple items from the cache with keys of the form key1, key2, key3
      * up to key[num].
-     * 
+     *
      * @param num
      *            int
      */
@@ -688,7 +691,7 @@ public class TestCacheAccess
 
     /**
      * Puts multiple items into the cache.
-     * 
+     *
      * @param num
      *            int
      */
@@ -712,7 +715,7 @@ public class TestCacheAccess
 
     /**
      * Removes multiple items from the cache.
-     * 
+     *
      * @param num
      *            int
      */
@@ -738,7 +741,7 @@ public class TestCacheAccess
      * The random method performs numOps number of operations. The operations
      * will be a mix of puts, gets, and removes. The key range will be from 0 to
      * range.
-     * 
+     *
      * @param range
      *            int The end of the key range.
      * @param numOps
@@ -807,7 +810,7 @@ public class TestCacheAccess
 
     /**
      * Sets the region to be used by test methods.
-     * 
+     *
      * @param name
      *            String -- Name of region
      */
@@ -830,7 +833,7 @@ public class TestCacheAccess
      * The tester will print to the console if isSysOut is true, else it will
      * log. It is false by default. When run via the main method, isSysOut will
      * be set to true
-     * 
+     *
      * @param s
      *            String to print or log
      */
@@ -880,7 +883,7 @@ public class TestCacheAccess
 
     /**
      * Gets the attributeNames attribute of the TestCacheAccess class
-     * 
+     *
      * @param groupName
      */
     public void getAttributeNames( String groupName )

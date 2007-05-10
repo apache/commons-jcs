@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.Random;
 
 import junit.framework.TestCase;
@@ -10,7 +29,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Tests the issue remove on put fuctionality.
- * 
+ *
  * @author asmuts
  */
 public class LateralTCPIssueRemoveOnPutUnitTest
@@ -20,7 +39,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
     /**
      * Constructor for the TestDiskCache object.
-     * 
+     *
      * @param testName
      */
     public LateralTCPIssueRemoveOnPutUnitTest( String testName )
@@ -37,7 +56,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     }
 
     /**
-     * 
+     *
      * @throws Exception
      */
     public void testPutLocalPutRemoteGetBusyVerifyRemoved()
@@ -48,12 +67,12 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
     /**
      * Verify that a standard put works.
-     * 
+     *
      * Get the cache configured from a file. Create a tcp service to talk to
      * that cache. Put via the servive. Verify that the cache got the data.
-     * 
+     *
      * @throws Exception
-     * 
+     *
      */
     public void testStandardPut()
         throws Exception
@@ -94,13 +113,13 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     /**
      * This tests issues tons of puts. It also check to see that a key that was
      * put in was removed by the clients remove command.
-     * 
+     *
      * @param region
      *            Name of the region to access
      * @param range
      * @param numOps
      * @param testNum
-     * 
+     *
      * @exception Exception
      *                If an error occurs
      */

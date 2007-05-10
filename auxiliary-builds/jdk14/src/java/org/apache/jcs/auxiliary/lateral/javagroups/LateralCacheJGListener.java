@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -36,7 +39,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * JavaGroups listener. Good for distributing cache data accross multiple vms on
  * the same machine. You also don't need to know the number of listerners for
  * configuration.
- *  
+ *
  */
 public class LateralCacheJGListener
     implements ILateralCacheJGListener, Serializable
@@ -63,7 +66,7 @@ public class LateralCacheJGListener
     /**
      * Only need one since it does work for all regions, just reference by
      * multiple region names.
-     * 
+     *
      * @param ilca
      */
     protected LateralCacheJGListener( ILateralCacheAttributes ilca )
@@ -96,7 +99,7 @@ public class LateralCacheJGListener
      * listerenr for all the regions and every region gets registered? the id
      * shouldn't be set if it isn't zero. If it is we assume that it is a
      * reconnect.
-     * 
+     *
      * @param id
      *            The new listenerId value
      * @exception IOException
@@ -113,7 +116,7 @@ public class LateralCacheJGListener
 
     /**
      * Gets the listenerId attribute of the LateralCacheJGListener object
-     * 
+     *
      * @return The listenerId value
      * @exception IOException
      */
@@ -130,7 +133,7 @@ public class LateralCacheJGListener
 
     /**
      * Gets the instance attribute of the LateralCacheJGListener class
-     * 
+     *
      * @return The instance value
      * @param ilca
      * @param cacheMgr
@@ -191,7 +194,7 @@ public class LateralCacheJGListener
 
     /**
      * Description of the Method
-     * 
+     *
      * @param cacheName
      * @param key
      * @exception IOException
@@ -209,7 +212,7 @@ public class LateralCacheJGListener
 
     /**
      * Description of the Method
-     * 
+     *
      * @param cacheName
      * @exception IOException
      */
@@ -227,7 +230,7 @@ public class LateralCacheJGListener
 
     /**
      * Test get implementation.
-     * 
+     *
      * @return
      * @param cacheName
      * @param key
@@ -246,7 +249,7 @@ public class LateralCacheJGListener
 
     /**
      * Description of the Method
-     * 
+     *
      * @param cacheName
      * @exception IOException
      */
@@ -263,7 +266,7 @@ public class LateralCacheJGListener
 
     /**
      * Gets the cacheManager attribute of the LateralCacheTCPListener object
-     * 
+     *
      * @param name
      * @return CompositeCache
      */
@@ -284,7 +287,7 @@ public class LateralCacheJGListener
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener#setCacheManager(org.apache.jcs.engine.behavior.ICompositeCacheManager)
      */
     public void setCacheManager( ICompositeCacheManager cacheMgr )
@@ -294,7 +297,7 @@ public class LateralCacheJGListener
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener#getCacheManager()
      */
     public ICompositeCacheManager getCacheManager()

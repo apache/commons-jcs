@@ -1,3 +1,21 @@
+<%--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+--%>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Iterator" %>
@@ -16,7 +34,7 @@
     if( confirm(message) )
     {
       location.href = url;
-    }  
+    }
   }
 </SCRIPT>
 
@@ -32,9 +50,9 @@
 		 	String CLEAR_ALL_REGIONS_ACTION = "clearAllRegions";
 		 	String CLEAR_REGION_ACTION = "clearRegion";
 		 	String REMOVE_ACTION = "remove";
-		 	String DETAIL_ACTION = "detail";			
-		 	String REGION_SUMMARY_ACTION = "regionSummary";			
-		 	String ITEM_ACTION = "item";			
+		 	String DETAIL_ACTION = "detail";
+		 	String REGION_SUMMARY_ACTION = "regionSummary";
+		 	String ITEM_ACTION = "item";
 			String KEY_PARAM = "key";
 			String SILENT_PARAM = "silent";
 
@@ -42,11 +60,11 @@
      		String REGION_DETAIL_TEMPLATE_NAME = "DETAIL";
      		String ITEM_TEMPLATE_NAME = "ITEM";
      		String REGION_SUMMARY_TEMPLATE_NAME = "SUMMARY";
-     		
+
 			String templateName = DEFAULT_TEMPLATE_NAME;
-			
+
 			HashMap context = new HashMap();
-		
+
 			// Get cacheName for actions from request (might be null)
 			String cacheName = request.getParameter( CACHE_NAME_PARAM );
 
@@ -54,7 +72,7 @@
 			{
 			    cacheName = cacheName.trim();
 			}
-			
+
 			// If an action was provided, handle it
 			String action = request.getParameter( ACTION_PARAM );
 
@@ -118,35 +136,35 @@
 					context.put( "cacheInfoRecords", jcsBean.buildCacheInfo() );
 				}
 			}
-	
-///////////////////////////////////////////////////////////////////////////////////	
+
+///////////////////////////////////////////////////////////////////////////////////
 			//handle display
 
-			if ( templateName == ITEM_TEMPLATE_NAME ) 
+			if ( templateName == ITEM_TEMPLATE_NAME )
 			{
 			    String key = request.getParameter( KEY_PARAM );
-			    
+
 			    if ( key != null )
 			    {
 			        key = key.trim();
 			    }
 
 			    JCS cache = JCS.getInstance( cacheName );
-			    
+
 				org.apache.jcs.engine.behavior.ICacheElement element = cache.getCacheElement( key );
 %>
 <h1> Item for key [<%=key%>] in region [<%=cacheName%>] </h1>
 
-<a href="JCSAdmin.jsp?action=detail&cacheName=<%=cacheName%>">Region Detail</a> 
+<a href="JCSAdmin.jsp?action=detail&cacheName=<%=cacheName%>">Region Detail</a>
 | <a href="JCSAdmin.jsp">All Regions</a>
 
   <pre>
 	<%=element%>
-  </pre>	
+  </pre>
 <%
-			}    
+			}
 			else
-			if ( templateName == REGION_SUMMARY_TEMPLATE_NAME ) 
+			if ( templateName == REGION_SUMMARY_TEMPLATE_NAME )
 			{
 %>
 
@@ -154,22 +172,22 @@
 
 <a href="JCSAdmin.jsp">All Regions</a>
 
-<%    
+<%
     JCS cache = JCS.getInstance( cacheName );
     String stats = cache.getStats();
-%>  
-   
+%>
+
     <br>
 <b> Stats for region [<%=cacheName%>] </b>
 
     <pre>
     	<%=stats%>
-    </pre>   
+    </pre>
 
 <%
-			}    
+			}
 			else
-			if ( templateName == REGION_DETAIL_TEMPLATE_NAME ) 
+			if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
 			{
 %>
 
@@ -189,7 +207,7 @@
 	List list = (List)context.get( "elementInfoRecords" );
     Iterator it = list.iterator();
     while ( it.hasNext() ) {
-    	CacheElementInfo element = (CacheElementInfo)it.next();  
+    	CacheElementInfo element = (CacheElementInfo)it.next();
 %>
         <tr>
             <td> <%=element.getKey()%> </td>
@@ -204,21 +222,21 @@
         </tr>
 <%
     }
-    
+
     JCS cache = JCS.getInstance( cacheName );
     String stats = cache.getStats();
-%>  
+%>
     </table>
-    
+
     <br>
 <b> Stats for region [<%=cacheName%>] </b>
 
     <pre>
     	<%=stats%>
-    </pre>    
-<%			
-  } 
-  else 
+    </pre>
+<%
+  }
+  else
   {
 %>
 
@@ -239,14 +257,14 @@ which empties the entire cache.
 <%
   List listSelect = (List)context.get( "cacheInfoRecords" );
   Iterator itSelect = listSelect.iterator();
-  while ( itSelect.hasNext() ) 
+  while ( itSelect.hasNext() )
   {
 	CacheRegionInfo record = (CacheRegionInfo)itSelect.next();
 	%>
     <option value="<%=record.getCache().getCacheName()%>"><%=record.getCache().getCacheName()%></option>
 	<%
-  }		
-%>		
+  }
+%>
 				</select>
 		<input type="submit">
 	</form>
@@ -267,7 +285,7 @@ which empties the entire cache.
 <%
 	List list = (List)context.get( "cacheInfoRecords" );
     Iterator it = list.iterator();
-    while (it.hasNext() ) 
+    while (it.hasNext() )
     {
     	CacheRegionInfo record = (CacheRegionInfo)it.next();
 
@@ -281,18 +299,18 @@ which empties the entire cache.
             <td> <%=record.getCache().getHitCountAux()%> </td>
             <td> <%=record.getCache().getMissCountNotFound()%> </td>
             <td> <%=record.getCache().getMissCountExpired()%> </td>
-            <td>   
+            <td>
                 <a href="JCSAdmin.jsp?action=regionSummary&cacheName=<%=record.getCache().getCacheName()%>"> Summary </a>
                 | <a href="JCSAdmin.jsp?action=detail&cacheName=<%=record.getCache().getCacheName()%>"> Detail </a>
                 | <a href="javascript:decision('Clicking OK will remove all the data from the region [<%=record.getCache().getCacheName()%>]!','JCSAdmin.jsp?action=clearRegion&cacheName=<%=record.getCache().getCacheName()%>')"> Clear </a>
             </td>
         </tr>
-<%  
+<%
     }
-%>  
-    </table>   
-<%	
-  }		
+%>
+    </table>
+<%
+  }
 %>
 
 

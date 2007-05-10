@@ -1,19 +1,22 @@
 package org.apache.jcs.engine.memory.lru;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import junit.extensions.ActiveTestSuite;
@@ -28,7 +31,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 /**
  * Test which exercises the LRUMemory cache. This one uses three different
  * regions for three threads.
- * 
+ *
  * @version $Id$
  */
 public class LRUMemoryCacheConcurrentUnitTest
@@ -42,7 +45,7 @@ public class LRUMemoryCacheConcurrentUnitTest
 
     /**
      * Constructor for the TestDiskCache object.
-     * 
+     *
      * @param testName
      */
     public LRUMemoryCacheConcurrentUnitTest( String testName )
@@ -52,7 +55,7 @@ public class LRUMemoryCacheConcurrentUnitTest
 
     /**
      * Main method passes this test to the text test runner.
-     * 
+     *
      * @param args
      */
     public static void main( String args[] )
@@ -63,7 +66,7 @@ public class LRUMemoryCacheConcurrentUnitTest
 
     /**
      * A unit test suite for JUnit
-     * 
+     *
      * @return The test suite
      */
     public static Test suite()
@@ -83,7 +86,7 @@ public class LRUMemoryCacheConcurrentUnitTest
          * suite.addTest( new TestDiskCache( "testIndexedDiskCache2" ) { public
          * void runTest() throws Exception { this.runTestForRegion(
          * "indexedRegion2" ); } } );
-         * 
+         *
          * suite.addTest( new TestDiskCache( "testIndexedDiskCache3" ) { public
          * void runTest() throws Exception { this.runTestForRegion(
          * "indexedRegion3" ); } } );
@@ -102,10 +105,10 @@ public class LRUMemoryCacheConcurrentUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should be dumped.
-     * 
+     *
      * @param region
      *            Name of the region to access
-     * 
+     *
      * @exception Exception
      *                If an error occurs
      */

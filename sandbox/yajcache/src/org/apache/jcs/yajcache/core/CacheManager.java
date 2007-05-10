@@ -1,20 +1,23 @@
+package org.apache.jcs.yajcache.core;
 
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.apache.jcs.yajcache.core;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -37,10 +40,10 @@ import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 // http://www.netbeans.org/issues/show_bug.cgi?id=53704
 public enum CacheManager {
     inst;
-    
+
     private static final boolean debug = true;
     private AtomicInteger countGetCache = new AtomicInteger(0);
-    
+
     private AtomicInteger countCreateCache = new AtomicInteger(0);
     private AtomicInteger countCreateCacheRace = new AtomicInteger(0);
     private AtomicInteger countCreateFileCache = new AtomicInteger(0);
@@ -48,36 +51,36 @@ public enum CacheManager {
 
     private AtomicInteger countRemoveCache = new AtomicInteger(0);
     private AtomicInteger countRemoveFileCache = new AtomicInteger(0);
-    
+
     // Cache name to Cache mapping.
-    private final ConcurrentMap<String,ICache<?>> map = 
+    private final ConcurrentMap<String,ICache<?>> map =
                 new ConcurrentHashMap<String, ICache<?>>();
-    /** 
+    /**
      * Used for entire cache with external IO,
      * so cache create/removal won't conflict with normal get/put operations.
      */
-    private final IKeyedReadWriteLock<String> keyedRWLock = 
+    private final IKeyedReadWriteLock<String> keyedRWLock =
             new KeyedReadWriteLock<String>();
-    /** 
-     * Returns an existing cache for the specified name; 
+    /**
+     * Returns an existing cache for the specified name;
      * or null if not found.
      */
     public ICache getCache(@NonNullable String name) {
         return this.map.get(name);
     }
-    /** 
-     * Returns an existing safe cache for the specified name; 
+    /**
+     * Returns an existing safe cache for the specified name;
      * or null if such a safe cache cannot not found.
      */
     public ICacheSafe getSafeCache(@NonNullable String name) {
         ICache c = this.getCache(name);
-        
+
         if (c == null || !(c instanceof ICacheSafe))
             return null;
         return (ICacheSafe)c;
     }
-    /** 
-     * Returns an existing cache for the specified name and value type;  
+    /**
+     * Returns an existing cache for the specified name and value type;
      * or null if not found.
      */
 //    @SuppressWarnings({"unchecked"})
@@ -90,8 +93,8 @@ public enum CacheManager {
         ICache c = this.map.get(name);
         return c != null && this.checkValueType(c, valueType) ? c : null;
     }
-    /** 
-     * Returns an existing safe cache for the specified name and value type;  
+    /**
+     * Returns an existing safe cache for the specified name and value type;
      * or null if such a safe cache cannot be found.
      */
     public <V> ICacheSafe<V> getSafeCache(
@@ -104,7 +107,7 @@ public enum CacheManager {
             return null;
         return this.checkValueType(c, valueType) ? (ICacheSafe<V>)c : null;
     }
-    /** 
+    /**
      * Returns a cache for the specified name, value type and cache type.
      * Creates the cache if necessary.
      *
@@ -117,7 +120,7 @@ public enum CacheManager {
             @NonNullable CacheType cacheType)
     {
         ICache c = this.map.get(name);
-               
+
         if (c == null) {
             switch(cacheType) {
                 case SOFT_REFERENCE:
@@ -137,7 +140,7 @@ public enum CacheManager {
         }
         return c;
     }
-    /** 
+    /**
      * Returns a safe cache for the specified name, value type and cache type.
      * Creates the cache if necessary.
      *
@@ -167,10 +170,10 @@ public enum CacheManager {
         if (debug)
             this.countRemoveCache.incrementAndGet();
         ICache c = this.map.remove(name);
-        
+
         if (c != null) {
             CacheType cacheType = c.getCacheType();
-            
+
             switch(cacheType) {
                 case SOFT_REFERENCE:
                 case SOFT_REFERENCE_SAFE:
@@ -197,9 +200,9 @@ public enum CacheManager {
         }
         return c;
     }
-    /** 
+    /**
      * Creates the specified cache if not already created.
-     * 
+     *
      * @return either the cache created by the current thread, or
      * an existing cache created by another thread due to data race.
      *
@@ -208,7 +211,7 @@ public enum CacheManager {
      */
 //    @SuppressWarnings({"unchecked"})
     private @NonNullable <V> ICache<V> tryCreateCache(
-            @NonNullable String name, 
+            @NonNullable String name,
             @NonNullable Class<V> valueType,
             @NonNullable CacheType cacheType)
     {
@@ -228,9 +231,9 @@ public enum CacheManager {
         }
         return newCache;
     }
-    /** 
+    /**
      * Creates the specified file cache if not already created.
-     * 
+     *
      * @return either the file cache created by the current thread, or
      * an existing file cache created by another thread due to data race.
      *
@@ -238,7 +241,7 @@ public enum CacheManager {
      * incompatible value type or incompatible cache type.
      */
     private @NonNullable <V> ICache<V> tryCreateFileCache(
-            @NonNullable String name, 
+            @NonNullable String name,
             @NonNullable Class<V> valueType,
             @NonNullable CacheType cacheType)
     {
@@ -267,13 +270,13 @@ public enum CacheManager {
 
     @TestOnly("Used solely to simluate a race condition during cache creation ")
     @NonNullable <V> ICache<V> testCreateCacheRaceCondition(
-            @NonNullable String name, @NonNullable Class<V> valueType, @NonNullable CacheType cacheType) 
+            @NonNullable String name, @NonNullable Class<V> valueType, @NonNullable CacheType cacheType)
     {
         return this.tryCreateCache(name, valueType, cacheType);
     }
     @TestOnly("Used solely to simluate a race condition during cache creation ")
     @NonNullable <V> ICache<V> testCreateFileCacheRaceCondition(
-            @NonNullable String name, @NonNullable Class<V> valueType, @NonNullable CacheType cacheType) 
+            @NonNullable String name, @NonNullable Class<V> valueType, @NonNullable CacheType cacheType)
     {
         return this.tryCreateCache(name, valueType, cacheType);
     }
@@ -284,18 +287,18 @@ public enum CacheManager {
      * @throws ClassCastException if the cache already exists for an
      * incompatible value type or incompatible cache type.
      */
-    private <V> void checkTypes(ICache c, 
-            @NonNullable CacheType cacheType, @NonNullable Class<V> valueType) 
+    private <V> void checkTypes(ICache c,
+            @NonNullable CacheType cacheType, @NonNullable Class<V> valueType)
     {
         if (c == null)
             return;
         if (!c.getCacheType().isAsssignableFrom(cacheType))
             throw new ClassCastException("Cache " + c.getName()
-                + " of type " + c.getCacheType() 
+                + " of type " + c.getCacheType()
                 + " already exists and cannot be used for cache type " + cacheType);
         if (!this.checkValueType(c, valueType))
             throw new ClassCastException("Cache " + c.getName()
-                + " of value type " + c.getValueType() 
+                + " of value type " + c.getValueType()
                 + " already exists and cannot be used for value type " + valueType);
         return;
     }
@@ -306,7 +309,7 @@ public enum CacheManager {
      * @return true if the valueType is compatible with the cache;
      *  false otherwise.
      */
-    private boolean checkValueType(@NonNullable ICache c, @NonNullable Class<?> valueType) 
+    private boolean checkValueType(@NonNullable ICache c, @NonNullable Class<?> valueType)
     {
         Class<?> cacheValueType = c.getValueType();
         return cacheValueType.isAssignableFrom(valueType);

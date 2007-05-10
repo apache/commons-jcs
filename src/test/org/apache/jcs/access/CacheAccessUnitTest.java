@@ -1,5 +1,24 @@
 package org.apache.jcs.access;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.access.exception.CacheException;
@@ -12,9 +31,9 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Tests the methods of the cache access class from which the class JCS extends.
- * 
+ *
  * @author Aaron Smuts
- * 
+ *
  */
 public class CacheAccessUnitTest
     extends TestCase
@@ -23,7 +42,7 @@ public class CacheAccessUnitTest
     /**
      * Verify that we get an object exists exception if the item is in the
      * cache.
-     * 
+     *
      */
     public void testPutSafe()
     {
@@ -73,7 +92,7 @@ public class CacheAccessUnitTest
 
     /**
      * Try to put a null key and verify that we get an exception.
-     * 
+     *
      */
     public void testPutNullKey()
     {
@@ -107,7 +126,7 @@ public class CacheAccessUnitTest
 
     /**
      * Try to put a null value and verify that we get an exception.
-     * 
+     *
      */
     public void testPutNullValue()
     {
@@ -142,9 +161,9 @@ public class CacheAccessUnitTest
     /**
      * Verify that elements that go in the region after this call takethe new
      * attributes.
-     * 
+     *
      * @throws Exception
-     * 
+     *
      */
     public void testSetDefaultElementAttributes()
         throws Exception
@@ -178,9 +197,9 @@ public class CacheAccessUnitTest
 
     /**
      * Verify that we can get a region using the define region method.
-     * 
+     *
      * @throws Exception
-     * 
+     *
      */
     public void testRegionDefiniton()
         throws Exception
@@ -191,9 +210,9 @@ public class CacheAccessUnitTest
 
     /**
      * Verify that we can get a region using the define region method with cache attributes.
-     * 
+     *
      * @throws Exception
-     * 
+     *
      */
     public void testRegionDefinitonWithAttributes()
         throws Exception
@@ -209,12 +228,12 @@ public class CacheAccessUnitTest
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
         assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
     }
-    
+
     /**
      * Verify that we can get a region using the define region method with cache attributes and elemetn attributes.
-     * 
+     *
      * @throws Exception
-     * 
+     *
      */
     public void testRegionDefinitonWithBothAttributes()
         throws Exception
@@ -227,12 +246,12 @@ public class CacheAccessUnitTest
         long maxLife = 9876;
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLifeSeconds( maxLife );
-        
+
         CacheAccess access = CacheAccess.defineRegion( "testRegionDefinitonWithAttributes", ca, attr );
         assertNotNull( "We should have an access class", access );
 
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
         assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
     }
-    
+
 }

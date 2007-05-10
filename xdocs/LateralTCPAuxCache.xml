@@ -1,4 +1,22 @@
 <?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
 
 <document>
   <properties>
@@ -9,7 +27,7 @@
 
   <body>
     <section name="Lateral TCP Auxiliary Cache">
-      <p> 
+      <p>
         The TCP Lateral Auxiliary Cache is an optional plug in for the
         JCS.  It is primarily intended to broadcast puts and removals to
         other local caches, though it can also get cached objects.  It
@@ -41,7 +59,7 @@
           Lateral Auxiliary Cache referenced by <code>LTCP</code>.  It
           connects to two servers defined in a comma separated list in
           the <code>TcpServers</code> attribute.  It listens to port
-          <code>1110</code> and does <code>AllowGet</code>.  
+          <code>1110</code> and does <code>AllowGet</code>.
 			Setting <code>AllowGet</code>
           equal to <code>false</code> would cause the auxiliary cache to
           return <code>null</code> from any get request.  In most cases this
@@ -68,17 +86,17 @@ jcs.auxiliary.LTCP.attributes.AllowGet=true
           in send only mode by setting the <code>Receive</code> attribute
           to false.  By default the receive attribute is true.
           When it is set to false, the lateral cache will not
-          establish a socket server.    
+          establish a socket server.
         </p>
         <p>
-           Setting receive to false allows you to broadcast puts 
+           Setting receive to false allows you to broadcast puts
            and removes, but not receive any.  This is useful for
            nodes of an application that produce data, but are not
            involved in data retrieval.
         </p>
         <p>
           The configuration below is the same as above, except the
-          <code>Receive</code> attribute is set to false.  It also uses UDP 
+          <code>Receive</code> attribute is set to false.  It also uses UDP
           discovery to find the servers, rather than listing them in the
           servers attribute.
         </p>
@@ -96,7 +114,7 @@ jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
 jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
         ]]></source>
       </subsection>
-                  
+
       <subsection name="Potential Issues">
         <p>
           The TCP Lateral Auxiliary Cache can provide a high level of
@@ -130,7 +148,7 @@ jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
           I added a <code>IssueRemoveOnPut</code> attribute that
           causes the lateral cache to remove an element from the
           cache rather than inserting it when a put.  This allows the local caches to
-          dictate their own memory usage pattern. 
+          dictate their own memory usage pattern.
         </p>
       </subsection>
     </section>

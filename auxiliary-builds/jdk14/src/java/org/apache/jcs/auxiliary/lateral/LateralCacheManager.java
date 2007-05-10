@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -44,10 +47,10 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * level, distribution and search may need to occur at the lateral cache level.
  * This is currently not implemented in the lateral cache.
  * <p>
- * 
+ *
  * @TODO: - need freeCache, release, getStats - need to find an interface
  *        acceptible for all - cache managers or a manager within a type
- * 
+ *
  * @deprecated use individual cache managers
  */
 public class LateralCacheManager
@@ -85,7 +88,7 @@ public class LateralCacheManager
 
     /**
      * Returns an instance of the LateralCacheManager.
-     * 
+     *
      * @param lca
      * @param cacheMgr
      *            this allows the auxiliary to be passed a cache manager.
@@ -127,7 +130,7 @@ public class LateralCacheManager
 
     /**
      * Constructor for the LateralCacheManager object
-     * 
+     *
      * @param lcaA
      * @param cacheMgr
      */
@@ -191,7 +194,7 @@ public class LateralCacheManager
 
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.
-     * 
+     *
      * @param cacheName
      *            The feature to be added to the LateralCacheListener attribute
      * @param listener
@@ -217,7 +220,7 @@ public class LateralCacheManager
      * <p>
      * There should be one manager per server and one cache per region per
      * manager.
-     * 
+     *
      * @return AuxiliaryCache
      * @param cacheName
      */
@@ -277,7 +280,7 @@ public class LateralCacheManager
 
     /**
      * Gets the cacheType attribute of the LateralCacheManager object
-     * 
+     *
      * @return The cache type value
      */
     public int getCacheType()
@@ -287,7 +290,7 @@ public class LateralCacheManager
 
     /**
      * Gets the stats attribute of the LateralCacheManager object
-     * 
+     *
      * @return String
      */
     public String getStats()
@@ -298,7 +301,7 @@ public class LateralCacheManager
 
     /**
      * Fixes up all the caches managed by this cache manager.
-     * 
+     *
      * @param lateralService
      * @param lateralWatch
      */
@@ -322,7 +325,7 @@ public class LateralCacheManager
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager#getInstances()
      */
     public Map getInstances()

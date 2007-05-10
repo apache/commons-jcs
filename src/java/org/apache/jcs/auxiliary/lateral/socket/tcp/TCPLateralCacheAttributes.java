@@ -1,20 +1,24 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
@@ -23,9 +27,9 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttr
  * This interface defines functions that are particular to the TCP Lateral Cache
  * plugin. It extends the generic LateralCacheAttributes interface which in turn
  * extends the AuxiliaryCache interface.
- * 
+ *
  * @author Aaron Smuts
- *  
+ *
  */
 public class TCPLateralCacheAttributes
     extends LateralCacheAttributes
@@ -74,7 +78,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setTcpServer(java.lang.String)
      */
     public void setTcpServer( String val )
@@ -84,7 +88,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getTcpServer()
      */
     public String getTcpServer()
@@ -94,7 +98,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setTcpServers(java.lang.String)
      */
     public void setTcpServers( String val )
@@ -104,7 +108,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getTcpServers()
      */
     public String getTcpServers()
@@ -114,7 +118,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setTcpListenerPort(int)
      */
     public void setTcpListenerPort( int val )
@@ -124,7 +128,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getTcpListenerPort()
      */
     public int getTcpListenerPort()
@@ -134,7 +138,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setUdpDiscoveryEnabled(boolean)
      */
     public void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled )
@@ -144,7 +148,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#isUdpDiscoveryEnabled()
      */
     public boolean isUdpDiscoveryEnabled()
@@ -154,7 +158,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getUdpDiscoveryPort()
      */
     public int getUdpDiscoveryPort()
@@ -164,7 +168,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setUdpDiscoveryPort(int)
      */
     public void setUdpDiscoveryPort( int udpDiscoveryPort )
@@ -174,7 +178,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getUdpDiscoveryAddr()
      */
     public String getUdpDiscoveryAddr()
@@ -184,7 +188,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setUdpDiscoveryAddr(java.lang.String)
      */
     public void setUdpDiscoveryAddr( String udpDiscoveryAddr )
@@ -194,7 +198,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setAllowGet(boolean)
      */
     public void setAllowGet( boolean allowGet )
@@ -204,7 +208,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isAllowGet()
      */
     public boolean isAllowGet()
@@ -214,7 +218,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setAllowPut(boolean)
      */
     public void setAllowPut( boolean allowPut )
@@ -224,7 +228,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isAllowPut()
      */
     public boolean isAllowPut()
@@ -234,7 +238,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setIssueRemoveOnPut(boolean)
      */
     public void setIssueRemoveOnPut( boolean issueRemoveOnPut )
@@ -244,7 +248,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isIssueRemoveOnPut()
      */
     public boolean isIssueRemoveOnPut()
@@ -254,7 +258,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#copy()
      */
     public AuxiliaryCacheAttributes copy()
@@ -272,7 +276,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isFilterRemoveByHashCode()
      */
     public boolean isFilterRemoveByHashCode()
@@ -282,7 +286,7 @@ public class TCPLateralCacheAttributes
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setFilterRemoveByHashCode(boolean)
      */
     public void setFilterRemoveByHashCode( boolean filter )
@@ -293,7 +297,7 @@ public class TCPLateralCacheAttributes
     /**
      * Used to key the instance TODO create another method for this and use
      * toString for debugging only.
-     * 
+     *
      * @return String
      */
     public String toString()

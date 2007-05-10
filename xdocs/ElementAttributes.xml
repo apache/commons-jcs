@@ -1,4 +1,22 @@
 <?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
 
 <document>
 	<properties>
@@ -27,7 +45,7 @@
 				</p>
 				<source>
 					<![CDATA[
-# DEFAULT CACHE REGION   
+# DEFAULT CACHE REGION
 
 jcs.default=DC
 jcs.default.cacheattributes=
@@ -37,14 +55,14 @@ jcs.default.cacheattributes.MemoryCacheName=
     org.apache.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
-jcs.default.cacheattributes.ShrinkerIntervalSeconds=60    
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=700
 jcs.default.elementattributes.IdleTime=1800
 jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
-jcs.default.elementattributes.IsLateral=true    
+jcs.default.elementattributes.IsLateral=true
         ]]>
 				</source>
 				<p>
@@ -126,11 +144,11 @@ jcs.default.elementattributes.IsLateral=true
 					for an element when you put it in the cache.
 				</p>
 				<source>
-				<![CDATA[	
+				<![CDATA[
     JCS jcs = JCS.getInstance( "myregion" );
 
     . . .
-    
+
     // jcs.getDefaultElementAttributes returns a copy not a reference
     IElementAttributes attributes = jcs.getDefaultElementAttributes();
 
@@ -146,11 +164,11 @@ jcs.default.elementattributes.IsLateral=true
 				</p>
 
 				<source>
-					<![CDATA[	
+					<![CDATA[
     JCS jcs = JCS.getInstance( "myregion" );
 
     . . .
-    
+
     // jcs.getDefaultElementAttributes returns a copy not a reference
     IElementAttributes attributes = jcs.getDefaultElementAttributes();
 

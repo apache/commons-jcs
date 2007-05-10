@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.remote;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
@@ -17,7 +36,7 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * Tests for the remote cache listener.
  * <p>
  * @author Aaron Smuts
- * 
+ *
  */
 public class RemoteCacheListenerUnitTest
     extends TestCase
@@ -25,9 +44,9 @@ public class RemoteCacheListenerUnitTest
     /**
      * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to false.
      * Create a serialized element.  Call put on the listener.
-     * Verify that the deserialized element is in the cache.  
-     * 
-     * @throws Exception 
+     * Verify that the deserialized element is in the cache.
+     *
+     * @throws Exception
      */
     public void testUpdate()
         throws Exception
@@ -48,23 +67,23 @@ public class RemoteCacheListenerUnitTest
         ICacheElementSerialized element = new CacheElementSerialized( cacheName, key, elementSerializer
             .serialize( value ), attr );
         listener.handlePut( element );
-        
+
         ICacheElement after = cacheMgr.getCache( cacheName ).get( key );
-        
+
         assertNotNull( "Should have a deserialized object.", after );
         assertEquals( "Values should be the same.", value, after.getVal() );
         assertEquals( "Attributes should be the same.", attr.getMaxLifeSeconds(), after
             .getElementAttributes().getMaxLifeSeconds() );
         assertEquals( "Keys should be the same.", key, after.getKey() );
-        assertEquals( "Cache name should be the same.", cacheName, after.getCacheName() );                        
+        assertEquals( "Cache name should be the same.", cacheName, after.getCacheName() );
     }
 
     /**
      * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to false.
      * Create a serialized element.  Call put on the listener.
-     * Verify that the deserialized element is in the cache.  
-     * 
-     * @throws Exception 
+     * Verify that the deserialized element is in the cache.
+     *
+     * @throws Exception
      */
     public void testUpdate_RemoveOnPut()
         throws Exception
@@ -85,9 +104,9 @@ public class RemoteCacheListenerUnitTest
         ICacheElementSerialized element = new CacheElementSerialized( cacheName, key, elementSerializer
             .serialize( value ), attr );
         listener.handlePut( element );
-        
+
         ICacheElement after = cacheMgr.getCache( cacheName ).get( key );
-        
+
         assertNull( "Should not have a deserialized object since remove on put is true.", after );
     }
 

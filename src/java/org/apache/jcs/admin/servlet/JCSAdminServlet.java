@@ -1,14 +1,22 @@
 package org.apache.jcs.admin.servlet;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +38,9 @@ import org.apache.velocity.servlet.VelocityServlet;
  * <p>
  * Initialization in a webapp will look something like this:
  * <p>
- * 
+ *
  * <pre>
- *  
+ *
  *    [servlet]
  *        [servlet-name]JCSAdminServlet[/servlet-name]
  *        [servlet-class]org.apache.jcs.admin.servlet.JCSAdminServlet[/servlet-class]
@@ -41,9 +49,9 @@ import org.apache.velocity.servlet.VelocityServlet;
  *            [param-value]WEB-INF/conf/JCSAdminServlet.velocity.properties[/param-value]
  *        [/init-param]
  *    [/servlet]
- *   
+ *
  * </pre>
- * 
+ *
  * <p>
  * FIXME: It would be nice to use the VelocityEngine model so this can be truly
  * standalone. Right now if you run it in the same container as, say, turbine,

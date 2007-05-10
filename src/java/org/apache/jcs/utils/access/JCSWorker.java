@@ -1,14 +1,22 @@
 package org.apache.jcs.utils.access;
 
 /*
- * Copyright 2002-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.Serializable;
@@ -42,38 +50,38 @@ import org.apache.jcs.access.exception.CacheException;
  * results may take time to be retrieved.
  * <p>
  * For example:
- * 
+ *
  * <pre>
  *      public static JCSWorker cachingWorker = new JCSWorker(&quot;example region&quot;);
  *   		public Object getSomething(Serializable aKey){
  *        JCSWorkerHelper helper = new AbstractJCSWorkerHelper(){
  *          public Object doWork(){
- *            // Do some (DB?) work here which results in a list 
- *            // This only happens if the cache dosn't have a item in this region for aKey 
+ *            // Do some (DB?) work here which results in a list
+ *            // This only happens if the cache dosn't have a item in this region for aKey
  *            // Note this is especially useful with Hibernate, which will cache indiviual
  *            // Objects, but not entire query result sets.
  *            List results = query.list();
- *            // Whatever we return here get's cached with aKey, and future calls to 
+ *            // Whatever we return here get's cached with aKey, and future calls to
  *            // getResult() on a CachedWorker with the same region and key will return that instead.
  *            return results;
  *        };
  *        List result = worker.getResult(aKey, helper);
  *      }
  * </pre>
- * 
+ *
  * This is essentially the same as doing:
- * 
+ *
  * <pre>
  * JCS jcs = JCS.getInstance( &quot;exampleregion&quot; );
  * List results = (List) jcs.get( aKey );
  * if ( results != null )
- * { 
+ * {
  *     //do the work here
  *     results = query.list();
  *     jcs.put( aKey, results );
  * }
  * </pre>
- * 
+ *
  * <p>
  * But has the added benifit of the work-load sharing; under normal
  * circumstances if multiple threads all tried to do the same query at the same

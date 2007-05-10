@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.remote;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import org.apache.commons.logging.Log;
@@ -39,7 +42,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * its connection to the primary server, it will attempt to restore that
  * connectin in the background. If failovers are defined, the Failover runner
  * will try to connect to a failover until the primary is restored.
- * 
+ *
  */
 public class RemoteCacheFailoverRunner
     implements Runnable
@@ -57,7 +60,7 @@ public class RemoteCacheFailoverRunner
     /**
      * Constructor for the RemoteCacheFailoverRunner object. This allows the
      * FailoverRunner to modify the facade that the CompositeCache references.
-     * 
+     *
      * @param facade
      *            the facade the CompositeCache talks to.
      * @param cacheMgr
@@ -310,7 +313,7 @@ public class RemoteCacheFailoverRunner
      * <p>
      * The primary server is the first server defines in the FailoverServers
      * list.
-     * 
+     *
      * @return boolean value indicating whether the resoration was successful
      */
     private boolean restorePrimary()
@@ -416,7 +419,7 @@ public class RemoteCacheFailoverRunner
                     // Restore primary
                     // may need to do this more gracefully, letting the failover finish in the background
                     RemoteCacheNoWait failoverNoWait = facade.noWaits[0];
-                    
+
                     // swap in a new one
                     facade.noWaits = new RemoteCacheNoWait[1];
                     facade.noWaits[0] = (RemoteCacheNoWait) ic;

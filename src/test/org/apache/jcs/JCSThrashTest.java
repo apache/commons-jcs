@@ -1,5 +1,24 @@
 package org.apache.jcs;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +31,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * This is based on a test that was posted to the user's list:
- * 
+ *
  * http://www.opensubscriber.com/message/jcs-users@jakarta.apache.org/2435965.html
  *
  */
@@ -61,7 +80,7 @@ public class JCSThrashTest
 
     /**
      * Tests adding an entry.
-     * @throws Exception 
+     * @throws Exception
      */
     public void testPut()
         throws Exception
@@ -85,7 +104,7 @@ public class JCSThrashTest
 
     /**
      * Test elements can be removed from the store
-     * @throws Exception 
+     * @throws Exception
      */
     public void testRemove()
         throws Exception
@@ -111,7 +130,7 @@ public class JCSThrashTest
     /**
      * This does a bunch of work and then verifies that the memory has not grown by much.
      * Most of the time the amount of memory used after the test is less.
-     * 
+     *
      * @throws Exception
      */
     public void testForMemoryLeaks()
@@ -120,7 +139,7 @@ public class JCSThrashTest
         long differenceMemoryCache = thrashCache();
         LOG.info( "Memory Difference is: " + differenceMemoryCache );
         assertTrue( differenceMemoryCache < 500000 );
-        
+
         //LOG.info( "Memory Used is: " + measureMemoryUse() );
     }
 
@@ -160,7 +179,7 @@ public class JCSThrashTest
             };
             executables.add( executable );
         }
-        
+
         // Create 15 threads that are insert 500 keys with large byte[] as
         // values
         for ( int i = 0; i < 15; i++ )
@@ -194,8 +213,8 @@ public class JCSThrashTest
 
     /**
      * Runs a set of threads, for a fixed amount of time.
-     * @param executables 
-     * @throws Exception 
+     * @param executables
+     * @throws Exception
      */
     protected void runThreads( final List executables )
         throws Exception
@@ -246,7 +265,7 @@ public class JCSThrashTest
 
     /**
      * Measure memory used by the VM.
-     * 
+     *
      * @return
      * @throws InterruptedException
      */
@@ -266,7 +285,7 @@ public class JCSThrashTest
     {
         /**
          * Executes this object.
-         * 
+         *
          * @throws Exception
          */
         void execute()
@@ -274,7 +293,7 @@ public class JCSThrashTest
     }
 
     /**
-     * 
+     *
      * @return
      */
     private int getListSize()

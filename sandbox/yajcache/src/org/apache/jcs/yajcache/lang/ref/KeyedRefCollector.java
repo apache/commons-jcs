@@ -1,20 +1,23 @@
-/*
- * Copyright 2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.apache.jcs.yajcache.lang.ref;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -27,8 +30,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**
- * Keyed Reference garbage collector which removes stale 
- * Keyed {@link Reference} entries 
+ * Keyed Reference garbage collector which removes stale
+ * Keyed {@link Reference} entries
  * from the given {@link ConcurrentMap} using the embedded keys.
  * The stale Keyed References are put into the given {@link ReferenceQueue}
  * by the JVM garbage collector.
@@ -46,7 +49,7 @@ public class KeyedRefCollector<K> implements Runnable {
      * Constructs with a given reference queue and concurrent map.
      */
     public KeyedRefCollector(
-            @NonNullable ReferenceQueue<?> q, 
+            @NonNullable ReferenceQueue<?> q,
             @NonNullable ConcurrentMap<K, ? extends IKey<K>> synMap)
     {
         this.q = q;
@@ -57,7 +60,7 @@ public class KeyedRefCollector<K> implements Runnable {
      */
     public void run() {
         Reference ref;
-        
+
         while ((ref = this.q.poll()) != null) {
             IKey keyedRef = (IKey)ref;
             // remove unused lock;  may fail but that's fine.
@@ -65,7 +68,7 @@ public class KeyedRefCollector<K> implements Runnable {
             // referent should have been cleared by GC.
             if (debug)
                 this.count.incrementAndGet();
-        }        
+        }
     }
     public int getCount() {
         return this.count.intValue();

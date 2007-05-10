@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.javagroups;
 
-/* 
- * Copyright 2001-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -43,7 +46,7 @@ import org.jgroups.View;
 import org.jgroups.blocks.GroupRequest;
 import org.jgroups.blocks.MessageDispatcher;
 import org.jgroups.blocks.RequestHandler;
-import org.jgroups.util.RspList; 
+import org.jgroups.util.RspList;
 
 /**
  * Auxiliary cache using javagroups. Expects to be created with a Channel, the
@@ -64,7 +67,7 @@ import org.jgroups.util.RspList;
  * added using MessageDispatcher or RpcDispatcher. Combined with a get
  * implementation this could provide much higher cache consistency (but with a
  * substantial speed penalty).
- * 
+ *
  * @version $Id: JavaGroupsCache.java 264665 2005-08-30 01:10:34Z asmuts $
  */
 public class JavaGroupsCache
@@ -132,7 +135,7 @@ public class JavaGroupsCache
     /**
      * Sends the provided element to all peers (connected to the same channel
      * and region name).
-     * 
+     *
      * @param ce
      *            CacheElement to replicate
      * @throws IOException
@@ -147,7 +150,7 @@ public class JavaGroupsCache
     /**
      * If 'getFromPeers' is true, this will attempt to get the requested element
      * from ant other members of the group.
-     * 
+     *
      * @param key
      * @return
      * @throws IOException
@@ -188,7 +191,7 @@ public class JavaGroupsCache
     /**
      * Sends a request to all peers to remove the element having the provided
      * key.
-     * 
+     *
      * @param key
      *            Key of element to be removed
      * @throws IOException
@@ -206,7 +209,7 @@ public class JavaGroupsCache
 
     /**
      * Sends a request to remove ALL elements from the peers
-     * 
+     *
      * @throws IOException
      *             Never thrown by this implementation
      */
@@ -221,7 +224,7 @@ public class JavaGroupsCache
     /**
      * Dispose this cache, terminates the listener thread and disconnects the
      * channel from the group.
-     * 
+     *
      * @throws IOException
      */
     public void dispose()
@@ -243,7 +246,7 @@ public class JavaGroupsCache
 
     /**
      * Since this is a lateral, size is not defined.
-     * 
+     *
      * @return Always returns 0
      */
     public int getSize()
@@ -253,7 +256,7 @@ public class JavaGroupsCache
 
     /**
      * Returns the status of this auxiliary.
-     * 
+     *
      * @return One of the status constants from {@link CacheConstants}
      */
     public int getStatus()
@@ -263,7 +266,7 @@ public class JavaGroupsCache
 
     /**
      * Accessor for cacheName property
-     * 
+     *
      * @return Name of cache / region this auxiliary is associated with.
      */
     public String getCacheName()
@@ -274,7 +277,7 @@ public class JavaGroupsCache
     /**
      * Not implemented (I believe since get is not supported, this should also
      * not be).
-     * 
+     *
      * @param group
      *            Ignored
      * @return Always reurns null
@@ -288,7 +291,7 @@ public class JavaGroupsCache
 
     /**
      * Get the cache type (always Lateral).
-     * 
+     *
      * @return Always returns ICacheType.LATERAL_CACHE
      */
     public int getCacheType()
@@ -302,7 +305,7 @@ public class JavaGroupsCache
      * Handles a message from a peer. The message should contain a Request, and
      * depending on the command this will call localUpdate, localRemove, or
      * localRemoveAll on the associated CompositeCache.
-     * 
+     *
      * @param msg
      *            The JavaGroups Message
      * @return Always returns null
@@ -354,7 +357,7 @@ public class JavaGroupsCache
     /**
      * TODO speed this up. We don't want to ahve to go through the manager
      * everytime.
-     * 
+     *
      * @return ICompositeCache
      */
     private CompositeCache getCompositeCache()
@@ -379,7 +382,7 @@ public class JavaGroupsCache
 
     /**
      * getStats
-     * 
+     *
      * @return String
      */
     public String getStats()
@@ -389,7 +392,7 @@ public class JavaGroupsCache
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()

@@ -1,3 +1,19 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
 # Cache configuration for the 'TestHSQLDiskCache' test. The memory cache has a
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
@@ -24,8 +40,8 @@ jcs.region.noRemoveAll.cacheattributes.MemoryCacheName=org.apache.jcs.engine.mem
 
 
 
-##############################################################
-################## AUXILIARY CACHES AVAILABLE ################
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
 # HSQL disk cache
 jcs.auxiliary.HSQL=org.apache.jcs.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory
 jcs.auxiliary.HSQL.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
@@ -58,8 +74,8 @@ jcs.auxiliary.HSQL_NORA.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.HSQL_NORA.attributes.EventQueueType=POOLED
 jcs.auxiliary.HSQL_NORA.attributes.EventQueuePoolName=disk_cache_event_queue
 
-##############################################################
-################## OPTIONAL THREAD POOL CONFIGURATION #########
+# #############################################################
+# ################# OPTIONAL THREAD POOL CONFIGURATION #########
 # Disk Cache pool
 thread_pool.disk_cache_event_queue.useBoundary=false
 thread_pool.disk_cache_event_queue.boundarySize=500

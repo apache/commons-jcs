@@ -1,19 +1,22 @@
 package org.apache.jcs.config;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.util.Properties;
@@ -27,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
  * G&uuml;lc&uuml; Simon Kitching; Avy Sharell (sharell@online.fr) Anders
  * Kristensen Matthieu Verbert (mve@zurich.ibm.com) A convenience class to
  * convert property values to specific types.
- *  
+ *
  */
 public class OptionConverter
 {
@@ -49,9 +52,9 @@ public class OptionConverter
         super();
     }
 
-    /** 
+    /**
      * Combines two arrays.
-     * 
+     *
      * @param l
      * @param r
      * @return String[]
@@ -67,9 +70,9 @@ public class OptionConverter
         return a;
     }
 
-    /** 
+    /**
      * Escapes special cahracters/
-     * 
+     *
      * @param s
      * @return  String
      */
@@ -127,7 +130,7 @@ public class OptionConverter
     /**
      * Very similar to <code>System.getProperty</code> except that the {@link
      * SecurityException} is hidden.
-     * 
+     *
      * @param key
      *            The key to search for.
      * @param def
@@ -153,7 +156,7 @@ public class OptionConverter
 
     /**
      * Creates an object for the className value of the key.
-     * 
+     *
      * @param props
      * @param key
      * @param superClass
@@ -182,7 +185,7 @@ public class OptionConverter
      * If <code>value</code> is "false", then <code>true</code> is returned.
      * Otherwise, <code>default</code> is returned.
      * <p>
-     * 
+     *
      * Case of value is unimportant.
      * @param value
      * @param dEfault
@@ -207,7 +210,7 @@ public class OptionConverter
         return dEfault;
     }
 
-    /** Description of the Method 
+    /** Description of the Method
      * @param value
      * @param dEfault
      * @return
@@ -230,7 +233,7 @@ public class OptionConverter
         return dEfault;
     }
 
-    /** 
+    /**
      * @param value
      * @param dEfault
      * @return
@@ -308,7 +311,7 @@ public class OptionConverter
      * <code>className</code> is a subclass of <code>superClass</code>. If
      * that test fails or the object could not be instantiated, then
      * <code>defaultValue</code> is returned.
-     * 
+     *
      * @param className
      *            The fully qualified class name of the object to instantiate.
      * @param superClass
@@ -345,43 +348,43 @@ public class OptionConverter
      * Perform variable substitution in string <code>val</code> from the
      * values of keys found in the system propeties.
      * <p>
-     * 
+     *
      * The variable substitution delimeters are <b>${ </b> and <b>} </b>.
      * <p>
-     * 
+     *
      * For example, if the System properties contains "key=value", then the call
-     * 
+     *
      * <pre>
      * String s = OptionConverter.substituteVars( &quot;Value of key is ${key}.&quot; );
      * </pre>
-     * 
+     *
      * will set the variable <code>s</code> to "Value of key is value.".
      * <p>
-     * 
+     *
      * If no value could be found for the specified key, then the
      * <code>props</code> parameter is searched, if the value could not be
      * found there, then substitution defaults to the empty string.
      * <p>
-     * 
+     *
      * For example, if system propeties contains no value for the key
      * "inexistentKey", then the call
-     * 
+     *
      * <pre>
      * String s = OptionConverter.subsVars( &quot;Value of inexistentKey is [${inexistentKey}]&quot; );
      * </pre>
-     * 
+     *
      * will set <code>s</code> to "Value of inexistentKey is []"
      * <p>
-     * 
+     *
      * An {@link java.lang.IllegalArgumentException}is thrown if
      * <code>val</code> contains a start delimeter "${" which is not balanced
      * by a stop delimeter "}".
      * </p>
      * <p>
-     * 
+     *
      * <b>Author </b> Avy Sharell </a>
      * </p>
-     * 
+     *
      * @param val
      *            The string on which variable substitution is performed.
      * @param props

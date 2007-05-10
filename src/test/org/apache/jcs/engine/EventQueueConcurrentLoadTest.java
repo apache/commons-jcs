@@ -1,19 +1,22 @@
 package org.apache.jcs.engine;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -30,7 +33,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
  * This test case is designed to makes sure there are no deadlocks in the event
  * queue. The time to live should be set to a very short interval to make a
  * deadlock more likely.
- * 
+ *
  * @author Aaron Smuts
  */
 public class EventQueueConcurrentLoadTest
@@ -50,7 +53,7 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Constructor for the TestDiskCache object.
-     * 
+     *
      * @param testName
      */
     public EventQueueConcurrentLoadTest( String testName )
@@ -60,7 +63,7 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Main method passes this test to the text test runner.
-     * 
+     *
      * @param args
      */
     public static void main( String args[] )
@@ -71,7 +74,7 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * A unit test suite for JUnit
-     * 
+     *
      * @return The test suite
      */
     public static Test suite()
@@ -167,7 +170,7 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Adds put events to the queue.
-     * 
+     *
      * @param end
      * @param expectedPutCount
      * @throws Exception
@@ -200,7 +203,7 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Add remove events to the event queue.
-     * 
+     *
      * @param end
      * @throws Exception
      */
@@ -216,7 +219,7 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Add remove events to the event queue.
-     * 
+     *
      * @throws Exception
      */
     public void runStopProcessingTest()
@@ -227,7 +230,7 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Test putting and a delay. Waits until queue is empty to start.
-     * 
+     *
      * @param end
      * @param expectedPutCount
      * @throws Exception
@@ -277,12 +280,12 @@ public class EventQueueConcurrentLoadTest
         System.out.println( "queue is empty, comparing putCount" );
 
         Thread.sleep( 1000 );
-        
+
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
         assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
                     + expectedPutCount + "]", listen.putCount >= ( expectedPutCount - 1 ) );
-        
+
     }
 
     /**
@@ -304,7 +307,7 @@ public class EventQueueConcurrentLoadTest
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
          */
         public void handlePut( ICacheElement item )
@@ -318,7 +321,7 @@ public class EventQueueConcurrentLoadTest
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
          *      java.io.Serializable)
          */
@@ -334,7 +337,7 @@ public class EventQueueConcurrentLoadTest
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
          */
         public void handleRemoveAll( String cacheName )
@@ -346,7 +349,7 @@ public class EventQueueConcurrentLoadTest
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
          */
         public void handleDispose( String cacheName )
@@ -358,7 +361,7 @@ public class EventQueueConcurrentLoadTest
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.apache.jcs.engine.behavior.ICacheListener#setListenerId(long)
          */
         public void setListenerId( long id )
@@ -370,7 +373,7 @@ public class EventQueueConcurrentLoadTest
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.apache.jcs.engine.behavior.ICacheListener#getListenerId()
          */
         public long getListenerId()

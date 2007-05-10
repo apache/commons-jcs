@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import junit.extensions.ActiveTestSuite;
@@ -26,7 +29,7 @@ import org.apache.jcs.JCS;
  * Test which exercises the indexed disk cache. This one uses three different
  * regions for thre threads. It uses a config file that specifies 0 items in
  * memory.
- * 
+ *
  * @version $Id: TestDiskCacheNoMemory.java 224346 2005-06-04 02:01:59Z asmuts $
  */
 public class IndexedDiskCacheNoMemoryUnitTest
@@ -40,7 +43,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
     /**
      * Constructor for the TestDiskCache object.
-     * 
+     *
      * @param testName
      */
     public IndexedDiskCacheNoMemoryUnitTest( String testName )
@@ -50,7 +53,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
     /**
      * Main method passes this test to the text test runner.
-     * 
+     *
      * @param args
      */
     public static void main( String args[] )
@@ -61,7 +64,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
     /**
      * A unit test suite for JUnit
-     * 
+     *
      * @return The test suite
      */
     public static Test suite()
@@ -109,10 +112,10 @@ public class IndexedDiskCacheNoMemoryUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
-     * 
+     *
      * @param region
      *            Name of the region to access
-     * 
+     *
      * @exception Exception
      *                If an error occurs
      */

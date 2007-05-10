@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -39,7 +42,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
  * level, distribution and search may need to occur at the lateral cache level.
  * This is currently not implemented in the lateral cache.
  * <p>
- * 
+ *
  * @TODO: - need freeCache, release, getStats - need to find an interface
  *        acceptible for all - cache managers or a manager within a type
  */
@@ -48,7 +51,7 @@ public abstract class LateralCacheAbstractManager
 {
     private final static Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
-    /** 
+    /**
      * Each manager instance has caches.
      */
     protected final Map caches = new HashMap();
@@ -72,7 +75,7 @@ public abstract class LateralCacheAbstractManager
 
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.
-     * 
+     *
      * @param cacheName
      *            The feature to be added to the LateralCacheListener attribute
      * @param listener
@@ -98,15 +101,15 @@ public abstract class LateralCacheAbstractManager
      * <p>
      * There should be one manager per server and one cache per region per
      * manager.
-     * 
+     *
      * @return AuxiliaryCache
      * @param cacheName
      */
     public abstract AuxiliaryCache getCache( String cacheName );
-    
+
     /**
      * Gets the cacheType attribute of the LateralCacheManager object
-     * 
+     *
      * @return The cache type value
      */
     public int getCacheType()
@@ -116,7 +119,7 @@ public abstract class LateralCacheAbstractManager
 
     /**
      * Gets the stats attribute of the LateralCacheManager object
-     * 
+     *
      * @return String
      */
     public String getStats()
@@ -127,7 +130,7 @@ public abstract class LateralCacheAbstractManager
 
     /**
      * Fixes up all the caches managed by this cache manager.
-     * 
+     *
      * @param lateralService
      * @param lateralWatch
      */
@@ -148,12 +151,12 @@ public abstract class LateralCacheAbstractManager
             }
         }
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager#getCaches()
      */
     public Map getCaches()
     {
         return caches;
-    }    
+    }
 }

@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
 
 /*
- * Copyright 2002-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License") you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.ByteArrayOutputStream;
@@ -30,9 +33,9 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 
 /**
  * This is a generic sender for the UDPDiscovery process.
- * 
+ *
  * @author Aaron Smuts
- * 
+ *
  */
 public class UDPDiscoverySender
 {
@@ -50,10 +53,10 @@ public class UDPDiscoverySender
      * This sender can be used to send multiple messages.
      * <p>
      * When you are done sending, you should destroy the socket sender.
-     * 
+     *
      * @param host
      * @param port
-     * 
+     *
      * @exception IOException
      */
     public UDPDiscoverySender( String host, int port )
@@ -78,7 +81,7 @@ public class UDPDiscoverySender
 
     /**
      * Closes the socket connection.
-     * 
+     *
      */
     public void destroy()
     {
@@ -99,7 +102,7 @@ public class UDPDiscoverySender
 
     /**
      * Just being careful about closing the socket.
-     * 
+     *
      * @throws Throwable
      */
     public void finalize()
@@ -111,7 +114,7 @@ public class UDPDiscoverySender
 
     /**
      * Send messages.
-     * 
+     *
      * @param message
      * @throws IOException
      */
@@ -159,7 +162,7 @@ public class UDPDiscoverySender
      * Ask other to broadcast their info the the multicast address. If a lateral
      * is non receiving it can use this. This is also called on startup so we
      * can get info.
-     * 
+     *
      * @throws IOException
      */
     public void requestBroadcast()
@@ -181,7 +184,7 @@ public class UDPDiscoverySender
      * for connections.
      * <p>
      * It uses the vmid as the requesterDI
-     * 
+     *
      * @param host
      * @param port
      * @param cacheNames
@@ -195,7 +198,7 @@ public class UDPDiscoverySender
 
     /**
      * This allows you to set the sender id. This is mainly for testing.
-     * 
+     *
      * @param host
      * @param port
      * @param cacheNames
@@ -222,7 +225,7 @@ public class UDPDiscoverySender
 
 /**
  * This allows us to get the byte array from an output stream.
- * 
+ *
  * @author asmuts
  * @created January 15, 2002
  */
@@ -232,7 +235,7 @@ class MyByteArrayOutputStream
 {
     /**
      * Gets the bytes attribute of the MyByteArrayOutputStream object
-     * 
+     *
      * @return The bytes value
      */
     public byte[] getBytes()

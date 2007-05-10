@@ -1,5 +1,21 @@
-##############################################################
-################## DEFAULT CACHE REGION  #####################
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# #############################################################
+# ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=DC
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -19,7 +35,7 @@ jcs.default.elementattributes.IsLateral=true
 
 # SYSTEM CACHE
 # should be defined for the storage of group attribute list
-jcs.system.groupIdCache=DC 
+jcs.system.groupIdCache=DC
 jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -30,10 +46,10 @@ jcs.system.groupIdCache.elementattributes.IdleTime=1800
 jcs.system.groupIdCache.elementattributes.IsSpool=true
 jcs.system.groupIdCache.elementattributes.IsRemote=true
 jcs.system.groupIdCache.elementattributes.IsLateral=true
- 
 
-##############################################################
-################## CACHE REGIONS AVAILABLE ###################
+
+# #############################################################
+# ################# CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
 jcs.region.testCache1=DC,RC
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -77,8 +93,8 @@ jcs.region.testCache3.elementattributes.IsRemote=true
 jcs.region.testCache3.elementattributes.IsLateral=true
 
 
-##############################################################
-################## AUXILIARY CACHES AVAILABLE ################
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
 
 # Remote RMI cache without failover
 jcs.auxiliary.RGroup=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
@@ -99,7 +115,7 @@ jcs.auxiliary.RFailover.attributes.GetOnly=false
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
-#new disk cache parameter.
+# new disk cache parameter.
 jcs.auxiliary.DC.attributes.maxKeySize=100000
 jcs.auxiliary.DC.attributes.optimizeAtRemoveCount=300
 
@@ -107,9 +123,9 @@ jcs.auxiliary.DC.attributes.optimizeAtRemoveCount=300
 jcs.auxiliary.JE=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
 jcs.auxiliary.JE.attributes=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
 jcs.auxiliary.JE.attributes.DiskPath=target/test-sandbox/bdbje-disk-cache-conc
-#the minimum cache size is 1024
+# the minimum cache size is 1024
 jcs.auxiliary.indexedDiskCache.attributes.CacheSize=1024
-#jcs.auxiliary.indexedDiskCache.attributes.CachePercent=0
+# jcs.auxiliary.indexedDiskCache.attributes.CachePercent=0
 
 # HSQL Disk Cache -- too slow as is
 jcs.auxiliary.HDC=org.apache.jcs.auxiliary.disk.hsql.HSQLCacheFactory
@@ -128,10 +144,10 @@ jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RC.attributes.RemoteHost=10.21.209.150
 jcs.auxiliary.RC.attributes.RemotePort=1102
-#jcs.auxiliary.RC.attributes.LocalPort=1103
+# jcs.auxiliary.RC.attributes.LocalPort=1103
 jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
-#jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
-#-1 means no timeout, this is the default
+# jcs.auxiliary.RC.attributes.RemoteServiceName=RemoteCache
+# -1 means no timeout, this is the default
 # if the timeout is -1, no threadpool will be used.
 jcs.auxiliary.RC.attributes.GetTimeoutMillis=5000
 jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
@@ -189,24 +205,24 @@ jcs.auxiliary.LCHTTP.attributes.httpReceiveServlet=/cache/LateralCacheReceiverSe
 jcs.auxiliary.LCHTTP.attributes.httpDeleteServlet=/cache/DeleteCacheServlet
 
 
-##############################################################
-################## THREAD POOL CONFIGURATION ###################
+# #############################################################
+# ################# THREAD POOL CONFIGURATION ###################
 # Default thread pool config
 thread_pool.default.boundarySize=2000
 thread_pool.default.maximumPoolSize=150
 thread_pool.default.minimumPoolSize=4
 thread_pool.default.keepAliveTime=350000
-#RUN ABORT WAIT BLOCK DISCARDOLDEST
+# RUN ABORT WAIT BLOCK DISCARDOLDEST
 thread_pool.default.whenBlockedPolicy=RUN
 thread_pool.default.startUpSize=4
 
 # Default Cache Event Queue thread pool config, used by auxiliaries
 thread_pool.cache_event_queue.useBoundary=false
-#thread_pool.cache_event_queue.boundarySize=2000
-#thread_pool.cache_event_queue.maximumPoolSize=10
+# thread_pool.cache_event_queue.boundarySize=2000
+# thread_pool.cache_event_queue.maximumPoolSize=10
 thread_pool.cache_event_queue.minimumPoolSize=5
 thread_pool.cache_event_queue.keepAliveTime=3500
-#thread_pool.cache_event_queue.whenBlockedPolicy=RUN
+# thread_pool.cache_event_queue.whenBlockedPolicy=RUN
 thread_pool.cache_event_queue.startUpSize=5
 
 # Remote cache client thread pool config

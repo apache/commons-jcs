@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.BufferedReader;
@@ -36,7 +39,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * A lateral cache service implementation.
- * 
+ *
  * @version $Id: LateralJGService.java 240226 2005-08-26 12:47:59Z asmuts $
  */
 public class LateralJGService
@@ -50,7 +53,7 @@ public class LateralJGService
 
     /**
      * Constructor for the LateralJGService object
-     * 
+     *
      * @param lca
      * @exception IOException
      */
@@ -58,7 +61,7 @@ public class LateralJGService
         throws IOException
     {
         this.ilca = lca;
-        
+
         try
         {
             log.debug( "creating sender" );
@@ -140,7 +143,7 @@ public class LateralJGService
 
     /**
      * Will close the connection.
-     * 
+     *
      * @param cache
      * @exception IOException
      */

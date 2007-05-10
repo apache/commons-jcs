@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.io.Serializable;
 
 import junit.framework.TestCase;
@@ -21,7 +40,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
 
     /**
      * Constructor for the TestDiskCache object.
-     * 
+     *
      * @param testName
      */
     public LateralTCPFilterRemoveHashCodeUnitTest( String testName )
@@ -38,7 +57,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     }
 
     /**
-     * 
+     *
      * @throws Exception
      */
     public void test()
@@ -50,12 +69,12 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     /**
      * This tests issues tons of puts. It also check to see that a key that was
      * put in was removed by the clients remove command.
-     * 
+     *
      * @param region
      *            Name of the region to access
      * @param numOps
      * @param testNum
-     * 
+     *
      * @exception Exception
      *                If an error occurs
      */
@@ -64,7 +83,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     {
 
         //boolean show = true;//false;
-       
+
         JCS cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
@@ -114,11 +133,11 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
          * try { for ( int i = 1; i < numOps; i++ ) { Random ran = new Random( i );
          * int n = ran.nextInt( 4 ); int kn = ran.nextInt( range ); String key =
          * "key" + kn;
-         * 
+         *
          * ICacheElement element = new CacheElement( region, key, region +
          * ":data" + i + " junk asdfffffffadfasdfasf " + kn + ":" + n );
          * service.update( element ); if ( show ) { p( "put " + key ); }
-         * 
+         *
          * if ( i % 100 == 0 ) { System.out.println( cache.getStats() ); }
          *  } p( "Finished cycle of " + numOps ); } catch ( Exception e ) { p(
          * e.toString() ); e.printStackTrace( System.out ); throw e; }

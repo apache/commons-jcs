@@ -1,20 +1,23 @@
-/*
- * Copyright 2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.apache.jcs.yajcache.util.concurrent.locks;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 import java.lang.ref.ReferenceQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +34,7 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 
 
 /**
- * Factory for key specific ReadWriteLock.  
+ * Factory for key specific ReadWriteLock.
  * Unused locks are automatically garbage collected.
  *
  * @author Hanson Char
@@ -39,16 +42,16 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 @CopyRightApache
 public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
     private static final boolean debug = true;
-    
-    private final @NonNullable 
-            ConcurrentMap<K, KeyedWeakReference<K,ReadWriteLock>> rwlMap = 
+
+    private final @NonNullable
+            ConcurrentMap<K, KeyedWeakReference<K,ReadWriteLock>> rwlMap =
             new ConcurrentHashMap<K, KeyedWeakReference<K,ReadWriteLock>>();
     private final @NonNullable Class<? extends ReadWriteLock> rwlClass;
-    private final @NonNullable ReferenceQueue<ReadWriteLock> refQ = 
+    private final @NonNullable ReferenceQueue<ReadWriteLock> refQ =
             new ReferenceQueue<ReadWriteLock>();
-    private final @NonNullable KeyedRefCollector<K> collector = 
+    private final @NonNullable KeyedRefCollector<K> collector =
             new KeyedRefCollector<K>(refQ, rwlMap);
-    
+
     private final AtomicInteger countRWLockCreate = new AtomicInteger(0);
     private final AtomicInteger countReadLock = new AtomicInteger(0);
     private final AtomicInteger countWriteLock = new AtomicInteger(0);
@@ -57,7 +60,7 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
     private final AtomicInteger countLockRefEmpty = new AtomicInteger(0);
     private final AtomicInteger countLockNew = new AtomicInteger(0);
     private final AtomicInteger countLockExist = new AtomicInteger(0);
-    
+
     public KeyedReadWriteLock() {
         this.rwlClass = ReentrantReadWriteLock.class;
     }
@@ -81,8 +84,8 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
         ReadWriteLock ret = this.getExistingLock(key);
         return ret == null ? this.tryNewLock(key) : ret;
     }
-    /** 
-     * Returns an existing RWLock for the specified key, or null if not found. 
+    /**
+     * Returns an existing RWLock for the specified key, or null if not found.
      */
     private ReadWriteLock getExistingLock(@NonNullable final K key) {
         KeyedWeakReference<K,ReadWriteLock> ref = this.rwlMap.get(key);
@@ -131,10 +134,10 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
     private @NonNullable ReadWriteLock tryNewLock(@NonNullable final K key)
     {
         final ReadWriteLock newLock = this.createRWLock();
-        final KeyedWeakReference<K,ReadWriteLock> newLockRef = 
+        final KeyedWeakReference<K,ReadWriteLock> newLockRef =
                 new KeyedWeakReference<K,ReadWriteLock>(key, newLock, refQ);
         do {
-            KeyedWeakReference<K,ReadWriteLock> ref = 
+            KeyedWeakReference<K,ReadWriteLock> ref =
                     this.rwlMap.putIfAbsent(key, newLockRef);
             if (ref == null) {
                 // successfully deposited the new lock.
@@ -143,7 +146,7 @@ public class KeyedReadWriteLock<K> implements IKeyedReadWriteLock<K> {
                 return newLock;
             }
             ReadWriteLock rwl = this.toLock(ref);
-            
+
             if (rwl != null) {
                 return rwl;
             }

@@ -1,5 +1,24 @@
 package org.apache.jcs.engine.memory.arc;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
@@ -124,7 +143,7 @@ public class ARCMemoryCacheUnitTest
 
         assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
-        
+
         assertEquals( "T2 should have one item.", 1, arc.getListSize( ARCMemoryCache._T2_ ) );
     }
 
@@ -159,10 +178,10 @@ public class ARCMemoryCacheUnitTest
 
         assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
-        
+
         assertEquals( "T2 should have one item.", 1, arc.getListSize( ARCMemoryCache._T2_ ) );
-    }   
-    
+    }
+
     /**
      * Put half the max and then get the first element.  It should now be in t2.
      * <p>
@@ -194,10 +213,10 @@ public class ARCMemoryCacheUnitTest
 
         assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
-        
+
         assertEquals( "T2 should have one item.", 1, arc.getListSize( ARCMemoryCache._T2_ ) );
-    }  
-    
+    }
+
     /**
      * Put half the max and then get the first element.  It should now be in t2.
      * <p>
@@ -229,10 +248,10 @@ public class ARCMemoryCacheUnitTest
 
         assertNull( "Should not have the element since it was the first.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
-        
+
         assertEquals( "T2 should have one item.", 1, arc.getListSize( ARCMemoryCache._T2_ ) );
-    }     
-    
+    }
+
     /**
      * Put half the max and then get the first element.  It should now be in t2.
      * <p>
@@ -264,8 +283,8 @@ public class ARCMemoryCacheUnitTest
 
         //assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
-        
+
         assertEquals( "Wrong number of items in T1.", max, arc.getListSize( ARCMemoryCache._T1_ ) );
         assertEquals( "Wrong number of items in T2.", 0, arc.getListSize( ARCMemoryCache._T2_ ) );
-    }  
+    }
 }

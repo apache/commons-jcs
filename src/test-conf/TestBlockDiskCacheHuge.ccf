@@ -1,3 +1,19 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
 # Cache configuration for the 'TestDiskCacheNoMemory' test. The memory cache has a
 # a maximum of 0 objects, so objects should get pushed into the disk cache
 
@@ -7,7 +23,7 @@ jcs.default.cacheattributes.MaxObjects=0
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 
-##### CACHE REGIONS FOR TEST
+# #### CACHE REGIONS FOR TEST
 
 jcs.region.blockRegion1=blockDiskCache
 jcs.region.blockRegion1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -15,7 +31,7 @@ jcs.region.blockRegion1.cacheattributes.MaxObjects=0
 jcs.region.blockRegion1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 
-##### AUXILIARY CACHES
+# #### AUXILIARY CACHES
 
 # Block Disk Cache
 jcs.auxiliary.blockDiskCache=org.apache.jcs.auxiliary.disk.block.BlockDiskCacheFactory
@@ -25,16 +41,16 @@ jcs.auxiliary.blockDiskCache.attributes.MaxPurgatorySize=300000
 jcs.auxiliary.blockDiskCache.attributes.MaxKeySize=1000000
 jcs.auxiliary.blockDiskCache.attributes.blockSizeBytes=500
 jcs.auxiliary.blockDiskCache.attributes.EventQueueType=SINGLE
-#jcs.auxiliary.blockDiskCache.attributes.EventQueuePoolName=disk_cache_event_queue
+# jcs.auxiliary.blockDiskCache.attributes.EventQueuePoolName=disk_cache_event_queue
 
-##############################################################
-################## THREAD POOL CONFIGURATION ###################
+# #############################################################
+# ################# THREAD POOL CONFIGURATION ###################
 # Default thread pool config
 thread_pool.default.boundarySize=2000
 thread_pool.default.maximumPoolSize=150
 thread_pool.default.minimumPoolSize=4
 thread_pool.default.keepAliveTime=350000
-#RUN ABORT WAIT BLOCK DISCARDOLDEST
+# RUN ABORT WAIT BLOCK DISCARDOLDEST
 thread_pool.default.whenBlockedPolicy=RUN
 thread_pool.default.startUpSize=4
 

@@ -1,20 +1,23 @@
-/*
- * Copyright 2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.apache.jcs.yajcache.core;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 import junit.framework.*;
 import org.apache.jcs.yajcache.util.TestSerializable;
@@ -31,7 +34,7 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 @TestOnly
 public class SafeCacheManagerTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
-    
+
     public void testGetCache() {
         log.debug("Test getCache and get");
         ICacheSafe<String> c = CacheManager.inst.getSafeCache(
@@ -100,7 +103,7 @@ public class SafeCacheManagerTest extends TestCase {
         ICacheSafe intCache1 = CacheManager.inst.getSafeCache("race", Integer.class);
         assertFalse(intCache == intCache1);
         CacheManager.inst.removeCache("race");
-        ICache<Double> doubleCache = 
+        ICache<Double> doubleCache =
                 CacheManager.inst.testCreateCacheRaceCondition(
                 "race", Double.class, CacheType.SOFT_REFERENCE_SAFE);
         doubleCache.put("double", 1.234);
@@ -129,7 +132,7 @@ public class SafeCacheManagerTest extends TestCase {
         ICacheSafe<TestSerializable> c = CacheManager.inst.getSafeCache(
                 "myCache", TestSerializable.class, CacheType.SOFT_REFERENCE_SAFE);
         TestSerializable[] ta = {
-                new TestSerializable("First Put"), 
+                new TestSerializable("First Put"),
                 new TestSerializable("Second Put"),
                 new TestSerializable("Third Put")
         };
@@ -145,7 +148,7 @@ public class SafeCacheManagerTest extends TestCase {
         c.putBeanClone("2a", ta[1]);
         assertFalse(ta[1] == c.get("2a"));
         assertEquals(ta[1], c.get("2a"));
-        
+
         c.put("3", ta[2]);
         assertEquals(c.size(), 4);
         assertFalse(ta[1] == c.getBeanClone("2"));

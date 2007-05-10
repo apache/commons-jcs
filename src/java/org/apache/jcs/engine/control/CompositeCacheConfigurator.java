@@ -1,19 +1,22 @@
 package org.apache.jcs.engine.control;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.FileInputStream;
@@ -41,7 +44,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
  * This class is based on the log4j class org.apache.log4j.PropertyConfigurator
  * which was made by: "Luke Blanshard" <Luke@quiq.com>"Mark DONSZELMANN"
  * <Mark.Donszelmann@cern.ch>"Anders Kristensen" <akristensen@dynamicsoft.com>
- * 
+ *
  */
 public class CompositeCacheConfigurator
 {
@@ -65,7 +68,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Constructor for the CompositeCacheConfigurator object
-     * 
+     *
      * @param ccMgr
      */
     public CompositeCacheConfigurator( CompositeCacheManager ccMgr )
@@ -78,7 +81,7 @@ public class CompositeCacheConfigurator
      * <p>
      * This is only used for testing. The manager handles the translation of a
      * file into a properties object.
-     * 
+     *
      * @param configFileName
      */
     protected void doConfigure( String configFileName )
@@ -112,7 +115,7 @@ public class CompositeCacheConfigurator
      * <li>Setup system caches to be used
      * <li>Setup preconfigured caches
      * </ul>
-     * 
+     *
      * @param properties
      */
     public void doConfigure( Properties properties )
@@ -140,12 +143,12 @@ public class CompositeCacheConfigurator
         {
             log.info( "Finished configuration in " + ( end - start ) + " ms." );
         }
-        
+
     }
 
     /**
      * Set the default aux list for new caches.
-     * 
+     *
      * @param props
      */
     protected void setDefaultAuxValues( Properties props )
@@ -161,7 +164,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Set the default CompositeCacheAttributes for new caches.
-     * 
+     *
      * @param props
      */
     protected void setDefaultCompositeCacheAttributes( Properties props )
@@ -175,7 +178,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Set the default ElementAttributes for new caches.
-     * 
+     *
      * @param props
      */
     protected void setDefaultElementAttributes( Properties props )
@@ -189,7 +192,7 @@ public class CompositeCacheConfigurator
     /**
      * Create caches used internally. System status gives them creation
      * priority.
-     * 
+     *
      * @param props
      */
     protected void parseSystemRegions( Properties props )
@@ -217,13 +220,13 @@ public class CompositeCacheConfigurator
 
     /**
      * Parse region elements.
-     * 
+     *
      * @param props
      */
     protected void parseRegions( Properties props )
     {
         List regionNames = new ArrayList();
-        
+
         Enumeration en = props.propertyNames();
         while ( en.hasMoreElements() )
         {
@@ -231,9 +234,9 @@ public class CompositeCacheConfigurator
             if ( key.startsWith( REGION_PREFIX ) && ( key.indexOf( "attributes" ) == -1 ) )
             {
                 String regionName = key.substring( REGION_PREFIX.length() );
-                
+
                 regionNames.add( regionName );
-                
+
                 String value = OptionConverter.findAndSubst( key, props );
                 ICache cache;
                 synchronized ( regionName )
@@ -243,17 +246,17 @@ public class CompositeCacheConfigurator
                 compositeCacheManager.caches.put( regionName, cache );
             }
         }
-        
+
         if ( log.isInfoEnabled() )
         {
             log.info( "Parsed regions " + regionNames );
         }
-        
+
     }
 
     /**
      * Create cache region.
-     * 
+     *
      * @param props
      * @param regName
      * @param value
@@ -268,7 +271,7 @@ public class CompositeCacheConfigurator
      * Get all the properties for a region and configure its cache.
      * <p>
      * This method tells the otehr parse method the name of the region prefix.
-     * 
+     *
      * @param props
      * @param regName
      * @param value
@@ -282,7 +285,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Get all the properties for a region and configure its cache.
-     * 
+     *
      * @param props
      * @param regName
      * @param value
@@ -359,7 +362,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Get an compositecacheattributes for the listed region.
-     * 
+     *
      * @param props
      * @param regName
      * @return
@@ -371,7 +374,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Get the main attributes for a region.
-     * 
+     *
      * @param props
      * @param regName
      * @param regionPrefix
@@ -421,7 +424,7 @@ public class CompositeCacheConfigurator
     /**
      * Create the element attributes from the properties object for a cache
      * region.
-     * 
+     *
      * @param props
      * @param regName
      * @param regionPrefix
@@ -468,7 +471,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Get an aux cache for the listed aux for a region.
-     * 
+     *
      * @param cache
      *            the cache manager
      * @param props

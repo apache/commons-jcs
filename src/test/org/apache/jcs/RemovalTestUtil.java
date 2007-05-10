@@ -1,26 +1,29 @@
 package org.apache.jcs;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import junit.framework.TestCase;
 
 /**
  * Simple methods to be run by active test suites that test removal.
- *  
+ *
  */
 public class RemovalTestUtil
     extends TestCase
@@ -28,7 +31,7 @@ public class RemovalTestUtil
 
     /**
      * Constructor for the TestSimpleLoad object
-     * 
+     *
      * @param testName
      *            Description of the Parameter
      */
@@ -40,10 +43,10 @@ public class RemovalTestUtil
     /**
      * Adds elements in the range specified and then removes them using the
      * categorical or substring removal method.
-     * 
-     * @param start 
-     * @param end 
-     * 
+     *
+     * @param start
+     * @param end
+     *
      * @exception Exception
      *                Description of the Exception
      */
@@ -81,7 +84,7 @@ public class RemovalTestUtil
     /**
      * Put items in the cache in this key range. Can be used to verify that
      * concurrent operations are not effected by things like hierchical removal.
-     * 
+     *
      * @param start
      *            int
      * @param end
@@ -111,7 +114,7 @@ public class RemovalTestUtil
 
     /**
      * Just get from start to end.
-     * 
+     *
      * @param start
      *            int
      * @param end

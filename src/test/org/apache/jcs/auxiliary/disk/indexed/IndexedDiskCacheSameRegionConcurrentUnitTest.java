@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import junit.extensions.ActiveTestSuite;
@@ -25,7 +28,7 @@ import org.apache.jcs.JCS;
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
  * same region.
- * 
+ *
  * @version $Id: TestDiskCacheConcurrent.java,v 1.8 2005/02/01 00:01:59 asmuts
  *          Exp $
  */
@@ -34,7 +37,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 {
     /**
      * Constructor for the TestDiskCache object.
-     * 
+     *
      * @param testName
      */
     public IndexedDiskCacheSameRegionConcurrentUnitTest( String testName )
@@ -44,7 +47,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
     /**
      * Main method passes this test to the text test runner.
-     * 
+     *
      * @param args
      */
     public static void main( String args[] )
@@ -55,7 +58,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
     /**
      * A unit test suite for JUnit
-     * 
+     *
      * @return The test suite
      */
     public static Test suite()
@@ -139,12 +142,12 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
-     * 
+     *
      * @param region
      *            Name of the region to access
      * @param start
      * @param end
-     * 
+     *
      * @exception Exception
      *                If an error occurs
      */
@@ -172,10 +175,10 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
         /*
          * // you can't remove in one thread and expect them to be in another //
          * Remove all the items
-         * 
+         *
          * for ( int i = start; i <= end; i++ ) { jcs.remove( i + ":key" ); } //
          * Verify removal
-         * 
+         *
          * for ( int i = start; i <= end; i++ ) { assertNull( "Removed key
          * should be null: " + i + ":key", jcs.get( i + ":key" ) ); }
          */

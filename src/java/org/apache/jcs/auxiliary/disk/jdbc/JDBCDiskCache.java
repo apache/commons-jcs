@@ -1,14 +1,22 @@
 package org.apache.jcs.auxiliary.disk.jdbc;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation. Licensed under the Apache
- * License, Version 2.0 (the "License") you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -42,10 +50,10 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * It expects a table created by the following script. The table name is
  * configurable.
  * <p>
- * 
+ *
  * <pre>
  *                       drop TABLE JCS_STORE;
- *                      
+ *
  *                       CREATE TABLE JCS_STORE
  *                       (
  *                       CACHE_KEY                  VARCHAR(250)          NOT NULL,
@@ -59,7 +67,7 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  *                       PRIMARY KEY (CACHE_KEY, REGION)
  *                       );
  * </pre>
- * 
+ *
  * <p>
  * The cleanup thread will delete non eternal items where (now - create time) >
  * max life seconds * 1000

@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.disk.block;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import junit.extensions.ActiveTestSuite;
@@ -37,9 +40,9 @@ public class BlockDiskCacheConcurrentUnitTest
 
     /**
      * Constructor for the TestDiskCache object.
-     * 
+     *
      * @param testName
-     * @throws Exception 
+     * @throws Exception
      */
     public BlockDiskCacheConcurrentUnitTest( String testName ) throws Exception
     {
@@ -48,7 +51,7 @@ public class BlockDiskCacheConcurrentUnitTest
 
     /**
      * Main method passes this test to the text test runner.
-     * 
+     *
      * @param args
      */
     public static void main( String args[] )
@@ -59,9 +62,9 @@ public class BlockDiskCacheConcurrentUnitTest
 
     /**
      * A unit test suite for JUnit
-     * 
+     *
      * @return The test suite
-     * @throws Exception 
+     * @throws Exception
      */
     public static Test suite() throws Exception
     {
@@ -71,7 +74,7 @@ public class BlockDiskCacheConcurrentUnitTest
         JCS.getInstance( "indexedRegion1" ).clear();
         JCS.getInstance( "indexedRegion2" ).clear();
         JCS.getInstance( "indexedRegion3" ).clear();
-        
+
         suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache1" )
         {
             public void runTest()
@@ -122,10 +125,10 @@ public class BlockDiskCacheConcurrentUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
-     * 
+     *
      * @param region
      *            Name of the region to access
-     * 
+     *
      * @exception Exception
      *                If an error occurs
      */
@@ -166,12 +169,12 @@ public class BlockDiskCacheConcurrentUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should spool to disk.
-     * 
+     *
      * @param region
      *            Name of the region to access
      * @param start
      * @param end
-     * 
+     *
      * @exception Exception
      *                If an error occurs
      */

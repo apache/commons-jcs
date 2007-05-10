@@ -1,4 +1,22 @@
 <?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
 
 <document>
 	<properties>
@@ -126,7 +144,7 @@
 			</p>
 			<source>
 				<![CDATA[
-# DEFAULT CACHE REGION   
+# DEFAULT CACHE REGION
 jcs.default=DC
 jcs.default.cacheattributes=
     org.apache.jcs.engine.CompositeCacheAttributes
@@ -144,7 +162,7 @@ jcs.default.elementattributes.IsSpool=true
 jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
 
-# PRE-DEFINED CACHE REGIONS   
+# PRE-DEFINED CACHE REGIONS
 jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes=
     org.apache.jcs.engine.CompositeCacheAttributes
@@ -158,7 +176,7 @@ jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
 jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
 
-# AVAILABLE AUXILIARY CACHES   
+# AVAILABLE AUXILIARY CACHES
 jcs.auxiliary.DC=
     org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
@@ -204,10 +222,10 @@ import org.apache.jcs.access.exception.CacheException;
 . . .
 
     private static final String cacheRegionName = "city";
-    
+
     private JCS cache = null;
-    
-. . . 
+
+. . .
 			// in your constructor you might do this
             try
             {
@@ -215,19 +233,19 @@ import org.apache.jcs.access.exception.CacheException;
             }
             catch ( CacheException e )
             {
-                log.error( "Problem initializing cache for region name [" 
+                log.error( "Problem initializing cache for region name ["
                   + this.getCacheRegionName() + "].", e );
-            }    	
-            
-. . .            		
+            }
 
-            // to get a city out of the cache by id you might do this:	
-            String key = "cityId:" + String.valueOf( id );
-				
-            City city = (City) cache.get( key );	
-			
 . . .
-			
+
+            // to get a city out of the cache by id you might do this:
+            String key = "cityId:" + String.valueOf( id );
+
+            City city = (City) cache.get( key );
+
+. . .
+
             // to put a city object in the cache, you could do this:
             try
             {
@@ -239,9 +257,9 @@ import org.apache.jcs.access.exception.CacheException;
             }
             catch ( CacheException e )
             {
-                 log.error( "Problem putting " 
+                 log.error( "Problem putting "
                    + city + " in the cache, for key " + key, e );
-            }			
+            }
         ]]>
 			</source>
 		</section>

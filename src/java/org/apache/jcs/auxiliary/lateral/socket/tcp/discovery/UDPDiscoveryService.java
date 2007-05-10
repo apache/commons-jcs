@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -21,7 +40,7 @@ import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- * 
+ *
  * This service creates a listener that can create lateral caches and add them
  * to the no wait list.
  * <p>
@@ -29,9 +48,9 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * <p>
  * The sender also broadcasts a request for other caches to broadcast their
  * addresses.
- * 
+ *
  * @author Aaron Smuts
- * 
+ *
  */
 public class UDPDiscoveryService
     implements IShutdownObserver
@@ -65,7 +84,7 @@ public class UDPDiscoveryService
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
     /**
-     * 
+     *
      * @param discoveryAddress
      *            address to multicast to
      * @param discoveryPort
@@ -136,7 +155,7 @@ public class UDPDiscoveryService
      * When a broadcast is received from the UDP Discovery receiver, for each
      * cacheName in the message, the add no wait will be called here. To add a
      * no wait, the facade is looked up for this cache name.
-     * 
+     *
      * @param facade
      * @param cacheName
      * @return true if the facade was not already registered.
@@ -164,7 +183,7 @@ public class UDPDiscoveryService
      * This adds nowaits to a facde for the region name. If the region has no
      * facade, then it is not configured to use the lateral cache, and no facde
      * will be created.
-     * 
+     *
      * @param noWait
      */
     protected void addNoWait( LateralCacheNoWait noWait )
@@ -198,7 +217,7 @@ public class UDPDiscoveryService
      * request for a request. We can respond to our own reques, since a request
      * broadcast is not intended as a connection request. We might want to only
      * send messages, so we would send a request, but never a passive broadcast.
-     * 
+     *
      */
     protected void serviceRequestBroadcast()
     {
@@ -242,7 +261,7 @@ public class UDPDiscoveryService
 
     /**
      * Get all the cache names we have facades for.
-     * 
+     *
      * @return
      */
     protected ArrayList getCacheNames()
@@ -260,16 +279,16 @@ public class UDPDiscoveryService
 
     /**
      * Allows us to set the daemon status on the clockdaemon
-     * 
+     *
      * @author aaronsm
-     * 
+     *
      */
     class MyThreadFactory
         implements ThreadFactory
     {
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
          */
         public Thread newThread( Runnable runner )
@@ -283,7 +302,7 @@ public class UDPDiscoveryService
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.engine.behavior.ShutdownObserver#shutdown()
      */
     public void shutdown()

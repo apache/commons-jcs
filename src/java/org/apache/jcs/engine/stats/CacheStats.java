@@ -1,19 +1,22 @@
 package org.apache.jcs.engine.stats;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
@@ -22,11 +25,11 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * This class stores cache historical and statistics data for a region.
- * 
+ *
  * Only the composite cache knows what the hit count across all auxiliaries is.
- * 
+ *
  * @author aaronsm
- *  
+ *
  */
 public class CacheStats
     extends Stats
@@ -42,7 +45,7 @@ public class CacheStats
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.engine.stats.behavior.ICacheStats#getRegionName()
      */
     public String getRegionName()
@@ -52,7 +55,7 @@ public class CacheStats
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.engine.stats.behavior.ICacheStats#setRegionName(java.lang.String)
      */
     public void setRegionName( String name )
@@ -62,7 +65,7 @@ public class CacheStats
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.engine.stats.behavior.ICacheStats#getAuxiliaryCacheStats()
      */
     public IStats[] getAuxiliaryCacheStats()
@@ -72,7 +75,7 @@ public class CacheStats
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.engine.stats.behavior.ICacheStats#setAuxiliaryCacheStats(org.apache.jcs.engine.stats.behavior.IAuxiliaryCacheStats[])
      */
     public void setAuxiliaryCacheStats( IStats[] stats )
@@ -92,7 +95,7 @@ public class CacheStats
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.jcs.engine.stats.behavior.IStats#setStatElements(org.apache.jcs.engine.stats.behavior.IStatElement[])
      */
     public void setStatElements( IStatElement[] stats )
@@ -102,7 +105,7 @@ public class CacheStats
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     public String toString()

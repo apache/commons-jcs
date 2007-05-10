@@ -1,5 +1,24 @@
 package org.apache.jcs.utils.threadpool;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
@@ -12,7 +31,7 @@ import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
 /**
  * Verify that the manager can create pools as intended by the default and
  * specified file names.
- * 
+ *
  * @author asmuts
  */
 public class ThreadPoolManagerUnitTest
@@ -94,7 +113,7 @@ public class ThreadPoolManagerUnitTest
 
     /**
      * Get a couple pools by name and then see if they are in the list.
-     * 
+     *
      */
     public void testGetPoolNames()
     {
@@ -114,7 +133,7 @@ public class ThreadPoolManagerUnitTest
 
     /**
      * Verify that the wait policy gets set correctly.
-     * 
+     *
      */
     public void testWaitPolicyConfig()
     {
@@ -146,7 +165,7 @@ public class ThreadPoolManagerUnitTest
     /**
      * Verify that if we specify not to use a buffer boundary that we get a
      * linked queue.
-     * 
+     *
      */
     public void testNoBoundary()
     {
@@ -161,7 +180,7 @@ public class ThreadPoolManagerUnitTest
 
         assertTrue( "Should have a linked queue and not a bounded buffer.", pool.getQueue() instanceof LinkedQueue );
     }
-    
+
     /**
      * Verify that if we specify useBoundary=true that we get a BoundedBuffer.
      *
@@ -177,9 +196,9 @@ public class ThreadPoolManagerUnitTest
 
         // DO WORK
         ThreadPool pool = mgr.getPool( "withbound" );
-        
+
         // VERIFY
         assertNotNull( "Should have gotten back a pool.", pool );
         assertTrue( "Should have a BoundedBuffer and not a linked queue.", pool.getQueue() instanceof BoundedBuffer );
-    }    
+    }
 }

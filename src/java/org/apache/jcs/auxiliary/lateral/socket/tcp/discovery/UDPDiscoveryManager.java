@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,9 +31,9 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * This manages UDPDiscovery Services. We should end up with one service per
  * Lateral Cache Manager Instance. One service works for multiple regions. We
  * don't want a connection for each region.
- * 
+ *
  * @author Aaron Smuts
- * 
+ *
  */
 public class UDPDiscoveryManager
 {
@@ -31,7 +50,7 @@ public class UDPDiscoveryManager
 
     /**
      * Singelton
-     * 
+     *
      * @return UDPDiscoveryManager
      */
     public static UDPDiscoveryManager getInstance()
@@ -41,7 +60,7 @@ public class UDPDiscoveryManager
 
     /**
      * Returns the UDP Discovery service associated with this instance.
-     * 
+     *
      * @param lca
      *            ITCPLateralCacheAttributes
      * @param cacheMgr
@@ -50,7 +69,7 @@ public class UDPDiscoveryManager
     public synchronized UDPDiscoveryService getService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
     {
         UDPDiscoveryService service = getService( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), lca.getTcpListenerPort(), cacheMgr );
-        
+
         // TODO find a way to remote these attributes from the service, the manager needs it on disocvery.
         service.setTcpLateralCacheAttributes( lca );
         return service;
@@ -60,7 +79,7 @@ public class UDPDiscoveryManager
      * Creates a service for the address and port if one doesn't exist already.
      * <p>
      * TODO we may need to key this using the listener port too
-     * 
+     *
      * @param discoveryAddress
      * @param discoveryPort
      * @param servicePort

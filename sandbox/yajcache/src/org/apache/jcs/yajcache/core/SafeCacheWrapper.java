@@ -1,20 +1,23 @@
+package org.apache.jcs.yajcache.core;
 
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.apache.jcs.yajcache.core;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -32,21 +35,21 @@ import org.apache.jcs.yajcache.lang.annotation.*;
  * @author Hanson Char
  */
 @CopyRightApache
-public class SafeCacheWrapper<V> implements ICacheSafe<V> 
+public class SafeCacheWrapper<V> implements ICacheSafe<V>
 {
     /** Underlying cache. */
     private final @NonNullable ICache<V> cache;
-    
+
     private final CacheType cacheType;
-    
-    /** 
-     * Constructs a safe cache by wrapping an underlying cache. 
+
+    /**
+     * Constructs a safe cache by wrapping an underlying cache.
      * @param cache underlying cache.
      */
     public SafeCacheWrapper(@NonNullable ICache<V> cache)
     {
         this.cache = cache;
-        
+
         switch(cache.getCacheType()) {
             case SOFT_REFERENCE:
                 this.cacheType = CacheType.SOFT_REFERENCE_SAFE;
@@ -58,23 +61,23 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
                 throw new AssertionError(this);
         }
     }
-    
+
     // ICache implementation by delegating to the underlying cache.
-    
-    public String getName() { 
-        return this.cache.getName(); 
+
+    public String getName() {
+        return this.cache.getName();
     }
-    public Class<V> getValueType() { 
-        return this.cache.getValueType(); 
+    public Class<V> getValueType() {
+        return this.cache.getValueType();
     }
-    public V get(String key) { 
-        return this.cache.get(key); 
+    public V get(String key) {
+        return this.cache.get(key);
     }
-    public int size() { 
-        return this.cache.size(); 
+    public int size() {
+        return this.cache.size();
     }
     public boolean isEmpty() {
-        return this.cache.isEmpty(); 
+        return this.cache.isEmpty();
     }
     public boolean containsKey(Object key) {
         return this.cache.containsKey(key);
@@ -103,9 +106,9 @@ public class SafeCacheWrapper<V> implements ICacheSafe<V>
     public Set<Map.Entry<String, V>> entrySet() {
         return this.cache.entrySet();
     }
-    
+
     // ICacheSafe implementation
-    
+
     public V getCopy(@NonNullable String key) {
         V val = this.cache.get(key);
         return this.dup(val);

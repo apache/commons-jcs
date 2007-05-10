@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.disk.jdbc;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,9 +33,9 @@ import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Runs basic tests for the JDBC disk cache.
- * 
+ *
  * @author Aaron Smuts
- * 
+ *
  */
 public class JDBCDiskCacheShrinkUnitTest
     extends TestCase
@@ -24,7 +43,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
     /**
      * Test setup
-     * 
+     *
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
      * @throws InstantiationException
@@ -55,7 +74,7 @@ public class JDBCDiskCacheShrinkUnitTest
     /**
      * Test the basic JDBC disk cache functionality with a hsql backing. Verify
      * that items configured to expire after 1 second actually expire.
-     * 
+     *
      * @throws Exception
      */
     public void testExpireInBackground()
@@ -91,7 +110,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
     /**
      * Verify that those not scheduled to expire do not expire.
-     * 
+     *
      * @throws CacheException
      * @throws InterruptedException
      */
@@ -144,7 +163,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
     /**
      * Verify that eternal trumps max life.
-     * 
+     *
      * @throws CacheException
      * @throws InterruptedException
      */
@@ -193,11 +212,11 @@ public class JDBCDiskCacheShrinkUnitTest
         {
             assertNull( "Removed key should be null: " + i + ":key", jcs.get( i + ":key" ) );
         }
-    }    
-    
+    }
+
     /**
      * SETUP TABLE FOR CACHE
-     * 
+     *
      * @param cConn
      */
     void setupTABLE( Connection cConn )
@@ -213,7 +232,7 @@ public class JDBCDiskCacheShrinkUnitTest
         createSql.append( "CREATE_TIME           DATE, " );
         createSql.append( "CREATE_TIME_SECONDS   BIGINT, " );
         createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
-        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );                
+        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
         createSql.append( "IS_ETERNAL            CHAR(1), " );
         createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
         createSql.append( ");" );

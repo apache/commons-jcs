@@ -1,19 +1,22 @@
 package org.apache.jcs.auxiliary.lateral.javagroups;
 
 /*
- * Copyright 2002-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import java.io.IOException;
@@ -39,7 +42,7 @@ import org.jgroups.util.RspList;
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet
  * repair structure, so it is significant;y different.
- * 
+ *
  * @version $Id: LateralJGSender.java 240226 2005-08-26 12:47:59Z asmuts $
  */
 public class LateralJGSender
@@ -61,7 +64,7 @@ public class LateralJGSender
 
     /**
      * Constructor for the LateralJGSender object
-     * 
+     *
      * @param lca
      * @exception IOException
      */
@@ -74,7 +77,7 @@ public class LateralJGSender
 
     /**
      * Create holder.
-     * 
+     *
      * @exception IOException
      */
     protected void init()
@@ -111,7 +114,7 @@ public class LateralJGSender
 
     /**
      * Sends commands to the lateral cache listener.
-     * 
+     *
      * @param led
      * @exception IOException
      */
@@ -143,7 +146,7 @@ public class LateralJGSender
 
     /**
      * Sends commands to the lateral cache listener and gets a response.
-     * 
+     *
      * @return
      * @param led
      * @exception IOException
@@ -205,7 +208,7 @@ public class LateralJGSender
     // Service Methods //
     /**
      * Description of the Method
-     * 
+     *
      * @param item
      * @param requesterId
      * @exception IOException
@@ -221,7 +224,7 @@ public class LateralJGSender
 
     /**
      * Description of the Method
-     * 
+     *
      * @param cacheName
      * @param key
      * @exception IOException
@@ -234,7 +237,7 @@ public class LateralJGSender
 
     /**
      * Description of the Method
-     * 
+     *
      * @param cacheName
      * @param key
      * @param requesterId
@@ -252,7 +255,7 @@ public class LateralJGSender
 
     /**
      * Description of the Method
-     * 
+     *
      * @exception IOException
      */
     public void release()
@@ -266,7 +269,7 @@ public class LateralJGSender
      * conneciton. Dispose request should come into the facade and be sent to
      * all lateral cache sevices. The lateral cache service will then call this
      * method.
-     * 
+     *
      * @param cache
      * @exception IOException
      */
@@ -278,7 +281,7 @@ public class LateralJGSender
 
     /**
      * Description of the Method
-     * 
+     *
      * @param cacheName
      * @exception IOException
      */
@@ -290,7 +293,7 @@ public class LateralJGSender
 
     /**
      * Description of the Method
-     * 
+     *
      * @param cacheName
      * @param requesterId
      * @exception IOException

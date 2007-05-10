@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
@@ -14,9 +33,9 @@ import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.
- * 
+ *
  * @author Aaron Smuts
- *  
+ *
  */
 public class TestTCPLateralUnitTest
     extends TestCase
@@ -76,7 +95,7 @@ public class TestTCPLateralUnitTest
     }
 
     /**
-     * 
+     *
      * @throws Exception
      */
     public void testReceive()
@@ -98,7 +117,7 @@ public class TestTCPLateralUnitTest
         //nowait1.update( );
 
         // start the listener
-        //LateralTCPListener listener = (LateralTCPListener) 
+        //LateralTCPListener listener = (LateralTCPListener)
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
@@ -138,7 +157,7 @@ public class TestTCPLateralUnitTest
 
         // get the listener started
         // give it our mock cache manager
-        //LateralTCPListener listener = (LateralTCPListener) 
+        //LateralTCPListener listener = (LateralTCPListener)
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         // setup a service to talk to the listener started above.
@@ -164,7 +183,7 @@ public class TestTCPLateralUnitTest
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
 
-    
+
     /**
      * Send objects with the same key but different values.
      * @throws Exception
@@ -180,7 +199,7 @@ public class TestTCPLateralUnitTest
 
         // get the listener started
         // give it our mock cache manager
-        //LateralTCPListener listener = (LateralTCPListener) 
+        //LateralTCPListener listener = (LateralTCPListener)
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
@@ -206,7 +225,7 @@ public class TestTCPLateralUnitTest
         System.out.println( "cacheElement = " + cacheElement );
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
-    
+
     /**
      * Create a listener.  Add an element to the listeners cache.  Setup a service.  Try to get from the service.
      * <p>
@@ -223,13 +242,13 @@ public class TestTCPLateralUnitTest
 
         // get the listener started
         // give it our mock cache manager
-        //LateralTCPListener listener = (LateralTCPListener) 
+        //LateralTCPListener listener = (LateralTCPListener)
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         // add the item to the listeners cache
         ICacheElement element = new CacheElement( "test", "key", "value1" );
         cacheMgr.getCache().update( element );
-                
+
         // setup a service to talk to the listener started above.
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1108 );
@@ -246,5 +265,5 @@ public class TestTCPLateralUnitTest
         System.out.println( "testSendAndReceived, result = " + result );
         assertNotNull( "Result should not be null.", result );
         assertEquals( "Didn't get the correct object", element.getVal(), result.getVal() );
-    }    
+    }
 }

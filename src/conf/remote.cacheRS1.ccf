@@ -1,5 +1,21 @@
-##############################################################
-################## REMOTE SERVER CONFIG  RS1 #################
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# #############################################################
+# ################# REMOTE SERVER CONFIG  RS1 #################
 # Registry used to register and provide the IRmiCacheService service.
 registry.host=localhost
 registry.port=1101
@@ -9,8 +25,8 @@ remote.cache.service.port=1101
 remote.cluster.LocalClusterConsistency=true
 
 
-##############################################################
-################## DEFAULT CACHE REGION  #####################
+# #############################################################
+# ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=DC,RCluster
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -28,8 +44,8 @@ jcs.default.elementattributes.IsRemote=true
 jcs.default.elementattributes.IsLateral=true
 
 
-##############################################################
-################## CACHE REGIONS AVAILABLE ###################
+# #############################################################
+# ################# CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
 jcs.region.testCache1=DC,RCluster
 jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
@@ -47,8 +63,8 @@ jcs.region.testCache1.elementattributes.IsRemote=true
 jcs.region.testCache1.elementattributes.IsSpool=true
 
 
-##############################################################
-################## AUXILIARY CACHES AVAILABLE ################
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
 # Primary Disk Cache-- faster than the rest because of memory key storage
 jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
@@ -58,7 +74,7 @@ jcs.auxiliary.DC.attributes.MaxKeySize=500000
 jcs.auxiliary.DC.attributes.MaxRecycleBinSize=50000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=-1
 
-# RS2 SERVER to update for clustering 
+# RS2 SERVER to update for clustering
 jcs.auxiliary.RCluster=org.apache.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RCluster.attributes=org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RCluster.attributes.RemoteTypeName=CLUSTER
