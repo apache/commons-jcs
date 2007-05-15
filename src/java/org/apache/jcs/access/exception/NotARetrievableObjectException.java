@@ -20,15 +20,15 @@ package org.apache.jcs.access.exception;
  */
 
 /**
- * This would be thrown if the object could not be retrieved from a method that
- * throws exceptions rather than null.
+ * This would be thrown if the object could not be retrieved from a method that throws exceptions
+ * rather than null.
  * <p>
  * TODO check to see if we can get rid of this.
  */
 public class NotARetrievableObjectException
     extends CacheException
 {
-
+    /** Don't change. */
     private static final long serialVersionUID = 4501711027054012410L;
 
     /** Constructor for the NotARetrievableObjectException object */
@@ -39,7 +39,7 @@ public class NotARetrievableObjectException
 
     /**
      * Constructor for the NotARetrievableObjectException object
-     *
+     * <p>
      * @param message
      */
     public NotARetrievableObjectException( String message )

@@ -24,13 +24,13 @@ package org.apache.jcs.access.exception;
  * <p>
  * TODO see if we can remove this.
  * <p>
- * This is thrown from the composite cache if you as for the element attributes
- * and the element does not exist.
+ * This is thrown from the composite cache if you as for the element attributes and the element does
+ * not exist.
  */
 public class ObjectNotFoundException
     extends CacheException
 {
-
+    /** Don't change. */
     private static final long serialVersionUID = 5684353421076546842L;
 
     /** Constructor for the ObjectNotFoundException object */

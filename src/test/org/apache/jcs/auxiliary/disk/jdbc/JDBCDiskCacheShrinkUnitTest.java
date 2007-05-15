@@ -33,9 +33,8 @@ import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Runs basic tests for the JDBC disk cache.
- *
+ * <p>
  * @author Aaron Smuts
- *
  */
 public class JDBCDiskCacheShrinkUnitTest
     extends TestCase
@@ -43,7 +42,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
     /**
      * Test setup
-     *
+     * <p>
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
      * @throws InstantiationException
@@ -60,7 +59,7 @@ public class JDBCDiskCacheShrinkUnitTest
         Properties p = new Properties();
         String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
         String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        String database = p.getProperty( "database", rafroot + "/cache_hsql_db" );
+        String database = p.getProperty( "database", rafroot + "/JDBCDiskCacheShrinkUnitTest" );
         String user = p.getProperty( "user", "sa" );
         String password = p.getProperty( "password", "" );
 
@@ -72,9 +71,9 @@ public class JDBCDiskCacheShrinkUnitTest
     }
 
     /**
-     * Test the basic JDBC disk cache functionality with a hsql backing. Verify
-     * that items configured to expire after 1 second actually expire.
-     *
+     * Test the basic JDBC disk cache functionality with a hsql backing. Verify that items
+     * configured to expire after 1 second actually expire.
+     * <p>
      * @throws Exception
      */
     public void testExpireInBackground()
@@ -110,7 +109,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
     /**
      * Verify that those not scheduled to expire do not expire.
-     *
+     * <p>
      * @throws CacheException
      * @throws InterruptedException
      */
@@ -163,7 +162,6 @@ public class JDBCDiskCacheShrinkUnitTest
 
     /**
      * Verify that eternal trumps max life.
-     *
      * @throws CacheException
      * @throws InterruptedException
      */
@@ -216,7 +214,6 @@ public class JDBCDiskCacheShrinkUnitTest
 
     /**
      * SETUP TABLE FOR CACHE
-     *
      * @param cConn
      */
     void setupTABLE( Connection cConn )

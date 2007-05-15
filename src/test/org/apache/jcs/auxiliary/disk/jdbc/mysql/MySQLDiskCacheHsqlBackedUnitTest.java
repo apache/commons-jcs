@@ -61,7 +61,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         Properties p = new Properties();
         String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
         String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        String database = p.getProperty( "database", rafroot + "/cache_hsql_db" );
+        String database = p.getProperty( "database", rafroot + "/MySQLDiskCacheHsqlBackedUnitTest" );
         String user = p.getProperty( "user", "sa" );
         String password = p.getProperty( "password", "" );
 

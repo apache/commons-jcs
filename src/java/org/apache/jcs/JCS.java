@@ -26,27 +26,25 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
- * Simple class for using JCS. To use JCS in your application, you can use the
- * static methods of this class to get access objects (instances of this class)
- * for your cache regions. Ideally this class should be all you need to import
- * to use JCS. One JCS should be created for each region you want to access. If
- * you have several regions, then get instances for each. For best performance
+ * Simple class for using JCS. To use JCS in your application, you can use the static methods of
+ * this class to get access objects (instances of this class) for your cache regions. Ideally this
+ * class should be all you need to import to use JCS. One JCS should be created for each region you
+ * want to access. If you have several regions, then get instances for each. For best performance
  * the getInstance call should be made in an initialization method.
- *
- * @version $Id$
  */
 public class JCS
     extends GroupCacheAccess
 {
+    /** cache.ccf alternative. */
     private static String configFilename = null;
 
+    /** The manager returns cache instances. */
     private static CompositeCacheManager cacheMgr;
 
     /**
      * Protected constructor for use by the static factory methods.
-     *
-     * @param cacheControl
-     *            Cache which the instance will provide access to
+     * <p>
+     * @param cacheControl Cache which the instance will provide access to
      */
     protected JCS( CompositeCache cacheControl )
     {
@@ -55,9 +53,8 @@ public class JCS
 
     /**
      * Get a JCS which accesses the provided region.
-     *
-     * @param region
-     *            Region that return JCS will provide access to
+     * <p>
+     * @param region Region that return JCS will provide access to
      * @return A JCS which provides access to a given region.
      * @exception CacheException
      */
@@ -71,11 +68,9 @@ public class JCS
 
     /**
      * Get a JCS which accesses the provided region.
-     *
-     * @param region
-     *            Region that return JCS will provide access to
-     * @param icca
-     *            CacheAttributes for region
+     * <p>
+     * @param region Region that return JCS will provide access to
+     * @param icca CacheAttributes for region
      * @return A JCS which provides access to a given region.
      * @exception CacheException
      */
@@ -88,10 +83,9 @@ public class JCS
     }
 
     /**
-     * Gets an instance of CompositeCacheManager and stores it in the cacheMgr
-     * class field, if it is not already set. Unlike the implementation in
-     * CacheAccess, the cache manager is a CompositeCacheManager. NOTE: This can
-     * will be moved up into GroupCacheAccess.
+     * Gets an instance of CompositeCacheManager and stores it in the cacheMgr class field, if it is
+     * not already set. Unlike the implementation in CacheAccess, the cache manager is a
+     * CompositeCacheManager. NOTE: This can will be moved up into GroupCacheAccess.
      */
     protected static synchronized void ensureCacheManager()
     {
@@ -111,9 +105,9 @@ public class JCS
     }
 
     /**
-     * Set the filename that the cache manager will be initialized with. Only
-     * matters before the instance is initialized.
-     *
+     * Set the filename that the cache manager will be initialized with. Only matters before the
+     * instance is initialized.
+     * <p>
      * @param configFilename
      */
     public static void setConfigFilename( String configFilename )

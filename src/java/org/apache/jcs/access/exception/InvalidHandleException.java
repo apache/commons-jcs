@@ -25,7 +25,7 @@ package org.apache.jcs.access.exception;
 public class InvalidHandleException
     extends CacheException
 {
-
+    /** Don't change. */
     private static final long serialVersionUID = -5947822454839845924L;
 
     /** Constructor for the InvalidHandleException object */
@@ -36,7 +36,8 @@ public class InvalidHandleException
     }
 
     /**
-     * Constructor for the InvalidHandleException object
+     * Constructor for the InvalidHandleException object.
+     * <p>
      * @param message
      */
     public InvalidHandleException( String message )

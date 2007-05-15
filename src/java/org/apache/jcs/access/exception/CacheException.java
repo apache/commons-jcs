@@ -26,9 +26,8 @@ package org.apache.jcs.access.exception;
  */
 public class CacheException
     extends Exception
-// extends NestableException
 {
-
+    /** Don't change. */
     private static final long serialVersionUID = 8725795372935590265L;
 
     /**

@@ -30,6 +30,7 @@ import org.apache.xmlrpc.WebServer;
  */
 public class MonitorXMLRPCServer
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( MonitorXMLRPCServer.class );
 
     /**

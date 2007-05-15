@@ -21,11 +21,11 @@ package org.apache.jcs.access.exception;
 
 /**
  * Description of the Class
- *
  */
 public class NullObjectException
     extends CacheException
 {
+    /** Don't change. */
     private static final long serialVersionUID = 827922769279844194L;
 
     /** Constructor for the NullObjectException object */
@@ -35,8 +35,8 @@ public class NullObjectException
     }
 
     /**
-     * Constructor for the NullObjectException object
-     *
+     * Constructor for the NullObjectException object.
+     * <p>
      * @param message
      */
     public NullObjectException( String message )

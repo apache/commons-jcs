@@ -40,17 +40,18 @@ import org.apache.jcs.engine.stats.behavior.ICacheStats;
 /**
  * This class provides an interface for all types of access to the cache.
  * <p>
- * An instance of this class is tied to a specific cache region. Static methods
- * are provided to get such instances.
+ * An instance of this class is tied to a specific cache region. Static methods are provided to get
+ * such instances.
  * <p>
- * Using this class you can retrieve an item, the items wrapper, the element
- * configuration, put an item in the cache, remove an item, and clear a region.
+ * Using this class you can retrieve an item, the items wrapper, the element configuration, put an
+ * item in the cache, remove an item, and clear a region.
  * <p>
  * The JCS class is the prefered way to access these methods.
  */
 public class CacheAccess
     implements ICacheAccess
 {
+    /** The logger. */
     private static final Log log = LogFactory.getLog( CacheAccess.class );
 
     /**
@@ -68,8 +69,7 @@ public class CacheAccess
     /**
      * Constructor for the CacheAccess object.
      * <p>
-     * @param cacheControl
-     *            The cache which the created instance accesses
+     * @param cacheControl The cache which the created instance accesses
      */
     public CacheAccess( CompositeCache cacheControl )
     {
@@ -79,16 +79,13 @@ public class CacheAccess
     // ----------------------------- static methods for access to cache regions
 
     /**
-     * Define a new cache region with the given name. In the oracle
-     * specification, these attributes are global and not region specific,
-     * regional overirdes is a value add each region should be able to house
-     * both cache and element attribute sets. It is more efficient to define a
-     * cache in the props file and then strictly use the get access method. Use
-     * of the define region outside of an initialization block should be
-     * avoided.
+     * Define a new cache region with the given name. In the oracle specification, these attributes
+     * are global and not region specific, regional overirdes is a value add each region should be
+     * able to house both cache and element attribute sets. It is more efficient to define a cache
+     * in the props file and then strictly use the get access method. Use of the define region
+     * outside of an initialization block should be avoided.
      * <p>
-     * @param name
-     *            Name that will identify the region
+     * @param name Name that will identify the region
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
@@ -103,10 +100,8 @@ public class CacheAccess
     /**
      * Define a new cache region with the specified name and attributes.
      * <p>
-     * @param name
-     *            Name that will identify the region
-     * @param cattr
-     *            CompositeCacheAttributes for the region
+     * @param name Name that will identify the region
+     * @param cattr CompositeCacheAttributes for the region
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
@@ -119,15 +114,12 @@ public class CacheAccess
     }
 
     /**
-     * Define a new cache region with the specified name and attributes and
-     * return a CacheAccess to it.
+     * Define a new cache region with the specified name and attributes and return a CacheAccess to
+     * it.
      * <p>
-     * @param name
-     *            Name that will identify the region
-     * @param cattr
-     *            CompositeCacheAttributes for the region
-     * @param attr
-     *            Attributes for the region
+     * @param name Name that will identify the region
+     * @param cattr CompositeCacheAttributes for the region
+     * @param attr Attributes for the region
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
@@ -142,8 +134,7 @@ public class CacheAccess
     /**
      * Get a CacheAccess instance for the given region.
      * <p>
-     * @param region
-     *            Name that identifies the region
+     * @param region Name that identifies the region
      * @return CacheAccess instance for region
      * @exception CacheException
      */
@@ -156,11 +147,9 @@ public class CacheAccess
     }
 
     /**
-     * Get a CacheAccess instance for the given region with the given
-     * attributes.
+     * Get a CacheAccess instance for the given region with the given attributes.
      * <p>
-     * @param region
-     *            Name that identifies the region
+     * @param region Name that identifies the region
      * @param icca
      * @return CacheAccess instance for region
      * @exception CacheException
@@ -174,8 +163,8 @@ public class CacheAccess
     }
 
     /**
-     * Helper method which checks to make sure the cacheMgr class field is set,
-     * and if not requests an instance from CacheManagerFactory.
+     * Helper method which checks to make sure the cacheMgr class field is set, and if not requests
+     * an instance from CacheManagerFactory.
      */
     protected static void ensureCacheManager()
     {
@@ -191,11 +180,9 @@ public class CacheAccess
     // ------------------------------------------------------- instance methods
 
     /**
-     * Retrieve an object from the cache region this instance provides access
-     * to.
+     * Retrieve an object from the cache region this instance provides access to.
      * <p>
-     * @param name
-     *            Key the object is stored as
+     * @param name Key the object is stored as
      * @return The object if found or null
      */
     public Object get( Object name )
@@ -206,19 +193,18 @@ public class CacheAccess
     }
 
     /**
-     * This method returns the ICacheElement wrapper which provides access to
-     * element info and other attributes.
+     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * attributes.
      * <p>
-     * This returns a reference to the wrapper. Any modifications will be
-     * reflected in the cache. No defensive copy is made.
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
      * <p>
-     * This method is most useful if you want to determine things such as the
-     * how long the element has been in the cache.
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
      * <p>
      * The last access time in teh ElementAttributes should be current.
      * <p>
-     * @param name
-     *            Key the object is stored as
+     * @param name Key the object is stored as
      * @return The ICacheElement if the object is found or null
      */
     public ICacheElement getCacheElement( Object name )
@@ -227,18 +213,14 @@ public class CacheAccess
     }
 
     /**
-     * Place a new object in the cache, associated with key name. If there is
-     * currently an object associated with name in the region an
-     * ObjectExistsException is thrown. Names are scoped to a region so they
-     * must be unique within the region they are placed.
+     * Place a new object in the cache, associated with key name. If there is currently an object
+     * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a
+     * region so they must be unique within the region they are placed.
      * <p>
-     * @param key
-     *            Key object will be stored with
-     * @param value
-     *            Object to store
-     * @exception CacheException
-     *                and ObjectExistsException is thrown if the item is already
-     *                in the cache.
+     * @param key Key object will be stored with
+     * @param value Object to store
+     * @exception CacheException and ObjectExistsException is thrown if the item is already in the
+     *                cache.
      */
     public void putSafe( Object key, Object value )
         throws CacheException
@@ -252,14 +234,11 @@ public class CacheAccess
     }
 
     /**
-     * Place a new object in the cache, associated with key name. If there is
-     * currently an object associated with name in the region it is replaced.
-     * Names are scoped to a region so they must be unique within the region
-     * they are placed. ObjectExistsException
-     * @param name
-     *            Key object will be stored with
-     * @param obj
-     *            Object to store
+     * Place a new object in the cache, associated with key name. If there is currently an object
+     * associated with name in the region it is replaced. Names are scoped to a region so they must
+     * be unique within the region they are placed. ObjectExistsException
+     * @param name Key object will be stored with
+     * @param obj Object to store
      * @exception CacheException
      */
     public void put( Object name, Object obj )
@@ -271,13 +250,12 @@ public class CacheAccess
     }
 
     /**
-     * Constructs a cache element with these attribures, and puts it into the
-     * cache.
+     * Constructs a cache element with these attribures, and puts it into the cache.
      * <p>
      * If the key or the value is null, and InvalidArgumentException is thrown.
      * <p>
-     * @see org.apache.jcs.access.behavior.ICacheAccess#put(java.lang.Object,
-     *      java.lang.Object, org.apache.jcs.engine.behavior.IElementAttributes)
+     * @see org.apache.jcs.access.behavior.ICacheAccess#put(java.lang.Object, java.lang.Object,
+     *      org.apache.jcs.engine.behavior.IElementAttributes)
      */
     public void put( Object key, Object val, IElementAttributes attr )
         throws CacheException
@@ -309,8 +287,8 @@ public class CacheAccess
     }
 
     /**
-     * Destory the region and all objects within it. After calling this method,
-     * the Cache object can no longer be used as it will be closed.
+     * Destory the region and all objects within it. After calling this method, the Cache object can
+     * no longer be used as it will be closed.
      * <p>
      * @exception CacheException
      * @deprecated
@@ -359,11 +337,10 @@ public class CacheAccess
     }
 
     /**
-     * Invalidate all objects associated with key name, removing all references
-     * to the objects from the cache.
+     * Invalidate all objects associated with key name, removing all references to the objects from
+     * the cache.
      * <p>
-     * @param name
-     *            Key that specifies object to invalidate
+     * @param name Key that specifies object to invalidate
      * @exception CacheException
      * @deprecated use remove
      */
@@ -376,8 +353,7 @@ public class CacheAccess
     /**
      * Removes a single item by name.
      * <p>
-     * @param name,
-     *            the name of the item to remove.
+     * @param name the name of the item to remove.
      * @throws CacheException
      */
     public void remove( Object name )
@@ -387,24 +363,22 @@ public class CacheAccess
     }
 
     /**
-     * ResetAttributes allows for some of the attributes of a region to be reset
-     * in particular expiration time attriubtes, time to live, default time to
-     * live and idle time, and event handlers. Changing default settings on
-     * groups and regions will not affect existing objects. Only object loaded
-     * after the reset will use the new defaults. If no name argument is
+     * ResetAttributes allows for some of the attributes of a region to be reset in particular
+     * expiration time attriubtes, time to live, default time to live and idle time, and event
+     * handlers. Changing default settings on groups and regions will not affect existing objects.
+     * Only object loaded after the reset will use the new defaults. If no name argument is
      * provided, the reset is applied to the region.
      * <p>
-     * NOTE: this method is does not reset the attributes for items already in
-     * the cache. It could potentially do this for items in memory, and maybe on
-     * disk (which would be slow) but not remote items. Rather than have
-     * unpredicatble behavior, this method just sets the default attributes.
+     * NOTE: this method is does not reset the attributes for items already in the cache. It could
+     * potentially do this for items in memory, and maybe on disk (which would be slow) but not
+     * remote items. Rather than have unpredicatble behavior, this method just sets the default
+     * attributes.
      * <p>
      * TODO is should be renamed "setDefaultElementAttributes"
      * <p>
      * @deprecated As of release 1.3
      * @see setDefaultElementAttributes
-     * @param attr
-     *            New attributes for this region.
+     * @param attr New attributes for this region.
      * @exception CacheException
      * @exception InvalidHandleException
      */
@@ -415,17 +389,14 @@ public class CacheAccess
     }
 
     /**
-     * This method is does not reset the attributes for items already in the
-     * cache. It could potentially do this for items in memory, and maybe on
-     * disk (which would be slow) but not remote items. Rather than have
-     * unpredicatble behavior, this method just sets the default attributes.
-     * Items subsequently put into the cache will use these defaults if they do
-     * not specify specific attributes.
+     * This method is does not reset the attributes for items already in the cache. It could
+     * potentially do this for items in memory, and maybe on disk (which would be slow) but not
+     * remote items. Rather than have unpredicatble behavior, this method just sets the default
+     * attributes. Items subsequently put into the cache will use these defaults if they do not
+     * specify specific attributes.
      * <p>
-     * @param attr
-     *            the default attributes.
-     * @throws CacheException
-     *             if something goes wrong.
+     * @param attr the default attributes.
+     * @throws CacheException if something goes wrong.
      */
     public void setDefaultElementAttributes( IElementAttributes attr )
         throws CacheException
@@ -434,16 +405,13 @@ public class CacheAccess
     }
 
     /**
-     * Reset attributes for a particular element in the cache. NOTE: this method
-     * is currently not implemented.
+     * Reset attributes for a particular element in the cache. NOTE: this method is currently not
+     * implemented.
      * <p>
-     * @param name
-     *            Key of object to reset attributes for
-     * @param attr
-     *            New attributes for the object
+     * @param name Key of object to reset attributes for
+     * @param attr New attributes for the object
      * @exception CacheException
-     * @exception InvalidHandleException
-     *                if the item does not exist.
+     * @exception InvalidHandleException if the item does not exist.
      */
     public void resetElementAttributes( Object name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
@@ -463,8 +431,8 @@ public class CacheAccess
     }
 
     /**
-     * GetElementAttributes will return an attribute object describing the
-     * current attributes associated with the object name.
+     * GetElementAttributes will return an attribute object describing the current attributes
+     * associated with the object name.
      * <p>
      * This was confusing, so I created a new method with a clear name.
      * <p>
@@ -480,11 +448,11 @@ public class CacheAccess
     }
 
     /**
-     * Retrieves A COPY OF the default element attributes used by this region.
-     * This does not provide a reference to the element attributes.
+     * Retrieves A COPY OF the default element attributes used by this region. This does not provide
+     * a reference to the element attributes.
      * <p>
-     * Each time an element is added to the cache without element attributes,
-     * the default element attributes are cloned.
+     * Each time an element is added to the cache without element attributes, the default element
+     * attributes are cloned.
      * <p>
      * @return the deafualt element attributes used by this region.
      * @throws CacheException
@@ -496,12 +464,11 @@ public class CacheAccess
     }
 
     /**
-     * GetElementAttributes will return an attribute object describing the
-     * current attributes associated with the object name. The name object must
-     * override the Object.equals and Object.hashCode methods.
+     * GetElementAttributes will return an attribute object describing the current attributes
+     * associated with the object name. The name object must override the Object.equals and
+     * Object.hashCode methods.
      * <p>
-     * @param name
-     *            Key of object to get attributes for
+     * @param name Key of object to get attributes for
      * @return Attributes for the object, null if object not in cache
      * @exception CacheException
      */
@@ -523,8 +490,7 @@ public class CacheAccess
     }
 
     /**
-     * This returns the ICacheStats object with information on this region and
-     * its auxiliaries.
+     * This returns the ICacheStats object with information on this region and its auxiliaries.
      * <p>
      * This data can be formatted as needed.
      * <p>
@@ -544,8 +510,8 @@ public class CacheAccess
     }
 
     /**
-     * Dispose this region. Flushes objects to and closes auxiliary caches. This
-     * is a shutdown command!
+     * Dispose this region. Flushes objects to and closes auxiliary caches. This is a shutdown
+     * command!
      * <p>
      * To simply remove all elements from the region use clear().
      */
@@ -557,8 +523,8 @@ public class CacheAccess
     /**
      * Gets the ICompositeCacheAttributes of the cache region.
      * <p>
-     * @return ICompositeCacheAttributes, the controllers config info, defined
-     *         in the top section of a region definition.
+     * @return ICompositeCacheAttributes, the controllers config info, defined in the top section of
+     *         a region definition.
      */
     public ICompositeCacheAttributes getCacheAttributes()
     {
@@ -568,8 +534,7 @@ public class CacheAccess
     /**
      * Sets the ICompositeCacheAttributes of the cache region.
      * <p>
-     * @param cattr
-     *            The new ICompositeCacheAttribute value
+     * @param cattr The new ICompositeCacheAttribute value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
@@ -577,14 +542,13 @@ public class CacheAccess
     }
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i>
-     * according to its eviction policy. For example, the LRUMemoryCache will
-     * remove the <i>numberToFree</i> least recently used items. These will be
-     * spooled to disk if a disk auxiliary is available.
+     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
      * <p>
      * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are
-     *         only 3, you will get 3.
+     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
      * @throws CacheException
      */
     public int freeMemoryElements( int numberToFree )

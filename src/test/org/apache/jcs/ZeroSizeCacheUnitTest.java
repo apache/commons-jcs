@@ -29,11 +29,13 @@ import junit.framework.TestCase;
 public class ZeroSizeCacheUnitTest
     extends TestCase
 {
-
+    /** number to get each loop */
     private static int items = 20000;
 
     /**
      * Test setup
+     * <p>
+     * @throws Exception 
      */
     public void setUp()
         throws Exception
@@ -90,7 +92,5 @@ public class ZeroSizeCacheUnitTest
         }
 
         System.out.println( jcs.getStats() );
-
     }
-
 }

@@ -24,6 +24,7 @@ package org.apache.jcs.utils.timing;
  */
 public class ElapsedTimer
 {
+    /** display suffix describing the unit of measure. */
     private static final String SUFFIX = "ms.";
 
     /**
@@ -35,7 +36,7 @@ public class ElapsedTimer
      * Gets the time elapsed between the start time and now. The start time is reset to now.
      * Subsequent calls will get the time between then and now.
      * <p>
-     * @return
+     * @return the elapsed time
      */
     public long getElapsedTime()
     {

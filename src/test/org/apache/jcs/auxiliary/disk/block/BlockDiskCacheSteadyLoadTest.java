@@ -37,10 +37,13 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
 public class BlockDiskCacheSteadyLoadTest
     extends TestCase
 {
+    /** String for separating log entries. */
     private static final String LOG_DIVIDER = "---------------------------";
 
+    /** the runtime. */
     private static Runtime rt = Runtime.getRuntime();
 
+    /** The decimal format to use int he logs. */
     private static DecimalFormat format = new DecimalFormat( "#,###" );
 
     /**

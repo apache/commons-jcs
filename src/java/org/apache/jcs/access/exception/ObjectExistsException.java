@@ -20,20 +20,19 @@ package org.apache.jcs.access.exception;
  */
 
 /**
- * The putSafe method on the JCS convenience class throws this exception if the
- * object is already present in the cache.
+ * The putSafe method on the JCS convenience class throws this exception if the object is already
+ * present in the cache.
  * <p>
  * I'm removing this exception from normal use.
  * <p>
- * The overhead of throwing exceptions and the cumbersomeness of coding around
- * exceptions warrants removal. Exceptions like this don't make sense to throw
- * in the course of normal operations to signify a normal and expected
- * condition. Returning null if an object isn't found is sufficient.
+ * The overhead of throwing exceptions and the cumbersomeness of coding around exceptions warrants
+ * removal. Exceptions like this don't make sense to throw in the course of normal operations to
+ * signify a normal and expected condition. Returning null if an object isn't found is sufficient.
  */
 public class ObjectExistsException
     extends CacheException
 {
-
+    /** Don't change. */
     private static final long serialVersionUID = -3779745827993383872L;
 
     /** Constructor for the ObjectExistsException object */

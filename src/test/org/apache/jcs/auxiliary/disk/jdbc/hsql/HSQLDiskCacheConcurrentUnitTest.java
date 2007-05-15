@@ -26,23 +26,19 @@ import junit.framework.TestCase;
 import org.apache.jcs.JCS;
 
 /**
- * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads.
- *
- * @version $Id: TestDiskCache.java 224346 2005-06-04 02:01:59Z asmuts $
+ * Test which exercises the indexed disk cache. This one uses three different regions for thre
+ * threads.
  */
 public class HSQLDiskCacheConcurrentUnitTest
     extends TestCase
 {
     /**
-     * Number of items to cache, twice the configured maxObjects for the memory
-     * cache regions.
+     * Number of items to cache, twice the configured maxObjects for the memory cache regions.
      */
     private static int items = 100;
 
     /**
      * Constructor for the TestDiskCache object.
-     *
      * @param testName
      */
     public HSQLDiskCacheConcurrentUnitTest( String testName )
@@ -52,7 +48,7 @@ public class HSQLDiskCacheConcurrentUnitTest
 
     /**
      * Main method passes this test to the text test runner.
-     *
+     * <p>
      * @param args
      */
     public static void main( String args[] )
@@ -62,8 +58,8 @@ public class HSQLDiskCacheConcurrentUnitTest
     }
 
     /**
-     * A unit test suite for JUnit
-     *
+     * A unit test suite for JUnit. Uses ActiveTestSuite to run multiple tests concurrently.
+     * <p>
      * @return The test suite
      */
     public static Test suite()
@@ -105,18 +101,15 @@ public class HSQLDiskCacheConcurrentUnitTest
      */
     public void setUp()
     {
-        JCS.setConfigFilename( "/TestHSQLDiskCache.ccf" );
+        JCS.setConfigFilename( "/TestHSQLDiskCacheConcurrent.ccf" );
     }
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
-     *
-     * @exception Exception
-     *                If an error occurs
+     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
+     * memory cache, so items should spool to disk.
+     * <p>
+     * @param region Name of the region to access
+     * @exception Exception If an error occurs
      */
     public void runTestForRegion( String region )
         throws Exception

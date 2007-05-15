@@ -20,12 +20,13 @@ package org.apache.jcs.access.exception;
  */
 
 /**
- * InvalidArgumentException is thrown if an argument is passed to the cache that
- * is invalid. For instance, null values passed to put result in this exception.
+ * InvalidArgumentException is thrown if an argument is passed to the cache that is invalid. For
+ * instance, null values passed to put result in this exception.
  */
 public class InvalidArgumentException
     extends CacheException
 {
+    /** Don't change. */
     private static final long serialVersionUID = -6058373692208755562L;
 
     /** Constructor for the InvalidArgumentException object */
@@ -35,7 +36,8 @@ public class InvalidArgumentException
     }
 
     /**
-     * Constructor for the InvalidArgumentException object
+     * Constructor for the InvalidArgumentException object.
+     * <p>
      * @param message
      */
     public InvalidArgumentException( String message )

@@ -25,10 +25,8 @@ import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
 
 /**
- * Test which exercises the indexed disk cache. This one uses three different
- * regions for thre threads.
- *
- * @version $Id: TestDiskCache.java 224346 2005-06-04 02:01:59Z asmuts $
+ * Test which exercises the indexed disk cache. This one uses three different regions for thre
+ * threads.
  */
 public class HSQLDiskCacheUnitTest
     extends TestCase
@@ -42,21 +40,18 @@ public class HSQLDiskCacheUnitTest
     }
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
-     *
-     * @exception Exception
-     *                If an error occurs
+     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
+     * memory cache, so items should spool to disk.
+     * <p>
+     * @param region Name of the region to access
+     * @exception Exception If an error occurs
      */
     public void testBasicPutRemove()
         throws Exception
     {
         int items = 20;
 
-        String region = "testCache";
+        String region = "testBasicPutRemove";
 
         JCS jcs = JCS.getInstance( region );
 
@@ -67,11 +62,9 @@ public class HSQLDiskCacheUnitTest
             jcs.put( i + ":key", region + " data " + i );
         }
 
+        //SleepUtil.sleepAtLeast( 1000 );
+
         System.out.println( jcs.getStats() );
-
-        // Thread.sleep( 1000 );
-
-        // System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
 
@@ -99,10 +92,9 @@ public class HSQLDiskCacheUnitTest
 
     /**
      * Verify that remove all work son a region where it is not prohibited.
-     *
+     * <p>
      * @throws CacheException
      * @throws InterruptedException
-     *
      */
     public void testRemoveAll()
         throws CacheException, InterruptedException
@@ -120,10 +112,11 @@ public class HSQLDiskCacheUnitTest
         }
 
         // a db thread could be updating when we call remove all?
-        // there was a race on remove all, an element may be put to disk after it is called even though the put
+        // there was a race on remove all, an element may be put to disk after it is called even
+        // though the put
         // was called before clear.
         // I discovered it and removed it.
-        //Thread.sleep( 500 );
+        // Thread.sleep( 500 );
 
         System.out.println( jcs.getStats() );
 
@@ -133,16 +126,15 @@ public class HSQLDiskCacheUnitTest
         {
             String value = (String) jcs.get( i + ":key" );
 
-            assertNull( "value should be null key = [" + i + ":key] value = [" + value + "]",  value );
+            assertNull( "value should be null key = [" + i + ":key] value = [" + value + "]", value );
         }
     }
 
     /**
      * Verify that remove all does not work on a region where it is prohibited.
-     *
+     * <p>
      * @throws CacheException
      * @throws InterruptedException
-     *
      */
     public void testRemoveAllProhibition()
         throws CacheException, InterruptedException
@@ -160,7 +152,7 @@ public class HSQLDiskCacheUnitTest
         }
 
         // a db thread could be updating the disk when
-        //Thread.sleep( 500 );
+        // Thread.sleep( 500 );
 
         System.out.println( jcs.getStats() );
 

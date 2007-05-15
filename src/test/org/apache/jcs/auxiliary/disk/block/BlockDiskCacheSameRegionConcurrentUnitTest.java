@@ -33,6 +33,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 {
     /**
      * Constructor for the TestDiskCache object.
+     * <p>
      * @param testName
      */
     public BlockDiskCacheSameRegionConcurrentUnitTest( String testName )
@@ -42,6 +43,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
     /**
      * Main method passes this test to the text test runner.
+     * <p>
      * @param args
      */
     public static void main( String args[] )
@@ -91,15 +93,6 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
                 throws Exception
             {
                 this.runTestForRegion( "blockRegion4", 2200, 5200 );
-            }
-        } );
-
-        suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache5" )
-        {
-            public void runTest()
-                throws Exception
-            {
-                this.runTestForRegion( "blockRegion4", 0, 5200 );
             }
         } );
 

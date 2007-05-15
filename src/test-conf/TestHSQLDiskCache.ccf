@@ -47,24 +47,21 @@ jcs.auxiliary.HSQL=org.apache.jcs.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory
 jcs.auxiliary.HSQL.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.HSQL.attributes.userName=sa
 jcs.auxiliary.HSQL.attributes.password=
-jcs.auxiliary.HSQL.attributes.url=jdbc:hsqldb:
-jcs.auxiliary.HSQL.attributes.database=target/cache_hsql_db
+jcs.auxiliary.HSQL.attributes.url=jdbc:hsqldb:target/HSQLDiskCacheUnitTest1
 jcs.auxiliary.HSQL.attributes.driverClassName=org.hsqldb.jdbcDriver
 jcs.auxiliary.HSQL.attributes.tableName=JCS_STORE3
 jcs.auxiliary.HSQL.attributes.testBeforeInsert=false
 jcs.auxiliary.HSQL.attributes.maxActive=15
 jcs.auxiliary.HSQL.attributes.allowRemoveAll=true
 jcs.auxiliary.HSQL.attributes.MaxPurgatorySize=10000000
-jcs.auxiliary.HSQL.attributes.EventQueueType=POOLED
-jcs.auxiliary.HSQL.attributes.EventQueuePoolName=disk_cache_event_queue
+jcs.auxiliary.HSQL.attributes.EventQueueType=SINGLE
 
 # HSQL disk cache, doesn't allow remove all
 jcs.auxiliary.HSQL_NORA=org.apache.jcs.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory
 jcs.auxiliary.HSQL_NORA.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.HSQL_NORA.attributes.userName=sa
 jcs.auxiliary.HSQL_NORA.attributes.password=
-jcs.auxiliary.HSQL_NORA.attributes.url=jdbc:hsqldb:
-jcs.auxiliary.HSQL_NORA.attributes.database=target/cache_hsql_db
+jcs.auxiliary.HSQL_NORA.attributes.url=jdbc:hsqldb:target/HSQLDiskCacheUnitTest2
 jcs.auxiliary.HSQL_NORA.attributes.driverClassName=org.hsqldb.jdbcDriver
 jcs.auxiliary.HSQL_NORA.attributes.tableName=JCS_STORE4
 jcs.auxiliary.HSQL_NORA.attributes.testBeforeInsert=false

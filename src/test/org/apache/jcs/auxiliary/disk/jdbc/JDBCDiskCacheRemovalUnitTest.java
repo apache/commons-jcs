@@ -49,6 +49,7 @@ public class JDBCDiskCacheRemovalUnitTest
      * Verify the fix for BUG JCS-20
      * <p>
      * Setup an hsql db. Add an item. Remove using partial key.
+     * @throws Exception 
      */
     public void testPartialKeyRemoval_Good()
         throws Exception
@@ -80,6 +81,9 @@ public class JDBCDiskCacheRemovalUnitTest
 
     /**
      * Create the database.
+     * @throws InstantiationException 
+     * @throws IllegalAccessException 
+     * @throws ClassNotFoundException 
      * @throws SQLException
      */
     private void setupDatabase()
@@ -91,7 +95,7 @@ public class JDBCDiskCacheRemovalUnitTest
         Properties p = new Properties();
         String driver = p.getProperty( "driver", "org.hsqldb.jdbcDriver" );
         String url = p.getProperty( "url", "jdbc:hsqldb:" );
-        String database = p.getProperty( "database", rafroot + "/cache_hsql_db" );
+        String database = p.getProperty( "database", rafroot + "/JDBCDiskCacheRemovalUnitTest" );
         String user = p.getProperty( "user", "sa" );
         String password = p.getProperty( "password", "" );
 
@@ -104,6 +108,7 @@ public class JDBCDiskCacheRemovalUnitTest
 
     /**
      * SETUP TABLE FOR CACHE
+     * <p>
      * @param cConn
      */
     private void setupTABLE( Connection cConn )

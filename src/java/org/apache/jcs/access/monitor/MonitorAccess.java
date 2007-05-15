@@ -38,8 +38,10 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 public class MonitorAccess
     implements Serializable
 {
+    /** Don't change. */
     private static final long serialVersionUID = 1002037665133774391L;
 
+    /** The logger. */
     private static final Log log = LogFactory.getLog( MonitorAccess.class );
 
     /** Description of the Field */

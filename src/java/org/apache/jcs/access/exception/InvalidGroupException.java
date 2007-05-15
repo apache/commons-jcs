@@ -21,11 +21,11 @@ package org.apache.jcs.access.exception;
 
 /**
  * InvalidGroupException
- *
  */
 public class InvalidGroupException
     extends CacheException
 {
+    /** Don't change. */
     private static final long serialVersionUID = -5219807114008843480L;
 
     /** Constructor for the InvalidGroupException object */
@@ -36,7 +36,7 @@ public class InvalidGroupException
 
     /**
      * Constructor for the InvalidGroupException object
-     *
+     * <p>
      * @param message
      */
     public InvalidGroupException( String message )

@@ -38,6 +38,7 @@ public class GroupCacheAccess
     extends CacheAccess
     implements IGroupCacheAccess
 {
+    /** The underlying cache manager. */
     private static CompositeCacheManager cacheMgr;
 
     /**

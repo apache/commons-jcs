@@ -87,7 +87,7 @@ public class TestTCPLateralUnitTest
             lur.send( led );
         }
 
-        SleepUtil.sleepAtLeast( numMes );
+        SleepUtil.sleepAtLeast( numMes * 3 );
 
         System.out.println( "PutCount = " + listener.getPutCnt() );
         assertEquals( "Should have received " + numMes + " by now.", numMes, listener.getPutCnt() );
@@ -135,7 +135,7 @@ public class TestTCPLateralUnitTest
             service.update( element );
         }
 
-        Thread.sleep( 1000 );
+        SleepUtil.sleepAtLeast( 1000 );
 
         System.out.println( "cache. getPutCount = " + cacheMgr.getCache().getUpdateCount() );
 
@@ -171,12 +171,12 @@ public class TestTCPLateralUnitTest
         ICacheElement element = new CacheElement( "test", "key", "value1" );
         service.update( element );
 
-        Thread.sleep( 300 );
+        SleepUtil.sleepAtLeast( 300 );
 
         ICacheElement element2 = new CacheElement( "test", "key", "value2" );
         service.update( element2 );
 
-        Thread.sleep( 1000 );
+        SleepUtil.sleepAtLeast(  1000 );
 
         ICacheElement cacheElement = cacheMgr.getCache().get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
@@ -214,12 +214,12 @@ public class TestTCPLateralUnitTest
         ICacheElement element = new CacheElement( "test", key, "value1" );
         service.update( element );
 
-        Thread.sleep( 300 );
+        SleepUtil.sleepAtLeast( 300 );
 
         ICacheElement element2 = new CacheElement( "test", key, "value2" );
         service.update( element2 );
 
-        Thread.sleep( 1000 );
+        SleepUtil.sleepAtLeast( 1000 );
 
         ICacheElement cacheElement = cacheMgr.getCache().get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
@@ -257,7 +257,7 @@ public class TestTCPLateralUnitTest
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
 
-        Thread.sleep( 300 );
+        SleepUtil.sleepAtLeast(  300 );
 
         // DO WORK
         ICacheElement result = service.get( "test", "key" );
