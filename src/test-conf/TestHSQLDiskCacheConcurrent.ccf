@@ -1,0 +1,84 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+# Cache configuration for the 'TestHSQLDiskCache' test. The memory cache has a
+# a maximum of 100 objects, so objects should get pushed into the disk cache
+
+jcs.default=HSQL
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=0
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=false
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
+
+
+jcs.region.noRemoveAll=HSQL_NORA
+jcs.region.noRemoveAll.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.noRemoveAll.cacheattributes.MaxObjects=0
+jcs.region.noRemoveAll.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
+
+
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
+# HSQL disk cache
+jcs.auxiliary.HSQL=org.apache.jcs.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory
+jcs.auxiliary.HSQL.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.HSQL.attributes.userName=sa
+jcs.auxiliary.HSQL.attributes.password=
+jcs.auxiliary.HSQL.attributes.url=jdbc:hsqldb:target/HSQLDiskCacheUnitTest1
+jcs.auxiliary.HSQL.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.auxiliary.HSQL.attributes.tableName=JCS_STORE3
+jcs.auxiliary.HSQL.attributes.testBeforeInsert=false
+jcs.auxiliary.HSQL.attributes.maxActive=15
+jcs.auxiliary.HSQL.attributes.allowRemoveAll=true
+jcs.auxiliary.HSQL.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.HSQL.attributes.EventQueueType=POOLED
+jcs.auxiliary.HSQL.attributes.EventQueuePoolName=disk_cache_event_queue
+
+# HSQL disk cache, doesn't allow remove all
+jcs.auxiliary.HSQL_NORA=org.apache.jcs.auxiliary.disk.jdbc.hsql.HSQLDiskCacheFactory
+jcs.auxiliary.HSQL_NORA.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.HSQL_NORA.attributes.userName=sa
+jcs.auxiliary.HSQL_NORA.attributes.password=
+jcs.auxiliary.HSQL_NORA.attributes.url=jdbc:hsqldb:target/HSQLDiskCacheUnitTest2
+jcs.auxiliary.HSQL_NORA.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.auxiliary.HSQL_NORA.attributes.tableName=JCS_STORE4
+jcs.auxiliary.HSQL_NORA.attributes.testBeforeInsert=false
+jcs.auxiliary.HSQL_NORA.attributes.maxActive=15
+jcs.auxiliary.HSQL_NORA.attributes.allowRemoveAll=false
+jcs.auxiliary.HSQL_NORA.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.HSQL_NORA.attributes.EventQueueType=POOLED
+jcs.auxiliary.HSQL_NORA.attributes.EventQueuePoolName=disk_cache_event_queue
+
+# #############################################################
+# ################# OPTIONAL THREAD POOL CONFIGURATION #########
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.disk_cache_event_queue.boundarySize=500
+thread_pool.disk_cache_event_queue.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=10
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.disk_cache_event_queue.startUpSize=10
