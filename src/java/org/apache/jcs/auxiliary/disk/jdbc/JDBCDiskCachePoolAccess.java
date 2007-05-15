@@ -33,21 +33,23 @@ import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
 
 /**
- * This class provides access to the connection pool. It ensures that the
- * various resources that need to access the tables will be able to use the same
- * pool.
+ * This class provides access to the connection pool. It ensures that the various resources that
+ * need to access the tables will be able to use the same pool.
  * <p>
  * @author Aaron Smuts
  */
 public class JDBCDiskCachePoolAccess
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( JDBCDiskCachePoolAccess.class );
 
     /** The defualt Pool Name to which the connetion pool will be keyed. */
     public static final String DEFAULT_POOL_NAME = "jcs";
 
+    /** The name of the pool. */
     private String poolName = DEFAULT_POOL_NAME;
 
+    /** default jdbc driver. */
     private static final String DRIVER_NAME = "jdbc:apache:commons:dbcp:";
 
     // WE SHOULD HAVE A DIFFERENT POOL FOR EACH DB NO REGION
@@ -57,8 +59,8 @@ public class JDBCDiskCachePoolAccess
     /**
      * Configures the pool name to use for the pool access.
      * <p>
-     * This pool name should be unique to the database. It is used as part of
-     * the URL each time we lookup a conection from the driver manager.
+     * This pool name should be unique to the database. It is used as part of the URL each time we
+     * lookup a conection from the driver manager.
      * <p>
      * @param poolName
      * @param driverName
@@ -78,7 +80,6 @@ public class JDBCDiskCachePoolAccess
             }
         }
     }
-
 
     /**
      * Gets a connection from the pool.
@@ -106,7 +107,7 @@ public class JDBCDiskCachePoolAccess
     /**
      * How many are idle in the pool.
      * <p>
-     * @return
+     * @return number idle
      */
     public int getNumIdleInPool()
     {
@@ -132,7 +133,7 @@ public class JDBCDiskCachePoolAccess
     /**
      * How many are active in the pool.
      * <p>
-     * @return
+     * @return number active
      */
     public int getNumActiveInPool()
     {
@@ -174,8 +175,7 @@ public class JDBCDiskCachePoolAccess
     }
 
     /**
-     * @param poolName
-     *            The poolName to set.
+     * @param poolName The poolName to set.
      */
     public void setPoolName( String poolName )
     {
@@ -194,8 +194,7 @@ public class JDBCDiskCachePoolAccess
      * @param connectURI
      * @param userName
      * @param password
-     * @param maxActive
-     *            max connetions
+     * @param maxActive max connetions
      * @throws Exception
      */
     public void setupDriver( String connectURI, String userName, String password, int maxActive )

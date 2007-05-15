@@ -38,20 +38,22 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
 /**
- * A servlet which provides HTTP access to JCS. Allows a summary of regions to
- * be viewed, and removeAll to be run on individual regions or all regions. Also
- * provides the ability to remove items (any number of key arguments can be
- * provided with action 'remove'). Should be initialized with a properties file
- * that provides at least a classpath resource loader.
+ * A servlet which provides HTTP access to JCS. Allows a summary of regions to be viewed, and
+ * removeAll to be run on individual regions or all regions. Also provides the ability to remove
+ * items (any number of key arguments can be provided with action 'remove'). Should be initialized
+ * with a properties file that provides at least a classpath resource loader.
  */
 public class JCSAdminBean
 {
+    /** The logger. */
     private static final Log log = LogFactory.getLog( JCSAdminBean.class );
 
+    /** The cache maanger. */
     private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
     /**
-     * Builds up info about each element in a region. int
+     * Builds up info about each element in a region.
+     * <p>
      * @param cacheName
      * @return List of CacheElementInfo objects
      * @throws Exception
@@ -109,9 +111,10 @@ public class JCSAdminBean
     }
 
     /**
-     * Builds up data on every region. int
-     * @TODO we need a most light weight method that does not count bytes. The
-     *       byte counting can really swamp a server.
+     * Builds up data on every region.
+     * <p>
+     * @TODO we need a most light weight method that does not count bytes. The byte counting can
+     *       really swamp a server.
      * @return list of CacheRegionInfo objects
      * @throws Exception
      */
@@ -143,11 +146,11 @@ public class JCSAdminBean
     }
 
     /**
-     * Tries to estimate how much data is in a region. This is expensive. If
-     * there are any non serializable objects in the region, the count will stop
-     * when it encouters the first one. int
+     * Tries to estimate how much data is in a region. This is expensive. If there are any non
+     * serializable objects in the region, the count will stop when it encouters the first one.
+     * <p>
      * @param cache
-     * @return
+     * @return int
      * @throws Exception
      */
     public int getByteCount( CompositeCache cache )
@@ -182,7 +185,8 @@ public class JCSAdminBean
     }
 
     /**
-     * Clears all regions in the cache. int
+     * Clears all regions in the cache.
+     * <p>
      * @throws IOException
      */
     public void clearAllRegions()
@@ -197,7 +201,8 @@ public class JCSAdminBean
     }
 
     /**
-     * Clears a particular cache region. int
+     * Clears a particular cache region.
+     * <p>
      * @param cacheName
      * @throws IOException
      */
@@ -208,7 +213,8 @@ public class JCSAdminBean
     }
 
     /**
-     * Removes a particular item from a particular region. int
+     * Removes a particular item from a particular region.
+     * <p>
      * @param cacheName
      * @param key
      * @throws IOException
@@ -218,5 +224,4 @@ public class JCSAdminBean
     {
         cacheHub.getCache( cacheName ).remove( key );
     }
-
 }

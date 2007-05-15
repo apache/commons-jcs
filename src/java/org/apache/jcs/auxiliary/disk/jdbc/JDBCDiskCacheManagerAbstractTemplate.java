@@ -32,14 +32,15 @@ import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- * This class serves as an abstract template for JDBCDiskCache Manager. The
- * MySQL JDBC Disk Cache needs many of the same features as the generic maanger.
+ * This class serves as an abstract template for JDBCDiskCache Manager. The MySQL JDBC Disk Cache
+ * needs many of the same features as the generic maanger.
  * <p>
  * @author Aaron Smuts
  */
 public abstract class JDBCDiskCacheManagerAbstractTemplate
     implements AuxiliaryCacheManager
 {
+    /** The logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManagerAbstractTemplate.class );
 
     /**
@@ -53,9 +54,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected static Hashtable caches = new Hashtable();
 
     /**
-     * A map of TableState objects to table names. Each cache has a table state
-     * object, which is used to determin if any long processes such as deletes
-     * or optimizations are running.
+     * A map of TableState objects to table names. Each cache has a table state object, which is
+     * used to determin if any long processes such as deletes or optimizations are running.
      */
     protected static Hashtable tableStates = new Hashtable();
 
@@ -65,9 +65,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     private ClockDaemon shrinkerDaemon;
 
     /**
-     * A map of table name to shrinker threads. This allows each table to have a
-     * different setting. It assumes that there is only one jdbc disk cache
-     * auxiliary defined per table.
+     * A map of table name to shrinker threads. This allows each table to have a different setting.
+     * It assumes that there is only one jdbc disk cache auxiliary defined per table.
      */
     private Map shrinkerThreadMap = new Hashtable();
 
@@ -81,9 +80,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected abstract AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState );
 
     /**
-     * Creates a JDBCDiskCache for the region if one doesn't exist, else it
-     * returns the precreated instance. It also adds the region to the shrinker
-     * thread if needed.
+     * Creates a JDBCDiskCache for the region if one doesn't exist, else it returns the precreated
+     * instance. It also adds the region to the shrinker thread if needed.
      * <p>
      * @param cattr
      * @return The cache value
@@ -100,7 +98,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
 
             if ( diskCache == null )
             {
-                TableState tableState = (TableState)tableStates.get( cattr.getTableName() );
+                TableState tableState = (TableState) tableStates.get( cattr.getTableName() );
 
                 if ( tableState == null )
                 {
@@ -125,8 +123,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     }
 
     /**
-     * If UseDiskShrinker is true then we will create a shrinker daemon if
-     * necessary.
+     * If UseDiskShrinker is true then we will create a shrinker daemon if necessary.
      * <p>
      * @param cattr
      * @param raf
@@ -213,9 +210,11 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     class MyThreadFactory
         implements ThreadFactory
     {
-        /*
-         * (non-Javadoc)
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+        /**
+         * Set the priority to min and daemon to true.
+         * <p>
+         * @param runner
+         * @return the daemon thread.
          */
         public Thread newThread( Runnable runner )
         {

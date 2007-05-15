@@ -23,26 +23,46 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Keeps track of the number of bytes written to it, but doesn't write them
- * anywhere.
+ * Keeps track of the number of bytes written to it, but doesn't write them anywhere.
  */
 public class CountingOnlyOutputStream
     extends OutputStream
 {
+    /** number of bytes passed through */
     private int count;
 
+    /**
+     * count as we write.
+     * <p>
+     * @param b
+     * @throws IOException
+     */
     public void write( byte[] b )
         throws IOException
     {
         this.count += b.length;
     }
 
+    /**
+     * count as we write.
+     * <p>
+     * @param b
+     * @param off
+     * @param len
+     * @throws IOException
+     */
     public void write( byte[] b, int off, int len )
         throws IOException
     {
         this.count += len;
     }
 
+    /**
+     * count as we write.
+     * <p>
+     * @param b
+     * @throws IOException
+     */
     public void write( int b )
         throws IOException
     {

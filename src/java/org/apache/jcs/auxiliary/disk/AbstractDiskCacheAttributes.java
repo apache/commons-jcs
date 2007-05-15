@@ -45,59 +45,71 @@ public abstract class AbstractDiskCacheAttributes
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
 
     /**
-     * This default determines how long the shutdown will wait for the key spool
-     * and data defrag to finish.
+     * This default determines how long the shutdown will wait for the key spool and data defrag to
+     * finish.
      */
     protected int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setDiskPath(java.lang.String)
+    /**
+     * Sets the diskPath attribute of the IJISPCacheAttributes object
+     * <p>
+     * @param path The new diskPath value
      */
     public void setDiskPath( String path )
     {
         this.diskPath = path.trim();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getDiskPath()
+    /**
+     * Gets the diskPath attribute of the attributes object
+     * <p>
+     * @return The diskPath value
      */
     public String getDiskPath()
     {
         return this.diskPath;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getMaxPurgatorySize()
+    /**
+     * Gets the maxKeySize attribute of the DiskCacheAttributes object
+     * <p>
+     * @return The maxPurgatorySize value
      */
     public int getMaxPurgatorySize()
     {
         return maxPurgatorySize;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setMaxPurgatorySize(int)
+    /**
+     * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
+     * <p>
+     * @param maxPurgatorySize The new maxPurgatorySize value
      */
     public void setMaxPurgatorySize( int maxPurgatorySize )
     {
         this.maxPurgatorySize = maxPurgatorySize;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#getShutdownSpoolTimeLimit()
+    /**
+     * Get the amount of time in seconds we will wait for elements to move to disk during shutdown
+     * for a particular region.
+     * <p>
+     * @return the time in seconds.
      */
     public int getShutdownSpoolTimeLimit()
     {
         return this.shutdownSpoolTimeLimit;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes#setShutdownSpoolTimeLimit(int)
+    /**
+     * Sets the amount of time in seconds we will wait for elements to move to disk during shutdown
+     * for a particular region.
+     * <p>
+     * This is how long we give the event queue to empty.
+     * <p>
+     * The default is 60 seconds.
+     * <p>
+     * @param shutdownSpoolTimeLimit the time in seconds
      */
     public void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit )
     {
@@ -105,7 +117,8 @@ public abstract class AbstractDiskCacheAttributes
     }
 
     /**
-     * Description of the Method
+     * Simple clone.
+     * <p>
      * @return AuxiliaryCacheAttributes
      */
     public AuxiliaryCacheAttributes copy()
@@ -122,8 +135,7 @@ public abstract class AbstractDiskCacheAttributes
     }
 
     /**
-     * @param allowRemoveAll
-     *            The allowRemoveAll to set.
+     * @param allowRemoveAll The allowRemoveAll to set.
      */
     public void setAllowRemoveAll( boolean allowRemoveAll )
     {

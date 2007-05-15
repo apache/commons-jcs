@@ -27,26 +27,30 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Calls delete expired on the disk caches. The shrinker is run by a clock
- * daemon. The shrinker calls delete on each region. It pauses between calls.
+ * Calls delete expired on the disk caches. The shrinker is run by a clock daemon. The shrinker
+ * calls delete on each region. It pauses between calls.
  * <p>
  * @author Aaron Smuts
  */
 public class ShrinkerThread
     implements Runnable
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
     private Set shrinkSet = Collections.synchronizedSet( new HashSet() );
 
     /**
-     * How long should we wait between calls to deleteExpired when we are
-     * iterating through the list of regions. Delete can lock the table. We want
-     * to give clients a chance to get some work done.
+     * Default time period to use.
      */
     private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
 
+    /**
+     * How long should we wait between calls to deleteExpired when we are iterating through the list
+     * of regions. Delete can lock the table. We want to give clients a chance to get some work
+     * done.
+     */
     private long pauseBetweenRegionCallsMillis = DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS;
 
     /**
@@ -129,11 +133,10 @@ public class ShrinkerThread
     }
 
     /**
-     * How long should we wait between calls to deleteExpired when we are
-     * iterating through the list of regions.
+     * How long should we wait between calls to deleteExpired when we are iterating through the list
+     * of regions.
      * <p>
-     * @param pauseBetweenRegionCallsMillis
-     *            The pauseBetweenRegionCallsMillis to set.
+     * @param pauseBetweenRegionCallsMillis The pauseBetweenRegionCallsMillis to set.
      */
     public void setPauseBetweenRegionCallsMillis( long pauseBetweenRegionCallsMillis )
     {
@@ -141,8 +144,8 @@ public class ShrinkerThread
     }
 
     /**
-     * How long should we wait between calls to deleteExpired when we are
-     * iterating through the list of regions.
+     * How long should we wait between calls to deleteExpired when we are iterating through the list
+     * of regions.
      * <p>
      * @return Returns the pauseBetweenRegionCallsMillis.
      */

@@ -27,12 +27,14 @@ import org.apache.jcs.engine.control.CompositeCache;
  */
 public class CacheRegionInfo
 {
+    /** The cache region we are getting info on. */
     CompositeCache cache = null;
 
+    /** number of bytes counted so far, will be a total of all items. */
     long byteCount = 0;
 
     /**
-     * @return
+     * @return the underlying region
      */
     public CompositeCache getCache()
     {
@@ -40,7 +42,7 @@ public class CacheRegionInfo
     }
 
     /**
-     * @return
+     * @return total byte count
      */
     public long getByteCount()
     {
@@ -48,7 +50,7 @@ public class CacheRegionInfo
     }
 
     /**
-     * @return
+     * @return a status string
      */
     public String getStatus()
     {
@@ -65,6 +67,7 @@ public class CacheRegionInfo
 
     /**
      * Return the stats for the region.
+     * <p>
      * @return String
      */
     public String getStats()
@@ -72,9 +75,8 @@ public class CacheRegionInfo
         return this.cache.getStats();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * @return string info on the region
      */
     public String toString()
     {
@@ -89,5 +91,4 @@ public class CacheRegionInfo
 
         return buf.toString();
     }
-
 }

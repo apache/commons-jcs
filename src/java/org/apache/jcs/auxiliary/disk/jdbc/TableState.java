@@ -32,8 +32,10 @@ import java.io.Serializable;
 public class TableState
     implements Serializable
 {
+    /** Don't change. */
     private static final long serialVersionUID = -6625081552084964885L;
 
+    /** Name of the table whose state this reflects. */
     private String tableName;
 
     /**
@@ -48,8 +50,7 @@ public class TableState
     /** A table locking optimization is running. */
     public static final int OPTIMIZATION_RUNNING = 2;
 
-    // we might want to add error
-
+    /** we might want to add error */
     private int state = FREE;
 
     /**
@@ -109,5 +110,4 @@ public class TableState
         str.append( "\n State = " + getState() );
         return str.toString();
     }
-
 }

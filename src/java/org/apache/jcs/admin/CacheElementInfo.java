@@ -24,14 +24,19 @@ package org.apache.jcs.admin;
  */
 public class CacheElementInfo
 {
+    /** element key */
     String key = null;
 
+    /** is it eternal */
     boolean eternal = false;
 
+    /** when it was created */
     String createTime = null;
 
+    /** max life */
     long maxLifeSeconds = -1;
 
+    /** when it will expire */
     long expiresInSeconds = -1;
 
     /**
@@ -76,9 +81,8 @@ public class CacheElementInfo
         return this.expiresInSeconds;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * @return string info on the item
      */
     public String toString()
     {
