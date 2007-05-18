@@ -1,0 +1,554 @@
+<!--
+
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+
+<!--
+Note: While this pom includes many of the elements required in order to build
+the project, maven 1 is the only supported build system for jcs.
+
+This pom is provided to make it easier for projects built with maven 2 to use
+jcs.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache</groupId>
+     <artifactId>apache</artifactId>
+     <version>3</version>
+  </parent>
+  <groupId>org.apache.jcs</groupId>
+  <artifactId>jcs</artifactId>
+  <packaging>pom</packaging>
+  <version>1.3-rc1</version>
+  <name>Jakarta JCS</name>
+  <url>http://jakarta.apache.org/jcs/</url>
+  <inceptionYear>2002</inceptionYear>
+
+  <dependencies>
+
+    <!--  For comparative performance tests only -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+      <version>1.4</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!--  REQUIRED FOR JCS CORE -->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <!--  REQUIRED FOR JCS CORE -->
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!--  JDBC DISK CACHE -->
+    <dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+      <version>1.2.2</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!--  JDBC DISK CACHE -->
+    <dependency>
+      <groupId>commons-pool</groupId>
+      <artifactId>commons-pool</artifactId>
+      <version>1.3</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!--  REQUIRED FOR JCS CORE -->
+    <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+      <!-- Using old release for now while JDK 1.3 is supported. -->
+      <version>1.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>3.0.10</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.7.3.3</version>
+      <!-- <version>1.8.0.7</version> -->
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
+      <version>2.3</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- LGPL! -->
+    <!--
+    <dependency>
+      <groupId>jgroups</groupId>
+      <artifactId>jgroups-all</artifactId>
+      <version>2.2.8</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    -->
+
+    <dependency>
+      <groupId>tomcat</groupId>
+      <artifactId>tomcat-util</artifactId>
+      <version>3.2.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.5</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>xmlrpc</groupId>
+      <artifactId>xmlrpc</artifactId>
+      <version>2.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.6.2</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <version>2.0.2</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>berkeleydb</groupId>
+      <artifactId>berkeleydb</artifactId>
+      <version>1.5.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+
+  </dependencies>
+
+  <!-- We don't use Continuum yet -->
+  <!--
+  <ciManagement>
+    <system>continuum</system>
+    <notifiers>
+      <notifier>
+        <configuration>
+          <address>commons-dev@jakarta.apache.org</address>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  -->
+
+  <distributionManagement>
+
+   <!--
+     This POM's parent POM (the Apache root POM) provides repositories. Unfortunately,
+     this allows for accidental deployments. So we disable them here by providing
+     a dummy repository. Use "mvn -Prc deploy" (Apache snapshot repository) or
+     "mvn -Prelease deploy" (Apache release repository), if you really want to deploy.
+   -->
+   <repository>
+     <id>dummy</id>
+     <name>Dummy to avoid accidental deploys</name>
+     <url />
+   </repository>
+  </distributionManagement>
+
+  <issueManagement>
+    <url>http://issues.apache.org/jira/</url>
+  </issueManagement>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/jcs/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/jcs/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/jakarta/jcs/trunk</url>
+  </scm>
+
+  <mailingLists>
+    <mailingList>
+      <name>JCS User List</name>
+      <subscribe>jcs-users-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>jcs-users-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/</archive>
+    </mailingList>
+    <mailingList>
+      <name>JCS Developer List</name>
+      <subscribe>jcs-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/</archive>
+    </mailingList>
+    <mailingList>
+      <name>OLD User list</name>
+      <subscribe></subscribe>
+      <unsubscribe></unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-user/</archive>
+    </mailingList>
+    <mailingList>
+      <name>OLD Developer list</name>
+      <subscribe></subscribe>
+      <unsubscribe></unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-dev/</archive>
+    </mailingList>
+  </mailingLists>
+
+  <developers>
+    <developer>
+      <id>asmuts</id>
+      <name>Aaron Smuts</name>
+      <email>asmuts@apache.org</email>
+      <organization />
+    </developer>
+    <developer>
+      <id>jtaylor</id>
+      <name>James Taylor</name>
+      <email>james@jamestaylor.org</email>
+      <organization />
+    </developer>
+    <developer>
+      <id>hchar</id>
+      <name>Hanson Char</name>
+      <email>hchar@apache.org</email>
+      <organization />
+    </developer>
+    <developer>
+      <id>tsavo</id>
+      <name>Travis Savo</name>
+      <email>tsavo@ifilm.com</email>
+      <organization>IFilm</organization>
+    </developer>
+  </developers>
+
+  <contributors>
+    <contributor>
+      <name>Scott Eade</name>
+      <email>seade@backstagetech.com.au</email>
+    </contributor>
+    <contributor>
+      <name>Michael Stevens</name>
+      <email>mstevens@etla.org</email>
+    </contributor>
+    <contributor>
+      <name>Thomas Vandahl</name>
+      <email>tv@apache.org</email>
+    </contributor>
+  </contributors>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.0-alpha-1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <!-- TODO: later use toolchain support to do compilation on an external JDK 1.3+ compiler -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${maven.compile.source}</source>
+          <target>${maven.compile.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Specification-Title>${project.name}</Specification-Title>
+              <Specification-Version>${project.version}</Specification-Version>
+              <Specification-Vendor>${project.organization.name}</Specification-Vendor>
+              <Implementation-Title>${project.name}</Implementation-Title>
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+              <Implementation-Vendor-Id>org.apache</Implementation-Vendor-Id>
+              <X-Compile-Source-JDK>${maven.compile.source}</X-Compile-Source-JDK>
+              <X-Compile-Target-JDK>${maven.compile.source}</X-Compile-Target-JDK>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration> 
+          <aggregate>true</aggregate>
+        </configuration> 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <configuration> 
+          <aggregate>true</aggregate>
+        </configuration> 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <!-- Exclude the navigation file for Maven 1 sites
+               and the changes file used by the changes-plugin,
+               as they interfere with the site generation. -->
+          <moduleExcludes>
+            <xdoc>navigation.xml,changes.xml</xdoc>
+          </moduleExcludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jdepend-maven-plugin</artifactId>
+        <version>2.0-beta-1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rat-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <distributionManagement>
+        <repository>
+          <id>apache.releases</id>
+          <name>Apache Release Distribution Repository</name>
+          <url>${jcs.deployment.protocol}://people.apache.org/www/people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+        </repository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <!-- We want to sign the artifact, the POM, and all attached artifacts -->
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <passphrase>${gpg.passphrase}</passphrase>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create-source-jar</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create-javadoc-jar</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <source>${maven.compile.source}</source>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>rc</id>
+      <distributionManagement>
+        <repository>
+          <id>apache.snapshots</id>
+          <name>Apache Development Snapshot Repository</name>
+          <url>${jcs.deployment.protocol}://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
+        </repository>
+        <snapshotRepository>
+          <id>apache.snapshots</id>
+          <name>Apache Development Snapshot Repository</name>
+          <url>${jcs.deployment.protocol}://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
+        </snapshotRepository>
+      </distributionManagement>
+      <build>
+        <plugins>
+          <!-- We want to sign the artifact, the POM, and all attached artifacts -->
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <passphrase>${gpg.passphrase}</passphrase>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create-source-jar</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create-javadoc-jar</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <source>${maven.compile.source}</source>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <properties>
+
+    <!-- Default configuration for compiler source and target JVM -->
+    <maven.compile.source>1.3</maven.compile.source>
+    <maven.compile.target>1.3</maven.compile.target>
+
+    <!--
+      Make the deployment protocol pluggable. This allows to switch to
+      other protocols like scpexe, which some users prefer over scp.
+    -->
+    <jcs.deployment.protocol>scp</jcs.deployment.protocol>
+
+  </properties>
+
+</project>
