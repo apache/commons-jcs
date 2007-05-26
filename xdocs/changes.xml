@@ -24,7 +24,7 @@
 	</properties>
 	<body>
 
-		<release version="1.2.7.9.3" date="in CVS">
+		<release version="1.2.7.9.3" date="in SVN">
 			<action dev="asmuts" type="fix" issue="JCS-15"
 				due-to="Kevin Preece">
 				Fixed partial key and group id removal bug in indexed disk cache.
@@ -40,7 +40,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.9.2" date="in CVS">
+		<release version="1.2.7.9.2" date="in SVN">
 			<action dev="asmuts" type="update">
 				Added a summary page to the JCSAdmin.jsp that just dumps
 				the stats for a region. It doesn't display all the keys.
@@ -58,7 +58,7 @@
 
 		</release>
 
-		<release version="1.2.7.9" date="in CVS">
+		<release version="1.2.7.9" date="in SVN">
 			<action dev="asmuts" type="fix" issue="JCS-1">
 				Fixed last element too small recycle bin bug.
 			</action>
@@ -84,7 +84,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.8" date="in CVS">
+		<release version="1.2.7.8" date="in SVN">
 			<action dev="asmuts" type="update">
 				Added the ability to schedule optimizations for the
 				MySQL disk cache. It can also recover from optimization
@@ -93,7 +93,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.7" date="in CVS">
+		<release version="1.2.7.7" date="in SVN">
 			<action dev="asmuts" type="fix"
 				due-to="Brian Crow  @noteworthyms.com">
 				Fixed the array index out of bounds exception in the
@@ -101,7 +101,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.6" date="in CVS">
+		<release version="1.2.7.6" date="in SVN">
 			<action dev="asmuts" type="fix"
 				due-to="Rick Szeto @vizible.com">
 				Fixed UDP discovery configuration problem. The discovery
@@ -115,7 +115,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.3" date="in CVS">
+		<release version="1.2.7.3" date="in SVN">
 			<action dev="asmuts" type="update" due-to="">
 				You can now configure the remote cache client to not
 				receive from the remote server.
@@ -129,7 +129,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.2" date="in CVS">
+		<release version="1.2.7.2" date="in SVN">
 			<action dev="asmuts" type="update" due-to="">
 				You can configure the remote cache to use a custom RMI
 				Socket Factory with socket timeouts.
@@ -143,7 +143,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.1" date="in CVS">
+		<release version="1.2.7.1" date="in SVN">
 			<action dev="asmuts" type="update" due-to="">
 				Added a JDBC disk cache. It has been tested with MYSql
 				and HSQL.
@@ -158,7 +158,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.7.0" date="in CVS">
+		<release version="1.2.7.0" date="in SVN">
 			<action dev="asmuts" type="update" due-to="">
 				Removed dependencies on commons-lang and on
 				commons-collections from the core of JCS.
@@ -171,7 +171,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.6.9" date="in CVS">
+		<release version="1.2.6.9" date="in SVN">
 			<action dev="asmuts" type="update" due-to="">
 				The remote cache now sends a byte array to the server
 				instead of the class. This allows you to run the remote
@@ -193,7 +193,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.6.8" date="in CVS">
+		<release version="1.2.6.8" date="in SVN">
 			<action dev="asmuts" type="fix" due-to="">
 				Moved synchronization from the client to the sorted
 				preferential array. This solved the index out of bounds
@@ -204,7 +204,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.6.7" date="in CVS">
+		<release version="1.2.6.7" date="in SVN">
 			<action dev="asmuts" type="fix"
 				due-to="Adam Siefker @amazon.com">
 				Fixed shutdown for lateral. Added shutdown observer
@@ -220,7 +220,7 @@
 			</action>
 		</release>
 
-		<release version="1.2.6.6" date="in CVS">
+		<release version="1.2.6.6" date="in SVN">
 			<action dev="asmuts" type="fix">
 				Properties are loaded using the current thread's
 				classloader by default.

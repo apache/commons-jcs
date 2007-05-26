@@ -25,6 +25,14 @@
 	</properties>
 
 	<body>
+        <section name="News: Version 1.3 is available">
+            <p>
+                The Java Caching System, version 1.3 has been released.
+                This release is actually the first official release of JCS.
+                You can download it from the
+                <a href="DownloadPage.html">Download</a> page.
+            </p>
+        </section>
 		<section name="Java Caching System">
 			<p>
 				JCS is a distributed caching system written in java. It
