@@ -43,9 +43,10 @@
 	</issueTrackingUrl>
 	<siteAddress>people.apache.org</siteAddress>
 	<siteDirectory>/www/jakarta.apache.org/jcs/</siteDirectory>
-	<distributionDirectory>
-		/www/jakarta.apache.org/builds/jakarta-jcs/
-	</distributionDirectory>
+    <distributionSite>www.apache.org</distributionSite>
+    <distributionDirectory>
+        /www/www.apache.org/dist/java-repository
+    </distributionDirectory>
 
 	<repository>
 		<connection>
@@ -345,6 +346,15 @@
 				</resource>
 			</resources>
 		</unitTest>
+        <resources>
+            <resource>
+                <directory>${basedir}</directory>
+                <targetPath>META-INF</targetPath>
+                <includes>
+                  <include>NOTICE</include>
+                </includes>
+            </resource>
+        </resources>
 	</build>
 
 	<reports>

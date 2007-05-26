@@ -73,4 +73,39 @@
     <ant:echo>Not generating the .project file.</ant:echo>
   </goal>
 
+  <!-- ================================================================== -->
+  <!-- D I S T : B U I L D _ B I N   P R E   G O A L                      -->
+  <!-- ================================================================== -->
+  <!-- copies NOTICE, LICENSE.txt                                         -->
+  <!-- ${maven.dist.bin.assembly.dir} to include them in the binary dists -->
+  <!-- ================================================================== -->
+  <preGoal name="dist:build-bin">
+    <!-- include listed dependencies -->
+    <!-- j:forEach var="dep" items="${pom.dependencies}">
+      <j:if test="${dep.getProperty('dist.bundle') != null &amp;&amp; dep.getProperty('dist.bundle').equalsIgnoreCase('true')}">
+        <copy todir="${maven.dist.bin.assembly.dir}/lib"
+              file="${maven.repo.local}/${dep.getArtifactDirectory()}/jars/${dep.getArtifact()}"/>
+      </j:if>
+    </j:forEach -->
+
+    <copy todir="${maven.dist.bin.assembly.dir}" failonerror="false">
+      <fileset file='${basedir}/NOTICE'/>
+      <fileset file='${basedir}/LICENSE.txt'/>
+    </copy>
+  </preGoal>
+
+  <!-- ================================================================== -->
+  <!-- D I S T : B U I L D _ S R C   P R E   G O A L                      -->
+  <!-- ================================================================== -->
+  <preGoal name="dist:build-src">
+      <copy todir="${maven.dist.src.assembly.dir}">
+      <fileset dir="${basedir}">
+        <include name="project.xml"/>
+        <include name="project.properties"/>
+        <include name="NOTICE"/>
+        <include name="LICENSE.txt"/>
+      </fileset>
+    </copy>
+  </preGoal>
+
 </project>
