@@ -1,0 +1,187 @@
+This file contains the PGP&GPG keys of various Apache developers.
+Please don't use them for email unless you have to. Their main
+purpose is code signing.
+
+Apache users: pgp < KEYS
+Apache developers: 
+        (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+      or
+        (gpg --fingerprint --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
+Apache developers: please ensure that your key is also available via the
+PGP keyservers (such as pgpkeys.mit.edu).
+
+
+pub   1024D/88817402 1998-03-18
+      Key fingerprint = 839B 8C32 286C 100B DB08  F552 2EB9 4682 8881 7402
+uid                  Thomas Vandahl <thomas@vandahl.org>
+sig 3        88817402 2006-11-19  Thomas Vandahl <thomas@vandahl.org>
+sig 3        88817402 2006-10-14  Thomas Vandahl <thomas@vandahl.org>
+sig 3        5D91D0AA 2006-11-19  Thomas Fischer <tfischer@apache.org>
+sig 3        88817402 2006-10-14  Thomas Vandahl <thomas@vandahl.org>
+sig          F12F6072 2007-05-05  Fred Vos <fred.vos@gmail.com>
+sig 2        990ED4AA 2007-05-06  Knut Anders Hatlen <kahatlen@apache.org>
+sig          C874155C 2007-05-06  Thilo Goetz (home key) <twgoetz@gmx.de>
+sig          4358C584 2007-05-06  Vincent Hennebert <vhennebert@apache.org>
+sig          0B7E6CFA 2007-05-06  Sami Siren <siren@apache.org>
+sig          5F6B8B72 2007-05-12  Stefan Bodewig <bodewig@apache.org>
+sig          9C85222B 2007-05-14  Henning Schmiedehausen <hps@intermeta.de>
+sig          01530235 2007-05-12  Luc Maisonobe (general purpose) <Luc.Maisonobe@free.fr>
+sig          6BD872A0 2007-05-17  Michael Busch (Lucene Committer) <buschmi@apache.org>
+sig          6210BFC0 2007-05-17  Jean-Frederic Clere <jfclere@apache.org>
+sig 3        DE8884A0 2007-05-22  Xavier Hanin <xavier.hanin@gmail.com>
+sig          0F143BC1 2007-05-22  Matt Hogstrom <matt@hogstrom.org>
+sig          A46C4CA1 2007-05-22  Matt Hogstrom <hogstrom@apache.org>
+uid                  Thomas Vandahl (Apache) <tv@apache.org>
+sig 3        88817402 2006-11-19  Thomas Vandahl <thomas@vandahl.org>
+sig 3        5D91D0AA 2006-11-19  Thomas Fischer <tfischer@apache.org>
+sig 3        88817402 2006-10-14  Thomas Vandahl <thomas@vandahl.org>
+sig          F12F6072 2007-05-05  Fred Vos <fred.vos@gmail.com>
+sig 2        990ED4AA 2007-05-06  Knut Anders Hatlen <kahatlen@apache.org>
+sig          C874155C 2007-05-06  Thilo Goetz (home key) <twgoetz@gmx.de>
+sig          4358C584 2007-05-06  Vincent Hennebert <vhennebert@apache.org>
+sig          0B7E6CFA 2007-05-06  Sami Siren <siren@apache.org>
+sig          5F6B8B72 2007-05-12  Stefan Bodewig <bodewig@apache.org>
+sig          9C85222B 2007-05-14  Henning Schmiedehausen <hps@intermeta.de>
+sig          01530235 2007-05-12  Luc Maisonobe (general purpose) <Luc.Maisonobe@free.fr>
+sig          6BD872A0 2007-05-17  Michael Busch (Lucene Committer) <buschmi@apache.org>
+sig          6210BFC0 2007-05-17  Jean-Frederic Clere <jfclere@apache.org>
+sig 3        DE8884A0 2007-05-22  Xavier Hanin <xavier.hanin@gmail.com>
+sig          0F143BC1 2007-05-22  Matt Hogstrom <matt@hogstrom.org>
+sig          A46C4CA1 2007-05-22  Matt Hogstrom <hogstrom@apache.org>
+uid                  Dr. Thomas Vandahl <thomas.vandahl@contec-dt.de>
+sig          88817402 2006-11-19  Thomas Vandahl <thomas@vandahl.org>
+sig          2C1AA577 1998-03-18  Dr. Thomas Vandahl <thomas.vandahl@contec-dt.de>
+sig          BB1D9F6D 1998-08-26  ct magazine CERTIFICATE <pgpCA@ct.heise.de>
+sig          88817402 1998-03-18  Thomas Vandahl <thomas@vandahl.org>
+sig          F12F6072 2007-05-05  Fred Vos <fred.vos@gmail.com>
+sig 2        990ED4AA 2007-05-06  Knut Anders Hatlen <kahatlen@apache.org>
+sig          C874155C 2007-05-06  Thilo Goetz (home key) <twgoetz@gmx.de>
+sig          4358C584 2007-05-06  Vincent Hennebert <vhennebert@apache.org>
+sig          0B7E6CFA 2007-05-06  Sami Siren <siren@apache.org>
+sig          5F6B8B72 2007-05-12  Stefan Bodewig <bodewig@apache.org>
+sig          9C85222B 2007-05-14  Henning Schmiedehausen <hps@intermeta.de>
+sig          01530235 2007-05-12  Luc Maisonobe (general purpose) <Luc.Maisonobe@free.fr>
+sig          6BD872A0 2007-05-17  Michael Busch (Lucene Committer) <buschmi@apache.org>
+sig          6210BFC0 2007-05-17  Jean-Frederic Clere <jfclere@apache.org>
+sig 3        DE8884A0 2007-05-22  Xavier Hanin <xavier.hanin@gmail.com>
+sig          0F143BC1 2007-05-22  Matt Hogstrom <matt@hogstrom.org>
+sig          A46C4CA1 2007-05-22  Matt Hogstrom <hogstrom@apache.org>
+sub   2048g/9FB1189B 1998-03-18
+sig          88817402 1998-03-18  Thomas Vandahl <thomas@vandahl.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.5 (Darwin)
+
+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
+pYAkC0YQXbPrhiw=
+=915X
+-----END PGP PUBLIC KEY BLOCK-----
