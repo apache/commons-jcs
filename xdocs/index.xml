@@ -25,12 +25,18 @@
 	</properties>
 
 	<body>
-        <section name="News: Version 1.3 is available">
+        <section name="News (2007-06-05): Version 1.3 is available">
             <p>
                 The Java Caching System, version 1.3 has been released.
                 This release is actually the first official release of JCS.
                 You can download it from the
                 <a href="DownloadPage.html">Download</a> page.
+            </p>
+            <p>
+                <b>Note:</b> The project object model file (POM) of JCS has been
+                updated to fix an error that prevented it from being mirrored to
+                the Maven-1 Repositories. Signature and MD5 checksum have been
+                updated accordingly.
             </p>
         </section>
 		<section name="Java Caching System">
