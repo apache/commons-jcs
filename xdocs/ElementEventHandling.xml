@@ -132,6 +132,20 @@
 				is done asynchronously. Events are added to an event
 				queue and processed by background threads.
 			</p>
+            <p>
+                Here is how to extract the event and source from the 
+                IElementEvent:
+            </p>
+            <source>
+                <![CDATA[
+    public void handleElementEvent( IElementEvent event )
+    {
+        int eventType = event.getElementEvent();
+        CacheElement element = (CacheElement)((EventObject)event).getSource();
+        . . .
+    }
+                ]]>
+            </source>
 			<p>
 				Once you have an IElementEventHandler implementation,
 				you can attach it to an element via the Element
