@@ -32,12 +32,17 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public class MySQLDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
+    /** name of the factory */
     private String name = "JDBCDiskCacheFactory";
 
     /**
      * This factory method should create an instance of the mysqlcache.
+     * <p>
+     * @param rawAttr 
+     * @param cacheManager 
+     * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1 )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager cacheManager )
     {
         MySQLDiskCacheManager mgr = MySQLDiskCacheManager.getInstance( (MySQLDiskCacheAttributes) rawAttr );
         return mgr.getCache( (MySQLDiskCacheAttributes) rawAttr );
@@ -45,6 +50,8 @@ public class MySQLDiskCacheFactory
 
     /**
      * The name of the factory.
+     * <p>
+     * @param nameArg 
      */
     public void setName( String nameArg )
     {
@@ -52,7 +59,9 @@ public class MySQLDiskCacheFactory
     }
 
     /**
-     * Returns the display name
+     * Returns the display name.
+     * <p>
+     * @return factory name
      */
     public String getName()
     {

@@ -63,7 +63,7 @@ public class ScheduleParser
      * combo will be seen.
      * <p>
      * @param startTime
-     * @return
+     * @return Date
      * @throws ScheduleFormatException
      */
     public static Date getDateForSchedule( String startTime )

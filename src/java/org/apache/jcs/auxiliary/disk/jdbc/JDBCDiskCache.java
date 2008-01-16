@@ -47,13 +47,11 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
 /**
  * This is the jdbc disk cache plugin.
  * <p>
- * It expects a table created by the following script. The table name is
- * configurable.
+ * It expects a table created by the following script. The table name is configurable.
  * <p>
- *
+ * 
  * <pre>
  *                       drop TABLE JCS_STORE;
- *
  *                       CREATE TABLE JCS_STORE
  *                       (
  *                       CACHE_KEY                  VARCHAR(250)          NOT NULL,
@@ -67,42 +65,49 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  *                       PRIMARY KEY (CACHE_KEY, REGION)
  *                       );
  * </pre>
- *
+ * 
  * <p>
- * The cleanup thread will delete non eternal items where (now - create time) >
- * max life seconds * 1000
+ * The cleanup thread will delete non eternal items where (now - create time) > max life seconds *
+ * 1000
  * <p>
- * To speed up the deletion the SYSTEM_EXPIRE_TIME_SECONDS is used instead. It
- * is recommended that an index be created on this column is you will have over
- * a million records.
+ * To speed up the deletion the SYSTEM_EXPIRE_TIME_SECONDS is used instead. It is recommended that
+ * an index be created on this column is you will have over a million records.
  * <p>
  * @author Aaron Smuts
  */
 public class JDBCDiskCache
     extends AbstractDiskCache
 {
+    /** The local logger. */
     private final static Log log = LogFactory.getLog( JDBCDiskCache.class );
 
+    /** Don't change. */
     private static final long serialVersionUID = -7169488308515823492L;
 
+    /** custom serialization */
     private IElementSerializer elementSerializer = new StandardSerializer();
 
+    /** configuration */
     private JDBCDiskCacheAttributes jdbcDiskCacheAttributes;
 
+    /** # of times update was called */
     private int updateCount = 0;
 
+    /** # of times get was called */
     private int getCount = 0;
 
-    // if count % interval == 0 then log
+    /** if count % interval == 0 then log */
     private static final int LOG_INTERVAL = 100;
 
+    /** db connection pool */
     private JDBCDiskCachePoolAccess poolAccess = null;
 
+    /** tracks optimization */
     private TableState tableState;
 
     /**
-     * Constructs a JDBC Disk Cache for the provided cache attributes. The table
-     * state object is used to mark deletions.
+     * Constructs a JDBC Disk Cache for the provided cache attributes. The table state object is
+     * used to mark deletions.
      * <p>
      * @param cattr
      * @param tableState
@@ -160,9 +165,12 @@ public class JDBCDiskCache
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
+    /**
+     * Inserts or updates. By default it will try to insert. If the item exists we will get an
+     * error. It will then update. This behavior is configurable. The cache can be configured to
+     * check before inserting.
+     * <p>
+     * @param ce
      */
     public void doUpdate( ICacheElement ce )
     {
@@ -438,8 +446,7 @@ public class JDBCDiskCache
     }
 
     /**
-     * Queries the database for the value. If it gets a result, the value is
-     * deserialized.
+     * Queries the database for the value. If it gets a result, the value is deserialized.
      * <p>
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
@@ -449,7 +456,7 @@ public class JDBCDiskCache
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Getting " + key + " from disk" );
+            log.debug( "Getting [" + key + "] from disk" );
         }
 
         if ( !alive )
@@ -492,11 +499,11 @@ public class JDBCDiskCache
                             }
                             catch ( IOException ioe )
                             {
-                                log.error( ioe );
+                                log.error( "Problem getting item for key [" + key + "]", ioe );
                             }
                             catch ( Exception e )
                             {
-                                log.error( "Problem getting item.", e );
+                                log.error( "Problem getting item for key [" + key + "]", e );
                             }
                         }
                     }
@@ -528,7 +535,7 @@ public class JDBCDiskCache
         }
         catch ( SQLException sqle )
         {
-            log.error( sqle );
+            log.error( "Caught a SQL exception trying to get the item for key [" + key + "]", sqle );
         }
 
         if ( log.isInfoEnabled() )
@@ -544,8 +551,8 @@ public class JDBCDiskCache
     }
 
     /**
-     * Returns true if the removal was succesful; or false if there is nothing
-     * to remove. Current implementation always result in a disk orphan.
+     * Returns true if the removal was succesful; or false if there is nothing to remove. Current
+     * implementation always results in a disk orphan.
      * <p>
      * @param key
      * @return boolean
@@ -581,7 +588,7 @@ public class JDBCDiskCache
                     psSelect.setString( 2, key.toString() );
                 }
 
-                psSelect.executeUpdate( );
+                psSelect.executeUpdate();
 
                 alive = true;
             }
@@ -615,7 +622,10 @@ public class JDBCDiskCache
         return false;
     }
 
-    /** This should remove all elements. */
+    /**
+     * This should remove all elements. The auxiliary can be configured to forbid this behavior. If
+     * remove all is not allowed, the method balks.
+     */
     public void doRemoveAll()
     {
         // it should never get here formt he abstract dis cache.
@@ -631,7 +641,7 @@ public class JDBCDiskCache
                     psDelete = con.prepareStatement( sql );
                     psDelete.setString( 1, this.getCacheName() );
                     alive = true;
-                    psDelete.executeUpdate( );
+                    psDelete.executeUpdate();
                 }
                 catch ( SQLException e )
                 {
@@ -704,7 +714,7 @@ public class JDBCDiskCache
 
                 alive = true;
 
-                deleted = psDelete.executeUpdate( );
+                deleted = psDelete.executeUpdate();
             }
             catch ( SQLException e )
             {
@@ -741,8 +751,7 @@ public class JDBCDiskCache
     }
 
     /**
-     * Typically this is used to handle errors by last resort, force content
-     * update, or removeall
+     * Typically this is used to handle errors by last resort, force content update, or removeall
      */
     public void reset()
     {
@@ -853,7 +862,7 @@ public class JDBCDiskCache
 
     /**
      * @param groupName
-     * @return
+     * @return Set
      */
     public Set getGroupKeys( String groupName )
     {
@@ -865,8 +874,7 @@ public class JDBCDiskCache
     }
 
     /**
-     * @param elementSerializer
-     *            The elementSerializer to set.
+     * @param elementSerializer The elementSerializer to set.
      */
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
@@ -894,8 +902,7 @@ public class JDBCDiskCache
     }
 
     /**
-     * @param jdbcDiskCacheAttributes
-     *            The jdbcDiskCacheAttributes to set.
+     * @param jdbcDiskCacheAttributes The jdbcDiskCacheAttributes to set.
      */
     protected void setJdbcDiskCacheAttributes( JDBCDiskCacheAttributes jdbcDiskCacheAttributes )
     {
@@ -920,6 +927,8 @@ public class JDBCDiskCache
 
     /**
      * Extends the parent stats.
+     * <p>
+     * @return IStats
      */
     public IStats getStatistics()
     {
@@ -1007,6 +1016,8 @@ public class JDBCDiskCache
 
     /**
      * For debugging.
+     * <p>
+     * @return this.getStats();
      */
     public String toString()
     {

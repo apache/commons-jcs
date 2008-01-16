@@ -38,10 +38,13 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 public class MySQLDiskCache
     extends JDBCDiskCache
 {
+    /** don't change */
     private static final long serialVersionUID = -7169488308515823491L;
 
+    /** local logger */
     private final static Log log = LogFactory.getLog( MySQLDiskCache.class );
 
+    /** config attributes */
     MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
 
     /**

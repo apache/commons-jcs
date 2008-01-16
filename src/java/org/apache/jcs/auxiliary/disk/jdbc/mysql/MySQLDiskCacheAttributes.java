@@ -29,6 +29,7 @@ import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 public class MySQLDiskCacheAttributes
     extends JDBCDiskCacheAttributes
 {
+    /** Don't change. */
     private static final long serialVersionUID = -6535808344813320061L;
 
     /**

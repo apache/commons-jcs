@@ -27,6 +27,7 @@ import java.io.Serializable;
 public class DiskTestObject
     implements Serializable
 {
+    /** don't change */
     private static final long serialVersionUID = 1L;
 
     /**

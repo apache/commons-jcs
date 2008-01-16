@@ -27,6 +27,7 @@ package org.apache.jcs.auxiliary.disk.jdbc.mysql.util;
 public class ScheduleFormatException
     extends Exception
 {
+    /** don't change */
     private static final long serialVersionUID = 1L;
 
     /**
