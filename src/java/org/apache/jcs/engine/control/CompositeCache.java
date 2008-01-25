@@ -629,6 +629,8 @@ public class CompositeCache
                     {
                         log.debug( "Exceeded maxLife: " + element.getKey() );
                     }
+                    
+                    handleElementEvent( element, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST );
 
                     return true;
                 }
@@ -646,6 +648,8 @@ public class CompositeCache
                     {
                         log.info( "Exceeded maxIdle: " + element.getKey() );
                     }
+
+                    handleElementEvent( element, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST );
 
                     return true;
                 }
