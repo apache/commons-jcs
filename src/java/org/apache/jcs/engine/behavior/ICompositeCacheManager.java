@@ -32,7 +32,7 @@ public interface ICompositeCacheManager
      * Gets the cache attribute of the CacheHub object
      *
      * @param cacheName
-     * @return
+     * @return CompositeCache
      */
     public abstract CompositeCache getCache( String cacheName );
 }

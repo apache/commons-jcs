@@ -23,41 +23,42 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
-import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
+import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
+import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
 
 /**
- * An event queue is used to propagate ordered cache events to one and only one
- * target listener.
+ * An event queue is used to propagate ordered cache events to one and only one target listener.
  */
 public class ElementEventQueue
     implements IElementEventQueue
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( ElementEventQueue.class );
 
+    /** number of processors */
     private static int processorInstanceCount = 0;
 
+    /** The cache (region) name. */
     private String cacheName;
 
+    /** shutdown or not */
     private boolean destroyed = false;
 
+    /** The worker thread. */
     private Thread t;
 
-    // Internal queue implementation
-
+    /** Internal queue implementation */
     private Object queueLock = new Object();
 
-    // Dummy node
-
+    /** Dummy node */
     private Node head = new Node();
 
+    /** tail of the doubly linked list */
     private Node tail = head;
 
     /**
      * Constructor for the ElementEventQueue object
-     *
      * @param cacheName
      */
     public ElementEventQueue( String cacheName )
@@ -115,11 +116,8 @@ public class ElementEventQueue
 
     /**
      * Adds an ElementEvent to be handled
-     *
-     * @param hand
-     *            The IElementEventHandler
-     * @param event
-     *            The IElementEventHandler IElementEvent event
+     * @param hand The IElementEventHandler
+     * @param event The IElementEventHandler IElementEvent event
      * @throws IOException
      */
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
@@ -146,7 +144,6 @@ public class ElementEventQueue
 
     /**
      * Adds an event to the queue.
-     *
      * @param event
      */
     private void put( AbstractElementEventRunner event )
@@ -164,6 +161,12 @@ public class ElementEventQueue
         }
     }
 
+    /**
+     * Returns the next item on the queue, or waits if empty.
+     * <p>
+     * @return AbstractElementEventRunner
+     * @throws InterruptedException
+     */
     private AbstractElementEventRunner take()
         throws InterruptedException
     {
@@ -207,7 +210,7 @@ public class ElementEventQueue
         }
     }
 
-    ///////////////////////////// Inner classes /////////////////////////////
+    // /////////////////////////// Inner classes /////////////////////////////
 
     private static class Node
     {
@@ -253,7 +256,6 @@ public class ElementEventQueue
                 catch ( InterruptedException e )
                 {
                     // We were interrupted, so terminate gracefully.
-
                     this.destroy();
                 }
 
@@ -269,7 +271,6 @@ public class ElementEventQueue
 
     /**
      * Retries before declaring failure.
-     *
      */
     private abstract class AbstractElementEventRunner
         implements Runnable
@@ -303,8 +304,8 @@ public class ElementEventQueue
         }
 
         /**
-         * Description of the Method
-         *
+         * This will do the work or trigger the work to be done.
+         * <p>
          * @exception IOException
          */
         protected abstract void doRun()
@@ -312,17 +313,20 @@ public class ElementEventQueue
     }
 
     /**
+     * ElementEventRunner.
      */
     private class ElementEventRunner
         extends AbstractElementEventRunner
     {
-
+        /** the handler */
         private IElementEventHandler hand;
 
+        /** event */
         private IElementEvent event;
 
         /**
-         * Constructor for the PutEvent object
+         * Constructor for the PutEvent object.
+         * <p>
          * @param hand
          * @param event
          * @exception IOException
@@ -339,8 +343,8 @@ public class ElementEventQueue
         }
 
         /**
-         * Description of the Method
-         *
+         * Tells the handler to handle the event.
+         * <p>
          * @exception IOException
          */
         protected void doRun()

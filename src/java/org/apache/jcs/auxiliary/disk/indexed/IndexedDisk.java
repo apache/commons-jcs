@@ -39,14 +39,19 @@ class IndexedDisk
      */
     public static final int RECORD_HEADER = 4;
 
+    /** Serializes. */
     private static final StandardSerializer SERIALIZER = new StandardSerializer();
 
+    /** The logger */
     private static final Log log = LogFactory.getLog( IndexedDisk.class );
 
+    /** The path to the log directory. */
     private final String filepath;
 
+    /** The data file. */
     private RandomAccessFile raf;
 
+    /** read buffer */
     private final byte[] buffer = new byte[16384]; // 16K
 
     /**
@@ -198,7 +203,7 @@ class IndexedDisk
      * Serializes the object and write it out to the given position.
      * <p>
      * TODO: make this take a ded as well.
-     * @return
+     * @return true unless error
      * @param obj
      * @param pos
      * @throws IOException
@@ -214,7 +219,7 @@ class IndexedDisk
     /**
      * Returns the raf length.
      * <p>
-     * @return
+     * @return the length of the file.
      * @exception IOException
      */
     protected long length()

@@ -43,7 +43,7 @@ public interface ICacheEventQueue
     /**
      * Return the type of event queue we are using, either single or pooled.
      * <p>
-     * @return
+     * @return the queue type: single or pooled
      */
     public abstract int getQueueType();
 
@@ -130,7 +130,7 @@ public interface ICacheEventQueue
     /**
      * Returns the historical and statistical data for an event queue cache.
      * <p>
-     * @return
+     * @return IStats
      */
     public IStats getStatistics();
 }
