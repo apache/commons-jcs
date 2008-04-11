@@ -24,7 +24,9 @@ import java.io.Serializable;
 import java.rmi.UnmarshalException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -64,18 +66,28 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class RemoteCacheNoWait
     implements AuxiliaryCache
 {
+    /** For serialization. Don't change. */
     private static final long serialVersionUID = -3104089136003714717L;
 
+    /** log instance */
     private final static Log log = LogFactory.getLog( RemoteCacheNoWait.class );
 
+    /** The remote cache client */
     private final IRemoteCacheClient cache;
 
+    /** Event queue for queueing up calls like put and remove. */
     private ICacheEventQueue cacheEventQueue;
 
+    /** how many times get has been called. */
     private int getCount = 0;
 
+    /** how many times getMultiple has been called. */
+    private int getMultipleCount = 0;
+
+    /** how many times remove has been called. */
     private int removeCount = 0;
 
+    /** how many times put has been called. */
     private int putCount = 0;
 
     /**
@@ -87,10 +99,10 @@ public class RemoteCacheNoWait
     public RemoteCacheNoWait( IRemoteCacheClient cache )
     {
         this.cache = cache;
-        CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache.getCacheName(),
-                                             cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-                                                 .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+        CacheEventQueueFactory factory = new CacheEventQueueFactory();
+        this.cacheEventQueue = factory.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache
+            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
+            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
 
         if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
         {
@@ -104,19 +116,19 @@ public class RemoteCacheNoWait
      * (non-Javadoc)
      * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement element )
         throws IOException
     {
         putCount++;
         try
         {
-            cacheEventQueue.addPutEvent( ce );
+            cacheEventQueue.addPutEvent( element );
         }
-        catch ( IOException ex )
+        catch ( IOException e )
         {
-            log.error( "Problem adding putEvent to queue.", ex );
+            log.error( "Problem adding putEvent to queue.", e );
             cacheEventQueue.destroy();
-            throw ex;
+            throw e;
         }
     }
 
@@ -124,7 +136,7 @@ public class RemoteCacheNoWait
      * Synchronously reads from the remote cache.
      * <p>
      * @param key
-     * @return
+     * @return element from the remote cache, or null if not present
      * @throws IOException
      */
     public ICacheElement get( Serializable key )
@@ -141,6 +153,7 @@ public class RemoteCacheNoWait
             {
                 log.debug( "Retrying the get owing to UnmarshalException..." );
             }
+
             try
             {
                 return cache.get( key );
@@ -160,9 +173,61 @@ public class RemoteCacheNoWait
             // Since get does not use the queue, I dont want to killing the queue.
             throw ex;
         }
+
         return null;
     }
 
+    /**
+     * Gets multiple items from the cache based on the given set of keys.  
+     * Sends the getMultiple request on to the server rather than looping through the requested keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @throws IOException 
+     */
+    public Map getMultiple( Set keys )
+        throws IOException
+    {
+        getMultipleCount++;
+        try
+        {
+            return cache.getMultiple( keys );
+        }
+        catch ( UnmarshalException ue )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Retrying the getMultiple owing to UnmarshalException..." );
+            }
+
+            try
+            {
+                return cache.getMultiple( keys );
+            }
+            catch ( IOException ex )
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Failed in retrying the getMultiple for the second time. " + ex.getMessage() );
+                }
+            }
+        }
+        catch ( IOException ex )
+        {
+            // We don't want to destroy the queue on a get failure.
+            // The RemoteCache will Zombie and queue.
+            // Since get does not use the queue, I dont want to killing the queue.
+            throw ex;
+        }
+
+        return new HashMap();
+    }
+
+    /**
+     * @param groupName 
+     * @return the keys for the group name
+     * @throws IOException 
+     */
     public Set getGroupKeys( String groupName )
         throws IOException
     {
@@ -173,7 +238,7 @@ public class RemoteCacheNoWait
      * Adds a remove request to the remote cache.
      * <p>
      * @param key
-     * @return
+     * @return if this was successful
      * @throws IOException
      */
     public boolean remove( Serializable key )
@@ -184,11 +249,11 @@ public class RemoteCacheNoWait
         {
             cacheEventQueue.addRemoveEvent( key );
         }
-        catch ( IOException ex )
+        catch ( IOException e )
         {
-            log.error( "Problem adding RemoveEvent to queue.", ex );
+            log.error( "Problem adding RemoveEvent to queue.", e );
             cacheEventQueue.destroy();
-            throw ex;
+            throw e;
         }
         return false;
     }
@@ -205,11 +270,11 @@ public class RemoteCacheNoWait
         {
             cacheEventQueue.addRemoveAllEvent();
         }
-        catch ( IOException ex )
+        catch ( IOException e )
         {
-            log.error( "Problem adding RemoveAllEvent to queue.", ex );
+            log.error( "Problem adding RemoveAllEvent to queue.", e );
             cacheEventQueue.destroy();
-            throw ex;
+            throw e;
         }
     }
 
@@ -220,9 +285,9 @@ public class RemoteCacheNoWait
         {
             cacheEventQueue.addDisposeEvent();
         }
-        catch ( IOException ex )
+        catch ( IOException e )
         {
-            log.error( "Problem adding DisposeEvent to queue.", ex );
+            log.error( "Problem adding DisposeEvent to queue.", e );
             cacheEventQueue.destroy();
         }
     }
@@ -293,9 +358,9 @@ public class RemoteCacheNoWait
         ICacheEventQueue previousQueue = cacheEventQueue;
 
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache.getCacheName(),
-                                             cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-                                                 .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache
+            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
+            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
 
         if ( previousQueue.isWorking() )
         {
@@ -311,7 +376,7 @@ public class RemoteCacheNoWait
     /**
      * This is temporary. It allows the manager to get the lister.
      * <p>
-     * @return
+     * @return the instance of the remote cache client used by this object
      */
     protected IRemoteCacheClient getRemoteCache()
     {
@@ -357,9 +422,8 @@ public class RemoteCacheNoWait
         return getStatistics().toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+    /**
+     * @return statistics about this communication 
      */
     public IStats getStatistics()
     {
@@ -413,6 +477,11 @@ public class RemoteCacheNoWait
         se = new StatElement();
         se.setName( "Get Count" );
         se.setData( "" + this.getCount );
+        elems.add( se );
+
+        se = new StatElement();
+        se.setName( "GetMultiple Count" );
+        se.setData( "" + this.getMultipleCount );
         elems.add( se );
 
         se = new StatElement();

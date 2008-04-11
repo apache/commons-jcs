@@ -41,22 +41,31 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  */
 public class LateralTCPSender
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( LateralTCPSender.class );
 
+    /** Config */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
+    /** The hostname of the remote server. */
     private String remoteHost;
 
+    /** The address of the server */
     private InetAddress address;
 
+    /** The port the server is listening to. */
     int port = 1111;
 
+    /** The stream from the server connection. */
     private ObjectOutputStream oos;
 
+    /** The socket connection with the server. */
     private Socket socket;
 
+    /** counter, for periodic OOS reset. */
     int counter = 0;
 
+    /** how many messages sent */
     private int sendCnt = 0;
 
     // reset the ObjectOutputStream every 70 calls
@@ -67,6 +76,7 @@ public class LateralTCPSender
     // a stream cached version.
     // I can't replicate an issue that was reported, so I'm not changing the
     // reset frequency for now.
+    /** How often we need to reset the stream. */
     private final static int RESET_FREQUENCY = 70;
 
     /**
@@ -250,7 +260,7 @@ public class LateralTCPSender
      * laterals, then you have to make 10 failed gets to find out none of the caches have the item.
      * <p>
      * @param led
-     * @return
+     * @return ICacheElement
      * @throws IOException
      */
     public ICacheElement sendAndReceive( LateralElementDescriptor led )

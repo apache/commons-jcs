@@ -20,11 +20,9 @@ package org.apache.jcs.auxiliary;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -38,83 +36,24 @@ public interface AuxiliaryCache
     extends ICache
 {
     /**
-     * Puts an item to the cache.
-     * @param ce
-     * @throws IOException
-     */
-    public void update( ICacheElement ce )
-        throws IOException;
-
-    /**
-     * Gets an item from the cache.
-     * @param key
-     * @return
-     * @throws IOException
-     */
-    public ICacheElement get( Serializable key )
-        throws IOException;
-
-    /**
-     * Removes an item from the cache.
-     * @param key
-     * @return
-     * @throws IOException
-     */
-    public boolean remove( Serializable key )
-        throws IOException;
-
-    /**
-     * Removes all cached items from the cache.
-     * @throws IOException
-     */
-    public void removeAll()
-        throws IOException;
-
-    /**
-     * Prepares for shutdown.
-     * @throws IOException
-     */
-    public void dispose()
-        throws IOException;
-
-    /**
-     * Returns the current cache size.
-     * @return
-     */
-    public int getSize();
-
-    /**
-     * Returns the cache status.
-     * @return
-     */
-    public int getStatus();
-
-    /**
-     * Returns the cache name.
-     * @return
-     */
-    public String getCacheName();
-
-    /**
      * Gets the set of keys of objects currently in the group
      * @param group
      * @return a set of group keys
      * @throws IOException
      */
-    public Set getGroupKeys( String group )
+    Set getGroupKeys( String group )
         throws IOException;
 
     /**
-     * Returns the historical and statistical data for a region's auxiliary cache.
-     * @return
+     * @return the historical and statistical data for a region's auxiliary cache.
      */
-    public IStats getStatistics();
+    IStats getStatistics();
 
     /**
      * This returns the generic attributes for an auxiliary cache. Most implementations will cast
      * this to a more specific type.
      * <p>
-     * @return
+     * @return the attributes for the auxiliary cache
      */
-    public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes();
+    AuxiliaryCacheAttributes getAuxiliaryCacheAttributes();
 }

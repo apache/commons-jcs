@@ -19,6 +19,10 @@ package org.apache.jcs.engine.memory.mru;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
@@ -96,6 +100,24 @@ public class MRUMemoryCacheUnitTest
             assertEquals( "myregion" + " data " + i, value );
         }
 
+        // Test that getMultiple returns all the items remaining in cache and none of the missing ones
+        Set keys = new HashSet();
+        for ( int i = 0; i < items; i++ )
+        {
+            keys.add( i + ":key" );
+        }
+
+        Map elements = cache.getCacheElements( keys );
+        for ( int i = max; i >= 0; i-- )
+        {
+            assertNull( elements.get( i + ":key" ) );
+        }
+        for ( int i = max + 2; i < items; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", "myregion" + " data " + i, element.getVal() );
+        }
     }
 
     /**
@@ -254,7 +276,6 @@ public class MRUMemoryCacheUnitTest
 
         assertEquals( "Wrong number of keys.", items, keys.length );
     }
-
 
     /**
      * Add a few keys with the delimeter.  Remove them.

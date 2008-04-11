@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -103,6 +104,31 @@ public class MemoryCacheMockImpl
         throws IOException
     {
         return (ICacheElement) map.get( key );
+    }
+
+    public Map getMultiple( Set keys )
+        throws IOException
+    {
+        Map elements = new HashMap();
+
+        if ( keys != null && !keys.isEmpty() )
+        {
+            Iterator iterator = keys.iterator();
+
+            while ( iterator.hasNext() )
+            {
+                Serializable key = (Serializable) iterator.next();
+
+                ICacheElement element = get( key );
+
+                if ( element != null )
+                {
+                    elements.put( key, element );
+                }
+            }
+        }
+
+        return elements;
     }
 
     public ICacheElement getQuiet( Serializable key )

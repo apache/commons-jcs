@@ -21,6 +21,8 @@ package org.apache.jcs.engine.control;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -58,10 +60,12 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @throws CacheException
      */
-    public void testSwapConfig() throws CacheException
+    public void testSwapConfig()
+        throws CacheException
     {
         JCS swap = JCS.getInstance( "Swap" );
-        assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP, swap.getCacheAttributes().getDiskUsagePattern() );
+        assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP, swap.getCacheAttributes()
+            .getDiskUsagePattern() );
     }
 
     /**
@@ -69,10 +73,12 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @throws CacheException
      */
-    public void testUpdateConfig() throws CacheException
+    public void testUpdateConfig()
+        throws CacheException
     {
         JCS swap = JCS.getInstance( "Update" );
-        assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE, swap.getCacheAttributes().getDiskUsagePattern() );
+        assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE, swap.getCacheAttributes()
+            .getDiskUsagePattern() );
     }
 
     /**
@@ -329,6 +335,17 @@ public class CompositeCacheDiskUsageUnitTest
         {
             // TODO Auto-generated method stub
             return null;
+        }
+
+        /**
+         * Gets multiple items from the cache based on the given set of keys.
+         * <p>
+         * @param keys
+         * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+         */
+        public Map getMultiple( Set keys )
+        {
+            return new HashMap();
         }
 
         /*

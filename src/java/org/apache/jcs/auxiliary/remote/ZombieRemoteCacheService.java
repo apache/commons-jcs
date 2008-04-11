@@ -22,6 +22,8 @@ package org.apache.jcs.auxiliary.remote;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -147,6 +149,17 @@ public class ZombieRemoteCacheService
     {
         // Zombies have no inner life
         return null;
+    }
+
+    /**
+     * @param cacheName 
+     * @param keys
+     * @param requesterId 
+     * @return an empty map.  zombies have no internal data
+     */
+    public Map getMultiple( String cacheName, Set keys, long requesterId )
+    {
+        return new HashMap();
     }
 
     /**

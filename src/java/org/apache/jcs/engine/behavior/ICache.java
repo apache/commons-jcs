@@ -21,6 +21,8 @@ package org.apache.jcs.engine.behavior;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is the top level interface for all cache like structures. It defines the methods used
@@ -35,30 +37,40 @@ public interface ICache
     /**
      * Puts an item to the cache.
      * <p>
-     * @param ce
+     * @param element
      * @throws IOException
      */
-    public void update( ICacheElement ce )
+    void update( ICacheElement element )
         throws IOException;
 
     /**
      * Gets an item from the cache.
      * <p>
      * @param key
-     * @return
+     * @return a cache element, or null if there is no data in cache for this key
      * @throws IOException
      */
-    public ICacheElement get( Serializable key )
+    ICacheElement get( Serializable key )
+        throws IOException;
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @throws IOException
+     */
+    Map getMultiple( Set keys )
         throws IOException;
 
     /**
      * Removes an item from the cache.
      * <p>
      * @param key
-     * @return
+     * @return false if there was an error in removal
      * @throws IOException
      */
-    public boolean remove( Serializable key )
+    boolean remove( Serializable key )
         throws IOException;
 
     /**
@@ -66,14 +78,14 @@ public interface ICache
      * <p>
      * @throws IOException
      */
-    public void removeAll()
+    void removeAll()
         throws IOException;
 
     /**
      * Prepares for shutdown.
      * @throws IOException
      */
-    public void dispose()
+    void dispose()
         throws IOException;
 
     /**
@@ -81,26 +93,26 @@ public interface ICache
      * <p>
      * @return number of elements
      */
-    public int getSize();
+    int getSize();
 
     /**
      * Returns the cache status.
      * <p>
      * @return Alive or Error
      */
-    public int getStatus();
+    int getStatus();
 
     /**
      * Returns the cache stats.
      * <p>
      * @return String of important historical information.
      */
-    public String getStats();
+    String getStats();
 
     /**
      * Returns the cache name.
      * <p>
      * @return usually the region name.
      */
-    public String getCacheName();
+    String getCacheName();
 }

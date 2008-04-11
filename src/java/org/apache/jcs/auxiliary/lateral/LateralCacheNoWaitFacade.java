@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -171,6 +174,36 @@ public class LateralCacheNoWaitFacade
             return null;
         }
         return null;
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     */
+    public Map getMultiple( Set keys )
+    {
+        Map elements = new HashMap();
+
+        if ( keys != null && !keys.isEmpty() )
+        {
+            Iterator iterator = keys.iterator();
+
+            while ( iterator.hasNext() )
+            {
+                Serializable key = (Serializable) iterator.next();
+
+                ICacheElement element = get( key );
+
+                if ( element != null )
+                {
+                    elements.put( key, element );
+                }
+            }
+        }
+
+        return elements;
     }
 
     /*

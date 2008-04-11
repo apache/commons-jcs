@@ -23,11 +23,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -106,7 +110,6 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
-
         for ( int i = 0; i <= items; i++ )
         {
             String value = (String) jcs.get( i + ":key" );
@@ -114,8 +117,22 @@ public class MySQLDiskCacheHsqlBackedUnitTest
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
-        // Remove all the items
+        // Test that getElements returns all the expected values
+        Set keys = new HashSet();
+        for ( int i = 0; i <= items; i++ )
+        {
+            keys.add( i + ":key" );
+        }
 
+        Map elements = jcs.getCacheElements( keys );
+        for ( int i = 0; i <= items; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+        }
+
+        // Remove all the items
         for ( int i = 0; i <= items; i++ )
         {
             jcs.remove( i + ":key" );

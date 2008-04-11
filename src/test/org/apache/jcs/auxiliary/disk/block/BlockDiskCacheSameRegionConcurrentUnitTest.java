@@ -19,11 +19,16 @@ package org.apache.jcs.auxiliary.disk.block;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Test which exercises the block disk cache. Runs three threads against the same region.
@@ -104,7 +109,8 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
      * <p>
      * @throws Exception
      */
-    public void setUp() throws Exception
+    public void setUp()
+        throws Exception
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
         JCS.getInstance( "blockRegion4" ).clear();
@@ -138,6 +144,21 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
             String value = (String) jcs.get( key );
 
             assertEquals( "Wrong value for key [" + key + "]", region + " data " + i + "-" + region, value );
+        }
+
+        // Test that getElements returns all the expected values
+        Set keys = new HashSet();
+        for ( int i = start; i <= end; i++ )
+        {
+            keys.add( i + ":key" );
+        }
+
+        Map elements = jcs.getCacheElements( keys );
+        for ( int i = start; i <= end; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i + "-" + region, element.getVal() );
         }
     }
 }

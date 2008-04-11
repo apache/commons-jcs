@@ -68,27 +68,28 @@ class RemoteCacheServer
     extends UnicastRemoteObject
     implements IRemoteCacheService, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
 {
+    /** For serialization. Don't change.*/
     private static final long serialVersionUID = -8072345435941473116L;
 
+    /** log instance */
     private final static Log log = LogFactory.getLog( RemoteCacheServer.class );
 
     /** timing -- if we should record operation times. */
     protected final static boolean timing = true;
 
+    /** Number of puts into the cache. */
     private int puts = 0;
 
-    // Maps cache name to CacheListeners object.
-    // association of listeners (regions).
+    /** Maps cache name to CacheListeners object. association of listeners (regions). */
     private final Hashtable cacheListenersMap = new Hashtable();
 
     private final Hashtable clusterListenersMap = new Hashtable();
 
     private CompositeCacheManager cacheManager;
 
-    // relates listener id with a type
+    /** relates listener id with a type */
     private final Hashtable idTypeMap = new Hashtable();
 
-    // private transient int listenerId = 0;
     private int[] listenerId = new int[1];
 
     /** Configuration settings. */
@@ -103,7 +104,6 @@ class RemoteCacheServer
      * <p>
      * @param rcsa
      * @throws RemoteException
-     * @exception IOException
      */
     RemoteCacheServer( IRemoteCacheServerAttributes rcsa )
         throws RemoteException
@@ -215,7 +215,6 @@ class RemoteCacheServer
      * <p>
      * @param item
      * @throws IOException
-     *
      */
     public void put( ICacheElement item )
         throws IOException
@@ -223,10 +222,9 @@ class RemoteCacheServer
         update( item );
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICacheService#update(org.apache.jcs.engine.behavior.ICacheElement)
+    /**
+     * @param item 
+     * @throws IOException 
      */
     public void update( ICacheElement item )
         throws IOException
@@ -266,7 +264,6 @@ class RemoteCacheServer
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
-
         long start = 0;
         if ( timing )
         {
@@ -487,8 +484,8 @@ class RemoteCacheServer
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "get [" + key + "] from cache [" + cacheName + "] requesterId = [" + requesterId + "] remoteType = "
-                + remoteTypeL );
+            log.debug( "get [" + key + "] from cache [" + cacheName + "] requesterId = [" + requesterId
+                + "] remoteType = " + remoteTypeL );
         }
 
         // Since a non-receiving remote cache client will not register a
@@ -538,7 +535,8 @@ class RemoteCacheServer
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet [" + this.rcsa.getAllowClusterGet() + "]"  );
+                log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
+                    + this.rcsa.getAllowClusterGet() + "]" );
             }
             element = c.get( key );
         }
@@ -550,12 +548,118 @@ class RemoteCacheServer
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet [" + this.rcsa.getAllowClusterGet() + "]" );
+                log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
+                    + this.rcsa.getAllowClusterGet() + "]" );
             }
             element = c.localGet( key );
         }
 
         return element;
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param cacheName 
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @throws IOException 
+     */
+    public Map getMultiple( String cacheName, Set keys )
+        throws IOException
+    {
+        return this.getMultiple( cacheName, keys, 0 );
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param cacheName 
+     * @param keys
+     * @param requesterId 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @throws IOException 
+     */
+    public Map getMultiple( String cacheName, Set keys, long requesterId )
+        throws IOException
+    {
+        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "getMultiple [" + keys + "] from cache [" + cacheName + "] requesterId = [" + requesterId
+                + "] remoteType = " + remoteTypeL );
+        }
+
+        // Since a non-receiving remote cache client will not register a
+        // listener, it will not have a listener id assigned from the server. As
+        // such the remote server cannot determine if it is a cluster or a
+        // normal client. It will assume that it is a normal client.
+
+        boolean fromCluster = false;
+        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        {
+            fromCluster = true;
+        }
+
+        CacheListeners cacheDesc = null;
+        try
+        {
+            cacheDesc = getCacheListeners( cacheName );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem getting listeners.", e );
+        }
+
+        if ( cacheDesc == null )
+        {
+            return null;
+        }
+        CompositeCache c = (CompositeCache) cacheDesc.cache;
+
+        Map elements = null;
+
+        // If we have a getMultiple come in from a client and we don't have the item
+        // locally, we will allow the cache to look in other non local sources,
+        // such as a remote cache or a lateral.
+        //
+        // Since remote servers never get from clients and clients never go
+        // remote from a remote call, this
+        // will not result in any loops.
+        //
+        // This is the only instance I can think of where we allow a remote get
+        // from a remote call. The purpose is to allow remote cache servers to
+        // talk to each other. If one goes down, you want it to be able to get
+        // data from those that were up when the failed server comes back o
+        // line.
+
+        if ( !fromCluster && this.rcsa.getAllowClusterGet() )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "NonLocalGetMultiple. fromCluster [" + fromCluster + "] AllowClusterGet ["
+                    + this.rcsa.getAllowClusterGet() + "]" );
+            }
+            
+            elements = c.getMultiple( keys );
+        }
+        else
+        {
+            // Gets from cluster type remote will end up here.
+            // Gets from all clients will end up here if allow cluster get is
+            // false.
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "LocalGetMultiple.  fromCluster [" + fromCluster + "] AllowClusterGet ["
+                    + this.rcsa.getAllowClusterGet() + "]" );
+            }
+            
+            elements = c.localGetMultiple( keys );
+        }
+
+        return elements;
     }
 
     /**
@@ -581,6 +685,7 @@ class RemoteCacheServer
         {
             return Collections.EMPTY_SET;
         }
+        
         CompositeCache c = (CompositeCache) cacheDesc.cache;
         return c.getGroupKeys( group );
     }
@@ -981,7 +1086,8 @@ class RemoteCacheServer
      * registered, it will be removed from the event queue map list.
      * <p>
      * @param cacheName
-     * @param listenerId
+     * @param listener
+     * @throws IOException 
      */
     public void removeCacheListener( String cacheName, ICacheListener listener )
         throws IOException

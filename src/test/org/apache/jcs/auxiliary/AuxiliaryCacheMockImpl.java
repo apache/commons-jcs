@@ -21,6 +21,8 @@ package org.apache.jcs.auxiliary;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.engine.CacheConstants;
@@ -64,6 +66,17 @@ public class AuxiliaryCacheMockImpl
     {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     */
+    public Map getMultiple( Set keys )
+    {
+        return new HashMap();
     }
 
     /*

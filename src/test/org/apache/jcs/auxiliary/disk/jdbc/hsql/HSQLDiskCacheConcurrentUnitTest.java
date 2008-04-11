@@ -19,11 +19,16 @@ package org.apache.jcs.auxiliary.disk.jdbc.hsql;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different regions for thre
@@ -125,10 +130,6 @@ public class HSQLDiskCacheConcurrentUnitTest
 
         System.out.println( jcs.getStats() );
 
-        // Thread.sleep( 1000 );
-
-        // System.out.println( jcs.getStats() );
-
         // Test that all items are in cache
 
         for ( int i = 0; i <= items; i++ )
@@ -136,6 +137,21 @@ public class HSQLDiskCacheConcurrentUnitTest
             String value = (String) jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
+        }
+
+        // Test that getElements returns all the expected values
+        Set keys = new HashSet();
+        for ( int i = 0; i <= items; i++ )
+        {
+            keys.add( i + ":key" );
+        }
+
+        Map elements = jcs.getCacheElements( keys );
+        for ( int i = 0; i <= items; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
 
         // Remove all the items

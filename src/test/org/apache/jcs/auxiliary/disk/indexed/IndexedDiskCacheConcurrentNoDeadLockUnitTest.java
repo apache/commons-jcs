@@ -22,6 +22,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.textui.TestRunner;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.engine.control.CompositeCacheManager;
@@ -54,7 +55,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     public static void main( String args[] )
     {
         String[] testCaseName = { IndexedDiskCacheConcurrentNoDeadLockUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
+        TestRunner.main( testCaseName );
     }
 
     /**

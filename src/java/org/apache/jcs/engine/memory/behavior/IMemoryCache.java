@@ -22,6 +22,7 @@ package org.apache.jcs.engine.memory.behavior;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -29,26 +30,22 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
-/**
- * For the framework. Insures methods a MemoryCache needs to access.
- *
- */
+/** For the framework. Insures methods a MemoryCache needs to access. */
 public interface IMemoryCache
 {
     /**
      * Initialize the memory cache
      * <p>
-     * @param cache
-     *            The cache (region) this memory store is attached to.
+     * @param cache The cache (region) this memory store is attached to.
      */
-    public void initialize( CompositeCache cache );
+    void initialize( CompositeCache cache );
 
     /**
      * Destroy the memory cache
      * <p>
      * @throws IOException
      */
-    public void dispose()
+    void dispose()
         throws IOException;
 
     /**
@@ -56,14 +53,14 @@ public interface IMemoryCache
      * <p>
      * @return Element count
      */
-    public int getSize();
+    int getSize();
 
     /**
      * Returns the historical and statistical data for a region's memory cache.
      * <p>
      * @return Statistics and Infor for the Memory Cache.
      */
-    public IStats getStatistics();
+    IStats getStatistics();
 
     /**
      * Get an iterator for all elements in the memory cache. This should be
@@ -72,7 +69,7 @@ public interface IMemoryCache
      * <p>
      * @return An iterator
      */
-    public Iterator getIterator();
+    Iterator getIterator();
 
     /**
      * Get an Array of the keys for all elements in the memory cache.
@@ -82,7 +79,7 @@ public interface IMemoryCache
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.
      */
-    public Object[] getKeyArray();
+    Object[] getKeyArray();
 
     /**
      * Removes an item from the cache
@@ -93,7 +90,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    public boolean remove( Serializable key )
+    boolean remove( Serializable key )
         throws IOException;
 
     /**
@@ -102,7 +99,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    public void removeAll()
+    void removeAll()
         throws IOException;
 
     /**
@@ -116,7 +113,7 @@ public interface IMemoryCache
      *         only 3, you will get 3.
      * @throws IOException
      */
-    public int freeElements( int numberToFree )
+    int freeElements( int numberToFree )
         throws IOException;
 
     /**
@@ -128,7 +125,18 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    public ICacheElement get( Serializable key )
+    ICacheElement get( Serializable key )
+        throws IOException;
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map 
+     * if there is no data in cache for any of these keys
+     * @throws IOException 
+     */
+    Map getMultiple( Set keys )
         throws IOException;
 
     /**
@@ -141,7 +149,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    public ICacheElement getQuiet( Serializable key )
+    ICacheElement getQuiet( Serializable key )
         throws IOException;
 
     /**
@@ -152,7 +160,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    public void waterfal( ICacheElement ce )
+    void waterfal( ICacheElement ce )
         throws IOException;
 
     /**
@@ -163,7 +171,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    public void update( ICacheElement ce )
+    void update( ICacheElement ce )
         throws IOException;
 
     /**
@@ -171,7 +179,7 @@ public interface IMemoryCache
      * <p>
      * @return The cacheAttributes value
      */
-    public ICompositeCacheAttributes getCacheAttributes();
+    ICompositeCacheAttributes getCacheAttributes();
 
     /**
      * Sets the CacheAttributes of the region.
@@ -179,14 +187,14 @@ public interface IMemoryCache
      * @param cattr
      *            The new cacheAttributes value
      */
-    public void setCacheAttributes( ICompositeCacheAttributes cattr );
+    void setCacheAttributes( ICompositeCacheAttributes cattr );
 
     /**
      * Gets the cache hub / region that uses the MemoryCache.
      * <p>
      * @return The cache value
      */
-    public CompositeCache getCompositeCache();
+    CompositeCache getCompositeCache();
 
     /**
      * Gets the set of keys of objects currently in the group.
@@ -194,6 +202,5 @@ public interface IMemoryCache
      * @param group
      * @return a Set of group keys.
      */
-    public Set getGroupKeys( String group );
-
+    Set getGroupKeys( String group );
 }

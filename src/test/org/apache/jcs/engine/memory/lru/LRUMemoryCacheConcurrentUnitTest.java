@@ -19,6 +19,10 @@ package org.apache.jcs.engine.memory.lru;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -132,18 +136,35 @@ public class LRUMemoryCacheConcurrentUnitTest
         }
 
         // Test that initial items have been purged
-
         for ( int i = 0; i < 102; i++ )
         {
             assertNull( lru.get( i + ":key" ) );
         }
 
         // Test that last items are in cache
-
         for ( int i = 102; i < items; i++ )
         {
             String value = (String) lru.get( i + ":key" ).getVal();
             assertEquals( region + " data " + i, value );
+        }
+
+        // Test that getMultiple returns all the items remaining in cache and none of the missing ones
+        Set keys = new HashSet();
+        for ( int i = 0; i < items; i++ )
+        {
+            keys.add( i + ":key" );
+        }
+
+        Map elements = lru.getMultiple( keys );
+        for ( int i = 0; i < 102; i++ )
+        {
+            assertNull( elements.get( i + ":key" ) );
+        }
+        for ( int i = 102; i < items; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
 
         // Remove all the items

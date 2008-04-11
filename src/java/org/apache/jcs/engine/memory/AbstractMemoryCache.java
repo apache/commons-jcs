@@ -21,6 +21,7 @@ package org.apache.jcs.engine.memory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -54,8 +55,10 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 public abstract class AbstractMemoryCache
     implements MemoryCache, Serializable
 {
+    /** log instance */
     private final static Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
+    /** default chunking size */
     private static final int DEFAULT_CHUNK_SIZE = 2;
 
     /** The region name. This defines a namespace of sorts. */
@@ -149,6 +152,39 @@ public abstract class AbstractMemoryCache
         throws IOException;
 
     /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map 
+     * if there is no data in cache for any of these keys
+     * @throws IOException 
+     */
+    public Map getMultiple( Set keys )
+        throws IOException
+    {
+        Map elements = new HashMap();
+
+        if ( keys != null && !keys.isEmpty() )
+        {
+            Iterator iterator = keys.iterator();
+
+            while ( iterator.hasNext() )
+            {
+                Serializable key = (Serializable) iterator.next();
+
+                ICacheElement element = get( key );
+
+                if ( element != null )
+                {
+                    elements.put( key, element );
+                }
+            }
+        }
+
+        return elements;
+    }
+
+    /**
      * Get an item from the cache without affecting its order or last access
      * time
      * @param key
@@ -200,9 +236,8 @@ public abstract class AbstractMemoryCache
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
+    /**
+     * @return statistics about the cache
      */
     public IStats getStatistics()
     {
@@ -286,6 +321,10 @@ public abstract class AbstractMemoryCache
         return this.cache;
     }
 
+    /**
+     * @param groupName 
+     * @return group keys
+     */
     public Set getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( getCacheName(), groupName );
@@ -313,10 +352,9 @@ public abstract class AbstractMemoryCache
     class MyThreadFactory
         implements ThreadFactory
     {
-
-        /*
-         * (non-Javadoc)
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+        /**  
+         * @param runner 
+         * @return a new thread for the given Runnable
          */
         public Thread newThread( Runnable runner )
         {

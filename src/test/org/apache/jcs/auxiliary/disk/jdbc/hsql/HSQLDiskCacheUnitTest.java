@@ -19,10 +19,15 @@ package org.apache.jcs.auxiliary.disk.jdbc.hsql;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different regions for thre
@@ -43,7 +48,6 @@ public class HSQLDiskCacheUnitTest
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
      * <p>
-     * @param region Name of the region to access
      * @exception Exception If an error occurs
      */
     public void testBasicPutRemove()
@@ -74,6 +78,22 @@ public class HSQLDiskCacheUnitTest
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
+
+        // Test that getElements returns all the expected values
+        Set keys = new HashSet();
+        for ( int i = 0; i <= items; i++ )
+        {
+            keys.add( i + ":key" );
+        }
+
+        Map elements = jcs.getCacheElements( keys );
+        for ( int i = 0; i <= items; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+        }
+
 
         // Remove all the items
 

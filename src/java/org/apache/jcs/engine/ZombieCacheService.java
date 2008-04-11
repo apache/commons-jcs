@@ -20,6 +20,10 @@ package org.apache.jcs.engine;
  */
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,14 +62,26 @@ public class ZombieCacheService
         // zombies have no inner life
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String,
-     *      java.io.Serializable)
-     */
+    /**
+     * @param cacheName 
+     * @param key 
+     * @return null. zombies have no internal data
+     * */
     public ICacheElement get( String cacheName, Serializable key )
     {
         return null;
+    }
+
+    /**
+     * Returns an empty map.  Zombies have no internal data.
+     * <p>
+     * @param cacheName 
+     * @param keys
+     * @return an empty map 
+     */
+    public Map getMultiple( String cacheName, Set keys )
+    {
+        return new HashMap();
     }
 
     /**

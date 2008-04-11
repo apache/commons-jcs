@@ -19,7 +19,11 @@ package org.apache.jcs.access.behavior;
  * under the License.
  */
 
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
@@ -68,11 +72,47 @@ public interface ICacheAccess
         throws CacheException;
 
     /**
+     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param name Key the object is stored as
+     * @return The ICacheElement if the object is found or null
+     */
+    ICacheElement getCacheElement( Object name );
+
+    /**
+     * Get multiple elements from the cache based on a set of cache keys.
+     * <p>
+     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param names set of Object cache keys
+     * @return a map of Object key to ICacheElement element, or empty map if none of the keys are present
+     */
+    Map getCacheElements( Set names );
+
+    /**
      * Removes an item or all items. Should be called remove.
      * <p>
      * @throws CacheException
      * @deprecated
-     * @see #remove
+     * @see #remove()
      */
     void destroy()
         throws CacheException;
@@ -90,7 +130,7 @@ public interface ICacheAccess
      * @param name
      * @throws CacheException
      * @deprecated
-     * @see #remove
+     * @see #remove(Object)
      */
     void destroy( Object name )
         throws CacheException;
@@ -114,20 +154,20 @@ public interface ICacheAccess
      * Only object loaded after the reset will use the new defaults. If no name
      * argument is provided, the reset is applied to the region.
      * <p>
-     * @param attr
+     * @param attributes
      * @throws CacheException
      */
-    void resetElementAttributes( IElementAttributes attr )
+    void resetElementAttributes( IElementAttributes attributes )
         throws CacheException;
 
     /**
      * Reset the attributes on the object matching this key name.
      * <p>
      * @param name
-     * @param attr
+     * @param attributes
      * @throws CacheException
      */
-    void resetElementAttributes( Object name, IElementAttributes attr )
+    void resetElementAttributes( Object name, IElementAttributes attributes )
         throws CacheException;
 
     /**

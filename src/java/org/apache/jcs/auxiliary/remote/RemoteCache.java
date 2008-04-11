@@ -26,6 +26,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.server.RMISocketFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -204,8 +207,7 @@ public class RemoteCache
 
                     // convert so we don't have to know about the object on the
                     // other end.
-                    serialized = SerializationConversionUtil
-                        .getSerializedCacheElement( ce, this.elementSerializer );
+                    serialized = SerializationConversionUtil.getSerializedCacheElement( ce, this.elementSerializer );
 
                     remote.update( serialized, getListenerId() );
                 }
@@ -278,6 +280,38 @@ public class RemoteCache
         }
 
         return retVal;
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @throws IOException 
+     */
+    public Map getMultiple( Set keys )
+        throws IOException
+    {
+        Map elements = new HashMap();
+
+        if ( keys != null && !keys.isEmpty() )
+        {
+            Iterator iterator = keys.iterator();
+
+            while ( iterator.hasNext() )
+            {
+                Serializable key = (Serializable) iterator.next();
+
+                ICacheElement element = get( key );
+
+                if ( element != null )
+                {
+                    elements.put( key, element );
+                }
+            }
+        }
+
+        return elements;
     }
 
     /**
@@ -504,7 +538,7 @@ public class RemoteCache
         {
             se = new StatElement();
             se.setName( "Zombie Queue Size" );
-            se.setData( "" + ((ZombieRemoteCacheService)remote).getQueueSize() );
+            se.setData( "" + ( (ZombieRemoteCacheService) remote ).getQueueSize() );
             elems.add( se );
         }
 
@@ -554,11 +588,11 @@ public class RemoteCache
     {
         if ( this.remote != null && this.remote instanceof ZombieRemoteCacheService )
         {
-            ZombieRemoteCacheService zombie = (ZombieRemoteCacheService)this.remote;
+            ZombieRemoteCacheService zombie = (ZombieRemoteCacheService) this.remote;
             this.remote = remote;
             try
             {
-                zombie.propagateEvents(  remote );
+                zombie.propagateEvents( remote );
             }
             catch ( Exception e )
             {
@@ -590,10 +624,10 @@ public class RemoteCache
     private void handleException( Exception ex, String msg )
         throws IOException
     {
-        log.error( "Disabling remote cache due to error: " + msg , ex );
+        log.error( "Disabling remote cache due to error: " + msg, ex );
 
         // we should not switch if the existing is a zombie.
-        if ( remote == null || !(remote instanceof ZombieRemoteCacheService) )
+        if ( remote == null || !( remote instanceof ZombieRemoteCacheService ) )
         {
             // TODO make configurable
             remote = new ZombieRemoteCacheService( irca.getZombieQueueMaxSize() );

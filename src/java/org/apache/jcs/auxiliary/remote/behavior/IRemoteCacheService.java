@@ -22,6 +22,7 @@ package org.apache.jcs.auxiliary.remote.behavior;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.Remote;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.access.exception.ObjectExistsException;
@@ -34,7 +35,6 @@ import org.apache.jcs.engine.behavior.ICacheService;
 public interface IRemoteCacheService
     extends Remote, ICacheService
 {
-
     /**
      * Puts a cache item to the cache.
      * <p>
@@ -43,7 +43,7 @@ public interface IRemoteCacheService
      * @throws ObjectExistsException
      * @throws IOException
      */
-    public void update( ICacheElement item, long requesterId )
+    void update( ICacheElement item, long requesterId )
         throws ObjectExistsException, IOException;
 
     /**
@@ -54,7 +54,7 @@ public interface IRemoteCacheService
      * @param requesterId
      * @throws IOException
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    void remove( String cacheName, Serializable key, long requesterId )
         throws IOException;
 
     /**
@@ -64,7 +64,7 @@ public interface IRemoteCacheService
      * @param requesterId
      * @throws IOException
      */
-    public void removeAll( String cacheName, long requesterId )
+    void removeAll( String cacheName, long requesterId )
         throws IOException;
 
     /**
@@ -80,7 +80,19 @@ public interface IRemoteCacheService
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+    ICacheElement get( String cacheName, Serializable key, long requesterId )
+        throws IOException;
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param cacheName 
+     * @param keys
+     * @param requesterId 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @throws IOException 
+     */
+    Map getMultiple( String cacheName, Set keys, long requesterId )
         throws IOException;
 
     /**
@@ -89,6 +101,6 @@ public interface IRemoteCacheService
      * @return A Set of keys
      * @throws java.rmi.RemoteException
      */
-    public Set getGroupKeys( String cacheName, String groupName )
+    Set getGroupKeys( String cacheName, String groupName )
         throws java.rmi.RemoteException;
 }

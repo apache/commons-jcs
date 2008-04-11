@@ -19,11 +19,16 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
@@ -172,16 +177,28 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
             assertEquals( region + " data " + i, value );
         }
 
-        /*
-         * // you can't remove in one thread and expect them to be in another //
-         * Remove all the items
-         *
-         * for ( int i = start; i <= end; i++ ) { jcs.remove( i + ":key" ); } //
-         * Verify removal
-         *
-         * for ( int i = start; i <= end; i++ ) { assertNull( "Removed key
-         * should be null: " + i + ":key", jcs.get( i + ":key" ) ); }
-         */
+        // Test that getElements returns all the expected values
+        Set keys = new HashSet();
+        for ( int i = start; i <= end; i++ )
+        {
+            keys.add( i + ":key" );
+        }
 
+        Map elements = jcs.getCacheElements( keys );
+        for ( int i = start; i <= end; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
+        }
+
+        // you can't remove in one thread and expect them to be in another //
+        //          Remove all the items
+        //         
+        //          for ( int i = start; i <= end; i++ ) { jcs.remove( i + ":key" ); } //
+        //          Verify removal
+        //         
+        //          for ( int i = start; i <= end; i++ ) { assertNull( "Removed key
+        //          should be null: " + i + ":key", jcs.get( i + ":key" ) ); }
     }
 }

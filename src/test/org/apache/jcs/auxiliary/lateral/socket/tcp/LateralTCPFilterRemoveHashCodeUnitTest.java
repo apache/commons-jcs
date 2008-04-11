@@ -33,11 +33,13 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 public class LateralTCPFilterRemoveHashCodeUnitTest
     extends TestCase
 {
-
+    /** Does the test print to system out. */
+    private static boolean isSysOut = true;
     //private static boolean isSysOut = false;
 
-    private static boolean isSysOut = true;
-
+    /** The port the server will listen to. */
+    private int serverPort = 1118;
+    
     /**
      * Constructor for the TestDiskCache object.
      *
@@ -53,6 +55,8 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
      */
     public void setUp()
     {
+        System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
+
         JCS.setConfigFilename( "/TestTCPLateralRemoveFilter.ccf" );
     }
 
@@ -91,7 +95,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
-        lattr2.setTcpServer( "localhost:1110" );
+        lattr2.setTcpServer( "localhost:1118" );
         lattr2.setIssueRemoveOnPut( true );
         // should still try to remove
         lattr2.setAllowPut( false );

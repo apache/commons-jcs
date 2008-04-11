@@ -21,11 +21,11 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import org.apache.jcs.access.exception.ObjectExistsException;
-import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
@@ -43,42 +43,38 @@ public class RemoteCacheServiceMockImpl
     /** The key that was last passed to remove. */
     public Object lastRemoveKey;
 
-    /**
-     * The cache name that was last passed to removeAll.
-     */
+    /** The cache name that was last passed to removeAll. */
     public String lastRemoveAllCacheName;
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#get(java.lang.String,
-     *      java.io.Serializable, long)
+    /**
+     * @param cacheName 
+     * @param key 
+     * @param requesterId 
+     * @return null
      */
     public ICacheElement get( String cacheName, Serializable key, long requesterId )
-        throws IOException
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#getGroupKeys(java.lang.String,
-     *      java.lang.String)
+    /**
+     * @param cacheName 
+     * @param groupName 
+     * @return empty set 
      */
     public Set getGroupKeys( String cacheName, String groupName )
-        throws RemoteException
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new HashSet();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#remove(java.lang.String,
-     *      java.io.Serializable, long)
+    /**
+     * Set the last remove key.
+     * <p>
+     * @param cacheName 
+     * @param key 
+     * @param requesterId 
      */
     public void remove( String cacheName, Serializable key, long requesterId )
-        throws IOException
     {
         lastRemoveKey = key;
     }
@@ -96,75 +92,95 @@ public class RemoteCacheServiceMockImpl
         lastRemoveAllCacheName = cacheName;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
-     *      long)
+    /**
+     * Set the last update item.
+     * <p>
+     * @param item 
+     * @param requesterId 
      */
     public void update( ICacheElement item, long requesterId )
-        throws ObjectExistsException, IOException
     {
         lastUpdate = item;
     }
 
+    /**
+     * Do nothing.
+     * <p>
+     * @param cacheName 
+     */
     public void dispose( String cacheName )
-        throws IOException
     {
-        // TODO Auto-generated method stub
-
+        return;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String, java.io.Serializable)
+    /**
+     * @param cacheName 
+     * @param key 
+     * @return null
      */
     public ICacheElement get( String cacheName, Serializable key )
-        throws ObjectNotFoundException, IOException
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#release()
+    /**
+     * Do nothing.
      */
     public void release()
-        throws IOException
     {
-        // TODO Auto-generated method stub
-
+        return;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String,
-     *      java.io.Serializable)
+    /**
+     * Set the last remove key.
+     * <p>
+     * @param cacheName 
+     * @param key 
      */
     public void remove( String cacheName, Serializable key )
-        throws IOException
     {
         lastRemoveKey = key;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#removeAll(java.lang.String)
+    /**
+     * Set the last remove all cache name.
+     * <p>
+     * @param cacheName 
      */
     public void removeAll( String cacheName )
-        throws IOException
     {
         lastRemoveAllCacheName = cacheName;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#update(org.apache.jcs.engine.behavior.ICacheElement)
+    /**
+     * Set the last update item.
+     * <p>
+     * @param item 
      */
     public void update( ICacheElement item )
-        throws ObjectExistsException, IOException
     {
         lastUpdate = item;
+    }
+
+    /**
+     * @param cacheName 
+     * @param keys 
+     * @param requesterId 
+     * @return empty map
+     */
+    public Map getMultiple( String cacheName, Set keys, long requesterId )
+    {
+        return new HashMap();
+    }
+
+    /**
+     * @param cacheName 
+     * @param keys 
+     * @return empty map
+     */
+    public Map getMultiple( String cacheName, Set keys )
+    {
+        return new HashMap();
     }
 
 }

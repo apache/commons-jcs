@@ -26,9 +26,7 @@ import java.util.Set;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheService;
 
-/**
- * Used to retrieve and update the lateral cache.
- */
+/** Used to retrieve and update the lateral cache. */
 public interface ILateralCacheService
     extends ICacheService
 {
@@ -39,7 +37,7 @@ public interface ILateralCacheService
      * @param requesterId
      * @throws IOException
      */
-    public void update( ICacheElement item, long requesterId )
+    void update( ICacheElement item, long requesterId )
         throws IOException;
 
     /**
@@ -50,7 +48,7 @@ public interface ILateralCacheService
      * @param requesterId
      * @throws IOException
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    void remove( String cacheName, Serializable key, long requesterId )
         throws IOException;
 
     /**
@@ -60,13 +58,13 @@ public interface ILateralCacheService
      * @param requesterId
      * @throws IOException
      */
-    public void removeAll( String cacheName, long requesterId )
+    void removeAll( String cacheName, long requesterId )
         throws IOException;
 
     /**
      * @param cacheName
      * @param groupName
-     * @return
+     * @return keys
      */
-    public Set getGroupKeys( String cacheName, String groupName );
+    Set getGroupKeys( String cacheName, String groupName );
 }

@@ -38,7 +38,8 @@ import org.apache.jcs.utils.timing.SleepUtil;
 public class BasicRemoteCacheClientServerUnitTest
     extends TestCase
 {
-    RemoteCacheServer server = null;
+    /** Server instance to use in the tests. */
+    private RemoteCacheServer server = null;
 
     /**
      * Starts the server. This is not in a setup, since the server is slow to kill right now.

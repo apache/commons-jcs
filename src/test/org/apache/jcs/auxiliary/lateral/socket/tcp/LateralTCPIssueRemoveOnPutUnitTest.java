@@ -29,17 +29,20 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Tests the issue remove on put fuctionality.
- *
  * @author asmuts
  */
 public class LateralTCPIssueRemoveOnPutUnitTest
     extends TestCase
 {
+    /** Should log data go to system out. */
     private static boolean isSysOut = true;
 
+    /** The port the server will listen to. */
+    private int serverPort = 1118;
+    
     /**
      * Constructor for the TestDiskCache object.
-     *
+     * <p>
      * @param testName
      */
     public LateralTCPIssueRemoveOnPutUnitTest( String testName )
@@ -51,12 +54,13 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * Test setup
      */
     public void setUp()
-    {
+    {        
+        System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
+        
         JCS.setConfigFilename( "/TestTCPLateralIssueRemoveCache.ccf" );
     }
 
     /**
-     *
      * @throws Exception
      */
     public void testPutLocalPutRemoteGetBusyVerifyRemoved()
@@ -66,13 +70,10 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     }
 
     /**
-     * Verify that a standard put works.
-     *
-     * Get the cache configured from a file. Create a tcp service to talk to
-     * that cache. Put via the servive. Verify that the cache got the data.
-     *
+     * Verify that a standard put works. Get the cache configured from a file. Create a tcp service
+     * to talk to that cache. Put via the servive. Verify that the cache got the data.
+     * <p>
      * @throws Exception
-     *
      */
     public void testStandardPut()
         throws Exception
@@ -86,7 +87,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
-        lattr2.setTcpServer( "localhost:1110" );
+        lattr2.setTcpServer( "localhost:" + serverPort );
         lattr2.setIssueRemoveOnPut( false );
         // should still try to remove
         // lattr2.setAllowPut( false );
@@ -111,17 +112,14 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     }
 
     /**
-     * This tests issues tons of puts. It also check to see that a key that was
-     * put in was removed by the clients remove command.
-     *
-     * @param region
-     *            Name of the region to access
+     * This tests issues tons of puts. It also check to see that a key that was put in was removed
+     * by the clients remove command.
+     * <p>
+     * @param region Name of the region to access
      * @param range
      * @param numOps
      * @param testNum
-     *
-     * @exception Exception
-     *                If an error occurs
+     * @exception Exception If an error occurs
      */
     public void runTestForRegion( String region, int range, int numOps, int testNum )
         throws Exception
@@ -136,7 +134,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
-        lattr2.setTcpServer( "localhost:1110" );
+        lattr2.setTcpServer( "localhost:" + serverPort );
         lattr2.setIssueRemoveOnPut( true );
         // should still try to remove
         lattr2.setAllowPut( false );
@@ -214,8 +212,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     }
 
     /**
-     * @param s
-     *            String to be printed
+     * @param s String to be printed
      */
     public static void p( String s )
     {

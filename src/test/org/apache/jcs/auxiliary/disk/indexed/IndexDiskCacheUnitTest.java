@@ -20,6 +20,9 @@ package org.apache.jcs.auxiliary.disk.indexed;
  */
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -66,6 +69,21 @@ public class IndexDiskCacheUnitTest
             ICacheElement element = disk.doGet( "key:" + i );
             assertNotNull( "Should have recevied an element.", element );
             assertEquals( "Element is wrong.", "data:" + i, element.getVal() );
+        }
+
+        // Test that getMultiple returns all the expected values
+        Set keys = new HashSet();
+        for ( int i = 0; i < cnt; i++ )
+        {
+            keys.add( "key:" + i );
+        }
+
+        Map elements = disk.getMultiple( keys );
+        for ( int i = 0; i < cnt; i++ )
+        {
+            ICacheElement element = (ICacheElement) elements.get( "key:" + i );
+            assertNotNull( "element " + i + ":key is missing", element );
+            assertEquals( "value key:" + i, "data:" + i, element.getVal() );
         }
 
         System.out.println( disk.getStats() );

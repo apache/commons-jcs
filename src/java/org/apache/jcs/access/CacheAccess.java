@@ -21,6 +21,8 @@ package org.apache.jcs.access;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -202,7 +204,7 @@ public class CacheAccess
      * This method is most useful if you want to determine things such as the how long the element
      * has been in the cache.
      * <p>
-     * The last access time in teh ElementAttributes should be current.
+     * The last access time in the ElementAttributes should be current.
      * <p>
      * @param name Key the object is stored as
      * @return The ICacheElement if the object is found or null
@@ -210,6 +212,28 @@ public class CacheAccess
     public ICacheElement getCacheElement( Object name )
     {
         return this.cacheControl.get( (Serializable) name );
+    }
+
+    /**
+     * Get multiple elements from the cache based on a set of cache keys.
+     * <p>
+     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param names set of Object cache keys
+     * @return a map of Object key to ICacheElement element, or empty map if none of the keys are present
+     */
+    public Map getCacheElements( Set names )
+    {
+        return this.cacheControl.getMultiple( names );
     }
 
     /**
@@ -377,7 +401,7 @@ public class CacheAccess
      * TODO is should be renamed "setDefaultElementAttributes"
      * <p>
      * @deprecated As of release 1.3
-     * @see setDefaultElementAttributes
+     * @see #setDefaultElementAttributes(IElementAttributes)
      * @param attr New attributes for this region.
      * @exception CacheException
      * @exception InvalidHandleException
@@ -417,6 +441,7 @@ public class CacheAccess
         throws CacheException, InvalidHandleException
     {
         ICacheElement element = this.cacheControl.get( (Serializable) name );
+
         if ( element == null )
         {
             throw new InvalidHandleException( "Object for name [" + name + "] is not in the cache" );
@@ -426,8 +451,8 @@ public class CacheAccess
         // i.e. don't do this:
         // element.setElementAttributes( attr );
         // Another reason to call put is to force the changes to be distributed.
-        put( element.getKey(), element.getVal(), attr );
 
+        put( element.getKey(), element.getVal(), attr );
     }
 
     /**
@@ -437,7 +462,7 @@ public class CacheAccess
      * This was confusing, so I created a new method with a clear name.
      * <p>
      * @deprecated As of release 1.3
-     * @see getDefaultElementAttributes
+     * @see #getDefaultElementAttributes
      * @return Attributes for this region
      * @exception CacheException
      */

@@ -21,6 +21,8 @@ package org.apache.jcs.engine.behavior;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
@@ -40,7 +42,7 @@ public interface ICacheService
      * @throws ObjectExistsException
      * @throws IOException
      */
-    public void update( ICacheElement item )
+    void update( ICacheElement item )
         throws ObjectExistsException, IOException;
 
     /**
@@ -48,11 +50,23 @@ public interface ICacheService
      * <p>
      * @param cacheName
      * @param key
-     * @return
+     * @return the ICacheElement or null if not found
      * @throws ObjectNotFoundException
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key )
+    ICacheElement get( String cacheName, Serializable key )
+        throws ObjectNotFoundException, IOException;
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param cacheName 
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @throws ObjectNotFoundException 
+     * @throws IOException 
+     */
+    Map getMultiple( String cacheName, Set keys )
         throws ObjectNotFoundException, IOException;
 
     /**

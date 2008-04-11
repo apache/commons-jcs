@@ -19,6 +19,10 @@ package org.apache.jcs.access;
  * under the License.
  */
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.access.exception.CacheException;
@@ -31,45 +35,28 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /**
  * Tests the methods of the cache access class from which the class JCS extends.
- *
+ * <p>
  * @author Aaron Smuts
- *
  */
 public class CacheAccessUnitTest
     extends TestCase
 {
-
     /**
      * Verify that we get an object exists exception if the item is in the
      * cache.
-     *
+     * @throws Exception 
      */
     public void testPutSafe()
+        throws Exception
     {
-
-        CacheAccess access = null;
-        try
-        {
-            access = CacheAccess.getAccess( "test" );
-
-            assertNotNull( "We should have an access class", access );
-        }
-        catch ( CacheException e )
-        {
-            fail( "Shouldn't have received an error." + e.getMessage() );
-        }
+        CacheAccess access = CacheAccess.getAccess( "test" );
+        assertNotNull( "We should have an access class", access );
 
         String key = "mykey";
         String value = "myvalue";
 
-        try
-        {
-            access.put( key, value );
-        }
-        catch ( CacheException e )
-        {
-            fail( "Should have been able to put " + e.getMessage() );
-        }
+        access.put( key, value );
+
         String returnedValue1 = (String) access.get( key );
         assertEquals( "Wrong value returned.", value, returnedValue1 );
 
@@ -80,8 +67,6 @@ public class CacheAccessUnitTest
         }
         catch ( CacheException e )
         {
-            // e.printStackTrace();
-            // expected
             assertTrue( "Wrong type of exception.", e instanceof ObjectExistsException );
             assertTrue( "Should have the key in the error message.", e.getMessage().indexOf( "[" + key + "]" ) != -1 );
         }
@@ -92,22 +77,13 @@ public class CacheAccessUnitTest
 
     /**
      * Try to put a null key and verify that we get an exception.
-     *
+     * @throws Exception 
      */
     public void testPutNullKey()
+        throws Exception
     {
-
-        CacheAccess access = null;
-        try
-        {
-            access = CacheAccess.getAccess( "test" );
-
-            assertNotNull( "We should have an access class", access );
-        }
-        catch ( CacheException e )
-        {
-            fail( "Shouldn't have received an error." + e.getMessage() );
-        }
+        CacheAccess access = CacheAccess.getAccess( "test" );
+        assertNotNull( "We should have an access class", access );
 
         String key = null;
         String value = "myvalue";
@@ -119,29 +95,19 @@ public class CacheAccessUnitTest
         }
         catch ( CacheException e )
         {
-            // expected
             assertTrue( "Should have the work null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
         }
     }
 
     /**
      * Try to put a null value and verify that we get an exception.
-     *
+     * @throws Exception
      */
     public void testPutNullValue()
+        throws Exception
     {
-
-        CacheAccess access = null;
-        try
-        {
-            access = CacheAccess.getAccess( "test" );
-
-            assertNotNull( "We should have an access class", access );
-        }
-        catch ( CacheException e )
-        {
-            fail( "Shouldn't have received an error." + e.getMessage() );
-        }
+        CacheAccess access = CacheAccess.getAccess( "test" );
+        assertNotNull( "We should have an access class", access );
 
         String key = "myKey";
         String value = null;
@@ -153,7 +119,6 @@ public class CacheAccessUnitTest
         }
         catch ( CacheException e )
         {
-            // expected
             assertTrue( "Should have the work null in the error message.", e.getMessage().indexOf( "null" ) != -1 );
         }
     }
@@ -163,16 +128,11 @@ public class CacheAccessUnitTest
      * attributes.
      *
      * @throws Exception
-     *
      */
     public void testSetDefaultElementAttributes()
         throws Exception
     {
-
-        CacheAccess access = null;
-
-        access = CacheAccess.getAccess( "test" );
-
+        CacheAccess access = CacheAccess.getAccess( "test" );
         assertNotNull( "We should have an access class", access );
 
         long maxLife = 9876;
@@ -196,10 +156,49 @@ public class CacheAccessUnitTest
     }
 
     /**
+     * Verify that getCacheElements returns the elements requested based on the key.
+     *
+     * @throws Exception
+     */
+    public void testGetCacheElements()
+        throws Exception
+    {
+        //SETUP
+        CacheAccess access = CacheAccess.getAccess( "test" );
+        assertNotNull( "We should have an access class", access );
+
+        String keyOne = "mykeyone";
+        String keyTwo = "mykeytwo";
+        String keyThree = "mykeythree";
+        String valueOne = "myvalueone";
+        String valueTwo = "myvaluetwo";
+        String valueThree = "myvaluethree";
+
+        access.put( keyOne, valueOne );
+        access.put( keyTwo, valueTwo );
+        access.put( keyThree, valueThree );
+
+        Set input = new HashSet();
+        input.add( keyOne );
+        input.add( keyTwo );
+
+        //DO WORK
+        Map result = access.getCacheElements( input );
+
+        //VERIFY
+        assertEquals( "map size", 2, result.size() );
+        ICacheElement elementOne = (ICacheElement) result.get( keyOne );
+        assertEquals( "value one", keyOne, elementOne.getKey() );
+        assertEquals( "value one", valueOne, elementOne.getVal() );
+        ICacheElement elementTwo = (ICacheElement) result.get( keyTwo );
+        assertEquals( "value two", keyTwo, elementTwo.getKey() );
+        assertEquals( "value two", valueTwo, elementTwo.getVal() );
+    }
+
+    /**
      * Verify that we can get a region using the define region method.
      *
      * @throws Exception
-     *
      */
     public void testRegionDefiniton()
         throws Exception
@@ -253,5 +252,4 @@ public class CacheAccessUnitTest
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
         assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
     }
-
 }

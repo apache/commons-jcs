@@ -19,6 +19,11 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.engine.CacheConstants;
@@ -79,6 +84,34 @@ public class RemoteCacheNoWaitUnitTest
 
         // VERIFY
         assertEquals( "Wrong element", input, result );
+    }
+
+    /**
+     * Simply verify that the client getMultiple is called from the no wait.
+     * <p>
+     * @throws Exception
+     */
+    public void testGetMultiple()
+        throws Exception
+    {
+        // SETUP
+        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
+
+        ICacheElement inputElement = new CacheElement( "testUpdate", "key", "value" );
+        Map inputMap = new HashMap();
+        inputMap.put( "key", inputElement );
+
+        Set keys = new HashSet();
+        keys.add( "key" );
+
+        client.getMultipleSetupMap.put( keys, inputMap );
+
+        // DO WORK
+        Map result = noWait.getMultiple( keys );
+
+        // VERIFY
+        assertEquals( "elements map", inputMap, result );
     }
 
     /**

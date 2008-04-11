@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -50,18 +52,22 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class RemoteCacheNoWaitFacade
     implements AuxiliaryCache
 {
+    /** For serialization. Don't change.*/
     private static final long serialVersionUID = -4529970797620747110L;
 
+    /** log instance */
     private final static Log log = LogFactory.getLog( RemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
     public RemoteCacheNoWait[] noWaits;
 
+    /** The cache name */
     private String cacheName;
 
     /** holds failover and cluster information */
     protected RemoteCacheAttributes remoteCacheAttributes;
 
+    /** A cache manager */
     private ICompositeCacheManager cacheMgr;
 
     /**
@@ -92,7 +98,7 @@ public class RemoteCacheNoWaitFacade
      * @param cacheMgr
      */
     public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca,
-                                   ICompositeCacheManager cacheMgr )
+                                    ICompositeCacheManager cacheMgr )
     {
         if ( log.isDebugEnabled() )
         {
@@ -174,10 +180,37 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     */
+    public Map getMultiple( Set keys )
+    {
+        if ( keys != null && !keys.isEmpty() )
+        {
+            for ( int i = 0; i < noWaits.length; i++ )
+            {
+                try
+                {
+                    return noWaits[i].getMultiple( keys );
+                }
+                catch ( Exception ex )
+                {
+                    log.debug( "Failed to get." );
+                    return new HashMap();
+                }
+            }
+        }
+
+        return new HashMap();
+    }
+
+    /**
      * Gets the set of keys of objects currently in the group.
      * <p>
      * @param group
-     * @return
+     * @return the set of keys of objects currently in the group
      * @throws IOException
      */
     public Set getGroupKeys( String group )
@@ -365,9 +398,8 @@ public class RemoteCacheNoWaitFacade
         return getStatistics().toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+    /**
+     * @return statistics about the cache region
      */
     public IStats getStatistics()
     {

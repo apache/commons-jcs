@@ -19,7 +19,6 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,18 +44,16 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class RemoteCacheClientMockImpl
     implements IRemoteCacheClient
 {
+    /** For serialization. Don't change. */
     private static final long serialVersionUID = 1L;
 
+    /** log instance */
     private final static Log log = LogFactory.getLog( RemoteCacheClientMockImpl.class );
 
-    /**
-     * List of ICacheElement objects passed into update.
-     */
+    /** List of ICacheElement objects passed into update. */
     public List updateList = new LinkedList();
 
-    /**
-     * List of key objects passed into remove.
-     */
+    /** List of key objects passed into remove. */
     public List removeList = new LinkedList();
 
     /** status to return. */
@@ -65,14 +62,13 @@ public class RemoteCacheClientMockImpl
     /** Can setup values to return from get. values must be ICacheElement */
     public Map getSetupMap = new HashMap();
 
-    /**
-     * The last service passed to fixCache
-     */
+    /** Can setup values to return from get. values must be Map<Serializable, ICacheElement> */
+    public Map getMultipleSetupMap = new HashMap();
+
+    /** The last service passed to fixCache */
     public IRemoteCacheService fixed;
 
-    /**
-     * Attributes.
-     */
+    /** Attributes. */
     public RemoteCacheAttributes attributes = new RemoteCacheAttributes();
 
     /**
@@ -92,7 +88,6 @@ public class RemoteCacheClientMockImpl
      */
     public long getListenerId()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -102,7 +97,6 @@ public class RemoteCacheClientMockImpl
      */
     public IRemoteCacheListener getListener()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -113,7 +107,6 @@ public class RemoteCacheClientMockImpl
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
     public void update( ICacheElement ce )
-        throws IOException
     {
         updateList.add( ce );
     }
@@ -125,10 +118,21 @@ public class RemoteCacheClientMockImpl
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#get(java.io.Serializable)
      */
     public ICacheElement get( Serializable key )
-        throws IOException
     {
         log.info( "get [" + key + "]" );
         return (ICacheElement) getSetupMap.get( key );
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     */
+    public Map getMultiple( Set keys )
+    {
+        log.info( "get [" + keys + "]" );
+        return (Map) getMultipleSetupMap.get( keys );
     }
 
     /**
@@ -138,7 +142,6 @@ public class RemoteCacheClientMockImpl
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#remove(java.io.Serializable)
      */
     public boolean remove( Serializable key )
-        throws IOException
     {
         removeList.add( key );
         return false;
@@ -149,10 +152,8 @@ public class RemoteCacheClientMockImpl
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#removeAll()
      */
     public void removeAll()
-        throws IOException
     {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 
     /*
@@ -160,10 +161,8 @@ public class RemoteCacheClientMockImpl
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#dispose()
      */
     public void dispose()
-        throws IOException
     {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 
     /*
@@ -172,7 +171,6 @@ public class RemoteCacheClientMockImpl
      */
     public int getSize()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -191,7 +189,6 @@ public class RemoteCacheClientMockImpl
      */
     public String getCacheName()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -200,9 +197,7 @@ public class RemoteCacheClientMockImpl
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
     public Set getGroupKeys( String group )
-        throws IOException
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -212,7 +207,6 @@ public class RemoteCacheClientMockImpl
      */
     public IStats getStatistics()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -233,7 +227,6 @@ public class RemoteCacheClientMockImpl
      */
     public String getStats()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -243,8 +236,6 @@ public class RemoteCacheClientMockImpl
      */
     public int getCacheType()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
-
 }

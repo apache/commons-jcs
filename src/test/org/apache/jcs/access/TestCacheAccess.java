@@ -39,20 +39,19 @@ import org.apache.jcs.engine.control.event.ElementEventHandlerMockImpl;
  * cache.
  *
  * This also provide basic methods for use in unit tests.
- *
  */
 public class TestCacheAccess
 {
+    /** log instance */
     private final static Log log = LogFactory.getLog( TestCacheAccess.class );
 
+    /** cache instance to use in testing*/
     private JCS cache_control = null;
 
+    /** do we use system.out.println to print out debug data?*/
     private static boolean isSysOut = false;
 
-    /**
-     * Construct and initialize the cachecontrol based on the config file.
-     *
-     */
+    /**Construct and initialize the cachecontrol based on the config file.     */
     public TestCacheAccess()
     {
         this( "testCache1" );
@@ -79,12 +78,10 @@ public class TestCacheAccess
      */
     public void runLoop()
     {
-
         try
         {
             try
             {
-
                 // process user input till done
                 boolean notDone = true;
                 String message = null;
@@ -135,13 +132,10 @@ public class TestCacheAccess
                         //System.exit( -1 );
                         return;
                     }
-                    else
-
                     /////////////////////////////////////////////////////////////////////
                     // get multiple from a region
-                    if ( message.startsWith( "getm" ) )
+                    else if ( message.startsWith( "getm" ) )
                     {
-
                         int num = 0;
                         boolean show = true;
 
@@ -177,12 +171,8 @@ public class TestCacheAccess
                             getMultiple( num, show );
                         }
                     }
-                    else
-
-                    /////////////////////////////////////////////////////////////////////
-                    if ( message.startsWith( "getg" ) )
+                    else if ( message.startsWith( "getg" ) )
                     {
-
                         String key = null;
                         String group = null;
                         boolean show = true;
@@ -213,7 +203,6 @@ public class TestCacheAccess
                         }
                         else
                         {
-
                             long n_start = System.currentTimeMillis();
                             try
                             {
@@ -232,10 +221,7 @@ public class TestCacheAccess
                                 + " millis ---" );
                         }
                     }
-                    else
-
-                    /////////////////////////////////////////////////////////////////////
-                    if ( message.startsWith( "getag" ) )
+                    else if ( message.startsWith( "getag" ) )
                     {
                         // get auto from group
 
@@ -269,7 +255,6 @@ public class TestCacheAccess
                         }
                         else
                         {
-
                             long n_start = System.currentTimeMillis();
                             try
                             {
@@ -291,10 +276,7 @@ public class TestCacheAccess
                                 + " millis ---" );
                         }
                     }
-                    else
-
-                    /////////////////////////////////////////////////////////////////////
-                    if ( message.startsWith( "get" ) )
+                    else if ( message.startsWith( "get" ) )
                     {
                         // plain old get
 
@@ -323,7 +305,6 @@ public class TestCacheAccess
                         }
                         else
                         {
-
                             long n_start = System.currentTimeMillis();
                             try
                             {
@@ -343,7 +324,6 @@ public class TestCacheAccess
                     }
                     else if ( message.startsWith( "putg" ) )
                     {
-
                         String group = null;
                         String key = null;
                         StringTokenizer toke = new StringTokenizer( message );
@@ -376,10 +356,8 @@ public class TestCacheAccess
                                 + " millis ---" );
                         }
                     }
-                    else
-
                     // put automatically
-                    if ( message.startsWith( "putag" ) )
+                    else if ( message.startsWith( "putag" ) )
                     {
 
                         String group = null;
@@ -417,10 +395,7 @@ public class TestCacheAccess
                                 + " millis ---" );
                         }
                     }
-                    else
-
-                    /////////////////////////////////////////////////////////////////////
-                    if ( message.startsWith( "putm" ) )
+                    else if ( message.startsWith( "putm" ) )
                     {
                         String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
                         int num = Integer.parseInt( numS.trim() );
@@ -433,10 +408,7 @@ public class TestCacheAccess
                             putMultiple( num );
                         }
                     }
-                    else
-
-                    /////////////////////////////////////////////////////////////////////
-                    if ( message.startsWith( "pute" ) )
+                    else if ( message.startsWith( "pute" ) )
                     {
                         String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
                         int num = Integer.parseInt( numS.trim() );
@@ -460,7 +432,6 @@ public class TestCacheAccess
                     }
                     else if ( message.startsWith( "put" ) )
                     {
-
                         String key = null;
                         String val = null;
                         StringTokenizer toke = new StringTokenizer( message );
@@ -493,7 +464,6 @@ public class TestCacheAccess
                                 + " millis ---" );
                         }
                     }
-                    /////////////////////////////////////////////////////////////////////
                     if ( message.startsWith( "removem" ) )
                     {
                         String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
@@ -507,7 +477,6 @@ public class TestCacheAccess
                             removeMultiple( num );
                         }
                     }
-
                     else if ( message.startsWith( "removeall" ) )
                     {
                         cache_control.clear();
@@ -562,6 +531,7 @@ public class TestCacheAccess
                         p( "Called system.gc()" );
                     }
                     else if ( message.startsWith( "random" ) )
+                    {
                         if ( message.startsWith( "random" ) )
                         {
                             String rangeS = "";
@@ -612,7 +582,7 @@ public class TestCacheAccess
                                 random( range, numOps, show );
                             }
                         }
-
+                    }
                 }
             }
             catch ( Exception e )
@@ -620,15 +590,13 @@ public class TestCacheAccess
                 p( e.toString() );
                 e.printStackTrace( System.out );
             }
-
         }
         catch ( Exception e )
         {
             p( e.toString() );
             e.printStackTrace( System.out );
         }
-
-    } // end runLoop
+    }
 
     /**
      * Test harness.
