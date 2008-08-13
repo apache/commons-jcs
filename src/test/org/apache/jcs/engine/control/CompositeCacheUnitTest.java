@@ -24,7 +24,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheMockImpl;
+import org.apache.jcs.auxiliary.MockAuxiliaryCache;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
@@ -32,7 +32,7 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.memory.MemoryCacheMockImpl;
+import org.apache.jcs.engine.memory.MockMemoryCache;
 
 /**
  * Tests that directly engage the composite cache.
@@ -53,7 +53,7 @@ public class CompositeCacheUnitTest
     {
         // SETUP
         String cacheName = "testCacheName";
-        String mockMemoryCacheClassName = "org.apache.jcs.engine.memory.MemoryCacheMockImpl";
+        String mockMemoryCacheClassName = "org.apache.jcs.engine.memory.MockMemoryCache";
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMemoryCacheName( mockMemoryCacheClassName );
 
@@ -61,7 +61,7 @@ public class CompositeCacheUnitTest
 
         CompositeCache cache = new CompositeCache( cacheName, cattr, attr );
 
-        AuxiliaryCacheMockImpl diskMock = new AuxiliaryCacheMockImpl();
+        MockAuxiliaryCache diskMock = new MockAuxiliaryCache();
         diskMock.cacheType = ICache.DISK_CACHE;
         AuxiliaryCache[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
@@ -77,7 +77,7 @@ public class CompositeCacheUnitTest
         cache.dispose();
 
         // VERIFY
-        MemoryCacheMockImpl memoryCache = (MemoryCacheMockImpl) cache.getMemoryCache();
+        MockMemoryCache memoryCache = (MockMemoryCache) cache.getMemoryCache();
         assertEquals( "Wrong number freed.", numToInsert, memoryCache.lastNumberOfFreedElements );
     }
 
@@ -92,7 +92,7 @@ public class CompositeCacheUnitTest
     {
         // SETUP
         String cacheName = "testCacheName";
-        String mockMemoryCacheClassName = "org.apache.jcs.engine.memory.MemoryCacheMockImpl";
+        String mockMemoryCacheClassName = "org.apache.jcs.engine.memory.MockMemoryCache";
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMemoryCacheName( mockMemoryCacheClassName );
 
@@ -100,7 +100,7 @@ public class CompositeCacheUnitTest
 
         CompositeCache cache = new CompositeCache( cacheName, cattr, attr );
 
-        AuxiliaryCacheMockImpl diskMock = new AuxiliaryCacheMockImpl();
+        MockAuxiliaryCache diskMock = new MockAuxiliaryCache();
         diskMock.cacheType = ICache.REMOTE_CACHE;
         AuxiliaryCache[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
@@ -116,7 +116,7 @@ public class CompositeCacheUnitTest
         cache.dispose();
 
         // VERIFY
-        MemoryCacheMockImpl memoryCache = (MemoryCacheMockImpl) cache.getMemoryCache();
+        MockMemoryCache memoryCache = (MockMemoryCache) cache.getMemoryCache();
         assertEquals( "Wrong number freed.", 0, memoryCache.lastNumberOfFreedElements );
     }
 }

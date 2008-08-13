@@ -39,28 +39,32 @@ import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheType;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
+ * The RemoteCacheNoWait wraps the RemoteCacheClient.  The client holds a handle on the RemoteCacheService.
+ * <p>
  * Used to queue up update requests to the underlying cache. These requests will be processed in
  * their order of arrival via the cache event queue processor.
  * <p>
  * Typically errors will be handled down stream. We only need to kill the queue if an error makes it
  * to this level from the queue. That can only happen if the queue is damaged, since the events are
- * procesed asynchronously.
+ * Processed asynchronously.
  * <p>
  * There is no reason to create a queue on startup if the remote is not healthy.
  * <p>
- * If the remote cache encounters an error it will zombie--create a blaking facade for the service.
- * The Zombie will queue up items until the conenction is restored. An alternative way to accomplish
+ * If the remote cache encounters an error it will zombie--create a balking facade for the service.
+ * The Zombie will queue up items until the connection is restored. An alternative way to accomplish
  * the same thing would be to stop, not destroy the queue at this level. That way items would be
  * added to the queue and then when the connection is restored, we could start the worker threads
- * again. This is a better long term solution, but it requires some significnat changes to the
+ * again. This is a better long term solution, but it requires some significant changes to the
  * complicated worker queues.
  */
 public class RemoteCacheNoWait
@@ -73,7 +77,7 @@ public class RemoteCacheNoWait
     private final static Log log = LogFactory.getLog( RemoteCacheNoWait.class );
 
     /** The remote cache client */
-    private final IRemoteCacheClient cache;
+    private final IRemoteCacheClient remoteCacheClient;
 
     /** Event queue for queueing up calls like put and remove. */
     private ICacheEventQueue cacheEventQueue;
@@ -90,21 +94,28 @@ public class RemoteCacheNoWait
     /** how many times put has been called. */
     private int putCount = 0;
 
+    /** An optional event logger */
+    private ICacheEventLogger cacheEventLogger;
+
+    /** The serializer. */
+    private IElementSerializer elementSerializer;
+
     /**
-     * Constructs with the given remote cache, and fires up an event queue for aysnchronous
+     * Constructs with the given remote cache, and fires up an event queue for asynchronous
      * processing.
      * <p>
      * @param cache
      */
     public RemoteCacheNoWait( IRemoteCacheClient cache )
     {
-        this.cache = cache;
-        CacheEventQueueFactory factory = new CacheEventQueueFactory();
-        this.cacheEventQueue = factory.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache
-            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+        remoteCacheClient = cache;
 
-        if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
+        CacheEventQueueFactory factory = new CacheEventQueueFactory();
+        this.cacheEventQueue = factory.createCacheEventQueue( new CacheAdaptor( remoteCacheClient ), remoteCacheClient
+            .getListenerId(), remoteCacheClient.getCacheName(), remoteCacheClient.getAuxiliaryCacheAttributes()
+            .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+
+        if ( remoteCacheClient.getStatus() == CacheConstants.STATUS_ERROR )
         {
             cacheEventQueue.destroy();
         }
@@ -113,8 +124,8 @@ public class RemoteCacheNoWait
     /**
      * Adds a put event to the queue.
      * <p>
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
+     * @param element
+     * @throws IOException
      */
     public void update( ICacheElement element )
         throws IOException
@@ -145,7 +156,7 @@ public class RemoteCacheNoWait
         getCount++;
         try
         {
-            return cache.get( key );
+            return remoteCacheClient.get( key );
         }
         catch ( UnmarshalException ue )
         {
@@ -156,7 +167,7 @@ public class RemoteCacheNoWait
 
             try
             {
-                return cache.get( key );
+                return remoteCacheClient.get( key );
             }
             catch ( IOException ex )
             {
@@ -178,12 +189,13 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * Gets multiple items from the cache based on the given set of keys.  
-     * Sends the getMultiple request on to the server rather than looping through the requested keys.
+     * Gets multiple items from the cache based on the given set of keys. Sends the getMultiple
+     * request on to the server rather than looping through the requested keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
     public Map getMultiple( Set keys )
         throws IOException
@@ -191,7 +203,7 @@ public class RemoteCacheNoWait
         getMultipleCount++;
         try
         {
-            return cache.getMultiple( keys );
+            return remoteCacheClient.getMultiple( keys );
         }
         catch ( UnmarshalException ue )
         {
@@ -202,7 +214,7 @@ public class RemoteCacheNoWait
 
             try
             {
-                return cache.getMultiple( keys );
+                return remoteCacheClient.getMultiple( keys );
             }
             catch ( IOException ex )
             {
@@ -224,14 +236,14 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * @param groupName 
+     * @param groupName
      * @return the keys for the group name
-     * @throws IOException 
+     * @throws IOException
      */
     public Set getGroupKeys( String groupName )
         throws IOException
     {
-        return cache.getGroupKeys( groupName );
+        return remoteCacheClient.getGroupKeys( groupName );
     }
 
     /**
@@ -299,11 +311,11 @@ public class RemoteCacheNoWait
      */
     public int getSize()
     {
-        return cache.getSize();
+        return remoteCacheClient.getSize();
     }
 
     /**
-     * No remote invokation.
+     * No remote invocation.
      * <p>
      * @return The cacheType value
      */
@@ -320,7 +332,7 @@ public class RemoteCacheNoWait
      */
     public int getStatus()
     {
-        return cacheEventQueue.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
+        return cacheEventQueue.isWorking() ? remoteCacheClient.getStatus() : CacheConstants.STATUS_ERROR;
     }
 
     /**
@@ -330,7 +342,7 @@ public class RemoteCacheNoWait
      */
     public String getCacheName()
     {
-        return cache.getCacheName();
+        return remoteCacheClient.getCacheName();
     }
 
     /**
@@ -341,7 +353,7 @@ public class RemoteCacheNoWait
      */
     public void fixCache( IRemoteCacheService remote )
     {
-        cache.fixCache( remote );
+        remoteCacheClient.fixCache( remote );
         resetEventQ();
         return;
     }
@@ -351,16 +363,16 @@ public class RemoteCacheNoWait
      * <p>
      * There may be no good reason to kill the existing queue. We will sometimes need to set a new
      * listener id, so we should create a new queue. We should let the old queue drain. If we were
-     * conencted to the failover, it would be best to finish sending items.
+     * Connected to the failover, it would be best to finish sending items.
      */
     public void resetEventQ()
     {
         ICacheEventQueue previousQueue = cacheEventQueue;
 
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), cache.getListenerId(), cache
-            .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( remoteCacheClient ), remoteCacheClient
+            .getListenerId(), remoteCacheClient.getCacheName(), remoteCacheClient.getAuxiliaryCacheAttributes()
+            .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
 
         if ( previousQueue.isWorking() )
         {
@@ -380,7 +392,7 @@ public class RemoteCacheNoWait
      */
     protected IRemoteCacheClient getRemoteCache()
     {
-        return cache;
+        return remoteCacheClient;
     }
 
     /**
@@ -388,17 +400,38 @@ public class RemoteCacheNoWait
      */
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return cache.getAuxiliaryCacheAttributes();
+        return remoteCacheClient.getAuxiliaryCacheAttributes();
     }
 
     /**
-     * This is for testing only.  It allows you to take a look at the event queue.
+     * This is for testing only. It allows you to take a look at the event queue.
      * <p>
      * @return ICacheEventQueue
      */
     protected ICacheEventQueue getCacheEventQueue()
     {
         return this.cacheEventQueue;
+    }
+
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @param cacheEventLogger
+     */
+    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    {
+        this.cacheEventLogger = cacheEventLogger;
+    }
+
+    /**
+     * Allows you to inject a custom serializer. A good example would be a compressing standard
+     * serializer.
+     * <p>
+     * @param elementSerializer
+     */
+    public void setElementSerializer( IElementSerializer elementSerializer )
+    {
+        this.elementSerializer = elementSerializer;
     }
 
     /**
@@ -409,7 +442,7 @@ public class RemoteCacheNoWait
      */
     public String toString()
     {
-        return getStats() + "\n" + cache.toString();
+        return getStats() + "\n" + remoteCacheClient.toString();
     }
 
     /**
@@ -423,7 +456,7 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * @return statistics about this communication 
+     * @return statistics about this communication
      */
     public IStats getStatistics()
     {
@@ -459,7 +492,7 @@ public class RemoteCacheNoWait
 
         // get the stats from the cache queue too
         // get as array, convert to list, add list to our outer list
-        IStats cStats = this.cache.getStatistics();
+        IStats cStats = this.remoteCacheClient.getStatistics();
         if ( cStats != null )
         {
             IStatElement[] cSEs = cStats.getStatElements();
@@ -500,5 +533,4 @@ public class RemoteCacheNoWait
 
         return stats;
     }
-
 }

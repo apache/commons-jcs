@@ -22,12 +22,14 @@ package org.apache.jcs.auxiliary.remote.server;
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.auxiliary.remote.RemoteCacheAttributes;
-import org.apache.jcs.auxiliary.remote.RemoteCacheListenerMockImpl;
+import org.apache.jcs.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.RemoteCacheManager;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.control.CompositeCacheManagerMockImpl;
+import org.apache.jcs.engine.control.MockCompositeCacheManager;
+import org.apache.jcs.engine.control.MockElementSerializer;
 import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
@@ -66,14 +68,14 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        CompositeCacheManagerMockImpl compositeCacheManager = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
         attributes.setRemotePort( 1101 );
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager );
+        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testSinglePut";
         AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
 
@@ -81,7 +83,7 @@ public class BasicRemoteCacheClientServerUnitTest
         int numPutsPrior = server.getPutCount();
         ICacheElement element = new CacheElement( regionName, "key", "value" );
         cache.update( element );
-        SleepUtil.sleepAtLeast( 50 );
+        SleepUtil.sleepAtLeast( 200 );
 
         // VERIFY
         System.out.println( server.getStats() );
@@ -93,7 +95,7 @@ public class BasicRemoteCacheClientServerUnitTest
         // VERIFY
         assertEquals( "Wrong element.", element.getVal(), result.getVal() );
     }
-
+    
     /**
      * Verify that we can remove an item via the remote server.
      * <p>
@@ -103,14 +105,14 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        CompositeCacheManagerMockImpl compositeCacheManager = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
         attributes.setRemotePort( 1101 );
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager );
+        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), null );
         String regionName = "testPutRemove";
         AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
 
@@ -132,7 +134,7 @@ public class BasicRemoteCacheClientServerUnitTest
 
         // DO WORK
         cache.remove( "key" );
-        SleepUtil.sleepAtLeast( 50 );
+        SleepUtil.sleepAtLeast( 200 );
         ICacheElement resultAfterRemote = cache.get( "key" );
 
         // VERIFY
@@ -147,18 +149,18 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        CompositeCacheManagerMockImpl compositeCacheManager = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
         attributes.setRemotePort( 1101 );
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager );
+        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testPutAndListen";
         AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
 
-        RemoteCacheListenerMockImpl listener = new RemoteCacheListenerMockImpl();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
         server.addCacheListener( regionName, listener );
 
         // DO WORK
@@ -189,18 +191,18 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        CompositeCacheManagerMockImpl compositeCacheManager = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
         attributes.setRemotePort( 1101 );
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager );
+        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testPutAndListen";
         AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
 
-        RemoteCacheListenerMockImpl listener = new RemoteCacheListenerMockImpl();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
         server.addCacheListener( regionName, listener );
 
         // DO WORK

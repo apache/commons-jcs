@@ -39,7 +39,7 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheServiceMockImpl service = new RemoteCacheServiceMockImpl();
+        MockRemoteCacheService service = new MockRemoteCacheService();
 
         ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 10 );
 
@@ -63,7 +63,7 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheServiceMockImpl service = new RemoteCacheServiceMockImpl();
+        MockRemoteCacheService service = new MockRemoteCacheService();
 
         ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 0 );
 
@@ -87,7 +87,7 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheServiceMockImpl service = new RemoteCacheServiceMockImpl();
+        MockRemoteCacheService service = new MockRemoteCacheService();
 
         ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 10 );
 
@@ -111,7 +111,7 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheServiceMockImpl service = new RemoteCacheServiceMockImpl();
+        MockRemoteCacheService service = new MockRemoteCacheService();
 
         ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 10 );
 

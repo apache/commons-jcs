@@ -91,6 +91,8 @@ public class MySQLDiskCacheAttributes
 
     /**
      * For debugging.
+     * <p>
+     * @return debug string
      */
     public String toString()
     {

@@ -32,22 +32,21 @@ import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
  * Tests the serialization conversion util.
- *
+ *<p>
  * @author Aaron Smuts
- *
  */
 public class SerializationConversionUtilUnitTest
     extends TestCase
 {
-
     /**
      * Verify that we can go back and forth with the simplest of objects.
-     *
+     *<p>
      * @throws Exception
      */
     public void testSimpleConversion()
         throws Exception
     {
+        // SETUP
         String cacheName = "testName";
         String key = "key";
         String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
@@ -60,29 +59,34 @@ public class SerializationConversionUtilUnitTest
         ICacheElement before = new CacheElement( cacheName, key, value );
         before.setElementAttributes( attr );
 
+        // DO WORK
         ICacheElementSerialized serialized = SerializationConversionUtil.getSerializedCacheElement( before,
                                                                                                     elementSerializer );
+
+        // VERIFY
         assertNotNull( "Should have a serialized object.", serialized );
         System.out.println( "testSimpleConversion, " + serialized );
 
+        // DO WORK
         ICacheElement after = SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
 
+        // VERIFY
         assertNotNull( "Should have a deserialized object.", after );
         assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
         assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLifeSeconds(), after
             .getElementAttributes().getMaxLifeSeconds() );
         assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
         assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
-
     }
 
     /**
      * Verify that we get an IOException for a null serializer.
-     *
+     * <p>
      * @throws Exception
      */
     public void testNullSerializerConversion()
     {
+        // SETUP
         String cacheName = "testName";
         String key = "key";
         String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
@@ -95,16 +99,17 @@ public class SerializationConversionUtilUnitTest
         ICacheElement before = new CacheElement( cacheName, key, value );
         before.setElementAttributes( attr );
 
+        // DO WORK
         try
         {
             SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
+
+            // VERIFY
             fail( "We should have received an IOException." );
         }
         catch ( IOException e )
         {
             // expected
         }
-
     }
-
 }

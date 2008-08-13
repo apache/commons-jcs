@@ -190,7 +190,7 @@ public class LateralCache
      * handle with a zombie.
      * <p>
      * @param key
-     * @return
+     * @return false always
      * @throws IOException
      */
     public boolean remove( Serializable key )

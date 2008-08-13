@@ -44,7 +44,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
  * <p>
  *
  * @TODO: - need freeCache, release, getStats - need to find an interface
- *        acceptible for all - cache managers or a manager within a type
+ *        Acceptable for all - cache managers or a manager within a type
  */
 public abstract class LateralCacheAbstractManager
     implements ILateralCacheManager

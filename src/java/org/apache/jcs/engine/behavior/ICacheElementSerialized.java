@@ -24,55 +24,50 @@ import java.io.Serializable;
 /**
  * This interface defines the behavior of the serialized element wrapper.
  * <p>
- * The value is stored as a byte array. This should allow for a variety of
- * serialization mechanisms.
+ * The value is stored as a byte array. This should allow for a variety of serialization mechanisms.
  * <p>
  * This currently extends ICacheElement for backward compatibility.
- *
+ *<p>
  * @author Aaron Smuts
- *
  */
 public interface ICacheElementSerialized
     extends ICacheElement
 {
-
     /**
-     * Gets the cacheName attribute of the ICacheElement object. The cacheName
-     * is also known as the region name.
-     *
+     * Gets the cacheName attribute of the ICacheElement object. The cacheName is also known as the
+     * region name.
+     *<p>
      * @return The cacheName value
      */
     public String getCacheName();
 
     /**
-     * Gets the key attribute of the ICacheElementSerialized object. This is the
-     * standard key that the value can be reference by.
-     *
+     * Gets the key attribute of the ICacheElementSerialized object. This is the standard key that
+     * the value can be reference by.
+     *<p>
      * @return The key value
      */
     public Serializable getKey();
 
     /**
-     * Gets the value attribute of the ICacheElementSerialized object. This is
-     * the value the client cached seriailzed by some mechanism.
-     *
+     * Gets the value attribute of the ICacheElementSerialized object. This is the value the client
+     * cached serialized by some mechanism.
+     *<p>
      * @return The serialized value
      */
     public byte[] getSerializedValue();
 
     /**
      * Gets the attributes attribute of the ICacheElement object
-     *
+     *<p>
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes();
 
     /**
      * Sets the attributes attribute of the ICacheElement object
-     *
-     * @param attr
-     *            The new attributes value
+     *<p>
+     * @param attr The new attributes value
      */
     public void setElementAttributes( IElementAttributes attr );
-
 }

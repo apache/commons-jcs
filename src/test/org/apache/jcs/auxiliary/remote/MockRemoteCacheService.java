@@ -34,7 +34,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * <p>
  * @author admin
  */
-public class RemoteCacheServiceMockImpl
+public class MockRemoteCacheService
     implements IRemoteCacheService
 {
     /** The object that was last passed to update. */

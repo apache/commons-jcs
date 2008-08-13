@@ -36,7 +36,9 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
@@ -55,15 +57,14 @@ public class RemoteCacheManager
 
     private final static Log log = LogFactory.getLog( RemoteCacheManager.class );
 
-    // Contains mappings of Location instance to RemoteCacheManager instance.
+    /** Contains mappings of Location instance to RemoteCacheManager instance. */
     final static Map instances = new HashMap();
 
     private static RemoteCacheMonitor monitor;
 
     private int clients;
 
-    // Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager
-    // instance.
+    /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
     final Map caches = new HashMap();
 
     final String host;
@@ -72,11 +73,16 @@ public class RemoteCacheManager
 
     final String service;
 
-    private IRemoteCacheAttributes irca;
+    /** The configuration attributes. */
+    private IRemoteCacheAttributes remoteCacheAttributes;
 
-    /**
-     * Handle to the remote cache service; or a zombie handle if failed to connect.
-     */
+    /** The event logger. */
+    private ICacheEventLogger cacheEventLogger;
+
+    /** The serializer. */
+    private IElementSerializer elementSerializer;
+
+    /** Handle to the remote cache service; or a zombie handle if failed to connect. */
     private IRemoteCacheService remoteService;
 
     /**
@@ -85,9 +91,7 @@ public class RemoteCacheManager
      */
     private RemoteCacheWatchRepairable remoteWatch;
 
-    /**
-     * The cache manager listeners will need to use to get a cache.
-     */
+    /** The cache manager listeners will need to use to get a cache. */
     private ICompositeCacheManager cacheMgr;
 
     private String registry;
@@ -101,13 +105,18 @@ public class RemoteCacheManager
      * @param port
      * @param service
      * @param cacheMgr
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
-    private RemoteCacheManager( String host, int port, String service, ICompositeCacheManager cacheMgr )
+    private RemoteCacheManager( String host, int port, String service, ICompositeCacheManager cacheMgr,
+                                ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         this.host = host;
         this.port = port;
         this.service = service;
         this.cacheMgr = cacheMgr;
+        this.cacheEventLogger = cacheEventLogger;
+        this.elementSerializer = elementSerializer;
 
         // register shutdown observer
         // TODO add the shutdown observable methods to the interface
@@ -160,7 +169,7 @@ public class RemoteCacheManager
      */
     public IRemoteCacheAttributes getDefaultCattr()
     {
-        return this.irca;
+        return this.remoteCacheAttributes;
     }
 
     /**
@@ -298,10 +307,13 @@ public class RemoteCacheManager
      * <p>
      * @param cattr
      * @param cacheMgr
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return The instance value
-     * @parma port port of the registry.
      */
-    public static RemoteCacheManager getInstance( IRemoteCacheAttributes cattr, ICompositeCacheManager cacheMgr )
+    public static RemoteCacheManager getInstance( IRemoteCacheAttributes cattr, ICompositeCacheManager cacheMgr,
+                                                  ICacheEventLogger cacheEventLogger,
+                                                  IElementSerializer elementSerializer )
     {
         String host = cattr.getRemoteHost();
         int port = cattr.getRemotePort();
@@ -316,19 +328,16 @@ public class RemoteCacheManager
         }
         Location loc = new Location( host, port );
 
-        RemoteCacheManager ins = (RemoteCacheManager) instances.get( loc );
+        RemoteCacheManager ins = null;
         synchronized ( instances )
         {
+            ins = (RemoteCacheManager) instances.get( loc );
             if ( ins == null )
             {
-                ins = (RemoteCacheManager) instances.get( loc );
-                if ( ins == null )
-                {
-                    // cahnge to use cattr and to set defaults
-                    ins = new RemoteCacheManager( host, port, service, cacheMgr );
-                    ins.irca = cattr;
-                    instances.put( loc, ins );
-                }
+                // Change to use cattr and to set defaults
+                ins = new RemoteCacheManager( host, port, service, cacheMgr, cacheEventLogger, elementSerializer );
+                ins.remoteCacheAttributes = cattr;
+                instances.put( loc, ins );
             }
         }
 
@@ -357,7 +366,7 @@ public class RemoteCacheManager
      */
     public AuxiliaryCache getCache( String cacheName )
     {
-        IRemoteCacheAttributes ca = (IRemoteCacheAttributes) irca.copy();
+        IRemoteCacheAttributes ca = (IRemoteCacheAttributes) remoteCacheAttributes.copy();
         ca.setCacheName( cacheName );
         return getCache( ca );
     }
@@ -374,12 +383,12 @@ public class RemoteCacheManager
      */
     public AuxiliaryCache getCache( IRemoteCacheAttributes cattr )
     {
-        RemoteCacheNoWait c = null;
+        RemoteCacheNoWait remoteCacheNoWait = null;
 
         synchronized ( caches )
         {
-            c = (RemoteCacheNoWait) caches.get( cattr.getCacheName() );
-            if ( c == null )
+            remoteCacheNoWait = (RemoteCacheNoWait) caches.get( cattr.getCacheName() );
+            if ( remoteCacheNoWait == null )
             {
                 // create a listener first and pass it to the remotecache
                 // sender.
@@ -398,14 +407,21 @@ public class RemoteCacheManager
                     log.error( e.getMessage() );
                 }
 
-                c = new RemoteCacheNoWait( new RemoteCache( cattr, remoteService, listener ) );
-                caches.put( cattr.getCacheName(), c );
+                IRemoteCacheClient remoteCacheClient = new RemoteCache( cattr, remoteService, listener );
+                remoteCacheClient.setCacheEventLogger( cacheEventLogger );
+                remoteCacheClient.setElementSerializer( elementSerializer );
+                
+                remoteCacheNoWait = new RemoteCacheNoWait( remoteCacheClient );
+                remoteCacheNoWait.setCacheEventLogger( cacheEventLogger );
+                remoteCacheNoWait.setElementSerializer( elementSerializer );
+                
+                caches.put( cattr.getCacheName(), remoteCacheNoWait );
             }
 
             // might want to do some listener sanity checking here.
         }
 
-        return c;
+        return remoteCacheNoWait;
     }
 
     /**

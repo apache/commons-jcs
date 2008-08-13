@@ -38,8 +38,10 @@ import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheInfo;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -49,19 +51,22 @@ import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
  * Abstract class providing a base implementation of a disk cache, which can be easily extended to
- * implement a disk cache for a specific perstistence mechanism.
+ * implement a disk cache for a specific persistence mechanism.
  * <p>
  * When implementing the abstract methods note that while this base class handles most things, it
- * does not acquire or release any locks. Implementations should do so as neccesary. This is mainly
- * done to minimize the time speant in critical sections.
+ * does not acquire or release any locks. Implementations should do so as necessary. This is mainly
+ * done to minimize the time spent in critical sections.
  * <p>
  * Error handling in this class needs to be addressed. Currently if an exception is thrown by the
- * persistence mechanism, this class destroys the event queue. Should it also destory purgatory?
+ * persistence mechanism, this class destroys the event queue. Should it also destroy purgatory?
  * Should it dispose itself?
  */
 public abstract class AbstractDiskCache
     implements AuxiliaryCache, Serializable
 {
+    /** Don't change. */
+    private static final long serialVersionUID = 6541664080877628324L;
+
     /** The logger */
     private static final Log log = LogFactory.getLog( AbstractDiskCache.class );
 
@@ -74,7 +79,7 @@ public abstract class AbstractDiskCache
      * serializing the elements to persistent storage queued for later.
      * <p>
      * If the elements are pulled into the memory cache while the are still in purgatory, writing to
-     * disk can be cancelled.
+     * disk can be canceled.
      */
     protected Map purgatory = new HashMap();
 
@@ -106,10 +111,16 @@ public abstract class AbstractDiskCache
      */
     private WriterPreferenceReadWriteLock removeAllLock = new WriterPreferenceReadWriteLock();
 
+    /** An optional event logger */
+    protected ICacheEventLogger cacheEventLogger;
+    
+    /** The serializer. */
+    protected IElementSerializer elementSerializer;    
+
     // ----------------------------------------------------------- constructors
 
     /**
-     * Construc the abstract disk cache, create event queues and purgatory.
+     * Construct the abstract disk cache, create event queues and purgatory.
      * <p>
      * @param attr
      */
@@ -306,7 +317,8 @@ public abstract class AbstractDiskCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
      */
     public final Map getMultiple( Set keys )
     {
@@ -411,11 +423,11 @@ public abstract class AbstractDiskCache
      * <p>
      * Disposal proceeds in several steps.
      * <ol>
-     * <li> Prior to this call the Composite cache dumped the memory into the disk cache. If it is
+     * <li>Prior to this call the Composite cache dumped the memory into the disk cache. If it is
      * large then we need to wait for the event queue to finish.
-     * <li> Wait until the event queue is empty of until the configured ShutdownSpoolTimeLimit is
+     * <li>Wait until the event queue is empty of until the configured ShutdownSpoolTimeLimit is
      * reached.
-     * <li> Call doDispose on the concrete impl.
+     * <li>Call doDispose on the concrete impl.
      * </ol>
      */
     public final void dispose()
@@ -551,6 +563,27 @@ public abstract class AbstractDiskCache
         return DISK_CACHE;
     }
 
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @param cacheEventLogger
+     */
+    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    {
+        this.cacheEventLogger = cacheEventLogger;
+    }
+
+    /**
+     * Allows you to inject a custom serializer. A good example would be a compressing standard
+     * serializer.
+     * <p>
+     * @param elementSerializer
+     */
+    public void setElementSerializer( IElementSerializer elementSerializer )
+    {
+        this.elementSerializer = elementSerializer;
+    }
+    
     /**
      * Cache that implements the CacheListener interface, and calls appropriate methods in its
      * parent class.

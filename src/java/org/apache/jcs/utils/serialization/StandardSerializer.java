@@ -38,7 +38,11 @@ public class StandardSerializer
     implements IElementSerializer
 {
     /**
-     * Serializes an object using default serilaization.
+     * Serializes an object using default serialization.
+     * <p>
+     * @param obj 
+     * @return byte[]
+     * @throws IOException 
      */
     public byte[] serialize( Serializable obj )
         throws IOException
@@ -57,8 +61,13 @@ public class StandardSerializer
     }
 
     /**
-     * Uses default de-serialization to turn a byte array into an object. All
-     * exceptions are converted into IOExceptions.
+     * Uses default de-serialization to turn a byte array into an object. All exceptions are
+     * converted into IOExceptions.
+     * <p>
+     * @param data
+     * @return Object
+     * @throws IOException
+     * @throws ClassNotFoundException
      */
     public Object deSerialize( byte[] data )
         throws IOException, ClassNotFoundException

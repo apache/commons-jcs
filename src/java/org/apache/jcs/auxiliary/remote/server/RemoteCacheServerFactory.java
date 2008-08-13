@@ -42,13 +42,16 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 public class RemoteCacheServerFactory
     implements IRemoteCacheConstants
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheServerFactory.class );
 
     /** The single instance of the RemoteCacheServer object. */
     private static RemoteCacheServer remoteCacheServer;
 
+    /** The name of the service. */
     private static String serviceName;
 
+    /** Factory socket time out. */
     private static int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS = 10000;
 
     /** Constructor for the RemoteCacheServerFactory object. */
@@ -60,7 +63,9 @@ public class RemoteCacheServerFactory
     /**
      * This will allow you to get stats from the server, etc. Perhaps we should provide methods on
      * the factory to do this instead.
-     * A remote cache is either a local cache or a cluster cache
+     * <p>
+     * A remote cache is either a local cache or a cluster cache.
+     * <p.
      * @return Returns the remoteCacheServer.
      */
     public static RemoteCacheServer getRemoteCacheServer()
@@ -68,11 +73,13 @@ public class RemoteCacheServerFactory
         return remoteCacheServer;
     }
 
-    // ///////////////////// Statup/shutdown methods. //////////////////
+    // ///////////////////// Startup/shutdown methods. //////////////////
     /**
      * Starts up the remote cache server on this JVM, and binds it to the registry on the given host
      * and port.
-     * A remote cache is either a local cache or a cluster cache
+     * <p>
+     * A remote cache is either a local cache or a cluster cache.
+     * <p>
      * @param host
      * @param port
      * @param propFile
@@ -247,7 +254,9 @@ public class RemoteCacheServerFactory
     /**
      * Creates an local RMI registry on the default port, starts up the remote cache server, and
      * binds it to the registry.
-     * A remote cache is either a local cache or a cluster cache
+     * <p>
+     * A remote cache is either a local cache or a cluster cache.
+     * <p>
      * @param args The command line arguments
      * @throws Exception
      */

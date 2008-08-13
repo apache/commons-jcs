@@ -1,4 +1,4 @@
-package org.apache.jcs.config;
+package org.apache.jcs.utils.config;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

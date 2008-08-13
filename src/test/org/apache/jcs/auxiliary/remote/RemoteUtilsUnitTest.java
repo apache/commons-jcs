@@ -24,21 +24,17 @@ import java.rmi.RemoteException;
 import junit.framework.TestCase;
 
 /**
- * Simple tests for remote utils.  It is difficult to verify most of the things is does.
- *
+ * Simple tests for remote utils. It is difficult to verify most of the things is does.
+ *<p>
  * @author Aaron Smuts
- *
  */
 public class RemoteUtilsUnitTest
     extends TestCase
 {
-
     /**
      * Call create registry twice.
-     *
      * <p>
      * The exception is in the security manager setting.
-     *
      */
     public void testCreateRegistryTwice()
     {
@@ -63,6 +59,4 @@ public class RemoteUtilsUnitTest
         }
 
     }
-
-
 }

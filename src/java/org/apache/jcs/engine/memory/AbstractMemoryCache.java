@@ -47,14 +47,15 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 /**
  * Some common code for the LRU and MRU caches.
  * <p>
- * This keeps a static reference to a memory shrinker clock daemon. If this
- * region is configured to use the shrinker, the clock daemon will be setup to
- * run the shrinker on this region.
- * @version $Id$
+ * This keeps a static reference to a memory shrinker clock daemon. If this region is configured to
+ * use the shrinker, the clock daemon will be setup to run the shrinker on this region.
  */
 public abstract class AbstractMemoryCache
     implements MemoryCache, Serializable
 {
+    /** Don't change. */
+    private static final long serialVersionUID = -4494626991630099575L;
+
     /** log instance */
     private final static Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
@@ -64,24 +65,16 @@ public abstract class AbstractMemoryCache
     /** The region name. This defines a namespace of sorts. */
     protected String cacheName;
 
-    /**
-     * Map where items are stored by key
-     */
+    /** Map where items are stored by key */
     protected Map map;
 
-    /**
-     * Region Elemental Attributes, used as a default.
-     */
+    /** Region Elemental Attributes, used as a default. */
     public IElementAttributes attr;
 
-    /**
-     * Cache Attributes
-     */
+    /** Cache Attributes */
     public ICompositeCacheAttributes cattr;
 
-    /**
-     * The cache region this store is associated with
-     */
+    /** The cache region this store is associated with */
     protected CompositeCache cache;
 
     /** status */
@@ -90,14 +83,10 @@ public abstract class AbstractMemoryCache
     /** How many to spool at a time. TODO make configurable */
     protected int chunkSize = DEFAULT_CHUNK_SIZE;
 
-    /**
-     * The background memory shrinker, one for all regions.
-     */
+    /** The background memory shrinker, one for all regions. */
     private static ClockDaemon shrinkerDaemon;
 
-    /**
-     * Constructor for the LRUMemoryCache object
-     */
+    /** Constructor for the LRUMemoryCache object */
     public AbstractMemoryCache()
     {
         status = CacheConstants.STATUS_ERROR;
@@ -106,6 +95,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * For post reflection creation initialization
+     * <p>
      * @param hub
      */
     public synchronized void initialize( CompositeCache hub )
@@ -131,22 +121,20 @@ public abstract class AbstractMemoryCache
 
     /**
      * Removes an item from the cache
-     * @param key
-     *            Identifies item to be removed
+     * <p>
+     * @param key Identifies item to be removed
      * @return Description of the Return Value
-     * @exception IOException
-     *                Description of the Exception
+     * @exception IOException Description of the Exception
      */
     public abstract boolean remove( Serializable key )
         throws IOException;
 
     /**
      * Get an item from the cache
-     * @param key
-     *            Description of the Parameter
+     * <p>
+     * @param key Description of the Parameter
      * @return Description of the Return Value
-     * @exception IOException
-     *                Description of the Exception
+     * @exception IOException Description of the Exception
      */
     public abstract ICacheElement get( Serializable key )
         throws IOException;
@@ -155,9 +143,9 @@ public abstract class AbstractMemoryCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map 
-     * if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
     public Map getMultiple( Set keys )
         throws IOException
@@ -185,35 +173,34 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     * Get an item from the cache without affecting its order or last access
-     * time
-     * @param key
-     *            Description of the Parameter
+     * Get an item from the cache without affecting its order or last access time
+     * <p>
+     * @param key Description of the Parameter
      * @return The quiet value
-     * @exception IOException
-     *                Description of the Exception
+     * @exception IOException Description of the Exception
      */
     public abstract ICacheElement getQuiet( Serializable key )
         throws IOException;
 
     /**
      * Puts an item to the cache.
-     * @param ce
-     *            Description of the Parameter
-     * @exception IOException
-     *                Description of the Exception
+     * <p>
+     * @param ce Description of the Parameter
+     * @exception IOException Description of the Exception
      */
     public abstract void update( ICacheElement ce )
         throws IOException;
 
     /**
      * Get an Array of the keys for all elements in the memory cache
+     * <p>
      * @return An Object[]
      */
     public abstract Object[] getKeyArray();
 
     /**
      * Removes all cached items from the cache.
+     * <p>
      * @exception IOException
      */
     public void removeAll()
@@ -224,6 +211,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Prepares for shutdown.
+     * <p>
      * @exception IOException
      */
     public void dispose()
@@ -248,6 +236,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the current cache size.
+     * <p>
      * @return The size value
      */
     public int getSize()
@@ -257,6 +246,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the cache status.
+     * <p>
      * @return The status value
      */
     public int getStatus()
@@ -266,6 +256,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the cache name.
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -275,6 +266,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Puts an item to the cache.
+     * <p>
      * @param ce
      * @exception IOException
      */
@@ -286,6 +278,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Gets the iterator attribute of the LRUMemoryCache object
+     * <p>
      * @return The iterator value
      */
     public Iterator getIterator()
@@ -295,6 +288,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Returns the CacheAttributes.
+     * <p>
      * @return The CacheAttributes value
      */
     public ICompositeCacheAttributes getCacheAttributes()
@@ -304,8 +298,8 @@ public abstract class AbstractMemoryCache
 
     /**
      * Sets the CacheAttributes.
-     * @param cattr
-     *            The new CacheAttributes value
+     * <p>
+     * @param cattr The new CacheAttributes value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
@@ -314,6 +308,7 @@ public abstract class AbstractMemoryCache
 
     /**
      * Gets the cache hub / region that the MemoryCache is used by
+     * <p>
      * @return The cache value
      */
     public CompositeCache getCompositeCache()
@@ -322,7 +317,7 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     * @param groupName 
+     * @param groupName
      * @return group keys
      */
     public Set getGroupKeys( String groupName )
@@ -347,13 +342,14 @@ public abstract class AbstractMemoryCache
 
     /**
      * Allows us to set the daemon status on the clockdaemon
+     * <p>
      * @author aaronsm
      */
     class MyThreadFactory
         implements ThreadFactory
     {
-        /**  
-         * @param runner 
+        /**
+         * @param runner
          * @return a new thread for the given Runnable
          */
         public Thread newThread( Runnable runner )

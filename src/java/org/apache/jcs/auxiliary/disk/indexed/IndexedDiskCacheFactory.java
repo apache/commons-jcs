@@ -24,7 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
  * Creates disk cache instances.
@@ -32,26 +34,30 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public class IndexedDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( IndexedDiskCacheFactory.class );
 
+    /** The auxiliary name. */
     private String name;
 
     /**
-     * Get an instance of the IndexDiskCacheManager for the attributes and then
-     * get an IndexedDiskCache from the manager.
+     * Get an instance of the IndexDiskCacheManager for the attributes and then get an
+     * IndexedDiskCache from the manager.
      * <p>
      * The manager is a singleton.
      * <p>
-     * One disk cache is returned per region fromt he maanger.
+     * One disk cache is returned per region from the manager.
      * <p>
      * @param iaca
-     * @param cacheMgr
-     *            This allows auxiliaries to reference the manager without
-     *            assuming that it is a singleton. This will allow JCS to be a
-     *            nonsingleton. Also, it makes it easier to test.
+     * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
+     *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier to
+     *            test.
+     * @param cacheEventLogger 
+     * @param elementSerializer 
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
+                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         IndexedDiskCacheAttributes idca = (IndexedDiskCacheAttributes) iaca;
         if ( log.isDebugEnabled() )
@@ -75,8 +81,7 @@ public class IndexedDiskCacheFactory
     /**
      * Sets the name attribute of the DiskCacheFactory object
      * <p>
-     * @param name
-     *            The new name value
+     * @param name The new name value
      */
     public void setName( String name )
     {

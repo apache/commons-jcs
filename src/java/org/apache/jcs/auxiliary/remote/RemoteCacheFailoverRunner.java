@@ -23,7 +23,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
  * The RemoteCacheFailoverRunner tries to establish a connection with a failover
@@ -32,15 +34,15 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * <p>
  * It works by switching out the RemoteCacheNoWait inside the Facade.
  * <p>
- * Client (i.e.) the CompositeCache has refernce to a RemoteCacheNoWaitFacade.
+ * Client (i.e.) the CompositeCache has reference to a RemoteCacheNoWaitFacade.
  * This facade is created by the RemoteCacheFactory. The factory maintains a set
  * of managers, one for each remote server. Typically, there will only be one
  * manager.
  * <p>
- * If you use multipleremote servesr, you may want to set one or more as
+ * If you use multiple remote servers, you may want to set one or more as
  * failovers. If a local cache cannot connect to the primary server, or looses
  * its connection to the primary server, it will attempt to restore that
- * connectin in the background. If failovers are defined, the Failover runner
+ * Connection in the background. If failovers are defined, the Failover runner
  * will try to connect to a failover until the primary is restored.
  *
  */
@@ -55,7 +57,14 @@ public class RemoteCacheFailoverRunner
 
     private boolean alright = true;
 
+    /** The cache manager */
     private ICompositeCacheManager cacheMgr;
+    
+    /** The event logger. */
+    private ICacheEventLogger cacheEventLogger;
+
+    /** The serializer. */
+    private IElementSerializer elementSerializer;
 
     /**
      * Constructor for the RemoteCacheFailoverRunner object. This allows the
@@ -64,11 +73,16 @@ public class RemoteCacheFailoverRunner
      * @param facade
      *            the facade the CompositeCache talks to.
      * @param cacheMgr
+     * @param cacheEventLogger 
+     * @param elementSerializer 
      */
-    public RemoteCacheFailoverRunner( RemoteCacheNoWaitFacade facade, ICompositeCacheManager cacheMgr )
+    public RemoteCacheFailoverRunner( RemoteCacheNoWaitFacade facade, ICompositeCacheManager cacheMgr,
+                                      ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         this.facade = facade;
         this.cacheMgr = cacheMgr;
+        this.cacheEventLogger = cacheEventLogger;
+        this.elementSerializer = elementSerializer;
     }
 
     /**
@@ -183,7 +197,7 @@ public class RemoteCacheFailoverRunner
                         rca = (RemoteCacheAttributes) facade.remoteCacheAttributes.copy();
                         rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                         rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-                        RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
+                        RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
 
                         if ( log.isDebugEnabled() )
                         {
@@ -332,7 +346,7 @@ public class RemoteCacheFailoverRunner
             RemoteCacheAttributes rca = (RemoteCacheAttributes) facade.remoteCacheAttributes.copy();
             rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
             rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-            RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr );
+            RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
 
             // add a listener if there are none, need to tell rca what number it
             // is at
@@ -376,7 +390,7 @@ public class RemoteCacheFailoverRunner
                                     rcaOld.setRemoteHost( serverOld.substring( 0, serverOld.indexOf( ":" ) ) );
                                     rcaOld.setRemotePort( Integer.parseInt( serverOld.substring( serverOld
                                         .indexOf( ":" ) + 1 ) ) );
-                                    RemoteCacheManager rcmOld = RemoteCacheManager.getInstance( rcaOld, cacheMgr );
+                                    RemoteCacheManager rcmOld = RemoteCacheManager.getInstance( rcaOld, cacheMgr, cacheEventLogger, elementSerializer );
 
                                     if ( rcmOld != null )
                                     {
@@ -427,7 +441,14 @@ public class RemoteCacheFailoverRunner
 
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "Successfully reconnected to PRIMARY remote server.  Substituted primary for failoverNoWait [" + failoverNoWait + "]" );
+                        String message = "Successfully reconnected to PRIMARY remote server.  Substituted primary for failoverNoWait [" + failoverNoWait + "]";
+                        log.info( message );
+                        
+                        if ( facade.getCacheEventLogger() != null )
+                        {
+                            facade.getCacheEventLogger().logApplicationEvent( "RemoteCacheFailoverRunner", "RestoredPrimary",
+                                                                              message );
+                        }                        
                     }
                     return true;
                 }

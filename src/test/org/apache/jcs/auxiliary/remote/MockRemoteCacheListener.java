@@ -33,11 +33,14 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * <p>
  * @author Aaron Smuts
  */
-public class RemoteCacheListenerMockImpl
+public class MockRemoteCacheListener
     implements IRemoteCacheListener
 {
     /** Setup the listener id that this will return. */
     private long listenerId;
+
+    /** Setup the listener ip that this will return. */
+    public String localAddress;
 
     /** Number of times handlePut was called. */
     public int putCount;
@@ -72,8 +75,7 @@ public class RemoteCacheListenerMockImpl
     public String getLocalHostAddress()
         throws IOException
     {
-        // TODO Auto-generated method stub
-        return null;
+        return localAddress;
     }
 
     /**

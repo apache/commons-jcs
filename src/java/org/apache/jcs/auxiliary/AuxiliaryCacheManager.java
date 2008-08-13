@@ -30,10 +30,9 @@ import org.apache.jcs.engine.behavior.ICacheType;
 public interface AuxiliaryCacheManager
     extends ICacheType
 {
-
     /**
      * Return the appropriate auxiliary cache for this region.
-     *
+     * <p>
      * @param cacheName
      * @return AuxiliaryCache
      */
@@ -41,9 +40,9 @@ public interface AuxiliaryCacheManager
 
     /**
      * This allows the cache manager to be plugged into the auxiliary caches,
-     * rather then having them get it themselves. Cache maangers can be mocked
+     * rather then having them get it themselves. Cache managers can be mocked
      * out and the auxiliaries will be easier to test.
-     *
+     * <p>
      * @param cacheName
      * @param cacheManager
      * @return AuxiliaryCache

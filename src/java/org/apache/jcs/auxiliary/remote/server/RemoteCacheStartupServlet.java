@@ -77,8 +77,10 @@ public class RemoteCacheStartupServlet
     /**
      * Starts the registry and then tries to bind to it.
      * <p>
-     * Gets the port from a props file. Uses the local host name for the rgistry
-     * host. Tries to start the registry, ignoreing failure. Starts the server.
+     * Gets the port from a props file. Uses the local host name for the registry
+     * host. Tries to start the registry, ignoring failure. Starts the server.
+     * <p>
+     * @throws ServletException 
      */
     public void init()
         throws ServletException
@@ -189,10 +191,8 @@ public class RemoteCacheStartupServlet
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.servlet.Servlet#destroy()
+    /**
+     * shuts the cache down.
      */
     public void destroy()
     {

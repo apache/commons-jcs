@@ -38,10 +38,7 @@ import org.apache.jcs.engine.behavior.ICacheObserver;
 import org.apache.jcs.engine.behavior.ICacheService;
 
 /**
- * Description of the Class
- *
- * @author asmuts
- * @created January 15, 2002
+ * Manual tester.
  */
 public class RemoteCacheClientTester
     implements IRemoteCacheListener, IRemoteCacheConstants

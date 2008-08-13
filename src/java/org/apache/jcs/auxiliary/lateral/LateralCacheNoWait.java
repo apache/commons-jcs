@@ -39,7 +39,9 @@ import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -52,8 +54,10 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class LateralCacheNoWait
     implements AuxiliaryCache
 {
+    /** Don't change */
     private static final long serialVersionUID = -7251187566116178475L;
 
+    /** The logger. */
     private final static Log log = LogFactory.getLog( LateralCacheNoWait.class );
 
     private final LateralCache cache;
@@ -65,6 +69,12 @@ public class LateralCacheNoWait
     private int removeCount = 0;
 
     private int putCount = 0;
+    
+    /** An optional event logger */
+    private ICacheEventLogger cacheEventLogger;    
+    
+    /** The serializer. */
+    private IElementSerializer elementSerializer;       
 
     /**
      * Constructs with the given lateral cache, and fires up an event queue for aysnchronous
@@ -314,6 +324,27 @@ public class LateralCacheNoWait
         return cache.getAuxiliaryCacheAttributes();
     }
 
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @param cacheEventLogger
+     */
+    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    {
+        this.cacheEventLogger = cacheEventLogger;
+    }   
+    
+    /**
+     * Allows you to inject a custom serializer. A good example would be a compressing standard
+     * serializer.
+     * <p>
+     * @param elementSerializer
+     */
+    public void setElementSerializer( IElementSerializer elementSerializer )
+    {
+        this.elementSerializer = elementSerializer;
+    }
+    
     /**
      * getStats
      * @return String

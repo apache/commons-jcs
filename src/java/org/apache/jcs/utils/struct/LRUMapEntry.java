@@ -30,10 +30,13 @@ import java.util.Map.Entry;
 public class LRUMapEntry
     implements Entry, Serializable
 {
+    /** Don't change */
     private static final long serialVersionUID = -8176116317739129331L;
 
+    /** key */
     private Object key;
 
+    /** value */
     private Object value;
 
     /**
@@ -47,27 +50,25 @@ public class LRUMapEntry
         this.value = value;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map$Entry#getKey()
+    /**
+     * @return key
      */
     public Object getKey()
     {
         return this.key;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map$Entry#getValue()
+    /**
+     * @return value
      */
     public Object getValue()
     {
         return this.value;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map$Entry#setValue(java.lang.Object)
+    /**
+     * @param valueArg
+     * @return the old value
      */
     public Object setValue( Object valueArg )
     {

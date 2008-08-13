@@ -25,8 +25,8 @@ import java.util.Map;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 
 /**
- * This helps ensure some common behvior among LateraLCacheManagers for things
- * such as montiors.
+ * This helps ensure some common behavior among LateraLCacheManagers for things
+ * such as monitors.
  * <p>
  * @author Aaron Smuts
  */
@@ -34,21 +34,24 @@ public interface ILateralCacheManager
     extends AuxiliaryCacheManager
 {
     /**
-     * This is a temporary solution that allos the monitor to get the instances
+     * This is a temporary solution that allows the monitor to get the instances
      * of a manager.
-     * @return
+     * <p>
+     * @return Map
      */
     public abstract Map getInstances();
 
     /**
-     * This is a temporary solution that allos the monitor to get caches from an
+     * This is a temporary solution that allows the monitor to get caches from an
      * instance of a manager.
-     * @return
+     * <p>
+     * @return Map
      */
     public abstract Map getCaches();
 
     /**
-     * The restore calls thsi on the manger if a cache if found to be in error.
+     * The restore calls this on the manger if a cache if found to be in error.
+     * <p>
      * @return Object is the service if it can be fixed.
      * @throws IOException
      *             if the service cannot be fixed.
@@ -57,11 +60,11 @@ public interface ILateralCacheManager
         throws IOException;
 
     /**
-     * Sets the corected service. The restore process will call this if it gets
+     * Sets the corrected service. The restore process will call this if it gets
      * a good service back from fixService.
+     * <p>
      * @param lateralService
      * @param lateralWatch
      */
     public void fixCaches( ILateralCacheService lateralService, ILateralCacheObserver lateralWatch );
-
 }

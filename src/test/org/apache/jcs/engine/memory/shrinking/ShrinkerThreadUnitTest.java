@@ -26,7 +26,7 @@ import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.event.ElementEventHandlerMockImpl;
-import org.apache.jcs.engine.memory.MemoryCacheMockImpl;
+import org.apache.jcs.engine.memory.MockMemoryCache;
 
 /**
  * This tests the functionality of the shrinker thread.
@@ -48,7 +48,7 @@ public class ShrinkerThreadUnitTest
     public void testSimpleShrink()
         throws Exception
     {
-        MemoryCacheMockImpl memory = new MemoryCacheMockImpl();
+        MockMemoryCache memory = new MockMemoryCache();
 
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
@@ -92,7 +92,7 @@ public class ShrinkerThreadUnitTest
     public void testSimpleShrinkMutiple()
         throws Exception
     {
-        MemoryCacheMockImpl memory = new MemoryCacheMockImpl();
+        MockMemoryCache memory = new MockMemoryCache();
 
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
@@ -141,7 +141,7 @@ public class ShrinkerThreadUnitTest
     public void testSimpleShrinkMutipleWithEventHandler()
     throws Exception
 {
-    MemoryCacheMockImpl memory = new MemoryCacheMockImpl();
+    MockMemoryCache memory = new MockMemoryCache();
 
     CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
     cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );

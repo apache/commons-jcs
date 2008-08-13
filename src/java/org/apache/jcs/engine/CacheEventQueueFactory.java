@@ -25,14 +25,13 @@ import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
- * This class hands out event Queues. This allows us to change the
- * implementation more easily.
+ * This class hands out event Queues. This allows us to change the implementation more easily.
  * <p>
  * @author aaronsm
  */
 public class CacheEventQueueFactory
 {
-
+    /** The logger. */
     private static final Log log = LogFactory.getLog( CacheEventQueueFactory.class );
 
     /**
@@ -43,10 +42,10 @@ public class CacheEventQueueFactory
      * @param cacheName
      * @param threadPoolName
      * @param poolType
-     * @return
+     * @return ICacheEventQueue
      */
     public ICacheEventQueue createCacheEventQueue( ICacheListener listener, long listenerId, String cacheName,
-                                                  String threadPoolName, int poolType )
+                                                   String threadPoolName, int poolType )
     {
         return createCacheEventQueue( listener, listenerId, cacheName, 10, 500, threadPoolName, poolType );
     }
@@ -59,15 +58,13 @@ public class CacheEventQueueFactory
      * @param cacheName
      * @param maxFailure
      * @param waitBeforeRetry
-     * @param threadPoolName
-     *            null is ok, if not a pooled event queue this is ignored
-     * @param poolType
-     *            single or pooled
-     * @return
+     * @param threadPoolName null is OK, if not a pooled event queue this is ignored
+     * @param poolType single or pooled
+     * @return ICacheEventQueue
      */
     public ICacheEventQueue createCacheEventQueue( ICacheListener listener, long listenerId, String cacheName,
-                                                  int maxFailure, int waitBeforeRetry, String threadPoolName,
-                                                  int poolType )
+                                                   int maxFailure, int waitBeforeRetry, String threadPoolName,
+                                                   int poolType )
     {
         if ( log.isDebugEnabled() )
         {

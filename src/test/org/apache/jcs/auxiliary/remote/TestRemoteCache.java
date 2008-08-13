@@ -25,10 +25,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.JCS;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.control.CompositeCacheManagerMockImpl;
+import org.apache.jcs.engine.control.MockCompositeCacheManager;
+import org.apache.jcs.engine.control.MockElementSerializer;
 
 /**
  * @author asmuts
@@ -100,13 +102,13 @@ public class TestRemoteCache
 
         Thread.sleep( 100 );
 
-        ICompositeCacheManager cacheMgr = new CompositeCacheManagerMockImpl();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
         RemoteCacheAttributes rca = new RemoteCacheAttributes();
         rca.setRemoteHost( "localhost" );
         rca.setRemotePort( 1101 );
 
-        RemoteCacheManager mgr = RemoteCacheManager.getInstance( rca, cacheMgr );
+        RemoteCacheManager mgr = RemoteCacheManager.getInstance( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
         AuxiliaryCache cache = mgr.getCache( "testCache" );
 
         int numMes = 100;

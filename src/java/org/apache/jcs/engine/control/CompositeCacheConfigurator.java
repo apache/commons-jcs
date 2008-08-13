@@ -32,19 +32,20 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.jcs.config.OptionConverter;
-import org.apache.jcs.config.PropertySetter;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.utils.config.OptionConverter;
+import org.apache.jcs.utils.config.PropertySetter;
 
 /**
  * This class configures JCS based on a properties object.
  * <p>
- * This class is based on the log4j class org.apache.log4j.PropertyConfigurator
- * which was made by: "Luke Blanshard" <Luke@quiq.com>"Mark DONSZELMANN"
- * <Mark.Donszelmann@cern.ch>"Anders Kristensen" <akristensen@dynamicsoft.com>
- *
+ * This class is based on the log4j class org.apache.log4j.PropertyConfigurator which was made by:
+ * "Luke Blanshard" <Luke@quiq.com>"Mark DONSZELMANN" <Mark.Donszelmann@cern.ch>"Anders Kristensen"
+ * <akristensen@dynamicsoft.com>
  */
 public class CompositeCacheConfigurator
 {
@@ -64,11 +65,25 @@ public class CompositeCacheConfigurator
 
     final static String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
 
+    /**
+     * jcs.auxiliary.NAME.cacheeventlogger=CLASSNAME
+     * <p>
+     * jcs.auxiliary.NAME.cacheeventlogger.attributes.CUSTOMPROPERTY=VALUE
+     */
+    final static String CACHE_EVENT_LOGGER_PREFIX = ".cacheeventlogger";
+
+    /**
+     * jcs.auxiliary.NAME.serializer=CLASSNAME
+     * <p>
+     * jcs.auxiliary.NAME.serializer.attributes.CUSTOMPROPERTY=VALUE
+     */
+    final static String SERIALIZER_PREFIX = ".serializer";
+
     private CompositeCacheManager compositeCacheManager;
 
     /**
      * Constructor for the CompositeCacheConfigurator object
-     *
+     *<p>
      * @param ccMgr
      */
     public CompositeCacheConfigurator( CompositeCacheManager ccMgr )
@@ -79,9 +94,9 @@ public class CompositeCacheConfigurator
     /**
      * Configure cached for file name.
      * <p>
-     * This is only used for testing. The manager handles the translation of a
-     * file into a properties object.
-     *
+     * This is only used for testing. The manager handles the translation of a file into a
+     * properties object.
+     * <p>
      * @param configFileName
      */
     protected void doConfigure( String configFileName )
@@ -115,7 +130,6 @@ public class CompositeCacheConfigurator
      * <li>Setup system caches to be used
      * <li>Setup preconfigured caches
      * </ul>
-     *
      * @param properties
      */
     public void doConfigure( Properties properties )
@@ -124,10 +138,13 @@ public class CompositeCacheConfigurator
 
         // store props for use by non configured caches
         compositeCacheManager.props = properties;
+
         // set default value list
         setDefaultAuxValues( properties );
+
         // set default cache attr
         setDefaultCompositeCacheAttributes( properties );
+
         // set default element attr
         setDefaultElementAttributes( properties );
 
@@ -148,7 +165,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Set the default aux list for new caches.
-     *
+     * <p>
      * @param props
      */
     protected void setDefaultAuxValues( Properties props )
@@ -164,7 +181,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Set the default CompositeCacheAttributes for new caches.
-     *
+     *<p>
      * @param props
      */
     protected void setDefaultCompositeCacheAttributes( Properties props )
@@ -178,7 +195,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Set the default ElementAttributes for new caches.
-     *
+     *<p>
      * @param props
      */
     protected void setDefaultElementAttributes( Properties props )
@@ -190,9 +207,8 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Create caches used internally. System status gives them creation
-     * priority.
-     *
+     * Create caches used internally. System status gives them creation priority.
+     *<p>
      * @param props
      */
     protected void parseSystemRegions( Properties props )
@@ -220,7 +236,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Parse region elements.
-     *
+     *<p>
      * @param props
      */
     protected void parseRegions( Properties props )
@@ -237,11 +253,11 @@ public class CompositeCacheConfigurator
 
                 regionNames.add( regionName );
 
-                String value = OptionConverter.findAndSubst( key, props );
+                String auxiliaryList = OptionConverter.findAndSubst( key, props );
                 ICache cache;
                 synchronized ( regionName )
                 {
-                    cache = parseRegion( props, regionName, value );
+                    cache = parseRegion( props, regionName, auxiliaryList );
                 }
                 compositeCacheManager.caches.put( regionName, cache );
             }
@@ -251,12 +267,11 @@ public class CompositeCacheConfigurator
         {
             log.info( "Parsed regions " + regionNames );
         }
-
     }
 
     /**
      * Create cache region.
-     *
+     *<p>
      * @param props
      * @param regName
      * @param value
@@ -270,8 +285,8 @@ public class CompositeCacheConfigurator
     /**
      * Get all the properties for a region and configure its cache.
      * <p>
-     * This method tells the otehr parse method the name of the region prefix.
-     *
+     * This method tells the other parse method the name of the region prefix.
+     *<p>
      * @param props
      * @param regName
      * @param value
@@ -285,7 +300,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Get all the properties for a region and configure its cache.
-     *
+     *<p>
      * @param props
      * @param regName
      * @param value
@@ -294,7 +309,7 @@ public class CompositeCacheConfigurator
      * @return CompositeCache
      */
     protected CompositeCache parseRegion( Properties props, String regName, String value,
-                                         ICompositeCacheAttributes cca, String regionPrefix )
+                                          ICompositeCacheAttributes cca, String regionPrefix )
     {
         // First, create or get the cache and element attributes, and create
         // the cache.
@@ -362,7 +377,7 @@ public class CompositeCacheConfigurator
 
     /**
      * Get an compositecacheattributes for the listed region.
-     *
+     *<p>
      * @param props
      * @param regName
      * @return
@@ -374,14 +389,14 @@ public class CompositeCacheConfigurator
 
     /**
      * Get the main attributes for a region.
-     *
+     *<p>
      * @param props
      * @param regName
      * @param regionPrefix
      * @return ICompositeCacheAttributes
      */
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( Properties props, String regName,
-                                                                      String regionPrefix )
+                                                                       String regionPrefix )
     {
         ICompositeCacheAttributes ccAttr;
 
@@ -396,7 +411,8 @@ public class CompositeCacheConfigurator
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "No special CompositeCacheAttributes class defined for key [" + attrName + "], using default class." );
+                log.info( "No special CompositeCacheAttributes class defined for key [" + attrName
+                    + "], using default class." );
             }
 
             ICompositeCacheAttributes ccAttr2 = compositeCacheManager.getDefaultCacheAttributes();
@@ -422,9 +438,8 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Create the element attributes from the properties object for a cache
-     * region.
-     *
+     * Create the element attributes from the properties object for a cache region.
+     *<p>
      * @param props
      * @param regName
      * @param regionPrefix
@@ -471,15 +486,11 @@ public class CompositeCacheConfigurator
 
     /**
      * Get an aux cache for the listed aux for a region.
-     *
-     * @param cache
-     *            the cache manager
-     * @param props
-     *            the configuration propeties
-     * @param auxName
-     *            the name of the auxiliary cache
-     * @param regName
-     *            the name of the region.
+     *<p>
+     * @param cache the cache manager
+     * @param props the configuration properties
+     * @param auxName the name of the auxiliary cache
+     * @param regName the name of the region.
      * @return AuxiliaryCache
      */
     protected AuxiliaryCache parseAuxiliary( CompositeCache cache, Properties props, String auxName, String regName )
@@ -521,7 +532,7 @@ public class CompositeCacheConfigurator
             String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
             auxAttr = (AuxiliaryCacheAttributes) OptionConverter
                 .instantiateByKey( props, prefix, org.apache.jcs.auxiliary.AuxiliaryCacheAttributes.class, null );
-            if ( auxFac == null )
+            if ( auxAttr == null )
             {
                 log.error( "Could not instantiate auxAttr named '" + attrName + "'" );
                 return null;
@@ -547,11 +558,70 @@ public class CompositeCacheConfigurator
 
         // GET CACHE FROM FACTORY WITH ATTRIBUTES
         auxAttr.setCacheName( regName );
+
+        // CONFIGURE THE EVENT LOGGER
+        ICacheEventLogger cacheEventLogger = parseCacheEventLogger( props, auxName );
+
+        // CONFIGURE THE ELEMENT SERIALIZER
+        IElementSerializer elementSerializer = parseElementSerializer( props, auxName );
+
         // Consider putting the compositeCache back in the factory interface
         // since the manager may not know about it at this point.
-        // need to make sure the maanger already has the cache
+        // need to make sure the manager already has the cache
         // before the auxiliary is created.
-        auxCache = auxFac.createCache( auxAttr, compositeCacheManager );
+        auxCache = auxFac.createCache( auxAttr, compositeCacheManager, cacheEventLogger, elementSerializer );
+
         return auxCache;
+    }
+
+    /**
+     * Parses the event logger config, if there is any for the auxiliary.
+     * <p>
+     * @param props
+     * @param auxName
+     * @return cacheEventLogger
+     */
+    protected ICacheEventLogger parseCacheEventLogger( Properties props, String auxName )
+    {
+        ICacheEventLogger cacheEventLogger = null;
+
+        // auxFactory was not previously initialized.
+        String eventLoggerClassName = AUXILIARY_PREFIX + auxName + CACHE_EVENT_LOGGER_PREFIX;
+        cacheEventLogger = (ICacheEventLogger) OptionConverter
+            .instantiateByKey( props, eventLoggerClassName, org.apache.jcs.engine.behavior.ICacheEventLogger.class,
+                               null );
+        if ( cacheEventLogger != null )
+        {
+            String cacheEventLoggerAttributePrefix = AUXILIARY_PREFIX + auxName + CACHE_EVENT_LOGGER_PREFIX
+                + ATTRIBUTE_PREFIX;
+            PropertySetter.setProperties( cacheEventLogger, props, cacheEventLoggerAttributePrefix + "." );
+        }
+        return cacheEventLogger;
+    }
+
+    /**
+     * Parses the element config, if there is any for the auxiliary.
+     * <p>
+     * @param props
+     * @param auxName
+     * @return cacheEventLogger
+     */
+    protected IElementSerializer parseElementSerializer( Properties props, String auxName )
+    {
+        // TODO take in the entire prop key
+        
+        IElementSerializer elementSerializer = null;
+
+        // auxFactory was not previously initialized.
+        String elementSerializerClassName = AUXILIARY_PREFIX + auxName + SERIALIZER_PREFIX;
+        elementSerializer = (IElementSerializer) OptionConverter
+            .instantiateByKey( props, elementSerializerClassName,
+                               org.apache.jcs.engine.behavior.IElementSerializer.class, null );
+        if ( elementSerializer != null )
+        {
+            String cacheEventLoggerAttributePrefix = AUXILIARY_PREFIX + auxName + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
+            PropertySetter.setProperties( elementSerializer, props, cacheEventLoggerAttributePrefix + "." );
+        }
+        return elementSerializer;
     }
 }

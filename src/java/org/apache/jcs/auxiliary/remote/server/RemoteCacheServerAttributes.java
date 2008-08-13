@@ -1,22 +1,18 @@
 package org.apache.jcs.auxiliary.remote.server;
 
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
@@ -69,6 +65,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteTypeName attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The remoteTypeName value
      */
     public String getRemoteTypeName()
@@ -87,6 +84,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteTypeName attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param s The new remoteTypeName value
      */
     public void setRemoteTypeName( String s )
@@ -104,6 +102,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteType attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The remoteType value
      */
     public int getRemoteType()
@@ -114,6 +113,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteType attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param p The new remoteType value
      */
     public void setRemoteType( int p )
@@ -124,6 +124,7 @@ public class RemoteCacheServerAttributes
     /**
      * clones
      * <p>
+     * 
      * @return AuxiliaryCacheAttributes clone
      */
     public AuxiliaryCacheAttributes copy()
@@ -142,6 +143,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteServiceName attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The remoteServiceName value
      */
     public String getRemoteServiceName()
@@ -152,6 +154,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteServiceName attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param s The new remoteServiceName value
      */
     public void setRemoteServiceName( String s )
@@ -162,6 +165,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteHost attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The remoteHost value
      */
     public String getRemoteHost()
@@ -172,6 +176,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteHost attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param s The new remoteHost value
      */
     public void setRemoteHost( String s )
@@ -182,6 +187,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remotePort attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The remotePort value
      */
     public int getRemotePort()
@@ -192,6 +198,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remotePort attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param p The new remotePort value
      */
     public void setRemotePort( int p )
@@ -202,6 +209,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the clusterServers attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The clusterServers value
      */
     public String getClusterServers()
@@ -212,6 +220,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the clusterServers attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param s The new clusterServers value
      */
     public void setClusterServers( String s )
@@ -222,6 +231,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the localPort attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The localPort value
      */
     public int getServicePort()
@@ -232,6 +242,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the localPort attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param p The new localPort value
      */
     public void setServicePort( int p )
@@ -242,6 +253,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the removeUponRemotePut attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The removeUponRemotePut value
      */
     public boolean getRemoveUponRemotePut()
@@ -252,6 +264,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the removeUponRemotePut attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param r The new removeUponRemotePut value
      */
     public void setRemoveUponRemotePut( boolean r )
@@ -262,6 +275,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the getOnly attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @return The getOnly value
      */
     public boolean getGetOnly()
@@ -272,6 +286,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the getOnly attribute of the RemoteCacheAttributes object
      * <p>
+     * 
      * @param r The new getOnly value
      */
     public void setGetOnly( boolean r )
@@ -280,8 +295,9 @@ public class RemoteCacheServerAttributes
     }
 
     /**
-     * Should cluster updates be propogated to the locals
+     * Should cluster updates be propagated to the locals
      * <p>
+     * 
      * @return The localClusterConsistency value
      */
     public boolean getLocalClusterConsistency()
@@ -290,8 +306,9 @@ public class RemoteCacheServerAttributes
     }
 
     /**
-     * Should cluster updates be propogated to the locals
+     * Should cluster updates be propagated to the locals
      * <p>
+     * 
      * @param r The new localClusterConsistency value
      */
     public void setLocalClusterConsistency( boolean r )
@@ -302,6 +319,7 @@ public class RemoteCacheServerAttributes
     /**
      * Should gets from non-cluster clients be allowed to get from other remote auxiliaries.
      * <p>
+     * 
      * @return The localClusterConsistency value
      */
     public boolean getAllowClusterGet()
@@ -312,6 +330,7 @@ public class RemoteCacheServerAttributes
     /**
      * Should we try to get from other cluster servers if we don't find the items locally.
      * <p>
+     * 
      * @param r The new localClusterConsistency value
      */
     public void setAllowClusterGet( boolean r )
@@ -322,6 +341,7 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the ConfigFileName attribute of the IRemoteCacheAttributes object
      * <p>
+     * 
      * @return The clusterServers value
      */
     public String getConfigFileName()
@@ -332,6 +352,7 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object
      * <p>
+     * 
      * @param s The new clusterServers value
      */
     public void setConfigFileName( String s )
@@ -339,9 +360,8 @@ public class RemoteCacheServerAttributes
         configFileName = s;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * @return String details
      */
     public String toString()
     {

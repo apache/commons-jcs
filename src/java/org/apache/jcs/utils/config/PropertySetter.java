@@ -1,4 +1,4 @@
-package org.apache.jcs.config;
+package org.apache.jcs.utils.config;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -29,8 +29,8 @@ import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.apache.jcs.config.OptionConverter;
-import org.apache.jcs.config.PropertySetterException;
+import org.apache.jcs.utils.config.OptionConverter;
+import org.apache.jcs.utils.config.PropertySetterException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

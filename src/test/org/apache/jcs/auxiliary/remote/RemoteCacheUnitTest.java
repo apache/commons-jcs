@@ -19,8 +19,11 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.util.HashSet;
+
 import junit.framework.TestCase;
 
+import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -29,8 +32,6 @@ import org.apache.jcs.utils.serialization.SerializationConversionUtil;
 
 /**
  * Unit Tests for the Remote Cache.
- * <p>
- * @author admin
  */
 public class RemoteCacheUnitTest
     extends TestCase
@@ -46,8 +47,8 @@ public class RemoteCacheUnitTest
     {
         // SETUP
         IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        RemoteCacheServiceMockImpl service = new RemoteCacheServiceMockImpl();
-        RemoteCacheListenerMockImpl listener = new RemoteCacheListenerMockImpl();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
 
         RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
 
@@ -77,8 +78,8 @@ public class RemoteCacheUnitTest
         // SETUP
         IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
         ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 10 );
-        RemoteCacheServiceMockImpl service = new RemoteCacheServiceMockImpl();
-        RemoteCacheListenerMockImpl listener = new RemoteCacheListenerMockImpl();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
 
         // set the zombir
         RemoteCache remoteCache = new RemoteCache( cattr, zombie, listener );
@@ -98,5 +99,137 @@ public class RemoteCacheUnitTest
             .getDeSerializedCacheElement( (ICacheElementSerialized) service.lastUpdate, remoteCache
                 .getElementSerializer() );
         assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testUpdate_simple()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        ICacheElement item = new CacheElement( "region", "key", "value" );
+
+        // DO WORK
+        remoteCache.update( item );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testGet_simple()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        remoteCache.get( "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testGetMultiple_simple()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        remoteCache.getMultiple( new HashSet() );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testRemove_simple()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        remoteCache.remove( "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testRemoveAll_simple()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        remoteCache.remove( "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
 }

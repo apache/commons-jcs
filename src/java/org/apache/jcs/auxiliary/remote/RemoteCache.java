@@ -41,6 +41,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IZombie;
@@ -72,6 +73,7 @@ public class RemoteCache
 
     private IRemoteCacheAttributes irca;
 
+    /** This is a handle on the remote server. In zombie mode it is replaced with a balking facade. */
     private IRemoteCacheService remote;
 
     private IRemoteCacheListener listener;
@@ -82,7 +84,11 @@ public class RemoteCache
 
     private boolean usePoolForGet = false;
 
+    /** The object serializer */
     private IElementSerializer elementSerializer = new StandardSerializer();
+
+    /** An optional event logger */
+    private ICacheEventLogger cacheEventLogger;
 
     /**
      * Constructor for the RemoteCache object. This object communicates with a remote cache server.
@@ -157,7 +163,7 @@ public class RemoteCache
         catch ( Exception e )
         {
             // TODO change this so that we only try to do it once. Otherwise we
-            // genreate errors for each region on construction.
+            // Generate errors for each region on construction.
             log.info( e.getMessage() );
         }
     }
@@ -187,47 +193,65 @@ public class RemoteCache
      * byte array is wrapped in a ICacheElementSerialized. This allows the remote server to operate
      * without any knowledge of caches classes.
      * <p>
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
+     * @param ce
+     * @throws IOException
      */
     public void update( ICacheElement ce )
         throws IOException
     {
-        if ( true )
+        logEventStart( ce, ICacheEventLogger.UPDATE_EVENT );
+        try
         {
-            if ( !this.irca.getGetOnly() )
-            {
-                ICacheElementSerialized serialized = null;
-                try
-                {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "sending item to remote server" );
-                    }
+            processUpdate( ce );
+        }
+        finally
+        {
+            logEventFinish( ce, ICacheEventLogger.UPDATE_EVENT );
+        }
+    }
 
-                    // convert so we don't have to know about the object on the
-                    // other end.
-                    serialized = SerializationConversionUtil.getSerializedCacheElement( ce, this.elementSerializer );
-
-                    remote.update( serialized, getListenerId() );
-                }
-                catch ( NullPointerException npe )
-                {
-                    log.error( "npe for ce = " + ce + "ce.attr = " + ce.getElementAttributes(), npe );
-                    return;
-                }
-                catch ( Exception ex )
-                {
-                    // event queue will wait and retry
-                    handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
-                }
-            }
-            else
+    /**
+     * Serializes the object and then calls update on the remote server with the byte array. The
+     * byte array is wrapped in a ICacheElementSerialized. This allows the remote server to operate
+     * without any knowledge of caches classes.
+     * <p>
+     * @param ce
+     * @throws IOException
+     */
+    private void processUpdate( ICacheElement ce )
+        throws IOException
+    {
+        if ( !this.irca.getGetOnly() )
+        {
+            ICacheElementSerialized serialized = null;
+            try
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "get only mode, not sending to remote server" );
+                    log.debug( "sending item to remote server" );
                 }
+
+                // convert so we don't have to know about the object on the
+                // other end.
+                serialized = SerializationConversionUtil.getSerializedCacheElement( ce, this.elementSerializer );
+
+                remote.update( serialized, getListenerId() );
+            }
+            catch ( NullPointerException npe )
+            {
+                log.error( "npe for ce = " + ce + "ce.attr = " + ce.getElementAttributes(), npe );
+            }
+            catch ( Exception ex )
+            {
+                // event queue will wait and retry
+                handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
+            }
+        }
+        else
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "get only mode, not sending to remote server" );
             }
         }
     }
@@ -237,8 +261,8 @@ public class RemoteCache
      * <p>
      * Use threadpool to timeout if a value is set for GetTimeoutMillis
      * <p>
-     * If we are a cluster client, we need to leave the Element in its serilaized form. Cluster
-     * cients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
+     * If we are a cluster client, we need to leave the Element in its serialized form. Cluster
+     * clients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
      * other remote servers.
      * <p>
      * @param key
@@ -249,7 +273,34 @@ public class RemoteCache
         throws IOException
     {
         ICacheElement retVal = null;
+        logEventStart( cacheName, key, ICacheEventLogger.GET_EVENT );
+        try
+        {
+            retVal = processGet( key, retVal );
+        }
+        finally
+        {
+            logEventFinish( retVal, ICacheEventLogger.GET_EVENT );
+        }
+        return retVal;
+    }
 
+    /**
+     * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
+     * <p>
+     * Use threadpool to timeout if a value is set for GetTimeoutMillis
+     * <p>
+     * If we are a cluster client, we need to leave the Element in its serialized form. Cluster
+     * clients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
+     * other remote servers.
+     * <p>
+     * @param key
+     * @return ICacheElement, a wrapper around the key, value, and attributes
+     * @throws IOException
+     */
+    private ICacheElement processGet( Serializable key, ICacheElement retVal )
+        throws IOException
+    {
         try
         {
             if ( usePoolForGet )
@@ -278,7 +329,6 @@ public class RemoteCache
         {
             handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]" );
         }
-
         return retVal;
     }
 
@@ -286,14 +336,35 @@ public class RemoteCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
     public Map getMultiple( Set keys )
         throws IOException
     {
-        Map elements = new HashMap();
+        logEventStart( cacheName, (Serializable) keys, ICacheEventLogger.GETMULTIPLE_EVENT );
+        try
+        {
+            return processGetMultiple( keys );
+        }
+        finally
+        {
+            logEventEnd( cacheName, (Serializable) keys, ICacheEventLogger.GETMULTIPLE_EVENT );
+        }
+    }
 
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     */
+    private Map processGetMultiple( Set keys )
+        throws IOException
+    {
+        Map elements = new HashMap();
         if ( keys != null && !keys.isEmpty() )
         {
             Iterator iterator = keys.iterator();
@@ -310,7 +381,6 @@ public class RemoteCache
                 }
             }
         }
-
         return elements;
     }
 
@@ -398,23 +468,43 @@ public class RemoteCache
     public boolean remove( Serializable key )
         throws IOException
     {
-        if ( true )
+        logEventStart( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
+        try
         {
-            if ( !this.irca.getGetOnly() )
+            return processRemove( key );
+        }
+        finally
+        {
+            logEventEnd( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
+        }
+    }
+
+    /**
+     * Synchronously remove from the remote cache; if failed, replace the remote handle with a
+     * zombie.
+     * <p>
+     * @param key
+     * @return boolean, whether or not the item was removed
+     * @throws IOException
+     */
+    private boolean processRemove( Serializable key )
+        throws IOException
+    {
+        if ( !this.irca.getGetOnly() )
+        {
+            if ( log.isDebugEnabled() )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "remove> key=" + key );
-                }
-                try
-                {
-                    remote.remove( cacheName, key, getListenerId() );
-                }
-                catch ( Exception ex )
-                {
-                    handleException( ex, "Failed to remove " + key + " from " + cacheName );
-                }
+                log.debug( "remove> key=" + key );
             }
+            try
+            {
+                remote.remove( cacheName, key, getListenerId() );
+            }
+            catch ( Exception ex )
+            {
+                handleException( ex, "Failed to remove " + key + " from " + cacheName );
+            }
+            return true;
         }
         return false;
     }
@@ -428,7 +518,8 @@ public class RemoteCache
     public void removeAll()
         throws IOException
     {
-        if ( true )
+        logEventStart( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
+        try
         {
             if ( !this.irca.getGetOnly() )
             {
@@ -442,6 +533,10 @@ public class RemoteCache
                 }
             }
         }
+        finally
+        {
+            logEventEnd( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
+        }
     }
 
     /**
@@ -452,18 +547,26 @@ public class RemoteCache
     public void dispose()
         throws IOException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Disposing of remote cache" );
-        }
+        logEventStart( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
-            listener.dispose();
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Disposing of remote cache" );
+            }
+            try
+            {
+                listener.dispose();
+            }
+            catch ( Exception ex )
+            {
+                log.error( "Couldn't dispose", ex );
+                handleException( ex, "Failed to dispose [" + cacheName + "]" );
+            }
         }
-        catch ( Exception ex )
+        finally
         {
-            log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose [" + cacheName + "]" );
+            logEventEnd( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         }
     }
 
@@ -501,7 +604,7 @@ public class RemoteCache
 
         se = new StatElement();
         se.setName( "Remote Host:Port" );
-        se.setData( this.irca.getRemoteHost() + ":" + this.irca.getRemotePort() );
+        se.setData( getIPAddressForService() );
         elems.add( se );
 
         se = new StatElement();
@@ -578,9 +681,8 @@ public class RemoteCache
     }
 
     /**
-     * Replaces the current remote cache service handle with the given handle.
-     * If the current remote is a Zombie, the propagate teh events that may be
-     * queued to the restored service.
+     * Replaces the current remote cache service handle with the given handle. If the current remote
+     * is a Zombie, the propagate teh events that may be queued to the restored service.
      * <p>
      * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
      */
@@ -624,7 +726,8 @@ public class RemoteCache
     private void handleException( Exception ex, String msg )
         throws IOException
     {
-        log.error( "Disabling remote cache due to error: " + msg, ex );
+        String message = "Disabling remote cache due to error: " + msg;
+        log.error( message, ex );
 
         // we should not switch if the existing is a zombie.
         if ( remote == null || !( remote instanceof ZombieRemoteCacheService ) )
@@ -673,9 +776,10 @@ public class RemoteCache
     }
 
     /**
-     * let the remote cache set a listener_id. Since there is only one listerenr for all the regions
+     * let the remote cache set a listener_id. Since there is only one listener for all the regions
      * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
      * assume that it is a reconnect.
+     * <p>
      * @param id The new listenerId value
      */
     public void setListenerId( long id )
@@ -718,7 +822,7 @@ public class RemoteCache
 
     /**
      * Allows other member of this package to access the listerner. This is mainly needed for
-     * deregistering alistener.
+     * deregistering a listener.
      * <p>
      * @return IRemoteCacheListener, the listener for this remote server
      */
@@ -728,11 +832,16 @@ public class RemoteCache
     }
 
     /**
+     * Never sets to null;
+     * <p>
      * @param elementSerializer The elementSerializer to set.
      */
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
-        this.elementSerializer = elementSerializer;
+        if ( elementSerializer != null )
+        {
+            this.elementSerializer = elementSerializer;
+        }
     }
 
     /**
@@ -744,11 +853,103 @@ public class RemoteCache
     }
 
     /**
+     * Allows it to be injected.
+     * <p>
+     * @param cacheEventLogger
+     */
+    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    {
+        this.cacheEventLogger = cacheEventLogger;
+    }
+
+    /**
      * Debugging info.
+     * <p>
      * @return basic info about the RemoteCache
      */
     public String toString()
     {
         return "RemoteCache: " + cacheName + " attributes = " + irca;
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param item
+     * @param requesterId
+     */
+    private void logEventStart( ICacheElement item, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForService();
+            cacheEventLogger.logStartICacheEvent( "RemoteCacheClient", item.getCacheName(), eventName, ipAddress, item );
+        }
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     */
+    private void logEventStart( String cacheName, Serializable key, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForService();
+            cacheEventLogger.logStartICacheEvent( "RemoteCacheClient", cacheName, eventName, ipAddress, key );
+        }
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param item
+     * @param requesterId
+     */
+    private void logEventFinish( ICacheElement item, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForService();
+            String cacheName = null;
+            if ( item != null )
+            {
+                cacheName = item.getCacheName();
+            }
+            cacheEventLogger.logEndICacheEvent( "RemoteCacheClient", cacheName, eventName, ipAddress, item );
+        }
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     */
+    private void logEventEnd( String cacheName, Serializable key, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForService();
+            cacheEventLogger.logEndICacheEvent( "RemoteCacheClient", cacheName, eventName, ipAddress, key );
+        }
+    }
+
+    /**
+     * Ip address for the service, if one is stored.
+     * <p>
+     * Protected for testing.
+     * <p>
+     * @param requesterId
+     * @return String
+     */
+    protected String getIPAddressForService()
+    {
+        String ipAddress = this.irca.getRemoteHost() + ":" + this.irca.getRemotePort();
+        return ipAddress;
     }
 }

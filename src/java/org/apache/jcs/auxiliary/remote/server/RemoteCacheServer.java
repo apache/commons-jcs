@@ -1,22 +1,18 @@
 package org.apache.jcs.auxiliary.remote.server;
 
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import java.io.IOException;
@@ -43,32 +39,29 @@ import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttribu
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheListeners;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
-/**
- * This class provides remote cache services. The remote cache server propagates
- * events from local caches to other local caches. It can also store cached
- * data, making it available to new clients.
- * <p>
- * Remote cache servers can be clustered. If the cache used by this remote cache
- * is configured to use a remote cache of type cluster, the two remote caches
- * will communicate with each other. Remote and put requests can be sent from
- * one remote to another. If they are configured to broadcast such event to
- * their client, then remove an puts can be sent to all locals in the cluster.
- * <p>
- * Get requests are made between clustered servers if AllowClusterGet is true. You can setup
- * several clients to use one remote server and several to use another. The get
- * locad will be distributed between the two servers. Since caches are usually
- * high get and low put, this should allow you to scale.
+/*
+ * This class provides remote cache services. The remote cache server propagates events from local
+ * caches to other local caches. It can also store cached data, making it available to new clients.
+ * <p> Remote cache servers can be clustered. If the cache used by this remote cache is configured
+ * to use a remote cache of type cluster, the two remote caches will communicate with each other.
+ * Remote and put requests can be sent from one remote to another. If they are configured to
+ * broadcast such event to their client, then remove an puts can be sent to all locals in the
+ * cluster. <p> Get requests are made between clustered servers if AllowClusterGet is true. You can
+ * setup several clients to use one remote server and several to use another. The get locad will be
+ * distributed between the two servers. Since caches are usually high get and low put, this should
+ * allow you to scale.
  */
 class RemoteCacheServer
     extends UnicastRemoteObject
     implements IRemoteCacheService, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
 {
-    /** For serialization. Don't change.*/
+    /** For serialization. Don't change. */
     private static final long serialVersionUID = -8072345435941473116L;
 
     /** log instance */
@@ -90,6 +83,9 @@ class RemoteCacheServer
     /** relates listener id with a type */
     private final Hashtable idTypeMap = new Hashtable();
 
+    /** relates listener id with an ip address */
+    private final Hashtable idIPMap = new Hashtable();
+
     private int[] listenerId = new int[1];
 
     /** Configuration settings. */
@@ -98,9 +94,12 @@ class RemoteCacheServer
     /** The interval at which we will log updates. */
     private int logInterval = 100;
 
+    /** An optional event logger */
+    private ICacheEventLogger cacheEventLogger;
+
     /**
-     * Constructor for the RemoteCacheServer object. Thiks initializes the
-     * server with the values from the config file.
+     * Constructor for the RemoteCacheServer object. Thiks initializes the server with the values
+     * from the config file.
      * <p>
      * @param rcsa
      * @throws RemoteException
@@ -135,8 +134,7 @@ class RemoteCacheServer
     /**
      * Subclass can override this method to create the specific cache manager.
      * <p>
-     * @param prop
-     *            The anem of the configuration file.
+     * @param prop The name of the configuration file.
      * @return The cache hub configured with this configuration file.
      */
     private CompositeCacheManager createCacheManager( String prop )
@@ -155,62 +153,10 @@ class RemoteCacheServer
     }
 
     /**
-     * Returns the cache listener for the specified cache. Creates the cache and
-     * the cache descriptor if they do not already exist.
-     * <p>
-     * @param cacheName
-     * @return The cacheListeners value
-     */
-    protected CacheListeners getCacheListeners( String cacheName )
-    {
-        CacheListeners cacheListeners = (CacheListeners) cacheListenersMap.get( cacheName );
-        synchronized ( cacheListenersMap )
-        {
-            if ( cacheListeners == null )
-            {
-                cacheListeners = (CacheListeners) cacheListenersMap.get( cacheName );
-                if ( cacheListeners == null )
-                {
-                    cacheListeners = new CacheListeners( cacheManager.getCache( cacheName ) );
-                    cacheListenersMap.put( cacheName, cacheListeners );
-                }
-            }
-        }
-        return cacheListeners;
-    }
-
-    /**
-     * Gets the clusterListeners attribute of the RemoteCacheServer object.
-     * <p>
-     * @todo may be able to remove this
-     *
-     * @param cacheName
-     * @return The clusterListeners value
-     */
-    protected CacheListeners getClusterListeners( String cacheName )
-    {
-        CacheListeners cacheListeners = (CacheListeners) clusterListenersMap.get( cacheName );
-        synchronized ( clusterListenersMap )
-        {
-            if ( cacheListeners == null )
-            {
-                cacheListeners = (CacheListeners) clusterListenersMap.get( cacheName );
-                if ( cacheListeners == null )
-                {
-                    cacheListeners = new CacheListeners( cacheManager.getCache( cacheName ) );
-                    clusterListenersMap.put( cacheName, cacheListeners );
-                }
-            }
-        }
-        return cacheListeners;
-    }
-
-    /**
-     * Puts a cache bean to the remote cache and notifies all listeners which
-     * <br>
+     * Puts a cache bean to the remote cache and notifies all listeners which <br>
      * <ol>
-     * <li>have a different listener id than the originating host;
-     * <li>are currently subscribed to the related cache.
+     * <li>have a different listener id than the originating host; <li>are currently subscribed to
+     * the related cache.
      * </ol>
      * <p>
      * @param item
@@ -223,8 +169,8 @@ class RemoteCacheServer
     }
 
     /**
-     * @param item 
-     * @throws IOException 
+     * @param item
+     * @throws IOException
      */
     public void update( ICacheElement item )
         throws IOException
@@ -233,29 +179,7 @@ class RemoteCacheServer
     }
 
     /**
-     * An update can come from either a local cache's remote auxiliary, or it
-     * can come from a remote server. A remote server is considered a a source
-     * of type cluster.
-     * <p>
-     * If the update came from a cluster, then we should tell the cache manager
-     * that this was a remote put. This way, any lateral and remote auxiliaries
-     * configured for the region will not be updated. This is basically how a
-     * remote listener works when plugged into a local cache.
-     * <p>
-     * If the cluster is configured to keep local cluster consistency, then all
-     * listeners will be updated. This allows cluster server A to update cluster
-     * server B and then B to update its clients if it is told to keep local
-     * cluster consistency. Otherwise, server A will update server B and B will
-     * not tell its clients. If you cluster using lateral caches for instance,
-     * this is how it will work. Updates to a cluster node, will never get to
-     * the leavess. The remote cluster, with local cluster consistency, allows
-     * you to update leaves. This basically allows you to have a failover remote
-     * server.
-     * <p>
-     * Since currently a cluster will not try to get from other cluster servers,
-     * you can scale a bit with a cluster configuration. Puts and removes will
-     * be broadcasted to all clients, but the get load on a remote server can be
-     * reduced.
+     * The internal processing is wrapped in event logging calls.
      * <p>
      * @param item
      * @param requesterId
@@ -264,26 +188,50 @@ class RemoteCacheServer
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
+        logEventStart( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+        try
+        {
+            processUpdate( item, requesterId );
+        }
+        finally
+        {
+            logEventFinish( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+        }
+    }
+
+    /**
+     * An update can come from either a local cache's remote auxiliary, or it can come from a remote
+     * server. A remote server is considered a a source of type cluster.
+     * <p>
+     * If the update came from a cluster, then we should tell the cache manager that this was a
+     * remote put. This way, any lateral and remote auxiliaries configured for the region will not
+     * be updated. This is basically how a remote listener works when plugged into a local cache.
+     * <p>
+     * If the cluster is configured to keep local cluster consistency, then all listeners will be
+     * updated. This allows cluster server A to update cluster server B and then B to update its
+     * clients if it is told to keep local cluster consistency. Otherwise, server A will update
+     * server B and B will not tell its clients. If you cluster using lateral caches for instance,
+     * this is how it will work. Updates to a cluster node, will never get to the leaves. The remote
+     * cluster, with local cluster consistency, allows you to update leaves. This basically allows
+     * you to have a failover remote server.
+     * <p>
+     * Since currently a cluster will not try to get from other cluster servers, you can scale a bit
+     * with a cluster configuration. Puts and removes will be broadcasted to all clients, but the
+     * get load on a remote server can be reduced.
+     * <p>
+     * @param item
+     * @param requesterId
+     * @throws IOException
+     */
+    private void processUpdate( ICacheElement item, long requesterId )
+    {
         long start = 0;
         if ( timing )
         {
             start = System.currentTimeMillis();
         }
 
-        if ( log.isInfoEnabled() )
-        {
-            // not thread safe, but it doesn't have to be accurate
-            puts++;
-            if ( puts % logInterval == 0 )
-            {
-                log.info( "puts = " + puts );
-            }
-        }
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "In update, put [" + item.getKey() + "] in [" + item.getCacheName() + "]" );
-        }
+        logUpdateInfo( item );
 
         try
         {
@@ -380,6 +328,12 @@ class RemoteCacheServer
         }
         catch ( Exception e )
         {
+            if ( cacheEventLogger != null )
+            {
+                cacheEventLogger.logError( "RemoteCacheServer", item.getCacheName(), ICacheEventLogger.UPDATE_EVENT, e
+                    .getMessage(), item );
+            }
+
             log.error( "Trouble in Update. requesterId [" + requesterId + "]", e );
         }
 
@@ -392,66 +346,34 @@ class RemoteCacheServer
                 log.debug( "put took " + String.valueOf( end - start ) + " ms." );
             }
         }
-
-        return;
     }
 
     /**
-     * Gets the eventQList attribute of the RemoteCacheServer object. This
-     * returns the event queues stored in the cacheListeners object for a
-     * particuylar region, if the queue is not for this requester.
+     * Log some details.
      * <p>
-     * Basically, this makes sure that a request from a particular local cache,
-     * identified by its listener id, does not result in a call to that same
-     * listener.
-     * <p>
-     * @param cacheListeners
-     * @param requesterId
-     * @return The eventQList value
+     * @param item
      */
-    private ICacheEventQueue[] getEventQList( CacheListeners cacheListeners, long requesterId )
+    private void logUpdateInfo( ICacheElement item )
     {
-        ICacheEventQueue[] list = null;
-        synchronized ( cacheListeners.eventQMap )
+        if ( log.isInfoEnabled() )
         {
-            list = (ICacheEventQueue[]) cacheListeners.eventQMap.values().toArray( new ICacheEventQueue[0] );
-        }
-        int count = 0;
-        // Set those not qualified to null; Count those qualified.
-        for ( int i = 0; i < list.length; i++ )
-        {
-            ICacheEventQueue q = list[i];
-            if ( q.isWorking() && q.getListenerId() != requesterId )
+            // not thread safe, but it doesn't have to be accurate
+            puts++;
+            if ( puts % logInterval == 0 )
             {
-                count++;
+                log.info( "puts = " + puts );
             }
-            else
-            {
-                list[i] = null;
-            }
-        }
-        if ( count == list.length )
-        {
-            // All qualified.
-            return list;
         }
 
-        // Returns only the qualified.
-        ICacheEventQueue[] qq = new ICacheEventQueue[count];
-        count = 0;
-        for ( int i = 0; i < list.length; i++ )
+        if ( log.isDebugEnabled() )
         {
-            if ( list[i] != null )
-            {
-                qq[count++] = list[i];
-            }
+            log.debug( "In update, put [" + item.getKey() + "] in [" + item.getCacheName() + "]" );
         }
-        return qq;
     }
 
     /**
-     * Returns a cache value from the specified remote cache; or null if the
-     * cache or key does not exist.
+     * Returns a cache value from the specified remote cache; or null if the cache or key does not
+     * exist.
      * <p>
      * @param cacheName
      * @param key
@@ -465,11 +387,11 @@ class RemoteCacheServer
     }
 
     /**
-     * Returns a cache bean from the specified cache; or null if the key does
-     * not exist.
+     * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
-     * Adding the requestor id, allows the cache to determine the sournce of the
-     * get.
+     * Adding the requestor id, allows the cache to determine the source of the get.
+     * <p>
+     * The internal processing is wrapped in event logging calls.
      * <p>
      * @param cacheName
      * @param key
@@ -479,6 +401,32 @@ class RemoteCacheServer
      */
     public ICacheElement get( String cacheName, Serializable key, long requesterId )
         throws IOException
+    {
+        ICacheElement element = null;
+        logEventStart( cacheName, key, requesterId, ICacheEventLogger.GET_EVENT );
+        try
+        {
+            element = processGet( cacheName, key, requesterId );
+        }
+        finally
+        {
+            logEventFinish( element, requesterId, ICacheEventLogger.GET_EVENT );
+        }
+        return element;
+    }
+
+    /**
+     * Returns a cache bean from the specified cache; or null if the key does not exist.
+     * <p>
+     * Adding the requestor id, allows the cache to determine the source of the get.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @return ICacheElement
+     * @throws IOException
+     */
+    private ICacheElement processGet( String cacheName, Serializable key, long requesterId )
     {
         Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
 
@@ -507,63 +455,84 @@ class RemoteCacheServer
         catch ( Exception e )
         {
             log.error( "Problem getting listeners.", e );
-        }
 
-        if ( cacheDesc == null )
-        {
-            return null;
+            if ( cacheEventLogger != null )
+            {
+                cacheEventLogger.logError( "RemoteCacheServer", cacheName, ICacheEventLogger.GET_EVENT, e.getMessage(),
+                                           key );
+            }
         }
-        CompositeCache c = (CompositeCache) cacheDesc.cache;
 
         ICacheElement element = null;
 
-        // If we have a get come in from a client and we don't have the item
-        // locally, we will allow the cache to look in other non local sources,
-        // such as a remote cache or a lateral.
-        //
-        // Since remote servers never get from clients and clients never go
-        // remote from a remote call, this
-        // will not result in any loops.
-        //
-        // This is the only instance I can think of where we allow a remote get
-        // from a remote call. The purpose is to allow remote cache servers to
-        // talk to each other. If one goes down, you want it to be able to get
-        // data from those that were up when the failed server comes back o
-        // line.
+        element = getFromCacheListeners( key, fromCluster, cacheDesc, element );
+        return element;
+    }
 
-        if ( !fromCluster && this.rcsa.getAllowClusterGet() )
+    /**
+     * Gets the item from the associated cache listeners.
+     * <p>
+     * @param key
+     * @param fromCluster
+     * @param cacheDesc
+     * @param element
+     * @return
+     */
+    private ICacheElement getFromCacheListeners( Serializable key, boolean fromCluster, CacheListeners cacheDesc,
+                                                 ICacheElement element )
+    {
+        if ( cacheDesc != null )
         {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                    + this.rcsa.getAllowClusterGet() + "]" );
-            }
-            element = c.get( key );
-        }
-        else
-        {
-            // Gets from cluster type remote will end up here.
-            // Gets from all clients will end up here if allow cluster get is
-            // false.
+            CompositeCache c = (CompositeCache) cacheDesc.cache;
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                    + this.rcsa.getAllowClusterGet() + "]" );
-            }
-            element = c.localGet( key );
-        }
+            // If we have a get come in from a client and we don't have the item
+            // locally, we will allow the cache to look in other non local sources,
+            // such as a remote cache or a lateral.
+            //
+            // Since remote servers never get from clients and clients never go
+            // remote from a remote call, this
+            // will not result in any loops.
+            //
+            // This is the only instance I can think of where we allow a remote get
+            // from a remote call. The purpose is to allow remote cache servers to
+            // talk to each other. If one goes down, you want it to be able to get
+            // data from those that were up when the failed server comes back o
+            // line.
 
+            if ( !fromCluster && this.rcsa.getAllowClusterGet() )
+            {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
+                        + this.rcsa.getAllowClusterGet() + "]" );
+                }
+                element = c.get( key );
+            }
+            else
+            {
+                // Gets from cluster type remote will end up here.
+                // Gets from all clients will end up here if allow cluster get is
+                // false.
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
+                        + this.rcsa.getAllowClusterGet() + "]" );
+                }
+                element = c.localGet( key );
+            }
+        }
         return element;
     }
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
-     * @param cacheName 
+     * @param cacheName
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
     public Map getMultiple( String cacheName, Set keys )
         throws IOException
@@ -574,15 +543,43 @@ class RemoteCacheServer
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
-     * @param cacheName 
+     * The internal processing is wrapped in event logging calls.
+     * <p>
+     * @param cacheName
      * @param keys
-     * @param requesterId 
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @param requesterId
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
     public Map getMultiple( String cacheName, Set keys, long requesterId )
         throws IOException
     {
+        logEventStart( cacheName, (Serializable) keys, requesterId, ICacheEventLogger.GETMULTIPLE_EVENT );
+        try
+        {
+            return processGetMultiple( cacheName, keys, requesterId );
+        }
+        finally
+        {
+            logEventEnd( cacheName, (Serializable) keys, requesterId, ICacheEventLogger.GETMULTIPLE_EVENT );
+        }
+    }
+
+    /**
+     * Gets multiple items from the cache based on the given set of keys.
+     * <p>
+     * @param cacheName
+     * @param keys
+     * @param requesterId
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
+     */
+    private Map processGetMultiple( String cacheName, Set keys, long requesterId )
+    {
+        Map elements = null;
+
         Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
 
         if ( log.isDebugEnabled() )
@@ -612,53 +609,64 @@ class RemoteCacheServer
             log.error( "Problem getting listeners.", e );
         }
 
-        if ( cacheDesc == null )
+        elements = getMultipleFromCacheListeners( keys, elements, fromCluster, cacheDesc );
+        return elements;
+    }
+
+    /**
+     * Gets the items from the associated cache listeners.
+     * <p>
+     * @param keys
+     * @param elements
+     * @param fromCluster
+     * @param cacheDesc
+     * @return
+     */
+    private Map getMultipleFromCacheListeners( Set keys, Map elements, boolean fromCluster, CacheListeners cacheDesc )
+    {
+        if ( cacheDesc != null )
         {
-            return null;
-        }
-        CompositeCache c = (CompositeCache) cacheDesc.cache;
+            CompositeCache c = (CompositeCache) cacheDesc.cache;
 
-        Map elements = null;
+            // If we have a getMultiple come in from a client and we don't have the item
+            // locally, we will allow the cache to look in other non local sources,
+            // such as a remote cache or a lateral.
+            //
+            // Since remote servers never get from clients and clients never go
+            // remote from a remote call, this
+            // will not result in any loops.
+            //
+            // This is the only instance I can think of where we allow a remote get
+            // from a remote call. The purpose is to allow remote cache servers to
+            // talk to each other. If one goes down, you want it to be able to get
+            // data from those that were up when the failed server comes back o
+            // line.
 
-        // If we have a getMultiple come in from a client and we don't have the item
-        // locally, we will allow the cache to look in other non local sources,
-        // such as a remote cache or a lateral.
-        //
-        // Since remote servers never get from clients and clients never go
-        // remote from a remote call, this
-        // will not result in any loops.
-        //
-        // This is the only instance I can think of where we allow a remote get
-        // from a remote call. The purpose is to allow remote cache servers to
-        // talk to each other. If one goes down, you want it to be able to get
-        // data from those that were up when the failed server comes back o
-        // line.
-
-        if ( !fromCluster && this.rcsa.getAllowClusterGet() )
-        {
-            if ( log.isDebugEnabled() )
+            if ( !fromCluster && this.rcsa.getAllowClusterGet() )
             {
-                log.debug( "NonLocalGetMultiple. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                    + this.rcsa.getAllowClusterGet() + "]" );
-            }
-            
-            elements = c.getMultiple( keys );
-        }
-        else
-        {
-            // Gets from cluster type remote will end up here.
-            // Gets from all clients will end up here if allow cluster get is
-            // false.
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "NonLocalGetMultiple. fromCluster [" + fromCluster + "] AllowClusterGet ["
+                        + this.rcsa.getAllowClusterGet() + "]" );
+                }
 
-            if ( log.isDebugEnabled() )
+                elements = c.getMultiple( keys );
+            }
+            else
             {
-                log.debug( "LocalGetMultiple.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                    + this.rcsa.getAllowClusterGet() + "]" );
-            }
-            
-            elements = c.localGetMultiple( keys );
-        }
+                // Gets from cluster type remote will end up here.
+                // Gets from all clients will end up here if allow cluster get is
+                // false.
 
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "LocalGetMultiple.  fromCluster [" + fromCluster + "] AllowClusterGet ["
+                        + this.rcsa.getAllowClusterGet() + "]" );
+                }
+
+                elements = c.localGetMultiple( keys );
+            }
+        }
         return elements;
     }
 
@@ -685,14 +693,13 @@ class RemoteCacheServer
         {
             return Collections.EMPTY_SET;
         }
-        
+
         CompositeCache c = (CompositeCache) cacheDesc.cache;
         return c.getGroupKeys( group );
     }
 
     /**
-     * Removes the given key from the specified remote cache. Defaults the
-     * listener id to 0.
+     * Removes the given key from the specified remote cache. Defaults the listener id to 0.
      * <p>
      * @param cacheName
      * @param key
@@ -705,8 +712,9 @@ class RemoteCacheServer
     }
 
     /**
-     * Remove the key from the cache region and don't tell the source listener
-     * about it.
+     * Remove the key from the cache region and don't tell the source listener about it.
+     * <p>
+     * The internal processing is wrapped in event logging calls.
      * <p>
      * @param cacheName
      * @param key
@@ -716,10 +724,35 @@ class RemoteCacheServer
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
+        logEventStart( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
+        try
+        {
+            processRemove( cacheName, key, requesterId );
+        }
+        finally
+        {
+            logEventEnd( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
+        }
+
+        return;
+    }
+
+    /**
+     * Remove the key from the cache region and don't tell the source listener about it.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @throws IOException
+     */
+    private void processRemove( String cacheName, Serializable key, long requesterId )
+        throws IOException
+    {
         if ( log.isDebugEnabled() )
         {
             log.debug( "remove [" + key + "] from cache [" + cacheName + "]" );
         }
+
         CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
 
         Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
@@ -776,11 +809,10 @@ class RemoteCacheServer
                 }
             }
         }
-        return;
     }
 
     /**
-     * Remove all keys from the sepcified remote cache.
+     * Remove all keys from the specified remote cache.
      * <p>
      * @param cacheName
      * @throws IOException
@@ -794,11 +826,35 @@ class RemoteCacheServer
     /**
      * Remove all keys from the specified remote cache.
      * <p>
+     * The internal processing is wrapped in event logging calls.
+     * <p>
      * @param cacheName
      * @param requesterId
      * @throws IOException
      */
     public void removeAll( String cacheName, long requesterId )
+        throws IOException
+    {
+        logEventStart( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
+        try
+        {
+            processRemoveAll( cacheName, requesterId );
+        }
+        finally
+        {
+            logEventEnd( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
+        }
+        return;
+    }
+
+    /**
+     * Remove all keys from the specified remote cache.
+     * <p>
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
+    private void processRemoveAll( String cacheName, long requesterId )
         throws IOException
     {
         CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
@@ -848,7 +904,6 @@ class RemoteCacheServer
                 }
             }
         }
-        return;
     }
 
     /**
@@ -883,27 +938,35 @@ class RemoteCacheServer
     public void dispose( String cacheName, long requesterId )
         throws IOException
     {
-        if ( log.isInfoEnabled() )
+        logEventStart( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
+        try
         {
-            log.info( "Dispose request received from listener [" + requesterId + "]" );
-        }
-
-        CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
-
-        // this is dangerous
-        if ( cacheDesc != null )
-        {
-            // best attempt to achieve ordered free-cache-op and notification.
-            synchronized ( cacheDesc )
+            if ( log.isInfoEnabled() )
             {
-                ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
-
-                for ( int i = 0; i < qlist.length; i++ )
-                {
-                    qlist[i].addDisposeEvent();
-                }
-                cacheManager.freeCache( cacheName );
+                log.info( "Dispose request received from listener [" + requesterId + "]" );
             }
+
+            CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
+
+            // this is dangerous
+            if ( cacheDesc != null )
+            {
+                // best attempt to achieve ordered free-cache-op and notification.
+                synchronized ( cacheDesc )
+                {
+                    ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
+
+                    for ( int i = 0; i < qlist.length; i++ )
+                    {
+                        qlist[i].addDisposeEvent();
+                    }
+                    cacheManager.freeCache( cacheName );
+                }
+            }
+        }
+        finally
+        {
+            logEventEnd( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
         }
         return;
     }
@@ -934,6 +997,108 @@ class RemoteCacheServer
     }
 
     /**
+     * Returns the cache listener for the specified cache. Creates the cache and the cache
+     * descriptor if they do not already exist.
+     * <p>
+     * @param cacheName
+     * @return The cacheListeners value
+     */
+    protected CacheListeners getCacheListeners( String cacheName )
+    {
+        CacheListeners cacheListeners = (CacheListeners) cacheListenersMap.get( cacheName );
+        synchronized ( cacheListenersMap )
+        {
+            if ( cacheListeners == null )
+            {
+                cacheListeners = (CacheListeners) cacheListenersMap.get( cacheName );
+                if ( cacheListeners == null )
+                {
+                    cacheListeners = new CacheListeners( cacheManager.getCache( cacheName ) );
+                    cacheListenersMap.put( cacheName, cacheListeners );
+                }
+            }
+        }
+        return cacheListeners;
+    }
+
+    /**
+     * Gets the clusterListeners attribute of the RemoteCacheServer object.
+     * <p>
+     * TODO may be able to remove this
+     * @param cacheName
+     * @return The clusterListeners value
+     */
+    protected CacheListeners getClusterListeners( String cacheName )
+    {
+        CacheListeners cacheListeners = (CacheListeners) clusterListenersMap.get( cacheName );
+        synchronized ( clusterListenersMap )
+        {
+            if ( cacheListeners == null )
+            {
+                cacheListeners = (CacheListeners) clusterListenersMap.get( cacheName );
+                if ( cacheListeners == null )
+                {
+                    cacheListeners = new CacheListeners( cacheManager.getCache( cacheName ) );
+                    clusterListenersMap.put( cacheName, cacheListeners );
+                }
+            }
+        }
+        return cacheListeners;
+    }
+
+    /**
+     * Gets the eventQList attribute of the RemoteCacheServer object. This returns the event queues
+     * stored in the cacheListeners object for a particular region, if the queue is not for this
+     * requester.
+     * <p>
+     * Basically, this makes sure that a request from a particular local cache, identified by its
+     * listener id, does not result in a call to that same listener.
+     * <p>
+     * @param cacheListeners
+     * @param requesterId
+     * @return The eventQList value
+     */
+    private ICacheEventQueue[] getEventQList( CacheListeners cacheListeners, long requesterId )
+    {
+        ICacheEventQueue[] list = null;
+        synchronized ( cacheListeners.eventQMap )
+        {
+            list = (ICacheEventQueue[]) cacheListeners.eventQMap.values().toArray( new ICacheEventQueue[0] );
+        }
+        int count = 0;
+        // Set those not qualified to null; Count those qualified.
+        for ( int i = 0; i < list.length; i++ )
+        {
+            ICacheEventQueue q = list[i];
+            if ( q.isWorking() && q.getListenerId() != requesterId )
+            {
+                count++;
+            }
+            else
+            {
+                list[i] = null;
+            }
+        }
+        if ( count == list.length )
+        {
+            // All qualified.
+            return list;
+        }
+
+        // Returns only the qualified.
+        ICacheEventQueue[] qq = new ICacheEventQueue[count];
+        count = 0;
+        for ( int i = 0; i < list.length; i++ )
+        {
+            if ( list[i] != null )
+            {
+                qq[count++] = list[i];
+            }
+        }
+        return qq;
+    }
+
+    /**
      * Removes dead event queues. Should clean out deregistered listeners.
      * <p>
      * @param eventQMap
@@ -949,8 +1114,8 @@ class RemoteCacheServer
 
                 // this does not care if the q is alive (i.e. if
                 // there are active threads; it cares if the queue
-                // is working -- if it has not encoutnered errors
-                // above the failure threshhold
+                // is working -- if it has not encountered errors
+                // above the failure threshold
                 if ( !q.isWorking() )
                 {
                     itr.remove();
@@ -963,14 +1128,12 @@ class RemoteCacheServer
     /**
      * Subscribes to the specified remote cache.
      * <p>
-     * If the client id is 0, then the remote cache server will increment it's
-     * local count and assign an id to the client.
+     * If the client id is 0, then the remote cache server will increment it's local count and
+     * assign an id to the client.
      * <p>
-     * @param cacheName
-     *            the specified remote cache.
-     * @param listener
-     *            object to notify for cache changes. must be synchronized since
-     *            there are remote calls involved.
+     * @param cacheName the specified remote cache.
+     * @param listener object to notify for cache changes. must be synchronized since there are
+     *            remote calls involved.
      * @throws IOException
      */
     public void addCacheListener( String cacheName, ICacheListener listener )
@@ -1007,7 +1170,7 @@ class RemoteCacheServer
             try
             {
                 id = listener.getListenerId();
-                // clients problably shouldn't do this.
+                // clients probably shouldn't do this.
                 if ( id == 0 )
                 {
                     // must start at one so the next gets recognized
@@ -1040,10 +1203,21 @@ class RemoteCacheServer
 
                 // relate the type to an id
                 this.idTypeMap.put( new Long( id ), new Integer( remoteType ) );
+                if ( listenerAddress != null )
+                {
+                    this.idIPMap.put( new Long( id ), listenerAddress );
+                }
             }
             catch ( IOException ioe )
             {
-                log.error( "Problem setting listener id, listenerAddress [" + listenerAddress + "]", ioe );
+                String message = "Problem setting listener id, listenerAddress [" + listenerAddress + "]";
+                log.error( message, ioe );
+
+                if ( cacheEventLogger != null )
+                {
+                    cacheEventLogger.logError( "RemoteCacheServer", "addCacheListener", message + " - "
+                        + ioe.getMessage() );
+                }
             }
 
             CacheEventQueueFactory fact = new CacheEventQueueFactory();
@@ -1062,8 +1236,7 @@ class RemoteCacheServer
     /**
      * Subscribes to all remote caches.
      * <p>
-     * @param listener
-     *            The feature to be added to the CacheListener attribute
+     * @param listener The feature to be added to the CacheListener attribute
      * @throws IOException
      */
     public void addCacheListener( ICacheListener listener )
@@ -1082,12 +1255,12 @@ class RemoteCacheServer
     }
 
     /**
-     * Unsubscribe this listener from this region. If the listener is
-     * registered, it will be removed from the event queue map list.
+     * Unsubscribe this listener from this region. If the listener is registered, it will be removed
+     * from the event queue map list.
      * <p>
      * @param cacheName
      * @param listener
-     * @throws IOException 
+     * @throws IOException
      */
     public void removeCacheListener( String cacheName, ICacheListener listener )
         throws IOException
@@ -1096,8 +1269,8 @@ class RemoteCacheServer
     }
 
     /**
-     * Unsubscribe this listener from this region. If the listener is
-     * registered, it will be removed from the event queue map list.
+     * Unsubscribe this listener from this region. If the listener is registered, it will be removed
+     * from the event queue map list.
      * <p>
      * @param cacheName
      * @param listenerId
@@ -1148,6 +1321,10 @@ class RemoteCacheServer
             }
         }
 
+        // cleanup
+        idTypeMap.remove( new Long( listenerId ) );
+        idIPMap.remove( new Long( listenerId ) );
+        
         if ( log.isInfoEnabled() )
         {
             log.info( "After removing listener [" + listenerId + "] cache region " + cacheName + "'s listener size ["
@@ -1189,7 +1366,8 @@ class RemoteCacheServer
     }
 
     /**
-     * Shuts down a server at a particular host and port.  Then it calls shutdown on the cache itself.
+     * Shuts down a server at a particular host and port. Then it calls shutdown on the cache
+     * itself.
      * <p>
      * @param host
      * @param port
@@ -1207,9 +1385,8 @@ class RemoteCacheServer
     }
 
     /**
-     * Called by the RMI runtime sometime after the runtime determines that the
-     * reference list, the list of clients referencing the remote object,
-     * becomes empty.
+     * Called by the RMI runtime sometime after the runtime determines that the reference list, the
+     * list of clients referencing the remote object, becomes empty.
      */
     // TODO: test out the DGC.
     public void unreferenced()
@@ -1223,8 +1400,7 @@ class RemoteCacheServer
     /**
      * Returns the next generated listener id [0,255].
      * <p>
-     * @return the listener id of a client. This should be unique for this
-     *         server.
+     * @return the listener id of a client. This should be unique for this server.
      */
     private long nextListenerId()
     {
@@ -1262,5 +1438,92 @@ class RemoteCacheServer
         throws IOException
     {
         return cacheManager.getStats();
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param item
+     * @param requesterId
+     */
+    private void logEventStart( ICacheElement item, long requesterId, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForRequesterId( requesterId );
+            cacheEventLogger.logStartICacheEvent( "RemoteCacheServer", item.getCacheName(), eventName, ipAddress, item );
+        }
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     */
+    private void logEventStart( String cacheName, Serializable key, long requesterId, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForRequesterId( requesterId );
+            cacheEventLogger.logStartICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
+        }
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param item
+     * @param requesterId
+     */
+    private void logEventFinish( ICacheElement item, long requesterId, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForRequesterId( requesterId );
+            cacheEventLogger.logEndICacheEvent( "RemoteCacheServer", item.getCacheName(), eventName, ipAddress, item );
+        }
+    }
+
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     */
+    private void logEventEnd( String cacheName, Serializable key, long requesterId, String eventName )
+    {
+        if ( cacheEventLogger != null )
+        {
+            String ipAddress = getIPAddressForRequesterId( requesterId );
+            cacheEventLogger.logEndICacheEvent( "RemoteCacheServer", cacheName, eventName,
+                                                ipAddress, key );
+        }
+    }
+
+    /**
+     * Ip address for the client, if one is stored.
+     * <p>
+     * Protected for testing.
+     * <p>
+     * @param requesterId
+     * @return String
+     */
+    protected String getIPAddressForRequesterId( long requesterId )
+    {
+        String ipAddress = (String)idIPMap.get( new Long( requesterId ) );
+        return ipAddress;
+    }
+    
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @param cacheEventLogger
+     */
+    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    {
+        this.cacheEventLogger = cacheEventLogger;
     }
 }

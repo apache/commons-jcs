@@ -34,7 +34,7 @@ public interface IRemoteCacheClient
 {
     /**
      * Replaces the current remote cache service handle with the given handle. If the current remote
-     * is a Zombie, the propagate teh events that may be queued to the restored service.
+     * is a Zombie, the propagate the events that may be queued to the restored service.
      * <p>
      * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
      */

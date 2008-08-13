@@ -41,7 +41,7 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  * Registered with RemoteCache server. The server updates the local caches via this listener. Each
- * server asings a unique listener id for a listener.
+ * server assigns a unique listener id for a listener.
  * <p>
  * One listener is used per remote cache server. The same listener is used for all the regions that
  * talk to a particular server.
@@ -81,7 +81,7 @@ public class RemoteCacheListener
      * Only need one since it does work for all regions, just reference by multiple region names.
      * <p>
      * The constructor exports this object, making it available to receive incoming calls. The
-     * calback port is anonymous unless a local port vlaue was specified in the configurtion.
+     * calback port is anonymous unless a local port value was specified in the configuration.
      * @param irca
      * @param cacheMgr
      */
@@ -95,7 +95,7 @@ public class RemoteCacheListener
         // calls, using an anonymous port unless the local port is specified.
         try
         {
-            if ( irca.getLocalPort() != 0 )
+            if ( irca.getLocalPort() > 0 )
             {
                 UnicastRemoteObject.exportObject( this, irca.getLocalPort() );
             }
@@ -112,7 +112,7 @@ public class RemoteCacheListener
     }
 
     /**
-     * Deregisters itself.
+     * Deregister itself.
      * <p>
      * @throws IOException
      */
@@ -157,8 +157,9 @@ public class RemoteCacheListener
     }
 
     /**
-     * Gets the listenerId attribute of the RemoteCacheListener object. This is stored int he
+     * Gets the listenerId attribute of the RemoteCacheListener object. This is stored in the
      * object. The RemoteCache object contains a reference to the listener and get the id this way.
+     * <p>
      * @return The listenerId value
      * @throws IOException
      */
@@ -174,7 +175,7 @@ public class RemoteCacheListener
     }
 
     /**
-     * Gets the remoteType attribute of the RemoteCacheListener object
+     * Gets the remoteType attribute of the RemoteCacheListener object <p.
      * @return The remoteType value
      * @throws IOException
      */
@@ -194,7 +195,7 @@ public class RemoteCacheListener
      * invalidation. The next time it is used the local cache will get the new version from the
      * remote store.
      * <p>
-     * If remove on put is not ocnfigured, then update the item.
+     * If remove on put is not configured, then update the item.
      * @param cb
      * @throws IOException
      */
@@ -261,9 +262,9 @@ public class RemoteCacheListener
     /**
      * Calls localRemove on the CompositeCache.
      * <p>
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
-     *      java.io.Serializable)
+     * @param cacheName
+     * @param key
+     * @throws IOException
      */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
@@ -288,8 +289,8 @@ public class RemoteCacheListener
     /**
      * Calls localRemoveAll on the CompositeCache.
      * <p>
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
+     * @param cacheName
+     * @throws IOException
      */
     public void handleRemoveAll( String cacheName )
         throws IOException
@@ -303,9 +304,9 @@ public class RemoteCacheListener
         cache.localRemoveAll();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
+    /**
+     * @param cacheName
+     * @throws IOException
      */
     public void handleDispose( String cacheName )
         throws IOException
@@ -346,6 +347,9 @@ public class RemoteCacheListener
 
     /**
      * This is for debugging. It allows the remote server to log the address of clients.
+     * <p>
+     * @return String
+     * @throws IOException 
      */
     public String getLocalHostAddress()
         throws IOException

@@ -29,7 +29,7 @@ import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
-import org.apache.jcs.engine.control.CompositeCacheManagerMockImpl;
+import org.apache.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
@@ -53,7 +53,7 @@ public class RemoteCacheListenerUnitTest
     {
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( false );
-        ICompositeCacheManager cacheMgr = new CompositeCacheManagerMockImpl();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         RemoteCacheListener listener = new RemoteCacheListener( irca, cacheMgr );
 
         String cacheName = "testName";
@@ -90,7 +90,7 @@ public class RemoteCacheListenerUnitTest
     {
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( true );
-        ICompositeCacheManager cacheMgr = new CompositeCacheManagerMockImpl();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         RemoteCacheListener listener = new RemoteCacheListener( irca, cacheMgr );
 
         String cacheName = "testName";

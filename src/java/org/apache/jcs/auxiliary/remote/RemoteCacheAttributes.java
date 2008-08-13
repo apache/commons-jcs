@@ -31,12 +31,16 @@ public class RemoteCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements IRemoteCacheAttributes
 {
+    /** Don't change */
     private static final long serialVersionUID = -1555143736942374000L;
 
+    /** The service name */
     private String remoteServiceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
 
+    /** server host */
     private String remoteHost;
 
+    /** server port */
     private int remotePort;
 
     /**
@@ -176,9 +180,8 @@ public class RemoteCacheAttributes
         this.remoteType = p;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#copy()
+    /**
+     * @return AuxiliaryCacheAttributes
      */
     public AuxiliaryCacheAttributes copy()
     {
@@ -371,36 +374,32 @@ public class RemoteCacheAttributes
         this.localClusterConsistency = r;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#getThreadPoolName()
+    /**
+     * @return the name of the pool
      */
     public String getThreadPoolName()
     {
         return threadPoolName;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#setThreadPoolName(java.lang.String)
+    /**
+     * @param name
      */
     public void setThreadPoolName( String name )
     {
         threadPoolName = name;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#getGetTimeoutMillis()
+    /**
+     * @return getTimeoutMillis
      */
     public int getGetTimeoutMillis()
     {
         return getTimeoutMillis;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes#setGetTimeoutMillis(int)
+    /**
+     * @param millis
      */
     public void setGetTimeoutMillis( int millis )
     {
@@ -492,5 +491,4 @@ public class RemoteCacheAttributes
         buf.append( "\n zombieQueueMaxSize = [" + getZombieQueueMaxSize() + "]" );
         return buf.toString();
     }
-
 }

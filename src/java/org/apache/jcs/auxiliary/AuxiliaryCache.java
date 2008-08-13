@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -56,4 +58,19 @@ public interface AuxiliaryCache
      * @return the attributes for the auxiliary cache
      */
     AuxiliaryCacheAttributes getAuxiliaryCacheAttributes();
+
+    /**
+     * Allows you to inject a custom serializer. A good example would be a compressing standard
+     * serializer.
+     * <p>
+     * @param elementSerializer
+     */
+    void setElementSerializer( IElementSerializer elementSerializer );
+
+    /**
+     * Every Auxiliary must allow for the use of an event logger.
+     * <p>
+     * @param cacheEventLogger
+     */
+    void setCacheEventLogger( ICacheEventLogger cacheEventLogger );
 }

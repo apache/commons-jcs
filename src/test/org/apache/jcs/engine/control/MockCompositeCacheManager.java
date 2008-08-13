@@ -25,7 +25,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  */
-public class CompositeCacheManagerMockImpl
+public class MockCompositeCacheManager
     implements ICompositeCacheManager
 {
 

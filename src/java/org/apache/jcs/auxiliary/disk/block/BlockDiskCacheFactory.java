@@ -24,7 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
  * Creates disk cache instances.
@@ -35,7 +37,7 @@ public class BlockDiskCacheFactory
     /** The logger */
     private final static Log log = LogFactory.getLog( BlockDiskCacheFactory.class );
 
-    /** The auxiliary name */
+    /** The auxiliary name. The composite cache manager keeps this in a map, keyed by name. */
     private String name;
 
     /**
@@ -44,15 +46,18 @@ public class BlockDiskCacheFactory
      * <p>
      * The manager is a singleton.
      * <p>
-     * One disk cache is returned per region fromt he maanger.
+     * One disk cache is returned per region from the manager.
      * <p>
      * @param iaca
      * @param cacheMgr This allows auxiliaries to reference the manager without assuming that it is
-     *            a singleton. This will allow JCS to be a nonsingleton. Also, it makes it easier to
-     *            test.
+     *            a singleton. This will allow JCS to be a non-singleton. Also, it makes it easier
+     *            to test.
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
+                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         BlockDiskCacheAttributes idca = (BlockDiskCacheAttributes) iaca;
         if ( log.isDebugEnabled() )

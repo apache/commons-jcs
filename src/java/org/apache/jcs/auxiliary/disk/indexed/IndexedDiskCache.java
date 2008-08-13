@@ -114,6 +114,7 @@ public class IndexedDiskCache
     private long bytesFree = 0;
 
     private int hitCount = 0;
+       
 
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechansism.

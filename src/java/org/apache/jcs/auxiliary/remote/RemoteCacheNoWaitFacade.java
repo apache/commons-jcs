@@ -35,8 +35,10 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -47,12 +49,13 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * NoWaitFacade to give to the composite cache out of caches it constructs from the varies manager
  * to lateral services.
  * <p>
- * Typically, we only connect to one remote server per facade.  We use a list of one RemoteCacheNoWait.
+ * Typically, we only connect to one remote server per facade. We use a list of one
+ * RemoteCacheNoWait.
  */
 public class RemoteCacheNoWaitFacade
     implements AuxiliaryCache
 {
-    /** For serialization. Don't change.*/
+    /** For serialization. Don't change. */
     private static final long serialVersionUID = -4529970797620747110L;
 
     /** log instance */
@@ -69,6 +72,15 @@ public class RemoteCacheNoWaitFacade
 
     /** A cache manager */
     private ICompositeCacheManager cacheMgr;
+
+    /**
+     * An optional event logger. Only errors are logged here. We don't want to log ICacheEvents
+     * since the noWaits do this.
+     */
+    private ICacheEventLogger cacheEventLogger;
+
+    /** The serializer. */
+    private IElementSerializer elementSerializer;
 
     /**
      * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object
@@ -96,9 +108,12 @@ public class RemoteCacheNoWaitFacade
      * @param noWaits
      * @param rca
      * @param cacheMgr
+     * @param cacheEventLogger 
+     * @param elementSerializer 
      */
     public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca,
-                                    ICompositeCacheManager cacheMgr )
+                                    ICompositeCacheManager cacheMgr,
+                                    ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         if ( log.isDebugEnabled() )
         {
@@ -108,6 +123,8 @@ public class RemoteCacheNoWaitFacade
         this.remoteCacheAttributes = rca;
         this.cacheName = rca.getCacheName();
         this.cacheMgr = cacheMgr;
+        this.cacheEventLogger = cacheEventLogger;
+        this.elementSerializer = elementSerializer;
     }
 
     /**
@@ -137,7 +154,15 @@ public class RemoteCacheNoWaitFacade
         }
         catch ( Exception ex )
         {
-            log.error( ex );
+            String message = "Problem updating no wait.  Will initiate failover if the noWait is in error.";
+            log.error( message, ex );
+
+            if ( getCacheEventLogger() != null )
+            {
+                getCacheEventLogger().logError( "RemoteCacheNoWaitFacade", ce.getCacheName(),
+                                                ICacheEventLogger.UPDATE_EVENT, message + ":" + ex.getMessage(), ce );
+            }
+
             // can handle failover here? Is it safe to try the others?
             // check to see it the noWait is now a zombie
             // if it is a zombie, then move to the next in the failover list
@@ -183,7 +208,8 @@ public class RemoteCacheNoWaitFacade
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
      */
     public Map getMultiple( Set keys )
     {
@@ -334,7 +360,7 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * String form of some of the configuratin information for the remote cache.
+     * String form of some of the configuration information for the remote cache.
      * <p>
      * @return Some info for logging.
      */
@@ -360,7 +386,7 @@ public class RemoteCacheNoWaitFacade
             if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
             {
                 // start failover, primary recovery process
-                RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this, cacheMgr );
+                RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this, cacheMgr, cacheEventLogger, elementSerializer );
                 // If the returned monitor is null, it means it's already
                 // started elsewhere.
                 if ( runner != null )
@@ -369,6 +395,12 @@ public class RemoteCacheNoWaitFacade
                     Thread t = new Thread( runner );
                     t.setDaemon( true );
                     t.start();
+                }
+
+                if ( getCacheEventLogger() != null )
+                {
+                    getCacheEventLogger().logApplicationEvent( "RemoteCacheNoWaitFacade", "InitiatedFailover",
+                                                               noWaits[i] + " was in error." );
                 }
             }
             else
@@ -434,4 +466,35 @@ public class RemoteCacheNoWaitFacade
 
         return stats;
     }
+
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @param cacheEventLogger
+     */
+    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    {
+        this.cacheEventLogger = cacheEventLogger;
+    }      
+
+    /**
+     * Allows the failover runner to use this event logger.
+     * <p>
+     * @return ICacheEventLogger
+     */
+    protected ICacheEventLogger getCacheEventLogger()
+    {
+        return cacheEventLogger;
+    }
+    
+    /**
+     * Allows you to inject a custom serializer. A good example would be a compressing standard
+     * serializer.
+     * <p>
+     * @param elementSerializer
+     */
+    public void setElementSerializer( IElementSerializer elementSerializer )
+    {
+        this.elementSerializer = elementSerializer;
+    }    
 }

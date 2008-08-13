@@ -37,7 +37,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * <p>
  * @author Aaron Smuts
  */
-public class MemoryCacheMockImpl
+public class MockMemoryCache
     implements MemoryCache
 {
     private ICompositeCacheAttributes cacheAttr;

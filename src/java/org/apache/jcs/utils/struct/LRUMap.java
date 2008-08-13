@@ -49,14 +49,15 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * <p>
  * Locking is done on the instance.
  * <p>
- * @author aaronsm
+ * @author aaron smuts
  */
 public class LRUMap
     implements Map
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( LRUMap.class );
 
-    // double linked list for lru
+    /** double linked list for lru */
     private DoubleLinkedList list;
 
     /** Map where items are stored by key. */
@@ -68,10 +69,10 @@ public class LRUMap
 
     int putCnt = 0;
 
-    // if the max is less than 0, there is no limit!
+    /** if the max is less than 0, there is no limit! */
     int maxObjects = -1;
 
-    // make configurable
+    /** make configurable */
     private int chunkSize = 1;
 
     /**

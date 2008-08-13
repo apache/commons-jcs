@@ -20,8 +20,8 @@ package org.apache.jcs.utils.access;
  */
 
 /**
- * This is an abstract template for JCSWorkerHelper implementations. it simple
- * has a convenience method for setting the finished flag.
+ * This is an abstract template for JCSWorkerHelper implementations. it simple has a convenience
+ * method for setting the finished flag.
  * <p>
  * @author tsavo
  */
@@ -38,11 +38,17 @@ public abstract class AbstractJCSWorkerHelper
         super();
     }
 
+    /**
+     * @return finished
+     */
     public boolean isFinished()
     {
         return finished;
     }
 
+    /**
+     * @param isFinished
+     */
     public void setFinished( boolean isFinished )
     {
         finished = isFinished;

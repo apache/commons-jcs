@@ -34,30 +34,34 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttr
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryManager;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryService;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
- * Constructs a LateralCacheNoWaitFacade for the given configuration. Each
- * lateral service / local relationship is managed by one manager. This manager
- * can have multiple caches. The remote relationships are consolidated and
- * restored via these managers.
+ * Constructs a LateralCacheNoWaitFacade for the given configuration. Each lateral service / local
+ * relationship is managed by one manager. This manager can have multiple caches. The remote
+ * relationships are consolidated and restored via these managers.
  * <p>
- * The facade provides a front to the composite cache so the implementation is
- * transparent.
- *
+ * The facade provides a front to the composite cache so the implementation is transparent.
  */
 public class LateralTCPCacheFactory
     extends LateralCacheAbstractFactory
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( LateralTCPCacheFactory.class );
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
-     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
+    /**
+     * Creates a TCP lateral.
+     * <p>
+     * @param iaca
+     * @param cacheMgr
+     * @param cacheEventLogger
+     * @param elementSerializer
+     * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
+                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
         ArrayList noWaits = new ArrayList();
@@ -101,7 +105,7 @@ public class LateralTCPCacheFactory
 
         // create the no wait facade.
         LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
-            .toArray( new LateralCacheNoWait[0] ), (ILateralCacheAttributes)iaca );
+            .toArray( new LateralCacheNoWait[0] ), (ILateralCacheAttributes) iaca );
 
         // create udp discovery if available.
         createDiscoveryService( lac, lcnwf, cacheMgr );
@@ -109,11 +113,9 @@ public class LateralTCPCacheFactory
         return lcnwf;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory#createListener(org.apache.jcs.auxiliary.lateral.LateralCacheAttributes,
-     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
+    /**
+     * @param lac
+     * @param cacheMgr
      */
     public void createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
@@ -146,17 +148,15 @@ public class LateralTCPCacheFactory
     }
 
     /**
-     * Creates the discovery service. Only creates this for tcp laterals right
-     * now.
-     *
-     * @param lac
-     *            ITCPLateralCacheAttributes
+     * Creates the discovery service. Only creates this for tcp laterals right now.
+     * <p>
+     * @param lac ITCPLateralCacheAttributes
      * @param lcnwf
      * @param cacheMgr
      * @return null if none is created.
      */
     private UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
-                                                       ICompositeCacheManager cacheMgr )
+                                                        ICompositeCacheManager cacheMgr )
     {
         UDPDiscoveryService discovery = null;
 

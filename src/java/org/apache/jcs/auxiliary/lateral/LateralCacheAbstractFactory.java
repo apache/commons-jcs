@@ -23,7 +23,9 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 
 
 /**
@@ -42,13 +44,20 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public abstract class LateralCacheAbstractFactory
 	implements AuxiliaryCacheFactory
 {
-
+    /** The auxiliary name */
     private String name;
 
-    /* (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes, org.apache.jcs.engine.behavior.ICompositeCacheManager)
+    /**
+     * Creates a lateral cache.
+     * <p>
+     * @param attr
+     * @param cacheMgr
+     * @param cacheEventLogger 
+     * @param elementSerializer 
+     * @return AuxiliaryCache
      */
-    public abstract AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr );
+    public abstract AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
+                                                ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
 
     /**
      * Makes sure a listener gets created. It will get monitored as soon as it

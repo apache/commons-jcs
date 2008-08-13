@@ -22,8 +22,7 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 
 /**
- * The configurator will set these values based on what is in the cache.ccf
- * file.
+ * The configurator will set these values based on what is in the cache.ccf file.
  * <p>
  * @author Aaron Smuts
  */
@@ -61,8 +60,7 @@ public class JDBCDiskCacheAttributes
     private boolean UseDiskShrinker = true;
 
     /**
-     * @param userName
-     *            The userName to set.
+     * @param userName The userName to set.
      */
     public void setUserName( String userName )
     {
@@ -78,8 +76,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param password
-     *            The password to set.
+     * @param password The password to set.
      */
     public void setPassword( String password )
     {
@@ -95,8 +92,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param url
-     *            The url to set.
+     * @param url The url to set.
      */
     public void setUrl( String url )
     {
@@ -113,8 +109,7 @@ public class JDBCDiskCacheAttributes
 
     /**
      * This is appended to the url.
-     * @param database
-     *            The database to set.
+     * @param database The database to set.
      */
     public void setDatabase( String database )
     {
@@ -130,8 +125,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param driverClassName
-     *            The driverClassName to set.
+     * @param driverClassName The driverClassName to set.
      */
     public void setDriverClassName( String driverClassName )
     {
@@ -147,8 +141,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param tableName
-     *            The tableName to set.
+     * @param tableName The tableName to set.
      */
     public void setTableName( String tableName )
     {
@@ -164,11 +157,9 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * If this is true then the disk cache will check to see if the item already
-     * exists in the database. If it is false, it will try to insert. If the
-     * isnert fails it will try to update.
-     * @param testBeforeInsert
-     *            The testBeforeInsert to set.
+     * If this is true then the disk cache will check to see if the item already exists in the
+     * database. If it is false, it will try to insert. If the isnert fails it will try to update.
+     * @param testBeforeInsert The testBeforeInsert to set.
      */
     public void setTestBeforeInsert( boolean testBeforeInsert )
     {
@@ -184,8 +175,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param maxActive
-     *            The maxActive to set.
+     * @param maxActive The maxActive to set.
      */
     public void setMaxActive( int maxActive )
     {
@@ -201,8 +191,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param shrinkerIntervalSecondsArg
-     *            The shrinkerIntervalSeconds to set.
+     * @param shrinkerIntervalSecondsArg The shrinkerIntervalSeconds to set.
      */
     public void setShrinkerIntervalSeconds( int shrinkerIntervalSecondsArg )
     {
@@ -218,8 +207,7 @@ public class JDBCDiskCacheAttributes
     }
 
     /**
-     * @param useDiskShrinker
-     *            The useDiskShrinker to set.
+     * @param useDiskShrinker The useDiskShrinker to set.
      */
     public void setUseDiskShrinker( boolean useDiskShrinker )
     {
@@ -236,6 +224,8 @@ public class JDBCDiskCacheAttributes
 
     /**
      * For debugging.
+     * <p>
+     * @return debug string with most of the properties.
      */
     public String toString()
     {

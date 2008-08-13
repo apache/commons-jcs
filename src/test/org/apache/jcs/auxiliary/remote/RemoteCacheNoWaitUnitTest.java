@@ -39,7 +39,7 @@ import org.apache.jcs.utils.timing.SleepUtil;
  */
 public class RemoteCacheNoWaitUnitTest
     extends TestCase
-{
+{   
     /**
      * Simply verify that the client gets updated via the no wait.
      * <p>
@@ -49,7 +49,7 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        MockRemoteCacheClient client = new MockRemoteCacheClient();
         RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
 
         ICacheElement element = new CacheElement( "testUpdate", "key", "value" );
@@ -73,7 +73,7 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        MockRemoteCacheClient client = new MockRemoteCacheClient();
         RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
 
         ICacheElement input = new CacheElement( "testUpdate", "key", "value" );
@@ -95,7 +95,7 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        MockRemoteCacheClient client = new MockRemoteCacheClient();
         RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
 
         ICacheElement inputElement = new CacheElement( "testUpdate", "key", "value" );
@@ -123,7 +123,7 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        MockRemoteCacheClient client = new MockRemoteCacheClient();
         RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
 
         String input = "MyKey";
@@ -147,7 +147,7 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        MockRemoteCacheClient client = new MockRemoteCacheClient();
         client.status = CacheConstants.STATUS_ALIVE;
         RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
 
@@ -167,7 +167,7 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        MockRemoteCacheClient client = new MockRemoteCacheClient();
         client.status = CacheConstants.STATUS_ERROR;
         RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
 
@@ -188,11 +188,11 @@ public class RemoteCacheNoWaitUnitTest
         throws Exception
     {
         // SETUP
-        RemoteCacheClientMockImpl client = new RemoteCacheClientMockImpl();
+        MockRemoteCacheClient client = new MockRemoteCacheClient();
         client.status = CacheConstants.STATUS_ALIVE;
         RemoteCacheNoWait noWait = new RemoteCacheNoWait( client );
 
-        RemoteCacheServiceMockImpl service = new RemoteCacheServiceMockImpl();
+        MockRemoteCacheService service = new MockRemoteCacheService();
 
         ICacheElement element = new CacheElement( "testUpdate", "key", "value" );
 

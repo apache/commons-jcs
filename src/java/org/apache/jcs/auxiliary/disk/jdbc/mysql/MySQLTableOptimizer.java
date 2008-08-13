@@ -31,31 +31,33 @@ import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
 import org.apache.jcs.auxiliary.disk.jdbc.TableState;
 
 /**
- * The MySQL Table Optimizer can optimize MySQL tables. It knows how to optimize
- * for MySQL datbases in particular and how to repari the table if it is
- * corrupted in the process.
+ * The MySQL Table Optimizer can optimize MySQL tables. It knows how to optimize for MySQL datbases
+ * in particular and how to repari the table if it is corrupted in the process.
  * <p>
- * We will probably be able to abstract out a generic optimizer interface from
- * this class in the future.
+ * We will probably be able to abstract out a generic optimizer interface from this class in the
+ * future.
  * <p>
  * @author Aaron Smuts
  */
 public class MySQLTableOptimizer
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( MySQLTableOptimizer.class );
 
+    /** The pool */
     private JDBCDiskCachePoolAccess poolAccess = null;
 
+    /** The name of the table. */
     private String tableName = null;
 
+    /** optimizing, etc. */
     private TableState tableState;
 
     /**
      * This constructs an optimizer with the disk cacn properties.
      * <p>
      * @param attributes
-     * @param tableState
-     *            We mark the table status as optimizing when this is happening.
+     * @param tableState We mark the table status as optimizing when this is happening.
      */
     public MySQLTableOptimizer( MySQLDiskCacheAttributes attributes, TableState tableState )
     {
@@ -99,14 +101,12 @@ public class MySQLTableOptimizer
     }
 
     /**
-     * A scheduler will call this method. When it is called the table state is
-     * marked as optimizing. TODO we need to verify that no deletions are
-     * running before we call optimize. We should wait if a deletion is in
-     * progress.
+     * A scheduler will call this method. When it is called the table state is marked as optimizing.
+     * TODO we need to verify that no deletions are running before we call optimize. We should wait
+     * if a deletion is in progress.
      * <p>
-     * This restores when there is an optimization error. The error output looks
-     * like this:
-     *
+     * This restores when there is an optimization error. The error output looks like this:
+     * 
      * <pre>
      *           mysql&gt; optimize table JCS_STORE_FLIGHT_OPTION_ITINERARY;
      *               +---------------------------------------------+----------+----------+---------------------+
@@ -117,9 +117,9 @@ public class MySQLTableOptimizer
      *               +---------------------------------------------+----------+----------+---------------------+
      *               2 rows in set (51.78 sec)
      * </pre>
-     *
+     * 
      * A successful repair response looks like this:
-     *
+     * 
      * <pre>
      *        mysql&gt; REPAIR TABLE JCS_STORE_FLIGHT_OPTION_ITINERARY;
      *            +---------------------------------------------+--------+----------+----------------------------------------------+
@@ -131,9 +131,9 @@ public class MySQLTableOptimizer
      *            +---------------------------------------------+--------+----------+----------------------------------------------+
      *            3 rows in set (3 min 5.94 sec)
      * </pre>
-     *
+     * 
      * A successful optimization looks like this:
-     *
+     * 
      * <pre>
      *       mysql&gt; optimize table JCS_STORE_DEFAULT;
      *           +-----------------------------+----------+----------+----------+
@@ -143,8 +143,7 @@ public class MySQLTableOptimizer
      *           +-----------------------------+----------+----------+----------+
      *           1 row in set (1.10 sec)
      * </pre>
-     *
-     * @return
+     * @return true if it worked
      */
     public boolean optimizeTable()
     {
@@ -294,8 +293,8 @@ public class MySQLTableOptimizer
     /**
      * This is called if the optimizatio is in error.
      * <p>
-     * It looks for "OK" in response. If it find "OK" as a message in any result
-     * set row, it returns true. Otherwise we assume that the repair failed.
+     * It looks for "OK" in response. If it find "OK" as a message in any result set row, it returns
+     * true. Otherwise we assume that the repair failed.
      * <p>
      * @param sStatement
      * @return true if successful
@@ -337,8 +336,7 @@ public class MySQLTableOptimizer
     }
 
     /**
-     * @param tableName
-     *            The tableName to set.
+     * @param tableName The tableName to set.
      */
     public void setTableName( String tableName )
     {

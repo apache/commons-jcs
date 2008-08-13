@@ -68,7 +68,7 @@
   <!-- The eclipse goal runs .project and .classpath generation -->
   <!-- I want to prevent the .project file genreation, so -->
   <!-- the ant external tool builder will not get wiped out. -->
-  <goal name="eclipse:generate-project">
+  <goal name="SKIPeclipse:generate-project">
     <!-- do nothing -->
     <ant:echo>Not generating the .project file.</ant:echo>
   </goal>

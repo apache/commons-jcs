@@ -34,7 +34,9 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManager;
+import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
  * This factory should create mysql disk caches.
@@ -44,6 +46,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public class HSQLDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( HSQLDiskCacheFactory.class );
 
     private String name = "HSQLDiskCacheFactory";
@@ -52,8 +55,15 @@ public class HSQLDiskCacheFactory
 
     /**
      * This factory method should create an instance of the mysqlcache.
+     * <p>
+     * @param rawAttr
+     * @param arg1
+     * @param cacheEventLogger
+     * @param elementSerializer
+     * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1 )
+    public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1,
+                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr );
         try
@@ -70,6 +80,8 @@ public class HSQLDiskCacheFactory
 
     /**
      * The name of the factory.
+     * <p>
+     * @param nameArg
      */
     public void setName( String nameArg )
     {
@@ -78,6 +90,8 @@ public class HSQLDiskCacheFactory
 
     /**
      * Returns the display name
+     * <p>
+     * @return name
      */
     public String getName()
     {
@@ -85,8 +99,7 @@ public class HSQLDiskCacheFactory
     }
 
     /**
-     * Creates the database if it doesn't exist, registers the driver class,
-     * etc.
+     * Creates the database if it doesn't exist, registers the driver class, etc.
      * <p>
      * @param attributes
      * @throws Exception

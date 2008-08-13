@@ -1,4 +1,4 @@
-package org.apache.jcs.config;
+package org.apache.jcs.utils.config;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,15 +25,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This class is based on the log4j class
- * org.apache.log4j.helpers.OptionConverter that was made by Ceki
- * G&uuml;lc&uuml; Simon Kitching; Avy Sharell (sharell@online.fr) Anders
- * Kristensen Matthieu Verbert (mve@zurich.ibm.com) A convenience class to
- * convert property values to specific types.
- *
+ * This class is based on the log4j class org.apache.log4j.helpers.OptionConverter that was made by
+ * Ceki G&uuml;lc&uuml; Simon Kitching; Avy Sharell (sharell@online.fr) Anders Kristensen Matthieu
+ * Verbert (mve@zurich.ibm.com) A convenience class to convert property values to specific types.
  */
 public class OptionConverter
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( OptionConverter.class );
 
     static String DELIM_START = "${";
@@ -54,7 +52,6 @@ public class OptionConverter
 
     /**
      * Combines two arrays.
-     *
      * @param l
      * @param r
      * @return String[]
@@ -72,9 +69,8 @@ public class OptionConverter
 
     /**
      * Escapes special cahracters/
-     *
      * @param s
-     * @return  String
+     * @return String
      */
     public static String convertSpecialChars( String s )
     {
@@ -128,15 +124,12 @@ public class OptionConverter
     }
 
     /**
-     * Very similar to <code>System.getProperty</code> except that the {@link
-     * SecurityException} is hidden.
-     *
-     * @param key
-     *            The key to search for.
-     * @param def
-     *            The default value to return.
-     * @return the string value of the system property, or the default value if
-     *         there is no property with that key.
+     * Very similar to <code>System.getProperty</code> except that the {@link SecurityException} is
+     * hidden.
+     * @param key The key to search for.
+     * @param def The default value to return.
+     * @return the string value of the system property, or the default value if there is no property
+     *         with that key.
      * @since 1.1
      */
 
@@ -156,7 +149,6 @@ public class OptionConverter
 
     /**
      * Creates an object for the className value of the key.
-     *
      * @param props
      * @param key
      * @param superClass
@@ -181,15 +173,13 @@ public class OptionConverter
     }
 
     /**
-     * If <code>value</code> is "true", then <code>true</code> is returned.
-     * If <code>value</code> is "false", then <code>true</code> is returned.
-     * Otherwise, <code>default</code> is returned.
+     * If <code>value</code> is "true", then <code>true</code> is returned. If <code>value</code> is
+     * "false", then <code>true</code> is returned. Otherwise, <code>default</code> is returned.
      * <p>
-     *
      * Case of value is unimportant.
      * @param value
      * @param dEfault
-     * @return  Object
+     * @return Object
      */
 
     public static boolean toBoolean( String value, boolean dEfault )
@@ -210,10 +200,12 @@ public class OptionConverter
         return dEfault;
     }
 
-    /** Description of the Method
+    /**
+     * Converts to int.
+     * <p>
      * @param value
      * @param dEfault
-     * @return
+     * @return int
      */
     public static int toInt( String value, int dEfault )
     {
@@ -236,7 +228,7 @@ public class OptionConverter
     /**
      * @param value
      * @param dEfault
-     * @return
+     * @return long
      */
     public static long toFileSize( String value, long dEfault )
     {
@@ -280,11 +272,12 @@ public class OptionConverter
     }
 
     /**
-     * Find the value corresponding to <code>key</code> in <code>props</code>.
-     * Then perform variable substitution on the found value.
+     * Find the value corresponding to <code>key</code> in <code>props</code>. Then perform variable
+     * substitution on the found value.
+     * <p>
      * @param key
      * @param props
-     * @return
+     * @return substituted string
      */
 
     public static String findAndSubst( String key, Properties props )
@@ -307,18 +300,14 @@ public class OptionConverter
     }
 
     /**
-     * Instantiate an object given a class name. Check that the
-     * <code>className</code> is a subclass of <code>superClass</code>. If
-     * that test fails or the object could not be instantiated, then
+     * Instantiate an object given a class name. Check that the <code>className</code> is a subclass
+     * of <code>superClass</code>. If that test fails or the object could not be instantiated, then
      * <code>defaultValue</code> is returned.
-     *
-     * @param className
-     *            The fully qualified class name of the object to instantiate.
-     * @param superClass
-     *            The class to which the new object should belong.
-     * @param defaultValue
-     *            The object to return in case of non-fulfillment
-     * @return
+     * <p>
+     * @param className The fully qualified class name of the object to instantiate.
+     * @param superClass The class to which the new object should belong.
+     * @param defaultValue The object to return in case of non-fulfillment
+     * @return instantiated object
      */
 
     public static Object instantiateByClassName( String className, Class superClass, Object defaultValue )
@@ -345,52 +334,41 @@ public class OptionConverter
     }
 
     /**
-     * Perform variable substitution in string <code>val</code> from the
-     * values of keys found in the system propeties.
+     * Perform variable substitution in string <code>val</code> from the values of keys found in the
+     * system properties.
      * <p>
-     *
      * The variable substitution delimeters are <b>${ </b> and <b>} </b>.
      * <p>
-     *
      * For example, if the System properties contains "key=value", then the call
-     *
+     * 
      * <pre>
      * String s = OptionConverter.substituteVars( &quot;Value of key is ${key}.&quot; );
      * </pre>
-     *
+     * 
      * will set the variable <code>s</code> to "Value of key is value.".
      * <p>
-     *
-     * If no value could be found for the specified key, then the
-     * <code>props</code> parameter is searched, if the value could not be
-     * found there, then substitution defaults to the empty string.
+     * If no value could be found for the specified key, then the <code>props</code> parameter is
+     * searched, if the value could not be found there, then substitution defaults to the empty
+     * string.
      * <p>
-     *
-     * For example, if system propeties contains no value for the key
-     * "inexistentKey", then the call
-     *
+     * For example, if system propeties contains no value for the key "inexistentKey", then the call
+     * 
      * <pre>
      * String s = OptionConverter.subsVars( &quot;Value of inexistentKey is [${inexistentKey}]&quot; );
      * </pre>
-     *
+     * 
      * will set <code>s</code> to "Value of inexistentKey is []"
      * <p>
-     *
-     * An {@link java.lang.IllegalArgumentException}is thrown if
-     * <code>val</code> contains a start delimeter "${" which is not balanced
-     * by a stop delimeter "}".
+     * An {@link java.lang.IllegalArgumentException}is thrown if <code>val</code> contains a start
+     * delimeter "${" which is not balanced by a stop delimeter "}".
      * </p>
      * <p>
-     *
      * <b>Author </b> Avy Sharell </a>
      * </p>
-     *
-     * @param val
-     *            The string on which variable substitution is performed.
+     * @param val The string on which variable substitution is performed.
      * @param props
      * @return String
-     * @throws IllegalArgumentException
-     *             if <code>val</code> is malformed.
+     * @throws IllegalArgumentException if <code>val</code> is malformed.
      */
 
     public static String substVars( String val, Properties props )
@@ -438,6 +416,4 @@ public class OptionConverter
             i = k + DELIM_STOP_LEN;
         }
     }
-
 }
-// end class

@@ -28,7 +28,7 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.control.CompositeCacheManagerMockImpl;
+import org.apache.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
@@ -104,7 +104,7 @@ public class TestTCPLateralUnitTest
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1101 );
         lattr.setTransmissionTypeName( "TCP" );
-        CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
         // force initialization
@@ -152,7 +152,7 @@ public class TestTCPLateralUnitTest
         // setup a listener
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1103 );
-        CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
         // get the listener started
@@ -194,7 +194,7 @@ public class TestTCPLateralUnitTest
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1105 );
         lattr.setTransmissionTypeName( "TCP" );
-        CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
         // get the listener started
@@ -237,7 +237,7 @@ public class TestTCPLateralUnitTest
         // setup a listener
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1107 );
-        CompositeCacheManagerMockImpl cacheMgr = new CompositeCacheManagerMockImpl();
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
         // get the listener started
