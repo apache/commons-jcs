@@ -39,6 +39,7 @@ public class CacheElementSerialized
     /** This is the cache key by which the value can be referenced. */
     private final Serializable key;
 
+    /** The serialized value. */
     private final byte[] serializedValue;
 
     /**
@@ -66,6 +67,8 @@ public class CacheElementSerialized
 
     /**
      * Returns the name of the cache. This is the name of the region.
+     * <p>
+     * @return this.cacheName;
      */
     public String getCacheName()
     {
@@ -118,6 +121,8 @@ public class CacheElementSerialized
 
     /**
      * For debugging only.
+     * <p>
+     * @return debugging string.
      */
     public String toString()
     {

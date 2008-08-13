@@ -39,7 +39,7 @@ public class CacheAdaptor
 
     private final ICache cache;
 
-    /** The unique id of this listner. */
+    /** The unique id of this listener. */
     protected long listenerId = 0;
 
     /**
@@ -70,6 +70,7 @@ public class CacheAdaptor
 
     /**
      * Constructor for the CacheAdaptor object
+     * <p>
      * @param cache
      */
     public CacheAdaptor( ICache cache )
@@ -96,10 +97,12 @@ public class CacheAdaptor
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
-     *      java.io.Serializable)
+    /**
+     * Removes an item.
+     * <p>
+     * @param cacheName 
+     * @param key 
+     * @throws IOException 
      */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
@@ -107,9 +110,11 @@ public class CacheAdaptor
         cache.remove( key );
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
+    /**
+     * Clears the region.
+     * <p>
+     * @param cacheName 
+     * @throws IOException 
      */
     public void handleRemoveAll( String cacheName )
         throws IOException
@@ -117,9 +122,11 @@ public class CacheAdaptor
         cache.removeAll();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
+    /**
+     * Shutdown call.
+     * <p>
+     * @param cacheName 
+     * @throws IOException 
      */
     public void handleDispose( String cacheName )
         throws IOException

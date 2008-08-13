@@ -27,14 +27,10 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 public interface IRemoteCacheAttributes
     extends AuxiliaryCacheAttributes
 {
-    /**
-     * A remote cache is either a local cache or a cluster cache.
-     */
+    /** A remote cache is either a local cache or a cluster cache.  */
     public static final int LOCAL = 0;
 
-    /**
-     * A remote cache is either a local cache or a cluster cache.
-     */
+    /** A remote cache is either a local cache or a cluster cache. */
     public static final int CLUSTER = 1;
 
     /** The default timeout for the custom RMI socket facfory */
@@ -246,7 +242,7 @@ public interface IRemoteCacheAttributes
      * <p>
      * The default name is "remote_cache_client"
      * <p>
-     * @return
+     * @return the name of the pool
      */
     public abstract String getThreadPoolName();
 
@@ -261,7 +257,7 @@ public interface IRemoteCacheAttributes
      * -1 and 0 mean no timeout, this is the default if the timeout is -1 or 0, no threadpool will
      * be used.
      * <p>
-     * @return
+     * @return the time in millis
      */
     public abstract int getGetTimeoutMillis();
 
@@ -284,7 +280,7 @@ public interface IRemoteCacheAttributes
     public abstract int getRmiSocketFactoryTimeoutMillis();
 
     /**
-     * This sets a general timeout on the rmi socket factory. By default the socket factory will
+     * This sets a general timeout on the RMI socket factory. By default the socket factory will
      * block forever.
      * <p>
      * @param rmiSocketFactoryTimeoutMillis
@@ -321,7 +317,7 @@ public interface IRemoteCacheAttributes
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our conenction with the server.
+     * loose our connection with the server.
      * <p>
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
@@ -329,7 +325,7 @@ public interface IRemoteCacheAttributes
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our conenction with the server.
+     * loose our connection with the server.
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */

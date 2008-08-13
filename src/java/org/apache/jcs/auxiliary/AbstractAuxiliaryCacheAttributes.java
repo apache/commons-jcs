@@ -17,22 +17,22 @@ package org.apache.jcs.auxiliary;
 
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 
-/*
+/**
  * This has common attributes used by all auxiliaries.
  */
 public abstract class AbstractAuxiliaryCacheAttributes
     implements AuxiliaryCacheAttributes
 {
-    /** Don't change     */
+    /** Don't change */
     private static final long serialVersionUID = -6594609334959187673L;
 
     /** cacheName */
     protected String cacheName;
 
-    /** name  */
+    /** name */
     protected String name;
 
-    /** eventQueueType -- pooled or single threaded  */
+    /** eventQueueType -- pooled or single threaded */
     protected int eventQueueType;
 
     /** Named when pooled */
@@ -77,12 +77,9 @@ public abstract class AbstractAuxiliaryCacheAttributes
     }
 
     /**
-     * SINGLE is the default. If you choose POOLED, the value of
-     * EventQueuePoolName will be used
+     * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
      * <p>
-     * @param s
-     *            SINGLE or POOLED
-     * @return
+     * @param s SINGLE or POOLED
      */
     public void setEventQueueType( String s )
     {
@@ -131,12 +128,10 @@ public abstract class AbstractAuxiliaryCacheAttributes
     }
 
     /**
-     * If you choose a POOLED event queue type, the value of EventQueuePoolName
-     * will be used. This is ignored if the pool type is SINGLE
+     * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
+     * is ignored if the pool type is SINGLE
      * <p>
-     * @param s
-     *            SINGLE or POOLED
-     * @return
+     * @param s SINGLE or POOLED
      */
     public void setEventQueuePoolName( String s )
     {
@@ -144,8 +139,8 @@ public abstract class AbstractAuxiliaryCacheAttributes
     }
 
     /**
-     * Sets the pool name to use. If a pool is not found by this name, the
-     * thread pool manager will return a default configuration.
+     * Sets the pool name to use. If a pool is not found by this name, the thread pool manager will
+     * return a default configuration.
      * <p>
      * @return name of thread pool to use for this auxiliary
      */
