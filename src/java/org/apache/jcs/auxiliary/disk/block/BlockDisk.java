@@ -497,4 +497,14 @@ public class BlockDisk
         }
         return buf.toString();
     }
+    
+    /**
+     * This is used for debugging.
+     * <p>
+     * @return the file path.
+     */
+    protected String getFilePath()
+    {
+        return filepath;
+    }    
 }

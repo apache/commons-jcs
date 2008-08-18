@@ -474,7 +474,7 @@ public class BlockDiskCache
      * Dispose of the disk cache in a background thread. Joins against this thread to put a cap on
      * the disposal time.
      * <p>
-     * @todo make dispose window configurable.
+     * TODO make dispose window configurable.
      */
     public void doDispose()
     {
@@ -726,4 +726,14 @@ public class BlockDiskCache
 
         return stats;
     }
+    
+    /**
+     * This is used by the event logging.
+     * <p>
+     * @return the location of the disk, either path or ip.
+     */
+    protected String getDiskLocation()
+    {
+        return dataFile.getFilePath();
+    }    
 }

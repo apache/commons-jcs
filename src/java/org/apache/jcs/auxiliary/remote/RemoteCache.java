@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
@@ -41,16 +42,16 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IZombie;
+import org.apache.jcs.engine.logging.behavior.ICacheEvent;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.serialization.SerializationConversionUtil;
-import org.apache.jcs.utils.serialization.StandardSerializer;
 import org.apache.jcs.utils.threadpool.ThreadPool;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
@@ -63,14 +64,19 @@ import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
  * failover recovery when an error is encountered.
  */
 public class RemoteCache
+    extends AbstractAuxiliaryCache
     implements IRemoteCacheClient
 {
+    /** Don't change. */
     private static final long serialVersionUID = -5329231850422826460L;
 
+    /** The logger. */
     private final static Log log = LogFactory.getLog( RemoteCache.class );
 
+    /** The cacheName */
     final String cacheName;
 
+    /** The configuration values. */
     private IRemoteCacheAttributes irca;
 
     /** This is a handle on the remote server. In zombie mode it is replaced with a balking facade. */
@@ -83,12 +89,6 @@ public class RemoteCache
     private ThreadPool pool = null;
 
     private boolean usePoolForGet = false;
-
-    /** The object serializer */
-    private IElementSerializer elementSerializer = new StandardSerializer();
-
-    /** An optional event logger */
-    private ICacheEventLogger cacheEventLogger;
 
     /**
      * Constructor for the RemoteCache object. This object communicates with a remote cache server.
@@ -134,12 +134,23 @@ public class RemoteCache
             }
         }
 
+        configureCustomSocketFactory();
+    }
+
+    /** Configure a custom socket factory to set the timeout value. */
+    private void configureCustomSocketFactory()
+    {
         try
         {
             // Don't set a socket factory if the setting is -1
             if ( irca.getRmiSocketFactoryTimeoutMillis() > 0 )
             {
-                // TODO make configurable.
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "RmiSocketFactoryTimeoutMillis [" + irca.getRmiSocketFactoryTimeoutMillis() + "]. "
+                        + " Configuring a custom socket factory." );
+                }
+
                 // use this socket factory to add a timeout.
                 RMISocketFactory.setSocketFactory( new RMISocketFactory()
                 {
@@ -164,7 +175,8 @@ public class RemoteCache
         {
             // TODO change this so that we only try to do it once. Otherwise we
             // Generate errors for each region on construction.
-            log.info( e.getMessage() );
+            log.info( "Could not create new custom socket factory. " + e.getMessage() + " Factory in use = "
+                + RMISocketFactory.getSocketFactory() );
         }
     }
 
@@ -199,14 +211,14 @@ public class RemoteCache
     public void update( ICacheElement ce )
         throws IOException
     {
-        logEventStart( ce, ICacheEventLogger.UPDATE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( ce, ICacheEventLogger.UPDATE_EVENT );
         try
         {
             processUpdate( ce );
         }
         finally
         {
-            logEventFinish( ce, ICacheEventLogger.UPDATE_EVENT );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -244,7 +256,7 @@ public class RemoteCache
             catch ( Exception ex )
             {
                 // event queue will wait and retry
-                handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
+                handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName(), ICacheEventLogger.UPDATE_EVENT );
             }
         }
         else
@@ -273,14 +285,14 @@ public class RemoteCache
         throws IOException
     {
         ICacheElement retVal = null;
-        logEventStart( cacheName, key, ICacheEventLogger.GET_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.GET_EVENT );
         try
         {
             retVal = processGet( key, retVal );
         }
         finally
         {
-            logEventFinish( retVal, ICacheEventLogger.GET_EVENT );
+            logICacheEvent( cacheEvent );
         }
         return retVal;
     }
@@ -327,7 +339,7 @@ public class RemoteCache
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]" );
+            handleException( ex, "Failed to get [" + key + "] from [" + cacheName + "]", ICacheEventLogger.GET_EVENT );
         }
         return retVal;
     }
@@ -343,14 +355,14 @@ public class RemoteCache
     public Map getMultiple( Set keys )
         throws IOException
     {
-        logEventStart( cacheName, (Serializable) keys, ICacheEventLogger.GETMULTIPLE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, (Serializable) keys, ICacheEventLogger.GETMULTIPLE_EVENT );
         try
         {
             return processGetMultiple( keys );
         }
         finally
         {
-            logEventEnd( cacheName, (Serializable) keys, ICacheEventLogger.GETMULTIPLE_EVENT );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -468,14 +480,14 @@ public class RemoteCache
     public boolean remove( Serializable key )
         throws IOException
     {
-        logEventStart( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
         try
         {
             return processRemove( key );
         }
         finally
         {
-            logEventEnd( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -502,7 +514,7 @@ public class RemoteCache
             }
             catch ( Exception ex )
             {
-                handleException( ex, "Failed to remove " + key + " from " + cacheName );
+                handleException( ex, "Failed to remove " + key + " from " + cacheName, ICacheEventLogger.REMOVE_EVENT );
             }
             return true;
         }
@@ -518,7 +530,7 @@ public class RemoteCache
     public void removeAll()
         throws IOException
     {
-        logEventStart( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
         try
         {
             if ( !this.irca.getGetOnly() )
@@ -529,13 +541,13 @@ public class RemoteCache
                 }
                 catch ( Exception ex )
                 {
-                    handleException( ex, "Failed to remove all from " + cacheName );
+                    handleException( ex, "Failed to remove all from " + cacheName, ICacheEventLogger.REMOVEALL_EVENT );
                 }
             }
         }
         finally
         {
-            logEventEnd( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -547,7 +559,7 @@ public class RemoteCache
     public void dispose()
         throws IOException
     {
-        logEventStart( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             if ( log.isInfoEnabled() )
@@ -561,12 +573,12 @@ public class RemoteCache
             catch ( Exception ex )
             {
                 log.error( "Couldn't dispose", ex );
-                handleException( ex, "Failed to dispose [" + cacheName + "]" );
+                handleException( ex, "Failed to dispose [" + cacheName + "]", ICacheEventLogger.DISPOSE_EVENT );
             }
         }
         finally
         {
-            logEventEnd( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -700,7 +712,7 @@ public class RemoteCache
             {
                 try
                 {
-                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service." );
+                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service.", "fixCache" );
                 }
                 catch ( IOException e1 )
                 {
@@ -721,12 +733,15 @@ public class RemoteCache
      * <p>
      * @param ex
      * @param msg
+     * @param eventName
      * @throws IOException
      */
-    private void handleException( Exception ex, String msg )
+    private void handleException( Exception ex, String msg, String eventName )
         throws IOException
     {
         String message = "Disabling remote cache due to error: " + msg;
+        
+        logError( cacheName, "", message );
         log.error( message, ex );
 
         // we should not switch if the existing is a zombie.
@@ -873,74 +888,17 @@ public class RemoteCache
     }
 
     /**
-     * Logs an event if an event logger is configured.
+     * Gets the extra info for the event log.
      * <p>
-     * @param item
-     * @param requesterId
+     * @return disk location
      */
-    private void logEventStart( ICacheElement item, String eventName )
+    public String getEventLoggingExtraInfo()
     {
-        if ( cacheEventLogger != null )
-        {
-            String ipAddress = getIPAddressForService();
-            cacheEventLogger.logStartICacheEvent( "RemoteCacheClient", item.getCacheName(), eventName, ipAddress, item );
-        }
+        return getIPAddressForService();
     }
 
     /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     */
-    private void logEventStart( String cacheName, Serializable key, String eventName )
-    {
-        if ( cacheEventLogger != null )
-        {
-            String ipAddress = getIPAddressForService();
-            cacheEventLogger.logStartICacheEvent( "RemoteCacheClient", cacheName, eventName, ipAddress, key );
-        }
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param item
-     * @param requesterId
-     */
-    private void logEventFinish( ICacheElement item, String eventName )
-    {
-        if ( cacheEventLogger != null )
-        {
-            String ipAddress = getIPAddressForService();
-            String cacheName = null;
-            if ( item != null )
-            {
-                cacheName = item.getCacheName();
-            }
-            cacheEventLogger.logEndICacheEvent( "RemoteCacheClient", cacheName, eventName, ipAddress, item );
-        }
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     */
-    private void logEventEnd( String cacheName, Serializable key, String eventName )
-    {
-        if ( cacheEventLogger != null )
-        {
-            String ipAddress = getIPAddressForService();
-            cacheEventLogger.logEndICacheEvent( "RemoteCacheClient", cacheName, eventName, ipAddress, key );
-        }
-    }
-
-    /**
-     * Ip address for the service, if one is stored.
+     * IP address for the service, if one is stored.
      * <p>
      * Protected for testing.
      * <p>

@@ -31,9 +31,11 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * Provides remote cache services. This creates remote cache servers and can proxy command line
@@ -64,8 +66,7 @@ public class RemoteCacheServerFactory
      * This will allow you to get stats from the server, etc. Perhaps we should provide methods on
      * the factory to do this instead.
      * <p>
-     * A remote cache is either a local cache or a cluster cache.
-     * <p.
+     * A remote cache is either a local cache or a cluster cache. <p.
      * @return Returns the remoteCacheServer.
      */
     public static RemoteCacheServer getRemoteCacheServer()
@@ -132,58 +133,24 @@ public class RemoteCacheServerFactory
                 log.error( "Problem setting custom RMI Socket Factory.", e );
             }
 
-            // TODO: make automatic
-            RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
-            rcsa.setConfigFileName( propFile );
-
-            Properties prop = RemoteUtils.loadProps( propFile );
-            // Properties prop = PropertyLoader.loadProperties( propFile );
-
-            String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
-            int servicePort = -1;
-            try
-            {
-                servicePort = Integer.parseInt( servicePortStr );
-
-                rcsa.setServicePort( servicePort );
-                log.debug( "Remote cache service uses port number " + servicePort + "." );
-            }
-            catch ( NumberFormatException ignore )
-            {
-                log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT
-                    + " not specified.  An anonymous port will be used." );
-            }
-
-            String lccStr = prop.getProperty( REMOTE_LOCAL_CLUSTER_CONSISTENCY );
-            if ( lccStr == null )
-            {
-                lccStr = "true";
-            }
-            boolean lcc = Boolean.valueOf( lccStr ).booleanValue();
-            rcsa.setLocalClusterConsistency( lcc );
-
-            String acgStr = prop.getProperty( REMOTE_ALLOW_CLUSTER_GET );
-            if ( acgStr == null )
-            {
-                acgStr = "true";
-            }
-            boolean acg = Boolean.valueOf( acgStr ).booleanValue();
-            rcsa.setAllowClusterGet( acg );
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Creating server with these attributes " + rcsa );
-            }
-
-            // CREATE SERVER
-            remoteCacheServer = new RemoteCacheServer( rcsa );
-
             if ( host == null )
             {
                 host = "";
             }
-            // Register the RemoteCacheServer remote object in the registry.
-            serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
+
+            Properties props = RemoteUtils.loadProps( propFile );
+
+            RemoteCacheServerAttributes rcsa = configureServerAttributes( propFile );
+
+            serviceName = rcsa.getRemoteServiceName();
+
+            // CONFIGURE THE EVENT LOGGER
+            ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator
+                .parseCacheEventLogger( props, IRemoteCacheConstants.PROPERTY_PREFIX );
+
+            // CREATE SERVER
+            remoteCacheServer = new RemoteCacheServer( rcsa );
+            remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
             if ( log.isInfoEnabled() )
             {
@@ -199,6 +166,57 @@ public class RemoteCacheServerFactory
                 throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port );
             }
         }
+    }
+
+    /** Configures the RemoteCacheServerAttributes from the props file. */
+    protected static RemoteCacheServerAttributes configureServerAttributes( String propFile )
+        throws IOException
+    {
+        // TODO: make automatic
+        RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
+        rcsa.setConfigFileName( propFile );
+
+        Properties prop = RemoteUtils.loadProps( propFile );
+        // Properties prop = PropertyLoader.loadProperties( propFile );
+
+        String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
+        try
+        {
+            int servicePort = Integer.parseInt( servicePortStr );
+            rcsa.setServicePort( servicePort );
+            log.debug( "Remote cache service uses port number " + servicePort + "." );
+        }
+        catch ( NumberFormatException ignore )
+        {
+            log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT
+                + " not specified.  An anonymous port will be used." );
+        }
+
+        String lccStr = prop.getProperty( REMOTE_LOCAL_CLUSTER_CONSISTENCY );
+        if ( lccStr == null )
+        {
+            lccStr = "true";
+        }
+        boolean lcc = Boolean.valueOf( lccStr ).booleanValue();
+        rcsa.setLocalClusterConsistency( lcc );
+
+        String acgStr = prop.getProperty( REMOTE_ALLOW_CLUSTER_GET );
+        if ( acgStr == null )
+        {
+            acgStr = "true";
+        }
+        boolean acg = Boolean.valueOf( acgStr ).booleanValue();
+        rcsa.setAllowClusterGet( acg );
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Creating server with these attributes " + rcsa );
+        }
+
+        // Register the RemoteCacheServer remote object in the registry.
+        rcsa.setRemoteServiceName( prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim() );
+
+        return rcsa;
     }
 
     /**

@@ -22,28 +22,25 @@ package org.apache.jcs.engine.control.group;
 import java.io.Serializable;
 
 /**
- * Used to avoid name conflict when group cache items are mixed with non-group
- * cache items in the same cache.
- *
+ * Used to avoid name conflict when group cache items are mixed with non-group cache items in the
+ * same cache.
  */
 public class GroupId
     implements Serializable
 {
+    /** Don't change. */
     private static final long serialVersionUID = 4626368486444860133L;
 
     /** Description of the Field */
     public final String groupName;
 
-    /**
-     * the name of the region.
-     */
+    /** the name of the region. */
     public final String cacheName;
 
     private String toString;
 
     /**
      * Constructor for the GroupId object
-     *
      * @param cacheName
      * @param groupName
      */
@@ -62,9 +59,9 @@ public class GroupId
         }
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * @param obj 
+     * @return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
      */
     public boolean equals( Object obj )
     {
@@ -76,18 +73,18 @@ public class GroupId
         return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /**
+     * @return cacheName.hashCode() + groupName.hashCode();
      */
     public int hashCode()
     {
         return cacheName.hashCode() + groupName.hashCode();
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * Caches the value.
+     * <p>
+     * @return debugging string.
      */
     public String toString()
     {

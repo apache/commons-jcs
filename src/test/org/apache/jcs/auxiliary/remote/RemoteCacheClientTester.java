@@ -61,8 +61,8 @@ public class RemoteCacheClientTester
 
     /**
      * Gets the remoteType attribute of the RemoteCacheClientTest object
-     *
      * @return The remoteType value
+     * @throws IOException 
      */
     public int getRemoteType()
         throws IOException
@@ -72,7 +72,6 @@ public class RemoteCacheClientTester
 
     /**
      * Constructor for the RemoteCacheClientTest object
-     *
      * @param count
      * @exception MalformedURLException
      * @exception NotBoundException
@@ -86,7 +85,6 @@ public class RemoteCacheClientTester
 
     /**
      * Constructor for the RemoteCacheClientTest object
-     *
      * @param count
      * @param write
      * @param read
@@ -103,7 +101,6 @@ public class RemoteCacheClientTester
 
     /**
      * Constructor for the RemoteCacheClientTest object
-     *
      * @param host
      * @param port
      * @param count
@@ -197,28 +194,41 @@ public class RemoteCacheClientTester
         }
     }
 
-    /** Description of the Method */
+    /**
+     * @param cb
+     * @throws IOException
+     */
     public void handlePut( ICacheElement cb )
         throws IOException
     {
         p( "handlePut> cb=" + cb );
     }
 
-    /** Description of the Method */
+    /**
+     * @param cacheName
+     * @param key
+     * @throws IOException
+     */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
     {
         p( "handleRemove> cacheName=" + cacheName + ", key=" + key );
     }
 
-    /** Description of the Method */
+    /**
+     * @param cacheName
+     * @throws IOException
+     */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
         p( "handleRemove> cacheName=" + cacheName );
     }
 
-    /** Description of the Method */
+    /**
+     * @param cacheName
+     * @throws IOException
+     */
     public void handleDispose( String cacheName )
         throws IOException
     {
@@ -230,9 +240,7 @@ public class RemoteCacheClientTester
      */
     /**
      * The main program for the RemoteCacheClientTest class
-     *
-     * @param args
-     *            The command line arguments
+     * @param args The command line arguments
      * @throws Exception
      */
     public static void main( String[] args )
@@ -270,9 +278,8 @@ public class RemoteCacheClientTester
 
     /**
      * Sets the listenerId attribute of the RemoteCacheClientTest object
-     *
-     * @param id
-     *            The new listenerId value
+     * @param id The new listenerId value
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException
@@ -283,8 +290,8 @@ public class RemoteCacheClientTester
 
     /**
      * Gets the listenerId attribute of the RemoteCacheClientTest object
-     *
      * @return The listenerId value
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException
@@ -292,7 +299,8 @@ public class RemoteCacheClientTester
         return listenerId;
     }
 
-    /** Helper for output, this is an user run test class
+    /**
+     * Helper for output, this is an user run test class
      * @param s
      */
     private static void p( String s )
@@ -300,6 +308,10 @@ public class RemoteCacheClientTester
         System.out.println( s );
     }
 
+    /**
+     * @return null
+     * @throws IOException
+     */
     public String getLocalHostAddress()
         throws IOException
     {
@@ -307,13 +319,12 @@ public class RemoteCacheClientTester
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener#dispose()
+    /**
+     * @throws IOException
      */
     public void dispose()
         throws IOException
     {
         // TODO Auto-generated method stub
-
     }
 }

@@ -20,31 +20,31 @@ package org.apache.jcs.auxiliary.remote.behavior;
  */
 
 /**
- * This holds contants that are used by the remote cache.
- *
+ * This holds constants that are used by the remote cache.
  */
 public interface IRemoteCacheConstants
 {
-
-    /** Mapping to props file value */
-    public final static String REMOTE_CACHE_SERVICE_NAME = "remote.cache.service.name";
-
     /** Mapping to props file value */
     public final static String REMOTE_CACHE_SERVICE_VAL = IRemoteCacheService.class.getName();
 
+    /** Property prefix, should be jcs.remote but this would break existing config. */
+    public final static String PROPERTY_PREFIX = "remote";
+    
     /** Mapping to props file value */
-    public final static String TOMCAT_XML = "remote.tomcat.xml";
+    public final static String REMOTE_CACHE_SERVICE_NAME = PROPERTY_PREFIX + ".cache.service.name";
 
     /** Mapping to props file value */
-    public final static String TOMCAT_ON = "remote.tomcat.on";
+    public final static String TOMCAT_XML = PROPERTY_PREFIX + ".tomcat.xml";
 
     /** Mapping to props file value */
-    public final static String REMOTE_CACHE_SERVICE_PORT = "remote.cache.service.port";
+    public final static String TOMCAT_ON = PROPERTY_PREFIX + ".tomcat.on";
 
     /** Mapping to props file value */
-    public final static String REMOTE_LOCAL_CLUSTER_CONSISTENCY = "remote.cluster.LocalClusterConsistency";
+    public final static String REMOTE_CACHE_SERVICE_PORT = PROPERTY_PREFIX + ".cache.service.port";
 
     /** Mapping to props file value */
-    public final static String REMOTE_ALLOW_CLUSTER_GET = "remote.cluster.AllowClusterGet";
+    public final static String REMOTE_LOCAL_CLUSTER_CONSISTENCY = PROPERTY_PREFIX + ".cluster.LocalClusterConsistency";
 
+    /** Mapping to props file value */
+    public final static String REMOTE_ALLOW_CLUSTER_GET = PROPERTY_PREFIX + ".cluster.AllowClusterGet";
 }

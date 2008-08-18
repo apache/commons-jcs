@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
@@ -38,10 +39,8 @@ import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheInfo;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
-import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -62,6 +61,7 @@ import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
  * Should it dispose itself?
  */
 public abstract class AbstractDiskCache
+    extends AbstractAuxiliaryCache
     implements AuxiliaryCache, Serializable
 {
     /** Don't change. */
@@ -89,20 +89,13 @@ public abstract class AbstractDiskCache
      */
     protected ICacheEventQueue cacheEventQueue;
 
-    /**
-     * Indicates whether the cache is 'alive', defined as having been initialized, but not yet
-     * disposed.
-     */
+    /** Indicates whether the cache is 'alive': initialized, but not yet disposed. */
     protected boolean alive = false;
 
-    /**
-     * Every cache will have a name, subclasses must set this when they are initialized.
-     */
+    /** Every cache will have a name, subclasses must set this when they are initialized. */
     protected String cacheName;
 
-    /**
-     * DEBUG: Keeps a count of the number of purgatory hits for debug messages
-     */
+    /** DEBUG: Keeps a count of the number of purgatory hits for debug messages */
     protected int purgHits = 0;
 
     /**
@@ -110,12 +103,6 @@ public abstract class AbstractDiskCache
      * the item.
      */
     private WriterPreferenceReadWriteLock removeAllLock = new WriterPreferenceReadWriteLock();
-
-    /** An optional event logger */
-    protected ICacheEventLogger cacheEventLogger;
-    
-    /** The serializer. */
-    protected IElementSerializer elementSerializer;    
 
     // ----------------------------------------------------------- constructors
 
@@ -218,7 +205,7 @@ public abstract class AbstractDiskCache
             // Wrap the CacheElement in a PurgatoryElement
             PurgatoryElement pe = new PurgatoryElement( cacheElement );
 
-            // Indicates the the element is eligable to be spooled to disk,
+            // Indicates the the element is eligible to be spooled to disk,
             // this will remain true unless the item is pulled back into
             // memory.
             pe.setSpoolable( true );
@@ -564,27 +551,6 @@ public abstract class AbstractDiskCache
     }
 
     /**
-     * Allows it to be injected.
-     * <p>
-     * @param cacheEventLogger
-     */
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
-    {
-        this.cacheEventLogger = cacheEventLogger;
-    }
-
-    /**
-     * Allows you to inject a custom serializer. A good example would be a compressing standard
-     * serializer.
-     * <p>
-     * @param elementSerializer
-     */
-    public void setElementSerializer( IElementSerializer elementSerializer )
-    {
-        this.elementSerializer = elementSerializer;
-    }
-    
-    /**
      * Cache that implements the CacheListener interface, and calls appropriate methods in its
      * parent class.
      */
@@ -786,4 +752,20 @@ public abstract class AbstractDiskCache
      */
     protected abstract void doDispose();
 
+    /**
+     * Gets the extra info for the event log.
+     * <p>
+     * @return disk location
+     */
+    public String getEventLoggingExtraInfo()
+    {
+        return getDiskLocation();
+    }
+
+    /**
+     * This is used by the event logging.
+     * <p>
+     * @return the location of the disk, either path or ip.
+     */
+    protected abstract String getDiskLocation();
 }

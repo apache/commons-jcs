@@ -66,6 +66,9 @@ public class IndexedDiskElementDescriptor
         this.len = len;
     }
 
+    /**
+     * @return debug string
+     */
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

@@ -36,11 +36,11 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * An instance of RemoteCacheManager corresponds to one remote connection of a specific host and

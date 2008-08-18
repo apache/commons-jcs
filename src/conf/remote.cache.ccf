@@ -19,11 +19,10 @@
 # Registry used to register and provide the IRmiCacheService service.
 registry.host=localhost
 registry.port=1101
-# call back port to local caches.
 remote.cache.service.port=1101
-# cluster setting
 remote.cluster.LocalClusterConsistency=true
-
+#remote.cacheeventlogger=org.apache.jcs.engine.logging.CacheEventLoggerDebugLoggerImpl
+#remote.cacheeventlogger.attributes.logCategoryName=TestEventLogCategory
 
 # #############################################################
 # ################# DEFAULT CACHE REGION  #####################

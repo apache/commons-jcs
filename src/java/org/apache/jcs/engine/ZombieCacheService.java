@@ -21,7 +21,6 @@ package org.apache.jcs.engine;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,16 +28,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheService;
-
 import org.apache.jcs.engine.behavior.IZombie;
 
 /**
- * Zombie adapter for any cache service. balks at every call.
+ * Zombie adapter for any cache service.  Balks at every call.
  */
 public class ZombieCacheService
     implements ICacheService, IZombie
 {
-
+    /** The logger. */
     private static final Log log = LogFactory.getLog( ZombieCacheService.class );
 
     /**
@@ -53,9 +51,10 @@ public class ZombieCacheService
         // zombies have no inner life
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#update(org.apache.jcs.engine.behavior.ICacheElement)
+    /**
+     * Does nothing.
+     * <p>
+     * @param item 
      */
     public void update( ICacheElement item )
     {
@@ -63,21 +62,21 @@ public class ZombieCacheService
     }
 
     /**
-     * @param cacheName 
-     * @param key 
+     * @param cacheName
+     * @param key
      * @return null. zombies have no internal data
-     * */
+     */
     public ICacheElement get( String cacheName, Serializable key )
     {
         return null;
     }
 
     /**
-     * Returns an empty map.  Zombies have no internal data.
+     * Returns an empty map. Zombies have no internal data.
      * <p>
-     * @param cacheName 
+     * @param cacheName
      * @param keys
-     * @return an empty map 
+     * @return an empty map
      */
     public Map getMultiple( String cacheName, Set keys )
     {

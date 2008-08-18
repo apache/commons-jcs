@@ -23,7 +23,6 @@ import java.io.Serializable;
 
 /**
  * Description of the Class
- *
  */
 public class GroupAttrName
     implements Serializable
@@ -40,7 +39,6 @@ public class GroupAttrName
 
     /**
      * Constructor for the GroupAttrName object
-     *
      * @param groupId
      * @param attrName
      */
@@ -58,9 +56,7 @@ public class GroupAttrName
 
     /**
      * Tests object equality.
-     *
-     * @param obj
-     *            The <code>GroupAttrName</code> instance to test.
+     * @param obj The <code>GroupAttrName</code> instance to test.
      * @return Whether equal.
      */
     public boolean equals( Object obj )
@@ -74,17 +70,15 @@ public class GroupAttrName
     }
 
     /**
-     * @return A hash code based on the hash code of {@ #groupid}and
-     *         {@link #attrName}.
+     * @return A hash code based on the hash code of @ #groupid} and {@link #attrName}.
      */
     public int hashCode()
     {
         return groupId.hashCode() ^ attrName.hashCode();
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * @return the cached value.
      */
     public String toString()
     {

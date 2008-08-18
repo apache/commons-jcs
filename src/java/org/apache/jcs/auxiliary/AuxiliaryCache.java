@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -32,7 +32,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * ICache, but I anticipate that will change. For example, there will be a mechanism for determining
  * the type (disk/lateral/remote) of the auxiliary here -- and the existing getCacheType will be
  * removed from ICache.
- * @version $Id$
  */
 public interface AuxiliaryCache
     extends ICache

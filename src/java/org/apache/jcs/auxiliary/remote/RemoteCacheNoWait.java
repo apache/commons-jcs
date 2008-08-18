@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
@@ -39,17 +40,16 @@ import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * The RemoteCacheNoWait wraps the RemoteCacheClient.  The client holds a handle on the RemoteCacheService.
+ * The RemoteCacheNoWait wraps the RemoteCacheClient. The client holds a handle on the
+ * RemoteCacheService.
  * <p>
  * Used to queue up update requests to the underlying cache. These requests will be processed in
  * their order of arrival via the cache event queue processor.
@@ -68,6 +68,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * complicated worker queues.
  */
 public class RemoteCacheNoWait
+    extends AbstractAuxiliaryCache
     implements AuxiliaryCache
 {
     /** For serialization. Don't change. */
@@ -93,12 +94,6 @@ public class RemoteCacheNoWait
 
     /** how many times put has been called. */
     private int putCount = 0;
-
-    /** An optional event logger */
-    private ICacheEventLogger cacheEventLogger;
-
-    /** The serializer. */
-    private IElementSerializer elementSerializer;
 
     /**
      * Constructs with the given remote cache, and fires up an event queue for asynchronous
@@ -414,27 +409,6 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * Allows it to be injected.
-     * <p>
-     * @param cacheEventLogger
-     */
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
-    {
-        this.cacheEventLogger = cacheEventLogger;
-    }
-
-    /**
-     * Allows you to inject a custom serializer. A good example would be a compressing standard
-     * serializer.
-     * <p>
-     * @param elementSerializer
-     */
-    public void setElementSerializer( IElementSerializer elementSerializer )
-    {
-        this.elementSerializer = elementSerializer;
-    }
-
-    /**
      * Returns the stats and the cache.toString().
      * <p>
      * (non-Javadoc)
@@ -532,5 +506,15 @@ public class RemoteCacheNoWait
         stats.setStatElements( ses );
 
         return stats;
+    }
+
+    /**
+     * this won't be called since we don't do ICache logging here.
+     * <p>
+     * @return String
+     */
+    public String getEventLoggingExtraInfo()
+    {
+        return "Remote Cache No Wait";
     }
 }

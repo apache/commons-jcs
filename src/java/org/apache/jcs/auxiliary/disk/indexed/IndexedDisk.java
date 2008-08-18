@@ -308,4 +308,14 @@ class IndexedDisk
         }
         raf.setLength( length );
     }
+    
+    /**
+     * This is used for debugging.
+     * <p>
+     * @return the file path.
+     */
+    protected String getFilePath()
+    {
+        return filepath;
+    }
 }

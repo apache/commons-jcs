@@ -31,12 +31,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.utils.config.OptionConverter;
 import org.apache.jcs.utils.config.PropertySetter;
 
@@ -59,25 +60,12 @@ public class CompositeCacheConfigurator
 
     final static String AUXILIARY_PREFIX = "jcs.auxiliary.";
 
+    /** .attributes */
     final static String ATTRIBUTE_PREFIX = ".attributes";
 
     final static String CACHE_ATTRIBUTE_PREFIX = ".cacheattributes";
 
     final static String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
-
-    /**
-     * jcs.auxiliary.NAME.cacheeventlogger=CLASSNAME
-     * <p>
-     * jcs.auxiliary.NAME.cacheeventlogger.attributes.CUSTOMPROPERTY=VALUE
-     */
-    final static String CACHE_EVENT_LOGGER_PREFIX = ".cacheeventlogger";
-
-    /**
-     * jcs.auxiliary.NAME.serializer=CLASSNAME
-     * <p>
-     * jcs.auxiliary.NAME.serializer.attributes.CUSTOMPROPERTY=VALUE
-     */
-    final static String SERIALIZER_PREFIX = ".serializer";
 
     private CompositeCacheManager compositeCacheManager;
 
@@ -559,11 +547,13 @@ public class CompositeCacheConfigurator
         // GET CACHE FROM FACTORY WITH ATTRIBUTES
         auxAttr.setCacheName( regName );
 
+        String auxPrefix = AUXILIARY_PREFIX + auxName;
+        
         // CONFIGURE THE EVENT LOGGER
-        ICacheEventLogger cacheEventLogger = parseCacheEventLogger( props, auxName );
+        ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxName );
 
         // CONFIGURE THE ELEMENT SERIALIZER
-        IElementSerializer elementSerializer = parseElementSerializer( props, auxName );
+        IElementSerializer elementSerializer = AuxiliaryCacheConfigurator.parseElementSerializer( props, auxName );
 
         // Consider putting the compositeCache back in the factory interface
         // since the manager may not know about it at this point.
@@ -572,56 +562,5 @@ public class CompositeCacheConfigurator
         auxCache = auxFac.createCache( auxAttr, compositeCacheManager, cacheEventLogger, elementSerializer );
 
         return auxCache;
-    }
-
-    /**
-     * Parses the event logger config, if there is any for the auxiliary.
-     * <p>
-     * @param props
-     * @param auxName
-     * @return cacheEventLogger
-     */
-    protected ICacheEventLogger parseCacheEventLogger( Properties props, String auxName )
-    {
-        ICacheEventLogger cacheEventLogger = null;
-
-        // auxFactory was not previously initialized.
-        String eventLoggerClassName = AUXILIARY_PREFIX + auxName + CACHE_EVENT_LOGGER_PREFIX;
-        cacheEventLogger = (ICacheEventLogger) OptionConverter
-            .instantiateByKey( props, eventLoggerClassName, org.apache.jcs.engine.behavior.ICacheEventLogger.class,
-                               null );
-        if ( cacheEventLogger != null )
-        {
-            String cacheEventLoggerAttributePrefix = AUXILIARY_PREFIX + auxName + CACHE_EVENT_LOGGER_PREFIX
-                + ATTRIBUTE_PREFIX;
-            PropertySetter.setProperties( cacheEventLogger, props, cacheEventLoggerAttributePrefix + "." );
-        }
-        return cacheEventLogger;
-    }
-
-    /**
-     * Parses the element config, if there is any for the auxiliary.
-     * <p>
-     * @param props
-     * @param auxName
-     * @return cacheEventLogger
-     */
-    protected IElementSerializer parseElementSerializer( Properties props, String auxName )
-    {
-        // TODO take in the entire prop key
-        
-        IElementSerializer elementSerializer = null;
-
-        // auxFactory was not previously initialized.
-        String elementSerializerClassName = AUXILIARY_PREFIX + auxName + SERIALIZER_PREFIX;
-        elementSerializer = (IElementSerializer) OptionConverter
-            .instantiateByKey( props, elementSerializerClassName,
-                               org.apache.jcs.engine.behavior.IElementSerializer.class, null );
-        if ( elementSerializer != null )
-        {
-            String cacheEventLoggerAttributePrefix = AUXILIARY_PREFIX + auxName + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
-            PropertySetter.setProperties( elementSerializer, props, cacheEventLoggerAttributePrefix + "." );
-        }
-        return elementSerializer;
     }
 }

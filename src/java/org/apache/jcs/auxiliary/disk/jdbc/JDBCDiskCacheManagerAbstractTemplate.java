@@ -33,35 +33,32 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This class serves as an abstract template for JDBCDiskCache Manager. The MySQL JDBC Disk Cache
- * needs many of the same features as the generic maanger.
+ * needs many of the same features as the generic manager.
  * <p>
  * @author Aaron Smuts
  */
 public abstract class JDBCDiskCacheManagerAbstractTemplate
     implements AuxiliaryCacheManager
 {
+    /** Don't change. */
+    private static final long serialVersionUID = 218557927622128905L;
+
     /** The logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManagerAbstractTemplate.class );
 
-    /**
-     * Incremented on getIntance, decremented on release.
-     */
+    /** Incremented on getIntance, decremented on release.  */
     protected static int clients;
 
-    /**
-     * A map of JDBCDiskCache objects to region names.
-     */
+    /** A map of JDBCDiskCache objects to region names.  */
     protected static Hashtable caches = new Hashtable();
 
     /**
      * A map of TableState objects to table names. Each cache has a table state object, which is
-     * used to determin if any long processes such as deletes or optimizations are running.
+     * used to determine if any long processes such as deletes or optimizations are running.
      */
     protected static Hashtable tableStates = new Hashtable();
 
-    /**
-     * The background disk shrinker, one for all regions.
-     */
+    /** The background disk shrinker, one for all regions.  */
     private ClockDaemon shrinkerDaemon;
 
     /**
@@ -203,9 +200,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     }
 
     /**
-     * Allows us to set the daemon status on the clockdaemon
-     * <p>
-     * @author aaronsm
+     * Allows us to set the daemon status on the clock-daemon
      */
     class MyThreadFactory
         implements ThreadFactory

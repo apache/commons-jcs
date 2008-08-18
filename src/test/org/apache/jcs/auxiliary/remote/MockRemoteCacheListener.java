@@ -65,6 +65,8 @@ public class MockRemoteCacheListener
 
     /**
      * returns the listener id, which can be setup.
+     * @return 
+     * @throws IOException 
      */
     public long getListenerId()
         throws IOException
@@ -80,6 +82,8 @@ public class MockRemoteCacheListener
 
     /**
      * Return the setup remoteType.
+     * @return 
+     * @throws IOException 
      */
     public int getRemoteType()
         throws IOException

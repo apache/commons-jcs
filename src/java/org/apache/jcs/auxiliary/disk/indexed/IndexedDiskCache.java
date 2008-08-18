@@ -43,6 +43,8 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.engine.logging.behavior.ICacheEvent;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -86,7 +88,7 @@ public class IndexedDiskCache
 
     boolean isShutdownOptimizationEnabled = true;
 
-    /** are we currenlty optimizing the files */
+    /** are we currently optimizing the files */
     boolean isOptimizing = false;
 
     private int timesOptimized = 0;
@@ -114,7 +116,6 @@ public class IndexedDiskCache
     private long bytesFree = 0;
 
     private int hitCount = 0;
-       
 
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechansism.
@@ -410,6 +411,25 @@ public class IndexedDiskCache
      */
     public void doUpdate( ICacheElement ce )
     {
+        ICacheEvent cacheEvent = createICacheEvent( ce, ICacheEventLogger.UPDATE_EVENT );
+        try
+        {
+            processUpdate( ce );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Update the disk cache. Called from the Queue. Makes sure the Item has not been retireved from
+     * purgatory while in queue for disk. Remove items from purgatory when they go to disk.
+     * <p>
+     * @param ce The ICacheElement to put to disk.
+     */
+    private void processUpdate( ICacheElement ce )
+    {
         if ( !alive )
         {
             log.error( logCacheName + "No longer alive; aborting put of key = " + ce.getKey() );
@@ -517,10 +537,29 @@ public class IndexedDiskCache
      */
     protected ICacheElement doGet( Serializable key )
     {
+        ICacheElement object = null;
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.GET_EVENT );
+        try
+        {
+            object = processGet( key, object );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+        return object;
+    }
+
+    /**
+     * @param key
+     * @return ICacheElement or null
+     * @see AbstractDiskCache#doGet
+     */
+    private ICacheElement processGet( Serializable key, ICacheElement object )
+    {
         if ( !alive )
         {
             log.error( logCacheName + "No longer alive so returning null for key = " + key );
-
             return null;
         }
 
@@ -529,7 +568,6 @@ public class IndexedDiskCache
             log.debug( logCacheName + "Trying to get from disk: " + key );
         }
 
-        ICacheElement object = null;
         try
         {
             storageLock.readLock().acquire();
@@ -556,7 +594,6 @@ public class IndexedDiskCache
         {
             log.error( logCacheName + "Failure getting from disk, key = " + key, e );
         }
-
         return object;
     }
 
@@ -636,13 +673,33 @@ public class IndexedDiskCache
     }
 
     /**
-     * Returns true if the removal was succesful; or false if there is nothing to remove. Current
+     * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always result in a disk orphan.
      * <p>
      * @return true if at least one item was removed.
      * @param key
      */
     public boolean doRemove( Serializable key )
+    {
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
+        try
+        {
+            return processRemove( key );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Returns true if the removal was successful; or false if there is nothing to remove. Current
+     * implementation always result in a disk orphan.
+     * <p>
+     * @return true if at least one item was removed.
+     * @param key
+     */
+    private boolean processRemove( Serializable key )
     {
         if ( !alive )
         {
@@ -689,7 +746,7 @@ public class IndexedDiskCache
             reset();
         }
 
-        // this increments the removecount.
+        // this increments the remove count.
         // there is no reason to call this if an item was not removed.
         if ( removed )
         {
@@ -811,6 +868,7 @@ public class IndexedDiskCache
      */
     public void doRemoveAll()
     {
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
         try
         {
             reset();
@@ -819,6 +877,10 @@ public class IndexedDiskCache
         {
             log.error( logCacheName + "Problem removing all.", e );
             reset();
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -914,27 +976,35 @@ public class IndexedDiskCache
      * Dispose of the disk cache in a background thread. Joins against this thread to put a cap on
      * the disposal time.
      * <p>
-     * @todo make dispose window configurable.
+     * TODO make dispose window configurable.
      */
     public void doDispose()
     {
-        Runnable disR = new Runnable()
-        {
-            public void run()
-            {
-                disposeInternal();
-            }
-        };
-        Thread t = new Thread( disR, "IndexedDiskCache-DisposalThread" );
-        t.start();
-        // wait up to 60 seconds for dispose and then quit if not done.
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
-            t.join( 60 * 1000 );
+            Runnable disR = new Runnable()
+            {
+                public void run()
+                {
+                    disposeInternal();
+                }
+            };
+            Thread t = new Thread( disR, "IndexedDiskCache-DisposalThread" );
+            t.start();
+            // wait up to 60 seconds for dispose and then quit if not done.
+            try
+            {
+                t.join( 60 * 1000 );
+            }
+            catch ( InterruptedException ex )
+            {
+                log.error( logCacheName + "Interrupted while waiting for disposal thread to finish.", ex );
+            }
         }
-        catch ( InterruptedException ex )
+        finally
         {
-            log.error( logCacheName + "Interrupted while waiting for disposal thread to finish.", ex );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -1077,21 +1147,17 @@ public class IndexedDiskCache
     /**
      * File optimization is handled by this method. It works as follows:
      * <ol>
-     * <li>Shutdown recycling and turn on queuing of puts. </li>
-     * <li>Take a snapshot of the current descriptors. If there are any removes, ignore them, as
-     * they will be compacted during the next optimization.</li>
-     * <li>Optimize the snapshot. For each descriptor:
+     * <li>Shutdown recycling and turn on queuing of puts. </li> <li>Take a snapshot of the current
+     * descriptors. If there are any removes, ignore them, as they will be compacted during the next
+     * optimization.</li> <li>Optimize the snapshot. For each descriptor:
      * <ol>
-     * <li>Obtain the write-lock.</li>
-     * <li>Shift the element on the disk, in order to compact out the free space. </li>
-     * <li>Release the write-lock. This allows elements to still be accessible during optimization.</li>
+     * <li>Obtain the write-lock.</li> <li>Shift the element on the disk, in order to compact out
+     * the free space. </li> <li>Release the write-lock. This allows elements to still be accessible
+     * during optimization.</li>
      * </ol>
-     * <li>Obtain the write-lock.</li>
-     * <li>All queued puts are made at the end of the file. Optimize these under a single
-     * write-lock.</li>
-     * <li>Truncate the file.</li>
-     * <li>Release the write-lock.</li>
-     * <li>Restore system to standard operation.</li>
+     * <li>Obtain the write-lock.</li> <li>All queued puts are made at the end of the file. Optimize
+     * these under a single write-lock.</li> <li>Truncate the file.</li> <li>Release the write-lock.
+     * </li> <li>Restore system to standard operation.</li>
      * </ol>
      */
     protected void optimizeFile()
@@ -1519,6 +1585,16 @@ public class IndexedDiskCache
     }
 
     /**
+     * This is used by the event logging.
+     * <p>
+     * @return the location of the disk, either path or ip.
+     */
+    protected String getDiskLocation()
+    {
+        return dataFile.getFilePath();
+    }
+
+    /**
      * Compares IndexedDiskElementDescriptor based on their position.
      * <p>
      */
@@ -1551,8 +1627,8 @@ public class IndexedDiskCache
     }
 
     /**
-     * Class for recylcing and lru. This implments the LRU overflow callback, so we can add items to
-     * the recycle bin.
+     * Class for recylcing and lru. This implements the LRU overflow callback, so we can add items
+     * to the recycle bin.
      */
     public class LRUMap
         extends LRUMapJCS
@@ -1582,7 +1658,7 @@ public class IndexedDiskCache
         }
 
         /**
-         * This is called when the may key size is reaced. The least recently used item will be
+         * This is called when the may key size is reached. The least recently used item will be
          * passed here. We will store the position and size of the spot on disk in the recycle bin.
          * <p>
          * @param key

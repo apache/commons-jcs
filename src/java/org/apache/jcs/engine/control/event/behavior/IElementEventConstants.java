@@ -21,54 +21,34 @@ package org.apache.jcs.engine.control.event.behavior;
 
 /**
  * This describes the events that an item can encounter.
- *
  */
 public interface IElementEventConstants
 {
-
-    /**
-     * Background expiration
-     */
+    /** Background expiration */
     public final static int ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND = 0;
 
-    /**
-     * Expiration discovered on request
-     */
+    /*** Expiration discovered on request */
     public final static int ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST = 1;
 
-    /**
-     * Background expiration
-     */
+    /** Background expiration */
     public final static int ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND = 2;
 
-    /**
-     * Expiration discovered on request
-     */
+    /** Expiration discovered on request */
     public final static int ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST = 3;
 
-    /**
-     * Moving from memory to disk (what if no disk?)
-     */
+    /** Moving from memory to disk (what if no disk?) */
     public final static int ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE = 4;
 
-    /**
-     * Moving from memory to disk (what if no disk?)
-     */
+    /** Moving from memory to disk (what if no disk?) */
     public final static int ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE = 5;
 
-    /**
-     * Moving from memory to disk, but item is not spoolable
-     */
+    /** Moving from memory to disk, but item is not spoolable */
     public final static int ELEMENT_EVENT_SPOOLED_NOT_ALLOWED = 6;
 
-    /**
-     * Removed activley by a remove command. (Could distinguish between local
-     * and remote)
-     */
+    /** Removed actively by a remove command. (Could distinguish between local and remote) */
     //public final static int ELEMENT_EVENT_REMOVED = 7;
     /**
-     * Element was requested from cache. Not sure we ever want to implement
-     * this.
+     * Element was requested from cache. Not sure we ever want to implement this.
      */
     //public final static int ELEMENT_EVENT_GET = 8;
 }

@@ -14,12 +14,15 @@ rem "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
-@rem echo off
+@echo off
 
 call prep.bat
 
 :run
 rem set DBUGPARM=-classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=5000,suspend=n
-%JAVA_HOME%\bin\java %DBUGPARM% -verbosegc -XX:+PrintTenuringDistribution -ms10m -mx200m -classpath %CLASSPATH% "-Djava.security.policy=%CURDIR%\src\conf\cache.policy" org.apache.jcs.auxiliary.remote.server.RemoteCacheServerFactory /remote.cache%1.ccf
+
+rem -XX:+PrintTenuringDistribution
+
+java %DBUGPARM% -verbosegc  -ms10m -mx200m -classpath %CLASSPATH% "-Djava.security.policy=%CURDIR%\src\conf\cache.policy" org.apache.jcs.auxiliary.remote.server.RemoteCacheServerFactory /remote.cache%1.ccf
 
 

@@ -1023,4 +1023,14 @@ public class JDBCDiskCache
     {
         return this.getStats();
     }
+    
+    /**
+     * This is used by the event logging.
+     * <p>
+     * @return the location of the disk, either path or ip.
+     */
+    protected String getDiskLocation()
+    {
+        return this.jdbcDiskCacheAttributes.getUrl();
+    }    
 }

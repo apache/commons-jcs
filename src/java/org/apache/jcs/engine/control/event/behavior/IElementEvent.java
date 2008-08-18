@@ -23,18 +23,15 @@ import java.io.Serializable;
 
 /**
  * Defines how an element event object should behave.
- *
  */
 public interface IElementEvent
     extends Serializable
 {
-
     /**
-     * Gets the elementEvent attribute of the IElementEvent object. This code is
-     * Contained in the IElememtEventConstants class.
-     *
+     * Gets the elementEvent attribute of the IElementEvent object. This code is Contained in the
+     * IElememtEventConstants class.
+     *<p>
      * @return The elementEvent value
      */
     public int getElementEvent();
-
 }

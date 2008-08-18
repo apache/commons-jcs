@@ -39,23 +39,28 @@ import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttribu
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheListeners;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.logging.CacheEvent;
+import org.apache.jcs.engine.logging.behavior.ICacheEvent;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
-/*
+/**
  * This class provides remote cache services. The remote cache server propagates events from local
  * caches to other local caches. It can also store cached data, making it available to new clients.
- * <p> Remote cache servers can be clustered. If the cache used by this remote cache is configured
- * to use a remote cache of type cluster, the two remote caches will communicate with each other.
+ * <p>
+ * Remote cache servers can be clustered. If the cache used by this remote cache is configured to
+ * use a remote cache of type cluster, the two remote caches will communicate with each other.
  * Remote and put requests can be sent from one remote to another. If they are configured to
  * broadcast such event to their client, then remove an puts can be sent to all locals in the
- * cluster. <p> Get requests are made between clustered servers if AllowClusterGet is true. You can
- * setup several clients to use one remote server and several to use another. The get locad will be
- * distributed between the two servers. Since caches are usually high get and low put, this should
- * allow you to scale.
+ * cluster.
+ * <p>
+ * Get requests are made between clustered servers if AllowClusterGet is true. You can setup several
+ * clients to use one remote server and several to use another. The get local will be distributed
+ * between the two servers. Since caches are usually high get and low put, this should allow you to
+ * scale.
  */
 class RemoteCacheServer
     extends UnicastRemoteObject
@@ -76,8 +81,10 @@ class RemoteCacheServer
     /** Maps cache name to CacheListeners object. association of listeners (regions). */
     private final Hashtable cacheListenersMap = new Hashtable();
 
+    /** maps cluster listeners to regions. */
     private final Hashtable clusterListenersMap = new Hashtable();
 
+    /** The central hub */
     private CompositeCacheManager cacheManager;
 
     /** relates listener id with a type */
@@ -97,8 +104,11 @@ class RemoteCacheServer
     /** An optional event logger */
     private ICacheEventLogger cacheEventLogger;
 
+    /** If there is no event logger, we will return this event for all create calls. */
+    private static final ICacheEvent EMPTY_ICACHE_EVENT = new CacheEvent();
+
     /**
-     * Constructor for the RemoteCacheServer object. Thiks initializes the server with the values
+     * Constructor for the RemoteCacheServer object. This initializes the server with the values
      * from the config file.
      * <p>
      * @param rcsa
@@ -188,14 +198,14 @@ class RemoteCacheServer
     public void update( ICacheElement item, long requesterId )
         throws IOException
     {
-        logEventStart( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
         try
         {
             processUpdate( item, requesterId );
         }
         finally
         {
-            logEventFinish( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -330,8 +340,8 @@ class RemoteCacheServer
         {
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logError( "RemoteCacheServer", item.getCacheName(), ICacheEventLogger.UPDATE_EVENT, e
-                    .getMessage(), item );
+                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.UPDATE_EVENT, e.getMessage()
+                    + " REGION: " + item.getCacheName() + " ITEM: " + item );
             }
 
             log.error( "Trouble in Update. requesterId [" + requesterId + "]", e );
@@ -403,14 +413,14 @@ class RemoteCacheServer
         throws IOException
     {
         ICacheElement element = null;
-        logEventStart( cacheName, key, requesterId, ICacheEventLogger.GET_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.GET_EVENT );
         try
         {
             element = processGet( cacheName, key, requesterId );
         }
         finally
         {
-            logEventFinish( element, requesterId, ICacheEventLogger.GET_EVENT );
+            logICacheEvent( cacheEvent );
         }
         return element;
     }
@@ -458,8 +468,8 @@ class RemoteCacheServer
 
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logError( "RemoteCacheServer", cacheName, ICacheEventLogger.GET_EVENT, e.getMessage(),
-                                           key );
+                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GET_EVENT, e.getMessage() + cacheName
+                    + " KEY: " + key );
             }
         }
 
@@ -555,14 +565,14 @@ class RemoteCacheServer
     public Map getMultiple( String cacheName, Set keys, long requesterId )
         throws IOException
     {
-        logEventStart( cacheName, (Serializable) keys, requesterId, ICacheEventLogger.GETMULTIPLE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId, ICacheEventLogger.GETMULTIPLE_EVENT );
         try
         {
             return processGetMultiple( cacheName, keys, requesterId );
         }
         finally
         {
-            logEventEnd( cacheName, (Serializable) keys, requesterId, ICacheEventLogger.GETMULTIPLE_EVENT );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -724,14 +734,14 @@ class RemoteCacheServer
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
-        logEventStart( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
         try
         {
             processRemove( cacheName, key, requesterId );
         }
         finally
         {
-            logEventEnd( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
+            logICacheEvent( cacheEvent );
         }
 
         return;
@@ -835,14 +845,14 @@ class RemoteCacheServer
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
-        logEventStart( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
         try
         {
             processRemoveAll( cacheName, requesterId );
         }
         finally
         {
-            logEventEnd( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
+            logICacheEvent( cacheEvent );
         }
         return;
     }
@@ -938,7 +948,7 @@ class RemoteCacheServer
     public void dispose( String cacheName, long requesterId )
         throws IOException
     {
-        logEventStart( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             if ( log.isInfoEnabled() )
@@ -966,7 +976,7 @@ class RemoteCacheServer
         }
         finally
         {
-            logEventEnd( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
+            logICacheEvent( cacheEvent );
         }
         return;
     }
@@ -1324,7 +1334,7 @@ class RemoteCacheServer
         // cleanup
         idTypeMap.remove( new Long( listenerId ) );
         idIPMap.remove( new Long( listenerId ) );
-        
+
         if ( log.isInfoEnabled() )
         {
             log.info( "After removing listener [" + listenerId + "] cache region " + cacheName + "'s listener size ["
@@ -1446,13 +1456,15 @@ class RemoteCacheServer
      * @param item
      * @param requesterId
      */
-    private void logEventStart( ICacheElement item, long requesterId, String eventName )
+    private ICacheEvent createICacheEvent( ICacheElement item, long requesterId, String eventName )
     {
-        if ( cacheEventLogger != null )
+        if ( cacheEventLogger == null )
         {
-            String ipAddress = getIPAddressForRequesterId( requesterId );
-            cacheEventLogger.logStartICacheEvent( "RemoteCacheServer", item.getCacheName(), eventName, ipAddress, item );
+            return EMPTY_ICACHE_EVENT;
         }
+        String ipAddress = getIPAddressForRequesterId( requesterId );
+        return cacheEventLogger
+            .createICacheEvent( "RemoteCacheServer", item.getCacheName(), eventName, ipAddress, item );
     }
 
     /**
@@ -1462,13 +1474,14 @@ class RemoteCacheServer
      * @param key
      * @param requesterId
      */
-    private void logEventStart( String cacheName, Serializable key, long requesterId, String eventName )
+    private ICacheEvent createICacheEvent( String cacheName, Serializable key, long requesterId, String eventName )
     {
-        if ( cacheEventLogger != null )
+        if ( cacheEventLogger == null )
         {
-            String ipAddress = getIPAddressForRequesterId( requesterId );
-            cacheEventLogger.logStartICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
+            return EMPTY_ICACHE_EVENT;
         }
+        String ipAddress = getIPAddressForRequesterId( requesterId );
+        return cacheEventLogger.createICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
     }
 
     /**
@@ -1477,29 +1490,11 @@ class RemoteCacheServer
      * @param item
      * @param requesterId
      */
-    private void logEventFinish( ICacheElement item, long requesterId, String eventName )
+    protected void logICacheEvent( ICacheEvent cacheEvent )
     {
         if ( cacheEventLogger != null )
         {
-            String ipAddress = getIPAddressForRequesterId( requesterId );
-            cacheEventLogger.logEndICacheEvent( "RemoteCacheServer", item.getCacheName(), eventName, ipAddress, item );
-        }
-    }
-
-    /**
-     * Logs an event if an event logger is configured.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     */
-    private void logEventEnd( String cacheName, Serializable key, long requesterId, String eventName )
-    {
-        if ( cacheEventLogger != null )
-        {
-            String ipAddress = getIPAddressForRequesterId( requesterId );
-            cacheEventLogger.logEndICacheEvent( "RemoteCacheServer", cacheName, eventName,
-                                                ipAddress, key );
+            cacheEventLogger.logICacheEvent( cacheEvent );
         }
     }
 
@@ -1513,10 +1508,10 @@ class RemoteCacheServer
      */
     protected String getIPAddressForRequesterId( long requesterId )
     {
-        String ipAddress = (String)idIPMap.get( new Long( requesterId ) );
+        String ipAddress = (String) idIPMap.get( new Long( requesterId ) );
         return ipAddress;
     }
-    
+
     /**
      * Allows it to be injected.
      * <p>

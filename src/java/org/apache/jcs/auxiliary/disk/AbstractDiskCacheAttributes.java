@@ -25,13 +25,14 @@ import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 
 /**
  * This has common attributes that any conceivable disk cache would need.
- * <p>
- * @author aaronsm
  */
 public abstract class AbstractDiskCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements IDiskCacheAttributes
 {
+    /** Don't change. */
+    private static final long serialVersionUID = 8306631920391711229L;
+
     /** path to disk */
     protected String diskPath;
 
@@ -41,7 +42,7 @@ public abstract class AbstractDiskCacheAttributes
     /** default to 5000 */
     protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFUALT;
 
-    /** Default amount of time to allow for keypersistence on shutdown */
+    /** Default amount of time to allow for key persistence on shutdown */
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
 
     /**

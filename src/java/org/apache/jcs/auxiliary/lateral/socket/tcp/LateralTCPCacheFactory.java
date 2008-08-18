@@ -34,9 +34,9 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttr
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryManager;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryService;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each lateral service / local

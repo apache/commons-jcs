@@ -974,7 +974,7 @@ public class CompositeCache
     }
 
     /**
-     * Do not propogate removeall laterally or remotely.
+     * Do not propagate removeall laterally or remotely.
      * <p>
      * @param key
      * @return true if the item was already in the cache.
@@ -987,12 +987,12 @@ public class CompositeCache
     /**
      * fromRemote: If a remove call was made on a cache with both, then the remote should have been
      * called. If it wasn't then the remote is down. we'll assume it is down for all. If it did come
-     * from the remote then the cache is remotely configured and lateral removal is unncessary. If
+     * from the remote then the cache is remotely configured and lateral removal is unnecessary. If
      * it came laterally then lateral removal is unnecessary. Does this assume that there is only
-     * one lateral and remote for the cache? Not really, the intial removal should take care of the
-     * problem if the source cache was similiarly configured. Otherwise the remote cache, if it had
+     * one lateral and remote for the cache? Not really, the initial removal should take care of the
+     * problem if the source cache was similarly configured. Otherwise the remote cache, if it had
      * no laterals, would remove all the elements from remotely configured caches, but if those
-     * caches had some other wierd laterals that were not remotely configured, only laterally
+     * caches had some other weird laterals that were not remotely configured, only laterally
      * propagated then they would go out of synch. The same could happen for multiple remotes. If
      * this looks necessary we will need to build in an identifier to specify the source of a
      * removal.
@@ -1133,7 +1133,7 @@ public class CompositeCache
     }
 
     /**
-     * Flushes all cache items from memory to auxilliary caches and close the auxilliary caches.
+     * Flushes all cache items from memory to auxiliary caches and close the auxiliary caches.
      */
     public void dispose()
     {
@@ -1142,8 +1142,8 @@ public class CompositeCache
 
     /**
      * Invoked only by CacheManager. This method disposes of the auxiliaries one by one. For the disk cache, the items in memory
-     * are freed, meaning that they will be sent through the overflow chanel to disk.  After the
-     * auxiliaries are disposed, the memory cache is dispposed.
+     * are freed, meaning that they will be sent through the overflow channel to disk.  After the
+     * auxiliaries are disposed, the memory cache is disposed.
      * <p>
      * @param fromRemote
      */
@@ -1161,7 +1161,7 @@ public class CompositeCache
         }
         alive = false;
 
-        // Dispose of each auxilliary cache, Remote auxilliaries will be
+        // Dispose of each auxiliary cache, Remote auxiliaries will be
         // skipped if 'fromRemote' is true.
 
         for ( int i = 0; i < auxCaches.length; i++ )
@@ -1170,10 +1170,10 @@ public class CompositeCache
             {
                 ICache aux = auxCaches[i];
 
-                // Skip this auxilliary if:
-                // - The auxilliary is null
-                // - The auxilliary is not alive
-                // - The auxilliary is remote and the invocation was remote
+                // Skip this auxiliary if:
+                // - The auxiliary is null
+                // - The auxiliary is not alive
+                // - The auxiliary is remote and the invocation was remote
 
                 if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE
                     || ( fromRemote && aux.getCacheType() == REMOTE_CACHE ) )
@@ -1191,7 +1191,7 @@ public class CompositeCache
                     log.info( "In DISPOSE, [" + this.cacheName + "] auxiliary [" + aux + "]" );
                 }
 
-                // IT USED TO BE THE CASE THAT (If the auxilliary is not a lateral, or the cache
+                // IT USED TO BE THE CASE THAT (If the auxiliary is not a lateral, or the cache
                 // attributes
                 // have 'getUseLateral' set, all the elements currently in
                 // memory are written to the lateral before disposing)

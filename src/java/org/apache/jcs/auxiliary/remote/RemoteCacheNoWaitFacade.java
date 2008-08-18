@@ -35,10 +35,10 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -108,12 +108,12 @@ public class RemoteCacheNoWaitFacade
      * @param noWaits
      * @param rca
      * @param cacheMgr
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
     public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca,
-                                    ICompositeCacheManager cacheMgr,
-                                    ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+                                    ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
+                                    IElementSerializer elementSerializer )
     {
         if ( log.isDebugEnabled() )
         {
@@ -159,8 +159,11 @@ public class RemoteCacheNoWaitFacade
 
             if ( getCacheEventLogger() != null )
             {
-                getCacheEventLogger().logError( "RemoteCacheNoWaitFacade", ce.getCacheName(),
-                                                ICacheEventLogger.UPDATE_EVENT, message + ":" + ex.getMessage(), ce );
+                getCacheEventLogger().logError(
+                                                "RemoteCacheNoWaitFacade",
+                                                ICacheEventLogger.UPDATE_EVENT,
+                                                message + ":" + ex.getMessage() + " REGION: " + ce.getCacheName()
+                                                    + " ELEMENT: " + ce );
             }
 
             // can handle failover here? Is it safe to try the others?
@@ -386,7 +389,8 @@ public class RemoteCacheNoWaitFacade
             if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
             {
                 // start failover, primary recovery process
-                RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this, cacheMgr, cacheEventLogger, elementSerializer );
+                RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this, cacheMgr, cacheEventLogger,
+                                                                                  elementSerializer );
                 // If the returned monitor is null, it means it's already
                 // started elsewhere.
                 if ( runner != null )
@@ -475,7 +479,7 @@ public class RemoteCacheNoWaitFacade
     public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
     {
         this.cacheEventLogger = cacheEventLogger;
-    }      
+    }
 
     /**
      * Allows the failover runner to use this event logger.
@@ -486,7 +490,7 @@ public class RemoteCacheNoWaitFacade
     {
         return cacheEventLogger;
     }
-    
+
     /**
      * Allows you to inject a custom serializer. A good example would be a compressing standard
      * serializer.
@@ -496,5 +500,5 @@ public class RemoteCacheNoWaitFacade
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
         this.elementSerializer = elementSerializer;
-    }    
+    }
 }

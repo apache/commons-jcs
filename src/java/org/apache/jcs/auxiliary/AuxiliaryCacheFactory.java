@@ -15,9 +15,9 @@ package org.apache.jcs.auxiliary;
  * the License.
  */
 
-import org.apache.jcs.engine.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * All auxiliary caches must have a factory that the cache configurator can use to create instances.

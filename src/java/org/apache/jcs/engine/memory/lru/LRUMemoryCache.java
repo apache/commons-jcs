@@ -402,7 +402,7 @@ public class LRUMemoryCache
         list.removeAll();
     }
 
-    // --------------------------- iteration mehods (iteration helpers)
+    // --------------------------- iteration methods (iteration helpers)
     /**
      * iteration aid
      */
