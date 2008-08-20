@@ -33,7 +33,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
@@ -45,7 +45,6 @@ import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IZombie;
-import org.apache.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
@@ -64,7 +63,7 @@ import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
  * failover recovery when an error is encountered.
  */
 public class RemoteCache
-    extends AbstractAuxiliaryCache
+    extends AbstractAuxiliaryCacheEventLogging
     implements IRemoteCacheClient
 {
     /** Don't change. */
@@ -208,29 +207,7 @@ public class RemoteCache
      * @param ce
      * @throws IOException
      */
-    public void update( ICacheElement ce )
-        throws IOException
-    {
-        ICacheEvent cacheEvent = createICacheEvent( ce, ICacheEventLogger.UPDATE_EVENT );
-        try
-        {
-            processUpdate( ce );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Serializes the object and then calls update on the remote server with the byte array. The
-     * byte array is wrapped in a ICacheElementSerialized. This allows the remote server to operate
-     * without any knowledge of caches classes.
-     * <p>
-     * @param ce
-     * @throws IOException
-     */
-    private void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement ce )
         throws IOException
     {
         if ( !this.irca.getGetOnly() )
@@ -256,7 +233,8 @@ public class RemoteCache
             catch ( Exception ex )
             {
                 // event queue will wait and retry
-                handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName(), ICacheEventLogger.UPDATE_EVENT );
+                handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName(),
+                                 ICacheEventLogger.UPDATE_EVENT );
             }
         }
         else
@@ -281,38 +259,10 @@ public class RemoteCache
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
-    public ICacheElement get( Serializable key )
+    protected ICacheElement processGet( Serializable key )
         throws IOException
     {
         ICacheElement retVal = null;
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.GET_EVENT );
-        try
-        {
-            retVal = processGet( key, retVal );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-        return retVal;
-    }
-
-    /**
-     * Synchronously get from the remote cache; if failed, replace the remote handle with a zombie.
-     * <p>
-     * Use threadpool to timeout if a value is set for GetTimeoutMillis
-     * <p>
-     * If we are a cluster client, we need to leave the Element in its serialized form. Cluster
-     * clients cannot deserialize objects. Cluster clients get ICacheElementSerialized objects from
-     * other remote servers.
-     * <p>
-     * @param key
-     * @return ICacheElement, a wrapper around the key, value, and attributes
-     * @throws IOException
-     */
-    private ICacheElement processGet( Serializable key, ICacheElement retVal )
-        throws IOException
-    {
         try
         {
             if ( usePoolForGet )
@@ -350,30 +300,8 @@ public class RemoteCache
      * @param keys
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
-     * @throws IOException
      */
-    public Map getMultiple( Set keys )
-        throws IOException
-    {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, (Serializable) keys, ICacheEventLogger.GETMULTIPLE_EVENT );
-        try
-        {
-            return processGetMultiple( keys );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Gets multiple items from the cache based on the given set of keys.
-     * <p>
-     * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
-     *         data in cache for any of these keys
-     */
-    private Map processGetMultiple( Set keys )
+    protected Map processGetMultiple( Set keys )
         throws IOException
     {
         Map elements = new HashMap();
@@ -477,29 +405,7 @@ public class RemoteCache
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
-    public boolean remove( Serializable key )
-        throws IOException
-    {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
-        try
-        {
-            return processRemove( key );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Synchronously remove from the remote cache; if failed, replace the remote handle with a
-     * zombie.
-     * <p>
-     * @param key
-     * @return boolean, whether or not the item was removed
-     * @throws IOException
-     */
-    private boolean processRemove( Serializable key )
+    protected boolean processRemove( Serializable key )
         throws IOException
     {
         if ( !this.irca.getGetOnly() )
@@ -527,27 +433,19 @@ public class RemoteCache
      * <p>
      * @throws IOException
      */
-    public void removeAll()
+    protected void processRemoveAll()
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
-        try
+        if ( !this.irca.getGetOnly() )
         {
-            if ( !this.irca.getGetOnly() )
+            try
             {
-                try
-                {
-                    remote.removeAll( cacheName, getListenerId() );
-                }
-                catch ( Exception ex )
-                {
-                    handleException( ex, "Failed to remove all from " + cacheName, ICacheEventLogger.REMOVEALL_EVENT );
-                }
+                remote.removeAll( cacheName, getListenerId() );
             }
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
+            catch ( Exception ex )
+            {
+                handleException( ex, "Failed to remove all from " + cacheName, ICacheEventLogger.REMOVEALL_EVENT );
+            }
         }
     }
 
@@ -556,29 +454,21 @@ public class RemoteCache
      * <p>
      * @throws IOException
      */
-    public void dispose()
+    protected void processDispose()
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Disposing of remote cache" );
+        }
         try
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Disposing of remote cache" );
-            }
-            try
-            {
-                listener.dispose();
-            }
-            catch ( Exception ex )
-            {
-                log.error( "Couldn't dispose", ex );
-                handleException( ex, "Failed to dispose [" + cacheName + "]", ICacheEventLogger.DISPOSE_EVENT );
-            }
+            listener.dispose();
         }
-        finally
+        catch ( Exception ex )
         {
-            logICacheEvent( cacheEvent );
+            log.error( "Couldn't dispose", ex );
+            handleException( ex, "Failed to dispose [" + cacheName + "]", ICacheEventLogger.DISPOSE_EVENT );
         }
     }
 
@@ -712,7 +602,8 @@ public class RemoteCache
             {
                 try
                 {
-                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service.", "fixCache" );
+                    handleException( e, "Problem propagating events from Zombie Queue to new Remote Service.",
+                                     "fixCache" );
                 }
                 catch ( IOException e1 )
                 {
@@ -740,7 +631,7 @@ public class RemoteCache
         throws IOException
     {
         String message = "Disabling remote cache due to error: " + msg;
-        
+
         logError( cacheName, "", message );
         log.error( message, ex );
 

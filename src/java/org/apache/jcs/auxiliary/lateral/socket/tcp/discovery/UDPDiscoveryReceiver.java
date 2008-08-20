@@ -38,7 +38,9 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
@@ -79,25 +81,36 @@ public class UDPDiscoveryReceiver
 
     private boolean shutdown = false;
 
+    /** The event logger. */
+    protected ICacheEventLogger cacheEventLogger;
+
+    /** The serializer. */
+    protected IElementSerializer elementSerializer;
+
     /**
      * Constructor for the LateralUDPReceiver object.
      * <p>
      * We determine out own host using InetAddress
-     *
+     *<p>
      * @param service
      * @param multicastAddressString
      * @param multicastPort
      * @param cacheMgr
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @exception IOException
      */
     public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastAddressString, int multicastPort,
-                                ICompositeCacheManager cacheMgr )
+                                 ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
+                                 IElementSerializer elementSerializer )
         throws IOException
     {
         this.service = service;
         this.multicastAddressString = multicastAddressString;
         this.multicastPort = multicastPort;
         this.cacheMgr = cacheMgr;
+        this.cacheEventLogger = cacheEventLogger;
+        this.elementSerializer = elementSerializer;
 
         // create a small thread pool to handle a barage
         pooledExecutor = new PooledExecutor( new BoundedBuffer( 100 ), maxPoolSize );
@@ -124,7 +137,6 @@ public class UDPDiscoveryReceiver
 
     /**
      * Creates the socket for this class.
-     *
      * @param multicastAddressString
      * @param multicastPort
      * @throws IOException
@@ -145,9 +157,8 @@ public class UDPDiscoveryReceiver
     }
 
     /**
-     * Highly unreliable. If it is processing one message while another comes in ,
-     * the second message is lost. This is for low concurency peppering.
-     *
+     * Highly unreliable. If it is processing one message while another comes in , the second
+     * message is lost. This is for low concurency peppering.
      * @return the object message
      * @throws IOException
      */
@@ -238,8 +249,7 @@ public class UDPDiscoveryReceiver
     }
 
     /**
-     * @param cnt
-     *            The cnt to set.
+     * @param cnt The cnt to set.
      */
     public void setCnt( int cnt )
     {
@@ -321,7 +331,8 @@ public class UDPDiscoveryReceiver
                     }
                     lca.setTransmissionType( LateralCacheAttributes.TCP );
                     lca.setTcpServer( message.getHost() + ":" + message.getPort() );
-                    LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr );
+                    LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
+                                                                                     elementSerializer );
 
                     ArrayList regions = message.getCacheNames();
                     if ( regions != null )
@@ -373,9 +384,7 @@ public class UDPDiscoveryReceiver
 
     /**
      * Allows us to set the daemon status on the executor threads
-     *
      * @author aaronsm
-     *
      */
     class MyThreadFactory
         implements ThreadFactory

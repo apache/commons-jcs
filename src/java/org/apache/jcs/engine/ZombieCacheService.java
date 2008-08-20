@@ -31,7 +31,7 @@ import org.apache.jcs.engine.behavior.ICacheService;
 import org.apache.jcs.engine.behavior.IZombie;
 
 /**
- * Zombie adapter for any cache service.  Balks at every call.
+ * Zombie adapter for any cache service. Balks at every call.
  */
 public class ZombieCacheService
     implements ICacheService, IZombie
@@ -54,7 +54,7 @@ public class ZombieCacheService
     /**
      * Does nothing.
      * <p>
-     * @param item 
+     * @param item
      */
     public void update( ICacheElement item )
     {
@@ -101,28 +101,25 @@ public class ZombieCacheService
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String,
-     *      java.io.Serializable)
+    /**
+     * @param cacheName
+     * @param key
      */
     public void remove( String cacheName, Serializable key )
     {
         // zombies have no inner life
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#removeAll(java.lang.String)
+    /**
+     * @param cacheName
      */
     public void removeAll( String cacheName )
     {
         // zombies have no inner life
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#dispose(java.lang.String)
+    /**
+     * @param cacheName
      */
     public void dispose( String cacheName )
     {
@@ -130,14 +127,12 @@ public class ZombieCacheService
         return;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#release()
+    /**
+     * Frees all caches.
      */
     public void release()
     {
         // zombies have no inner life
         return;
     }
-
 }

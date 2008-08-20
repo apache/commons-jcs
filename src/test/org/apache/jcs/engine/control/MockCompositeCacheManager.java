@@ -23,23 +23,24 @@ import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
-/**
- */
+/** For testing. */
 public class MockCompositeCacheManager
     implements ICompositeCacheManager
 {
-
+    /** The cache that was returned. */
     private CompositeCache cache;
 
-    /* (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICompositeCacheManager#getCache(java.lang.String)
+    /**
+     * @param cacheName 
+     * @return Returns a CompositeCache
      */
     public CompositeCache getCache( String cacheName )
     {
         if ( cache == null )
         {
             System.out.println( "Creating mock cache" );
-            CompositeCache newCache = new CompositeCache( cacheName, new CompositeCacheAttributes(), new ElementAttributes() );
+            CompositeCache newCache = new CompositeCache( cacheName, new CompositeCacheAttributes(),
+                                                          new ElementAttributes() );
             this.setCache( newCache );
         }
         return cache;
@@ -60,5 +61,4 @@ public class MockCompositeCacheManager
     {
         return cache;
     }
-
 }

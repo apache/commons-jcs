@@ -33,24 +33,21 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObservable;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- *
- * This service creates a listener that can create lateral caches and add them
- * to the no wait list.
+ * This service creates a listener that can create lateral caches and add them to the no wait list.
  * <p>
  * It also creates a sender that periodically broadcasts its availability.
  * <p>
- * The sender also broadcasts a request for other caches to broadcast their
- * addresses.
- *
+ * The sender also broadcasts a request for other caches to broadcast their addresses.
  * @author Aaron Smuts
- *
  */
 public class UDPDiscoveryService
     implements IShutdownObserver
@@ -83,19 +80,23 @@ public class UDPDiscoveryService
 
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
+    /** The event logger. */
+    protected ICacheEventLogger cacheEventLogger;
+
+    /** The serializer. */
+    protected IElementSerializer elementSerializer;
+
     /**
-     *
-     * @param discoveryAddress
-     *            address to multicast to
-     * @param discoveryPort
-     *            port to multicast to
-     * @param servicePort
-     *            the port this service runs on, the service we are telling
-     *            other about
+     * @param discoveryAddress address to multicast to
+     * @param discoveryPort port to multicast to
+     * @param servicePort the port this service runs on, the service we are telling other about
      * @param cacheMgr
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
     public UDPDiscoveryService( String discoveryAddress, int discoveryPort, int servicePort,
-                               ICompositeCacheManager cacheMgr )
+                                ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
+                                IElementSerializer elementSerializer )
     {
         // register for shutdown notification
         ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( this );
@@ -103,6 +104,8 @@ public class UDPDiscoveryService
         this.setDiscoveryAddress( discoveryAddress );
         this.setDiscoveryPort( discoveryPort );
         this.setServicePort( servicePort );
+        this.cacheEventLogger = cacheEventLogger;
+        this.elementSerializer = elementSerializer;
 
         try
         {
@@ -121,7 +124,8 @@ public class UDPDiscoveryService
         try
         {
             // todo need some kind of recovery here.
-            receiver = new UDPDiscoveryReceiver( this, getDiscoveryAddress(), getDiscoveryPort(), cacheMgr );
+            receiver = new UDPDiscoveryReceiver( this, getDiscoveryAddress(), getDiscoveryPort(), cacheMgr,
+                                                 cacheEventLogger, elementSerializer );
             udpReceiverThread = new Thread( receiver );
             udpReceiverThread.setDaemon( true );
             // udpReceiverThread.setName( t.getName() + "--UDPReceiver" );
@@ -129,8 +133,8 @@ public class UDPDiscoveryService
         }
         catch ( Exception e )
         {
-            log.error( "Problem creating UDPDiscoveryReceiver, address [" + getDiscoveryAddress() + "] port [" + getDiscoveryPort()
-                + "] we won't be able to find any other caches", e );
+            log.error( "Problem creating UDPDiscoveryReceiver, address [" + getDiscoveryAddress() + "] port ["
+                + getDiscoveryPort() + "] we won't be able to find any other caches", e );
         }
 
         // todo only do the passive if receive is inenabled, perhaps set the
@@ -149,13 +153,11 @@ public class UDPDiscoveryService
     }
 
     /**
-     * Adds a nowait facade under this cachename. If one already existed, it
-     * will be overridden.
+     * Adds a nowait facade under this cachename. If one already existed, it will be overridden.
      * <p>
-     * When a broadcast is received from the UDP Discovery receiver, for each
-     * cacheName in the message, the add no wait will be called here. To add a
-     * no wait, the facade is looked up for this cache name.
-     *
+     * When a broadcast is received from the UDP Discovery receiver, for each cacheName in the
+     * message, the add no wait will be called here. To add a no wait, the facade is looked up for
+     * this cache name.
      * @param facade
      * @param cacheName
      * @return true if the facade was not already registered.
@@ -180,10 +182,8 @@ public class UDPDiscoveryService
     }
 
     /**
-     * This adds nowaits to a facde for the region name. If the region has no
-     * facade, then it is not configured to use the lateral cache, and no facde
-     * will be created.
-     *
+     * This adds nowaits to a facde for the region name. If the region has no facade, then it is not
+     * configured to use the lateral cache, and no facde will be created.
      * @param noWait
      */
     protected void addNoWait( LateralCacheNoWait noWait )
@@ -213,11 +213,10 @@ public class UDPDiscoveryService
     }
 
     /**
-     * Send a passive broadcast in response to a request broadcast. Never send a
-     * request for a request. We can respond to our own reques, since a request
-     * broadcast is not intended as a connection request. We might want to only
-     * send messages, so we would send a request, but never a passive broadcast.
-     *
+     * Send a passive broadcast in response to a request broadcast. Never send a request for a
+     * request. We can respond to our own reques, since a request broadcast is not intended as a
+     * connection request. We might want to only send messages, so we would send a request, but
+     * never a passive broadcast.
      */
     protected void serviceRequestBroadcast()
     {
@@ -261,7 +260,6 @@ public class UDPDiscoveryService
 
     /**
      * Get all the cache names we have facades for.
-     *
      * @return
      */
     protected ArrayList getCacheNames()
@@ -279,9 +277,7 @@ public class UDPDiscoveryService
 
     /**
      * Allows us to set the daemon status on the clockdaemon
-     *
      * @author aaronsm
-     *
      */
     class MyThreadFactory
         implements ThreadFactory
@@ -300,10 +296,8 @@ public class UDPDiscoveryService
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ShutdownObserver#shutdown()
+    /**
+     * Shuts down the receiver.
      */
     public void shutdown()
     {
@@ -340,8 +334,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param discoveryAddress
-     *            The discoveryAddress to set.
+     * @param discoveryAddress The discoveryAddress to set.
      */
     protected void setDiscoveryAddress( String discoveryAddress )
     {
@@ -357,8 +350,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param discoveryPort
-     *            The discoveryPort to set.
+     * @param discoveryPort The discoveryPort to set.
      */
     protected void setDiscoveryPort( int discoveryPort )
     {
@@ -374,8 +366,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param servicePort
-     *            The servicePort to set.
+     * @param servicePort The servicePort to set.
      */
     protected void setServicePort( int servicePort )
     {
@@ -391,8 +382,7 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param tCPLateralCacheAttributes
-     *            The tCPLateralCacheAttributes to set.
+     * @param tCPLateralCacheAttributes The tCPLateralCacheAttributes to set.
      */
     public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tCPLateralCacheAttributes )
     {

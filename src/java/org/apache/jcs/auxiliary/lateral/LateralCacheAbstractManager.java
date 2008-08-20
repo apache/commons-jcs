@@ -32,6 +32,8 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
@@ -43,22 +45,22 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
  * This is currently not implemented in the lateral cache.
  * <p>
  *
- * @TODO: - need freeCache, release, getStats - need to find an interface
+ * TODO: - need freeCache, release, getStats - need to find an interface
  *        Acceptable for all - cache managers or a manager within a type
  */
 public abstract class LateralCacheAbstractManager
     implements ILateralCacheManager
 {
+    /** Don't change */
+    private static final long serialVersionUID = -515393179178435508L;
+
+    /** The logger. */
     private final static Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
-    /**
-     * Each manager instance has caches.
-     */
+    /** Each manager instance has caches.   */
     protected final Map caches = new HashMap();
 
-    /**
-     * Description of the Field
-     */
+    /** Configuration */
     protected ILateralCacheAttributes lca;
 
     /**
@@ -73,6 +75,12 @@ public abstract class LateralCacheAbstractManager
      */
     private LateralCacheWatchRepairable lateralWatch;
 
+    /** The event logger. */
+    protected ICacheEventLogger cacheEventLogger;
+
+    /** The serializer. */
+    protected IElementSerializer elementSerializer;
+    
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.
      *
@@ -152,8 +160,9 @@ public abstract class LateralCacheAbstractManager
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager#getCaches()
+    /**
+     * @return Map
+     * 
      */
     public Map getCaches()
     {

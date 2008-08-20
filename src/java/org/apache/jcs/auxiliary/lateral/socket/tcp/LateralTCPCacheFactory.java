@@ -85,7 +85,8 @@ public class LateralTCPCacheFactory
                 }
                 ITCPLateralCacheAttributes lacC = (ITCPLateralCacheAttributes) lac.copy();
                 lacC.setTcpServer( server );
-                LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lacC, cacheMgr );
+                LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lacC, cacheMgr, cacheEventLogger,
+                                                                                 elementSerializer );
                 ICache ic = lcm.getCache( lacC.getCacheName() );
                 if ( ic != null )
                 {
@@ -108,7 +109,7 @@ public class LateralTCPCacheFactory
             .toArray( new LateralCacheNoWait[0] ), (ILateralCacheAttributes) iaca );
 
         // create udp discovery if available.
-        createDiscoveryService( lac, lcnwf, cacheMgr );
+        createDiscoveryService( lac, lcnwf, cacheMgr, cacheEventLogger, elementSerializer );
 
         return lcnwf;
     }
@@ -156,7 +157,9 @@ public class LateralTCPCacheFactory
      * @return null if none is created.
      */
     private UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
-                                                        ICompositeCacheManager cacheMgr )
+                                                        ICompositeCacheManager cacheMgr,
+                                                        ICacheEventLogger cacheEventLogger,
+                                                        IElementSerializer elementSerializer )
     {
         UDPDiscoveryService discovery = null;
 
@@ -165,7 +168,8 @@ public class LateralTCPCacheFactory
         {
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
-            discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr );
+            discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr, cacheEventLogger,
+                                                                      elementSerializer );
 
             discovery.addNoWaitFacade( lcnwf, lac.getCacheName() );
 

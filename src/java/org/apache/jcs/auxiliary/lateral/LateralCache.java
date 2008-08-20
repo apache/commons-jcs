@@ -28,27 +28,30 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.IZombie;
+import org.apache.jcs.engine.stats.Stats;
+import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * Lateral distributor. Returns null on get by default. Net search not
- * implemented.
+ * Lateral distributor. Returns null on get by default. Net search not implemented.
  */
 public class LateralCache
-    implements ICache
+    extends AbstractAuxiliaryCacheEventLogging
 {
+    /** Don't change. */
     private static final long serialVersionUID = 6274549256562382782L;
 
+    /** The logger. */
     private final static Log log = LogFactory.getLog( LateralCache.class );
 
-    // generalize this, use another interface
+    /** generalize this, use another interface */
     private ILateralCacheAttributes cattr;
 
     final String cacheName;
@@ -56,6 +59,7 @@ public class LateralCache
     /** either http, socket.udp, or socket.tcp can set in config */
     private ILateralCacheService lateral;
 
+    /** Monitors the connection. */
     private LateralCacheMonitor monitor;
 
     /**
@@ -90,7 +94,7 @@ public class LateralCache
      * @param ce
      * @throws IOException
      */
-    public void update( ICacheElement ce )
+    protected void processUpdate( ICacheElement ce )
         throws IOException
     {
         try
@@ -115,14 +119,13 @@ public class LateralCache
     }
 
     /**
-     * The performace costs are too great. It is not recommended that you enable
-     * lateral gets.
+     * The performance costs are too great. It is not recommended that you enable lateral gets.
      * <p>
      * @param key
-     * @return
+     * @return ICacheElement or null
      * @throws IOException
      */
-    public ICacheElement get( Serializable key )
+    protected ICacheElement processGet( Serializable key )
         throws IOException
     {
         ICacheElement obj = null;
@@ -147,10 +150,11 @@ public class LateralCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
-    public Map getMultiple( Set keys )
+    protected Map processGetMultiple( Set keys )
         throws IOException
     {
         Map elements = new HashMap();
@@ -176,7 +180,6 @@ public class LateralCache
     }
 
     /**
-     *
      * @param groupName
      * @return A set of group keys.
      */
@@ -186,17 +189,20 @@ public class LateralCache
     }
 
     /**
-     * Synchronously remove from the remote cache; if failed, replace the remote
-     * handle with a zombie.
+     * Synchronously remove from the remote cache; if failed, replace the remote handle with a
+     * zombie.
      * <p>
      * @param key
      * @return false always
      * @throws IOException
      */
-    public boolean remove( Serializable key )
+    protected boolean processRemove( Serializable key )
         throws IOException
     {
-        log.debug( "removing key:" + key );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "removing key:" + key );
+        }
 
         try
         {
@@ -210,12 +216,12 @@ public class LateralCache
     }
 
     /**
-     * Synchronously removeAll from the remote cache; if failed, replace the
-     * remote handle with a zombie.
+     * Synchronously removeAll from the remote cache; if failed, replace the remote handle with a
+     * zombie.
      * <p>
      * @throws IOException
      */
-    public void removeAll()
+    protected void processRemoveAll()
         throws IOException
     {
         try
@@ -230,10 +236,10 @@ public class LateralCache
 
     /**
      * Synchronously dispose the cache. Not sure we want this.
-     *
+     * <p>
      * @throws IOException
      */
-    public void dispose()
+    protected void processDispose()
         throws IOException
     {
         log.debug( "Disposing of lateral cache" );
@@ -252,7 +258,6 @@ public class LateralCache
             log.error( "Couldn't dispose", ex );
             handleException( ex, "Failed to dispose " + this.cattr.getCacheName() );
         }
-        //*/
     }
 
     /**
@@ -357,10 +362,8 @@ public class LateralCache
         return cattr;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
+    /**
+     * @return debugging data.
      */
     public String toString()
     {
@@ -371,4 +374,23 @@ public class LateralCache
         return buf.toString();
     }
 
+    /**
+     * @return extra data.
+     */
+    public String getEventLoggingExtraInfo()
+    {
+        return null;
+    }
+
+    /**
+     * The NoWait on top does not call out to here yet.
+     * <p>
+     * @return almost nothing
+     */
+    public IStats getStatistics()
+    {
+        IStats stats = new Stats();
+        stats.setTypeName( "LateralCache" );
+        return stats;
+    }
 }

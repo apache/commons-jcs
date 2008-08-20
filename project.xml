@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- Licensed to the Apache Software Foundation (ASF) under one
- or more contributor license agreements.  See the NOTICE file
- distributed with this work for additional information
- regarding copyright ownership.  The ASF licenses this file
- to you under the Apache License, Version 2.0 (the
- "License"); you may not use this file except in compliance
- with the License.  You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing,
- software distributed under the License is distributed on an
- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- KIND, either express or implied.  See the License for the
- specific language governing permissions and limitations
- under the License.
--->
-
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
 <project>
-
 	<pomVersion>3</pomVersion>
 	<name>JCS</name>
 	<id>jcs</id>
-	<currentVersion>1.3.1.0-RC</currentVersion>
+	<currentVersion>1.3.2.0-RC</currentVersion>
 	<organization>
 		<name>Apache Software Foundation</name>
 		<url>http://jakarta.apache.org/</url>
@@ -32,22 +26,18 @@
 	<inceptionYear>2002</inceptionYear>
 	<package>org.apache.jcs</package>
 	<logo></logo>
-
 	<gumpRepositoryId>jakarta</gumpRepositoryId>
-
 	<shortDescription>Cache</shortDescription>
 	<description>Comprehensive Caching System</description>
 	<url>http://jakarta.apache.org/jcs/</url>
-	<issueTrackingUrl>
-		http://issues.apache.org/jira/browse/JCS
+	<issueTrackingUrl> http://issues.apache.org/jira/browse/JCS
 	</issueTrackingUrl>
 	<siteAddress>people.apache.org</siteAddress>
-	<siteDirectory>/www/jakarta.apache.org/jcs/</siteDirectory>
-    <distributionSite>www.apache.org</distributionSite>
-    <distributionDirectory>
-        /www/www.apache.org/dist/java-repository
-    </distributionDirectory>
-
+	<siteDirectory>/www/jakarta.apache.org/jcs/
+	</siteDirectory>
+	<distributionSite>www.apache.org</distributionSite>
+	<distributionDirectory> /www/www.apache.org/dist/java-repository
+	</distributionDirectory>
 	<repository>
 		<connection>
 			scm:svn:http://svn.apache.org/repos/asf/jakarta/jcs/trunk/
@@ -55,30 +45,23 @@
 		<developerConnection>
 			scm:svn:https://svn.apache.org/repos/asf/jakarta/jcs/trunk/
 		</developerConnection>
-		<url>http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/</url>
+		<url>http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/
+		</url>
 	</repository>
-
 	<mailingLists>
 		<mailingList>
 			<name>JCS User List</name>
-			<subscribe>
-				jcs-users-subscribe@jakarta.apache.org
-			</subscribe>
-			<unsubscribe>
-				jcs-users-unsubscribe@jakarta.apache.org
-			</unsubscribe>
-			<archive>
-				http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/
+			<subscribe> jcs-users-subscribe@jakarta.apache.org</subscribe>
+			<unsubscribe> jcs-users-unsubscribe@jakarta.apache.org</unsubscribe>
+			<archive> http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/
 			</archive>
 		</mailingList>
 		<mailingList>
 			<name>JCS Developer List</name>
-			<subscribe>jcs-dev-subscribe@jakarta.apache.org</subscribe>
-			<unsubscribe>
-				jcs-dev-unsubscribe@jakarta.apache.org
-			</unsubscribe>
-			<archive>
-				http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/
+			<subscribe>jcs-dev-subscribe@jakarta.apache.org
+			</subscribe>
+			<unsubscribe> jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+			<archive> http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/
 			</archive>
 		</mailingList>
 		<mailingList>
@@ -98,7 +81,6 @@
 			</archive>
 		</mailingList>
 	</mailingLists>
-
 	<developers>
 		<developer>
 			<name>Aaron Smuts</name>
@@ -125,7 +107,6 @@
 			<organization>IFilm</organization>
 		</developer>
 	</developers>
-
 	<contributors>
 		<contributor>
 			<name>Scott Eade</name>
@@ -140,7 +121,6 @@
 			<email>tv@apache.org</email>
 		</contributor>
 	</contributors>
-
 	<dependencies>
 
 		<!--  For comparative performance tests only -->
@@ -148,15 +128,16 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2</version>
-			<url>http://jakarta.apache.org/commons/collections/</url>
+			<url>http://jakarta.apache.org/commons/collections/
+			</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.4</version>
-			<url>http://jakarta.apache.org/commons/configuration/</url>
+			<url>http://jakarta.apache.org/commons/configuration/
+			</url>
 			<type>jar</type>
 		</dependency>
 
@@ -165,7 +146,8 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1</version>
-			<url>http://jakarta.apache.org/commons/logging/</url>
+			<url>http://jakarta.apache.org/commons/logging/
+			</url>
 			<type>jar</type>
 		</dependency>
 
@@ -174,7 +156,8 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.1</version>
-			<url>http://jakarta.apache.org/commons/lang/</url>
+			<url>http://jakarta.apache.org/commons/lang/
+			</url>
 			<type>jar</type>
 		</dependency>
 
@@ -183,7 +166,8 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.2</version>
-			<url>http://jakarta.apache.org/commons</url>
+			<url>http://jakarta.apache.org/commons
+			</url>
 			<type>jar</type>
 		</dependency>
 
@@ -192,7 +176,8 @@
 			<groupId>commons-pool</groupId>
 			<artifactId>commons-pool</artifactId>
 			<version>1.3</version>
-			<url>http://jakarta.apache.org/commons</url>
+			<url>http://jakarta.apache.org/commons
+			</url>
 			<type>jar</type>
 		</dependency>
 
@@ -207,7 +192,6 @@
 			</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -215,43 +199,38 @@
 			<url></url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>1.7.3.3</version>
 			<!-- <version>1.8.0.7</version> -->
-			<url>http://hsqldb.sourceforge.net/</url>
+			<url>http://hsqldb.sourceforge.net/
+			</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.12</version>
-			<url>http://logging.apache.org/log4j/</url>
+			<url>http://logging.apache.org/log4j/
+			</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>servletapi</groupId>
 			<artifactId>servletapi</artifactId>
 			<version>2.3</version>
-			<url>http://java.sun.com/products/servlet/</url>
+			<url>http://java.sun.com/products/servlet/
+			</url>
 			<type>jar</type>
 		</dependency>
 
 		<!-- LGPL! -->
 		<!--
-		<dependency>
-			<groupId>jgroups</groupId>
-			<artifactId>jgroups-all</artifactId>
-			<version>2.2.8</version>
-			<url></url>
-			<type>jar</type>
-		</dependency>
+			<dependency> <groupId>jgroups</groupId>
+			<artifactId>jgroups-all</artifactId> <version>2.2.8</version>
+			<url></url> <type>jar</type> </dependency>
 		-->
-
 		<dependency>
 			<groupId>tomcat</groupId>
 			<artifactId>tomcat-util</artifactId>
@@ -259,15 +238,14 @@
 			<url>http://tomcat.apache.org/</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>1.5</version>
-			<url>http://jakarta.apache.org/velocity/</url>
+			<url>http://jakarta.apache.org/velocity/
+			</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -275,7 +253,6 @@
 			<url>http://www.junit.org/</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>xmlrpc</groupId>
 			<artifactId>xmlrpc</artifactId>
@@ -283,23 +260,22 @@
 			<url>http://ws.apache.org/xmlrpc/</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<version>2.6.2</version>
-			<url>http://xml.apache.org/xerces2-j/</url>
+			<url>http://xml.apache.org/xerces2-j/
+			</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
 			<version>2.0.2</version>
-			<url>http://xml.apache.org/commons/</url>
+			<url>http://xml.apache.org/commons/
+			</url>
 			<type>jar</type>
 		</dependency>
-
 		<dependency>
 			<groupId>berkeleydb</groupId>
 			<artifactId>berkeleydb</artifactId>
@@ -307,8 +283,13 @@
 			<url></url>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>maven-plugins</groupId>
+			<artifactId>maven-cobertura-plugin</artifactId>
+			<version>1.4</version>
+			<type>plugin</type>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<sourceDirectory>src/java</sourceDirectory>
 		<unitTestSourceDirectory>src/test</unitTestSourceDirectory>
@@ -318,14 +299,23 @@
 				<include>**/*${test}Test.java</include>
 			</includes>
 			<excludes>
-				<!-- Several of the test cases rely on background tasks that are timing sensitive. -->
+				<!--
+					Several of the test cases rely on background tasks that are timing
+					sensitive.
+				-->
 				<!-- You need to manually run these test cases. -->
-				<exclude>**/BlockDiskElementDescriptorUnitTest.java</exclude> 
-				<exclude>**/HSQLDiskCacheConcurrentUnitTest.java</exclude> 
-				<exclude>**/HSQLDiskCacheUnitTest.java</exclude>
-				<exclude>**/IndexedDiskCacheOptimizationUnitTest.java</exclude>
-				<exclude>**/TestTCPLateralUnitTest.java</exclude>
-				<exclude>**/UDPDiscoveryUnitTest.java</exclude>
+				<exclude>**/BlockDiskElementDescriptorUnitTest.java
+				</exclude>
+				<exclude>**/HSQLDiskCacheConcurrentUnitTest.java
+				</exclude>
+				<exclude>**/HSQLDiskCacheUnitTest.java
+				</exclude>
+				<exclude>**/IndexedDiskCacheOptimizationUnitTest.java
+				</exclude>
+				<exclude>**/TestTCPLateralUnitTest.java
+				</exclude>
+				<exclude>**/UDPDiscoveryUnitTest.java
+				</exclude>
 				<!-- The ones that fail may be different for you. -->
 				<!-- <exclude>**/JDBCDiskCacheRemovalUnitTest.java</exclude> -->
 				<!-- <exclude>**/JDBCDiskCacheUnitTest.java</exclude> -->
@@ -340,23 +330,22 @@
 				</resource>
 			</resources>
 		</unitTest>
-        <resources>
-            <resource>
-                <directory>${basedir}</directory>
-                <targetPath>META-INF</targetPath>
-                <includes>
-                  <include>NOTICE</include>
-                  <include>LICENSE.xerox</include>
-                </includes>
-            </resource>
-        </resources>
+		<resources>
+			<resource>
+				<directory>${basedir}</directory>
+				<targetPath>META-INF</targetPath>
+				<includes>
+					<include>NOTICE</include>
+					<include>LICENSE.xerox</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
-
 	<reports>
 		<report>maven-jdepend-plugin</report>
-		<report>maven-checkstyle-plugin</report>
+		<!-- report>maven-checkstyle-plugin</report-->
 		<report>maven-changes-plugin</report>
-		<report>maven-jcoverage-plugin</report>
+		<report>maven-cobertura-plugin</report>
 		<report>maven-javadoc-plugin</report>
 		<report>maven-jxr-plugin</report>
 		<report>maven-junit-report-plugin</report>
@@ -365,5 +354,4 @@
 		<report>maven-simian-plugin</report>
 		<report>maven-faq-plugin</report>
 	</reports>
-
 </project>

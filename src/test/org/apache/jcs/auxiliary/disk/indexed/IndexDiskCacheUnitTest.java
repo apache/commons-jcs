@@ -26,12 +26,14 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Tests for common functionality.
@@ -557,5 +559,148 @@ public class IndexDiskCacheUnitTest
     {
         GroupId gid = new GroupId( cacheName, group );
         return new GroupAttrName( gid, name );
+    }
+    
+    
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testUpdate_EventLogging_simple()
+        throws Exception
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testUpdate_EventLogging_simple" );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        diskCache.doRemoveAll();
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        diskCache.setCacheEventLogger( cacheEventLogger );
+
+        ICacheElement item = new CacheElement( "region", "key", "value" );
+
+        // DO WORK
+        diskCache.update( item );
+
+        SleepUtil.sleepAtLeast( 200 );
+        
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testGet_EventLogging_simple()
+        throws Exception
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testGet_EventLogging_simple" );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        diskCache.doRemoveAll();
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        diskCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        diskCache.get( "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testGetMultiple_EventLogging_simple()
+        throws Exception
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testGetMultiple_EventLogging_simple" );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        diskCache.doRemoveAll();
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        diskCache.setCacheEventLogger( cacheEventLogger );
+
+        Set keys = new HashSet();
+        keys.add( "junk" );
+        
+        // DO WORK
+        diskCache.getMultiple( keys );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testRemove_EventLogging_simple()
+        throws Exception
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testRemoveAll_EventLogging_simple" );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        diskCache.doRemoveAll();
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        diskCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        diskCache.remove( "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testRemoveAll_EventLogging_simple()
+        throws Exception
+    {
+        // SETUP
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( "testRemoveAll_EventLogging_simple" );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        diskCache.doRemoveAll();
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        diskCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        diskCache.remove( "key" );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
 }

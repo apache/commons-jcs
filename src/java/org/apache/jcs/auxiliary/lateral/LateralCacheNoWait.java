@@ -69,12 +69,12 @@ public class LateralCacheNoWait
     private int removeCount = 0;
 
     private int putCount = 0;
-    
+
     /** An optional event logger */
-    private ICacheEventLogger cacheEventLogger;    
-    
+    private ICacheEventLogger cacheEventLogger;
+
     /** The serializer. */
-    private IElementSerializer elementSerializer;       
+    private IElementSerializer elementSerializer;
 
     /**
      * Constructs with the given lateral cache, and fires up an event queue for aysnchronous
@@ -167,7 +167,8 @@ public class LateralCacheNoWait
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
      */
     public Map getMultiple( Set keys )
     {
@@ -193,6 +194,10 @@ public class LateralCacheNoWait
         return elements;
     }
 
+    /**
+     * @param groupName
+     * @return Set
+     */
     public Set getGroupKeys( String groupName )
     {
         return cache.getGroupKeys( groupName );
@@ -332,8 +337,8 @@ public class LateralCacheNoWait
     public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
     {
         this.cacheEventLogger = cacheEventLogger;
-    }   
-    
+    }
+
     /**
      * Allows you to inject a custom serializer. A good example would be a compressing standard
      * serializer.
@@ -344,7 +349,7 @@ public class LateralCacheNoWait
     {
         this.elementSerializer = elementSerializer;
     }
-    
+
     /**
      * getStats
      * @return String
@@ -400,9 +405,8 @@ public class LateralCacheNoWait
         return stats;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * @return debugging info.
      */
     public String toString()
     {

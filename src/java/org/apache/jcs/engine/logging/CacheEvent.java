@@ -12,6 +12,9 @@ public class CacheEvent
     /** Don't change. */
     private static final long serialVersionUID = -5913139566421714330L;
     
+    /** The time at which this object was created. */
+    private long createTime = System.currentTimeMillis();
+    
     /** The auxiliary or other source of the event. */
     private String source;
     
@@ -105,6 +108,16 @@ public class CacheEvent
     public Serializable getKey()
     {
         return key;
+    }
+    
+    /**
+     * The time at which this object was created.
+     * <p>
+     * @return the createTime
+     */
+    public long getCreateTime()
+    {
+        return createTime;
     }
     
     /** 

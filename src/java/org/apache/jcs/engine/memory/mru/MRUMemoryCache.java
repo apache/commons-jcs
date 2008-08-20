@@ -41,12 +41,11 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * A SLOW reference management system. The most recently used items move to the
- * front of the list and get spooled to disk if the cache hub is configured to
- * use a disk cache.
+ * A SLOW reference management system. The most recently used items move to the front of the list
+ * and get spooled to disk if the cache hub is configured to use a disk cache.
  * <p>
- * This class is mainly for testing the hub. It also shows that use of the
- * Collection LinkedList is far slower than JCS' own double linked list.
+ * This class is mainly for testing the hub. It also shows that use of the Collection LinkedList is
+ * far slower than JCS' own double linked list.
  */
 public class MRUMemoryCache
     extends AbstractMemoryCache
@@ -193,14 +192,13 @@ public class MRUMemoryCache
     }
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i>
-     * according to its eviction policy. For example, the LRUMemoryCache will
-     * remove the <i>numberToFree</i> least recently used items. These will be
-     * spooled to disk if a disk auxiliary is available.
+     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
      * <p>
      * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are
-     *         only 3, you will get 3.
+     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
      * @throws IOException
      */
     public int freeElements( int numberToFree )
@@ -219,11 +217,9 @@ public class MRUMemoryCache
     }
 
     /**
-     * Get an item from the cache without affecting its last access time or
-     * position.
+     * Get an item from the cache without affecting its last access time or position.
      * @return Element matching key if found, or null
-     * @param key
-     *            Identifies item to find
+     * @param key Identifies item to find
      * @exception IOException
      */
     public ICacheElement getQuiet( Serializable key )
@@ -255,9 +251,10 @@ public class MRUMemoryCache
     }
 
     /**
-     * Gets an item out of the map. If it finds an item, it is removed from the
-     * list and then added to the first position in the linked list.
-     * @return
+     * Gets an item out of the map. If it finds an item, it is removed from the list and then added
+     * to the first position in the linked list.
+     * <p>
+     * @return ICacheElement or null if none is found.
      * @param key
      * @exception IOException
      */
@@ -335,7 +332,8 @@ public class MRUMemoryCache
 
     /**
      * Removes an item from the cache.
-     * @return
+     * <p>
+     * @return true if present
      * @param key
      * @exception IOException
      */
@@ -448,9 +446,8 @@ public class MRUMemoryCache
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
+    /**
+     * @return IStats
      */
     public IStats getStatistics()
     {

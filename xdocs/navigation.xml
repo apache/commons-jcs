@@ -59,6 +59,8 @@
 			</item>
 			<item name="Auxiliary" href="/Plugins.html"
 				collapse="true">
+				<item name="Cache Event Logging"
+					href="/CacheEventLogging.html" />
 				<item name="Indexed Disk Cache"
 					href="/IndexedDiskAuxCache.html" />
 				<item name="Indexed Disk Properties"

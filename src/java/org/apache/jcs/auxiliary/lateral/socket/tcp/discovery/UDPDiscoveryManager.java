@@ -26,12 +26,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * This manages UDPDiscovery Services. We should end up with one service per
  * Lateral Cache Manager Instance. One service works for multiple regions. We
  * don't want a connection for each region.
- *
+ * <p>
  * @author Aaron Smuts
  *
  */
@@ -42,6 +44,7 @@ public class UDPDiscoveryManager
     private static UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();
 
     private Map services = new HashMap();
+   
 
     private UDPDiscoveryManager()
     {
@@ -64,11 +67,14 @@ public class UDPDiscoveryManager
      * @param lca
      *            ITCPLateralCacheAttributes
      * @param cacheMgr
-     * @return
+     * @param cacheEventLogger 
+     * @param elementSerializer 
+     * @return instance for this address
      */
-    public synchronized UDPDiscoveryService getService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr )
+    public synchronized UDPDiscoveryService getService( ITCPLateralCacheAttributes lca, ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
+                                                        IElementSerializer elementSerializer )
     {
-        UDPDiscoveryService service = getService( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), lca.getTcpListenerPort(), cacheMgr );
+        UDPDiscoveryService service = getService( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), lca.getTcpListenerPort(), cacheMgr, cacheEventLogger, elementSerializer );
 
         // TODO find a way to remote these attributes from the service, the manager needs it on disocvery.
         service.setTcpLateralCacheAttributes( lca );
@@ -84,10 +90,13 @@ public class UDPDiscoveryManager
      * @param discoveryPort
      * @param servicePort
      * @param cacheMgr
-     * @return
+     * @param cacheEventLogger 
+     * @param elementSerializer      * 
+     * @return UDPDiscoveryService
      */
-    public synchronized UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
-                                                       ICompositeCacheManager cacheMgr )
+    private synchronized UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
+                                                       ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
+                                                       IElementSerializer elementSerializer )
     {
         String key = discoveryAddress + ":" + discoveryPort;
 
@@ -99,7 +108,7 @@ public class UDPDiscoveryManager
                 log.info( "Creating service for address:port [" + key + "]" );
             }
 
-            service = new UDPDiscoveryService( discoveryAddress, discoveryPort, servicePort, cacheMgr );
+            service = new UDPDiscoveryService( discoveryAddress, discoveryPort, servicePort, cacheMgr, cacheEventLogger, elementSerializer );
             services.put( key, service );
         }
 

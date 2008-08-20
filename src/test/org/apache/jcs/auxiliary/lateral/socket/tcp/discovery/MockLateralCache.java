@@ -29,14 +29,12 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * For testing things that need a lateral cache
- *
- * @author Aaron Smuts
- *
  */
 public class MockLateralCache
     extends LateralCache
     implements ICache
 {
+    /** junk */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -47,12 +45,10 @@ public class MockLateralCache
         super( cattr );
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
+    /**
+     * Nothing.
      */
-    public void update( ICacheElement ce )
+    protected void processUpdate( ICacheElement ce )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -64,7 +60,7 @@ public class MockLateralCache
      *
      * @see org.apache.jcs.engine.behavior.ICache#get(java.io.Serializable)
      */
-    public ICacheElement get( Serializable key )
+    protected ICacheElement processGet( Serializable key )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -76,7 +72,7 @@ public class MockLateralCache
      *
      * @see org.apache.jcs.engine.behavior.ICache#remove(java.io.Serializable)
      */
-    public boolean remove( Serializable key )
+    protected boolean processRemove( Serializable key )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -88,7 +84,7 @@ public class MockLateralCache
      *
      * @see org.apache.jcs.engine.behavior.ICache#removeAll()
      */
-    public void removeAll()
+    public void processRemoveAll()
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -100,7 +96,7 @@ public class MockLateralCache
      *
      * @see org.apache.jcs.engine.behavior.ICache#dispose()
      */
-    public void dispose()
+    public void processDispose()
         throws IOException
     {
         // TODO Auto-generated method stub

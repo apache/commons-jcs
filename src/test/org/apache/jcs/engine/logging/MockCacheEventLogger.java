@@ -1,4 +1,4 @@
-package org.apache.jcs.engine.control;
+package org.apache.jcs.engine.logging;
 
 import java.io.Serializable;
 

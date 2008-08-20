@@ -35,17 +35,13 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Runs basic tests for the JDBC disk cache.
- *
+ *<p>
  * @author Aaron Smuts
- *
  */
 public class JDBCDiskCacheUnitTest
     extends TestCase
 {
-
-    /**
-     * Test setup
-     */
+    /** Test setup */
     public void setUp()
     {
         JCS.setConfigFilename( "/TestJDBCDiskCache.ccf" );
@@ -53,7 +49,6 @@ public class JDBCDiskCacheUnitTest
 
     /**
      * Test the basic JDBC disk cache functionality with a hsql backing.
-     *
      * @throws Exception
      */
     public void testSimpleJDBCPutGetWithHSQL()
@@ -79,15 +74,12 @@ public class JDBCDiskCacheUnitTest
     }
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
+     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
+     * memory cache, so items should spool to disk.
+     * <p>
+     * @param region Name of the region to access
      * @param items
-     *
-     * @exception Exception
-     *                If an error occurs
+     * @exception Exception If an error occurs
      */
     public void runTestForRegion( String region, int items )
         throws Exception
@@ -148,7 +140,6 @@ public class JDBCDiskCacheUnitTest
 
     /**
      * SETUP TABLE FOR CACHE
-     *
      * @param cConn
      */
     void setupTABLE( Connection cConn )

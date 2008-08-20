@@ -67,6 +67,7 @@ public class CompositeCacheConfigurator
 
     final static String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
 
+    /** Can't operate on the interface.  */
     private CompositeCacheManager compositeCacheManager;
 
     /**
@@ -550,17 +551,17 @@ public class CompositeCacheConfigurator
         String auxPrefix = AUXILIARY_PREFIX + auxName;
         
         // CONFIGURE THE EVENT LOGGER
-        ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxName );
+        ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxPrefix );
 
         // CONFIGURE THE ELEMENT SERIALIZER
-        IElementSerializer elementSerializer = AuxiliaryCacheConfigurator.parseElementSerializer( props, auxName );
+        IElementSerializer elementSerializer = AuxiliaryCacheConfigurator.parseElementSerializer( props, auxPrefix );
 
         // Consider putting the compositeCache back in the factory interface
         // since the manager may not know about it at this point.
         // need to make sure the manager already has the cache
         // before the auxiliary is created.
         auxCache = auxFac.createCache( auxAttr, compositeCacheManager, cacheEventLogger, elementSerializer );
-
+        
         return auxCache;
     }
 }

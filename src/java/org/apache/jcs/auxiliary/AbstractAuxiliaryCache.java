@@ -94,7 +94,7 @@ public abstract class AbstractAuxiliaryCache
             cacheEventLogger.logApplicationEvent( source, eventName, optionalDetails );
         }
     }
-    
+
     /**
      * Logs an event if an event logger is configured.
      * <p>
@@ -108,8 +108,8 @@ public abstract class AbstractAuxiliaryCache
         {
             cacheEventLogger.logError( source, eventName, errorMessage );
         }
-    }    
-    
+    }
+
     /**
      * Gets the extra info for the event log.
      * <p>

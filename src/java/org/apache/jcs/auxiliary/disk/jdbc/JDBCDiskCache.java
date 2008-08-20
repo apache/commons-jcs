@@ -39,6 +39,8 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEvent;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
@@ -65,7 +67,6 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  *                       PRIMARY KEY (CACHE_KEY, REGION)
  *                       );
  * </pre>
- * 
  * <p>
  * The cleanup thread will delete non eternal items where (now - create time) > max life seconds *
  * 1000
@@ -125,9 +126,7 @@ public class JDBCDiskCache
             log.info( "jdbcDiskCacheAttributes = " + getJdbcDiskCacheAttributes() );
         }
 
-        /**
-         * This initializes the pool access.
-         */
+        // This initializes the pool access.
         initializePoolAccess( cattr );
 
         // Initialization finished successfully, so set alive to true.
@@ -161,6 +160,8 @@ public class JDBCDiskCache
         }
         catch ( Exception e )
         {
+            logError( getAuxiliaryCacheAttributes().getName(), "initializePoolAccess", e.getMessage() + " URL: "
+                + getDiskLocation() );
             log.error( "Problem getting connection.", e );
         }
     }
@@ -173,6 +174,26 @@ public class JDBCDiskCache
      * @param ce
      */
     public void doUpdate( ICacheElement ce )
+    {
+        ICacheEvent cacheEvent = createICacheEvent( ce, ICacheEventLogger.UPDATE_EVENT );
+        try
+        {
+            processUpdate( ce );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Inserts or updates. By default it will try to insert. If the item exists we will get an
+     * error. It will then update. This behavior is configurable. The cache can be configured to
+     * check before inserting.
+     * <p>
+     * @param ce
+     */
+    private void processUpdate( ICacheElement ce )
     {
         incrementUpdateCount();
 
@@ -255,94 +276,13 @@ public class JDBCDiskCache
             // If it doesn't exist, insert it, otherwise update
             if ( !exists )
             {
-                try
-                {
-                    String sqlI = "insert into "
-                        + getJdbcDiskCacheAttributes().getTableName()
-                        + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, CREATE_TIME_SECONDS, SYSTEM_EXPIRE_TIME_SECONDS) "
-                        + " values (?, ?, ?, ?, ?, ?, ?, ?)";
-
-                    PreparedStatement psInsert = con.prepareStatement( sqlI );
-                    psInsert.setString( 1, (String) ce.getKey() );
-                    psInsert.setString( 2, this.getCacheName() );
-                    psInsert.setBytes( 3, element );
-                    psInsert.setLong( 4, ce.getElementAttributes().getMaxLifeSeconds() );
-                    if ( ce.getElementAttributes().getIsEternal() )
-                    {
-                        psInsert.setString( 5, "T" );
-                    }
-                    else
-                    {
-                        psInsert.setString( 5, "F" );
-                    }
-                    Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
-                    psInsert.setDate( 6, createTime );
-
-                    long now = System.currentTimeMillis() / 1000;
-                    psInsert.setLong( 7, now );
-
-                    long expireTime = now + ce.getElementAttributes().getMaxLifeSeconds();
-                    psInsert.setLong( 8, expireTime );
-
-                    psInsert.execute();
-                    psInsert.close();
-                }
-                catch ( SQLException e )
-                {
-                    if ( e.toString().indexOf( "Violation of unique index" ) != -1
-                        || e.getMessage().indexOf( "Violation of unique index" ) != -1
-                        || e.getMessage().indexOf( "Duplicate entry" ) != -1 )
-                    {
-                        exists = true;
-                    }
-                    else
-                    {
-                        log.error( "Could not insert element", e );
-                    }
-
-                    // see if it exists, if we didn't already
-                    if ( !exists && !this.getJdbcDiskCacheAttributes().isTestBeforeInsert() )
-                    {
-                        exists = doesElementExist( ce );
-                    }
-                }
+                exists = insertRow( ce, con, element );
             }
 
             // update if it exists.
             if ( exists )
             {
-                String sqlU = null;
-                try
-                {
-                    sqlU = "update " + getJdbcDiskCacheAttributes().getTableName()
-                        + " set ELEMENT  = ?, CREATE_TIME = ?, CREATE_TIME_SECONDS = ?, "
-                        + " SYSTEM_EXPIRE_TIME_SECONDS = ? " + " where CACHE_KEY = ? and REGION = ?";
-                    PreparedStatement psUpdate = con.prepareStatement( sqlU );
-                    psUpdate.setBytes( 1, element );
-
-                    Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
-                    psUpdate.setDate( 2, createTime );
-
-                    long now = System.currentTimeMillis() / 1000;
-                    psUpdate.setLong( 3, now );
-
-                    long expireTime = now + ce.getElementAttributes().getMaxLifeSeconds();
-                    psUpdate.setLong( 4, expireTime );
-
-                    psUpdate.setString( 5, (String) ce.getKey() );
-                    psUpdate.setString( 6, this.getCacheName() );
-                    psUpdate.execute();
-                    psUpdate.close();
-
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "ran update " + sqlU );
-                    }
-                }
-                catch ( SQLException e2 )
-                {
-                    log.error( "e2 sql [" + sqlU + "] Exception: ", e2 );
-                }
+                updateRow( ce, con, element );
             }
         }
         finally
@@ -364,6 +304,114 @@ public class JDBCDiskCache
                 // TODO make a log stats method
                 log.info( "Update Count [" + updateCount + "]" );
             }
+        }
+    }
+
+    /**
+     * This inserts a new row in the database.
+     * <p>
+     * @param ce
+     * @param con
+     * @param element
+     * @return true if the insertion fails because the record exists.
+     */
+    private boolean insertRow( ICacheElement ce, Connection con, byte[] element  )
+    {
+        boolean exists = false;
+        try
+        {
+            String sqlI = "insert into "
+                + getJdbcDiskCacheAttributes().getTableName()
+                + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, CREATE_TIME_SECONDS, SYSTEM_EXPIRE_TIME_SECONDS) "
+                + " values (?, ?, ?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement psInsert = con.prepareStatement( sqlI );
+            psInsert.setString( 1, (String) ce.getKey() );
+            psInsert.setString( 2, this.getCacheName() );
+            psInsert.setBytes( 3, element );
+            psInsert.setLong( 4, ce.getElementAttributes().getMaxLifeSeconds() );
+            if ( ce.getElementAttributes().getIsEternal() )
+            {
+                psInsert.setString( 5, "T" );
+            }
+            else
+            {
+                psInsert.setString( 5, "F" );
+            }
+            Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
+            psInsert.setDate( 6, createTime );
+
+            long now = System.currentTimeMillis() / 1000;
+            psInsert.setLong( 7, now );
+
+            long expireTime = now + ce.getElementAttributes().getMaxLifeSeconds();
+            psInsert.setLong( 8, expireTime );
+
+            psInsert.execute();
+            psInsert.close();
+        }
+        catch ( SQLException e )
+        {
+            if ( e.toString().indexOf( "Violation of unique index" ) != -1
+                || e.getMessage().indexOf( "Violation of unique index" ) != -1
+                || e.getMessage().indexOf( "Duplicate entry" ) != -1 )
+            {
+                exists = true;
+            }
+            else
+            {
+                log.error( "Could not insert element", e );
+            }
+
+            // see if it exists, if we didn't already
+            if ( !exists && !this.getJdbcDiskCacheAttributes().isTestBeforeInsert() )
+            {
+                exists = doesElementExist( ce );
+            }
+        }
+        return exists;
+    }
+
+    /**
+     * This updates a row in the database.
+     * <p>
+     * @param ce
+     * @param con
+     * @param element
+     */
+    private void updateRow( ICacheElement ce, Connection con, byte[] element )
+    {
+        String sqlU = null;
+        try
+        {
+            sqlU = "update " + getJdbcDiskCacheAttributes().getTableName()
+                + " set ELEMENT  = ?, CREATE_TIME = ?, CREATE_TIME_SECONDS = ?, " + " SYSTEM_EXPIRE_TIME_SECONDS = ? "
+                + " where CACHE_KEY = ? and REGION = ?";
+            PreparedStatement psUpdate = con.prepareStatement( sqlU );
+            psUpdate.setBytes( 1, element );
+
+            Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
+            psUpdate.setDate( 2, createTime );
+
+            long now = System.currentTimeMillis() / 1000;
+            psUpdate.setLong( 3, now );
+
+            long expireTime = now + ce.getElementAttributes().getMaxLifeSeconds();
+            psUpdate.setLong( 4, expireTime );
+
+            psUpdate.setString( 5, (String) ce.getKey() );
+            psUpdate.setString( 6, this.getCacheName() );
+            psUpdate.execute();
+            psUpdate.close();
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "ran update " + sqlU );
+            }
+        }
+        catch ( SQLException e2 )
+        {
+            log.error( "e2 sql [" + sqlU + "] Exception: ", e2 );
         }
     }
 
@@ -452,6 +500,26 @@ public class JDBCDiskCache
      */
     public ICacheElement doGet( Serializable key )
     {
+        ICacheElement obj = null;
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.GET_EVENT );
+        try
+        {
+            obj = processGet( key, obj );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+        return obj;
+    }
+
+    /**
+     * Queries the database for the value. If it gets a result, the value is deserialized.
+     * <p>
+     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
+     */
+    private ICacheElement processGet( Serializable key, ICacheElement obj )
+    {
         incrementGetCount();
 
         if ( log.isDebugEnabled() )
@@ -463,8 +531,6 @@ public class JDBCDiskCache
         {
             return null;
         }
-
-        ICacheElement obj = null;
 
         byte[] data = null;
         try
@@ -546,18 +612,37 @@ public class JDBCDiskCache
                 log.info( "Get Count [" + getCount + "]" );
             }
         }
-
         return obj;
     }
 
     /**
-     * Returns true if the removal was succesful; or false if there is nothing to remove. Current
+     * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always results in a disk orphan.
      * <p>
      * @param key
      * @return boolean
      */
     public boolean doRemove( Serializable key )
+    {
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
+        try
+        {
+            return processRemove( key );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Returns true if the removal was successful; or false if there is nothing to remove. Current
+     * implementation always results in a disk orphan.
+     * <p>
+     * @param key
+     * @return boolean
+     */
+    private boolean processRemove( Serializable key )
     {
         // remove single item.
         String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
@@ -627,6 +712,23 @@ public class JDBCDiskCache
      * remove all is not allowed, the method balks.
      */
     public void doRemoveAll()
+    {
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
+        try
+        {
+            processRemoveAll();
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * This should remove all elements. The auxiliary can be configured to forbid this behavior. If
+     * remove all is not allowed, the method balks.
+     */
+    private void processRemoveAll()
     {
         // it should never get here formt he abstract dis cache.
         if ( this.jdbcDiskCacheAttributes.isAllowRemoveAll() )
@@ -736,9 +838,13 @@ public class JDBCDiskCache
                     log.error( "Problem closing statement.", e1 );
                 }
             }
+            logApplicationEvent( getAuxiliaryCacheAttributes().getName(), "deleteExpired",
+                                 "Deleted expired elements.  URL: " + getDiskLocation() );
         }
         catch ( Exception e )
         {
+            logError( getAuxiliaryCacheAttributes().getName(), "deleteExpired", e.getMessage() + " URL: "
+                + getDiskLocation() );
             log.error( "Problem removing expired elements from the table.", e );
             reset();
         }
@@ -761,13 +867,21 @@ public class JDBCDiskCache
     /** Shuts down the pool */
     public void doDispose()
     {
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
-            poolAccess.shutdownDriver();
+            try
+            {
+                poolAccess.shutdownDriver();
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem shutting down.", e );
+            }
         }
-        catch ( Exception e )
+        finally
         {
-            log.error( "Problem shutting down.", e );
+            logICacheEvent( cacheEvent );
         }
     }
 
@@ -1023,7 +1137,7 @@ public class JDBCDiskCache
     {
         return this.getStats();
     }
-    
+
     /**
      * This is used by the event logging.
      * <p>
@@ -1032,5 +1146,5 @@ public class JDBCDiskCache
     protected String getDiskLocation()
     {
         return this.jdbcDiskCacheAttributes.getUrl();
-    }    
+    }
 }

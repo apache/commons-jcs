@@ -41,21 +41,20 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
- * <p>
- * @version $Id$
  */
 public class LateralTCPService
     implements ILateralCacheService, ILateralCacheObserver
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( LateralTCPService.class );
 
+    /** special configuration */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
+    /** Sends to another lateral. */
     private LateralTCPSender sender;
 
-    /**
-     * use the vmid by default
-     */
+    /** use the vmid by default */
     private long listenerId = LateralCacheInfo.listenerId;
 
     /**
@@ -175,9 +174,8 @@ public class LateralTCPService
         sender.send( led );
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#release()
+    /**
+     * Does nothing.
      */
     public void release()
         throws IOException
@@ -243,10 +241,11 @@ public class LateralTCPService
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
-     * @param cacheName 
+     * @param cacheName
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
     public Map getMultiple( String cacheName, Set keys )
         throws IOException

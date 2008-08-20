@@ -40,6 +40,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class MockAuxiliaryCache
     implements AuxiliaryCache
 {
+    /** Don't change */
     private static final long serialVersionUID = 1L;
 
     /** Can setup the cache type */
@@ -47,6 +48,12 @@ public class MockAuxiliaryCache
 
     /** Can setup status */
     public int status = CacheConstants.STATUS_ALIVE;
+
+    /** The event logger */
+    public ICacheEventLogger cacheEventLogger;
+
+    /** IElementSerializer elementSerializer */
+    public IElementSerializer elementSerializer;
 
     /**
      * @param ce
@@ -192,15 +199,19 @@ public class MockAuxiliaryCache
         return null;
     }
 
+    /**
+     * @param cacheEventLogger
+     */
     public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
     {
-        // TODO Auto-generated method stub
-
+        this.cacheEventLogger = cacheEventLogger;
     }
 
+    /**
+     * @param elementSerializer
+     */
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
-        // TODO Auto-generated method stub
-        
+        this.elementSerializer = elementSerializer;
     }
 }

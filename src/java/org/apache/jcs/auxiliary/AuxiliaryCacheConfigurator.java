@@ -14,21 +14,21 @@ import org.apache.jcs.utils.config.PropertySetter;
 public class AuxiliaryCacheConfigurator
 {
     /** .attributes */
-    final static String ATTRIBUTE_PREFIX = ".attributes";
+    public final static String ATTRIBUTE_PREFIX = ".attributes";
 
     /**
      * jcs.auxiliary.NAME.cacheeventlogger=CLASSNAME
      * <p>
      * jcs.auxiliary.NAME.cacheeventlogger.attributes.CUSTOMPROPERTY=VALUE
      */
-    final static String CACHE_EVENT_LOGGER_PREFIX = ".cacheeventlogger";
+    public final static String CACHE_EVENT_LOGGER_PREFIX = ".cacheeventlogger";
 
     /**
      * jcs.auxiliary.NAME.serializer=CLASSNAME
      * <p>
      * jcs.auxiliary.NAME.serializer.attributes.CUSTOMPROPERTY=VALUE
      */
-    final static String SERIALIZER_PREFIX = ".serializer";
+    public final static String SERIALIZER_PREFIX = ".serializer";
 
     /**
      * Parses the event logger config, if there is any for the auxiliary.

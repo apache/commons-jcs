@@ -136,7 +136,7 @@
 						<td>60</td>
 					</tr>
 					<tr>
-						<td>DiskUsagePattern</td>
+						<td>DiskUsagePatternName</td>
 						<td>
 							SWAP is the default. Under the swap pattern,
 							data is only put to disk when the max memory
@@ -153,7 +153,7 @@
 							disk. If you are using the JDBC disk cache
 							for instance, you can put all the items on
 							disk while using the memory cache for
-							performance, and not worry about lossing
+							performance, and not worry about losing
 							data from a system crash or improper
 							shutdown. Also, since all items are on disk,
 							there is no need to swap to disk. This
@@ -189,7 +189,7 @@
 							If you specify that elements within a region
 							are not eternal, then you can set the max
 							life seconds. If this is exceeded the
-							elmenets will be removed passively when a
+							elements will be removed passively when a
 							client tries to retrieve them. If you are
 							using a memory shrinker, then the items can
 							be removed actively.

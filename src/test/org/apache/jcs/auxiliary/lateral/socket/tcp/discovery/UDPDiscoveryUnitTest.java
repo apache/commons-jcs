@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
+import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.auxiliary.lateral.LateralCache;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
@@ -32,6 +33,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  *
@@ -85,7 +87,7 @@ public class UDPDiscoveryUnitTest
         ICompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(), lac.getTcpListenerPort(), cacheMgr );
+        UDPDiscoveryService service = new UDPDiscoveryService( lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(), lac.getTcpListenerPort(), cacheMgr, new MockCacheEventLogger(), new StandardSerializer() );
         service.setTcpLateralCacheAttributes( lac );
 
         // create a no wait facade for the service
@@ -100,7 +102,7 @@ public class UDPDiscoveryUnitTest
         service.addNoWaitFacade( lcnwf, "testCache1" );
 
         // create a receiver with the service
-        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, "228.5.6.7", 6789, cacheMgr );
+        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, "228.5.6.7", 6789, cacheMgr, new MockCacheEventLogger(), new StandardSerializer() );
         Thread t = new Thread( receiver );
         t.start();
 

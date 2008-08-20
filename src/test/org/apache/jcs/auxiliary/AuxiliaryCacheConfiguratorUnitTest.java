@@ -4,8 +4,8 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-import org.apache.jcs.engine.control.MockCacheEventLogger;
 import org.apache.jcs.engine.control.MockElementSerializer;
+import org.apache.jcs.engine.logging.MockCacheEventLogger;
 
 /** Unit tests for the auxiliary cache configurator. */
 public class AuxiliaryCacheConfiguratorUnitTest

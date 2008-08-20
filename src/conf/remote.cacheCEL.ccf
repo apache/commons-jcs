@@ -22,7 +22,7 @@ registry.port=1101
 remote.cache.service.port=1101
 remote.cluster.LocalClusterConsistency=true
 remote.cacheeventlogger=org.apache.jcs.engine.logging.CacheEventLoggerDebugLoggerImpl
-remote.cacheeventlogger.attributes.logCategoryName=TestEventLogCategory
+remote.cacheeventlogger.attributes.logCategoryName=test.RCSEventLogCategory
 
 # #############################################################
 # ################# DEFAULT CACHE REGION  #####################

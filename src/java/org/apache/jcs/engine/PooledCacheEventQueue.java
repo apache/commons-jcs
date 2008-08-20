@@ -91,7 +91,7 @@ public class PooledCacheEventQueue
      * @param threadPoolName
      */
     public PooledCacheEventQueue( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
-                                 int waitBeforeRetry, String threadPoolName )
+                                  int waitBeforeRetry, String threadPoolName )
     {
         if ( listener == null )
         {
@@ -117,9 +117,8 @@ public class PooledCacheEventQueue
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getQueueType()
+    /**
+     * @return the queue type
      */
     public int getQueueType()
     {
@@ -127,7 +126,7 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * Event Q is emtpy.
+     * Event Q is empty.
      */
     public synchronized void stopProcessing()
     {
@@ -309,9 +308,8 @@ public class PooledCacheEventQueue
         return getStatistics().toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getStatistics()
+    /**
+     * @return IStats
      */
     public IStats getStatistics()
     {

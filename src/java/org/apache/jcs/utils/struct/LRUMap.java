@@ -153,18 +153,16 @@ public class LRUMap
         return map.containsValue( value );
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map#values()
+    /**
+     * @return map.values();
      */
     public Collection values()
     {
         return map.values();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map#putAll(java.util.Map)
+    /**
+     * @param source
      */
     public void putAll( Map source )
     {
@@ -180,9 +178,9 @@ public class LRUMap
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map#get(java.lang.Object)
+    /**
+     * @param key
+     * @return Object
      */
     public Object get( Object key )
     {
@@ -247,9 +245,9 @@ public class LRUMap
         return ce;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map#remove(java.lang.Object)
+    /**
+     * @param key
+     * @return Object removed
      */
     public Object remove( Object key )
     {
@@ -271,9 +269,10 @@ public class LRUMap
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+    /**
+     * @param key
+     * @param value
+     * @return Object
      */
     public Object put( Object key, Object value )
     {
@@ -653,9 +652,8 @@ public class LRUMap
         return unWrapped;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Map#keySet()
+    /**
+     * @return map.keySet();
      */
     public Set keySet()
     {

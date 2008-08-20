@@ -25,20 +25,16 @@ import org.apache.jcs.engine.behavior.IZombie;
 import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
- * Description of the Class
- *
+ * Zombie Observer.
  */
 public class ZombieCacheWatch
     implements ICacheObserver, IZombie
 {
     /**
-     * Adds a feature to the CacheListener attribute of the ZombieCacheWatch
-     * object
+     * Adds a feature to the CacheListener attribute of the ZombieCacheWatch object
      * <p>
-     * @param cacheName
-     *            The feature to be added to the CacheListener attribute
-     * @param obj
-     *            The feature to be added to the CacheListener attribute
+     * @param cacheName The feature to be added to the CacheListener attribute
+     * @param obj The feature to be added to the CacheListener attribute
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
     {
@@ -46,29 +42,26 @@ public class ZombieCacheWatch
     }
 
     /**
-     * Adds a feature to the CacheListener attribute of the ZombieCacheWatch
-     * object
+     * Adds a feature to the CacheListener attribute of the ZombieCacheWatch object
      * <p>
-     * @param obj
-     *            The feature to be added to the CacheListener attribute
+     * @param obj The feature to be added to the CacheListener attribute
      */
     public void addCacheListener( ICacheListener obj )
     {
         return;
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String, org.apache.jcs.engine.behavior.ICacheListener)
+    /**
+     * @param cacheName
+     * @param obj
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
     {
         return;
     }
 
-    /*
-     *  (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
+    /**
+     * @param obj
      */
     public void removeCacheListener( ICacheListener obj )
     {
