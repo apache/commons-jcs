@@ -61,12 +61,16 @@ import org.apache.jcs.utils.props.PropertyLoader;
 public class RemoteCacheStartupServlet
     extends HttpServlet
 {
+    /** Don't change */
     private static final long serialVersionUID = 1L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheStartupServlet.class );
 
+    /** The default port to start the registry on.  */
     private static final int DEFAULT_REGISTRY_PORT = 1101;
 
+    /** The default config file name */
     private static final String DEFAULT_PROPS_FILE_NAME = "cache.ccf";
 
     /**
@@ -163,6 +167,11 @@ public class RemoteCacheStartupServlet
 
     /**
      * It just dumps the stats.
+     * <p>
+     * @param request 
+     * @param response 
+     * @throws ServletException 
+     * @throws IOException 
      */
     protected void service( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException

@@ -516,6 +516,9 @@ public class JDBCDiskCache
     /**
      * Queries the database for the value. If it gets a result, the value is deserialized.
      * <p>
+     * @param key 
+     * @param obj 
+     * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
     private ICacheElement processGet( Serializable key, ICacheElement obj )

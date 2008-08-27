@@ -27,12 +27,16 @@ public class RemoteCacheServerAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements IRemoteCacheServerAttributes
 {
+    /** Don't change */
     private static final long serialVersionUID = -2741662082869155365L;
 
+    /** Name of the remote service. */
     private String remoteServiceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
 
+    /** The remote host. */
     private String remoteHost;
 
+    /** The remote port. */
     private int remotePort;
 
     /**

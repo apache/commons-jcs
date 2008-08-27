@@ -28,13 +28,16 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 public class IndexedDiskCacheAttributes
     extends AbstractDiskCacheAttributes
 {
+    /** Don't change. */
     private static final long serialVersionUID = -2190863599358782950L;
 
+    /** default value */
     private static final int DEFAULT_maxKeySize = 5000;
 
     /** -1 means no limit. */
     private int maxKeySize = DEFAULT_maxKeySize;
 
+    /** default value */
     private static final int DEFAULT_maxRecycleBinSize = 5000;
 
     /**
@@ -43,12 +46,13 @@ public class IndexedDiskCacheAttributes
      */
     private int maxRecycleBinSize = DEFAULT_maxRecycleBinSize;
 
-    // default to -1, i.e., don't optimize until shutdown
+    /** default to -1, i.e., don't optimize until shutdown */
     private int optimizeAtRemoveCount = -1;
 
     /** Should we optimize on shutdown. */
     public static final boolean DEFAULT_OPTIMIZE_ON_SHUTDOWN = true;
 
+    /** Should we optimize on shutdown. */
     private boolean optimizeOnShutdown = DEFAULT_OPTIMIZE_ON_SHUTDOWN;
 
     /**

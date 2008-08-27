@@ -29,7 +29,8 @@ public abstract class AbstractAuxiliaryCache
      * Logs an event if an event logger is configured.
      * <p>
      * @param item
-     * @param requesterId
+     * @param eventName
+     * @return ICacheEvent
      */
     protected ICacheEvent createICacheEvent( ICacheElement item, String eventName )
     {
@@ -50,9 +51,10 @@ public abstract class AbstractAuxiliaryCache
     /**
      * Logs an event if an event logger is configured.
      * <p>
-     * @param cacheName
+     * @param regionName 
      * @param key
-     * @param requesterId
+     * @param eventName 
+     * @return ICacheEvent
      */
     protected ICacheEvent createICacheEvent( String regionName, Serializable key, String eventName )
     {
@@ -69,8 +71,7 @@ public abstract class AbstractAuxiliaryCache
     /**
      * Logs an event if an event logger is configured.
      * <p>
-     * @param item
-     * @param requesterId
+     * @param cacheEvent
      */
     protected void logICacheEvent( ICacheEvent cacheEvent )
     {

@@ -49,12 +49,16 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 public class RemoteCacheFailoverRunner
     implements Runnable
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheFailoverRunner.class );
 
+    /** The facade returned to the composite cache. */
     private RemoteCacheNoWaitFacade facade;
 
+    /** How long to wait between reconnect attempts. */
     private static long idlePeriod = 20 * 1000;
 
+    /** Have we reconnected. */
     private boolean alright = true;
 
     /** The cache manager */

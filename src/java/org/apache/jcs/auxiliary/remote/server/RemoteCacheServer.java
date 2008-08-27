@@ -93,6 +93,7 @@ class RemoteCacheServer
     /** relates listener id with an ip address */
     private final Hashtable idIPMap = new Hashtable();
 
+    /** Used to get the next listener id. */
     private int[] listenerId = new int[1];
 
     /** Configuration settings. */
@@ -231,7 +232,6 @@ class RemoteCacheServer
      * <p>
      * @param item
      * @param requesterId
-     * @throws IOException
      */
     private void processUpdate( ICacheElement item, long requesterId )
     {
@@ -434,7 +434,6 @@ class RemoteCacheServer
      * @param key
      * @param requesterId
      * @return ICacheElement
-     * @throws IOException
      */
     private ICacheElement processGet( String cacheName, Serializable key, long requesterId )
     {
@@ -486,7 +485,7 @@ class RemoteCacheServer
      * @param fromCluster
      * @param cacheDesc
      * @param element
-     * @return
+     * @return ICacheElement
      */
     private ICacheElement getFromCacheListeners( Serializable key, boolean fromCluster, CacheListeners cacheDesc,
                                                  ICacheElement element )
@@ -584,7 +583,6 @@ class RemoteCacheServer
      * @param requesterId
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
-     * @throws IOException
      */
     private Map processGetMultiple( String cacheName, Set keys, long requesterId )
     {
@@ -630,7 +628,7 @@ class RemoteCacheServer
      * @param elements
      * @param fromCluster
      * @param cacheDesc
-     * @return
+     * @return Map
      */
     private Map getMultipleFromCacheListeners( Set keys, Map elements, boolean fromCluster, CacheListeners cacheDesc )
     {
@@ -1455,6 +1453,8 @@ class RemoteCacheServer
      * <p>
      * @param item
      * @param requesterId
+     * @param eventName 
+     * @return ICacheEvent
      */
     private ICacheEvent createICacheEvent( ICacheElement item, long requesterId, String eventName )
     {
@@ -1473,6 +1473,8 @@ class RemoteCacheServer
      * @param cacheName
      * @param key
      * @param requesterId
+     * @param eventName 
+     * @return ICacheEvent
      */
     private ICacheEvent createICacheEvent( String cacheName, Serializable key, long requesterId, String eventName )
     {
@@ -1487,8 +1489,7 @@ class RemoteCacheServer
     /**
      * Logs an event if an event logger is configured.
      * <p>
-     * @param item
-     * @param requesterId
+     * @param cacheEvent 
      */
     protected void logICacheEvent( ICacheEvent cacheEvent )
     {

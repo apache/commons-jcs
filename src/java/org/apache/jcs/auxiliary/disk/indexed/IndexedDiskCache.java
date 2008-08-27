@@ -68,36 +68,49 @@ public class IndexedDiskCache
     /** The logger */
     private static final Log log = LogFactory.getLog( IndexedDiskCache.class );
 
+    /** Cache name used in log messages */
     private final String logCacheName;
 
+    /** The name of the file where the data is stored */
     private String fileName;
 
+    /** The IndexedDisk manages reads and writes to the data file. */
     private IndexedDisk dataFile;
 
+    /** The IndexedDisk manages reads and writes to the key file. */
     private IndexedDisk keyFile;
 
+    /** Map containing the keys and disk offsets. */
     private Map keyHash;
 
+    /** The maximum number of keys that we will keep in memory. */
     private int maxKeySize;
 
+    /** A handle on the data file. */
     private File rafDir;
 
+    /** Should we keep adding to the recycle bin. False during optimization. */
     boolean doRecycle = true;
 
+    /** Should we optimize real time */
     boolean isRealTimeOptimizationEnabled = true;
 
+    /** Should we optimize on shutdown. */
     boolean isShutdownOptimizationEnabled = true;
 
     /** are we currently optimizing the files */
     boolean isOptimizing = false;
 
+    /** The numer of times the file has been optimized. */
     private int timesOptimized = 0;
 
+    /** The thread optimizing the file. */
     private volatile Thread currentOptimizationThread;
 
     /** used for counting the number of requests */
     private int removeCount = 0;
 
+    /** Should we queue puts. True when optimizing. We write the queue post optimization. */
     private boolean queueInput = false;
 
     /** list where puts made during optimization are made */
@@ -106,15 +119,19 @@ public class IndexedDiskCache
     /** RECYLCE BIN -- array of empty spots */
     private SortedPreferentialArray recycle;
 
+    /** User configurable parameters */
     private IndexedDiskCacheAttributes cattr;
 
+    /** How many slots have we recycled. */
     private int recycleCnt = 0;
 
+    /** How many items were there on startup. */
     private int startupSize = 0;
 
     /** the number of bytes free on disk. */
     private long bytesFree = 0;
 
+    /** simple stat */
     private int hitCount = 0;
 
     /**
@@ -552,6 +569,7 @@ public class IndexedDiskCache
 
     /**
      * @param key
+     * @param object 
      * @return ICacheElement or null
      * @see AbstractDiskCache#doGet
      */

@@ -34,6 +34,7 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 public class JDBCDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
+    /** Name of the factory */
     private String name = "JDBCDiskCacheFactory";
 
     /**

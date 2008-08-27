@@ -168,7 +168,11 @@ public class RemoteCacheServerFactory
         }
     }
 
-    /** Configures the RemoteCacheServerAttributes from the props file. */
+    /** Configures the RemoteCacheServerAttributes from the props file. 
+     * <p>
+     * @param propFile 
+     * @return RemoteCacheServerAttributes
+     * @throws IOException */
     protected static RemoteCacheServerAttributes configureServerAttributes( String propFile )
         throws IOException
     {

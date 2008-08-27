@@ -26,8 +26,10 @@ package org.apache.jcs.utils.struct;
  */
 public class BoundedQueue
 {
+    /** Queue size limit. */
     private int maxSize;
 
+    /** The list backing the queue */
     private DoubleLinkedList list = new DoubleLinkedList();
 
     /**

@@ -24,19 +24,22 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 /**
- * This manages instances of the jdbc disk cache. It maintains one for each
- * region. One for all regions would work, but this gives us more detailed stats
- * by region.
+ * This manages instances of the jdbc disk cache. It maintains one for each region. One for all
+ * regions would work, but this gives us more detailed stats by region.
  */
 public class JDBCDiskCacheManager
     extends JDBCDiskCacheManagerAbstractTemplate
 {
+    /** Don't change */
     private static final long serialVersionUID = -8258856770927857896L;
 
+    /** The logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManager.class );
 
+    /** Singleton instance */
     private static JDBCDiskCacheManager instance;
 
+    /** User configurable settings. */
     private JDBCDiskCacheAttributes defaultJDBCDiskCacheAttributes;
 
     /**
@@ -99,7 +102,8 @@ public class JDBCDiskCacheManager
      * Creates a JDBCDiskCache using the supplied attributes.
      * <p>
      * @param cattr
-     * @return
+     * @param tableState 
+     * @return AuxiliaryCache
      */
     protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {

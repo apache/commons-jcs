@@ -42,8 +42,10 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 public class RemoteCacheFactory
     implements AuxiliaryCacheFactory
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( RemoteCacheFactory.class );
 
+    /** The name of this auxiliary */
     private String name;
 
     /** store reference of facades to initiate failover */

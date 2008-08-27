@@ -55,8 +55,6 @@ public class ShrinkerThread
 
     /**
      * Does nothing special.
-     * <p>
-     * @param diskCache
      */
     protected ShrinkerThread()
     {

@@ -60,10 +60,9 @@ public class JDBCDiskCachePoolAccess
      * Configures the pool name to use for the pool access.
      * <p>
      * This pool name should be unique to the database. It is used as part of the URL each time we
-     * lookup a conection from the driver manager.
+     * lookup a connection from the driver manager.
      * <p>
      * @param poolName
-     * @param driverName
      */
     public JDBCDiskCachePoolAccess( String poolName )
     {

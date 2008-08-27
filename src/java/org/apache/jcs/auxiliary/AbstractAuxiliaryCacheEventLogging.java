@@ -149,6 +149,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @param keys
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
+     * @throws IOException 
      */
     protected abstract Map processGetMultiple( Set keys )
         throws IOException;    
@@ -229,6 +230,8 @@ public abstract class AbstractAuxiliaryCacheEventLogging
     
     /**
      * Specific implementation of removeAll.
+     * <p>
+     * @throws IOException 
      */
     protected abstract void processRemoveAll()
         throws IOException;    

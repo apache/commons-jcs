@@ -29,34 +29,46 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCacheAttributes;
 public class JDBCDiskCacheAttributes
     extends AbstractDiskCacheAttributes
 {
+    /** Don't change */
     private static final long serialVersionUID = -6535808344813320062L;
 
+    /** default */
     private static final String DEFAULT_TABLE_NAME = "JCS_STORE";
 
+    /** DB username */
     private String userName;
 
+    /** DB password */
     private String password;
 
+    /** URL for the db */
     private String url;
 
+    /** The name of the database. */
     private String database = "";
 
+    /** The driver */
     private String driverClassName;
 
+    /** The table name */
     private String tableName = DEFAULT_TABLE_NAME;
 
+    /** If false we will insert and if it fails we will update. */
     private boolean testBeforeInsert = true;
 
     /** This is the default limit on the maximum number of active connections. */
     public static final int DEFAULT_MAX_ACTIVE = 10;
 
+    /** Max connections allowed */
     private int maxActive = DEFAULT_MAX_ACTIVE;
 
     /** This is the default setting for the cleanup routine. */
     public static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 300;
 
+    /** How often should we remove expired. */
     private int shrinkerIntervalSeconds = DEFAULT_SHRINKER_INTERVAL_SECONDS;
 
+    /** Should we remove expired in the background. */
     private boolean UseDiskShrinker = true;
 
     /**

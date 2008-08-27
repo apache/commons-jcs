@@ -35,16 +35,22 @@ import org.apache.jcs.engine.behavior.ICache;
 public class IndexedDiskCacheManager
     implements AuxiliaryCacheManager
 {
+    /** Don't change */
     private static final long serialVersionUID = -4153287154512274626L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( IndexedDiskCacheManager.class );
 
+    /** How many checkout have we received.  Decremented on release. This isn't very useful. */
     private static int clients;
 
+    /** Singleton instance. */
     private static IndexedDiskCacheManager instance;
 
+    /** Each region has an entry here. */
     private Hashtable caches = new Hashtable();
 
+    /** User configurable atributes */
     private IndexedDiskCacheAttributes defaultCacheAttributes;
 
     /**

@@ -32,32 +32,35 @@ import org.apache.jcs.engine.behavior.ICacheRestore;
  * <p>
  * When there is an error the monitor kicks off. The Failover runner starts looks for a manager with
  * a connection to a remote cache that is not in error. If a manager's connection to a remote cache
- * is found to be in error, the restorer kicks off and tries to reconnect. When it is succesful, the
+ * is found to be in error, the restorer kicks off and tries to reconnect. When it is successful, the
  * status of the manager changes.
  * <p>
  * When the failover runner finds that the primary is in good shape, it will switch back. Switching
- * back invovles setting the first no wait on the no wait facade.
+ * back involves setting the first no wait on the no wait facade.
  */
 public class RemoteCacheRestore
     implements ICacheRestore
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheRestore.class );
 
-    private final RemoteCacheManager rcm;
+    /** The manager */
+    private final RemoteCacheManager remoteCacheManager;
 
-    // private final AuxiliaryCacheManager rcm;
+    /** can it be restored */
     private boolean canFix = true;
 
+    /** The remote handle */
     private Object remoteObj;
 
     /**
      * Constructs with the given instance of RemoteCacheManager.
+     * <p>
      * @param rcm
      */
     public RemoteCacheRestore( RemoteCacheManager rcm )
     {
-        // public RemoteCacheRestore(AuxiliaryCacheManager rcm) {
-        this.rcm = rcm;
+        this.remoteCacheManager = rcm;
     }
 
     /**
@@ -72,7 +75,7 @@ public class RemoteCacheRestore
         {
             return canFix;
         }
-        String registry = "//" + rcm.host + ":" + rcm.port + "/" + rcm.service;
+        String registry = "//" + remoteCacheManager.host + ":" + remoteCacheManager.port + "/" + remoteCacheManager.service;
         if ( log.isInfoEnabled() )
         {
             log.info( "looking up server " + registry );
@@ -87,7 +90,7 @@ public class RemoteCacheRestore
         }
         catch ( Exception ex )
         {
-            log.error( "host=" + rcm.host + "; port" + rcm.port + "; service=" + rcm.service );
+            log.error( "host=" + remoteCacheManager.host + "; port" + remoteCacheManager.port + "; service=" + remoteCacheManager.service );
             canFix = false;
         }
         return canFix;
@@ -102,11 +105,11 @@ public class RemoteCacheRestore
         {
             return;
         }
-        rcm.fixCaches( (IRemoteCacheService) remoteObj, (IRemoteCacheObserver) remoteObj );
+        remoteCacheManager.fixCaches( (IRemoteCacheService) remoteObj, (IRemoteCacheObserver) remoteObj );
 
         if ( log.isInfoEnabled() )
         {
-            String msg = "Remote connection to " + "//" + rcm.host + ":" + rcm.port + "/" + rcm.service + " resumed.";
+            String msg = "Remote connection to " + "//" + remoteCacheManager.host + ":" + remoteCacheManager.port + "/" + remoteCacheManager.service + " resumed.";
             log.info( msg );
         }
     }

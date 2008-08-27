@@ -53,24 +53,31 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 public class RemoteCacheManager
     implements AuxiliaryCacheManager, IShutdownObserver
 {
+    /** Dont' change */
     private static final long serialVersionUID = 798077557166389498L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheManager.class );
 
     /** Contains mappings of Location instance to RemoteCacheManager instance. */
     final static Map instances = new HashMap();
 
+    /** Monitors connections. */
     private static RemoteCacheMonitor monitor;
 
+    /** Not so useful. How many getCaches over releases were called. */
     private int clients;
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
     final Map caches = new HashMap();
 
+    /** The remote host */
     final String host;
 
+    /** The remote port */
     final int port;
 
+    /** The service name */
     final String service;
 
     /** The configuration attributes. */
@@ -94,6 +101,7 @@ public class RemoteCacheManager
     /** The cache manager listeners will need to use to get a cache. */
     private ICompositeCacheManager cacheMgr;
 
+    /** The service found through lookup */
     private String registry;
 
     /**
@@ -410,11 +418,11 @@ public class RemoteCacheManager
                 IRemoteCacheClient remoteCacheClient = new RemoteCache( cattr, remoteService, listener );
                 remoteCacheClient.setCacheEventLogger( cacheEventLogger );
                 remoteCacheClient.setElementSerializer( elementSerializer );
-                
+
                 remoteCacheNoWait = new RemoteCacheNoWait( remoteCacheClient );
                 remoteCacheNoWait.setCacheEventLogger( cacheEventLogger );
                 remoteCacheNoWait.setElementSerializer( elementSerializer );
-                
+
                 caches.put( cattr.getCacheName(), remoteCacheNoWait );
             }
 
@@ -551,9 +559,9 @@ public class RemoteCacheManager
             this.port = port;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.lang.Object#equals(java.lang.Object)
+        /**
+         * @param obj
+         * @return true if the host and port are equal
          */
         public boolean equals( Object obj )
         {
@@ -585,7 +593,6 @@ public class RemoteCacheManager
     /**
      * Shutdown callback from composite cache manager.
      * <p>
-     * (non-Javadoc)
      * @see org.apache.jcs.engine.behavior.IShutdownObserver#shutdown()
      */
     public void shutdown()

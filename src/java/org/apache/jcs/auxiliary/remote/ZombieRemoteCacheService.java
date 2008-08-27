@@ -35,8 +35,9 @@ import org.apache.jcs.utils.struct.BoundedQueue;
 import org.apache.jcs.utils.timing.ElapsedTimer;
 
 /**
- * Zombie adapter for the remote cache service. It just balks if there is no queue configured. If a
- * queue is configured, then events will be added to the queue. The idea is that when proper
+ * Zombie adapter for the remote cache service. It just balks if there is no queue configured.
+ * <p>
+ * If a queue is configured, then events will be added to the queue. The idea is that when proper
  * operation is restored, the remote cache will walk the queue. The queue must be bounded so it does
  * not eat memory.
  * <p>
@@ -48,10 +49,13 @@ public class ZombieRemoteCacheService
     extends ZombieCacheService
     implements IRemoteCacheService
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( ZombieRemoteCacheService.class );
 
+    /** How big can the queue grow. */
     private int maxQueueSize = 0;
 
+    /** The queue */
     private BoundedQueue queue;
 
     /**
@@ -152,10 +156,10 @@ public class ZombieRemoteCacheService
     }
 
     /**
-     * @param cacheName 
+     * @param cacheName
      * @param keys
-     * @param requesterId 
-     * @return an empty map.  zombies have no internal data
+     * @param requesterId
+     * @return an empty map. zombies have no internal data
      */
     public Map getMultiple( String cacheName, Set keys, long requesterId )
     {
@@ -222,8 +226,10 @@ public class ZombieRemoteCacheService
      */
     private abstract class ZombieEvent
     {
+        /** The name of the region. */
         String cacheName;
 
+        /** The id of the requester */
         long requesterId;
     }
 
@@ -233,6 +239,7 @@ public class ZombieRemoteCacheService
     private class PutEvent
         extends ZombieEvent
     {
+        /** The element to put */
         ICacheElement element;
 
         /**
@@ -253,6 +260,7 @@ public class ZombieRemoteCacheService
     private class RemoveEvent
         extends ZombieEvent
     {
+        /** The key to remove */
         Serializable key;
 
         /**

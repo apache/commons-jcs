@@ -49,8 +49,10 @@ public class HSQLDiskCacheFactory
     /** The logger */
     private final static Log log = LogFactory.getLog( HSQLDiskCacheFactory.class );
 
+    /** Name for logging, etc. */
     private String name = "HSQLDiskCacheFactory";
 
+    /** The databases. */
     private Set databases = Collections.synchronizedSet( new HashSet() );
 
     /**

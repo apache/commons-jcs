@@ -33,29 +33,31 @@ import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleFormatException;
 import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
 
 /**
- * This manages instances of the MySQL jdbc disk cache. It maintains one for
- * each region. One for all regions would work, but this gives us more detailed
- * stats by region.
+ * This manages instances of the MySQL jdbc disk cache. It maintains one for each region. One for
+ * all regions would work, but this gives us more detailed stats by region.
  * <p>
- * Although the generic JDBC Disk Cache Manager can be used for MySQL, the MySQL
- * JDBC Disk Cache has additional features, such as table optimization that are
- * particular to MySQL.
+ * Although the generic JDBC Disk Cache Manager can be used for MySQL, the MySQL JDBC Disk Cache has
+ * additional features, such as table optimization that are particular to MySQL.
  */
 public class MySQLDiskCacheManager
     extends JDBCDiskCacheManagerAbstractTemplate
 {
+    /** Don't change. */
     private static final long serialVersionUID = -8258856770927857896L;
 
+    /** The logger */
     private static final Log log = LogFactory.getLog( MySQLDiskCacheManager.class );
 
+    /** The singleton instance. */
     private static MySQLDiskCacheManager instance;
 
+    /** User configurable atributes. */
     private MySQLDiskCacheAttributes defaultJDBCDiskCacheAttributes;
 
-    // ms in a day
+    /** ms in a day */
     private static final int DAILY_INTERVAL = 60 * 60 * 24 * 1000;
 
-    // for schedule optimizations
+    /** for schedule optimizations */
     private Timer daemon = null;
 
     /**
@@ -118,7 +120,8 @@ public class MySQLDiskCacheManager
      * Creates a JDBCDiskCache using the supplied attributes.
      * <p>
      * @param cattr
-     * @return
+     * @param tableState
+     * @return AuxiliaryCache
      */
     protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
@@ -130,8 +133,7 @@ public class MySQLDiskCacheManager
     }
 
     /**
-     * For each time in the optimization schedule, this calls schedule
-     * Optimizaiton.
+     * For each time in the optimization schedule, this calls schedule Optimizaiton.
      * <p>
      * @param attributes
      * @param tableState
@@ -178,11 +180,9 @@ public class MySQLDiskCacheManager
     }
 
     /**
-     * This takes in a single time and schedules the optimizer to be called at
-     * that time every day.
+     * This takes in a single time and schedules the optimizer to be called at that time every day.
      * <p>
-     * @param startTime --
-     *            HH:MM:SS format
+     * @param startTime -- HH:MM:SS format
      * @param optimizer
      */
     protected void scheduleOptimization( Date startTime, MySQLTableOptimizer optimizer )
@@ -213,14 +213,14 @@ public class MySQLDiskCacheManager
     }
 
     /**
-     * This calls the optimizers' optimize table method. This is used by the
-     * timer.
+     * This calls the optimizers' optimize table method. This is used by the timer.
      * <p>
      * @author Aaron Smuts
      */
     private class OptimizerTask
         extends TimerTask
     {
+        /** Handles optimization */
         private MySQLTableOptimizer optimizer = null;
 
         /**

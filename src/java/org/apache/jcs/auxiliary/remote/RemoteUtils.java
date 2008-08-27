@@ -37,6 +37,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class RemoteUtils
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( RemoteUtils.class );
 
     /** No instances please. */

@@ -50,12 +50,16 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
 public class RemoteCacheListener
     implements IRemoteCacheListener, IRemoteCacheConstants, Serializable
 {
+    /** Don't change */
     private static final long serialVersionUID = 1L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheListener.class );
 
+    /** The cached name of the local host.  The remote server gets this for logging purposes. */
     private static String localHostName = null;
 
+    /** Has this client been shutdown. */
     boolean disposed = false;
 
     /**
@@ -76,6 +80,7 @@ public class RemoteCacheListener
     /** This is set by the remote cache server. */
     protected long listenerId = 0;
 
+    /** Custom serializer.  Standard by default. */
     private transient IElementSerializer elementSerializer = new StandardSerializer();
 
     /**

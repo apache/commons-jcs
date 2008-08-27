@@ -81,12 +81,16 @@ public class RemoteCache
     /** This is a handle on the remote server. In zombie mode it is replaced with a balking facade. */
     private IRemoteCacheService remote;
 
+    /** The listener */
     private IRemoteCacheListener listener;
 
+    /** Default element attribures */
     private IElementAttributes attr = null;
 
+    /** A thread pool for gets if configured. */
     private ThreadPool pool = null;
 
+    /** Should we get asynchonously using a pool. */
     private boolean usePoolForGet = false;
 
     /**
@@ -300,6 +304,7 @@ public class RemoteCache
      * @param keys
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
+     * @throws IOException 
      */
     protected Map processGetMultiple( Set keys )
         throws IOException
@@ -793,7 +798,6 @@ public class RemoteCache
      * <p>
      * Protected for testing.
      * <p>
-     * @param requesterId
      * @return String
      */
     protected String getIPAddressForService()
