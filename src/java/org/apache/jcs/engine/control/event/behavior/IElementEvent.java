@@ -34,4 +34,9 @@ public interface IElementEvent
      * @return The elementEvent value
      */
     public int getElementEvent();
+
+    /**
+     * @return the source of the event.
+     */
+    public Object getSource();
 }
