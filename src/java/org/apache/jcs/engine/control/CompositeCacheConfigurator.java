@@ -50,24 +50,31 @@ import org.apache.jcs.utils.config.PropertySetter;
  */
 public class CompositeCacheConfigurator
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( CompositeCacheConfigurator.class );
 
+    /** default region prefix */
     final static String DEFAULT_REGION = "jcs.default";
 
+    /** normal region prefix */
     final static String REGION_PREFIX = "jcs.region.";
 
+    /** system region prefix. might not be used */
     final static String SYSTEM_REGION_PREFIX = "jcs.system.";
 
+    /** auxiliary prefix */
     final static String AUXILIARY_PREFIX = "jcs.auxiliary.";
 
     /** .attributes */
     final static String ATTRIBUTE_PREFIX = ".attributes";
 
+    /** .cacheattributes */
     final static String CACHE_ATTRIBUTE_PREFIX = ".cacheattributes";
 
+    /** .elementattributes */
     final static String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
 
-    /** Can't operate on the interface.  */
+    /** Can't operate on the interface. */
     private CompositeCacheManager compositeCacheManager;
 
     /**
@@ -365,11 +372,11 @@ public class CompositeCacheConfigurator
     }
 
     /**
-     * Get an compositecacheattributes for the listed region.
+     * Get an ICompositeCacheAttributes for the listed region.
      *<p>
      * @param props
      * @param regName
-     * @return
+     * @return ICompositeCacheAttributes
      */
     protected ICompositeCacheAttributes parseCompositeCacheAttributes( Properties props, String regName )
     {
@@ -549,7 +556,7 @@ public class CompositeCacheConfigurator
         auxAttr.setCacheName( regName );
 
         String auxPrefix = AUXILIARY_PREFIX + auxName;
-        
+
         // CONFIGURE THE EVENT LOGGER
         ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator.parseCacheEventLogger( props, auxPrefix );
 
@@ -561,7 +568,7 @@ public class CompositeCacheConfigurator
         // need to make sure the manager already has the cache
         // before the auxiliary is created.
         auxCache = auxFac.createCache( auxAttr, compositeCacheManager, cacheEventLogger, elementSerializer );
-        
+
         return auxCache;
     }
 }

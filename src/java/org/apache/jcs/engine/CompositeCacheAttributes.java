@@ -31,28 +31,43 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 public class CompositeCacheAttributes
     implements ICompositeCacheAttributes, Cloneable
 {
+    /** Don't change */
     private static final long serialVersionUID = 6754049978134196787L;
 
+    /** default lateral switch */
     private static final boolean DEFAULT_USE_LATERAL = true;
 
+    /** default remote switch */
     private static final boolean DEFAULT_USE_REMOTE = true;
 
+    /** default disk switch */
     private static final boolean DEFAULT_USE_DISK = true;
 
+    /** default shrinker setting */
     private static final boolean DEFAULT_USE_SHRINKER = false;
 
+    /** default max objects value */
     private static final int DEFAULT_MAX_OBJECTS = 100;
 
+    /** default */
     private static final int DEFAULT_MAX_MEMORY_IDLE_TIME_SECONDS = 60 * 120;
 
+    /** default interval to run the shrinker */
     private static final int DEFAULT_SHRINKER_INTERVAL_SECONDS = 30;
 
+    /** default */
     private static final int DEFAULT_MAX_SPOOL_PER_RUN = -1;
 
+    /** default */
     private static final String DEFAULT_MEMORY_CACHE_NAME = "org.apache.jcs.engine.memory.lru.LRUMemoryCache";
 
+    /** Default number to send to disk at a time when memory fills. */
+    private static final int DEFAULT_CHUNK_SIZE = 2;
+
+    /** allow lateral caches */
     private boolean useLateral = DEFAULT_USE_LATERAL;
 
+    /** allow remote caches */
     private boolean useRemote = DEFAULT_USE_REMOTE;
 
     /** Whether we should use a disk cache if it is configured. */
@@ -79,7 +94,11 @@ public class CompositeCacheAttributes
     /** The name of the memory cache implementation class. */
     private String memoryCacheName;
 
+    /** Set via DISK_USAGE_PATTERN_NAME */
     private short diskUsagePattern = DISK_USAGE_PATTERN_SWAP;
+
+    /** How many to spool to disk at a time. */
+    private int spoolChunkSize = DEFAULT_CHUNK_SIZE;
 
     /**
      * Constructor for the CompositeCacheAttributes object
@@ -331,6 +350,26 @@ public class CompositeCacheAttributes
     }
 
     /**
+     * Number to send to disk at at time when memory is full.
+     * <p>
+     * @return int
+     */
+    public int getSpoolChunkSize()
+    {
+        return spoolChunkSize;
+    }
+
+    /**
+     * Number to send to disk at a time.
+     * <p>
+     * @param spoolChunkSize
+     */
+    public void setSpoolChunkSize( int spoolChunkSize )
+    {
+        this.spoolChunkSize = spoolChunkSize;
+    }
+
+    /**
      * @return Returns the diskUsagePattern.
      */
     public short getDiskUsagePattern()
@@ -341,7 +380,7 @@ public class CompositeCacheAttributes
     /**
      * Description of the Method
      * <p>
-     * @return
+     * @return ICompositeCacheAttributes a copy
      */
     public ICompositeCacheAttributes copy()
     {
@@ -373,6 +412,7 @@ public class CompositeCacheAttributes
         dump.append( ", maxObjs = " ).append( maxObjs );
         dump.append( ", maxSpoolPerRun = " ).append( maxSpoolPerRun );
         dump.append( ", diskUsagePattern = " ).append( diskUsagePattern );
+        dump.append( ", spoolChunkSize = " ).append( spoolChunkSize );
         dump.append( " ]" );
 
         return dump.toString();

@@ -226,4 +226,18 @@ public interface ICompositeCacheAttributes
      * @return Returns the diskUsagePattern.
      */
     public short getDiskUsagePattern();
+    
+    /**
+     * Number to send to disk at at time when memory is full.
+     * <p>
+     * @return int
+     */
+    public int getSpoolChunkSize();
+    
+    /**
+     * Number to send to disk at a time.
+     * <p>
+     * @param spoolChunkSize
+     */
+    public void setSpoolChunkSize( int spoolChunkSize );
 }

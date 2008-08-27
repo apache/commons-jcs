@@ -27,6 +27,7 @@ import java.io.Serializable;
 public class GroupAttrName
     implements Serializable
 {
+    /** Don't change */
     private static final long serialVersionUID = 1586079686300744198L;
 
     /** Description of the Field */
@@ -35,6 +36,7 @@ public class GroupAttrName
     /** the name of the attribute */
     public final Object attrName;
 
+    /** Cached toString value */
     private String toString;
 
     /**

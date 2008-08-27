@@ -44,6 +44,7 @@ import org.apache.jcs.engine.memory.MemoryCache;
 public class ShrinkerThread
     implements Runnable
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** The MemoryCache instance which this shrinker is watching */
@@ -55,11 +56,12 @@ public class ShrinkerThread
     /** Maximum number of items to spool per run. Default is -1, or no limit. */
     private int maxSpoolPerRun;
 
+    /** Should we limit the number spooled per run.  If so, the maxSpoolPerRun will be used. */
     private boolean spoolLimit = false;
 
     /**
      * Constructor for the ShrinkerThread object.
-     *
+     * <p>
      * @param cache
      *            The MemoryCache which the new shrinker should watch.
      */

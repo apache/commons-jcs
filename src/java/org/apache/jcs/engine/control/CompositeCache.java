@@ -965,7 +965,6 @@ public class CompositeCache
      * <p>
      * @param key
      * @return true is it was removed
-     * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#remove(java.io.Serializable)
      */
     public boolean remove( Serializable key )

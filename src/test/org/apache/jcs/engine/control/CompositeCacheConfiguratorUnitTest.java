@@ -28,7 +28,7 @@ public class CompositeCacheConfiguratorUnitTest
         String auxPrefix = "jcs.auxiliary." + auxName;
         String auxiliaryClassName = MockAuxiliaryCacheFactory.class.getCanonicalName();
         String eventLoggerClassName = MockCacheEventLogger.class.getCanonicalName();
-        String auxiliaryAttributeClassName =  MockAuxiliaryCacheAttributes.class.getCanonicalName();
+        String auxiliaryAttributeClassName = MockAuxiliaryCacheAttributes.class.getCanonicalName();
 
         Properties props = new Properties();
         props.put( auxPrefix, auxiliaryClassName );
@@ -36,7 +36,7 @@ public class CompositeCacheConfiguratorUnitTest
         props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, eventLoggerClassName );
 
         System.out.print( props );
-        
+
         CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
 
         CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( manager );
@@ -50,5 +50,28 @@ public class CompositeCacheConfiguratorUnitTest
         // VERIFY
         assertNotNull( "Should have an auxcache.", result );
         assertNotNull( "Should have an event logger.", result.cacheEventLogger );
+    }
+
+    /**
+     * Verify that we can parse the spool chunk size
+     */
+    public void testParseSpoolChunkSize_Normal()
+    {
+        // SETUP
+        String regionName = "MyRegion";
+        int chunkSize = 5;
+
+        Properties props = new Properties();
+        props.put( "jcs.default", "" );
+        props.put( "jcs.default.cacheattributes.SpoolChunkSize", String.valueOf( chunkSize ) );
+
+        CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
+
+        // DO WORK
+        manager.configure( props );
+
+        // VERIFY
+        CompositeCache cache = manager.getCache( regionName );
+        assertEquals( "Wrong chunkSize", cache.getCacheAttributes().getSpoolChunkSize(), chunkSize );
     }
 }

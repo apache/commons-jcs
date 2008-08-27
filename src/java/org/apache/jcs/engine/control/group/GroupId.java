@@ -37,10 +37,12 @@ public class GroupId
     /** the name of the region. */
     public final String cacheName;
 
+    /** Cached toString value. */
     private String toString;
 
     /**
      * Constructor for the GroupId object
+     * <p>
      * @param cacheName
      * @param groupName
      */
@@ -60,7 +62,7 @@ public class GroupId
     }
 
     /**
-     * @param obj 
+     * @param obj
      * @return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
      */
     public boolean equals( Object obj )

@@ -212,10 +212,13 @@ public class ElementEventQueue
 
     // /////////////////////////// Inner classes /////////////////////////////
 
+    /** A node in the queue. These are chained forming a singly linked list */
     private static class Node
     {
+        /** The next node. */
         Node next = null;
 
+        /** The event to run */
         ElementEventQueue.AbstractElementEventRunner event = null;
     }
 

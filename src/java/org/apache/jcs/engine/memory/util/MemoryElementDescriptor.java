@@ -28,7 +28,7 @@ import org.apache.jcs.utils.struct.DoubleLinkedListNode;
 public class MemoryElementDescriptor
     extends DoubleLinkedListNode
 {
-
+    /** Don't change */
     private static final long serialVersionUID = -1905161209035522460L;
 
     /** The CacheElement wrapped by this descriptor */
@@ -36,7 +36,7 @@ public class MemoryElementDescriptor
 
     /**
      * Constructor for the MemoryElementDescriptor object
-     *
+     * <p>
      * @param ce
      */
     public MemoryElementDescriptor( ICacheElement ce )

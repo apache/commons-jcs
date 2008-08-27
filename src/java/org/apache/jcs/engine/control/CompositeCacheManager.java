@@ -61,8 +61,10 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 public class CompositeCacheManager
     implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, IShutdownObservable
 {
+    /** Don't change */
     private static final long serialVersionUID = 7598584393134401756L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 
     /** Caches managed by this cache manager */
@@ -95,10 +97,13 @@ public class CompositeCacheManager
     /** The Singleton Instance */
     protected static CompositeCacheManager instance;
 
+    /** The prefix of relevant system properties */
     private static final String SYSTEM_PROPERTY_KEY_PREFIX = "jcs";
 
+    /** Should we use system property substitutions. */
     private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
 
+    /** Those waiting for notification of a shutdown.  */
     private Set shutdownObservers = new HashSet();
 
     /**

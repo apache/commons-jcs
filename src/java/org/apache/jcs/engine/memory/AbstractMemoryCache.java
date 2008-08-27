@@ -59,9 +59,6 @@ public abstract class AbstractMemoryCache
     /** log instance */
     private final static Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
-    /** default chunking size */
-    private static final int DEFAULT_CHUNK_SIZE = 2;
-
     /** The region name. This defines a namespace of sorts. */
     protected String cacheName;
 
@@ -80,8 +77,8 @@ public abstract class AbstractMemoryCache
     /** status */
     protected int status;
 
-    /** How many to spool at a time. TODO make configurable */
-    protected int chunkSize = DEFAULT_CHUNK_SIZE;
+    /** How many to spool at a time.  */
+    protected int chunkSize;
 
     /** The background memory shrinker, one for all regions. */
     private static ClockDaemon shrinkerDaemon;
@@ -103,7 +100,8 @@ public abstract class AbstractMemoryCache
         this.cacheName = hub.getCacheName();
         this.cattr = hub.getCacheAttributes();
         this.cache = hub;
-
+        
+        chunkSize = cattr.getSpoolChunkSize();
         status = CacheConstants.STATUS_ALIVE;
 
         if ( cattr.getUseMemoryShrinker() )
@@ -342,8 +340,6 @@ public abstract class AbstractMemoryCache
 
     /**
      * Allows us to set the daemon status on the clockdaemon
-     * <p>
-     * @author aaronsm
      */
     class MyThreadFactory
         implements ThreadFactory

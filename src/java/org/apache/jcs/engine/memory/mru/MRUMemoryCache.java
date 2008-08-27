@@ -50,14 +50,19 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class MRUMemoryCache
     extends AbstractMemoryCache
 {
+    /** Don't change */
     private static final long serialVersionUID = 5013101678192336129L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( MRUMemoryCache.class );
 
+    /** Simple stat.  Number of hits.  */
     private int hitCnt = 0;
 
+    /** Number of misses */
     private int missCnt = 0;
 
+    /** Number of puts */
     private int putCnt = 0;
 
     /**
