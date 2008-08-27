@@ -36,14 +36,11 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
- *
- * @author Aaron Smuts
- *
+ * Unit tests for discovery
  */
 public class UDPDiscoveryUnitTest
     extends TestCase
 {
-
     /**
      * Test setup
      */
@@ -65,15 +62,14 @@ public class UDPDiscoveryUnitTest
      * <p>
      * 6. create a sender
      * <p>
-     * 7.create more names than we have no wait facades for the only one that
-     * gets added should be testCache1
+     * 7.create more names than we have no wait facades for the only one that gets added should be
+     * testCache1
      * <p>
      * 8. send 10 messages
      * <p>
      * 9. check to see that we got 10 messages
      * <p>
      * 10. check to see if the testCache1 facade got a nowait.
-     *
      * @throws Exception
      */
     public void testSimpleUDPDiscovery()
@@ -87,7 +83,9 @@ public class UDPDiscoveryUnitTest
         ICompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(), lac.getTcpListenerPort(), cacheMgr, new MockCacheEventLogger(), new StandardSerializer() );
+        UDPDiscoveryService service = new UDPDiscoveryService( lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(),
+                                                               lac.getTcpListenerPort(), cacheMgr,
+                                                               new MockCacheEventLogger(), new StandardSerializer() );
         service.setTcpLateralCacheAttributes( lac );
 
         // create a no wait facade for the service
@@ -102,7 +100,8 @@ public class UDPDiscoveryUnitTest
         service.addNoWaitFacade( lcnwf, "testCache1" );
 
         // create a receiver with the service
-        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, "228.5.6.7", 6789, cacheMgr, new MockCacheEventLogger(), new StandardSerializer() );
+        UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, "228.5.6.7", 6789, cacheMgr,
+                                                                  new MockCacheEventLogger(), new StandardSerializer() );
         Thread t = new Thread( receiver );
         t.start();
 
@@ -152,7 +151,6 @@ public class UDPDiscoveryUnitTest
 
     /**
      * Verify that the config does not throw any errors.
-     *
      * @throws Exception
      */
     public void testUDPDiscoveryConfig()
@@ -201,6 +199,5 @@ public class UDPDiscoveryUnitTest
         // try adding the same one again
         lcnwf.addNoWait( noWait2 );
         assertEquals( "Facade should still have 2 no waits", 2, lcnwf.noWaits.length );
-
     }
 }

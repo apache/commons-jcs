@@ -21,7 +21,6 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -35,14 +34,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.utils.net.HostNameUtil;
 import org.apache.jcs.utils.props.PropertyLoader;
 
 /**
- * This servlet can be used to startup the JCS remote cache. It is easy to
- * deploy the remote server in a tomcat base. This give you an easy way to
- * monitor its activity.
+ * This servlet can be used to startup the JCS remote cache. It is easy to deploy the remote server
+ * in a tomcat base. This give you an easy way to monitor its activity.
  * <p>
- *
  * <code>
  *  <servlet>
         <servlet-name>JCSRemoteCacheStartupServlet</servlet-name>
@@ -58,10 +56,7 @@ import org.apache.jcs.utils.props.PropertyLoader;
         <url-pattern>/jcs</url-pattern>
     </servlet-mapping>
  * </code>
- *
- *
  * @author Aaron Smuts
- *
  */
 public class RemoteCacheStartupServlet
     extends HttpServlet
@@ -77,10 +72,10 @@ public class RemoteCacheStartupServlet
     /**
      * Starts the registry and then tries to bind to it.
      * <p>
-     * Gets the port from a props file. Uses the local host name for the registry
-     * host. Tries to start the registry, ignoring failure. Starts the server.
+     * Gets the port from a props file. Uses the local host name for the registry host. Tries to
+     * start the registry, ignoring failure. Starts the server.
      * <p>
-     * @throws ServletException 
+     * @throws ServletException
      */
     public void init()
         throws ServletException
@@ -120,7 +115,7 @@ public class RemoteCacheStartupServlet
         String registryHost;
         try
         {
-            registryHost = InetAddress.getLocalHost().getHostAddress();
+            registryHost = HostNameUtil.getLocalHostAddress();
 
             if ( log.isDebugEnabled() )
             {

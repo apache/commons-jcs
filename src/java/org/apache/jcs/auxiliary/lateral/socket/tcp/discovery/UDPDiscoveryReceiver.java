@@ -46,16 +46,17 @@ import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
-/**
- * Receives UDP Discovery messages.
- */
+/** Receives UDP Discovery messages. */
 public class UDPDiscoveryReceiver
     implements Runnable, IShutdownObserver
 {
+    /** The log factory */
     private final static Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
 
+    /** buffer */
     private final byte[] m_buffer = new byte[65536];
 
+    /** The socket used for communication. */
     private MulticastSocket m_socket;
 
     // todo consider using the threadpool manager to
@@ -280,10 +281,8 @@ public class UDPDiscoveryReceiver
             this.message = message;
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.lang.Runnable#run()
+        /**
+         * Process the message.
          */
         public void run()
         {
@@ -384,15 +383,15 @@ public class UDPDiscoveryReceiver
 
     /**
      * Allows us to set the daemon status on the executor threads
-     * @author aaronsm
      */
     class MyThreadFactory
         implements ThreadFactory
     {
-        /*
-         * (non-Javadoc)
-         *
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+        /**
+         * Sets the thread to daemon.
+         * <p>
+         * @param runner
+         * @return a daemon thread
          */
         public Thread newThread( Runnable runner )
         {
@@ -403,11 +402,7 @@ public class UDPDiscoveryReceiver
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ShutdownObserver#shutdown()
-     */
+    /** Shuts down the socket. */
     public void shutdown()
     {
         try

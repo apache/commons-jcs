@@ -21,6 +21,7 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -53,13 +54,13 @@ public class RemoteCacheListener
 
     private final static Log log = LogFactory.getLog( RemoteCacheListener.class );
 
-    private static String localHostName = HostNameUtil.getLocalHostAddress();
+    private static String localHostName = null;
 
     boolean disposed = false;
 
     /**
-     * The cache manager used to put items in differnt regions. This is set lazily and should not be
-     * sent to the remote server.
+     * The cache manager used to put items in different regions. This is set lazily and should not
+     * be sent to the remote server.
      */
     protected transient ICompositeCacheManager cacheMgr;
 
@@ -349,11 +350,22 @@ public class RemoteCacheListener
      * This is for debugging. It allows the remote server to log the address of clients.
      * <p>
      * @return String
-     * @throws IOException 
+     * @throws IOException
      */
-    public String getLocalHostAddress()
+    public synchronized String getLocalHostAddress()
         throws IOException
     {
+        if ( localHostName == null )
+        {
+            try
+            {
+                localHostName = HostNameUtil.getLocalHostAddress();
+            }
+            catch ( UnknownHostException uhe )
+            {
+                localHostName = "unknown";
+            }
+        }
         return localHostName;
     }
 

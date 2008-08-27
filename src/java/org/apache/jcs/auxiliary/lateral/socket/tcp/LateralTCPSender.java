@@ -19,9 +19,7 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
@@ -32,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.utils.SocketOpener;
-import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -408,37 +405,5 @@ public class LateralTCPSender
     public String getRemoteHost()
     {
         return remoteHost;
-    }
-
-    /**
-     * This is a Testing Method. It should be moved to a unit test.
-     * @param args
-     */
-    public static void main( String args[] )
-    {
-        try
-        {
-            LateralTCPSender lur = null;
-            // new LateralTCPSender( "localhost", 1111 );
-
-            // process user input till done
-            boolean notDone = true;
-            String message = null;
-            // wait to dispose
-            BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
-
-            while ( notDone )
-            {
-                System.out.println( "enter mesage:" );
-                message = br.readLine();
-                CacheElement ce = new CacheElement( "test", "test", message );
-                LateralElementDescriptor led = new LateralElementDescriptor( ce );
-                lur.send( led );
-            }
-        }
-        catch ( Exception e )
-        {
-            System.out.println( e.toString() );
-        }
     }
 }

@@ -175,7 +175,8 @@ public class LateralTCPService
     }
 
     /**
-     * Does nothing.
+     * Does nothing. <p.
+     * @throws IOException
      */
     public void release()
         throws IOException
@@ -215,9 +216,11 @@ public class LateralTCPService
         // nothing needs to be done
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#get(java.lang.String, java.io.Serializable)
+    /**
+     * @param cacheName
+     * @param key
+     * @return ICacheElement if found.
+     * @throws IOException
      */
     public ICacheElement get( String cacheName, Serializable key )
         throws IOException
@@ -288,9 +291,9 @@ public class LateralTCPService
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheService#removeAll(java.lang.String)
+    /**
+     * @param cacheName
+     * @throws IOException
      */
     public void removeAll( String cacheName )
         throws IOException
@@ -298,10 +301,10 @@ public class LateralTCPService
         removeAll( cacheName, getListenerId() );
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String,
-     *      long)
+    /**
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
      */
     public void removeAll( String cacheName, long requesterId )
         throws IOException
@@ -347,10 +350,10 @@ public class LateralTCPService
     // the connection is not registered, the udp service is
     // is not registered.
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(java.lang.String,
-     *      org.apache.jcs.engine.behavior.ICacheListener)
+    /**
+     * @param cacheName
+     * @param obj
+     * @throws IOException
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -358,9 +361,9 @@ public class LateralTCPService
         // Empty
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#addCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
+    /**
+     * @param obj
+     * @throws IOException
      */
     public void addCacheListener( ICacheListener obj )
         throws IOException
@@ -368,10 +371,10 @@ public class LateralTCPService
         // Empty
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(java.lang.String,
-     *      org.apache.jcs.engine.behavior.ICacheListener)
+    /**
+     * @param cacheName
+     * @param obj
+     * @throws IOException
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -379,9 +382,9 @@ public class LateralTCPService
         // Empty
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheObserver#removeCacheListener(org.apache.jcs.engine.behavior.ICacheListener)
+    /**
+     * @param obj
+     * @throws IOException
      */
     public void removeCacheListener( ICacheListener obj )
         throws IOException

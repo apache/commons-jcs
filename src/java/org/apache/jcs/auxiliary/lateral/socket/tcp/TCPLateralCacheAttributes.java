@@ -27,15 +27,12 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttr
  * This interface defines functions that are particular to the TCP Lateral Cache
  * plugin. It extends the generic LateralCacheAttributes interface which in turn
  * extends the AuxiliaryCache interface.
- *
- * @author Aaron Smuts
- *
  */
 public class TCPLateralCacheAttributes
     extends LateralCacheAttributes
     implements ITCPLateralCacheAttributes
 {
-
+    /** Don't change. */
     private static final long serialVersionUID = 1077889204513905220L;
 
     private static final String DEFAULT_UDP_DISCOVERY_ADDRESS = "228.5.6.7";

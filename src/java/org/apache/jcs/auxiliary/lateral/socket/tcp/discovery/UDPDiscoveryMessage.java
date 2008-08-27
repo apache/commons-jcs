@@ -24,25 +24,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- *
- * @author Aaron Smuts
- *
+ * The message sent by the discovery mechanism.
  */
 public class UDPDiscoveryMessage
     implements Serializable
 {
-
+    /** Don't change */
     private static final long serialVersionUID = -5332377899560951794L;
 
     /**
-     * This is the periodic broadcast of a servers location. This type of
-     * message is also sent in response to a REQUEST_BROADCAST.
+     * This is the periodic broadcast of a servers location. This type of message is also sent in
+     * response to a REQUEST_BROADCAST.
      */
     public static final int PASSIVE_BROADCAST = 0;
 
     /**
-     * This asks recipients to broadcast their location. This is used on
-     * startup.
+     * This asks recipients to broadcast their location. This is used on startup.
      */
     public static final int REQUEST_BROADCAST = 1;
 
@@ -58,8 +55,7 @@ public class UDPDiscoveryMessage
     private ArrayList cacheNames = new ArrayList();
 
     /**
-     * @param port
-     *            The port to set.
+     * @param port The port to set.
      */
     public void setPort( int port )
     {
@@ -75,8 +71,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @param host
-     *            The host to set.
+     * @param host The host to set.
      */
     public void setHost( String host )
     {
@@ -92,8 +87,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @param requesterId
-     *            The requesterId to set.
+     * @param requesterId The requesterId to set.
      */
     public void setRequesterId( long requesterId )
     {
@@ -109,8 +103,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @param messageType
-     *            The messageType to set.
+     * @param messageType The messageType to set.
      */
     public void setMessageType( int messageType )
     {
@@ -126,8 +119,7 @@ public class UDPDiscoveryMessage
     }
 
     /**
-     * @param cacheNames
-     *            The cacheNames to set.
+     * @param cacheNames The cacheNames to set.
      */
     public void setCacheNames( ArrayList cacheNames )
     {
@@ -142,10 +134,8 @@ public class UDPDiscoveryMessage
         return cacheNames;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
+    /**
+     * @return debugging string
      */
     public String toString()
     {
@@ -164,5 +154,4 @@ public class UDPDiscoveryMessage
         }
         return buf.toString();
     }
-
 }

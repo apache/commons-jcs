@@ -19,7 +19,6 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
  * under the License.
  */
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +36,7 @@ import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObservable;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.utils.net.HostNameUtil;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
@@ -52,12 +52,13 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 public class UDPDiscoveryService
     implements IShutdownObserver
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
-    // The background broadcaster.
+    /** The background broadcaster. */
     private static ClockDaemon senderDaemon;
 
-    // thread that listens for messages
+    /** thread that listens for messages */
     private Thread udpReceiverThread;
 
     // the runanble that the receiver thread runs
@@ -110,11 +111,7 @@ public class UDPDiscoveryService
         try
         {
             // todo, you should be able to set this
-            hostAddress = InetAddress.getLocalHost().getHostAddress();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "hostAddress = [" + hostAddress + "]" );
-            }
+            hostAddress = HostNameUtil.getLocalHostAddress();
         }
         catch ( UnknownHostException e1 )
         {

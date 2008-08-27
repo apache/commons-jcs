@@ -25,23 +25,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Used to periodically broadcast our location to other caches that might be
- * listening.
- *
- * @author Aaron Smuts
- *
+ * Used to periodically broadcast our location to other caches that might be listening.
  */
 public class UDPDiscoverySenderThread
     implements Runnable
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( UDPDiscoverySenderThread.class );
 
-    // the UDP multicast port
+    /** the UDP multicast port */
     private String discoveryAddress = "";
 
+    /** The port */
     private int discoveryPort = 0;
 
-    // the host and port we listen on for TCP socket connections
+    /** the host and port we listen on for TCP socket connections */
     private String myHostName = null;
 
     private int myPort = 0;
@@ -49,8 +47,7 @@ public class UDPDiscoverySenderThread
     private ArrayList cacheNames = new ArrayList();
 
     /**
-     * @param cacheNames
-     *            The cacheNames to set.
+     * @param cacheNames The cacheNames to set.
      */
     protected void setCacheNames( ArrayList cacheNames )
     {
@@ -72,22 +69,15 @@ public class UDPDiscoverySenderThread
     /**
      * Constructs the sender with the port to tell others to connect to.
      * <p>
-     * On construction the sender will request that the other caches let it know
-     * their addresses.
-     *
-     * @param discoveryAddress
-     *            host to broadcast to
-     * @param discoveryPort
-     *            port to broadcast to
-     * @param myHostName
-     *            host name we can be found at
-     * @param myPort
-     *            port we are listening on
-     * @param cacheNames
-     *            List of strings of the names of the regiond participating.
+     * On construction the sender will request that the other caches let it know their addresses.
+     * @param discoveryAddress host to broadcast to
+     * @param discoveryPort port to broadcast to
+     * @param myHostName host name we can be found at
+     * @param myPort port we are listening on
+     * @param cacheNames List of strings of the names of the regiond participating.
      */
     public UDPDiscoverySenderThread( String discoveryAddress, int discoveryPort, String myHostName, int myPort,
-                                    ArrayList cacheNames )
+                                     ArrayList cacheNames )
     {
         this.discoveryAddress = discoveryAddress;
         this.discoveryPort = discoveryPort;
@@ -135,10 +125,8 @@ public class UDPDiscoverySenderThread
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Runnable#run()
+    /**
+     * Send a message.
      */
     public void run()
     {

@@ -28,54 +28,54 @@ import org.apache.jcs.engine.ZombieCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * The ZombieLateralCacheService is used as a facade when the lateral is not
- * available. It balks when the lateral is in error. When lateral service is
- * restored, this is replaced by a live facade.
- *
+ * The ZombieLateralCacheService is used as a facade when the lateral is not available. It balks
+ * when the lateral is in error. When lateral service is restored, this is replaced by a live
+ * facade.
  */
 public class ZombieLateralCacheService
     extends ZombieCacheService
     implements ILateralCacheService
 {
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
-     *      long)
+    /**
+     * Balks
+     * <p>
+     * @param item
+     * @param listenerId
      */
     public void update( ICacheElement item, long listenerId )
     {
         // zombies have no inner life
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String,
-     *      java.io.Serializable, long)
+    /**
+     * Balks
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param listenerId
      */
     public void remove( String cacheName, Serializable key, long listenerId )
     {
         // zombies have no inner life
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#removeAll(java.lang.String,
-     *      long)
+    /**
+     * Balks
+     * <p>
+     * @param cacheName
+     * @param listenerId
      */
     public void removeAll( String cacheName, long listenerId )
     {
         // zombies have no inner life
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#getGroupKeys(java.lang.String,
-     *      java.lang.String)
+    /**
+     * Balks
+     * <p>
+     * @param cacheName
+     * @param groupName
+     * @return empty set
      */
     public Set getGroupKeys( String cacheName, String groupName )
     {
