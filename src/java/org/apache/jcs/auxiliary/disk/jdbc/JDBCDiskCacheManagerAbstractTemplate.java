@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
@@ -162,7 +163,14 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         JDBCDiskCache raf = (JDBCDiskCache) caches.get( name );
         if ( raf != null )
         {
-            raf.dispose();
+            try
+            {
+                raf.dispose();
+            }
+            catch ( IOException e )
+            {
+                log.error( "Problem disposing of disk.", e );
+            }
         }
     }
 
@@ -193,7 +201,14 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
                 JDBCDiskCache raf = (JDBCDiskCache) allCaches.nextElement();
                 if ( raf != null )
                 {
-                    raf.dispose();
+                    try
+                    {
+                        raf.dispose();
+                    }
+                    catch ( IOException e )
+                    {
+                        log.error( "Problem disposing of disk.", e );
+                    }
                 }
             }
         }

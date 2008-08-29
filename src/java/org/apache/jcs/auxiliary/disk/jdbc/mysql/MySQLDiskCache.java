@@ -73,7 +73,7 @@ public class MySQLDiskCache
      * @param key Key to locate value for.
      * @return An object matching key, or null.
      */
-    public ICacheElement doGet( Serializable key )
+    protected ICacheElement processGet( Serializable key )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {
@@ -82,7 +82,7 @@ public class MySQLDiskCache
                 return null;
             }
         }
-        return super.doGet( key );
+        return super.processGet( key );
     }
 
     /**
@@ -91,7 +91,7 @@ public class MySQLDiskCache
      * <p>
      * @param element
      */
-    public void doUpdate( ICacheElement element )
+    protected void processUpdate( ICacheElement element )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {
@@ -100,7 +100,7 @@ public class MySQLDiskCache
                 return;
             }
         }
-        super.doUpdate( element );
+        super.processUpdate( element );
     }
 
     /**

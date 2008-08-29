@@ -25,31 +25,23 @@ import org.apache.jcs.JCS;
 
 /**
  * Put a few hundred thousand entries in the disk cache.
- *
+ * <p>
  * @author Aaron Smuts
- *
  */
 public class HugeQuantityIndDiskCacheLoadTest
     extends TestCase
 {
-
-    /**
-     * Test setup
-     */
+    /** Test setup.  */
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheHuge.ccf" );
     }
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
-     *
-     * @exception Exception
-     *                If an error occurs
+     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
+     * memory cache, so items should spool to disk.
+     * <p>
+     * @exception Exception If an error occurs
      */
     public void testLargeNumberOfItems()
         throws Exception
@@ -61,7 +53,6 @@ public class HugeQuantityIndDiskCacheLoadTest
 
         try
         {
-
             System.out.println( "Start: " + measureMemoryUse() );
 
             // Add items to cache
@@ -117,8 +108,8 @@ public class HugeQuantityIndDiskCacheLoadTest
 
     /**
      * Measure memory used by the VM.
-     *
-     * @return
+     * <p>
+     * @return memory used
      * @throws InterruptedException
      */
     protected long measureMemoryUse()

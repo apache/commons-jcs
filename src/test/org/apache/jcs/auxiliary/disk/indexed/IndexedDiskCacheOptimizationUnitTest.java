@@ -59,7 +59,7 @@ public class IndexedDiskCacheOptimizationUnitTest
 
         for ( int i = 0; i < elements.length; i++ )
         {
-            disk.doUpdate( elements[i] );
+            disk.processUpdate( elements[i] );
         }
 
         Thread.sleep( 1000 );
@@ -70,7 +70,7 @@ public class IndexedDiskCacheOptimizationUnitTest
         // DO WORK
         for ( int i = 0; i < removeCount; i++ )
         {
-            disk.doRemove( new Integer( i ) );
+            disk.processRemove( new Integer( i ) );
         }
 
         SleepUtil.sleepAtLeast( 1000 );

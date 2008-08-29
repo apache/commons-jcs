@@ -27,24 +27,26 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.behavior.ICacheRestore;
 
 /**
- * Used to repair the lateral caches managed by the associated instance of
- * LateralCacheManager.
- *
+ * Used to repair the lateral caches managed by the associated instance of LateralCacheManager.
  */
 public class LateralCacheRestore
     implements ICacheRestore
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( LateralCacheRestore.class );
 
+    /** The lateral manager. */
     private final ILateralCacheManager lcm;
 
+    /** fixable indicator */
     private boolean canFix = true;
 
+    /** handle */
     private Object lateralObj;
 
     /**
      * Constructs with the given instance of LateralCacheManager.
-     *
+     * <p>
      * @param lcm
      */
     public LateralCacheRestore( ILateralCacheManager lcm )
@@ -53,9 +55,9 @@ public class LateralCacheRestore
     }
 
     /**
-     * Returns true iff the connection to the lateral host for the corresponding
-     * cache manager can be successfully re-established.
-     *
+     * Returns true iff the connection to the lateral host for the corresponding cache manager can
+     * be successfully re-established.
+     * <p>
      * @return whether or not the cache can be fixed.
      */
     public boolean canFix()

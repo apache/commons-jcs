@@ -31,7 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
@@ -61,7 +61,7 @@ import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
  * Should it dispose itself?
  */
 public abstract class AbstractDiskCache
-    extends AbstractAuxiliaryCache
+    extends AbstractAuxiliaryCacheEventLogging
     implements AuxiliaryCache, Serializable
 {
     /** Don't change. */
@@ -307,7 +307,7 @@ public abstract class AbstractDiskCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public final Map getMultiple( Set keys )
+    public Map processGetMultiple( Set keys )
     {
         Map elements = new HashMap();
 
@@ -344,9 +344,10 @@ public abstract class AbstractDiskCache
      * <p>
      * @param key
      * @return whether the item was present to be removed.
+     * @throws IOException 
      * @see org.apache.jcs.engine.behavior.ICache#remove
      */
-    public final boolean remove( Serializable key )
+    public final boolean remove( Serializable key ) throws IOException
     {
         PurgatoryElement pe = null;
 
@@ -384,9 +385,10 @@ public abstract class AbstractDiskCache
     }
 
     /**
+     * @throws IOException 
      * @see org.apache.jcs.engine.behavior.ICache#removeAll
      */
-    public final void removeAll()
+    public final void removeAll() throws IOException
     {
         if ( this.dcattr.isAllowRemoveAll() )
         {
@@ -416,8 +418,9 @@ public abstract class AbstractDiskCache
      * reached.
      * <li>Call doDispose on the concrete impl.
      * </ol>
+     * @throws IOException 
      */
-    public final void dispose()
+    public final void dispose() throws IOException
     {
         Runnable disR = new Runnable()
         {
@@ -719,38 +722,91 @@ public abstract class AbstractDiskCache
         }
     }
 
-    // ---------------------- subclasses should implement the following methods
+    /**
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     */
 
     /**
      * Get a value from the persistent store.
+     * <p>
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     * <p>
      * @param key Key to locate value for.
      * @return An object matching key, or null.
+     * @throws IOException
      */
-    protected abstract ICacheElement doGet( Serializable key );
+    protected final ICacheElement doGet( Serializable key )
+        throws IOException
+    {
+        return super.getWithEventLogging( key );
+    }
 
     /**
      * Add a cache element to the persistent store.
-     * @param element
+     * <p>
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     * <p>
+     * @param cacheElement
+     * @throws IOException
      */
-    protected abstract void doUpdate( ICacheElement element );
+    protected final void doUpdate( ICacheElement cacheElement )
+        throws IOException
+    {
+        super.updateWithEventLogging( cacheElement );
+    }
 
     /**
      * Remove an object from the persistent store if found.
+     * <p>
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     * <p>
      * @param key Key of object to remove.
      * @return whether or no the item was present when removed
+     * @throws IOException
      */
-    protected abstract boolean doRemove( Serializable key );
+    protected final boolean doRemove( Serializable key )
+        throws IOException
+    {
+        return super.removeWithEventLogging( key );
+    }
 
     /**
      * Remove all objects from the persistent store.
+     * <p>
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     * <p>
+     * @throws IOException
      */
-    protected abstract void doRemoveAll();
+    protected final void doRemoveAll()
+        throws IOException
+    {
+        super.removeAllWithEventLogging();
+    }
 
     /**
      * Dispose of the persistent store. Note that disposal of purgatory and setting alive to false
      * does NOT need to be done by this method.
+     * <p>
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     * <p>
+     * @throws IOException
      */
-    protected abstract void doDispose();
+    protected final void doDispose() throws IOException
+    {
+        super.disposeWithEventLogging();
+    }
 
     /**
      * Gets the extra info for the event log.

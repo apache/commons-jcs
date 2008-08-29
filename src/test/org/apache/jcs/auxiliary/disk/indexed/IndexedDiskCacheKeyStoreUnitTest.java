@@ -52,7 +52,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         cattr.setDiskPath( "target/test-sandbox/KeyStoreUnitTest" );
         IndexedDiskCache disk = new IndexedDiskCache( cattr );
 
-        disk.doRemoveAll();
+        disk.processRemoveAll();
 
         int cnt = 25;
         for ( int i = 0; i < cnt; i++ )
@@ -61,12 +61,12 @@ public class IndexedDiskCacheKeyStoreUnitTest
             eAttr.setIsSpool( true );
             ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
-            disk.doUpdate( element );
+            disk.processUpdate( element );
         }
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.doGet( "key:" + i );
+            ICacheElement element = disk.processGet( "key:" + i );
             assertNotNull( "presave, Should have recevied an element.", element );
             assertEquals( "presave, element is wrong.", "data:" + i, element.getVal() );
         }
@@ -79,7 +79,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.doGet( "key:" + i );
+            ICacheElement element = disk.processGet( "key:" + i );
             assertNotNull( "postsave, Should have recevied an element.", element );
             assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
         }
@@ -106,7 +106,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         cattr.setDiskPath( "target/test-sandbox/KeyStoreUnitTest" );
         IndexedDiskCache disk = new IndexedDiskCache( cattr );
 
-        disk.doRemoveAll();
+        disk.processRemoveAll();
 
         int cnt = 25;
         for ( int i = 0; i < cnt; i++ )
@@ -115,7 +115,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
             eAttr.setIsSpool( true );
             ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
-            disk.doUpdate( element );
+            disk.processUpdate( element );
         }
 
         long preAddRemoveSize = disk.getDataFileSize();
@@ -124,9 +124,9 @@ public class IndexedDiskCacheKeyStoreUnitTest
         eAttr.setIsSpool( true );
         ICacheElement elementSetup = new CacheElement( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
         elementSetup.setElementAttributes( eAttr );
-        disk.doUpdate( elementSetup );
+        disk.processUpdate( elementSetup );
 
-        ICacheElement elementRet = disk.doGet( "key:" + "A" );
+        ICacheElement elementRet = disk.processGet( "key:" + "A" );
         assertNotNull( "postsave, Should have recevied an element.", elementRet );
         assertEquals( "postsave, element is wrong.", "data:" + "A", elementRet.getVal() );
 
@@ -146,7 +146,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.doGet( "key:" + i );
+            ICacheElement element = disk.processGet( "key:" + i );
             assertNotNull( "postsave, Should have recevied an element.", element );
             assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
         }

@@ -241,7 +241,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * <p>
      * @throws IOException
      */
-    public final void dispose()
+    public void dispose()
         throws IOException
     {
         disposeWithEventLogging();
@@ -253,7 +253,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * <p>
      * @throws IOException
      */
-    protected void disposeWithEventLogging()
+    protected final void disposeWithEventLogging()
         throws IOException
     {
         ICacheEvent cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );

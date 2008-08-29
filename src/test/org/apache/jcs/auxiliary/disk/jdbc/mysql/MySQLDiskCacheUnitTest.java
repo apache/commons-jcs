@@ -53,7 +53,7 @@ public class MySQLDiskCacheUnitTest
 
         MySQLDiskCache cache = new MySQLDiskCache( attributes, tableState );
 
-        Object result = cache.doGet( "myKey" );
+        Object result = cache.processGet( "myKey" );
         assertNull( "The result should be null", result );
     }
 }

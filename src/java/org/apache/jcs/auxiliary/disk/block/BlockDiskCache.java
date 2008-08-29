@@ -145,8 +145,6 @@ public class BlockDiskCache
             log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and root directory: "
                 + rootDirName, e );
         }
-        ShutdownHook shutdownHook = new ShutdownHook();
-        Runtime.getRuntime().addShutdownHook( shutdownHook );
     }
 
     /**
@@ -242,9 +240,11 @@ public class BlockDiskCache
      * <li>Release the lock.</li>
      * </ol>
      * (non-Javadoc)
+     * @param key 
+     * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
-    protected ICacheElement doGet( Serializable key )
+    protected ICacheElement processGet( Serializable key )
     {
         if ( !alive )
         {
@@ -301,9 +301,10 @@ public class BlockDiskCache
      * <li>Release the write lock.</li>
      * </ol>
      * (non-Javadoc)
+     * @param element 
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
      */
-    protected void doUpdate( ICacheElement element )
+    protected void processUpdate( ICacheElement element )
     {
         if ( !alive )
         {
@@ -357,9 +358,11 @@ public class BlockDiskCache
      * implementation always result in a disk orphan.
      * <p>
      * (non-Javadoc)
+     * @param key 
+     * @return true if removed anything
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doRemove(java.io.Serializable)
      */
-    protected boolean doRemove( Serializable key )
+    protected boolean processRemove( Serializable key )
     {
         if ( !alive )
         {
@@ -457,7 +460,7 @@ public class BlockDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doRemoveAll()
      */
-    protected void doRemoveAll()
+    protected void processRemoveAll()
     {
         try
         {
@@ -476,7 +479,7 @@ public class BlockDiskCache
      * <p>
      * TODO make dispose window configurable.
      */
-    public void doDispose()
+    public void processDispose()
     {
         Runnable disR = new Runnable()
         {
@@ -619,24 +622,6 @@ public class BlockDiskCache
     protected void freeBlocks( int[] blocksToFree )
     {
         this.dataFile.freeBlocks( blocksToFree );
-    }
-
-    /**
-     * Called on shutdown. This gives use a chance to store the keys even if the cache manager's
-     * shutdown method was not called.
-     */
-    class ShutdownHook
-        extends Thread
-    {
-        /** Disposes of the cache. This will result force the keys to be persisted. */
-        public void run()
-        {
-            if ( alive )
-            {
-                log.warn( logCacheName + "Disk cache not shutdown properly, shutting down now." );
-                doDispose();
-            }
-        }
     }
 
     /**

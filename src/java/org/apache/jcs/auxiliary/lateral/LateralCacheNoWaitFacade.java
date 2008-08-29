@@ -24,11 +24,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,15 +53,19 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class LateralCacheNoWaitFacade
     implements AuxiliaryCache
 {
+    /** Don't change */
     private static final long serialVersionUID = -9047687810358008955L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
 
     /** The queuing facade to the client. */
     public LateralCacheNoWait[] noWaits;
 
+    /** The region name */
     private String cacheName;
 
+    /** User configurable attributes. */
     private ILateralCacheAttributes lateralCacheAttributes;
 
     /**
@@ -69,12 +73,13 @@ public class LateralCacheNoWaitFacade
      * since the noWaits do this.
      */
     private ICacheEventLogger cacheEventLogger;
-    
+
     /** The serializer. */
-    private IElementSerializer elementSerializer;        
+    private IElementSerializer elementSerializer;
 
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
+     * <p>
      * @param noWaits
      * @param cattr
      */
@@ -128,10 +133,9 @@ public class LateralCacheNoWaitFacade
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#update(org.apache.jcs.engine.behavior.ICacheElement)
+    /**
+     * @param ce
+     * @throws IOException
      */
     public void update( ICacheElement ce )
         throws IOException
@@ -215,10 +219,9 @@ public class LateralCacheNoWaitFacade
         return elements;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+    /**
+     * @param group
+     * @return Set
      */
     public Set getGroupKeys( String group )
     {
@@ -298,7 +301,7 @@ public class LateralCacheNoWaitFacade
     }
 
     /**
-     * No lateral invokation.
+     * No lateral invocation.
      * @return The size value
      */
     public int getSize()
@@ -308,7 +311,8 @@ public class LateralCacheNoWaitFacade
     }
 
     /**
-     * Gets the cacheType attribute of the LateralCacheNoWaitFacade object
+     * Gets the cacheType attribute of the LateralCacheNoWaitFacade object.
+     * <p>
      * @return The cacheType value
      */
     public int getCacheType()
@@ -317,7 +321,8 @@ public class LateralCacheNoWaitFacade
     }
 
     /**
-     * Gets the cacheName attribute of the LateralCacheNoWaitFacade object
+     * Gets the cacheName attribute of the LateralCacheNoWaitFacade object.
+     * <p>
      * @return The cacheName value
      */
     public String getCacheName()
@@ -383,10 +388,8 @@ public class LateralCacheNoWaitFacade
         return getStatistics().toString();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+    /**
+     * @return IStats
      */
     public IStats getStatistics()
     {

@@ -54,6 +54,7 @@ public class LateralCache
     /** generalize this, use another interface */
     private ILateralCacheAttributes cattr;
 
+    /** The region name */
     final String cacheName;
 
     /** either http, socket.udp, or socket.tcp can set in config */

@@ -424,26 +424,7 @@ public class IndexedDiskCache
      * <p>
      * @param ce The ICacheElement to put to disk.
      */
-    public void doUpdate( ICacheElement ce )
-    {
-        ICacheEvent cacheEvent = createICacheEvent( ce, ICacheEventLogger.UPDATE_EVENT );
-        try
-        {
-            processUpdate( ce );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Update the disk cache. Called from the Queue. Makes sure the Item has not been retireved from
-     * purgatory while in queue for disk. Remove items from purgatory when they go to disk.
-     * <p>
-     * @param ce The ICacheElement to put to disk.
-     */
-    private void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement ce )
     {
         if ( !alive )
         {
@@ -546,32 +527,13 @@ public class IndexedDiskCache
     }
 
     /**
+     * Gets the key, then goes to disk to get the object.
+     * <p>
      * @param key
      * @return ICacheElement or null
      * @see AbstractDiskCache#doGet
      */
-    protected ICacheElement doGet( Serializable key )
-    {
-        ICacheElement object = null;
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.GET_EVENT );
-        try
-        {
-            object = processGet( key, object );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-        return object;
-    }
-
-    /**
-     * @param key
-     * @param object
-     * @return ICacheElement or null
-     * @see AbstractDiskCache#doGet
-     */
-    private ICacheElement processGet( Serializable key, ICacheElement object )
+    protected ICacheElement processGet( Serializable key )
     {
         if ( !alive )
         {
@@ -584,6 +546,7 @@ public class IndexedDiskCache
             log.debug( logCacheName + "Trying to get from disk: " + key );
         }
 
+        ICacheElement object = null;
         try
         {
             storageLock.readLock().acquire();
@@ -695,27 +658,7 @@ public class IndexedDiskCache
      * @return true if at least one item was removed.
      * @param key
      */
-    public boolean doRemove( Serializable key )
-    {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
-        try
-        {
-            return processRemove( key );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Returns true if the removal was successful; or false if there is nothing to remove. Current
-     * implementation always result in a disk orphan.
-     * <p>
-     * @return true if at least one item was removed.
-     * @param key
-     */
-    private boolean processRemove( Serializable key )
+    protected boolean processRemove( Serializable key )
     {
         if ( !alive )
         {
@@ -882,7 +825,7 @@ public class IndexedDiskCache
     /**
      * Remove all the items from the disk cache by reseting everything.
      */
-    public void doRemoveAll()
+    public void processRemoveAll()
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
         try
@@ -994,7 +937,7 @@ public class IndexedDiskCache
      * <p>
      * TODO make dispose window configurable.
      */
-    public void doDispose()
+    public void processDispose()
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try

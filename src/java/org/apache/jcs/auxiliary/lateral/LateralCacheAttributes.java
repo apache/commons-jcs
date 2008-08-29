@@ -34,7 +34,7 @@ public class LateralCacheAttributes
     extends AbstractAuxiliaryCacheAttributes
     implements Serializable, ILateralCacheAttributes
 {
-
+    /** Don't change */
     private static final long serialVersionUID = -3408449508837393660L;
 
     private static final boolean DEFAULT_RECEIVE = true;

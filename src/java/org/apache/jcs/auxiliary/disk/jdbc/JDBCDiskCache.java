@@ -173,27 +173,7 @@ public class JDBCDiskCache
      * <p>
      * @param ce
      */
-    public void doUpdate( ICacheElement ce )
-    {
-        ICacheEvent cacheEvent = createICacheEvent( ce, ICacheEventLogger.UPDATE_EVENT );
-        try
-        {
-            processUpdate( ce );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Inserts or updates. By default it will try to insert. If the item exists we will get an
-     * error. It will then update. This behavior is configurable. The cache can be configured to
-     * check before inserting.
-     * <p>
-     * @param ce
-     */
-    private void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement ce )
     {
         incrementUpdateCount();
 
@@ -496,32 +476,11 @@ public class JDBCDiskCache
     /**
      * Queries the database for the value. If it gets a result, the value is deserialized.
      * <p>
-     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
-     */
-    public ICacheElement doGet( Serializable key )
-    {
-        ICacheElement obj = null;
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.GET_EVENT );
-        try
-        {
-            obj = processGet( key, obj );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-        return obj;
-    }
-
-    /**
-     * Queries the database for the value. If it gets a result, the value is deserialized.
-     * <p>
      * @param key 
-     * @param obj 
      * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
-    private ICacheElement processGet( Serializable key, ICacheElement obj )
+    protected ICacheElement processGet( Serializable key )
     {
         incrementGetCount();
 
@@ -535,6 +494,8 @@ public class JDBCDiskCache
             return null;
         }
 
+        ICacheElement obj = null;
+        
         byte[] data = null;
         try
         {
@@ -625,27 +586,7 @@ public class JDBCDiskCache
      * @param key
      * @return boolean
      */
-    public boolean doRemove( Serializable key )
-    {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, ICacheEventLogger.REMOVE_EVENT );
-        try
-        {
-            return processRemove( key );
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * Returns true if the removal was successful; or false if there is nothing to remove. Current
-     * implementation always results in a disk orphan.
-     * <p>
-     * @param key
-     * @return boolean
-     */
-    private boolean processRemove( Serializable key )
+    protected boolean processRemove( Serializable key )
     {
         // remove single item.
         String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
@@ -714,24 +655,7 @@ public class JDBCDiskCache
      * This should remove all elements. The auxiliary can be configured to forbid this behavior. If
      * remove all is not allowed, the method balks.
      */
-    public void doRemoveAll()
-    {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
-        try
-        {
-            processRemoveAll();
-        }
-        finally
-        {
-            logICacheEvent( cacheEvent );
-        }
-    }
-
-    /**
-     * This should remove all elements. The auxiliary can be configured to forbid this behavior. If
-     * remove all is not allowed, the method balks.
-     */
-    private void processRemoveAll()
+    protected void processRemoveAll()
     {
         // it should never get here formt he abstract dis cache.
         if ( this.jdbcDiskCacheAttributes.isAllowRemoveAll() )
@@ -868,7 +792,7 @@ public class JDBCDiskCache
     }
 
     /** Shuts down the pool */
-    public void doDispose()
+    public void processDispose()
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try
