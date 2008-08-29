@@ -44,11 +44,11 @@
 			<action dev="asmuts" type="fix" issue="JCS-32" due-to="Andy">Moved
 				shutdown hook from disk cache to composite cache manager.</action>
 		</release>
-		<release version="1.3.1.0" date="in SVN">
-			<action dev="asmuts" type="update"> Added getMultiple() method to
+		<release version="1.3.1.0" date="2008-04-11" description="tempbuild">
+			<action dev="asmuts" type="update" due-to="Chris Fairbanks"> Added getMultiple() method to
 				ICache</action>
 		</release>
-		<release version="1.3" date="2007-06-05">
+		<release version="1.3" date="2007-06-05" description="First formal release">
 			<action dev="tv" type="update"> Updated/added license headers in all
 				files.</action>
 		</release>

@@ -236,8 +236,6 @@ public class IndexedDiskCache
             // Kick off a real time optimization, in case we didn't do a final optimization.
             doOptimizeRealTime();
         }
-        ShutdownHook shutdownHook = new ShutdownHook();
-        Runtime.getRuntime().addShutdownHook( shutdownHook );
     }
 
     /**
@@ -569,7 +567,7 @@ public class IndexedDiskCache
 
     /**
      * @param key
-     * @param object 
+     * @param object
      * @return ICacheElement or null
      * @see AbstractDiskCache#doGet
      */
@@ -1692,28 +1690,6 @@ public class IndexedDiskCache
             }
 
             doOptimizeRealTime();
-        }
-    }
-
-    /**
-     * Called on shutdown. This gives use a chance to store the keys and to optimize even if the
-     * cache manager's shutdown method was not called.
-     */
-    class ShutdownHook
-        extends Thread
-    {
-        /**
-         * This will persist the keys on shutdown.
-         * <p>
-         * @see java.lang.Thread#run()
-         */
-        public void run()
-        {
-            if ( alive )
-            {
-                log.warn( logCacheName + "Disk cache not shutdown properly, shutting down now." );
-                doDispose();
-            }
         }
     }
 }

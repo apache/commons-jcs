@@ -103,8 +103,11 @@ public class CompositeCacheManager
     /** Should we use system property substitutions. */
     private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
 
-    /** Those waiting for notification of a shutdown.  */
+    /** Those waiting for notification of a shutdown. */
     private Set shutdownObservers = new HashSet();
+
+    /** Indicates whether shutdown has been called. */
+    private boolean isShutdown = false;
 
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates the instance it will
@@ -183,6 +186,13 @@ public class CompositeCacheManager
     protected static CompositeCacheManager createInstance()
     {
         return new CompositeCacheManager();
+    }
+
+    /** CreAtes a shutdown hook */
+    protected CompositeCacheManager()
+    {
+        ShutdownHook shutdownHook = new ShutdownHook();
+        Runtime.getRuntime().addShutdownHook( shutdownHook );
     }
 
     /**
@@ -470,10 +480,12 @@ public class CompositeCacheManager
      */
     public void shutDown()
     {
+        isShutdown = true;
+
         // notify any observers
         synchronized ( shutdownObservers )
         {
-            // We don't need to worry about lcoking the set.
+            // We don't need to worry about locking the set.
             // since this is a shutdown command, nor do we need
             // to queue these up.
             Iterator it = shutdownObservers.iterator();
@@ -607,7 +619,6 @@ public class CompositeCacheManager
         return (AuxiliaryCacheAttributes) auxiliaryAttributeRegistry.get( name );
     }
 
-
     /**
      * Gets stats for debugging. This calls gets statistics and then puts all the results in a
      * string. This returns data for all regions.
@@ -681,6 +692,28 @@ public class CompositeCacheManager
         synchronized ( shutdownObservers )
         {
             shutdownObservers.remove( observer );
+        }
+    }
+
+    /**
+     * Called on shutdown. This gives use a chance to store the keys and to optimize even if the
+     * cache manager's shutdown method was not called manually.
+     */
+    class ShutdownHook
+        extends Thread
+    {
+        /**
+         * This will persist the keys on shutdown.
+         * <p>
+         * @see java.lang.Thread#run()
+         */
+        public void run()
+        {
+            if ( !isShutdown )
+            {
+                log.info( "Shutdown hook activated.  Shutdown was not called.  Shutting down JCS." );
+                shutDown();
+            }
         }
     }
 }
