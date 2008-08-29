@@ -182,8 +182,6 @@ public class IndexedDiskCacheManager
      */
     public void release()
     {
-        clients--;
-
         if ( --clients != 0 )
         {
             return;
