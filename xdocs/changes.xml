@@ -36,9 +36,11 @@
 				getSource to IElementEvent interface.</action>
 			<action dev="asmuts" type="update" issue="JCS-44" due-to="Maxim Gordienko"> Made
 				spool chunk size configurable.</action>
-			<action dev="asmuts" type="fix" issue="JCS-41" due-to="Niall Gallagher">Added
-				RMI socket connect timeout. Made this configurable on the server and client.
-			</action>
+			<action dev="asmuts" type="fix" issue="JCS-41" due-to="Niall Gallagher"> Added
+				RMI socket connect timeout. Made this configurable on the server and
+				client.</action>
+			<action dev="asmuts" type="fix" issue="JCS-36" due-to="Matthias Kerkhoff">Fixed
+				client decrement count in indexed disk cache.</action>
 		</release>
 		<release version="1.3.1.0" date="in SVN">
 			<action dev="asmuts" type="update"> Added getMultiple() method to
