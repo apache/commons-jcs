@@ -26,9 +26,9 @@ public class CompositeCacheConfiguratorUnitTest
 
         String auxName = "MockAux";
         String auxPrefix = "jcs.auxiliary." + auxName;
-        String auxiliaryClassName = MockAuxiliaryCacheFactory.class.getCanonicalName();
-        String eventLoggerClassName = MockCacheEventLogger.class.getCanonicalName();
-        String auxiliaryAttributeClassName = MockAuxiliaryCacheAttributes.class.getCanonicalName();
+        String auxiliaryClassName = MockAuxiliaryCacheFactory.class.getName();
+        String eventLoggerClassName = MockCacheEventLogger.class.getName();
+        String auxiliaryAttributeClassName = MockAuxiliaryCacheAttributes.class.getName();
 
         Properties props = new Properties();
         props.put( auxPrefix, auxiliaryClassName );

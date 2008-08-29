@@ -42,6 +42,9 @@ public class BasicRemoteCacheClientServerUnitTest
 {
     /** Server instance to use in the tests. */
     private RemoteCacheServer server = null;
+    
+    /** the remote server port */
+    private int remotePort;
 
     /**
      * Starts the server. This is not in a setup, since the server is slow to kill right now.
@@ -50,6 +53,7 @@ public class BasicRemoteCacheClientServerUnitTest
     {
         String configFile = "TestRemoteCacheClientServer.ccf";
         server = RemoteCacheServerStartupUtil.startServerUsingProperties( configFile );
+        remotePort = server.remoteCacheServerAttributes.getRemotePort();
     }
 
     /**
@@ -73,7 +77,7 @@ public class BasicRemoteCacheClientServerUnitTest
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
-        attributes.setRemotePort( 1101 );
+        attributes.setRemotePort( remotePort );
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testSinglePut";
@@ -110,7 +114,7 @@ public class BasicRemoteCacheClientServerUnitTest
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
-        attributes.setRemotePort( 1101 );
+        attributes.setRemotePort( remotePort );
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), null );
         String regionName = "testPutRemove";
@@ -154,7 +158,7 @@ public class BasicRemoteCacheClientServerUnitTest
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
-        attributes.setRemotePort( 1101 );
+        attributes.setRemotePort( remotePort );
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testPutAndListen";
@@ -196,7 +200,7 @@ public class BasicRemoteCacheClientServerUnitTest
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
         attributes.setLocalPort( 1202 );
-        attributes.setRemotePort( 1101 );
+        attributes.setRemotePort( remotePort );
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testPutAndListen";

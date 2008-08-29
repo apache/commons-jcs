@@ -21,10 +21,14 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RMISocketFactory;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -131,5 +135,57 @@ public class RemoteUtils
             }
         }
         return props;
+    }
+    
+    /**
+     * Configure a custom socket factory to set the timeout value.
+     * <p>
+     * @param timeoutMillis
+     */
+    public static void configureCustomSocketFactory( final int timeoutMillis )
+    {
+        try
+        {
+            // Don't set a socket factory if the setting is -1
+            if ( timeoutMillis > 0 )
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "RmiSocketFactoryTimeoutMillis [" + timeoutMillis + "]. "
+                        + " Configuring a custom socket factory." );
+                }
+
+                // use this socket factory to add a timeout.
+                RMISocketFactory.setSocketFactory( new RMISocketFactory()
+                {
+                    public Socket createSocket( String host, int port )
+                        throws IOException
+                    {
+                        Socket socket = new Socket();
+                        socket.setSoTimeout( timeoutMillis );
+                        socket.setSoLinger( false, 0 );
+                        socket.connect( new InetSocketAddress( host, port ), timeoutMillis );
+                        return socket;
+                    }
+
+                    public ServerSocket createServerSocket( int port )
+                        throws IOException
+                    {
+                        return new ServerSocket( port );
+                    }
+                } );
+            }
+        }
+        catch ( Exception e )
+        {
+            // Only try to do it once. Otherwise we
+            // Generate errors for each region on construction.
+            RMISocketFactory factoryInUse = RMISocketFactory.getSocketFactory();
+            if ( factoryInUse != null && !factoryInUse.getClass().getName().startsWith( "org.apache.jcs" ) )
+            {
+                log.info( "Could not create new custom socket factory. " + e.getMessage() + " Factory in use = "
+                    + RMISocketFactory.getSocketFactory() );
+            }
+        }
     }
 }

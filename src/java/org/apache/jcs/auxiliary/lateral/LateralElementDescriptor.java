@@ -31,6 +31,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 public class LateralElementDescriptor
     implements Serializable
 {
+    /** Don't change */
     private static final long serialVersionUID = 5268222498076063575L;
 
     /** The int for updates */

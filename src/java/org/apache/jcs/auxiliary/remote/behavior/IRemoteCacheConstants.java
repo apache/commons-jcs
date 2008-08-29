@@ -31,6 +31,9 @@ public interface IRemoteCacheConstants
     public final static String PROPERTY_PREFIX = "remote";
     
     /** Mapping to props file value */
+    public final static String SOCKET_TIMEOUT_MILLIS = PROPERTY_PREFIX + ".cache.rmiSocketFactoryTimeoutMillis";
+    
+    /** Mapping to props file value */
     public final static String REMOTE_CACHE_SERVICE_NAME = PROPERTY_PREFIX + ".cache.service.name";
 
     /** Mapping to props file value */

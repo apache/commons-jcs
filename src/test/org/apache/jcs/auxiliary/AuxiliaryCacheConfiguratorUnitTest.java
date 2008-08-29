@@ -51,7 +51,7 @@ public class AuxiliaryCacheConfiguratorUnitTest
         // SETUP
         String auxPrefix = "jcs.auxiliary." + "MYAux";
         String testPropertyValue = "This is the value";
-        String className = MockCacheEventLogger.class.getCanonicalName();
+        String className = MockCacheEventLogger.class.getName();
 
         Properties props = new Properties();
         props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, className );
@@ -75,7 +75,7 @@ public class AuxiliaryCacheConfiguratorUnitTest
         // SETUP
         String auxPrefix = "jcs.auxiliary." + "MYAux";
         String testPropertyValue = "This is the value";
-        String className = MockElementSerializer.class.getCanonicalName();
+        String className = MockElementSerializer.class.getName();
 
         Properties props = new Properties();
         props.put( auxPrefix + AuxiliaryCacheConfigurator.SERIALIZER_PREFIX, className );

@@ -67,12 +67,13 @@ public class RemoteCacheAttributes
 
     private boolean localClusterConsistency = false;
 
-    // default name is remote_cache_client
+    /** default name is remote_cache_client */
     private String threadPoolName = "remote_cache_client";
 
-    // must be greater than 0 for a pool to be used.
+    /** must be greater than 0 for a pool to be used. */
     private int getTimeoutMillis = -1;
 
+    /** read and connect timeout */
     private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
 
     private boolean receive = DEFAULT_RECEIVE;

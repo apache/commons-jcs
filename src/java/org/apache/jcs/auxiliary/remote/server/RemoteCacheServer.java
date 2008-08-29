@@ -97,7 +97,7 @@ class RemoteCacheServer
     private int[] listenerId = new int[1];
 
     /** Configuration settings. */
-    protected IRemoteCacheServerAttributes rcsa;
+    protected IRemoteCacheServerAttributes remoteCacheServerAttributes;
 
     /** The interval at which we will log updates. */
     private int logInterval = 100;
@@ -119,7 +119,7 @@ class RemoteCacheServer
         throws RemoteException
     {
         super( rcsa.getServicePort() );
-        this.rcsa = rcsa;
+        this.remoteCacheServerAttributes = rcsa;
         init( rcsa.getConfigFileName() );
     }
 
@@ -311,7 +311,7 @@ class RemoteCacheServer
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
+                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
@@ -508,12 +508,12 @@ class RemoteCacheServer
             // data from those that were up when the failed server comes back o
             // line.
 
-            if ( !fromCluster && this.rcsa.getAllowClusterGet() )
+            if ( !fromCluster && this.remoteCacheServerAttributes.getAllowClusterGet() )
             {
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.rcsa.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
                 element = c.get( key );
             }
@@ -526,7 +526,7 @@ class RemoteCacheServer
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.rcsa.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
                 element = c.localGet( key );
             }
@@ -650,12 +650,12 @@ class RemoteCacheServer
             // data from those that were up when the failed server comes back o
             // line.
 
-            if ( !fromCluster && this.rcsa.getAllowClusterGet() )
+            if ( !fromCluster && this.remoteCacheServerAttributes.getAllowClusterGet() )
             {
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "NonLocalGetMultiple. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.rcsa.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
 
                 elements = c.getMultiple( keys );
@@ -669,7 +669,7 @@ class RemoteCacheServer
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "LocalGetMultiple.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.rcsa.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
 
                 elements = c.localGetMultiple( keys );
@@ -806,7 +806,7 @@ class RemoteCacheServer
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
+                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
@@ -901,7 +901,7 @@ class RemoteCacheServer
                 }
 
                 // update registered listeners
-                if ( !fromCluster || ( fromCluster && rcsa.getLocalClusterConsistency() ) )
+                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
 
@@ -1229,8 +1229,8 @@ class RemoteCacheServer
             }
 
             CacheEventQueueFactory fact = new CacheEventQueueFactory();
-            ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, rcsa.getEventQueuePoolName(),
-                                                             rcsa.getEventQueueTypeFactoryCode() );
+            ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes.getEventQueuePoolName(),
+                                                             remoteCacheServerAttributes.getEventQueueTypeFactoryCode() );
 
             eventQMap.put( new Long( listener.getListenerId() ), q );
 

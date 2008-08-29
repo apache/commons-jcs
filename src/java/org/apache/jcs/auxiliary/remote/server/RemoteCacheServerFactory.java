@@ -21,12 +21,9 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.registry.Registry;
-import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -52,9 +49,6 @@ public class RemoteCacheServerFactory
 
     /** The name of the service. */
     private static String serviceName;
-
-    /** Factory socket time out. */
-    private static int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS = 10000;
 
     /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()
@@ -100,49 +94,27 @@ public class RemoteCacheServerFactory
             {
                 return;
             }
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "ConfigFileName = [" + propFile + "]" );
-            }
-
-            try
-            {
-                // TODO make configurable.
-                // use this socket factory to add a timeout.
-                RMISocketFactory.setSocketFactory( new RMISocketFactory()
-                {
-                    public Socket createSocket( String host, int port )
-                        throws IOException
-                    {
-                        Socket socket = new Socket( host, port );
-                        socket.setSoTimeout( DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS );
-                        socket.setSoLinger( false, 0 );
-                        return socket;
-                    }
-
-                    public ServerSocket createServerSocket( int port )
-                        throws IOException
-                    {
-                        return new ServerSocket( port );
-                    }
-                } );
-            }
-            catch ( Exception e )
-            {
-                log.error( "Problem setting custom RMI Socket Factory.", e );
-            }
-
             if ( host == null )
             {
                 host = "";
             }
-
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "ConfigFileName = [" + propFile + "]" );
+            }
             Properties props = RemoteUtils.loadProps( propFile );
-
             RemoteCacheServerAttributes rcsa = configureServerAttributes( propFile );
+            // These should come from the file!
+            rcsa.setRemotePort( port );
+            rcsa.setRemoteHost( host );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Creating server with these attributes: " + rcsa );
+            }
 
             serviceName = rcsa.getRemoteServiceName();
+
+            RemoteUtils.configureCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
 
             // CONFIGURE THE EVENT LOGGER
             ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator
@@ -168,20 +140,35 @@ public class RemoteCacheServerFactory
         }
     }
 
-    /** Configures the RemoteCacheServerAttributes from the props file. 
+    /**
+     * Configures the RemoteCacheServerAttributes from the props file.
      * <p>
-     * @param propFile 
+     * @param propFile
      * @return RemoteCacheServerAttributes
-     * @throws IOException */
+     * @throws IOException
+     */
     protected static RemoteCacheServerAttributes configureServerAttributes( String propFile )
         throws IOException
     {
-        // TODO: make automatic
-        RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
-        rcsa.setConfigFileName( propFile );
-
         Properties prop = RemoteUtils.loadProps( propFile );
         // Properties prop = PropertyLoader.loadProperties( propFile );
+
+        RemoteCacheServerAttributes rcsa = configureRemoteCacheServerAttributes( prop );
+        rcsa.setConfigFileName( propFile );
+
+        return rcsa;
+    }
+
+    /**
+     * Configure.
+     * <p>
+     * @param prop
+     * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
+     */
+    protected static RemoteCacheServerAttributes configureRemoteCacheServerAttributes( Properties prop )
+    {
+        // TODO: make automatic
+        RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
 
         String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
         try
@@ -194,6 +181,19 @@ public class RemoteCacheServerFactory
         {
             log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT
                 + " not specified.  An anonymous port will be used." );
+        }
+
+        String socketTimeoutMillisStr = prop.getProperty( SOCKET_TIMEOUT_MILLIS );
+        try
+        {
+            int rmiSocketFactoryTimeoutMillis = Integer.parseInt( socketTimeoutMillisStr );
+            rcsa.setRmiSocketFactoryTimeoutMillis( rmiSocketFactoryTimeoutMillis );
+            log.debug( "Remote cache socket timeout " + rmiSocketFactoryTimeoutMillis + "ms." );
+        }
+        catch ( NumberFormatException ignore )
+        {
+            log.debug( "Remote cache socket timeout property " + SOCKET_TIMEOUT_MILLIS
+                + " not specified.  The default will be used." );
         }
 
         String lccStr = prop.getProperty( REMOTE_LOCAL_CLUSTER_CONSISTENCY );
@@ -212,14 +212,8 @@ public class RemoteCacheServerFactory
         boolean acg = Boolean.valueOf( acgStr ).booleanValue();
         rcsa.setAllowClusterGet( acg );
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Creating server with these attributes " + rcsa );
-        }
-
         // Register the RemoteCacheServer remote object in the registry.
         rcsa.setRemoteServiceName( prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim() );
-
         return rcsa;
     }
 

@@ -34,14 +34,14 @@ import org.apache.jcs.utils.props.PropertyLoader;
  *Starts the registry and runs the server via the factory.
  *<p>
  * @author Aaron Smuts
- *
  */
 public class RemoteCacheServerStartupUtil
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheServerStartupUtil.class );
 
+    /** Registry to use in the test. */
     private static final int DEFAULT_REGISTRY_PORT = 1101;
-
 
     /**
      * Starts the registry on port "registry.port"

@@ -21,10 +21,12 @@
 	<body>
 		<release version="1.4-dev" date="in SVN">
 		</release>
-		<release version="1.3.2.0" date="in SVN">
+		<release version="1.3.2.0" date="2008-08-29" description="tempbuild">
 			<action dev="asmuts" type="update"> Added eventLogging to major
 				auxiliaries and to the auxiliary factory interface. This allows you
 				to time and monitor the internal working of the cache.</action>
+			<action dev="asmuts" type="update">Moving to JDK 1.4 compliance.
+				1.3 not supported.</action>
 			<action dev="asmuts" type="update"> Added the ability to inject custom
 				serializers into auxiliary caches.</action>
 			<action dev="asmuts" type="fix" issue="JCS-40" due-to="Niall Gallagher"> Added a
@@ -34,6 +36,9 @@
 				getSource to IElementEvent interface.</action>
 			<action dev="asmuts" type="update" issue="JCS-44" due-to="Maxim Gordienko"> Made
 				spool chunk size configurable.</action>
+			<action dev="asmuts" type="fix" issue="JCS-41" due-to="Niall Gallagher">Added
+				RMI socket connect timeout. Made this configurable on the server and client.
+			</action>
 		</release>
 		<release version="1.3.1.0" date="in SVN">
 			<action dev="asmuts" type="update"> Added getMultiple() method to

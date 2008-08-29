@@ -22,9 +22,6 @@ package org.apache.jcs.auxiliary.remote;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.rmi.server.RMISocketFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -137,50 +134,7 @@ public class RemoteCache
             }
         }
 
-        configureCustomSocketFactory();
-    }
-
-    /** Configure a custom socket factory to set the timeout value. */
-    private void configureCustomSocketFactory()
-    {
-        try
-        {
-            // Don't set a socket factory if the setting is -1
-            if ( irca.getRmiSocketFactoryTimeoutMillis() > 0 )
-            {
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "RmiSocketFactoryTimeoutMillis [" + irca.getRmiSocketFactoryTimeoutMillis() + "]. "
-                        + " Configuring a custom socket factory." );
-                }
-
-                // use this socket factory to add a timeout.
-                RMISocketFactory.setSocketFactory( new RMISocketFactory()
-                {
-                    public Socket createSocket( String host, int port )
-                        throws IOException
-                    {
-                        Socket socket = new Socket( host, port );
-                        socket.setSoTimeout( irca.getRmiSocketFactoryTimeoutMillis() );
-                        socket.setSoLinger( false, 0 );
-                        return socket;
-                    }
-
-                    public ServerSocket createServerSocket( int port )
-                        throws IOException
-                    {
-                        return new ServerSocket( port );
-                    }
-                } );
-            }
-        }
-        catch ( Exception e )
-        {
-            // TODO change this so that we only try to do it once. Otherwise we
-            // Generate errors for each region on construction.
-            log.info( "Could not create new custom socket factory. " + e.getMessage() + " Factory in use = "
-                + RMISocketFactory.getSocketFactory() );
-        }
+        RemoteUtils.configureCustomSocketFactory( irca.getRmiSocketFactoryTimeoutMillis() );
     }
 
     /**
@@ -304,7 +258,7 @@ public class RemoteCache
      * @param keys
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
-     * @throws IOException 
+     * @throws IOException
      */
     protected Map processGetMultiple( Set keys )
         throws IOException

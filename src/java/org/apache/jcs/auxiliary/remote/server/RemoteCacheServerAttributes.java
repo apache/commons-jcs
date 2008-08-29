@@ -46,19 +46,32 @@ public class RemoteCacheServerAttributes
      */
     private String clusterServers = "";
 
+    /** port the rmi server will listen to */
     private int servicePort = 0;
 
+    /** Cluster or local */
     private int remoteType = LOCAL;
 
+    /** Remove item when put */
     private boolean removeUponRemotePut = true;
 
+    /** Ony get, don't put */
     private boolean getOnly = false;
 
+    /** Can a cluster remote put to other remotes */
     private boolean localClusterConsistency = false;
 
+    /** Can a cluster remote get from other remotes */
     private boolean allowClusterGet = true;
 
+    /** The config file, the initializationis multistage. Remote cache then composite cache. */
     private String configFileName = "";
+
+    /** Factory socket time out. */
+    public static final int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS = 10000;
+
+    /** Connect and read timeout. */
+    private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS;
 
     /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheServerAttributes()
@@ -69,7 +82,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteTypeName attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The remoteTypeName value
      */
     public String getRemoteTypeName()
@@ -88,7 +100,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteTypeName attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param s The new remoteTypeName value
      */
     public void setRemoteTypeName( String s )
@@ -106,7 +117,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteType attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The remoteType value
      */
     public int getRemoteType()
@@ -117,7 +127,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteType attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param p The new remoteType value
      */
     public void setRemoteType( int p )
@@ -128,7 +137,6 @@ public class RemoteCacheServerAttributes
     /**
      * clones
      * <p>
-     * 
      * @return AuxiliaryCacheAttributes clone
      */
     public AuxiliaryCacheAttributes copy()
@@ -147,7 +155,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteServiceName attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The remoteServiceName value
      */
     public String getRemoteServiceName()
@@ -158,7 +165,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteServiceName attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param s The new remoteServiceName value
      */
     public void setRemoteServiceName( String s )
@@ -169,7 +175,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remoteHost attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The remoteHost value
      */
     public String getRemoteHost()
@@ -180,7 +185,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remoteHost attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param s The new remoteHost value
      */
     public void setRemoteHost( String s )
@@ -191,7 +195,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the remotePort attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The remotePort value
      */
     public int getRemotePort()
@@ -202,7 +205,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the remotePort attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param p The new remotePort value
      */
     public void setRemotePort( int p )
@@ -213,7 +215,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the clusterServers attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The clusterServers value
      */
     public String getClusterServers()
@@ -224,7 +225,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the clusterServers attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param s The new clusterServers value
      */
     public void setClusterServers( String s )
@@ -235,7 +235,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the localPort attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The localPort value
      */
     public int getServicePort()
@@ -246,7 +245,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the localPort attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param p The new localPort value
      */
     public void setServicePort( int p )
@@ -257,7 +255,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the removeUponRemotePut attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The removeUponRemotePut value
      */
     public boolean getRemoveUponRemotePut()
@@ -268,7 +265,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the removeUponRemotePut attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param r The new removeUponRemotePut value
      */
     public void setRemoveUponRemotePut( boolean r )
@@ -279,7 +275,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the getOnly attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @return The getOnly value
      */
     public boolean getGetOnly()
@@ -290,7 +285,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the getOnly attribute of the RemoteCacheAttributes object
      * <p>
-     * 
      * @param r The new getOnly value
      */
     public void setGetOnly( boolean r )
@@ -301,7 +295,6 @@ public class RemoteCacheServerAttributes
     /**
      * Should cluster updates be propagated to the locals
      * <p>
-     * 
      * @return The localClusterConsistency value
      */
     public boolean getLocalClusterConsistency()
@@ -312,7 +305,6 @@ public class RemoteCacheServerAttributes
     /**
      * Should cluster updates be propagated to the locals
      * <p>
-     * 
      * @param r The new localClusterConsistency value
      */
     public void setLocalClusterConsistency( boolean r )
@@ -323,7 +315,6 @@ public class RemoteCacheServerAttributes
     /**
      * Should gets from non-cluster clients be allowed to get from other remote auxiliaries.
      * <p>
-     * 
      * @return The localClusterConsistency value
      */
     public boolean getAllowClusterGet()
@@ -334,7 +325,6 @@ public class RemoteCacheServerAttributes
     /**
      * Should we try to get from other cluster servers if we don't find the items locally.
      * <p>
-     * 
      * @param r The new localClusterConsistency value
      */
     public void setAllowClusterGet( boolean r )
@@ -345,7 +335,6 @@ public class RemoteCacheServerAttributes
     /**
      * Gets the ConfigFileName attribute of the IRemoteCacheAttributes object
      * <p>
-     * 
      * @return The clusterServers value
      */
     public String getConfigFileName()
@@ -356,7 +345,6 @@ public class RemoteCacheServerAttributes
     /**
      * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object
      * <p>
-     * 
      * @param s The new clusterServers value
      */
     public void setConfigFileName( String s )
@@ -365,19 +353,37 @@ public class RemoteCacheServerAttributes
     }
 
     /**
+     * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
+     */
+    public void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis )
+    {
+        this.rmiSocketFactoryTimeoutMillis = rmiSocketFactoryTimeoutMillis;
+    }
+
+    /**
+     * @return Returns the rmiSocketFactoryTimeoutMillis.
+     */
+    public int getRmiSocketFactoryTimeoutMillis()
+    {
+        return rmiSocketFactoryTimeoutMillis;
+    }
+
+    /**
      * @return String details
      */
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
-        buf.append( "\n remoteHost = " + this.getRemoteHost() );
-        buf.append( "\n remotePort = " + this.getRemotePort() );
-        buf.append( "\n cacheName = " + this.getCacheName() );
-        buf.append( "\n removeUponRemotePut = " + this.getRemoveUponRemotePut() );
-        buf.append( "\n getOnly = " + this.getGetOnly() );
-        buf.append( "\n allowClusterGet = " + this.getAllowClusterGet() );
-        buf.append( "\n localClusterConsistency = " + this.getLocalClusterConsistency() );
-        buf.append( "\n getConfigFileName = " + this.getConfigFileName() );
+        buf.append( "\n remoteHost = [" + this.getRemoteHost() + "]" );
+        buf.append( "\n remotePort = [" + this.getRemotePort() + "]" );
+        buf.append( "\n servicePort = [" + this.getServicePort() + "]" );
+        buf.append( "\n cacheName = [" + this.getCacheName() + "]" );
+        buf.append( "\n removeUponRemotePut = [" + this.getRemoveUponRemotePut() + "]" );
+        buf.append( "\n getOnly = [" + this.getGetOnly() + "]" );
+        buf.append( "\n allowClusterGet = [" + this.getAllowClusterGet() + "]" );
+        buf.append( "\n localClusterConsistency = [" + this.getLocalClusterConsistency() + "]" );
+        buf.append( "\n configFileName = [" + this.getConfigFileName() + "]" );
+        buf.append( "\n rmiSocketFactoryTimeoutMillis = [" + this.getRmiSocketFactoryTimeoutMillis() + "]" );
         return buf.toString();
     }
 }
