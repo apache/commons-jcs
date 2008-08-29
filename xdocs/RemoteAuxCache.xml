@@ -201,6 +201,8 @@ registry.host=localhost
 registry.port=1102
 # call back port to local caches.
 remote.cache.service.port=1102
+# rmi socket factory timeout
+remote.cache.rmiSocketFactoryTimeoutMillis=5000
 # cluster setting
 remote.cluster.LocalClusterConsistency=true
 remote.cluster.AllowClusterGet=true
