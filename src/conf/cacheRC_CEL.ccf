@@ -105,7 +105,7 @@ jcs.auxiliary.RC.attributes.RemoveUponRemotePut=false
 jcs.auxiliary.RC.attributes.GetTimeoutMillis=500
 jcs.auxiliary.RC.attributes.ThreadPoolName=remote_cache_client
 jcs.auxiliary.RC.attributes.GetOnly=false
-jcs.auxiliary.RC.cacheeventlogger=org.apache.jcs.engine.logging.CacheEventLoggerDebugLoggerImpl
+jcs.auxiliary.RC.cacheeventlogger=org.apache.jcs.engine.logging.CacheEventLoggerDebugLogger
 jcs.auxiliary.RC.cacheeventlogger.attributes.logCategoryName=test.RCCEventLogCategory
 
 

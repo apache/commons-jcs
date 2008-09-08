@@ -29,8 +29,6 @@ import org.apache.jcs.utils.struct.LRUMap;
 
 /**
  * Tests the LRUMap
- * <p>
- * @author aaron smuts
  *
  */
 public class LRUMapConcurrentUnitTest

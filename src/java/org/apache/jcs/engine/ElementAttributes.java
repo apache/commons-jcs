@@ -31,84 +31,62 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
- * This it the element attribute descriptor class. Each element in the cache has
- * an ElementAttribute object associated with it. An ElementAttributes object
- * can be associated with an element in 3 ways:
+ * This it the element attribute descriptor class. Each element in the cache has an ElementAttribute
+ * object associated with it. An ElementAttributes object can be associated with an element in 3
+ * ways:
  * <ol>
- * <li>When the item is put into the cache, you can associate an element
- * attributes object.</li>
- * <li>If not attributes object is include when the element is put into the
- * cache, then the default attributes for the region will be used.</li>
- * <li>The element attributes can be reset. This effectively results in a
- * retrieval followed by a put. Hence, this is the same as 1.</li>
+ * <li>When the item is put into the cache, you can associate an element attributes object.</li>
+ * <li>If not attributes object is include when the element is put into the cache, then the default
+ * attributes for the region will be used.</li>
+ * <li>The element attributes can be reset. This effectively results in a retrieval followed by a
+ * put. Hence, this is the same as 1.</li>
  * </ol>
- * @version $Id: ILateralCacheTCPListener.java,v 1.2 2002/01/18 22:08:26
  */
 public class ElementAttributes
     implements IElementAttributes, Serializable, Cloneable
 {
+    /** Don't change. */
     private static final long serialVersionUID = 7814990748035017441L;
 
-    /**
-     * Can this item be flushed to disk
-     */
+    /** Can this item be flushed to disk */
     public boolean IS_SPOOL = true;
 
-    /**
-     * Is this item laterally distributable
-     */
+    /** Is this item laterally distributable */
     public boolean IS_LATERAL = true;
 
-    /**
-     * Can this item be sent to the remote cache
-     */
+    /** Can this item be sent to the remote cache */
     public boolean IS_REMOTE = true;
 
     /**
-     * You can turn off expiration by setting this to true. This causes the
-     * cache to bypass both max life and idle time expiration.
+     * You can turn off expiration by setting this to true. This causes the cache to bypass both max
+     * life and idle time expiration.
      */
     public boolean IS_ETERNAL = true;
 
-    /**
-     * The object version. This is currently not used.
-     */
-    public long version = 0;
-
-    /**
-     * Max life seconds
-     */
+    /** Max life seconds */
     public long maxLifeSeconds = -1;
 
     /**
-     * The maximum time an entry can be idle. Setting this to -1 causes the idle
-     * time check to be ignored.
+     * The maximum time an entry can be idle. Setting this to -1 causes the idle time check to be
+     * ignored.
      */
     public long maxIdleTimeSeconds = -1;
 
-    /**
-     * The byte size of the field. Must be manually set.
-     */
+    /** The byte size of the field. Must be manually set. */
     public int size = 0;
 
-    /**
-     * The creation time. This is used to enforce the max life.
-     */
+    /** The creation time. This is used to enforce the max life. */
     public long createTime = 0;
 
-    /**
-     * The last access time. This is used to enforce the max idel time.
-     */
+    /** The last access time. This is used to enforce the max idel time. */
     public long lastAccessTime = 0;
 
     /**
-     * The list of Event handlers to use. This is transient, since the event
-     * handlers cannot usually be serialized. This means that you cannot attach
-     * a post serialization event to an item.
+     * The list of Event handlers to use. This is transient, since the event handlers cannot usually
+     * be serialized. This means that you cannot attach a post serialization event to an item.
      * <p>
-     * TODO we need to check that when an item is passed to a non-local cache
-     * that if the local cache had a copy with event handlers, that those
-     * handlers are used.
+     * TODO we need to check that when an item is passed to a non-local cache that if the local
+     * cache had a copy with event handlers, that those handlers are used.
      */
     public transient ArrayList eventHandlers;
 
@@ -130,7 +108,7 @@ public class ElementAttributes
     {
         IS_ETERNAL = attr.IS_ETERNAL;
 
-        // waterfal onto disk, for pure disk set memory to 0
+        // waterfall onto disk, for pure disk set memory to 0
         IS_SPOOL = attr.IS_SPOOL;
 
         // lateral
@@ -140,7 +118,7 @@ public class ElementAttributes
         IS_REMOTE = attr.IS_REMOTE;
 
         maxLifeSeconds = attr.maxLifeSeconds;
-        // timetolive
+        // time-to-live
         maxIdleTimeSeconds = attr.maxIdleTimeSeconds;
         size = attr.size;
     }
@@ -204,63 +182,70 @@ public class ElementAttributes
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#setVersion(long)
-     */
-    public void setVersion( long version )
-    {
-        this.version = version;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#setMaxLifeSeconds(long)
+    /**
+     * Sets the maxLife attribute of the IAttributes object.
+     * <p>
+     * @param mls The new MaxLifeSeconds value
      */
     public void setMaxLifeSeconds( long mls )
     {
         this.maxLifeSeconds = mls;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getMaxLifeSeconds()
+    /**
+     * Sets the maxLife attribute of the IAttributes object. How many seconds it can live after
+     * creation.
+     * <p>
+     * If this is exceeded the element will not be returned, instead it will be removed. It will be
+     * removed on retrieval, or removed actively if the memory shrinker is turned on.
+     * @return The MaxLifeSeconds value
      */
     public long getMaxLifeSeconds()
     {
         return this.maxLifeSeconds;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#setIdleTime(long)
+    /**
+     * Sets the idleTime attribute of the IAttributes object. This is the maximum time the item can
+     * be idle in the cache, that is not accessed.
+     * <p>
+     * If this is exceeded the element will not be returned, instead it will be removed. It will be
+     * removed on retrieval, or removed actively if the memory shrinker is turned on.
+     * @param idle The new idleTime value
      */
     public void setIdleTime( long idle )
     {
         this.maxIdleTimeSeconds = idle;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#setSize(int)
+    /**
+     * Size in bytes. This is not used except in the admin pages. It will be -1 by default.
+     * <p>
+     * @param size The new size value
      */
     public void setSize( int size )
     {
         this.size = size;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getSize()
+    /**
+     * Gets the size attribute of the IAttributes object
+     * <p>
+     * @return The size value
      */
     public int getSize()
     {
         return size;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getCreateTime()
+    /**
+     * Gets the createTime attribute of the IAttributes object.
+     * <p>
+     * This should be the current time in milliseconds returned by the sysutem call when the element
+     * is put in the cache.
+     * <p>
+     * Putting an item in the cache overrides any existing items.
+     * @return The createTime value
      */
     public long getCreateTime()
     {
@@ -275,27 +260,21 @@ public class ElementAttributes
         createTime = System.currentTimeMillis();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getVersion()
-     */
-    public long getVersion()
-    {
-        return version;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getIdleTime()
+    /**
+     * Gets the idleTime attribute of the IAttributes object.
+     * <p>
+     * @return The idleTime value
      */
     public long getIdleTime()
     {
         return this.maxIdleTimeSeconds;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getTimeToLiveSeconds()
+    /**
+     * Gets the time left to live of the IAttributes object.
+     * <p>
+     * This is the (max life + create time) - current time.
+     * @return The TimeToLiveSeconds value
      */
     public long getTimeToLiveSeconds()
     {
@@ -303,54 +282,62 @@ public class ElementAttributes
         return ( ( this.getCreateTime() + ( this.getMaxLifeSeconds() * 1000 ) ) - now ) / 1000;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getLastAccessTime()
+    /**
+     * Gets the LastAccess attribute of the IAttributes object.
+     * <p>
+     * @return The LastAccess value.
      */
     public long getLastAccessTime()
     {
         return this.lastAccessTime;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#setLastAccessTimeNow()
+    /**
+     * Sets the LastAccessTime as now of the IElementAttributes object
      */
     public void setLastAccessTimeNow()
     {
         this.lastAccessTime = System.currentTimeMillis();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsSpool()
+    /**
+     * Can this item be spooled to disk
+     * <p>
+     * By default this is true.
+     * @return The spoolable value
      */
     public boolean getIsSpool()
     {
         return this.IS_SPOOL;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsSpool(boolean)
+    /**
+     * Sets the isSpool attribute of the IElementAttributes object
+     * <p>
+     * By default this is true.
+     * @param val The new isSpool value
      */
     public void setIsSpool( boolean val )
     {
         this.IS_SPOOL = val;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#getIsLateral()
+    /**
+     * Is this item laterally distributable. Can it be sent to auxiliaries of type lateral.
+     * <p>
+     * By default this is true.
+     * @return The isLateral value
      */
     public boolean getIsLateral()
     {
         return this.IS_LATERAL;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.IElementAttributes#setIsLateral(boolean)
+    /**
+     * Sets the isLateral attribute of the IElementAttributes object
+     * <p>
+     * By default this is true.
+     * @param val The new isLateral value
      */
     public void setIsLateral( boolean val )
     {
@@ -368,8 +355,7 @@ public class ElementAttributes
 
     /**
      * Sets the isRemote attribute of the ElementAttributes object
-     * @param val
-     *            The new isRemote value
+     * @param val The new isRemote value
      */
     public void setIsRemote( boolean val )
     {
@@ -377,8 +363,7 @@ public class ElementAttributes
     }
 
     /**
-     * You can turn off expiration by setting this to true. The max life value
-     * will be ignored.
+     * You can turn off expiration by setting this to true. The max life value will be ignored.
      * <p>
      * @return true if the item cannot expire.
      */
@@ -388,13 +373,11 @@ public class ElementAttributes
     }
 
     /**
-     * Sets the isEternal attribute of the ElementAttributes object. True means
-     * that the item should never expire. If can still be removed if it is the
-     * least recently used, and you are using the LRUMemory cache. it just will
-     * not be filtered for expiration by the cache hub.
+     * Sets the isEternal attribute of the ElementAttributes object. True means that the item should
+     * never expire. If can still be removed if it is the least recently used, and you are using the
+     * LRUMemory cache. it just will not be filtered for expiration by the cache hub.
      * <p>
-     * @param val
-     *            The new isEternal value
+     * @param val The new isEternal value
      */
     public void setIsEternal( boolean val )
     {
@@ -402,15 +385,13 @@ public class ElementAttributes
     }
 
     /**
-     * Adds a ElementEventHandler. Handler's can be registered for multiple
-     * events. A registered handler will be called at every recognized event.
+     * Adds a ElementEventHandler. Handler's can be registered for multiple events. A registered
+     * handler will be called at every recognized event.
      * <p>
-     * The alternative would be to register handlers for each event. Or maybe
-     * The handler interface should have a method to return whether it cares
-     * about certain events.
+     * The alternative would be to register handlers for each event. Or maybe The handler interface
+     * should have a method to return whether it cares about certain events.
      * <p>
-     * @param eventHandler
-     *            The ElementEventHandler to be added to the list.
+     * @param eventHandler The ElementEventHandler to be added to the list.
      */
     public void addElementEventHandler( IElementEventHandler eventHandler )
     {
@@ -425,11 +406,10 @@ public class ElementAttributes
     /**
      * Sets the eventHandlers of the IElementAttributes object.
      * <p>
-     * This add the references to the local list. Subsequent changes in the
-     * caller's list will not be reflected.
+     * This add the references to the local list. Subsequent changes in the caller's list will not
+     * be reflected.
      * <p>
-     * @param eventHandlers
-     *            List of IElementEventHandler objects
+     * @param eventHandlers List of IElementEventHandler objects
      */
     public void addElementEventHandlers( ArrayList eventHandlers )
     {
@@ -445,8 +425,7 @@ public class ElementAttributes
     }
 
     /**
-     * Gets the elementEventHandlers. Returns null if none exist. Makes checking
-     * easy.
+     * Gets the elementEventHandlers. Returns null if none exist. Makes checking easy.
      * <p>
      * @return The elementEventHandlers List of IElementEventHandler objects
      */

@@ -31,7 +31,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * gracefully.
  * <p>
  * Add the following to the top of your web.xml file.
- *
+ * 
  * <pre>
  *  &lt;listener&gt;
  *  &lt;listener-class&gt;
@@ -39,12 +39,12 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  *  &lt;/listener-class&gt;
  *  &lt;/listener&gt;
  * </pre>
- *
  * @author Aaron Smuts
  */
 public class JCSServletContextListener
     implements ServletContextListener
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( JCSServletContextListener.class );
 
     /**
@@ -75,5 +75,4 @@ public class JCSServletContextListener
         }
         CompositeCacheManager.getInstance().shutDown();
     }
-
 }

@@ -19,30 +19,26 @@ package org.apache.jcs.auxiliary.disk.block;
  * under the License.
  */
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
-import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
- * Cache manager for BlockDiskCaches. This manages the instances of the disk
- * cache.
+ * Cache manager for BlockDiskCaches. This manages the instances of the disk cache.
  */
 public class BlockDiskCacheManager
-    implements AuxiliaryCacheManager
+    extends AbstractDiskCacheManager
 {
     /** Don't change */
     private static final long serialVersionUID = -4153287154512274626L;
 
     /** The logger */
     private final static Log log = LogFactory.getLog( BlockDiskCacheManager.class );
-
-    /** ? */
-    private static int clients;
 
     /** The singleton instance */
     private static BlockDiskCacheManager instance;
@@ -56,43 +52,45 @@ public class BlockDiskCacheManager
     /**
      * Constructor for the BlockDiskCacheManager object
      * <p>
-     * @param defaultCacheAttributes
-     *            Default attributes for caches managed by the instance.
+     * @param defaultCacheAttributes Default attributes for caches managed by the instance.
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
-    private BlockDiskCacheManager( BlockDiskCacheAttributes defaultCacheAttributes )
+    private BlockDiskCacheManager( BlockDiskCacheAttributes defaultCacheAttributes, ICacheEventLogger cacheEventLogger,
+                                   IElementSerializer elementSerializer )
     {
         this.defaultCacheAttributes = defaultCacheAttributes;
+        setElementSerializer( elementSerializer );
+        setCacheEventLogger( cacheEventLogger );
     }
 
     /**
      * Gets the singleton instance of the manager
      * <p>
-     * @param defaultCacheAttributes
-     *            If the instance has not yet been created, it will be
+     * @param defaultCacheAttributes If the instance has not yet been created, it will be
      *            initialized with this set of default attributes.
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return The instance value
      */
-    public static BlockDiskCacheManager getInstance( BlockDiskCacheAttributes defaultCacheAttributes )
+    public static BlockDiskCacheManager getInstance( BlockDiskCacheAttributes defaultCacheAttributes,
+                                                     ICacheEventLogger cacheEventLogger,
+                                                     IElementSerializer elementSerializer )
     {
         synchronized ( BlockDiskCacheManager.class )
         {
             if ( instance == null )
             {
-                instance = new BlockDiskCacheManager( defaultCacheAttributes );
+                instance = new BlockDiskCacheManager( defaultCacheAttributes, cacheEventLogger, elementSerializer );
             }
         }
-
-        clients++;
-
         return instance;
     }
 
     /**
-     * Gets an BlockDiskCache for the supplied name using the default
-     * attributes.
+     * Gets an BlockDiskCache for the supplied name using the default attributes.
      * <p>
-     * @param cacheName
-     *            Name that will be used when creating attributes.
+     * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
     public AuxiliaryCache getCache( String cacheName )
@@ -105,12 +103,10 @@ public class BlockDiskCacheManager
     }
 
     /**
-     * Get an BlockDiskCache for the supplied attributes. Will provide an
-     * existing cache for the name attribute if one has been created, or will
-     * create a new cache.
+     * Get an BlockDiskCache for the supplied attributes. Will provide an existing cache for the
+     * name attribute if one has been created, or will create a new cache.
      * <p>
-     * @param cacheAttributes
-     *            Attributes the cache should have.
+     * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
     public AuxiliaryCache getCache( BlockDiskCacheAttributes cacheAttributes )
@@ -134,36 +130,13 @@ public class BlockDiskCacheManager
             if ( cache == null )
             {
                 cache = new BlockDiskCache( cacheAttributes );
-
+                cache.setCacheEventLogger( getCacheEventLogger() );
+                cache.setElementSerializer( getElementSerializer() );
                 caches.put( cacheName, cache );
             }
         }
 
         return cache;
-    }
-
-    /**
-     * Disposes the cache with the given name, if found in the set of managed
-     * caches.
-     * <p>
-     * @param cacheName
-     *            Name of cache to dispose.
-     */
-    public void freeCache( String cacheName )
-    {
-        ICache cache = (ICache) caches.get( cacheName );
-
-        if ( cache != null )
-        {
-            try
-            {
-                cache.dispose();
-            }
-            catch ( Exception e )
-            {
-                log.error( "Failure disposing cache: " + cacheName, e );
-            }
-        }
     }
 
     /**
@@ -174,41 +147,5 @@ public class BlockDiskCacheManager
     public int getCacheType()
     {
         return DISK_CACHE;
-    }
-
-    /**
-     * Releases the cache manager instance. When all clients have released the
-     * cache manager, all contained caches will be disposed.
-     */
-    public void release()
-    {
-        clients--;
-
-        if ( --clients != 0 )
-        {
-            return;
-        }
-
-        synchronized ( caches )
-        {
-            Enumeration allCaches = caches.elements();
-
-            while ( allCaches.hasMoreElements() )
-            {
-                ICache cache = (ICache) allCaches.nextElement();
-
-                if ( cache != null )
-                {
-                    try
-                    {
-                        cache.dispose();
-                    }
-                    catch ( Exception e )
-                    {
-                        log.error( "Failure disposing cache: " + cache.getCacheName(), e );
-                    }
-                }
-            }
-        }
     }
 }

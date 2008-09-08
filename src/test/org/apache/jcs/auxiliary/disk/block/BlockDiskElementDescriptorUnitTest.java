@@ -75,7 +75,7 @@ public class BlockDiskElementDescriptorUnitTest
 
     /**
      * Measure memory used by the VM.
-     * @return
+     * @return long
      * @throws InterruptedException
      */
     protected long measureMemoryUse()

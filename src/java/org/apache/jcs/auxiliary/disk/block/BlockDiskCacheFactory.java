@@ -64,7 +64,7 @@ public class BlockDiskCacheFactory
         {
             log.debug( "Creating DiskCache for attributes = " + idca );
         }
-        BlockDiskCacheManager dcm = BlockDiskCacheManager.getInstance( idca );
+        BlockDiskCacheManager dcm = BlockDiskCacheManager.getInstance( idca, cacheEventLogger, elementSerializer );
         return dcm.getCache( idca );
     }
 

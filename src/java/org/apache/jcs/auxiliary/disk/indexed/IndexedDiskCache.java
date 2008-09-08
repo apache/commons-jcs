@@ -169,9 +169,9 @@ public class IndexedDiskCache
 
         try
         {
-            this.dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ) );
+            this.dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ), getElementSerializer() );
 
-            this.keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ) );
+            this.keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ), getElementSerializer() );
 
             // If the key file has contents, try to initialize the keys
             // from it. In no keys are loaded reset the data file.
@@ -444,7 +444,7 @@ public class IndexedDiskCache
 
         try
         {
-            byte[] data = IndexedDisk.serialize( ce );
+            byte[] data = getElementSerializer().serialize( ce );
 
             // make sure this only locks for one particular cache region
             storageLock.writeLock().acquire();
@@ -873,9 +873,9 @@ public class IndexedDiskCache
             File keyFileTemp = new File( rafDir, fileName + ".key" );
             keyFileTemp.delete();
 
-            dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ) );
+            dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ), getElementSerializer() );
 
-            keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ) );
+            keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ), getElementSerializer() );
 
             initRecycleBin();
 

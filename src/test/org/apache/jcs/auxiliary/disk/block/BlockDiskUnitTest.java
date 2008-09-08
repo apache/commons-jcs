@@ -23,14 +23,17 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.apache.jcs.utils.serialization.StandardSerializer;
+
 /**
- * Test for the disk acces layer of the Block Disk Cache.
+ * Test for the disk access layer of the Block Disk Cache.
  * <p>
  * @author Aaron Smuts
  */
 public class BlockDiskUnitTest
     extends TestCase
 {
+    /** data file. */
     private File rafDir;
 
     /**
@@ -55,7 +58,7 @@ public class BlockDiskUnitTest
         String fileName = "testWriteSingleBlockElement";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
-        BlockDisk disk = new BlockDisk( file );
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
 
         // DO WORK
         int bytes = 1 * 1024;
@@ -80,7 +83,7 @@ public class BlockDiskUnitTest
         String fileName = "testWriteAndReadSingleBlockElement";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
-        BlockDisk disk = new BlockDisk( file );
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
 
         // DO WORK
         int bytes = 1 * 1024;
@@ -104,7 +107,7 @@ public class BlockDiskUnitTest
         String fileName = "testWriteSingleBlockElement";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
-        BlockDisk disk = new BlockDisk( file );
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
 
         // DO WORK
         int bytes = 1 * 1024;
@@ -131,7 +134,7 @@ public class BlockDiskUnitTest
         String fileName = "testCalculateBlocksNeededDouble";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
-        BlockDisk disk = new BlockDisk( file );
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
 
         // DO WORK
         int result = disk.calculateTheNumberOfBlocksNeeded( new byte[disk.getBlockSizeBytes() * 2
@@ -152,7 +155,7 @@ public class BlockDiskUnitTest
         // SETUP
         String fileName = "testWriteDoubleBlockElement";
         File file = new File( rafDir, fileName + ".data" );
-        BlockDisk disk = new BlockDisk( file );
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
 
         // DO WORK
         // byte arrays encur 27 bytes of serialization overhead.
@@ -178,7 +181,7 @@ public class BlockDiskUnitTest
         String fileName = "testWriteAndReadSingleBlockElement";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
-        BlockDisk disk = new BlockDisk( file );
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
 
         // DO WORK
         int numBlocksPerElement = 4;

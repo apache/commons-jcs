@@ -25,25 +25,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.jcs.utils.struct.LRUMap;
-
 /**
  * Tests the LRUMap
- *
- * @author aaronsm
- *
  */
 public class LRUMapConcurrentTest
     extends TestCase
 {
-
+    /** the number of items to use in a test */
     private static int items = 20000;
 
     /**
      * Constructor for the TestSimpleLoad object
-     *
-     * @param testName
-     *            Description of the Parameter
+     * @param testName Description of the Parameter
      */
     public LRUMapConcurrentTest( String testName )
     {
@@ -52,9 +45,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Description of the Method
-     *
-     * @param args
-     *            Description of the Parameter
+     * @param args Description of the Parameter
      */
     public static void main( String args[] )
     {
@@ -64,7 +55,6 @@ public class LRUMapConcurrentTest
 
     /**
      * A unit test suite for JUnit
-     *
      * @return The test suite
      */
     public static Test suite()
@@ -124,9 +114,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Just test that we can put, get and remove as expected.
-     *
-     * @exception Exception
-     *                Description of the Exception
+     * @exception Exception Description of the Exception
      */
     public void testSimpleLoad()
         throws Exception
@@ -155,9 +143,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Just make sure that the LRU functions int he most simple case.
-     *
-     * @exception Exception
-     *                Description of the Exception
+     * @exception Exception Description of the Exception
      */
     public void testLRURemoval()
         throws Exception
@@ -237,7 +223,6 @@ public class LRUMapConcurrentTest
 
     /**
      * Just make sure that we can put and get concurrently
-     *
      * @param map
      * @param items
      * @throws Exception
@@ -262,9 +247,8 @@ public class LRUMapConcurrentTest
     }
 
     /**
-     * Put, get, and remove from a range. This should occur at a range that is
-     * not touched by other tests.
-     *
+     * Put, get, and remove from a range. This should occur at a range that is not touched by other
+     * tests.
      * @param map
      * @param start
      * @param end
@@ -292,5 +276,4 @@ public class LRUMapConcurrentTest
         assertNull( map.get( start + ":key" ) );
 
     }
-
 }

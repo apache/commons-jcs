@@ -64,7 +64,6 @@ public interface ICacheEventLogger
      * Logs an error.
      * <p>
      * @param source - e.g. RemoteCacheServer
-     * @param region - the name of the region
      * @param eventName - e.g. update, get, put, remove
      * @param errorMessage - any error message
      */

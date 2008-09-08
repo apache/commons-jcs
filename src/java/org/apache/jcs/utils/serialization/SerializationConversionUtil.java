@@ -30,12 +30,13 @@ import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
- * This uses a supplied Serialer to convert to and from cache elements.
+ * This uses a supplied Serializer to convert to and from cache elements.
  * <p>
  * @author Aaron Smuts
  */
 public class SerializationConversionUtil
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( SerializationConversionUtil.class );
 
     /**

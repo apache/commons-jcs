@@ -50,21 +50,28 @@ public class RemoteCacheAttributes
      */
     private String failoverServers = "";
 
+    /** Cluster chain */
     private String clusterServers = "";
 
+    /** callback */
     private int localPort = 0;
 
+    /** THe type of remote cache, local or cluster */
     private int remoteType = LOCAL;
 
-    // what failover server we are connected to.
+    /** what failover server we are connected to. */
     private int failoverIndex = 0;
 
+    /** Array of failover server addresses */
     private String[] failovers;
 
+    /** Should we issue a local remove if we get a put from a remote server */
     private boolean removeUponRemotePut = true;
 
+    /** Can we receive from or put to the remote. this probably shouldn't be used. Use receive. */
     private boolean getOnly = false;
 
+    /** Should we put and get from the clusters. */
     private boolean localClusterConsistency = false;
 
     /** default name is remote_cache_client */
@@ -76,8 +83,13 @@ public class RemoteCacheAttributes
     /** read and connect timeout */
     private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
 
+    /**
+     * Can we receive from the server. You might have a 0 local store and keep everything on the
+     * remote. If so, you don't want to be notified of updates.
+     */
     private boolean receive = DEFAULT_RECEIVE;
 
+    /** If the primary fails, we will queue items before reconnect.  This limits the number of items that can be queued. */
     private int zombieQueueMaxSize = DEFAULT_ZOMBIE_QUEUE_MAX_SIZE;
 
     /** Default constructor for the RemoteCacheAttributes object */

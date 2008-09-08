@@ -27,7 +27,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheManager;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
@@ -39,7 +39,7 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * @author Aaron Smuts
  */
 public abstract class JDBCDiskCacheManagerAbstractTemplate
-    implements AuxiliaryCacheManager
+    extends AbstractDiskCacheManager
 {
     /** Don't change. */
     private static final long serialVersionUID = 218557927622128905L;
@@ -47,10 +47,10 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     /** The logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManagerAbstractTemplate.class );
 
-    /** Incremented on getIntance, decremented on release.  */
+    /** Incremented on getIntance, decremented on release. */
     protected static int clients;
 
-    /** A map of JDBCDiskCache objects to region names.  */
+    /** A map of JDBCDiskCache objects to region names. */
     protected static Hashtable caches = new Hashtable();
 
     /**
@@ -59,7 +59,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      */
     protected static Hashtable tableStates = new Hashtable();
 
-    /** The background disk shrinker, one for all regions.  */
+    /** The background disk shrinker, one for all regions. */
     private ClockDaemon shrinkerDaemon;
 
     /**
@@ -104,7 +104,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
                 }
 
                 diskCache = createJDBCDiskCache( cattr, tableState );
-
+                diskCache.setCacheEventLogger( getCacheEventLogger() );
+                diskCache.setElementSerializer( getElementSerializer() );
                 caches.put( cattr.getCacheName(), diskCache );
             }
         }

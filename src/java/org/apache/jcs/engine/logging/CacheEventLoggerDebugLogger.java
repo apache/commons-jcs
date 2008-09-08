@@ -11,11 +11,11 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * This implementation simple logs to a commons logger at debug level, for all events. It's mainly
  * for testing. It isn't very useful otherwise.
  */
-public class CacheEventLoggerDebugLoggerImpl
+public class CacheEventLoggerDebugLogger
     implements ICacheEventLogger
 {
     /** This is the name of the category. */
-    private String logCategoryName = CacheEventLoggerDebugLoggerImpl.class.getName();
+    private String logCategoryName = CacheEventLoggerDebugLogger.class.getName();
 
     /** The logger. This is recreated on set logCategoryName */
     private Log log = LogFactory.getLog( logCategoryName );

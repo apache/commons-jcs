@@ -441,9 +441,6 @@ public class PooledCacheEventQueue
 
     /**
      * An event that puts an item to a ICacheListener
-     * <p>
-     * @author asmuts
-     * @created January 15, 2002
      */
     private class PutEvent
         extends AbstractCacheEvent
@@ -472,6 +469,7 @@ public class PooledCacheEventQueue
             listener.handlePut( ice );
         }
 
+        /** @return debugging info */
         public String toString()
         {
             return new StringBuffer( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
@@ -482,9 +480,6 @@ public class PooledCacheEventQueue
 
     /**
      * An event that knows how to call remove on an ICacheListener
-     * <p>
-     * @author asmuts
-     * @created January 15, 2002
      */
     private class RemoveEvent
         extends AbstractCacheEvent
@@ -503,7 +498,7 @@ public class PooledCacheEventQueue
         }
 
         /**
-         * Calls remove on the listner.
+         * Calls remove on the listener.
          * <p>
          * @exception IOException
          */
@@ -513,10 +508,7 @@ public class PooledCacheEventQueue
             listener.handleRemove( cacheName, key );
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.lang.Object#toString()
-         */
+        /** @return debugging info */
         public String toString()
         {
             return new StringBuffer( "RemoveEvent for " ).append( key ).toString();
@@ -526,9 +518,6 @@ public class PooledCacheEventQueue
 
     /**
      * An event that knows how to call remove all on an ICacheListener
-     * <p>
-     * @author asmuts
-     * @created January 15, 2002
      */
     private class RemoveAllEvent
         extends AbstractCacheEvent
@@ -544,10 +533,7 @@ public class PooledCacheEventQueue
             listener.handleRemoveAll( cacheName );
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.lang.Object#toString()
-         */
+        /** @return debugging info */
         public String toString()
         {
             return "RemoveAllEvent";
@@ -557,9 +543,6 @@ public class PooledCacheEventQueue
 
     /**
      * The Event put into the queue for dispose requests.
-     * <p>
-     * @author asmuts
-     * @created January 15, 2002
      */
     private class DisposeEvent
         extends AbstractCacheEvent
@@ -575,6 +558,7 @@ public class PooledCacheEventQueue
             listener.handleDispose( cacheName );
         }
 
+        /** @return debugging info */
         public String toString()
         {
             return "DisposeEvent";

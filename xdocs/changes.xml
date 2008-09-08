@@ -21,6 +21,10 @@
 	<body>
 		<release version="1.4-dev" date="in SVN">
 		</release>
+		<release version="1.3.2.1" date="2008-09-08" description="tempbuild">
+			<action dev="asmuts" type="update">Made all disk cache managers
+				handle custom event loggers.</action>
+		</release>
 		<release version="1.3.2.0" date="2008-08-29" description="tempbuild">
 			<action dev="asmuts" type="update"> Added eventLogging to major
 				auxiliaries and to the auxiliary factory interface. This allows you
@@ -45,8 +49,8 @@
 				shutdown hook from disk cache to composite cache manager.</action>
 		</release>
 		<release version="1.3.1.0" date="2008-04-11" description="tempbuild">
-			<action dev="asmuts" type="update" due-to="Chris Fairbanks"> Added getMultiple() method to
-				ICache</action>
+			<action dev="asmuts" type="update" due-to="Chris Fairbanks"> Added getMultiple()
+				method to ICache</action>
 		</release>
 		<release version="1.3" date="2007-06-05" description="First formal release">
 			<action dev="tv" type="update"> Updated/added license headers in all

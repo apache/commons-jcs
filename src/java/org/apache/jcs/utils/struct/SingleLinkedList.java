@@ -30,16 +30,19 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SingleLinkedList
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( SingleLinkedList.class );
 
+    /** for sync */
     private Object lock = new Object();
 
-    // the head of the queue
+    /** the head of the queue */
     private Node head = new Node();
 
-    // the end of the queue
+    /** the end of the queue */
     private Node tail = head;
 
+    /** The size of the list */
     private int size = 0;
 
     /**
@@ -115,8 +118,10 @@ public class SingleLinkedList
      */
     private static class Node
     {
+        /** next int he list */
         Node next = null;
 
+        /** The data in this node */
         Object payload;
     }
 

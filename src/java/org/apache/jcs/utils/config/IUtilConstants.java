@@ -45,10 +45,13 @@ public interface IUtilConstants
      */
     final static class Config
     {
+        /** The logger */
         private final static Log log = LogFactory.getLog( Config.class );
 
+        /** username */
         private final static String ADMIN_USERID;
 
+        /** password */
         private final static String ADMIN_PASSWORD;
 
         static

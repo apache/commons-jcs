@@ -28,6 +28,7 @@ package org.apache.jcs.utils.access;
 public abstract class AbstractJCSWorkerHelper
     implements JCSWorkerHelper
 {
+    /** finished flag. Can't we use wait notify? */
     private boolean finished = false;
 
     /**

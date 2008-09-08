@@ -4,8 +4,10 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.control.MockElementSerializer;
 import org.apache.jcs.engine.logging.MockCacheEventLogger;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /** Unit tests for the auxiliary cache configurator. */
 public class AuxiliaryCacheConfiguratorUnitTest
@@ -87,7 +89,7 @@ public class AuxiliaryCacheConfiguratorUnitTest
             .parseElementSerializer( props, auxPrefix );
 
         // VERIFY
-        assertNotNull( "Should have a logger.", result );
+        assertNotNull( "Should have a Serializer.", result );
         assertEquals( "Property should be set.", testPropertyValue, result.getTestProperty() );
     }
 
@@ -100,10 +102,10 @@ public class AuxiliaryCacheConfiguratorUnitTest
         Properties props = new Properties();
 
         // DO WORK
-        MockElementSerializer result = (MockElementSerializer) AuxiliaryCacheConfigurator
+        IElementSerializer result = AuxiliaryCacheConfigurator
             .parseElementSerializer( props, "junk" );
 
         // VERIFY
-        assertNull( "Should not have a logger.", result );
+        assertTrue( "Should have the default Serializer.", result instanceof StandardSerializer );
     }
 }

@@ -2,10 +2,13 @@ package org.apache.jcs.auxiliary;
 
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.utils.config.OptionConverter;
 import org.apache.jcs.utils.config.PropertySetter;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  * Configuration util for auxiliary caches. I plan to move the auxiliary configuration from the
@@ -13,6 +16,9 @@ import org.apache.jcs.utils.config.PropertySetter;
  */
 public class AuxiliaryCacheConfigurator
 {
+    /** The logger. */
+    private final static Log log = LogFactory.getLog( AuxiliaryCacheConfigurator.class );
+
     /** .attributes */
     public final static String ATTRIBUTE_PREFIX = ".attributes";
 
@@ -44,12 +50,23 @@ public class AuxiliaryCacheConfigurator
         // auxFactory was not previously initialized.
         String eventLoggerClassName = auxPrefix + CACHE_EVENT_LOGGER_PREFIX;
         cacheEventLogger = (ICacheEventLogger) OptionConverter
-            .instantiateByKey( props, eventLoggerClassName, org.apache.jcs.engine.logging.behavior.ICacheEventLogger.class,
-                               null );
+            .instantiateByKey( props, eventLoggerClassName,
+                               org.apache.jcs.engine.logging.behavior.ICacheEventLogger.class, null );
         if ( cacheEventLogger != null )
         {
             String cacheEventLoggerAttributePrefix = auxPrefix + CACHE_EVENT_LOGGER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( cacheEventLogger, props, cacheEventLoggerAttributePrefix + "." );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Using custom cache event logger [" + cacheEventLogger + "] for auxiliary [" + auxPrefix + "]" );
+            }
+        }
+        else
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "No cache event logger defined for auxiliary [" + auxPrefix + "]" );
+            }
         }
         return cacheEventLogger;
     }
@@ -76,6 +93,20 @@ public class AuxiliaryCacheConfigurator
         {
             String cacheEventLoggerAttributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
             PropertySetter.setProperties( elementSerializer, props, cacheEventLoggerAttributePrefix + "." );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Using custom element serializer [" + elementSerializer + "] for auxiliary [" + auxPrefix
+                    + "]" );
+            }
+        }
+        else
+        {
+            // use the default standard serializer
+            elementSerializer = new StandardSerializer();
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Using standard serializer [" + elementSerializer + "] for auxiliary [" + auxPrefix + "]" );
+            }
         }
         return elementSerializer;
     }

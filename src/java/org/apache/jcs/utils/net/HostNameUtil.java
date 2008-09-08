@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class HostNameUtil
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( HostNameUtil.class );
 
     /**
@@ -83,6 +84,7 @@ public class HostNameUtil
      * <p>
      * <a href="http://issues.apache.org/jira/browse/JCS-40">JIR ISSUE JCS-40</a>
      * <p>
+     * @return InetAddress
      * @throws UnknownHostException If the LAN address of the machine cannot be found.
      */
     private static InetAddress getLocalHostLANAddress()

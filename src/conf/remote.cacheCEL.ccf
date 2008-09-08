@@ -21,7 +21,7 @@ registry.host=localhost
 registry.port=1101
 remote.cache.service.port=1101
 remote.cluster.LocalClusterConsistency=true
-remote.cacheeventlogger=org.apache.jcs.engine.logging.CacheEventLoggerDebugLoggerImpl
+remote.cacheeventlogger=org.apache.jcs.engine.logging.CacheEventLoggerDebugLogger
 remote.cacheeventlogger.attributes.logCategoryName=test.RCSEventLogCategory
 
 # #############################################################

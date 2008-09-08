@@ -32,8 +32,10 @@ import java.io.Serializable;
 public class DoubleLinkedListNode
     implements Serializable
 {
+    /** Dont' change. */
     private static final long serialVersionUID = -1114934407695836097L;
 
+    /** The object in the node. */
     private Object payload;
 
     /** Double Linked list references */

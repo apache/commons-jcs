@@ -51,9 +51,9 @@ public abstract class AbstractAuxiliaryCache
     /**
      * Logs an event if an event logger is configured.
      * <p>
-     * @param regionName 
+     * @param regionName
      * @param key
-     * @param eventName 
+     * @param eventName
      * @return ICacheEvent
      */
     protected ICacheEvent createICacheEvent( String regionName, Serializable key, String eventName )
@@ -129,13 +129,38 @@ public abstract class AbstractAuxiliaryCache
     }
 
     /**
+     * Allows it to be injected.
+     * <p>
+     * @return cacheEventLogger
+     */
+    public ICacheEventLogger getCacheEventLogger()
+    {
+        return this.cacheEventLogger;
+    }
+
+    /**
      * Allows you to inject a custom serializer. A good example would be a compressing standard
      * serializer.
+     * <p>
+     * Does not allow you to set it to null.
      * <p>
      * @param elementSerializer
      */
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
-        this.elementSerializer = elementSerializer;
+        if ( elementSerializer != null )
+        {
+            this.elementSerializer = elementSerializer;
+        }
+    }
+
+    /**
+     * Allows it to be injected.
+     * <p>
+     * @return elementSerializer
+     */
+    public IElementSerializer getElementSerializer()
+    {
+        return this.elementSerializer;
     }
 }

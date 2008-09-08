@@ -19,21 +19,20 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
-import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.auxiliary.disk.AbstractDiskCacheManager;
+import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
- * Cache manager for IndexedDiskCaches. This manages the instances of the disk
- * cache.
+ * Cache manager for IndexedDiskCaches. This manages the instances of the disk cache.
  */
 public class IndexedDiskCacheManager
-    implements AuxiliaryCacheManager
+    extends AbstractDiskCacheManager
 {
     /** Don't change */
     private static final long serialVersionUID = -4153287154512274626L;
@@ -41,58 +40,57 @@ public class IndexedDiskCacheManager
     /** The logger */
     private final static Log log = LogFactory.getLog( IndexedDiskCacheManager.class );
 
-    /** How many checkout have we received.  Decremented on release. This isn't very useful. */
-    private static int clients;
-
     /** Singleton instance. */
     private static IndexedDiskCacheManager instance;
 
     /** Each region has an entry here. */
     private Hashtable caches = new Hashtable();
 
-    /** User configurable atributes */
+    /** User configurable attributes */
     private IndexedDiskCacheAttributes defaultCacheAttributes;
 
     /**
      * Constructor for the IndexedDiskCacheManager object
      * <p>
-     * @param defaultCacheAttributes
-     *            Default attributes for caches managed by the instance.
+     * @param defaultCacheAttributes Default attributes for caches managed by the instance.
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
-    private IndexedDiskCacheManager( IndexedDiskCacheAttributes defaultCacheAttributes )
+    private IndexedDiskCacheManager( IndexedDiskCacheAttributes defaultCacheAttributes,
+                                     ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         this.defaultCacheAttributes = defaultCacheAttributes;
+        setElementSerializer( elementSerializer );
+        setCacheEventLogger( cacheEventLogger );
     }
 
     /**
      * Gets the singleton instance of the manager
      * <p>
-     * @param defaultCacheAttributes
-     *            If the instance has not yet been created, it will be
+     * @param defaultCacheAttributes If the instance has not yet been created, it will be
      *            initialized with this set of default attributes.
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return The instance value
      */
-    public static IndexedDiskCacheManager getInstance( IndexedDiskCacheAttributes defaultCacheAttributes )
+    public static IndexedDiskCacheManager getInstance( IndexedDiskCacheAttributes defaultCacheAttributes,
+                                                       ICacheEventLogger cacheEventLogger,
+                                                       IElementSerializer elementSerializer )
     {
         synchronized ( IndexedDiskCacheManager.class )
         {
             if ( instance == null )
             {
-                instance = new IndexedDiskCacheManager( defaultCacheAttributes );
+                instance = new IndexedDiskCacheManager( defaultCacheAttributes, cacheEventLogger, elementSerializer );
             }
         }
-
-        clients++;
-
         return instance;
     }
 
     /**
-     * Gets an IndexedDiskCache for the supplied name using the default
-     * attributes.
+     * Gets an IndexedDiskCache for the supplied name using the default attributes.
      * <p>
-     * @param cacheName
-     *            Name that will be used when creating attributes.
+     * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
     public AuxiliaryCache getCache( String cacheName )
@@ -105,12 +103,10 @@ public class IndexedDiskCacheManager
     }
 
     /**
-     * Get an IndexedDiskCache for the supplied attributes. Will provide an
-     * existing cache for the name attribute if one has been created, or will
-     * create a new cache.
+     * Get an IndexedDiskCache for the supplied attributes. Will provide an existing cache for the
+     * name attribute if one has been created, or will create a new cache.
      * <p>
-     * @param cacheAttributes
-     *            Attributes the cache should have.
+     * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
     public AuxiliaryCache getCache( IndexedDiskCacheAttributes cacheAttributes )
@@ -134,36 +130,13 @@ public class IndexedDiskCacheManager
             if ( cache == null )
             {
                 cache = new IndexedDiskCache( cacheAttributes );
-
+                cache.setCacheEventLogger( getCacheEventLogger() );
+                cache.setElementSerializer( getElementSerializer() );
                 caches.put( cacheName, cache );
             }
         }
 
         return cache;
-    }
-
-    /**
-     * Disposes the cache with the given name, if found in the set of managed
-     * caches.
-     * <p>
-     * @param cacheName
-     *            Name of cache to dispose.
-     */
-    public void freeCache( String cacheName )
-    {
-        ICache cache = (ICache) caches.get( cacheName );
-
-        if ( cache != null )
-        {
-            try
-            {
-                cache.dispose();
-            }
-            catch ( Exception e )
-            {
-                log.error( "Failure disposing cache: " + cacheName, e );
-            }
-        }
     }
 
     /**
@@ -174,39 +147,5 @@ public class IndexedDiskCacheManager
     public int getCacheType()
     {
         return DISK_CACHE;
-    }
-
-    /**
-     * Releases the cache manager instance. When all clients have released the
-     * cache manager, all contained caches will be disposed.
-     */
-    public void release()
-    {
-        if ( --clients != 0 )
-        {
-            return;
-        }
-
-        synchronized ( caches )
-        {
-            Enumeration allCaches = caches.elements();
-
-            while ( allCaches.hasMoreElements() )
-            {
-                ICache cache = (ICache) allCaches.nextElement();
-
-                if ( cache != null )
-                {
-                    try
-                    {
-                        cache.dispose();
-                    }
-                    catch ( Exception e )
-                    {
-                        log.error( "Failure disposing cache: " + cache.getCacheName(), e );
-                    }
-                }
-            }
-        }
     }
 }

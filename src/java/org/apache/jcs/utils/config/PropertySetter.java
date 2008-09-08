@@ -23,48 +23,37 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-
 import java.lang.reflect.Method;
-
 import java.util.Enumeration;
 import java.util.Properties;
-
-import org.apache.jcs.utils.config.OptionConverter;
-import org.apache.jcs.utils.config.PropertySetterException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This class is based on the log4j class org.apache.log4j.config.PropertySetter
- * that was made by Anders Kristensen
- *
- */
-
-/**
- * General purpose Object property setter. Clients repeatedly invokes {@link
- * #setProperty setProperty(name,value)} in order to invoke setters on the
- * Object specified in the constructor. This class relies on the JavaBeans
- * {@link Introspector}to analyze the given Object Class using reflection.
+ * This class is based on the log4j class org.apache.log4j.config.PropertySetter that was made by
+ * Anders Kristensen
  * <p>
- *
+ * General purpose Object property setter. Clients repeatedly invokes {@link #setProperty
+ * setProperty(name,value)} in order to invoke setters on the Object specified in the constructor.
+ * This class relies on the JavaBeans {@link Introspector}to analyze the given Object Class using
+ * reflection.
+ * <p>
  * Usage:
- *
+ * 
  * <pre>
  * PropertySetter ps = new PropertySetter( anObject );
  * ps.set( &quot;name&quot;, &quot;Joe&quot; );
  * ps.set( &quot;age&quot;, &quot;32&quot; );
  * ps.set( &quot;isMale&quot;, &quot;true&quot; );
  * </pre>
- *
- * will cause the invocations anObject.setName("Joe"), anObject.setAge(32), and
- * setMale(true) if such methods exist with those signatures. Otherwise an
- * {@link IntrospectionException}are thrown.
- *
- * @since 1.1
+ * 
+ * will cause the invocations anObject.setName("Joe"), anObject.setAge(32), and setMale(true) if
+ * such methods exist with those signatures. Otherwise an {@link IntrospectionException}are thrown.
  */
 public class PropertySetter
 {
+    /** Logger */
     private final static Log log = LogFactory.getLog( OptionConverter.class );
 
     /** Description of the Field */
@@ -74,11 +63,9 @@ public class PropertySetter
     protected PropertyDescriptor[] props;
 
     /**
-     * Create a new PropertySetter for the specified Object. This is done in
-     * prepartion for invoking {@link #setProperty}one or more times.
-     *
-     * @param obj
-     *            the object for which to set properties
+     * Create a new PropertySetter for the specified Object. This is done in prepartion for invoking
+     * {@link #setProperty}one or more times.
+     * @param obj the object for which to set properties
      */
     public PropertySetter( Object obj )
     {
@@ -86,8 +73,7 @@ public class PropertySetter
     }
 
     /**
-     * Uses JavaBeans {@link Introspector}to computer setters of object to be
-     * configured.
+     * Uses JavaBeans {@link Introspector}to computer setters of object to be configured.
      */
     protected void introspect()
     {
@@ -104,15 +90,12 @@ public class PropertySetter
     }
 
     /**
-     * Set the properties of an object passed as a parameter in one go. The
-     * <code>properties</code> are parsed relative to a <code>prefix</code>.
-     *
-     * @param obj
-     *            The object to configure.
-     * @param properties
-     *            A java.util.Properties containing keys and values.
-     * @param prefix
-     *            Only keys having the specified prefix will be set.
+     * Set the properties of an object passed as a parameter in one go. The <code>properties</code>
+     * are parsed relative to a <code>prefix</code>.
+     * <p>
+     * @param obj The object to configure.
+     * @param properties A java.util.Properties containing keys and values.
+     * @param prefix Only keys having the specified prefix will be set.
      */
     public static void setProperties( Object obj, Properties properties, String prefix )
     {
@@ -120,13 +103,10 @@ public class PropertySetter
     }
 
     /**
-     * Set the properites for the object that match the <code>prefix</code>
-     * passed as parameter.
-     *
-     * @param properties
-     *            The new properties value
-     * @param prefix
-     *            The new properties value
+     * Set the properties for the object that match the <code>prefix</code> passed as parameter.
+     * <p>
+     * @param properties The new properties value
+     * @param prefix The new properties value
      */
     public void setProperties( Properties properties, String prefix )
     {
@@ -158,22 +138,16 @@ public class PropertySetter
     }
 
     /**
-     * Set a property on this PropertySetter's Object. If successful, this
-     * method will invoke a setter method on the underlying Object. The setter
-     * is the one for the specified property name and the value is determined
-     * partly from the setter argument type and partly from the value specified
-     * in the call to this method.
+     * Set a property on this PropertySetter's Object. If successful, this method will invoke a
+     * setter method on the underlying Object. The setter is the one for the specified property name
+     * and the value is determined partly from the setter argument type and partly from the value
+     * specified in the call to this method.
      * <p>
-     *
-     * If the setter expects a String no conversion is necessary. If it expects
-     * an int, then an attempt is made to convert 'value' to an int using new
-     * Integer(value). If the setter expects a boolean, the conversion is by new
-     * Boolean(value).
-     *
-     * @param name
-     *            name of the property
-     * @param value
-     *            String value of the property
+     * If the setter expects a String no conversion is necessary. If it expects an int, then an
+     * attempt is made to convert 'value' to an int using new Integer(value). If the setter expects
+     * a boolean, the conversion is by new Boolean(value).
+     * @param name name of the property
+     * @param value String value of the property
      */
 
     public void setProperty( String name, String value )
@@ -207,14 +181,9 @@ public class PropertySetter
 
     /**
      * Set the named property given a {@link PropertyDescriptor}.
-     *
-     * @param prop
-     *            A PropertyDescriptor describing the characteristics of the
-     *            property to set.
-     * @param name
-     *            The named of the property to set.
-     * @param value
-     *            The value of the property.
+     * @param prop A PropertyDescriptor describing the characteristics of the property to set.
+     * @param name The named of the property to set.
+     * @param value The value of the property.
      * @throws PropertySetterException
      */
 
@@ -257,8 +226,7 @@ public class PropertySetter
     }
 
     /**
-     * Convert <code>val</code> a String parameter to an object of a given
-     * type.
+     * Convert <code>val</code> a String parameter to an object of a given type.
      * @param val
      * @param type
      * @return Object
@@ -300,7 +268,6 @@ public class PropertySetter
     /**
      * Gets the propertyDescriptor attribute of the PropertySetter object
      * @param name
-     *
      * @return The propertyDescriptor value
      */
     protected PropertyDescriptor getPropertyDescriptor( String name )

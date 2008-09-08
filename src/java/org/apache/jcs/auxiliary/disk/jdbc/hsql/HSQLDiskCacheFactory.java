@@ -67,7 +67,8 @@ public class HSQLDiskCacheFactory
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
-        JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr );
+        JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr,
+                                                                     cacheEventLogger, elementSerializer );
         try
         {
             setupDatabase( (JDBCDiskCacheAttributes) rawAttr );

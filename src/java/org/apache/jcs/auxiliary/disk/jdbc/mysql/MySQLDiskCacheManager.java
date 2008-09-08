@@ -31,6 +31,8 @@ import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManagerAbstractTemplate;
 import org.apache.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleFormatException;
 import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
+import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * This manages instances of the MySQL jdbc disk cache. It maintains one for each region. One for
@@ -64,14 +66,19 @@ public class MySQLDiskCacheManager
      * Constructor for the HSQLCacheManager object
      * <p>
      * @param cattr
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
-    private MySQLDiskCacheManager( MySQLDiskCacheAttributes cattr )
+    private MySQLDiskCacheManager( MySQLDiskCacheAttributes cattr,
+                                   ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         if ( log.isInfoEnabled() )
         {
             log.info( "Creating MySQLDiskCacheManager with " + cattr );
         }
         defaultJDBCDiskCacheAttributes = cattr;
+        setElementSerializer( elementSerializer );
+        setCacheEventLogger( cacheEventLogger );        
     }
 
     /**
@@ -88,15 +95,19 @@ public class MySQLDiskCacheManager
      * Gets the instance attribute of the HSQLCacheManager class
      * <p>
      * @param cattr
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return The instance value
      */
-    public static MySQLDiskCacheManager getInstance( MySQLDiskCacheAttributes cattr )
+    public static MySQLDiskCacheManager getInstance( MySQLDiskCacheAttributes cattr,
+                                                     ICacheEventLogger cacheEventLogger,
+                                                     IElementSerializer elementSerializer )
     {
         synchronized ( MySQLDiskCacheManager.class )
         {
             if ( instance == null )
             {
-                instance = new MySQLDiskCacheManager( cattr );
+                instance = new MySQLDiskCacheManager( cattr, cacheEventLogger, elementSerializer );
             }
         }
         clients++;

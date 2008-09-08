@@ -34,14 +34,19 @@ public class OptionConverter
     /** The logger */
     private final static Log log = LogFactory.getLog( OptionConverter.class );
 
+    /** System property delimter */
     static String DELIM_START = "${";
 
+    /** System property delimter */
     static char DELIM_STOP = '}';
 
+    /** System property delimter start length */
     static int DELIM_START_LEN = 2;
 
+    /** System property delimter end length */
     static int DELIM_STOP_LEN = 1;
 
+    /** working buffer */
     static StringBuffer sbuf = new StringBuffer();
 
     /** No instances please. */
@@ -68,7 +73,8 @@ public class OptionConverter
     }
 
     /**
-     * Escapes special cahracters/
+     * Escapes special characters.
+     * <p>
      * @param s
      * @return String
      */

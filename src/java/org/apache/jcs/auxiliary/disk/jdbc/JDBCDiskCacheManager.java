@@ -22,6 +22,8 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * This manages instances of the jdbc disk cache. It maintains one for each region. One for all
@@ -46,14 +48,19 @@ public class JDBCDiskCacheManager
      * Constructor for the HSQLCacheManager object
      * <p>
      * @param cattr
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
-    private JDBCDiskCacheManager( JDBCDiskCacheAttributes cattr )
+    private JDBCDiskCacheManager( JDBCDiskCacheAttributes cattr, ICacheEventLogger cacheEventLogger,
+                                  IElementSerializer elementSerializer )
     {
         if ( log.isInfoEnabled() )
         {
             log.info( "Creating JDBCDiskCacheManager with " + cattr );
         }
         defaultJDBCDiskCacheAttributes = cattr;
+        setElementSerializer( elementSerializer );
+        setCacheEventLogger( cacheEventLogger );
     }
 
     /**
@@ -70,15 +77,18 @@ public class JDBCDiskCacheManager
      * Gets the instance attribute of the HSQLCacheManager class
      * <p>
      * @param cattr
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return The instance value
      */
-    public static JDBCDiskCacheManager getInstance( JDBCDiskCacheAttributes cattr )
+    public static JDBCDiskCacheManager getInstance( JDBCDiskCacheAttributes cattr, ICacheEventLogger cacheEventLogger,
+                                                    IElementSerializer elementSerializer )
     {
         synchronized ( JDBCDiskCacheManager.class )
         {
             if ( instance == null )
             {
-                instance = new JDBCDiskCacheManager( cattr );
+                instance = new JDBCDiskCacheManager( cattr, cacheEventLogger, elementSerializer );
             }
         }
         clients++;
@@ -102,7 +112,7 @@ public class JDBCDiskCacheManager
      * Creates a JDBCDiskCache using the supplied attributes.
      * <p>
      * @param cattr
-     * @param tableState 
+     * @param tableState
      * @return AuxiliaryCache
      */
     protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )

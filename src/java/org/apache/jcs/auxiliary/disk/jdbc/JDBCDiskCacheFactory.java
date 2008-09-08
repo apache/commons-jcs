@@ -40,23 +40,24 @@ public class JDBCDiskCacheFactory
     /**
      * This factory method should create an instance of the mysqlcache.
      * <p>
-     * @param rawAttr 
-     * @param arg1 
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * @param rawAttr
+     * @param arg1
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return AuxiliaryCache
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
-        JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr );
+        JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr,
+                                                                     cacheEventLogger, elementSerializer );
         return mgr.getCache( (JDBCDiskCacheAttributes) rawAttr );
     }
 
     /**
      * The name of the factory.
      * <p>
-     * @param nameArg 
+     * @param nameArg
      */
     public void setName( String nameArg )
     {

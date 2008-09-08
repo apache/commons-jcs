@@ -31,7 +31,6 @@ public class ConcurrentRemovalLoadTest
 {
     /**
      * Constructor for the TestDiskCache object.
-     *
      * @param testName
      */
     public ConcurrentRemovalLoadTest( String testName )
@@ -41,7 +40,6 @@ public class ConcurrentRemovalLoadTest
 
     /**
      * Main method passes this test to the text test runner.
-     *
      * @param args
      */
     public static void main( String args[] )
@@ -51,9 +49,8 @@ public class ConcurrentRemovalLoadTest
     }
 
     /**
-     * A unit test suite for JUnit. This verfies that we can remove
-     * hierarchically while the region is active.
-     *
+     * A unit test suite for JUnit. This verfies that we can remove hierarchically while the region
+     * is active.
      * @return The test suite
      */
     public static Test suite()
@@ -125,11 +122,12 @@ public class ConcurrentRemovalLoadTest
             }
         } );
         return suite;
-
     }
 
     /**
      * Test setup
+     * <p>
+     * @throws Exception
      */
     public void setUp()
         throws Exception
@@ -137,5 +135,4 @@ public class ConcurrentRemovalLoadTest
         JCS.setConfigFilename( "/TestRemoval.ccf" );
         JCS.getInstance( "testCache1" );
     }
-
 }

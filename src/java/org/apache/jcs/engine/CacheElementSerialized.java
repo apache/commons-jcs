@@ -24,13 +24,11 @@ import java.io.Serializable;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
-
-/**
- * Either serialized value or the value should be null;
- */
+/** Either serialized value or the value should be null; */
 public class CacheElementSerialized
     implements ICacheElementSerialized
 {
+    /** Don't change. */
     private static final long serialVersionUID = -7265084818647601874L;
 
     /** The name of the cache region. This is a namespace. */
@@ -43,8 +41,7 @@ public class CacheElementSerialized
     private final byte[] serializedValue;
 
     /**
-     * These attributes hold information about the element and what it is
-     * allowed to do.
+     * These attributes hold information about the element and what it is allowed to do.
      */
     private IElementAttributes elementAttributes;
 
@@ -57,7 +54,7 @@ public class CacheElementSerialized
      * @param elementAttributesArg
      */
     public CacheElementSerialized( String cacheNameArg, Serializable keyArg, byte[] serializedValueArg,
-                                  IElementAttributes elementAttributesArg )
+                                   IElementAttributes elementAttributesArg )
     {
         this.cacheName = cacheNameArg;
         this.key = keyArg;
@@ -75,36 +72,26 @@ public class CacheElementSerialized
         return this.cacheName;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheElement#getKey()
-     */
+    /** @return Serializable */
     public Serializable getKey()
     {
         return this.key;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheElementSerialized#getSerializedValue()
-     */
+    /** @return byte[] */
     public byte[] getSerializedValue()
     {
         return this.serializedValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheElement#getElementAttributes()
-     */
+    /** @return IElementAttributes */
     public IElementAttributes getElementAttributes()
     {
         return this.elementAttributes;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheElement#setElementAttributes(org.apache.jcs.engine.behavior.IElementAttributes)
+    /**
+     * @param attr
      */
     public void setElementAttributes( IElementAttributes attr )
     {
@@ -113,6 +100,8 @@ public class CacheElementSerialized
 
     /**
      * Backward compatibility.
+     * <p>
+     * @return Serializable
      */
     public Serializable getVal()
     {

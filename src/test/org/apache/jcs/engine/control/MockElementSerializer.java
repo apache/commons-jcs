@@ -13,6 +13,7 @@ public class MockElementSerializer
     /** test property */
     private String testProperty;
     
+    /** What's used in the background */
     private StandardSerializer serializer = new StandardSerializer();    
     
     /**

@@ -27,20 +27,17 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 
-/**
- * Provides thread safe access to the underlying random access file.
- */
+/** Provides thread safe access to the underlying random access file. */
 class IndexedDisk
 {
-    /**
-     * The size of the header in bytes. The header describes the length of the entry.
-     */
+    /** The size of the header in bytes. The header describes the length of the entry.  */
     public static final int RECORD_HEADER = 4;
 
-    /** Serializes. */
-    private static final StandardSerializer SERIALIZER = new StandardSerializer();
+    /** The serializer. Uses a standard serializer by default. */
+    protected IElementSerializer elementSerializer = new StandardSerializer();
 
     /** The logger */
     private static final Log log = LogFactory.getLog( IndexedDisk.class );
@@ -58,12 +55,14 @@ class IndexedDisk
      * Constructor for the Disk object
      * <p>
      * @param file
+     * @param elementSerializer 
      * @exception FileNotFoundException
      */
-    public IndexedDisk( File file )
+    public IndexedDisk( File file, IElementSerializer elementSerializer )
         throws FileNotFoundException
     {
         this.filepath = file.getAbsolutePath();
+        this.elementSerializer = elementSerializer;
         raf = new RandomAccessFile( filepath, "rw" );
     }
 
@@ -117,7 +116,7 @@ class IndexedDisk
             raf.readFully( data = new byte[ded.len] );
         }
 
-        return (Serializable) SERIALIZER.deSerialize( data );
+        return (Serializable) elementSerializer.deSerialize( data );
     }
 
     /**
@@ -211,7 +210,7 @@ class IndexedDisk
     protected boolean writeObject( Serializable obj, long pos )
         throws IOException
     {
-        byte[] data = SERIALIZER.serialize( obj );
+        byte[] data = elementSerializer.serialize( obj );
         write( new IndexedDiskElementDescriptor( pos, data.length ), data );
         return true;
     }
@@ -276,21 +275,6 @@ class IndexedDisk
             throw ex;
         }
         raf = new RandomAccessFile( filepath, "rw" );
-    }
-
-    /**
-     * Returns the serialized form of the given object in a byte array.
-     * <p>
-     * Use the Serilizer abstraction layer.
-     * <p>
-     * @return a byte array of the serialized object.
-     * @param obj
-     * @exception IOException
-     */
-    protected static byte[] serialize( Serializable obj )
-        throws IOException
-    {
-        return SERIALIZER.serialize( obj );
     }
 
     /**

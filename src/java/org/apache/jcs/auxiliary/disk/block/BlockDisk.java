@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 import org.apache.jcs.utils.struct.SingleLinkedList;
 
@@ -59,8 +60,8 @@ public class BlockDisk
     /** Empty blocks that can be reused. */
     private SingleLinkedList emptyBlocks = new SingleLinkedList();
 
-    /** Handles serializing the objects */
-    private static final StandardSerializer SERIALIZER = new StandardSerializer();
+    /** The serializer. Uses a standard serializer by default. */
+    protected IElementSerializer elementSerializer = new StandardSerializer();
 
     /** Location of the spot on disk */
     private final String filepath;
@@ -78,9 +79,10 @@ public class BlockDisk
      * Constructor for the Disk object
      * <p>
      * @param file
+     * @param elementSerializer 
      * @exception FileNotFoundException
      */
-    public BlockDisk( File file )
+    public BlockDisk( File file, IElementSerializer elementSerializer )
         throws FileNotFoundException
     {
         this( file, DEFAULT_BLOCK_SIZE_BYTES );
@@ -88,7 +90,7 @@ public class BlockDisk
         {
             log.info( "Used default block size [" + DEFAULT_BLOCK_SIZE_BYTES + "]" );
         }
-
+        this.elementSerializer = elementSerializer;        
     }
 
     /**
@@ -132,7 +134,7 @@ public class BlockDisk
         throws IOException
     {
         // serialize the object
-        byte[] data = SERIALIZER.serialize( object );
+        byte[] data = elementSerializer.serialize( object );
 
         this.addToPutBytes( data.length );
         this.incrementPutCount();
@@ -260,7 +262,7 @@ public class BlockDisk
             }
         }
 
-        return (Serializable) SERIALIZER.deSerialize( data );
+        return (Serializable) elementSerializer.deSerialize( data );
     }
 
     /**
@@ -418,21 +420,6 @@ public class BlockDisk
         throws IOException
     {
         raf.close();
-    }
-
-    /**
-     * Returns the serialized form of the given object in a byte array.
-     * <p>
-     * Use the Serilizer abstraction layer.
-     * <p>
-     * @return a byte array of the serialized object.
-     * @param obj
-     * @exception IOException
-     */
-    protected static byte[] serialize( Serializable obj )
-        throws IOException
-    {
-        return SERIALIZER.serialize( obj );
     }
 
     /**

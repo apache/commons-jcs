@@ -147,6 +147,8 @@ public class LateralTCPCacheManager
      * <p>
      * @param lcaA
      * @param cacheMgr
+     * @param cacheEventLogger 
+     * @param elementSerializer 
      */
     private LateralTCPCacheManager( ITCPLateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr,
                                     ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )

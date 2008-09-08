@@ -64,7 +64,7 @@ public class IndexedDiskCacheFactory
         {
             log.debug( "Creating DiskCache for attributes = " + idca );
         }
-        IndexedDiskCacheManager dcm = IndexedDiskCacheManager.getInstance( idca );
+        IndexedDiskCacheManager dcm = IndexedDiskCacheManager.getInstance( idca, cacheEventLogger, elementSerializer );
         return dcm.getCache( idca );
     }
 

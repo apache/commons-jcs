@@ -121,7 +121,7 @@ public class BlockDiskCache
             }
             else
             {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ) );
+                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), getElementSerializer() );
             }
 
             keyStore = new BlockDiskKeyStore( this.blockDiskCacheAttributes, this );
@@ -599,7 +599,7 @@ public class BlockDiskCache
             }
             else
             {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ) );
+                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), getElementSerializer() );
             }
 
             this.keyStore.reset();

@@ -63,10 +63,13 @@ public class LRUMap
     /** Map where items are stored by key. */
     protected Map map;
 
+    /** stats */
     int hitCnt = 0;
 
+    /** stats */
     int missCnt = 0;
 
+    /** stats */
     int putCnt = 0;
 
     /** if the max is less than 0, there is no limit! */
@@ -78,8 +81,6 @@ public class LRUMap
     /**
      * This creates an unbounded version. Setting the max objects will result in spooling on
      * subsequent puts.
-     * <p>
-     * @param maxObjects
      */
     public LRUMap()
     {

@@ -37,10 +37,13 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
 public class IndexedDiskCacheSteadyLoadTest
     extends TestCase
 {
+    /** For display */
     private static final String LOG_DIVIDER = "---------------------------";
 
+    /** For getting memory info */
     private static Runtime rt = Runtime.getRuntime();
 
+    /** For display */
     private static DecimalFormat format = new DecimalFormat( "#,###" );
 
     /**

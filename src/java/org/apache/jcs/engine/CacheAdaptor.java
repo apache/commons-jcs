@@ -35,8 +35,10 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 public class CacheAdaptor
     implements ICacheListener
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( CacheAdaptor.class );
 
+    /** The cache we are adadpting. */
     private final ICache cache;
 
     /** The unique id of this listener. */

@@ -83,7 +83,7 @@ import org.apache.jcs.access.exception.CacheException;
  * </pre>
  *
  * <p>
- * But has the added benifit of the work-load sharing; under normal
+ * But has the added benefit of the work-load sharing; under normal
  * circumstances if multiple threads all tried to do the same query at the same
  * time, the same query would happen multiple times on the database, and the
  * resulting object would get put into JCS multiple times.
@@ -92,8 +92,10 @@ import org.apache.jcs.access.exception.CacheException;
  */
 public class JCSWorker
 {
+    /** The logger */
     private static final Log logger = LogFactory.getLog( JCSWorker.class );
 
+    /** The cache we are working with */
     private JCS cache;
 
     /**

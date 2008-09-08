@@ -20,20 +20,16 @@ package org.apache.jcs.utils.config;
  */
 
 /**
- * This class is based on the log4j class org.apache.log4j.config.PropertySetter
- * that was made by Anders Kristensen
- *
- */
-
-/**
- * Thrown when an error is encountered whilst attempting to set a property using
- * the {@link PropertySetter}utility class.
- *
- * @since 1.1
+ * This class is based on the log4j class org.apache.log4j.config.PropertySetter that was made by
+ * Anders Kristensen
+ * <p>
+ * Thrown when an error is encountered whilst attempting to set a property using the
+ * {@link PropertySetter}utility class.
  */
 public class PropertySetterException
     extends Exception
 {
+    /** DOn't change */
     private static final long serialVersionUID = -210271658004609028L;
 
     /** Description of the Field */
@@ -41,7 +37,7 @@ public class PropertySetterException
 
     /**
      * Constructor for the PropertySetterException object
-     *
+     * <p>
      * @param msg
      */
     public PropertySetterException( String msg )
@@ -51,7 +47,7 @@ public class PropertySetterException
 
     /**
      * Constructor for the PropertySetterException object
-     *
+     * <p>
      * @param rootCause
      */
     public PropertySetterException( Throwable rootCause )
@@ -62,10 +58,9 @@ public class PropertySetterException
 
     /**
      * Returns descriptive text on the cause of this exception.
-     *
+     * <p>
      * @return The message value
      */
-
     public String getMessage()
     {
         String msg = super.getMessage();

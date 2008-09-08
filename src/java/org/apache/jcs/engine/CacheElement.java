@@ -30,6 +30,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 public class CacheElement
     implements ICacheElement, Serializable
 {
+    /** Don't change */
     private static final long serialVersionUID = -6062305728297627263L;
 
     /** The name of the cache region. This is a namespace. */
@@ -165,5 +166,4 @@ public class CacheElement
         return "[CacheElement: cacheName [" + cacheName + "], key [" + key + "], val [" + val + "], attr [" + attr
             + "]";
     }
-
 }

@@ -81,8 +81,6 @@ public class SerializationConversionUtilUnitTest
 
     /**
      * Verify that we get an IOException for a null serializer.
-     * <p>
-     * @throws Exception
      */
     public void testNullSerializerConversion()
     {

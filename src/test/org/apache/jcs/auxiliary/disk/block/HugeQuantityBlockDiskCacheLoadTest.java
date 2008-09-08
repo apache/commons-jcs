@@ -26,10 +26,8 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
 import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
- * Put a few hundred thousand entries in the block disk cache.
- * <p.
+ * Put a few hundred thousand entries in the block disk cache. <p.
  * @author Aaron Smuts
- *
  */
 public class HugeQuantityBlockDiskCacheLoadTest
     extends TestCase
@@ -44,14 +42,10 @@ public class HugeQuantityBlockDiskCacheLoadTest
     }
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
-     *
-     * @exception Exception
-     *                If an error occurs
+     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
+     * memory cache, so items should spool to disk.
+     * <p>
+     * @exception Exception If an error occurs
      */
     public void testLargeNumberOfItems()
         throws Exception
@@ -91,7 +85,8 @@ public class HugeQuantityBlockDiskCacheLoadTest
             {
                 SleepUtil.sleepAtLeast( 3000 );
                 System.out.println( "--------------------------" );
-                System.out.println( "After sleep. " + timer.getElapsedTimeString() + " memory used = " + measureMemoryUse() );
+                System.out.println( "After sleep. " + timer.getElapsedTimeString() + " memory used = "
+                    + measureMemoryUse() );
                 System.out.println( jcs.getStats() );
             }
 
@@ -102,15 +97,15 @@ public class HugeQuantityBlockDiskCacheLoadTest
             {
                 //System.out.print(  "\033[s" );
                 String value = (String) jcs.get( i + ":key" );
-                if( i % 1000 == 0 )
+                if ( i % 1000 == 0 )
                 {
                     //System.out.print(  "\033[r" );
-                    System.out.println(  i + " ");
+                    System.out.println( i + " " );
                 }
                 assertEquals( "Wrong value returned.", region + " data " + i, value );
             }
             long aftetGet = measureMemoryUse();
-            System.out.println( "After get: " + aftetGet + " diff = " + (aftetGet - initialMemory));
+            System.out.println( "After get: " + aftetGet + " diff = " + ( aftetGet - initialMemory ) );
 
         }
         finally
@@ -119,14 +114,13 @@ public class HugeQuantityBlockDiskCacheLoadTest
             System.out.println( jcs.getStats() );
             System.out.println( "--------------------------" );
             long endMemory = measureMemoryUse();
-            System.out.println( "End: " + endMemory + " diff = " + (endMemory - initialMemory) );
+            System.out.println( "End: " + endMemory + " diff = " + ( endMemory - initialMemory ) );
         }
     }
 
     /**
      * Measure memory used by the VM.
-     *
-     * @return
+     * @return long
      * @throws InterruptedException
      */
     protected long measureMemoryUse()
