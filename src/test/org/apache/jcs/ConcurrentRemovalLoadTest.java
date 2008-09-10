@@ -111,6 +111,15 @@ public class ConcurrentRemovalLoadTest
                 runTestPutThenRemoveCategorical( 701, 800 );
             }
         } );
+        
+        suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
+        {
+            public void runTest()
+                throws Exception
+            {
+                runTestPutThenRemoveCategorical( 901, 1000 );
+            }
+        } );
 
         suite.addTest( new RemovalTestUtil( "testPutCache2" )
         {

@@ -23,9 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This is a generic thread safe double linked list. It's very simple and all
- * the operations are so quick that course grained synchronization is more than
- * acceptible.
+ * This is a generic thread safe double linked list. It's very simple and all the operations are so
+ * quick that course grained synchronization is more than acceptible.
  */
 public class DoubleLinkedList
 {
@@ -52,8 +51,7 @@ public class DoubleLinkedList
     /**
      * Adds a new node to the end of the link list.
      * <p>
-     * @param me
-     *            The feature to be added to the Last
+     * @param me The feature to be added to the Last
      */
     public synchronized void addLast( DoubleLinkedListNode me )
     {
@@ -74,8 +72,7 @@ public class DoubleLinkedList
     /**
      * Adds a new node to the start of the link list.
      * <p>
-     * @param me
-     *            The feature to be added to the First
+     * @param me The feature to be added to the First
      */
     public synchronized void addFirst( DoubleLinkedListNode me )
     {
@@ -125,8 +122,7 @@ public class DoubleLinkedList
     /**
      * Moves an existing node to the start of the link list.
      * <p>
-     * @param ln
-     *            The node to set as the head.
+     * @param ln The node to set as the head.
      */
     public synchronized void makeFirst( DoubleLinkedListNode ln )
     {
@@ -135,6 +131,7 @@ public class DoubleLinkedList
             // already the first node. or not a node
             return;
         }
+        // splice: remove it from the list        
         ln.prev.next = ln.next;
 
         if ( ln.next == null )
@@ -152,6 +149,38 @@ public class DoubleLinkedList
         ln.next = first;
         ln.prev = null;
         first = ln;
+    }
+
+    /**
+     * Moves an existing node to the end of the link list.
+     * <p>
+     * @param ln The node to set as the head.
+     */
+    public synchronized void makeLast( DoubleLinkedListNode ln )
+    {
+        if ( ln.next == null )
+        {
+            // already the last node. or not a node
+            return;
+        }
+        // splice: remove it from the list
+        if ( ln.prev != null )
+        {
+            ln.prev.next = ln.next;
+        }
+        else
+        {
+            // first
+            first = last;
+        }
+        
+        if ( last != null )
+        {
+            last.next = ln;
+        }
+        ln.prev = last;
+        ln.next = null;
+        last = ln;
     }
 
     /**
@@ -176,8 +205,7 @@ public class DoubleLinkedList
     /**
      * Removes the specified node from the link list.
      * <p>
-     * @param me
-     *            Description of the Parameter
+     * @param me Description of the Parameter
      * @return true if an element was removed.
      */
     public synchronized boolean remove( DoubleLinkedListNode me )

@@ -35,8 +35,6 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
 /**
  * Test which exercises the LRUMemory cache. This one uses three different
  * regions for three threads.
- *
- * @version $Id$
  */
 public class LRUMemoryCacheConcurrentUnitTest
     extends TestCase
@@ -70,7 +68,7 @@ public class LRUMemoryCacheConcurrentUnitTest
 
     /**
      * A unit test suite for JUnit
-     *
+     * <p>
      * @return The test suite
      */
     public static Test suite()
@@ -85,16 +83,7 @@ public class LRUMemoryCacheConcurrentUnitTest
                 this.runTestForRegion( "indexedRegion1" );
             }
         } );
-
-        /*
-         * suite.addTest( new TestDiskCache( "testIndexedDiskCache2" ) { public
-         * void runTest() throws Exception { this.runTestForRegion(
-         * "indexedRegion2" ); } } );
-         *
-         * suite.addTest( new TestDiskCache( "testIndexedDiskCache3" ) { public
-         * void runTest() throws Exception { this.runTestForRegion(
-         * "indexedRegion3" ); } } );
-         */
+        
         return suite;
     }
 
@@ -109,7 +98,7 @@ public class LRUMemoryCacheConcurrentUnitTest
     /**
      * Adds items to cache, gets them, and removes them. The item count is more
      * than the size of the memory cache, so items should be dumped.
-     *
+     * <p>
      * @param region
      *            Name of the region to access
      *
@@ -136,13 +125,13 @@ public class LRUMemoryCacheConcurrentUnitTest
         }
 
         // Test that initial items have been purged
-        for ( int i = 0; i < 102; i++ )
+        for ( int i = 0; i < 100; i++ )
         {
-            assertNull( lru.get( i + ":key" ) );
+            assertNull( "Should not have " + i + ":key", lru.get( i + ":key" ) );
         }
 
         // Test that last items are in cache
-        for ( int i = 102; i < items; i++ )
+        for ( int i = 100; i < items; i++ )
         {
             String value = (String) lru.get( i + ":key" ).getVal();
             assertEquals( region + " data " + i, value );
@@ -156,11 +145,11 @@ public class LRUMemoryCacheConcurrentUnitTest
         }
 
         Map elements = lru.getMultiple( keys );
-        for ( int i = 0; i < 102; i++ )
+        for ( int i = 0; i < 100; i++ )
         {
-            assertNull( elements.get( i + ":key" ) );
+            assertNull( "Should not have " + i + ":key", elements.get( i + ":key" ) );
         }
-        for ( int i = 102; i < items; i++ )
+        for ( int i = 100; i < items; i++ )
         {
             ICacheElement element = (ICacheElement) elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +37,7 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
+import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
@@ -77,18 +77,11 @@ public abstract class AbstractMemoryCache
     /** status */
     protected int status;
 
-    /** How many to spool at a time.  */
+    /** How many to spool at a time. */
     protected int chunkSize;
 
     /** The background memory shrinker, one for all regions. */
     private static ClockDaemon shrinkerDaemon;
-
-    /** Constructor for the LRUMemoryCache object */
-    public AbstractMemoryCache()
-    {
-        status = CacheConstants.STATUS_ERROR;
-        map = new Hashtable();
-    }
 
     /**
      * For post reflection creation initialization
@@ -100,7 +93,8 @@ public abstract class AbstractMemoryCache
         this.cacheName = hub.getCacheName();
         this.cattr = hub.getCacheAttributes();
         this.cache = hub;
-        
+        map = createMap();
+
         chunkSize = cattr.getSpoolChunkSize();
         status = CacheConstants.STATUS_ALIVE;
 
@@ -116,6 +110,14 @@ public abstract class AbstractMemoryCache
 
         }
     }
+
+    /**
+     * Children must implement this method. A FIFO implementation may use a tree map. An LRU might
+     * use a hashtable. The map returned should be threadsafe.
+     * <p>
+     * @return Map
+     */
+    public abstract Map createMap();
 
     /**
      * Removes an item from the cache
@@ -171,14 +173,34 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     * Get an item from the cache without affecting its order or last access time
+     * Get an item from the cache without affecting its last access time or position.
      * <p>
-     * @param key Description of the Parameter
-     * @return The quiet value
-     * @exception IOException Description of the Exception
+     * @param key Identifies item to find
+     * @return Element matching key if found, or null
+     * @exception IOException
      */
-    public abstract ICacheElement getQuiet( Serializable key )
-        throws IOException;
+    public ICacheElement getQuiet( Serializable key )
+        throws IOException
+    {
+        ICacheElement ce = null;
+
+        MemoryElementDescriptor me = (MemoryElementDescriptor) map.get( key );
+        if ( me != null )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( cacheName + ": MemoryCache quiet hit for " + key );
+            }
+
+            ce = me.ce;
+        }
+        else if ( log.isDebugEnabled() )
+        {
+            log.debug( cacheName + ": MemoryCache quiet miss for " + key );
+        }
+
+        return ce;
+    };
 
     /**
      * Puts an item to the cache.
@@ -204,7 +226,7 @@ public abstract class AbstractMemoryCache
     public void removeAll()
         throws IOException
     {
-        map = new Hashtable();
+        map.clear();
     }
 
     /**
@@ -314,6 +336,7 @@ public abstract class AbstractMemoryCache
         return this.cache;
     }
 
+    
     /**
      * @param groupName
      * @return group keys

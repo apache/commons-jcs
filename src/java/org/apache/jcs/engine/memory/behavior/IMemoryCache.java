@@ -75,7 +75,7 @@ public interface IMemoryCache
      * Get an Array of the keys for all elements in the memory cache.
      * <p>
      * @return Object[]
-     * @TODO This should probably be done in chunks with a range pased in. This
+     * @TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.
      */

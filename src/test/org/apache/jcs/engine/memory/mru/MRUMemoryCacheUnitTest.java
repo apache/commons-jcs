@@ -33,29 +33,23 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
- * Tests for the test MRU implementation that uses the java linked list class.
- * This is more a set of tests for the hub than for the MRU, since we don't care
- * about the MRU.
- *
+ * Tests for the test MRU implementation.
+ * <p>
  * @author Aaron Smuts
- *
  */
 public class MRUMemoryCacheUnitTest
     extends TestCase
 {
-
-    /**
-     * Test setup
-     */
+    /** Test setup */
     public void setUp()
     {
         JCS.setConfigFilename( "/TestMRUCache.ccf" );
     }
 
     /**
-     * Verify that the mru gets used by a non-defined region when it is set as
-     * the defualt in the default region.
-     *
+     * Verify that the mru gets used by a non-defined region when it is set as the default in the
+     * default region.
+     * <p>
      * @throws CacheException
      */
     public void testLoadFromCCF()
@@ -67,9 +61,8 @@ public class MRUMemoryCacheUnitTest
     }
 
     /**
-     * put twice as many as the max. verify that the second half is in the
-     * cache.
-     *
+     * put twice as many as the max.  verify that the second half is in the cache.
+     * <p>
      * @throws CacheException
      */
     public void testPutGetThroughHub()
@@ -86,10 +79,10 @@ public class MRUMemoryCacheUnitTest
         }
 
         // Test that first items are not in the cache
-        for ( int i = max; i >= 0; i-- )
+        for ( int i = max -1; i >= 0; i-- )
         {
             String value = (String) cache.get( i + ":key" );
-            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
+            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache." + cache.getStats(), value );
         }
 
         // Test that last items are in cache
@@ -108,9 +101,9 @@ public class MRUMemoryCacheUnitTest
         }
 
         Map elements = cache.getCacheElements( keys );
-        for ( int i = max; i >= 0; i-- )
+        for ( int i = max-1; i >= 0; i-- )
         {
-            assertNull( elements.get( i + ":key" ) );
+            assertNull( "Should not have value for key [" + i + ":key" + "] in the cache." + cache.getStats(), elements.get( i + ":key" ) );
         }
         for ( int i = max + 2; i < items; i++ )
         {
@@ -121,9 +114,8 @@ public class MRUMemoryCacheUnitTest
     }
 
     /**
-     * Put twice as many as the max, twice. verify that the second half is in
-     * the cache.
-     *
+     * Put twice as many as the max, twice. verify that the second half is in the cache.
+     * <p>
      * @throws CacheException
      */
     public void testPutGetThroughHubTwice()
@@ -163,7 +155,7 @@ public class MRUMemoryCacheUnitTest
 
     /**
      * put the max and remove each. verify that they are all null.
-     *
+     * <p>
      * @throws CacheException
      */
     public void testPutRemoveThroughHub()
@@ -194,7 +186,7 @@ public class MRUMemoryCacheUnitTest
 
     /**
      * put the max and clear. verify that no elements remain.
-     *
+     * <p>
      * @throws CacheException
      */
     public void testClearThroughHub()
@@ -221,8 +213,8 @@ public class MRUMemoryCacheUnitTest
     }
 
     /**
-     * put twice the max and clear. verify that no elements remain.
-     *
+     * Get stats.
+     * <p>
      * @throws CacheException
      */
     public void testGetStatsThroughHub()
@@ -247,9 +239,9 @@ public class MRUMemoryCacheUnitTest
     }
 
     /**
-     * Put half the max and clear. get the key array and verify that it has the
-     * correct number of items.
-     *
+     * Put half the max and clear. get the key array and verify that it has the correct number of
+     * items.
+     * <p>
      * @throws Exception
      */
     public void testGetKeyArray()
@@ -278,9 +270,8 @@ public class MRUMemoryCacheUnitTest
     }
 
     /**
-     * Add a few keys with the delimeter.  Remove them.
-     *
-     *
+     * Add a few keys with the delimeter. Remove them.
+     * <p>
      * @throws CacheException
      */
     public void testRemovePartialThroughHub()
@@ -316,6 +307,5 @@ public class MRUMemoryCacheUnitTest
         }
 
         assertNotNull( "Other item should be in the cache.", cache.get( "test" ) );
-
     }
 }
