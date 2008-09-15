@@ -176,7 +176,6 @@ public class RemoteCacheStartupServlet
     protected void service( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
-
         String stats = CompositeCacheManager.getInstance().getStats();
         if ( log.isInfoEnabled() )
         {

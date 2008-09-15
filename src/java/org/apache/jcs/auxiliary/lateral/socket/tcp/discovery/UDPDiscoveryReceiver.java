@@ -396,6 +396,8 @@ public class UDPDiscoveryReceiver
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );
+            String oldName = t.getName();
+            t.setName( "JCS-UDPDiscoveryReceiver-" + oldName );            
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
             return t;

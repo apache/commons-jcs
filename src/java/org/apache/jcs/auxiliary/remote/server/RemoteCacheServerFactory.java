@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.Properties;
 
@@ -124,19 +125,33 @@ public class RemoteCacheServerFactory
             remoteCacheServer = new RemoteCacheServer( rcsa );
             remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Binding server to " + host + ":" + port + " with the name " + serviceName );
-            }
-            try
-            {
-                Naming.rebind( "//" + host + ":" + port + "/" + serviceName, remoteCacheServer );
-            }
-            catch ( MalformedURLException ex )
-            {
-                // impossible case.
-                throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port );
-            }
+            registerServer( host, port );
+        }
+    }
+
+    /**
+     * Registers the server with the registry. I broke this off because we might want to have code
+     * that will restart a dead registry. It will need to rebind the server.
+     * <p>
+     * @param host
+     * @param port
+     * @throws RemoteException
+     */
+    protected static void registerServer( String host, int port )
+        throws RemoteException
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Binding server to " + host + ":" + port + " with the name " + serviceName );
+        }
+        try
+        {
+            Naming.rebind( "//" + host + ":" + port + "/" + serviceName, remoteCacheServer );
+        }
+        catch ( MalformedURLException ex )
+        {
+            // impossible case.
+            throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port );
         }
     }
 

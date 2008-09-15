@@ -458,14 +458,17 @@ public class ThreadPoolManager
     class MyThreadFactory
         implements ThreadFactory
     {
-        /*
-         * (non-Javadoc)
-         *
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+        /**
+         * Sets the thread to daemon.
+         * <p>
+         * @param runner
+         * @return a daemon thread
          */
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );
+            String oldName = t.getName();
+            t.setName( "JCS-ThreadPoolManager-" + oldName );                
             t.setDaemon( true );
             return t;
         }

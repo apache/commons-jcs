@@ -374,6 +374,8 @@ public abstract class AbstractMemoryCache
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );
+            String oldName = t.getName();
+            t.setName( "JCS-AbstractMemoryCache-" + oldName );              
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
             return t;
