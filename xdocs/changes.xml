@@ -21,6 +21,10 @@
 	<body>
 		<release version="1.4-dev" date="in SVN">
 		</release>
+		<release version="1.3.2.2" date="2008-09-17" description="tempbuild">
+			<action dev="asmuts" type="update">Added a registry keep alive and
+				restore option for the remote cache server.</action>
+		</release>
 		<release version="1.3.2.1" date="2008-09-08" description="tempbuild">
 			<action dev="asmuts" type="update">Made all disk cache managers
 				handle custom event loggers.</action>

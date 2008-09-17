@@ -70,8 +70,17 @@ public class RemoteCacheStartupServlet
     /** The default port to start the registry on.  */
     private static final int DEFAULT_REGISTRY_PORT = 1101;
 
-    /** The default config file name */
-    private static final String DEFAULT_PROPS_FILE_NAME = "cache.ccf";
+    /** properties file name */
+    private static final String DEFAULT_PROPS_FILE_NAME = "cache";
+
+    /** properties file Suffix */
+    private static final String DEFAULT_PROPS_FILE_SUFFIX = "ccf";
+
+    /** properties file name, must set prior to calling get instance */
+    private String propsFileName = DEFAULT_PROPS_FILE_NAME;
+
+    /** properties file name, must set prior to calling get instance */
+    private String fullPropsFileName = DEFAULT_PROPS_FILE_NAME + "." + DEFAULT_PROPS_FILE_SUFFIX;
 
     /**
      * Starts the registry and then tries to bind to it.
@@ -91,7 +100,7 @@ public class RemoteCacheStartupServlet
 
         try
         {
-            Properties props = PropertyLoader.loadProperties( DEFAULT_PROPS_FILE_NAME );
+            Properties props = PropertyLoader.loadProperties( propsFileName );
             if ( props != null )
             {
                 String portS = props.getProperty( "registry.port", String.valueOf( DEFAULT_REGISTRY_PORT ) );
@@ -147,7 +156,11 @@ public class RemoteCacheStartupServlet
 
             try
             {
-                RemoteCacheServerFactory.startup( registryHost, registryPort, "/" + DEFAULT_PROPS_FILE_NAME );
+                RemoteCacheServerFactory.startup( registryHost, registryPort, "/" + fullPropsFileName );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Remote JCS Server started with properties from " + fullPropsFileName );
+                }                
             }
             catch ( IOException e )
             {

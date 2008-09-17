@@ -72,7 +72,22 @@ public class RemoteCacheServerAttributes
 
     /** Connect and read timeout. */
     private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MS;
+    
+    /** Should we start the registry */
+    private boolean DEFAULT_START_REGISTRY = true;
+    
+    /** Should we start the registry */
+    private boolean startRegistry = DEFAULT_START_REGISTRY;
+    
+    /** Should we try to keep the registry alive */
+    private boolean DEFAULT_USE_REGISTRY_KEEP_ALIVE = true;
+    
+    /** Should we try to keep the registry alive */
+    private boolean useRegistryKeepAlive = DEFAULT_USE_REGISTRY_KEEP_ALIVE;
 
+    /** The delay between runs */
+    private long registryKeepAliveDelayMillis = 15 * 1000;
+    
     /** Default constructor for the RemoteCacheAttributes object */
     public RemoteCacheServerAttributes()
     {
@@ -369,6 +384,62 @@ public class RemoteCacheServerAttributes
     }
 
     /**
+     * Should we try to keep the registry alive
+     * <p>
+     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
+     */
+    public void setUseRegistryKeepAlive( boolean useRegistryKeepAlive )
+    {
+        this.useRegistryKeepAlive = useRegistryKeepAlive;
+    }
+
+    /**
+     * Should we start the registry
+     * <p>
+     * @param startRegistry the startRegistry to set
+     */
+    public void setStartRegistry( boolean startRegistry )
+    {
+        this.startRegistry = startRegistry;
+    }
+
+    /**
+     * Should we start the registry
+     * <p>
+     * @return the startRegistry
+     */
+    public boolean isStartRegistry()
+    {
+        return startRegistry;
+    }
+
+    /**
+     * Should we try to keep the registry alive
+     * <p>
+     * @return the useRegistryKeepAlive
+     */
+    public boolean isUseRegistryKeepAlive()
+    {
+        return useRegistryKeepAlive;
+    }
+
+    /**
+     * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
+     */
+    public void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis )
+    {
+        this.registryKeepAliveDelayMillis = registryKeepAliveDelayMillis;
+    }
+
+    /**
+     * @return the registryKeepAliveDelayMillis
+     */
+    public long getRegistryKeepAliveDelayMillis()
+    {
+        return registryKeepAliveDelayMillis;
+    }
+
+    /**
      * @return String details
      */
     public String toString()
@@ -384,6 +455,9 @@ public class RemoteCacheServerAttributes
         buf.append( "\n localClusterConsistency = [" + this.getLocalClusterConsistency() + "]" );
         buf.append( "\n configFileName = [" + this.getConfigFileName() + "]" );
         buf.append( "\n rmiSocketFactoryTimeoutMillis = [" + this.getRmiSocketFactoryTimeoutMillis() + "]" );
+        buf.append( "\n startRegistry = [" + this.isStartRegistry() + "]" );
+        buf.append( "\n useRegistryKeepAlive = [" + this.isUseRegistryKeepAlive() + "]" );
+        buf.append( "\n registryKeepAliveDelayMillis = [" + this.getRegistryKeepAliveDelayMillis() + "]" );
         return buf.toString();
     }
 }

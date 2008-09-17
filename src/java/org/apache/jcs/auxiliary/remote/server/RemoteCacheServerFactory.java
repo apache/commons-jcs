@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Properties;
 
@@ -34,6 +35,9 @@ import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+
+import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
+import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * Provides remote cache services. This creates remote cache servers and can proxy command line
@@ -49,7 +53,10 @@ public class RemoteCacheServerFactory
     private static RemoteCacheServer remoteCacheServer;
 
     /** The name of the service. */
-    private static String serviceName;
+    private static String serviceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
+
+    /** Executes the registry keep alive. */
+    private static ClockDaemon keepAliveDaemon;
 
     /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()
@@ -113,7 +120,7 @@ public class RemoteCacheServerFactory
                 log.info( "Creating server with these attributes: " + rcsa );
             }
 
-            serviceName = rcsa.getRemoteServiceName();
+            setServiceName( rcsa.getRemoteServiceName() );
 
             RemoteUtils.configureCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
 
@@ -125,7 +132,49 @@ public class RemoteCacheServerFactory
             remoteCacheServer = new RemoteCacheServer( rcsa );
             remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
-            registerServer( host, port );
+            // START THE REGISTRY
+            startTheRegistry( port, rcsa );
+
+            // REGISTER THE SERVER
+            registerServer( host, port, serviceName );
+
+            // KEEP THE REGISTRY ALIVE
+            if ( rcsa.isUseRegistryKeepAlive() )
+            {
+                if ( keepAliveDaemon == null )
+                {
+                    keepAliveDaemon = new ClockDaemon();
+                    keepAliveDaemon.setThreadFactory( new MyThreadFactory() );
+                }
+                RegistryKeepAliveRunner runner = new RegistryKeepAliveRunner( host, port, serviceName );
+                runner.setCacheEventLogger( cacheEventLogger );
+                keepAliveDaemon.executePeriodically( rcsa.getRegistryKeepAliveDelayMillis(), runner, false );
+            }
+        }
+    }
+
+    /**
+     * Starts the registry if needed
+     * <p>
+     * @param registryPort
+     * @param rcsa
+     */
+    private static void startTheRegistry( int registryPort, RemoteCacheServerAttributes rcsa )
+    {
+        if ( rcsa.isStartRegistry() )
+        {
+            try
+            {
+                LocateRegistry.createRegistry( registryPort );
+            }
+            catch ( RemoteException e )
+            {
+                log.warn( "Problem creating registry.  It may already be started. " + e.getMessage() );
+            }
+            catch ( Throwable t )
+            {
+                log.error( "Problem creating registry.", t );
+            }
         }
     }
 
@@ -135,11 +184,19 @@ public class RemoteCacheServerFactory
      * <p>
      * @param host
      * @param port
+     * @param serviceName
      * @throws RemoteException
      */
-    protected static void registerServer( String host, int port )
+    protected static void registerServer( String host, int port, String serviceName )
         throws RemoteException
     {
+        if ( remoteCacheServer == null )
+        {
+            String message = "Cannot register the server until it is created.  Please start the server first.";
+            log.error( message );
+            throw new RemoteException( message );
+        }
+
         if ( log.isInfoEnabled() )
         {
             log.info( "Binding server to " + host + ":" + port + " with the name " + serviceName );
@@ -252,16 +309,16 @@ public class RemoteCacheServerFactory
             {
                 return;
             }
-            log.info( "Unbinding host=" + host + ", port=" + port + ", serviceName=" + serviceName );
+            log.info( "Unbinding host=" + host + ", port=" + port + ", serviceName=" + getServiceName() );
             try
             {
-                Naming.unbind( "//" + host + ":" + port + "/" + serviceName );
+                Naming.unbind( "//" + host + ":" + port + "/" + getServiceName() );
             }
             catch ( MalformedURLException ex )
             {
                 // impossible case.
                 throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port
-                    + ", serviceName=" + serviceName );
+                    + ", serviceName=" + getServiceName() );
             }
             catch ( NotBoundException ex )
             {
@@ -381,5 +438,42 @@ public class RemoteCacheServerFactory
         log.debug( "main> starting up RemoteCacheServer" );
         RemoteCacheServerFactory.startup( host, port, args.length > 0 ? args[0] : null );
         log.debug( "main> done" );
+    }
+
+    /**
+     * @param serviceName the serviceName to set
+     */
+    protected static void setServiceName( String serviceName )
+    {
+        RemoteCacheServerFactory.serviceName = serviceName;
+    }
+
+    /**
+     * @return the serviceName
+     */
+    protected static String getServiceName()
+    {
+        return serviceName;
+    }
+
+    /**
+     * Allows us to set the daemon status on the clockdaemon
+     */
+    static class MyThreadFactory
+        implements ThreadFactory
+    {
+        /**
+         * @param runner
+         * @return a new thread for the given Runnable
+         */
+        public Thread newThread( Runnable runner )
+        {
+            Thread t = new Thread( runner );
+            String oldName = t.getName();
+            t.setName( "JCS-RemoteCacheServerFactory-" + oldName );
+            t.setDaemon( true );
+            t.setPriority( Thread.MIN_PRIORITY );
+            return t;
+        }
     }
 }

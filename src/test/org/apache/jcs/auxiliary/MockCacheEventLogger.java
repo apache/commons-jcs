@@ -1,6 +1,8 @@
 package org.apache.jcs.auxiliary;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.logging.CacheEvent;
@@ -25,6 +27,9 @@ public class MockCacheEventLogger
 
     /** times called */
     public int errorEventCalls = 0;
+    
+    /** list of messages */
+    public List errorMessages = new ArrayList();
 
     /**
      * @param source
@@ -52,6 +57,7 @@ public class MockCacheEventLogger
     public void logError( String source, String eventName, String errorMessage )
     {
         errorEventCalls++;
+        errorMessages.add( errorMessage );
     }
 
     /**

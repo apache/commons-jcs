@@ -564,7 +564,8 @@ class RemoteCacheServer
     public Map getMultiple( String cacheName, Set keys, long requesterId )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId, ICacheEventLogger.GETMULTIPLE_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId,
+                                                    ICacheEventLogger.GETMULTIPLE_EVENT );
         try
         {
             return processGetMultiple( cacheName, keys, requesterId );
@@ -1229,8 +1230,8 @@ class RemoteCacheServer
             }
 
             CacheEventQueueFactory fact = new CacheEventQueueFactory();
-            ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes.getEventQueuePoolName(),
-                                                             remoteCacheServerAttributes.getEventQueueTypeFactoryCode() );
+            ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes
+                .getEventQueuePoolName(), remoteCacheServerAttributes.getEventQueueTypeFactoryCode() );
 
             eventQMap.put( new Long( listener.getListenerId() ), q );
 
@@ -1453,7 +1454,7 @@ class RemoteCacheServer
      * <p>
      * @param item
      * @param requesterId
-     * @param eventName 
+     * @param eventName
      * @return ICacheEvent
      */
     private ICacheEvent createICacheEvent( ICacheElement item, long requesterId, String eventName )
@@ -1473,7 +1474,7 @@ class RemoteCacheServer
      * @param cacheName
      * @param key
      * @param requesterId
-     * @param eventName 
+     * @param eventName
      * @return ICacheEvent
      */
     private ICacheEvent createICacheEvent( String cacheName, Serializable key, long requesterId, String eventName )
@@ -1489,7 +1490,7 @@ class RemoteCacheServer
     /**
      * Logs an event if an event logger is configured.
      * <p>
-     * @param cacheEvent 
+     * @param cacheEvent
      */
     protected void logICacheEvent( ICacheEvent cacheEvent )
     {
