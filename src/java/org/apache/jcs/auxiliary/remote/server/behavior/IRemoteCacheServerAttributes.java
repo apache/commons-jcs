@@ -205,4 +205,52 @@ public interface IRemoteCacheServerAttributes
      *            The new clusterServers value
      */
     public void setConfigFileName( String s );
+    
+    /**
+     * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
+     */
+    public void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis );
+
+    /**
+     * @return Returns the rmiSocketFactoryTimeoutMillis.
+     */
+    public int getRmiSocketFactoryTimeoutMillis();
+
+    /**
+     * Should we try to keep the registry alive
+     * <p>
+     * @param useRegistryKeepAlive the useRegistryKeepAlive to set
+     */
+    public void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );
+
+    /**
+     * Should we start the registry
+     * <p>
+     * @param startRegistry the startRegistry to set
+     */
+    public void setStartRegistry( boolean startRegistry );
+
+    /**
+     * Should we start the registry
+     * <p>
+     * @return the startRegistry
+     */
+    public boolean isStartRegistry();
+
+    /**
+     * Should we try to keep the registry alive
+     * <p>
+     * @return the useRegistryKeepAlive
+     */
+    public boolean isUseRegistryKeepAlive();
+
+    /**
+     * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
+     */
+    public void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis );
+
+    /**
+     * @return the registryKeepAliveDelayMillis
+     */
+    public long getRegistryKeepAliveDelayMillis();
 }

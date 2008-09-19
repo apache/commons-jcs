@@ -35,6 +35,7 @@ import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.utils.config.PropertySetter;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
@@ -234,59 +235,88 @@ public class RemoteCacheServerFactory
     /**
      * Configure.
      * <p>
+     * jcs.remotecache.serverattributes.ATTRIBUTENAME=ATTRIBUTEVALUE
+     * <p>
      * @param prop
      * @return RemoteCacheServerAttributesconfigureRemoteCacheServerAttributes
      */
     protected static RemoteCacheServerAttributes configureRemoteCacheServerAttributes( Properties prop )
     {
-        // TODO: make automatic
         RemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
 
+        // configure automatically
+        PropertySetter.setProperties( rcsa, prop, CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + "." );
+
+        configureManuallyIfValuesArePresent( prop, rcsa );
+
+        return rcsa;
+    }
+
+    /** 
+     * This looks for the old config values.  
+     * <p>
+     * @param prop
+     * @param rcsa
+     */
+    private static void configureManuallyIfValuesArePresent( Properties prop, RemoteCacheServerAttributes rcsa )
+    {
+        // DEPRECATED CONFIG
         String servicePortStr = prop.getProperty( REMOTE_CACHE_SERVICE_PORT );
-        try
+        if ( servicePortStr != null )
         {
-            int servicePort = Integer.parseInt( servicePortStr );
-            rcsa.setServicePort( servicePort );
-            log.debug( "Remote cache service uses port number " + servicePort + "." );
-        }
-        catch ( NumberFormatException ignore )
-        {
-            log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT
-                + " not specified.  An anonymous port will be used." );
+            try
+            {
+                int servicePort = Integer.parseInt( servicePortStr );
+                rcsa.setServicePort( servicePort );
+                log.debug( "Remote cache service uses port number " + servicePort + "." );
+            }
+            catch ( NumberFormatException ignore )
+            {
+                log.debug( "Remote cache service port property " + REMOTE_CACHE_SERVICE_PORT
+                    + " not specified.  An anonymous port will be used." );
+            }
         }
 
         String socketTimeoutMillisStr = prop.getProperty( SOCKET_TIMEOUT_MILLIS );
-        try
+        if ( socketTimeoutMillisStr != null )
         {
-            int rmiSocketFactoryTimeoutMillis = Integer.parseInt( socketTimeoutMillisStr );
-            rcsa.setRmiSocketFactoryTimeoutMillis( rmiSocketFactoryTimeoutMillis );
-            log.debug( "Remote cache socket timeout " + rmiSocketFactoryTimeoutMillis + "ms." );
-        }
-        catch ( NumberFormatException ignore )
-        {
-            log.debug( "Remote cache socket timeout property " + SOCKET_TIMEOUT_MILLIS
-                + " not specified.  The default will be used." );
+            try
+            {
+                int rmiSocketFactoryTimeoutMillis = Integer.parseInt( socketTimeoutMillisStr );
+                rcsa.setRmiSocketFactoryTimeoutMillis( rmiSocketFactoryTimeoutMillis );
+                log.debug( "Remote cache socket timeout " + rmiSocketFactoryTimeoutMillis + "ms." );
+            }
+            catch ( NumberFormatException ignore )
+            {
+                log.debug( "Remote cache socket timeout property " + SOCKET_TIMEOUT_MILLIS
+                    + " not specified.  The default will be used." );
+            }
         }
 
         String lccStr = prop.getProperty( REMOTE_LOCAL_CLUSTER_CONSISTENCY );
-        if ( lccStr == null )
+        if ( lccStr != null )
         {
-            lccStr = "true";
+            if ( lccStr == null )
+            {
+                lccStr = "true";
+            }
+            boolean lcc = Boolean.valueOf( lccStr ).booleanValue();
+            rcsa.setLocalClusterConsistency( lcc );
         }
-        boolean lcc = Boolean.valueOf( lccStr ).booleanValue();
-        rcsa.setLocalClusterConsistency( lcc );
 
         String acgStr = prop.getProperty( REMOTE_ALLOW_CLUSTER_GET );
-        if ( acgStr == null )
+        if ( acgStr != null )
         {
-            acgStr = "true";
+            if ( acgStr == null )
+            {
+                acgStr = "true";
+            }
+            boolean acg = Boolean.valueOf( acgStr ).booleanValue();
+            rcsa.setAllowClusterGet( acg );
         }
-        boolean acg = Boolean.valueOf( acgStr ).booleanValue();
-        rcsa.setAllowClusterGet( acg );
 
         // Register the RemoteCacheServer remote object in the registry.
         rcsa.setRemoteServiceName( prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim() );
-        return rcsa;
     }
 
     /**

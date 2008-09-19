@@ -59,7 +59,7 @@ public class RemoteCacheServerAttributes
     private boolean getOnly = false;
 
     /** Can a cluster remote put to other remotes */
-    private boolean localClusterConsistency = false;
+    private boolean localClusterConsistency = true;
 
     /** Can a cluster remote get from other remotes */
     private boolean allowClusterGet = true;
@@ -314,9 +314,19 @@ public class RemoteCacheServerAttributes
      */
     public boolean getLocalClusterConsistency()
     {
-        return localClusterConsistency;
+        return isLocalClusterConsistency();
     }
 
+    /**
+     * Should cluster updates be propagated to the locals
+     * <p>
+     * @return The localClusterConsistency value
+     */
+    public boolean isLocalClusterConsistency()
+    {
+        return localClusterConsistency;
+    }
+    
     /**
      * Should cluster updates be propagated to the locals
      * <p>
@@ -334,9 +344,19 @@ public class RemoteCacheServerAttributes
      */
     public boolean getAllowClusterGet()
     {
-        return allowClusterGet;
+        return isAllowClusterGet();
     }
 
+    /**
+     * Should gets from non-cluster clients be allowed to get from other remote auxiliaries.
+     * <p>
+     * @return The localClusterConsistency value
+     */
+    public boolean isAllowClusterGet()
+    {
+        return allowClusterGet;
+    }
+    
     /**
      * Should we try to get from other cluster servers if we don't find the items locally.
      * <p>

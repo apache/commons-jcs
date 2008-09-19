@@ -27,12 +27,18 @@ public interface IRemoteCacheConstants
     /** Mapping to props file value */
     public final static String REMOTE_CACHE_SERVICE_VAL = IRemoteCacheService.class.getName();
 
+    /**
+     * I'm trying to migrate everything to use this prefix. All those below will be replaced. Any of
+     * the RemoteCacheServerAttributes can be configured this way.
+     */
+    public final static String CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX = "jcs.remotecache.serverattributes";
+
     /** Property prefix, should be jcs.remote but this would break existing config. */
     public final static String PROPERTY_PREFIX = "remote";
-    
+
     /** Mapping to props file value */
     public final static String SOCKET_TIMEOUT_MILLIS = PROPERTY_PREFIX + ".cache.rmiSocketFactoryTimeoutMillis";
-    
+
     /** Mapping to props file value */
     public final static String REMOTE_CACHE_SERVICE_NAME = PROPERTY_PREFIX + ".cache.service.name";
 
