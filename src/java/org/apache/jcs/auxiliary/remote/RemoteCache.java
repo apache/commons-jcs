@@ -134,7 +134,7 @@ public class RemoteCache
             }
         }
 
-        RemoteUtils.configureCustomSocketFactory( irca.getRmiSocketFactoryTimeoutMillis() );
+        RemoteUtils.configureGlobalCustomSocketFactory( irca.getRmiSocketFactoryTimeoutMillis() );
     }
 
     /**
@@ -545,17 +545,17 @@ public class RemoteCache
      * Replaces the current remote cache service handle with the given handle. If the current remote
      * is a Zombie, the propagate teh events that may be queued to the restored service.
      * <p>
-     * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
+     * @param restoredRemote IRemoteCacheService -- the remote server or proxy to the remote server
      */
-    public void fixCache( IRemoteCacheService remote )
+    public void fixCache( IRemoteCacheService restoredRemote )
     {
         if ( this.remote != null && this.remote instanceof ZombieRemoteCacheService )
         {
             ZombieRemoteCacheService zombie = (ZombieRemoteCacheService) this.remote;
-            this.remote = remote;
+            this.remote = restoredRemote;
             try
             {
-                zombie.propagateEvents( remote );
+                zombie.propagateEvents( restoredRemote );
             }
             catch ( Exception e )
             {
@@ -572,7 +572,7 @@ public class RemoteCache
         }
         else
         {
-            this.remote = remote;
+            this.remote = restoredRemote;
         }
         return;
     }
@@ -670,17 +670,20 @@ public class RemoteCache
      */
     public long getListenerId()
     {
-        try
+        if ( listener != null )
         {
-            if ( log.isDebugEnabled() )
+            try
             {
-                log.debug( "get listenerId = " + listener.getListenerId() );
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "get listenerId = " + listener.getListenerId() );
+                }
+                return listener.getListenerId();
             }
-            return listener.getListenerId();
-        }
-        catch ( Exception e )
-        {
-            log.error( "Problem setting listenerId", e );
+            catch ( Exception e )
+            {
+                log.error( "Problem getting listenerId", e );
+            }
         }
         return -1;
     }

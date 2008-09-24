@@ -155,6 +155,7 @@ public class OptionConverter
 
     /**
      * Creates an object for the className value of the key.
+     * <p>
      * @param props
      * @param key
      * @param superClass

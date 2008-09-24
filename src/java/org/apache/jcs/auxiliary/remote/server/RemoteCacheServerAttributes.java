@@ -36,7 +36,7 @@ public class RemoteCacheServerAttributes
     /** The remote host. */
     private String remoteHost;
 
-    /** The remote port. */
+    /** The registry remote port. */
     private int remotePort;
 
     /**
@@ -46,7 +46,7 @@ public class RemoteCacheServerAttributes
      */
     private String clusterServers = "";
 
-    /** port the rmi server will listen to */
+    /** port the server will listen to */
     private int servicePort = 0;
 
     /** Cluster or local */

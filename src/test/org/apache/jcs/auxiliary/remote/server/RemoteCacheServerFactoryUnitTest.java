@@ -1,5 +1,6 @@
 package org.apache.jcs.auxiliary.remote.server;
 
+import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
 
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
@@ -126,5 +127,22 @@ public class RemoteCacheServerFactoryUnitTest
         
         // VERIFY
         assertEquals( "Wrong localClusterConsistency", localClusterConsistency, result.isLocalClusterConsistency() );
+    }
+    
+    /** verify that we get the timeout value */
+    public void testConfigureObjectSpecificCustomFactory_withProperty()
+    {
+        // SETUP
+        String testValue = "123245";
+        Properties props = new Properties();
+        props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, MockRMISocketFactory.class.getName() );        
+        props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + ".testStringProperty", testValue );        
+                
+        // DO WORK
+        RMISocketFactory result = RemoteCacheServerFactory.configureObjectSpecificCustomFactory( props );
+        
+        // VERIFY
+        assertNotNull( "Should have a custom socket factory.", result );
+        assertEquals( "Wrong testValue", testValue, ((MockRMISocketFactory)result).getTestStringProperty() );
     }
 }

@@ -110,6 +110,7 @@ public class RemoteCacheRestore
         if ( log.isInfoEnabled() )
         {
             String msg = "Remote connection to " + "//" + remoteCacheManager.host + ":" + remoteCacheManager.port + "/" + remoteCacheManager.service + " resumed.";
+            remoteCacheManager.logApplicationEvent( "RemoteCacheRestore", "fix", msg );
             log.info( msg );
         }
     }

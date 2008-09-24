@@ -116,7 +116,9 @@ public class BasicRemoteCacheClientServerUnitTest
         attributes.setLocalPort( 1202 );
         attributes.setRemotePort( remotePort );
 
-        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), null );
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        
+        RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, cacheEventLogger, null );
         String regionName = "testPutRemove";
         AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
 

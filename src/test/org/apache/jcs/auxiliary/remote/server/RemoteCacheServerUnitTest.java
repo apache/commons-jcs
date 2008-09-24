@@ -47,7 +47,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
-    public void testAddListenerToCache()
+    public void testAddListenerToCache_LOCALtype()
         throws Exception
     {
         // SETUP
@@ -59,8 +59,10 @@ public class RemoteCacheServerUnitTest
         RemoteCacheServer server = new RemoteCacheServer( rcsa );
 
         MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
+        mockListener1.remoteType = IRemoteCacheAttributes.LOCAL;
         mockListener1.localAddress = expectedIp1;
         MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        mockListener1.remoteType = IRemoteCacheAttributes.LOCAL;
         mockListener2.localAddress = expectedIp2;
 
         String cacheName = "testAddListener";
@@ -77,21 +79,63 @@ public class RemoteCacheServerUnitTest
     }
 
     /**
-     * Add a listner. Pass the id of 0, verify that the server sets a new listener id. Do another
+     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2.
      * <p>
      * @throws Exception
      */
-    public void testAddListenerToAll()
+    public void testAddListenerToCache_CLUSTERtype()
         throws Exception
     {
         // SETUP
+        String expectedIp1 = "adfasdf";
+        String expectedIp2 = "adsfadsafaf";
+
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
         RemoteCacheServer server = new RemoteCacheServer( rcsa );
 
         MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
+        mockListener1.remoteType = IRemoteCacheAttributes.CLUSTER;
+        mockListener1.localAddress = expectedIp1;
         MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        mockListener1.remoteType = IRemoteCacheAttributes.CLUSTER;
+        mockListener2.localAddress = expectedIp2;
+
+        String cacheName = "testAddListener";
+
+        // DO WORK
+        server.addCacheListener( cacheName, mockListener1 );
+        server.addCacheListener( cacheName, mockListener2 );
+
+        // VERIFY
+        assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
+        assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
+        assertEquals( "Wrong ip.", expectedIp1, server.getIPAddressForRequesterId( 1 ) );
+        assertEquals( "Wrong ip.", expectedIp2, server.getIPAddressForRequesterId( 2 ) );
+    }
+    
+    /**
+     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
+     * and verify that the second gets an id of 2.
+     * <p>
+     * @throws Exception
+     */
+    public void testAddListener_ToAll()
+        throws Exception
+    {
+        // SETUP
+        String expectedIp1 = "adfasdf";
+        String expectedIp2 = "adsfadsafaf";
+        
+        IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
+        rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
+        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+
+        MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
+        mockListener1.localAddress = expectedIp1;
+        MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        mockListener2.localAddress = expectedIp2;
 
         // DO WORK
         // don't specify the cache name
@@ -101,6 +145,8 @@ public class RemoteCacheServerUnitTest
         // VERIFY
         assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
         assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
+        assertEquals( "Wrong ip.", expectedIp1, server.getIPAddressForRequesterId( 1 ) );
+        assertEquals( "Wrong ip.", expectedIp2, server.getIPAddressForRequesterId( 2 ) );        
     }
 
     /**
@@ -110,7 +156,7 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
-    public void testAddListenerToAllThenRemove()
+    public void testAddListener_ToAllThenRemove()
         throws Exception
     {
         // SETUP
@@ -138,13 +184,13 @@ public class RemoteCacheServerUnitTest
     }
 
     /**
-     * Add a listner. Pass the id of 0, verify that the server sets a new listener id. Do another
+     * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2. Call remove Listener and verify that it is
      * removed.
      * <p>
      * @throws Exception
      */
-    public void testAddListenerToAllThenRemove_clusterType()
+    public void testAddListener_ToAllThenRemove_clusterType()
         throws Exception
     {
         // SETUP
@@ -232,7 +278,7 @@ public class RemoteCacheServerUnitTest
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
         RemoteCacheServer server = new RemoteCacheServer( rcsa );
 
-        // this is to get the listenr id for inserts.
+        // this is to get the listener id for inserts.
         MockRemoteCacheListener clusterListener = new MockRemoteCacheListener();
         clusterListener.remoteType = IRemoteCacheAttributes.CLUSTER;
 
@@ -422,7 +468,7 @@ public class RemoteCacheServerUnitTest
         server.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
-        server.remove( "region", "key" );
+        server.removeAll( "region" );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );

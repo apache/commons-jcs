@@ -21,20 +21,17 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.util.Iterator;
 
-import org.apache.jcs.engine.CacheConstants;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.CacheConstants;
 
 /**
- * Used to monitor and repair any failed connection for the remote cache
- * service. By default the monitor operates in a failure driven mode. That is,
- * it goes into a wait state until there is an error. TODO consider moving this
- * into an active monitoring mode. Upon the notification of a connection error,
- * the monitor changes to operate in a time driven mode. That is, it attempts to
- * recover the connections on a periodic basis. When all failed connections are
- * restored, it changes back to the failure driven mode.
- *
+ * Used to monitor and repair any failed connection for the remote cache service. By default the
+ * monitor operates in a failure driven mode. That is, it goes into a wait state until there is an
+ * error. TODO consider moving this into an active monitoring mode. Upon the notification of a
+ * connection error, the monitor changes to operate in a time driven mode. That is, it attempts to
+ * recover the connections on a periodic basis. When all failed connections are restored, it changes
+ * back to the failure driven mode.
  */
 public class RemoteCacheMonitor
     implements Runnable
@@ -51,8 +48,9 @@ public class RemoteCacheMonitor
     // minimum 30 seconds.
     //private static long idlePeriod = 3*1000; // for debugging.
 
-    /** Must make sure RemoteCacheMonitor is started before any remote error can
-    * be detected! */
+    /**
+     * Must make sure RemoteCacheMonitor is started before any remote error can be detected!
+     */
     private boolean alright = true;
 
     /** Time driven mode */
@@ -66,9 +64,7 @@ public class RemoteCacheMonitor
 
     /**
      * Configures the idle period between repairs.
-     *
-     * @param idlePeriod
-     *            The new idlePeriod value
+     * @param idlePeriod The new idlePeriod value
      */
     public static void setIdlePeriod( long idlePeriod )
     {
@@ -86,7 +82,6 @@ public class RemoteCacheMonitor
 
     /**
      * Returns the singleton instance;
-     *
      * @return The instance value
      */
     static RemoteCacheMonitor getInstance()
@@ -102,8 +97,7 @@ public class RemoteCacheMonitor
     }
 
     /**
-     * Notifies the cache monitor that an error occurred, and kicks off the
-     * error recovery process.
+     * Notifies the cache monitor that an error occurred, and kicks off the error recovery process.
      */
     public void notifyError()
     {

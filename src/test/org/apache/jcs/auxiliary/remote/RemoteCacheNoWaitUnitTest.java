@@ -57,9 +57,9 @@ public class RemoteCacheNoWaitUnitTest
         // DO WORK
         noWait.update( element );
 
+        // VERIFY
         SleepUtil.sleepAtLeast( 10 );
 
-        // VERIFY
         assertEquals( "Wrong number updated.", 1, client.updateList.size() );
         assertEquals( "Wrong element", element, client.updateList.get( 0 ) );
     }

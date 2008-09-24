@@ -604,4 +604,18 @@ public class RemoteCacheManager
         release();
     }
 
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param source
+     * @param eventName
+     * @param optionalDetails
+     */
+    protected void logApplicationEvent( String source, String eventName, String optionalDetails )
+    {
+        if ( cacheEventLogger != null )
+        {
+            cacheEventLogger.logApplicationEvent( source, eventName, optionalDetails );
+        }
+    }
 }

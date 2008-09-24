@@ -36,7 +36,6 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * Tests for the remote cache listener.
  * <p>
  * @author Aaron Smuts
- *
  */
 public class RemoteCacheListenerUnitTest
     extends TestCase
@@ -45,12 +44,13 @@ public class RemoteCacheListenerUnitTest
      * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to false.
      * Create a serialized element.  Call put on the listener.
      * Verify that the deserialized element is in the cache.
-     *
+     * <p>
      * @throws Exception
      */
-    public void testUpdate()
+    public void testUpdate_PutOnPut()
         throws Exception
     {
+        // SETUP
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( false );
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
@@ -66,8 +66,11 @@ public class RemoteCacheListenerUnitTest
 
         ICacheElementSerialized element = new CacheElementSerialized( cacheName, key, elementSerializer
             .serialize( value ), attr );
+        
+        // DO WORK
         listener.handlePut( element );
 
+        // VERIFY
         ICacheElement after = cacheMgr.getCache( cacheName ).get( key );
 
         assertNotNull( "Should have a deserialized object.", after );
@@ -79,15 +82,16 @@ public class RemoteCacheListenerUnitTest
     }
 
     /**
-     * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to false.
+     * Create a RemoteCacheListener with a mock cache manager.  Set remove on put to true.
      * Create a serialized element.  Call put on the listener.
-     * Verify that the deserialized element is in the cache.
-     *
+     * Verify that the deserialized element is not in the cache.
+     * <p>
      * @throws Exception
      */
     public void testUpdate_RemoveOnPut()
         throws Exception
     {
+        // SETUP
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( true );
         ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
@@ -103,11 +107,13 @@ public class RemoteCacheListenerUnitTest
 
         ICacheElementSerialized element = new CacheElementSerialized( cacheName, key, elementSerializer
             .serialize( value ), attr );
+        
+        // DO WORK
         listener.handlePut( element );
 
+        // VERIFY
         ICacheElement after = cacheMgr.getCache( cacheName ).get( key );
 
         assertNull( "Should not have a deserialized object since remove on put is true.", after );
     }
-
 }

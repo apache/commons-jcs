@@ -21,8 +21,10 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,14 +33,18 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * This is a mock impl of the remote cache service.
- * <p>
- * @author admin
  */
 public class MockRemoteCacheService
     implements IRemoteCacheService
 {
     /** The object that was last passed to update. */
     public Object lastUpdate;
+
+    /** List of updates. */
+    public List updateRequestList = new ArrayList();
+
+    /** List of request ids. */
+    public List updateRequestIdList = new ArrayList();
 
     /** The key that was last passed to remove. */
     public Object lastRemoveKey;
@@ -47,9 +53,9 @@ public class MockRemoteCacheService
     public String lastRemoveAllCacheName;
 
     /**
-     * @param cacheName 
-     * @param key 
-     * @param requesterId 
+     * @param cacheName
+     * @param key
+     * @param requesterId
      * @return null
      */
     public ICacheElement get( String cacheName, Serializable key, long requesterId )
@@ -58,9 +64,9 @@ public class MockRemoteCacheService
     }
 
     /**
-     * @param cacheName 
-     * @param groupName 
-     * @return empty set 
+     * @param cacheName
+     * @param groupName
+     * @return empty set
      */
     public Set getGroupKeys( String cacheName, String groupName )
     {
@@ -70,9 +76,9 @@ public class MockRemoteCacheService
     /**
      * Set the last remove key.
      * <p>
-     * @param cacheName 
-     * @param key 
-     * @param requesterId 
+     * @param cacheName
+     * @param key
+     * @param requesterId
      */
     public void remove( String cacheName, Serializable key, long requesterId )
     {
@@ -95,18 +101,20 @@ public class MockRemoteCacheService
     /**
      * Set the last update item.
      * <p>
-     * @param item 
-     * @param requesterId 
+     * @param item
+     * @param requesterId
      */
     public void update( ICacheElement item, long requesterId )
     {
         lastUpdate = item;
+        updateRequestList.add( item );
+        updateRequestIdList.add( new Long( requesterId ) );
     }
 
     /**
      * Do nothing.
      * <p>
-     * @param cacheName 
+     * @param cacheName
      */
     public void dispose( String cacheName )
     {
@@ -114,8 +122,8 @@ public class MockRemoteCacheService
     }
 
     /**
-     * @param cacheName 
-     * @param key 
+     * @param cacheName
+     * @param key
      * @return null
      */
     public ICacheElement get( String cacheName, Serializable key )
@@ -134,8 +142,8 @@ public class MockRemoteCacheService
     /**
      * Set the last remove key.
      * <p>
-     * @param cacheName 
-     * @param key 
+     * @param cacheName
+     * @param key
      */
     public void remove( String cacheName, Serializable key )
     {
@@ -145,7 +153,7 @@ public class MockRemoteCacheService
     /**
      * Set the last remove all cache name.
      * <p>
-     * @param cacheName 
+     * @param cacheName
      */
     public void removeAll( String cacheName )
     {
@@ -155,7 +163,7 @@ public class MockRemoteCacheService
     /**
      * Set the last update item.
      * <p>
-     * @param item 
+     * @param item
      */
     public void update( ICacheElement item )
     {
@@ -163,9 +171,9 @@ public class MockRemoteCacheService
     }
 
     /**
-     * @param cacheName 
-     * @param keys 
-     * @param requesterId 
+     * @param cacheName
+     * @param keys
+     * @param requesterId
      * @return empty map
      */
     public Map getMultiple( String cacheName, Set keys, long requesterId )
@@ -174,13 +182,12 @@ public class MockRemoteCacheService
     }
 
     /**
-     * @param cacheName 
-     * @param keys 
+     * @param cacheName
+     * @param keys
      * @return empty map
      */
     public Map getMultiple( String cacheName, Set keys )
     {
         return new HashMap();
     }
-
 }

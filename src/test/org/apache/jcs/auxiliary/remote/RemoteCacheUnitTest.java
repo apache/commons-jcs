@@ -46,9 +46,11 @@ public class RemoteCacheUnitTest
         throws Exception
     {
         // SETUP
+        long listenerId = 123;
         IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
         MockRemoteCacheService service = new MockRemoteCacheService();
         MockRemoteCacheListener listener = new MockRemoteCacheListener();
+        listener.setListenerId( listenerId );
 
         RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
 
@@ -65,6 +67,7 @@ public class RemoteCacheUnitTest
             .getDeSerializedCacheElement( (ICacheElementSerialized) service.lastUpdate, remoteCache
                 .getElementSerializer() );
         assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
+        assertEquals( "Wrong listener id.", new Long( listenerId ), service.updateRequestIdList.get( 0 ) );
     }
 
     /**

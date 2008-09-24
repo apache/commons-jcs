@@ -36,8 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * This class provides some basic utilities for doing things such as starting
- * the registry properly.
+ * This class provides some basic utilities for doing things such as starting the registry properly.
  */
 public class RemoteUtils
 {
@@ -136,13 +135,14 @@ public class RemoteUtils
         }
         return props;
     }
-    
+
     /**
-     * Configure a custom socket factory to set the timeout value.
+     * Configure a custom socket factory to set the timeout value. This sets the global socket
+     * factory. It's used only if a custom factory is not configured for the specific object.
      * <p>
      * @param timeoutMillis
      */
-    public static void configureCustomSocketFactory( final int timeoutMillis )
+    public static void configureGlobalCustomSocketFactory( final int timeoutMillis )
     {
         try
         {

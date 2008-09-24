@@ -57,6 +57,9 @@ public class MockRemoteCacheListener
     /** The type of remote listener */
     public int remoteType = IRemoteCacheAttributes.LOCAL;
 
+    /**
+     * @throws IOException
+     */
     public void dispose()
         throws IOException
     {
@@ -65,8 +68,8 @@ public class MockRemoteCacheListener
 
     /**
      * returns the listener id, which can be setup.
-     * @return 
-     * @throws IOException 
+     * @return listenerId
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException
@@ -74,6 +77,10 @@ public class MockRemoteCacheListener
         return listenerId;
     }
 
+    /**
+     * @return localAddress
+     * @throws IOException
+     */
     public String getLocalHostAddress()
         throws IOException
     {
@@ -82,8 +89,8 @@ public class MockRemoteCacheListener
 
     /**
      * Return the setup remoteType.
-     * @return 
-     * @throws IOException 
+     * @return remoteType
+     * @throws IOException
      */
     public int getRemoteType()
         throws IOException
@@ -93,6 +100,9 @@ public class MockRemoteCacheListener
 
     /**
      * Allows you to setup the listener id.
+     * <p>
+     * @param id
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException
@@ -100,6 +110,10 @@ public class MockRemoteCacheListener
         listenerId = id;
     }
 
+    /**
+     * @param cacheName
+     * @throws IOException
+     */
     public void handleDispose( String cacheName )
         throws IOException
     {
@@ -109,6 +123,9 @@ public class MockRemoteCacheListener
 
     /**
      * This increments the put count and adds the item to the putItem list.
+     * <p>
+     * @param item
+     * @throws IOException
      */
     public void handlePut( ICacheElement item )
         throws IOException
@@ -119,6 +136,10 @@ public class MockRemoteCacheListener
 
     /**
      * Increments the remove count and adds the key to the removedKeys list.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @throws IOException
      */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException
@@ -127,11 +148,13 @@ public class MockRemoteCacheListener
         removedKeys.add( key );
     }
 
+    /**
+     * @param cacheName
+     * @throws IOException
+     */
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
         // TODO Auto-generated method stub
-
     }
-
 }

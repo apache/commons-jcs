@@ -26,6 +26,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RMIClientSocketFactory;
+import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -35,6 +37,7 @@ import org.apache.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.utils.config.OptionConverter;
 import org.apache.jcs.utils.config.PropertySetter;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
@@ -123,14 +126,24 @@ public class RemoteCacheServerFactory
 
             setServiceName( rcsa.getRemoteServiceName() );
 
-            RemoteUtils.configureCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
+            RMISocketFactory customRMISocketFactory = configureObjectSpecificCustomFactory( props );
+
+            RemoteUtils.configureGlobalCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
 
             // CONFIGURE THE EVENT LOGGER
-            ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator
-                .parseCacheEventLogger( props, IRemoteCacheConstants.PROPERTY_PREFIX );
+            ICacheEventLogger cacheEventLogger;
+
+            cacheEventLogger = configureCacheEventLogger( props );
 
             // CREATE SERVER
-            remoteCacheServer = new RemoteCacheServer( rcsa );
+            if ( customRMISocketFactory != null )
+            {
+                remoteCacheServer = new RemoteCacheServer( rcsa, customRMISocketFactory );
+            }
+            else
+            {
+                remoteCacheServer = new RemoteCacheServer( rcsa );
+            }
             remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
             // START THE REGISTRY
@@ -152,6 +165,57 @@ public class RemoteCacheServerFactory
                 keepAliveDaemon.executePeriodically( rcsa.getRegistryKeepAliveDelayMillis(), runner, false );
             }
         }
+    }
+
+    /**
+     * Tries to get the event logger by new and old config styles.
+     * <p>
+     * @param props
+     * @return ICacheEventLogger
+     */
+    protected static ICacheEventLogger configureCacheEventLogger( Properties props )
+    {
+        ICacheEventLogger cacheEventLogger = AuxiliaryCacheConfigurator
+            .parseCacheEventLogger( props, IRemoteCacheConstants.CACHE_SERVER_PREFIX );
+
+        // try the old way
+        if ( cacheEventLogger == null )
+        {
+            cacheEventLogger = AuxiliaryCacheConfigurator.parseCacheEventLogger( props,
+                                                                                 IRemoteCacheConstants.PROPERTY_PREFIX );
+        }
+        return cacheEventLogger;
+    }
+
+    /**
+     * This configures an object specific custom factory. This will be configured for just this
+     * object in the registry. This can be null.
+     * <p>
+     * @param props
+     * @return RMISocketFactory
+     */
+    protected static RMISocketFactory configureObjectSpecificCustomFactory( Properties props )
+    {
+        RMISocketFactory customRMISocketFactory = (RMISocketFactory) OptionConverter
+            .instantiateByKey( props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, RMIClientSocketFactory.class, null );
+
+        if ( customRMISocketFactory != null )
+        {
+            PropertySetter.setProperties( customRMISocketFactory, props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX
+                + "." );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Will use server specific custom socket factory. " + customRMISocketFactory );
+            }
+        }
+        else
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "No server specific custom socket factory defined." );
+            }
+        }
+        return customRMISocketFactory;
     }
 
     /**
@@ -252,8 +316,8 @@ public class RemoteCacheServerFactory
         return rcsa;
     }
 
-    /** 
-     * This looks for the old config values.  
+    /**
+     * This looks for the old config values.
      * <p>
      * @param prop
      * @param rcsa

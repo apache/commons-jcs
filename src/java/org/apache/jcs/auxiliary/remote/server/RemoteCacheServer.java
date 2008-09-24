@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.rmi.server.RMISocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.Unreferenced;
 import java.util.Collections;
@@ -103,7 +104,7 @@ class RemoteCacheServer
     private int logInterval = 100;
 
     /** An optional event logger */
-    private ICacheEventLogger cacheEventLogger;
+    private transient ICacheEventLogger cacheEventLogger;
 
     /** If there is no event logger, we will return this event for all create calls. */
     private static final ICacheEvent EMPTY_ICACHE_EVENT = new CacheEvent();
@@ -119,6 +120,22 @@ class RemoteCacheServer
         throws RemoteException
     {
         super( rcsa.getServicePort() );
+        this.remoteCacheServerAttributes = rcsa;
+        init( rcsa.getConfigFileName() );
+    }
+    
+    /**
+     * Constructor for the RemoteCacheServer object. This initializes the server with the values
+     * from the config file.
+     * <p>
+     * @param rcsa
+     * @param customRMISocketFactory 
+     * @throws RemoteException
+     */
+    RemoteCacheServer( IRemoteCacheServerAttributes rcsa,  RMISocketFactory customRMISocketFactory )
+        throws RemoteException
+    {
+        super( rcsa.getServicePort(), customRMISocketFactory, customRMISocketFactory );
         this.remoteCacheServerAttributes = rcsa;
         init( rcsa.getConfigFileName() );
     }
@@ -1193,18 +1210,22 @@ class RemoteCacheServer
                     id = listenerIdB;
 
                     // in case it needs synchronization
+                    String message = "adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
+                    + listenerAddress + "]";
+                    logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
-                            + listenerAddress + "]" );
+                        log.info( message );
                     }
                 }
                 else
                 {
+                    String message = "adding listener under existing id = [" + id + "], listenerAddress ["
+                    + listenerAddress + "]";
+                    logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "adding listener under existing id = [" + id + "], listenerAddress ["
-                            + listenerAddress + "]" );
+                        log.info( message );
                     }
                     // should confirm the the host is the same as we have on
                     // record, just in case a client has made a mistake.
@@ -1286,9 +1307,11 @@ class RemoteCacheServer
      */
     public void removeCacheListener( String cacheName, long listenerId )
     {
+        String message = "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]";
+        logApplicationEvent( "RemoteCacheServer", "removeCacheListener", message );
         if ( log.isInfoEnabled() )
         {
-            log.info( "Removing listener for cache region = [" + cacheName + "] and listenerId [" + listenerId + "]" );
+            log.info( message );
         }
 
         Integer remoteTypeL = (Integer) idTypeMap.get( new Long( listenerId ) );
@@ -1485,6 +1508,21 @@ class RemoteCacheServer
         }
         String ipAddress = getIPAddressForRequesterId( requesterId );
         return cacheEventLogger.createICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
+    }
+    
+    /**
+     * Logs an event if an event logger is configured.
+     * <p>
+     * @param source
+     * @param eventName
+     * @param optionalDetails
+     */
+    protected void logApplicationEvent( String source, String eventName, String optionalDetails )
+    {
+        if ( cacheEventLogger != null )
+        {
+            cacheEventLogger.logApplicationEvent( source, eventName, optionalDetails );
+        }
     }
 
     /**
