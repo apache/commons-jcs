@@ -21,7 +21,6 @@ package org.apache.jcs.utils.threadpool;
 
 import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
 
-
 /**
  * This object holds configuration data for a thread pool.
  * <p>
@@ -30,27 +29,32 @@ import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
 public class PoolConfiguration
     implements Cloneable, IPoolConfiguration
 {
+    /** Should we bound the queue */
     private boolean useBoundary = true;
 
+    /** If the queue is boudned, how big can it get */
     private int boundarySize = 2000;
 
-    // only has meaning if a bounday is used
+    /** only has meaning if a bounday is used */
     private int maximumPoolSize = 150;
 
-    // the exact number that will be used in a boundless queue. If the queue has
-    // a boundary, more will be created if the queue fills.
+    /**
+     * the exact number that will be used in a boundless queue. If the queue has a boundary, more
+     * will be created if the queue fills.
+     */
     private int minimumPoolSize = 4;
 
+    /** How long idle threads above the minimum should be kept alive. */
     private int keepAliveTime = 1000 * 60 * 5;
 
-    // should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST,
+    /** should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST, */
     private String whenBlockedPolicy = POLICY_RUN;
 
+    /** The number of threads to create on startup */
     private int startUpSize = 4;
 
     /**
-     * @param useBoundary
-     *            The useBoundary to set.
+     * @param useBoundary The useBoundary to set.
      */
     public void setUseBoundary( boolean useBoundary )
     {
@@ -85,7 +89,7 @@ public class PoolConfiguration
      * @param startUpSize
      */
     public PoolConfiguration( boolean useBoundary, int boundarySize, int maximumPoolSize, int minimumPoolSize,
-                             int keepAliveTime, String whenBlockedPolicy, int startUpSize )
+                              int keepAliveTime, String whenBlockedPolicy, int startUpSize )
     {
         setUseBoundary( useBoundary );
         setBoundarySize( boundarySize );
@@ -97,8 +101,7 @@ public class PoolConfiguration
     }
 
     /**
-     * @param boundarySize
-     *            The boundarySize to set.
+     * @param boundarySize The boundarySize to set.
      */
     public void setBoundarySize( int boundarySize )
     {
@@ -114,8 +117,7 @@ public class PoolConfiguration
     }
 
     /**
-     * @param maximumPoolSize
-     *            The maximumPoolSize to set.
+     * @param maximumPoolSize The maximumPoolSize to set.
      */
     public void setMaximumPoolSize( int maximumPoolSize )
     {
@@ -131,8 +133,7 @@ public class PoolConfiguration
     }
 
     /**
-     * @param minimumPoolSize
-     *            The minimumPoolSize to set.
+     * @param minimumPoolSize The minimumPoolSize to set.
      */
     public void setMinimumPoolSize( int minimumPoolSize )
     {
@@ -148,8 +149,7 @@ public class PoolConfiguration
     }
 
     /**
-     * @param keepAliveTime
-     *            The keepAliveTime to set.
+     * @param keepAliveTime The keepAliveTime to set.
      */
     public void setKeepAliveTime( int keepAliveTime )
     {
@@ -165,8 +165,7 @@ public class PoolConfiguration
     }
 
     /**
-     * @param whenBlockedPolicy
-     *            The whenBlockedPolicy to set.
+     * @param whenBlockedPolicy The whenBlockedPolicy to set.
      */
     public void setWhenBlockedPolicy( String whenBlockedPolicy )
     {
@@ -216,8 +215,7 @@ public class PoolConfiguration
     }
 
     /**
-     * @param startUpSize
-     *            The startUpSize to set.
+     * @param startUpSize The startUpSize to set.
      */
     public void setStartUpSize( int startUpSize )
     {

@@ -145,4 +145,24 @@ public class RemoteCacheServerFactoryUnitTest
         assertNotNull( "Should have a custom socket factory.", result );
         assertEquals( "Wrong testValue", testValue, ((MockRMISocketFactory)result).getTestStringProperty() );
     }
+    
+    /** verify that we get the timeout value */
+    public void testConfigureObjectSpecificCustomFactory_withProperty_TimeoutConfigurableRMIScoketFactory()
+    {
+        // SETUP
+        int readTimeout = 1234;
+        int openTimeout = 1234;
+        Properties props = new Properties();
+        props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, TimeoutConfigurableRMIScoketFactory.class.getName() );        
+        props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + ".readTimeout", String.valueOf( readTimeout ) );        
+        props.put( IRemoteCacheConstants.CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX + ".openTimeout", String.valueOf( openTimeout ) );        
+                
+        // DO WORK
+        RMISocketFactory result = RemoteCacheServerFactory.configureObjectSpecificCustomFactory( props );
+        
+        // VERIFY
+        assertNotNull( "Should have a custom socket factory.", result );
+        assertEquals( "Wrong readTimeout", readTimeout, ((TimeoutConfigurableRMIScoketFactory)result).getReadTimeout() );
+        assertEquals( "Wrong readTimeout", openTimeout, ((TimeoutConfigurableRMIScoketFactory)result).getOpenTimeout() );
+    }
 }

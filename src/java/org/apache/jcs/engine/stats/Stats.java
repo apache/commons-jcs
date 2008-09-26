@@ -22,64 +22,55 @@ package org.apache.jcs.engine.stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
-
 /**
  * @author aaronsm
- *
  */
 public class Stats
     implements IStats
 {
+    /** Don't change */
     private static final long serialVersionUID = 227327902875154010L;
 
+    /** The stats */
     private IStatElement[] stats = null;
 
+    /** The type of stat */
     private String typeName = null;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStats#getStatElements()
+    /**
+     * @return IStatElement[]
      */
     public IStatElement[] getStatElements()
     {
         return stats;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStats#setStatElements(org.apache.jcs.engine.stats.behavior.IStatElement[])
+    /**
+     * @param stats
      */
     public void setStatElements( IStatElement[] stats )
     {
         this.stats = stats;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStats#getTypeName()
+    /**
+     * @return typeName
      */
     public String getTypeName()
     {
         return typeName;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStats#setTypeName(java.lang.String)
+    /**
+     * @param name
      */
     public void setTypeName( String name )
     {
         typeName = name;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
+    /**
+     * @return the stats in a readable string
      */
     public String toString()
     {
@@ -98,5 +89,4 @@ public class Stats
 
         return buf.toString();
     }
-
 }

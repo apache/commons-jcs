@@ -37,85 +37,93 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- * This manages threadpools for an application using Doug Lea's Util Concurrent
- * package.
+ * This manages threadpools for an application using Doug Lea's Util Concurrent package.
  * http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html
  * <p>
  * It is a singleton since threads need to be managed vm wide.
  * <p>
- * This manager forces you to use a bounded queue. By default it uses the
- * current thread for execuion when the buffer is full and no free threads can
- * be created.
+ * This manager forces you to use a bounded queue. By default it uses the current thread for
+ * execution when the buffer is full and no free threads can be created.
  * <p>
- * You can specify the props file to use or pass in a properties object prior to
- * configuration. By default it looks for configuration information in
- * thread_pool.properties.
+ * You can specify the props file to use or pass in a properties object prior to configuration. By
+ * default it looks for configuration information in thread_pool.properties.
  * <p>
  * If set, the Properties object will take precedence.
  * <p>
- * If a value is not set for a particular pool, the hard coded defaults will be
- * used.
- *
+ * If a value is not set for a particular pool, the hard coded defaults will be used.
+ * 
  * <pre>
  * int boundarySize_DEFAULT = 2000;
- *
+ * 
  * int maximumPoolSize_DEFAULT = 150;
- *
+ * 
  * int minimumPoolSize_DEFAULT = 4;
- *
+ * 
  * int keepAliveTime_DEFAULT = 1000 * 60 * 5;
- *
+ * 
  * boolean abortWhenBlocked = false;
- *
+ * 
  * String whenBlockedPolicy_DEFAULT = IPoolConfiguration.POLICY_RUN;
- *
+ * 
  * int startUpSize_DEFAULT = 4;
  * </pre>
- *
- * You can configure default settings by specifying a default pool in the
- * properties, ie "cache.ccf"
+ * 
+ * You can configure default settings by specifying a default pool in the properties, ie "cache.ccf"
  * <p>
  * @author Aaron Smuts
  */
 public class ThreadPoolManager
 {
+    /** The logger */
     private static final Log log = LogFactory.getLog( ThreadPoolManager.class );
 
-    // DEFAULT SETTINGS, these are not final since they can be set
-    // via the Propeties file or object
+    /**
+     * DEFAULT SETTINGS, these are not final since they can be set via the properties file or object
+     */
     private static boolean useBoundary_DEFAULT = true;
 
+    /** Default queue size limit */
     private static int boundarySize_DEFAULT = 2000;
 
+    /** Default max size */
     private static int maximumPoolSize_DEFAULT = 150;
 
+    /** Default min */
     private static int minimumPoolSize_DEFAULT = 4;
 
+    /** Default keep alive */
     private static int keepAliveTime_DEFAULT = 1000 * 60 * 5;
 
+    /** Default when blocked */
     private static String whenBlockedPolicy_DEFAULT = IPoolConfiguration.POLICY_RUN;
 
+    /** Default startup size */
     private static int startUpSize_DEFAULT = 4;
 
+    /** The deafult config, created using propety defaults if present, else those above. */
     private static PoolConfiguration defaultConfig;
 
-    // This is the default value. Setting this after
-    // inialization will have no effect
+    /**
+     * This is the default value. Setting this after inialization will have no effect.
+     */
     private static String propsFileName = "cache.ccf";
 
-    // the root property name
+    /** the root property name */
     private static String PROP_NAME_ROOT = "thread_pool";
 
+    /** default property file name */
     private static String DEFAULT_PROP_NAME_ROOT = "thread_pool.default";
 
-    // You can specify the properties to be used to configure
-    // the thread pool. Setting this post initialization will have
-    // no effect.
+    /**
+     * You can specify the properties to be used to configure the thread pool. Setting this post
+     * initialization will have no effect.
+     */
     private static Properties props = null;
 
+    /** Map of names to pools. */
     private static HashMap pools = new HashMap();
 
-    // singleton instance
+    /** singleton instance */
     private static ThreadPoolManager INSTANCE = null;
 
     /**
@@ -187,9 +195,8 @@ public class ThreadPoolManager
     }
 
     /**
-     * Returns a configured instance of the ThreadPoolManger To specify a
-     * configuation file or Properties object to use call the appropriate setter
-     * prior to calling getInstance.
+     * Returns a configured instance of the ThreadPoolManger To specify a configuation file or
+     * Properties object to use call the appropriate setter prior to calling getInstance.
      * <p>
      * @return The single instance of the ThreadPoolManager
      */
@@ -203,9 +210,8 @@ public class ThreadPoolManager
     }
 
     /**
-     * Returns a pool by name. If a pool by this name does not exist in the
-     * configuration file or properties, one will be created using the default
-     * values.
+     * Returns a pool by name. If a pool by this name does not exist in the configuration file or
+     * properties, one will be created using the default values.
      * <p>
      * Pools are lazily created.
      * <p>
@@ -266,8 +272,7 @@ public class ThreadPoolManager
     /**
      * Setting this post initialization will have no effect.
      * <p>
-     * @param propsFileName
-     *            The propsFileName to set.
+     * @param propsFileName The propsFileName to set.
      */
     public static void setPropsFileName( String propsFileName )
     {
@@ -275,9 +280,8 @@ public class ThreadPoolManager
     }
 
     /**
-     * Returns the name of the properties file that we used to initialize the
-     * pools. If the value was set post-initialization, then it may not be the
-     * file used.
+     * Returns the name of the properties file that we used to initialize the pools. If the value
+     * was set post-initialization, then it may not be the file used.
      * <p>
      * @return Returns the propsFileName.
      */
@@ -287,11 +291,10 @@ public class ThreadPoolManager
     }
 
     /**
-     * This will be used if it is not null on initialzation. Setting this post
-     * initialization will have no effect.
+     * This will be used if it is not null on initialzation. Setting this post initialization will
+     * have no effect.
      * <p>
-     * @param props
-     *            The props to set.
+     * @param props The props to set.
      */
     public static void setProps( Properties props )
     {
@@ -307,8 +310,7 @@ public class ThreadPoolManager
     }
 
     /**
-     * Intialize the ThreadPoolManager and create all the pools defined in the
-     * configuration.
+     * Intialize the ThreadPoolManager and create all the pools defined in the configuration.
      */
     protected void configure()
     {
@@ -468,7 +470,7 @@ public class ThreadPoolManager
         {
             Thread t = new Thread( runner );
             String oldName = t.getName();
-            t.setName( "JCS-ThreadPoolManager-" + oldName );                
+            t.setName( "JCS-ThreadPoolManager-" + oldName );
             t.setDaemon( true );
             return t;
         }

@@ -30,8 +30,10 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  */
 public class ThreadPool
 {
+    /** The worker */
     private PooledExecutor pool = null;
 
+    /** The queue */
     private Channel queue = null;
 
     /**

@@ -380,8 +380,10 @@ public class PooledCacheEventQueue
     private abstract class AbstractCacheEvent
         implements Runnable
     {
+        /** Times failed to process */
         int failures = 0;
 
+        /** Has the event been processed */
         boolean done = false;
 
         /**
@@ -445,6 +447,7 @@ public class PooledCacheEventQueue
     private class PutEvent
         extends AbstractCacheEvent
     {
+        /** The payload */
         private ICacheElement ice;
 
         /**
@@ -484,6 +487,7 @@ public class PooledCacheEventQueue
     private class RemoveEvent
         extends AbstractCacheEvent
     {
+        /** The payload, the key to remove */
         private Serializable key;
 
         /**
