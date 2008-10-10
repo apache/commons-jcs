@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.MockElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
@@ -22,8 +23,8 @@ public class JDBCDiskCacheManagerUnitTest
         ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         IElementSerializer elementSerializer = new MockElementSerializer();
 
-        JDBCDiskCacheManager manager = JDBCDiskCacheManager.getInstance( defaultCacheAttributes, cacheEventLogger,
-                                                                         elementSerializer );
+        JDBCDiskCacheManager manager = JDBCDiskCacheManager.getInstance( defaultCacheAttributes, CompositeCacheManager
+            .getUnconfiguredInstance(), cacheEventLogger, elementSerializer );
 
         // DO WORK
         JDBCDiskCache cache = (JDBCDiskCache) manager.getCache( cacheName );

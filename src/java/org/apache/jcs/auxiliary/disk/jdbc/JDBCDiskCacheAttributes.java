@@ -72,6 +72,20 @@ public class JDBCDiskCacheAttributes
     private boolean UseDiskShrinker = true;
 
     /**
+     * If a pool name is supplied, the manager will attempt to load it. It should be configured in a
+     * separate section as follows. Assuming the name is "MyPool":
+     * 
+     * <pre>
+     * jcs.connectionpool.MyPool.attributes.userName=MyUserName
+     * jcs.connectionpool.MyPool.attributes.password=MyPassword
+     * jcs.connectionpool.MyPool.attributes.url=MyUrl
+     * jcs.connectionpool.MyPool.attributes.maxActive=MyMaxActive
+     * jcs.connectionpool.MyPool.attributes.driverClassName=MyDriverClassName
+     * </pre>
+     */
+    private String connectionPoolName;
+
+    /**
      * @param userName The userName to set.
      */
     public void setUserName( String userName )
@@ -232,6 +246,22 @@ public class JDBCDiskCacheAttributes
     public boolean isUseDiskShrinker()
     {
         return UseDiskShrinker;
+    }
+
+    /**
+     * @param connectionPoolName the connectionPoolName to set
+     */
+    public void setConnectionPoolName( String connectionPoolName )
+    {
+        this.connectionPoolName = connectionPoolName;
+    }
+
+    /**
+     * @return the connectionPoolName
+     */
+    public String getConnectionPoolName()
+    {
+        return connectionPoolName;
     }
 
     /**

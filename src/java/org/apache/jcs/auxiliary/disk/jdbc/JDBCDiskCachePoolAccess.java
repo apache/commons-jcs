@@ -51,11 +51,7 @@ public class JDBCDiskCachePoolAccess
 
     /** default jdbc driver. */
     private static final String DRIVER_NAME = "jdbc:apache:commons:dbcp:";
-
-    // WE SHOULD HAVE A DIFFERENT POOL FOR EACH DB NO REGION
-    // THE SAME TABLE CAN BE USED BY MULTIPLE REGIONS
-    // this.setPoolName( jdbcDiskCacheAttributes.getCacheName() );
-
+    
     /**
      * Configures the pool name to use for the pool access.
      * <p>

@@ -19,6 +19,8 @@ package org.apache.jcs.engine.behavior;
  * under the License.
  */
 
+import java.util.Properties;
+
 import org.apache.jcs.engine.control.CompositeCache;
 
 /**
@@ -34,5 +36,12 @@ public interface ICompositeCacheManager
      * @param cacheName
      * @return CompositeCache
      */
-    public abstract CompositeCache getCache( String cacheName );
+    CompositeCache getCache( String cacheName );
+    
+    /**
+     * This is exposed so other manager can get access to the props.
+     * <p>
+     * @return the configurationProperties
+     */
+    Properties getConfigurationProperties();
 }

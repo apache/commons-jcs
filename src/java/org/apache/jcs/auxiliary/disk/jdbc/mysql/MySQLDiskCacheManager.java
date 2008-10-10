@@ -31,6 +31,7 @@ import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManagerAbstractTemplate;
 import org.apache.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleFormatException;
 import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
@@ -61,15 +62,19 @@ public class MySQLDiskCacheManager
 
     /** for schedule optimizations */
     private Timer daemon = null;
+    
+    /** The cache manager instance */
+    private ICompositeCacheManager compositeCacheManager;    
 
     /**
      * Constructor for the HSQLCacheManager object
      * <p>
      * @param cattr
+     * @param compositeCacheManager 
      * @param cacheEventLogger
      * @param elementSerializer
      */
-    private MySQLDiskCacheManager( MySQLDiskCacheAttributes cattr,
+    private MySQLDiskCacheManager( MySQLDiskCacheAttributes cattr, ICompositeCacheManager compositeCacheManager,
                                    ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         if ( log.isInfoEnabled() )
@@ -79,6 +84,7 @@ public class MySQLDiskCacheManager
         defaultJDBCDiskCacheAttributes = cattr;
         setElementSerializer( elementSerializer );
         setCacheEventLogger( cacheEventLogger );        
+        setCompositeCacheManager( compositeCacheManager );        
     }
 
     /**
@@ -95,11 +101,12 @@ public class MySQLDiskCacheManager
      * Gets the instance attribute of the HSQLCacheManager class
      * <p>
      * @param cattr
+     * @param compositeCacheManager 
      * @param cacheEventLogger
      * @param elementSerializer
      * @return The instance value
      */
-    public static MySQLDiskCacheManager getInstance( MySQLDiskCacheAttributes cattr,
+    public static MySQLDiskCacheManager getInstance( MySQLDiskCacheAttributes cattr, ICompositeCacheManager compositeCacheManager,
                                                      ICacheEventLogger cacheEventLogger,
                                                      IElementSerializer elementSerializer )
     {
@@ -107,7 +114,7 @@ public class MySQLDiskCacheManager
         {
             if ( instance == null )
             {
-                instance = new MySQLDiskCacheManager( cattr, cacheEventLogger, elementSerializer );
+                instance = new MySQLDiskCacheManager( cattr, compositeCacheManager, cacheEventLogger, elementSerializer );
             }
         }
         clients++;
@@ -136,13 +143,28 @@ public class MySQLDiskCacheManager
      */
     protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
-        AuxiliaryCache raf = new MySQLDiskCache( (MySQLDiskCacheAttributes) cattr, tableState );
+        AuxiliaryCache raf = new MySQLDiskCache( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
 
         scheduleOptimizations( (MySQLDiskCacheAttributes) cattr, tableState );
 
         return raf;
     }
 
+    /**
+     * @param compositeCacheManager the compositeCacheManager to set
+     */
+    protected void setCompositeCacheManager( ICompositeCacheManager compositeCacheManager )
+    {
+        this.compositeCacheManager = compositeCacheManager;
+    }
+
+    /**
+     * @return the compositeCacheManager
+     */
+    protected ICompositeCacheManager getCompositeCacheManager()
+    {
+        return compositeCacheManager;
+    }
     /**
      * For each time in the optimization schedule, this calls schedule Optimizaiton.
      * <p>

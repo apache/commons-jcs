@@ -88,8 +88,8 @@ public class CompositeCacheManager
     /** Used to keep track of attributes for auxiliaries. */
     protected Hashtable auxiliaryAttributeRegistry = new Hashtable( 11 );
 
-    /** Properties with which this manager was configured */
-    protected Properties props;
+    /** Properties with which this manager was configured. This is exposed for other managers. */
+    private Properties configurationProperties;
 
     /** The default auxiliary caches to be used if not preconfigured */
     protected String defaultAuxValues;
@@ -167,7 +167,7 @@ public class CompositeCacheManager
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Instance is null, creating with provided config" );
+                log.info( "Instance is null, returning unconfigured instance" );
             }
 
             instance = createInstance();
@@ -281,7 +281,6 @@ public class CompositeCacheManager
     {
         if ( props != null )
         {
-
             if ( useSystemProperties )
             {
                 // override any setting with values from the system properties.
@@ -302,10 +301,12 @@ public class CompositeCacheManager
                 }
             }
 
+            // We will expose this for managers that need raw properties.
+            this.configurationProperties = props;
+
             // set the props value and then configure the ThreadPoolManager
             ThreadPoolManager.setProps( props );
             ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
-
             if ( log.isDebugEnabled() )
             {
                 log.debug( "ThreadPoolManager = " + poolMgr );
@@ -315,8 +316,6 @@ public class CompositeCacheManager
             CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
 
             configurator.doConfigure( props );
-
-            this.props = props;
         }
         else
         {
@@ -444,7 +443,8 @@ public class CompositeCacheManager
 
                 CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
 
-                cache = configurator.parseRegion( this.props, cattr.getCacheName(), this.defaultAuxValues, cattr );
+                cache = configurator.parseRegion( this.getConfigurationProperties(), cattr.getCacheName(),
+                                                  this.defaultAuxValues, cattr );
 
                 caches.put( cattr.getCacheName(), cache );
             }
@@ -693,6 +693,26 @@ public class CompositeCacheManager
         {
             shutdownObservers.remove( observer );
         }
+    }
+
+    /**
+     * This is exposed so other manager can get access to the props.
+     * <p>
+     * @param props
+     */
+    public void setConfigurationProperties( Properties props )
+    {
+        this.configurationProperties = props;
+    }
+
+    /**
+     * This is exposed so other manager can get access to the props.
+     * <p>
+     * @return the configurationProperties
+     */
+    public Properties getConfigurationProperties()
+    {
+        return configurationProperties;
     }
 
     /**

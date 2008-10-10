@@ -103,10 +103,11 @@ public class ThreadPoolManager
     /** The deafult config, created using propety defaults if present, else those above. */
     private static PoolConfiguration defaultConfig;
 
-    /**
-     * This is the default value. Setting this after inialization will have no effect.
-     */
-    private static String propsFileName = "cache.ccf";
+    /** This is the default value. */
+    public static final String DEFAULT_PROPS_FILE_NAME = "cache.ccf";
+    
+    /** Setting this after inialization will have no effect.  */
+    private static String propsFileName = null;
 
     /** the root property name */
     private static String PROP_NAME_ROOT = "thread_pool";

@@ -19,6 +19,8 @@ package org.apache.jcs.engine.control;
  * under the License.
  */
 
+import java.util.Properties;
+
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
@@ -30,6 +32,9 @@ public class MockCompositeCacheManager
     /** The cache that was returned. */
     private CompositeCache cache;
 
+    /** Properties with which this manager was configured. This is exposed for other managers. */
+    private Properties configurationProperties;
+    
     /**
      * @param cacheName 
      * @return Returns a CompositeCache
@@ -60,5 +65,25 @@ public class MockCompositeCacheManager
     public CompositeCache getCache()
     {
         return cache;
+    }
+    
+    /**
+     * This is exposed so other manager can get access to the props.
+     * <p>
+     * @param props
+     */
+    public void setConfigurationProperties( Properties props )
+    {
+        this.configurationProperties = props;
+    }
+
+    /**
+     * This is exposed so other manager can get access to the props.
+     * <p>
+     * @return the configurationProperties
+     */
+    public Properties getConfigurationProperties()
+    {
+        return configurationProperties;
     }
 }

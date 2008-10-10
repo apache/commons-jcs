@@ -133,7 +133,7 @@ public class CompositeCacheConfigurator
         long start = System.currentTimeMillis();
 
         // store props for use by non configured caches
-        compositeCacheManager.props = properties;
+        compositeCacheManager.setConfigurationProperties( properties );
 
         // set default value list
         setDefaultAuxValues( properties );

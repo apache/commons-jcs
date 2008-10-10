@@ -21,8 +21,6 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -32,6 +30,7 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.control.MockCompositeCacheManager;
 
 /**
  * Runs basic tests for the JDBC disk cache.
@@ -68,7 +67,7 @@ public class JDBCDiskCacheUnitTest
         Class.forName( driver ).newInstance();
         Connection cConn = DriverManager.getConnection( url + database, user, password );
 
-        setupTABLE( cConn );
+        HsqlSetupTableUtil.setupTABLE( cConn, "JCS_STORE2" );
 
         runTestForRegion( "testCache1", 200 );
     }
@@ -139,71 +138,55 @@ public class JDBCDiskCacheUnitTest
     }
 
     /**
-     * SETUP TABLE FOR CACHE
-     * @param cConn
+     * Verfiy that it uses the pool access manager config.
+     * <p>
+     * @throws Exception
      */
-    void setupTABLE( Connection cConn )
+    public void testInitializePoolAccess_withPoolName()
+        throws Exception
     {
-        boolean newT = true;
+        // SETUP
+        String poolName = "testInitializePoolAccess_withPoolName";
 
-        StringBuffer createSql = new StringBuffer();
-        createSql.append( "CREATE CACHED TABLE JCS_STORE2 " );
-        createSql.append( "( " );
-        createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
-        createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
-        createSql.append( "ELEMENT               BINARY, " );
-        createSql.append( "CREATE_TIME           DATE, " );
-        createSql.append( "CREATE_TIME_SECONDS   BIGINT, " );
-        createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
-        createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
-        createSql.append( "IS_ETERNAL            CHAR(1), " );
-        createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
-        createSql.append( ");" );
+        String url = "jdbc:hsqldb:";
+        String userName = "sa";
+        String password = "";
+        int maxActive = 10;
+        String driverClassName = "org.hsqldb.jdbcDriver";
 
-        Statement sStatement = null;
-        try
-        {
-            sStatement = cConn.createStatement();
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
+        Properties props = new Properties();
+        String prefix = JDBCDiskCachePoolAccessManager.POOL_CONFIGURATION_PREFIX + poolName
+            + JDBCDiskCachePoolAccessManager.ATTRIBUTE_PREFIX;
+        props.put( prefix + ".url", url );
+        props.put( prefix + ".userName", userName );
+        props.put( prefix + ".password", password );
+        props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
+        props.put( prefix + ".driverClassName", driverClassName );
 
-        try
-        {
-            sStatement.executeQuery( createSql.toString() );
-            sStatement.close();
-        }
-        catch ( SQLException e )
-        {
-            if ( e.toString().indexOf( "already exists" ) != -1 )
-            {
-                newT = false;
-            }
-            else
-            {
-                // TODO figure out if it exists prior to trying to create it.
-                // log.error( "Problem creating table.", e );
-                e.printStackTrace();
-            }
-        }
+        JDBCDiskCacheAttributes cattr = new JDBCDiskCacheAttributes();
+        cattr.setConnectionPoolName( poolName );
 
-        String setupData[] = { "create index iKEY on JCS_STORE2 (CACHE_KEY, REGION)" };
+        TableState tableState = new TableState( "JCSTESTTABLE_InitializePoolAccess" );
+        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        compositeCacheManager.setConfigurationProperties( props );
 
-        if ( newT )
-        {
-            for ( int i = 1; i < setupData.length; i++ )
-            {
-                try
-                {
-                    sStatement.executeQuery( setupData[i] );
-                }
-                catch ( SQLException e )
-                {
-                    System.out.println( "Exception: " + e );
-                }
-            }
-        } // end ifnew
+        JDBCDiskCache diskCache = new JDBCDiskCache( cattr, tableState, compositeCacheManager );
+
+        System.setProperty( "hsqldb.cache_scale", "8" );
+
+        String rafroot = "target";
+        String database = rafroot + "/cache_hsql_db";
+
+        new org.hsqldb.jdbcDriver();
+        Class.forName( driverClassName ).newInstance();
+        Connection cConn = DriverManager.getConnection( url + database, userName, password );
+        HsqlSetupTableUtil.setupTABLE( cConn, "JCSTESTTABLE_InitializePoolAccess" );
+
+        // DO WORK
+        JDBCDiskCachePoolAccess result = diskCache.initializePoolAccess( cattr, compositeCacheManager );
+
+        // VEIFY
+        assertNotNull( "Should have an access class", result );
+        assertEquals( "wrong name", poolName, result.getPoolName() );
     }
 }

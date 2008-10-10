@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
 import org.apache.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * The MySQLDiskCache extends the core JDBCDiskCache.
@@ -53,10 +54,11 @@ public class MySQLDiskCache
      * <p>
      * @param attributes
      * @param tableState
+     * @param compositeCacheManager 
      */
-    public MySQLDiskCache( MySQLDiskCacheAttributes attributes, TableState tableState )
+    public MySQLDiskCache( MySQLDiskCacheAttributes attributes, TableState tableState, ICompositeCacheManager compositeCacheManager )
     {
-        super( attributes, tableState );
+        super( attributes, tableState, compositeCacheManager );
 
         mySQLDiskCacheAttributes = attributes;
 

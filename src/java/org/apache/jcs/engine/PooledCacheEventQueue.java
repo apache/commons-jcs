@@ -63,19 +63,25 @@ public class PooledCacheEventQueue
     if the queue is empty.   make configurable later */
     private int waitToDieMillis = 10000;
 
+    /** The listener to process events */
     private ICacheListener listener;
 
+    /** The listener id */
     private long listenerId;
 
+    /** The name of the cache */
     private String cacheName;
 
+    /** Max failures before self destruction */
     private int maxFailure;
 
     /** in milliseconds */
     private int waitBeforeRetry;
 
+    /** Has the pool been destroyed */
     private boolean destroyed = true;
 
+    /** Is it working */
     private boolean working = true;
 
     /** The Thread Pool to execute events with. */
@@ -99,7 +105,7 @@ public class PooledCacheEventQueue
 
     /**
      * Initializes the queue.
-     * <,p>
+     * <p>
      * @param listener
      * @param listenerId
      * @param cacheName

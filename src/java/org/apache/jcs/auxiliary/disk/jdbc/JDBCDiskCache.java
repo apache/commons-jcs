@@ -38,6 +38,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -112,12 +113,14 @@ public class JDBCDiskCache
      * <p>
      * @param cattr
      * @param tableState
+     * @param compositeCacheManager
      */
-    public JDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    public JDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState,
+                          ICompositeCacheManager compositeCacheManager )
     {
         super( cattr );
 
-        this.setTableState( tableState );
+        setTableState( tableState );
 
         setJdbcDiskCacheAttributes( cattr );
 
@@ -127,7 +130,7 @@ public class JDBCDiskCache
         }
 
         // This initializes the pool access.
-        initializePoolAccess( cattr );
+        initializePoolAccess( cattr, compositeCacheManager );
 
         // Initialization finished successfully, so set alive to true.
         alive = true;
@@ -135,35 +138,48 @@ public class JDBCDiskCache
 
     /**
      * Registers the driver and creates a poolAccess class.
+     * <p>
      * @param cattr
+     * @param compositeCacheManager
+     * @return JDBCDiskCachePoolAccess for testing
      */
-    protected void initializePoolAccess( JDBCDiskCacheAttributes cattr )
+    protected JDBCDiskCachePoolAccess initializePoolAccess( JDBCDiskCacheAttributes cattr, ICompositeCacheManager compositeCacheManager )
     {
-        try
+        if ( cattr.getConnectionPoolName() != null )
+        {
+            JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( compositeCacheManager
+                .getConfigurationProperties() );
+            poolAccess = manager.getJDBCDiskCachePoolAccess( cattr.getConnectionPoolName() );
+        }
+        else
         {
             try
             {
-                // org.gjt.mm.mysql.Driver
-                Class.forName( cattr.getDriverClassName() );
+                try
+                {
+                    // org.gjt.mm.mysql.Driver
+                    Class.forName( cattr.getDriverClassName() );
+                }
+                catch ( ClassNotFoundException e )
+                {
+                    log.error( "Couldn't find class for driver [" + cattr.getDriverClassName() + "]", e );
+                }
+
+                poolAccess = new JDBCDiskCachePoolAccess( cattr.getName() );
+
+                poolAccess.setupDriver( cattr.getUrl() + cattr.getDatabase(), cattr.getUserName(), cattr.getPassword(),
+                                        cattr.getMaxActive() );
+
+                poolAccess.logDriverStats();
             }
-            catch ( ClassNotFoundException e )
+            catch ( Exception e )
             {
-                log.error( "Couldn't find class for driver [" + cattr.getDriverClassName() + "]", e );
+                logError( getAuxiliaryCacheAttributes().getName(), "initializePoolAccess", e.getMessage() + " URL: "
+                    + getDiskLocation() );
+                log.error( "Problem getting connection.", e );
             }
-
-            poolAccess = new JDBCDiskCachePoolAccess( cattr.getName() );
-
-            poolAccess.setupDriver( cattr.getUrl() + cattr.getDatabase(), cattr.getUserName(), cattr.getPassword(),
-                                    cattr.getMaxActive() );
-
-            poolAccess.logDriverStats();
         }
-        catch ( Exception e )
-        {
-            logError( getAuxiliaryCacheAttributes().getName(), "initializePoolAccess", e.getMessage() + " URL: "
-                + getDiskLocation() );
-            log.error( "Problem getting connection.", e );
-        }
+        return poolAccess;
     }
 
     /**
@@ -295,7 +311,7 @@ public class JDBCDiskCache
      * @param element
      * @return true if the insertion fails because the record exists.
      */
-    private boolean insertRow( ICacheElement ce, Connection con, byte[] element  )
+    private boolean insertRow( ICacheElement ce, Connection con, byte[] element )
     {
         boolean exists = false;
         try
@@ -476,7 +492,7 @@ public class JDBCDiskCache
     /**
      * Queries the database for the value. If it gets a result, the value is deserialized.
      * <p>
-     * @param key 
+     * @param key
      * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
@@ -495,7 +511,7 @@ public class JDBCDiskCache
         }
 
         ICacheElement obj = null;
-        
+
         byte[] data = null;
         try
         {
@@ -1056,16 +1072,6 @@ public class JDBCDiskCache
     }
 
     /**
-     * For debugging.
-     * <p>
-     * @return this.getStats();
-     */
-    public String toString()
-    {
-        return this.getStats();
-    }
-
-    /**
      * This is used by the event logging.
      * <p>
      * @return the location of the disk, either path or ip.
@@ -1073,5 +1079,15 @@ public class JDBCDiskCache
     protected String getDiskLocation()
     {
         return this.jdbcDiskCacheAttributes.getUrl();
+    }
+    
+    /**
+     * For debugging.
+     * <p>
+     * @return this.getStats();
+     */
+    public String toString()
+    {
+        return this.getStats();
     }
 }

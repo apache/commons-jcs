@@ -22,6 +22,7 @@ package org.apache.jcs.auxiliary.disk.jdbc.mysql;
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.disk.jdbc.TableState;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Simple tests for the MySQLDisk Cache.
@@ -51,7 +52,7 @@ public class MySQLDiskCacheUnitTest
         TableState tableState = new TableState( tableName );
         tableState.setState( TableState.OPTIMIZATION_RUNNING );
 
-        MySQLDiskCache cache = new MySQLDiskCache( attributes, tableState );
+        MySQLDiskCache cache = new MySQLDiskCache( attributes, tableState, CompositeCacheManager.getUnconfiguredInstance() );
 
         Object result = cache.processGet( "myKey" );
         assertNull( "The result should be null", result );

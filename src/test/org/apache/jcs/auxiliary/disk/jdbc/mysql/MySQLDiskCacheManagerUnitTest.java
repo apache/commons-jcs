@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.MockElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
@@ -22,7 +23,7 @@ public class MySQLDiskCacheManagerUnitTest
         ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         IElementSerializer elementSerializer = new MockElementSerializer();
 
-        MySQLDiskCacheManager manager = MySQLDiskCacheManager.getInstance( defaultCacheAttributes, cacheEventLogger,
+        MySQLDiskCacheManager manager = MySQLDiskCacheManager.getInstance( defaultCacheAttributes, CompositeCacheManager.getUnconfiguredInstance(), cacheEventLogger,
                                                                            elementSerializer );
 
         // DO WORK

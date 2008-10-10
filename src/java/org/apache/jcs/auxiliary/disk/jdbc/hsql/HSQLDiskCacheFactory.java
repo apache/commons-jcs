@@ -36,6 +36,7 @@ import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManager;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
@@ -68,6 +69,7 @@ public class HSQLDiskCacheFactory
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr,
+                                                                     CompositeCacheManager.getUnconfiguredInstance(),
                                                                      cacheEventLogger, elementSerializer );
         try
         {
