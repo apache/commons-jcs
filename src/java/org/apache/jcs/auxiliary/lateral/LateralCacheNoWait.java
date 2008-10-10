@@ -94,7 +94,7 @@ public class LateralCacheNoWait
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+            .getAuxiliaryCacheAttributes().getEventQueueType() );
 
         // need each no wait to handle each of its real updates and removes,
         // since there may
@@ -318,7 +318,7 @@ public class LateralCacheNoWait
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
-            .getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+            .getAuxiliaryCacheAttributes().getEventQueueType() );
     }
 
     /**

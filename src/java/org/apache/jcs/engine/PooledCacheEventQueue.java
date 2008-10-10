@@ -53,13 +53,14 @@ import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 public class PooledCacheEventQueue
     implements ICacheEventQueue
 {
-    private static final int queueType = POOLED_QUEUE_TYPE;
+    /** The type of event queue */
+    private static final String queueType = POOLED_QUEUE_TYPE;
 
+    /** The logger */
     private static final Log log = LogFactory.getLog( PooledCacheEventQueue.class );
 
-    // time to wait for an event before snuffing the background thread
-    // if the queue is empty.
-    // make configurable later
+    /** time to wait for an event before snuffing the background thread
+    if the queue is empty.   make configurable later */
     private int waitToDieMillis = 10000;
 
     private ICacheListener listener;
@@ -70,14 +71,14 @@ public class PooledCacheEventQueue
 
     private int maxFailure;
 
-    // in milliseconds
+    /** in milliseconds */
     private int waitBeforeRetry;
 
     private boolean destroyed = true;
 
     private boolean working = true;
 
-    // The Thread Pool to execute events with.
+    /** The Thread Pool to execute events with. */
     private ThreadPool pool = null;
 
     /**
@@ -92,6 +93,22 @@ public class PooledCacheEventQueue
      */
     public PooledCacheEventQueue( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
                                   int waitBeforeRetry, String threadPoolName )
+    {
+        initialize( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, threadPoolName );
+    }
+
+    /**
+     * Initializes the queue.
+     * <,p>
+     * @param listener
+     * @param listenerId
+     * @param cacheName
+     * @param maxFailure
+     * @param waitBeforeRetry
+     * @param threadPoolName
+     */
+    public void initialize( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+                            int waitBeforeRetry, String threadPoolName )
     {
         if ( listener == null )
         {
@@ -113,14 +130,14 @@ public class PooledCacheEventQueue
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Constructed: " + this );
+            log.debug( "Initialized: " + this );
         }
     }
 
     /**
      * @return the queue type
      */
-    public int getQueueType()
+    public String getQueueType()
     {
         return queueType;
     }

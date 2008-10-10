@@ -108,7 +108,7 @@ public class RemoteCacheNoWait
         CacheEventQueueFactory factory = new CacheEventQueueFactory();
         this.cacheEventQueue = factory.createCacheEventQueue( new CacheAdaptor( remoteCacheClient ), remoteCacheClient
             .getListenerId(), remoteCacheClient.getCacheName(), remoteCacheClient.getAuxiliaryCacheAttributes()
-            .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+            .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueType() );
 
         if ( remoteCacheClient.getStatus() == CacheConstants.STATUS_ERROR )
         {
@@ -367,7 +367,7 @@ public class RemoteCacheNoWait
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( remoteCacheClient ), remoteCacheClient
             .getListenerId(), remoteCacheClient.getCacheName(), remoteCacheClient.getAuxiliaryCacheAttributes()
-            .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueTypeFactoryCode() );
+            .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueType() );
 
         if ( previousQueue.isWorking() )
         {

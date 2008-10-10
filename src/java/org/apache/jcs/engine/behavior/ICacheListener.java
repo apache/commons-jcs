@@ -23,52 +23,54 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * Used to receive a cache event notification. <br>
- * <br>
- * Note: objects which implement this interface are local listeners to cache
- * changes, whereas objects which implement IRmiCacheListener are remote
- * listeners to cache changes.
- *
+ * Used to receive a cache event notification.
+ * <p>
+ * Note: objects which implement this interface are local listeners to cache changes, whereas
+ * objects which implement IRmiCacheListener are remote listeners to cache changes.
  */
 public interface ICacheListener
 {
-    /** Notifies the subscribers for a cache entry update.
+    /**
+     * Notifies the subscribers for a cache entry update.
+     * <p>
      * @param item
-     * @throws IOException*/
+     * @throws IOException
+     */
     public void handlePut( ICacheElement item )
         throws IOException;
 
-    /** Notifies the subscribers for a cache entry removal.
+    /**
+     * Notifies the subscribers for a cache entry removal.
+     * <p>
      * @param cacheName
      * @param key
-     * @throws IOException*/
+     * @throws IOException
+     */
     public void handleRemove( String cacheName, Serializable key )
         throws IOException;
 
-    /** Notifies the subscribers for a cache remove-all.
+    /**
+     * Notifies the subscribers for a cache remove-all.
+     * <p>
      * @param cacheName
-     * @throws IOException*/
+     * @throws IOException
+     */
     public void handleRemoveAll( String cacheName )
         throws IOException;
 
-    /** Notifies the subscribers for freeing up the named cache.
+    /**
+     * Notifies the subscribers for freeing up the named cache.
+     * <p>
      * @param cacheName
-     * @throws IOException*/
+     * @throws IOException
+     */
     public void handleDispose( String cacheName )
         throws IOException;
 
     /**
-     * Notifies the subscribers for releasing all caches.
-     *
-     * @param id
-     *            The new listenerId value
-     */
-    //  public void handleRelease() throws IOException;
-    /**
      * sets unique identifier of listener home
-     *
-     * @param id
-     *            The new listenerId value
+     * <p>
+     * @param id The new listenerId value
      * @throws IOException
      */
     public void setListenerId( long id )
@@ -76,11 +78,10 @@ public interface ICacheListener
 
     /**
      * Gets the listenerId attribute of the ICacheListener object
-     *
+     * <p>
      * @return The listenerId value
      * @throws IOException
      */
     public long getListenerId()
         throws IOException;
-
 }

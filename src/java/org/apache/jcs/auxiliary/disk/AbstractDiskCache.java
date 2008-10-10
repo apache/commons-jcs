@@ -121,7 +121,7 @@ public abstract class AbstractDiskCache
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId, cacheName,
                                                            dcattr.getEventQueuePoolName(), dcattr
-                                                               .getEventQueueTypeFactoryCode() );
+                                                               .getEventQueueType() );
 
         // create purgatory
         initPurgatory();

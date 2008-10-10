@@ -31,21 +31,35 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public interface ICacheEventQueue
 {
     /**
+     * Initializes the queue.
+     * <,p>
+     * @param listener
+     * @param listenerId
+     * @param cacheName
+     * @param maxFailure
+     * @param waitBeforeRetry
+     * @param threadPoolName
+     */
+    public void initialize( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+                            int waitBeforeRetry, String threadPoolName );
+    
+    /**
      * Does not use a thread pool.
      */
-    public static final int SINGLE_QUEUE_TYPE = 0;
+    public static final String SINGLE_QUEUE_TYPE = "SINGLE";
 
     /**
      * Uses a thread pool
      */
-    public static final int POOLED_QUEUE_TYPE = 1;
+    public static final String POOLED_QUEUE_TYPE = "POOLED";
+    
 
     /**
      * Return the type of event queue we are using, either single or pooled.
      * <p>
      * @return the queue type: single or pooled
      */
-    public abstract int getQueueType();
+    public abstract String getQueueType();
 
     /**
      * Adds a feature to the PutEvent attribute of the ICacheEventQueue object

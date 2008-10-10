@@ -47,7 +47,7 @@ public class CacheEventQueue
     private static final Log log = LogFactory.getLog( CacheEventQueue.class );
 
     /** The type of queue -- there are pooled and single */
-    private static final int queueType = SINGLE_QUEUE_TYPE;
+    private static final String queueType = SINGLE_QUEUE_TYPE;
 
     /** default */
     private static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
@@ -124,6 +124,22 @@ public class CacheEventQueue
     public CacheEventQueue( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry )
     {
+        initialize( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, null );
+    }
+
+    /**
+     * Initializes the queue.
+     * <,p>
+     * @param listener
+     * @param listenerId
+     * @param cacheName
+     * @param maxFailure
+     * @param waitBeforeRetry
+     * @param threadPoolName
+     */
+    public void initialize( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+                            int waitBeforeRetry, String threadPoolName )
+    {
         if ( listener == null )
         {
             throw new IllegalArgumentException( "listener must not be null" );
@@ -140,14 +156,13 @@ public class CacheEventQueue
             log.debug( "Constructed: " + this );
         }
     }
-
+    
     /**
      * What type of queue is this.
      * <p>
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getQueueType()
+     * @return queueType
      */
-    public int getQueueType()
+    public String getQueueType()
     {
         return queueType;
     }
@@ -164,6 +179,7 @@ public class CacheEventQueue
 
     /**
      * Returns the time to wait for events before killing the background thread.
+     * <p>
      * @return int
      */
     public int getWaitToDieMillis()

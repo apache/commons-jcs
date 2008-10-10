@@ -1252,7 +1252,7 @@ class RemoteCacheServer
 
             CacheEventQueueFactory fact = new CacheEventQueueFactory();
             ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes
-                .getEventQueuePoolName(), remoteCacheServerAttributes.getEventQueueTypeFactoryCode() );
+                .getEventQueuePoolName(), remoteCacheServerAttributes.getEventQueueType() );
 
             eventQMap.put( new Long( listener.getListenerId() ), q );
 

@@ -30,6 +30,7 @@ public interface AuxiliaryCacheAttributes
     /** Uses a thread pool. */
     public static final String POOLED_QUEUE_TYPE = "POOLED";
 
+
     /**
      * Sets the name of the cache, referenced by the appropriate manager.
      * <p>
@@ -69,13 +70,6 @@ public interface AuxiliaryCacheAttributes
      * @return SINGLE or POOLED
      */
     public String getEventQueueType();
-
-    /**
-     * Returns the value used by the factory.
-     * <p>
-     * @return code
-     */
-    public int getEventQueueTypeFactoryCode();
 
     /**
      * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This

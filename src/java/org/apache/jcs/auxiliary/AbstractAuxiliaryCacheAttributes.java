@@ -15,8 +15,6 @@ package org.apache.jcs.auxiliary;
  * the License.
  */
 
-import org.apache.jcs.engine.behavior.ICacheEventQueue;
-
 /**
  * This has common attributes used by all auxiliaries.
  */
@@ -32,8 +30,8 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /** name */
     protected String name;
 
-    /** eventQueueType -- pooled or single threaded */
-    protected int eventQueueType;
+    /** eventQueueType -- custom classname, pooled, or single threaded */
+    protected String eventQueueType;
 
     /** Named when pooled */
     protected String eventQueuePoolName;
@@ -79,27 +77,11 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
      * <p>
-     * @param s SINGLE or POOLED
+     * @param queueType SINGLE or POOLED or a classname
      */
-    public void setEventQueueType( String s )
+    public void setEventQueueType( String queueType )
     {
-        if ( s != null )
-        {
-            if ( s.equalsIgnoreCase( POOLED_QUEUE_TYPE ) )
-            {
-                this.eventQueueType = ICacheEventQueue.POOLED_QUEUE_TYPE;
-            }
-            else
-            {
-                // single by default
-                this.eventQueueType = ICacheEventQueue.SINGLE_QUEUE_TYPE;
-            }
-        }
-        else
-        {
-            //  null, single by default
-            this.eventQueueType = ICacheEventQueue.SINGLE_QUEUE_TYPE;
-        }
+        this.eventQueueType = queueType;
     }
 
     /**
@@ -107,24 +89,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      */
     public String getEventQueueType()
     {
-        if ( this.eventQueueType == ICacheEventQueue.POOLED_QUEUE_TYPE )
-        {
-            return POOLED_QUEUE_TYPE;
-        }
-        else
-        {
-            return SINGLE_QUEUE_TYPE;
-        }
-    }
-
-    /**
-     * Returns the value used by the factory.
-     * <p>
-     * @return code
-     */
-    public int getEventQueueTypeFactoryCode()
-    {
-        return this.eventQueueType;
+        return eventQueueType;
     }
 
     /**
