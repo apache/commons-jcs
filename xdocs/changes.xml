@@ -23,8 +23,10 @@
 		</release>
 		<release version="1.3.2.4" date="2008-?" description="tempbuild">
 			<action dev="asmuts" type="update">Added the ability to inject a
-				custom event queue.  You simply specify the classname as the type.
+				custom event queue. You simply specify the classname as the type.
 			</action>
+			<action dev="asmuts" type="update">Added the ability to share a
+				connection pool amongst different JBC disk cache instances.</action>
 		</release>
 		<release version="1.3.2.3" date="2008-09-26" description="tempbuild">
 			<action dev="asmuts" type="update">Added the ability to inject a
