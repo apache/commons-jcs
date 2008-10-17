@@ -13,11 +13,11 @@ import org.apache.jcs.utils.config.PropertySetter;
  * disk cache will try to use this manager to create a pool. Assuming the name is "MyPool":
  * 
  * <pre>
- * jcs.connectionpool.MyPool.attributes.userName=MyUserName
- * jcs.connectionpool.MyPool.attributes.password=MyPassword
- * jcs.connectionpool.MyPool.attributes.url=MyUrl
- * jcs.connectionpool.MyPool.attributes.maxActive=MyMaxActive
- * jcs.connectionpool.MyPool.attributes.driverClassName=MyDriverClassName
+ * jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
+ * jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword
+ * jcs.jdbcconnectionpool.MyPool.attributes.url=MyUrl
+ * jcs.jdbcconnectionpool.MyPool.attributes.maxActive=MyMaxActive
+ * jcs.jdbcconnectionpool.MyPool.attributes.driverClassName=MyDriverClassName
  * </pre>
  */
 public class JDBCDiskCachePoolAccessManager
