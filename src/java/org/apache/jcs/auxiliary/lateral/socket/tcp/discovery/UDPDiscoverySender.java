@@ -33,18 +33,21 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 
 /**
  * This is a generic sender for the UDPDiscovery process.
- *
+ * <p>
  * @author Aaron Smuts
- *
  */
 public class UDPDiscoverySender
 {
+    /** The logger. */
     private final static Log log = LogFactory.getLog( UDPDiscoverySender.class );
 
+    /** The socket */
     private MulticastSocket m_localSocket;
 
+    /** The address */
     private InetAddress m_multicastAddress;
 
+    /** The port */
     private int m_multicastPort;
 
     /**
@@ -53,10 +56,8 @@ public class UDPDiscoverySender
      * This sender can be used to send multiple messages.
      * <p>
      * When you are done sending, you should destroy the socket sender.
-     *
      * @param host
      * @param port
-     *
      * @exception IOException
      */
     public UDPDiscoverySender( String host, int port )
@@ -81,7 +82,6 @@ public class UDPDiscoverySender
 
     /**
      * Closes the socket connection.
-     *
      */
     public void destroy()
     {
@@ -102,7 +102,6 @@ public class UDPDiscoverySender
 
     /**
      * Just being careful about closing the socket.
-     *
      * @throws Throwable
      */
     public void finalize()
@@ -114,7 +113,6 @@ public class UDPDiscoverySender
 
     /**
      * Send messages.
-     *
      * @param message
      * @throws IOException
      */
@@ -159,10 +157,8 @@ public class UDPDiscoverySender
     }
 
     /**
-     * Ask other to broadcast their info the the multicast address. If a lateral
-     * is non receiving it can use this. This is also called on startup so we
-     * can get info.
-     *
+     * Ask other to broadcast their info the the multicast address. If a lateral is non receiving it
+     * can use this. This is also called on startup so we can get info.
      * @throws IOException
      */
     public void requestBroadcast()
@@ -180,11 +176,9 @@ public class UDPDiscoverySender
     }
 
     /**
-     * This sends a message braodcasting our that the host and port is available
-     * for connections.
+     * This sends a message braodcasting our that the host and port is available for connections.
      * <p>
      * It uses the vmid as the requesterDI
-     *
      * @param host
      * @param port
      * @param cacheNames
@@ -198,7 +192,6 @@ public class UDPDiscoverySender
 
     /**
      * This allows you to set the sender id. This is mainly for testing.
-     *
      * @param host
      * @param port
      * @param cacheNames
@@ -225,7 +218,6 @@ public class UDPDiscoverySender
 
 /**
  * This allows us to get the byte array from an output stream.
- *
  * @author asmuts
  * @created January 15, 2002
  */
@@ -235,7 +227,6 @@ class MyByteArrayOutputStream
 {
     /**
      * Gets the bytes attribute of the MyByteArrayOutputStream object
-     *
      * @return The bytes value
      */
     public byte[] getBytes()

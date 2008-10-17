@@ -56,10 +56,13 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 public class LateralTCPCacheManager
     extends LateralCacheAbstractManager
 {
+    /** Don't change. */
     private static final long serialVersionUID = -9213011856644392480L;
 
+    /** The logger. */
     private final static Log log = LogFactory.getLog( LateralTCPCacheManager.class );
 
+    /** The monitor */
     private static LateralCacheMonitor monitor;
 
     /** Address to instance map. */
@@ -68,6 +71,7 @@ public class LateralTCPCacheManager
     /** ITCPLateralCacheAttributes */
     protected ITCPLateralCacheAttributes lca;
 
+    /** number of clients, we can remove this. */
     private int clients;
 
     /**

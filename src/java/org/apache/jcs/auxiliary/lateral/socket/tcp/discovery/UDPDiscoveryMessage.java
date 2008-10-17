@@ -43,15 +43,19 @@ public class UDPDiscoveryMessage
      */
     public static final int REQUEST_BROADCAST = 1;
 
+    /** The message type */
     private int messageType = PASSIVE_BROADCAST;
 
+    /** udp port */
     private int port = 6789;
 
+    /** UDP host */
     private String host = "228.5.6.7";
 
-    /** Description of the Field */
+    /** Id of the requestor, allows self-filtration */
     private long requesterId;
 
+    /** Names of regions */
     private ArrayList cacheNames = new ArrayList();
 
     /**

@@ -61,24 +61,31 @@ public class UDPDiscoveryService
     /** thread that listens for messages */
     private Thread udpReceiverThread;
 
-    // the runanble that the receiver thread runs
+    /** the runanble that the receiver thread runs */
     private UDPDiscoveryReceiver receiver;
 
+    /** Map of facades */
     private Map facades = new HashMap();
 
-    // the runanble that sends messages via the clock daemon
+    /** the runnanble that sends messages via the clock daemon */
     private UDPDiscoverySenderThread sender = null;
 
+    /** The host address */
     private String hostAddress = "unknown";
 
+    /** THe udp address */
     private String discoveryAddress;
 
+    /** The port to braodcast to. */
     private int discoveryPort;
 
-    // the port this service runs on, the service we are telling other about
-    // we should have a service info object instead
+    /**
+     * the port this service runs on, the service we are telling other about. we should have a
+     * service info object instead
+     */
     private int servicePort;
 
+    /** Attributes for creating new instances. */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
     /** The event logger. */
@@ -257,7 +264,8 @@ public class UDPDiscoveryService
 
     /**
      * Get all the cache names we have facades for.
-     * @return
+     * <p>
+     * @return ArrayList
      */
     protected ArrayList getCacheNames()
     {
@@ -290,7 +298,7 @@ public class UDPDiscoveryService
         {
             Thread t = new Thread( runner );
             String oldName = t.getName();
-            t.setName( "JCS-UDPDiscoveryService-" + oldName );            
+            t.setName( "JCS-UDPDiscoveryService-" + oldName );
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
             return t;

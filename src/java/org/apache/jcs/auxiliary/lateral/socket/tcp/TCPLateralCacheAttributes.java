@@ -35,18 +35,25 @@ public class TCPLateralCacheAttributes
     /** Don't change. */
     private static final long serialVersionUID = 1077889204513905220L;
 
+    /** default */
     private static final String DEFAULT_UDP_DISCOVERY_ADDRESS = "228.5.6.7";
 
+    /** default */
     private static final int DEFAULT_UDP_DISCOVERY_PORT = 6789;
 
+    /** default */
     private static final boolean DEFAULT_UDP_DISCOVERY_ENABLED = true;
 
+    /** default */
     private static final boolean DEFAULT_ALLOW_GET = true;
 
+    /** default */
     private static final boolean DEFAULT_ALLOW_PUT = true;
 
+    /** default */
     private static final boolean DEFAULT_ISSUE_REMOVE_FOR_PUT = false;
 
+    /** default */
     private static final boolean DEFAULT_FILTER_REMOVE_BY_HASH_CODE = true;
 
     // TCP --------------------------------------------

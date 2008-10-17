@@ -42,8 +42,10 @@ public class UDPDiscoverySenderThread
     /** the host and port we listen on for TCP socket connections */
     private String myHostName = null;
 
+    /** The udp port */
     private int myPort = 0;
 
+    /** List of known regions. */
     private ArrayList cacheNames = new ArrayList();
 
     /**

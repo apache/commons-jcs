@@ -27,39 +27,39 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.engine.CacheConstants;
 
 /**
- * Used to monitor and repair any failed connection for the lateral cache
- * service. By default the monitor operates in a failure driven mode. That is,
- * it goes into a wait state until there is an error. Upon the notification of a
- * connection error, the monitor changes to operate in a time driven mode. That
- * is, it attempts to recover the connections on a periodic basis. When all
- * failed connections are restored, it changes back to the failure driven mode.
- *
+ * Used to monitor and repair any failed connection for the lateral cache service. By default the
+ * monitor operates in a failure driven mode. That is, it goes into a wait state until there is an
+ * error. Upon the notification of a connection error, the monitor changes to operate in a time
+ * driven mode. That is, it attempts to recover the connections on a periodic basis. When all failed
+ * connections are restored, it changes back to the failure driven mode.
  */
 public class LateralCacheMonitor
     implements Runnable
 {
+    /** The logger */
     private final static Log log = LogFactory.getLog( LateralCacheMonitor.class );
 
+    /** How long to wait between runs */
     private static long idlePeriod = 20 * 1000;
 
-    // minimum 20 seconds.
-    //private static long idlePeriod = 3*1000; // for debugging.
-
-    // Must make sure LateralCacheMonitor is started before any lateral error
-    // can be detected!
+    /**
+     * Must make sure LateralCacheMonitor is started before any lateral error can be detected!
+     */
     private boolean alright = true;
 
+    /** code for eror */
     private final static int ERROR = 1;
 
+    /** The mode we are running in. Error driven */
     private static int mode = ERROR;
 
+    /** The manager */
     private ILateralCacheManager manager;
 
     /**
      * Configures the idle period between repairs.
-     *
-     * @param idlePeriod
-     *            The new idlePeriod value
+     * <p>
+     * @param idlePeriod The new idlePeriod value
      */
     public static void setIdlePeriod( long idlePeriod )
     {
@@ -70,9 +70,8 @@ public class LateralCacheMonitor
     }
 
     /**
-     * Allows close classes, ie testers to set the idle period to something
-     * testable.
-     *
+     * Allows close classes, ie testers to set the idle period to something testable.
+     * <p>
      * @param idlePeriod
      */
     protected static void forceShortIdlePeriod( long idlePeriod )
@@ -80,11 +79,11 @@ public class LateralCacheMonitor
         LateralCacheMonitor.idlePeriod = idlePeriod;
     }
 
-    /** Constructor for the LateralCacheMonitor object
+    /**
+     * Constructor for the LateralCacheMonitor object
      * <p>
-     * It's the clients responsibility to decide how many
-     * of these there will be.
-     *
+     * It's the clients responsibility to decide how many of these there will be.
+     * <p>
      * @param manager
      */
     public LateralCacheMonitor( ILateralCacheManager manager )
@@ -93,8 +92,7 @@ public class LateralCacheMonitor
     }
 
     /**
-     * Notifies the cache monitor that an error occurred, and kicks off the
-     * error recovery process.
+     * Notifies the cache monitor that an error occurred, and kicks off the error recovery process.
      */
     public void notifyError()
     {

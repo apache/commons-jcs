@@ -154,6 +154,8 @@ public class LateralTCPCacheFactory
      * @param lac ITCPLateralCacheAttributes
      * @param lcnwf
      * @param cacheMgr
+     * @param cacheEventLogger 
+     * @param elementSerializer 
      * @return null if none is created.
      */
     private UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,

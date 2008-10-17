@@ -23,24 +23,26 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Socket openere that will timeout on the initial connect rather than block
+ * This should no longer be needed.
+ * <p>
+ * Socket opener that will timeout on the initial connect rather than block
  * forever. Technique from core java II.
- *
- * @version $Id$
  */
 public class SocketOpener
     implements Runnable
 {
-
+    /** The host */
     private String host;
 
+    /** The port. */
     private int port;
 
+    /** The socket */
     private Socket socket;
 
     /**
-     * Opens a socket with a connection timeout value. Joins against a backgroud
-     * thread that does the openeing.
+     * Opens a socket with a connection timeout value. Joins against a background
+     * thread that does the opening.
      *
      * @param host
      * @param port

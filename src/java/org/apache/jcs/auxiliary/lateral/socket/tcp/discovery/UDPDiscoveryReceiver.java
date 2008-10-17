@@ -59,27 +59,31 @@ public class UDPDiscoveryReceiver
     /** The socket used for communication. */
     private MulticastSocket m_socket;
 
-    // todo consider using the threadpool manager to
-    // get this thread pool
-    // for now place a tight restrcition on the pool size
+    /**
+     * TODO: Consider using the threadpool manager to get this thread pool. For now place a tight
+     * restriction on the pool size
+     */
     private static final int maxPoolSize = 10;
 
+    /** The processor */
     private PooledExecutor pooledExecutor = null;
 
-    // number of messages received.
+    /** number of messages received. For debugging and testing. */
     private int cnt = 0;
 
-    /**
-     * Service to get cache names and hande request broadcasts
-     */
+    /** Service to get cache names and hande request broadcasts */
     protected UDPDiscoveryService service = null;
 
+    /** Address */
     private String multicastAddressString = "";
 
+    /** The port */
     private int multicastPort = 0;
 
+    /** The cache manager. */
     private ICompositeCacheManager cacheMgr;
 
+    /** Is it shutdown. */
     private boolean shutdown = false;
 
     /** The event logger. */
@@ -271,6 +275,7 @@ public class UDPDiscoveryReceiver
     public class MessageHandler
         implements Runnable
     {
+        /** The message to handle.  Passed in during construction. */
         private UDPDiscoveryMessage message = null;
 
         /**
@@ -397,7 +402,7 @@ public class UDPDiscoveryReceiver
         {
             Thread t = new Thread( runner );
             String oldName = t.getName();
-            t.setName( "JCS-UDPDiscoveryReceiver-" + oldName );            
+            t.setName( "JCS-UDPDiscoveryReceiver-" + oldName );
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
             return t;

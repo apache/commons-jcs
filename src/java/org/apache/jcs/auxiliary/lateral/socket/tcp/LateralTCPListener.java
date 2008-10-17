@@ -43,19 +43,20 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- * Listens for connections from other TCP lateral caches and handles them. The
- * initialization method starts a listening thread, which creates a socket
- * server. When messages are received they are passed to a pooled executor which
- * then calls the appropriate handle method.
+ * Listens for connections from other TCP lateral caches and handles them. The initialization method
+ * starts a listening thread, which creates a socket server. When messages are received they are
+ * passed to a pooled executor which then calls the appropriate handle method.
  */
 public class LateralTCPListener
     implements ILateralCacheListener, Serializable
 {
+    /** Don't change. */
     private static final long serialVersionUID = -9107062664967131738L;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( LateralTCPListener.class );
 
-    /** How long the server will block on an accept(). 0 is infinte. */
+    /** How long the server will block on an accept(). 0 is infinite. */
     private final static int acceptTimeOut = 0;
 
     /** The CacheHub this listener is associated with */
@@ -67,34 +68,39 @@ public class LateralTCPListener
     /** The socket listener */
     private ListenerThread receiver;
 
+    /** Configuration attributes */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
+    /** Listening port */
     private int port;
 
+    /** The processor. We should probably use an event queue here. */
     private PooledExecutor pooledExecutor;
 
+    /** put count */
     private int putCnt = 0;
 
+    /** remove count */
     private int removeCnt = 0;
 
+    /** get count */
     private int getCnt = 0;
 
     /**
-     * Use the vmid by default. This can be set for testing. If we ever need to
-     * run more than one per vm, then we need a new technique.
+     * Use the vmid by default. This can be set for testing. If we ever need to run more than one
+     * per vm, then we need a new technique.
      */
     private long listenerId = LateralCacheInfo.listenerId;
 
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
      * <p>
-     * @param ilca
-     *            ITCPLateralCacheAttributes
+     * @param ilca ITCPLateralCacheAttributes
      * @param cacheMgr
      * @return The instance value
      */
     public synchronized static ILateralCacheListener getInstance( ITCPLateralCacheAttributes ilca,
-                                                                 ICompositeCacheManager cacheMgr )
+                                                                  ICompositeCacheManager cacheMgr )
     {
         ILateralCacheListener ins = (ILateralCacheListener) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
@@ -118,8 +124,7 @@ public class LateralTCPListener
     }
 
     /**
-     * Only need one since it does work for all regions, just reference by
-     * multiple region names.
+     * Only need one since it does work for all regions, just reference by multiple region names.
      * <p>
      * @param ilca
      */
@@ -153,21 +158,18 @@ public class LateralTCPListener
     }
 
     /**
-     * Let the lateral cache set a listener_id. Since there is only one
-     * listerenr for all the regions and every region gets registered? the id
-     * shouldn't be set if it isn't zero. If it is we assume that it is a
-     * reconnect.
+     * Let the lateral cache set a listener_id. Since there is only one listerenr for all the
+     * regions and every region gets registered? the id shouldn't be set if it isn't zero. If it is
+     * we assume that it is a reconnect.
      * <p>
      * By default, the listener id is the vmid.
      * <p>
-     * The service should set this value. This value will never be changed by a
-     * server we connect to. It needs to be non static, for unit tests.
+     * The service should set this value. This value will never be changed by a server we connect
+     * to. It needs to be non static, for unit tests.
      * <p>
-     * The service will use the value it sets in all send requests to the
-     * sender.
+     * The service will use the value it sets in all send requests to the sender.
      * <p>
-     * @param id
-     *            The new listenerId value
+     * @param id The new listenerId value
      * @throws IOException
      */
     public void setListenerId( long id )
@@ -193,8 +195,8 @@ public class LateralTCPListener
     }
 
     /**
-     * Increments the put count. Gets the cache that was injected by the lateral
-     * factory. Calls put on the cache.
+     * Increments the put count. Gets the cache that was injected by the lateral factory. Calls put
+     * on the cache.
      * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
      */
@@ -220,8 +222,8 @@ public class LateralTCPListener
     }
 
     /**
-     * Increments the remove count. Gets the cache that was injected by the
-     * lateral factory. Calls remove on the cache.
+     * Increments the remove count. Gets the cache that was injected by the lateral factory. Calls
+     * remove on the cache.
      * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
      *      java.io.Serializable)
@@ -247,8 +249,7 @@ public class LateralTCPListener
     }
 
     /**
-     * Gets the cache that was injected by the lateral factory. Calls removeAll
-     * on the cache.
+     * Gets the cache that was injected by the lateral factory. Calls removeAll on the cache.
      * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
      */
@@ -264,8 +265,7 @@ public class LateralTCPListener
     }
 
     /**
-     * Gets the cache that was injected by the lateral factory. Calls get on the
-     * cache.
+     * Gets the cache that was injected by the lateral factory. Calls get on the cache.
      * <p>
      * @param cacheName
      * @param key
@@ -314,8 +314,8 @@ public class LateralTCPListener
     /**
      * Gets the cacheManager attribute of the LateralCacheTCPListener object.
      * <p>
-     * Normally this is set by the factory. If it wasn't set the listener
-     * defaults to the expected singleton behavior of the cache amanger.
+     * Normally this is set by the factory. If it wasn't set the listener defaults to the expected
+     * singleton behavior of the cache amanger.
      * <p>
      * @param name
      * @return CompositeCache
@@ -363,8 +363,7 @@ public class LateralTCPListener
     }
 
     /**
-     * @param cacheMgr
-     *            The cacheMgr to set.
+     * @param cacheMgr The cacheMgr to set.
      */
     public void setCacheManager( ICompositeCacheManager cacheMgr )
     {
@@ -380,8 +379,7 @@ public class LateralTCPListener
     }
 
     /**
-     * @param tcpLateralCacheAttributes
-     *            The tcpLateralCacheAttributes to set.
+     * @param tcpLateralCacheAttributes The tcpLateralCacheAttributes to set.
      */
     public void setTcpLateralCacheAttributes( ITCPLateralCacheAttributes tcpLateralCacheAttributes )
     {
@@ -397,8 +395,8 @@ public class LateralTCPListener
     }
 
     /**
-     * Processes commands from the server socket. There should be one listener
-     * for each configured TCP lateral.
+     * Processes commands from the server socket. There should be one listener for each configured
+     * TCP lateral.
      */
     public class ListenerThread
         extends Thread
@@ -444,12 +442,12 @@ public class LateralTCPListener
     }
 
     /**
-     * A Separate thread taht runs when a command comes into the
-     * LateralTCPReceiver.
+     * A Separate thread taht runs when a command comes into the LateralTCPReceiver.
      */
     public class ConnectionHandler
         implements Runnable
     {
+        /** The socket connection, passed in via constructor */
         private Socket socket;
 
         /**
@@ -532,8 +530,8 @@ public class LateralTCPListener
         }
 
         /**
-         * This calls the appropriate method, based on the command sent in the
-         * Lateral element descriptor.
+         * This calls the appropriate method, based on the command sent in the Lateral element
+         * descriptor.
          * <p>
          * @param led
          * @throws IOException
@@ -604,14 +602,14 @@ public class LateralTCPListener
     /**
      * Allows us to set the daemon status on the executor threads
      * <p>
-     * @author aaronsm
+     * @author Aaron Smuts
      */
     class MyThreadFactory
         implements ThreadFactory
     {
-        /*
-         * (non-Javadoc)
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
+        /**
+         * @param runner
+         * @return daemon thread
          */
         public Thread newThread( Runnable runner )
         {
