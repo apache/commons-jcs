@@ -21,63 +21,58 @@ package org.apache.jcs.engine.stats;
 
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 
-
 /**
- * @author aaronsm
- *
+ * This is a stat data holder.
  */
 public class StatElement
     implements IStatElement
 {
-
+    /** name of the stat */
     private String name = null;
 
+    /** the data */
     private String data = null;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStatElement#getName()
+    /**
+     * Get the name of the stat element, ex. HitCount
+     * <p>
+     * @return the stat element name
      */
     public String getName()
     {
         return name;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStatElement#setName(java.lang.String)
+    /**
+     * @param name
      */
     public void setName( String name )
     {
         this.name = name;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStatElement#getData()
+    /**
+     * Get the data, ex. for hit count you would get a String value for some number.
+     * <p>
+     * @return String data
      */
     public String getData()
     {
         return data;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStatElement#setData(java.lang.String)
+    /**
+     * Set the data for this element.
+     * <p>
+     * @param data
      */
     public void setData( String data )
     {
         this.data = data;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
+    /**
+     * @return a readable string.
      */
     public String toString()
     {

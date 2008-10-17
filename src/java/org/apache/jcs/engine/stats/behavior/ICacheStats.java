@@ -20,39 +20,30 @@ package org.apache.jcs.engine.stats.behavior;
  */
 
 /**
- * This holds stat information on a region. It contains both auxiliary and core
- * stats.
- *
- * @author aaronsm
- *
+ * This holds stat information on a region. It contains both auxiliary and core stats.
  */
 public interface ICacheStats
     extends IStats
 {
-
     /**
      * Stats are for a region, though auxiliary data may be for more.
-     *
+     * <p>
      * @return The region name
      */
     public abstract String getRegionName();
 
     /**
-     *
      * @param name
      */
     public abstract void setRegionName( String name );
 
     /**
-     *
-     * @return
+     * @return IStats[]
      */
     public abstract IStats[] getAuxiliaryCacheStats();
 
     /**
-     *
      * @param stats
      */
     public abstract void setAuxiliaryCacheStats( IStats[] stats );
-
 }

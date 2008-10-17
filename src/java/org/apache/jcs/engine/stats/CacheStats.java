@@ -25,58 +25,55 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * This class stores cache historical and statistics data for a region.
- *
+ * <p>
  * Only the composite cache knows what the hit count across all auxiliaries is.
- *
- * @author aaronsm
- *
  */
 public class CacheStats
     extends Stats
     implements ICacheStats
 {
+    /** Don't change. */
     private static final long serialVersionUID = 529914708798168590L;
 
+    /** The region */
     private String regionName = null;
 
+    /** What that auxiliaries are reporting. */
     private IStats[] auxStats = null;
 
+    /** stats */
     private IStatElement[] stats = null;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.ICacheStats#getRegionName()
+    /**
+     * Stats are for a region, though auxiliary data may be for more.
+     * <p>
+     * @return The region name
      */
     public String getRegionName()
     {
         return regionName;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.ICacheStats#setRegionName(java.lang.String)
+    /**
+     * Stats are for a region, though auxiliary data may be for more.
+     * <p>
+     * @param name - The region name
      */
     public void setRegionName( String name )
     {
         regionName = name;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.ICacheStats#getAuxiliaryCacheStats()
+    /**
+     * @return IStats[]
      */
     public IStats[] getAuxiliaryCacheStats()
     {
         return auxStats;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.ICacheStats#setAuxiliaryCacheStats(org.apache.jcs.engine.stats.behavior.IAuxiliaryCacheStats[])
+    /**
+     * @param stats
      */
     public void setAuxiliaryCacheStats( IStats[] stats )
     {
@@ -84,8 +81,9 @@ public class CacheStats
     }
 
     /**
-     * This returns data about the auxiliaries, such as hit count. Only the
-     * composite cache knows what the hit count across all auxiliaries is.
+     * This returns data about the auxiliaries, such as hit count. Only the composite cache knows
+     * what the hit count across all auxiliaries is.
+     * <p>
      * @return IStatElement[]
      */
     public IStatElement[] getStatElements()
@@ -93,20 +91,16 @@ public class CacheStats
         return stats;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.stats.behavior.IStats#setStatElements(org.apache.jcs.engine.stats.behavior.IStatElement[])
+    /**
+     * @param stats
      */
     public void setStatElements( IStatElement[] stats )
     {
         this.stats = stats;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
+    /**
+     * @return readable string that can be logged.
      */
     public String toString()
     {
