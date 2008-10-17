@@ -29,7 +29,7 @@ public class JDBCDiskCachePoolAccessManager
     private Map pools = new HashMap();
 
     /** props prefix */
-    public static final String POOL_CONFIGURATION_PREFIX = "jcs.connectionpool.";
+    public static final String POOL_CONFIGURATION_PREFIX = "jcs.jdbcconnectionpool.";
 
     /** .attributes */
     public final static String ATTRIBUTE_PREFIX = ".attributes";

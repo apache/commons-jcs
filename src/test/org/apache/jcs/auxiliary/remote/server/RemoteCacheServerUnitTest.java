@@ -31,6 +31,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Since the server does not know that it is a server, it is easy to unit test. The factory does all
@@ -302,9 +303,9 @@ public class RemoteCacheServerUnitTest
             server.update( element, clusterListener.getListenerId() );
         }
 
-        Thread.sleep( 100 );
+        SleepUtil.sleepAtLeast( 200 );
         Thread.yield();
-        Thread.sleep( 100 );
+        SleepUtil.sleepAtLeast( 200 );
 
         // VERIFY
         assertEquals( "Wrong number of items put to listener.", numToPut, localListener.putItems.size() );

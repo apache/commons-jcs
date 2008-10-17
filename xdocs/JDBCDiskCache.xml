@@ -1,42 +1,37 @@
 <?xml version="1.0"?>
-<!--
- Licensed to the Apache Software Foundation (ASF) under one
- or more contributor license agreements.  See the NOTICE file
- distributed with this work for additional information
- regarding copyright ownership.  The ASF licenses this file
- to you under the Apache License, Version 2.0 (the
- "License"); you may not use this file except in compliance
- with the License.  You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing,
- software distributed under the License is distributed on an
- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- KIND, either express or implied.  See the License for the
- specific language governing permissions and limitations
- under the License.
--->
-
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to you under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
 <document>
 	<properties>
 		<title>JDBC Disk Cache</title>
 		<author email="asmuts@apache.org">Aaron Smuts</author>
 	</properties>
-
 	<body>
 		<section name="JDBC Disk Auxiliary Cache">
-			<p>
-				The JDBC disk cache uses a relational database such as
-				MySQL as a persistent store. It works with Oracle, MySQL
-				and HSQL. The cache elements are serialized and written
-				into a BLOB. Multiple regions can share a single table.
-				You can define multiple, differently configured JDBC
-				disk caches in one JCS instance. This allows you to use
-				different tables for different cache regions.
-			</p>
-
-			<subsection name="Example cache.ccf (MySQL)">
+			<p> The JDBC disk cache uses a relational database such as MySQL as a
+				persistent store. It works with Oracle, MySQL and HSQL. The cache
+				elements are serialized and written into a BLOB. Multiple regions
+				can share a single table. You can define multiple, differently
+				configured JDBC disk caches in one JCS instance. This allows you to
+				use different tables for different cache regions.</p>
+			<p> If you want to use numerous JDBC disk cache instances that talk
+				to the same database, you can configure them to share a connection
+				pool. You might want to use several different tables to partition
+				the data. Some operations, such as index building on a MyISAM
+				storage engine take longer if there are more items in the table.</p>
+			<subsection name="Example #1 cache.ccf (MySQL)">
 				<source>
 					<![CDATA[
 ##############################################################
@@ -92,8 +87,81 @@ thread_pool.disk_cache_event_queue.startUpSize=10
         ]]>
 				</source>
 			</subsection>
+			
+			<subsection name="Example #2 cache.ccf (MySQL)">
+				<p>
+				This example uses two JDBC Disck Cache instances and a shared connection pool.
+				</p>
+				<source>
+					<![CDATA[
+jcs.default=JDBC_0
+jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes.MaxObjects=100
+jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.UseMemoryShrinker=false
+jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
+jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
+jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes.IsEternal=false
+jcs.default.elementattributes.MaxLifeSeconds=700
+jcs.default.elementattributes.IdleTime=1800
+jcs.default.elementattributes.IsSpool=true
+jcs.default.elementattributes.IsRemote=true
+jcs.default.elementattributes.IsLateral=true
 
+# #############################################################
+# ################# CONFIGURED REGIONS ########################
 
+jcs.region.testCache1=JDBC_1
+jcs.region.testCache1.cacheattributes.MaxObjects=10000
+
+# #############################################################
+# ################# AUXILIARY CACHES AVAILABLE ################
+# JDBC disk cache
+jcs.auxiliary.JDBC_0=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC_0.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC_0.attributes.tableName=JCS_STORE_0
+jcs.auxiliary.JDBC_0.attributes.testBeforeInsert=false
+jcs.auxiliary.JDBC_0.attributes.allowRemoveAll=true
+jcs.auxiliary.JDBC_0.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.JDBC_0.attributes.connectionPoolName=MySharedPool
+jcs.auxiliary.JDBC_0.attributes.EventQueueType=POOLED
+jcs.auxiliary.JDBC_0.attributes.EventQueuePoolName=disk_cache_event_queue
+
+jcs.auxiliary.JDBC_1=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC_1.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC_1.attributes.tableName=JCS_STORE_1
+jcs.auxiliary.JDBC_1.attributes.testBeforeInsert=false
+jcs.auxiliary.JDBC_1.attributes.allowRemoveAll=true
+jcs.auxiliary.JDBC_1.attributes.MaxPurgatorySize=10000000
+jcs.auxiliary.JDBC_1.attributes.connectionPoolName=MySharedPool
+jcs.auxiliary.JDBC_1.attributes.EventQueueType=POOLED
+jcs.auxiliary.JDBC_1.attributes.EventQueuePoolName=disk_cache_event_queue
+
+# #############################################################
+# ######## OPTIONAL SHARED CONNECTION POOL CONFIGURATION ######
+# My Shared Pool
+
+jcs.jdbcconnectionpool.MySharedPool.attributes.userName=sa
+jcs.jdbcconnectionpool.MySharedPool.attributes.password=
+jcs.jdbcconnectionpool.MySharedPool.attributes.url=jdbc:hsqldb:target/cache_hsql_db
+jcs.jdbcconnectionpool.MySharedPool.attributes.driverClassName=org.hsqldb.jdbcDriver
+jcs.jdbcconnectionpool.MySharedPool.attributes.maxActive=15
+
+# #############################################################
+# ################# OPTIONAL THREAD POOL CONFIGURATION #########
+# Disk Cache pool
+thread_pool.disk_cache_event_queue.useBoundary=false
+thread_pool.disk_cache_event_queue.boundarySize=500
+thread_pool.disk_cache_event_queue.maximumPoolSize=15
+thread_pool.disk_cache_event_queue.minimumPoolSize=10
+thread_pool.disk_cache_event_queue.keepAliveTime=3500
+thread_pool.disk_cache_event_queue.whenBlockedPolicy=RUN
+thread_pool.disk_cache_event_queue.startUpSize=10
+        ]]>
+				</source>
+			</subsection>			
+			
 			<subsection name="Table Creation Script (MySQL)">
 				<source>
 					<![CDATA[
