@@ -30,24 +30,27 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 
 /**
- * This test ensures that basic memory operations are with a speficified order
- * of magnitude of the java.util.Hashtable.
+ * This test ensures that basic memory operations are with a speficified order of magnitude of the
+ * java.util.Hashtable.
  * <p>
  * Currenlty JCS is un 2x a hashtable for gets, and under 1.2x for puts.
- *
  */
 public class JCSvsHashtablePerformanceTest
     extends TestCase
 {
-
+    /** jcs / hashtable */
     float ratioPut = 0;
 
+    /** jcs / hashtable */
     float ratioGet = 0;
 
+    /** ration goal */
     float target = 3.50f;
 
+    /** Times to run the test */
     int loops = 20;
 
+    /** how many puts and gets to run */
     int tries = 50000;
 
     /**
@@ -60,7 +63,6 @@ public class JCSvsHashtablePerformanceTest
 
     /**
      * A unit test suite for JUnit
-     *
      * @return The test suite
      */
     public static Test suite()
@@ -70,9 +72,7 @@ public class JCSvsHashtablePerformanceTest
 
     /**
      * A unit test for JUnit
-     *
-     * @exception Exception
-     *                Description of the Exception
+     * @exception Exception Description of the Exception
      */
     public void testSimpleLoad()
         throws Exception

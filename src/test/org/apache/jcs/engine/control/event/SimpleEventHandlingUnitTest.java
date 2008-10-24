@@ -19,9 +19,7 @@ package org.apache.jcs.engine.control.event;
  * under the License.
  */
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -30,55 +28,16 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
- * This test suite verifies that the basic ElementEvent are called as they
- * should be.
- *
- *
- * @version $Id: TestSimpleEventHandling.java,v 1.1 2005/02/01 00:01:59 asmuts
- *          Exp $
+ * This test suite verifies that the basic ElementEvent are called as they should be.
  */
 public class SimpleEventHandlingUnitTest
     extends TestCase
 {
-
+    /** Items to test with */
     private static int items = 20000;
 
     /**
-     * Constructor for test case.
-     *
-     * @param testName
-     *            Description of the Parameter
-     */
-    public SimpleEventHandlingUnitTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * Run at command line.
-     *
-     * @param args
-     *            Description of the Parameter
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { SimpleEventHandlingUnitTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-    }
-
-    /**
-     * A unit test suite for JUnit
-     *
-     * @return The test suite
-     */
-    public static Test suite()
-    {
-        return new TestSuite( SimpleEventHandlingUnitTest.class );
-    }
-
-    /**
      * Test setup with expected configuration parameters.
-     *
      */
     public void setUp()
     {
@@ -87,14 +46,13 @@ public class SimpleEventHandlingUnitTest
 
     /**
      * Verify that the spooled event is called as expected.
-     *
-     *
-     * @exception Exception
-     *                Description of the Exception
+     * <p>
+     * @exception Exception Description of the Exception
      */
     public void testSpoolEvent()
         throws Exception
     {
+        // SETUP
         MyEventHandler meh = new MyEventHandler();
 
         JCS jcs = JCS.getInstance( "WithDisk" );
@@ -103,6 +61,7 @@ public class SimpleEventHandlingUnitTest
         attributes.addElementEventHandler( meh );
         jcs.setDefaultElementAttributes( attributes );
 
+        // DO WORK
         // put them in
         for ( int i = 0; i <= items; i++ )
         {
@@ -112,15 +71,15 @@ public class SimpleEventHandlingUnitTest
         // wait a bit for it to finish
         Thread.sleep( items / 20 );
 
+        // VERIFY
         // test to see if the count is right
         assertTrue( "The number of ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE events [" + meh.getSpoolCount()
             + "] does not equal the number expected [" + items + "]", meh.getSpoolCount() >= items );
-
     }
 
     /**
      * Test overflow with no disk configured for the region.
-     *
+     * <p>
      * @throws Exception
      */
     public void testSpoolNoDiskEvent()
@@ -152,7 +111,6 @@ public class SimpleEventHandlingUnitTest
 
     /**
      * Test the ELEMENT_EVENT_SPOOLED_NOT_ALLOWED event.
-     *
      * @throws Exception
      */
     public void testSpoolNotAllowedEvent()
@@ -181,10 +139,8 @@ public class SimpleEventHandlingUnitTest
 
     }
 
-
     /**
      * Test the ELEMENT_EVENT_SPOOLED_NOT_ALLOWED event.
-     *
      * @throws Exception
      */
     public void testSpoolNotAllowedEventOnItem()
@@ -214,26 +170,24 @@ public class SimpleEventHandlingUnitTest
             + "] does not equal the number expected.", meh.getSpoolNotAllowedCount() >= items );
 
     }
+
     /**
      * Simple event counter used to verify test results.
-     *
-     * @author aaronsm
-     *
      */
     public class MyEventHandler
         implements IElementEventHandler
     {
-
+        /** times spool called */
         private int spoolCount = 0;
 
+        /** times spool not allowed */
         private int spoolNotAllowedCount = 0;
 
+        /** times spool without disk */
         private int spoolNoDiskCount = 0;
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.apache.jcs.engine.control.event.behavior.IElementEventHandler#handleElementEvent(org.apache.jcs.engine.control.event.behavior.IElementEvent)
+        /**
+         * @param event
          */
         public synchronized void handleElementEvent( IElementEvent event )
         {
@@ -257,8 +211,7 @@ public class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @param spoolCount
-         *            The spoolCount to set.
+         * @param spoolCount The spoolCount to set.
          */
         protected void setSpoolCount( int spoolCount )
         {
@@ -274,8 +227,7 @@ public class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @param spoolNotAllowedCount
-         *            The spoolNotAllowedCount to set.
+         * @param spoolNotAllowedCount The spoolNotAllowedCount to set.
          */
         protected void setSpoolNotAllowedCount( int spoolNotAllowedCount )
         {
@@ -291,8 +243,7 @@ public class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @param spoolNoDiskCount
-         *            The spoolNoDiskCount to set.
+         * @param spoolNoDiskCount The spoolNoDiskCount to set.
          */
         protected void setSpoolNoDiskCount( int spoolNoDiskCount )
         {

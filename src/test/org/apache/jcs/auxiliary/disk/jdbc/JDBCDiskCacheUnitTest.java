@@ -180,6 +180,7 @@ public class JDBCDiskCacheUnitTest
         new org.hsqldb.jdbcDriver();
         Class.forName( driverClassName ).newInstance();
         Connection cConn = DriverManager.getConnection( url + database, userName, password );
+        
         HsqlSetupTableUtil.setupTABLE( cConn, "JCSTESTTABLE_InitializePoolAccess" );
 
         // DO WORK

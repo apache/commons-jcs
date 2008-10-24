@@ -19,30 +19,27 @@ package org.apache.jcs;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Random;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.jcs.JCS;
-
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Random;
-
 /**
  * Simple test for the JCS class.
- *
- * @version $Id$
  */
-public class JCSUniTest
+public class JCSUnitTest
     extends TestCase
 {
+    /** A random for key generation. */
     Random random = new Random();
 
     /**
      * @param testName
      */
-    public JCSUniTest( String testName )
+    public JCSUnitTest( String testName )
     {
         super( testName );
     }
@@ -52,7 +49,7 @@ public class JCSUniTest
      */
     public static Test suite()
     {
-        return new TestSuite( JCSUniTest.class );
+        return new TestSuite( JCSUnitTest.class );
     }
 
     /**
@@ -60,7 +57,7 @@ public class JCSUniTest
      */
     public static void main( String args[] )
     {
-        String[] testCaseName = { JCSUniTest.class.getName() };
+        String[] testCaseName = { JCSUnitTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
     }
 
@@ -79,6 +76,9 @@ public class JCSUniTest
         assertEquals( list, jcs.get( "some:key" ) );
     }
 
+    /**
+     * @return builds a list
+     */
     private LinkedList buildList()
     {
         LinkedList list = new LinkedList();
@@ -91,6 +91,9 @@ public class JCSUniTest
         return list;
     }
 
+    /**
+     * @return a map
+     */
     private HashMap buildMap()
     {
         HashMap map = new HashMap();
@@ -108,5 +111,4 @@ public class JCSUniTest
 
         return map;
     }
-
 }

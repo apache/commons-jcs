@@ -206,6 +206,15 @@ public class RemoteCacheNoWaitFacade
         }
         return null;
     }
+    
+    /** TODO fix this */
+    public Map getMatching( String pattern )
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
     /**
      * Gets multiple items from the cache based on the given set of keys.

@@ -68,11 +68,9 @@ public interface IRemoteCacheService
         throws IOException;
 
     /**
-     * Returns a cache bean from the specified cache; or null if the key does
-     * not exist.
+     * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
-     * Adding the requestor id, allows the cache to determine the sournce of the
-     * get.
+     * Adding the requestor id, allows the cache to determine the sournce of the get.
      * <p>
      * @param cacheName
      * @param key
@@ -86,13 +84,27 @@ public interface IRemoteCacheService
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
-     * @param cacheName 
+     * @param cacheName
      * @param keys
-     * @param requesterId 
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @param requesterId
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
      */
     Map getMultiple( String cacheName, Set keys, long requesterId )
+        throws IOException;
+
+    /**
+     * Gets multiple items from the cache matching the pattern.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @param requesterId
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    Map getMatching( String cacheName, String pattern, long requesterId )
         throws IOException;
 
     /**

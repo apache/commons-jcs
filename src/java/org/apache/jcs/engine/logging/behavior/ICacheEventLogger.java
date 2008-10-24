@@ -20,6 +20,9 @@ public interface ICacheEventLogger
     /** ICache getMultiple */
     static final String GETMULTIPLE_EVENT = "getMultiple";
 
+    /** ICache getMatching */
+    static final String GETMATCHING_EVENT = "getMatching";
+
     /** ICache remove */
     static final String REMOVE_EVENT = "remove";
 

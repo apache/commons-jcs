@@ -60,14 +60,19 @@ public class LateralCacheNoWait
     /** The logger. */
     private final static Log log = LogFactory.getLog( LateralCacheNoWait.class );
 
+    /** The cache */
     private final LateralCache cache;
 
-    private ICacheEventQueue q;
+    /** The event queue */
+    private ICacheEventQueue eventQueue;
 
+    /** times get called */
     private int getCount = 0;
 
+    /** times remove called */
     private int removeCount = 0;
 
+    /** times put called */
     private int putCount = 0;
 
     /** An optional event logger */
@@ -92,7 +97,7 @@ public class LateralCacheNoWait
         }
 
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
 
@@ -104,7 +109,7 @@ public class LateralCacheNoWait
         // LateralCacheInfo.listenerId, cache.getCacheName());
         if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
         {
-            q.destroy();
+            eventQueue.destroy();
         }
     }
 
@@ -118,12 +123,12 @@ public class LateralCacheNoWait
         putCount++;
         try
         {
-            q.addPutEvent( ce );
+            eventQueue.addPutEvent( ce );
         }
         catch ( IOException ex )
         {
             log.error( ex );
-            q.destroy();
+            eventQueue.destroy();
         }
     }
 
@@ -152,12 +157,12 @@ public class LateralCacheNoWait
                 catch ( IOException ex )
                 {
                     log.error( "Failed in retrying the get for the second time." );
-                    q.destroy();
+                    eventQueue.destroy();
                 }
             }
             catch ( IOException ex )
             {
-                q.destroy();
+                eventQueue.destroy();
             }
         }
         return null;
@@ -195,6 +200,42 @@ public class LateralCacheNoWait
     }
 
     /**
+     * Synchronously reads from the lateral cache.
+     * <p>
+     * @param pattern
+     * @return ICacheElement if found, else null
+     */
+    public Map getMatching( String pattern )
+    {
+        getCount++;
+        if ( this.getStatus() != CacheConstants.STATUS_ERROR )
+        {
+            try
+            {
+                return cache.getMatching( pattern );
+            }
+            catch ( UnmarshalException ue )
+            {
+                log.debug( "Retrying the get owing to UnmarshalException." );
+                try
+                {
+                    return cache.getMatching( pattern );
+                }
+                catch ( IOException ex )
+                {
+                    log.error( "Failed in retrying the get for the second time." );
+                    eventQueue.destroy();
+                }
+            }
+            catch ( IOException ex )
+            {
+                eventQueue.destroy();
+            }
+        }
+        return null;
+    }
+    
+    /**
      * @param groupName
      * @return Set
      */
@@ -214,12 +255,12 @@ public class LateralCacheNoWait
         removeCount++;
         try
         {
-            q.addRemoveEvent( key );
+            eventQueue.addRemoveEvent( key );
         }
         catch ( IOException ex )
         {
             log.error( ex );
-            q.destroy();
+            eventQueue.destroy();
         }
         return false;
     }
@@ -229,12 +270,12 @@ public class LateralCacheNoWait
     {
         try
         {
-            q.addRemoveAllEvent();
+            eventQueue.addRemoveAllEvent();
         }
         catch ( IOException ex )
         {
             log.error( ex );
-            q.destroy();
+            eventQueue.destroy();
         }
     }
 
@@ -243,12 +284,12 @@ public class LateralCacheNoWait
     {
         try
         {
-            q.addDisposeEvent();
+            eventQueue.addDisposeEvent();
         }
         catch ( IOException ex )
         {
             log.error( ex );
-            q.destroy();
+            eventQueue.destroy();
         }
     }
 
@@ -280,7 +321,7 @@ public class LateralCacheNoWait
      */
     public int getStatus()
     {
-        return q.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
+        return eventQueue.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
     }
 
     /**
@@ -311,12 +352,12 @@ public class LateralCacheNoWait
      */
     public void resetEventQ()
     {
-        if ( q.isWorking() )
+        if ( eventQueue.isWorking() )
         {
-            q.destroy();
+            eventQueue.destroy();
         }
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.q = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
     }
@@ -375,7 +416,7 @@ public class LateralCacheNoWait
 
         // get the stats from the event queue too
         // get as array, convert to list, add list to our outer list
-        IStats eqStats = this.q.getStatistics();
+        IStats eqStats = this.eventQueue.getStatistics();
 
         IStatElement[] eqSEs = eqStats.getStatElements();
         List eqL = Arrays.asList( eqSEs );

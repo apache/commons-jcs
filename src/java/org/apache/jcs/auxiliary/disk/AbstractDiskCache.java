@@ -45,6 +45,7 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.jcs.utils.match.KeyMatcherUtil;
 
 import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
@@ -120,8 +121,7 @@ public abstract class AbstractDiskCache
         // create queue
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId, cacheName,
-                                                           dcattr.getEventQueuePoolName(), dcattr
-                                                               .getEventQueueType() );
+                                                           dcattr.getEventQueuePoolName(), dcattr.getEventQueueType() );
 
         // create purgatory
         initPurgatory();
@@ -301,6 +301,47 @@ public abstract class AbstractDiskCache
     }
 
     /**
+     * Gets items from the cache matching the given pattern. Items from memory will replace those
+     * from remote sources.
+     * <p>
+     * This only works with string keys. It's too expensive to do a toString on every key.
+     * <p>
+     * Auxiliaries will do their best to handle simple expressions. For instance, the JDBC disk
+     * cache will convert * to % and . to _
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data matching the pattern.
+     * @throws IOException
+     */
+    public Map getMatching( String pattern )
+        throws IOException
+    {
+        // TODO finish.
+
+        // Get the keys from purgatory
+        Object[] keyArray = null;
+
+        // this avoids locking purgatory, but it uses more memory
+        synchronized ( purgatory )
+        {
+            keyArray = purgatory.keySet().toArray();
+        }
+
+        Set matchingKeys = KeyMatcherUtil.getMatchingKeysFromArray( pattern, keyArray );
+
+        // call getMultiple with the set
+        Map result = processGetMultiple( matchingKeys );
+
+        // Get the keys from disk
+        Map diskMatches = doGetMatching( pattern );
+
+        result.putAll( diskMatches );
+
+        return result;
+    }
+
+    /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
@@ -344,10 +385,11 @@ public abstract class AbstractDiskCache
      * <p>
      * @param key
      * @return whether the item was present to be removed.
-     * @throws IOException 
+     * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#remove
      */
-    public final boolean remove( Serializable key ) throws IOException
+    public final boolean remove( Serializable key )
+        throws IOException
     {
         PurgatoryElement pe = null;
 
@@ -385,10 +427,11 @@ public abstract class AbstractDiskCache
     }
 
     /**
-     * @throws IOException 
+     * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#removeAll
      */
-    public final void removeAll() throws IOException
+    public final void removeAll()
+        throws IOException
     {
         if ( this.dcattr.isAllowRemoveAll() )
         {
@@ -418,9 +461,10 @@ public abstract class AbstractDiskCache
      * reached.
      * <li>Call doDispose on the concrete impl.
      * </ol>
-     * @throws IOException 
+     * @throws IOException
      */
-    public final void dispose() throws IOException
+    public final void dispose()
+        throws IOException
     {
         Runnable disR = new Runnable()
         {
@@ -746,6 +790,23 @@ public abstract class AbstractDiskCache
     }
 
     /**
+     * Get a value from the persistent store.
+     * <p>
+     * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
+     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * abstract process* methods. The children implement the process methods.
+     * <p>
+     * @param pattern Used to match keys.
+     * @return A map of matches..
+     * @throws IOException
+     */
+    protected final Map doGetMatching( String pattern )
+        throws IOException
+    {
+        return super.getMatchingWithEventLogging( pattern );
+    }
+
+    /**
      * Add a cache element to the persistent store.
      * <p>
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
@@ -803,7 +864,8 @@ public abstract class AbstractDiskCache
      * <p>
      * @throws IOException
      */
-    protected final void doDispose() throws IOException
+    protected final void doDispose()
+        throws IOException
     {
         super.disposeWithEventLogging();
     }

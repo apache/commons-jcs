@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.disk.jdbc.mysql;
  */
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -87,6 +88,42 @@ public class MySQLDiskCache
         return super.processGet( key );
     }
 
+    /**
+     * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
+     * method will balk and return null.
+     * <p>
+     * @param pattern used for like query.
+     * @return An object matching key, or null.
+     */
+    protected Map processGetMatching( String pattern )
+    {
+        if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
+        {
+            if ( this.mySQLDiskCacheAttributes.isBalkDuringOptimization() )
+            {
+                return null;
+            }
+        }
+        return super.processGetMatching( pattern );
+    }
+    
+    /**
+     * @param pattern
+     * @return String to use in the like query.
+     */
+    public String constructLikeParameterFromPattern( String pattern )
+    {
+        pattern = pattern.replaceAll( "\\.\\+", "%" );
+        pattern = pattern.replaceAll( "\\.", "_" );
+        
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "pattern = [" + pattern + "]" );
+        }
+               
+        return pattern;
+    }
+    
     /**
      * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
      * method will balk and do nothing.

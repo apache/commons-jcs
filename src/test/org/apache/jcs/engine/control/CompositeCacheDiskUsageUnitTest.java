@@ -291,26 +291,19 @@ public class CompositeCacheDiskUsageUnitTest
     public class MockAuxCache
         implements AuxiliaryCache
     {
+        /** Don't change */
         private static final long serialVersionUID = 1L;
 
-        /**
-         * The last item passed to update.
-         */
+        /** The last item passed to update.    */
         public ICacheElement lastUpdatedItem;
 
-        /**
-         * The number of times update was called.
-         */
+        /** The number of times update was called.    */
         public int updateCount = 0;
 
-        /**
-         * The type that should be returned from getCacheType.
-         */
+        /** The type that should be returned from getCacheType.    */
         public int cacheType = AuxiliaryCache.DISK_CACHE;
 
-        /**
-         * Resets counters and catchers.
-         */
+        /** Resets counters and catchers.      */
         public void reset()
         {
             updateCount = 0;
@@ -343,7 +336,8 @@ public class CompositeCacheDiskUsageUnitTest
          * Gets multiple items from the cache based on the given set of keys.
          * <p>
          * @param keys
-         * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+         * @return a map of Serializable key to ICacheElement element, or an empty map if there is
+         *         no data in cache for any of these keys
          */
         public Map getMultiple( Set keys )
         {
@@ -434,9 +428,8 @@ public class CompositeCacheDiskUsageUnitTest
             return null;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.engine.behavior.ICache#getStats()
+        /**
+         * @return null
          */
         public String getStats()
         {
@@ -463,16 +456,33 @@ public class CompositeCacheDiskUsageUnitTest
             return null;
         }
 
+        /**
+         * @param cacheEventLogger
+         */
         public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
         {
             // TODO Auto-generated method stub
-            
+
         }
 
+        /**
+         * @param elementSerializer
+         */
         public void setElementSerializer( IElementSerializer elementSerializer )
         {
             // TODO Auto-generated method stub
-            
+
+        }
+
+        /**
+         * @param pattern
+         * @return Map
+         * @throws IOException
+         */
+        public Map getMatching( String pattern )
+            throws IOException
+        {
+            return new HashMap();
         }
     }
 

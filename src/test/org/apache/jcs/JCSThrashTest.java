@@ -31,14 +31,13 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
  * This is based on a test that was posted to the user's list:
- *
+ * <p>
  * http://www.opensubscriber.com/message/jcs-users@jakarta.apache.org/2435965.html
- *
  */
 public class JCSThrashTest
     extends TestCase
 {
-
+    /** The logger. */
     private static final Log LOG = LogFactory.getLog( JCSThrashTest.class.getName() );
 
     /**
@@ -62,6 +61,10 @@ public class JCSThrashTest
         super( arg0 );
     }
 
+    /**
+     * Sets up the test
+     * @throws Exception
+     */
     protected void setUp()
         throws Exception
     {
@@ -70,6 +73,9 @@ public class JCSThrashTest
         jcs = JCS.getInstance( "testcache" );
     }
 
+    /**
+     * @throws Exception
+     */
     protected void tearDown()
         throws Exception
     {
@@ -128,9 +134,8 @@ public class JCSThrashTest
     }
 
     /**
-     * This does a bunch of work and then verifies that the memory has not grown by much.
-     * Most of the time the amount of memory used after the test is less.
-     *
+     * This does a bunch of work and then verifies that the memory has not grown by much. Most of
+     * the time the amount of memory used after the test is less.
      * @throws Exception
      */
     public void testForMemoryLeaks()
@@ -144,13 +149,12 @@ public class JCSThrashTest
     }
 
     /**
-     * @return
+     * @return time
      * @throws Exception
      */
     protected long thrashCache()
         throws Exception
     {
-
         long startingSize = measureMemoryUse();
         LOG.info( "Memory Used is: " + startingSize );
 
@@ -213,6 +217,7 @@ public class JCSThrashTest
 
     /**
      * Runs a set of threads, for a fixed amount of time.
+     * <p>
      * @param executables
      * @throws Exception
      */
@@ -265,8 +270,8 @@ public class JCSThrashTest
 
     /**
      * Measure memory used by the VM.
-     *
-     * @return
+     * <p>
+     * @return bytes
      * @throws InterruptedException
      */
     protected long measureMemoryUse()
@@ -285,7 +290,6 @@ public class JCSThrashTest
     {
         /**
          * Executes this object.
-         *
          * @throws Exception
          */
         void execute()
@@ -293,8 +297,7 @@ public class JCSThrashTest
     }
 
     /**
-     *
-     * @return
+     * @return size
      */
     private int getListSize()
     {
@@ -315,23 +318,7 @@ public class JCSThrashTest
                     }
                 }
             }
-
         }
         return Integer.parseInt( result );
     }
-
-//    private int getMapSize()
-//    {
-//        final String listSize = "Map Size";
-//        String result = "0";
-//        IStatElement statElements[] = jcs.getStatistics().getStatElements();
-//        for ( int i = 0; i < statElements.length; i++ )
-//        {
-//            if ( listSize.equals( statElements[i].getName() ) )
-//            {
-//                result = statElements[i].getData();
-//            }
-//        }
-//        return Integer.parseInt( result );
-//    }
 }

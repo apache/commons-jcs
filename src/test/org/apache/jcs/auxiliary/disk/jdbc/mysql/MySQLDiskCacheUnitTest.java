@@ -43,6 +43,7 @@ public class MySQLDiskCacheUnitTest
      */
     public void testBalkOnGet()
     {
+        // SETUP
         MySQLDiskCacheAttributes attributes = new MySQLDiskCacheAttributes();
         String tableName = "JCS_TEST";
         attributes.setDriverClassName( "org.gjt.mm.mysql.Driver" );
@@ -54,7 +55,10 @@ public class MySQLDiskCacheUnitTest
 
         MySQLDiskCache cache = new MySQLDiskCache( attributes, tableState, CompositeCacheManager.getUnconfiguredInstance() );
 
+        // DO WORK
         Object result = cache.processGet( "myKey" );
+        
+        // VERIFY
         assertNull( "The result should be null", result );
     }
 }

@@ -419,7 +419,7 @@ public class IndexedDiskCache
     }
 
     /**
-     * Update the disk cache. Called from the Queue. Makes sure the Item has not been retireved from
+     * Update the disk cache. Called from the Queue. Makes sure the Item has not been retrieved from
      * purgatory while in queue for disk. Remove items from purgatory when they go to disk.
      * <p>
      * @param ce The ICacheElement to put to disk.
@@ -576,6 +576,22 @@ public class IndexedDiskCache
         return object;
     }
 
+    /**
+     * Gets matching items from the cache.
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching keys
+     */
+    public Map processGetMatching( String pattern )
+    {
+        Map elements = new HashMap();
+
+        // implement
+
+        return elements;
+    }
+    
     /**
      * Reads the item from disk.
      * <p>

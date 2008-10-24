@@ -21,50 +21,42 @@ package org.apache.jcs.engine.control.event;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
- *
  * @author aaronsm
- *
  */
 public class ElementEventHandlerMockImpl
     implements IElementEventHandler
 {
-
-    /**
-     * Times called.
-     */
+    /** Times called. */
     private int callCount = 0;
 
+    /** The logger */
     private final static Log log = LogFactory.getLog( ElementEventHandlerMockImpl.class );
 
-    // ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE
+    /** ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE */
     private int spoolCount = 0;
 
-    // ELEMENT_EVENT_SPOOLED_NOT_ALLOWED
+    /** ELEMENT_EVENT_SPOOLED_NOT_ALLOWED */
     private int spoolNotAllowedCount = 0;
 
-    // ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE
+    /** ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE */
     private int spoolNoDiskCount = 0;
 
-    // ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND
+    /** ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND */
     private int exceededMaxLifeBackgroundCount = 0;
 
-    // ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND
+    /** ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND */
     private int exceededIdleTimeBackgroundCount = 0;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.control.event.behavior.IElementEventHandler#handleElementEvent(org.apache.jcs.engine.control.event.behavior.IElementEvent)
+    /**
+     * @param event
      */
     public synchronized void handleElementEvent( IElementEvent event )
     {
-
         setCallCount( getCallCount() + 1 );
 
         if ( log.isDebugEnabled() )
@@ -96,8 +88,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @param spoolCount
-     *            The spoolCount to set.
+     * @param spoolCount The spoolCount to set.
      */
     public void setSpoolCount( int spoolCount )
     {
@@ -113,8 +104,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @param spoolNotAllowedCount
-     *            The spoolNotAllowedCount to set.
+     * @param spoolNotAllowedCount The spoolNotAllowedCount to set.
      */
     public void setSpoolNotAllowedCount( int spoolNotAllowedCount )
     {
@@ -130,8 +120,7 @@ public class ElementEventHandlerMockImpl
     }
 
     /**
-     * @param spoolNoDiskCount
-     *            The spoolNoDiskCount to set.
+     * @param spoolNoDiskCount The spoolNoDiskCount to set.
      */
     public void setSpoolNoDiskCount( int spoolNoDiskCount )
     {

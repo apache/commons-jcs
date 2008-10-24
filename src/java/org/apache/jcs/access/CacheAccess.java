@@ -45,10 +45,10 @@ import org.apache.jcs.engine.stats.behavior.ICacheStats;
  * An instance of this class is tied to a specific cache region. Static methods are provided to get
  * such instances.
  * <p>
- * Using this class you can retrieve an item, the items wrapper, the element configuration, put an
+ * Using this class you can retrieve an item, the item's wrapper, the element configuration, put an
  * item in the cache, remove an item, and clear a region.
  * <p>
- * The JCS class is the prefered way to access these methods.
+ * The JCS class is the preferred way to access these methods.
  */
 public class CacheAccess
     implements ICacheAccess
@@ -64,7 +64,7 @@ public class CacheAccess
     /**
      * The cache that a given instance of this class provides access to.
      * <p>
-     * @TODO Should this be the inteface?
+     * @TODO Should this be the interface?
      */
     protected CompositeCache cacheControl;
 
@@ -82,7 +82,7 @@ public class CacheAccess
 
     /**
      * Define a new cache region with the given name. In the oracle specification, these attributes
-     * are global and not region specific, regional overirdes is a value add each region should be
+     * are global and not region specific, regional overrides is a value add each region should be
      * able to house both cache and element attribute sets. It is more efficient to define a cache
      * in the props file and then strictly use the get access method. Use of the define region
      * outside of an initialization block should be avoided.
@@ -236,6 +236,28 @@ public class CacheAccess
         return this.cacheControl.getMultiple( names );
     }
 
+    /**
+     * Get multiple elements from the cache based on a set of cache keys.
+     * <p>
+     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param pattern key search patern
+     * @return a map of Object key to ICacheElement element, or empty map if no keys match the pattern
+     */
+    public Map getMatchingCacheElements( String pattern )
+    {
+        return this.cacheControl.getMatching( pattern );
+    }
+    
     /**
      * Place a new object in the cache, associated with key name. If there is currently an object
      * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a

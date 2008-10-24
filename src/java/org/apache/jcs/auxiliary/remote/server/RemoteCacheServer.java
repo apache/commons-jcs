@@ -495,6 +495,14 @@ class RemoteCacheServer
         return element;
     }
 
+    /** TODO finish */
+    public Map getMatching( String cacheName, String pattern, long requesterId )
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+        
     /**
      * Gets the item from the associated cache listeners.
      * <p>

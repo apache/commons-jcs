@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -248,5 +249,16 @@ public class MockRemoteCacheClient
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
         // TODO Auto-generated method stub       
+    }
+
+    /**
+     * @param pattern
+     * @return Map
+     * @throws IOException
+     */
+    public Map getMatching( String pattern )
+        throws IOException
+    {
+        return new HashMap();
     }
 }

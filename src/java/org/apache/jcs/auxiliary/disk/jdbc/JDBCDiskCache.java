@@ -29,7 +29,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -98,6 +100,9 @@ public class JDBCDiskCache
     /** # of times get was called */
     private int getCount = 0;
 
+    /** # of times getMatching was called */
+    private int getMatchingCount = 0;
+
     /** if count % interval == 0 then log */
     private static final int LOG_INTERVAL = 100;
 
@@ -143,7 +148,8 @@ public class JDBCDiskCache
      * @param compositeCacheManager
      * @return JDBCDiskCachePoolAccess for testing
      */
-    protected JDBCDiskCachePoolAccess initializePoolAccess( JDBCDiskCacheAttributes cattr, ICompositeCacheManager compositeCacheManager )
+    protected JDBCDiskCachePoolAccess initializePoolAccess( JDBCDiskCacheAttributes cattr,
+                                                            ICompositeCacheManager compositeCacheManager )
     {
         if ( cattr.getConnectionPoolName() != null )
         {
@@ -407,7 +413,7 @@ public class JDBCDiskCache
         }
         catch ( SQLException e2 )
         {
-            log.error( "e2 sql [" + sqlU + "] Exception: ", e2 );
+            log.error( "e2 sql [" +  sqlU + "] Exception: ", e2 );
         }
     }
 
@@ -596,6 +602,130 @@ public class JDBCDiskCache
     }
 
     /**
+     * This will run a like query. It will try to construct a usable query but different
+     * implementations will be needed to adjust the syntax.
+     * <p>
+     * @param pattern
+     * @return key,value map
+     */
+    protected Map processGetMatching( String pattern )
+    {
+        incrementGetMatchingCount();
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Getting [" + pattern + "] from disk" );
+        }
+
+        if ( !alive )
+        {
+            return null;
+        }
+
+        Map results = new HashMap();
+
+        try
+        {
+            // region, key
+            String selectString = "select CACHE_KEY, ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
+                + " where REGION = ? and CACHE_KEY like ?";
+
+            Connection con = poolAccess.getConnection();
+            try
+            {
+                PreparedStatement psSelect = null;
+                try
+                {
+                    psSelect = con.prepareStatement( selectString );
+                    psSelect.setString( 1, this.getCacheName() );
+                    psSelect.setString( 2, constructLikeParameterFromPattern( pattern ) );
+
+                    ResultSet rs = psSelect.executeQuery();
+                    try
+                    {
+                        while ( rs.next() )
+                        {
+                            String key = rs.getString( 1 );
+                            byte[] data = rs.getBytes( 2 );
+                            if ( data != null )
+                            {
+                                try
+                                {
+                                    // USE THE SERIALIZER
+                                    ICacheElement value = (ICacheElement) getElementSerializer().deSerialize( data );
+                                    results.put( key, value );
+                                }
+                                catch ( IOException ioe )
+                                {
+                                    log.error( "Problem getting items for pattern [" + pattern + "]", ioe );
+                                }
+                                catch ( Exception e )
+                                {
+                                    log.error( "Problem getting items for pattern [" + pattern + "]", e );
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        if ( rs != null )
+                        {
+                            rs.close();
+                        }
+                        rs.close();
+                    }
+                }
+                finally
+                {
+                    if ( psSelect != null )
+                    {
+                        psSelect.close();
+                    }
+                    psSelect.close();
+                }
+            }
+            finally
+            {
+                if ( con != null )
+                {
+                    con.close();
+                }
+            }
+        }
+        catch ( SQLException sqle )
+        {
+            log.error( "Caught a SQL exception trying to get items for pattern [" + pattern + "]", sqle );
+        }
+
+        if ( log.isInfoEnabled() )
+        {
+            if ( getMatchingCount % LOG_INTERVAL == 0 )
+            {
+                // TODO make a log stats method
+                log.info( "Get Matching Count [" + getMatchingCount + "]" );
+            }
+        }
+        return results;
+    }
+
+    /**
+     * @param pattern
+     * @return String to use in the like query.
+     */
+    public String constructLikeParameterFromPattern( String pattern )
+    {
+        pattern = pattern.replaceAll( "\\.\\+", "%" );
+        pattern = pattern.replaceAll( "\\.", "_" );
+        
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "pattern = [" + pattern + "]" );
+        }
+        
+        return pattern;        
+    }
+
+    /**
      * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always results in a disk orphan.
      * <p>
@@ -639,7 +769,7 @@ public class JDBCDiskCache
             }
             catch ( SQLException e )
             {
-                log.error( "Problem creating statement. sql [" + sql + "]", e );
+                log.error( "Problem creating statement. sql [" + sql+ "]", e );
                 alive = false;
             }
             finally
@@ -958,6 +1088,12 @@ public class JDBCDiskCache
         getCount++;
     }
 
+    /** safely increment */
+    private synchronized void incrementGetMatchingCount()
+    {
+        getMatchingCount++;
+    }
+    
     /**
      * @param jdbcDiskCacheAttributes The jdbcDiskCacheAttributes to set.
      */
@@ -1005,6 +1141,11 @@ public class JDBCDiskCache
         se = new StatElement();
         se.setName( "Get Count" );
         se.setData( "" + getCount );
+        elems.add( se );
+
+        se = new StatElement();
+        se.setName( "Get Matching Count" );
+        se.setData( "" + getMatchingCount );
         elems.add( se );
 
         se = new StatElement();
@@ -1080,7 +1221,7 @@ public class JDBCDiskCache
     {
         return this.jdbcDiskCacheAttributes.getUrl();
     }
-    
+
     /**
      * For debugging.
      * <p>

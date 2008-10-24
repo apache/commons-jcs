@@ -24,17 +24,17 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Description of the Class
- *
+ * Runs a few thousand queries.
  */
 public class JCSLightLoadUnitTest
     extends TestCase
 {
-
+    /** number to use for the test */
     private static int items = 20000;
 
     /**
      * Test setup
+     * @throws Exception
      */
     public void setUp()
         throws Exception
@@ -44,10 +44,7 @@ public class JCSLightLoadUnitTest
     }
 
     /**
-     * Constructor for the TestSimpleLoad object
-     *
      * @param testName
-     *            Description of the Parameter
      */
     public JCSLightLoadUnitTest( String testName )
     {
@@ -56,9 +53,7 @@ public class JCSLightLoadUnitTest
 
     /**
      * Description of the Method
-     *
-     * @param args
-     *            Description of the Parameter
+     * @param args Description of the Parameter
      */
     public static void main( String args[] )
     {
@@ -68,7 +63,6 @@ public class JCSLightLoadUnitTest
 
     /**
      * A unit test suite for JUnit
-     *
      * @return The test suite
      */
     public static Test suite()
@@ -78,9 +72,7 @@ public class JCSLightLoadUnitTest
 
     /**
      * A unit test for JUnit
-     *
-     * @exception Exception
-     *                Description of the Exception
+     * @exception Exception Description of the Exception
      */
     public void testSimpleLoad()
         throws Exception
@@ -107,7 +99,5 @@ public class JCSLightLoadUnitTest
         // test removal
         jcs.remove( "300:key" );
         assertNull( jcs.get( "300:key" ) );
-
     }
-
 }

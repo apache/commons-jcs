@@ -55,6 +55,9 @@ public class MockAuxiliaryCache
     /** IElementSerializer elementSerializer */
     public IElementSerializer elementSerializer;
 
+    /** Times getMatching was Called */
+    public int getMatchingCallCount = 0;
+    
     /**
      * @param ce
      * @throws IOException
@@ -78,6 +81,18 @@ public class MockAuxiliaryCache
         return null;
     }
 
+    /**
+     * @param pattern
+     * @return Map
+     * @throws IOException
+     */
+    public Map getMatching( String pattern )
+        throws IOException
+    {
+        getMatchingCallCount++;
+        return new HashMap();
+    }
+    
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>

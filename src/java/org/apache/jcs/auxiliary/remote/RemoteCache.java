@@ -252,6 +252,14 @@ public class RemoteCache
         return retVal;
     }
 
+    /** TODO finish */
+    public Map processGetMatching( String pattern )
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>

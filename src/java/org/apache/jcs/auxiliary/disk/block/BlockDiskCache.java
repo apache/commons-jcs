@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -219,6 +220,22 @@ public class BlockDiskCache
         return keys;
     }
 
+    /**
+     * Gets matching items from the cache.
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching keys
+     */
+    public Map processGetMatching( String pattern )
+    {
+        Map elements = new HashMap();
+
+        // implement
+
+        return elements;
+    }
+    
     /**
      * Returns the number of keys.
      * <p>

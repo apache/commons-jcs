@@ -40,18 +40,16 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 public class MockMemoryCache
     implements MemoryCache
 {
+    /** Config */
     private ICompositeCacheAttributes cacheAttr;
 
+    /** Internal map */
     private HashMap map = new HashMap();
 
-    /**
-     * The number of times waterfall was called.
-     */
+    /** The number of times waterfall was called.   */
     public int waterfallCallCount = 0;
 
-    /**
-     * The number passed to the last call of free elements.
-     */
+    /** The number passed to the last call of free elements.   */
     public int lastNumberOfFreedElements = 0;
 
     public void initialize( CompositeCache cache )

@@ -28,8 +28,6 @@ public class JCSRemovalSimpleConcurrentTest
     extends TestCase
 {
     /**
-     * Constructor for the TestDiskCache object.
-     *
      * @param testName
      */
     public JCSRemovalSimpleConcurrentTest( String testName )
@@ -39,6 +37,8 @@ public class JCSRemovalSimpleConcurrentTest
 
     /**
      * Test setup
+     * <p>
+     * @throws Exception 
      */
     public void setUp()
         throws Exception
@@ -49,7 +49,7 @@ public class JCSRemovalSimpleConcurrentTest
 
     /**
      * Main method passes this test to the text test runner.
-     *
+     * <p>
      * @param args
      */
     public static void main( String args[] )
@@ -60,13 +60,12 @@ public class JCSRemovalSimpleConcurrentTest
 
     /**
      * Verify that 2 level deep hierchical removal works.
-     *
+     * <p>
      * @throws Exception
      */
     public void testTwoDeepRemoval()
         throws Exception
     {
-
         System.out.println( "------------------------------------------" );
         System.out.println( "testTwoDeepRemoval" );
 
@@ -142,7 +141,7 @@ public class JCSRemovalSimpleConcurrentTest
 
     /**
      * Verify that clear removes everyting as it should.
-     *
+     * <p>
      * @throws Exception
      */
     public void testClear()
@@ -231,6 +230,5 @@ public class JCSRemovalSimpleConcurrentTest
             }
         }
         System.out.println( "Confirmed that all items were removed" );
-
     }
 }

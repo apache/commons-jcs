@@ -220,6 +220,30 @@ public class LateralCacheNoWaitFacade
     }
 
     /**
+     * Synchronously reads from the lateral cache. Get a response from each! This will be slow.
+     * Merge them.
+     * <p>
+     * @param pattern
+     * @return ICacheElement
+     */
+    public Map getMatching( String pattern )
+    {
+        Map elements = new HashMap();
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            try
+            {
+                elements.putAll( noWaits[i].getMatching( pattern ) );
+            }
+            catch ( Exception ex )
+            {
+                log.error( "Failed to get", ex );
+            }
+        }
+        return elements;
+    }
+
+    /**
      * @param group
      * @return Set
      */

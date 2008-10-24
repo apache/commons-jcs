@@ -2,6 +2,7 @@ package org.apache.jcs.auxiliary;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,7 +96,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
             logICacheEvent( cacheEvent );
         }
     }
-    
+
     /**
      * Implementation of get.
      * <p>
@@ -142,18 +143,73 @@ public abstract class AbstractAuxiliaryCacheEventLogging
             logICacheEvent( cacheEvent );
         }
     }
-    
+
     /**
      * Implementation of getMultiple.
      * <p>
      * @param keys
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
-     * @throws IOException 
+     * @throws IOException
      */
     protected abstract Map processGetMultiple( Set keys )
-        throws IOException;    
+        throws IOException;
 
+    /**
+     * Gets items from the cache matching the given pattern. Items from memory will replace those
+     * from remote sources.
+     * <p>
+     * This only works with string keys. It's too expensive to do a toString on every key.
+     * <p>
+     * Auxiliaries will do their best to handle simple expressions. For instance, the JDBC disk
+     * cache will convert * to % and . to _
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data matching the pattern.
+     * @throws IOException
+     */
+    public Map getMatching( String pattern )
+        throws IOException
+    {
+        // do nothing
+        return new HashMap();
+    }
+
+    /**
+     * Gets mmatching items from the cache based on the given pattern.
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data matching the pattern.
+     * @throws IOException
+     */
+    protected final Map getMatchingWithEventLogging( String pattern )
+        throws IOException
+    {
+        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), pattern,
+                                                    ICacheEventLogger.GETMATCHING_EVENT );
+        try
+        {
+            return processGetMatching( pattern );
+        }
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
+    }
+
+    /**
+     * Implementation of getMatching.
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data matching the pattern.
+     * @throws IOException
+     */
+    protected abstract Map processGetMatching( String pattern )
+        throws IOException;
+    
     /**
      * Removes the item from the cache. Wraps the remove in event logs.
      * <p>
@@ -187,7 +243,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
             logICacheEvent( cacheEvent );
         }
     }
-    
+
     /**
      * Specific implementation of remove.
      * <p>
@@ -196,7 +252,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @throws IOException
      */
     protected abstract boolean processRemove( Serializable key )
-        throws IOException;    
+        throws IOException;
 
     /**
      * Removes all from the region. Wraps the removeAll in event logs.
@@ -227,14 +283,14 @@ public abstract class AbstractAuxiliaryCacheEventLogging
             logICacheEvent( cacheEvent );
         }
     }
-    
+
     /**
      * Specific implementation of removeAll.
      * <p>
-     * @throws IOException 
+     * @throws IOException
      */
     protected abstract void processRemoveAll()
-        throws IOException;    
+        throws IOException;
 
     /**
      * Synchronously dispose the remote cache; if failed, replace the remote handle with a zombie.

@@ -108,6 +108,25 @@ public interface ICacheAccess
     Map getCacheElements( Set names );
 
     /**
+     * Get multiple elements from the cache based on a set of cache keys.
+     * <p>
+     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * attributes.
+     * <p>
+     * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
+     * defensive copy is made.
+     * <p>
+     * This method is most useful if you want to determine things such as the how long the element
+     * has been in the cache.
+     * <p>
+     * The last access time in the ElementAttributes should be current.
+     * <p>
+     * @param pattern key search patern
+     * @return a map of Object key to ICacheElement element, or empty map if no keys match the pattern
+     */
+    Map getMatchingCacheElements( String pattern );
+    
+    /**
      * Removes an item or all items. Should be called remove.
      * <p>
      * @throws CacheException

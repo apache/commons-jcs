@@ -55,6 +55,7 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.jcs.utils.match.KeyMatcherUtil;
 
 /**
  * This is the primary hub for a single cache/region. It controls the flow of items through the
@@ -608,8 +609,8 @@ public class CompositeCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map 
-     * if there is no data in cache for any of these keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
      */
     public Map getMultiple( Set keys )
     {
@@ -617,12 +618,12 @@ public class CompositeCache
     }
 
     /**
-     * Gets multiple items from the cache based on the given set of keys.  
-     * Do not try to go remote or laterally for this data.
+     * Gets multiple items from the cache based on the given set of keys. Do not try to go remote or
+     * laterally for this data.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map 
-     * if there is no data in cache for any of these keys
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
      */
     public Map localGetMultiple( Set keys )
     {
@@ -630,9 +631,9 @@ public class CompositeCache
     }
 
     /**
-     * Look in memory, then disk, remote, or laterally for these items. The order is dependent on the
-     * order in the cache.ccf file.  Keep looking in each cache location until either the element is found,
-     * or the method runs out of places to look.
+     * Look in memory, then disk, remote, or laterally for these items. The order is dependent on
+     * the order in the cache.ccf file. Keep looking in each cache location until either the element
+     * is found, or the method runs out of places to look.
      * <p>
      * Do not try to go remote or laterally for this get if it is localOnly. Otherwise try to go
      * remote or lateral if such an auxiliary is configured for this region.
@@ -682,7 +683,8 @@ public class CompositeCache
     }
 
     /**
-     * Gets items for the keys in the set.  Returns a map: key -> result.
+     * Gets items for the keys in the set. Returns a map: key -> result.
+     * <p>
      * @param keys
      * @return the elements found in the memory cache
      * @throws IOException
@@ -847,12 +849,209 @@ public class CompositeCache
     }
 
     /**
+     *Build a map of all the matching elements in all of the auxiliaries and memory.
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any matching keys
+     */
+    public Map getMatching( String pattern )
+    {
+        return getMatching( pattern, false );
+    }
+
+    /**
+     * Build a map of all the matching elements in all of the auxiliaries and memory. Do not try to
+     * go remote or laterally for this data.
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any matching keys
+     */
+    public Map localGetMatching( String pattern )
+    {
+        return getMatching( pattern, true );
+    }
+
+    /**
+     * Build a map of all the matching elements in all of the auxiliaries and memory. Items in
+     * memory will replace from the auxiliaries in the returned map. The auxiliaries are accessed in
+     * opposite order. It's assumed that those closer to home are better.
+     * <p>
+     * Do not try to go remote or laterally for this get if it is localOnly. Otherwise try to go
+     * remote or lateral if such an auxiliary is configured for this region.
+     * <p>
+     * @param pattern
+     * @param localOnly
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any matching keys
+     */
+    protected Map getMatching( String pattern, boolean localOnly )
+    {
+        Map elements = new HashMap();
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "get: pattern [" + pattern + "], localOnly = " + localOnly );
+        }
+
+        try
+        {
+            // First look in auxiliaries
+            elements.putAll( getMatchingFromAuxiliaryCaches( pattern, localOnly ) );
+
+            // then look in memory, override aux with newer memory items.
+            elements.putAll( getMatchingFromMemory( pattern ) );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem encountered getting elements.", e );
+        }
+
+        return elements;
+    }
+
+    /**
+     * Gets the key array from the memcache. Builds a set of matches. Calls getMultiple with the
+     * set. Returns a map: key -> result.
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any matching keys
+     * @throws IOException
+     */
+    protected Map getMatchingFromMemory( String pattern )
+        throws IOException
+    {
+        // find matches in key array
+        // this avoids locking the memory cache, but it uses more memory
+        Object[] keyArray = memCache.getKeyArray();
+
+        Set matchingKeys = KeyMatcherUtil.getMatchingKeysFromArray( pattern, keyArray );
+
+        // call get multiple
+        return getMultipleFromMemory( matchingKeys );
+    }
+
+    /**
+     * If local invocation look in aux caches, even if not local look in disk auxiliaries.
+     * <p>
+     * Moves in reverse order of definition. This will allow you to override those that are fromthe
+     * remote with those on disk.
+     * <p>
+     * @param pattern
+     * @param localOnly
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any matching keys
+     * @throws IOException
+     */
+    private Map getMatchingFromAuxiliaryCaches( String pattern, boolean localOnly )
+        throws IOException
+    {
+        Map elements = new HashMap();
+
+        for ( int i = auxCaches.length - 1; i >= 0; i-- )
+        {
+            AuxiliaryCache aux = auxCaches[i];
+
+            if ( aux != null )
+            {
+                Map elementsFromAuxiliary = new HashMap();
+
+                long cacheType = aux.getCacheType();
+
+                if ( !localOnly || cacheType == AuxiliaryCache.DISK_CACHE )
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Attempting to get from aux [" + aux.getCacheName() + "] which is of type: "
+                            + cacheType );
+                    }
+                }
+
+                try
+                {
+                    elementsFromAuxiliary.putAll( aux.getMatching( pattern ) );
+                }
+                catch ( IOException e )
+                {
+                    log.error( "Error getting from aux", e );
+                }
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Got CacheElements: " + elementsFromAuxiliary );
+                }
+
+                Iterator elementFromAuxiliaryIterator = new HashMap( elementsFromAuxiliary ).values().iterator();
+
+                while ( elementFromAuxiliaryIterator.hasNext() )
+                {
+                    ICacheElement element = (ICacheElement) elementFromAuxiliaryIterator.next();
+
+                    // Item found in one of the auxiliary caches.
+                    if ( element != null )
+                    {
+                        if ( isExpired( element ) )
+                        {
+                            if ( log.isDebugEnabled() )
+                            {
+                                log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
+                            }
+
+                            missCountExpired++;
+
+                            // This will tell the remotes to remove the item
+                            // based on the element's expiration policy. The elements attributes
+                            // associated with the item when it created govern its behavior
+                            // everywhere.
+                            remove( element.getKey() );
+                            elementsFromAuxiliary.remove( element.getKey() );
+                        }
+                        else
+                        {
+                            if ( log.isDebugEnabled() )
+                            {
+                                log.debug( cacheName + " - Aux cache[" + i + "] hit" );
+                            }
+
+                            // Update counters
+                            hitCountAux++;
+                            auxHitCountByIndex[i]++;
+
+                            // Spool the item back into memory
+                            // only spool if the mem cache size is greater
+                            // than 0, else the item will immediately get put
+                            // into purgatory
+                            if ( memCache.getCacheAttributes().getMaxObjects() > 0 )
+                            {
+                                memCache.update( element );
+                            }
+                            else
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( "Skipping memory update since no items are allowed in memory" );
+                                }
+                            }
+                        }
+                    }
+                }
+
+                elements.putAll( elementsFromAuxiliary );
+            }
+        }
+
+        return elements;
+    }
+
+    /**
      * Returns a set of keys that were not found.
      * <p>
      * @param keys
      * @param foundElements
-     * @return the original set of cache keys, minus any cache keys 
-     * present in the map keys of the foundElements map 
+     * @return the original set of cache keys, minus any cache keys present in the map keys of the
+     *         foundElements map
      */
     private Set pruneKeysFound( Set keys, Map foundElements )
     {
@@ -896,7 +1095,7 @@ public class CompositeCache
                     {
                         log.debug( "Exceeded maxLife: " + element.getKey() );
                     }
-                    
+
                     handleElementEvent( element, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST );
 
                     return true;
@@ -1140,9 +1339,9 @@ public class CompositeCache
     }
 
     /**
-     * Invoked only by CacheManager. This method disposes of the auxiliaries one by one. For the disk cache, the items in memory
-     * are freed, meaning that they will be sent through the overflow channel to disk.  After the
-     * auxiliaries are disposed, the memory cache is disposed.
+     * Invoked only by CacheManager. This method disposes of the auxiliaries one by one. For the
+     * disk cache, the items in memory are freed, meaning that they will be sent through the
+     * overflow channel to disk. After the auxiliaries are disposed, the memory cache is disposed.
      * <p>
      * @param fromRemote
      */

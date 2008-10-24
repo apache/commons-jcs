@@ -75,6 +75,6 @@ public class HsqlSetupTableUtil
                     System.out.println( "Exception: " + e );
                 }
             }
-        } // end ifnew
+        }
     }
 }

@@ -64,6 +64,20 @@ public interface ICache
         throws IOException;
 
     /**
+     * Gets items from the cache matching the given pattern.  Items from memory will replace those from remote sources.
+     * <p>
+     * This only works with string keys.  It's too expensive to do a toString on every key.
+     * <p>
+     * Auxiliaries will do their best to handle simple expressions.  For instance, the JDBC disk cache will convert * to % and . to _
+     * <p>
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data matching the pattern.
+     * @throws IOException
+     */
+    Map getMatching( String pattern )
+        throws IOException;
+
+    /**
      * Removes an item from the cache.
      * <p>
      * @param key

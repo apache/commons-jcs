@@ -190,4 +190,17 @@ public class MockRemoteCacheService
     {
         return new HashMap();
     }
+
+    /**
+     * @param cacheName
+     * @param pattern
+     * @param requesterId
+     * @return Map
+     * @throws IOException
+     */
+    public Map getMatching( String cacheName, String pattern, long requesterId )
+        throws IOException
+    {
+        return new HashMap();
+    }
 }

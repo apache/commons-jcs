@@ -35,30 +35,20 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Runs basic tests for the JDBC disk cache.
- *
  * @author Aaron Smuts
- *
  */
 public class MySQLDiskCacheHsqlBackedUnitTest
     extends TestCase
 {
-
     /**
-     * Test setup
-     */
-    public void setUp()
-    {
-        JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );
-    }
-
-    /**
-     * Test the basic JDBC disk cache functionality with a hsql backing.
-     *
+     * Creates the DB
+     * <p>
      * @throws Exception
      */
-    public void testSimpleJDBCPutGetWithHSQL()
+    public MySQLDiskCacheHsqlBackedUnitTest()
         throws Exception
     {
+        super();
         System.setProperty( "hsqldb.cache_scale", "8" );
 
         String rafroot = "target";
@@ -74,40 +64,49 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         Connection cConn = DriverManager.getConnection( url + database, user, password );
 
         setupTABLE( cConn );
-
-        runTestForRegion( "testCache1", 30 );
     }
 
     /**
-     * Adds items to cache, gets them, and removes them. The item count is more
-     * than the size of the memory cache, so items should spool to disk.
-     *
-     * @param region
-     *            Name of the region to access
+     * Test setup
+     */
+    public void setUp()
+    {
+        JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );
+    }
+    
+    /**
+     * Test the basic JDBC disk cache functionality with a hsql backing.
+     * @throws Exception
+     */
+    public void testSimpleJDBCPutGetWithHSQL()
+        throws Exception
+    {
+        runTestForRegion( "testCache1", 200 );
+    }
+
+    /**
+     * Adds items to cache, gets them, and removes them. The item count is more than the size of the
+     * memory cache, so items should spool to disk.
+     * <p>
+     * @param region Name of the region to access
      * @param items
-     *
-     * @exception Exception
-     *                If an error occurs
+     * @exception Exception If an error occurs
      */
     public void runTestForRegion( String region, int items )
         throws Exception
     {
         JCS jcs = JCS.getInstance( region );
-
-        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
+        //System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
-
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
 
-        System.out.println( jcs.getStats() );
-
+        //System.out.println( jcs.getStats() );
         Thread.sleep( 1000 );
-
-        System.out.println( jcs.getStats() );
+        //System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
         for ( int i = 0; i <= items; i++ )
@@ -147,8 +146,36 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     }
 
     /**
+     * Test the basic JDBC disk cache functionality with a hsql backing.
+     * <p>
+     * @throws Exception
+     */
+    public void testPutGetMatchingWithHSQL()
+        throws Exception
+    {
+        // SETUP
+        int items = 200;
+        String region = "testCache2";
+        JCS jcs = JCS.getInstance( region );
+        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
+        
+        // DO WORK
+        for ( int i = 0; i <= items; i++ )
+        {
+            jcs.put( i + ":key", region + " data " + i );
+        }
+        Thread.sleep( 1000 );
+        
+        Map matchingResults = jcs.getMatchingCacheElements( "1.8.+" );
+        
+        // VERIFY
+        assertEquals( "Wrong number returned", 10, matchingResults.size() );
+        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );        
+        System.out.println( "\nAFTER TEST \n" + jcs.getStats() );
+    }
+    
+    /**
      * SETUP TABLE FOR CACHE
-     *
      * @param cConn
      */
     void setupTABLE( Connection cConn )

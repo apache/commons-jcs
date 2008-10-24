@@ -28,27 +28,28 @@ import junit.framework.TestSuite;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.JCSvsHashtablePerformanceTest;
-import org.apache.jcs.utils.struct.LRUMap;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
  * version. It has been testing at .6 to .7 times the commons LRU.
  *
- * @author aaronsm
- *
  */
 public class JCSvsCommonsLRUMapPerformanceTest
     extends TestCase
 {
-
+    /** jcs / commons */
     float ratioPut = 0;
 
+    /** jcs / commons */
     float ratioGet = 0;
 
+    /** goal */
     float target = 1.0f;
 
+    /** loops */
     int loops = 20;
 
+    /** number to test with */
     int tries = 50000;
 
     /**
