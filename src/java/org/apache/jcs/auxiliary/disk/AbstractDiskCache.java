@@ -317,8 +317,6 @@ public abstract class AbstractDiskCache
     public Map getMatching( String pattern )
         throws IOException
     {
-        // TODO finish.
-
         // Get the keys from purgatory
         Object[] keyArray = null;
 

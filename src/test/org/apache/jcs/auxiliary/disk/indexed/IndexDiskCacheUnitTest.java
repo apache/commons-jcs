@@ -45,9 +45,10 @@ public class IndexDiskCacheUnitTest
 {
     /**
      * Simply verify that we can put items in the disk cache and retrieve them.
-     * @throws IOException 
+     * @throws IOException
      */
-    public void testSimplePutAndGet() throws IOException
+    public void testSimplePutAndGet()
+        throws IOException
     {
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testSimplePutAndGet" );
@@ -94,9 +95,10 @@ public class IndexDiskCacheUnitTest
 
     /**
      * Add some items to the disk cache and then remove them one by one.
-     * @throws IOException 
+     * @throws IOException
      */
-    public void testRemoveItems() throws IOException
+    public void testRemoveItems()
+        throws IOException
     {
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testRemoveItems" );
@@ -127,9 +129,10 @@ public class IndexDiskCacheUnitTest
 
     /**
      * Verify that we don't override the largest item.
-     * @throws IOException 
+     * @throws IOException
      */
-    public void testRecycleBin() throws IOException
+    public void testRecycleBin()
+        throws IOException
     {
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testRemoveItems" );
@@ -458,9 +461,10 @@ public class IndexDiskCacheUnitTest
 
     /**
      * Add some items to the disk cache and then remove them one by one.
-     * @throws IOException 
+     * @throws IOException
      */
-    public void testRemove_PartialKey() throws IOException
+    public void testRemove_PartialKey()
+        throws IOException
     {
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testRemove_PartialKey" );
@@ -498,9 +502,10 @@ public class IndexDiskCacheUnitTest
 
     /**
      * Verify that group members are removed if we call remove with a group.
-     * @throws IOException 
+     * @throws IOException
      */
-    public void testRemove_Group() throws IOException
+    public void testRemove_Group()
+        throws IOException
     {
         // SETUP
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
@@ -565,8 +570,7 @@ public class IndexDiskCacheUnitTest
         GroupId gid = new GroupId( cacheName, group );
         return new GroupAttrName( gid, name );
     }
-    
-    
+
     /**
      * Verify event log calls.
      * <p>
@@ -592,7 +596,7 @@ public class IndexDiskCacheUnitTest
         diskCache.update( item );
 
         SleepUtil.sleepAtLeast( 200 );
-        
+
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
@@ -646,7 +650,7 @@ public class IndexDiskCacheUnitTest
 
         Set keys = new HashSet();
         keys.add( "junk" );
-        
+
         // DO WORK
         diskCache.getMultiple( keys );
 
@@ -709,4 +713,69 @@ public class IndexDiskCacheUnitTest
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
+
+    /**
+     * Test the basic get matching.
+     * <p>
+     * @throws Exception
+     */
+    public void testPutGetMatching_SmallWait()
+        throws Exception
+    {
+        // SETUP
+        int items = 200;
+
+        String cacheName = "testPutGetMatching_SmallWait";
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        // DO WORK
+        for ( int i = 0; i <= items; i++ )
+        {
+            diskCache.update( new CacheElement( cacheName, i + ":key", cacheName + " data " + i ) );
+        }
+        Thread.sleep( 500 );
+
+        Map matchingResults = diskCache.getMatching( "1.8.+" );
+
+        // VERIFY
+        assertEquals( "Wrong number returned", 10, matchingResults.size() );
+        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+    }
+    
+    /**
+     * Test the basic get matching. With no wait this will all come from purgatory.
+     * <p>
+     * @throws Exception
+     */
+    public void testPutGetMatching_NoWait()
+        throws Exception
+    {
+        // SETUP
+        int items = 200;
+
+        String cacheName = "testPutGetMatching_NoWait";
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        // DO WORK
+        for ( int i = 0; i <= items; i++ )
+        {
+            diskCache.update( new CacheElement( cacheName, i + ":key", cacheName + " data " + i ) );
+        }
+
+        Map matchingResults = diskCache.getMatching( "1.8.+" );
+
+        // VERIFY
+        assertEquals( "Wrong number returned", 10, matchingResults.size() );
+        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+    }    
 }

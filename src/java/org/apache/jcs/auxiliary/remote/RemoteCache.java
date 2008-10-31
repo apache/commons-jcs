@@ -252,14 +252,58 @@ public class RemoteCache
         return retVal;
     }
 
-    /** TODO finish */
+    /**
+     * Calls get matching on the server. Each entry in the result is unwrapped.
+     * <p>
+     * @param pattern
+     * @return Map
+     * @throws IOException
+     */
     public Map processGetMatching( String pattern )
         throws IOException
     {
-        // TODO Auto-generated method stub
-        return null;
+        Map results = new HashMap();
+        try
+        {
+            Map rawResults = remote.getMatching( cacheName, pattern, getListenerId() );
+
+            // Eventually the instance of will not be necessary.
+            if ( rawResults != null )
+            {
+                Set entrySet = rawResults.entrySet();
+                Iterator it = entrySet.iterator();
+                while ( it.hasNext() )
+                {
+                    Map.Entry entry = (Map.Entry) it.next();
+                    ICacheElement unwrappedResult = null;
+                    if ( entry.getValue() instanceof ICacheElementSerialized )
+                    {
+                        // Never try to deserialize if you are a cluster client. Cluster
+                        // clients are merely intra-remote cache communicators. Remote caches are assumed
+                        // to have no ability to deserialze the objects.
+                        if ( this.irca.getRemoteType() != IRemoteCacheAttributes.CLUSTER )
+                        {
+                            unwrappedResult = SerializationConversionUtil
+                                .getDeSerializedCacheElement( (ICacheElementSerialized) entry.getValue(),
+                                                              this.elementSerializer );
+                        }
+                    }
+                    else
+                    {
+                        unwrappedResult = (ICacheElement) entry.getValue();
+                    }
+                    results.put( entry.getKey(), unwrappedResult );
+                }
+            }
+        }
+        catch ( Exception ex )
+        {
+            handleException( ex, "Failed to getMatching [" + pattern + "] from [" + cacheName + "]",
+                             ICacheEventLogger.GET_EVENT );
+        }
+        return results;
     }
-    
+
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>

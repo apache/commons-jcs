@@ -30,30 +30,31 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
- * This test case is designed to makes sure there are no deadlocks in the event
- * queue. The time to live should be set to a very short interval to make a
- * deadlock more likely.
- *
+ * This test case is designed to makes sure there are no deadlocks in the event queue. The time to
+ * live should be set to a very short interval to make a deadlock more likely.
+ * <p>
  * @author Aaron Smuts
  */
 public class EventQueueConcurrentLoadTest
     extends TestCase
 {
-
+    /** The queue implementation */
     private static CacheEventQueue queue = null;
 
+    /** The mock listener */
     private static CacheListenerImpl listen = null;
 
+    /** max failure setting */
     private int maxFailure = 3;
 
+    /** time to wait before rtrying on failure. */
     private int waitBeforeRetry = 100;
 
-    // very small idle time
+    /** very small idle time */
     private int idleTime = 2;
 
     /**
      * Constructor for the TestDiskCache object.
-     *
      * @param testName
      */
     public EventQueueConcurrentLoadTest( String testName )
@@ -63,7 +64,6 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Main method passes this test to the text test runner.
-     *
      * @param args
      */
     public static void main( String args[] )
@@ -74,12 +74,10 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * A unit test suite for JUnit
-     *
      * @return The test suite
      */
     public static Test suite()
     {
-
         ActiveTestSuite suite = new ActiveTestSuite();
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest1" )
@@ -170,7 +168,6 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Adds put events to the queue.
-     *
      * @param end
      * @param expectedPutCount
      * @throws Exception
@@ -203,7 +200,6 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Add remove events to the event queue.
-     *
      * @param end
      * @throws Exception
      */
@@ -219,7 +215,6 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Add remove events to the event queue.
-     *
      * @throws Exception
      */
     public void runStopProcessingTest()
@@ -230,7 +225,6 @@ public class EventQueueConcurrentLoadTest
 
     /**
      * Test putting and a delay. Waits until queue is empty to start.
-     *
      * @param end
      * @param expectedPutCount
      * @throws Exception
@@ -284,7 +278,7 @@ public class EventQueueConcurrentLoadTest
         // this becomes less accurate with each test. It should never fail. If
         // it does things are very off.
         assertTrue( "The put count [" + listen.putCount + "] is below the expected minimum threshold ["
-                    + expectedPutCount + "]", listen.putCount >= ( expectedPutCount - 1 ) );
+            + expectedPutCount + "]", listen.putCount >= ( expectedPutCount - 1 ) );
 
     }
 
@@ -294,7 +288,6 @@ public class EventQueueConcurrentLoadTest
     private class CacheListenerImpl
         implements ICacheListener
     {
-
         /**
          * <code>putCount</code>
          */
@@ -305,10 +298,9 @@ public class EventQueueConcurrentLoadTest
          */
         protected int removeCount = 0;
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
+        /**
+         * @param item
+         * @throws IOException
          */
         public void handlePut( ICacheElement item )
             throws IOException
@@ -319,11 +311,10 @@ public class EventQueueConcurrentLoadTest
             }
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
-         *      java.io.Serializable)
+        /**
+         * @param cacheName
+         * @param key
+         * @throws IOException
          */
         public void handleRemove( String cacheName, Serializable key )
             throws IOException
@@ -335,10 +326,9 @@ public class EventQueueConcurrentLoadTest
 
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
+        /**
+         * @param cacheName
+         * @throws IOException
          */
         public void handleRemoveAll( String cacheName )
             throws IOException
@@ -347,10 +337,9 @@ public class EventQueueConcurrentLoadTest
 
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
+        /**
+         * @param cacheName
+         * @throws IOException
          */
         public void handleDispose( String cacheName )
             throws IOException
@@ -359,10 +348,9 @@ public class EventQueueConcurrentLoadTest
 
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.apache.jcs.engine.behavior.ICacheListener#setListenerId(long)
+        /**
+         * @param id
+         * @throws IOException
          */
         public void setListenerId( long id )
             throws IOException
@@ -371,10 +359,9 @@ public class EventQueueConcurrentLoadTest
 
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see org.apache.jcs.engine.behavior.ICacheListener#getListenerId()
+        /**
+         * @return 0
+         * @throws IOException
          */
         public long getListenerId()
             throws IOException

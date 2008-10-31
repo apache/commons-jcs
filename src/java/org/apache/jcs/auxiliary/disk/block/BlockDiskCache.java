@@ -43,6 +43,7 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.jcs.utils.match.KeyMatcherUtil;
 
 import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
@@ -230,9 +231,36 @@ public class BlockDiskCache
     public Map processGetMatching( String pattern )
     {
         Map elements = new HashMap();
-
-        // implement
-
+        try
+        {
+            Object[] keyArray = null;
+            storageLock.readLock().acquire();
+            try
+            {
+                keyArray = this.keyStore.keySet().toArray();
+            }
+            finally
+            {
+                storageLock.readLock().release();
+            }
+            
+            Set matchingKeys = KeyMatcherUtil.getMatchingKeysFromArray( pattern, keyArray );
+            
+            Iterator keyIterator = matchingKeys.iterator();
+            while ( keyIterator.hasNext() )
+            {
+                String key = (String)keyIterator.next();
+                ICacheElement element = processGet( key );
+                if ( element != null )
+                {
+                    elements.put( key, element );
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            log.error( logCacheName + "Failure getting matching from disk, pattern = " + pattern, e );
+        }
         return elements;
     }
     

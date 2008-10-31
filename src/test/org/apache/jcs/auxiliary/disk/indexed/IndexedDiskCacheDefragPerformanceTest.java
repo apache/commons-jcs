@@ -33,6 +33,7 @@ import org.apache.jcs.JCS;
 public class IndexedDiskCacheDefragPerformanceTest
     extends TestCase
 {
+    /** For readability */
     private static final String LOG_DIVIDER = "---------------------------";
 
     private static final int TOTAL_ELEMENTS = 30000;
@@ -132,6 +133,7 @@ public class IndexedDiskCacheDefragPerformanceTest
     private static class Tile
         implements Serializable
     {
+        /** Don't change */
         private static final long serialVersionUID = 1L;
 
         /**

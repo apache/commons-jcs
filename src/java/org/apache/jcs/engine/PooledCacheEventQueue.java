@@ -46,9 +46,6 @@ import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
  * The PooledExecutor is static, because presumably these processes will be IO bound, so throwing
  * more than a few threads at them will serve no purpose other than to saturate the IO interface. In
  * light of this, having one thread per region seems unnecessary. This may prove to be false.
- * <p>
- * @author Aaron Smuts
- * @author Travis Savo <tsavo@ifilm.com>
  */
 public class PooledCacheEventQueue
     implements ICacheEventQueue

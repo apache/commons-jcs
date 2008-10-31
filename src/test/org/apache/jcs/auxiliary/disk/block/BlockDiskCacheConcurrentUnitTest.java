@@ -32,7 +32,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * Test which exercises the block disk cache. This one uses three different
- * regions for thre threads.
+ * regions for three threads.
  */
 public class BlockDiskCacheConcurrentUnitTest
     extends TestCase

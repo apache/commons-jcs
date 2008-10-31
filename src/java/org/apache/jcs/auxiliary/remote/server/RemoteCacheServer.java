@@ -494,14 +494,6 @@ class RemoteCacheServer
         element = getFromCacheListeners( key, fromCluster, cacheDesc, element );
         return element;
     }
-
-    /** TODO finish */
-    public Map getMatching( String cacheName, String pattern, long requesterId )
-        throws IOException
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
         
     /**
      * Gets the item from the associated cache listeners.
@@ -559,6 +551,95 @@ class RemoteCacheServer
         return element;
     }
 
+    /** TODO finish 
+     * <p>
+     * @param cacheName 
+     * @param pattern 
+     * @param requesterId 
+     * @return Map of keys and wrapped objects
+     * @throws IOException 
+     */
+    public Map getMatching( String cacheName, String pattern, long requesterId )
+        throws IOException
+    {
+        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "getMatching [" + pattern + "] from cache [" + cacheName + "] requesterId = [" + requesterId
+                + "] remoteType = " + remoteTypeL );
+        }
+        
+        boolean fromCluster = false;
+        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        {
+            fromCluster = true;
+        }
+
+        CacheListeners cacheDesc = null;
+        try
+        {
+            cacheDesc = getCacheListeners( cacheName );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem getting listeners.", e );
+
+            if ( cacheEventLogger != null )
+            {
+                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GET_EVENT, e.getMessage() + cacheName
+                    + " pattern: " + pattern );
+            }
+        }
+        
+        return getMatchingFromCacheListeners( pattern, fromCluster, cacheDesc );
+    }
+    
+    /**
+     * Gets the item from the associated cache listeners.
+     * <p>
+     * @param pattern
+     * @param fromCluster
+     * @param cacheDesc
+     * @return Map of keys to results
+     */
+    private Map getMatchingFromCacheListeners( String pattern, boolean fromCluster, CacheListeners cacheDesc )
+    {
+        Map elements = null;
+        if ( cacheDesc != null )
+        {
+            CompositeCache c = (CompositeCache) cacheDesc.cache;
+
+            // We always want to go remote and then merge the items.  But this can lead to inconsistencies after 
+            // failover recovery.  Removed items may show up.  There is no good way to prevent this.
+            // We should make it configurable.
+
+            if ( !fromCluster && this.remoteCacheServerAttributes.getAllowClusterGet() )
+            {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
+                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                }
+                elements = c.getMatching( pattern );
+            }
+            else
+            {
+                // Gets from cluster type remote will end up here.
+                // Gets from all clients will end up here if allow cluster get is
+                // false.
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
+                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                }
+                elements = c.localGetMatching( pattern );
+            }
+        }
+        return elements;
+    }
+    
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
