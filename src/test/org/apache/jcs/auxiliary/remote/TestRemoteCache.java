@@ -33,17 +33,16 @@ import org.apache.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.jcs.engine.control.MockElementSerializer;
 
 /**
- * @author asmuts
+ * @author Aaron SMuts
  */
 public class TestRemoteCache
     extends TestCase
 {
-
+    /** The logger */
     private final static Log log = LogFactory.getLog( TestRemoteCache.class );
 
     /**
-     *
-     *
+     * Start the cache.
      */
     public TestRemoteCache()
     {

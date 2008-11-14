@@ -1,11 +1,11 @@
-package org.apache.jcs.utils.match;
+package org.apache.jcs.engine.match;
 
 import java.util.Set;
 
 import junit.framework.TestCase;
 
 /** Unit tests for the key matcher. */
-public class KeyMatcherUtilUnitTest
+public class KeyMatcherPatternImpllUnitTest
     extends TestCase
 {
     /**
@@ -26,8 +26,10 @@ public class KeyMatcherUtilUnitTest
             keyArray[i] = keyprefix1 + String.valueOf( i );
         }
 
+        KeyMatcherPatternImpl keyMatcher = new KeyMatcherPatternImpl();
+
         // DO WORK
-        Set result1 = KeyMatcherUtil.getMatchingKeysFromArray( keyprefix1 + ".", keyArray );
+        Set result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".", keyArray );
 
         // VERIFY
         assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );
@@ -51,8 +53,10 @@ public class KeyMatcherUtilUnitTest
             keyArray[i] = keyprefix1 + String.valueOf( i );
         }
 
+        KeyMatcherPatternImpl keyMatcher = new KeyMatcherPatternImpl();
+
         // DO WORK
-        Set result1 = KeyMatcherUtil.getMatchingKeysFromArray( keyprefix1 + "\\S+", keyArray );
+        Set result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + "\\S+", keyArray );
 
         // VERIFY
         assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );
@@ -84,9 +88,11 @@ public class KeyMatcherUtilUnitTest
             keyArray[i] = keyprefix2 + String.valueOf( i );
         }
 
+        KeyMatcherPatternImpl keyMatcher = new KeyMatcherPatternImpl();
+
         // DO WORK
-        Set result1 = KeyMatcherUtil.getMatchingKeysFromArray( keyprefix1 + ".+", keyArray );
-        Set result2 = KeyMatcherUtil.getMatchingKeysFromArray( keyprefix2 + ".+", keyArray );
+        Set result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".+", keyArray );
+        Set result2 = keyMatcher.getMatchingKeysFromArray( keyprefix2 + ".+", keyArray );
 
         // VERIFY
         assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );

@@ -32,13 +32,12 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.IElementSerializer;
-import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -51,7 +50,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * do this.
  */
 public class LateralCacheNoWaitFacade
-    implements AuxiliaryCache
+    extends AbstractAuxiliaryCache
 {
     /** Don't change */
     private static final long serialVersionUID = -9047687810358008955L;
@@ -67,15 +66,6 @@ public class LateralCacheNoWaitFacade
 
     /** User configurable attributes. */
     private ILateralCacheAttributes lateralCacheAttributes;
-
-    /**
-     * An optional event logger. Only errors are logged here. We don't want to log ICacheEvents
-     * since the noWaits do this.
-     */
-    private ICacheEventLogger cacheEventLogger;
-
-    /** The serializer. */
-    private IElementSerializer elementSerializer;
 
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
@@ -375,32 +365,21 @@ public class LateralCacheNoWaitFacade
     }
 
     /**
-     * Allows it to be injected.
-     * <p>
-     * @param cacheEventLogger
-     */
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
-    {
-        this.cacheEventLogger = cacheEventLogger;
-    }
-
-    /**
-     * Allows you to inject a custom serializer. A good example would be a compressing standard
-     * serializer.
-     * <p>
-     * @param elementSerializer
-     */
-    public void setElementSerializer( IElementSerializer elementSerializer )
-    {
-        this.elementSerializer = elementSerializer;
-    }
-
-    /**
      * @return "LateralCacheNoWaitFacade: " + cacheName;
      */
     public String toString()
     {
         return "LateralCacheNoWaitFacade: " + cacheName;
+    }
+
+    /**
+     * this won't be called since we don't do ICache logging here.
+     * <p>
+     * @return String
+     */
+    public String getEventLoggingExtraInfo()
+    {
+        return "Lateral Cache No Wait";
     }
 
     /**

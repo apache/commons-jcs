@@ -22,6 +22,7 @@ package org.apache.jcs.engine.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -192,7 +193,14 @@ public class CompositeCacheManager
     protected CompositeCacheManager()
     {
         ShutdownHook shutdownHook = new ShutdownHook();
-        Runtime.getRuntime().addShutdownHook( shutdownHook );
+        try
+        {
+            Runtime.getRuntime().addShutdownHook( shutdownHook );
+        }
+        catch ( AccessControlException e )
+        {
+            log.error( "Could not register shutdown hook.", e );
+        }
     }
 
     /**

@@ -19,8 +19,10 @@ package org.apache.jcs.auxiliary.lateral;
  * under the License.
  */
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
@@ -81,4 +83,19 @@ public class ZombieLateralCacheService
     {
         return Collections.EMPTY_SET;
     }
+    
+    /**
+     * The service does not get via this method, so this return empty.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    public Map getMatching( String cacheName, String pattern )
+        throws IOException
+    {
+        return Collections.EMPTY_MAP;
+    }    
 }

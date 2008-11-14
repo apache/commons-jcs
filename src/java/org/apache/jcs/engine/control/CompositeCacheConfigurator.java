@@ -38,6 +38,8 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.engine.match.KeyMatcherPatternImpl;
+import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.jcs.utils.config.OptionConverter;
 import org.apache.jcs.utils.config.PropertySetter;
 
@@ -74,6 +76,13 @@ public class CompositeCacheConfigurator
     /** .elementattributes */
     final static String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
 
+    /**
+     * jcs.auxiliary.NAME.keymatcher=CLASSNAME
+     * <p>
+     * jcs.auxiliary.NAME.keymatcher.attributes.CUSTOMPROPERTY=VALUE
+     */
+    public final static String KEY_MATCHER_PREFIX = ".keymatcher";
+    
     /** Can't operate on the interface. */
     private CompositeCacheManager compositeCacheManager;
 
@@ -563,6 +572,10 @@ public class CompositeCacheConfigurator
         // CONFIGURE THE ELEMENT SERIALIZER
         IElementSerializer elementSerializer = AuxiliaryCacheConfigurator.parseElementSerializer( props, auxPrefix );
 
+        // CONFIGURE THE KEYMATCHER
+        //IKeyMatcher keyMatcher = parseKeyMatcher( props, auxPrefix );
+        // TODO add to factory interface
+        
         // Consider putting the compositeCache back in the factory interface
         // since the manager may not know about it at this point.
         // need to make sure the manager already has the cache
@@ -571,4 +584,42 @@ public class CompositeCacheConfigurator
 
         return auxCache;
     }
+    
+    /**
+     * Creates a custom key matcher if one is defined.  Else, it uses the default.
+     * <p>
+     * @param props
+     * @param auxPrefix - ex. AUXILIARY_PREFIX + auxName
+     * @return IKeyMatcher
+     */
+    public static IKeyMatcher parseKeyMatcher( Properties props, String auxPrefix )
+    {
+        IKeyMatcher keyMatcher = null;
+
+        // auxFactory was not previously initialized.
+        String keyMatcherClassName = auxPrefix + KEY_MATCHER_PREFIX;
+        keyMatcher = (IKeyMatcher) OptionConverter
+            .instantiateByKey( props, keyMatcherClassName,
+                               IKeyMatcher.class, null );
+        if ( keyMatcher != null )
+        {
+            String attributePrefix = auxPrefix + KEY_MATCHER_PREFIX + ATTRIBUTE_PREFIX;
+            PropertySetter.setProperties( keyMatcher, props, attributePrefix + "." );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Using custom key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix
+                    + "]" );
+            }
+        }
+        else
+        {
+            // use the default standard serializer
+            keyMatcher = new KeyMatcherPatternImpl();
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Using standard key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix + "]" );
+            }
+        }
+        return keyMatcher;
+    }    
 }

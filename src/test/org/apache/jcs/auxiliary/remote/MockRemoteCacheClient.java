@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
@@ -45,6 +46,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * @author Aaron Smuts
  */
 public class MockRemoteCacheClient
+    extends AbstractAuxiliaryCache
     implements IRemoteCacheClient
 {
     /** For serialization. Don't change. */
@@ -241,16 +243,6 @@ public class MockRemoteCacheClient
         return 0;
     }
 
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
-    {
-        // TODO Auto-generated method stub
-    }
-
-    public void setElementSerializer( IElementSerializer elementSerializer )
-    {
-        // TODO Auto-generated method stub       
-    }
-
     /**
      * @param pattern
      * @return Map
@@ -260,5 +252,15 @@ public class MockRemoteCacheClient
         throws IOException
     {
         return new HashMap();
+    }
+
+    /**
+     * Nothing important
+     * <p>
+     * @return null
+     */
+    public String getEventLoggingExtraInfo()
+    {
+        return null;
     }
 }

@@ -12,6 +12,36 @@ public class RemoteCacheServerFactoryUnitTest
     extends TestCase
 {
     /** verify that we get the timeout value */
+    public void testConfigureRemoteCacheServerAttributes_eventQueueType()
+    {
+        // SETUP
+        String eventQueueType = "my.special.type";
+        Properties props = new Properties();
+        props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".EventQueueType", eventQueueType );        
+                
+        // DO WORK
+        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        
+        // VERIFY
+        assertEquals( "Wrong EventQueueType", eventQueueType, result.getEventQueueType() );
+    }
+    
+    /** verify that we get the timeout value */
+    public void testConfigureRemoteCacheServerAttributes_eventQueuePoolName()
+    {
+        // SETUP
+        String eventQueuePoolName = "specialName";
+        Properties props = new Properties();
+        props.put( IRemoteCacheConstants.CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".EventQueuePoolName", eventQueuePoolName );        
+                
+        // DO WORK
+        RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
+        
+        // VERIFY
+        assertEquals( "Wrong eventQueuePoolName", eventQueuePoolName, result.getEventQueuePoolName() );
+    }
+    
+    /** verify that we get the timeout value */
     public void testConfigureRemoteCacheServerAttributes_timeoutPresent()
     {
         // SETUP
@@ -24,7 +54,7 @@ public class RemoteCacheServerFactoryUnitTest
         
         // VERIFY
         assertEquals( "Wrong timeout", timeout, result.getRmiSocketFactoryTimeoutMillis() );
-    }
+    }   
     
     /** verify that we get the timeout value */
     public void testConfigureRemoteCacheServerAttributes_timeoutNotPresent()

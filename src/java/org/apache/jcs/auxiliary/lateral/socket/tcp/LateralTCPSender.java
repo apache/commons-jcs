@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.utils.SocketOpener;
-import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a differnet repair structure, so
@@ -260,11 +259,9 @@ public class LateralTCPSender
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement sendAndReceive( LateralElementDescriptor led )
+    public Object sendAndReceive( LateralElementDescriptor led )
         throws IOException
     {
-        ICacheElement ice = null;
-
         if ( led == null )
         {
             return null;
@@ -274,6 +271,8 @@ public class LateralTCPSender
         {
             throw new IOException( "No remote host is set for LateralTCPSender." );
         }
+
+        Object response = null;
 
         if ( oos != null )
         {
@@ -310,13 +309,7 @@ public class LateralTCPSender
                         // TODO make configurable
                         // socket.setSoTimeout( 2000 );
                         ObjectInputStream ois = new ObjectInputStream( socket.getInputStream() );
-                        Object obj = ois.readObject();
-                        ice = (ICacheElement) obj;
-                        if ( ice == null )
-                        {
-                            // p( "ice is null" );
-                            // TODO: count misses
-                        }
+                        response = ois.readObject();
                     }
                     catch ( IOException ioe )
                     {
@@ -353,7 +346,7 @@ public class LateralTCPSender
             }
         }
 
-        return ice;
+        return response;
     }
 
     /**

@@ -478,6 +478,8 @@ public class RemoteCacheServerAttributes
         buf.append( "\n startRegistry = [" + this.isStartRegistry() + "]" );
         buf.append( "\n useRegistryKeepAlive = [" + this.isUseRegistryKeepAlive() + "]" );
         buf.append( "\n registryKeepAliveDelayMillis = [" + this.getRegistryKeepAliveDelayMillis() + "]" );
+        buf.append( "\n eventQueueType = [" + this.getEventQueueType() + "]" );
+        buf.append( "\n eventQueuePoolName = [" + this.getEventQueuePoolName() + "]" );
         return buf.toString();
     }
 }

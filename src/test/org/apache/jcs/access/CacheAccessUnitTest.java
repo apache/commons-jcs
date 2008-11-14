@@ -20,6 +20,7 @@ package org.apache.jcs.access;
  */
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,9 +43,8 @@ public class CacheAccessUnitTest
     extends TestCase
 {
     /**
-     * Verify that we get an object exists exception if the item is in the
-     * cache.
-     * @throws Exception 
+     * Verify that we get an object exists exception if the item is in the cache.
+     * @throws Exception
      */
     public void testPutSafe()
         throws Exception
@@ -77,7 +77,7 @@ public class CacheAccessUnitTest
 
     /**
      * Try to put a null key and verify that we get an exception.
-     * @throws Exception 
+     * @throws Exception
      */
     public void testPutNullKey()
         throws Exception
@@ -124,9 +124,7 @@ public class CacheAccessUnitTest
     }
 
     /**
-     * Verify that elements that go in the region after this call takethe new
-     * attributes.
-     *
+     * Verify that elements that go in the region after this call takethe new attributes.
      * @throws Exception
      */
     public void testSetDefaultElementAttributes()
@@ -157,7 +155,6 @@ public class CacheAccessUnitTest
 
     /**
      * Verify that getCacheElements returns the elements requested based on the key.
-     *
      * @throws Exception
      */
     public void testGetCacheElements()
@@ -197,7 +194,6 @@ public class CacheAccessUnitTest
 
     /**
      * Verify that we can get a region using the define region method.
-     *
      * @throws Exception
      */
     public void testRegionDefiniton()
@@ -209,9 +205,7 @@ public class CacheAccessUnitTest
 
     /**
      * Verify that we can get a region using the define region method with cache attributes.
-     *
      * @throws Exception
-     *
      */
     public void testRegionDefinitonWithAttributes()
         throws Exception
@@ -229,10 +223,9 @@ public class CacheAccessUnitTest
     }
 
     /**
-     * Verify that we can get a region using the define region method with cache attributes and elemetn attributes.
-     *
+     * Verify that we can get a region using the define region method with cache attributes and
+     * elemetn attributes.
      * @throws Exception
-     *
      */
     public void testRegionDefinitonWithBothAttributes()
         throws Exception
@@ -251,5 +244,119 @@ public class CacheAccessUnitTest
 
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
         assertEquals( "Wrong idle time setting.", ca.getMaxMemoryIdleTimeSeconds(), ca2.getMaxMemoryIdleTimeSeconds() );
+    }
+
+    /**
+     * Verify we can get some matching elements..
+     * <p>
+     * @throws Exception
+     */
+    public void testGetMatching_Normal()
+        throws Exception
+    {
+        // SETUP
+        int maxMemorySize = 1000;
+        String keyprefix1 = "MyPrefix1";
+        String keyprefix2 = "MyPrefix2";
+        String memoryCacheClassName = "org.apache.jcs.engine.memory.lru.LRUMemoryCache";
+        ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setMemoryCacheName( memoryCacheClassName );
+        cattr.setMaxObjects( maxMemorySize );
+
+        long maxLife = 9876;
+        IElementAttributes attr = new ElementAttributes();
+        attr.setMaxLifeSeconds( maxLife );
+
+        CacheAccess access = CacheAccess.defineRegion( "testGetMatching_Normal", cattr, attr );
+
+        // DO WORK
+        int numToInsertPrefix1 = 10;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertPrefix1; i++ )
+        {
+            access.put( keyprefix1 + String.valueOf( i ), new Integer( i ) );
+        }
+
+        int numToInsertPrefix2 = 50;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertPrefix2; i++ )
+        {
+            access.put( keyprefix2 + String.valueOf( i ), new Integer( i ) );
+        }
+
+        Map result1 = access.getMatching( keyprefix1 + ".+" );
+        Map result2 = access.getMatching( keyprefix2 + "\\S+" );
+
+        // VERIFY
+        assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
+        assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
+        //System.out.println( result1 );
+        
+        // verify that the elements are unwrapped
+        Set keySet1 = result1.keySet();
+        Iterator it1 = keySet1.iterator();
+        while ( it1.hasNext() )
+        {
+            Object key = it1.next();
+            Object value = result1.get( key );
+            assertFalse( "Should not be a cache element.", value instanceof ICacheElement );
+        }
+    }
+    
+    /**
+     * Verify we can get some matching elements..
+     * <p>
+     * @throws Exception
+     */
+    public void testGetMatchingElements_Normal()
+        throws Exception
+    {
+        // SETUP
+        int maxMemorySize = 1000;
+        String keyprefix1 = "MyPrefix1";
+        String keyprefix2 = "MyPrefix2";
+        String memoryCacheClassName = "org.apache.jcs.engine.memory.lru.LRUMemoryCache";
+        ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setMemoryCacheName( memoryCacheClassName );
+        cattr.setMaxObjects( maxMemorySize );
+
+        long maxLife = 9876;
+        IElementAttributes attr = new ElementAttributes();
+        attr.setMaxLifeSeconds( maxLife );
+
+        CacheAccess access = CacheAccess.defineRegion( "testGetMatching_Normal", cattr, attr );
+
+        // DO WORK
+        int numToInsertPrefix1 = 10;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertPrefix1; i++ )
+        {
+            access.put( keyprefix1 + String.valueOf( i ), new Integer( i ) );
+        }
+
+        int numToInsertPrefix2 = 50;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertPrefix2; i++ )
+        {
+            access.put( keyprefix2 + String.valueOf( i ), new Integer( i ) );
+        }
+
+        Map result1 = access.getMatchingCacheElements( keyprefix1 + "\\S+" );
+        Map result2 = access.getMatchingCacheElements( keyprefix2 + ".+" );
+
+        // VERIFY
+        assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
+        assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
+        //System.out.println( result1 );
+        
+        // verify that the elements are wrapped
+        Set keySet1 = result1.keySet();
+        Iterator it1 = keySet1.iterator();
+        while ( it1.hasNext() )
+        {
+            Object key = it1.next();
+            Object value = result1.get( key );
+            assertTrue( "Should be a cache element.", value instanceof ICacheElement );
+        }        
     }
 }

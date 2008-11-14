@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
@@ -53,7 +55,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * RemoteCacheNoWait.
  */
 public class RemoteCacheNoWaitFacade
-    implements AuxiliaryCache
+    extends AbstractAuxiliaryCache
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -4529970797620747110L;
@@ -72,15 +74,6 @@ public class RemoteCacheNoWaitFacade
 
     /** A cache manager */
     private ICompositeCacheManager cacheMgr;
-
-    /**
-     * An optional event logger. Only errors are logged here. We don't want to log ICacheEvents
-     * since the noWaits do this.
-     */
-    private ICacheEventLogger cacheEventLogger;
-
-    /** The serializer. */
-    private IElementSerializer elementSerializer;
 
     /**
      * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object
@@ -174,9 +167,7 @@ public class RemoteCacheNoWaitFacade
             // should start a failover thread
             // should probably only failover if there is only one in the noWait
             // list
-            // should start a background thread to set the original as the
-            // primary
-            // if we are in failover state
+            // Should start a background thread to restore the original primary if we are in failover state.
         }
     }
 
@@ -201,20 +192,36 @@ public class RemoteCacheNoWaitFacade
             catch ( Exception ex )
             {
                 log.debug( "Failed to get." );
+                return null;
             }
-            return null;
         }
         return null;
     }
-    
-    /** TODO fix this */
+
+    /**
+     * Synchronously read from the remote cache.
+     * <p>
+     * @param pattern
+     * @return map
+     * @throws IOException
+     */
     public Map getMatching( String pattern )
         throws IOException
     {
-        // TODO Auto-generated method stub
-        return null;
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            try
+            {
+                return noWaits[i].getMatching( pattern );
+            }
+            catch ( Exception ex )
+            {
+                log.debug( "Failed to getMatching." );
+                return Collections.EMPTY_MAP;
+            }
+        }
+        return Collections.EMPTY_MAP;
     }
-
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
@@ -236,11 +243,10 @@ public class RemoteCacheNoWaitFacade
                 catch ( Exception ex )
                 {
                     log.debug( "Failed to get." );
-                    return new HashMap();
+                    return Collections.EMPTY_MAP;
                 }
             }
         }
-
         return new HashMap();
     }
 
@@ -270,7 +276,7 @@ public class RemoteCacheNoWaitFacade
      * Adds a remove request to the remote cache.
      * <p>
      * @param key
-     * @return wether or not it was removed, right now it return false.
+     * @return whether or not it was removed, right now it return false.
      */
     public boolean remove( Serializable key )
     {
@@ -289,7 +295,7 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Adds a removeAll request to the lateral cache.
+     * Adds a removeAll request to the remote cache.
      */
     public void removeAll()
     {
@@ -306,7 +312,7 @@ public class RemoteCacheNoWaitFacade
         }
     }
 
-    /** Adds a dispose request to the lateral cache. */
+    /** Adds a dispose request to the remote cache. */
     public void dispose()
     {
         try
@@ -323,7 +329,8 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * No lateral invocation.
+     * No remote invocation.
+     * <p>
      * @return The size value
      */
     public int getSize()
@@ -481,33 +488,12 @@ public class RemoteCacheNoWaitFacade
     }
 
     /**
-     * Allows it to be injected.
+     * This typically returns end point info .
      * <p>
-     * @param cacheEventLogger
+     * @return the name
      */
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    public String getEventLoggingExtraInfo()
     {
-        this.cacheEventLogger = cacheEventLogger;
-    }
-
-    /**
-     * Allows the failover runner to use this event logger.
-     * <p>
-     * @return ICacheEventLogger
-     */
-    protected ICacheEventLogger getCacheEventLogger()
-    {
-        return cacheEventLogger;
-    }
-
-    /**
-     * Allows you to inject a custom serializer. A good example would be a compressing standard
-     * serializer.
-     * <p>
-     * @param elementSerializer
-     */
-    public void setElementSerializer( IElementSerializer elementSerializer )
-    {
-        this.elementSerializer = elementSerializer;
+        return "Remote Cache No Wait Facade";
     }
 }

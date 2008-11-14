@@ -21,6 +21,7 @@ package org.apache.jcs.auxiliary.lateral;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -142,17 +143,36 @@ public class LateralCache
         catch ( Exception e )
         {
             log.error( e );
-            handleException( e, "Failed to get " + key + " from " + this.cattr.getCacheName() );
+            handleException( e, "Failed to get [" + key + "] from " + this.cattr.getCacheName() );
         }
         return obj;
     }
 
-    /** TODO finish */
+    /**
+     * @param pattern
+     * @return A map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
+     */
     protected Map processGetMatching( String pattern )
         throws IOException
     {
-        // TODO Auto-generated method stub
-        return null;
+        Map elements = new HashMap();
+
+        if ( this.cattr.getPutOnlyMode() )
+        {
+            return Collections.EMPTY_MAP;
+        }
+        try
+        {
+            elements = lateral.getMatching( cacheName, pattern );
+        }
+        catch ( Exception e )
+        {
+            log.error( e );
+            handleException( e, "Failed to getMatching [" + pattern + "] from " + this.cattr.getCacheName() );
+        }
+        return elements;
     }
 
     /**

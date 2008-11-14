@@ -24,9 +24,8 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 
 /**
- * This interface defines functions that are particular to the TCP Lateral Cache
- * plugin. It extends the generic LateralCacheAttributes interface which in turn
- * extends the AuxiliaryCache interface.
+ * This interface defines functions that are particular to the TCP Lateral Cache plugin. It extends
+ * the generic LateralCacheAttributes interface which in turn extends the AuxiliaryCache interface.
  */
 public class TCPLateralCacheAttributes
     extends LateralCacheAttributes
@@ -56,214 +55,225 @@ public class TCPLateralCacheAttributes
     /** default */
     private static final boolean DEFAULT_FILTER_REMOVE_BY_HASH_CODE = true;
 
-    // TCP --------------------------------------------
+    /** TCP -------------------------------------------- */
     private String tcpServers = "";
 
-    // used to identify the service that this manager will be
-    // operating on
+    /** used to identify the service that this manager will be operating on */
     private String tcpServer = "";
 
+    /** The pot */
     private int tcpListenerPort = 0;
 
-    // udp discovery for tcp server
+    /** udp discovery for tcp server */
     private String udpDiscoveryAddr = DEFAULT_UDP_DISCOVERY_ADDRESS;
 
+    /** discovery port */
     private int udpDiscoveryPort = DEFAULT_UDP_DISCOVERY_PORT;
 
+    /** discovery switch */
     private boolean udpDiscoveryEnabled = DEFAULT_UDP_DISCOVERY_ENABLED;
 
+    /** can we put */
     private boolean allowPut = DEFAULT_ALLOW_GET;
 
+    /** can we go laterally for a get */
     private boolean allowGet = DEFAULT_ALLOW_PUT;
 
+    /** call remove when there is a put */
     private boolean issueRemoveOnPut = DEFAULT_ISSUE_REMOVE_FOR_PUT;
 
+    /** don't remove it the hashcode is the same */
     private boolean filterRemoveByHashCode = DEFAULT_FILTER_REMOVE_BY_HASH_CODE;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setTcpServer(java.lang.String)
+    /**
+     * Sets the tcpServer attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val The new tcpServer value
      */
     public void setTcpServer( String val )
     {
         this.tcpServer = val;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getTcpServer()
+    /**
+     * Gets the tcpServer attribute of the ILateralCacheAttributes object
+     * <p>
+     * @return The tcpServer value
      */
     public String getTcpServer()
     {
         return this.tcpServer;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setTcpServers(java.lang.String)
+    /**
+     * Sets the tcpServers attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val The new tcpServers value
      */
     public void setTcpServers( String val )
     {
         this.tcpServers = val;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getTcpServers()
+    /**
+     * Gets the tcpServers attribute of the ILateralCacheAttributes object
+     * <p>
+     * @return The tcpServers value
      */
     public String getTcpServers()
     {
         return this.tcpServers;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setTcpListenerPort(int)
+    /**
+     * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
+     * <p>
+     * @param val The new tcpListenerPort value
      */
     public void setTcpListenerPort( int val )
     {
         this.tcpListenerPort = val;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getTcpListenerPort()
+    /**
+     * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
+     * <p>
+     * @return The tcpListenerPort value
      */
     public int getTcpListenerPort()
     {
         return this.tcpListenerPort;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setUdpDiscoveryEnabled(boolean)
+    /**
+     * Can setup UDP Discovery. This only works for TCp laterals right now. It allows TCP laterals
+     * to find each other by broadcasting to a multicast port.
+     * <p>
+     * @param udpDiscoveryEnabled The udpDiscoveryEnabled to set.
      */
     public void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled )
     {
         this.udpDiscoveryEnabled = udpDiscoveryEnabled;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#isUdpDiscoveryEnabled()
+    /**
+     * Whether or not TCP laterals can try to find each other by multicast communication.
+     * <p>
+     * @return Returns the udpDiscoveryEnabled.
      */
     public boolean isUdpDiscoveryEnabled()
     {
         return this.udpDiscoveryEnabled;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getUdpDiscoveryPort()
+    /**
+     * The port to use if UDPDiscovery is enabled.
+     * <p>
+     * @return Returns the udpDiscoveryPort.
      */
     public int getUdpDiscoveryPort()
     {
         return this.udpDiscoveryPort;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setUdpDiscoveryPort(int)
+    /**
+     * Sets the port to use if UDPDiscovery is enabled.
+     * <p>
+     * @param udpDiscoveryPort The udpDiscoveryPort to set.
      */
     public void setUdpDiscoveryPort( int udpDiscoveryPort )
     {
         this.udpDiscoveryPort = udpDiscoveryPort;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#getUdpDiscoveryAddr()
+    /**
+     * The address to broadcast to if UDPDiscovery is enabled.
+     * <p>
+     * @return Returns the udpDiscoveryAddr.
      */
     public String getUdpDiscoveryAddr()
     {
         return this.udpDiscoveryAddr;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes#setUdpDiscoveryAddr(java.lang.String)
+    /**
+     * Sets the address to broadcast to if UDPDiscovery is enabled.
+     * <p>
+     * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
      */
     public void setUdpDiscoveryAddr( String udpDiscoveryAddr )
     {
         this.udpDiscoveryAddr = udpDiscoveryAddr;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setAllowGet(boolean)
+    /**
+     * Is the lateral allowed to try and get from other laterals.
+     * <p>
+     * This replaces the old putOnlyMode
+     * <p>
+     * @param allowGet
      */
     public void setAllowGet( boolean allowGet )
     {
         this.allowGet = allowGet;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isAllowGet()
+    /**
+     * Is the lateral allowed to try and get from other laterals.
+     * <p>
+     * @return true if the lateral will try to get
      */
     public boolean isAllowGet()
     {
         return this.allowGet;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setAllowPut(boolean)
+    /**
+     * Is the lateral allowed to put objects to other laterals.
+     * <p>
+     * @param allowPut
      */
     public void setAllowPut( boolean allowPut )
     {
         this.allowPut = allowPut;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isAllowPut()
+    /**
+     * Is the lateral allowed to put objects to other laterals.
+     * <p>
+     * @return true if puts are allowed
      */
     public boolean isAllowPut()
     {
         return this.allowPut;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setIssueRemoveOnPut(boolean)
+    /**
+     * Should the client send a remove command rather than a put when update is called. This is a
+     * client option, not a receiver option. This allows you to prevent the lateral from serializing
+     * objects.
+     * <p>
+     * @param issueRemoveOnPut
      */
     public void setIssueRemoveOnPut( boolean issueRemoveOnPut )
     {
         this.issueRemoveOnPut = issueRemoveOnPut;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isIssueRemoveOnPut()
+    /**
+     * Should the client send a remove command rather than a put when update is called. This is a
+     * client option, not a receiver option. This allows you to prevent the lateral from serializing
+     * objects.
+     * <p>
+     * @return true if updates will result in a remove command being sent.
      */
     public boolean isIssueRemoveOnPut()
     {
         return this.issueRemoveOnPut;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.AuxiliaryCacheAttributes#copy()
+    /**
+     * @return AuxiliaryCacheAttributes
      */
     public AuxiliaryCacheAttributes copy()
     {
@@ -278,20 +288,28 @@ public class TCPLateralCacheAttributes
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#isFilterRemoveByHashCode()
+    /**
+     * Should the receiver try to match hashcodes. If true, the receiver will see if the client
+     * supplied a hshcode. If it did, then it will try to get the item locally. If the item exists,
+     * then it will compare the hashcode. if they are the same, it will not remove. This isn't
+     * perfect since different objects can have the same hashcode, but it is unlikely of objects of
+     * the same type.
+     * <p>
+     * @return boolean
      */
     public boolean isFilterRemoveByHashCode()
     {
         return this.filterRemoveByHashCode;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes#setFilterRemoveByHashCode(boolean)
+    /**
+     * Should the receiver try to match hashcodes. If true, the receiver will see if the client
+     * supplied a hshcode. If it did, then it will try to get the item locally. If the item exists,
+     * then it will compare the hashcode. if they are the same, it will not remove. This isn't
+     * perfect since different objects can have the same hashcode, but it is unlikely of objects of
+     * the same type.
+     * <p>
+     * @param filter
      */
     public void setFilterRemoveByHashCode( boolean filter )
     {
@@ -299,9 +317,9 @@ public class TCPLateralCacheAttributes
     }
 
     /**
-     * Used to key the instance TODO create another method for this and use
-     * toString for debugging only.
-     *
+     * Used to key the instance TODO create another method for this and use toString for debugging
+     * only.
+     * <p>
      * @return String
      */
     public String toString()

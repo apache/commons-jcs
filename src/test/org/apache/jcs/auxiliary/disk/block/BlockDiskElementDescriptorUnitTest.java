@@ -29,7 +29,6 @@ import junit.framework.TestCase;
 public class BlockDiskElementDescriptorUnitTest
     extends TestCase
 {
-
     /**
      * Verify that the memory used per element is reasonable.
      * <p>

@@ -49,7 +49,6 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.utils.match.KeyMatcherUtil;
 import org.apache.jcs.utils.struct.SortedPreferentialArray;
 import org.apache.jcs.utils.timing.ElapsedTimer;
 
@@ -600,7 +599,7 @@ public class IndexedDiskCache
                 storageLock.readLock().release();
             }
             
-            Set matchingKeys = KeyMatcherUtil.getMatchingKeysFromArray( pattern, keyArray );
+            Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
             
             Iterator keyIterator = matchingKeys.iterator();
             while ( keyIterator.hasNext() )

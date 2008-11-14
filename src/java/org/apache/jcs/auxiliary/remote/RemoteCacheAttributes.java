@@ -464,7 +464,7 @@ public class RemoteCacheAttributes
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our conenction with the server.
+     * loose our connection with the server.
      * <p>
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
@@ -475,7 +475,7 @@ public class RemoteCacheAttributes
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our conenction with the server.
+     * loose our connection with the server.
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */

@@ -1,14 +1,15 @@
-package org.apache.jcs.utils.match;
+package org.apache.jcs.engine.match;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * We'll probably want to make an interface for this so new implementations can be plugged in.
- */
-public class KeyMatcherUtil
+import org.apache.jcs.engine.match.behavior.IKeyMatcher;
+
+/** This implementation of the KeyMatcher uses standard Java Pattern matching. */
+public class KeyMatcherPatternImpl
+    implements IKeyMatcher
 {
     /**
      * Creates a pattern and find matches on the array.
@@ -17,7 +18,7 @@ public class KeyMatcherUtil
      * @param keyArray
      * @return Set of the matching keys
      */
-    public static Set getMatchingKeysFromArray( String pattern, Object[] keyArray )
+    public Set getMatchingKeysFromArray( String pattern, Object[] keyArray )
     {
         Pattern compiledPattern = Pattern.compile( pattern );
 

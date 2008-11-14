@@ -89,6 +89,10 @@ public class CacheEventQueueFactory
                                                                                     null );
             if ( eventQueue != null )
             {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Created custom event queue. " + eventQueue );
+                }
                 eventQueue.initialize( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, threadPoolName );
             }
             else

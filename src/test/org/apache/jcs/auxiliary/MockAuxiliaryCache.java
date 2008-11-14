@@ -28,8 +28,6 @@ import java.util.Set;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.IElementSerializer;
-import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -38,7 +36,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * @author Aaron Smuts
  */
 public class MockAuxiliaryCache
-    implements AuxiliaryCache
+    extends AbstractAuxiliaryCache
 {
     /** Don't change */
     private static final long serialVersionUID = 1L;
@@ -49,15 +47,9 @@ public class MockAuxiliaryCache
     /** Can setup status */
     public int status = CacheConstants.STATUS_ALIVE;
 
-    /** The event logger */
-    public ICacheEventLogger cacheEventLogger;
-
-    /** IElementSerializer elementSerializer */
-    public IElementSerializer elementSerializer;
-
     /** Times getMatching was Called */
     public int getMatchingCallCount = 0;
-    
+
     /**
      * @param ce
      * @throws IOException
@@ -92,7 +84,7 @@ public class MockAuxiliaryCache
         getMatchingCallCount++;
         return new HashMap();
     }
-    
+
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
@@ -146,13 +138,12 @@ public class MockAuxiliaryCache
         return 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatus()
+    /**
+     * @return int
+     * 
      */
     public int getStatus()
     {
-        // TODO Auto-generated method stub
         return status;
     }
 
@@ -162,7 +153,6 @@ public class MockAuxiliaryCache
      */
     public String getCacheName()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -173,7 +163,6 @@ public class MockAuxiliaryCache
     public Set getGroupKeys( String group )
         throws IOException
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -183,7 +172,6 @@ public class MockAuxiliaryCache
      */
     public IStats getStatistics()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -193,7 +181,6 @@ public class MockAuxiliaryCache
      */
     public String getStats()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -214,19 +201,9 @@ public class MockAuxiliaryCache
         return null;
     }
 
-    /**
-     * @param cacheEventLogger
-     */
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
+    /** @return null */
+    public String getEventLoggingExtraInfo()
     {
-        this.cacheEventLogger = cacheEventLogger;
-    }
-
-    /**
-     * @param elementSerializer
-     */
-    public void setElementSerializer( IElementSerializer elementSerializer )
-    {
-        this.elementSerializer = elementSerializer;
+        return null;
     }
 }

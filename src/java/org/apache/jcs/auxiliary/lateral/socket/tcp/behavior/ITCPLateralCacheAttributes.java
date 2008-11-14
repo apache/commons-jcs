@@ -195,5 +195,4 @@ public interface ITCPLateralCacheAttributes
      * @param filter
      */
     public void setFilterRemoveByHashCode( boolean filter );
-
 }

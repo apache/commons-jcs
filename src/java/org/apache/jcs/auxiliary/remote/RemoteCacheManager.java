@@ -53,7 +53,7 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 public class RemoteCacheManager
     implements AuxiliaryCacheManager, IShutdownObserver
 {
-    /** Dont' change */
+    /** Don't change */
     private static final long serialVersionUID = 798077557166389498L;
 
     /** The logger */

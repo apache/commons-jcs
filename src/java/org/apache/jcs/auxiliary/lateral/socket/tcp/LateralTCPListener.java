@@ -27,6 +27,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -293,6 +294,35 @@ public class LateralTCPListener
         return getCache( cacheName ).localGet( key );
     }
 
+    /**
+     * Gets the cache that was injected by the lateral factory. Calls get on the cache.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return Map
+     * @throws IOException
+     */
+    public Map handleGetMatching( String cacheName, String pattern )
+        throws IOException
+    {
+        getCnt++;
+        if ( log.isInfoEnabled() )
+        {
+            if ( getGetCnt() % 100 == 0 )
+            {
+                log.info( "GetMatching Count (port " + getTcpLateralCacheAttributes().getTcpListenerPort() + ") = "
+                    + getGetCnt() );
+            }
+        }
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "handleGetMatching> cacheName=" + cacheName + ", pattern = " + pattern );
+        }
+
+        return getCache( cacheName ).localGetMatching( pattern );
+    }
+    
     /**
      * Right now this does nothing.
      * <p>
@@ -587,6 +617,18 @@ public class LateralTCPListener
             else if ( led.command == LateralElementDescriptor.GET )
             {
                 Serializable obj = handleGet( cacheName, key );
+
+                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
+
+                if ( oos != null )
+                {
+                    oos.writeObject( obj );
+                    oos.flush();
+                }
+            }
+            else if ( led.command == LateralElementDescriptor.GET_MATCHING )
+            {
+                Map obj = handleGetMatching( cacheName, (String)key );
 
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
 

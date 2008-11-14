@@ -28,12 +28,12 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * @author asmuts
+ * @author Aaron Smuts
  */
 public class LateralTCPConcurrentRandomTestUtil
     extends TestCase
 {
-
+    /** Should we write out. */
     private static boolean isSysOut = false;
     //private static boolean isSysOut = true;
 
@@ -189,13 +189,6 @@ public class LateralTCPConcurrentRandomTestUtil
         if ( isSysOut )
         {
             System.out.println( s );
-        }
-        else
-        {
-            //if ( log.isInfoEnabled() )
-            //{
-            //    log.info( s );
-            //}
         }
     }
 }

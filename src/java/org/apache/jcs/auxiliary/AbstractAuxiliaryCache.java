@@ -7,6 +7,8 @@ import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.CacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.engine.match.KeyMatcherPatternImpl;
+import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /** This holds convenience methods used by most auxiliary caches. */
@@ -24,6 +26,9 @@ public abstract class AbstractAuxiliaryCache
 
     /** If there is no event logger, we will return this event for all create calls. */
     private static final ICacheEvent EMPTY_ICACHE_EVENT = new CacheEvent();
+
+    /** Key matcher used by the getMatching API */
+    protected IKeyMatcher keyMatcher = new KeyMatcherPatternImpl();
 
     /**
      * Logs an event if an event logger is configured.
@@ -162,5 +167,28 @@ public abstract class AbstractAuxiliaryCache
     public IElementSerializer getElementSerializer()
     {
         return this.elementSerializer;
+    }
+
+    /**
+     * Sets the key matcher used by get matching.
+     * <p>
+     * @param keyMatcher
+     */
+    public void setKeyMatcher( IKeyMatcher keyMatcher )
+    {
+        if ( keyMatcher != null )
+        {
+            this.keyMatcher = keyMatcher;
+        }
+    }
+
+    /**
+     * Rerturns the key matcher used by get matching.
+     * <p>
+     * @return keyMatcher
+     */
+    public IKeyMatcher getKeyMatcher()
+    {
+        return this.keyMatcher;
     }
 }

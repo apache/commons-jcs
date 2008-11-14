@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -232,7 +233,12 @@ public class LateralTCPService
             LateralElementDescriptor led = new LateralElementDescriptor( ce );
             // led.requesterId = requesterId; // later
             led.command = LateralElementDescriptor.GET;
-            return sender.sendAndReceive( led );
+            Object response = sender.sendAndReceive( led );
+            if ( response != null )
+            {
+                return (ICacheElement) response;
+            }
+            return null;
         }
         else
         {
@@ -241,6 +247,40 @@ public class LateralTCPService
         }
     }
 
+    /**
+     * The service does not get via this method, so this return empty.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    public Map getMatching( String cacheName, String pattern )
+        throws IOException
+    {
+        // if get is not allowed return
+        if ( this.getTcpLateralCacheAttributes().isAllowGet() )
+        {
+            CacheElement ce = new CacheElement( cacheName, pattern, null );
+            LateralElementDescriptor led = new LateralElementDescriptor( ce );
+            // led.requesterId = requesterId; // later
+            led.command = LateralElementDescriptor.GET_MATCHING;
+            
+            Object response = sender.sendAndReceive( led );
+            if ( response != null )
+            {
+                return (Map) response;
+            }
+            return Collections.EMPTY_MAP;
+        }
+        else
+        {
+            // nothing needs to be done
+            return null;
+        }
+    }
+    
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>

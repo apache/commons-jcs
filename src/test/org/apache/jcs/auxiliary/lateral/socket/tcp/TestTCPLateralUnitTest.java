@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
@@ -33,14 +35,12 @@ import org.apache.jcs.utils.timing.SleepUtil;
 
 /**
  * Basic unit tests for the sending and receiving portions of the lateral cache.
- *
+ * <p>
  * @author Aaron Smuts
- *
  */
 public class TestTCPLateralUnitTest
     extends TestCase
 {
-
     /**
      * Test setup
      */
@@ -50,16 +50,16 @@ public class TestTCPLateralUnitTest
     }
 
     /**
-     * Make sure we can send a bunch to the listener. This would be better if we
-     * could plugin a Mock CacheManger. The listener will instantiate on on its
-     * own. We have to configure one before that.
+     * Make sure we can send a bunch to the listener. This would be better if we could plugin a Mock
+     * CacheManger. The listener will instantiate it on its own. We have to configure one before
+     * that.
      * <p>
      * @throws Exception
      */
     public void testSimpleSend()
         throws Exception
     {
-
+        // SETUP
         // force initialization
         JCS.getInstance( "test" );
 
@@ -76,6 +76,7 @@ public class TestTCPLateralUnitTest
         // send to the listener
         LateralTCPSender lur = new LateralTCPSender( lac );
 
+        // DO WORK
         int numMes = 10;
         for ( int i = 0; i < numMes; i++ )
         {
@@ -89,35 +90,24 @@ public class TestTCPLateralUnitTest
 
         SleepUtil.sleepAtLeast( numMes * 3 );
 
+        // VERIFY
         System.out.println( "PutCount = " + listener.getPutCnt() );
         assertEquals( "Should have received " + numMes + " by now.", numMes, listener.getPutCnt() );
-
     }
 
     /**
-     *
      * @throws Exception
      */
     public void testReceive()
         throws Exception
     {
+        // VERIFY
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1101 );
         lattr.setTransmissionTypeName( "TCP" );
         MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
-        // force initialization
-        //LateralTCPCacheFactory fact = new LateralTCPCacheFactory();
-        //.getInstance( lattr, cacheMgr );
-        //LateralCacheNoWait nwait1 = (LateralCacheNoWait)lcMgr1.getCache(
-        // "test" );
-        //AuxiliaryCache nowait1 = fact.createCache( lattr, cacheMgr );
-
-        //nowait1.update( );
-
-        // start the listener
-        //LateralTCPListener listener = (LateralTCPListener)
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
@@ -128,6 +118,7 @@ public class TestTCPLateralUnitTest
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
 
+        // DO WORK
         int cnt = 100;
         for ( int i = 0; i < cnt; i++ )
         {
@@ -137,18 +128,20 @@ public class TestTCPLateralUnitTest
 
         SleepUtil.sleepAtLeast( 1000 );
 
+        // VERIFY
         System.out.println( "cache. getPutCount = " + cacheMgr.getCache().getUpdateCount() );
-
         assertEquals( "Didn't get the correct number", cnt, cacheMgr.getCache().getUpdateCount() );
     }
 
     /**
      * Send objects with the same key but different values.
+     * <p>
      * @throws Exception
      */
     public void testSameKeyDifferentObject()
         throws Exception
     {
+        // SETUP
         // setup a listener
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1103 );
@@ -168,6 +161,7 @@ public class TestTCPLateralUnitTest
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
 
+        // DO WORK
         ICacheElement element = new CacheElement( "test", "key", "value1" );
         service.update( element );
 
@@ -176,16 +170,17 @@ public class TestTCPLateralUnitTest
         ICacheElement element2 = new CacheElement( "test", "key", "value2" );
         service.update( element2 );
 
-        SleepUtil.sleepAtLeast(  1000 );
+        SleepUtil.sleepAtLeast( 1000 );
 
+        // VERIFY
         ICacheElement cacheElement = cacheMgr.getCache().get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
 
-
     /**
      * Send objects with the same key but different values.
+     * <p>
      * @throws Exception
      */
     public void testSameKeyObjectDifferentValueObject()
@@ -203,13 +198,14 @@ public class TestTCPLateralUnitTest
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
-        lattr2.setTcpListenerPort( 1106);
+        lattr2.setTcpListenerPort( 1106 );
         lattr2.setTransmissionTypeName( "TCP" );
         lattr2.setTcpServer( "localhost:1105" );
 
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
 
+        // DO WORK
         String key = "key";
         ICacheElement element = new CacheElement( "test", key, "value1" );
         service.update( element );
@@ -221,19 +217,22 @@ public class TestTCPLateralUnitTest
 
         SleepUtil.sleepAtLeast( 1000 );
 
+        // VERIFY
         ICacheElement cacheElement = cacheMgr.getCache().get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
 
     /**
-     * Create a listener.  Add an element to the listeners cache.  Setup a service.  Try to get from the service.
+     * Create a listener. Add an element to the listeners cache. Setup a service. Try to get from
+     * the service.
      * <p>
      * @throws Exception
      */
-    public void testSendAndReceived()
+    public void testGet_SendAndReceived()
         throws Exception
     {
+        // SETUP
         // setup a listener
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1107 );
@@ -242,7 +241,6 @@ public class TestTCPLateralUnitTest
 
         // get the listener started
         // give it our mock cache manager
-        //LateralTCPListener listener = (LateralTCPListener)
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         // add the item to the listeners cache
@@ -257,13 +255,63 @@ public class TestTCPLateralUnitTest
         LateralTCPService service = new LateralTCPService( lattr2 );
         service.setListenerId( 123456 );
 
-        SleepUtil.sleepAtLeast(  300 );
+        SleepUtil.sleepAtLeast( 300 );
 
         // DO WORK
         ICacheElement result = service.get( "test", "key" );
 
+        // VERIFY
         System.out.println( "testSendAndReceived, result = " + result );
         assertNotNull( "Result should not be null.", result );
         assertEquals( "Didn't get the correct object", element.getVal(), result.getVal() );
+    }
+
+    /**
+     * Create a listener. Add an element to the listeners cache. Setup a service. Try to get from
+     * the service.
+     * <p>
+     * @throws Exception
+     */
+    public void testGetMatching_WithData()
+        throws Exception
+    {
+        // SETUP
+        // setup a listener
+        TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
+        lattr.setTcpListenerPort( 1108 );
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
+
+        // get the listener started
+        // give it our mock cache manager
+        LateralTCPListener.getInstance( lattr, cacheMgr );
+
+        String keyprefix1 = "MyPrefix1";
+        int numToInsertPrefix1 = 10;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertPrefix1; i++ )
+        {
+            // add the item to the listeners cache
+            ICacheElement element = new CacheElement( "test", keyprefix1 + String.valueOf( i ), new Integer( i ) );
+            cacheMgr.getCache().update( element );
+        }
+
+        // setup a service to talk to the listener started above.
+        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
+        lattr2.setTcpListenerPort( 1108 );
+        lattr2.setTcpServer( "localhost:1108" );
+
+        LateralTCPService service = new LateralTCPService( lattr2 );
+        service.setListenerId( 123456 );
+
+        SleepUtil.sleepAtLeast( 300 );
+
+        // DO WORK
+        Map result = service.getMatching( "test", keyprefix1 + ".+" );
+
+        // VERIFY
+        System.out.println( "testSendAndReceived, result = " + result );
+        assertNotNull( "Result should not be null.", result );
+        assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result.size() );
     }
 }

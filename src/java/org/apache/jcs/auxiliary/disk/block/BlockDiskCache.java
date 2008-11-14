@@ -43,7 +43,6 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.utils.match.KeyMatcherUtil;
 
 import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
@@ -244,7 +243,7 @@ public class BlockDiskCache
                 storageLock.readLock().release();
             }
             
-            Set matchingKeys = KeyMatcherUtil.getMatchingKeysFromArray( pattern, keyArray );
+            Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
             
             Iterator keyIterator = matchingKeys.iterator();
             while ( keyIterator.hasNext() )

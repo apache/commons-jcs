@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.rmi.UnmarshalException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.CacheAdaptor;
@@ -40,8 +41,6 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
-import org.apache.jcs.engine.behavior.IElementSerializer;
-import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -52,7 +51,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * their order of arrival via the cache event queue processor.
  */
 public class LateralCacheNoWait
-    implements AuxiliaryCache
+    extends AbstractAuxiliaryCache
 {
     /** Don't change */
     private static final long serialVersionUID = -7251187566116178475L;
@@ -74,12 +73,6 @@ public class LateralCacheNoWait
 
     /** times put called */
     private int putCount = 0;
-
-    /** An optional event logger */
-    private ICacheEventLogger cacheEventLogger;
-
-    /** The serializer. */
-    private IElementSerializer elementSerializer;
 
     /**
      * Constructs with the given lateral cache, and fires up an event queue for aysnchronous
@@ -203,7 +196,7 @@ public class LateralCacheNoWait
      * Synchronously reads from the lateral cache.
      * <p>
      * @param pattern
-     * @return ICacheElement if found, else null
+     * @return ICacheElement if found, else empty
      */
     public Map getMatching( String pattern )
     {
@@ -232,9 +225,9 @@ public class LateralCacheNoWait
                 eventQueue.destroy();
             }
         }
-        return null;
+        return Collections.EMPTY_MAP;
     }
-    
+
     /**
      * @param groupName
      * @return Set
@@ -371,27 +364,6 @@ public class LateralCacheNoWait
     }
 
     /**
-     * Allows it to be injected.
-     * <p>
-     * @param cacheEventLogger
-     */
-    public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
-    {
-        this.cacheEventLogger = cacheEventLogger;
-    }
-
-    /**
-     * Allows you to inject a custom serializer. A good example would be a compressing standard
-     * serializer.
-     * <p>
-     * @param elementSerializer
-     */
-    public void setElementSerializer( IElementSerializer elementSerializer )
-    {
-        this.elementSerializer = elementSerializer;
-    }
-
-    /**
      * getStats
      * @return String
      */
@@ -400,9 +372,18 @@ public class LateralCacheNoWait
         return getStatistics().toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+    /**
+     * this won't be called since we don't do ICache logging here.
+     * <p>
+     * @return String
+     */
+    public String getEventLoggingExtraInfo()
+    {
+        return "Lateral Cache No Wait";
+    }
+
+    /**
+     * @return statistics about this communication
      */
     public IStats getStatistics()
     {

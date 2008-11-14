@@ -53,14 +53,15 @@ public class RemoteCacheFactory
 
     /**
      * For LOCAL clients we get a handle to all the failovers, but we do not register a listener
-     * with them. We create the RemoteCacheManager, but we do not get a cache. The failover runner
-     * will get a cache from the manager. When the primary is restored it will tell the manager for
-     * the failover to deregister the listener.
+     * with them. We create the RemoteCacheManager, but we do not get a cache.
      * <p>
-     * @param iaca 
-     * @param cacheMgr 
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * The failover runner will get a cache from the manager. When the primary is restored it will
+     * tell the manager for the failover to deregister the listener.
+     * <p>
+     * @param iaca
+     * @param cacheMgr
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return AuxiliaryCache
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
@@ -86,7 +87,8 @@ public class RemoteCacheFactory
 
                 failovers.add( rca.getRemoteHost() + ":" + rca.getRemotePort() );
 
-                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
+                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
+                                                                         elementSerializer );
                 ICache ic = rcm.getCache( rca );
                 if ( ic != null )
                 {
@@ -113,7 +115,8 @@ public class RemoteCacheFactory
 
                     rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                     rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-                    RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
+                    RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
+                                                                             elementSerializer );
                     // add a listener if there are none, need to tell rca what
                     // number it is at
                     if ( ( !primayDefined && fCnt == 1 ) || noWaits.size() <= 0 )
@@ -148,7 +151,8 @@ public class RemoteCacheFactory
                 // p( "tcp server = " + server );
                 rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                 rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
-                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
+                RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
+                                                                         elementSerializer );
                 rca.setRemoteType( RemoteCacheAttributes.CLUSTER );
                 ICache ic = rcm.getCache( rca );
                 if ( ic != null )

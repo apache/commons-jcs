@@ -21,6 +21,8 @@ package org.apache.jcs.access;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -193,7 +195,35 @@ public class CacheAccess
 
         return ( element != null ) ? element.getVal() : null;
     }
-
+    
+    /**
+     * Retrieve matching objects from the cache region this instance provides access to.
+     * <p>
+     * @param pattern - a key pattern for the objects stored
+     * @return A map of key to values.  These are stripped from the wrapper.
+     */
+    public HashMap getMatching( String pattern )
+    {
+        HashMap unwrappedResults = new HashMap();
+        
+        Map wrappedResults = this.cacheControl.getMatching( pattern );
+        if ( wrappedResults != null )
+        {
+            Set keySet = wrappedResults.keySet();
+            Iterator it = keySet.iterator();
+            while ( it.hasNext() )
+            {
+                Object key = it.next();
+                ICacheElement element = (ICacheElement)wrappedResults.get( key );
+                if ( element != null )
+                {
+                    unwrappedResults.put( key, element.getVal() );
+                }
+            }            
+        }
+        return unwrappedResults;
+    }
+    
     /**
      * This method returns the ICacheElement wrapper which provides access to element info and other
      * attributes.

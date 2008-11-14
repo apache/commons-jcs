@@ -39,27 +39,25 @@ public class LateralCacheAttributes
     private static final boolean DEFAULT_RECEIVE = true;
 
     /** THe type of lateral */
-    String transmissionTypeName = "UDP";
+    private String transmissionTypeName = "UDP";
     
-    int transmissionType = UDP;
-
-    String httpServers;
+    /** indicates the lateral type, this needs to change */
+    private int transmissionType = UDP;
+    
+    /** The heep servers */
+    private String httpServers;
 
     /** used to identify the service that this manager will be operating on */
-    String httpServer = "";
+    private String httpServer = "";
 
-    String httpReceiveServlet = "";
+    /** this needs to change */
+    private String udpMulticastAddr = "228.5.6.7";
 
-    String httpDeleteServlet = "";
+    /** this needs to change */
+    private int udpMulticastPort = 6789;
 
-    String udpMulticastAddr = "228.5.6.7";
-
-    int udpMulticastPort = 6789;
-
-    int httpListenerPort = 8080;
-
-    /** REMOVE THIS: JAVAGROUPS ------------------------- */
-    private String jgChannelProperties = null;
+    /** this needs to change */
+    private int httpListenerPort = 8080;
 
     /** disables gets from laterals */
     boolean putOnlyMode = true;
@@ -184,10 +182,6 @@ public class LateralCacheAttributes
         {
             transmissionTypeName = "XMLRPC";
         }
-        else if ( val == JAVAGROUPS )
-        {
-            transmissionTypeName = "JAVAGROUPS";
-        }
     }
 
     /**
@@ -222,11 +216,6 @@ public class LateralCacheAttributes
         {
             transmissionType = XMLRPC;
         }
-        else if ( val.equals( "JAVAGROUPS" ) )
-        {
-            transmissionType = JAVAGROUPS;
-        }
-
     }
 
     /**
@@ -255,16 +244,6 @@ public class LateralCacheAttributes
     public boolean getPutOnlyMode()
     {
         return putOnlyMode;
-    }
-
-    public String getJGChannelProperties()
-    {
-        return jgChannelProperties;
-    }
-
-    public void setJGChannelProperties( String channelProperties )
-    {
-        this.jgChannelProperties = channelProperties;
     }
 
     /**
@@ -300,10 +279,8 @@ public class LateralCacheAttributes
         return receive;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
+    /**
+     * @return debug string.
      */
     public String toString()
     {
@@ -316,5 +293,4 @@ public class LateralCacheAttributes
         buf.append( transmissionTypeName + httpServer + udpMulticastAddr + String.valueOf( udpMulticastPort ) );
         return buf.toString();
     }
-
 }

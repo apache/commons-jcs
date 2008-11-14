@@ -155,12 +155,18 @@ public class ZombieRemoteCacheService
         return null;
     }
 
-    /** TODO finish */
+    /**
+     * @param cacheName 
+     * @param pattern 
+     * @param requesterId 
+     * @return empty map
+     * @throws IOException 
+     * 
+     */
     public Map getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.EMPTY_MAP;
     }
     
     /**

@@ -28,7 +28,7 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
- * @author asmuts
+ * @author Aaron Smuts
  */
 public class LateralTCPFilterRemoveHashCodeUnitTest
     extends TestCase

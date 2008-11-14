@@ -45,7 +45,6 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.utils.match.KeyMatcherUtil;
 
 import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
@@ -326,7 +325,7 @@ public abstract class AbstractDiskCache
             keyArray = purgatory.keySet().toArray();
         }
 
-        Set matchingKeys = KeyMatcherUtil.getMatchingKeysFromArray( pattern, keyArray );
+        Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
         // call getMultiple with the set
         Map result = processGetMultiple( matchingKeys );

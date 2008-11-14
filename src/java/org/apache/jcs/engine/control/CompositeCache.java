@@ -47,6 +47,8 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
 import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.engine.match.KeyMatcherPatternImpl;
+import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 import org.apache.jcs.engine.stats.CacheStats;
@@ -55,7 +57,6 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.utils.match.KeyMatcherUtil;
 
 /**
  * This is the primary hub for a single cache/region. It controls the flow of items through the
@@ -119,6 +120,9 @@ public class CompositeCache
      * but they are tied closely together. More than one doesn't make much sense.
      */
     private MemoryCache memCache;
+
+    /** Key matcher used by the getMatching API */
+    protected IKeyMatcher keyMatcher = new KeyMatcherPatternImpl();
 
     /**
      * Constructor for the Cache object
@@ -927,7 +931,7 @@ public class CompositeCache
         // this avoids locking the memory cache, but it uses more memory
         Object[] keyArray = memCache.getKeyArray();
 
-        Set matchingKeys = KeyMatcherUtil.getMatchingKeysFromArray( pattern, keyArray );
+        Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
         // call get multiple
         return getMultipleFromMemory( matchingKeys );
@@ -1768,6 +1772,29 @@ public class CompositeCache
             log.debug( "Adding event to Element Event Queue" );
         }
         elementEventQ.addElementEvent( hand, event );
+    }
+
+    /**
+     * Sets the key matcher used by get matching.
+     * <p>
+     * @param keyMatcher
+     */
+    public void setKeyMatcher( IKeyMatcher keyMatcher )
+    {
+        if ( keyMatcher != null )
+        {
+            this.keyMatcher = keyMatcher;
+        }
+    }
+
+    /**
+     * Rerturns the key matcher used by get matching.
+     * <p>
+     * @return keyMatcher
+     */
+    public IKeyMatcher getKeyMatcher()
+    {
+        return this.keyMatcher;
     }
 
     /**

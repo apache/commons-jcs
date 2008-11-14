@@ -29,6 +29,7 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
@@ -39,6 +40,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -289,7 +291,7 @@ public class CompositeCacheDiskUsageUnitTest
      * @author Aaron Smuts
      */
     public class MockAuxCache
-        implements AuxiliaryCache
+        extends AbstractAuxiliaryCache
     {
         /** Don't change */
         private static final long serialVersionUID = 1L;
@@ -310,9 +312,10 @@ public class CompositeCacheDiskUsageUnitTest
             lastUpdatedItem = null;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#update(org.apache.jcs.engine.behavior.ICacheElement)
+        /**
+         * @param ce 
+         * @throws IOException 
+         * 
          */
         public void update( ICacheElement ce )
             throws IOException
@@ -321,14 +324,15 @@ public class CompositeCacheDiskUsageUnitTest
             updateCount++;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#get(java.io.Serializable)
+        /**
+         * @param key 
+         * @return ICacheElement
+         * @throws IOException 
+         * 
          */
         public ICacheElement get( Serializable key )
             throws IOException
         {
-            // TODO Auto-generated method stub
             return null;
         }
 
@@ -344,14 +348,15 @@ public class CompositeCacheDiskUsageUnitTest
             return new HashMap();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#remove(java.io.Serializable)
+        /**
+         * @param key 
+         * @return false
+         * @throws IOException 
+         * 
          */
         public boolean remove( Serializable key )
             throws IOException
         {
-            // TODO Auto-generated method stub
             return false;
         }
 
@@ -474,15 +479,17 @@ public class CompositeCacheDiskUsageUnitTest
 
         }
 
-        /**
-         * @param pattern
-         * @return Map
-         * @throws IOException
-         */
+        public String getEventLoggingExtraInfo()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
         public Map getMatching( String pattern )
             throws IOException
         {
-            return new HashMap();
+            // TODO Auto-generated method stub
+            return null;
         }
     }
 

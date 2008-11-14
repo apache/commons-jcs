@@ -39,8 +39,8 @@ public class BlockDiskCacheUnitTest
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
-        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        //System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        //System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
 
     /**
@@ -71,7 +71,7 @@ public class BlockDiskCacheUnitTest
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
-        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        //System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        //System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
 }

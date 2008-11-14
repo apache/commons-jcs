@@ -49,7 +49,7 @@ public class CompositeCacheConfiguratorUnitTest
 
         // VERIFY
         assertNotNull( "Should have an auxcache.", result );
-        assertNotNull( "Should have an event logger.", result.cacheEventLogger );
+        assertNotNull( "Should have an event logger.", result.getCacheEventLogger() );
     }
 
     /**

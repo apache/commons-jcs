@@ -56,8 +56,10 @@ import EDU.oswego.cs.dl.util.concurrent.FutureResult;
 import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
 
 /**
- * Client proxy for an RMI remote cache. This handles gets, updates, and removes. It also initiates
- * failover recovery when an error is encountered.
+ * Client proxy for an RMI remote cache.
+ * <p>
+ * This handles gets, updates, and removes. It also initiates failover recovery when an error is
+ * encountered.
  */
 public class RemoteCache
     extends AbstractAuxiliaryCacheEventLogging
@@ -81,13 +83,13 @@ public class RemoteCache
     /** The listener */
     private IRemoteCacheListener listener;
 
-    /** Default element attribures */
+    /** Default element attributes */
     private IElementAttributes attr = null;
 
     /** A thread pool for gets if configured. */
     private ThreadPool pool = null;
 
-    /** Should we get asynchonously using a pool. */
+    /** Should we get asynchronously using a pool. */
     private boolean usePoolForGet = false;
 
     /**

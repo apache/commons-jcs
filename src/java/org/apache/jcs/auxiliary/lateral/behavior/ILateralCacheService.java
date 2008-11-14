@@ -21,6 +21,7 @@ package org.apache.jcs.auxiliary.lateral.behavior;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -67,4 +68,16 @@ public interface ILateralCacheService
      * @return keys
      */
     Set getGroupKeys( String cacheName, String groupName );
+    
+    /**
+     * Gets multiple items from the cache matching the pattern.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    Map getMatching( String cacheName, String pattern )
+        throws IOException;    
 }

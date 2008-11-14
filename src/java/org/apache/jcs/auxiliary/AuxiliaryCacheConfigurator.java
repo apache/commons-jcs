@@ -58,7 +58,8 @@ public class AuxiliaryCacheConfigurator
             PropertySetter.setProperties( cacheEventLogger, props, cacheEventLoggerAttributePrefix + "." );
             if ( log.isInfoEnabled() )
             {
-                log.info( "Using custom cache event logger [" + cacheEventLogger + "] for auxiliary [" + auxPrefix + "]" );
+                log.info( "Using custom cache event logger [" + cacheEventLogger + "] for auxiliary [" + auxPrefix
+                    + "]" );
             }
         }
         else
@@ -91,8 +92,8 @@ public class AuxiliaryCacheConfigurator
                                org.apache.jcs.engine.behavior.IElementSerializer.class, null );
         if ( elementSerializer != null )
         {
-            String cacheEventLoggerAttributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
-            PropertySetter.setProperties( elementSerializer, props, cacheEventLoggerAttributePrefix + "." );
+            String attributePrefix = auxPrefix + SERIALIZER_PREFIX + ATTRIBUTE_PREFIX;
+            PropertySetter.setProperties( elementSerializer, props, attributePrefix + "." );
             if ( log.isInfoEnabled() )
             {
                 log.info( "Using custom element serializer [" + elementSerializer + "] for auxiliary [" + auxPrefix

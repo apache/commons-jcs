@@ -49,6 +49,9 @@ public class LateralElementDescriptor
     /** Command to return an object. */
     public final static int GET = 5;
 
+    /** Command to return an object. */
+    public final static int GET_MATCHING = 6;
+
     /** The Cache Element that we are distributing. */
     public ICacheElement ce;
 

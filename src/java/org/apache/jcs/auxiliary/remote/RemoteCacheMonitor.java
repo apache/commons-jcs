@@ -64,6 +64,7 @@ public class RemoteCacheMonitor
 
     /**
      * Configures the idle period between repairs.
+     * <p>
      * @param idlePeriod The new idlePeriod value
      */
     public static void setIdlePeriod( long idlePeriod )
@@ -81,7 +82,8 @@ public class RemoteCacheMonitor
     }
 
     /**
-     * Returns the singleton instance;
+     * Returns the singleton instance.
+     * <p>
      * @return The instance value
      */
     static RemoteCacheMonitor getInstance()
@@ -220,7 +222,7 @@ public class RemoteCacheMonitor
         while ( true );
     }
 
-    /** Sets the "alright" flag to false in a critial section. */
+    /** Sets the "aright" flag to false in a critical section. */
     private synchronized void bad()
     {
         alright = false;

@@ -47,113 +47,82 @@ public class MockLateralCache
 
     /**
      * Nothing.
+     * @param ce
+     * @throws IOException
      */
     protected void processUpdate( ICacheElement ce )
         throws IOException
     {
-        // TODO Auto-generated method stub
-
+        // nothing
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#get(java.io.Serializable)
+    /**
+     * @param key
+     * @return ICacheElement
+     * @throws IOException
      */
     protected ICacheElement processGet( Serializable key )
         throws IOException
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#remove(java.io.Serializable)
+    /**
+     * @param key
+     * @return false
+     * @throws IOException
      */
     protected boolean processRemove( Serializable key )
         throws IOException
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#removeAll()
+    /**
+     * @throws IOException
      */
     public void processRemoveAll()
         throws IOException
     {
-        // TODO Auto-generated method stub
-
+        //nothing
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#dispose()
+    /**
+     * @throws IOException
      */
     public void processDispose()
         throws IOException
     {
-        // TODO Auto-generated method stub
-
+        // nothing
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#getSize()
-     */
+    /** @return 0 */
     public int getSize()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#getStatus()
-     */
+    /** @return 0 */
     public int getStatus()
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#getStats()
-     */
+    /** @return String */
     public String getStats()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICache#getCacheName()
-     */
+    /** @return String */
     public String getCacheName()
     {
         return super.getCacheName();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType()
-     */
+    /** @return type */
     public int getCacheType()
     {
         return super.getCacheType();
     }
-
 }

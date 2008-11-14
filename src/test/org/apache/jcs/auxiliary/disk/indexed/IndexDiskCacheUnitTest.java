@@ -89,8 +89,7 @@ public class IndexDiskCacheUnitTest
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value key:" + i, "data:" + i, element.getVal() );
         }
-
-        System.out.println( disk.getStats() );
+        //System.out.println( disk.getStats() );
     }
 
     /**
@@ -743,8 +742,8 @@ public class IndexDiskCacheUnitTest
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
-        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        //System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        //System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
     
     /**
@@ -775,7 +774,7 @@ public class IndexDiskCacheUnitTest
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
-        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+        //System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+        //System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }    
 }

@@ -149,7 +149,7 @@ public abstract class LateralCacheAbstractManager
         synchronized ( this.caches )
         {
             this.lateralService = lateralService;
-            // need to implment an observer for some types of laterals( http and
+            // need to implement an observer for some types of laterals( http and
             // tcp)
             //this.lateralWatch.setCacheWatch(lateralWatch);
             for ( Iterator en = this.caches.values().iterator(); en.hasNext(); )

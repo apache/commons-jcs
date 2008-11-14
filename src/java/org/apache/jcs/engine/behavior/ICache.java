@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.jcs.engine.match.behavior.IKeyMatcher;
+
 /**
  * This is the top level interface for all cache like structures. It defines the methods used
  * internally by JCS to access, modify, and instrument such structures.
@@ -129,4 +131,11 @@ public interface ICache
      * @return usually the region name.
      */
     String getCacheName();
+    
+    /**
+     * Sets the key matcher used by get matching. 
+     * <p>
+     * @param keyMatcher
+     */
+    void setKeyMatcher( IKeyMatcher keyMatcher );
 }

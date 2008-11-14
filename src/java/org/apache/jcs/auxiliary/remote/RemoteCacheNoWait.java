@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.rmi.UnmarshalException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
@@ -69,7 +69,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  */
 public class RemoteCacheNoWait
     extends AbstractAuxiliaryCache
-    implements AuxiliaryCache
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -3104089136003714717L;
@@ -85,6 +84,9 @@ public class RemoteCacheNoWait
 
     /** how many times get has been called. */
     private int getCount = 0;
+
+    /** how many times getMatching has been called. */
+    private int getMatchingCount = 0;
 
     /** how many times getMultiple has been called. */
     private int getMultipleCount = 0;
@@ -157,7 +159,7 @@ public class RemoteCacheNoWait
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Retrying the get owing to UnmarshalException..." );
+                log.debug( "Retrying the get owing to UnmarshalException." );
             }
 
             try
@@ -176,21 +178,57 @@ public class RemoteCacheNoWait
         {
             // We don't want to destroy the queue on a get failure.
             // The RemoteCache will Zombie and queue.
-            // Since get does not use the queue, I dont want to killing the queue.
+            // Since get does not use the queue, I don't want to kill the queue.
             throw ex;
         }
 
         return null;
     }
 
-    /** TODO fix this */
+    /**
+     * @param pattern 
+     * @return Map
+     * @throws IOException 
+     * 
+     */
     public Map getMatching( String pattern )
         throws IOException
     {
-        // TODO Auto-generated method stub
-        return null;
+        getMatchingCount++;
+        try
+        {
+            return remoteCacheClient.getMatching( pattern );
+        }
+        catch ( UnmarshalException ue )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Retrying the getMatching owing to UnmarshalException." );
+            }
+
+            try
+            {
+                return remoteCacheClient.getMatching( pattern );
+            }
+            catch ( IOException ex )
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Failed in retrying the getMatching for the second time. " + ex.getMessage() );
+                }
+            }
+        }
+        catch ( IOException ex )
+        {
+            // We don't want to destroy the queue on a get failure.
+            // The RemoteCache will Zombie and queue.
+            // Since get does not use the queue, I don't want to kill the queue.
+            throw ex;
+        }
+
+        return Collections.EMPTY_MAP;
     }
-    
+
     /**
      * Gets multiple items from the cache based on the given set of keys. Sends the getMultiple
      * request on to the server rather than looping through the requested keys.
@@ -231,7 +269,7 @@ public class RemoteCacheNoWait
         {
             // We don't want to destroy the queue on a get failure.
             // The RemoteCache will Zombie and queue.
-            // Since get does not use the queue, I dont want to killing the queue.
+            // Since get does not use the queue, I don't want to kill the queue.
             throw ex;
         }
 
@@ -492,6 +530,11 @@ public class RemoteCacheNoWait
         se = new StatElement();
         se.setName( "Get Count" );
         se.setData( "" + this.getCount );
+        elems.add( se );
+
+        se = new StatElement();
+        se.setName( "GetMatching Count" );
+        se.setData( "" + this.getMatchingCount );
         elems.add( se );
 
         se = new StatElement();

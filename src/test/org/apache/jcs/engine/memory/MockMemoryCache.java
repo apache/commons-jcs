@@ -32,8 +32,7 @@ import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * Mock implementation of a memory cache for testing things like the memory
- * shrinker.
+ * Mock implementation of a memory cache for testing things like the memory shrinker.
  * <p>
  * @author Aaron Smuts
  */
@@ -46,35 +45,45 @@ public class MockMemoryCache
     /** Internal map */
     private HashMap map = new HashMap();
 
-    /** The number of times waterfall was called.   */
+    /** The number of times waterfall was called. */
     public int waterfallCallCount = 0;
 
-    /** The number passed to the last call of free elements.   */
+    /** The number passed to the last call of free elements. */
     public int lastNumberOfFreedElements = 0;
 
+    /**
+     * Does nothing
+     * @param cache
+     */
     public void initialize( CompositeCache cache )
     {
-        // TODO Auto-generated method stub
+        // nothinh
     }
 
+    /**
+     * Destroy the memory cache
+     * <p>
+     * @throws IOException
+     */
     public void dispose()
         throws IOException
     {
-        // TODO Auto-generated method stub
-
+        // nothing
     }
 
+    /** @return size */
     public int getSize()
     {
         return map.size();
     }
 
+    /** @return stats */
     public IStats getStatistics()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    /** @return null */
     public Iterator getIterator()
     {
         // return
@@ -141,6 +150,10 @@ public class MockMemoryCache
         waterfallCallCount++;
     }
 
+    /**
+     * @param ce
+     * @throws IOException
+     */
     public void update( ICacheElement ce )
         throws IOException
     {
@@ -150,10 +163,8 @@ public class MockMemoryCache
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.memory.MemoryCache#getCacheAttributes()
+    /**
+     * @return ICompositeCacheAttributes
      */
     public ICompositeCacheAttributes getCacheAttributes()
     {
@@ -172,18 +183,18 @@ public class MockMemoryCache
 
     public CompositeCache getCompositeCache()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public Set getGroupKeys( String group )
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.jcs.engine.memory.MemoryCache#freeElements(int)
+    /**
+     * @param numberToFree
+     * @return 0
+     * @throws IOException
      */
     public int freeElements( int numberToFree )
         throws IOException

@@ -87,7 +87,8 @@ public class RemoteCacheListener
      * Only need one since it does work for all regions, just reference by multiple region names.
      * <p>
      * The constructor exports this object, making it available to receive incoming calls. The
-     * calback port is anonymous unless a local port value was specified in the configuration.
+     * callback port is anonymous unless a local port value was specified in the configuration.
+     * <p>
      * @param irca
      * @param cacheMgr
      */

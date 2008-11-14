@@ -25,7 +25,6 @@ import org.apache.jcs.engine.CacheWatchRepairable;
 
 /**
  * Same as CacheWatcherWrapper but implements the IRemoteCacheWatch interface.
- *
  */
 public class RemoteCacheWatchRepairable
     extends CacheWatchRepairable
