@@ -566,21 +566,7 @@ public class CompositeCache
                                 hitCountAux++;
                                 auxHitCountByIndex[i]++;
 
-                                // Spool the item back into memory
-                                // only spool if the mem cache size is greater
-                                // than 0, else the item will immediately get put
-                                // into purgatory
-                                if ( memCache.getCacheAttributes().getMaxObjects() > 0 )
-                                {
-                                    memCache.update( element );
-                                }
-                                else
-                                {
-                                    if ( log.isDebugEnabled() )
-                                    {
-                                        log.debug( "Skipping memory update since no items are allowed in memory" );
-                                    }
-                                }
+                                copyAuxiliaryRetrievedItemToMemory( element );
                             }
 
                             found = true;
@@ -781,60 +767,7 @@ public class CompositeCache
                     log.debug( "Got CacheElements: " + elementsFromAuxiliary );
                 }
 
-                Iterator elementFromAuxiliaryIterator = new HashMap( elementsFromAuxiliary ).values().iterator();
-
-                while ( elementFromAuxiliaryIterator.hasNext() )
-                {
-                    ICacheElement element = (ICacheElement) elementFromAuxiliaryIterator.next();
-
-                    // Item found in one of the auxiliary caches.
-                    if ( element != null )
-                    {
-                        if ( isExpired( element ) )
-                        {
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
-                            }
-
-                            missCountExpired++;
-
-                            // This will tell the remotes to remove the item
-                            // based on the element's expiration policy. The elements attributes
-                            // associated with the item when it created govern its behavior
-                            // everywhere.
-                            remove( element.getKey() );
-                            elementsFromAuxiliary.remove( element.getKey() );
-                        }
-                        else
-                        {
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( cacheName + " - Aux cache[" + i + "] hit" );
-                            }
-
-                            // Update counters
-                            hitCountAux++;
-                            auxHitCountByIndex[i]++;
-
-                            // Spool the item back into memory
-                            // only spool if the mem cache size is greater
-                            // than 0, else the item will immediately get put
-                            // into purgatory
-                            if ( memCache.getCacheAttributes().getMaxObjects() > 0 )
-                            {
-                                memCache.update( element );
-                            }
-                            else
-                            {
-                                if ( log.isDebugEnabled() )
-                                {
-                                    log.debug( "Skipping memory update since no items are allowed in memory" );
-                                }
-                            }
-                        }
-                    }
-                }
+                processRetrievedElements( i, elementsFromAuxiliary );
 
                 elements.putAll( elementsFromAuxiliary );
 
@@ -853,7 +786,7 @@ public class CompositeCache
     }
 
     /**
-     *Build a map of all the matching elements in all of the auxiliaries and memory.
+     * Build a map of all the matching elements in all of the auxiliaries and memory.
      * <p>
      * @param pattern
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
@@ -987,66 +920,88 @@ public class CompositeCache
                     log.debug( "Got CacheElements: " + elementsFromAuxiliary );
                 }
 
-                Iterator elementFromAuxiliaryIterator = new HashMap( elementsFromAuxiliary ).values().iterator();
-
-                while ( elementFromAuxiliaryIterator.hasNext() )
-                {
-                    ICacheElement element = (ICacheElement) elementFromAuxiliaryIterator.next();
-
-                    // Item found in one of the auxiliary caches.
-                    if ( element != null )
-                    {
-                        if ( isExpired( element ) )
-                        {
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
-                            }
-
-                            missCountExpired++;
-
-                            // This will tell the remotes to remove the item
-                            // based on the element's expiration policy. The elements attributes
-                            // associated with the item when it created govern its behavior
-                            // everywhere.
-                            remove( element.getKey() );
-                            elementsFromAuxiliary.remove( element.getKey() );
-                        }
-                        else
-                        {
-                            if ( log.isDebugEnabled() )
-                            {
-                                log.debug( cacheName + " - Aux cache[" + i + "] hit" );
-                            }
-
-                            // Update counters
-                            hitCountAux++;
-                            auxHitCountByIndex[i]++;
-
-                            // Spool the item back into memory
-                            // only spool if the mem cache size is greater
-                            // than 0, else the item will immediately get put
-                            // into purgatory
-                            if ( memCache.getCacheAttributes().getMaxObjects() > 0 )
-                            {
-                                memCache.update( element );
-                            }
-                            else
-                            {
-                                if ( log.isDebugEnabled() )
-                                {
-                                    log.debug( "Skipping memory update since no items are allowed in memory" );
-                                }
-                            }
-                        }
-                    }
-                }
+                processRetrievedElements( i, elementsFromAuxiliary );
 
                 elements.putAll( elementsFromAuxiliary );
             }
         }
 
         return elements;
+    }
+
+    /**
+     * Remove expired elements retrieved from an auxiliary. Update memory with good items.
+     * <p>
+     * @param i - the aux index
+     * @param elementsFromAuxiliary
+     * @throws IOException
+     */
+    private void processRetrievedElements( int i, Map elementsFromAuxiliary )
+        throws IOException
+    {
+        Iterator elementFromAuxiliaryIterator = new HashMap( elementsFromAuxiliary ).values().iterator();
+
+        while ( elementFromAuxiliaryIterator.hasNext() )
+        {
+            ICacheElement element = (ICacheElement) elementFromAuxiliaryIterator.next();
+
+            // Item found in one of the auxiliary caches.
+            if ( element != null )
+            {
+                if ( isExpired( element ) )
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
+                    }
+
+                    missCountExpired++;
+
+                    // This will tell the remotes to remove the item
+                    // based on the element's expiration policy. The elements attributes
+                    // associated with the item when it created govern its behavior
+                    // everywhere.
+                    remove( element.getKey() );
+                    elementsFromAuxiliary.remove( element.getKey() );
+                }
+                else
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( cacheName + " - Aux cache[" + i + "] hit" );
+                    }
+
+                    // Update counters
+                    hitCountAux++;
+                    auxHitCountByIndex[i]++;
+
+                    copyAuxiliaryRetrievedItemToMemory( element );
+                }
+            }
+        }
+    }
+
+    /**
+     * Copies the item to memory if the memory size is greater than 0. Only spool if the memory cache
+     * size is greater than 0, else the item will immediately get put into purgatory.
+     * <p>
+     * @param element
+     * @throws IOException
+     */
+    private void copyAuxiliaryRetrievedItemToMemory( ICacheElement element )
+        throws IOException
+    {
+        if ( memCache.getCacheAttributes().getMaxObjects() > 0 )
+        {
+            memCache.update( element );
+        }
+        else
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Skipping memory update since no items are allowed in memory" );
+            }
+        }
     }
 
     /**

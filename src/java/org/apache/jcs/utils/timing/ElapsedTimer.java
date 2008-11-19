@@ -47,7 +47,7 @@ public class ElapsedTimer
     }
 
     /**
-     * Retuns the elapsed time with the display suffix.
+     * Returns the elapsed time with the display suffix.
      * <p>
      * @return formatted elapsed Time
      */

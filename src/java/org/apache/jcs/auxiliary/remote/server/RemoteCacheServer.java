@@ -618,7 +618,7 @@ class RemoteCacheServer
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
+                    log.debug( "NonLocalGetMatching. fromCluster [" + fromCluster + "] AllowClusterGet ["
                         + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
                 elements = c.getMatching( pattern );
@@ -631,7 +631,7 @@ class RemoteCacheServer
 
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
+                    log.debug( "LocalGetMatching.  fromCluster [" + fromCluster + "] AllowClusterGet ["
                         + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
                 elements = c.localGetMatching( pattern );
@@ -754,7 +754,7 @@ class RemoteCacheServer
             // This is the only instance I can think of where we allow a remote get
             // from a remote call. The purpose is to allow remote cache servers to
             // talk to each other. If one goes down, you want it to be able to get
-            // data from those that were up when the failed server comes back o
+            // data from those that were up when the failed server comes back on
             // line.
 
             if ( !fromCluster && this.remoteCacheServerAttributes.getAllowClusterGet() )

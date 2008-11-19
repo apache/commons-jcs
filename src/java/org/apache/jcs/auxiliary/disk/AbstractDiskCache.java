@@ -651,8 +651,7 @@ public abstract class AbstractDiskCache
                         {
                             // TODO consider a timeout.
                             // we need this so that we can have multiple update
-                            // threads
-                            // and still have removeAll request come in that
+                            // threads and still have removeAll requests come in that
                             // always win
                             removeAllLock.readLock().acquire();
 
@@ -671,7 +670,7 @@ public abstract class AbstractDiskCache
                             }
 
                             // I took this out of the purgatory sync block.
-                            // If the element is still eligable, spool it.
+                            // If the element is still eligible, spool it.
                             if ( pe.isSpoolable() )
                             {
                                 doUpdate( element );
@@ -689,8 +688,7 @@ public abstract class AbstractDiskCache
                         synchronized ( purgatory )
                         {
                             // After the update has completed, it is safe to
-                            // remove
-                            // the element from purgatory.
+                            // remove the element from purgatory.
                             purgatory.remove( element.getKey() );
                         }
                     }
@@ -765,8 +763,10 @@ public abstract class AbstractDiskCache
 
     /**
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *EventLogging method on the super. The *WithEventLogging methods call the
+     * methods call the *WithEventLogging method on the super. The *WithEventLogging methods call the
      * abstract process* methods. The children implement the process methods.
+     * <p>
+     * ex.  doGet calls getWithEventLogging, which calls processGet
      */
 
     /**

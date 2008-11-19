@@ -759,7 +759,7 @@ public class IndexedDiskCache
     }
 
     /**
-     * Iterates over the keyset. Builds a list of matches. Removes all the keys in the list . Does
+     * Iterates over the keyset. Builds a list of matches. Removes all the keys in the list. Does
      * not remove via the iterator, since the map impl may not support it.
      * <p>
      * This operates under a lock obtained in doRemove().

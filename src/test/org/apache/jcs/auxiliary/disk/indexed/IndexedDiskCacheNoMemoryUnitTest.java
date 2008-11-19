@@ -34,8 +34,6 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * Test which exercises the indexed disk cache. This one uses three different
  * regions for thre threads. It uses a config file that specifies 0 items in
  * memory.
- *
- * @version $Id: TestDiskCacheNoMemory.java 224346 2005-06-04 02:01:59Z asmuts $
  */
 public class IndexedDiskCacheNoMemoryUnitTest
     extends TestCase
@@ -47,8 +45,6 @@ public class IndexedDiskCacheNoMemoryUnitTest
     private static int items = 2000;
 
     /**
-     * Constructor for the TestDiskCache object.
-     *
      * @param testName
      */
     public IndexedDiskCacheNoMemoryUnitTest( String testName )
@@ -58,7 +54,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
     /**
      * Main method passes this test to the text test runner.
-     *
+     * <p>
      * @param args
      */
     public static void main( String args[] )
@@ -69,7 +65,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
     /**
      * A unit test suite for JUnit
-     *
+     * <p>
      * @return The test suite
      */
     public static Test suite()

@@ -286,5 +286,4 @@ public class PropertySetter
         }
         return null;
     }
-
 }

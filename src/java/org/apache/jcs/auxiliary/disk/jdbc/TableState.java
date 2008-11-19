@@ -22,9 +22,9 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 import java.io.Serializable;
 
 /**
- * This is used by various elemetns of the JDBC disk cache to indicate the
+ * This is used by various elements of the JDBC disk cache to indicate the
  * status of a table. The MySQL disk cache, for instance, marks the status as
- * optimizing when a scheduled optimizatio is taking place. This allows the
+ * optimizing when a scheduled optimization is taking place. This allows the
  * cache to balk rather than block during long running optimizations.
  * <p>
  * @author Aaron Smuts

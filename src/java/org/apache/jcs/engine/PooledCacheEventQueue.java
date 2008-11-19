@@ -498,7 +498,6 @@ public class PooledCacheEventQueue
             return new StringBuffer( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
                 .append( ice.getVal() ).toString();
         }
-
     }
 
     /**
@@ -537,7 +536,6 @@ public class PooledCacheEventQueue
         {
             return new StringBuffer( "RemoveEvent for " ).append( key ).toString();
         }
-
     }
 
     /**
@@ -562,7 +560,6 @@ public class PooledCacheEventQueue
         {
             return "RemoveAllEvent";
         }
-
     }
 
     /**

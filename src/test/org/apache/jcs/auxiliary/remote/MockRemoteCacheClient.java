@@ -36,8 +36,6 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.IElementSerializer;
-import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
