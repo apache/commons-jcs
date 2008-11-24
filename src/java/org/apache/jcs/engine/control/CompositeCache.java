@@ -904,25 +904,25 @@ public class CompositeCache
                         log.debug( "Attempting to get from aux [" + aux.getCacheName() + "] which is of type: "
                             + cacheType );
                     }
-                }
+                    
+                    try
+                    {
+                        elementsFromAuxiliary.putAll( aux.getMatching( pattern ) );
+                    }
+                    catch ( IOException e )
+                    {
+                        log.error( "Error getting from aux", e );
+                    }
+                    
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Got CacheElements: " + elementsFromAuxiliary );
+                    }
 
-                try
-                {
-                    elementsFromAuxiliary.putAll( aux.getMatching( pattern ) );
-                }
-                catch ( IOException e )
-                {
-                    log.error( "Error getting from aux", e );
-                }
+                    processRetrievedElements( i, elementsFromAuxiliary );
 
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Got CacheElements: " + elementsFromAuxiliary );
+                    elements.putAll( elementsFromAuxiliary );
                 }
-
-                processRetrievedElements( i, elementsFromAuxiliary );
-
-                elements.putAll( elementsFromAuxiliary );
             }
         }
 
