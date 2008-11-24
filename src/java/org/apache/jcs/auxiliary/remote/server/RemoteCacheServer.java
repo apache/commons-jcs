@@ -587,7 +587,7 @@ class RemoteCacheServer
 
             if ( cacheEventLogger != null )
             {
-                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GET_EVENT, e.getMessage() + cacheName
+                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GETMATCHING_EVENT, e.getMessage() + cacheName
                     + " pattern: " + pattern );
             }
         }
