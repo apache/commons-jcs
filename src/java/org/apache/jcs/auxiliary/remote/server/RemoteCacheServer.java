@@ -123,16 +123,16 @@ class RemoteCacheServer
         this.remoteCacheServerAttributes = rcsa;
         init( rcsa.getConfigFileName() );
     }
-    
+
     /**
      * Constructor for the RemoteCacheServer object. This initializes the server with the values
      * from the config file.
      * <p>
      * @param rcsa
-     * @param customRMISocketFactory 
+     * @param customRMISocketFactory
      * @throws RemoteException
      */
-    RemoteCacheServer( IRemoteCacheServerAttributes rcsa,  RMISocketFactory customRMISocketFactory )
+    RemoteCacheServer( IRemoteCacheServerAttributes rcsa, RMISocketFactory customRMISocketFactory )
         throws RemoteException
     {
         super( rcsa.getServicePort(), customRMISocketFactory, customRMISocketFactory );
@@ -494,7 +494,7 @@ class RemoteCacheServer
         element = getFromCacheListeners( key, fromCluster, cacheDesc, element );
         return element;
     }
-        
+
     /**
      * Gets the item from the associated cache listeners.
      * <p>
@@ -551,50 +551,60 @@ class RemoteCacheServer
         return element;
     }
 
-    /** TODO finish 
+    /**
+     * TODO finish
      * <p>
-     * @param cacheName 
-     * @param pattern 
-     * @param requesterId 
+     * @param cacheName
+     * @param pattern
+     * @param requesterId
      * @return Map of keys and wrapped objects
-     * @throws IOException 
+     * @throws IOException
      */
     public Map getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
-        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "getMatching [" + pattern + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                + "] remoteType = " + remoteTypeL );
-        }
-        
-        boolean fromCluster = false;
-        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-        {
-            fromCluster = true;
-        }
-
-        CacheListeners cacheDesc = null;
+        ICacheEvent cacheEvent = createICacheEvent( cacheName, pattern, requesterId,
+                                                    ICacheEventLogger.GETMATCHING_EVENT );
         try
         {
-            cacheDesc = getCacheListeners( cacheName );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Problem getting listeners.", e );
+            Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
 
-            if ( cacheEventLogger != null )
+            if ( log.isDebugEnabled() )
             {
-                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GETMATCHING_EVENT, e.getMessage() + cacheName
-                    + " pattern: " + pattern );
+                log.debug( "getMatching [" + pattern + "] from cache [" + cacheName + "] requesterId = [" + requesterId
+                    + "] remoteType = " + remoteTypeL );
             }
+
+            boolean fromCluster = false;
+            if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+            {
+                fromCluster = true;
+            }
+
+            CacheListeners cacheDesc = null;
+            try
+            {
+                cacheDesc = getCacheListeners( cacheName );
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem getting listeners.", e );
+
+                if ( cacheEventLogger != null )
+                {
+                    cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GETMATCHING_EVENT, e.getMessage()
+                        + cacheName + " pattern: " + pattern );
+                }
+            }
+
+            return getMatchingFromCacheListeners( pattern, fromCluster, cacheDesc );
         }
-        
-        return getMatchingFromCacheListeners( pattern, fromCluster, cacheDesc );
+        finally
+        {
+            logICacheEvent( cacheEvent );
+        }
     }
-    
+
     /**
      * Gets the item from the associated cache listeners.
      * <p>
@@ -639,7 +649,7 @@ class RemoteCacheServer
         }
         return elements;
     }
-    
+
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
@@ -1300,7 +1310,7 @@ class RemoteCacheServer
 
                     // in case it needs synchronization
                     String message = "adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
-                    + listenerAddress + "]";
+                        + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     if ( log.isInfoEnabled() )
                     {
@@ -1310,7 +1320,7 @@ class RemoteCacheServer
                 else
                 {
                     String message = "adding listener under existing id = [" + id + "], listenerAddress ["
-                    + listenerAddress + "]";
+                        + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     if ( log.isInfoEnabled() )
                     {
@@ -1598,7 +1608,7 @@ class RemoteCacheServer
         String ipAddress = getIPAddressForRequesterId( requesterId );
         return cacheEventLogger.createICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
     }
-    
+
     /**
      * Logs an event if an event logger is configured.
      * <p>
