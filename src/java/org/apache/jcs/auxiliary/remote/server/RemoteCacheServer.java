@@ -265,17 +265,13 @@ class RemoteCacheServer
             CacheListeners cacheDesc = getCacheListeners( item.getCacheName() );
             /* Object val = */item.getVal();
 
-            Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
+            boolean fromCluster = isRequestFromCluster( requesterId );            
+
             if ( log.isDebugEnabled() )
             {
-                log.debug( "In update, requesterId = [" + requesterId + "] remoteType = " + remoteTypeL );
+                log.debug( "In update, requesterId = [" + requesterId + "] fromCluster = " + fromCluster );
             }
 
-            boolean fromCluster = false;
-            if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-            {
-                fromCluster = true;
-            }
             // ordered cache item update and notification.
             synchronized ( cacheDesc )
             {
@@ -454,23 +450,12 @@ class RemoteCacheServer
      */
     private ICacheElement processGet( String cacheName, Serializable key, long requesterId )
     {
-        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
-
+        boolean fromCluster = isRequestFromCluster( requesterId );
+        
         if ( log.isDebugEnabled() )
         {
             log.debug( "get [" + key + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                + "] remoteType = " + remoteTypeL );
-        }
-
-        // Since a non-receiving remote cache client will not register a
-        // listener, it will not have a listener id assigned from the server. As
-        // such the remote server cannot determine if it is a cluster or a
-        // normal client. It will assume that it is a normal client.
-
-        boolean fromCluster = false;
-        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-        {
-            fromCluster = true;
+                + "] fromCluster = " + fromCluster );
         }
 
         CacheListeners cacheDesc = null;
@@ -567,18 +552,12 @@ class RemoteCacheServer
                                                     ICacheEventLogger.GETMATCHING_EVENT );
         try
         {
-            Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
-
+            boolean fromCluster = isRequestFromCluster( requesterId );
+            
             if ( log.isDebugEnabled() )
             {
                 log.debug( "getMatching [" + pattern + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                    + "] remoteType = " + remoteTypeL );
-            }
-
-            boolean fromCluster = false;
-            if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-            {
-                fromCluster = true;
+                    + "] fromCluster = " + fromCluster );
             }
 
             CacheListeners cacheDesc = null;
@@ -705,23 +684,12 @@ class RemoteCacheServer
     {
         Map elements = null;
 
-        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
+        boolean fromCluster = isRequestFromCluster( requesterId );
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "getMultiple [" + keys + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                + "] remoteType = " + remoteTypeL );
-        }
-
-        // Since a non-receiving remote cache client will not register a
-        // listener, it will not have a listener id assigned from the server. As
-        // such the remote server cannot determine if it is a cluster or a
-        // normal client. It will assume that it is a normal client.
-
-        boolean fromCluster = false;
-        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-        {
-            fromCluster = true;
+                + "] fromCluster = " + fromCluster );
         }
 
         CacheListeners cacheDesc = null;
@@ -736,6 +704,26 @@ class RemoteCacheServer
 
         elements = getMultipleFromCacheListeners( keys, elements, fromCluster, cacheDesc );
         return elements;
+    }
+
+    /**
+     * Since a non-receiving remote cache client will not register a listener, it will not have a
+     * listener id assigned from the server. As such the remote server cannot determine if it is a
+     * cluster or a normal client. It will assume that it is a normal client.
+     * <p>
+     * @param requesterId
+     * @return true is from a cluster.
+     */
+    private boolean isRequestFromCluster( long requesterId )
+    {
+        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
+
+        boolean fromCluster = false;
+        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
+        {
+            fromCluster = true;
+        }
+        return fromCluster;
     }
 
     /**
@@ -880,12 +868,7 @@ class RemoteCacheServer
 
         CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
 
-        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
-        boolean fromCluster = false;
-        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-        {
-            fromCluster = true;
-        }
+        boolean fromCluster = isRequestFromCluster( requesterId );
 
         if ( cacheDesc != null )
         {
@@ -984,12 +967,7 @@ class RemoteCacheServer
     {
         CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
 
-        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( requesterId ) );
-        boolean fromCluster = false;
-        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-        {
-            fromCluster = true;
-        }
+        boolean fromCluster = isRequestFromCluster( requesterId );
 
         if ( cacheDesc != null )
         {
@@ -1413,12 +1391,7 @@ class RemoteCacheServer
             log.info( message );
         }
 
-        Integer remoteTypeL = (Integer) idTypeMap.get( new Long( listenerId ) );
-        boolean isClusterListener = false;
-        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-        {
-            isClusterListener = true;
-        }
+        boolean isClusterListener = isRequestFromCluster( listenerId );
 
         CacheListeners cacheDesc = null;
 
