@@ -2,7 +2,6 @@ package org.apache.jcs.auxiliary;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -172,8 +171,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
     public Map getMatching( String pattern )
         throws IOException
     {
-        // do nothing
-        return new HashMap();
+        return getMatchingWithEventLogging( pattern );
     }
 
     /**
@@ -187,8 +185,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
     protected final Map getMatchingWithEventLogging( String pattern )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), pattern,
-                                                    ICacheEventLogger.GETMATCHING_EVENT );
+        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), pattern, ICacheEventLogger.GETMATCHING_EVENT );
         try
         {
             return processGetMatching( pattern );
@@ -209,7 +206,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      */
     protected abstract Map processGetMatching( String pattern )
         throws IOException;
-    
+
     /**
      * Removes the item from the cache. Wraps the remove in event logs.
      * <p>

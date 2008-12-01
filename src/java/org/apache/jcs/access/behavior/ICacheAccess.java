@@ -19,6 +19,7 @@ package org.apache.jcs.access.behavior;
  * under the License.
  */
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,6 +41,14 @@ public interface ICacheAccess
      */
     Object get( Object name );
 
+    /**
+     * Retrieve matching objects from the cache region this instance provides access to.
+     * <p>
+     * @param pattern - a key pattern for the objects stored
+     * @return A map of key to values.  These are stripped from the wrapper.
+     */
+    HashMap getMatching( String pattern );
+    
     /**
      * Puts in cache if an item does not exist with the name in that region.
      * <p>

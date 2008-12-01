@@ -409,6 +409,30 @@ public class RemoteCacheServerUnitTest
      * <p>
      * @throws Exception
      */
+    public void testGetMatching_simple()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
+        rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
+        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        server.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        server.getMatching( "region", "pattern", 0 );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+    
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
     public void testGetMultiple_simple()
         throws Exception
     {

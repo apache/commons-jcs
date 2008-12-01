@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 import java.util.HashSet;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -232,6 +233,34 @@ public class RemoteCacheUnitTest
         remoteCache.remove( "key" );
 
         // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+    
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testGetMatching_simple()
+        throws Exception
+    {
+        // SETUP
+        String pattern = "adsfasdfasd.?";
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        Map result = remoteCache.getMatching( pattern );
+
+        // VERIFY
+        assertNotNull( "Should have a map", result );
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
