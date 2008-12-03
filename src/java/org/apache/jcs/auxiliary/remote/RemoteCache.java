@@ -472,11 +472,14 @@ public class RemoteCache
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "Disposing of remote cache" );
+            log.info( "Disposing of remote cache." );
         }
         try
         {
-            listener.dispose();
+            if ( listener != null )
+            {
+                listener.dispose();
+            }
         }
         catch ( Exception ex )
         {

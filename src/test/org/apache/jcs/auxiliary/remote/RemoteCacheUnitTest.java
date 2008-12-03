@@ -264,4 +264,56 @@ public class RemoteCacheUnitTest
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
+    
+    /**
+     * Verify event log calls.
+     * <p>
+     * @throws Exception
+     */
+    public void testDispose_simple()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        remoteCache.dispose( );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
+    
+    /**
+     * Verify that there is no problem if there is no listener.
+     * <p>
+     * @throws Exception
+     */
+    public void testDispose_nullListener()
+        throws Exception
+    {
+        // SETUP
+        IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
+        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheListener listener = null;
+
+        RemoteCache remoteCache = new RemoteCache( cattr, service, listener );
+
+        MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
+        remoteCache.setCacheEventLogger( cacheEventLogger );
+
+        // DO WORK
+        remoteCache.dispose( );
+
+        // VERIFY
+        assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
+        assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
+    }
 }
