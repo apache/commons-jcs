@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManagerAbstractTemplate;
+import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
 import org.apache.jcs.auxiliary.disk.jdbc.TableState;
 import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleFormatException;
 import org.apache.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
@@ -143,11 +144,11 @@ public class MySQLDiskCacheManager
      */
     protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
-        AuxiliaryCache raf = new MySQLDiskCache( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
+        MySQLDiskCache diskCache = new MySQLDiskCache( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
 
-        scheduleOptimizations( (MySQLDiskCacheAttributes) cattr, tableState );
+        scheduleOptimizations( (MySQLDiskCacheAttributes) cattr, tableState, diskCache.getPoolAccess() );
 
-        return raf;
+        return diskCache;
     }
 
     /**
@@ -168,10 +169,11 @@ public class MySQLDiskCacheManager
     /**
      * For each time in the optimization schedule, this calls schedule Optimizaiton.
      * <p>
-     * @param attributes
-     * @param tableState
+     * @param attributes configuration propeties.
+     * @param tableState for noting optimization in progress, etc.
+     * @param poolAccess access to the pool
      */
-    protected void scheduleOptimizations( MySQLDiskCacheAttributes attributes, TableState tableState )
+    protected void scheduleOptimizations( MySQLDiskCacheAttributes attributes, TableState tableState, JDBCDiskCachePoolAccess poolAccess  )
     {
         if ( attributes != null )
         {
@@ -183,7 +185,7 @@ public class MySQLDiskCacheManager
                         + "] on schdule [" + attributes.getOptimizationSchedule() + "]" );
                 }
 
-                MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState );
+                MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, poolAccess );
 
                 // loop through the dates.
                 try

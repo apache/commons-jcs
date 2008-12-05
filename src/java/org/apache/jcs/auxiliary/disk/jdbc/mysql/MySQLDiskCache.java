@@ -47,7 +47,7 @@ public class MySQLDiskCache
     private final static Log log = LogFactory.getLog( MySQLDiskCache.class );
 
     /** config attributes */
-    MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
+    private MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
 
     /**
      * Delegates to the super and makes use of the MySQL specific parameters used for scheduled

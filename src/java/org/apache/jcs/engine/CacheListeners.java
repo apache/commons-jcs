@@ -30,7 +30,7 @@ import org.apache.jcs.engine.behavior.ICache;
  */
 public class CacheListeners
 {
-    /** Description of the Field */
+    /** The cache using the queue. */
     public final ICache cache;
 
     /** Map ICacheListener to ICacheEventQueue */

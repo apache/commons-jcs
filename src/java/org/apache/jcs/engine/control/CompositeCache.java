@@ -309,12 +309,9 @@ public class CompositeCache
                 }
                 if ( cacheAttr.getUseLateral() && cacheElement.getElementAttributes().getIsLateral() && !localOnly )
                 {
-                    // later if we want a multicast, possibly delete abnormal
-                    // broadcaster
                     // DISTRIBUTE LATERALLY
                     // Currently always multicast even if the value is
-                    // unchanged,
-                    // just to cause the cache item to move to the front.
+                    // unchanged, to cause the cache item to move to the front.
                     aux.update( cacheElement );
                     if ( log.isDebugEnabled() )
                     {
@@ -344,8 +341,8 @@ public class CompositeCache
     }
 
     /**
-     * Writes the specified element to any disk auxilliaries. Might want to rename this "overflow"
-     * incase the hub wants to do something else.
+     * Writes the specified element to any disk auxiliaries. Might want to rename this "overflow" in
+     * case the hub wants to do something else.
      * <p>
      * If JCS is not configured to use the disk as a swap, that is if the the
      * CompositeCacheAttribute diskUsagePattern is not SWAP_ONLY, then the item will not be spooled.
@@ -904,7 +901,7 @@ public class CompositeCache
                         log.debug( "Attempting to get from aux [" + aux.getCacheName() + "] which is of type: "
                             + cacheType );
                     }
-                    
+
                     try
                     {
                         elementsFromAuxiliary.putAll( aux.getMatching( pattern ) );
@@ -913,7 +910,7 @@ public class CompositeCache
                     {
                         log.error( "Error getting from aux", e );
                     }
-                    
+
                     if ( log.isDebugEnabled() )
                     {
                         log.debug( "Got CacheElements: " + elementsFromAuxiliary );
@@ -957,7 +954,7 @@ public class CompositeCache
 
                     missCountExpired++;
 
-                    // This will tell the remotes to remove the item
+                    // This will tell the remote caches to remove the item
                     // based on the element's expiration policy. The elements attributes
                     // associated with the item when it created govern its behavior
                     // everywhere.
@@ -982,8 +979,8 @@ public class CompositeCache
     }
 
     /**
-     * Copies the item to memory if the memory size is greater than 0. Only spool if the memory cache
-     * size is greater than 0, else the item will immediately get put into purgatory.
+     * Copies the item to memory if the memory size is greater than 0. Only spool if the memory
+     * cache size is greater than 0, else the item will immediately get put into purgatory.
      * <p>
      * @param element
      * @throws IOException
@@ -1743,7 +1740,7 @@ public class CompositeCache
     }
 
     /**
-     * Rerturns the key matcher used by get matching.
+     * Returns the key matcher used by get matching.
      * <p>
      * @return keyMatcher
      */
@@ -1787,8 +1784,7 @@ public class CompositeCache
     /**
      * This returns the stats.
      * <p>
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+     * @return getStats()
      */
     public String toString()
     {

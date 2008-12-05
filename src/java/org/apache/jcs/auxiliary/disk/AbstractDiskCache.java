@@ -496,7 +496,7 @@ public abstract class AbstractDiskCache
         }
         catch ( InterruptedException ex )
         {
-            log.error( ex );
+            log.error( "The Shutdown Spool Process was interrupted.", ex );
         }
 
         log.info( "In dispose, destroying event queue." );

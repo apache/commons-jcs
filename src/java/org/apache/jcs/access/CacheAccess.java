@@ -47,7 +47,7 @@ import org.apache.jcs.engine.stats.behavior.ICacheStats;
  * An instance of this class is tied to a specific cache region. Static methods are provided to get
  * such instances.
  * <p>
- * Using this class you can retrieve an item, the item's wrapper, the element configuration, put an
+ * Using this class you can retrieve an item, the item's wrapper, and the element's configuration.  You can also put an
  * item in the cache, remove an item, and clear a region.
  * <p>
  * The JCS class is the preferred way to access these methods.
@@ -58,9 +58,7 @@ public class CacheAccess
     /** The logger. */
     private static final Log log = LogFactory.getLog( CacheAccess.class );
 
-    /**
-     * Cache manager use by the various forms of defineRegion and getAccess
-     */
+    /** Cache manager use by the various forms of defineRegion and getAccess */
     private static CompositeCacheManager cacheMgr;
 
     /**
@@ -280,7 +278,7 @@ public class CacheAccess
      * <p>
      * The last access time in the ElementAttributes should be current.
      * <p>
-     * @param pattern key search patern
+     * @param pattern key search pattern
      * @return a map of Object key to ICacheElement element, or empty map if no keys match the pattern
      */
     public Map getMatchingCacheElements( String pattern )
@@ -326,7 +324,7 @@ public class CacheAccess
     }
 
     /**
-     * Constructs a cache element with these attribures, and puts it into the cache.
+     * Constructs a cache element with these attributes, and puts it into the cache.
      * <p>
      * If the key or the value is null, and InvalidArgumentException is thrown.
      * <p>
@@ -363,7 +361,7 @@ public class CacheAccess
     }
 
     /**
-     * Destory the region and all objects within it. After calling this method, the Cache object can
+     * Destroy the region and all objects within it. After calling this method, the Cache object can
      * no longer be used as it will be closed.
      * <p>
      * @exception CacheException
@@ -440,14 +438,14 @@ public class CacheAccess
 
     /**
      * ResetAttributes allows for some of the attributes of a region to be reset in particular
-     * expiration time attriubtes, time to live, default time to live and idle time, and event
+     * expiration time attributes, time to live, default time to live and idle time, and event
      * handlers. Changing default settings on groups and regions will not affect existing objects.
      * Only object loaded after the reset will use the new defaults. If no name argument is
      * provided, the reset is applied to the region.
      * <p>
      * NOTE: this method is does not reset the attributes for items already in the cache. It could
      * potentially do this for items in memory, and maybe on disk (which would be slow) but not
-     * remote items. Rather than have unpredicatble behavior, this method just sets the default
+     * remote items. Rather than have unpredictable behavior, this method just sets the default
      * attributes.
      * <p>
      * TODO is should be renamed "setDefaultElementAttributes"
@@ -467,7 +465,7 @@ public class CacheAccess
     /**
      * This method is does not reset the attributes for items already in the cache. It could
      * potentially do this for items in memory, and maybe on disk (which would be slow) but not
-     * remote items. Rather than have unpredicatble behavior, this method just sets the default
+     * remote items. Rather than have unpredictable behavior, this method just sets the default
      * attributes. Items subsequently put into the cache will use these defaults if they do not
      * specify specific attributes.
      * <p>

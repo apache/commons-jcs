@@ -83,33 +83,24 @@ public class JDBCDiskCachePoolAccessManager
             JDBCDiskCachePoolAccessAttributes poolAttributes = configurePoolAccessAttributes( poolName );
             try
             {
-                try
-                {
-                    // org.gjt.mm.mysql.Driver
-                    Class.forName( poolAttributes.getDriverClassName() );
-                }
-                catch ( ClassNotFoundException e )
-                {
-                    log.error( "Couldn't find class for driver [" + poolAttributes.getDriverClassName() + "]", e );
-                }
-
-                poolAccess = new JDBCDiskCachePoolAccess( poolAttributes.getPoolName() );
-
-                poolAccess.setupDriver( poolAttributes.getUrl() + poolAttributes.getDatabase(), poolAttributes
-                    .getUserName(), poolAttributes.getPassword(), poolAttributes.getMaxActive() );
-
-                poolAccess.logDriverStats();
+                poolAccess = JDBCDiskCachePoolAccessFactory.createPoolAccess( poolAttributes );
                 
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Created shared pooled access for pool name [" + poolName + "]." );
+                }
                 pools.put( poolName, poolAccess );
             }
             catch ( Exception e )
             {
-                log.error( "Problem creating connection pool.", e );
+                log.error( "Problem creating connection poolfor pool name [" + poolName + "].", e );
             }
         }
 
         return poolAccess;
     }
+
+
 
     /**
      * Configures the attributes using the properties.

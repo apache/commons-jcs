@@ -76,11 +76,11 @@ public class JDBCDiskCacheAttributes
      * separate section as follows. Assuming the name is "MyPool":
      * 
      * <pre>
-     * jcs.connectionpool.MyPool.attributes.userName=MyUserName
-     * jcs.connectionpool.MyPool.attributes.password=MyPassword
-     * jcs.connectionpool.MyPool.attributes.url=MyUrl
-     * jcs.connectionpool.MyPool.attributes.maxActive=MyMaxActive
-     * jcs.connectionpool.MyPool.attributes.driverClassName=MyDriverClassName
+     * jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
+     * jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword
+     * jcs.jdbcconnectionpool.MyPool.attributes.url=MyUrl
+     * jcs.jdbcconnectionpool.MyPool.attributes.maxActive=MyMaxActive
+     * jcs.jdbcconnectionpool.MyPool.attributes.driverClassName=MyDriverClassName
      * </pre>
      */
     private String connectionPoolName;
@@ -184,7 +184,8 @@ public class JDBCDiskCacheAttributes
 
     /**
      * If this is true then the disk cache will check to see if the item already exists in the
-     * database. If it is false, it will try to insert. If the isnert fails it will try to update.
+     * database. If it is false, it will try to insert. If the insert fails it will try to update.
+     * <p>
      * @param testBeforeInsert The testBeforeInsert to set.
      */
     public void setTestBeforeInsert( boolean testBeforeInsert )

@@ -129,7 +129,7 @@ public class CacheEventQueue
 
     /**
      * Initializes the queue.
-     * <,p>
+     * <p>
      * @param listener
      * @param listenerId
      * @param cacheName
@@ -251,7 +251,7 @@ public class CacheEventQueue
                 log.info( "Destroying queue, stats =  " + getStatistics() );
             }
 
-            // sychronize on queue so the thread will not wait forever,
+            // Synchronize on queue so the thread will not wait forever,
             // and then interrupt the QueueProcessor
 
             if ( processorThread != null )
@@ -278,7 +278,7 @@ public class CacheEventQueue
     }
 
     /**
-     * This adds a put event ot the queue. When it is processed, the element will be put to the
+     * This adds a put event to the queue. When it is processed, the element will be put to the
      * listener.
      * <p>
      * @param ce The feature to be added to the PutEvent attribute
@@ -445,10 +445,10 @@ public class CacheEventQueue
     }
 
     /**
-     * This method returns semi structured data on this queue.
+     * This method returns semi-structured data on this queue.
      * <p>
-     * (non-Javadoc)
      * @see org.apache.jcs.engine.behavior.ICacheEventQueue#getStatistics()
+     * @return information on the status and history of the queue
      */
     public IStats getStatistics()
     {

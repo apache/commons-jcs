@@ -150,6 +150,7 @@ public class JDBCDiskCachePoolAccessAttributes
         buf.append( "\nJDBCDiskCachePoolAccessAttributes" );
         buf.append( "\n UserName [" + getUserName() + "]" );
         buf.append( "\n Url [" + getUrl() + "]" );
+        buf.append( "\n PoolName [" + getPoolName() + "]" );
         buf.append( "\n Database [" + getDatabase() + "]" );
         buf.append( "\n DriverClassName [" + getDriverClassName() + "]" );
         buf.append( "\n MaxActive [" + getMaxActive() + "]" );

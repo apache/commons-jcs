@@ -26,13 +26,12 @@ import java.sql.Statement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
 import org.apache.jcs.auxiliary.disk.jdbc.TableState;
 
 /**
  * The MySQL Table Optimizer can optimize MySQL tables. It knows how to optimize for MySQL datbases
- * in particular and how to repari the table if it is corrupted in the process.
+ * in particular and how to repair the table if it is corrupted in the process.
  * <p>
  * We will probably be able to abstract out a generic optimizer interface from this class in the
  * future.
@@ -58,46 +57,16 @@ public class MySQLTableOptimizer
      * <p>
      * @param attributes
      * @param tableState We mark the table status as optimizing when this is happening.
+     * @param poolAccess access to the database
      */
-    public MySQLTableOptimizer( MySQLDiskCacheAttributes attributes, TableState tableState )
+    public MySQLTableOptimizer( MySQLDiskCacheAttributes attributes, TableState tableState,
+                                JDBCDiskCachePoolAccess poolAccess )
     {
         setTableName( attributes.getTableName() );
 
         this.tableState = tableState;
-        /**
-         * This initializes the pool access.
-         */
-        initializePoolAccess( attributes );
-    }
 
-    /**
-     * Register the driver and create a pool.
-     * <p>
-     * @param cattr
-     */
-    protected void initializePoolAccess( JDBCDiskCacheAttributes cattr )
-    {
-        try
-        {
-            try
-            {
-                // org.gjt.mm.mysql.Driver
-                Class.forName( cattr.getDriverClassName() );
-            }
-            catch ( ClassNotFoundException e )
-            {
-                log.error( "Couldn't find class for driver [" + cattr.getDriverClassName() + "]", e );
-            }
-
-            poolAccess = new JDBCDiskCachePoolAccess( cattr.getName() );
-
-            poolAccess.setupDriver( cattr.getUrl() + cattr.getDatabase(), cattr.getUserName(), cattr.getPassword(),
-                                    cattr.getMaxActive() );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Problem getting connection.", e );
-        }
+        this.poolAccess = poolAccess;
     }
 
     /**
@@ -162,7 +131,7 @@ public class MySQLTableOptimizer
             tableState.setState( TableState.OPTIMIZATION_RUNNING );
             if ( log.isInfoEnabled() )
             {
-                log.debug( "Optimizing table [" + this.getTableName() + "]" );
+                log.info( "Optimizing table [" + this.getTableName() + "]" );
             }
 
             Connection con;

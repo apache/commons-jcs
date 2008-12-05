@@ -21,15 +21,19 @@
 	<body>
 		<release version="1.4-dev" date="in SVN">
 		</release>
+		<release version="1.3.2.7" date="2008-12-05" description="tempbuild">
+			<action dev="asmuts" type="fix">Fixed bug in the MySQLDiskCache
+				optimizer. It can now use a shared pool.</action>
+		</release>
 		<release version="1.3.2.6" date="2008-12-01" description="tempbuild">
-			<action dev="asmuts" type="fix">Fixed balking bug in getMatching( String pattern ) API.
-			</action>
-			<action dev="asmuts" type="fix">Fixed event naming bug in getMatching( String pattern ) API.
-			</action>
+			<action dev="asmuts" type="fix">Fixed balking bug in
+				getMatching( String pattern ) API.</action>
+			<action dev="asmuts" type="fix">Fixed event naming bug in
+				getMatching( String pattern ) API.</action>
 		</release>
 		<release version="1.3.2.5" date="2008-11-20" description="tempbuild">
-			<action dev="asmuts" type="update">Added a getMatching( String pattern ) API.
-			</action>
+			<action dev="asmuts" type="update">Added a getMatching( String
+				pattern ) API.</action>
 		</release>
 		<release version="1.3.2.4" date="2008-?" description="tempbuild">
 			<action dev="asmuts" type="update">Added the ability to inject a

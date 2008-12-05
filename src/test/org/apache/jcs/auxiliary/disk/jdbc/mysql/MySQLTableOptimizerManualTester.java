@@ -19,9 +19,10 @@ package org.apache.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
-import org.apache.jcs.auxiliary.disk.jdbc.TableState;
-
 import junit.framework.TestCase;
+
+import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessFactory;
+import org.apache.jcs.auxiliary.disk.jdbc.TableState;
 
 /**
  * Hand run tests for the MySQL table optimizer.
@@ -31,12 +32,15 @@ import junit.framework.TestCase;
 public class MySQLTableOptimizerManualTester
     extends TestCase
 {
-
     /**
      * Run the optimization against live a table.
+     * <p>
+     * @throws Exception
      */
     public void testBasicOptimization()
+        throws Exception
     {
+        // SETUP
         MySQLDiskCacheAttributes attributes = new MySQLDiskCacheAttributes();
         attributes.setUserName( "java" );
         attributes.setPassword( "letmein" );
@@ -44,18 +48,24 @@ public class MySQLTableOptimizerManualTester
         attributes.setDriverClassName( "org.gjt.mm.mysql.Driver" );
         String tableName = "JCS_STORE_FLIGHT_OPTION_ITINERARY";
         attributes.setTableName( tableName );
-        TableState tableState = new TableState( tableName);
+        TableState tableState = new TableState( tableName );
 
-        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState );
+        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, JDBCDiskCachePoolAccessFactory
+            .createPoolAccess( attributes ) );
 
+        // DO WORK
         optimizer.optimizeTable();
     }
 
     /**
      * Run the optimization against live a table.
+     * <p>
+     * @throws Exception
      */
     public void testBasicOptimizationUnknownTable()
+        throws Exception
     {
+        // SETUP
         MySQLDiskCacheAttributes attributes = new MySQLDiskCacheAttributes();
         attributes.setUserName( "java" );
         attributes.setPassword( "letmein" );
@@ -63,11 +73,12 @@ public class MySQLTableOptimizerManualTester
         attributes.setDriverClassName( "org.gjt.mm.mysql.Driver" );
         String tableName = "DOESNTEXIST";
         attributes.setTableName( tableName );
-        TableState tableState = new TableState( tableName);
+        TableState tableState = new TableState( tableName );
 
-        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState );
+        MySQLTableOptimizer optimizer = new MySQLTableOptimizer( attributes, tableState, JDBCDiskCachePoolAccessFactory
+            .createPoolAccess( attributes ) );
 
+        // DO WORK
         optimizer.optimizeTable();
     }
-
 }

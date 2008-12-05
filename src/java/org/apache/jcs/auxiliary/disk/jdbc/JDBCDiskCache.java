@@ -135,7 +135,7 @@ public class JDBCDiskCache
         }
 
         // This initializes the pool access.
-        initializePoolAccess( cattr, compositeCacheManager );
+        setPoolAccess( initializePoolAccess( cattr, compositeCacheManager ) );
 
         // Initialization finished successfully, so set alive to true.
         alive = true;
@@ -151,6 +151,7 @@ public class JDBCDiskCache
     protected JDBCDiskCachePoolAccess initializePoolAccess( JDBCDiskCacheAttributes cattr,
                                                             ICompositeCacheManager compositeCacheManager )
     {
+        JDBCDiskCachePoolAccess poolAccess = null;
         if ( cattr.getConnectionPoolName() != null )
         {
             JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( compositeCacheManager
@@ -161,22 +162,7 @@ public class JDBCDiskCache
         {
             try
             {
-                try
-                {
-                    // org.gjt.mm.mysql.Driver
-                    Class.forName( cattr.getDriverClassName() );
-                }
-                catch ( ClassNotFoundException e )
-                {
-                    log.error( "Couldn't find class for driver [" + cattr.getDriverClassName() + "]", e );
-                }
-
-                poolAccess = new JDBCDiskCachePoolAccess( cattr.getName() );
-
-                poolAccess.setupDriver( cattr.getUrl() + cattr.getDatabase(), cattr.getUserName(), cattr.getPassword(),
-                                        cattr.getMaxActive() );
-
-                poolAccess.logDriverStats();
+                poolAccess = JDBCDiskCachePoolAccessFactory.createPoolAccess( cattr );
             }
             catch ( Exception e )
             {
@@ -207,7 +193,7 @@ public class JDBCDiskCache
         Connection con;
         try
         {
-            con = poolAccess.getConnection();
+            con = getPoolAccess().getConnection();
         }
         catch ( SQLException e )
         {
@@ -413,7 +399,7 @@ public class JDBCDiskCache
         }
         catch ( SQLException e2 )
         {
-            log.error( "e2 sql [" +  sqlU + "] Exception: ", e2 );
+            log.error( "e2 sql [" + sqlU + "] Exception: ", e2 );
         }
     }
 
@@ -430,7 +416,7 @@ public class JDBCDiskCache
         Connection con;
         try
         {
-            con = poolAccess.getConnection();
+            con = getPoolAccess().getConnection();
         }
         catch ( SQLException e )
         {
@@ -525,7 +511,7 @@ public class JDBCDiskCache
             String selectString = "select ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
                 + " where REGION = ? and CACHE_KEY = ?";
 
-            Connection con = poolAccess.getConnection();
+            Connection con = getPoolAccess().getConnection();
             try
             {
                 PreparedStatement psSelect = null;
@@ -630,7 +616,7 @@ public class JDBCDiskCache
             String selectString = "select CACHE_KEY, ELEMENT from " + getJdbcDiskCacheAttributes().getTableName()
                 + " where REGION = ? and CACHE_KEY like ?";
 
-            Connection con = poolAccess.getConnection();
+            Connection con = getPoolAccess().getConnection();
             try
             {
                 PreparedStatement psSelect = null;
@@ -716,13 +702,13 @@ public class JDBCDiskCache
     {
         pattern = pattern.replaceAll( "\\.\\+", "%" );
         pattern = pattern.replaceAll( "\\.", "_" );
-        
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "pattern = [" + pattern + "]" );
         }
-        
-        return pattern;        
+
+        return pattern;
     }
 
     /**
@@ -748,7 +734,7 @@ public class JDBCDiskCache
                     + " where REGION = ? and CACHE_KEY like ?";
                 partial = true;
             }
-            Connection con = poolAccess.getConnection();
+            Connection con = getPoolAccess().getConnection();
             PreparedStatement psSelect = null;
             try
             {
@@ -769,7 +755,7 @@ public class JDBCDiskCache
             }
             catch ( SQLException e )
             {
-                log.error( "Problem creating statement. sql [" + sql+ "]", e );
+                log.error( "Problem creating statement. sql [" + sql + "]", e );
                 alive = false;
             }
             finally
@@ -809,7 +795,7 @@ public class JDBCDiskCache
             try
             {
                 String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName() + " where REGION = ?";
-                Connection con = poolAccess.getConnection();
+                Connection con = getPoolAccess().getConnection();
                 PreparedStatement psDelete = null;
                 try
                 {
@@ -878,7 +864,7 @@ public class JDBCDiskCache
             String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
                 + " where IS_ETERNAL = ? and REGION = ? and ? > SYSTEM_EXPIRE_TIME_SECONDS";
 
-            Connection con = poolAccess.getConnection();
+            Connection con = getPoolAccess().getConnection();
             PreparedStatement psDelete = null;
             try
             {
@@ -945,7 +931,7 @@ public class JDBCDiskCache
         {
             try
             {
-                poolAccess.shutdownDriver();
+                getPoolAccess().shutdownDriver();
             }
             catch ( Exception e )
             {
@@ -974,7 +960,7 @@ public class JDBCDiskCache
         Connection con;
         try
         {
-            con = poolAccess.getConnection();
+            con = getPoolAccess().getConnection();
         }
         catch ( SQLException e1 )
         {
@@ -1093,7 +1079,7 @@ public class JDBCDiskCache
     {
         getMatchingCount++;
     }
-    
+
     /**
      * @param jdbcDiskCacheAttributes The jdbcDiskCacheAttributes to set.
      */
@@ -1155,12 +1141,12 @@ public class JDBCDiskCache
 
         se = new StatElement();
         se.setName( "Active DB Connections" );
-        se.setData( "" + poolAccess.getNumActiveInPool() );
+        se.setData( "" + getPoolAccess().getNumActiveInPool() );
         elems.add( se );
 
         se = new StatElement();
         se.setName( "Idle DB Connections" );
-        se.setData( "" + poolAccess.getNumIdleInPool() );
+        se.setData( "" + getPoolAccess().getNumIdleInPool() );
         elems.add( se );
 
         se = new StatElement();
@@ -1220,6 +1206,23 @@ public class JDBCDiskCache
     protected String getDiskLocation()
     {
         return this.jdbcDiskCacheAttributes.getUrl();
+    }
+
+    /**
+     * @param poolAccess the poolAccess to set
+     */
+    protected void setPoolAccess( JDBCDiskCachePoolAccess poolAccess )
+    {
+        this.poolAccess = poolAccess;
+    }
+
+    /**
+     * Public so managers can access it.
+     * @return the poolAccess
+     */
+    public JDBCDiskCachePoolAccess getPoolAccess()
+    {
+        return poolAccess;
     }
 
     /**

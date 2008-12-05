@@ -35,7 +35,7 @@ public class MySQLDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
     /** name of the factory */
-    private String name = "JDBCDiskCacheFactory";
+    private String name = "MySQLDiskCacheFactory";
 
     /**
      * This factory method should create an instance of the mysqlcache.

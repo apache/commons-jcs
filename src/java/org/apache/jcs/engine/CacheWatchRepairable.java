@@ -35,7 +35,7 @@ import org.apache.jcs.engine.behavior.ICacheObserver;
  * Intercepts the requests to the underlying ICacheObserver object so that the
  * listeners can be recorded locally for remote connection recovery purposes.
  * (Durable subscription like those in JMS is not implemented at this stage for
- * it can be too expensive on the runtime.)
+ * it can be too expensive.)
  */
 public class CacheWatchRepairable
     implements ICacheObserver
@@ -95,8 +95,7 @@ public class CacheWatchRepairable
         throws IOException
     {
         // Record the added cache listener locally, regardless of whether the
-        // remote add-listener
-        // operation succeeds or fails.
+        // remote add-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
             Set listenerSet = (Set) cacheMap.get( cacheName );
@@ -122,8 +121,7 @@ public class CacheWatchRepairable
         throws IOException
     {
         // Record the added cache listener locally, regardless of whether the
-        // remote add-listener
-        // operation succeeds or fails.
+        // remote add-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
             for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext(); )
@@ -150,8 +148,7 @@ public class CacheWatchRepairable
             log.info( "removeCacheListener, cacheName [" + cacheName + "]" );
         }
         // Record the removal locally, regardless of whether the remote
-        // remove-listener
-        // operation succeeds or fails.
+        // remove-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
             Set listenerSet = (Set) cacheMap.get( cacheName );
