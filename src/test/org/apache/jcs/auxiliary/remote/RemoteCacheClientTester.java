@@ -43,10 +43,11 @@ import org.apache.jcs.engine.behavior.ICacheService;
 public class RemoteCacheClientTester
     implements IRemoteCacheListener, IRemoteCacheConstants
 {
+    /** the observer */
+    protected ICacheObserver watch;
 
-    ICacheObserver watch;
-
-    ICacheService cache;
+    /** the service */
+    protected ICacheService cache;
 
     /** The registry host name. */
     final String host;
@@ -54,6 +55,7 @@ public class RemoteCacheClientTester
     /** The registry port number. */
     final int port;
 
+    /** call count */
     final int count;
 
     /** Description of the Field */
