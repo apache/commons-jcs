@@ -21,6 +21,7 @@ package org.apache.jcs.engine.control;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +41,6 @@ import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -296,16 +296,16 @@ public class CompositeCacheDiskUsageUnitTest
         /** Don't change */
         private static final long serialVersionUID = 1L;
 
-        /** The last item passed to update.    */
+        /** The last item passed to update. */
         public ICacheElement lastUpdatedItem;
 
-        /** The number of times update was called.    */
+        /** The number of times update was called. */
         public int updateCount = 0;
 
-        /** The type that should be returned from getCacheType.    */
+        /** The type that should be returned from getCacheType. */
         public int cacheType = AuxiliaryCache.DISK_CACHE;
 
-        /** Resets counters and catchers.      */
+        /** Resets counters and catchers. */
         public void reset()
         {
             updateCount = 0;
@@ -313,9 +313,8 @@ public class CompositeCacheDiskUsageUnitTest
         }
 
         /**
-         * @param ce 
-         * @throws IOException 
-         * 
+         * @param ce
+         * @throws IOException
          */
         public void update( ICacheElement ce )
             throws IOException
@@ -325,10 +324,9 @@ public class CompositeCacheDiskUsageUnitTest
         }
 
         /**
-         * @param key 
+         * @param key
          * @return ICacheElement
-         * @throws IOException 
-         * 
+         * @throws IOException
          */
         public ICacheElement get( Serializable key )
             throws IOException
@@ -349,10 +347,9 @@ public class CompositeCacheDiskUsageUnitTest
         }
 
         /**
-         * @param key 
+         * @param key
          * @return false
-         * @throws IOException 
-         * 
+         * @throws IOException
          */
         public boolean remove( Serializable key )
             throws IOException
@@ -360,93 +357,66 @@ public class CompositeCacheDiskUsageUnitTest
             return false;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#removeAll()
-         */
+        /** @throws IOException */
         public void removeAll()
             throws IOException
         {
-            // TODO Auto-generated method stub
-
+            // noop
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#dispose()
-         */
+        /** @throws IOException */
         public void dispose()
             throws IOException
         {
-            // TODO Auto-generated method stub
-
+            // noop
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#getSize()
-         */
+        /** @return 0 */
         public int getSize()
         {
-            // TODO Auto-generated method stub
             return 0;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatus()
-         */
+        /** @return 0 */
         public int getStatus()
         {
-            // TODO Auto-generated method stub
             return 0;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#getCacheName()
-         */
+        /** @return null */
         public String getCacheName()
         {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
-         */
-        public Set getGroupKeys( String group )
-            throws IOException
-        {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        /*
-         * (non-Javadoc)
-         * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
-         */
-        public IStats getStatistics()
-        {
-            // TODO Auto-generated method stub
             return null;
         }
 
         /**
+         * @param group
          * @return null
+         * @throws IOException
          */
+        public Set getGroupKeys( String group )
+            throws IOException
+        {
+            return null;
+        }
+
+        /** @return null */
+        public IStats getStatistics()
+        {
+            return null;
+        }
+
+        /** @return null */
         public String getStats()
         {
-            // TODO Auto-generated method stub
             return null;
         }
 
         /**
          * Returns the setup cache type. This allows you to use this mock as multiple cache types.
          * <p>
-         * (non-Javadoc)
          * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType()
+         * @return cacheType
          */
         public int getCacheType()
         {
@@ -479,17 +449,22 @@ public class CompositeCacheDiskUsageUnitTest
 
         }
 
+        /** @return null */
         public String getEventLoggingExtraInfo()
         {
             // TODO Auto-generated method stub
             return null;
         }
 
+        /**
+         * @param pattern
+         * @return Collections.EMPTY_MAP;
+         * @throws IOException
+         */
         public Map getMatching( String pattern )
             throws IOException
         {
-            // TODO Auto-generated method stub
-            return null;
+            return Collections.EMPTY_MAP;
         }
     }
 
