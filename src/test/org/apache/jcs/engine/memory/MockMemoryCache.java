@@ -86,33 +86,52 @@ public class MockMemoryCache
     /** @return null */
     public Iterator getIterator()
     {
-        // return
         return null;
     }
 
+    /**
+     * @return map.keySet().toArray( */
     public Object[] getKeyArray()
     {
         return map.keySet().toArray();
     }
 
+    /**
+     * @param key
+     * @return map.remove( key ) != null
+     * @throws IOException
+     */
     public boolean remove( Serializable key )
         throws IOException
     {
         return map.remove( key ) != null;
     }
 
+    /**
+     * @throws IOException
+     */
     public void removeAll()
         throws IOException
     {
         map.clear();
     }
 
+    /**
+     * @param key
+     * @return (ICacheElement) map.get( key )
+     * @throws IOException
+     */
     public ICacheElement get( Serializable key )
         throws IOException
     {
         return (ICacheElement) map.get( key );
     }
 
+    /**
+     * @param keys
+     * @return elements
+     * @throws IOException
+     */
     public Map getMultiple( Set keys )
         throws IOException
     {
@@ -138,12 +157,21 @@ public class MockMemoryCache
         return elements;
     }
 
+    /**
+     * @param key
+     * @return (ICacheElement) map.get( key )
+     * @throws IOException
+     */
     public ICacheElement getQuiet( Serializable key )
         throws IOException
     {
         return (ICacheElement) map.get( key );
     }
 
+    /**
+     * @param ce
+     * @throws IOException
+     */
     public void waterfal( ICacheElement ce )
         throws IOException
     {
@@ -171,21 +199,24 @@ public class MockMemoryCache
         return cacheAttr;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jcs.engine.memory.MemoryCache#setCacheAttributes(org.apache.jcs.engine.behavior.ICompositeCacheAttributes)
+    /**
+     * @param cattr
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
         this.cacheAttr = cattr;
     }
 
+    /** @return null */
     public CompositeCache getCompositeCache()
     {
         return null;
     }
 
+    /**
+     * @param group
+     * @return null
+     */
     public Set getGroupKeys( String group )
     {
         return null;
