@@ -75,8 +75,8 @@ public class RemoteCacheServerUnitTest
         // VERIFY
         assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
         assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-        assertEquals( "Wrong ip.", expectedIp1, server.getIPAddressForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getIPAddressForRequesterId( 2 ) );
+        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
+        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
     }
 
     /**
@@ -112,8 +112,8 @@ public class RemoteCacheServerUnitTest
         // VERIFY
         assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
         assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-        assertEquals( "Wrong ip.", expectedIp1, server.getIPAddressForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getIPAddressForRequesterId( 2 ) );
+        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
+        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
     }
     
     /**
@@ -146,8 +146,8 @@ public class RemoteCacheServerUnitTest
         // VERIFY
         assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
         assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
-        assertEquals( "Wrong ip.", expectedIp1, server.getIPAddressForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getIPAddressForRequesterId( 2 ) );        
+        assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
+        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );        
     }
 
     /**
@@ -219,7 +219,7 @@ public class RemoteCacheServerUnitTest
         // DO WORK
         server.removeCacheListener( cacheName, mockListener1.getListenerId() );
         assertEquals( "Wrong number of listeners.", 1, server.getClusterListeners( cacheName ).eventQMap.size() );
-        assertNull( "Should be no entry in the ip map.", server.getIPAddressForRequesterId( 1 ) );
+        assertNull( "Should be no entry in the ip map.", server.getExtraInfoForRequesterId( 1 ) );
     }
 
     /**

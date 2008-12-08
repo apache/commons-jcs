@@ -70,6 +70,18 @@ public interface ICacheService
         throws ObjectNotFoundException, IOException;
 
     /**
+     * Gets multiple items from the cache matching the pattern.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    Map getMatching( String cacheName, String pattern )
+        throws IOException;
+    
+    /**
      * Removes the given key from the specified cache.
      * <p>
      * @param cacheName

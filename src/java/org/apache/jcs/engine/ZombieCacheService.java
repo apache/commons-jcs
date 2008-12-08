@@ -20,7 +20,7 @@ package org.apache.jcs.engine;
  */
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,11 +76,23 @@ public class ZombieCacheService
      * <p>
      * @param cacheName
      * @param keys
-     * @return an empty map
+     * @return Collections.EMPTY_MAP
      */
     public Map getMultiple( String cacheName, Set keys )
     {
-        return new HashMap();
+        return Collections.EMPTY_MAP;
+    }
+
+    /**
+     * Returns an empty map. Zombies have no internal data.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return Collections.EMPTY_MAP
+     */
+    public Map getMatching( String cacheName, String pattern )
+    {
+        return Collections.EMPTY_MAP;
     }
 
     /**

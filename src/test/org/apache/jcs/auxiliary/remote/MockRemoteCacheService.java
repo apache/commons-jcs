@@ -37,6 +37,15 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 public class MockRemoteCacheService
     implements IRemoteCacheService
 {
+    /** The key last passed to get */
+    public Serializable lastGetKey;
+
+    /** The pattern last passed to get */
+    public String lastGetMatchingPattern;
+
+    /** The keya last passed to getMatching */
+    public Set lastGetMultipleKeys;
+
     /** The object that was last passed to update. */
     public Object lastUpdate;
 
@@ -60,6 +69,7 @@ public class MockRemoteCacheService
      */
     public ICacheElement get( String cacheName, Serializable key, long requesterId )
     {
+        lastGetKey = key;
         return null;
     }
 
@@ -128,7 +138,7 @@ public class MockRemoteCacheService
      */
     public ICacheElement get( String cacheName, Serializable key )
     {
-        return null;
+        return get( cacheName, key, 0 );
     }
 
     /**
@@ -178,6 +188,7 @@ public class MockRemoteCacheService
      */
     public Map getMultiple( String cacheName, Set keys, long requesterId )
     {
+        lastGetMultipleKeys = keys;
         return new HashMap();
     }
 
@@ -188,7 +199,21 @@ public class MockRemoteCacheService
      */
     public Map getMultiple( String cacheName, Set keys )
     {
-        return new HashMap();
+        return getMultiple( cacheName, keys, 0 );
+    }
+
+    /**
+     * Returns an empty map. Zombies have no internal data.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return an empty map
+     * @throws IOException
+     */
+    public Map getMatching( String cacheName, String pattern )
+        throws IOException
+    {
+        return getMatching( cacheName, pattern, 0 );
     }
 
     /**
@@ -201,6 +226,7 @@ public class MockRemoteCacheService
     public Map getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
+        lastGetMatchingPattern = pattern;
         return new HashMap();
     }
 }

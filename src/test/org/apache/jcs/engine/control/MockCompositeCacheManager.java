@@ -34,9 +34,9 @@ public class MockCompositeCacheManager
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
-    
+
     /**
-     * @param cacheName 
+     * @param cacheName
      * @return Returns a CompositeCache
      */
     public CompositeCache getCache( String cacheName )
@@ -66,7 +66,7 @@ public class MockCompositeCacheManager
     {
         return cache;
     }
-    
+
     /**
      * This is exposed so other manager can get access to the props.
      * <p>
@@ -85,5 +85,11 @@ public class MockCompositeCacheManager
     public Properties getConfigurationProperties()
     {
         return configurationProperties;
+    }
+
+    /** @return Mock */
+    public String getStats()
+    {
+        return "Mock";
     }
 }

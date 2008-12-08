@@ -149,27 +149,26 @@ public class MockRemoteCacheClient
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#removeAll()
+    /**
+     * Removes all cached items from the cache.
      */
     public void removeAll()
     {
         // do nothing
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#dispose()
+    /**
+     * Prepares for shutdown.
      */
     public void dispose()
     {
         // do nothing
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getSize()
+    /**
+     * Returns the current cache size in number of elements.
+     * <p>
+     * @return number of elements
      */
     public int getSize()
     {
@@ -185,27 +184,27 @@ public class MockRemoteCacheClient
         return status;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getCacheName()
+    /**
+     * Returns the cache name.
+     * <p>
+     * @return usually the region name.
      */
     public String getCacheName()
     {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+    /**
+     * @param group
+     * @return null
      */
     public Set getGroupKeys( String group )
     {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+    /**
+     * @return null
      */
     public IStats getStatistics()
     {
@@ -223,19 +222,17 @@ public class MockRemoteCacheClient
         return attributes;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICache#getStats()
+    /**
+     * Returns the cache stats.
+     * <p>
+     * @return String of important historical information.
      */
     public String getStats()
     {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType()
-     */
+    /** @return 0 */
     public int getCacheType()
     {
         return 0;

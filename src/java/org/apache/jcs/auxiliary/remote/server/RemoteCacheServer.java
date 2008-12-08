@@ -265,7 +265,7 @@ class RemoteCacheServer
             CacheListeners cacheDesc = getCacheListeners( item.getCacheName() );
             /* Object val = */item.getVal();
 
-            boolean fromCluster = isRequestFromCluster( requesterId );            
+            boolean fromCluster = isRequestFromCluster( requesterId );
 
             if ( log.isDebugEnabled() )
             {
@@ -451,7 +451,7 @@ class RemoteCacheServer
     private ICacheElement processGet( String cacheName, Serializable key, long requesterId )
     {
         boolean fromCluster = isRequestFromCluster( requesterId );
-        
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "get [" + key + "] from cache [" + cacheName + "] requesterId = [" + requesterId
@@ -537,7 +537,21 @@ class RemoteCacheServer
     }
 
     /**
-     * TODO finish
+     * Gets all matching items.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @return Map of keys and wrapped objects
+     * @throws IOException
+     */
+    public Map getMatching( String cacheName, String pattern )
+        throws IOException
+    {
+        return getMatching( cacheName, pattern, 0 );
+    }
+
+    /**
+     * Retrieves all matching keys.
      * <p>
      * @param cacheName
      * @param pattern
@@ -552,36 +566,49 @@ class RemoteCacheServer
                                                     ICacheEventLogger.GETMATCHING_EVENT );
         try
         {
-            boolean fromCluster = isRequestFromCluster( requesterId );
-            
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "getMatching [" + pattern + "] from cache [" + cacheName + "] requesterId = [" + requesterId
-                    + "] fromCluster = " + fromCluster );
-            }
-
-            CacheListeners cacheDesc = null;
-            try
-            {
-                cacheDesc = getCacheListeners( cacheName );
-            }
-            catch ( Exception e )
-            {
-                log.error( "Problem getting listeners.", e );
-
-                if ( cacheEventLogger != null )
-                {
-                    cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GETMATCHING_EVENT, e.getMessage()
-                        + cacheName + " pattern: " + pattern );
-                }
-            }
-
-            return getMatchingFromCacheListeners( pattern, fromCluster, cacheDesc );
+            return processGetMatching( cacheName, pattern, requesterId );
         }
         finally
         {
             logICacheEvent( cacheEvent );
         }
+    }
+
+    /**
+     * Retrieves all matching keys.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @param requesterId
+     * @return Map of keys and wrapped objects
+     */
+    protected Map processGetMatching( String cacheName, String pattern, long requesterId )
+    {
+        boolean fromCluster = isRequestFromCluster( requesterId );
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "getMatching [" + pattern + "] from cache [" + cacheName + "] requesterId = [" + requesterId
+                + "] fromCluster = " + fromCluster );
+        }
+
+        CacheListeners cacheDesc = null;
+        try
+        {
+            cacheDesc = getCacheListeners( cacheName );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem getting listeners.", e );
+
+            if ( cacheEventLogger != null )
+            {
+                cacheEventLogger.logError( "RemoteCacheServer", ICacheEventLogger.GETMATCHING_EVENT, e.getMessage()
+                    + cacheName + " pattern: " + pattern );
+            }
+        }
+
+        return getMatchingFromCacheListeners( pattern, fromCluster, cacheDesc );
     }
 
     /**
@@ -791,6 +818,18 @@ class RemoteCacheServer
      * @return A Set of group keys
      */
     public Set getGroupKeys( String cacheName, String group )
+    {
+        return processGetGroupKeys( cacheName, group );
+    }
+
+    /**
+     * Gets the set of keys of objects currently in the group.
+     * <p>
+     * @param cacheName
+     * @param group
+     * @return Set
+     */
+    protected Set processGetGroupKeys( String cacheName, String group )
     {
         CacheListeners cacheDesc = null;
         try
@@ -1044,34 +1083,45 @@ class RemoteCacheServer
         ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
         try
         {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Dispose request received from listener [" + requesterId + "]" );
-            }
-
-            CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
-
-            // this is dangerous
-            if ( cacheDesc != null )
-            {
-                // best attempt to achieve ordered free-cache-op and notification.
-                synchronized ( cacheDesc )
-                {
-                    ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
-
-                    for ( int i = 0; i < qlist.length; i++ )
-                    {
-                        qlist[i].addDisposeEvent();
-                    }
-                    cacheManager.freeCache( cacheName );
-                }
-            }
+            processDispose( cacheName, requesterId );
         }
         finally
         {
             logICacheEvent( cacheEvent );
         }
         return;
+    }
+
+    /**
+     * @param cacheName
+     * @param requesterId
+     * @throws IOException
+     */
+    private void processDispose( String cacheName, long requesterId )
+        throws IOException
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Dispose request received from listener [" + requesterId + "]" );
+        }
+
+        CacheListeners cacheDesc = (CacheListeners) cacheListenersMap.get( cacheName );
+
+        // this is dangerous
+        if ( cacheDesc != null )
+        {
+            // best attempt to achieve ordered free-cache-op and notification.
+            synchronized ( cacheDesc )
+            {
+                ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
+
+                for ( int i = 0; i < qlist.length; i++ )
+                {
+                    qlist[i].addDisposeEvent();
+                }
+                cacheManager.freeCache( cacheName );
+            }
+        }
     }
 
     /**
@@ -1558,7 +1608,7 @@ class RemoteCacheServer
         {
             return EMPTY_ICACHE_EVENT;
         }
-        String ipAddress = getIPAddressForRequesterId( requesterId );
+        String ipAddress = getExtraInfoForRequesterId( requesterId );
         return cacheEventLogger
             .createICacheEvent( "RemoteCacheServer", item.getCacheName(), eventName, ipAddress, item );
     }
@@ -1578,7 +1628,7 @@ class RemoteCacheServer
         {
             return EMPTY_ICACHE_EVENT;
         }
-        String ipAddress = getIPAddressForRequesterId( requesterId );
+        String ipAddress = getExtraInfoForRequesterId( requesterId );
         return cacheEventLogger.createICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
     }
 
@@ -1618,7 +1668,7 @@ class RemoteCacheServer
      * @param requesterId
      * @return String
      */
-    protected String getIPAddressForRequesterId( long requesterId )
+    protected String getExtraInfoForRequesterId( long requesterId )
     {
         String ipAddress = (String) idIPMap.get( new Long( requesterId ) );
         return ipAddress;

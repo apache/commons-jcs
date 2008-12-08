@@ -44,4 +44,11 @@ public interface ICompositeCacheManager
      * @return the configurationProperties
      */
     Properties getConfigurationProperties();
+    
+    /**
+     * Gets stats for debugging.
+     * <p>
+     * @return String
+     */
+    String getStats();
 }

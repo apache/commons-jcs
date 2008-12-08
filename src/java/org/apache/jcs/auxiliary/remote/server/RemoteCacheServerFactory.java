@@ -131,9 +131,7 @@ public class RemoteCacheServerFactory
             RemoteUtils.configureGlobalCustomSocketFactory( rcsa.getRmiSocketFactoryTimeoutMillis() );
 
             // CONFIGURE THE EVENT LOGGER
-            ICacheEventLogger cacheEventLogger;
-
-            cacheEventLogger = configureCacheEventLogger( props );
+            ICacheEventLogger cacheEventLogger = configureCacheEventLogger( props );
 
             // CREATE SERVER
             if ( customRMISocketFactory != null )

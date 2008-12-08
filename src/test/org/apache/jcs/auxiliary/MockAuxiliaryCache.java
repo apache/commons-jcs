@@ -140,25 +140,24 @@ public class MockAuxiliaryCache
 
     /**
      * @return int
-     * 
      */
     public int getStatus()
     {
         return status;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getCacheName()
+    /**
+     * @return null
      */
     public String getCacheName()
     {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+    /**
+     * @param group
+     * @return null
+     * @throws IOException
      */
     public Set getGroupKeys( String group )
         throws IOException
@@ -166,27 +165,24 @@ public class MockAuxiliaryCache
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+    /**
+     * @return null
      */
     public IStats getStatistics()
     {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICache#getStats()
+    /**
+     * @return null
      */
     public String getStats()
     {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType()
+    /**
+     * @return cacheType
      */
     public int getCacheType()
     {
