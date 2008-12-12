@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.registry.Registry;
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
@@ -41,7 +42,7 @@ import org.apache.jcs.engine.behavior.ICacheService;
  * Manual tester.
  */
 public class RemoteCacheClientTester
-    implements IRemoteCacheListener, IRemoteCacheConstants
+    implements IRemoteCacheListener, IRemoteCacheConstants, Remote
 {
     /** the observer */
     protected ICacheObserver watch;

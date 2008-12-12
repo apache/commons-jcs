@@ -5,9 +5,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
-import org.apache.jcs.auxiliary.remote.http.behavior.IRemoteHttpCacheConstants;
-import org.apache.jcs.auxiliary.remote.http.value.RemoteHttpCacheRequest;
-import org.apache.jcs.auxiliary.remote.http.value.RemoteHttpCacheResponse;
+import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
+import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
@@ -24,13 +23,13 @@ public class RemoteCacheServiceAdaptor
 
     /** The service that does the work. */
     private IRemoteCacheService remoteCacheService;
-    
+
     /** This is for testing without the factory. */
     protected RemoteCacheServiceAdaptor()
     {
         // for testing.
     }
-    
+
     /**
      * Create a process with a cache manager.
      * <p>
@@ -47,9 +46,9 @@ public class RemoteCacheServiceAdaptor
      * @param request
      * @return RemoteHttpCacheResponse, never null
      */
-    public RemoteHttpCacheResponse processRequest( RemoteHttpCacheRequest request )
+    public RemoteCacheResponse processRequest( RemoteCacheRequest request )
     {
-        RemoteHttpCacheResponse response = new RemoteHttpCacheResponse();
+        RemoteCacheResponse response = new RemoteCacheResponse();
 
         if ( request == null )
         {
@@ -64,42 +63,44 @@ public class RemoteCacheServiceAdaptor
             {
                 switch ( request.getRequestType() )
                 {
-                    case IRemoteHttpCacheConstants.REQUEST_TYPE_GET:
-                        ICacheElement element = getRemoteCacheService().get( request.getCacheName(),
-                                                                                 request.getKey(),
-                                                                                 request.getRequesterId() );
+                    case RemoteCacheRequest.REQUEST_TYPE_GET:
+                        ICacheElement element = getRemoteCacheService().get( request.getCacheName(), request.getKey(),
+                                                                             request.getRequesterId() );
                         if ( element != null )
                         {
                             response.getPayload().put( element.getKey(), element );
                         }
                         break;
-                    case IRemoteHttpCacheConstants.REQUEST_TYPE_GET_MULTIPLE:
+                    case RemoteCacheRequest.REQUEST_TYPE_GET_MULTIPLE:
                         Map elementMap = getRemoteCacheService().getMultiple( request.getCacheName(),
-                                                                                  request.getKeySet(),
-                                                                                  request.getRequesterId() );
+                                                                              request.getKeySet(),
+                                                                              request.getRequesterId() );
                         if ( elementMap != null )
                         {
                             response.getPayload().putAll( elementMap );
                         }
                         break;
-                    case IRemoteHttpCacheConstants.REQUEST_TYPE_GET_MATCHING:
+                    case RemoteCacheRequest.REQUEST_TYPE_GET_MATCHING:
                         Map elementMapMatching = getRemoteCacheService().getMatching( request.getCacheName(),
-                                                                                          request.getPattern(),
-                                                                                          request.getRequesterId() );
+                                                                                      request.getPattern(),
+                                                                                      request.getRequesterId() );
                         if ( elementMapMatching != null )
                         {
                             response.getPayload().putAll( elementMapMatching );
                         }
                         break;
-                    case IRemoteHttpCacheConstants.REQUEST_TYPE_REMOVE:
+                    case RemoteCacheRequest.REQUEST_TYPE_REMOVE:
                         getRemoteCacheService().remove( request.getCacheName(), request.getKey(),
-                                                            request.getRequesterId() );
+                                                        request.getRequesterId() );
                         break;
-                    case IRemoteHttpCacheConstants.REQUEST_TYPE_REMOVE_ALL:
+                    case RemoteCacheRequest.REQUEST_TYPE_REMOVE_ALL:
                         getRemoteCacheService().removeAll( request.getCacheName(), request.getRequesterId() );
                         break;
-                    case IRemoteHttpCacheConstants.REQUEST_TYPE_UPDATE:
+                    case RemoteCacheRequest.REQUEST_TYPE_UPDATE:
                         getRemoteCacheService().update( request.getCacheElement(), request.getRequesterId() );
+                        break;
+                    case RemoteCacheRequest.REQUEST_TYPE_ALIVE_CHECK:
+                        response.setSuccess( true );
                         break;
                     default:
                         String message = "Unknown event type.  Cannot process " + request;

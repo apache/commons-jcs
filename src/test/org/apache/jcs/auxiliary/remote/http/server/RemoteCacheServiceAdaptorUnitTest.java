@@ -7,9 +7,9 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.remote.MockRemoteCacheService;
-import org.apache.jcs.auxiliary.remote.http.client.RemoteHttpClientRequestFactory;
-import org.apache.jcs.auxiliary.remote.http.value.RemoteHttpCacheRequest;
-import org.apache.jcs.auxiliary.remote.http.value.RemoteHttpCacheResponse;
+import org.apache.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
+import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
+import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.jcs.engine.CacheElement;
 
 /** Unit tests for the adaptor. */
@@ -28,10 +28,10 @@ public class RemoteCacheServiceAdaptorUnitTest
         String cacheName = "test";
         Serializable key = "key";
         long requesterId = 2;
-        RemoteHttpCacheRequest request = RemoteHttpClientRequestFactory.createGetRequest( cacheName, key, requesterId );
+        RemoteCacheRequest request = RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
         // DO WORK
-        RemoteHttpCacheResponse result = adaptor.processRequest( request );
+        RemoteCacheResponse result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -50,11 +50,11 @@ public class RemoteCacheServiceAdaptorUnitTest
         String cacheName = "test";
         String pattern = "pattern";
         long requesterId = 2;
-        RemoteHttpCacheRequest request = RemoteHttpClientRequestFactory.createGetMatchingRequest( cacheName, pattern,
+        RemoteCacheRequest request = RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern,
                                                                                                   requesterId );
 
         // DO WORK
-        RemoteHttpCacheResponse result = adaptor.processRequest( request );
+        RemoteCacheResponse result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -73,11 +73,11 @@ public class RemoteCacheServiceAdaptorUnitTest
         String cacheName = "test";
         Set keys = Collections.EMPTY_SET;
         long requesterId = 2;
-        RemoteHttpCacheRequest request = RemoteHttpClientRequestFactory.createGetMultipleRequest( cacheName, keys,
+        RemoteCacheRequest request = RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys,
                                                                                                   requesterId );
 
         // DO WORK
-        RemoteHttpCacheResponse result = adaptor.processRequest( request );
+        RemoteCacheResponse result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -98,10 +98,10 @@ public class RemoteCacheServiceAdaptorUnitTest
         Serializable key = "key";
         long requesterId = 2;
         CacheElement element = new CacheElement( cacheName, key, null );
-        RemoteHttpCacheRequest request = RemoteHttpClientRequestFactory.createUpdateRequest( element, requesterId );
+        RemoteCacheRequest request = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
 
         // DO WORK
-        RemoteHttpCacheResponse result = adaptor.processRequest( request );
+        RemoteCacheResponse result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -120,10 +120,10 @@ public class RemoteCacheServiceAdaptorUnitTest
         String cacheName = "test";
         Serializable key = "key";
         long requesterId = 2;
-        RemoteHttpCacheRequest request = RemoteHttpClientRequestFactory.createRemoveRequest( cacheName, key, requesterId );
+        RemoteCacheRequest request = RemoteCacheRequestFactory.createRemoveRequest( cacheName, key, requesterId );
 
         // DO WORK
-        RemoteHttpCacheResponse result = adaptor.processRequest( request );
+        RemoteCacheResponse result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -141,10 +141,10 @@ public class RemoteCacheServiceAdaptorUnitTest
 
         String cacheName = "testRemoveALl";
         long requesterId = 2;
-        RemoteHttpCacheRequest request = RemoteHttpClientRequestFactory.createRemoveAllRequest( cacheName, requesterId );
+        RemoteCacheRequest request = RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
 
         // DO WORK
-        RemoteHttpCacheResponse result = adaptor.processRequest( request );
+        RemoteCacheResponse result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );

@@ -112,7 +112,8 @@ public interface IRemoteCacheService
      * @param groupName
      * @return A Set of keys
      * @throws java.rmi.RemoteException
+     * @throws IOException 
      */
     Set getGroupKeys( String cacheName, String groupName )
-        throws java.rmi.RemoteException;
+        throws java.rmi.RemoteException, IOException;
 }

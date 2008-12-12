@@ -21,20 +21,18 @@ package org.apache.jcs.auxiliary.remote.behavior;
 
 import java.io.IOException;
 
-import java.rmi.Remote;
-
 import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
  * Listens for remote cache event notification ( rmi callback ).
  */
 public interface IRemoteCacheListener
-    extends ICacheListener, Remote
+    extends ICacheListener
 {
     /** SERVER_LISTENER -- for the cluster */
     public final static int SERVER_LISTENER = 0;
 
-    /** CLIENT_LISTENER -- these aren't used any longer.  remove*/
+    /** CLIENT_LISTENER -- these aren't used any longer. remove */
     public final static int CLIENT_LISTENER = 1;
 
     /**
@@ -67,7 +65,7 @@ public interface IRemoteCacheListener
 
     /**
      * This is for debugging. It allows the remote cache server to log the address of any listeners
-     * that regiser.
+     * that register.
      * <p>
      * @return the local host address.
      * @throws IOException
@@ -82,5 +80,4 @@ public interface IRemoteCacheListener
      */
     public void dispose()
         throws IOException;
-
 }

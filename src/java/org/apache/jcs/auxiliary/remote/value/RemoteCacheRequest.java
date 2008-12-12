@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.remote.http.value;
+package org.apache.jcs.auxiliary.remote.value;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -11,11 +11,38 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * Rather than creating sub object types, I created on object thsat has values for all types of
  * requests.
  */
-public class RemoteHttpCacheRequest
+public class RemoteCacheRequest
     implements Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = -8858447417390442569L;
+
+    /** Alive check request type. */
+    public static final byte REQUEST_TYPE_ALIVE_CHECK = 0;
+
+    /** Get request type. */
+    public static final byte REQUEST_TYPE_GET = 1;
+
+    /** Get Multiple request type. */
+    public static final byte REQUEST_TYPE_GET_MULTIPLE = 2;
+
+    /** Get Matching request type. */
+    public static final byte REQUEST_TYPE_GET_MATCHING = 3;
+
+    /** Update request type. */
+    public static final byte REQUEST_TYPE_UPDATE = 4;
+
+    /** Remove request type. */
+    public static final byte REQUEST_TYPE_REMOVE = 5;
+
+    /** Remove All request type. */
+    public static final byte REQUEST_TYPE_REMOVE_ALL = 6;
+
+    /** Remove All request type. */
+    public static final byte REQUEST_TYPE_GET_GROUP_KEYS = 7;
+
+    /** Remove All request type. */
+    public static final byte REQUEST_TYPE_DIPOSE = 8;
 
     /** The request type specifies the type of request: get, put, remove, . . */
     private byte requestType = -1;

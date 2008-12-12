@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.remote.http.value;
+package org.apache.jcs.auxiliary.remote.value;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Map;
  * This is the response wrapper. The servlet wraps all different type of responses in one of these
  * objects.
  */
-public class RemoteHttpCacheResponse
+public class RemoteCacheResponse
     implements Serializable
 {
     /** Don't change. */

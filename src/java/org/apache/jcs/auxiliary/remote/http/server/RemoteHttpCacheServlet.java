@@ -20,8 +20,9 @@ package org.apache.jcs.auxiliary.remote.http.server;
  */
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,9 +32,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.remote.http.value.RemoteHttpCacheRequest;
-import org.apache.jcs.auxiliary.remote.http.value.RemoteHttpCacheResponse;
+import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
+import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  * This servlet simply reads and writes objects. The requests are packaged in a general wrapper. The
@@ -53,6 +55,9 @@ public class RemoteHttpCacheServlet
 
     /** Processes requests */
     private RemoteCacheServiceAdaptor remoteHttpCacheServiceAdaptor;
+
+    /** This needs to be standard, since the other side is standard */
+    private StandardSerializer serializer = new StandardSerializer();
 
     /**
      * Initializes the cache.
@@ -88,9 +93,9 @@ public class RemoteHttpCacheServlet
             log.debug( "Servicing a request." );
         }
 
-        RemoteHttpCacheRequest remoteRequest = readRequest( request );
+        RemoteCacheRequest remoteRequest = readRequest( request );
 
-        RemoteHttpCacheResponse cacheResponse = getRemoteHttpCacheServiceAdaptor().processRequest( remoteRequest );
+        RemoteCacheResponse cacheResponse = getRemoteHttpCacheServiceAdaptor().processRequest( remoteRequest );
 
         writeResponse( response, cacheResponse );
     }
@@ -101,20 +106,18 @@ public class RemoteHttpCacheServlet
      * @param request
      * @return RemoteHttpCacheRequest
      */
-    protected RemoteHttpCacheRequest readRequest( HttpServletRequest request )
+    protected RemoteCacheRequest readRequest( HttpServletRequest request )
     {
-        RemoteHttpCacheRequest remoteRequest = null;
+        RemoteCacheRequest remoteRequest = null;
         try
         {
-            ObjectInputStream ois = new ObjectInputStream( request.getInputStream() );
-
+            InputStream inputStream = request.getInputStream();
             if ( log.isDebugEnabled() )
             {
                 log.debug( "after getting input stream and before reading it" );
             }
 
-            remoteRequest = (RemoteHttpCacheRequest) ois.readObject();
-            ois.close();
+            remoteRequest = readRequestFromStream( inputStream );
         }
         catch ( Exception e )
         {
@@ -124,28 +127,48 @@ public class RemoteHttpCacheServlet
     }
 
     /**
+     * Reads the response from the stream and then closes it.
+     * <p>
+     * @param inputStream
+     * @return RemoteHttpCacheRequest
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    protected RemoteCacheRequest readRequestFromStream( InputStream inputStream )
+        throws IOException, ClassNotFoundException
+    {
+        RemoteCacheRequest remoteRequest;
+        ObjectInputStream ois = new ObjectInputStream( inputStream );
+
+        remoteRequest = (RemoteCacheRequest) ois.readObject();
+        ois.close();
+        return remoteRequest;
+    }
+
+    /**
      * Write the response to the output stream.
      * <p>
      * @param response
      * @param cacheResponse
      */
-    protected void writeResponse( HttpServletResponse response, RemoteHttpCacheResponse cacheResponse )
+    protected void writeResponse( HttpServletResponse response, RemoteCacheResponse cacheResponse )
     {
         try
         {
             response.setContentType( "application/octet-stream" );
 
-            ObjectOutputStream oos = new ObjectOutputStream( response.getOutputStream() );
+            byte[] responseAsByteAray = serializer.serialize( cacheResponse );
+            response.setContentLength( responseAsByteAray.length );
 
+            OutputStream outputStream = response.getOutputStream();
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Opened output stream." );
+                log.debug( "Opened output stream.  Response size: " + responseAsByteAray.length );
             }
-
             // WRITE
-            oos.writeObject( cacheResponse );
-            oos.flush();
-            oos.close();
+            outputStream.write( responseAsByteAray );
+            outputStream.flush();
+            outputStream.close();
         }
         catch ( Exception e )
         {
