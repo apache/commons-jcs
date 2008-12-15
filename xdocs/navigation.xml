@@ -76,6 +76,8 @@
 				<item name="Remote Cache" href="/RemoteAuxCache.html" />
 				<item name="Remote Cache Properties"
 					href="/RemoteCacheProperties.html" />
+				<item name="Remote Http Cache Properties"
+					href="/RemoteHttpCacheProperties.html" />
 				<item name="Lateral TCP Cache"
 					href="/LateralTCPAuxCache.html" />
 				<item name="Lateral TCP Properties"

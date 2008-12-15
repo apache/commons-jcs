@@ -25,17 +25,13 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.jcs.engine.CacheConstants;
 
 /**
- * Used to monitor and repair any failed connection for the remote cache service. By default the
- * monitor operates in a failure driven mode. That is, it goes into a wait state until there is an
- * error. TODO consider moving this into an active monitoring mode. Upon the notification of a
- * connection error, the monitor changes to operate in a time driven mode. That is, it attempts to
- * recover the connections on a periodic basis. When all failed connections are restored, it changes
- * back to the failure driven mode.
- * <p>
- * This simply pings the service until it works.
+ * Upon the notification of a connection error, the monitor changes to operate in a time driven
+ * mode. That is, it attempts to recover the connections on a periodic basis. When all failed
+ * connections are restored, it changes back to the failure driven mode.
  */
 public class RemoteHttpCacheMonitor
     implements Runnable
@@ -124,7 +120,7 @@ public class RemoteHttpCacheMonitor
     // Run forever.
 
     // Avoid the use of any synchronization in the process of monitoring for
-    // performance reason.
+    // performance reasons.
     // If exception is thrown owing to synchronization,
     // just skip the monitoring until the next round.
     /** Main processing method for the RemoteCacheMonitor object */
@@ -209,7 +205,7 @@ public class RemoteHttpCacheMonitor
                     {
                         RemoteHttpCacheAttributes attributes = remoteCache.getRemoteHttpCacheAttributes();
 
-                        RemoteHttpCacheClient remoteService = RemoteHttpCacheManager.getInstance()
+                        IRemoteHttpCacheClient remoteService = RemoteHttpCacheManager.getInstance()
                             .createRemoteHttpCacheClientForAttributes( attributes );
 
                         if ( log.isInfoEnabled() )

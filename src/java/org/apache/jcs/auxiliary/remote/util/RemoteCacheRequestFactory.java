@@ -171,7 +171,7 @@ public class RemoteCacheRequestFactory
         RemoteCacheRequest request = new RemoteCacheRequest();
         request.setCacheName( cacheName );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_DIPOSE );
+        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_DISPOSE );
 
         if ( log.isDebugEnabled() )
         {

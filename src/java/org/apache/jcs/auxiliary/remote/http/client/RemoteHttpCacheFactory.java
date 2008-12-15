@@ -74,7 +74,8 @@ public class RemoteHttpCacheFactory
         ArrayList noWaits = new ArrayList();
 
         RemoteHttpCacheManager rcm = RemoteHttpCacheManager.getInstance( cacheMgr, cacheEventLogger, elementSerializer );
-        rca.setRemoteType( RemoteCacheAttributes.CLUSTER );
+        // TODO, use the configured value.
+        rca.setRemoteType( RemoteCacheAttributes.LOCAL );
         ICache ic = rcm.getCache( rca );
         if ( ic != null )
         {

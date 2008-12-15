@@ -30,13 +30,14 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
+import org.apache.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.utils.config.OptionConverter;
 
 /**
  * This is a very crude copy of the RMI remote manager. It needs a lot of work!
@@ -181,7 +182,7 @@ public class RemoteHttpCacheManager
             {
                 RemoteHttpClientListener listener = new RemoteHttpClientListener( cattr, cacheMgr );
 
-                RemoteHttpCacheClient remoteService = createRemoteHttpCacheClientForAttributes( cattr );
+                IRemoteHttpCacheClient remoteService = createRemoteHttpCacheClientForAttributes( cattr );
 
                 IRemoteCacheClient remoteCacheClient = new RemoteHttpCache( cattr, remoteService, listener );
                 remoteCacheClient.setCacheEventLogger( cacheEventLogger );
@@ -204,12 +205,23 @@ public class RemoteHttpCacheManager
      * RemoteHttpCacheClient through this method.
      * <p>
      * @param cattr
-     * @return RemoteHttpCacheClient
+     * @return IRemoteHttpCacheClient
      */
-    protected RemoteHttpCacheClient createRemoteHttpCacheClientForAttributes( RemoteHttpCacheAttributes cattr )
+    protected IRemoteHttpCacheClient createRemoteHttpCacheClientForAttributes( RemoteHttpCacheAttributes cattr )
     {
-        RemoteHttpCacheClient remoteService = new RemoteHttpCacheClient( cattr );
-        return remoteService;
+        IRemoteHttpCacheClient client = (IRemoteHttpCacheClient) OptionConverter.instantiateByClassName( cattr
+            .getRemoteHttpClientClassName(), IRemoteHttpCacheClient.class, null );
+
+        if ( client == null )
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Creating the default client." );
+            }
+            client = new RemoteHttpCacheClient( );
+        }
+        client.initialize( cattr );
+        return client;
     }
 
     /**
@@ -230,25 +242,6 @@ public class RemoteHttpCacheManager
             }
         }
         return stats.toString();
-    }
-
-    /**
-     * Fixes up all the caches managed by this cache manager.
-     * <p>
-     * @param remoteService
-     */
-    public void fixCaches( IRemoteCacheService remoteService )
-    {
-        synchronized ( caches )
-        {
-            //            this.remoteService = remoteService;
-            //            // this.remoteWatch.setCacheWatch( remoteWatch );
-            //            for ( Iterator en = caches.values().iterator(); en.hasNext(); )
-            //            {
-            //                RemoteCacheNoWait cache = (RemoteCacheNoWait) en.next();
-            //                cache.fixCache( this.remoteService );
-            //            }
-        }
     }
 
     /**

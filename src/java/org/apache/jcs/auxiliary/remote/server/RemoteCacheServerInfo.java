@@ -21,9 +21,7 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import java.rmi.dgc.VMID;
 
-/**
- * A shared static variable holder for the server.
- */
+/** A shared static variable holder for the server. */
 public class RemoteCacheServerInfo
 {
     /** shouldn't be instantiated */
@@ -42,5 +40,4 @@ public class RemoteCacheServerInfo
 
     /** By default it is the VMID. */
     public static long listenerId = vmid.hashCode();
-
 }

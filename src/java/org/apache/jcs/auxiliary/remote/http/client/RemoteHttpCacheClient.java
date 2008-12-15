@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.remote.http.client;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -9,7 +28,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheDispatcher;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
+import org.apache.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.jcs.auxiliary.remote.http.server.RemoteCacheServiceAdaptor;
 import org.apache.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
@@ -18,13 +37,25 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 
 /** This is the service used by the remote http auxiliary cache. */
 public class RemoteHttpCacheClient
-    implements IRemoteCacheService
+    implements IRemoteHttpCacheClient
 {
     /** The Logger. */
     private final static Log log = LogFactory.getLog( RemoteCacheServiceAdaptor.class );
 
     /** The internal client. */
     private IRemoteCacheDispatcher remoteDispatcher;
+
+    /** The remote attributes */
+    private RemoteHttpCacheAttributes remoteHttpCacheAttributes;
+
+    /** Set to true when initialize is called */
+    private boolean initialized = false;
+
+    /** For factory construction. */
+    public RemoteHttpCacheClient()
+    {
+        // does nothing
+    }
 
     /**
      * Constructs a client.
@@ -33,6 +64,7 @@ public class RemoteHttpCacheClient
      */
     public RemoteHttpCacheClient( RemoteHttpCacheAttributes attributes )
     {
+        setRemoteHttpCacheAttributes( attributes );
         initialize( attributes );
     }
 
@@ -42,7 +74,7 @@ public class RemoteHttpCacheClient
      * <p>
      * @param attributes
      */
-    protected void initialize( RemoteHttpCacheAttributes attributes )
+    public void initialize( RemoteHttpCacheAttributes attributes )
     {
         setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
 
@@ -50,6 +82,7 @@ public class RemoteHttpCacheClient
         {
             log.info( "Created remote Dispatcher." + getRemoteDispatcher() );
         }
+        setInitialized( true );
     }
 
     /**
@@ -78,6 +111,12 @@ public class RemoteHttpCacheClient
     public ICacheElement get( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetRequest( cacheName, key,
                                                                                                 requesterId );
 
@@ -87,7 +126,7 @@ public class RemoteHttpCacheClient
         {
             log.debug( "Get [" + key + "] = " + remoteHttpCacheResponse );
         }
-        
+
         ICacheElement retval = null;
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
@@ -124,11 +163,23 @@ public class RemoteHttpCacheClient
     public Map getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetMatchingRequest( cacheName,
                                                                                                         pattern,
                                                                                                         requesterId );
 
         RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "GetMatching [" + pattern + "] = " + remoteHttpCacheResponse );
+        }
 
         return remoteHttpCacheResponse.getPayload();
     }
@@ -161,11 +212,23 @@ public class RemoteHttpCacheClient
     public Map getMultiple( String cacheName, Set keys, long requesterId )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetMultipleRequest( cacheName,
                                                                                                         keys,
                                                                                                         requesterId );
 
         RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "GetMultiple [" + keys + "] = " + remoteHttpCacheResponse );
+        }
 
         return remoteHttpCacheResponse.getPayload();
     }
@@ -194,6 +257,13 @@ public class RemoteHttpCacheClient
     public void remove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createRemoveRequest( cacheName, key,
                                                                                                    requesterId );
 
@@ -222,6 +292,13 @@ public class RemoteHttpCacheClient
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createRemoveAllRequest( cacheName,
                                                                                                       requesterId );
 
@@ -250,6 +327,13 @@ public class RemoteHttpCacheClient
     public void update( ICacheElement cacheElement, long requesterId )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createUpdateRequest( cacheElement,
                                                                                                    requesterId );
 
@@ -265,6 +349,13 @@ public class RemoteHttpCacheClient
     public void dispose( String cacheName )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createDisposeRequest( cacheName, 0 );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
@@ -290,12 +381,23 @@ public class RemoteHttpCacheClient
     public Set getGroupKeys( String cacheName, String groupName )
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetGroupKeysRequest( cacheName,
                                                                                                          groupName, 0 );
 
-        getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
-        // FIX ME
+        if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
+        {
+            return (Set)remoteHttpCacheResponse.getPayload().get( groupName );
+        }
+
         return Collections.EMPTY_SET;
     }
 
@@ -303,11 +405,18 @@ public class RemoteHttpCacheClient
      * Make and alive request.
      * <p>
      * @return true if we make a successful alive request.
-     * @throws IOException 
+     * @throws IOException
      */
-    protected boolean isAlive()
+    public boolean isAlive()
         throws IOException
     {
+        if ( !isInitialized() )
+        {
+            String message = "The Remote Http Client is not initialized.  Cannot process request.";
+            log.warn( message );
+            throw new IOException( message );
+        }
+
         RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
         RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
@@ -333,5 +442,37 @@ public class RemoteHttpCacheClient
     public IRemoteCacheDispatcher getRemoteDispatcher()
     {
         return remoteDispatcher;
+    }
+
+    /**
+     * @param remoteHttpCacheAttributes the remoteHttpCacheAttributes to set
+     */
+    public void setRemoteHttpCacheAttributes( RemoteHttpCacheAttributes remoteHttpCacheAttributes )
+    {
+        this.remoteHttpCacheAttributes = remoteHttpCacheAttributes;
+    }
+
+    /**
+     * @return the remoteHttpCacheAttributes
+     */
+    public RemoteHttpCacheAttributes getRemoteHttpCacheAttributes()
+    {
+        return remoteHttpCacheAttributes;
+    }
+
+    /**
+     * @param initialized the initialized to set
+     */
+    protected void setInitialized( boolean initialized )
+    {
+        this.initialized = initialized;
+    }
+
+    /**
+     * @return the initialized
+     */
+    protected boolean isInitialized()
+    {
+        return initialized;
     }
 }

@@ -59,6 +59,12 @@ public class RemoteHttpCacheServlet
     /** This needs to be standard, since the other side is standard */
     private StandardSerializer serializer = new StandardSerializer();
 
+    /** Number of service calls. */
+    private int serviceCalls = 0;
+
+    /** The interval at which we will log the count. */
+    private int logInterval = 100;
+
     /**
      * Initializes the cache.
      * <p>
@@ -88,9 +94,10 @@ public class RemoteHttpCacheServlet
     public void service( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
+        incrementServiceCallCount();
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Servicing a request." );
+            log.debug( "Servicing a request. " + request );
         }
 
         RemoteCacheRequest remoteRequest = readRequest( request );
@@ -114,7 +121,7 @@ public class RemoteHttpCacheServlet
             InputStream inputStream = request.getInputStream();
             if ( log.isDebugEnabled() )
             {
-                log.debug( "after getting input stream and before reading it" );
+                log.debug( "After getting input stream and before reading it" );
             }
 
             remoteRequest = readRequestFromStream( inputStream );
@@ -173,6 +180,22 @@ public class RemoteHttpCacheServlet
         catch ( Exception e )
         {
             log.error( "Problem writing response. " + cacheResponse, e );
+        }
+    }
+
+    /**
+     * Log some details.
+     */
+    private void incrementServiceCallCount()
+    {
+        // not thread safe, but it doesn't have to be accurate
+        serviceCalls++;
+        if ( log.isInfoEnabled() )
+        {
+            if ( serviceCalls % logInterval == 0 )
+            {
+                log.info( "serviceCalls = " + serviceCalls );
+            }
         }
     }
 

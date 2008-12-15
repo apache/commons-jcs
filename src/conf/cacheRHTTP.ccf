@@ -37,3 +37,4 @@ jcs.default.elementattributes.IsLateral=true
 jcs.auxiliary.RC=org.apache.jcs.auxiliary.remote.http.client.RemoteHttpCacheFactory
 jcs.auxiliary.RC.attributes=org.apache.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes
 jcs.auxiliary.RC.attributes.url=http://localhost:8000/jcs-app/RemoteCache
+jcs.auxiliary.RC.attributes.maxConnectionsPerHost=500

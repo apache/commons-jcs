@@ -1,5 +1,24 @@
 package org.apache.jcs.auxiliary.remote.http.client;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import org.apache.jcs.auxiliary.remote.RemoteCacheAttributes;
 
 /** Http client specific settings. */
@@ -10,7 +29,7 @@ public class RemoteHttpCacheAttributes
     private static final long serialVersionUID = -5944327125140505212L;
 
     /** http verison to use. */
-    private static final String DEFAULT_HTTP_VERSION = "1.0";
+    private static final String DEFAULT_HTTP_VERSION = "1.1";
 
     /** The max connections allowed per host */
     private int maxConnectionsPerHost = 100;
@@ -35,6 +54,12 @@ public class RemoteHttpCacheAttributes
     
     /** The complete URL to the service. */
     private String url;
+    
+    /** The default classname for the client.  */
+    public static final String DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME = RemoteHttpCacheClient.class.getName();
+    
+    /** This allows users to inject their own client implementation. */
+    private String remoteHttpClientClassName = DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME;
 
     /**
      * @param maxConnectionsPerHost the maxConnectionsPerHost to set
@@ -165,6 +190,22 @@ public class RemoteHttpCacheAttributes
     }
 
     /**
+     * @param remoteHttpClientClassName the remoteHttpClientClassName to set
+     */
+    public void setRemoteHttpClientClassName( String remoteHttpClientClassName )
+    {
+        this.remoteHttpClientClassName = remoteHttpClientClassName;
+    }
+
+    /**
+     * @return the remoteHttpClientClassName
+     */
+    public String getRemoteHttpClientClassName()
+    {
+        return remoteHttpClientClassName;
+    }
+
+    /**
      * @return String details
      */
     public String toString()
@@ -179,6 +220,7 @@ public class RemoteHttpCacheAttributes
         buf.append( "\n includeKeysAndPatternsAsParameter = [" + isIncludeKeysAndPatternsAsParameter() + "]" );
         buf.append( "\n includeRequestTypeasAsParameter = [" + isIncludeRequestTypeasAsParameter() + "]" );
         buf.append( "\n url = [" + getUrl() + "]" );
+        buf.append( "\n remoteHttpClientClassName = [" + getRemoteHttpClientClassName() + "]" );
         buf.append( super.toString() );
         return buf.toString();
     }
