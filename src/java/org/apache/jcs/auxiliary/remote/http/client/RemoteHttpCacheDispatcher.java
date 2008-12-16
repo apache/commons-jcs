@@ -136,6 +136,10 @@ public class RemoteHttpCacheDispatcher
             {
                 url.append( "?" );
             }
+            else
+            {
+                url.append( "&" );
+            }
 
             if ( getRemoteHttpCacheAttributes().isIncludeCacheNameAsParameter() )
             {
