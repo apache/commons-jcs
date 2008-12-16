@@ -116,7 +116,7 @@ public class RemoteHttpCacheDispatcher
         PostMethod post = new PostMethod( url );
         RequestEntity requestEntity = new ByteArrayRequestEntity( requestAsByteArray );
         post.setRequestEntity( requestEntity );
-        getHttpClient().executeMethod( post );
+        doWebserviceCall( post );
         byte[] response = post.getResponseBody();
         return response;
     }
@@ -194,21 +194,6 @@ public class RemoteHttpCacheDispatcher
         }
 
         return url.toString();
-    }
-
-    /**
-     * Extracted method that can be overwritten to do additional things to the post before the call
-     * is made.
-     * <p>
-     * @param post the post that is about to get executed.
-     * @throws IOException on i/o error
-     */
-    protected final void doWebserviceCall( HttpMethod post )
-        throws IOException
-    {
-        HttpState httpState = preProcessWebserviceCall( post );
-        getHttpClient().executeMethod( null, post, httpState );
-        postProcessWebserviceCall( post, httpState );
     }
 
     /**

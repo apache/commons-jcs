@@ -19,7 +19,11 @@ package org.apache.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
+import java.io.IOException;
+
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpVersion;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
@@ -105,9 +109,44 @@ public abstract class AbstractHttpClient
     }
 
     /**
+     * Extracted method that can be overwritten to do additional things to the post before the call
+     * is made.
+     * <p>
+     * @param post the post that is about to get executed.
+     * @throws IOException on i/o error
+     */
+    protected final void doWebserviceCall( HttpMethod post )
+        throws IOException
+    {
+        HttpState httpState = preProcessWebserviceCall( post );
+        getHttpClient().executeMethod( null, post, httpState );
+        postProcessWebserviceCall( post, httpState );
+    }
+
+    /**
+     * Called before the executeMethod on the client.
+     * <p>
+     * @param post http method
+     * @return HttpState
+     * @throws IOException
+     */
+    public abstract HttpState preProcessWebserviceCall( HttpMethod post )
+        throws IOException;
+
+    /**
+     * Called after the executeMethod on the client.
+     * <p>
+     * @param post http method
+     * @param httpState state
+     * @throws IOException
+     */
+    public abstract void postProcessWebserviceCall( HttpMethod post, HttpState httpState )
+        throws IOException;
+    
+    /**
      * @return Returns the httpClient.
      */
-    public HttpClient getHttpClient()
+    private HttpClient getHttpClient()
     {
         return httpClient;
     }
@@ -115,7 +154,7 @@ public abstract class AbstractHttpClient
     /**
      * @param httpClient The httpClient to set.
      */
-    public void setHttpClient( HttpClient httpClient )
+    private void setHttpClient( HttpClient httpClient )
     {
         this.httpClient = httpClient;
     }
