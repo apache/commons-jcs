@@ -21,6 +21,9 @@
 	<body>
 		<release version="1.4-dev" date="in SVN">
 		</release>
+		<release version="1.3.2.8" date="2008-12-16" description="tempbuild">
+			<action dev="asmuts" type="fix">Fixed bug remote cache listener interface.</action>
+		</release>
 		<release version="1.3.2.7" date="2008-12-15" description="tempbuild">
 			<action dev="asmuts" type="update">Added a simple http remote
 				cache client and server.</action>

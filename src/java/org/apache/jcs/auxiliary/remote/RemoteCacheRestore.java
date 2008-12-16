@@ -78,14 +78,14 @@ public class RemoteCacheRestore
         String registry = "//" + remoteCacheManager.host + ":" + remoteCacheManager.port + "/" + remoteCacheManager.service;
         if ( log.isInfoEnabled() )
         {
-            log.info( "looking up server " + registry );
+            log.info( "looking up server [" + registry + "]" );
         }
         try
         {
             remoteObj = Naming.lookup( registry );
             if ( log.isInfoEnabled() )
             {
-                log.info( "looking up server " + registry );
+                log.info( "Found server " + remoteObj );
             }
         }
         catch ( Exception ex )

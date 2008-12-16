@@ -134,17 +134,18 @@ public class RemoteCacheManager
         }
 
         this.registry = "//" + host + ":" + port + "/" + service;
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( "looking up server " + registry );
+            log.info( "Looking up server [" + registry + "]" );
         }
         try
         {
             Object obj = Naming.lookup( registry );
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "server found" );
+                log.info( "Server found: " + obj );
             }
+
             // Successful connection to the remote server.
             remoteService = (IRemoteCacheService) obj;
             if ( log.isDebugEnabled() )
@@ -164,6 +165,7 @@ public class RemoteCacheManager
             remoteService = new ZombieRemoteCacheService();
             remoteWatch = new RemoteCacheWatchRepairable();
             remoteWatch.setCacheWatch( new ZombieRemoteCacheWatch() );
+
             // Notify the cache monitor about the error, and kick off the
             // recovery process.
             RemoteCacheMonitor.getInstance().notifyError();
@@ -195,7 +197,8 @@ public class RemoteCacheManager
             if ( log.isInfoEnabled() )
             {
                 log.info( "The remote cache is configured to receive events from the remote server.  "
-                    + "We will register a listener." );
+                    + "We will register a listener. remoteWatch = " + remoteWatch + " | IRemoteCacheListener = "
+                    + listener + " | cacheName " + cattr.getCacheName() );
             }
 
             synchronized ( caches )
@@ -408,11 +411,13 @@ public class RemoteCacheManager
                 }
                 catch ( IOException ioe )
                 {
-                    log.error( ioe.getMessage() );
+                    log.error( "IOException. Problem adding listener. Message: " + ioe.getMessage()
+                        + " | RemoteCacheListener = " + listener, ioe );
                 }
                 catch ( Exception e )
                 {
-                    log.error( e.getMessage() );
+                    log.error( "Problem adding listener. Message: " + e.getMessage() + " | RemoteCacheListener = "
+                        + listener, e );
                 }
 
                 IRemoteCacheClient remoteCacheClient = new RemoteCache( cattr, remoteService, listener );
@@ -515,6 +520,10 @@ public class RemoteCacheManager
      */
     public void fixCaches( IRemoteCacheService remoteService, IRemoteCacheObserver remoteWatch )
     {
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Fixing caches. IRemoteCacheService " + remoteService + " | IRemoteCacheObserver " + remoteWatch );
+        }
         synchronized ( caches )
         {
             this.remoteService = remoteService;

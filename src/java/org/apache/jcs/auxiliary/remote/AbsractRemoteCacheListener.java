@@ -42,7 +42,7 @@ public abstract class AbsractRemoteCacheListener
     implements IRemoteCacheListener
 {
     /** Don't change */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 32442324243243L;
 
     /** The logger */
     private final static Log log = LogFactory.getLog( AbsractRemoteCacheListener.class );
@@ -101,9 +101,9 @@ public abstract class AbsractRemoteCacheListener
         throws IOException
     {
         listenerId = id;
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
         {
-            log.debug( "set listenerId = [" + id + "]" );
+            log.info( "set listenerId = [" + id + "]" );
         }
     }
 

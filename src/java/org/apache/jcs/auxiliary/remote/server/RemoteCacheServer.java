@@ -1296,7 +1296,7 @@ class RemoteCacheServer
         {
             throw new IllegalArgumentException( "cacheName and listener must not be null" );
         }
-        CacheListeners cacheDesc;
+        CacheListeners cacheListeners;
 
         IRemoteCacheListener ircl = (IRemoteCacheListener) listener;
 
@@ -1306,14 +1306,14 @@ class RemoteCacheServer
         if ( remoteType == IRemoteCacheAttributes.CLUSTER )
         {
             log.debug( "adding cluster listener, listenerAddress [" + listenerAddress + "]" );
-            cacheDesc = getClusterListeners( cacheName );
+            cacheListeners = getClusterListeners( cacheName );
         }
         else
         {
             log.debug( "adding normal listener, listenerAddress [" + listenerAddress + "]" );
-            cacheDesc = getCacheListeners( cacheName );
+            cacheListeners = getCacheListeners( cacheName );
         }
-        Map eventQMap = cacheDesc.eventQMap;
+        Map eventQMap = cacheListeners.eventQMap;
         cleanupEventQMap( eventQMap );
 
         // synchronized ( listenerId )
@@ -1337,7 +1337,7 @@ class RemoteCacheServer
                     id = listenerIdB;
 
                     // in case it needs synchronization
-                    String message = "adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
+                    String message = "Adding vm listener under new id = [" + listenerIdB + "], listenerAddress ["
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     if ( log.isInfoEnabled() )
@@ -1347,7 +1347,7 @@ class RemoteCacheServer
                 }
                 else
                 {
-                    String message = "adding listener under existing id = [" + id + "], listenerAddress ["
+                    String message = "Adding listener under existing id = [" + id + "], listenerAddress ["
                         + listenerAddress + "]";
                     logApplicationEvent( "RemoteCacheServer", "addCacheListener", message );
                     if ( log.isInfoEnabled() )
@@ -1385,7 +1385,7 @@ class RemoteCacheServer
 
             if ( log.isInfoEnabled() )
             {
-                log.info( "Region " + cacheName + "'s listener size = " + cacheDesc.eventQMap.size() );
+                log.info( cacheListeners );
             }
         }
     }

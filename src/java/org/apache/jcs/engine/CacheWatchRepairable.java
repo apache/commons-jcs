@@ -32,10 +32,9 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICacheObserver;
 
 /**
- * Intercepts the requests to the underlying ICacheObserver object so that the
- * listeners can be recorded locally for remote connection recovery purposes.
- * (Durable subscription like those in JMS is not implemented at this stage for
- * it can be too expensive.)
+ * Intercepts the requests to the underlying ICacheObserver object so that the listeners can be
+ * recorded locally for remote connection recovery purposes. (Durable subscription like those in JMS
+ * is not implemented at this stage for it can be too expensive.)
  */
 public class CacheWatchRepairable
     implements ICacheObserver
@@ -50,11 +49,10 @@ public class CacheWatchRepairable
     private Map cacheMap = new HashMap();
 
     /**
-     * Replaces the underlying cache watch service and reattached all existing
-     * listeners to the new cache watch.
+     * Replaces the underlying cache watch service and reattached all existing listeners to the new
+     * cache watch.
      * <p>
-     * @param cacheWatch
-     *            The new cacheWatch value
+     * @param cacheWatch The new cacheWatch value
      */
     public void setCacheWatch( ICacheObserver cacheWatch )
     {
@@ -68,13 +66,20 @@ public class CacheWatchRepairable
                 Set listenerSet = (Set) entry.getValue();
                 for ( Iterator itr2 = listenerSet.iterator(); itr2.hasNext(); )
                 {
+                    ICacheListener listener = (ICacheListener) itr2.next();
                     try
                     {
-                        cacheWatch.addCacheListener( cacheName, (ICacheListener) itr2.next() );
+                        if ( log.isInfoEnabled() )
+                        {
+                            log.info( "Adding listener to cache watch. ICacheListener = " + listener
+                                + " | ICacheObserver = " + cacheWatch );
+                        }
+                        cacheWatch.addCacheListener( cacheName, listener );
                     }
                     catch ( IOException ex )
                     {
-                        log.error( "Problem adding listener.", ex );
+                        log.error( "Problem adding listener. ICacheListener = " + listener + " | ICacheObserver = "
+                            + cacheWatch, ex );
                     }
                 }
             }
@@ -82,13 +87,10 @@ public class CacheWatchRepairable
     }
 
     /**
-     * Adds a feature to the CacheListener attribute of the CacheWatchRepairable
-     * object
+     * Adds a feature to the CacheListener attribute of the CacheWatchRepairable object
      * <p>
-     * @param cacheName
-     *            The feature to be added to the CacheListener attribute
-     * @param obj
-     *            The feature to be added to the CacheListener attribute
+     * @param cacheName The feature to be added to the CacheListener attribute
+     * @param obj The feature to be added to the CacheListener attribute
      * @throws IOException
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
@@ -102,19 +104,23 @@ public class CacheWatchRepairable
             if ( listenerSet == null )
             {
                 listenerSet = new HashSet();
+                
                 cacheMap.put( cacheName, listenerSet );
             }
             listenerSet.add( obj );
+        }
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Adding listener to cache watch. ICacheListener = " + obj
+                + " | ICacheObserver = " + cacheWatch + " | cacheName = " + cacheName );
         }
         cacheWatch.addCacheListener( cacheName, obj );
     }
 
     /**
-     * Adds a feature to the CacheListener attribute of the CacheWatchRepairable
-     * object
+     * Adds a feature to the CacheListener attribute of the CacheWatchRepairable object
      * <p>
-     * @param obj
-     *            The feature to be added to the CacheListener attribute
+     * @param obj The feature to be added to the CacheListener attribute
      * @throws IOException
      */
     public void addCacheListener( ICacheListener obj )
@@ -130,6 +136,11 @@ public class CacheWatchRepairable
                 listenerSet.add( obj );
             }
         }
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Adding listener to cache watch. ICacheListener = " + obj
+                + " | ICacheObserver = " + cacheWatch );
+        }        
         cacheWatch.addCacheListener( obj );
     }
 

@@ -20,6 +20,7 @@ package org.apache.jcs.engine;
  */
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.jcs.engine.behavior.ICache;
@@ -48,5 +49,31 @@ public class CacheListeners
             throw new IllegalArgumentException( "cache must not be null" );
         }
         this.cache = cache;
+    }
+    
+    /** @return info on the listeners */
+    public String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append( "\n CacheListeners" );
+        if ( cache != null )
+        {
+            buffer.append( "\n Region = " + cache.getCacheName() );
+        }
+        if ( eventQMap != null )
+        {
+            buffer.append( "\n Event Queue Map " );
+            buffer.append( "\n size = " + eventQMap.size() );
+            Iterator it = eventQMap.entrySet().iterator();
+            while ( it.hasNext() )
+            {
+                buffer.append( "\n Entry: " + it.next() );               
+            }                
+        }
+        else
+        {
+            buffer.append( "\n No Listeners. " );
+        }
+        return buffer.toString();
     }
 }

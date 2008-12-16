@@ -21,7 +21,6 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -29,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
@@ -40,10 +40,10 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  */
 public class RemoteCacheListener
     extends AbsractRemoteCacheListener
-    implements IRemoteCacheConstants, Serializable, Remote
+    implements IRemoteCacheConstants, Serializable, IRemoteCacheListener
 {
     /** Don't change */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 25345252345322345L;
 
     /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheListener.class );
@@ -106,5 +106,18 @@ public class RemoteCacheListener
             }
             disposed = true;
         }
+    }
+
+    /**
+     * For easier debugging.
+     * <p>
+     * @return Basic info on this listener.
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "\n RemoteCacheListener: " );
+        buf.append( super.toString() );
+        return buf.toString();
     }
 }

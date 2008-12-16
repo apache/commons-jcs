@@ -215,7 +215,7 @@ public class RemoteCacheMonitor
                     // Problem encountered in fixing the caches managed by a
                     // RemoteCacheManager instance.
                     // Soldier on to the next RemoteCacheManager instance.
-                    log.error( ex );
+                    log.error( "Problem fixing caches for manager." + mgr, ex );
                 }
             }
         }
