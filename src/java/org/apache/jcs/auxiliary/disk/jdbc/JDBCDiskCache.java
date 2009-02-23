@@ -1151,7 +1151,14 @@ public class JDBCDiskCache
 
         se = new StatElement();
         se.setName( "DB URL" );
-        se.setData( this.jdbcDiskCacheAttributes.getUrl() );
+        if ( getPoolAccess() != null )
+        {
+            se.setData( "" + getPoolAccess().getPoolUrl() );
+        }
+        else
+        {
+            se.setData( "" + getJdbcDiskCacheAttributes().getUrl() );
+        }
         elems.add( se );
 
         // get the stats from the event queue too
