@@ -21,7 +21,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
 
 /**
  * Used to dump out a Disk cache from disk for debugging. This is meant to be
- * run as a comman line utility for
+ * run as a command line utility for
  */
 public class IndexedDiskDumper
 {

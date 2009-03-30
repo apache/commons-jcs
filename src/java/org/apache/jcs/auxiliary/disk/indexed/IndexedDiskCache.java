@@ -41,6 +41,7 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.logging.behavior.ICacheEvent;
@@ -142,11 +143,23 @@ public class IndexedDiskCache
     /**
      * Constructor for the DiskCache object.
      * <p>
-     * @param cattr
+     * @param cacheAttributes
      */
-    public IndexedDiskCache( IndexedDiskCacheAttributes cattr )
+    public IndexedDiskCache( IndexedDiskCacheAttributes cacheAttributes )
+    {
+        this( cacheAttributes, null );
+    }
+
+    /**
+     * Constructor for the DiskCache object.
+     * <p>
+     * @param cattr
+     * @param elementSerializer  used if supplied, the super's super will not set a null
+     */
+    public IndexedDiskCache( IndexedDiskCacheAttributes cattr, IElementSerializer elementSerializer )
     {
         super( cattr );
+        setElementSerializer( elementSerializer );
 
         String rootDirName = cattr.getDiskPath();
         this.maxKeySize = cattr.getMaxKeySize();
@@ -598,13 +611,13 @@ public class IndexedDiskCache
             {
                 storageLock.readLock().release();
             }
-            
+
             Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
-            
+
             Iterator keyIterator = matchingKeys.iterator();
             while ( keyIterator.hasNext() )
             {
-                String key = (String)keyIterator.next();
+                String key = (String) keyIterator.next();
                 ICacheElement element = processGet( key );
                 if ( element != null )
                 {

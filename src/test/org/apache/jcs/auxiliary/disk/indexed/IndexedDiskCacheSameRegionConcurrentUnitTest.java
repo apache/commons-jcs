@@ -33,9 +33,6 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * Test which exercises the indexed disk cache. Runs three threads against the
  * same region.
- *
- * @version $Id: TestDiskCacheConcurrent.java,v 1.8 2005/02/01 00:01:59 asmuts
- *          Exp $
  */
 public class IndexedDiskCacheSameRegionConcurrentUnitTest
     extends TestCase

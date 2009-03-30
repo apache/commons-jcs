@@ -1,10 +1,14 @@
 package org.apache.jcs.auxiliary.disk.block;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /** Unit tests for the Block Disk Cache */
 public class BlockDiskCacheUnitTest
@@ -73,5 +77,243 @@ public class BlockDiskCacheUnitTest
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
         //System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         //System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
+    }
+
+    /**
+     * Verify that the block disk cache can handle a big string.
+     * <p>
+     * @throws Exception
+     */
+    public void SKIPtestChunk_BigString()
+        throws Exception
+    {
+
+        String string = "This is my big string ABCDEFGH";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( " " + i + sb.toString() ); // big string
+        }
+        string = sb.toString();
+
+        StandardSerializer elementSerializer = new StandardSerializer();
+        byte[] data = elementSerializer.serialize( string );
+
+        File file = new File( "target/test-sandbox/BlockDiskCacheUnitTest/testChunk_BigString.data" );
+        BlockDisk blockDisk = new BlockDisk( file, elementSerializer );
+
+        int numBlocksNeeded = blockDisk.calculateTheNumberOfBlocksNeeded( data );
+
+        // get the individual sub arrays.
+        byte[][] chunks = blockDisk.getBlockChunks( data, numBlocksNeeded );
+
+        for ( short i = 0; i < chunks.length; i++ )
+        {
+            byte[] chunk = chunks[i];
+            byte[] newTotal = new byte[data.length + chunk.length];
+            // copy data into the new array
+            System.arraycopy( data, 0, newTotal, 0, data.length );
+            // copy the chunk into the new array
+            System.arraycopy( chunk, 0, newTotal, data.length, chunk.length );
+            // swap the new and old.
+            data = newTotal;
+        }
+        
+        Serializable result = (Serializable) elementSerializer.deSerialize( data );
+        System.out.println( result );
+        assertEquals( "wrong string after retrieval", string, result );
+    }
+
+    /**
+     * Verify that the block disk cache can handle a big string.
+     * <p>
+     * @throws Exception
+     */
+    public void SKIPtestPutGet_BigString()
+        throws Exception
+    {
+        String string = "This is my big string ABCDEFGH";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( " " + i + sb.toString() ); // big string
+        }
+        string = sb.toString();
+
+        String cacheName = "testPutGet_BigString";
+
+        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setBlockSizeBytes( 300 );
+        cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
+        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+
+        // DO WORK
+        diskCache.update( new CacheElement( cacheName, "x", string ) );
+
+        // VERIFY
+        assertNotNull( diskCache.get( "x" ) );
+        Thread.sleep( 1000 );
+        ICacheElement afterElement = diskCache.get( "x" );
+        assertNotNull( afterElement );
+        System.out.println( "afterElement = " + afterElement );
+        String after = (String) afterElement.getVal();
+
+        assertNotNull( after );
+        assertEquals( "wrong string after retrieval", string, after );
+    }
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     * @throws Exception
+     */
+    public void SKIPtestUTF8String()
+        throws Exception
+    {
+        String string = "Iñtërnâtiônàlizætiøn";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( sb.toString() ); // big string
+        }
+        string = sb.toString();
+
+        //System.out.println( "The string contains " + string.length() + " characters" );
+
+        String cacheName = "testUTF8String";
+
+        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setBlockSizeBytes( 200 );
+        cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
+        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+
+        // DO WORK
+        diskCache.update( new CacheElement( cacheName, "x", string ) );
+
+        // VERIFY
+        assertNotNull( diskCache.get( "x" ) );
+        Thread.sleep( 1000 );
+        ICacheElement afterElement = diskCache.get( "x" );
+        assertNotNull( afterElement );
+        System.out.println( "afterElement = " + afterElement );
+        String after = (String) afterElement.getVal();
+
+        assertNotNull( after );
+        assertEquals( "wrong string after retrieval", string, after );
+    }
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     * @throws Exception
+     */
+    public void SKIPtestUTF8ByteArray()
+        throws Exception
+    {
+        String string = "Iñtërnâtiônàlizætiøn";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( sb.toString() ); // big string
+        }
+        string = sb.toString();
+        //System.out.println( "The string contains " + string.length() + " characters" );
+        String UTF8 = "UTF-8";
+        byte[] bytes = string.getBytes( UTF8 );
+
+        String cacheName = "testUTF8ByteArray";
+
+        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setBlockSizeBytes( 200 );
+        cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
+        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+
+        // DO WORK
+        diskCache.update( new CacheElement( cacheName, "x", bytes ) );
+
+        // VERIFY
+        assertNotNull( diskCache.get( "x" ) );
+        Thread.sleep( 1000 );
+        ICacheElement afterElement = diskCache.get( "x" );
+        assertNotNull( afterElement );
+        System.out.println( "afterElement = " + afterElement );
+        byte[] after = (byte[]) afterElement.getVal();
+
+        assertNotNull( after );
+        assertEquals( "wrong bytes after retrieval", bytes.length, after.length );
+        //assertEquals( "wrong bytes after retrieval", bytes, after );
+        //assertEquals( "wrong bytes after retrieval", string, new String( after, UTF8 ) );
+
+    }
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     * @throws Exception
+     */
+    public void SKIPtestUTF8StringAndBytes()
+        throws Exception
+    {
+        X before = new X();
+        String string = "Iñtërnâtiônàlizætiøn";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( sb.toString() ); // big string
+        }
+        string = sb.toString();
+        //System.out.println( "The string contains " + string.length() + " characters" );
+        String UTF8 = "UTF-8";
+        before.string = string;
+        before.bytes = string.getBytes( UTF8 );
+
+        String cacheName = "testUTF8StringAndBytes";
+
+        BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setBlockSizeBytes( 500 );
+        cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
+        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+
+        // DO WORK
+        diskCache.update( new CacheElement( cacheName, "x", before ) );
+
+        // VERIFY
+        assertNotNull( diskCache.get( "x" ) );
+        Thread.sleep( 1000 );
+        ICacheElement afterElement = diskCache.get( "x" );
+        System.out.println( "afterElement = " + afterElement );
+        X after = (X) ( afterElement.getVal() );
+
+        assertNotNull( after );
+        assertEquals( "wrong string after retrieval", string, after.string );
+        assertEquals( "wrong bytes after retrieval", string, new String( after.bytes, UTF8 ) );
+
+    }
+
+    /** Holder for a string and byte array. */
+    static class X
+        implements Serializable
+    {
+        /** ignore */
+        private static final long serialVersionUID = 1L;
+
+        /** Test string */
+        String string;
+
+        /*** test byte array. */
+        byte[] bytes;
     }
 }

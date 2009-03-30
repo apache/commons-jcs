@@ -129,9 +129,8 @@ public class IndexedDiskCacheManager
 
             if ( cache == null )
             {
-                cache = new IndexedDiskCache( cacheAttributes );
+                cache = new IndexedDiskCache( cacheAttributes, getElementSerializer() );
                 cache.setCacheEventLogger( getCacheEventLogger() );
-                cache.setElementSerializer( getElementSerializer() );
                 caches.put( cacheName, cache );
             }
         }

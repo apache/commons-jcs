@@ -37,6 +37,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.stats.StatElement;
@@ -82,8 +83,6 @@ public class BlockDiskCache
      * Use this lock to synchronize reads and writes to the underlying storage mechansism. We don't
      * need a reentrant lock, since we only lock one level.
      */
-    // private ReentrantWriterPreferenceReadWriteLock storageLock = new
-    // ReentrantWriterPreferenceReadWriteLock();
     private WriterPreferenceReadWriteLock storageLock = new WriterPreferenceReadWriteLock();
 
     /**
@@ -93,8 +92,20 @@ public class BlockDiskCache
      */
     public BlockDiskCache( BlockDiskCacheAttributes cacheAttributes )
     {
+        this( cacheAttributes, null );
+    }
+    
+    /**
+     * Constructs the BlockDisk after setting up the root directory.
+     * <p>
+     * @param cacheAttributes
+     * @param elementSerializer used if supplied, the super's super will not set a null
+     */
+    public BlockDiskCache( BlockDiskCacheAttributes cacheAttributes, IElementSerializer elementSerializer )
+    {
         super( cacheAttributes );
-
+        setElementSerializer( elementSerializer );
+        
         this.blockDiskCacheAttributes = cacheAttributes;
         this.logCacheName = "Region [" + getCacheName() + "] ";
 

@@ -206,7 +206,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     }
 
     /**
-     * Adjust the list as needed for a get. This allows childred to control the algorithm
+     * Adjust the list as needed for a get. This allows children to control the algorithm
      * <p>
      * @param me
      */

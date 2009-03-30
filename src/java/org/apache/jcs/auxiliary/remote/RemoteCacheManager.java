@@ -102,7 +102,7 @@ public class RemoteCacheManager
     private ICompositeCacheManager cacheMgr;
 
     /** The service found through lookup */
-    private String registry;
+    //private String registry;
 
     /**
      * Constructs an instance to with the given remote connection parameters. If the connection
@@ -133,7 +133,7 @@ public class RemoteCacheManager
             ( (CompositeCacheManager) this.cacheMgr ).registerShutdownObserver( this );
         }
 
-        this.registry = "//" + host + ":" + port + "/" + service;
+        String registry = "//" + host + ":" + port + "/" + service;
         if ( log.isInfoEnabled() )
         {
             log.info( "Looking up server [" + registry + "]" );

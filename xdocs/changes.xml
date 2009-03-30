@@ -21,8 +21,15 @@
 	<body>
 		<release version="1.4-dev" date="in SVN">
 		</release>
+		<release version="1.3.2.9" date="2009-02-02" description="tempbuild">
+			<action dev="asmuts" type="fix">Fixed bug in Remote Http Client
+				URL creation for query strings.</action>
+			<action dev="asmuts" type="fix" issue="JCS-55" due-to="Alexander Sofronov"> Fixed
+				disk cache custom serializer injection.</action>
+		</release>
 		<release version="1.3.2.8" date="2008-12-16" description="tempbuild">
-			<action dev="asmuts" type="fix">Fixed bug remote cache listener interface.</action>
+			<action dev="asmuts" type="fix">Fixed bug remote cache listener
+				interface.</action>
 		</release>
 		<release version="1.3.2.7" date="2008-12-15" description="tempbuild">
 			<action dev="asmuts" type="update">Added a simple http remote

@@ -745,7 +745,7 @@ public class IndexDiskCacheUnitTest
         //System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         //System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
     }
-    
+
     /**
      * Test the basic get matching. With no wait this will all come from purgatory.
      * <p>
@@ -776,5 +776,91 @@ public class IndexDiskCacheUnitTest
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
         //System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         //System.out.println( "\nAFTER TEST \n" + diskCache.getStats() );
-    }    
+    }
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     * @throws Exception
+     */
+    public void testUTF8String()
+        throws Exception
+    {
+        String string = "Iñtërnâtiônàlizætiøn";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( sb.toString() ); // big string
+        }
+        string = sb.toString();
+
+        //System.out.println( "The string contains " + string.length() + " characters" );
+
+        String cacheName = "testUTF8String";
+
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        // DO WORK
+        diskCache.update( new CacheElement( cacheName, "x", string ) );
+
+        // VERIFY
+        assertNotNull( diskCache.get( "x" ) );
+        Thread.sleep( 1000 );
+        ICacheElement afterElement = diskCache.get( "x" );
+        assertNotNull( afterElement );
+        System.out.println( "afterElement = " + afterElement );
+        String after = (String) afterElement.getVal();
+
+        assertNotNull( after );
+        assertEquals( "wrong string after retrieval", string, after );
+    }
+
+    /**
+     * Verify that the block disk cache can handle utf encoded strings.
+     * <p>
+     * @throws Exception
+     */
+    public void testUTF8ByteArray()
+        throws Exception
+    {
+        String string = "Iñtërnâtiônàlizætiøn";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( sb.toString() ); // big string
+        }
+        string = sb.toString();
+        //System.out.println( "The string contains " + string.length() + " characters" );
+        String UTF8 = "UTF-8";
+        byte[] bytes = string.getBytes( UTF8 );
+
+        String cacheName = "testUTF8ByteArray";
+
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        // DO WORK
+        diskCache.update( new CacheElement( cacheName, "x", bytes ) );
+
+        // VERIFY
+        assertNotNull( diskCache.get( "x" ) );
+        Thread.sleep( 1000 );
+        ICacheElement afterElement = diskCache.get( "x" );
+        assertNotNull( afterElement );
+        System.out.println( "afterElement = " + afterElement );
+        byte[] after = (byte[]) afterElement.getVal();
+
+        assertNotNull( after );
+        assertEquals( "wrong bytes after retrieval", string, new String( after, UTF8 ) );
+    }
+
 }

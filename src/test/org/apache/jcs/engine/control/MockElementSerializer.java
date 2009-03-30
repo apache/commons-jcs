@@ -16,6 +16,12 @@ public class MockElementSerializer
     /** What's used in the background */
     private StandardSerializer serializer = new StandardSerializer();    
     
+    /** times out was called */
+    public int deSerializeCount = 0;
+
+    /** times in was called */
+    public int serializeCount = 0;
+
     /**
      * @param bytes 
      * @return Object
@@ -26,6 +32,7 @@ public class MockElementSerializer
     public Object deSerialize( byte[] bytes )
         throws IOException, ClassNotFoundException
     {
+        deSerializeCount++;
         return serializer.deSerialize( bytes );
     }
 
@@ -38,6 +45,7 @@ public class MockElementSerializer
     public byte[] serialize( Serializable obj )
         throws IOException
     {
+        serializeCount++;
         return serializer.serialize( obj );
     }
     

@@ -119,7 +119,7 @@ public class BlockDisk
      * The program flow is as follows:
      * <ol>
      * <li>Serialize the object.</li>
-     * <li>Detemine the number of blocks needed.</li>
+     * <li>Determine the number of blocks needed.</li>
      * <li>Look for free blocks in the emptyBlock list.</li>
      * <li>If there were not enough in the empty list. Take the nextBlock and increment it.</li>
      * <li>If the data will not fit in one block, create sub arrays.</li>
@@ -136,12 +136,21 @@ public class BlockDisk
         // serialize the object
         byte[] data = elementSerializer.serialize( object );
 
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "read, total pre-chunking data.length = " + data.length );
+        }
+        
         this.addToPutBytes( data.length );
         this.incrementPutCount();
 
         // figure out how many blocks we need.
         int numBlocksNeeded = calculateTheNumberOfBlocksNeeded( data );
-
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "numBlocksNeeded = " + numBlocksNeeded );
+        }
+        
         int[] blocks = new int[numBlocksNeeded];
 
         // get them from the empty list or take the next one
@@ -255,13 +264,18 @@ public class BlockDisk
                 byte[] newTotal = new byte[data.length + chunk.length];
                 // copy data into the new array
                 System.arraycopy( data, 0, newTotal, 0, data.length );
-                // copyt the chunk into the new array
+                // copy the chunk into the new array
                 System.arraycopy( chunk, 0, newTotal, data.length, chunk.length );
                 // swap the new and old.
                 data = newTotal;
             }
         }
 
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "read, total post combination data.length = " + data.length );
+        }
+        
         return (Serializable) elementSerializer.deSerialize( data );
     }
 
