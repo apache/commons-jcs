@@ -94,7 +94,7 @@ public class BlockDiskCache
     {
         this( cacheAttributes, null );
     }
-    
+
     /**
      * Constructs the BlockDisk after setting up the root directory.
      * <p>
@@ -105,7 +105,7 @@ public class BlockDiskCache
     {
         super( cacheAttributes );
         setElementSerializer( elementSerializer );
-        
+
         this.blockDiskCacheAttributes = cacheAttributes;
         this.logCacheName = "Region [" + getCacheName() + "] ";
 
@@ -253,13 +253,13 @@ public class BlockDiskCache
             {
                 storageLock.readLock().release();
             }
-            
+
             Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
-            
+
             Iterator keyIterator = matchingKeys.iterator();
             while ( keyIterator.hasNext() )
             {
-                String key = (String)keyIterator.next();
+                String key = (String) keyIterator.next();
                 ICacheElement element = processGet( key );
                 if ( element != null )
                 {
@@ -273,7 +273,7 @@ public class BlockDiskCache
         }
         return elements;
     }
-    
+
     /**
      * Returns the number of keys.
      * <p>
@@ -288,14 +288,12 @@ public class BlockDiskCache
     /**
      * Gets the ICacheElement for the key if it is in the cache. The program flow is as follows:
      * <ol>
-     * <li>Make sure the disk cache is alive.</li>
-     * <li>Get a read lock.</li>
-     * <li>See if the key is in the key store.</li>
-     * <li>If we found a key, ask the BlockDisk for the object at the blocks..</li>
-     * <li>Release the lock.</li>
+     * <li>Make sure the disk cache is alive.</li> <li>Get a read lock.</li> <li>See if the key is
+     * in the key store.</li> <li>If we found a key, ask the BlockDisk for the object at the
+     * blocks..</li> <li>Release the lock.</li>
      * </ol>
      * (non-Javadoc)
-     * @param key 
+     * @param key
      * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
@@ -348,15 +346,13 @@ public class BlockDiskCache
     /**
      * Writes an element to disk. The program flow is as follows:
      * <ol>
-     * <li>Aquire write lock.</li>
-     * <li>See id an item exists for this key.</li>
-     * <li>If an itme already exists, add its blocks to the remove list.</li>
-     * <li>Have the Block disk write the item.</li>
-     * <li>Create a descriptor and add it to the key map.</li>
-     * <li>Release the write lock.</li>
+     * <li>Aquire write lock.</li> <li>See id an item exists for this key.</li> <li>If an itme
+     * already exists, add its blocks to the remove list.</li> <li>Have the Block disk write the
+     * item.</li> <li>Create a descriptor and add it to the key map.</li> <li>Release the write
+     * lock.</li>
      * </ol>
      * (non-Javadoc)
-     * @param element 
+     * @param element
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
      */
     protected void processUpdate( ICacheElement element )
@@ -413,7 +409,7 @@ public class BlockDiskCache
      * implementation always result in a disk orphan.
      * <p>
      * (non-Javadoc)
-     * @param key 
+     * @param key
      * @return true if removed anything
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doRemove(java.io.Serializable)
      */
@@ -766,7 +762,7 @@ public class BlockDiskCache
 
         return stats;
     }
-    
+
     /**
      * This is used by the event logging.
      * <p>
@@ -775,5 +771,5 @@ public class BlockDiskCache
     protected String getDiskLocation()
     {
         return dataFile.getFilePath();
-    }    
+    }
 }

@@ -84,10 +84,9 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIPtestChunk_BigString()
+    public void testChunk_BigString()
         throws Exception
     {
-
         String string = "This is my big string ABCDEFGH";
         StringBuffer sb = new StringBuffer();
         sb.append( string );
@@ -101,13 +100,17 @@ public class BlockDiskCacheUnitTest
         byte[] data = elementSerializer.serialize( string );
 
         File file = new File( "target/test-sandbox/BlockDiskCacheUnitTest/testChunk_BigString.data" );
-        BlockDisk blockDisk = new BlockDisk( file, elementSerializer );
+
+        BlockDisk blockDisk = new BlockDisk( file, 200, elementSerializer );
 
         int numBlocksNeeded = blockDisk.calculateTheNumberOfBlocksNeeded( data );
-
+        System.out.println( numBlocksNeeded );
+        
         // get the individual sub arrays.
         byte[][] chunks = blockDisk.getBlockChunks( data, numBlocksNeeded );
 
+        byte[] resultData = new byte[0];
+        
         for ( short i = 0; i < chunks.length; i++ )
         {
             byte[] chunk = chunks[i];
@@ -117,10 +120,10 @@ public class BlockDiskCacheUnitTest
             // copy the chunk into the new array
             System.arraycopy( chunk, 0, newTotal, data.length, chunk.length );
             // swap the new and old.
-            data = newTotal;
+            resultData = newTotal;
         }
         
-        Serializable result = (Serializable) elementSerializer.deSerialize( data );
+        Serializable result = (Serializable) elementSerializer.deSerialize( resultData );
         System.out.println( result );
         assertEquals( "wrong string after retrieval", string, result );
     }
@@ -130,7 +133,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIPtestPutGet_BigString()
+    public void SKIP_testPutGet_BigString()
         throws Exception
     {
         String string = "This is my big string ABCDEFGH";
@@ -147,7 +150,7 @@ public class BlockDiskCacheUnitTest
         BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
-        cattr.setBlockSizeBytes( 300 );
+        cattr.setBlockSizeBytes( 200 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
         BlockDiskCache diskCache = new BlockDiskCache( cattr );
 
@@ -171,7 +174,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIPtestUTF8String()
+    public void SKIP_testUTF8String()
         throws Exception
     {
         String string = "Iñtërnâtiônàlizætiøn";
@@ -261,7 +264,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIPtestUTF8StringAndBytes()
+    public void SKIP_testUTF8StringAndBytes()
         throws Exception
     {
         X before = new X();

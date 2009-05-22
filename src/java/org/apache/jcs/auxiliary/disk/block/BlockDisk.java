@@ -112,6 +112,33 @@ public class BlockDisk
         }
         this.blockSizeBytes = blockSizeBytes;
     }
+    
+    /**
+     * Creates the file and set the block size in bytes.
+     * <p>
+     * @param file
+     * @param blockSizeBytes
+     * @param elementSerializer 
+     * @throws FileNotFoundException
+     */
+    public BlockDisk( File file, int blockSizeBytes, IElementSerializer elementSerializer )
+        throws FileNotFoundException
+    {
+        this.filepath = file.getAbsolutePath();
+        raf = new RandomAccessFile( filepath, "rw" );
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]" );
+        }
+        this.blockSizeBytes = blockSizeBytes;
+        
+        if ( log.isInfoEnabled() )
+        {
+            log.info( "Used default block size [" + DEFAULT_BLOCK_SIZE_BYTES + "]" );
+        }
+        this.elementSerializer = elementSerializer;   
+    }
 
     /**
      * This writes an object to disk and returns the blocks it was stored in.

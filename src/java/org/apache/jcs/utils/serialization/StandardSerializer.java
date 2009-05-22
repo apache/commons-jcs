@@ -47,7 +47,7 @@ public class StandardSerializer
     public byte[] serialize( Serializable obj )
         throws IOException
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();        
         ObjectOutputStream oos = new ObjectOutputStream( baos );
         try
         {
