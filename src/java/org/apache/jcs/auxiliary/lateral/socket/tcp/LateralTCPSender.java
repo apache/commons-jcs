@@ -75,15 +75,6 @@ public class LateralTCPSender
     /** How often we need to reset the stream. */
     private final static int RESET_FREQUENCY = 70;
 
-    /**
-     * Only block for 1 second before timing out on a read. TODO: make configurable. The default 1
-     * is way too long.
-     */
-    private final static int timeOut = 1000;
-
-    /** Only block for 5 seconds before timing out on startup. */
-    private final static int openTimeOut = 5000;
-
     /** Use to synchronize multiple threads that may be trying to get. */
     private Object getLock = new int[0];
 
@@ -140,14 +131,14 @@ public class LateralTCPSender
             }
 
             // have time out socket open do this for us
-            socket = SocketOpener.openSocket( host, port, openTimeOut );
+            socket = SocketOpener.openSocket( host, port, tcpLateralCacheAttributes.getOpenTimeOut() );
 
             if ( socket == null )
             {
                 throw new IOException( "Socket is null, cannot connect to " + host + ":" + port );
             }
 
-            socket.setSoTimeout( LateralTCPSender.timeOut );
+            socket.setSoTimeout( tcpLateralCacheAttributes.getSocketTimeOut() );
             synchronized ( this )
             {
                 oos = new ObjectOutputStream( socket.getOutputStream() );

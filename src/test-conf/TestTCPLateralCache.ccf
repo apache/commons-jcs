@@ -39,6 +39,8 @@ jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLat
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
 jcs.auxiliary.LTCP.attributes.AllowGet=false
+jcs.auxiliary.LTCP.attributes.SocketTimeOut=1001
+jcs.auxiliary.LTCP.attributes.OpenTimeOut=2002
 
 # #############################################################
 # ################# THREAD POOL CONFIGURATION ###################

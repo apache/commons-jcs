@@ -195,4 +195,24 @@ public interface ITCPLateralCacheAttributes
      * @param filter
      */
     public void setFilterRemoveByHashCode( boolean filter );
+    
+    /**
+     * @param socketTimeOut the socketTimeOut to set
+     */
+    public void setSocketTimeOut( int socketTimeOut );
+
+    /**
+     * @return the socketTimeOut
+     */
+    public int getSocketTimeOut();
+
+    /**
+     * @param openTimeOut the openTimeOut to set
+     */
+    public void setOpenTimeOut( int openTimeOut );
+
+    /**
+     * @return the openTimeOut
+     */
+    public int getOpenTimeOut();  
 }

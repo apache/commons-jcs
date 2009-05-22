@@ -20,13 +20,12 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp.utils;
  */
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
- * This should no longer be needed.
- * <p>
- * Socket opener that will timeout on the initial connect rather than block
- * forever. Technique from core java II.
+ * Since 1.4, we can specify the timeout in the connect block, we no longer need the extra thread to
+ * join against the Socket creation.
  */
 public class SocketOpener
     implements Runnable
@@ -37,13 +36,15 @@ public class SocketOpener
     /** The port. */
     private int port;
 
+    /** the open timeOut */
+    private int timeOut;
+
     /** The socket */
     private Socket socket;
 
     /**
-     * Opens a socket with a connection timeout value. Joins against a background
-     * thread that does the opening.
-     *
+     * Opens a socket with a connection timeout value.
+     * <p>
      * @param host
      * @param port
      * @param timeOut
@@ -51,39 +52,43 @@ public class SocketOpener
      */
     public static Socket openSocket( String host, int port, int timeOut )
     {
-        SocketOpener opener = new SocketOpener( host, port );
-        Thread t = new Thread( opener );
-        t.start();
-        try
-        {
-            t.join( timeOut );
-        }
-        catch ( InterruptedException ire )
-        {
-            // swallow
-        }
+        // TODO get rid of the extra object
+        SocketOpener opener = new SocketOpener( host, port, timeOut );
+        opener.connect();
         return opener.getSocket();
     }
 
     /**
      * Constructor for the SocketOpener object
-     *
      * @param host
      * @param port
+     * @param timeout connect timeout
      */
-    public SocketOpener( String host, int port )
+    public SocketOpener( String host, int port, int timeout )
     {
         this.socket = null;
         this.host = host;
         this.port = port;
+        this.timeOut = timeout;
     }
 
     /** Main processing method for the SocketOpener object */
     public void run()
     {
+        connect();
+    }
+
+    /**
+     * Creates an InetSocketAddress. Creates an unconnected Socket. Connects the Socket to the
+     * address.
+     */
+    private void connect()
+    {
         try
         {
-            socket = new Socket( host, port );
+            InetSocketAddress address = new InetSocketAddress( host, port );
+            socket = new Socket();
+            socket.connect( address, timeOut );
         }
         catch ( IOException ioe )
         {
@@ -92,7 +97,6 @@ public class SocketOpener
     }
 
     /**
-     *
      * @return The opened socket
      */
     public Socket getSocket()

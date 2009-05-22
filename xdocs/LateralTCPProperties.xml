@@ -101,6 +101,22 @@
             <td>false</td>
           </tr>
           <tr>
+            <td>SocketTimeOut</td>
+            <td>
+              This allows you to set the socket (read) timeout.
+            </td>
+            <td>N</td>
+            <td>1000</td>
+          </tr>
+          <tr>
+            <td>OpenTimeOut</td>
+            <td>
+              This allows you to set the socket open timeout.
+            </td>
+            <td>N</td>
+            <td>2000</td>
+          </tr>          
+          <tr>
             <td>UdpDiscoveryAddr</td>
             <td>
               The address the UDP discovery process should broadcast messages to.
@@ -141,6 +157,8 @@ jcs.auxiliary.LTCP.attributes.Receive=true
 jcs.auxiliary.LTCP.attributes.AllowGet=false
 jcs.auxiliary.LTCP.attributes.IssueRemoveOnPut=false
 jcs.auxiliary.LTCP.attributes.FilterRemoveByHashCode=false
+jcs.auxiliary.LTCP.attributes.SocketTimeoOt=1001
+jcs.auxiliary.LTCP.attributes.OpenTimeOut=2002
         ]]></source>
       </subsection>
 

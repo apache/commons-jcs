@@ -55,6 +55,12 @@ public class TCPLateralCacheAttributes
     /** default */
     private static final boolean DEFAULT_FILTER_REMOVE_BY_HASH_CODE = true;
 
+    /** default - Only block for 1 second before timing out on a read.*/
+    private static final int DEFAULT_SOCKET_TIME_OUT = 1000;
+
+    /** default - Only block for 2 seconds before timing out on startup.*/
+    private static final int DEFAULT_OPEN_TIMEOUT = 2000;
+
     /** TCP -------------------------------------------- */
     private String tcpServers = "";
 
@@ -84,7 +90,13 @@ public class TCPLateralCacheAttributes
 
     /** don't remove it the hashcode is the same */
     private boolean filterRemoveByHashCode = DEFAULT_FILTER_REMOVE_BY_HASH_CODE;
+   
+    /** Only block for socketTimeOut seconds before timing out on a read.  */
+    private int socketTimeOut = DEFAULT_SOCKET_TIME_OUT;
 
+    /** Only block for openTimeOut seconds before timing out on startup. */
+    private int openTimeOut = DEFAULT_OPEN_TIMEOUT;
+    
     /**
      * Sets the tcpServer attribute of the ILateralCacheAttributes object
      * <p>
@@ -317,6 +329,38 @@ public class TCPLateralCacheAttributes
     }
 
     /**
+     * @param socketTimeOut the socketTimeOut to set
+     */
+    public void setSocketTimeOut( int socketTimeOut )
+    {
+        this.socketTimeOut = socketTimeOut;
+    }
+
+    /**
+     * @return the socketTimeOut
+     */
+    public int getSocketTimeOut()
+    {
+        return socketTimeOut;
+    }
+
+    /**
+     * @param openTimeOut the openTimeOut to set
+     */
+    public void setOpenTimeOut( int openTimeOut )
+    {
+        this.openTimeOut = openTimeOut;
+    }
+
+    /**
+     * @return the openTimeOut
+     */
+    public int getOpenTimeOut()
+    {
+        return openTimeOut;
+    }
+
+    /**
      * Used to key the instance TODO create another method for this and use toString for debugging
      * only.
      * <p>
@@ -326,5 +370,4 @@ public class TCPLateralCacheAttributes
     {
         return this.getTcpServer() + ":" + this.getTcpListenerPort();
     }
-
 }
