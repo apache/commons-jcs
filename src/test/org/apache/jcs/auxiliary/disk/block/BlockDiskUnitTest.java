@@ -245,4 +245,80 @@ public class BlockDiskUnitTest
         // byte arrays encur some bytes of serialization overhead.
         return blockSize * numBlocks - ( numBlocks * BlockDisk.HEADER_SIZE_BYTES ) - ( numBlocks * 14 );
     }
+
+    /**
+     * Verify that the block disk can handle a big string.
+     * <p>
+     * @throws Exception
+     */
+    public void SKIP_testWriteAndRead_BigString()
+        throws Exception
+    {
+        // SETUP
+        String fileName = "testWriteAndRead_BigString";
+        File file = new File( rafDir, fileName + ".data" );
+        file.delete();
+        int blockSizeBytes = 4096;//1024;
+        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );        
+
+        String string = "This is my big string ABCDEFGH";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 8; i++ )
+        {
+            sb.append( " " + i + sb.toString() ); // big string
+        }
+        string = sb.toString();
+
+        // DO WORK
+        int[] blocks = disk.write( string );
+        String result = (String) disk.read( blocks );
+
+        // VERIFY
+        System.out.println( string );
+        System.out.println( result );
+        System.out.println( disk );        
+        assertEquals( "Wrong item retured.", string, result );
+    }
+    
+    /**
+     * Verify that the block disk can handle a big string.
+     * <p>
+     * @throws Exception
+     */
+    public void SKIP_testWriteAndRead_BigString2()
+        throws Exception
+    {
+        System.setProperty("file.encoding", "UTF-8");
+
+        // SETUP
+        String fileName = "testWriteAndRead_BigString";
+        File file = new File( rafDir, fileName + ".data" );
+        file.delete();
+        int blockSizeBytes = 47;//4096;//1024;
+        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );        
+
+        String string = "abcdefghijklmnopqrstuvwxyz1234567890";
+        string += string;
+        string += string;
+
+
+        // DO WORK
+        int[] blocks = disk.write( string );
+        String result = (String) disk.read( blocks );
+
+        // VERIFY
+        System.out.println( string );
+        System.out.println( result );
+        byte[] bytes = string.getBytes();
+        
+        for ( int i=0; i < bytes.length; i++)
+        {
+            int c = bytes[i];
+            System.out.println( c ); 
+            System.out.println( (char)c );        
+        }
+        System.out.println( disk );        
+        assertEquals( "Wrong item retured.", string, result );
+    }    
 }
