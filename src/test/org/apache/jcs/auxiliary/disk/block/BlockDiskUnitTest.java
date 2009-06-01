@@ -251,7 +251,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIP_testWriteAndRead_BigString()
+    public void testWriteAndRead_BigString()
         throws Exception
     {
         // SETUP
@@ -286,11 +286,9 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIP_testWriteAndRead_BigString2()
+    public void testWriteAndRead_BigString2()
         throws Exception
     {
-        System.setProperty("file.encoding", "UTF-8");
-
         // SETUP
         String fileName = "testWriteAndRead_BigString";
         File file = new File( rafDir, fileName + ".data" );
@@ -307,18 +305,7 @@ public class BlockDiskUnitTest
         int[] blocks = disk.write( string );
         String result = (String) disk.read( blocks );
 
-        // VERIFY
-        System.out.println( string );
-        System.out.println( result );
-        byte[] bytes = string.getBytes();
-        
-        for ( int i=0; i < bytes.length; i++)
-        {
-            int c = bytes[i];
-            System.out.println( c ); 
-            System.out.println( (char)c );        
-        }
-        System.out.println( disk );        
+        // VERIFY 
         assertEquals( "Wrong item retured.", string, result );
     }    
 }

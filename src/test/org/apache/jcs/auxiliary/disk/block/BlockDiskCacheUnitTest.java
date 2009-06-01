@@ -133,7 +133,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIP_testPutGet_BigString()
+    public void testPutGet_BigString()
         throws Exception
     {
         String string = "This is my big string ABCDEFGH";
@@ -174,7 +174,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIP_testUTF8String()
+    public void testUTF8String()
         throws Exception
     {
         String string = "Iñtërnâtiônàlizætiøn";
@@ -217,7 +217,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIP_testUTF8ByteArray()
+    public void testUTF8ByteArray()
         throws Exception
     {
         String string = "Iñtërnâtiônàlizætiøn";
@@ -249,7 +249,7 @@ public class BlockDiskCacheUnitTest
         Thread.sleep( 1000 );
         ICacheElement afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
-        System.out.println( "afterElement = " + afterElement );
+        //System.out.println( "afterElement = " + afterElement );
         byte[] after = (byte[]) afterElement.getVal();
 
         assertNotNull( after );
@@ -264,7 +264,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIP_testUTF8StringAndBytes()
+    public void testUTF8StringAndBytes()
         throws Exception
     {
         X before = new X();

@@ -72,4 +72,31 @@ public class StandardSerializerUnitTest
         // VERIFY
         assertNull( "Should have nothing.", after );
     }
+    
+    /**
+     * Test simple back and forth with a string.
+     *<p>
+     * @throws Exception
+     */
+    public void testBigStringBackAndForth()
+        throws Exception
+    {
+        // SETUP
+        StandardSerializer serializer = new StandardSerializer();
+
+        String string = "This is my big string ABCDEFGH";
+        StringBuffer sb = new StringBuffer();
+        sb.append( string );
+        for ( int i = 0; i < 4; i++ )
+        {
+            sb.append( " " + i + sb.toString() ); // big string
+        }
+        String before = sb.toString();
+
+        // DO WORK
+        String after = (String) serializer.deSerialize( serializer.serialize( before ) );
+
+        // VERIFY
+        assertEquals( "Before and after should be the same.", before, after );
+    }
 }
