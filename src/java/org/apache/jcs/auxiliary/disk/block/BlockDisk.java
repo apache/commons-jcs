@@ -132,11 +132,7 @@ public class BlockDisk
             log.info( "Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]" );
         }
         this.blockSizeBytes = blockSizeBytes;
-        
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Used default block size [" + DEFAULT_BLOCK_SIZE_BYTES + "]" );
-        }
+
         this.elementSerializer = elementSerializer;   
     }
 
@@ -165,7 +161,7 @@ public class BlockDisk
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "read, total pre-chunking data.length = " + data.length );
+            log.debug( "write, total pre-chunking data.length = " + data.length );
         }
         
         this.addToPutBytes( data.length );
@@ -231,7 +227,7 @@ public class BlockDisk
             {
                 // use the max that can be written to a block or whatever is left in the original
                 // array
-                int chunkSize = Math.min( totalUsed + maxChunkSize, totalBytes - totalUsed );
+                int chunkSize = Math.min( maxChunkSize, totalBytes - totalUsed );
                 byte[] chunk = new byte[chunkSize];
                 // copy from the used position to the chunk size on the complete array to the chunk
                 // array.
