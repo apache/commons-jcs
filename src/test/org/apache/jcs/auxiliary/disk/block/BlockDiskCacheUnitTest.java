@@ -92,7 +92,7 @@ public class BlockDiskCacheUnitTest
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {
-            sb.append( " " + i + sb.toString() ); // big string
+            sb.append( "|" + i + ":" + sb.toString() ); // big string
         }
         string = sb.toString();
 
@@ -186,7 +186,7 @@ public class BlockDiskCacheUnitTest
         }
         string = sb.toString();
 
-        //System.out.println( "The string contains " + string.length() + " characters" );
+        System.out.println( "The string contains " + string.length() + " characters" );
 
         String cacheName = "testUTF8String";
 
@@ -217,7 +217,7 @@ public class BlockDiskCacheUnitTest
      * <p>
      * @throws Exception
      */
-    public void SKIPtestUTF8ByteArray()
+    public void SKIP_testUTF8ByteArray()
         throws Exception
     {
         String string = "Iñtërnâtiônàlizætiøn";
