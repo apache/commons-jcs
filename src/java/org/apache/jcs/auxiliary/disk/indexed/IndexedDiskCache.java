@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
  */
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -154,81 +155,28 @@ public class IndexedDiskCache
      * Constructor for the DiskCache object.
      * <p>
      * @param cattr
-     * @param elementSerializer  used if supplied, the super's super will not set a null
+     * @param elementSerializer used if supplied, the super's super will not set a null
      */
     public IndexedDiskCache( IndexedDiskCacheAttributes cattr, IElementSerializer elementSerializer )
     {
         super( cattr );
+
         setElementSerializer( elementSerializer );
 
-        String rootDirName = cattr.getDiskPath();
+        this.cattr = cattr;
         this.maxKeySize = cattr.getMaxKeySize();
-
         this.isRealTimeOptimizationEnabled = cattr.getOptimizeAtRemoveCount() > 0;
         this.isShutdownOptimizationEnabled = cattr.isOptimizeOnShutdown();
-
-        this.cattr = cattr;
-
         this.logCacheName = "Region [" + getCacheName() + "] ";
         this.fileName = getCacheName();
 
-        this.rafDir = new File( rootDirName );
-        this.rafDir.mkdirs();
-
-        if ( log.isInfoEnabled() )
-        {
-            log.info( logCacheName + "Cache file root directory: " + rootDirName );
-        }
-
         try
         {
-            this.dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ), getElementSerializer() );
+            initializeFileSystem( cattr );
 
-            this.keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ), getElementSerializer() );
+            initializeKeysAndData( cattr );
 
-            // If the key file has contents, try to initialize the keys
-            // from it. In no keys are loaded reset the data file.
-
-            if ( keyFile.length() > 0 )
-            {
-                loadKeys();
-
-                if ( keyHash.size() == 0 )
-                {
-                    dataFile.reset();
-                }
-                else
-                {
-                    boolean isOk = checkKeyDataConsistency( false );
-                    if ( !isOk )
-                    {
-                        keyHash.clear();
-                        keyFile.reset();
-                        dataFile.reset();
-                        log.warn( logCacheName + "Corruption detected.  Reset data and keys files." );
-                    }
-                    else
-                    {
-                        startupSize = keyHash.size();
-                    }
-                }
-            }
-
-            // Otherwise start with a new empty map for the keys, and reset
-            // the data file if it has contents.
-
-            else
-            {
-                initKeyMap();
-
-                if ( dataFile.length() > 0 )
-                {
-                    dataFile.reset();
-                }
-            }
-
-            // create the recyclebin
-            initRecycleBin();
+            initializeRecycleBin();
 
             // Initialization finished successfully, so set alive to true.
             alive = true;
@@ -239,8 +187,8 @@ public class IndexedDiskCache
         }
         catch ( Exception e )
         {
-            log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and root directory: "
-                + rootDirName, e );
+            log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and directory: "
+                + this.rafDir.getAbsolutePath(), e );
         }
 
         // TODO: Should we improve detection of whether or not the file should be optimized.
@@ -248,6 +196,111 @@ public class IndexedDiskCache
         {
             // Kick off a real time optimization, in case we didn't do a final optimization.
             doOptimizeRealTime();
+        }
+    }
+
+    /**
+     * Tries to create the root directory if it does not already exist.
+     * <p>
+     * @param cattr
+     */
+    private void initializeFileSystem( IndexedDiskCacheAttributes cattr )
+    {
+        String rootDirName = cattr.getDiskPath();
+        this.rafDir = new File( rootDirName );
+        boolean createdDirectories = this.rafDir.mkdirs();
+        if ( log.isInfoEnabled() )
+        {
+            log.info( logCacheName + "Cache file root directory: " + rootDirName );
+            log.info( logCacheName + "Created root directory: " + createdDirectories );
+        }
+    }
+
+    /**
+     * Creates the key and data disk caches.
+     * <p>
+     * Loads any keys if they are present and ClearDiskOnStartup is false.
+     * <p>
+     * @param cattr
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    private void initializeKeysAndData( IndexedDiskCacheAttributes cattr )
+        throws FileNotFoundException, IOException, InterruptedException
+    {
+        this.dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ), getElementSerializer() );
+
+        this.keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ), getElementSerializer() );
+
+        if ( cattr.isClearDiskOnStartup() )
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( logCacheName + "ClearDiskOnStartup is set to true.  Ingnoring any persisted data." );
+            }
+            initializeEmptyStore();
+        }
+        else if ( keyFile.length() > 0 )
+        {
+            // If the key file has contents, try to initialize the keys
+            // from it. In no keys are loaded reset the data file.
+            initializeStoreFromPersistedData();
+        }
+        else
+        {
+            // Otherwise start with a new empty map for the keys, and reset
+            // the data file if it has contents.
+            initializeEmptyStore();
+        }
+    }
+
+    /**
+     * Initializes an empty disk cache.
+     * <p>
+     * @throws IOException
+     */
+    private void initializeEmptyStore()
+        throws IOException
+    {
+        initializeKeyMap();
+
+        if ( dataFile.length() > 0 )
+        {
+            dataFile.reset();
+        }
+    }
+
+    /**
+     * Loads any persisted data and checks for consistency. If there is a consistency issue, the
+     * files are cleared.
+     * <p>
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    private void initializeStoreFromPersistedData()
+        throws InterruptedException, IOException
+    {
+        loadKeys();
+
+        if ( keyHash.size() == 0 )
+        {
+            dataFile.reset();
+        }
+        else
+        {
+            boolean isOk = checkKeyDataConsistency( false );
+            if ( !isOk )
+            {
+                keyHash.clear();
+                keyFile.reset();
+                dataFile.reset();
+                log.warn( logCacheName + "Corruption detected.  Reseting data and keys files." );
+            }
+            else
+            {
+                startupSize = keyHash.size();
+            }
         }
     }
 
@@ -270,7 +323,7 @@ public class IndexedDiskCache
         try
         {
             // create a key map to use.
-            initKeyMap();
+            initializeKeyMap();
 
             HashMap keys = (HashMap) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
                 - IndexedDisk.RECORD_HEADER ) );
@@ -307,7 +360,7 @@ public class IndexedDiskCache
     }
 
     /**
-     * Check for minimal consitency between the keys and the datafile. Makes sure no starting
+     * Check for minimal consistency between the keys and the datafile. Makes sure no starting
      * positions in the keys exceed the file length.
      * <p>
      * The caller should take the appropriate action if the keys and data are not consistent.
@@ -405,9 +458,9 @@ public class IndexedDiskCache
     {
         try
         {
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( logCacheName + "Saving keys to: " + fileName + ", key count: " + keyHash.size() );
+                log.info( logCacheName + "Saving keys to: " + fileName + ", key count: " + keyHash.size() );
             }
 
             keyFile.reset();
@@ -420,9 +473,9 @@ public class IndexedDiskCache
                 keyFile.writeObject( keys, 0 );
             }
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( logCacheName + "Finished saving keys." );
+                log.info( logCacheName + "Finished saving keys." );
             }
         }
         catch ( Exception e )
@@ -933,9 +986,9 @@ public class IndexedDiskCache
 
             keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ), getElementSerializer() );
 
-            initRecycleBin();
+            initializeRecycleBin();
 
-            initKeyMap();
+            initializeKeyMap();
         }
         catch ( Exception e )
         {
@@ -951,7 +1004,7 @@ public class IndexedDiskCache
      * If the maxKeySize is < 0, use 5000, no way to have an unlimted recycle bin right now, or one
      * less than the mazKeySize.
      */
-    private void initRecycleBin()
+    private void initializeRecycleBin()
     {
         int recycleBinSize = cattr.getMaxRecycleBinSize() >= 0 ? cattr.getMaxRecycleBinSize() : 0;
         recycle = new SortedPreferentialArray( recycleBinSize );
@@ -964,7 +1017,7 @@ public class IndexedDiskCache
     /**
      * Create the map for keys that contain the index position on disk.
      */
-    private void initKeyMap()
+    private void initializeKeyMap()
     {
         keyHash = null;
         if ( maxKeySize >= 0 )
@@ -1233,7 +1286,7 @@ public class IndexedDiskCache
             // RESTORE NORMAL OPERATION
             removeCount = 0;
             bytesFree = 0;
-            initRecycleBin();
+            initializeRecycleBin();
             queuedPutList.clear();
             queueInput = false;
             // turn recycle back on.
@@ -1251,9 +1304,9 @@ public class IndexedDiskCache
     }
 
     /**
-     * Defragments the file inplace by compacting out the free space (i.e., moving records forward).
-     * If there were no gaps the resulting file would be the same size as the previous file. This
-     * must be supplied an ordered defragList.
+     * Defragments the file in place by compacting out the free space (i.e., moving records
+     * forward). If there were no gaps the resulting file would be the same size as the previous
+     * file. This must be supplied an ordered defragList.
      * <p>
      * @param defragList sorted list of descriptors for optimization
      * @param startingPos the start position in the file

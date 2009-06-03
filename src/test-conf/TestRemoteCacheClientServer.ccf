@@ -21,7 +21,7 @@ registry.host=localhost
 registry.port=1102
 
 # client callback port.
-remote.cache.service.port=1103
+remote.cache.service.port=1301
 remote.cache.rmiSocketFactoryTimeoutMillis=12345
 
 # cluster setting

@@ -41,8 +41,7 @@ public class IndexedDiskCacheAttributes
     private static final int DEFAULT_maxRecycleBinSize = 5000;
 
     /**
-     * Cannot be larger than the max size. If max is less than 0, this will be
-     * 5000
+     * Cannot be larger than the max size. If max is less than 0, this will be 5000
      */
     private int maxRecycleBinSize = DEFAULT_maxRecycleBinSize;
 
@@ -54,6 +53,12 @@ public class IndexedDiskCacheAttributes
 
     /** Should we optimize on shutdown. */
     private boolean optimizeOnShutdown = DEFAULT_OPTIMIZE_ON_SHUTDOWN;
+
+    /** Should we clear the disk on startup. */
+    public static final boolean DEFAULT_CLEAR_DISK_ON_STARTUP = false;
+
+    /** Should we clear the disk on startup. If true the congtents of disk are cleared. */
+    private boolean clearDiskOnStartup = DEFAULT_CLEAR_DISK_ON_STARTUP;
 
     /**
      * Constructor for the DiskCacheAttributes object
@@ -76,8 +81,7 @@ public class IndexedDiskCacheAttributes
     /**
      * Sets the maxKeySize attribute of the DiskCacheAttributes object
      * <p>
-     * @param maxKeySize
-     *            The new maxKeySize value
+     * @param maxKeySize The new maxKeySize value
      */
     public void setMaxKeySize( int maxKeySize )
     {
@@ -88,8 +92,7 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes
-     * object
+     * Gets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object
      * <p>
      * @return The optimizeAtRemoveCount value
      */
@@ -99,12 +102,10 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes
-     * object This number determines how often the disk cache should run real
-     * time optimizations.
+     * Sets the optimizeAtRemoveCount attribute of the DiskCacheAttributes object This number
+     * determines how often the disk cache should run real time optimizations.
      * <p>
-     * @param cnt
-     *            The new optimizeAtRemoveCount value
+     * @param cnt The new optimizeAtRemoveCount value
      */
     public void setOptimizeAtRemoveCount( int cnt )
     {
@@ -112,14 +113,12 @@ public class IndexedDiskCacheAttributes
     }
 
     /**
-     * This cannot be larger than the maxKeySize. It wouldn't hurt anything, but
-     * it makes the config necessary. The recycle bin entry willbe at least as
-     * large as a key.
+     * This cannot be larger than the maxKeySize. It wouldn't hurt anything, but it makes the config
+     * necessary. The recycle bin entry willbe at least as large as a key.
      * <p>
      * If the maxKeySize is -1 this will be set tot he default, which is 5000.
      * <p>
-     * @param maxRecycleBinSize
-     *            The maxRecycleBinSize to set.
+     * @param maxRecycleBinSize The maxRecycleBinSize to set.
      */
     public void setMaxRecycleBinSize( int maxRecycleBinSize )
     {
@@ -148,6 +147,22 @@ public class IndexedDiskCacheAttributes
     public boolean isOptimizeOnShutdown()
     {
         return optimizeOnShutdown;
+    }
+
+    /**
+     * @param clearDiskOnStartup the clearDiskOnStartup to set
+     */
+    public void setClearDiskOnStartup( boolean clearDiskOnStartup )
+    {
+        this.clearDiskOnStartup = clearDiskOnStartup;
+    }
+
+    /**
+     * @return the clearDiskOnStartup
+     */
+    public boolean isClearDiskOnStartup()
+    {
+        return clearDiskOnStartup;
     }
 
     /**
@@ -184,7 +199,7 @@ public class IndexedDiskCacheAttributes
         str.append( "\n optimizeAtRemoveCount  = " + optimizeAtRemoveCount );
         str.append( "\n shutdownSpoolTimeLimit  = " + shutdownSpoolTimeLimit );
         str.append( "\n optimizeOnShutdown  = " + optimizeOnShutdown );
+        str.append( "\n clearDiskOnStartup  = " + clearDiskOnStartup );
         return str.toString();
     }
-
 }

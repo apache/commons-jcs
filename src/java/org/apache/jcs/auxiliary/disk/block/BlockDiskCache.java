@@ -183,14 +183,14 @@ public class BlockDiskCache
                 Object data = this.dataFile.read( (int[]) entry.getValue() );
                 if ( data == null )
                 {
-                    throw new Exception( "Couldn't find data for key [" + entry.getKey() + "]" );
+                    throw new Exception( logCacheName + "Couldn't find data for key [" + entry.getKey() + "]" );
                 }
             }
             alright = true;
         }
         catch ( Exception e )
         {
-            log.warn( "Problem verifying disk.  Message [" + e.getMessage() + "]" );
+            log.warn( logCacheName + "Problem verifying disk.  Message [" + e.getMessage() + "]" );
             alright = false;
         }
         return alright;

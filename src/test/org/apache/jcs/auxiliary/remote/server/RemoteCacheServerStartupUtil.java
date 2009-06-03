@@ -119,7 +119,6 @@ public class RemoteCacheServerStartupUtil
             {
                 log.error( "Problem starting remote cache server.", e );
             }
-
             catch ( Throwable t )
             {
                 log.error( "Problem starting remote cache server.", t );
@@ -132,5 +131,4 @@ public class RemoteCacheServerStartupUtil
 
         return RemoteCacheServerFactory.getRemoteCacheServer();
     }
-
 }

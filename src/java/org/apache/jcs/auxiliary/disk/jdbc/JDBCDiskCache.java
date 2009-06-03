@@ -253,25 +253,7 @@ public class JDBCDiskCache
                 return;
             }
 
-            boolean exists = false;
-
-            // First do a query to determine if the element already exists
-            if ( this.getJdbcDiskCacheAttributes().isTestBeforeInsert() )
-            {
-                exists = doesElementExist( ce );
-            }
-
-            // If it doesn't exist, insert it, otherwise update
-            if ( !exists )
-            {
-                exists = insertRow( ce, con, element );
-            }
-
-            // update if it exists.
-            if ( exists )
-            {
-                updateRow( ce, con, element );
-            }
+            insertOrUpdate( ce, con, element );
         }
         finally
         {
@@ -292,6 +274,38 @@ public class JDBCDiskCache
                 // TODO make a log stats method
                 log.info( "Update Count [" + updateCount + "]" );
             }
+        }
+    }
+
+    /**
+     * If test before insert it true, we check to see if the element exists. If the element exists
+     * we will update. Otherwise, we try inserting.  If this fails because the item exists, we will
+     * update.
+     * <p>
+     * @param ce
+     * @param con
+     * @param element
+     */
+    private void insertOrUpdate( ICacheElement ce, Connection con, byte[] element )
+    {
+        boolean exists = false;
+
+        // First do a query to determine if the element already exists
+        if ( this.getJdbcDiskCacheAttributes().isTestBeforeInsert() )
+        {
+            exists = doesElementExist( ce );
+        }
+
+        // If it doesn't exist, insert it, otherwise update
+        if ( !exists )
+        {
+            exists = insertRow( ce, con, element );
+        }
+
+        // update if it exists.
+        if ( exists )
+        {
+            updateRow( ce, con, element );
         }
     }
 
@@ -773,7 +787,6 @@ public class JDBCDiskCache
                     log.error( "Problem closing statement.", e1 );
                 }
             }
-
         }
         catch ( Exception e )
         {
