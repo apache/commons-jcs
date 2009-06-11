@@ -173,7 +173,7 @@ public class DoubleLinkedList
             // first
             first = last;
         }
-        
+
         if ( last != null )
         {
             last.next = ln;
@@ -291,10 +291,13 @@ public class DoubleLinkedList
      */
     public synchronized void debugDumpEntries()
     {
-        log.debug( "dumping Entries" );
-        for ( DoubleLinkedListNode me = first; me != null; me = me.next )
+        if ( log.isDebugEnabled() )
         {
-            log.debug( "dump Entries> payload= '" + me.getPayload() + "'" );
+            log.debug( "dumping Entries" );
+            for ( DoubleLinkedListNode me = first; me != null; me = me.next )
+            {
+                log.debug( "dump Entries> payload= '" + me.getPayload() + "'" );
+            }
         }
     }
 }
