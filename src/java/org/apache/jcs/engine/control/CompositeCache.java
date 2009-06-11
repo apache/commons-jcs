@@ -77,6 +77,7 @@ public class CompositeCache
      * EventQueue for handling element events. 1 should be enough for all the regions. Else should
      * create as needed per region.
      */
+    // TODO fix for multi-instance JCS, have the manager pass this in.
     public static IElementEventQueue elementEventQ = new ElementEventQueue( "AllRegionQueue" );
 
     /** Auxiliary caches. */

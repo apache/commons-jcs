@@ -38,7 +38,7 @@ public class MRUMemoryCache
     /**
      * Adds the item to the front of the list. A put doesn't count as a usage.
      * <p>
-     * It's not clear if the put operation sould be different. Perhaps this should remove the oldest
+     * It's not clear if the put operation should be different. Perhaps this should remove the oldest
      * if full, and then put.
      * <p>
      * @param ce

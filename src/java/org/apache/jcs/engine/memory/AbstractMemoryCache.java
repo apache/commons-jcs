@@ -45,7 +45,7 @@ import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
- * Some common code for the LRU and MRU caches.
+ * This base includes some common code for memory caches.
  * <p>
  * This keeps a static reference to a memory shrinker clock daemon. If this region is configured to
  * use the shrinker, the clock daemon will be setup to run the shrinker on this region.
@@ -56,20 +56,20 @@ public abstract class AbstractMemoryCache
     /** Don't change. */
     private static final long serialVersionUID = -4494626991630099575L;
 
-    /** log instance */
+    /** Log instance */
     private final static Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
     /** The region name. This defines a namespace of sorts. */
     protected String cacheName;
 
-    /** Map where items are stored by key */
+    /** Map where items are stored by key.  This is created by the concrete child class. */
     protected Map map;
 
-    /** Region Elemental Attributes, used as a default. */
-    public IElementAttributes attr;
+    /** Region Elemental Attributes, used as a default and copied for each item. */
+    public IElementAttributes elementAttributes;
 
-    /** Cache Attributes */
-    public ICompositeCacheAttributes cattr;
+    /** Cache Attributes.  Regions settings. */
+    public ICompositeCacheAttributes cacheAttributes;
 
     /** The cache region this store is associated with */
     protected CompositeCache cache;
@@ -81,6 +81,7 @@ public abstract class AbstractMemoryCache
     protected int chunkSize;
 
     /** The background memory shrinker, one for all regions. */
+    // TODO fix for multi-instance JCS
     private static ClockDaemon shrinkerDaemon;
 
     /**
@@ -91,21 +92,21 @@ public abstract class AbstractMemoryCache
     public synchronized void initialize( CompositeCache hub )
     {
         this.cacheName = hub.getCacheName();
-        this.cattr = hub.getCacheAttributes();
+        this.cacheAttributes = hub.getCacheAttributes();
         this.cache = hub;
         map = createMap();
 
-        chunkSize = cattr.getSpoolChunkSize();
+        chunkSize = cacheAttributes.getSpoolChunkSize();
         status = CacheConstants.STATUS_ALIVE;
 
-        if ( cattr.getUseMemoryShrinker() )
+        if ( cacheAttributes.getUseMemoryShrinker() )
         {
             if ( shrinkerDaemon == null )
             {
                 shrinkerDaemon = new ClockDaemon();
                 shrinkerDaemon.setThreadFactory( new MyThreadFactory() );
             }
-            shrinkerDaemon.executePeriodically( cattr.getShrinkerIntervalSeconds() * 1000, new ShrinkerThread( this ),
+            shrinkerDaemon.executePeriodically( cacheAttributes.getShrinkerIntervalSeconds() * 1000, new ShrinkerThread( this ),
                                                 false );
         }
     }
@@ -114,7 +115,7 @@ public abstract class AbstractMemoryCache
      * Children must implement this method. A FIFO implementation may use a tree map. An LRU might
      * use a hashtable. The map returned should be threadsafe.
      * <p>
-     * @return Map
+     * @return a threadsafe Map
      */
     public abstract Map createMap();
 
@@ -172,7 +173,8 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     * Get an item from the cache without affecting its last access time or position.
+     * Get an item from the cache without affecting its last access time or position. Not all memory
+     * cache implementations can get quietly.
      * <p>
      * @param key Identifies item to find
      * @return Element matching key if found, or null
@@ -274,13 +276,13 @@ public abstract class AbstractMemoryCache
     }
 
     /**
-     * Returns the cache name.
+     * Returns the cache (aka "region") name.
      * <p>
      * @return The cacheName value
      */
     public String getCacheName()
     {
-        return this.cattr.getCacheName();
+        return this.cacheAttributes.getCacheName();
     }
 
     /**
@@ -312,7 +314,7 @@ public abstract class AbstractMemoryCache
      */
     public ICompositeCacheAttributes getCacheAttributes()
     {
-        return this.cattr;
+        return this.cacheAttributes;
     }
 
     /**
@@ -322,7 +324,7 @@ public abstract class AbstractMemoryCache
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
-        this.cattr = cattr;
+        this.cacheAttributes = cattr;
     }
 
     /**
@@ -335,7 +337,6 @@ public abstract class AbstractMemoryCache
         return this.cache;
     }
 
-    
     /**
      * @param groupName
      * @return group keys
@@ -374,7 +375,7 @@ public abstract class AbstractMemoryCache
         {
             Thread t = new Thread( runner );
             String oldName = t.getName();
-            t.setName( "JCS-AbstractMemoryCache-" + oldName );              
+            t.setName( "JCS-AbstractMemoryCache-" + oldName );
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
             return t;

@@ -127,7 +127,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         int size = map.size();
         // If the element limit is reached, we need to spool
 
-        if ( size <= this.cattr.getMaxObjects() )
+        if ( size <= this.cacheAttributes.getMaxObjects() )
         {
             return;
         }
@@ -143,7 +143,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         if ( log.isDebugEnabled() )
         {
             log.debug( "About to spool to disk cache, map size: " + size + ", max objects: "
-                + this.cattr.getMaxObjects() + ", items to spool: " + chunkSizeCorrected );
+                + this.cacheAttributes.getMaxObjects() + ", items to spool: " + chunkSizeCorrected );
         }
 
         // The spool will put them in a disk event queue, so there is no
@@ -740,9 +740,6 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         // get an array and put them in the Stats object
         IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
-
-        // int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
-        // buf.append("\n Hit Rate = " + rate + " %" );
 
         return stats;
     }

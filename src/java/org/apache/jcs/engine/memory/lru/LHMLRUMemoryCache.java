@@ -42,8 +42,7 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
- * This is a test memory manager using the jdk1.4 LinkedHashMap. There may be some thread safety
- * issues.
+ * This is a test memory manager using the jdk1.4 LinkedHashMap.
  */
 public class LHMLRUMemoryCache
     extends AbstractMemoryCache

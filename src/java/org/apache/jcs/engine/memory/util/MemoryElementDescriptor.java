@@ -35,7 +35,7 @@ public class MemoryElementDescriptor
     public ICacheElement ce;
 
     /**
-     * Constructor for the MemoryElementDescriptor object
+     * Constructs a usable MemoryElementDescriptor.
      * <p>
      * @param ce
      */

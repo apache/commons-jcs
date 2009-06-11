@@ -26,7 +26,7 @@ import org.apache.jcs.engine.memory.AbstractDoulbeLinkedListMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 
 /**
- * The items are spooled in the order they are added. No adjustments to the list are make on get.
+ * The items are spooled in the order they are added. No adjustments to the list are made on get.
  */
 public class FIFOMemoryCache
     extends AbstractDoulbeLinkedListMemoryCache
