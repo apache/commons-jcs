@@ -35,10 +35,8 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.memory.MemoryCache;
 
 /**
- * A background memory shrinker. Memory problems and concurrent modification
- * exception caused by acting directly on an iterator of the underlying memory
- * cache should have been solved.
- *
+ * A background memory shrinker. Memory problems and concurrent modification exception caused by
+ * acting directly on an iterator of the underlying memory cache should have been solved.
  * @version $Id$
  */
 public class ShrinkerThread
@@ -56,14 +54,13 @@ public class ShrinkerThread
     /** Maximum number of items to spool per run. Default is -1, or no limit. */
     private int maxSpoolPerRun;
 
-    /** Should we limit the number spooled per run.  If so, the maxSpoolPerRun will be used. */
+    /** Should we limit the number spooled per run. If so, the maxSpoolPerRun will be used. */
     private boolean spoolLimit = false;
 
     /**
      * Constructor for the ShrinkerThread object.
      * <p>
-     * @param cache
-     *            The MemoryCache which the new shrinker should watch.
+     * @param cache The MemoryCache which the new shrinker should watch.
      */
     public ShrinkerThread( MemoryCache cache )
     {
@@ -99,23 +96,19 @@ public class ShrinkerThread
     }
 
     /**
-     * This method is called when the thread wakes up. Frist the method obtains
-     * an array of keys for the cache region. It iterates through the keys and
-     * tries to get the item from the cache without affecting the last access or
-     * position of the item. The item is checked for expiration, the expiration
-     * check has 3 parts:
+     * This method is called when the thread wakes up. Frist the method obtains an array of keys for
+     * the cache region. It iterates through the keys and tries to get the item from the cache
+     * without affecting the last access or position of the item. The item is checked for
+     * expiration, the expiration check has 3 parts:
      * <ol>
-     * <li>Has the cacheattributes.MaxMemoryIdleTimeSeconds defined for the
-     * region been exceeded? If so, the item should be move to disk.</li>
-     * <li>Has the item exceeded MaxLifeSeconds defined in the element
-     * attributes? If so, remove it.</li>
-     * <li>Has the item exceeded IdleTime defined in the element atributes? If
-     * so, remove it. If there are event listeners registered for the cache
-     * element, they will be called.</li>
+     * <li>Has the cacheattributes.MaxMemoryIdleTimeSeconds defined for the region been exceeded? If
+     * so, the item should be move to disk.</li> <li>Has the item exceeded MaxLifeSeconds defined in
+     * the element attributes? If so, remove it.</li> <li>Has the item exceeded IdleTime defined in
+     * the element atributes? If so, remove it. If there are event listeners registered for the
+     * cache element, they will be called.</li>
      * </ol>
-     *
-     * @todo Change element event handling to use the queue, then move the queue
-     *       to the region and access via the Cache.
+     * @todo Change element event handling to use the queue, then move the queue to the region and
+     *       access via the Cache.
      */
     protected void shrink()
     {
@@ -158,20 +151,8 @@ public class ShrinkerThread
 
                 long now = System.currentTimeMillis();
 
-                // Useful, but overkill even for DEBUG since it is written for
-                // every element in memory
-                //
-                // if ( log.isDebugEnabled() )
-                // {
-                // log.debug( "IsEternal: " + attributes.getIsEternal() );
-                // log.debug( "MaxLifeSeconds: "
-                // + attributes.getMaxLifeSeconds() );
-                // log.debug( "CreateTime:" + attributes.getCreateTime() );
-                // }
-
                 // If the element is not eternal, check if it should be
                 // removed and remove it if so.
-
                 if ( !cacheElement.getElementAttributes().getIsEternal() )
                 {
                     remove = checkForRemoval( cacheElement, now );
@@ -189,7 +170,6 @@ public class ShrinkerThread
                 {
                     if ( !spoolLimit || ( spoolCount < this.maxSpoolPerRun ) )
                     {
-
                         final long lastAccessTime = attributes.getLastAccessTime();
 
                         if ( lastAccessTime + maxMemoryIdleTime < now )
@@ -245,21 +225,18 @@ public class ShrinkerThread
             // stop for now
             return;
         }
-
     }
 
     /**
-     * Check if either lifetime or idletime has expired for the provided event,
-     * and remove it from the cache if so.
-     *
-     * @param cacheElement
-     *            Element to check for expiration
-     * @param now
-     *            Time to consider expirations relative to
+     * Check if either lifetime or idletime has expired for the provided event, and remove it from
+     * the cache if so.
+     * <p>
+     * @param cacheElement Element to check for expiration
+     * @param now Time to consider expirations relative to. This makes it easier to test.
      * @return true if the element should be removed, or false.
      * @throws IOException
      */
-    private boolean checkForRemoval( ICacheElement cacheElement, long now )
+    protected boolean checkForRemoval( ICacheElement cacheElement, long now )
         throws IOException
     {
         IElementAttributes attributes = cacheElement.getElementAttributes();
@@ -300,15 +277,11 @@ public class ShrinkerThread
     }
 
     /**
-     * Handle any events registered for the given element of the given event
-     * type.
-     *
-     * @param cacheElement
-     *            Element to handle events for
-     * @param eventType
-     *            Type of event to handle
-     * @throws IOException
-     *             If an error occurs
+     * Handle any events registered for the given element of the given event type.
+     * <p>
+     * @param cacheElement Element to handle events for
+     * @param eventType Type of event to handle
+     * @throws IOException If an error occurs
      */
     private void handleElementEvents( ICacheElement cacheElement, int eventType )
         throws IOException
