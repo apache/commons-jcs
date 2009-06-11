@@ -355,8 +355,9 @@ public class JDBCDiskCache
         catch ( SQLException e )
         {
             if ( e.toString().indexOf( "Violation of unique index" ) != -1
-                || e.getMessage().indexOf( "Violation of unique index" ) != -1
-                || e.getMessage().indexOf( "Duplicate entry" ) != -1 )
+                || e.getMessage().indexOf( "Duplicate entry" ) != -1 
+                || e.getMessage().indexOf( "duplicate key" ) != -1 
+                || e.getMessage().indexOf( "primary key constraint" ) != -1 )
             {
                 exists = true;
             }
