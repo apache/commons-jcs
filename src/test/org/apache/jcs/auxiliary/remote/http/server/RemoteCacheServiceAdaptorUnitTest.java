@@ -35,6 +35,26 @@ import org.apache.jcs.engine.CacheElement;
 public class RemoteCacheServiceAdaptorUnitTest
     extends TestCase
 {
+    /** Verify that we balk and return an error. */
+    public void testProcessRequest_null()
+    {
+        // SETUP
+        RemoteCacheServiceAdaptor adaptor = new RemoteCacheServiceAdaptor();
+
+        MockRemoteCacheService remoteHttpCacheService = new MockRemoteCacheService();
+        adaptor.setRemoteCacheService( remoteHttpCacheService );
+
+        RemoteCacheRequest request = null;
+
+        // DO WORK
+        RemoteCacheResponse result = adaptor.processRequest( request );
+
+        // VERIFY
+        assertNotNull( "Should have a result.", result );
+        assertTrue( "Should have 'The request is null' in the errorMessage", result.getErrorMessage().indexOf( "The request is null" ) != -1 );
+        assertTrue( "Should have 'The request is null' in the toString", result.toString().indexOf( "The request is null" ) != -1 );
+    }
+    
     /** Verify that the service is called. */
     public void testProcessRequest_Get()
     {
