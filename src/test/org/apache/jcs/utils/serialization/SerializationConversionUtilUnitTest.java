@@ -32,15 +32,54 @@ import org.apache.jcs.engine.behavior.IElementSerializer;
 
 /**
  * Tests the serialization conversion util.
- *<p>
+ * <p>
  * @author Aaron Smuts
  */
 public class SerializationConversionUtilUnitTest
     extends TestCase
 {
     /**
+     * Verify null for null.
+     * <p>
+     * @throws IOException
+     */
+    public void testgGetSerializedCacheElement_null()
+        throws IOException
+    {
+        // SETUP
+        IElementSerializer elementSerializer = new StandardSerializer();
+        ICacheElement before = null;
+
+        // DO WORK
+        ICacheElementSerialized result = SerializationConversionUtil.getSerializedCacheElement( before,
+                                                                                                elementSerializer );
+
+        // VERIFY
+        assertNull( "Should get null for null", result );
+    }
+
+    /**
+     * Verify null for null.
+     * <p>
+     * @throws Exception
+     */
+    public void testgGetDeSerializedCacheElement_null()
+        throws Exception
+    {
+        // SETUP
+        IElementSerializer elementSerializer = new StandardSerializer();
+        ICacheElementSerialized before = null;
+
+        // DO WORK
+        ICacheElement result = SerializationConversionUtil.getDeSerializedCacheElement( before, elementSerializer );
+
+        // VERIFY
+        assertNull( "Should get null for null", result );
+    }
+
+    /**
      * Verify that we can go back and forth with the simplest of objects.
-     *<p>
+     * <p>
      * @throws Exception
      */
     public void testSimpleConversion()
@@ -61,6 +100,49 @@ public class SerializationConversionUtilUnitTest
 
         // DO WORK
         ICacheElementSerialized serialized = SerializationConversionUtil.getSerializedCacheElement( before,
+                                                                                                    elementSerializer );
+
+        // VERIFY
+        assertNotNull( "Should have a serialized object.", serialized );
+        System.out.println( "testSimpleConversion, " + serialized );
+
+        // DO WORK
+        ICacheElement after = SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
+
+        // VERIFY
+        assertNotNull( "Should have a deserialized object.", after );
+        assertEquals( "Values should be the same.", before.getVal(), after.getVal() );
+        assertEquals( "Attributes should be the same.", before.getElementAttributes().getMaxLifeSeconds(), after
+            .getElementAttributes().getMaxLifeSeconds() );
+        assertEquals( "Keys should be the same.", before.getKey(), after.getKey() );
+        assertEquals( "Cache name should be the same.", before.getCacheName(), after.getCacheName() );
+    }
+
+    /**
+     * Verify that we can go back and forth with the simplest of objects.
+     *<p>
+     * @throws Exception
+     */
+    public void testAccidentalDoubleConversion()
+        throws Exception
+    {
+        // SETUP
+        String cacheName = "testName";
+        String key = "key";
+        String value = "value fdsadf dsafdsa fdsaf dsafdsaf dsafdsaf dsaf dsaf dsaf dsafa dsaf dsaf dsafdsaf";
+
+        IElementSerializer elementSerializer = new StandardSerializer();
+
+        IElementAttributes attr = new ElementAttributes();
+        attr.setMaxLifeSeconds( 34 );
+
+        ICacheElement before = new CacheElement( cacheName, key, value );
+        before.setElementAttributes( attr );
+
+        // DO WORK
+        ICacheElementSerialized alreadySerialized = SerializationConversionUtil
+            .getSerializedCacheElement( before, elementSerializer );
+        ICacheElementSerialized serialized = SerializationConversionUtil.getSerializedCacheElement( alreadySerialized,
                                                                                                     elementSerializer );
 
         // VERIFY
