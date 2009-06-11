@@ -661,4 +661,12 @@ public class LRUMap
         // TODO fix this, it needs to return the keys inside the wrappers.
         return map.keySet();
     }
+
+    /**
+     * @return the max objects size.
+     */
+    public int getMaxObjects()
+    {
+        return maxObjects;
+    }
 }

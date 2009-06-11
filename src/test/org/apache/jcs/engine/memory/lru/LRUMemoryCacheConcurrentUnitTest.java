@@ -47,7 +47,7 @@ public class LRUMemoryCacheConcurrentUnitTest
 
     /**
      * Constructor for the TestDiskCache object.
-     *
+     * <p>
      * @param testName
      */
     public LRUMemoryCacheConcurrentUnitTest( String testName )
@@ -57,7 +57,7 @@ public class LRUMemoryCacheConcurrentUnitTest
 
     /**
      * Main method passes this test to the text test runner.
-     *
+     * <p>
      * @param args
      */
     public static void main( String args[] )
@@ -80,7 +80,7 @@ public class LRUMemoryCacheConcurrentUnitTest
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion1" );
+                this.runTestForRegion( "testRegion1" );
             }
         } );
         
@@ -101,7 +101,6 @@ public class LRUMemoryCacheConcurrentUnitTest
      * <p>
      * @param region
      *            Name of the region to access
-     *
      * @exception Exception
      *                If an error occurs
      */
@@ -157,18 +156,15 @@ public class LRUMemoryCacheConcurrentUnitTest
         }
 
         // Remove all the items
-
         for ( int i = 0; i < items; i++ )
         {
             lru.remove( i + ":key" );
         }
 
         // Verify removal
-
         for ( int i = 0; i < items; i++ )
         {
             assertNull( "Removed key should be null: " + i + ":key", lru.get( i + ":key" ) );
         }
     }
-
 }

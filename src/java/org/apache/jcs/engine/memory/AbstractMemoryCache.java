@@ -107,7 +107,6 @@ public abstract class AbstractMemoryCache
             }
             shrinkerDaemon.executePeriodically( cattr.getShrinkerIntervalSeconds() * 1000, new ShrinkerThread( this ),
                                                 false );
-
         }
     }
 

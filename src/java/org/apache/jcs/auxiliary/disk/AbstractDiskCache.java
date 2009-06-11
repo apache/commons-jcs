@@ -71,7 +71,7 @@ public abstract class AbstractDiskCache
     private static final Log log = LogFactory.getLog( AbstractDiskCache.class );
 
     /** Generic disk cache attributes */
-    private IDiskCacheAttributes dcattr = null;
+    private IDiskCacheAttributes diskCacheAttributes = null;
 
     /**
      * Map where elements are stored between being added to this cache and actually spooled to disk.
@@ -89,7 +89,10 @@ public abstract class AbstractDiskCache
      */
     protected ICacheEventQueue cacheEventQueue;
 
-    /** Indicates whether the cache is 'alive': initialized, but not yet disposed. */
+    /**
+     * Indicates whether the cache is 'alive': initialized, but not yet disposed. Child classes must
+     * set this to true.
+     */
     protected boolean alive = false;
 
     /** Every cache will have a name, subclasses must set this when they are initialized. */
@@ -107,20 +110,22 @@ public abstract class AbstractDiskCache
     // ----------------------------------------------------------- constructors
 
     /**
-     * Construct the abstract disk cache, create event queues and purgatory.
+     * Construct the abstract disk cache, create event queues and purgatory. Child classes should
+     * set the alive flag to true after they are initialized.
      * <p>
      * @param attr
      */
     public AbstractDiskCache( IDiskCacheAttributes attr )
     {
-        this.dcattr = attr;
+        this.diskCacheAttributes = attr;
 
         this.cacheName = attr.getCacheName();
 
         // create queue
         CacheEventQueueFactory fact = new CacheEventQueueFactory();
         this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId, cacheName,
-                                                           dcattr.getEventQueuePoolName(), dcattr.getEventQueueType() );
+                                                           diskCacheAttributes.getEventQueuePoolName(),
+                                                           diskCacheAttributes.getEventQueueType() );
 
         // create purgatory
         initPurgatory();
@@ -146,9 +151,9 @@ public abstract class AbstractDiskCache
             {
                 synchronized ( purgatory )
                 {
-                    if ( dcattr.getMaxPurgatorySize() >= 0 )
+                    if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
                     {
-                        purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
+                        purgatory = new LRUMapJCS( diskCacheAttributes.getMaxPurgatorySize() );
                     }
                     else
                     {
@@ -158,9 +163,9 @@ public abstract class AbstractDiskCache
             }
             else
             {
-                if ( dcattr.getMaxPurgatorySize() >= 0 )
+                if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
                 {
-                    purgatory = new LRUMapJCS( dcattr.getMaxPurgatorySize() );
+                    purgatory = new LRUMapJCS( diskCacheAttributes.getMaxPurgatorySize() );
                 }
                 else
                 {
@@ -240,6 +245,10 @@ public abstract class AbstractDiskCache
 
         if ( !alive )
         {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "get was called, but the disk cache is not alive." );
+            }
             return null;
         }
 
@@ -430,7 +439,7 @@ public abstract class AbstractDiskCache
     public final void removeAll()
         throws IOException
     {
-        if ( this.dcattr.isAllowRemoveAll() )
+        if ( this.diskCacheAttributes.isAllowRemoveAll() )
         {
             // Replace purgatory with a new empty hashtable
             initPurgatory();
@@ -492,7 +501,7 @@ public abstract class AbstractDiskCache
         // wait up to 60 seconds for dispose and then quit if not done.
         try
         {
-            t.join( this.dcattr.getShutdownSpoolTimeLimit() * 1000 );
+            t.join( this.diskCacheAttributes.getShutdownSpoolTimeLimit() * 1000 );
         }
         catch ( InterruptedException ex )
         {
@@ -763,10 +772,10 @@ public abstract class AbstractDiskCache
 
     /**
      * Before the event logging layer, the subclasses implemented the do* methods. Now the do*
-     * methods call the *WithEventLogging method on the super. The *WithEventLogging methods call the
-     * abstract process* methods. The children implement the process methods.
+     * methods call the *WithEventLogging method on the super. The *WithEventLogging methods call
+     * the abstract process* methods. The children implement the process methods.
      * <p>
-     * ex.  doGet calls getWithEventLogging, which calls processGet
+     * ex. doGet calls getWithEventLogging, which calls processGet
      */
 
     /**

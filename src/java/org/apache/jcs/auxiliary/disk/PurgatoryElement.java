@@ -128,4 +128,21 @@ public class PurgatoryElement
     {
         cacheElement.setElementAttributes( attr );
     }
+    
+    /**
+     * @return debug string
+     */
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "[PurgatoryElement: " );
+        buf.append( " isSpoolable = " + isSpoolable() );
+        buf.append( " CacheElement = " + getCacheElement() );
+        buf.append( " CacheName = " + getCacheName() );
+        buf.append( " Key = " + getKey() );
+        buf.append( " Value = " + getVal() );
+        buf.append( " ElementAttributes = " + getElementAttributes() );
+        buf.append( "]" );
+        return buf.toString();
+    }    
 }

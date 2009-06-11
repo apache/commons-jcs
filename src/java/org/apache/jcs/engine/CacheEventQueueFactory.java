@@ -74,7 +74,7 @@ public class CacheEventQueueFactory
         }
 
         ICacheEventQueue eventQueue = null;
-        if ( ICacheEventQueue.SINGLE_QUEUE_TYPE.equalsIgnoreCase( poolType ) )
+        if ( poolType == null || ICacheEventQueue.SINGLE_QUEUE_TYPE.equalsIgnoreCase( poolType ) )
         {
             eventQueue = new CacheEventQueue( listener, listenerId, cacheName, maxFailure, waitBeforeRetry );
         }

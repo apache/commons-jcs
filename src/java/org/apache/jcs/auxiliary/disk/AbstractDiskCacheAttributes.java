@@ -160,9 +160,10 @@ public abstract class AbstractDiskCacheAttributes
     {
         StringBuffer str = new StringBuffer();
         str.append( "AbstractDiskCacheAttributes " );
-        str.append( "\n diskPath = " + diskPath );
-        str.append( "\n maxPurgatorySize   = " + maxPurgatorySize );
-        str.append( "\n allowRemoveAll   = " + allowRemoveAll );
+        str.append( "\n diskPath = " + getDiskPath() );
+        str.append( "\n maxPurgatorySize   = " + getMaxPurgatorySize() );
+        str.append( "\n allowRemoveAll   = " + isAllowRemoveAll() );
+        str.append( "\n ShutdownSpoolTimeLimit   = " + getShutdownSpoolTimeLimit() );
         return str.toString();
     }
 }

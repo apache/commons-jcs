@@ -114,6 +114,7 @@ public class CompositeCacheManager
      * Gets the CacheHub instance. For backward compatibility, if this creates the instance it will
      * attempt to configure it with the default configuration. If you want to configure from your
      * own source, use {@link #getUnconfiguredInstance}and then call {@link #configure}
+     * <p>
      * @return CompositeCacheManager
      */
     public static synchronized CompositeCacheManager getInstance()
@@ -134,6 +135,7 @@ public class CompositeCacheManager
 
     /**
      * Initializes the cache manager using the props file for the given name.
+     * <p>
      * @param propsFilename
      * @return CompositeCacheManager configured from the give propsFileName
      */
@@ -182,6 +184,7 @@ public class CompositeCacheManager
     /**
      * Simple factory method, must override in subclasses so getInstance creates / returns the
      * correct object.
+     * <p>
      * @return CompositeCacheManager
      */
     protected static CompositeCacheManager createInstance()

@@ -38,24 +38,6 @@ public class IndexedDiskElementDescriptor
     public int len;
 
     /**
-     * Set the offset (i.e. position, and the size of the element)
-     * <p>
-     * @param pos
-     * @param data
-     */
-    public void init( long pos, byte[] data )
-    {
-        this.pos = pos;
-        this.len = data.length;
-    }
-
-    /** Constructor for the DiskElementDescriptor object */
-    public IndexedDiskElementDescriptor()
-    {
-        super();
-    }
-
-    /**
      * Constructs a usable disk element descriptor.
      * <p>
      * @param pos
