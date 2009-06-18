@@ -36,17 +36,23 @@ public class ElementEventQueue
     /** The logger */
     private final static Log log = LogFactory.getLog( ElementEventQueue.class );
 
-    /** number of processors */
-    private static int processorInstanceCount = 0;
-
     /** The cache (region) name. */
     private String cacheName;
+
+    /** default */
+    private static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
+
+    /**
+     * time to wait for an event before snuffing the background thread if the queue is empty. make
+     * configurable later
+     */
+    private int waitToDieMillis = DEFAULT_WAIT_TO_DIE_MILLIS;
 
     /** shutdown or not */
     private boolean destroyed = false;
 
     /** The worker thread. */
-    private Thread t;
+    private Thread processorThread;
 
     /** Internal queue implementation */
     private Object queueLock = new Object();
@@ -57,17 +63,20 @@ public class ElementEventQueue
     /** tail of the doubly linked list */
     private Node tail = head;
 
+    /** Number of items in the queue */
+    private int size = 0;
+
     /**
      * Constructor for the ElementEventQueue object
+     * <p>
      * @param cacheName
      */
     public ElementEventQueue( String cacheName )
     {
-
         this.cacheName = cacheName;
 
-        t = new QProcessor();
-        t.start();
+        processorThread = new QProcessor( this );
+        processorThread.start();
 
         if ( log.isDebugEnabled() )
         {
@@ -76,7 +85,7 @@ public class ElementEventQueue
     }
 
     /**
-     * Event Q is emtpy.
+     * Event Q is empty.
      */
     public synchronized void destroy()
     {
@@ -84,18 +93,50 @@ public class ElementEventQueue
         {
             destroyed = true;
 
-            // sychronize on queue so the thread will not wait forever,
+            // synchronize on queue so the thread will not wait forever,
             // and then interrupt the QueueProcessor
-
             synchronized ( queueLock )
             {
-                t.interrupt();
+                processorThread.interrupt();
             }
 
-            t = null;
+            processorThread = null;
 
-            log.info( "Element event queue destroyed: " + this );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Element event queue destroyed: " + this );
+            }
         }
+    }
+
+    /**
+     * Kill the processor thread and indicate that the queue is detroyed and no longer alive, but it
+     * can still be working.
+     */
+    public synchronized void stopProcessing()
+    {
+        destroyed = true;
+        processorThread = null;
+    }
+
+    /**
+     * Returns the time to wait for events before killing the background thread.
+     * <p>
+     * @return int
+     */
+    public int getWaitToDieMillis()
+    {
+        return waitToDieMillis;
+    }
+
+    /**
+     * Sets the time to wait for events before killing the background thread.
+     * <p>
+     * @param wtdm the ms for the q to sit idle.
+     */
+    public void setWaitToDieMillis( int wtdm )
+    {
+        waitToDieMillis = wtdm;
     }
 
     /**
@@ -104,6 +145,16 @@ public class ElementEventQueue
     public String toString()
     {
         return "cacheName=" + cacheName;
+    }
+
+    /**
+     * Returns the number of elements in the queue.
+     * <p>
+     * @return number of items in the queue.
+     */
+    public int size()
+    {
+        return size;
     }
 
     /**
@@ -154,9 +205,19 @@ public class ElementEventQueue
 
         synchronized ( queueLock )
         {
+            size++;
             tail.next = newNode;
             tail = newNode;
-
+            if ( !isAlive() )
+            {
+                destroyed = false;
+                processorThread = new QProcessor( this );
+                processorThread.start();
+            }
+            else
+            {
+                queueLock.notify();
+            }
             queueLock.notify();
         }
     }
@@ -165,31 +226,16 @@ public class ElementEventQueue
      * Returns the next item on the queue, or waits if empty.
      * <p>
      * @return AbstractElementEventRunner
-     * @throws InterruptedException
      */
     private AbstractElementEventRunner take()
-        throws InterruptedException
     {
         synchronized ( queueLock )
         {
             // wait until there is something to read
-
-            while ( head == tail )
+            if ( head == tail )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Waiting for something to come into the Q" );
-                }
-
-                queueLock.wait();
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Something came into the Q" );
-                }
+                return null;
             }
-
-            // we have the lock, and the list is not empty
 
             Node node = head.next;
 
@@ -206,6 +252,7 @@ public class ElementEventQueue
             node.event = null;
             head = node;
 
+            size--;
             return value;
         }
     }
@@ -227,48 +274,75 @@ public class ElementEventQueue
     private class QProcessor
         extends Thread
     {
+        /** The event queue */
+        ElementEventQueue queue;
+
         /**
          * Constructor for the QProcessor object
+         * <p>
+         * @param aQueue 
          */
-        QProcessor()
+        QProcessor( ElementEventQueue aQueue )
         {
-            super( "ElementEventQueue.QProcessor-" + ( ++processorInstanceCount ) );
+            super( "ElementEventQueue.QProcessor-" + aQueue.cacheName );
 
             setDaemon( true );
+            queue = aQueue;
         }
 
         /**
-         * Main processing method for the QProcessor object
+         * Main processing method for the QProcessor object.
+         * <p>
+         * Waits for a specified time (waitToDieMillis) for something to come in and if no new
+         * events come in during that period the run method can exit and the thread is dereferenced.
          */
         public void run()
         {
-            AbstractElementEventRunner r = null;
+            AbstractElementEventRunner event = null;
 
-            while ( !destroyed )
+            while ( queue.isAlive() )
             {
-                try
-                {
-                    r = take();
+                event = queue.take();
 
-                    if ( log.isDebugEnabled() )
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Event from queue = " + event );
+                }
+
+                if ( event == null )
+                {
+                    synchronized ( queueLock )
                     {
-                        log.debug( "r from take() = " + r );
+                        try
+                        {
+                            queueLock.wait( queue.getWaitToDieMillis() );
+                        }
+                        catch ( InterruptedException e )
+                        {
+                            log.warn( "Interrupted while waiting for another event to come in before we die." );
+                            return;
+                        }
+                        event = queue.take();
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "Event from queue after sleep = " + event );
+                        }
                     }
-
-                }
-                catch ( InterruptedException e )
-                {
-                    // We were interrupted, so terminate gracefully.
-                    this.destroy();
+                    if ( event == null )
+                    {
+                        queue.stopProcessing();
+                    }
                 }
 
-                if ( !destroyed && r != null )
+                if ( queue.isAlive() && event != null )
                 {
-                    r.run();
+                    event.run();
                 }
             }
-
-            log.info( "QProcessor exiting for " + ElementEventQueue.this );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "QProcessor exiting for " + queue );
+            }
         }
     }
 

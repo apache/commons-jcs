@@ -74,11 +74,10 @@ public class CompositeCache
     private final static Log log = LogFactory.getLog( CompositeCache.class );
 
     /**
-     * EventQueue for handling element events. 1 should be enough for all the regions. Else should
-     * create as needed per region.
+     * EventQueue for handling element events. Lazy initialized. One for each region. To be more eficient, the manager
+     * should pass a shared queue in.
      */
-    // TODO fix for multi-instance JCS, have the manager pass this in.
-    public static IElementEventQueue elementEventQ = new ElementEventQueue( "AllRegionQueue" );
+    public IElementEventQueue elementEventQ;
 
     /** Auxiliary caches. */
     private AuxiliaryCache[] auxCaches = new AuxiliaryCache[0];
@@ -167,7 +166,7 @@ public class CompositeCache
      * @param ce
      * @exception IOException
      */
-    public synchronized void update( ICacheElement ce )
+    public void update( ICacheElement ce )
         throws IOException
     {
         update( ce, false );
@@ -179,7 +178,7 @@ public class CompositeCache
      * @param ce
      * @exception IOException
      */
-    public synchronized void localUpdate( ICacheElement ce )
+    public void localUpdate( ICacheElement ce )
         throws IOException
     {
         update( ce, true );
@@ -193,11 +192,9 @@ public class CompositeCache
      * @param localOnly Whether the operation should be restricted to local auxiliaries.
      * @exception IOException
      */
-    protected synchronized void update( ICacheElement cacheElement, boolean localOnly )
+    protected void update( ICacheElement cacheElement, boolean localOnly )
         throws IOException
     {
-        // not thread safe, but just for debugging and testing.
-        updateCount++;
 
         if ( cacheElement.getKey() instanceof String
             && cacheElement.getKey().toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
@@ -215,9 +212,14 @@ public class CompositeCache
             log.debug( "Updating memory cache" );
         }
 
-        memCache.update( cacheElement );
+        synchronized ( this )
+        {
+            updateCount++;
 
-        updateAuxiliaries( cacheElement, localOnly );
+            memCache.update( cacheElement );
+
+            updateAuxiliaries( cacheElement, localOnly );
+        }
     }
 
     /**
@@ -572,7 +574,7 @@ public class CompositeCache
                             break;
                         }
                     }
-                }
+                }                
             }
         }
         catch ( Exception e )
@@ -1681,6 +1683,7 @@ public class CompositeCache
      * <p>
      * This does not call handle directly; instead the handler and the event are put into a queue.
      * This prevents the event handling from blocking normal cache operations.
+     * <p>
      * @param ce
      * @param eventType
      */
@@ -1713,6 +1716,7 @@ public class CompositeCache
 
     /**
      * Adds an ElementEvent to be handled to the queue.
+     * <p>
      * @param hand The IElementEventHandler
      * @param event The IElementEventHandler IElementEvent event
      * @exception IOException Description of the Exception
@@ -1723,6 +1727,14 @@ public class CompositeCache
         if ( log.isDebugEnabled() )
         {
             log.debug( "Adding event to Element Event Queue" );
+        }
+        // lazy init
+        synchronized ( this )
+        {
+            if ( elementEventQ == null )
+            {
+                elementEventQ = new ElementEventQueue( this.getCacheName() );
+            }
         }
         elementEventQ.addElementEvent( hand, event );
     }
