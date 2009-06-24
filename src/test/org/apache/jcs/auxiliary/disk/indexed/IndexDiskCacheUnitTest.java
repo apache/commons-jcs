@@ -128,6 +128,7 @@ public class IndexDiskCacheUnitTest
 
     /**
      * Verify that we don't override the largest item.
+     * <p>
      * @throws IOException
      */
     public void testRecycleBin()
@@ -145,18 +146,18 @@ public class IndexDiskCacheUnitTest
         String[] test = { "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhhh", "iiiiiiiiii" };
         String[] expect = { null, "bb", "ccc", null, null, "ffffff", null, "hhhhhhhhh", "iiiiiiiiii" };
 
-        System.out.println( "------------------------- testRecycleBin " );
+        //System.out.println( "------------------------- testRecycleBin " );
 
         for ( int i = 0; i < 6; i++ )
         {
             ICacheElement element = new CacheElement( "testRecycleBin", "key:" + test[i], test[i] );
-            System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
+            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
 
         for ( int i = 3; i < 5; i++ )
         {
-            System.out.println( "About to remove " + "key:" + test[i] + " i = " + i );
+            //System.out.println( "About to remove " + "key:" + test[i] + " i = " + i );
             disk.remove( "key:" + test[i] );
         }
 
@@ -165,7 +166,7 @@ public class IndexDiskCacheUnitTest
         for ( int i = 7; i < 9; i++ )
         {
             ICacheElement element = new CacheElement( "testRecycleBin", "key:" + test[i], test[i] );
-            System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
+            //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
 
@@ -176,11 +177,11 @@ public class IndexDiskCacheUnitTest
                 ICacheElement element = disk.get( "key:" + test[i] );
                 if ( element != null )
                 {
-                    System.out.println( "element = " + element.getVal() );
+                    //System.out.println( "element = " + element.getVal() );
                 }
                 else
                 {
-                    System.out.println( "null --" + "key:" + test[i] );
+                    //System.out.println( "null --" + "key:" + test[i] );
                 }
 
                 String expectedValue = expect[i];
@@ -264,6 +265,7 @@ public class IndexDiskCacheUnitTest
 
     /**
      * Verify that the file size is as expected.
+     * <p>
      * @throws IOException
      * @throws InterruptedException
      */
@@ -293,7 +295,7 @@ public class IndexDiskCacheUnitTest
         long expectedSize = DiskTestObjectUtil.totalSize( elements, numberToInsert );
         long resultSize = disk.getDataFileSize();
 
-        System.out.println( "testFileSize stats " + disk.getStats() );
+        //System.out.println( "testFileSize stats " + disk.getStats() );
 
         assertEquals( "Wrong file size", expectedSize, resultSize );
     }
@@ -344,8 +346,8 @@ public class IndexDiskCacheUnitTest
     }
 
     /**
-     * Verify that items of the same size use recyle bin spots. Setup the receyle bin by removing
-     * some items. Add some of the same size. Verify that the recyle count is the number added.
+     * Verify that items of the same size use recycle bin spots. Setup the recycle bin by removing
+     * some items. Add some of the same size. Verify that the recycle count is the number added.
      * <p>
      * @throws IOException
      * @throws InterruptedException
@@ -442,7 +444,7 @@ public class IndexDiskCacheUnitTest
         long expectedSize = DiskTestObjectUtil.totalSize( elements, numberToRemove );
         long resultSize = disk.getBytesFree();
 
-        System.out.println( "testBytesFreeSize stats " + disk.getStats() );
+        //System.out.println( "testBytesFreeSize stats " + disk.getStats() );
 
         assertEquals( "Wrong bytes free size" + disk.getStats(), expectedSize, resultSize );
 
@@ -863,4 +865,147 @@ public class IndexDiskCacheUnitTest
         assertEquals( "wrong bytes after retrieval", string, new String( after, UTF8 ) );
     }
 
+    /**
+     * Verify the item makes it to disk.
+     * <p>
+     * @throws IOException
+     */
+    public void testProcessUpdate_Simple()
+        throws IOException
+    {
+        // SETUP
+        String cacheName = "testProcessUpdate_Simple";
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        String key = "myKey";
+        String value = "myValue";
+        ICacheElement ce = new CacheElement( cacheName, key, value );
+
+        // DO WORK
+        diskCache.processUpdate( ce );
+        ICacheElement result = diskCache.processGet( key );
+
+        // VERIFY
+        assertNotNull( "Should have a result", result );
+        long fileSize = diskCache.getDataFileSize();
+        assertTrue( "File should be greater than 0", fileSize > 0 );
+    }
+
+    /**
+     * Verify the item makes it to disk.
+     * <p>
+     * @throws IOException
+     */
+    public void testProcessUpdate_SameKeySameSize()
+        throws IOException
+    {
+        // SETUP
+        String cacheName = "testProcessUpdate_SameKeySameSize";
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        String key = "myKey";
+        String value = "myValue";
+        ICacheElement ce1 = new CacheElement( cacheName, key, value );
+
+        // DO WORK
+        diskCache.processUpdate( ce1 );
+        long fileSize1 = diskCache.getDataFileSize();
+        
+        // DO WORK
+        ICacheElement ce2 = new CacheElement( cacheName, key, value );
+        diskCache.processUpdate( ce2 );
+        ICacheElement result = diskCache.processGet( key );
+        
+        // VERIFY
+        assertNotNull( "Should have a result", result );
+        long fileSize2 = diskCache.getDataFileSize();
+        assertEquals( "File should be the same", fileSize1, fileSize2 );
+        int binSize = diskCache.getRecyleBinSize();
+        assertEquals( "Should be nothing in the bin.", 0, binSize );
+    }
+    
+    /**
+     * Verify the item makes it to disk.
+     * <p>
+     * @throws IOException
+     */
+    public void testProcessUpdate_SameKeySmallerSize()
+        throws IOException
+    {
+        // SETUP
+        String cacheName = "testProcessUpdate_SameKeySmallerSize";
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        String key = "myKey";
+        String value = "myValue";
+        String value2 = "myValu";
+        ICacheElement ce1 = new CacheElement( cacheName, key, value );
+
+        // DO WORK
+        diskCache.processUpdate( ce1 );
+        long fileSize1 = diskCache.getDataFileSize();
+        
+        // DO WORK
+        ICacheElement ce2 = new CacheElement( cacheName, key, value2 );
+        diskCache.processUpdate( ce2 );
+        ICacheElement result = diskCache.processGet( key );
+        
+        // VERIFY
+        assertNotNull( "Should have a result", result );
+        long fileSize2 = diskCache.getDataFileSize();
+        assertEquals( "File should be the same", fileSize1, fileSize2 );
+        int binSize = diskCache.getRecyleBinSize();
+        assertEquals( "Should be nothing in the bin.", 0, binSize );
+    }
+    
+    
+    /**
+     * Verify that the old slot gets in the recycle bin.
+     * <p>
+     * @throws IOException
+     */
+    public void testProcessUpdate_SameKeyBiggerSize()
+        throws IOException
+    {
+        // SETUP
+        String cacheName = "testProcessUpdate_SameKeyBiggerSize";
+        IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
+        cattr.setCacheName( cacheName );
+        cattr.setMaxKeySize( 100 );
+        cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
+        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+
+        String key = "myKey";
+        String value = "myValue";
+        String value2 = "myValue2";
+        ICacheElement ce1 = new CacheElement( cacheName, key, value );
+
+        // DO WORK
+        diskCache.processUpdate( ce1 );
+        long fileSize1 = diskCache.getDataFileSize();
+        
+        // DO WORK
+        ICacheElement ce2 = new CacheElement( cacheName, key, value2 );
+        diskCache.processUpdate( ce2 );
+        ICacheElement result = diskCache.processGet( key );
+        
+        // VERIFY
+        assertNotNull( "Should have a result", result );
+        long fileSize2 = diskCache.getDataFileSize();
+        assertTrue( "File should be greater.", fileSize1 < fileSize2 );
+        int binSize = diskCache.getRecyleBinSize();
+        assertEquals( "Should be one in the bin.", 1, binSize );
+    }
 }

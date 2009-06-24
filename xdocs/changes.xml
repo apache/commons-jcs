@@ -19,14 +19,16 @@
 		<author email="asmuts@apache.org">Aaron Smuts</author>
 	</properties>
 	<body>
-		<release version="1.4-dev" date="in SVN">
+		<release version="forthcoming" date="in SVN">
+			<action dev="asmuts" type="fix" issue="JCS-60">Slots for same key
+				updates now get added to the recycle bin.</action>
 		</release>
 		<release version="1.3.3.2" date="2009-06-11" description="tempbuild">
 			<action dev="asmuts" type="update">Added a compressing serializer.
 			</action>
 			<action dev="asmuts" type="update">Added an LHMLRUMemoryCache.
 			</action>
-		</release>		
+		</release>
 		<release version="1.3.3.1" date="2009-05-22" description="tempbuild">
 			<action dev="asmuts" type="update">Added a clearDiskOnStartup
 				configuration option for the IndexedDisk Cache. False by default.

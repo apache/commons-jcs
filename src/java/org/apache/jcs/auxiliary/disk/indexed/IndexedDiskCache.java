@@ -528,7 +528,7 @@ public class IndexedDiskCache
                     ded.len = data.length;
                 }
                 else
-                {
+                {                    
                     // we need this to compare in the recycle bin
                     ded = new IndexedDiskElementDescriptor( dataFile.length(), data.length );
 
@@ -560,6 +560,12 @@ public class IndexedDiskCache
                         {
                             log.debug( logCacheName + "added to queued put list." + queuedPutList.size() );
                         }
+                    }
+
+                    // add the old slot to the recycle bin
+                    if ( old != null )
+                    {
+                        addToRecycleBin( old );
                     }
                 }
 
