@@ -528,7 +528,7 @@ public class IndexedDiskCache
                     ded.len = data.length;
                 }
                 else
-                {                    
+                {
                     // we need this to compare in the recycle bin
                     ded = new IndexedDiskElementDescriptor( dataFile.length(), data.length );
 
@@ -1157,7 +1157,6 @@ public class IndexedDiskCache
 
             if ( doRecycle )
             {
-
                 recycle.add( ded );
                 if ( log.isDebugEnabled() )
                 {
@@ -1229,9 +1228,9 @@ public class IndexedDiskCache
      * the free space. </li> <li>Release the write-lock. This allows elements to still be accessible
      * during optimization.</li>
      * </ol>
-     * <li>Obtain the write-lock.</li> <li>All queued puts are made at the end of the file. Optimize
-     * these under a single write-lock.</li> <li>Truncate the file.</li> <li>Release the write-lock.
-     * </li> <li>Restore system to standard operation.</li>
+     * </li> <li>Obtain the write-lock.</li> <li>All queued puts are made at the end of the file.
+     * Optimize these under a single write-lock.</li> <li>Truncate the file.</li> <li>Release the
+     * write-lock. </li> <li>Restore system to standard operation.</li>
      * </ol>
      */
     protected void optimizeFile()
