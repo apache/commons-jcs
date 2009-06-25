@@ -22,6 +22,8 @@
 		<release version="forthcoming" date="in SVN">
 			<action dev="asmuts" type="fix" issue="JCS-60">Slots for same key
 				updates now get added to the recycle bin.</action>
+			<action dev="asmuts" type="update">Caught Throwable in
+				JDBC disk cache shrinker, so it won't die.</action>
 		</release>
 		<release version="1.3.3.2" date="2009-06-11" description="tempbuild">
 			<action dev="asmuts" type="update">Added a compressing serializer.
