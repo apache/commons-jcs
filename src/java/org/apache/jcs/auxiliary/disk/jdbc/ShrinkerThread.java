@@ -78,6 +78,21 @@ public class ShrinkerThread
      */
     public void run()
     {
+        try
+        {
+            deleteExpiredFromAllRegisteredRegions();
+        }
+        catch ( Throwable e )
+        {
+            log.error( "Caught an expcetion while trying to delete expired items.", e );
+        }
+    }
+
+    /**
+     * Deletes the expired items from all the registered regions.
+     */
+    private void deleteExpiredFromAllRegisteredRegions()
+    {
         if ( log.isInfoEnabled() )
         {
             log.info( "Running JDBC disk cache shrinker.  Number of regions [" + shrinkSet.size() + "]" );
@@ -121,7 +136,7 @@ public class ShrinkerThread
                     }
                     catch ( InterruptedException e )
                     {
-                        log.warn( "Interrupted while waiting to delete expired for the enxt region." );
+                        log.warn( "Interrupted while waiting to delete expired for the next region." );
                     }
                 }
             }
