@@ -71,7 +71,7 @@ public class UDPDiscoveryReceiver
     /** number of messages received. For debugging and testing. */
     private int cnt = 0;
 
-    /** Service to get cache names and hande request broadcasts */
+    /** Service to get cache names and handle request broadcasts */
     protected UDPDiscoveryService service = null;
 
     /** Address */

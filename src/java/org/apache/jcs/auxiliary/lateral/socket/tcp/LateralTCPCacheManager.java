@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class LateralTCPCacheManager
     private static LateralCacheMonitor monitor;
 
     /** Address to instance map. */
-    protected static Map instances = new HashMap();
+    protected static Map instances = Collections.synchronizedMap( new HashMap() );
 
     /** ITCPLateralCacheAttributes */
     protected ITCPLateralCacheAttributes lca;
@@ -101,9 +102,9 @@ public class LateralTCPCacheManager
                                                       ICacheEventLogger cacheEventLogger,
                                                       IElementSerializer elementSerializer )
     {
-        LateralTCPCacheManager ins = (LateralTCPCacheManager) instances.get( lca.toString() );
         synchronized ( instances )
         {
+            LateralTCPCacheManager ins = (LateralTCPCacheManager) instances.get( lca.toString() );
             if ( ins == null )
             {
                 log.info( "Instance for [" + lca.toString() + "] is null, creating" );
@@ -114,12 +115,13 @@ public class LateralTCPCacheManager
                     ins = new LateralTCPCacheManager( lca, cacheMgr, cacheEventLogger, elementSerializer );
                     instances.put( lca.toString(), ins );
                 }
+                
+                createMonitor( ins );
             }
-            createMonitor( ins );
-        }
-        ins.clients++;
+            ins.clients++;
 
-        return ins;
+            return ins;
+        }
     }
 
     /**
