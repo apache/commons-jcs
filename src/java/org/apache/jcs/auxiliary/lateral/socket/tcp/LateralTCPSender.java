@@ -32,7 +32,7 @@ import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttr
 import org.apache.jcs.auxiliary.lateral.socket.tcp.utils.SocketOpener;
 
 /**
- * This class is based on the log4j SocketAppender class. I'm using a differnet repair structure, so
+ * This class is based on the log4j SocketAppender class. I'm using a different repair structure, so
  * it is significantly different.
  */
 public class LateralTCPSender
@@ -66,7 +66,7 @@ public class LateralTCPSender
 
     // reset the ObjectOutputStream every 70 calls
     // private static final int RESET_FREQUENCY = 70;
-    // Perhaps we need to resett every time until we move to jdk 1.4
+    // Perhaps we need to reset every time until we move to jdk 1.4
     // then we can call writeUnshared to make sure
     // that the object definetely gets across and not
     // a stream cached version.
@@ -270,7 +270,7 @@ public class LateralTCPSender
             // Synchronized to insure that the get requests to server from this
             // sender and the responses are processed in order, else you could
             // return the wrong item from the cache.
-            // This is a big block of code. May need to rethink this strategy.
+            // This is a big block of code. May need to re-think this strategy.
             // This may not be necessary.
             // Normal puts, etc to laterals do not have to be synchronized.
             synchronized ( this.getLock )
@@ -307,8 +307,7 @@ public class LateralTCPSender
                         String message = "Could not open ObjectInputStream to " + socket;
                         if ( socket != null )
                         {
-                            message += " SoTimeout [" + socket.getSoTimeout() + "]";
-                            // this is 1.4 specific -- Connected [" + socket.isConnected() + "]";
+                            message += " SoTimeout [" + socket.getSoTimeout() + "] Connected [" + socket.isConnected() + "]";
                         }
                         log.error( message, ioe );
                         throw ioe;
@@ -322,8 +321,7 @@ public class LateralTCPSender
                     {
                         counter = 0;
                         // Failing to reset the object output stream every now
-                        // and
-                        // then creates a serious memory leak.
+                        // and then creates a serious memory leak.
                         log.info( "Doing oos.reset()" );
                         oos.reset();
                     }

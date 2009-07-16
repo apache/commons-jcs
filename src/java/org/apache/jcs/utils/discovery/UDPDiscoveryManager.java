@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
+package org.apache.jcs.utils.discovery;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,9 +24,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.behavior.IShutdownObservable;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
@@ -63,31 +63,10 @@ public class UDPDiscoveryManager
     }
 
     /**
-     * Returns the UDP Discovery service associated with this instance.
-     * <p>
-     * @param lca ITCPLateralCacheAttributes
-     * @param cacheMgr
-     * @param cacheEventLogger
-     * @param elementSerializer
-     * @return instance for this address
-     */
-    public synchronized UDPDiscoveryService getService( ITCPLateralCacheAttributes lca,
-                                                        ICompositeCacheManager cacheMgr,
-                                                        ICacheEventLogger cacheEventLogger,
-                                                        IElementSerializer elementSerializer )
-    {
-        UDPDiscoveryService service = getService( lca.getUdpDiscoveryAddr(), lca.getUdpDiscoveryPort(), lca
-            .getTcpListenerPort(), cacheMgr, cacheEventLogger, elementSerializer );
-
-        // TODO find a way to remote these attributes from the service, the manager needs it on disocvery.
-        service.setTcpLateralCacheAttributes( lca );
-        return service;
-    }
-
-    /**
      * Creates a service for the address and port if one doesn't exist already.
      * <p>
-     * TODO we may need to key this using the listener port too
+     * We need to key this using the listener port too. TODO think of making one discovery service
+     * work for mutliple types of clients.
      * <p>
      * @param discoveryAddress
      * @param discoveryPort
@@ -97,23 +76,29 @@ public class UDPDiscoveryManager
      * @param elementSerializer
      * @return UDPDiscoveryService
      */
-    private synchronized UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
-                                                         ICompositeCacheManager cacheMgr,
-                                                         ICacheEventLogger cacheEventLogger,
-                                                         IElementSerializer elementSerializer )
+    public synchronized UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
+                                                        ICompositeCacheManager cacheMgr,
+                                                        ICacheEventLogger cacheEventLogger,
+                                                        IElementSerializer elementSerializer )
     {
-        String key = discoveryAddress + ":" + discoveryPort;
+        String key = discoveryAddress + ":" + discoveryPort + ":" + servicePort;
 
         UDPDiscoveryService service = (UDPDiscoveryService) services.get( key );
         if ( service == null )
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Creating service for address:port [" + key + "]" );
+                log.info( "Creating service for address:port:servicePort [" + key + "]" );
             }
 
-            service = new UDPDiscoveryService( discoveryAddress, discoveryPort, servicePort, cacheMgr,
-                                               cacheEventLogger, elementSerializer );
+            UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
+            attributes.setUdpDiscoveryAddr( discoveryAddress );
+            attributes.setUdpDiscoveryPort( discoveryPort );
+            attributes.setServicePort( servicePort );
+
+            service = new UDPDiscoveryService( attributes, cacheEventLogger );
+            ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( service );
+
             services.put( key, service );
         }
 

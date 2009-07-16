@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
+package org.apache.jcs.utils.discovery;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,22 +25,11 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheManager;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
-import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
@@ -54,16 +43,16 @@ public class UDPDiscoveryReceiver
     private final static Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
 
     /** buffer */
-    private final byte[] m_buffer = new byte[65536];
+    private final byte[] mBuffer = new byte[65536];
 
     /** The socket used for communication. */
-    private MulticastSocket m_socket;
+    private MulticastSocket mSocket;
 
     /**
      * TODO: Consider using the threadpool manager to get this thread pool. For now place a tight
      * restriction on the pool size
      */
-    private static final int maxPoolSize = 10;
+    private static final int maxPoolSize = 2;
 
     /** The processor */
     private PooledExecutor pooledExecutor = null;
@@ -80,17 +69,8 @@ public class UDPDiscoveryReceiver
     /** The port */
     private int multicastPort = 0;
 
-    /** The cache manager. */
-    private ICompositeCacheManager cacheMgr;
-
     /** Is it shutdown. */
     private boolean shutdown = false;
-
-    /** The event logger. */
-    protected ICacheEventLogger cacheEventLogger;
-
-    /** The serializer. */
-    protected IElementSerializer elementSerializer;
 
     /**
      * Constructor for the LateralUDPReceiver object.
@@ -100,32 +80,24 @@ public class UDPDiscoveryReceiver
      * @param service
      * @param multicastAddressString
      * @param multicastPort
-     * @param cacheMgr
-     * @param cacheEventLogger
-     * @param elementSerializer
      * @exception IOException
      */
-    public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastAddressString, int multicastPort,
-                                 ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
-                                 IElementSerializer elementSerializer )
+    public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastAddressString, int multicastPort )
         throws IOException
     {
         this.service = service;
         this.multicastAddressString = multicastAddressString;
         this.multicastPort = multicastPort;
-        this.cacheMgr = cacheMgr;
-        this.cacheEventLogger = cacheEventLogger;
-        this.elementSerializer = elementSerializer;
 
-        // create a small thread pool to handle a barage
+        // create a small thread pool to handle a barrage
         pooledExecutor = new PooledExecutor( new BoundedBuffer( 100 ), maxPoolSize );
         pooledExecutor.discardOldestWhenBlocked();
-        //pooledExecutor.setMinimumPoolSize(1);
+        pooledExecutor.setMinimumPoolSize(1);
         pooledExecutor.setThreadFactory( new MyThreadFactory() );
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "constructing listener, [" + this.multicastAddressString + ":" + this.multicastPort + "]" );
+            log.info( "Constructing listener, [" + this.multicastAddressString + ":" + this.multicastPort + "]" );
         }
 
         try
@@ -134,7 +106,7 @@ public class UDPDiscoveryReceiver
         }
         catch ( IOException ioe )
         {
-            // consider eatign this so we can go on, or constructing the socket
+            // consider eating this so we can go on, or constructing the socket
             // later
             throw ioe;
         }
@@ -142,6 +114,7 @@ public class UDPDiscoveryReceiver
 
     /**
      * Creates the socket for this class.
+     * <p>
      * @param multicastAddressString
      * @param multicastPort
      * @throws IOException
@@ -151,8 +124,8 @@ public class UDPDiscoveryReceiver
     {
         try
         {
-            m_socket = new MulticastSocket( multicastPort );
-            m_socket.joinGroup( InetAddress.getByName( multicastAddressString ) );
+            mSocket = new MulticastSocket( multicastPort );
+            mSocket.joinGroup( InetAddress.getByName( multicastAddressString ) );
         }
         catch ( IOException e )
         {
@@ -162,27 +135,37 @@ public class UDPDiscoveryReceiver
     }
 
     /**
-     * Highly unreliable. If it is processing one message while another comes in , the second
-     * message is lost. This is for low concurency peppering.
+     * Highly unreliable. If it is processing one message while another comes in, the second
+     * message is lost. This is for low concurrency peppering.
+     * <p>
      * @return the object message
      * @throws IOException
      */
     public Object waitForMessage()
         throws IOException
     {
-        final DatagramPacket packet = new DatagramPacket( m_buffer, m_buffer.length );
+        final DatagramPacket packet = new DatagramPacket( mBuffer, mBuffer.length );
 
         Object obj = null;
         try
         {
-            m_socket.receive( packet );
+            mSocket.receive( packet );
 
-            final ByteArrayInputStream byteStream = new ByteArrayInputStream( m_buffer, 0, packet.getLength() );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Received packet from address [" + packet.getSocketAddress() + "]" );
+            }
+            
+            final ByteArrayInputStream byteStream = new ByteArrayInputStream( mBuffer, 0, packet.getLength() );
 
             final ObjectInputStream objectStream = new ObjectInputStream( byteStream );
 
             obj = objectStream.readObject();
-
+            
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Read object from address [" + packet.getSocketAddress() + "], object=[" + obj + "]" );
+            }            
         }
         catch ( Exception e )
         {
@@ -275,7 +258,7 @@ public class UDPDiscoveryReceiver
     public class MessageHandler
         implements Runnable
     {
-        /** The message to handle.  Passed in during construction. */
+        /** The message to handle. Passed in during construction. */
         private UDPDiscoveryMessage message = null;
 
         /**
@@ -296,92 +279,64 @@ public class UDPDiscoveryReceiver
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "from self" );
+                    log.debug( "Ignoring message sent from self" );
                 }
             }
             else
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "from another" );
+                    log.debug( "Process message sent from another" );
                     log.debug( "Message = " + message );
                 }
 
-                // if this is a request message, have the service handle it and
-                // return
-                if ( message.getMessageType() == UDPDiscoveryMessage.REQUEST_BROADCAST )
+                if ( message.getHost() == null || message.getCacheNames() == null || message.getCacheNames().isEmpty() )
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "Message is a Request Broadcase, will have the service handle it." );
+                        log.debug( "Ignoring invalid message: " + message );
                     }
-                    service.serviceRequestBroadcast();
-                    return;
                 }
-
-                try
+                else
                 {
-                    // get a cache and add it to the no waits
-                    // the add method should not add the same.
-                    // we need the listener port from the original config.
-                    ITCPLateralCacheAttributes lca = null;
-                    if ( service.getTcpLateralCacheAttributes() != null )
-                    {
-                        lca = (ITCPLateralCacheAttributes) service.getTcpLateralCacheAttributes().copy();
-                    }
-                    else
-                    {
-                        lca = new TCPLateralCacheAttributes();
-                    }
-                    lca.setTransmissionType( LateralCacheAttributes.TCP );
-                    lca.setTcpServer( message.getHost() + ":" + message.getPort() );
-                    LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
-                                                                                     elementSerializer );
-
-                    ArrayList regions = message.getCacheNames();
-                    if ( regions != null )
-                    {
-                        // for each region get the cache
-                        Iterator it = regions.iterator();
-                        while ( it.hasNext() )
-                        {
-                            String cacheName = (String) it.next();
-
-                            try
-                            {
-                                ICache ic = lcm.getCache( cacheName );
-
-                                if ( log.isDebugEnabled() )
-                                {
-                                    log.debug( "Got cache, ic = " + ic );
-                                }
-
-                                // add this to the nowaits for this cachename
-                                if ( ic != null )
-                                {
-                                    service.addNoWait( (LateralCacheNoWait) ic );
-                                    if ( log.isDebugEnabled() )
-                                    {
-                                        log.debug( "Called addNoWait for cacheName " + cacheName );
-                                    }
-                                }
-                            }
-                            catch ( Exception e )
-                            {
-                                log.error( "Problem creating no wait", e );
-                            }
-                        }
-                        // end while
-                    }
-                    else
-                    {
-                        log.warn( "No cache names found in message " + message );
-                    }
+                    processMessage();
                 }
-                catch ( Exception e )
+            }
+        }
+
+        /**
+         * Process the incoming message.
+         */
+        private void processMessage()
+        {
+            DiscoveredService discoveredService = new DiscoveredService();
+            discoveredService.setServiceAddress( message.getHost() );
+            discoveredService.setCacheNames( message.getCacheNames() );
+            discoveredService.setServicePort( message.getPort() );
+            discoveredService.setLastHearFromTime( System.currentTimeMillis() );
+
+            // if this is a request message, have the service handle it and
+            // return
+            if ( message.getMessageType() == UDPDiscoveryMessage.REQUEST_BROADCAST )
+            {
+                if ( log.isDebugEnabled() )
                 {
-                    log.error( "Problem getting lateral maanger", e );
+                    log.debug( "Message is a Request Broadcase, will have the service handle it." );
                 }
+                service.serviceRequestBroadcast();
+                return;
+            }
+            else if ( message.getMessageType() == UDPDiscoveryMessage.REMOVE_BROADCAST )
+            {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Removing service from set " + discoveredService );
+                }
+                service.removeDiscoveredService( discoveredService );
+            }
+            else
+            {
+                service.addOrUpdateService( discoveredService );
             }
         }
     }
@@ -415,7 +370,7 @@ public class UDPDiscoveryReceiver
         try
         {
             shutdown = true;
-            m_socket.close();
+            mSocket.close();
             pooledExecutor.shutdownNow();
         }
         catch ( Exception e )
@@ -424,4 +379,3 @@ public class UDPDiscoveryReceiver
         }
     }
 }
-// end class

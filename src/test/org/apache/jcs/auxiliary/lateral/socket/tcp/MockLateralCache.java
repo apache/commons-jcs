@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
+package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

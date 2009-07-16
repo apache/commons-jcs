@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
+package org.apache.jcs.utils.discovery;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,7 +30,7 @@ public class UDPDiscoveryMessage
     implements Serializable
 {
     /** Don't change */
-    private static final long serialVersionUID = -5332377899560951794L;
+    private static final long serialVersionUID = -5332377899560951793L;
 
     /**
      * This is the periodic broadcast of a servers location. This type of message is also sent in
@@ -42,6 +42,11 @@ public class UDPDiscoveryMessage
      * This asks recipients to broadcast their location. This is used on startup.
      */
     public static final int REQUEST_BROADCAST = 1;
+    
+    /**
+     * This message instructs the receiver to remove this service from its list.
+     */
+    public static final int REMOVE_BROADCAST = 2;    
 
     /** The message type */
     private int messageType = PASSIVE_BROADCAST;
@@ -57,7 +62,7 @@ public class UDPDiscoveryMessage
 
     /** Names of regions */
     private ArrayList cacheNames = new ArrayList();
-
+    
     /**
      * @param port The port to set.
      */
@@ -137,7 +142,7 @@ public class UDPDiscoveryMessage
     {
         return cacheNames;
     }
-
+    
     /**
      * @return debugging string
      */
@@ -148,7 +153,6 @@ public class UDPDiscoveryMessage
         buf.append( "\n port = [" + port + "]" );
         buf.append( "\n requesterId = [" + requesterId + "]" );
         buf.append( "\n messageType = [" + messageType + "]" );
-
         buf.append( "\n Cache Names" );
         Iterator it = cacheNames.iterator();
         while ( it.hasNext() )

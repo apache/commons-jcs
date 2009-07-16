@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
+package org.apache.jcs.utils.discovery;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -33,17 +33,10 @@ public class UDPDiscoverySenderThread
     /** The logger. */
     private final static Log log = LogFactory.getLog( UDPDiscoverySenderThread.class );
 
-    /** the UDP multicast port */
-    private String discoveryAddress = "";
-
-    /** The port */
-    private int discoveryPort = 0;
-
-    /** the host and port we listen on for TCP socket connections */
-    private String myHostName = null;
-
-    /** The udp port */
-    private int myPort = 0;
+    /**
+     * details of the host, port, and service being advertised to listen for TCP socket connections
+     */
+    private UDPDiscoveryAttributes attributes;
 
     /** List of known regions. */
     private ArrayList cacheNames = new ArrayList();
@@ -72,34 +65,27 @@ public class UDPDiscoverySenderThread
      * Constructs the sender with the port to tell others to connect to.
      * <p>
      * On construction the sender will request that the other caches let it know their addresses.
-     * @param discoveryAddress host to broadcast to
-     * @param discoveryPort port to broadcast to
-     * @param myHostName host name we can be found at
-     * @param myPort port we are listening on
-     * @param cacheNames List of strings of the names of the regiond participating.
+     * @param attributes host, port, etc.
+     * @param cacheNames List of strings of the names of the region participating.
      */
-    public UDPDiscoverySenderThread( String discoveryAddress, int discoveryPort, String myHostName, int myPort,
-                                     ArrayList cacheNames )
+    public UDPDiscoverySenderThread( UDPDiscoveryAttributes attributes, ArrayList cacheNames )
     {
-        this.discoveryAddress = discoveryAddress;
-        this.discoveryPort = discoveryPort;
-
-        this.myHostName = myHostName;
-        this.myPort = myPort;
+        this.attributes = attributes;
 
         this.cacheNames = cacheNames;
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Creating sender thread for discoveryAddress = [" + discoveryAddress + "] and discoveryPort = ["
-                + discoveryPort + "] myHostName = [" + myHostName + "] and port = [" + myPort + "]" );
+            log.debug( "Creating sender thread for discoveryAddress = [" + attributes.getUdpDiscoveryAddr()
+                + "] and discoveryPort = [" + attributes.getUdpDiscoveryPort() + "] myHostName = ["
+                + attributes.getServiceAddress() + "] and port = [" + attributes.getServicePort() + "]" );
         }
 
         UDPDiscoverySender sender = null;
         try
         {
             // move this to the run method and determine how often to call it.
-            sender = new UDPDiscoverySender( discoveryAddress, discoveryPort );
+            sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(), attributes.getUdpDiscoveryPort() );
             sender.requestBroadcast();
 
             if ( log.isDebugEnabled() )
@@ -137,9 +123,9 @@ public class UDPDiscoverySenderThread
         {
             // create this connection each time.
             // more robust
-            sender = new UDPDiscoverySender( discoveryAddress, discoveryPort );
+            sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(), attributes.getUdpDiscoveryPort() );
 
-            sender.passiveBroadcast( myHostName, myPort, cacheNames );
+            sender.passiveBroadcast( attributes.getServiceAddress(), attributes.getServicePort(), cacheNames );
 
             // todo we should consider sending a request broadcast every so
             // often.
@@ -152,7 +138,8 @@ public class UDPDiscoverySenderThread
         }
         catch ( Exception e )
         {
-            log.error( "Problem calling the UDP Discovery Sender [" + discoveryAddress + ":" + discoveryPort + "]", e );
+            log.error( "Problem calling the UDP Discovery Sender [" + attributes.getUdpDiscoveryAddr() + ":"
+                + attributes.getUdpDiscoveryPort() + "]", e );
         }
         finally
         {
@@ -163,6 +150,45 @@ public class UDPDiscoverySenderThread
             catch ( Exception e )
             {
                 log.error( "Problem closing Passive Broadcast sender", e );
+            }
+        }
+    }
+
+    /**
+     * Issues a remove broadcast to the others.
+     */
+    protected void shutdown()
+    {
+        UDPDiscoverySender sender = null;
+        try
+        {
+            // create this connection each time.
+            // more robust
+            sender = new UDPDiscoverySender( attributes.getUdpDiscoveryAddr(), attributes.getUdpDiscoveryPort() );
+
+            sender.removeBroadcast( attributes.getServiceAddress(), attributes.getServicePort(), cacheNames );
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Called sender to issue a remove broadcast in shudown." );
+            }
+        }
+        catch ( Exception e )
+        {
+            log.error( "Problem calling the UDP Discovery Sender", e );
+        }
+        finally
+        {
+            try
+            {
+                if ( sender != null )
+                {
+                    sender.destroy();
+                }
+            }
+            catch ( Exception e )
+            {
+                log.error( "Problem closing Remote Broadcast sender", e );
             }
         }
     }

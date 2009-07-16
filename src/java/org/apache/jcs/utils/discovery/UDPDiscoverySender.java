@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.tcp.discovery;
+package org.apache.jcs.utils.discovery;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -42,13 +42,13 @@ public class UDPDiscoverySender
     private final static Log log = LogFactory.getLog( UDPDiscoverySender.class );
 
     /** The socket */
-    private MulticastSocket m_localSocket;
+    private MulticastSocket localSocket;
 
     /** The address */
-    private InetAddress m_multicastAddress;
+    private InetAddress multicastAddress;
 
     /** The port */
-    private int m_multicastPort;
+    private int multicastPort;
 
     /**
      * Constructor for the UDPDiscoverySender object
@@ -56,6 +56,7 @@ public class UDPDiscoverySender
      * This sender can be used to send multiple messages.
      * <p>
      * When you are done sending, you should destroy the socket sender.
+     * <p>
      * @param host
      * @param port
      * @exception IOException
@@ -65,10 +66,14 @@ public class UDPDiscoverySender
     {
         try
         {
-            m_localSocket = new MulticastSocket();
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Constructing socket for sender." );
+            }            
+            localSocket = new MulticastSocket();
 
             // Remote address.
-            m_multicastAddress = InetAddress.getByName( host );
+            multicastAddress = InetAddress.getByName( host );
         }
         catch ( IOException e )
         {
@@ -77,7 +82,7 @@ public class UDPDiscoverySender
             throw e;
         }
 
-        m_multicastPort = port;
+        multicastPort = port;
     }
 
     /**
@@ -87,11 +92,9 @@ public class UDPDiscoverySender
     {
         try
         {
-            // TODO when we move to jdk 1.4 reinstate the isClosed check
-            if ( this.m_localSocket != null )
-            // && !this.m_localSocket.isClosed() )
+            if ( this.localSocket != null && !this.localSocket.isClosed() )
             {
-                this.m_localSocket.close();
+                this.localSocket.close();
             }
         }
         catch ( Exception e )
@@ -102,6 +105,7 @@ public class UDPDiscoverySender
 
     /**
      * Just being careful about closing the socket.
+     * <p>
      * @throws Throwable
      */
     public void finalize()
@@ -113,27 +117,27 @@ public class UDPDiscoverySender
 
     /**
      * Send messages.
+     * <p>
      * @param message
      * @throws IOException
      */
     public void send( UDPDiscoveryMessage message )
         throws IOException
     {
-        if ( this.m_localSocket == null )
+        if ( this.localSocket == null )
         {
             throw new IOException( "Socket is null, cannot send message." );
         }
 
-        // TODO when we move to jdk 1.4 reinstate the isClosed check
-        // if (this.m_localSocket.isClosed() )
-        // {
-        // throw new IOException( "Socket is closed, cannot send message." );
-        // }
+        if ( this.localSocket.isClosed() )
+        {
+            throw new IOException( "Socket is closed, cannot send message." );
+        }
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "sending UDPDiscoveryMessage, message = " + message );
-        }
+            log.debug( "sending UDPDiscoveryMessage, address [" + multicastAddress + "], port [" + multicastPort
+                       + "], message = " + message );        }
 
         try
         {
@@ -145,9 +149,14 @@ public class UDPDiscoverySender
             final byte[] bytes = byteStream.getBytes();
 
             // put the byte array in a packet
-            final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, m_multicastAddress, m_multicastPort );
+            final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, multicastAddress, multicastPort );
 
-            m_localSocket.send( packet );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Sending DatagramPacket. bytes.length [" + bytes.length + "] to " + multicastAddress + ":" + multicastPort  );
+            }
+            
+            localSocket.send( packet );
         }
         catch ( IOException e )
         {
@@ -159,6 +168,7 @@ public class UDPDiscoverySender
     /**
      * Ask other to broadcast their info the the multicast address. If a lateral is non receiving it
      * can use this. This is also called on startup so we can get info.
+     * <p>
      * @throws IOException
      */
     public void requestBroadcast()
@@ -170,13 +180,13 @@ public class UDPDiscoverySender
         }
 
         UDPDiscoveryMessage message = new UDPDiscoveryMessage();
-        message.setRequesterId( LateralCacheInfo.listenerId );
+        message.setRequesterId( UDPDiscoveryInfo.listenerId );
         message.setMessageType( UDPDiscoveryMessage.REQUEST_BROADCAST );
         send( message );
     }
 
     /**
-     * This sends a message braodcasting our that the host and port is available for connections.
+     * This sends a message broadcasting our that the host and port is available for connections.
      * <p>
      * It uses the vmid as the requesterDI
      * @param host
@@ -192,9 +202,10 @@ public class UDPDiscoverySender
 
     /**
      * This allows you to set the sender id. This is mainly for testing.
+     * <p>
      * @param host
      * @param port
-     * @param cacheNames
+     * @param cacheNames names of the cache regions
      * @param listenerId
      * @throws IOException
      */
@@ -214,10 +225,53 @@ public class UDPDiscoverySender
         message.setMessageType( UDPDiscoveryMessage.PASSIVE_BROADCAST );
         send( message );
     }
+
+    /**
+     * This sends a message broadcasting our that the host and port is no longer available.
+     * <p>
+     * It uses the vmid as the requesterID
+     * <p>
+     * @param host host
+     * @param port port
+     * @param cacheNames names of the cache regions
+     * @throws IOException on error
+     */
+    public void removeBroadcast( String host, int port, ArrayList cacheNames )
+        throws IOException
+    {
+        removeBroadcast( host, port, cacheNames, LateralCacheInfo.listenerId );
+    }
+
+    /**
+     * This allows you to set the sender id. This is mainly for testing.
+     * <p>
+     * @param host host
+     * @param port port
+     * @param cacheNames names of the cache regions
+     * @param listenerId listener ID
+     * @throws IOException on error
+     */
+    protected void removeBroadcast( String host, int port, ArrayList cacheNames, long listenerId )
+        throws IOException
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "sending removeBroadcast " );
+        }
+
+        UDPDiscoveryMessage message = new UDPDiscoveryMessage();
+        message.setHost( host );
+        message.setPort( port );
+        message.setCacheNames( cacheNames );
+        message.setRequesterId( listenerId );
+        message.setMessageType( UDPDiscoveryMessage.REMOVE_BROADCAST );
+        send( message );
+    }
 }
 
 /**
  * This allows us to get the byte array from an output stream.
+ * <p>
  * @author asmuts
  * @created January 15, 2002
  */
@@ -234,4 +288,3 @@ class MyByteArrayOutputStream
         return buf;
     }
 }
-// end class

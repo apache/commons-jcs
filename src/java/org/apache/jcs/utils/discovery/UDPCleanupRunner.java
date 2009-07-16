@@ -1,0 +1,82 @@
+package org.apache.jcs.utils.discovery;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * This class periodically check the lastHeardFrom time on the services.
+ * <p>
+ * If they exceed the configurable limit, it removes them from the set.
+ * <p>
+ * @author Aaron Smuts
+ */
+public class UDPCleanupRunner
+    implements Runnable
+{
+    /** log instance */
+    private static final Log log = LogFactory.getLog( UDPCleanupRunner.class );
+
+    /** UDP discovery service */
+    private UDPDiscoveryService discoveryService;
+
+    /** default for max idle time, in seconds */
+    private static final long DEFAULT_MAX_IDLE_TIME_SECONDS = 180;
+
+    /** The configured max idle time, in seconds */
+    private long maxIdleTimeSeconds = DEFAULT_MAX_IDLE_TIME_SECONDS;
+
+    /**
+     * @param service UDPDiscoveryService
+     */
+    public UDPCleanupRunner( UDPDiscoveryService service )
+    {
+        this.discoveryService = service;
+    }
+
+    /**
+     * This goes through the list of services and removes those that we haven't heard from in longer
+     * than the max idle time.
+     * <p>
+     * @see java.lang.Runnable#run()
+     */
+    public void run()
+    {
+        long now = System.currentTimeMillis();
+
+        // iterate through the set
+        // it is thread safe
+        // http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/CopyOnWriteArraySet.
+        // html
+        // TODO this should get a copy.  you can't simply remove from this.
+        // the listeners need to be notified.
+        Iterator it = discoveryService.getDiscoveredServices().iterator();
+
+        Set toRemove = new HashSet();
+        // can't remove via the iterator. must remove directly
+        while ( it.hasNext() )
+        {
+            DiscoveredService service = (DiscoveredService) it.next();
+            if ( ( now - service.getLastHearFromTime() ) > ( maxIdleTimeSeconds * 1000 ) )
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Removing service, since we haven't heard from it in " + maxIdleTimeSeconds
+                        + " seconds.  service = " + service );
+                }
+                toRemove.add( service );
+            }
+        }
+
+        // remove the bad ones
+        Iterator toRemoveIt = toRemove.iterator();
+        while ( toRemoveIt.hasNext() )
+        {
+            // call this so the listeners get notified
+            discoveryService.removeDiscoveredService( (DiscoveredService) toRemoveIt.next() );
+        }
+    }
+}

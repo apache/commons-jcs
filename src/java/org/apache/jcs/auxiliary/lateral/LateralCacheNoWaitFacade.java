@@ -90,7 +90,7 @@ public class LateralCacheNoWaitFacade
      * @param noWait
      * @return true if it wasn't alreay contained
      */
-    public boolean addNoWait( LateralCacheNoWait noWait )
+    public synchronized boolean addNoWait( LateralCacheNoWait noWait )
     {
         if ( noWait == null )
         {
@@ -120,9 +120,50 @@ public class LateralCacheNoWaitFacade
         noWaits = newArray;
 
         return true;
-
     }
 
+    /**
+     * Removes a no wait from the list if it is already there.
+     * <p>
+     * @param noWait
+     * @return true if it was already in the array
+     */
+    public synchronized boolean removeNoWait( LateralCacheNoWait noWait )
+    {
+        if ( noWait == null )
+        {
+            return false;
+        }
+
+        int position = -1;
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            // we know noWait isn't null
+            if ( noWait.equals( noWaits[i] ) )
+            {
+                position = i;
+            }
+        }
+
+        if ( position == -1 )
+        {
+            return false;
+        }
+        
+        LateralCacheNoWait[] newArray = new LateralCacheNoWait[noWaits.length -1];
+
+        if ( position > 0 )
+        {
+            System.arraycopy( noWaits, 0, newArray, 0, position -1 );
+        }
+        System.arraycopy( noWaits, position +1, newArray, 0, noWaits.length );
+
+        noWaits = newArray;
+
+        return true;
+    }
+
+    
     /**
      * @param ce
      * @throws IOException

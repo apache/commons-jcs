@@ -31,12 +31,12 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryManager;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.discovery.UDPDiscoveryService;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
+import org.apache.jcs.utils.discovery.UDPDiscoveryManager;
+import org.apache.jcs.utils.discovery.UDPDiscoveryService;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each lateral service / local
@@ -154,8 +154,8 @@ public class LateralTCPCacheFactory
      * @param lac ITCPLateralCacheAttributes
      * @param lcnwf
      * @param cacheMgr
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return null if none is created.
      */
     private UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
@@ -168,13 +168,19 @@ public class LateralTCPCacheFactory
         // create the UDP discovery for the TCP lateral
         if ( lac.isUdpDiscoveryEnabled() )
         {
+            LateralTCPDiscoveryListener discoveryListener = new LateralTCPDiscoveryListener( cacheMgr, cacheEventLogger,
+                                                                                    elementSerializer );
+
+            discoveryListener.addNoWaitFacade( lcnwf, lac.getCacheName() );
+            
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
-            discovery = UDPDiscoveryManager.getInstance().getService( lac, cacheMgr, cacheEventLogger,
+            discovery = UDPDiscoveryManager.getInstance().getService( lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(), lac.getTcpListenerPort(), cacheMgr, cacheEventLogger,
                                                                       elementSerializer );
 
-            discovery.addNoWaitFacade( lcnwf, lac.getCacheName() );
-
+            discovery.addParticipatingCacheName( lac.getCacheName() );
+            discovery.setDiscoveryListener( discoveryListener );
+                        
             if ( log.isInfoEnabled() )
             {
                 log.info( "Created UDPDiscoveryService for TCP lateral cache." );
