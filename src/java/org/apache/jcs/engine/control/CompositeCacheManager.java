@@ -80,7 +80,7 @@ public class CompositeCacheManager
     /** Default cache attributes for this cache manager */
     protected ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();
 
-    /** Default elemeent attributes for this cache manager */
+    /** Default element attributes for this cache manager */
     protected IElementAttributes defaultElementAttr = new ElementAttributes();
 
     /** Used to keep track of configured auxiliaries */
@@ -104,11 +104,17 @@ public class CompositeCacheManager
     /** Should we use system property substitutions. */
     private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
 
+    /** Once configured, you can force a recofiguration of sorts. */
+    private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
+
     /** Those waiting for notification of a shutdown. */
     private Set shutdownObservers = new HashSet();
 
     /** Indicates whether shutdown has been called. */
     private boolean isShutdown = false;
+
+    /** Indicates whether configure has been called. */
+    private boolean isConfigured = false;
 
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates the instance it will
@@ -290,48 +296,110 @@ public class CompositeCacheManager
      */
     public void configure( Properties props, boolean useSystemProperties )
     {
-        if ( props != null )
-        {
-            if ( useSystemProperties )
-            {
-                // override any setting with values from the system properties.
-                Properties sysProps = System.getProperties();
-                Set keys = sysProps.keySet();
-                Iterator keyIt = keys.iterator();
-                while ( keyIt.hasNext() )
-                {
-                    String key = (String) keyIt.next();
-                    if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
-                    {
-                        if ( log.isInfoEnabled() )
-                        {
-                            log.info( "Using system property [[" + key + "] [" + sysProps.getProperty( key ) + "]]" );
-                        }
-                        props.put( key, sysProps.getProperty( key ) );
-                    }
-                }
-            }
+        configure( props, useSystemProperties, DEFAULT_FORCE_RECONFIGURATION );
+    }
 
-            // We will expose this for managers that need raw properties.
-            this.configurationProperties = props;
-
-            // set the props value and then configure the ThreadPoolManager
-            ThreadPoolManager.setProps( props );
-            ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "ThreadPoolManager = " + poolMgr );
-            }
-
-            // configure the cache
-            CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
-
-            configurator.doConfigure( props );
-        }
-        else
+    /**
+     * Configure from properties object, overriding with values from the system properteis if
+     * instructed.
+     * <p>
+     * You can override a specific value by passing in a ssytem property:
+     * <p>
+     * For example, you could override this value in the cache.ccf file by starting up your program
+     * with the argument: -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
+     * <p>
+     * @param props
+     * @param useSystemProperties -- if true, values starting with jcs will be put into the props
+     *            file prior to configuring the cache.
+     * @param forceReconfiguration - if the manager is already configured, we will try again. This
+     *            may not work properly.
+     */
+    public synchronized void configure( Properties props, boolean useSystemProperties, boolean forceReconfiguration )
+    {
+        if ( props == null )
         {
             log.error( "No properties found.  Please configure the cache correctly." );
+            return;
         }
+
+        if ( isConfigured )
+        {
+            if ( !forceReconfiguration )
+            {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Configure called after the manager has been configured.  "
+                        + "Force reconfiguration is false.  Doing nothing" );
+                }
+                return;
+            }
+            else
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Configure called after the manager has been configured.  "
+                        + "Force reconfiguration is true.  Reconfiguring as best we can." );
+                }
+            }
+        }
+        if ( useSystemProperties )
+        {
+            overrideWithSystemProperties( props );
+        }
+        doConfigure( props );
+    }
+
+    /**
+     * Any property values will be replaced with system property values that match the key.
+     * <p>
+     * TODO move to a utility.
+     * <p>
+     * @param props
+     */
+    private static void overrideWithSystemProperties( Properties props )
+    {
+        // override any setting with values from the system properties.
+        Properties sysProps = System.getProperties();
+        Set keys = sysProps.keySet();
+        Iterator keyIt = keys.iterator();
+        while ( keyIt.hasNext() )
+        {
+            String key = (String) keyIt.next();
+            if ( key.startsWith( SYSTEM_PROPERTY_KEY_PREFIX ) )
+            {
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Using system property [[" + key + "] [" + sysProps.getProperty( key ) + "]]" );
+                }
+                props.put( key, sysProps.getProperty( key ) );
+            }
+        }
+    }
+
+    /**
+     * Configure the cache using the supplied properties.
+     * <p>
+     * @param props assumed not null
+     */
+    private void doConfigure( Properties props )
+    {
+        // We will expose this for managers that need raw properties.
+        this.configurationProperties = props;
+
+        // set the props value and then configure the ThreadPoolManager
+        ThreadPoolManager.setProps( props );
+        ThreadPoolManager poolMgr = ThreadPoolManager.getInstance();
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "ThreadPoolManager = " + poolMgr );
+        }
+
+        // configure the cache
+        CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( this );
+
+        configurator.doConfigure( props );
+
+        isConfigured = true;
     }
 
     /**
@@ -727,6 +795,22 @@ public class CompositeCacheManager
     }
 
     /**
+     * @return the isShutdown
+     */
+    public boolean isShutdown()
+    {
+        return isShutdown;
+    }
+
+    /**
+     * @return the isConfigured
+     */
+    public boolean isConfigured()
+    {
+        return isConfigured;
+    }
+
+    /**
      * Called on shutdown. This gives use a chance to store the keys and to optimize even if the
      * cache manager's shutdown method was not called manually.
      */
@@ -740,7 +824,7 @@ public class CompositeCacheManager
          */
         public void run()
         {
-            if ( !isShutdown )
+            if ( !isShutdown() )
             {
                 log.info( "Shutdown hook activated.  Shutdown was not called.  Shutting down JCS." );
                 shutDown();
