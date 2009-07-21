@@ -28,7 +28,6 @@ import java.net.MulticastSocket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
@@ -92,7 +91,7 @@ public class UDPDiscoveryReceiver
         // create a small thread pool to handle a barrage
         pooledExecutor = new PooledExecutor( new BoundedBuffer( 100 ), maxPoolSize );
         pooledExecutor.discardOldestWhenBlocked();
-        pooledExecutor.setMinimumPoolSize(1);
+        //pooledExecutor.setMinimumPoolSize(1);
         pooledExecutor.setThreadFactory( new MyThreadFactory() );
 
         if ( log.isInfoEnabled() )
@@ -125,11 +124,15 @@ public class UDPDiscoveryReceiver
         try
         {
             mSocket = new MulticastSocket( multicastPort );
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Joining Group: [" + InetAddress.getByName( multicastAddressString ) + "]" );
+            }            
             mSocket.joinGroup( InetAddress.getByName( multicastAddressString ) );
         }
         catch ( IOException e )
         {
-            log.error( "Could not bind to multicast address [" + multicastAddressString + ":" + multicastPort + "]", e );
+            log.error( "Could not bind to multicast address [" + InetAddress.getByName( multicastAddressString ) + ":" + multicastPort + "]", e );
             throw e;
         }
     }
@@ -149,6 +152,11 @@ public class UDPDiscoveryReceiver
         Object obj = null;
         try
         {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Waiting for message." );
+            }
+
             mSocket.receive( packet );
 
             if ( log.isDebugEnabled() )
@@ -157,9 +165,7 @@ public class UDPDiscoveryReceiver
             }
             
             final ByteArrayInputStream byteStream = new ByteArrayInputStream( mBuffer, 0, packet.getLength() );
-
             final ObjectInputStream objectStream = new ObjectInputStream( byteStream );
-
             obj = objectStream.readObject();
             
             if ( log.isDebugEnabled() )
@@ -275,7 +281,7 @@ public class UDPDiscoveryReceiver
         public void run()
         {
             // consider comparing ports here instead.
-            if ( message.getRequesterId() == LateralCacheInfo.listenerId )
+            if ( message.getRequesterId() == UDPDiscoveryInfo.listenerId )
             {
                 if ( log.isDebugEnabled() )
                 {
@@ -370,6 +376,7 @@ public class UDPDiscoveryReceiver
         try
         {
             shutdown = true;
+            mSocket.leaveGroup( InetAddress.getByName( multicastAddressString ) );
             mSocket.close();
             pooledExecutor.shutdownNow();
         }

@@ -21,6 +21,7 @@ package org.apache.jcs.utils.discovery;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -77,8 +78,8 @@ public class UDPDiscoveryService
     /** This a list of regions that are configured to use discovery. */
     private Set cacheNames = new CopyOnWriteArraySet();
 
-    /** handles add and remove. consider making into a set. */
-    private IDiscoveryListener discoveryListener;
+    /** Set of listeners. */
+    private Set discoveryListeners = new CopyOnWriteArraySet();
 
     /**
      * @param attributes
@@ -208,7 +209,12 @@ public class UDPDiscoveryService
     public void removeDiscoveredService( DiscoveredService service )
     {
         getDiscoveredServices().remove( service );
-        getDiscoveryListener().removeDiscoveredService( service );
+        
+        Iterator it = getDiscoveryListeners().iterator();
+        while ( it.hasNext() )
+        {
+            ( (IDiscoveryListener) it.next() ).removeDiscoveredService( service );
+        }
     }
 
     /**
@@ -234,7 +240,11 @@ public class UDPDiscoveryService
             getDiscoveredServices().add( discoveredService );
 
             // todo update some list of cachenames
-            getDiscoveryListener().addDiscoveredService( discoveredService );
+            Iterator it = getDiscoveryListeners().iterator();
+            while ( it.hasNext() )
+            {
+                ( (IDiscoveryListener) it.next() ).addDiscoveredService( discoveredService );
+            }
         }
         else
         {
@@ -404,18 +414,42 @@ public class UDPDiscoveryService
     }
 
     /**
-     * @param discoveryListener the discoveryListener to set
+     * @return the discoveryListeners
      */
-    public void setDiscoveryListener( IDiscoveryListener discoveryListener )
+    private Set getDiscoveryListeners()
     {
-        this.discoveryListener = discoveryListener;
+        return discoveryListeners;
     }
 
     /**
-     * @return the discoveryListener
+     * @return the discoveryListeners
      */
-    public IDiscoveryListener getDiscoveryListener()
+    public Set getCopyOfDiscoveryListeners()
     {
-        return discoveryListener;
+        Set copy = new HashSet();
+        copy.addAll( getDiscoveryListeners() );
+        return copy;
+    }
+
+    /**
+     * Adds a listener.
+     * <p>
+     * @param listener
+     * @return true if it wasn't already in the set
+     */
+    public boolean addDiscoveryListener( IDiscoveryListener listener )
+    {
+        return getDiscoveryListeners().add( listener );
+    }
+
+    /**
+     * Removes a listener.
+     * <p>
+     * @param listener
+     * @return true if it was in the set
+     */
+    public boolean removeDiscoveryListener( IDiscoveryListener listener )
+    {
+        return getDiscoveryListeners().remove( listener );
     }
 }

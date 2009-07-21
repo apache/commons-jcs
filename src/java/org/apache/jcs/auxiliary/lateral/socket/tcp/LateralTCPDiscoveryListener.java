@@ -18,7 +18,11 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.utils.discovery.DiscoveredService;
 import org.apache.jcs.utils.discovery.behavior.IDiscoveryListener;
 
-/** This knows how to add and remove discovered services. */
+/**
+ * This knows how to add and remove discovered services.
+ * <p>
+ * We can have one listener per region, or one shared by all regions.
+ */
 public class LateralTCPDiscoveryListener
     implements IDiscoveryListener
 {
@@ -79,6 +83,9 @@ public class LateralTCPDiscoveryListener
      * When a broadcast is received from the UDP Discovery receiver, for each cacheName in the
      * message, the add no wait will be called here. To add a no wait, the facade is looked up for
      * this cache name.
+     * <p>
+     * Each region has a facade. The facade contains a list of end points--the other tcp lateral
+     * services.
      * <p>
      * @param noWait
      */
@@ -150,11 +157,7 @@ public class LateralTCPDiscoveryListener
         // get a cache and add it to the no waits
         // the add method should not add the same.
         // we need the listener port from the original config.
-        ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        lca.setTransmissionType( LateralCacheAttributes.TCP );
-        lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
-        LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
-                                                                         elementSerializer );
+        LateralTCPCacheManager lcm = findManagerForServiceEndPoint( service );
 
         ArrayList regions = service.getCacheNames();
         if ( regions != null )
@@ -180,7 +183,7 @@ public class LateralTCPDiscoveryListener
                         addNoWait( (LateralCacheNoWait) ic );
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( "Called addNoWait for cacheName " + cacheName );
+                            log.debug( "Called addNoWait for cacheName [" + cacheName + "]" );
                         }
                     }
                 }
@@ -189,7 +192,6 @@ public class LateralTCPDiscoveryListener
                     log.error( "Problem creating no wait", e );
                 }
             }
-            // end while
         }
         else
         {
@@ -199,10 +201,69 @@ public class LateralTCPDiscoveryListener
 
     /**
      * Removes the lateral cache.
+     * <p>
      * @param service
      */
     public void removeDiscoveredService( DiscoveredService service )
     {
-        // TODO Auto-generated method stub
+        // get a cache and add it to the no waits
+        // the add method should not add the same.
+        // we need the listener port from the original config.
+        LateralTCPCacheManager lcm = findManagerForServiceEndPoint( service );
+
+        ArrayList regions = service.getCacheNames();
+        if ( regions != null )
+        {
+            // for each region get the cache
+            Iterator it = regions.iterator();
+            while ( it.hasNext() )
+            {
+                String cacheName = (String) it.next();
+
+                try
+                {
+                    ICache ic = lcm.getCache( cacheName );
+
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Got cache, ic = " + ic );
+                    }
+
+                    // remove this to the nowaits for this cachename
+                    if ( ic != null )
+                    {
+                        removeNoWait( (LateralCacheNoWait) ic );
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "Called removeNoWait for cacheName [" + cacheName + "]" );
+                        }
+                    }
+                }
+                catch ( Exception e )
+                {
+                    log.error( "Problem removing no wait", e );
+                }
+            }
+        }
+        else
+        {
+            log.warn( "No cache names found in message " + service );
+        }
+    }
+
+    /**
+     * Gets the appropriate manager.
+     * <p>
+     * @param service
+     * @return LateralTCPCacheManager configured for that end point.
+     */
+    private LateralTCPCacheManager findManagerForServiceEndPoint( DiscoveredService service )
+    {
+        ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
+        lca.setTransmissionType( LateralCacheAttributes.TCP );
+        lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
+        LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
+                                                                         elementSerializer );
+        return lcm;
     }
 }

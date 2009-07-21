@@ -168,19 +168,23 @@ public class LateralTCPCacheFactory
         // create the UDP discovery for the TCP lateral
         if ( lac.isUdpDiscoveryEnabled() )
         {
-            LateralTCPDiscoveryListener discoveryListener = new LateralTCPDiscoveryListener( cacheMgr, cacheEventLogger,
-                                                                                    elementSerializer );
+            // TODO this will create one for each region, but one can be used for all regions
+            LateralTCPDiscoveryListener discoveryListener = new LateralTCPDiscoveryListener( cacheMgr,
+                                                                                             cacheEventLogger,
+                                                                                             elementSerializer );
 
             discoveryListener.addNoWaitFacade( lcnwf, lac.getCacheName() );
-            
+
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
-            discovery = UDPDiscoveryManager.getInstance().getService( lac.getUdpDiscoveryAddr(), lac.getUdpDiscoveryPort(), lac.getTcpListenerPort(), cacheMgr, cacheEventLogger,
-                                                                      elementSerializer );
+            discovery = UDPDiscoveryManager.getInstance().getService( lac.getUdpDiscoveryAddr(),
+                                                                      lac.getUdpDiscoveryPort(),
+                                                                      lac.getTcpListenerPort(), cacheMgr,
+                                                                      cacheEventLogger );
 
             discovery.addParticipatingCacheName( lac.getCacheName() );
-            discovery.setDiscoveryListener( discoveryListener );
-                        
+            discovery.addDiscoveryListener( discoveryListener );
+
             if ( log.isInfoEnabled() )
             {
                 log.info( "Created UDPDiscoveryService for TCP lateral cache." );

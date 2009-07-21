@@ -49,7 +49,7 @@ public class UDPDiscoveryUnitTest
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
-        service.setDiscoveryListener( discoveryListener );
+        service.addDiscoveryListener( discoveryListener );
 
         // create a receiver with the service
         UDPDiscoveryReceiver receiver = new UDPDiscoveryReceiver( service, attributes.getUdpDiscoveryAddr(), attributes

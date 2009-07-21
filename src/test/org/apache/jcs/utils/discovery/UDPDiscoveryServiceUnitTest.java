@@ -46,7 +46,7 @@ public class UDPDiscoveryServiceUnitTest
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
-        service.setDiscoveryListener( discoveryListener );
+        service.addDiscoveryListener( discoveryListener );
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
@@ -80,7 +80,7 @@ public class UDPDiscoveryServiceUnitTest
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
-        service.setDiscoveryListener( discoveryListener );
+        service.addDiscoveryListener( discoveryListener );
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
@@ -135,7 +135,7 @@ public class UDPDiscoveryServiceUnitTest
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
-        service.setDiscoveryListener( discoveryListener );
+        service.addDiscoveryListener( discoveryListener );
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );

@@ -33,7 +33,7 @@ public class UDPDiscoverySenderUnitTest
     private static final String ADDRESS = "228.4.5.9";
 
     /** multicast address to send/receive on */
-    private static final int PORT = 5555;
+    private static final int PORT = 5556;
 
     /** imaginary host address for sending */
     private static final String SENDING_HOST = "imaginary host address";

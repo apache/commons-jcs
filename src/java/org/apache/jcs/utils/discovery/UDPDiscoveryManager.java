@@ -25,7 +25,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObservable;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
@@ -73,13 +72,11 @@ public class UDPDiscoveryManager
      * @param servicePort
      * @param cacheMgr
      * @param cacheEventLogger
-     * @param elementSerializer
      * @return UDPDiscoveryService
      */
     public synchronized UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
                                                         ICompositeCacheManager cacheMgr,
-                                                        ICacheEventLogger cacheEventLogger,
-                                                        IElementSerializer elementSerializer )
+                                                        ICacheEventLogger cacheEventLogger )
     {
         String key = discoveryAddress + ":" + discoveryPort + ":" + servicePort;
 
@@ -97,6 +94,8 @@ public class UDPDiscoveryManager
             attributes.setServicePort( servicePort );
 
             service = new UDPDiscoveryService( attributes, cacheEventLogger );
+            
+            // register for shutdown notification
             ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( service );
 
             services.put( key, service );

@@ -21,7 +21,6 @@ package org.apache.jcs.utils.discovery;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
@@ -29,7 +28,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /**
  * This is a generic sender for the UDPDiscovery process.
@@ -50,6 +49,9 @@ public class UDPDiscoverySender
     /** The port */
     private int multicastPort;
 
+    /** Used to serialize messages */
+    private StandardSerializer serializer = new StandardSerializer();
+
     /**
      * Constructor for the UDPDiscoverySender object
      * <p>
@@ -69,8 +71,8 @@ public class UDPDiscoverySender
             if ( log.isInfoEnabled() )
             {
                 log.info( "Constructing socket for sender." );
-            }            
-            localSocket = new MulticastSocket();
+            }
+            localSocket = new MulticastSocket( port );
 
             // Remote address.
             multicastAddress = InetAddress.getByName( host );
@@ -137,25 +139,22 @@ public class UDPDiscoverySender
         if ( log.isDebugEnabled() )
         {
             log.debug( "sending UDPDiscoveryMessage, address [" + multicastAddress + "], port [" + multicastPort
-                       + "], message = " + message );        }
+                + "], message = " + message );
+        }
 
         try
         {
-            // write the object to a byte array.
-            final MyByteArrayOutputStream byteStream = new MyByteArrayOutputStream();
-            final ObjectOutputStream objectStream = new ObjectOutputStream( byteStream );
-            objectStream.writeObject( message );
-            objectStream.flush();
-            final byte[] bytes = byteStream.getBytes();
+            final byte[] bytes = serializer.serialize( message );
 
             // put the byte array in a packet
             final DatagramPacket packet = new DatagramPacket( bytes, bytes.length, multicastAddress, multicastPort );
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Sending DatagramPacket. bytes.length [" + bytes.length + "] to " + multicastAddress + ":" + multicastPort  );
+                log.debug( "Sending DatagramPacket. bytes.length [" + bytes.length + "] to " + multicastAddress + ":"
+                    + multicastPort );
             }
-            
+
             localSocket.send( packet );
         }
         catch ( IOException e )
@@ -186,7 +185,7 @@ public class UDPDiscoverySender
     }
 
     /**
-     * This sends a message broadcasting our that the host and port is available for connections.
+     * This sends a message broadcasting out that the host and port is available for connections.
      * <p>
      * It uses the vmid as the requesterDI
      * @param host
@@ -197,7 +196,7 @@ public class UDPDiscoverySender
     public void passiveBroadcast( String host, int port, ArrayList cacheNames )
         throws IOException
     {
-        passiveBroadcast( host, port, cacheNames, LateralCacheInfo.listenerId );
+        passiveBroadcast( host, port, cacheNames, UDPDiscoveryInfo.listenerId );
     }
 
     /**
@@ -239,7 +238,7 @@ public class UDPDiscoverySender
     public void removeBroadcast( String host, int port, ArrayList cacheNames )
         throws IOException
     {
-        removeBroadcast( host, port, cacheNames, LateralCacheInfo.listenerId );
+        removeBroadcast( host, port, cacheNames, UDPDiscoveryInfo.listenerId );
     }
 
     /**
