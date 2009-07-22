@@ -32,8 +32,11 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.behavior.IShutdownObservable;
+import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.utils.discovery.UDPDiscoveryManager;
 import org.apache.jcs.utils.discovery.UDPDiscoveryService;
@@ -51,6 +54,9 @@ public class LateralTCPCacheFactory
     /** The logger */
     private final static Log log = LogFactory.getLog( LateralTCPCacheFactory.class );
 
+    /** Non singleton manager. Used by this instance of the factory. */
+    private LateralTCPDiscoveryListenerManager lateralTCPDiscoveryListenerManager;
+
     /**
      * Creates a TCP lateral.
      * <p>
@@ -66,7 +72,7 @@ public class LateralTCPCacheFactory
         ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
         ArrayList noWaits = new ArrayList();
 
-        // pars up the tcp servers and set the tcpServer value and
+        // pairs up the tcp servers and set the tcpServer value and
         // get the manager and then get the cache
         // no servers are required.
         if ( lac.getTcpServers() != null )
@@ -126,13 +132,19 @@ public class LateralTCPCacheFactory
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Creating listener for " + lac );
+                log.info( "Getting listener for " + lac );
             }
 
             try
             {
                 // make a listener. if one doesn't exist
-                LateralTCPListener.getInstance( attr, cacheMgr );
+                ICacheListener listener = LateralTCPListener.getInstance( attr, cacheMgr );
+
+                // register for shutdown notification
+                if ( listener instanceof IShutdownObserver && cacheMgr instanceof IShutdownObservable )
+                {
+                    ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( (IShutdownObserver) listener );
+                }
             }
             catch ( Exception e )
             {
@@ -158,22 +170,27 @@ public class LateralTCPCacheFactory
      * @param elementSerializer
      * @return null if none is created.
      */
-    private UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac, LateralCacheNoWaitFacade lcnwf,
-                                                        ICompositeCacheManager cacheMgr,
-                                                        ICacheEventLogger cacheEventLogger,
-                                                        IElementSerializer elementSerializer )
+    private synchronized UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac,
+                                                                     LateralCacheNoWaitFacade lcnwf,
+                                                                     ICompositeCacheManager cacheMgr,
+                                                                     ICacheEventLogger cacheEventLogger,
+                                                                     IElementSerializer elementSerializer )
     {
         UDPDiscoveryService discovery = null;
 
         // create the UDP discovery for the TCP lateral
         if ( lac.isUdpDiscoveryEnabled() )
         {
-            // TODO this will create one for each region, but one can be used for all regions
-            LateralTCPDiscoveryListener discoveryListener = new LateralTCPDiscoveryListener( cacheMgr,
-                                                                                             cacheEventLogger,
-                                                                                             elementSerializer );
+            if ( lateralTCPDiscoveryListenerManager == null )
+            {
+                lateralTCPDiscoveryListenerManager = new LateralTCPDiscoveryListenerManager();
+            }
 
-            discoveryListener.addNoWaitFacade( lcnwf, lac.getCacheName() );
+            // One can be used for all regions
+            LateralTCPDiscoveryListener discoveryListener = lateralTCPDiscoveryListenerManager
+                .getDiscoveryListener( lac, cacheMgr, cacheEventLogger, elementSerializer );
+
+            discoveryListener.addNoWaitFacade( lac.getCacheName(), lcnwf );
 
             // need a factory for this so it doesn't
             // get dereferenced, also we don't want one for every region.
@@ -187,7 +204,7 @@ public class LateralTCPCacheFactory
 
             if ( log.isInfoEnabled() )
             {
-                log.info( "Created UDPDiscoveryService for TCP lateral cache." );
+                log.info( "Registered TCP lateral cache [" + lac.getCacheName() + "] with UDPDiscoveryService." );
             }
         }
         return discovery;

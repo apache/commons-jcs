@@ -104,18 +104,19 @@ public class LateralTCPCacheManager
     {
         synchronized ( instances )
         {
-            LateralTCPCacheManager ins = (LateralTCPCacheManager) instances.get( lca.toString() );
+            String key = lca.getTcpServer();
+            LateralTCPCacheManager ins = (LateralTCPCacheManager) instances.get( key );
             if ( ins == null )
             {
-                log.info( "Instance for [" + lca.toString() + "] is null, creating" );
+                log.info( "Instance for [" + key + "] is null, creating" );
 
-                ins = (LateralTCPCacheManager) instances.get( lca.toString() );
+                ins = (LateralTCPCacheManager) instances.get( lca.getTcpServer() );
                 if ( ins == null )
                 {
                     ins = new LateralTCPCacheManager( lca, cacheMgr, cacheEventLogger, elementSerializer );
-                    instances.put( lca.toString(), ins );
+                    instances.put( key, ins );
                 }
-                
+
                 createMonitor( ins );
             }
             ins.clients++;
@@ -153,8 +154,8 @@ public class LateralTCPCacheManager
      * <p>
      * @param lcaA
      * @param cacheMgr
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
     private LateralTCPCacheManager( ITCPLateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr,
                                     ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
@@ -217,7 +218,7 @@ public class LateralTCPCacheManager
     {
         synchronized ( this.caches )
         {
-            this.lateralWatch.addCacheListener( cacheName, listener );
+            lateralWatch.addCacheListener( cacheName, listener );
         }
     }
 
@@ -236,9 +237,9 @@ public class LateralTCPCacheManager
     public AuxiliaryCache getCache( String cacheName )
     {
         LateralCacheNoWait lateralNoWait = null;
-        synchronized ( this.caches )
+        synchronized ( caches )
         {
-            lateralNoWait = (LateralCacheNoWait) this.caches.get( cacheName );
+            lateralNoWait = (LateralCacheNoWait) caches.get( cacheName );
             if ( lateralNoWait == null )
             {
                 LateralCacheAttributes attr = (LateralCacheAttributes) lca.copy();
@@ -257,22 +258,35 @@ public class LateralTCPCacheManager
                 lateralNoWait.setCacheEventLogger( cacheEventLogger );
                 lateralNoWait.setElementSerializer( elementSerializer );
 
-                this.caches.put( cacheName, lateralNoWait );
+                caches.put( cacheName, lateralNoWait );
 
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "Created LateralCacheNoWait for [" + this.lca + "] LateralCacheNoWait = ["
-                        + lateralNoWait + "]" );
+                    log.info( "Created LateralCacheNoWait for [" + lca + "] LateralCacheNoWait = [" + lateralNoWait
+                        + "]" );
                 }
+
+                // this used to be called every getCache. i move it in here.
+                addListenerIfNeeded( cacheName );
             }
         }
 
+        return lateralNoWait;
+    }
+
+    /**
+     * TODO see if this belongs here or in the factory.
+     * <p>
+     * @param cacheName
+     */
+    private void addListenerIfNeeded( String cacheName )
+    {
         // don't create a listener if we are not receiving.
         if ( lca.isReceive() )
         {
             try
             {
-                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( this.lca, cacheMgr ) );
+                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lca, cacheMgr ) );
             }
             catch ( IOException ioe )
             {
@@ -290,9 +304,6 @@ public class LateralTCPCacheManager
                 log.debug( "Not creating a listener since we are not receiving." );
             }
         }
-        // TODO: need listener repair
-
-        return lateralNoWait;
     }
 
     /**
@@ -321,5 +332,22 @@ public class LateralTCPCacheManager
             throw new IOException( "Can't fix " + ex.getMessage() );
         }
         return service;
+    }
+
+    /**
+     * Shutsdown the lateral.
+     */
+    public void shutdown()
+    {
+        // TODO revist this.
+        // the name here doesn't matter.
+        try
+        {
+            lateralService.dispose( "ALL" );
+        }
+        catch ( IOException e )
+        {
+            log.error( "Problem disposing of service", e );
+        }
     }
 }

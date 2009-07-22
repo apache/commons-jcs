@@ -37,6 +37,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
@@ -49,7 +50,7 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * passed to a pooled executor which then calls the appropriate handle method.
  */
 public class LateralTCPListener
-    implements ILateralCacheListener, Serializable
+    implements ILateralCacheListener, Serializable, IShutdownObserver
 {
     /** Don't change. */
     private static final long serialVersionUID = -9107062664967131738L;
@@ -93,6 +94,9 @@ public class LateralTCPListener
      */
     private long listenerId = LateralCacheInfo.listenerId;
 
+    /** is this shut down? */
+    private boolean shutdown = false;
+
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
      * <p>
@@ -115,9 +119,9 @@ public class LateralTCPListener
 
             instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "created new listener " + ilca.getTcpListenerPort() );
+                log.info( "Created new listener " + ilca.getTcpListenerPort() );
             }
         }
 
@@ -322,7 +326,7 @@ public class LateralTCPListener
 
         return getCache( cacheName ).localGetMatching( pattern );
     }
-    
+
     /**
      * Right now this does nothing.
      * <p>
@@ -333,12 +337,10 @@ public class LateralTCPListener
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "handleDispose > cacheName=" + cacheName );
+            log.info( "handleDispose > cacheName=" + cacheName + " | Ignoring message.  Do not dispose from remote." );
         }
 
         // TODO handle active deregistration, rather than passive detection
-        // through error
-        // getCacheManager().freeCache( cacheName, true );
     }
 
     /**
@@ -443,7 +445,7 @@ public class LateralTCPListener
 
                 ConnectionHandler handler;
 
-                while ( true )
+                while ( !shutdown )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -538,11 +540,11 @@ public class LateralTCPListener
             }
             catch ( java.io.EOFException e )
             {
-                log.info( "Caught java.io.EOFException closing connection." );
+                log.info( "Caught java.io.EOFException closing connection." + e.getMessage() );
             }
             catch ( java.net.SocketException e )
             {
-                log.info( "Caught java.net.SocketException closing connection." );
+                log.info( "Caught java.net.SocketException closing connection." + e.getMessage() );
             }
             catch ( Exception e )
             {
@@ -628,7 +630,7 @@ public class LateralTCPListener
             }
             else if ( led.command == LateralElementDescriptor.GET_MATCHING )
             {
-                Map obj = handleGetMatching( cacheName, (String)key );
+                Map obj = handleGetMatching( cacheName, (String) key );
 
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
 
@@ -659,6 +661,30 @@ public class LateralTCPListener
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
             return t;
+        }
+    }
+
+    /**
+     * Shuts down the receiver.
+     */
+    public void shutdown()
+    {
+        if ( !shutdown )
+        {
+            shutdown = true;
+
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Shutting down TCP Lateral receiver." );
+            }
+            receiver.interrupt();
+        }
+        else
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Shutdown already called." );
+            }
         }
     }
 }

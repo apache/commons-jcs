@@ -111,12 +111,12 @@ public class LateralCache
         catch ( NullPointerException npe )
         {
             log.error( "Failure updating lateral. lateral = " + lateral, npe );
-            handleException( npe, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
+            handleException( npe, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + cattr );
             return;
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() );
+            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + cattr );
         }
     }
 
@@ -143,7 +143,7 @@ public class LateralCache
         catch ( Exception e )
         {
             log.error( e );
-            handleException( e, "Failed to get [" + key + "] from " + this.cattr.getCacheName() );
+            handleException( e, "Failed to get [" + key + "] from " + cattr.getCacheName() + "@" + cattr );
         }
         return obj;
     }
@@ -170,7 +170,7 @@ public class LateralCache
         catch ( Exception e )
         {
             log.error( e );
-            handleException( e, "Failed to getMatching [" + pattern + "] from " + this.cattr.getCacheName() );
+            handleException( e, "Failed to getMatching [" + pattern + "] from " + cattr.getCacheName() + "@" + cattr );
         }
         return elements;
     }
@@ -239,7 +239,7 @@ public class LateralCache
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove " + key + " from " + this.cattr.getCacheName() );
+            handleException( ex, "Failed to remove " + key + " from " + cattr.getCacheName() + "@" + cattr );
         }
         return false;
     }
@@ -259,7 +259,7 @@ public class LateralCache
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove all from " + this.cattr.getCacheName() );
+            handleException( ex, "Failed to remove all from " + cattr.getCacheName() + "@" + cattr );
         }
     }
 
@@ -285,7 +285,7 @@ public class LateralCache
         catch ( Exception ex )
         {
             log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose " + this.cattr.getCacheName() );
+            handleException( ex, "Failed to dispose " + cattr.getCacheName() );
         }
     }
 

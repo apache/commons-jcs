@@ -68,9 +68,9 @@ public class UDPDiscoverySender
     {
         try
         {
-            if ( log.isInfoEnabled() )
+            if ( log.isDebugEnabled() )
             {
-                log.info( "Constructing socket for sender." );
+                log.debug( "Constructing socket for sender on port [" + port + "]" );
             }
             localSocket = new MulticastSocket( port );
 

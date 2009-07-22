@@ -17,7 +17,7 @@
 # #############################################################
 # ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
-jcs.default=LTCP
+jcs.default=
 jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=200001
 jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
@@ -55,14 +55,14 @@ jcs.region.testCache1.elementattributes.IsRemote=true
 # ################# AUXILIARY CACHES AVAILABLE ################
 
 # almost complete
-jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LTCP=org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPCacheFactory
+jcs.auxiliary.LTCP.attributes=org.apache.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
-# jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1118
+# jcs.auxiliary.LTCP.attributes.TcpServers=
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1121
 jcs.auxiliary.LTCP.attributes.PutOnlyMode=true
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryAddr=228.5.6.8
-jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=6780
+jcs.auxiliary.LTCP.attributes.UdpDiscoveryPort=9780
 jcs.auxiliary.LTCP.attributes.UdpDiscoveryEnabled=true
-jcs.auxiliary.LTCP.attributes.Receive=false
+# jcs.auxiliary.LTCP.attributes.Receive=true
 

@@ -33,6 +33,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
@@ -49,7 +50,7 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  *        Acceptable for all - cache managers or a manager within a type
  */
 public abstract class LateralCacheAbstractManager
-    implements ILateralCacheManager
+    implements ILateralCacheManager, IShutdownObserver
 {
     /** Don't change */
     private static final long serialVersionUID = -515393179178435508L;

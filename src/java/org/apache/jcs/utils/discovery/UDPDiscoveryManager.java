@@ -94,10 +94,12 @@ public class UDPDiscoveryManager
             attributes.setServicePort( servicePort );
 
             service = new UDPDiscoveryService( attributes, cacheEventLogger );
-            
-            // register for shutdown notification
-            ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( service );
 
+            // register for shutdown notification
+            if ( cacheMgr instanceof IShutdownObservable )
+            {
+                ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( service );
+            }
             services.put( key, service );
         }
 

@@ -85,10 +85,29 @@ public class LateralCacheNoWaitFacade
     }
 
     /**
+     * Tells you if the no wait is in the list or not.
+     * <p>
+     * @param noWait
+     * @return true if the noWait is in the list.
+     */
+    public boolean containsNoWait( LateralCacheNoWait noWait )
+    {
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            // we know noWait isn't null
+            if ( noWait.equals( noWaits[i] ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Adds a no wait to the list if it isn't already in the list.
      * <p>
      * @param noWait
-     * @return true if it wasn't alreay contained
+     * @return true if it wasn't already contained
      */
     public synchronized boolean addNoWait( LateralCacheNoWait noWait )
     {
@@ -97,17 +116,13 @@ public class LateralCacheNoWaitFacade
             return false;
         }
 
-        for ( int i = 0; i < noWaits.length; i++ )
+        if ( containsNoWait( noWait ) )
         {
-            // we know noWait isn't null
-            if ( noWait.equals( noWaits[i] ) )
+            if ( log.isDebugEnabled() )
             {
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "No Wait already contained, [" + noWait + "]" );
-                }
-                return false;
+                log.debug( "No Wait already contained, [" + noWait + "]" );
             }
+            return false;
         }
 
         LateralCacheNoWait[] newArray = new LateralCacheNoWait[noWaits.length + 1];
@@ -142,28 +157,27 @@ public class LateralCacheNoWaitFacade
             if ( noWait.equals( noWaits[i] ) )
             {
                 position = i;
+                break;
             }
         }
-
+        
         if ( position == -1 )
         {
             return false;
         }
-        
-        LateralCacheNoWait[] newArray = new LateralCacheNoWait[noWaits.length -1];
 
-        if ( position > 0 )
+        LateralCacheNoWait[] newArray = new LateralCacheNoWait[noWaits.length - 1];
+
+        System.arraycopy( noWaits, 0, newArray, 0, position );
+        if ( noWaits.length != position )
         {
-            System.arraycopy( noWaits, 0, newArray, 0, position -1 );
+            System.arraycopy( noWaits, position + 1, newArray, position, noWaits.length - position - 1 );
         }
-        System.arraycopy( noWaits, position +1, newArray, 0, noWaits.length );
-
         noWaits = newArray;
 
         return true;
     }
 
-    
     /**
      * @param ce
      * @throws IOException

@@ -50,6 +50,19 @@ jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
 jcs.region.testCache1.elementattributes.IsLateral=true
 jcs.region.testCache1.elementattributes.IsRemote=true
 
+jcs.region.testCache2=LTCP
+jcs.region.testCache2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache2.cacheattributes.MaxObjects=1000
+jcs.region.testCache2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache2.cacheattributes.UseMemoryShrinker=true
+jcs.region.testCache2.cacheattributes.ShrinkerIntervalSeconds=30
+jcs.region.testCache2.cacheattributes.MaxMemoryIdleTimeSeconds=300
+jcs.region.testCache2.cacheattributes.MaxSpoolPerRun=100
+jcs.region.testCache2.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache2.elementattributes.IsEternal=false
+jcs.region.testCache2.elementattributes.MaxLifeSeconds=60000
+jcs.region.testCache2.elementattributes.IsLateral=true
+jcs.region.testCache2.elementattributes.IsRemote=true
 
 # #############################################################
 # ################# AUXILIARY CACHES AVAILABLE ################

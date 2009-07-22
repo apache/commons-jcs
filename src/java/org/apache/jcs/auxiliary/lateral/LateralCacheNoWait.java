@@ -420,6 +420,11 @@ public class LateralCacheNoWait
         se.setData( "" + this.putCount );
         elems.add( se );
 
+        se = new StatElement();
+        se.setName( "Attributes" );
+        se.setData( "" + cache.getAuxiliaryCacheAttributes() );
+        elems.add( se );
+
         // get an array and put them in the Stats object
         IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[elems.size()] );
         stats.setStatElements( ses );

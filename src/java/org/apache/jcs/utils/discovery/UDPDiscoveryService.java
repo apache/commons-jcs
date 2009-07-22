@@ -116,8 +116,6 @@ public class UDPDiscoveryService
                 + getUdpDiscoveryAttributes().getUdpDiscoveryPort() + "] we won't be able to find any other caches", e );
         }
 
-        // todo only do the passive if receive is enabled, perhaps set the
-        // myhost to null or something on the request
         if ( senderDaemon == null )
         {
             senderDaemon = new ClockDaemon();
@@ -125,16 +123,15 @@ public class UDPDiscoveryService
         }
 
         // create a sender thread
-        sender = new UDPDiscoverySenderThread( getUdpDiscoveryAttributes(), this.getCacheNames() );
-
-        senderDaemon.executePeriodically( 30 * 1000, sender, false );
+        sender = new UDPDiscoverySenderThread( getUdpDiscoveryAttributes(), getCacheNames() );
+        senderDaemon.executePeriodically( 15 * 1000, sender, true );        
 
         // add the cleanup daemon too
         cleanup = new UDPCleanupRunner( this );
         // I'm going to use this as both, but it could happen
-        // that something could hang around twice the time suing this as the
+        // that something could hang around twice the time using this as the
         // delay and the idle time.
-        senderDaemon.executePeriodically( this.getUdpDiscoveryAttributes().getMaxIdleTimeSec() * 1000, cleanup, false );
+        senderDaemon.executePeriodically( getUdpDiscoveryAttributes().getMaxIdleTimeSec() * 1000, cleanup, false );
 
         // add shutdown hook that will issue a remove call.
         DiscoveryShutdownHook shutdownHook = new DiscoveryShutdownHook( this );
@@ -208,7 +205,15 @@ public class UDPDiscoveryService
      */
     public void removeDiscoveredService( DiscoveredService service )
     {
-        getDiscoveredServices().remove( service );
+        boolean contained = getDiscoveredServices().remove( service );
+        
+        if ( contained )
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Removing " + service );
+            }
+        }
         
         Iterator it = getDiscoveryListeners().iterator();
         while ( it.hasNext() )

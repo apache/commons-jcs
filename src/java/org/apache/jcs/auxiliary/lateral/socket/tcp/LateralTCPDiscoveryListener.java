@@ -1,6 +1,7 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class LateralTCPDiscoveryListener
      * Map of no wait facades. these are used to determine which regions are locally configured to
      * use laterals.
      */
-    private Map facades = new HashMap();
+    private Map facades = Collections.synchronizedMap( new HashMap() );
 
     /** The cache manager. */
     private ICompositeCacheManager cacheMgr;
@@ -65,11 +66,11 @@ public class LateralTCPDiscoveryListener
      * This adds nowaits to a facade for the region name. If the region has no facade, then it is
      * not configured to use the lateral cache, and no facade will be created.
      * <p>
-     * @param facade
+     * @param facade - facade (for region) => multiple lateral clients.
      * @param cacheName
      * @return true if the facade was not already registered.
      */
-    public synchronized boolean addNoWaitFacade( LateralCacheNoWaitFacade facade, String cacheName )
+    public synchronized boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade facade )
     {
         boolean isNew = !facades.containsKey( cacheName );
 
@@ -109,8 +110,8 @@ public class LateralTCPDiscoveryListener
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Different nodes are configured differently.  Region [" + noWait.getCacheName()
-                    + "] is not configured to use the lateral cache." );
+                log.info( "addNoWait > Different nodes are configured differently or region [" + noWait.getCacheName()
+                    + "] is not yet used on this side.  " );
             }
         }
     }
@@ -131,24 +132,35 @@ public class LateralTCPDiscoveryListener
 
         if ( facade != null )
         {
-            boolean isNew = facade.addNoWait( noWait );
+            boolean removed = facade.removeNoWait( noWait );
             if ( log.isDebugEnabled() )
             {
-                log.debug( "Called addNoWait, isNew = " + isNew );
+                log.debug( "Called removeNoWait, removed " + removed );
             }
         }
         else
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Different nodes are configured differently.  Region [" + noWait.getCacheName()
-                    + "] is not configured to use the lateral cache." );
+                log.info( "removeNoWait > Different nodes are configured differently or region ["
+                    + noWait.getCacheName() + "] is not yet used on this side.  " );
             }
         }
     }
 
     /**
      * Creates the lateral cache if needed.
+     * <p>
+     * We could go to the composite cache manager and get the the cache for the region. This would
+     * force a full configuration of the region. One advantage of this would be that the creation of
+     * the later would go through the factory, which would add the item to the no wait list. But we
+     * don't want to do this. This would force this client to have all the regions as the other.
+     * This might not be desired. We don't want to send or recieve for a region here that is either
+     * not used or not configured to use the lateral.
+     * <p>
+     * Right now, I'm afraid that the region will get puts if another instance has the region
+     * configured to use the lateral and our address is configured. This might be a bug, but it
+     * shouldn't happen with discovery.
      * <p>
      * @param service
      */
@@ -201,6 +213,9 @@ public class LateralTCPDiscoveryListener
 
     /**
      * Removes the lateral cache.
+     * <p>
+     * We need to tell the manager that this instance is bad, so it will reconnect the sender if it
+     * comes back.
      * <p>
      * @param service
      */
