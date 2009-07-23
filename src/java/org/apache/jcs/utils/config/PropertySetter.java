@@ -112,7 +112,7 @@ public class PropertySetter
     {
         int len = prefix.length();
 
-        for ( Enumeration e = properties.keys(); e.hasMoreElements(); )
+        for ( Enumeration e = properties.propertyNames(); e.hasMoreElements(); )
         {
             String key = (String) e.nextElement();
 
