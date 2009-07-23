@@ -183,7 +183,7 @@ public abstract class AbstractAuxiliaryCache
     }
 
     /**
-     * Rerturns the key matcher used by get matching.
+     * Returns the key matcher used by get matching.
      * <p>
      * @return keyMatcher
      */
