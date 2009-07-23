@@ -28,8 +28,8 @@ import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 
 /**
- * Used to retrieve and update the cache. <br>
- * <br>
+ * Used to retrieve and update the cache.
+ * <p>
  * Note: server which implements this interface provides a local cache service, whereas server which
  * implements IRmiCacheService provides a remote cache service.
  */
@@ -60,11 +60,12 @@ public interface ICacheService
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
-     * @param cacheName 
+     * @param cacheName
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
-     * @throws ObjectNotFoundException 
-     * @throws IOException 
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws ObjectNotFoundException
+     * @throws IOException
      */
     Map getMultiple( String cacheName, Set keys )
         throws ObjectNotFoundException, IOException;
@@ -80,7 +81,7 @@ public interface ICacheService
      */
     Map getMatching( String cacheName, String pattern )
         throws IOException;
-    
+
     /**
      * Removes the given key from the specified cache.
      * <p>

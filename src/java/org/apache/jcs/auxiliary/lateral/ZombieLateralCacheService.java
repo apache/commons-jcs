@@ -19,79 +19,29 @@ package org.apache.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
-import org.apache.jcs.engine.ZombieCacheService;
-import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 
 /**
  * The ZombieLateralCacheService is used as a facade when the lateral is not available. It balks
  * when the lateral is in error. When lateral service is restored, this is replaced by a live
  * facade.
+ * <p>
+ * Extends a queing non-local service.
  */
 public class ZombieLateralCacheService
-    extends ZombieCacheService
+    extends ZombieCacheServiceNonLocal
     implements ILateralCacheService
 {
-    /**
-     * Balks
-     * <p>
-     * @param item
-     * @param listenerId
-     */
-    public void update( ICacheElement item, long listenerId )
-    {
-        // zombies have no inner life
-    }
+    // backwards compatibility
 
     /**
-     * Balks
+     * Sets the maximum number of items that will be allowed on the queue.
      * <p>
-     * @param cacheName
-     * @param key
-     * @param listenerId
+     * @param maxQueueSize
      */
-    public void remove( String cacheName, Serializable key, long listenerId )
+    public ZombieLateralCacheService( int maxQueueSize )
     {
-        // zombies have no inner life
-    }
-
-    /**
-     * Balks
-     * <p>
-     * @param cacheName
-     * @param listenerId
-     */
-    public void removeAll( String cacheName, long listenerId )
-    {
-        // zombies have no inner life
-    }
-
-    /**
-     * Balks
-     * <p>
-     * @param cacheName
-     * @param groupName
-     * @return empty set
-     */
-    public Set getGroupKeys( String cacheName, String groupName )
-    {
-        return Collections.EMPTY_SET;
-    }
-
-    /**
-     * The service does not get via this method, so this return empty.
-     * <p>
-     * @param cacheName
-     * @param pattern
-     * @return Collections.EMPTY_MAP.
-     */
-    public Map getMatching( String cacheName, String pattern )
-    {
-        return Collections.EMPTY_MAP;
+        super( maxQueueSize );
     }
 }

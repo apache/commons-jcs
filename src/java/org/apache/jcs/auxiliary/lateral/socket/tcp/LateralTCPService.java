@@ -176,7 +176,8 @@ public class LateralTCPService
     }
 
     /**
-     * Does nothing. <p.
+     * Does nothing.
+     * <p>
      * @throws IOException
      */
     public void release()
@@ -226,6 +227,21 @@ public class LateralTCPService
     public ICacheElement get( String cacheName, Serializable key )
         throws IOException
     {
+        return get( cacheName, key, getListenerId() );
+    }
+
+    /**
+     * If get is allowed, we will issues a get request.
+     * <p>
+     * @param cacheName
+     * @param key
+     * @param requesterId
+     * @return ICacheElement if found.
+     * @throws IOException
+     */
+    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+        throws IOException
+    {
         // if get is not allowed return
         if ( this.getTcpLateralCacheAttributes().isAllowGet() )
         {
@@ -248,7 +264,7 @@ public class LateralTCPService
     }
 
     /**
-     * The service does not get via this method, so this return empty.
+     * If allow get is true, we will issue a getmatching query.
      * <p>
      * @param cacheName
      * @param pattern
@@ -259,6 +275,22 @@ public class LateralTCPService
     public Map getMatching( String cacheName, String pattern )
         throws IOException
     {
+        return getMatching( cacheName, pattern, getListenerId() );
+    }
+
+    /**
+     * If allow get is true, we will issue a getmatching query.
+     * <p>
+     * @param cacheName
+     * @param pattern
+     * @param requesterId - our identity
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache matching the pattern.
+     * @throws IOException
+     */
+    public Map getMatching( String cacheName, String pattern, long requesterId )
+        throws IOException
+    {
         // if get is not allowed return
         if ( this.getTcpLateralCacheAttributes().isAllowGet() )
         {
@@ -266,7 +298,7 @@ public class LateralTCPService
             LateralElementDescriptor led = new LateralElementDescriptor( ce );
             // led.requesterId = requesterId; // later
             led.command = LateralElementDescriptor.GET_MATCHING;
-            
+
             Object response = sender.sendAndReceive( led );
             if ( response != null )
             {
@@ -280,7 +312,7 @@ public class LateralTCPService
             return null;
         }
     }
-    
+
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
@@ -291,6 +323,24 @@ public class LateralTCPService
      * @throws IOException
      */
     public Map getMultiple( String cacheName, Set keys )
+        throws IOException
+    {
+        return getMultiple( cacheName, keys, getListenerId() );
+    }
+
+    /**
+     * This issues a separate get for each item.
+     * <p>
+     * TODO We should change this. It should issue one request.
+     * <p>
+     * @param cacheName
+     * @param keys
+     * @param requesterId
+     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     *         data in cache for any of these keys
+     * @throws IOException
+     */
+    public Map getMultiple( String cacheName, Set keys, long requesterId )
         throws IOException
     {
         Map elements = new HashMap();
@@ -311,7 +361,6 @@ public class LateralTCPService
                 }
             }
         }
-
         return elements;
     }
 
@@ -463,5 +512,4 @@ public class LateralTCPService
     {
         return tcpLateralCacheAttributes;
     }
-
 }

@@ -45,6 +45,12 @@ public interface ILateralCacheAttributes
     final static int XMLRPC = 4;
 
     /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     */
+    public static final int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
+    
+    /**
      * Sets the httpServer attribute of the ILateralCacheAttributes object
      * <p>
      * @param val The new httpServer value
@@ -171,7 +177,23 @@ public interface ILateralCacheAttributes
      * not configured for the lateral but another is. And if cache B has region R1 configured for
      * lateral distribution, A will get messages for R1 but not send them.
      * <p>
-     * @return true if we should have a listener conenction
+     * @return true if we should have a listener connection
      */
     public boolean isReceive();
+    
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     * <p>
+     * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
+     */
+    public void setZombieQueueMaxSize( int zombieQueueMaxSize );
+
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     * <p>
+     * @return Returns the zombieQueueMaxSize.
+     */
+    public int getZombieQueueMaxSize();      
 }

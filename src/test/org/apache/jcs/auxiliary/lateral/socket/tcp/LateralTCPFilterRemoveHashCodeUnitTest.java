@@ -38,7 +38,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     //private static boolean isSysOut = false;
 
     /** The port the server will listen to. */
-    private int serverPort = 1118;
+    private int serverPort = 2001;
     
     /**
      * Constructor for the TestDiskCache object.
@@ -56,7 +56,6 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     public void setUp()
     {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
-
         JCS.setConfigFilename( "/TestTCPLateralRemoveFilter.ccf" );
     }
 
@@ -85,9 +84,6 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     public void runTestForRegion( String region, int numOps, int testNum )
         throws Exception
     {
-
-        //boolean show = true;//false;
-
         JCS cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
@@ -95,7 +91,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1102 );
         lattr2.setTransmissionTypeName( "TCP" );
-        lattr2.setTcpServer( "localhost:1118" );
+        lattr2.setTcpServer( "localhost:" + serverPort );
         lattr2.setIssueRemoveOnPut( true );
         // should still try to remove
         lattr2.setAllowPut( false );

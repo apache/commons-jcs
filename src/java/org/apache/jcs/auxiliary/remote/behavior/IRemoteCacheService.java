@@ -19,101 +19,15 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.rmi.Remote;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.jcs.access.exception.ObjectExistsException;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheService;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * Used to retrieve and update the remote cache.
+ * <p>
+ * For convenience, ICacheServiceNonLocal extends Remote.
  */
 public interface IRemoteCacheService
-    extends Remote, ICacheService
+    extends ICacheServiceNonLocal
 {
-    /**
-     * Puts a cache item to the cache.
-     * <p>
-     * @param item
-     * @param requesterId
-     * @throws ObjectExistsException
-     * @throws IOException
-     */
-    void update( ICacheElement item, long requesterId )
-        throws ObjectExistsException, IOException;
-
-    /**
-     * Removes the given key from the specified cache.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @throws IOException
-     */
-    void remove( String cacheName, Serializable key, long requesterId )
-        throws IOException;
-
-    /**
-     * Remove all keys from the specified cache.
-     * <p>
-     * @param cacheName
-     * @param requesterId
-     * @throws IOException
-     */
-    void removeAll( String cacheName, long requesterId )
-        throws IOException;
-
-    /**
-     * Returns a cache bean from the specified cache; or null if the key does not exist.
-     * <p>
-     * Adding the requestor id, allows the cache to determine the sournce of the get.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @return ICacheElement
-     * @throws IOException
-     */
-    ICacheElement get( String cacheName, Serializable key, long requesterId )
-        throws IOException;
-
-    /**
-     * Gets multiple items from the cache based on the given set of keys.
-     * <p>
-     * @param cacheName
-     * @param keys
-     * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
-     *         data in cache for any of these keys
-     * @throws IOException
-     */
-    Map getMultiple( String cacheName, Set keys, long requesterId )
-        throws IOException;
-
-    /**
-     * Gets multiple items from the cache matching the pattern.
-     * <p>
-     * @param cacheName
-     * @param pattern
-     * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
-     *         data in cache matching the pattern.
-     * @throws IOException
-     */
-    Map getMatching( String cacheName, String pattern, long requesterId )
-        throws IOException;
-
-    /**
-     * @param cacheName
-     * @param groupName
-     * @return A Set of keys
-     * @throws java.rmi.RemoteException
-     * @throws IOException 
-     */
-    Set getGroupKeys( String cacheName, String groupName )
-        throws java.rmi.RemoteException, IOException;
+    // backwards compatibility
 }

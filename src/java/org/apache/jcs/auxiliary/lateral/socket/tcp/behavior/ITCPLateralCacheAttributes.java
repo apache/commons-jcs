@@ -214,5 +214,5 @@ public interface ITCPLateralCacheAttributes
     /**
      * @return the openTimeOut
      */
-    public int getOpenTimeOut();  
+    public int getOpenTimeOut();       
 }

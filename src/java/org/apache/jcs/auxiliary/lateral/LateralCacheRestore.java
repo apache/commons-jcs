@@ -92,6 +92,5 @@ public class LateralCacheRestore
         lcm.fixCaches( (ILateralCacheService) lateralObj, (ILateralCacheObserver) lateralObj );
         String msg = "Lateral connection resumed.";
         log.info( msg );
-        log.debug( msg );
     }
 }

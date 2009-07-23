@@ -57,11 +57,11 @@ public class LateralTCPDiscoveryListenerManager
         {
             ins = new LateralTCPDiscoveryListener( cacheMgr, cacheEventLogger, elementSerializer );
 
-            instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
+            instances.put( key, ins );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                log.debug( "created new listener " + ilca.getTcpListenerPort() );
+                log.info( "Created new discovery listener for " + key + " cacheName for request " + ilca.getCacheName() );
             }
         }
 

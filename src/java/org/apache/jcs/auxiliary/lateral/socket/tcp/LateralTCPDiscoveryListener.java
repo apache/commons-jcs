@@ -3,8 +3,10 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,7 +22,7 @@ import org.apache.jcs.utils.discovery.DiscoveredService;
 import org.apache.jcs.utils.discovery.behavior.IDiscoveryListener;
 
 /**
- * This knows how to add and remove discovered services.
+ * This knows how to add and remove discovered services. It observers UDP discovery events.
  * <p>
  * We can have one listener per region, or one shared by all regions.
  */
@@ -35,6 +37,12 @@ public class LateralTCPDiscoveryListener
      * use laterals.
      */
     private Map facades = Collections.synchronizedMap( new HashMap() );
+
+    /**
+     * List of regions that are configured differently here than on another server. We keep track of
+     * this to limit the amount of info logging.
+     */
+    private Set knownDifferentlyConfiguredRegions = Collections.synchronizedSet( new HashSet() );
 
     /** The cache manager. */
     private ICompositeCacheManager cacheMgr;
@@ -66,18 +74,48 @@ public class LateralTCPDiscoveryListener
      * This adds nowaits to a facade for the region name. If the region has no facade, then it is
      * not configured to use the lateral cache, and no facade will be created.
      * <p>
+     * @param cacheName - the region name
      * @param facade - facade (for region) => multiple lateral clients.
-     * @param cacheName
      * @return true if the facade was not already registered.
      */
     public synchronized boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade facade )
     {
-        boolean isNew = !facades.containsKey( cacheName );
+        boolean isNew = !containsNoWaitFacade( cacheName );
 
         // override or put anew, it doesn't matter
         facades.put( cacheName, facade );
+        knownDifferentlyConfiguredRegions.remove( cacheName );
 
         return isNew;
+    }
+
+    /**
+     * Allows us to see if the facade is present.
+     * <p>
+     * @param cacheName - facades are for a region
+     * @return do we contain the no wait. true if so
+     */
+    public boolean containsNoWaitFacade( String cacheName )
+    {
+        return facades.containsKey( cacheName );
+    }
+
+    /**
+     * Allows us to see if the facade is present and if it has the no wait.
+     * <p>
+     * @param cacheName - facades are for a region
+     * @param noWait - is this no wait in the facade
+     * @return do we contain the no wait. true if so
+     */
+    public boolean containsNoWait( String cacheName, LateralCacheNoWait noWait )
+    {
+        LateralCacheNoWaitFacade facade = (LateralCacheNoWaitFacade) facades.get( noWait.getCacheName() );
+        if ( facade == null )
+        {
+            return false;
+        }
+
+        return facade.containsNoWait( noWait );
     }
 
     /**
@@ -89,13 +127,15 @@ public class LateralTCPDiscoveryListener
      * services.
      * <p>
      * @param noWait
+     * @return true if we found the no wait and added it. False if the no wait was not present or it
+     *         we already had it.
      */
-    protected void addNoWait( LateralCacheNoWait noWait )
+    protected boolean addNoWait( LateralCacheNoWait noWait )
     {
         LateralCacheNoWaitFacade facade = (LateralCacheNoWaitFacade) facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Got facade for " + noWait.getCacheName() + " = " + facade );
+            log.debug( "addNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
         }
 
         if ( facade != null )
@@ -105,14 +145,20 @@ public class LateralTCPDiscoveryListener
             {
                 log.debug( "Called addNoWait, isNew = " + isNew );
             }
+            return isNew;
         }
         else
         {
-            if ( log.isInfoEnabled() )
+            if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
             {
-                log.info( "addNoWait > Different nodes are configured differently or region [" + noWait.getCacheName()
-                    + "] is not yet used on this side.  " );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "addNoWait > Different nodes are configured differently or region ["
+                        + noWait.getCacheName() + "] is not yet used on this side.  " );
+                }
+                knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
+            return false;
         }
     }
 
@@ -121,13 +167,14 @@ public class LateralTCPDiscoveryListener
      * use with the lateral cache. If it is present, remove the item from the no wait list.
      * <p>
      * @param noWait
+     * @return true if we found the no wait and removed it. False if the no wait was not present.
      */
-    protected void removeNoWait( LateralCacheNoWait noWait )
+    protected boolean removeNoWait( LateralCacheNoWait noWait )
     {
         LateralCacheNoWaitFacade facade = (LateralCacheNoWaitFacade) facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Got facade for " + noWait.getCacheName() + " = " + facade );
+            log.debug( "removeNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
         }
 
         if ( facade != null )
@@ -137,14 +184,20 @@ public class LateralTCPDiscoveryListener
             {
                 log.debug( "Called removeNoWait, removed " + removed );
             }
+            return removed;
         }
         else
         {
-            if ( log.isInfoEnabled() )
+            if ( !knownDifferentlyConfiguredRegions.contains( noWait.getCacheName() ) )
             {
-                log.info( "removeNoWait > Different nodes are configured differently or region ["
-                    + noWait.getCacheName() + "] is not yet used on this side.  " );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "removeNoWait > Different nodes are configured differently or region ["
+                        + noWait.getCacheName() + "] is not yet used on this side.  " );
+                }
+                knownDifferentlyConfiguredRegions.add( noWait.getCacheName() );
             }
+            return false;
         }
     }
 
@@ -155,7 +208,7 @@ public class LateralTCPDiscoveryListener
      * force a full configuration of the region. One advantage of this would be that the creation of
      * the later would go through the factory, which would add the item to the no wait list. But we
      * don't want to do this. This would force this client to have all the regions as the other.
-     * This might not be desired. We don't want to send or recieve for a region here that is either
+     * This might not be desired. We don't want to send or receive for a region here that is either
      * not used or not configured to use the lateral.
      * <p>
      * Right now, I'm afraid that the region will get puts if another instance has the region

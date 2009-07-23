@@ -70,7 +70,7 @@ public class LateralTCPCacheManager
     protected static Map instances = Collections.synchronizedMap( new HashMap() );
 
     /** ITCPLateralCacheAttributes */
-    protected ITCPLateralCacheAttributes lca;
+    protected ITCPLateralCacheAttributes lateralCacheAttribures;
 
     /** number of clients, we can remove this. */
     private int clients;
@@ -160,14 +160,14 @@ public class LateralTCPCacheManager
     private LateralTCPCacheManager( ITCPLateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr,
                                     ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
-        this.lca = lcaA;
+        this.lateralCacheAttribures = lcaA;
         this.cacheMgr = cacheMgr;
         this.cacheEventLogger = cacheEventLogger;
         this.elementSerializer = elementSerializer;
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Creating lateral cache service, lca = " + this.lca );
+            log.debug( "Creating lateral cache service, lca = " + this.lateralCacheAttribures );
         }
 
         // Create the service
@@ -175,9 +175,9 @@ public class LateralTCPCacheManager
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Creating TCP service, lca = " + this.lca );
+                log.info( "Creating TCP service, lca = " + this.lateralCacheAttribures );
             }
-            this.lateralService = new LateralTCPService( this.lca );
+            this.lateralService = new LateralTCPService( this.lateralCacheAttribures );
 
             if ( this.lateralService == null )
             {
@@ -195,7 +195,7 @@ public class LateralTCPCacheManager
             // "zombie" services.
             log.error( "Failure, lateral instance will use zombie service", ex );
 
-            this.lateralService = new ZombieLateralCacheService();
+            this.lateralService = new ZombieLateralCacheService( lateralCacheAttribures.getZombieQueueMaxSize() );
             this.lateralWatch = new LateralCacheWatchRepairable();
             this.lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
 
@@ -242,7 +242,7 @@ public class LateralTCPCacheManager
             lateralNoWait = (LateralCacheNoWait) caches.get( cacheName );
             if ( lateralNoWait == null )
             {
-                LateralCacheAttributes attr = (LateralCacheAttributes) lca.copy();
+                LateralCacheAttributes attr = (LateralCacheAttributes) lateralCacheAttribures.copy();
                 attr.setCacheName( cacheName );
 
                 LateralCache cache = new LateralCache( attr, this.lateralService, monitor );
@@ -262,7 +262,7 @@ public class LateralTCPCacheManager
 
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "Created LateralCacheNoWait for [" + lca + "] LateralCacheNoWait = [" + lateralNoWait
+                    log.info( "Created LateralCacheNoWait for [" + lateralCacheAttribures + "] LateralCacheNoWait = [" + lateralNoWait
                         + "]" );
                 }
 
@@ -282,11 +282,11 @@ public class LateralTCPCacheManager
     private void addListenerIfNeeded( String cacheName )
     {
         // don't create a listener if we are not receiving.
-        if ( lca.isReceive() )
+        if ( lateralCacheAttribures.isReceive() )
         {
             try
             {
-                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lca, cacheMgr ) );
+                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lateralCacheAttribures, cacheMgr ) );
             }
             catch ( IOException ioe )
             {
@@ -324,7 +324,7 @@ public class LateralTCPCacheManager
         Object service = null;
         try
         {
-            service = new LateralTCPService( lca );
+            service = new LateralTCPService( lateralCacheAttribures );
         }
         catch ( Exception ex )
         {
@@ -335,7 +335,8 @@ public class LateralTCPCacheManager
     }
 
     /**
-     * Shutsdown the lateral.
+     * Shuts down the lateral sender. This does not shutdown the listener. This can be called if the
+     * end point is taken out of service.
      */
     public void shutdown()
     {

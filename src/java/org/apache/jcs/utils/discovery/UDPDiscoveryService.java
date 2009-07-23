@@ -124,7 +124,7 @@ public class UDPDiscoveryService
 
         // create a sender thread
         sender = new UDPDiscoverySenderThread( getUdpDiscoveryAttributes(), getCacheNames() );
-        senderDaemon.executePeriodically( 15 * 1000, sender, true );        
+        senderDaemon.executePeriodically( 15 * 1000, sender, true );
 
         // add the cleanup daemon too
         cleanup = new UDPCleanupRunner( this );
@@ -206,7 +206,7 @@ public class UDPDiscoveryService
     public void removeDiscoveredService( DiscoveredService service )
     {
         boolean contained = getDiscoveredServices().remove( service );
-        
+
         if ( contained )
         {
             if ( log.isInfoEnabled() )
@@ -214,7 +214,7 @@ public class UDPDiscoveryService
                 log.info( "Removing " + service );
             }
         }
-        
+
         Iterator it = getDiscoveryListeners().iterator();
         while ( it.hasNext() )
         {
@@ -229,50 +229,73 @@ public class UDPDiscoveryService
      */
     protected void addOrUpdateService( DiscoveredService discoveredService )
     {
-        // Since this is a set we can add it over an over.
-        // We want to replace the old one, since we may add info that is not part of the equals.
-        // The equals method on the object being added is intentionally restricted.
-        if ( !getDiscoveredServices().contains( discoveredService ) )
+        synchronized ( getDiscoveredServices() )
         {
-            if ( log.isInfoEnabled() )
+            // Since this is a set we can add it over an over.
+            // We want to replace the old one, since we may add info that is not part of the equals.
+            // The equals method on the object being added is intentionally restricted.
+            if ( !getDiscoveredServices().contains( discoveredService ) )
             {
-                log.info( "Set does not contain service. I discovered " + discoveredService );
-            }
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Adding service in the set " + discoveredService );
-            }
-            getDiscoveredServices().add( discoveredService );
-
-            // todo update some list of cachenames
-            Iterator it = getDiscoveryListeners().iterator();
-            while ( it.hasNext() )
-            {
-                ( (IDiscoveryListener) it.next() ).addDiscoveredService( discoveredService );
-            }
-        }
-        else
-        {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Set contains service." );
-            }
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Updating service in the set " + discoveredService );
-            }
-            Iterator it = getDiscoveredServices().iterator();
-            // need to update the time this sucks. add has no effect convert to a map
-            while ( it.hasNext() )
-            {
-                DiscoveredService service1 = (DiscoveredService) it.next();
-                if ( discoveredService.equals( service1 ) )
+                if ( log.isInfoEnabled() )
                 {
-                    service1.setLastHearFromTime( discoveredService.getLastHearFromTime() );
-                    break;
+                    log.info( "Set does not contain service. I discovered " + discoveredService );
                 }
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Adding service in the set " + discoveredService );
+                }
+                getDiscoveredServices().add( discoveredService );
+            }
+            else
+            {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Set contains service." );
+                }
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "Updating service in the set " + discoveredService );
+                }
+
+                // Update the list of cache names if it has changed.
+                DiscoveredService theOldServiceInformation = null;
+                Iterator it = getDiscoveredServices().iterator();
+                // need to update the time this sucks. add has no effect convert to a map
+                while ( it.hasNext() )
+                {
+                    DiscoveredService service1 = (DiscoveredService) it.next();
+                    if ( discoveredService.equals( service1 ) )
+                    {
+                        theOldServiceInformation = service1;
+                        break;
+                    }
+                }
+                if ( theOldServiceInformation != null )
+                {
+                    if ( !theOldServiceInformation.getCacheNames().equals( discoveredService.getCacheNames() ) )
+                    {
+                        if ( log.isInfoEnabled() )
+                        {
+                            log.info( "List of cache names changed for service: " + discoveredService );
+                        }
+                    }
+                }
+
+                // replace it, we want to reset the payload and the last heard from time.
+                getDiscoveredServices().remove( discoveredService );
+                getDiscoveredServices().add( discoveredService );
             }
         }
+        // Always Notify the listeners
+        // If we don't do this, then if a region using the default config is initialized after notification, 
+        // it will never get the service in it's no wait list.
+        // Leave it to the listeners to decide what to do.
+        Iterator it = getDiscoveryListeners().iterator();
+        while ( it.hasNext() )
+        {
+            ( (IDiscoveryListener) it.next() ).addDiscoveredService( discoveredService );
+        }
+
     }
 
     /**

@@ -234,7 +234,16 @@ public class LateralCacheNoWait
      */
     public Set getGroupKeys( String groupName )
     {
-        return cache.getGroupKeys( groupName );
+        try
+        {
+            return cache.getGroupKeys( groupName );
+        }
+        catch ( IOException ex )
+        {
+            log.error( ex );
+            eventQueue.destroy();
+        }
+        return Collections.EMPTY_SET;
     }
 
     /**

@@ -68,6 +68,9 @@ public class LateralCacheAttributes
      */
     private boolean receive = DEFAULT_RECEIVE;
 
+    /** If the primary fails, we will queue items before reconnect.  This limits the number of items that can be queued. */
+    private int zombieQueueMaxSize = DEFAULT_ZOMBIE_QUEUE_MAX_SIZE;
+    
     /**
      * Sets the httpServer attribute of the LateralCacheAttributes object
      * <P>
@@ -279,6 +282,28 @@ public class LateralCacheAttributes
         return receive;
     }
 
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     * <p>
+     * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
+     */
+    public void setZombieQueueMaxSize( int zombieQueueMaxSize )
+    {
+        this.zombieQueueMaxSize = zombieQueueMaxSize;
+    }
+
+    /**
+     * The number of elements the zombie queue will hold. This queue is used to store events if we
+     * loose our connection with the server.
+     * <p>
+     * @return Returns the zombieQueueMaxSize.
+     */
+    public int getZombieQueueMaxSize()
+    {
+        return zombieQueueMaxSize;
+    }
+    
     /**
      * @return debug string.
      */

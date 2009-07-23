@@ -53,13 +53,13 @@ public class LateralCache
     private final static Log log = LogFactory.getLog( LateralCache.class );
 
     /** generalize this, use another interface */
-    private ILateralCacheAttributes cattr;
+    private ILateralCacheAttributes lateralCacheAttribures;
 
     /** The region name */
     final String cacheName;
 
     /** either http, socket.udp, or socket.tcp can set in config */
-    private ILateralCacheService lateral;
+    private ILateralCacheService lateralCacheService;
 
     /** Monitors the connection. */
     private LateralCacheMonitor monitor;
@@ -74,8 +74,8 @@ public class LateralCache
     public LateralCache( ILateralCacheAttributes cattr, ILateralCacheService lateral, LateralCacheMonitor monitor )
     {
         this.cacheName = cattr.getCacheName();
-        this.cattr = cattr;
-        this.lateral = lateral;
+        this.lateralCacheAttribures = cattr;
+        this.lateralCacheService = lateral;
         this.monitor = monitor;
     }
 
@@ -84,10 +84,10 @@ public class LateralCache
      * <p>
      * @param cattr
      */
-    protected LateralCache( ILateralCacheAttributes cattr )
+    public LateralCache( ILateralCacheAttributes cattr )
     {
         this.cacheName = cattr.getCacheName();
-        this.cattr = cattr;
+        this.lateralCacheAttribures = cattr;
     }
 
     /**
@@ -103,20 +103,20 @@ public class LateralCache
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "update: lateral = [" + lateral + "], " + "LateralCacheInfo.listenerId = "
+                log.debug( "update: lateral = [" + lateralCacheService + "], " + "LateralCacheInfo.listenerId = "
                     + LateralCacheInfo.listenerId );
             }
-            lateral.update( ce, LateralCacheInfo.listenerId );
+            lateralCacheService.update( ce, LateralCacheInfo.listenerId );
         }
         catch ( NullPointerException npe )
         {
-            log.error( "Failure updating lateral. lateral = " + lateral, npe );
-            handleException( npe, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + cattr );
+            log.error( "Failure updating lateral. lateral = " + lateralCacheService, npe );
+            handleException( npe, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttribures );
             return;
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + cattr );
+            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttribures );
         }
     }
 
@@ -132,18 +132,18 @@ public class LateralCache
     {
         ICacheElement obj = null;
 
-        if ( this.cattr.getPutOnlyMode() )
+        if ( this.lateralCacheAttribures.getPutOnlyMode() )
         {
             return null;
         }
         try
         {
-            obj = lateral.get( cacheName, key );
+            obj = lateralCacheService.get( cacheName, key );
         }
         catch ( Exception e )
         {
             log.error( e );
-            handleException( e, "Failed to get [" + key + "] from " + cattr.getCacheName() + "@" + cattr );
+            handleException( e, "Failed to get [" + key + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
         }
         return obj;
     }
@@ -159,18 +159,18 @@ public class LateralCache
     {
         Map elements = new HashMap();
 
-        if ( this.cattr.getPutOnlyMode() )
+        if ( this.lateralCacheAttribures.getPutOnlyMode() )
         {
             return Collections.EMPTY_MAP;
         }
         try
         {
-            elements = lateral.getMatching( cacheName, pattern );
+            elements = lateralCacheService.getMatching( cacheName, pattern );
         }
         catch ( Exception e )
         {
             log.error( e );
-            handleException( e, "Failed to getMatching [" + pattern + "] from " + cattr.getCacheName() + "@" + cattr );
+            handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
         }
         return elements;
     }
@@ -211,10 +211,21 @@ public class LateralCache
     /**
      * @param groupName
      * @return A set of group keys.
+     * @throws IOException
      */
     public Set getGroupKeys( String groupName )
+        throws IOException
     {
-        return lateral.getGroupKeys( cacheName, groupName );
+        try
+        {
+            return lateralCacheService.getGroupKeys( cacheName, groupName );
+        }
+        catch ( Exception ex )
+        {
+            handleException( ex, "Failed to remove groupName [" + groupName + "] from " + lateralCacheAttribures.getCacheName() + "@"
+                + lateralCacheAttribures );
+        }
+        return Collections.EMPTY_SET;
     }
 
     /**
@@ -235,11 +246,11 @@ public class LateralCache
 
         try
         {
-            lateral.remove( cacheName, key, LateralCacheInfo.listenerId );
+            lateralCacheService.remove( cacheName, key, LateralCacheInfo.listenerId );
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove " + key + " from " + cattr.getCacheName() + "@" + cattr );
+            handleException( ex, "Failed to remove " + key + " from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
         }
         return false;
     }
@@ -255,11 +266,11 @@ public class LateralCache
     {
         try
         {
-            lateral.removeAll( cacheName, LateralCacheInfo.listenerId );
+            lateralCacheService.removeAll( cacheName, LateralCacheInfo.listenerId );
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove all from " + cattr.getCacheName() + "@" + cattr );
+            handleException( ex, "Failed to remove all from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
         }
     }
 
@@ -279,13 +290,13 @@ public class LateralCache
         // any.
         try
         {
-            lateral.dispose( this.cattr.getCacheName() );
+            lateralCacheService.dispose( this.lateralCacheAttribures.getCacheName() );
             // Should remove connection
         }
         catch ( Exception ex )
         {
             log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose " + cattr.getCacheName() );
+            handleException( ex, "Failed to dispose " + lateralCacheAttribures.getCacheName() );
         }
     }
 
@@ -296,7 +307,7 @@ public class LateralCache
      */
     public int getStatus()
     {
-        return this.lateral instanceof IZombie ? CacheConstants.STATUS_ERROR : CacheConstants.STATUS_ALIVE;
+        return this.lateralCacheService instanceof IZombie ? CacheConstants.STATUS_ERROR : CacheConstants.STATUS_ALIVE;
     }
 
     /**
@@ -341,7 +352,7 @@ public class LateralCache
     {
         log.error( "Disabling lateral cache due to error " + msg, ex );
 
-        lateral = new ZombieLateralCacheService();
+        lateralCacheService = new ZombieLateralCacheService( lateralCacheAttribures.getZombieQueueMaxSize() );
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
         // process.
@@ -358,17 +369,33 @@ public class LateralCache
     /**
      * Replaces the current remote cache service handle with the given handle.
      * <p>
-     * @param lateral
+     * @param restoredLateral
      */
-    public void fixCache( ILateralCacheService lateral )
+    public void fixCache( ILateralCacheService restoredLateral )
     {
-        if ( lateral != null )
+        if ( this.lateralCacheService != null && this.lateralCacheService instanceof ZombieLateralCacheService )
         {
-            this.lateral = lateral;
+            ZombieLateralCacheService zombie = (ZombieLateralCacheService) this.lateralCacheService;
+            this.lateralCacheService = restoredLateral;
+            try
+            {
+                zombie.propagateEvents( restoredLateral );
+            }
+            catch ( Exception e )
+            {
+                try
+                {
+                    handleException( e, "Problem propagating events from Zombie Queue to new Lateral Service." );
+                }
+                catch ( IOException e1 )
+                {
+                    // swallow, since this is just expected kick back.  Handle always throws
+                }
+            }
         }
         else
         {
-            log.warn( "Fix cache called with null lateral." );
+            this.lateralCacheService = restoredLateral;
         }
         return;
     }
@@ -388,7 +415,7 @@ public class LateralCache
      */
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return cattr;
+        return lateralCacheAttribures;
     }
 
     /**
@@ -398,8 +425,8 @@ public class LateralCache
     {
         StringBuffer buf = new StringBuffer();
         buf.append( "\n LateralCache " );
-        buf.append( "\n Cache Name [" + cattr.getCacheName() + "]" );
-        buf.append( "\n cattr =  [" + cattr + "]" );
+        buf.append( "\n Cache Name [" + lateralCacheAttribures.getCacheName() + "]" );
+        buf.append( "\n cattr =  [" + lateralCacheAttribures + "]" );
         return buf.toString();
     }
 

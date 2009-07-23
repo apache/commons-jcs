@@ -19,65 +19,11 @@ package org.apache.jcs.auxiliary.lateral.behavior;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheService;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /** Used to retrieve and update the lateral cache. */
 public interface ILateralCacheService
-    extends ICacheService
+    extends ICacheServiceNonLocal
 {
-    /**
-     * Puts a cache item to the cache.
-     * <p>
-     * @param item
-     * @param requesterId
-     * @throws IOException
-     */
-    void update( ICacheElement item, long requesterId )
-        throws IOException;
-
-    /**
-     * Removes the given key from the specified cache.
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param requesterId
-     * @throws IOException
-     */
-    void remove( String cacheName, Serializable key, long requesterId )
-        throws IOException;
-
-    /**
-     * Remove all keys from the sepcified cache.
-     * <p>
-     * @param cacheName
-     * @param requesterId
-     * @throws IOException
-     */
-    void removeAll( String cacheName, long requesterId )
-        throws IOException;
-
-    /**
-     * @param cacheName
-     * @param groupName
-     * @return keys
-     */
-    Set getGroupKeys( String cacheName, String groupName );
-    
-    /**
-     * Gets multiple items from the cache matching the pattern.
-     * <p>
-     * @param cacheName
-     * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
-     *         data in cache matching the pattern.
-     * @throws IOException
-     */
-    Map getMatching( String cacheName, String pattern )
-        throws IOException;    
+    // backwards compatibility
 }

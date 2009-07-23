@@ -113,21 +113,25 @@ public class DiscoveredService
         return lastHearFromTime;
     }
 
-    /** @return hashcode based on address/port/name */
+    /** @return hashcode based on address/port */
     public int hashCode()
     {
         HashCodeBuilder builder = new HashCodeBuilder();
         builder.append( this.getServiceAddress() );
         builder.append( this.getServicePort() );
-        builder.append( this.getCacheNames() );
+        //builder.append( this.getCacheNames().toString() );
         return builder.toHashCode();
     }
 
     /**
      * NOTE - this object is often put into sets, so equals needs to be overridden.
      * <p>
+     * We can't use cache names as part of the equals unless we manually only use the address and
+     * port in a contains check. So that we can use normal set functionality, I've kept the cache
+     * names out.
+     * <p>
      * @param otherArg other
-     * @return equality based on the address/port/name
+     * @return equality based on the address/port
      */
     public boolean equals( Object otherArg )
     {
@@ -137,7 +141,7 @@ public class DiscoveredService
             EqualsBuilder builder = new EqualsBuilder();
             builder.append( this.getServiceAddress(), other.getServiceAddress() );
             builder.append( this.getServicePort(), other.getServicePort() );
-            builder.append( this.getCacheNames(), other.getCacheNames() );
+            //builder.append( this.getCacheNames().toString(), other.getCacheNames().toString() );
             return builder.isEquals();
         }
         return false;

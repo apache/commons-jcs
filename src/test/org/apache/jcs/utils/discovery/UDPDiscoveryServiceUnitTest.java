@@ -65,7 +65,71 @@ public class UDPDiscoveryServiceUnitTest
     }
 
     /** Verify that the list is updated. */
-    public void testAddOrUpdateService_InList()
+    public void testAddOrUpdateService_InList_NamesDoNotChange()
+    {
+        // SETUP
+        String host = "228.5.6.7";
+        int port = 6789;
+        UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
+        attributes.setUdpDiscoveryAddr( host );
+        attributes.setUdpDiscoveryPort( port );
+        attributes.setServicePort( 1000 );
+
+        // create the service
+        UDPDiscoveryService service = new UDPDiscoveryService( attributes, new MockCacheEventLogger() );
+        service.addParticipatingCacheName( "testCache1" );
+
+        MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
+        service.addDiscoveryListener( discoveryListener );
+
+        ArrayList sametCacheNames = new ArrayList();
+        sametCacheNames.add( "name1" );
+        
+        DiscoveredService discoveredService = new DiscoveredService();
+        discoveredService.setServiceAddress( host );
+        discoveredService.setCacheNames( sametCacheNames );
+        discoveredService.setServicePort( 1000 );
+        discoveredService.setLastHearFromTime( 100 );
+
+
+        DiscoveredService discoveredService2 = new DiscoveredService();
+        discoveredService2.setServiceAddress( host );
+        discoveredService2.setCacheNames( sametCacheNames );
+        discoveredService2.setServicePort( 1000 );
+        discoveredService2.setLastHearFromTime( 500 );
+
+        // DO WORK
+        service.addOrUpdateService( discoveredService );
+        // again
+        service.addOrUpdateService( discoveredService2 );
+
+        // VERIFY
+        assertEquals( "Should only be one in the set.", 1, service.getDiscoveredServices().size() );
+        assertTrue( "Service should be in the service list.", service.getDiscoveredServices()
+            .contains( discoveredService ) );
+        assertTrue( "Service should be in the listener list.", discoveryListener.discoveredServices
+            .contains( discoveredService ) );
+
+        Iterator it = service.getDiscoveredServices().iterator();
+        // need to update the time this sucks. add has no effect convert to a map
+        while ( it.hasNext() )
+        {
+            DiscoveredService service1 = (DiscoveredService) it.next();
+            if ( discoveredService.equals( service1 ) )
+            {
+                assertEquals( "The match should have the new last heard from time.", service1.getLastHearFromTime(),
+                              discoveredService2.getLastHearFromTime() );
+            }
+        }
+        // the mock has a list from all add calls.
+        // it should have been called when the list changed.
+        //assertEquals( "Mock should have been called once.", 1, discoveryListener.discoveredServices.size() );
+        // logic changed.  it's called every time.
+        assertEquals( "Mock should have been called twice.", 2, discoveryListener.discoveredServices.size() );
+    }
+
+    /** Verify that the list is updated. */
+    public void testAddOrUpdateService_InList_NamesChange()
     {
         // SETUP
         String host = "228.5.6.7";
@@ -88,9 +152,11 @@ public class UDPDiscoveryServiceUnitTest
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 
+        ArrayList differentCacheNames = new ArrayList();
+        differentCacheNames.add( "name1" );
         DiscoveredService discoveredService2 = new DiscoveredService();
         discoveredService2.setServiceAddress( host );
-        discoveredService2.setCacheNames( new ArrayList() );
+        discoveredService2.setCacheNames( differentCacheNames );
         discoveredService2.setServicePort( 1000 );
         discoveredService2.setLastHearFromTime( 500 );
 
@@ -105,7 +171,7 @@ public class UDPDiscoveryServiceUnitTest
             .contains( discoveredService ) );
         assertTrue( "Service should be in the listener list.", discoveryListener.discoveredServices
             .contains( discoveredService ) );
-        
+
         Iterator it = service.getDiscoveredServices().iterator();
         // need to update the time this sucks. add has no effect convert to a map
         while ( it.hasNext() )
@@ -115,8 +181,14 @@ public class UDPDiscoveryServiceUnitTest
             {
                 assertEquals( "The match should have the new last heard from time.", service1.getLastHearFromTime(),
                               discoveredService2.getLastHearFromTime() );
+                assertEquals( "The names should be updated.", service1.getCacheNames() + "", differentCacheNames + "" );
             }
-        }        
+        }
+        // the mock has a list from all add calls.
+        // it should have been called when the list changed.
+        assertEquals( "Mock should have been called twice.", 2, discoveryListener.discoveredServices.size() );
+        assertEquals( "The second mock listener add should be discoveredService2", discoveredService2,
+                      discoveryListener.discoveredServices.get( 1 ) );
     }
     
     /** Verify that the list is updated. */
@@ -153,5 +225,5 @@ public class UDPDiscoveryServiceUnitTest
             .contains( discoveredService ) );
         assertFalse( "Service should not be in the listener list.", discoveryListener.discoveredServices
             .contains( discoveredService ) );
-    }    
+    }
 }
