@@ -47,15 +47,39 @@ public class BlockDiskUnitTest
     }
 
     /**
+     * Test writing a null object within a single block size.
+     * <p>
+     * @throws Exception
+     */
+    public void testWrite_NullBlockElement()
+        throws Exception
+    {
+        // SETUP
+        String fileName = "testWrite_NullBlockElement";
+        File file = new File( rafDir, fileName + ".data" );
+        file.delete();
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+
+        // DO WORK
+        int[] blocks = disk.write( null );
+
+        // VERIFY
+        System.out.println( "testWrite_NullBlockElement " + disk );
+        assertEquals( "Wrong number of blocks recorded.", 1, disk.getNumberOfBlocks() );
+        assertEquals( "Wrong number of blocks returned.", 1, blocks.length );
+        assertEquals( "Wrong block returned.", 0, blocks[0] );
+    }
+
+    /**
      * Test writing an element within a single block size.
      * <p>
      * @throws Exception
      */
-    public void testWriteSingleBlockElement()
+    public void testWrite_SingleBlockElement()
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteSingleBlockElement";
+        String fileName = "testWrite_SingleBlockElement";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
         BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
@@ -76,11 +100,11 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
-    public void testWriteAndReadSingleBlockElement()
+    public void testWriteAndRead_SingleBlockElement()
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteAndReadSingleBlockElement";
+        String fileName = "testWriteAndRead_SingleBlockElement";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
         BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
@@ -100,11 +124,11 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
-    public void testWriteTwoSingleBlockElements()
+    public void testWrite_TwoSingleBlockElements()
         throws Exception
     {
         // SETUP
-        String fileName = "testWriteSingleBlockElement";
+        String fileName = "testWrite_TwoSingleBlockElements";
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
         BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
@@ -149,7 +173,7 @@ public class BlockDiskUnitTest
      * <p>
      * @throws Exception
      */
-    public void testWriteDoubleBlockElement()
+    public void testWrite_DoubleBlockElement()
         throws Exception
     {
         // SETUP
@@ -166,6 +190,33 @@ public class BlockDiskUnitTest
         System.out.println( "testWriteDoubleBlockElement " + disk );
         assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 2, blocks.length );
+        assertEquals( "Wrong block returned.", 0, blocks[0] );
+    }
+    
+    /**
+     * Test writing an element that takes 128 blocks.  There was a byte in a for loop that limited the number to 127.  I fixed this.
+     * <p>
+     * @throws Exception
+     */
+    public void testWrite_128BlockElement()
+        throws Exception
+    {
+        // SETUP
+        int numBlocks = 128;
+        
+        String fileName = "testWrite_128BlockElement";
+        File file = new File( rafDir, fileName + ".data" );
+        BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
+
+        // DO WORK
+        // byte arrays encur 27 bytes of serialization overhead.
+        int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), numBlocks );
+        int[] blocks = disk.write( new byte[bytes] );
+
+        // VERIFY
+        System.out.println( "testWriteDoubleBlockElement " + disk );
+        assertEquals( "Wrong number of blocks recorded.", numBlocks, disk.getNumberOfBlocks() );
+        assertEquals( "Wrong number of blocks returned.", numBlocks, blocks.length );
         assertEquals( "Wrong block returned.", 0, blocks[0] );
     }
 
@@ -259,7 +310,7 @@ public class BlockDiskUnitTest
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
         int blockSizeBytes = 4096;//1024;
-        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );        
+        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );
 
         String string = "This is my big string ABCDEFGH";
         StringBuffer sb = new StringBuffer();
@@ -277,10 +328,10 @@ public class BlockDiskUnitTest
         // VERIFY
         System.out.println( string );
         System.out.println( result );
-        System.out.println( disk );        
+        System.out.println( disk );
         assertEquals( "Wrong item retured.", string, result );
     }
-    
+
     /**
      * Verify that the block disk can handle a big string.
      * <p>
@@ -294,12 +345,11 @@ public class BlockDiskUnitTest
         File file = new File( rafDir, fileName + ".data" );
         file.delete();
         int blockSizeBytes = 47;//4096;//1024;
-        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );        
+        BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );
 
         String string = "abcdefghijklmnopqrstuvwxyz1234567890";
         string += string;
         string += string;
-
 
         // DO WORK
         int[] blocks = disk.write( string );
@@ -307,5 +357,5 @@ public class BlockDiskUnitTest
 
         // VERIFY 
         assertEquals( "Wrong item retured.", string, result );
-    }    
+    }
 }

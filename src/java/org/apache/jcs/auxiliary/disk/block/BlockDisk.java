@@ -177,7 +177,7 @@ public class BlockDisk
         int[] blocks = new int[numBlocksNeeded];
 
         // get them from the empty list or take the next one
-        for ( short i = 0; i < numBlocksNeeded; i++ )
+        for ( int i = 0; i < numBlocksNeeded; i++ )
         {
             Integer emptyBlock = (Integer) emptyBlocks.takeFirst();
             if ( emptyBlock != null )
@@ -194,7 +194,7 @@ public class BlockDisk
         byte[][] chunks = getBlockChunks( data, numBlocksNeeded );
 
         // write the blocks
-        for ( byte i = 0; i < numBlocksNeeded; i++ )
+        for ( int i = 0; i < numBlocksNeeded; i++ )
         {
             int position = calculateByteOffsetForBlock( blocks[i] );
             write( position, chunks[i] );
