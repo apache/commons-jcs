@@ -19,6 +19,12 @@
 		<author email="asmuts@apache.org">Aaron Smuts</author>
 	</properties>
 	<body>
+		<release version="1.3.3.4" date="2009-08-11" description="tempbuild">
+			<action dev="asmuts" type="fix" issue="JCS-66">Fixed bug in block
+				disk cache. It couldn't handle items with more than 127 blocks. Now
+				it can. (Note: for performance reasons, you should try to fit your
+				items in as few blocks as possible.)</action>
+		</release>
 		<release version="1.3.3.3" date="2009-07-23" description="tempbuild">
 			<action dev="asmuts" type="update">TCP Lateral now uses a queuing
 				zombie service during recovery.</action>
