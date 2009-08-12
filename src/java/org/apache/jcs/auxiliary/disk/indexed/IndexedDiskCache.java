@@ -714,6 +714,7 @@ public class IndexedDiskCache
             try
             {
                 object = (ICacheElement) dataFile.readObject( ded );
+                // TODO consider checking key equality and throwing if there is a failure
             }
             catch ( IOException e )
             {
@@ -862,8 +863,8 @@ public class IndexedDiskCache
         while ( itToRemove.hasNext() )
         {
             String fullKey = (String) itToRemove.next();
-            IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( fullKey );
-            addToRecycleBin( ded );
+            // Don't add to recycle bin here
+            // https://issues.apache.org/jira/browse/JCS-67
             performSingleKeyRemoval( fullKey );
             removed = true;
             // TODO this needs to update the remove count separately
@@ -906,8 +907,8 @@ public class IndexedDiskCache
         while ( itToRemove.hasNext() )
         {
             GroupAttrName keyToRemove = (GroupAttrName) itToRemove.next();
-            IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( keyToRemove );
-            addToRecycleBin( ded );
+            // Don't add to recycle bin here
+            // https://issues.apache.org/jira/browse/JCS-67            
             performSingleKeyRemoval( keyToRemove );
             removed = true;
         }
@@ -1145,6 +1146,13 @@ public class IndexedDiskCache
     /**
      * Add descriptor to recycle bin if it is not null. Adds the length of the item to the bytes
      * free.
+     * <p>
+     * This is called in three places: (1) When an item is removed. All item removals funnel down to
+     * the removeSingleItem method. (2) When an item on disk is updated with a value that will not
+     * fit in the previous slot. (3) When the max key size is reached, the freed slot will be added.
+     * <p>
+     * The recylebin is not a set. If a slot it added twice, it will result in the wrong data being
+     * returned.
      * <p>
      * @param ded
      */

@@ -462,6 +462,7 @@ public class IndexDiskCacheUnitTest
 
     /**
      * Add some items to the disk cache and then remove them one by one.
+     * <p>
      * @throws IOException
      */
     public void testRemove_PartialKey()
@@ -499,6 +500,9 @@ public class IndexDiskCacheUnitTest
             ICacheElement element = disk.processGet( i + ":key" );
             assertNull( "Should not have recevied an element.", element );
         }
+        // https://issues.apache.org/jira/browse/JCS-67
+        assertEquals( "Recylenbin should not have more elements than we removed. Check for JCS-67", cnt, disk
+            .getRecyleBinSize() );
     }
 
     /**
@@ -918,12 +922,12 @@ public class IndexDiskCacheUnitTest
         // DO WORK
         diskCache.processUpdate( ce1 );
         long fileSize1 = diskCache.getDataFileSize();
-        
+
         // DO WORK
         ICacheElement ce2 = new CacheElement( cacheName, key, value );
         diskCache.processUpdate( ce2 );
         ICacheElement result = diskCache.processGet( key );
-        
+
         // VERIFY
         assertNotNull( "Should have a result", result );
         long fileSize2 = diskCache.getDataFileSize();
@@ -931,7 +935,7 @@ public class IndexDiskCacheUnitTest
         int binSize = diskCache.getRecyleBinSize();
         assertEquals( "Should be nothing in the bin.", 0, binSize );
     }
-    
+
     /**
      * Verify the item makes it to disk.
      * <p>
@@ -956,12 +960,12 @@ public class IndexDiskCacheUnitTest
         // DO WORK
         diskCache.processUpdate( ce1 );
         long fileSize1 = diskCache.getDataFileSize();
-        
+
         // DO WORK
         ICacheElement ce2 = new CacheElement( cacheName, key, value2 );
         diskCache.processUpdate( ce2 );
         ICacheElement result = diskCache.processGet( key );
-        
+
         // VERIFY
         assertNotNull( "Should have a result", result );
         long fileSize2 = diskCache.getDataFileSize();
@@ -969,8 +973,7 @@ public class IndexDiskCacheUnitTest
         int binSize = diskCache.getRecyleBinSize();
         assertEquals( "Should be nothing in the bin.", 0, binSize );
     }
-    
-    
+
     /**
      * Verify that the old slot gets in the recycle bin.
      * <p>
@@ -995,12 +998,12 @@ public class IndexDiskCacheUnitTest
         // DO WORK
         diskCache.processUpdate( ce1 );
         long fileSize1 = diskCache.getDataFileSize();
-        
+
         // DO WORK
         ICacheElement ce2 = new CacheElement( cacheName, key, value2 );
         diskCache.processUpdate( ce2 );
         ICacheElement result = diskCache.processGet( key );
-        
+
         // VERIFY
         assertNotNull( "Should have a result", result );
         long fileSize2 = diskCache.getDataFileSize();

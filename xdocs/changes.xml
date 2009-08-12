@@ -19,6 +19,12 @@
 		<author email="asmuts@apache.org">Aaron Smuts</author>
 	</properties>
 	<body>
+		<release version="1.3.3.5" date="2009-08-12" description="tempbuild">
+			<action dev="asmuts" type="fix" issue="JCS-67">Fixed bug in
+				indexed disk cache. Partial key removal was adding duplicates in the
+				recycle bin. This lead to the multiple keys pointing to the same spot
+				on disk.</action>
+		</release>
 		<release version="1.3.3.4" date="2009-08-11" description="tempbuild">
 			<action dev="asmuts" type="fix" issue="JCS-66">Fixed bug in block
 				disk cache. It couldn't handle items with more than 127 blocks. Now
