@@ -19,7 +19,6 @@ package org.apache.jcs.access.behavior;
  * under the License.
  */
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,10 +44,10 @@ public interface ICacheAccess
      * Retrieve matching objects from the cache region this instance provides access to.
      * <p>
      * @param pattern - a key pattern for the objects stored
-     * @return A map of key to values.  These are stripped from the wrapper.
+     * @return A map of key to values. These are stripped from the wrapper.
      */
-    HashMap getMatching( String pattern );
-    
+    Map getMatching( String pattern );
+
     /**
      * Puts in cache if an item does not exist with the name in that region.
      * <p>
@@ -112,7 +111,8 @@ public interface ICacheAccess
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param names set of Object cache keys
-     * @return a map of Object key to ICacheElement element, or empty map if none of the keys are present
+     * @return a map of Object key to ICacheElement element, or empty map if none of the keys are
+     *         present
      */
     Map getCacheElements( Set names );
 
@@ -131,36 +131,16 @@ public interface ICacheAccess
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param pattern key search patern
-     * @return a map of Object key to ICacheElement element, or empty map if no keys match the pattern
+     * @return a map of Object key to ICacheElement element, or empty map if no keys match the
+     *         pattern
      */
     Map getMatchingCacheElements( String pattern );
-    
-    /**
-     * Removes an item or all items. Should be called remove.
-     * <p>
-     * @throws CacheException
-     * @deprecated
-     * @see #remove()
-     */
-    void destroy()
-        throws CacheException;
 
     /**
      * Old remove all method.
      * @throws CacheException
      */
     void remove()
-        throws CacheException;
-
-    /**
-     * The older removeall method.
-     * <p>
-     * @param name
-     * @throws CacheException
-     * @deprecated
-     * @see #remove(Object)
-     */
-    void destroy( Object name )
         throws CacheException;
 
     /**
@@ -173,14 +153,13 @@ public interface ICacheAccess
         throws CacheException;
 
     /**
-     * ResetAttributes allows for some of the attributes of a region to be reset
-     * in particular expiration time attriubtes, time to live, default time to
-     * live and idle time, and event handlers. The cacheloader object and
-     * attributes set as flags can't be reset with resetAttributes, the object
-     * must be destroyed and redefined to cache those parameters. Changing
-     * default settings on groups and regions will not affect existing objects.
-     * Only object loaded after the reset will use the new defaults. If no name
-     * argument is provided, the reset is applied to the region.
+     * ResetAttributes allows for some of the attributes of a region to be reset in particular
+     * expiration time attriubtes, time to live, default time to live and idle time, and event
+     * handlers. The cacheloader object and attributes set as flags can't be reset with
+     * resetAttributes, the object must be destroyed and redefined to cache those parameters.
+     * Changing default settings on groups and regions will not affect existing objects. Only object
+     * loaded after the reset will use the new defaults. If no name argument is provided, the reset
+     * is applied to the region.
      * <p>
      * @param attributes
      * @throws CacheException
@@ -199,10 +178,10 @@ public interface ICacheAccess
         throws CacheException;
 
     /**
-     * GetElementAttributes will return an attribute object describing the
-     * current attributes associated with the object name. If no name parameter
-     * is available, the attributes for the region will be returned. The name
-     * object must override the Object.equals and Object.hashCode methods.
+     * GetElementAttributes will return an attribute object describing the current attributes
+     * associated with the object name. If no name parameter is available, the attributes for the
+     * region will be returned. The name object must override the Object.equals and Object.hashCode
+     * methods.
      * <p>
      * @return The elementAttributes value
      * @throws CacheException
@@ -230,20 +209,18 @@ public interface ICacheAccess
     /**
      * Sets the ICompositeCacheAttributes of the cache region
      * <p>
-     * @param cattr
-     *            The new ICompositeCacheAttribute value
+     * @param cattr The new ICompositeCacheAttribute value
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr );
 
     /**
-     * This instructs the memory cache to remove the <i>numberToFree</i>
-     * according to its eviction policy. For example, the LRUMemoryCache will
-     * remove the <i>numberToFree</i> least recently used items. These will be
-     * spooled to disk if a disk auxiliary is available.
+     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
+     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
+     * used items. These will be spooled to disk if a disk auxiliary is available.
      * <p>
      * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are
-     *         only 3, you will get 3.
+     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
+     *         get 3.
      * @throws CacheException
      */
     public int freeMemoryElements( int numberToFree )

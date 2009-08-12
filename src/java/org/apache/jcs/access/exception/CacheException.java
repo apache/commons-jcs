@@ -57,5 +57,4 @@ public class CacheException
     {
         super( message );
     }
-
 }

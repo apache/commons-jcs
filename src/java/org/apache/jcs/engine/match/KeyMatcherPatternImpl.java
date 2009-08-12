@@ -28,6 +28,7 @@ public class KeyMatcherPatternImpl
         for ( int i = 0; i < keyArray.length; i++ )
         {
             Object key = keyArray[i];
+            // TODO we might want to match on the toString.
             if ( key instanceof String )
             {
                 Matcher matcher = compiledPattern.matcher( (String) key );

@@ -200,7 +200,7 @@ public class CacheAccess
      * @param pattern - a key pattern for the objects stored
      * @return A map of key to values.  These are stripped from the wrapper.
      */
-    public HashMap getMatching( String pattern )
+    public Map getMatching( String pattern )
     {
         HashMap unwrappedResults = new HashMap();
         
