@@ -287,11 +287,11 @@ public class JCSWorker
                 {
                     map.remove( getRegion() + aKey );
                 }
-                synchronized ( this )
+                synchronized ( aHelper )
                 {
                     aHelper.setFinished( true );
                     // Wake everyone waiting on us
-                    notifyAll();
+                    aHelper.notifyAll();
                 }
             }
         }
