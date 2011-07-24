@@ -256,9 +256,9 @@ jcs.
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/jcs/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/jcs/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/jakarta/jcs/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/jcs/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/jcs/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/jcs/trunk</url>
   </scm>
 
   <mailingLists>

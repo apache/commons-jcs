@@ -19,7 +19,7 @@
 -->
 <rdf:RDF xmlns="http://usefulinc.com/ns/doap#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:asfext="http://projects.apache.org/ns/asfext#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:doap="http://usefulinc.com/ns/doap#" xml:lang="en">
   <Project rdf:about="http://jakarta.apache.org/jcs/">
-    <name>Apache Jakarta JCS</name>
+    <name>Apache Commons JCS</name>
     <homepage rdf:resource="http://jakarta.apache.org/jcs/"/>
     <programming-language>Java</programming-language>
     <category rdf:resource="http://projects.apache.org/category/library"/>
@@ -31,8 +31,8 @@
     <description xml:lang="en">Comprehensive Caching System</description>
     <repository>
       <SVNRepository>
-        <browse rdf:resource="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/"/>
-        <location rdf:resource="http://svn.apache.org/repos/asf/jakarta/jcs"/>
+        <browse rdf:resource="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/"/>
+        <location rdf:resource="http://svn.apache.org/repos/asf/commons/proper/jcs"/>
       </SVNRepository>
     </repository>
     <mailing-list rdf:resource="http://jakarta.apache.org/jcs/mail-lists.html"/>
