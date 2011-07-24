@@ -476,7 +476,6 @@ public class JDBCDiskCache
                 {
                     psSelect.close();
                 }
-                psSelect.close();
             }
             catch ( SQLException e1 )
             {
