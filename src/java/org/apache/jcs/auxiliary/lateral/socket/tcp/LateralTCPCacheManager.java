@@ -67,7 +67,8 @@ public class LateralTCPCacheManager
     private static LateralCacheMonitor monitor;
 
     /** Address to instance map. */
-    protected static Map instances = Collections.synchronizedMap( new HashMap() );
+    protected static Map<String, LateralTCPCacheManager> instances =
+        Collections.synchronizedMap( new HashMap<String, LateralTCPCacheManager>() );
 
     /** ITCPLateralCacheAttributes */
     protected ITCPLateralCacheAttributes lateralCacheAttribures;
@@ -87,7 +88,7 @@ public class LateralTCPCacheManager
     private LateralCacheWatchRepairable lateralWatch;
 
     /** This is set in the constructor. */
-    private ICompositeCacheManager cacheMgr;
+    private final ICompositeCacheManager cacheMgr;
 
     /**
      * Returns an instance of the LateralCacheManager.
@@ -105,12 +106,12 @@ public class LateralTCPCacheManager
         synchronized ( instances )
         {
             String key = lca.getTcpServer();
-            LateralTCPCacheManager ins = (LateralTCPCacheManager) instances.get( key );
+            LateralTCPCacheManager ins = instances.get( key );
             if ( ins == null )
             {
                 log.info( "Instance for [" + key + "] is null, creating" );
 
-                ins = (LateralTCPCacheManager) instances.get( lca.getTcpServer() );
+                ins = instances.get( lca.getTcpServer() );
                 if ( ins == null )
                 {
                     ins = new LateralTCPCacheManager( lca, cacheMgr, cacheEventLogger, elementSerializer );
@@ -213,6 +214,7 @@ public class LateralTCPCacheManager
      * @param listener The feature to be added to the LateralCacheListener attribute
      * @exception IOException
      */
+    @Override
     public void addLateralCacheListener( String cacheName, ILateralCacheListener listener )
         throws IOException
     {
@@ -234,12 +236,13 @@ public class LateralTCPCacheManager
      * @return AuxiliaryCache
      * @param cacheName
      */
+    @Override
     public AuxiliaryCache getCache( String cacheName )
     {
         LateralCacheNoWait lateralNoWait = null;
         synchronized ( caches )
         {
-            lateralNoWait = (LateralCacheNoWait) caches.get( cacheName );
+            lateralNoWait = caches.get( cacheName );
             if ( lateralNoWait == null )
             {
                 LateralCacheAttributes attr = (LateralCacheAttributes) lateralCacheAttribures.copy();
@@ -309,7 +312,7 @@ public class LateralTCPCacheManager
     /**
      * @return Map
      */
-    public Map getInstances()
+    public Map<String, ? extends ILateralCacheManager> getInstances()
     {
         return instances;
     }

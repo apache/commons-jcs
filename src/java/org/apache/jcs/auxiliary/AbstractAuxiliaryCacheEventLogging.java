@@ -114,7 +114,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
         throws IOException
     {
         return getMultipleWithEventLogging( keys );
@@ -128,7 +128,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected final Map getMultipleWithEventLogging( Set keys )
+    protected final Map<Serializable, ICacheElement> getMultipleWithEventLogging(Set<Serializable> keys )
         throws IOException
     {
         ICacheEvent cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
@@ -151,7 +151,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected abstract Map processGetMultiple( Set keys )
+    protected abstract Map<Serializable, ICacheElement> processGetMultiple(Set<Serializable> keys)
         throws IOException;
 
     /**
@@ -168,7 +168,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      *         data matching the pattern.
      * @throws IOException
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String pattern )
         throws IOException
     {
         return getMatchingWithEventLogging( pattern );
@@ -182,7 +182,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      *         data matching the pattern.
      * @throws IOException
      */
-    protected final Map getMatchingWithEventLogging( String pattern )
+    protected final Map<Serializable, ICacheElement> getMatchingWithEventLogging( String pattern )
         throws IOException
     {
         ICacheEvent cacheEvent = createICacheEvent( getCacheName(), pattern, ICacheEventLogger.GETMATCHING_EVENT );
@@ -204,7 +204,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      *         data matching the pattern.
      * @throws IOException
      */
-    protected abstract Map processGetMatching( String pattern )
+    protected abstract Map<Serializable, ICacheElement> processGetMatching( String pattern )
         throws IOException;
 
     /**

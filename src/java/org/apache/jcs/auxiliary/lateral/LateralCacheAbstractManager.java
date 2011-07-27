@@ -21,7 +21,6 @@ package org.apache.jcs.auxiliary.lateral;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -59,7 +58,7 @@ public abstract class LateralCacheAbstractManager
     private final static Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
     /** Each manager instance has caches.   */
-    protected final Map caches = new HashMap();
+    protected final Map<String, LateralCacheNoWait> caches = new HashMap<String, LateralCacheNoWait>();
 
     /** Configuration */
     protected ILateralCacheAttributes lca;
@@ -81,7 +80,7 @@ public abstract class LateralCacheAbstractManager
 
     /** The serializer. */
     protected IElementSerializer elementSerializer;
-    
+
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.
      *
@@ -153,9 +152,8 @@ public abstract class LateralCacheAbstractManager
             // need to implement an observer for some types of laterals( http and
             // tcp)
             //this.lateralWatch.setCacheWatch(lateralWatch);
-            for ( Iterator en = this.caches.values().iterator(); en.hasNext(); )
+            for (LateralCacheNoWait cache : this.caches.values())
             {
-                LateralCacheNoWait cache = (LateralCacheNoWait) en.next();
                 cache.fixCache( this.lateralService );
             }
         }
@@ -163,9 +161,9 @@ public abstract class LateralCacheAbstractManager
 
     /**
      * @return Map
-     * 
+     *
      */
-    public Map getCaches()
+    public Map<String, LateralCacheNoWait> getCaches()
     {
         return caches;
     }

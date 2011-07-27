@@ -50,28 +50,28 @@ public class MySQLDiskCacheManager
     private static final long serialVersionUID = -8258856770927857896L;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( MySQLDiskCacheManager.class );
+    protected static final Log log = LogFactory.getLog( MySQLDiskCacheManager.class );
 
     /** The singleton instance. */
     private static MySQLDiskCacheManager instance;
 
-    /** User configurable atributes. */
-    private MySQLDiskCacheAttributes defaultJDBCDiskCacheAttributes;
+    /** User configurable attributes. */
+    private final MySQLDiskCacheAttributes defaultJDBCDiskCacheAttributes;
 
     /** ms in a day */
     private static final int DAILY_INTERVAL = 60 * 60 * 24 * 1000;
 
     /** for schedule optimizations */
     private Timer daemon = null;
-    
+
     /** The cache manager instance */
-    private ICompositeCacheManager compositeCacheManager;    
+    private ICompositeCacheManager compositeCacheManager;
 
     /**
      * Constructor for the HSQLCacheManager object
      * <p>
      * @param cattr
-     * @param compositeCacheManager 
+     * @param compositeCacheManager
      * @param cacheEventLogger
      * @param elementSerializer
      */
@@ -84,8 +84,8 @@ public class MySQLDiskCacheManager
         }
         defaultJDBCDiskCacheAttributes = cattr;
         setElementSerializer( elementSerializer );
-        setCacheEventLogger( cacheEventLogger );        
-        setCompositeCacheManager( compositeCacheManager );        
+        setCacheEventLogger( cacheEventLogger );
+        setCompositeCacheManager( compositeCacheManager );
     }
 
     /**
@@ -102,7 +102,7 @@ public class MySQLDiskCacheManager
      * Gets the instance attribute of the HSQLCacheManager class
      * <p>
      * @param cattr
-     * @param compositeCacheManager 
+     * @param compositeCacheManager
      * @param cacheEventLogger
      * @param elementSerializer
      * @return The instance value
@@ -142,6 +142,7 @@ public class MySQLDiskCacheManager
      * @param tableState
      * @return AuxiliaryCache
      */
+    @Override
     protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
         MySQLDiskCache diskCache = new MySQLDiskCache( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
@@ -273,6 +274,7 @@ public class MySQLDiskCacheManager
          * <p>
          * @see java.lang.Runnable#run()
          */
+        @Override
         public void run()
         {
             if ( optimizer != null )

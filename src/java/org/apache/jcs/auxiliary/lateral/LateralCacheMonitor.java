@@ -19,8 +19,6 @@ package org.apache.jcs.auxiliary.lateral;
  * under the License.
  */
 
-import java.util.Iterator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
@@ -54,7 +52,7 @@ public class LateralCacheMonitor
     private static int mode = ERROR;
 
     /** The manager */
-    private ILateralCacheManager manager;
+    private final ILateralCacheManager manager;
 
     /**
      * Configures the idle period between repairs.
@@ -170,11 +168,9 @@ public class LateralCacheMonitor
             log.info( "LateralCacheManager.instances.size() = " + manager.getInstances().size() );
             //for
             int cnt = 0;
-            Iterator itr = manager.getInstances().values().iterator();
-            while ( itr.hasNext() )
+            for (ILateralCacheManager mgr : manager.getInstances().values())
             {
                 cnt++;
-                ILateralCacheManager mgr = (ILateralCacheManager) itr.next();
                 try
                 {
                     // If any cache is in error, it strongly suggests all caches
@@ -199,11 +195,8 @@ public class LateralCacheMonitor
                         }
                     }
 
-                    Iterator itr2 = mgr.getCaches().values().iterator();
-
-                    while ( itr2.hasNext() )
+                    for (LateralCacheNoWait c : mgr.getCaches().values())
                     {
-                        LateralCacheNoWait c = (LateralCacheNoWait) itr2.next();
                         if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                         {
                             log.info( "found LateralCacheNoWait in error, " + c.toString() );

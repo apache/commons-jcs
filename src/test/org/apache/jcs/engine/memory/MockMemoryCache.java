@@ -43,7 +43,7 @@ public class MockMemoryCache
     private ICompositeCacheAttributes cacheAttr;
 
     /** Internal map */
-    private HashMap map = new HashMap();
+    private final HashMap map = new HashMap();
 
     /** The number of times waterfall was called. */
     public int waterfallCallCount = 0;
@@ -132,7 +132,7 @@ public class MockMemoryCache
      * @return elements
      * @throws IOException
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
         throws IOException
     {
         Map elements = new HashMap();

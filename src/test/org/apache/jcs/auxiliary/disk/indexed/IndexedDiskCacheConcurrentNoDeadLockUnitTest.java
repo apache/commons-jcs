@@ -69,15 +69,17 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
 
         suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
-                this.runTestForRegion( "indexedRegion4", 0, 200, 1 );
+                this.runTestForRegion( "indexedRegion4", 1, 200, 1 );
             }
         } );
 
         suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -87,6 +89,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
 
         suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -96,6 +99,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
 
         suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache4" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -105,6 +109,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
 
         suite.addTest( new IndexedDiskCacheRandomConcurrentTestUtil( "testIndexedDiskCache5" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -118,6 +123,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );
@@ -126,6 +132,7 @@ public class IndexedDiskCacheConcurrentNoDeadLockUnitTest
     /**
      * Test tearDown. Dispose of the cache.
      */
+    @Override
     public void tearDown()
     {
         try

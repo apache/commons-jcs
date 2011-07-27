@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -93,7 +94,7 @@ public class RemoteCacheServiceAdaptor
                         }
                         break;
                     case RemoteCacheRequest.REQUEST_TYPE_GET_MULTIPLE:
-                        Map elementMap = getRemoteCacheService().getMultiple( request.getCacheName(),
+                        Map<Serializable, ICacheElement> elementMap = getRemoteCacheService().getMultiple( request.getCacheName(),
                                                                               request.getKeySet(),
                                                                               request.getRequesterId() );
                         if ( elementMap != null )
@@ -102,7 +103,7 @@ public class RemoteCacheServiceAdaptor
                         }
                         break;
                     case RemoteCacheRequest.REQUEST_TYPE_GET_MATCHING:
-                        Map elementMapMatching = getRemoteCacheService().getMatching( request.getCacheName(),
+                        Map<Serializable, ICacheElement> elementMapMatching = getRemoteCacheService().getMatching( request.getCacheName(),
                                                                                       request.getPattern(),
                                                                                       request.getRequesterId() );
                         if ( elementMapMatching != null )
@@ -128,11 +129,11 @@ public class RemoteCacheServiceAdaptor
                         // DO NOTHING
                         break;
                     case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_KEYS:
-                        Set groupKeys = getRemoteCacheService().getGroupKeys( request.getCacheName(),
+                        Set<Serializable> groupKeys = getRemoteCacheService().getGroupKeys( request.getCacheName(),
                                                                               request.getKey() + "" );
                         if ( groupKeys == null )
                         {
-                            groupKeys = Collections.EMPTY_SET;
+                            groupKeys = Collections.emptySet();
                         }
                         response.getPayload().put( request.getKey(), groupKeys );
                         break;

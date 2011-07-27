@@ -28,6 +28,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,9 +44,6 @@ import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
-
 /**
  * Listens for connections from other TCP lateral caches and handles them. The initialization method
  * starts a listening thread, which creates a socket server. When messages are received they are
@@ -56,7 +56,7 @@ public class LateralTCPListener
     private static final long serialVersionUID = -9107062664967131738L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( LateralTCPListener.class );
+    protected final static Log log = LogFactory.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinite. */
     private final static int acceptTimeOut = 0;
@@ -65,7 +65,8 @@ public class LateralTCPListener
     private transient ICompositeCacheManager cacheManager;
 
     /** Map of available instances, keyed by port */
-    protected final static HashMap instances = new HashMap();
+    protected final static HashMap<String, ILateralCacheListener> instances =
+        new HashMap<String, ILateralCacheListener>();
 
     /** The socket listener */
     private ListenerThread receiver;
@@ -74,10 +75,10 @@ public class LateralTCPListener
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
     /** Listening port */
-    private int port;
+    protected int port;
 
     /** The processor. We should probably use an event queue here. */
-    private PooledExecutor pooledExecutor;
+    protected ExecutorService pooledExecutor;
 
     /** put count */
     private int putCnt = 0;
@@ -95,7 +96,7 @@ public class LateralTCPListener
     private long listenerId = LateralCacheInfo.listenerId;
 
     /** is this shut down? */
-    private boolean shutdown = false;
+    protected boolean shutdown = false;
 
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
@@ -107,7 +108,7 @@ public class LateralTCPListener
     public synchronized static ILateralCacheListener getInstance( ITCPLateralCacheAttributes ilca,
                                                                   ICompositeCacheManager cacheMgr )
     {
-        ILateralCacheListener ins = (ILateralCacheListener) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
+        ILateralCacheListener ins = instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
         if ( ins == null )
         {
@@ -151,8 +152,7 @@ public class LateralTCPListener
             receiver.setDaemon( true );
             receiver.start();
 
-            pooledExecutor = new PooledExecutor();
-            pooledExecutor.setThreadFactory( new MyThreadFactory() );
+            pooledExecutor = Executors.newCachedThreadPool(new MyThreadFactory());
         }
         catch ( Exception ex )
         {
@@ -306,7 +306,7 @@ public class LateralTCPListener
      * @return Map
      * @throws IOException
      */
-    public Map handleGetMatching( String cacheName, String pattern )
+    public Map<Serializable, ICacheElement> handleGetMatching( String cacheName, String pattern )
         throws IOException
     {
         getCnt++;
@@ -434,6 +434,7 @@ public class LateralTCPListener
         extends Thread
     {
         /** Main processing method for the ListenerThread object */
+        @Override
         public void run()
         {
             try
@@ -480,7 +481,7 @@ public class LateralTCPListener
         implements Runnable
     {
         /** The socket connection, passed in via constructor */
-        private Socket socket;
+        private final Socket socket;
 
         /**
          * Construct for a given socket
@@ -622,23 +623,17 @@ public class LateralTCPListener
 
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
 
-                if ( oos != null )
-                {
-                    oos.writeObject( obj );
-                    oos.flush();
-                }
+                oos.writeObject( obj );
+                oos.flush();
             }
             else if ( led.command == LateralElementDescriptor.GET_MATCHING )
             {
-                Map obj = handleGetMatching( cacheName, (String) key );
+                Map<Serializable, ICacheElement> obj = handleGetMatching( cacheName, (String) key );
 
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
 
-                if ( oos != null )
-                {
-                    oos.writeObject( obj );
-                    oos.flush();
-                }
+                oos.writeObject( obj );
+                oos.flush();
             }
         }
     }

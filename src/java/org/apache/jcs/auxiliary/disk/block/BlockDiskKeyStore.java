@@ -29,17 +29,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.disk.LRUMapJCS;
 import org.apache.jcs.utils.timing.ElapsedTimer;
-
-import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This is responsible for storing the keys.
@@ -49,36 +49,36 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 public class BlockDiskKeyStore
 {
     /** The logger */
-    private static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );
+    protected static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );
 
     /** Attributes governing the behavior of the block disk cache. */
-    private BlockDiskCacheAttributes blockDiskCacheAttributes;
+    private final BlockDiskCacheAttributes blockDiskCacheAttributes;
 
     /** The key to block map */
-    private Map keyHash;
+    private Map<Serializable, int[]> keyHash;
 
     /** The file where we persist the keys */
     private File keyFile;
 
     /** The name to prefix log messages with. */
-    private final String logCacheName;
+    protected final String logCacheName;
 
     /** Name of the file where we persist the keys */
-    private String fileName;
+    private final String fileName;
 
     /** The maximum number of keys to store in memory */
-    private int maxKeySize;
+    private final int maxKeySize;
 
     /** we need this so we can communicate free blocks to the data store when keys fall off the LRU */
-    private BlockDiskCache blockDiskCache;
+    protected final BlockDiskCache blockDiskCache;
 
     /** The root directory in which the keyFile lives */
-    private File rootDirectory;
+    private final File rootDirectory;
 
     /**
      * The background key persister, one for all regions.
      */
-    private static ClockDaemon persistenceDaemon;
+    private static ScheduledExecutorService persistenceDaemon;
 
     /**
      * Set the configuration options.
@@ -128,18 +128,20 @@ public class BlockDiskKeyStore
         {
             if ( persistenceDaemon == null )
             {
-                persistenceDaemon = new ClockDaemon();
-                persistenceDaemon.setThreadFactory( new MyThreadFactory() );
+                persistenceDaemon = Executors.newScheduledThreadPool(1, new MyThreadFactory());
             }
+
             persistenceDaemon
-                .executePeriodically( this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds() * 1000,
-                                      new Runnable()
-                                      {
-                                          public void run()
-                                          {
-                                              saveKeys();
-                                          }
-                                      }, false );
+                .scheduleAtFixedRate(new Runnable()
+                                        {
+                                            public void run()
+                                            {
+                                                saveKeys();
+                                            }
+                                        },
+                        0,
+                        this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
+                        TimeUnit.SECONDS);
         }
     }
 
@@ -168,13 +170,11 @@ public class BlockDiskKeyStore
             try
             {
                 // don't need to synchronize, since the underlying collection makes a copy
-                Iterator keyIt = keyHash.entrySet().iterator();
-                while ( keyIt.hasNext() )
+                for (Map.Entry<Serializable, int[]> entry : keyHash.entrySet())
                 {
-                    Map.Entry entry = (Map.Entry) keyIt.next();
                     BlockDiskElementDescriptor descriptor = new BlockDiskElementDescriptor();
-                    descriptor.setKey( (Serializable) entry.getKey() );
-                    descriptor.setBlocks( (int[]) entry.getValue() );
+                    descriptor.setKey( entry.getKey() );
+                    descriptor.setBlocks( entry.getValue() );
                     // stream these out in the loop.
                     oos.writeObject( descriptor );
                 }
@@ -235,7 +235,7 @@ public class BlockDiskKeyStore
         else
         {
             // If no max size, use a plain map for memory and processing efficiency.
-            keyHash = new HashMap();
+            keyHash = new HashMap<Serializable, int[]>();
             // keyHash = Collections.synchronizedMap( new HashMap() );
             if ( log.isInfoEnabled() )
             {
@@ -263,7 +263,7 @@ public class BlockDiskKeyStore
             // create a key map to use.
             initKeyMap();
 
-            HashMap keys = new HashMap();
+            HashMap<Serializable, int[]> keys = new HashMap<Serializable, int[]>();
 
             FileInputStream fis = new FileInputStream( keyFile );
             BufferedInputStream bis = new BufferedInputStream( fis );
@@ -315,7 +315,7 @@ public class BlockDiskKeyStore
      * <p>
      * @return entry set.
      */
-    public Set entrySet()
+    public Set<Map.Entry<Serializable, int[]>> entrySet()
     {
         return this.keyHash.entrySet();
     }
@@ -325,7 +325,7 @@ public class BlockDiskKeyStore
      * <p>
      * @return key set.
      */
-    public Set keySet()
+    public Set<Serializable> keySet()
     {
         return this.keyHash.keySet();
     }
@@ -348,7 +348,7 @@ public class BlockDiskKeyStore
      */
     public int[] get( Object key )
     {
-        return (int[]) this.keyHash.get( key );
+        return this.keyHash.get( key );
     }
 
     /**
@@ -357,7 +357,7 @@ public class BlockDiskKeyStore
      * @param key
      * @param value
      */
-    public void put( Object key, int[] value )
+    public void put( Serializable key, int[] value )
     {
         this.keyHash.put( key, value );
     }
@@ -370,7 +370,7 @@ public class BlockDiskKeyStore
      */
     public int[] remove( Object key )
     {
-        return (int[]) this.keyHash.remove( key );
+        return this.keyHash.remove( key );
     }
 
     /**
@@ -378,7 +378,7 @@ public class BlockDiskKeyStore
      * blocks as free.
      */
     public class LRUMap
-        extends LRUMapJCS
+        extends LRUMapJCS<Serializable, int[]>
     {
         /** Don't change */
         private static final long serialVersionUID = 4955079991472142198L;
@@ -411,9 +411,10 @@ public class BlockDiskKeyStore
          * @param key
          * @param value
          */
-        protected void processRemovedLRU( Object key, Object value )
+        @Override
+        protected void processRemovedLRU( Serializable key, int[] value )
         {
-            blockDiskCache.freeBlocks( (int[]) value );
+            blockDiskCache.freeBlocks( value );
             if ( log.isDebugEnabled() )
             {
                 log.debug( logCacheName + "Removing key: [" + key + "] from key store." );

@@ -130,7 +130,7 @@ public class RemoteHttpCacheClient
         ICacheElement retval = null;
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
-            retval = (ICacheElement) remoteHttpCacheResponse.getPayload().get( key );
+            retval = (ICacheElement)remoteHttpCacheResponse.getPayload().get( key );
         }
         return retval;
     }
@@ -144,7 +144,7 @@ public class RemoteHttpCacheClient
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -160,7 +160,7 @@ public class RemoteHttpCacheClient
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern, long requesterId )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
@@ -181,7 +181,7 @@ public class RemoteHttpCacheClient
             log.debug( "GetMatching [" + pattern + "] = " + remoteHttpCacheResponse );
         }
 
-        return remoteHttpCacheResponse.getPayload();
+        return (Map)remoteHttpCacheResponse.getPayload();
     }
 
     /**
@@ -193,7 +193,7 @@ public class RemoteHttpCacheClient
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( String cacheName, Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
         throws IOException
     {
         return getMultiple( cacheName, keys, 0 );
@@ -209,7 +209,7 @@ public class RemoteHttpCacheClient
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( String cacheName, Set keys, long requesterId )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
@@ -230,7 +230,7 @@ public class RemoteHttpCacheClient
             log.debug( "GetMultiple [" + keys + "] = " + remoteHttpCacheResponse );
         }
 
-        return remoteHttpCacheResponse.getPayload();
+        return (Map)remoteHttpCacheResponse.getPayload();
     }
 
     /**
@@ -271,7 +271,7 @@ public class RemoteHttpCacheClient
     }
 
     /**
-     * Remove all keys from the sepcified cache.
+     * Remove all keys from the specified cache.
      * <p>
      * @param cacheName
      * @throws IOException
@@ -378,7 +378,7 @@ public class RemoteHttpCacheClient
      * @return A Set of keys
      * @throws IOException
      */
-    public Set getGroupKeys( String cacheName, String groupName )
+    public Set<Serializable> getGroupKeys( String cacheName, String groupName )
         throws IOException
     {
         if ( !isInitialized() )
@@ -395,10 +395,10 @@ public class RemoteHttpCacheClient
 
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
-            return (Set)remoteHttpCacheResponse.getPayload().get( groupName );
+            return (Set<Serializable>)remoteHttpCacheResponse.getPayload().get( groupName );
         }
 
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     /**

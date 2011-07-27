@@ -21,7 +21,6 @@ package org.apache.jcs.utils.discovery;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * The message sent by the discovery mechanism.
@@ -42,11 +41,11 @@ public class UDPDiscoveryMessage
      * This asks recipients to broadcast their location. This is used on startup.
      */
     public static final int REQUEST_BROADCAST = 1;
-    
+
     /**
      * This message instructs the receiver to remove this service from its list.
      */
-    public static final int REMOVE_BROADCAST = 2;    
+    public static final int REMOVE_BROADCAST = 2;
 
     /** The message type */
     private int messageType = PASSIVE_BROADCAST;
@@ -61,8 +60,8 @@ public class UDPDiscoveryMessage
     private long requesterId;
 
     /** Names of regions */
-    private ArrayList cacheNames = new ArrayList();
-    
+    private ArrayList<String> cacheNames = new ArrayList<String>();
+
     /**
      * @param port The port to set.
      */
@@ -130,7 +129,7 @@ public class UDPDiscoveryMessage
     /**
      * @param cacheNames The cacheNames to set.
      */
-    public void setCacheNames( ArrayList cacheNames )
+    public void setCacheNames( ArrayList<String> cacheNames )
     {
         this.cacheNames = cacheNames;
     }
@@ -138,14 +137,15 @@ public class UDPDiscoveryMessage
     /**
      * @return Returns the cacheNames.
      */
-    public ArrayList getCacheNames()
+    public ArrayList<String> getCacheNames()
     {
         return cacheNames;
     }
-    
+
     /**
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
@@ -154,10 +154,8 @@ public class UDPDiscoveryMessage
         buf.append( "\n requesterId = [" + requesterId + "]" );
         buf.append( "\n messageType = [" + messageType + "]" );
         buf.append( "\n Cache Names" );
-        Iterator it = cacheNames.iterator();
-        while ( it.hasNext() )
+        for (String name : cacheNames)
         {
-            String name = (String) it.next();
             buf.append( " cacheName = [" + name + "]" );
         }
         return buf.toString();

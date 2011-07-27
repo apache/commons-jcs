@@ -162,7 +162,7 @@ public class OptionConverter
      * @param defaultValue
      * @return Object that was created
      */
-    public static Object instantiateByKey( Properties props, String key, Class superClass, Object defaultValue )
+    public static Object instantiateByKey( Properties props, String key, Class<?> superClass, Object defaultValue )
     {
 
         // Get the value of the property in string form
@@ -317,13 +317,13 @@ public class OptionConverter
      * @return instantiated object
      */
 
-    public static Object instantiateByClassName( String className, Class superClass, Object defaultValue )
+    public static Object instantiateByClassName( String className, Class<?> superClass, Object defaultValue )
     {
         if ( className != null )
         {
             try
             {
-                Class classObj = Class.forName( className );
+                Class<?> classObj = Class.forName( className );
                 if ( !superClass.isAssignableFrom( classObj ) )
                 {
                     log.error( "A \"" + className + "\" object is not assignable to a \"" + superClass.getName()
@@ -347,11 +347,11 @@ public class OptionConverter
      * The variable substitution delimeters are <b>${ </b> and <b>} </b>.
      * <p>
      * For example, if the System properties contains "key=value", then the call
-     * 
+     *
      * <pre>
      * String s = OptionConverter.substituteVars( &quot;Value of key is ${key}.&quot; );
      * </pre>
-     * 
+     *
      * will set the variable <code>s</code> to "Value of key is value.".
      * <p>
      * If no value could be found for the specified key, then the <code>props</code> parameter is
@@ -359,11 +359,11 @@ public class OptionConverter
      * string.
      * <p>
      * For example, if system propeties contains no value for the key "inexistentKey", then the call
-     * 
+     *
      * <pre>
      * String s = OptionConverter.subsVars( &quot;Value of inexistentKey is [${inexistentKey}]&quot; );
      * </pre>
-     * 
+     *
      * will set <code>s</code> to "Value of inexistentKey is []"
      * <p>
      * An {@link java.lang.IllegalArgumentException}is thrown if <code>val</code> contains a start

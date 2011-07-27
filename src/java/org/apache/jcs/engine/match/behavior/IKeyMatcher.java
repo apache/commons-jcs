@@ -1,5 +1,6 @@
 package org.apache.jcs.engine.match.behavior;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /** Key matchers need to implement this interface. */
@@ -12,5 +13,5 @@ public interface IKeyMatcher
      * @param keyArray
      * @return Set of the matching keys
      */
-    Set getMatchingKeysFromArray( String pattern, Object[] keyArray );
+    Set<Serializable> getMatchingKeysFromArray( String pattern, Object[] keyArray );
 }

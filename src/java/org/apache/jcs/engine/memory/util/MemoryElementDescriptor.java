@@ -26,7 +26,7 @@ import org.apache.jcs.utils.struct.DoubleLinkedListNode;
  * This wrapper is needed for double linked lists.
  */
 public class MemoryElementDescriptor
-    extends DoubleLinkedListNode
+    extends DoubleLinkedListNode<ICacheElement>
 {
     /** Don't change */
     private static final long serialVersionUID = -1905161209035522460L;

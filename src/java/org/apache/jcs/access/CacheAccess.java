@@ -22,7 +22,6 @@ package org.apache.jcs.access;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,7 +52,7 @@ import org.apache.jcs.engine.stats.behavior.ICacheStats;
  * The JCS class is the preferred way to access these methods.
  */
 public class CacheAccess
-    implements ICacheAccess
+    implements ICacheAccess<Serializable, Serializable>
 {
     /** The logger. */
     private static final Log log = LogFactory.getLog( CacheAccess.class );
@@ -187,41 +186,38 @@ public class CacheAccess
      * @param name Key the object is stored as
      * @return The object if found or null
      */
-    public Object get( Object name )
+    public Serializable get( Serializable name )
     {
-        ICacheElement element = this.cacheControl.get( (Serializable) name );
+        ICacheElement element = this.cacheControl.get( name );
 
         return ( element != null ) ? element.getVal() : null;
     }
-    
+
     /**
      * Retrieve matching objects from the cache region this instance provides access to.
      * <p>
      * @param pattern - a key pattern for the objects stored
      * @return A map of key to values.  These are stripped from the wrapper.
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, Serializable> getMatching( String pattern )
     {
-        HashMap unwrappedResults = new HashMap();
-        
-        Map wrappedResults = this.cacheControl.getMatching( pattern );
+        HashMap<Serializable, Serializable> unwrappedResults = new HashMap<Serializable, Serializable>();
+
+        Map<Serializable, ICacheElement> wrappedResults = this.cacheControl.getMatching( pattern );
         if ( wrappedResults != null )
         {
-            Set keySet = wrappedResults.keySet();
-            Iterator it = keySet.iterator();
-            while ( it.hasNext() )
+            for (Map.Entry<Serializable, ICacheElement> entry : wrappedResults.entrySet())
             {
-                Object key = it.next();
-                ICacheElement element = (ICacheElement)wrappedResults.get( key );
+                ICacheElement element = wrappedResults.get( entry.getKey() );
                 if ( element != null )
                 {
-                    unwrappedResults.put( key, element.getVal() );
+                    unwrappedResults.put( entry.getKey(), element.getVal() );
                 }
-            }            
+            }
         }
         return unwrappedResults;
     }
-    
+
     /**
      * This method returns the ICacheElement wrapper which provides access to element info and other
      * attributes.
@@ -234,12 +230,12 @@ public class CacheAccess
      * <p>
      * The last access time in the ElementAttributes should be current.
      * <p>
-     * @param name Key the object is stored as
+     * @param name Key the Serializable is stored as
      * @return The ICacheElement if the object is found or null
      */
-    public ICacheElement getCacheElement( Object name )
+    public ICacheElement getCacheElement( Serializable name )
     {
-        return this.cacheControl.get( (Serializable) name );
+        return this.cacheControl.get( name );
     }
 
     /**
@@ -256,10 +252,10 @@ public class CacheAccess
      * <p>
      * The last access time in the ElementAttributes should be current.
      * <p>
-     * @param names set of Object cache keys
-     * @return a map of Object key to ICacheElement element, or empty map if none of the keys are present
+     * @param names set of Serializable cache keys
+     * @return a map of Serializable key to ICacheElement element, or empty map if none of the keys are present
      */
-    public Map getCacheElements( Set names )
+    public Map<Serializable, ICacheElement> getCacheElements( Set<Serializable> names )
     {
         return this.cacheControl.getMultiple( names );
     }
@@ -279,13 +275,13 @@ public class CacheAccess
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param pattern key search pattern
-     * @return a map of Object key to ICacheElement element, or empty map if no keys match the pattern
+     * @return a map of Serializable key to ICacheElement element, or empty map if no keys match the pattern
      */
-    public Map getMatchingCacheElements( String pattern )
+    public Map<Serializable, ICacheElement> getMatchingCacheElements( String pattern )
     {
         return this.cacheControl.getMatching( pattern );
     }
-    
+
     /**
      * Place a new object in the cache, associated with key name. If there is currently an object
      * associated with name in the region an ObjectExistsException is thrown. Names are scoped to a
@@ -296,10 +292,10 @@ public class CacheAccess
      * @exception CacheException and ObjectExistsException is thrown if the item is already in the
      *                cache.
      */
-    public void putSafe( Object key, Object value )
+    public void putSafe( Serializable key, Serializable value )
         throws CacheException
     {
-        if ( this.cacheControl.get( (Serializable) key ) != null )
+        if ( this.cacheControl.get( key ) != null )
         {
             throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
                 + "].  Remove first or use a non-safe put to override the value." );
@@ -315,7 +311,7 @@ public class CacheAccess
      * @param obj Object to store
      * @exception CacheException
      */
-    public void put( Object name, Object obj )
+    public void put( Serializable name, Serializable obj )
         throws CacheException
     {
         // Call put with a copy of the contained caches default attributes.
@@ -331,7 +327,7 @@ public class CacheAccess
      * @see org.apache.jcs.access.behavior.ICacheAccess#put(java.lang.Object, java.lang.Object,
      *      org.apache.jcs.engine.behavior.IElementAttributes)
      */
-    public void put( Object key, Object val, IElementAttributes attr )
+    public void put( Serializable key, Serializable val, IElementAttributes attr )
         throws CacheException
     {
         if ( key == null )
@@ -347,8 +343,8 @@ public class CacheAccess
         // should be wrapped by cache access.
         try
         {
-            CacheElement ce = new CacheElement( this.cacheControl.getCacheName(), (Serializable) key,
-                                                (Serializable) val );
+            CacheElement ce = new CacheElement( this.cacheControl.getCacheName(), key,
+                                                val );
 
             ce.setElementAttributes( attr );
 
@@ -367,6 +363,7 @@ public class CacheAccess
      * @exception CacheException
      * @deprecated
      */
+    @Deprecated
     public void destroy()
         throws CacheException
     {
@@ -386,6 +383,7 @@ public class CacheAccess
      * @deprecated use clear()
      * @throws CacheException
      */
+    @Deprecated
     public void remove()
         throws CacheException
     {
@@ -418,10 +416,11 @@ public class CacheAccess
      * @exception CacheException
      * @deprecated use remove
      */
-    public void destroy( Object name )
+    @Deprecated
+    public void destroy( Serializable name )
         throws CacheException
     {
-        this.cacheControl.remove( (Serializable) name );
+        this.cacheControl.remove( name );
     }
 
     /**
@@ -430,10 +429,10 @@ public class CacheAccess
      * @param name the name of the item to remove.
      * @throws CacheException
      */
-    public void remove( Object name )
+    public void remove( Serializable name )
         throws CacheException
     {
-        this.cacheControl.remove( (Serializable) name );
+        this.cacheControl.remove( name );
     }
 
     /**
@@ -456,6 +455,7 @@ public class CacheAccess
      * @exception CacheException
      * @exception InvalidHandleException
      */
+    @Deprecated
     public void resetElementAttributes( IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
@@ -487,10 +487,10 @@ public class CacheAccess
      * @exception CacheException
      * @exception InvalidHandleException if the item does not exist.
      */
-    public void resetElementAttributes( Object name, IElementAttributes attr )
+    public void resetElementAttributes( Serializable name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        ICacheElement element = this.cacheControl.get( (Serializable) name );
+        ICacheElement element = this.cacheControl.get( name );
 
         if ( element == null )
         {
@@ -516,6 +516,7 @@ public class CacheAccess
      * @return Attributes for this region
      * @exception CacheException
      */
+    @Deprecated
     public IElementAttributes getElementAttributes()
         throws CacheException
     {
@@ -547,14 +548,14 @@ public class CacheAccess
      * @return Attributes for the object, null if object not in cache
      * @exception CacheException
      */
-    public IElementAttributes getElementAttributes( Object name )
+    public IElementAttributes getElementAttributes( Serializable name )
         throws CacheException
     {
         IElementAttributes attr = null;
 
         try
         {
-            attr = this.cacheControl.getElementAttributes( (Serializable) name );
+            attr = this.cacheControl.getElementAttributes( name );
         }
         catch ( IOException ioe )
         {

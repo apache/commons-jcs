@@ -12,17 +12,18 @@ import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
- * The factory holds an instance of this maanger. This manager has a map of listeners, keyed to the
+ * The factory holds an instance of this manager. This manager has a map of listeners, keyed to the
  * discovery configuration. I'm not using a static map, because I'm trying to make JCS
  * multi-instance.
  * <p>
  * During configuration, the factory is only created once per auxiliary definition. Two different
- * laterals canot use the same discovery service. We will likey wantt o change this.
+ * laterals cannot use the same discovery service. We will likely want to change this.
  */
 public class LateralTCPDiscoveryListenerManager
 {
     /** Map of available instances, keyed by port. Note, this is not static. */
-    protected Map instances = Collections.synchronizedMap( new HashMap() );
+    protected Map<String, LateralTCPDiscoveryListener> instances =
+        Collections.synchronizedMap( new HashMap<String, LateralTCPDiscoveryListener>() );
 
     /** The logger */
     private final static Log log = LogFactory.getLog( LateralTCPDiscoveryListenerManager.class );
@@ -51,7 +52,7 @@ public class LateralTCPDiscoveryListenerManager
                                                                           IElementSerializer elementSerializer )
     {
         String key = ilca.getUdpDiscoveryAddr() + ":" + ilca.getUdpDiscoveryPort();
-        LateralTCPDiscoveryListener ins = (LateralTCPDiscoveryListener) instances.get( key );
+        LateralTCPDiscoveryListener ins = instances.get( key );
 
         if ( ins == null )
         {

@@ -20,7 +20,6 @@ package org.apache.jcs.auxiliary.remote.http.client;
  */
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -46,7 +45,7 @@ public class RemoteHttpCacheMonitor
     private static long idlePeriod = 3 * 1000;
 
     /** Set of remote caches to monitor. This are added on error, if not before. */
-    private Set remoteHttpCaches = new HashSet();
+    private final Set<RemoteHttpCache> remoteHttpCaches = new HashSet<RemoteHttpCache>();
 
     /**
      * Must make sure RemoteCacheMonitor is started before any remote error can be detected!
@@ -185,7 +184,7 @@ public class RemoteHttpCacheMonitor
             }
 
             // Make a copy
-            Set remoteCachesToExamine = new HashSet();
+            Set<RemoteHttpCache> remoteCachesToExamine = new HashSet<RemoteHttpCache>();
             synchronized ( this )
             {
                 remoteCachesToExamine.addAll( this.remoteHttpCaches );
@@ -194,13 +193,10 @@ public class RemoteHttpCacheMonitor
             // managed by the
             // same RmicCacheManager instance are in error. So we fix
             // them once and for all.
-            Iterator itr2 = remoteCachesToExamine.iterator();
-            while ( itr2.hasNext() )
+            for (RemoteHttpCache remoteCache : remoteCachesToExamine)
             {
                 try
                 {
-                    RemoteHttpCache remoteCache = (RemoteHttpCache) itr2.next();
-
                     if ( remoteCache.getStatus() == CacheConstants.STATUS_ERROR )
                     {
                         RemoteHttpCacheAttributes attributes = remoteCache.getRemoteHttpCacheAttributes();

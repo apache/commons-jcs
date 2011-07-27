@@ -29,6 +29,10 @@ import java.rmi.registry.Registry;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,9 +43,6 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.utils.config.OptionConverter;
 import org.apache.jcs.utils.config.PropertySetter;
-
-import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * Provides remote cache services. This creates remote cache servers and can proxy command line
@@ -60,7 +61,7 @@ public class RemoteCacheServerFactory
     private static String serviceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
 
     /** Executes the registry keep alive. */
-    private static ClockDaemon keepAliveDaemon;
+    private static ScheduledExecutorService keepAliveDaemon;
 
     /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()
@@ -155,12 +156,11 @@ public class RemoteCacheServerFactory
             {
                 if ( keepAliveDaemon == null )
                 {
-                    keepAliveDaemon = new ClockDaemon();
-                    keepAliveDaemon.setThreadFactory( new MyThreadFactory() );
+                    keepAliveDaemon = Executors.newScheduledThreadPool(1, new MyThreadFactory());
                 }
                 RegistryKeepAliveRunner runner = new RegistryKeepAliveRunner( host, port, serviceName );
                 runner.setCacheEventLogger( cacheEventLogger );
-                keepAliveDaemon.executePeriodically( rcsa.getRegistryKeepAliveDelayMillis(), runner, false );
+                keepAliveDaemon.scheduleAtFixedRate(runner, 0, rcsa.getRegistryKeepAliveDelayMillis(), TimeUnit.MILLISECONDS);
             }
         }
     }
@@ -358,10 +358,6 @@ public class RemoteCacheServerFactory
         String lccStr = prop.getProperty( REMOTE_LOCAL_CLUSTER_CONSISTENCY );
         if ( lccStr != null )
         {
-            if ( lccStr == null )
-            {
-                lccStr = "true";
-            }
             boolean lcc = Boolean.valueOf( lccStr ).booleanValue();
             rcsa.setLocalClusterConsistency( lcc );
         }
@@ -369,10 +365,6 @@ public class RemoteCacheServerFactory
         String acgStr = prop.getProperty( REMOTE_ALLOW_CLUSTER_GET );
         if ( acgStr != null )
         {
-            if ( acgStr == null )
-            {
-                acgStr = "true";
-            }
             boolean acg = Boolean.valueOf( acgStr ).booleanValue();
             rcsa.setAllowClusterGet( acg );
         }

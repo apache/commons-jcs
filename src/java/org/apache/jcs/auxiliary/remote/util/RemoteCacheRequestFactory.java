@@ -16,7 +16,7 @@ public class RemoteCacheRequestFactory
 {
     /** The Logger. */
     private final static Log log = LogFactory.getLog( RemoteCacheRequestFactory.class );
-    
+
     /**
      * Creates a get Request.
      * <p>
@@ -73,7 +73,7 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createGetMultipleRequest( String cacheName, Set keys, long requesterId )
+    public static RemoteCacheRequest createGetMultipleRequest( String cacheName, Set<Serializable> keys, long requesterId )
     {
         RemoteCacheRequest request = new RemoteCacheRequest();
         request.setCacheName( cacheName );
@@ -112,7 +112,7 @@ public class RemoteCacheRequestFactory
 
         return request;
     }
-    
+
     /**
      * Creates a GetGroupKeys Request.
      * <p>
@@ -180,7 +180,7 @@ public class RemoteCacheRequestFactory
 
         return request;
     }
-    
+
     /**
      * Creates an Update Request.
      * <p>
@@ -211,7 +211,7 @@ public class RemoteCacheRequestFactory
 
         return request;
     }
-    
+
     /**
      * Creates an alive check Request.
      * <p>

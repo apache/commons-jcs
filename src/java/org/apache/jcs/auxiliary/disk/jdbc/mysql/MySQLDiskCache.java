@@ -47,7 +47,7 @@ public class MySQLDiskCache
     private final static Log log = LogFactory.getLog( MySQLDiskCache.class );
 
     /** config attributes */
-    private MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
+    private final MySQLDiskCacheAttributes mySQLDiskCacheAttributes;
 
     /**
      * Delegates to the super and makes use of the MySQL specific parameters used for scheduled
@@ -55,7 +55,7 @@ public class MySQLDiskCache
      * <p>
      * @param attributes
      * @param tableState
-     * @param compositeCacheManager 
+     * @param compositeCacheManager
      */
     public MySQLDiskCache( MySQLDiskCacheAttributes attributes, TableState tableState, ICompositeCacheManager compositeCacheManager )
     {
@@ -76,6 +76,7 @@ public class MySQLDiskCache
      * @param key Key to locate value for.
      * @return An object matching key, or null.
      */
+    @Override
     protected ICacheElement processGet( Serializable key )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
@@ -95,7 +96,8 @@ public class MySQLDiskCache
      * @param pattern used for like query.
      * @return An object matching key, or null.
      */
-    protected Map processGetMatching( String pattern )
+    @Override
+    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {
@@ -106,30 +108,32 @@ public class MySQLDiskCache
         }
         return super.processGetMatching( pattern );
     }
-    
+
     /**
      * @param pattern
      * @return String to use in the like query.
      */
+    @Override
     public String constructLikeParameterFromPattern( String pattern )
     {
         pattern = pattern.replaceAll( "\\.\\+", "%" );
         pattern = pattern.replaceAll( "\\.", "_" );
-        
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "pattern = [" + pattern + "]" );
         }
-               
+
         return pattern;
     }
-    
+
     /**
      * This delegates to the generic JDBC disk cache. If we are currently optimizing, then this
      * method will balk and do nothing.
      * <p>
      * @param element
      */
+    @Override
     protected void processUpdate( ICacheElement element )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
@@ -151,6 +155,7 @@ public class MySQLDiskCache
      * <p>
      * @return the number deleted
      */
+    @Override
     protected int deleteExpired()
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )

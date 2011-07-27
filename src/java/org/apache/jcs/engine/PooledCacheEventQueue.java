@@ -22,6 +22,8 @@ package org.apache.jcs.engine;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,10 +34,7 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.utils.threadpool.ThreadPool;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
-
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one target listener.
@@ -54,26 +53,26 @@ public class PooledCacheEventQueue
     private static final String queueType = POOLED_QUEUE_TYPE;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( PooledCacheEventQueue.class );
+    protected static final Log log = LogFactory.getLog( PooledCacheEventQueue.class );
 
     /** time to wait for an event before snuffing the background thread
     if the queue is empty.   make configurable later */
     private int waitToDieMillis = 10000;
 
     /** The listener to process events */
-    private ICacheListener listener;
+    protected ICacheListener listener;
 
     /** The listener id */
     private long listenerId;
 
     /** The name of the cache */
-    private String cacheName;
+    protected String cacheName;
 
     /** Max failures before self destruction */
-    private int maxFailure;
+    protected int maxFailure;
 
     /** in milliseconds */
-    private int waitBeforeRetry;
+    protected int waitBeforeRetry;
 
     /** Has the pool been destroyed */
     private boolean destroyed = true;
@@ -82,7 +81,7 @@ public class PooledCacheEventQueue
     private boolean working = true;
 
     /** The Thread Pool to execute events with. */
-    private ThreadPool pool = null;
+    private ThreadPoolExecutor pool = null;
 
     /**
      * Constructor for the CacheEventQueue object
@@ -176,6 +175,7 @@ public class PooledCacheEventQueue
     /**
      * @return String info.
      */
+    @Override
     public String toString()
     {
         return "CacheEventQueue [listenerId=" + listenerId + ", cacheName=" + cacheName + "]";
@@ -213,9 +213,7 @@ public class PooledCacheEventQueue
         if ( !destroyed )
         {
             destroyed = true;
-            // TODO decide whether to shutdown or interrupt
-            // pool.getPool().shutdownNow();
-            pool.getPool().interruptAll();
+            pool.shutdownNow();
             if ( log.isInfoEnabled() )
             {
                 log.info( "Cache event queue destroyed: " + this );
@@ -310,14 +308,7 @@ public class PooledCacheEventQueue
      */
     private void put( AbstractCacheEvent event )
     {
-        try
-        {
-            pool.execute( event );
-        }
-        catch ( InterruptedException e )
-        {
-            log.error( e );
-        }
+        pool.execute( event );
     }
 
     /**
@@ -336,7 +327,7 @@ public class PooledCacheEventQueue
         IStats stats = new Stats();
         stats.setTypeName( "Pooled Cache Event Queue" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -357,33 +348,30 @@ public class PooledCacheEventQueue
 
         if ( pool.getQueue() != null )
         {
-            if ( pool.getQueue() instanceof BoundedBuffer )
-            {
-                BoundedBuffer bb = (BoundedBuffer) pool.getQueue();
-                se = new StatElement();
-                se.setName( "Queue Size" );
-                se.setData( "" + bb.size() );
-                elems.add( se );
+            BlockingQueue<Runnable> bb = pool.getQueue();
+            se = new StatElement();
+            se.setName( "Queue Size" );
+            se.setData( "" + bb.size() );
+            elems.add( se );
 
-                se = new StatElement();
-                se.setName( "Queue Capacity" );
-                se.setData( "" + bb.capacity() );
-                elems.add( se );
-            }
+            se = new StatElement();
+            se.setName( "Queue Capacity" );
+            se.setData( "" + bb.remainingCapacity() );
+            elems.add( se );
         }
 
         se = new StatElement();
         se.setName( "Pool Size" );
-        se.setData( "" + pool.getPool().getPoolSize() );
+        se.setData( "" + pool.getPoolSize() );
         elems.add( se );
 
         se = new StatElement();
         se.setName( "Maximum Pool Size" );
-        se.setData( "" + pool.getPool().getMaximumPoolSize() );
+        se.setData( "" + pool.getMaximumPoolSize() );
         elems.add( se );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[elems.size()] );
+        IStatElement[] ses = elems.toArray( new StatElement[elems.size()] );
         stats.setStatElements( ses );
 
         return stats;
@@ -397,7 +385,7 @@ public class PooledCacheEventQueue
      * @author asmuts
      * @created January 15, 2002
      */
-    private abstract class AbstractCacheEvent
+    protected abstract class AbstractCacheEvent
         implements Runnable
     {
         /** Times failed to process */
@@ -468,7 +456,7 @@ public class PooledCacheEventQueue
         extends AbstractCacheEvent
     {
         /** The payload */
-        private ICacheElement ice;
+        private final ICacheElement ice;
 
         /**
          * Constructor for the PutEvent object
@@ -486,6 +474,7 @@ public class PooledCacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -493,6 +482,7 @@ public class PooledCacheEventQueue
         }
 
         /** @return debugging info */
+        @Override
         public String toString()
         {
             return new StringBuffer( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
@@ -507,7 +497,7 @@ public class PooledCacheEventQueue
         extends AbstractCacheEvent
     {
         /** The payload, the key to remove */
-        private Serializable key;
+        private final Serializable key;
 
         /**
          * Constructor for the RemoveEvent object
@@ -525,6 +515,7 @@ public class PooledCacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -532,6 +523,7 @@ public class PooledCacheEventQueue
         }
 
         /** @return debugging info */
+        @Override
         public String toString()
         {
             return new StringBuffer( "RemoveEvent for " ).append( key ).toString();
@@ -541,7 +533,7 @@ public class PooledCacheEventQueue
     /**
      * An event that knows how to call remove all on an ICacheListener
      */
-    private class RemoveAllEvent
+    protected class RemoveAllEvent
         extends AbstractCacheEvent
     {
         /**
@@ -549,6 +541,7 @@ public class PooledCacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -556,6 +549,7 @@ public class PooledCacheEventQueue
         }
 
         /** @return debugging info */
+        @Override
         public String toString()
         {
             return "RemoveAllEvent";
@@ -565,7 +559,7 @@ public class PooledCacheEventQueue
     /**
      * The Event put into the queue for dispose requests.
      */
-    private class DisposeEvent
+    protected class DisposeEvent
         extends AbstractCacheEvent
     {
         /**
@@ -573,6 +567,7 @@ public class PooledCacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -580,6 +575,7 @@ public class PooledCacheEventQueue
         }
 
         /** @return debugging info */
+        @Override
         public String toString()
         {
             return "DisposeEvent";
@@ -612,19 +608,11 @@ public class PooledCacheEventQueue
     {
         if ( pool.getQueue() == null )
         {
-            return pool.getQueue().peek() == null;
+            return true;
         }
         else
         {
-            if ( pool.getQueue() instanceof BoundedBuffer )
-            {
-                BoundedBuffer bb = (BoundedBuffer) pool.getQueue();
-                return bb.size() == 0;
-            }
-            else
-            {
-                return true;
-            }
+            return pool.getQueue().size() == 0;
         }
     }
 
@@ -638,19 +626,11 @@ public class PooledCacheEventQueue
     {
         if ( pool.getQueue() == null )
         {
-            return pool.getQueue().peek() == null ? 0 : 1;
+            return 0;
         }
         else
         {
-            if ( pool.getQueue() instanceof BoundedBuffer )
-            {
-                BoundedBuffer bb = (BoundedBuffer) pool.getQueue();
-                return bb.size();
-            }
-            else
-            {
-                return 1;
-            }
+            return pool.getQueue().size();
         }
     }
 }

@@ -43,7 +43,7 @@ public class RemoteHttpCacheService
     private static final String EVENT_LOG_SOURCE_NAME = "RemoteHttpCacheServer";
 
     /** The configuration */
-    private RemoteHttpCacheServerAttributes remoteHttpCacheServerAttributes;
+    private final RemoteHttpCacheServerAttributes remoteHttpCacheServerAttributes;
 
     /**
      * Create a process with a cache manager.
@@ -72,10 +72,11 @@ public class RemoteHttpCacheService
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     public ICacheElement processGet( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
         if ( keepLocal )
@@ -100,10 +101,11 @@ public class RemoteHttpCacheService
      * @return Map
      * @throws IOException
      */
-    public Map processGetMultiple( String cacheName, Set keys, long requesterId )
+    @Override
+    public Map<Serializable, ICacheElement> processGetMultiple( String cacheName, Set<Serializable> keys, long requesterId )
         throws IOException
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
         if ( keepLocal )
@@ -128,10 +130,11 @@ public class RemoteHttpCacheService
      * @return Map
      * @throws IOException
      */
-    public Map processGetMatching( String cacheName, String pattern, long requesterId )
+    @Override
+    public Map<Serializable, ICacheElement> processGetMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
         if ( keepLocal )
@@ -154,10 +157,11 @@ public class RemoteHttpCacheService
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void processUpdate( ICacheElement item, long requesterId )
         throws IOException
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( item.getCacheName() );
+        CompositeCache cache = getCacheManager().getCache( item.getCacheName() );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
         if ( keepLocal )
@@ -181,10 +185,11 @@ public class RemoteHttpCacheService
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void processRemove( String cacheName, Serializable key, long requesterId )
         throws IOException
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
         if ( keepLocal )
@@ -207,10 +212,11 @@ public class RemoteHttpCacheService
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void processRemoveAll( String cacheName, long requesterId )
         throws IOException
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
         if ( keepLocal )
@@ -230,10 +236,11 @@ public class RemoteHttpCacheService
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void processDispose( String cacheName, long requesterId )
         throws IOException
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
         cache.dispose();
     }
 
@@ -254,6 +261,7 @@ public class RemoteHttpCacheService
      * @param requesterId
      * @return requesterId + ""
      */
+    @Override
     protected String getExtraInfoForRequesterId( long requesterId )
     {
         return requesterId + "";

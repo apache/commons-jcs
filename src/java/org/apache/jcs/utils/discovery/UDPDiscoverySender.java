@@ -47,10 +47,10 @@ public class UDPDiscoverySender
     private InetAddress multicastAddress;
 
     /** The port */
-    private int multicastPort;
+    private final int multicastPort;
 
     /** Used to serialize messages */
-    private StandardSerializer serializer = new StandardSerializer();
+    private final StandardSerializer serializer = new StandardSerializer();
 
     /**
      * Constructor for the UDPDiscoverySender object
@@ -110,6 +110,7 @@ public class UDPDiscoverySender
      * <p>
      * @throws Throwable
      */
+    @Override
     public void finalize()
         throws Throwable
     {
@@ -193,7 +194,7 @@ public class UDPDiscoverySender
      * @param cacheNames
      * @throws IOException
      */
-    public void passiveBroadcast( String host, int port, ArrayList cacheNames )
+    public void passiveBroadcast( String host, int port, ArrayList<String> cacheNames )
         throws IOException
     {
         passiveBroadcast( host, port, cacheNames, UDPDiscoveryInfo.listenerId );
@@ -208,7 +209,7 @@ public class UDPDiscoverySender
      * @param listenerId
      * @throws IOException
      */
-    protected void passiveBroadcast( String host, int port, ArrayList cacheNames, long listenerId )
+    protected void passiveBroadcast( String host, int port, ArrayList<String> cacheNames, long listenerId )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -235,7 +236,7 @@ public class UDPDiscoverySender
      * @param cacheNames names of the cache regions
      * @throws IOException on error
      */
-    public void removeBroadcast( String host, int port, ArrayList cacheNames )
+    public void removeBroadcast( String host, int port, ArrayList<String> cacheNames )
         throws IOException
     {
         removeBroadcast( host, port, cacheNames, UDPDiscoveryInfo.listenerId );
@@ -250,7 +251,7 @@ public class UDPDiscoverySender
      * @param listenerId listener ID
      * @throws IOException on error
      */
-    protected void removeBroadcast( String host, int port, ArrayList cacheNames, long listenerId )
+    protected void removeBroadcast( String host, int port, ArrayList<String> cacheNames, long listenerId )
         throws IOException
     {
         if ( log.isDebugEnabled() )

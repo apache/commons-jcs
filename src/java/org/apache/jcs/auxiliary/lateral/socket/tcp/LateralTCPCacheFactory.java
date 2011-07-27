@@ -66,11 +66,12 @@ public class LateralTCPCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
+    @Override
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
-        ArrayList noWaits = new ArrayList();
+        ArrayList<ICache> noWaits = new ArrayList<ICache>();
 
         // pairs up the tcp servers and set the tcpServer value and
         // get the manager and then get the cache
@@ -111,7 +112,7 @@ public class LateralTCPCacheFactory
         createListener( (ILateralCacheAttributes) iaca, cacheMgr );
 
         // create the no wait facade.
-        LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( (LateralCacheNoWait[]) noWaits
+        LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( noWaits
             .toArray( new LateralCacheNoWait[0] ), (ILateralCacheAttributes) iaca );
 
         // create udp discovery if available.
@@ -124,6 +125,7 @@ public class LateralTCPCacheFactory
      * @param lac
      * @param cacheMgr
      */
+    @Override
     public void createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
         ITCPLateralCacheAttributes attr = (ITCPLateralCacheAttributes) lac;

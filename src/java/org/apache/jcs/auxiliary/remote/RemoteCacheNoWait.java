@@ -186,12 +186,12 @@ public class RemoteCacheNoWait
     }
 
     /**
-     * @param pattern 
+     * @param pattern
      * @return Map
-     * @throws IOException 
-     * 
+     * @throws IOException
+     *
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String pattern )
         throws IOException
     {
         getMatchingCount++;
@@ -226,7 +226,7 @@ public class RemoteCacheNoWait
             throw ex;
         }
 
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     /**
@@ -238,7 +238,7 @@ public class RemoteCacheNoWait
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
         throws IOException
     {
         getMultipleCount++;
@@ -273,7 +273,7 @@ public class RemoteCacheNoWait
             throw ex;
         }
 
-        return new HashMap();
+        return new HashMap<Serializable, ICacheElement>();
     }
 
     /**
@@ -281,7 +281,7 @@ public class RemoteCacheNoWait
      * @return the keys for the group name
      * @throws IOException
      */
-    public Set getGroupKeys( String groupName )
+    public Set<Serializable> getGroupKeys( String groupName )
         throws IOException
     {
         return remoteCacheClient.getGroupKeys( groupName );
@@ -460,6 +460,7 @@ public class RemoteCacheNoWait
      * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString()
     {
         return getStats() + "\n" + remoteCacheClient.toString();
@@ -483,7 +484,7 @@ public class RemoteCacheNoWait
         IStats stats = new Stats();
         stats.setTypeName( "Remote Cache No Wait" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -516,7 +517,7 @@ public class RemoteCacheNoWait
         if ( cStats != null )
         {
             IStatElement[] cSEs = cStats.getStatElements();
-            List cL = Arrays.asList( cSEs );
+            List<IStatElement> cL = Arrays.asList( cSEs );
             elems.addAll( cL );
         }
 
@@ -524,7 +525,7 @@ public class RemoteCacheNoWait
         // get as array, convert to list, add list to our outer list
         IStats eqStats = this.cacheEventQueue.getStatistics();
         IStatElement[] eqSEs = eqStats.getStatElements();
-        List eqL = Arrays.asList( eqSEs );
+        List<IStatElement> eqL = Arrays.asList( eqSEs );
         elems.addAll( eqL );
 
         se = new StatElement();
@@ -553,7 +554,7 @@ public class RemoteCacheNoWait
         elems.add( se );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[elems.size()] );
+        IStatElement[] ses = elems.toArray( new StatElement[elems.size()] );
         stats.setStatElements( ses );
 
         return stats;
@@ -564,6 +565,7 @@ public class RemoteCacheNoWait
      * <p>
      * @return String
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return "Remote Cache No Wait";

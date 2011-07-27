@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,7 +52,7 @@ public class LateralCache
     private final static Log log = LogFactory.getLog( LateralCache.class );
 
     /** generalize this, use another interface */
-    private ILateralCacheAttributes lateralCacheAttribures;
+    private final ILateralCacheAttributes lateralCacheAttribures;
 
     /** The region name */
     final String cacheName;
@@ -96,6 +95,7 @@ public class LateralCache
      * @param ce
      * @throws IOException
      */
+    @Override
     protected void processUpdate( ICacheElement ce )
         throws IOException
     {
@@ -127,6 +127,7 @@ public class LateralCache
      * @return ICacheElement or null
      * @throws IOException
      */
+    @Override
     protected ICacheElement processGet( Serializable key )
         throws IOException
     {
@@ -154,14 +155,15 @@ public class LateralCache
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected Map processGetMatching( String pattern )
+    @Override
+    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
         throws IOException
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( this.lateralCacheAttribures.getPutOnlyMode() )
         {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         try
         {
@@ -183,19 +185,16 @@ public class LateralCache
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected Map processGetMultiple( Set keys )
+    @Override
+    protected Map<Serializable, ICacheElement> processGetMultiple( Set<Serializable> keys )
         throws IOException
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
+            for (Serializable key : keys)
             {
-                Serializable key = (Serializable) iterator.next();
-
                 ICacheElement element = get( key );
 
                 if ( element != null )
@@ -213,7 +212,7 @@ public class LateralCache
      * @return A set of group keys.
      * @throws IOException
      */
-    public Set getGroupKeys( String groupName )
+    public Set<Serializable> getGroupKeys( String groupName )
         throws IOException
     {
         try
@@ -225,7 +224,7 @@ public class LateralCache
             handleException( ex, "Failed to remove groupName [" + groupName + "] from " + lateralCacheAttribures.getCacheName() + "@"
                 + lateralCacheAttribures );
         }
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     /**
@@ -236,6 +235,7 @@ public class LateralCache
      * @return false always
      * @throws IOException
      */
+    @Override
     protected boolean processRemove( Serializable key )
         throws IOException
     {
@@ -261,6 +261,7 @@ public class LateralCache
      * <p>
      * @throws IOException
      */
+    @Override
     protected void processRemoveAll()
         throws IOException
     {
@@ -279,6 +280,7 @@ public class LateralCache
      * <p>
      * @throws IOException
      */
+    @Override
     protected void processDispose()
         throws IOException
     {
@@ -421,6 +423,7 @@ public class LateralCache
     /**
      * @return debugging data.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
@@ -433,6 +436,7 @@ public class LateralCache
     /**
      * @return extra data.
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return null;

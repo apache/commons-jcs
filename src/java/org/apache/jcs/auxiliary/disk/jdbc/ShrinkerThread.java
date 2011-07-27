@@ -39,7 +39,7 @@ public class ShrinkerThread
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
-    private Set shrinkSet = Collections.synchronizedSet( new HashSet() );
+    private final Set<JDBCDiskCache> shrinkSet = Collections.synchronizedSet( new HashSet<JDBCDiskCache>() );
 
     /** Default time period to use. */
     private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
@@ -67,7 +67,7 @@ public class ShrinkerThread
     public void addDiskCacheToShrinkList( JDBCDiskCache diskCache )
     {
         // the set will prevent dupes.
-        // we could also just add these to a hasmap by region name
+        // we could also just add these to a hashmap by region name
         // but that might cause a problem if you wanted to use two different
         // jbdc disk caches for the same region.
         shrinkSet.add( diskCache );

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,16 +35,18 @@ public class LateralTCPDiscoveryListener
      * Map of no wait facades. these are used to determine which regions are locally configured to
      * use laterals.
      */
-    private Map facades = Collections.synchronizedMap( new HashMap() );
+    private final Map<String, LateralCacheNoWaitFacade> facades =
+        Collections.synchronizedMap( new HashMap<String, LateralCacheNoWaitFacade>() );
 
     /**
      * List of regions that are configured differently here than on another server. We keep track of
      * this to limit the amount of info logging.
      */
-    private Set knownDifferentlyConfiguredRegions = Collections.synchronizedSet( new HashSet() );
+    private final Set<String> knownDifferentlyConfiguredRegions =
+        Collections.synchronizedSet( new HashSet<String>() );
 
     /** The cache manager. */
-    private ICompositeCacheManager cacheMgr;
+    private final ICompositeCacheManager cacheMgr;
 
     /** The event logger. */
     protected ICacheEventLogger cacheEventLogger;
@@ -109,7 +110,7 @@ public class LateralTCPDiscoveryListener
      */
     public boolean containsNoWait( String cacheName, LateralCacheNoWait noWait )
     {
-        LateralCacheNoWaitFacade facade = (LateralCacheNoWaitFacade) facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade facade = facades.get( noWait.getCacheName() );
         if ( facade == null )
         {
             return false;
@@ -132,7 +133,7 @@ public class LateralTCPDiscoveryListener
      */
     protected boolean addNoWait( LateralCacheNoWait noWait )
     {
-        LateralCacheNoWaitFacade facade = (LateralCacheNoWaitFacade) facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade facade = facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {
             log.debug( "addNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
@@ -171,7 +172,7 @@ public class LateralTCPDiscoveryListener
      */
     protected boolean removeNoWait( LateralCacheNoWait noWait )
     {
-        LateralCacheNoWaitFacade facade = (LateralCacheNoWaitFacade) facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade facade = facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {
             log.debug( "removeNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
@@ -224,15 +225,12 @@ public class LateralTCPDiscoveryListener
         // we need the listener port from the original config.
         LateralTCPCacheManager lcm = findManagerForServiceEndPoint( service );
 
-        ArrayList regions = service.getCacheNames();
+        ArrayList<String> regions = service.getCacheNames();
         if ( regions != null )
         {
             // for each region get the cache
-            Iterator it = regions.iterator();
-            while ( it.hasNext() )
+            for (String cacheName : regions)
             {
-                String cacheName = (String) it.next();
-
                 try
                 {
                     ICache ic = lcm.getCache( cacheName );
@@ -279,15 +277,12 @@ public class LateralTCPDiscoveryListener
         // we need the listener port from the original config.
         LateralTCPCacheManager lcm = findManagerForServiceEndPoint( service );
 
-        ArrayList regions = service.getCacheNames();
+        ArrayList<String> regions = service.getCacheNames();
         if ( regions != null )
         {
             // for each region get the cache
-            Iterator it = regions.iterator();
-            while ( it.hasNext() )
+            for (String cacheName : regions)
             {
-                String cacheName = (String) it.next();
-
                 try
                 {
                     ICache ic = lcm.getCache( cacheName );

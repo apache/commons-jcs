@@ -44,7 +44,7 @@ public class CacheEventQueue
     implements ICacheEventQueue
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog( CacheEventQueue.class );
+    protected static final Log log = LogFactory.getLog( CacheEventQueue.class );
 
     /** The type of queue -- there are pooled and single */
     private static final String queueType = SINGLE_QUEUE_TYPE;
@@ -62,19 +62,19 @@ public class CacheEventQueue
      * When the events are pulled off the queue, the tell the listener to handle the specific event
      * type. The work is done by the listener.
      */
-    private ICacheListener listener;
+    protected ICacheListener listener;
 
-    /** Id of the listener registed with this queue */
+    /** Id of the listener registered with this queue */
     private long listenerId;
 
     /** The cache region name, if applicable. */
-    private String cacheName;
+    protected String cacheName;
 
     /** Maximum number of failures before we buy the farm. */
-    private int maxFailure;
+    protected int maxFailure;
 
     /** in milliseconds */
-    private int waitBeforeRetry;
+    protected int waitBeforeRetry;
 
     /** this is true if there is no worker thread. */
     private boolean destroyed = true;
@@ -89,7 +89,7 @@ public class CacheEventQueue
     private Thread processorThread;
 
     /** sync */
-    private Object queueLock = new Object();
+    protected final Object queueLock = new Object();
 
     /** the head of the queue */
     private Node head = new Node();
@@ -156,7 +156,7 @@ public class CacheEventQueue
             log.debug( "Constructed: " + this );
         }
     }
-    
+
     /**
      * What type of queue is this.
      * <p>
@@ -202,6 +202,7 @@ public class CacheEventQueue
      * <p>
      * @return String debugging info.
      */
+    @Override
     public String toString()
     {
         return "CacheEventQueue [listenerId=" + listenerId + ", cacheName=" + cacheName + "]";
@@ -414,7 +415,7 @@ public class CacheEventQueue
      * <p>
      * @return An event to process.
      */
-    private AbstractCacheEvent take()
+    protected AbstractCacheEvent take()
     {
         synchronized ( queueLock )
         {
@@ -455,7 +456,7 @@ public class CacheEventQueue
         IStats stats = new Stats();
         stats.setTypeName( "Cache Event Queue" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -499,7 +500,7 @@ public class CacheEventQueue
         }
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -508,7 +509,7 @@ public class CacheEventQueue
     // /////////////////////////// Inner classes /////////////////////////////
 
     /** The queue is composed of nodes. */
-    private static class Node
+    protected static class Node
     {
         /** Next node in the singly linked list. */
         Node next = null;
@@ -548,6 +549,7 @@ public class CacheEventQueue
          * Waits for a specified time (waitToDieMillis) for something to come in and if no new
          * events come in during that period the run method can exit and the thread is dereferenced.
          */
+        @Override
         public void run()
         {
             AbstractCacheEvent event = null;
@@ -604,7 +606,7 @@ public class CacheEventQueue
      * @author asmuts
      * @created January 15, 2002
      */
-    private abstract class AbstractCacheEvent
+    protected abstract class AbstractCacheEvent
         implements Runnable
     {
         /** Number of failures encountered processing this event. */
@@ -679,7 +681,7 @@ public class CacheEventQueue
         extends AbstractCacheEvent
     {
         /** The element to put to the listener */
-        private ICacheElement ice;
+        private final ICacheElement ice;
 
         /**
          * Constructor for the PutEvent object.
@@ -698,6 +700,7 @@ public class CacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -709,6 +712,7 @@ public class CacheEventQueue
          * <p>
          * @return Info on the key and value.
          */
+        @Override
         public String toString()
         {
             return new StringBuffer( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
@@ -727,7 +731,7 @@ public class CacheEventQueue
         extends AbstractCacheEvent
     {
         /** The key to remove from the listener */
-        private Serializable key;
+        private final Serializable key;
 
         /**
          * Constructor for the RemoveEvent object
@@ -746,6 +750,7 @@ public class CacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -757,6 +762,7 @@ public class CacheEventQueue
          * <p>
          * @return Info on the key to remove.
          */
+        @Override
         public String toString()
         {
             return new StringBuffer( "RemoveEvent for " ).append( key ).toString();
@@ -770,7 +776,7 @@ public class CacheEventQueue
      * @author asmuts
      * @created January 15, 2002
      */
-    private class RemoveAllEvent
+    protected class RemoveAllEvent
         extends AbstractCacheEvent
     {
         /**
@@ -778,6 +784,7 @@ public class CacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -789,6 +796,7 @@ public class CacheEventQueue
          * <p>
          * @return The name of the event.
          */
+        @Override
         public String toString()
         {
             return "RemoveAllEvent";
@@ -802,7 +810,7 @@ public class CacheEventQueue
      * @author asmuts
      * @created January 15, 2002
      */
-    private class DisposeEvent
+    protected class DisposeEvent
         extends AbstractCacheEvent
     {
         /**
@@ -810,6 +818,7 @@ public class CacheEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {
@@ -821,6 +830,7 @@ public class CacheEventQueue
          * <p>
          * @return The name of the event.
          */
+        @Override
         public String toString()
         {
             return "DisposeEvent";

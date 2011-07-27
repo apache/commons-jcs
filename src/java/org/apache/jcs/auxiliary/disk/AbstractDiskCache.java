@@ -24,10 +24,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,8 +45,6 @@ import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
-
-import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
 
 /**
  * Abstract class providing a base implementation of a disk cache, which can be easily extended to
@@ -68,7 +66,7 @@ public abstract class AbstractDiskCache
     private static final long serialVersionUID = 6541664080877628324L;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( AbstractDiskCache.class );
+    protected static final Log log = LogFactory.getLog( AbstractDiskCache.class );
 
     /** Generic disk cache attributes */
     private IDiskCacheAttributes diskCacheAttributes = null;
@@ -81,7 +79,7 @@ public abstract class AbstractDiskCache
      * If the elements are pulled into the memory cache while the are still in purgatory, writing to
      * disk can be canceled.
      */
-    protected Map purgatory = new HashMap();
+    protected Map<Serializable, PurgatoryElement> purgatory = new HashMap<Serializable, PurgatoryElement>();
 
     /**
      * The CacheEventQueue where changes will be queued for asynchronous updating of the persistent
@@ -105,7 +103,7 @@ public abstract class AbstractDiskCache
      * We lock here, so that we cannot get an update after a remove all. an individual removal locks
      * the item.
      */
-    private WriterPreferenceReadWriteLock removeAllLock = new WriterPreferenceReadWriteLock();
+    protected final ReentrantReadWriteLock removeAllLock = new ReentrantReadWriteLock();
 
     // ----------------------------------------------------------- constructors
 
@@ -141,46 +139,37 @@ public abstract class AbstractDiskCache
      */
     private void initPurgatory()
     {
-        try
-        {
-            // we need this so we can stop the updates from happening after a
-            // removeall
-            removeAllLock.writeLock().acquire();
+        // we need this so we can stop the updates from happening after a
+        // removeall
+        removeAllLock.writeLock().lock();
 
-            if ( purgatory != null )
-            {
-                synchronized ( purgatory )
-                {
-                    if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
-                    {
-                        purgatory = new LRUMapJCS( diskCacheAttributes.getMaxPurgatorySize() );
-                    }
-                    else
-                    {
-                        purgatory = new HashMap();
-                    }
-                }
-            }
-            else
+        if ( purgatory != null )
+        {
+            synchronized ( purgatory )
             {
                 if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
                 {
-                    purgatory = new LRUMapJCS( diskCacheAttributes.getMaxPurgatorySize() );
+                    purgatory = new LRUMapJCS<Serializable, PurgatoryElement>( diskCacheAttributes.getMaxPurgatorySize() );
                 }
                 else
                 {
-                    purgatory = new HashMap();
+                    purgatory = new HashMap<Serializable, PurgatoryElement>();
                 }
             }
         }
-        catch ( InterruptedException e )
+        else
         {
-            log.error( "problem encountered resseting purgatory.", e );
+            if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
+            {
+                purgatory = new LRUMapJCS<Serializable, PurgatoryElement>( diskCacheAttributes.getMaxPurgatorySize() );
+            }
+            else
+            {
+                purgatory = new HashMap<Serializable, PurgatoryElement>();
+            }
         }
-        finally
-        {
-            removeAllLock.writeLock().release();
-        }
+
+        removeAllLock.writeLock().unlock();
     }
 
     // ------------------------------------------------------- interface ICache
@@ -196,6 +185,7 @@ public abstract class AbstractDiskCache
      * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#update
      */
+    @Override
     public final void update( ICacheElement cacheElement )
         throws IOException
     {
@@ -239,6 +229,7 @@ public abstract class AbstractDiskCache
      * @return ICacheElement or null
      * @see AuxiliaryCache#get
      */
+    @Override
     public final ICacheElement get( Serializable key )
     {
         // If not alive, always return null.
@@ -255,7 +246,7 @@ public abstract class AbstractDiskCache
         PurgatoryElement pe = null;
         synchronized ( purgatory )
         {
-            pe = (PurgatoryElement) purgatory.get( key );
+            pe = purgatory.get( key );
         }
 
         // If the element was found in purgatory
@@ -322,7 +313,8 @@ public abstract class AbstractDiskCache
      *         data matching the pattern.
      * @throws IOException
      */
-    public Map getMatching( String pattern )
+    @Override
+    public Map<Serializable, ICacheElement> getMatching( String pattern )
         throws IOException
     {
         // Get the keys from purgatory
@@ -334,13 +326,13 @@ public abstract class AbstractDiskCache
             keyArray = purgatory.keySet().toArray();
         }
 
-        Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+        Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
         // call getMultiple with the set
-        Map result = processGetMultiple( matchingKeys );
+        Map<Serializable, ICacheElement> result = processGetMultiple( matchingKeys );
 
         // Get the keys from disk
-        Map diskMatches = doGetMatching( pattern );
+        Map<Serializable, ICacheElement> diskMatches = doGetMatching( pattern );
 
         result.putAll( diskMatches );
 
@@ -354,18 +346,15 @@ public abstract class AbstractDiskCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map processGetMultiple( Set keys )
+    @Override
+    public Map<Serializable, ICacheElement> processGetMultiple(Set<Serializable> keys)
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
+            for (Serializable key : keys)
             {
-                Serializable key = (Serializable) iterator.next();
-
                 ICacheElement element = get( key );
 
                 if ( element != null )
@@ -384,7 +373,7 @@ public abstract class AbstractDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
-    public abstract Set getGroupKeys( String groupName );
+    public abstract Set<Serializable> getGroupKeys( String groupName );
 
     /**
      * Removes are not queued. A call to remove is immediate.
@@ -394,6 +383,7 @@ public abstract class AbstractDiskCache
      * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#remove
      */
+    @Override
     public final boolean remove( Serializable key )
         throws IOException
     {
@@ -403,7 +393,7 @@ public abstract class AbstractDiskCache
         {
             // I'm getting the object, so I can lock on the element
             // Remove element from purgatory if it is there
-            pe = (PurgatoryElement) purgatory.get( key );
+            pe = purgatory.get( key );
         }
 
         if ( pe != null )
@@ -436,6 +426,7 @@ public abstract class AbstractDiskCache
      * @throws IOException
      * @see org.apache.jcs.engine.behavior.ICache#removeAll
      */
+    @Override
     public final void removeAll()
         throws IOException
     {
@@ -469,6 +460,7 @@ public abstract class AbstractDiskCache
      * </ol>
      * @throws IOException
      */
+    @Override
     public final void dispose()
         throws IOException
     {
@@ -548,7 +540,7 @@ public abstract class AbstractDiskCache
         IStats stats = new Stats();
         stats.setTypeName( "Abstract Disk Cache" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -566,11 +558,11 @@ public abstract class AbstractDiskCache
         // get as array, convert to list, add list to our outer list
         IStats eqStats = this.cacheEventQueue.getStatistics();
         IStatElement[] eqSEs = eqStats.getStatElements();
-        List eqL = Arrays.asList( eqSEs );
+        List<IStatElement> eqL = Arrays.asList( eqSEs );
         elems.addAll( eqL );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -607,7 +599,7 @@ public abstract class AbstractDiskCache
      * Cache that implements the CacheListener interface, and calls appropriate methods in its
      * parent class.
      */
-    private class MyCacheListener
+    protected class MyCacheListener
         implements ICacheListener
     {
         /** Id of the listener */
@@ -656,43 +648,34 @@ public abstract class AbstractDiskCache
 
                     synchronized ( pe.getCacheElement() )
                     {
-                        try
+                        // TODO consider a timeout.
+                        // we need this so that we can have multiple update
+                        // threads and still have removeAll requests come in that
+                        // always win
+                        removeAllLock.readLock().lock();
+
+                        // TODO consider changing purgatory sync
+                        // String keyAsString = element.getKey().toString();
+                        synchronized ( purgatory )
                         {
-                            // TODO consider a timeout.
-                            // we need this so that we can have multiple update
-                            // threads and still have removeAll requests come in that
-                            // always win
-                            removeAllLock.readLock().acquire();
-
-                            // TODO consider changing purgatory sync
-                            // String keyAsString = element.getKey().toString();
-                            synchronized ( purgatory )
+                            // If the element has already been removed from
+                            // purgatory do nothing
+                            if ( !purgatory.containsKey( pe.getKey() ) )
                             {
-                                // If the element has already been removed from
-                                // purgatory do nothing
-                                if ( !purgatory.containsKey( pe.getKey() ) )
-                                {
-                                    return;
-                                }
-
-                                element = pe.getCacheElement();
+                                return;
                             }
 
-                            // I took this out of the purgatory sync block.
-                            // If the element is still eligible, spool it.
-                            if ( pe.isSpoolable() )
-                            {
-                                doUpdate( element );
-                            }
+                            element = pe.getCacheElement();
                         }
-                        catch ( InterruptedException e )
+
+                        // I took this out of the purgatory sync block.
+                        // If the element is still eligible, spool it.
+                        if ( pe.isSpoolable() )
                         {
-                            log.error( e );
+                            doUpdate( element );
                         }
-                        finally
-                        {
-                            removeAllLock.readLock().release();
-                        }
+
+                        removeAllLock.readLock().unlock();
 
                         synchronized ( purgatory )
                         {
@@ -806,7 +789,7 @@ public abstract class AbstractDiskCache
      * @return A map of matches..
      * @throws IOException
      */
-    protected final Map doGetMatching( String pattern )
+    protected final Map<Serializable, ICacheElement> doGetMatching( String pattern )
         throws IOException
     {
         return super.getMatchingWithEventLogging( pattern );
@@ -881,6 +864,7 @@ public abstract class AbstractDiskCache
      * <p>
      * @return disk location
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return getDiskLocation();

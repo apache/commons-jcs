@@ -22,13 +22,11 @@ package org.apache.jcs.access;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.JCS;
 import org.apache.jcs.access.behavior.ICacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.ConfigurationException;
@@ -55,9 +53,9 @@ import org.apache.jcs.utils.props.AbstractPropertyContainer;
  * <p>
  * @author Aaron Smuts
  */
-public class PartitionedCacheAccess
+public class PartitionedCacheAccess<K, V>
     extends AbstractPropertyContainer
-    implements ICacheAccess
+    implements ICacheAccess<K, V>
 {
     /** the logger. */
     private static final Log log = LogFactory.getLog( PartitionedCacheAccess.class );
@@ -72,7 +70,7 @@ public class PartitionedCacheAccess
     private String partitionRegionNamePrefix;
 
     /** An array of partitions built during initialization. */
-    private ICacheAccess[] partitions;
+    private ICacheAccess<K, V>[] partitions;
 
     /** Is the class initialized. */
     private boolean initialized = false;
@@ -91,7 +89,7 @@ public class PartitionedCacheAccess
      * @param object object
      * @throws CacheException on configuration problem
      */
-    public void put( Object key, Object object )
+    public void put( K key, V object )
         throws CacheException
     {
         if ( key == null || object == null )
@@ -120,7 +118,7 @@ public class PartitionedCacheAccess
      * @param object
      * @throws CacheException
      */
-    public void putSafe( Object key, Object object )
+    public void putSafe( K key, V object )
         throws CacheException
     {
         if ( key == null || object == null )
@@ -141,7 +139,7 @@ public class PartitionedCacheAccess
      * @param attr
      * @throws CacheException on configuration problem
      */
-    public void put( Object key, Object object, IElementAttributes attr )
+    public void put( K key, V object, IElementAttributes attr )
         throws CacheException
     {
         if ( key == null || object == null )
@@ -169,7 +167,7 @@ public class PartitionedCacheAccess
      * @param key key
      * @return result, null if not found.
      */
-    public Object get( Object key )
+    public V get( K key )
     {
         if ( key == null )
         {
@@ -198,7 +196,7 @@ public class PartitionedCacheAccess
      * @param key key
      * @return result, null if not found.
      */
-    public ICacheElement getCacheElement( Object key )
+    public ICacheElement getCacheElement( K key )
     {
         if ( key == null )
         {
@@ -227,29 +225,27 @@ public class PartitionedCacheAccess
      * @param names
      * @return Map of keys to ICacheElement
      */
-    public Map getCacheElements( Set names )
+    public Map<K, ICacheElement> getCacheElements( Set<K> names )
     {
         if ( names == null )
         {
             log.warn( "Bad input names cannot be null." );
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
 
-        Set[] dividedNames = new Set[this.getNumberOfPartitions()];
+        Set<K>[] dividedNames = new Set[this.getNumberOfPartitions()];
 
-        Iterator it = names.iterator();
-        while ( it.hasNext() )
+        for (K key : names)
         {
-            Object key = it.next();
             int partition = getPartitionNumberForKey( key );
             if ( dividedNames[partition] == null )
             {
-                dividedNames[partition] = new HashSet();
+                dividedNames[partition] = new HashSet<K>();
             }
             dividedNames[partition].add( key );
         }
 
-        Map result = new HashMap();
+        Map<K, ICacheElement> result = new HashMap<K, ICacheElement>();
         for ( int i = 0; i < partitions.length; i++ )
         {
             if ( dividedNames[i] != null && !dividedNames[i].isEmpty() )
@@ -264,12 +260,12 @@ public class PartitionedCacheAccess
      * This is tricky. Do we need to get from all the partitions?
      * <p>
      * If this interface took an object, we could use the hashcode to determine the partition. Then
-     * we could user the toString for the pattern.
+     * we could use the toString for the pattern.
      * <p>
      * @param pattern
      * @return HashMap key to value
      */
-    public Map getMatching( String pattern )
+    public Map<K, V> getMatching( String pattern )
     {
         if ( pattern == null )
         {
@@ -287,21 +283,21 @@ public class PartitionedCacheAccess
             return null;
         }
 
-        Map result = new HashMap();
+        Map<K, V> result = new HashMap<K,V>();
         for ( int i = 0; i < partitions.length; i++ )
         {
             result.putAll( partitions[i].getMatching( pattern ) );
         }
         return result;
     }
-    
+
     /**
      * This is tricky. Do we need to get from all the partitions?
      * <p>
      * @param pattern
      * @return HashMap key to ICacheElement
      */
-    public Map getMatchingCacheElements( String pattern )
+    public Map<K, ICacheElement> getMatchingCacheElements( String pattern )
     {
         if ( pattern == null )
         {
@@ -319,7 +315,7 @@ public class PartitionedCacheAccess
             return null;
         }
 
-        Map result = new HashMap();
+        Map<K, ICacheElement> result = new HashMap<K, ICacheElement>();
         for ( int i = 0; i < partitions.length; i++ )
         {
             result.putAll( partitions[i].getMatchingCacheElements( pattern ) );
@@ -349,7 +345,7 @@ public class PartitionedCacheAccess
      * @param key
      * @throws CacheException
      */
-    public void remove( Object key )
+    public void remove( K key )
         throws CacheException
     {
         if ( key == null )
@@ -439,7 +435,7 @@ public class PartitionedCacheAccess
      * @return IElementAttributes
      * @throws CacheException
      */
-    public IElementAttributes getElementAttributes( Object key )
+    public IElementAttributes getElementAttributes( K key )
         throws CacheException
     {
         if ( key == null )
@@ -480,7 +476,7 @@ public class PartitionedCacheAccess
      * @param attributes
      * @throws CacheException
      */
-    public void resetElementAttributes( Object key, IElementAttributes attributes )
+    public void resetElementAttributes( K key, IElementAttributes attributes )
         throws CacheException
     {
         if ( key == null )
@@ -520,15 +516,15 @@ public class PartitionedCacheAccess
     }
 
     /**
-     * This expects a numeric key. If the key cannot be converted into a number, we wil return 0.
+     * This expects a numeric key. If the key cannot be converted into a number, we will return 0.
      * TODO we could md5 it or get the hashcode.
      * <p>
-     * We determine the partition by taking the mod of the number of partions.
+     * We determine the partition by taking the mod of the number of partitions.
      * <p>
      * @param key key
      * @return the partition number.
      */
-    protected int getPartitionNumberForKey( Object key )
+    protected int getPartitionNumberForKey( K key )
     {
         if ( key == null )
         {
@@ -553,7 +549,7 @@ public class PartitionedCacheAccess
      * @param key key
      * @return long
      */
-    public long getNumericValueForKey( Object key )
+    public long getNumericValueForKey( K key )
     {
         String keyString = key.toString();
         long keyNum = -1;
@@ -565,7 +561,7 @@ public class PartitionedCacheAccess
         {
             // THIS IS UGLY, but I can't think of a better failsafe right now.
             keyNum = key.hashCode();
-            log.warn( "Counldn't convert [" + key + "] into a number.  Will use hashcode [" + keyNum + "]" );
+            log.warn( "Couldn't convert [" + key + "] into a number.  Will use hashcode [" + keyNum + "]" );
         }
         return keyNum;
     }
@@ -585,7 +581,7 @@ public class PartitionedCacheAccess
     }
 
     /**
-     * Use the partion prefix and the number of partions to get JCS regions.
+     * Use the partition prefix and the number of partitions to get JCS regions.
      * <p>
      * @throws ConfigurationException on configuration problem
      */
@@ -594,13 +590,13 @@ public class PartitionedCacheAccess
     {
         ensureProperties();
 
-        ICacheAccess[] tempPartitions = new ICacheAccess[this.getNumberOfPartitions()];
+        ICacheAccess<K, V>[] tempPartitions = new ICacheAccess[this.getNumberOfPartitions()];
         for ( int i = 0; i < this.getNumberOfPartitions(); i++ )
         {
             String regionName = this.getPartitionRegionNamePrefix() + "_" + i;
             try
             {
-                tempPartitions[i] = CacheAccess.getAccess( regionName );
+                tempPartitions[i] = (ICacheAccess<K, V>) CacheAccess.getAccess( regionName );
             }
             catch ( CacheException e )
             {
@@ -622,6 +618,7 @@ public class PartitionedCacheAccess
      * </ul>
      * @throws ConfigurationException on configuration problem
      */
+    @Override
     protected void handleProperties()
         throws ConfigurationException
     {
@@ -722,7 +719,7 @@ public class PartitionedCacheAccess
     /**
      * @param partitions The partitions to set.
      */
-    protected void setPartitions( JCS[] partitions )
+    protected void setPartitions( ICacheAccess<K, V>[] partitions )
     {
         this.partitions = partitions;
     }
@@ -730,7 +727,7 @@ public class PartitionedCacheAccess
     /**
      * @return Returns the partitions.
      */
-    protected ICacheAccess[] getPartitions()
+    protected ICacheAccess<K, V>[] getPartitions()
     {
         return partitions;
     }

@@ -131,7 +131,7 @@ public class MockRemoteCacheClient
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
     {
         log.info( "get [" + keys + "]" );
         return (Map) getMultipleSetupMap.get( keys );
@@ -243,7 +243,7 @@ public class MockRemoteCacheClient
      * @return Map
      * @throws IOException
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, ICacheElement> getMatching(String pattern)
         throws IOException
     {
         return new HashMap();
@@ -254,6 +254,7 @@ public class MockRemoteCacheClient
      * <p>
      * @return null
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return null;

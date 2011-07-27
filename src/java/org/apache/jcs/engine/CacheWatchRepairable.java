@@ -22,7 +22,6 @@ package org.apache.jcs.engine;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public class CacheWatchRepairable
     private ICacheObserver cacheWatch;
 
     /** Map of cache regions. */
-    private Map cacheMap = new HashMap();
+    private final Map<String, Set<ICacheListener>> cacheMap = new HashMap<String, Set<ICacheListener>>();
 
     /**
      * Replaces the underlying cache watch service and reattached all existing listeners to the new
@@ -59,14 +58,11 @@ public class CacheWatchRepairable
         this.cacheWatch = cacheWatch;
         synchronized ( cacheMap )
         {
-            for ( Iterator itr = cacheMap.entrySet().iterator(); itr.hasNext(); )
+            for (Map.Entry<String, Set<ICacheListener>> entry : cacheMap.entrySet())
             {
-                Map.Entry entry = (Map.Entry) itr.next();
-                String cacheName = (String) entry.getKey();
-                Set listenerSet = (Set) entry.getValue();
-                for ( Iterator itr2 = listenerSet.iterator(); itr2.hasNext(); )
+                String cacheName = entry.getKey();
+                for (ICacheListener listener : entry.getValue())
                 {
-                    ICacheListener listener = (ICacheListener) itr2.next();
                     try
                     {
                         if ( log.isInfoEnabled() )
@@ -100,11 +96,10 @@ public class CacheWatchRepairable
         // remote add-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            Set listenerSet = (Set) cacheMap.get( cacheName );
+            Set<ICacheListener> listenerSet = cacheMap.get( cacheName );
             if ( listenerSet == null )
             {
-                listenerSet = new HashSet();
-                
+                listenerSet = new HashSet<ICacheListener>();
                 cacheMap.put( cacheName, listenerSet );
             }
             listenerSet.add( obj );
@@ -130,9 +125,8 @@ public class CacheWatchRepairable
         // remote add-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext(); )
+            for (Set<ICacheListener> listenerSet : cacheMap.values())
             {
-                Set listenerSet = (Set) itr.next();
                 listenerSet.add( obj );
             }
         }
@@ -140,7 +134,7 @@ public class CacheWatchRepairable
         {
             log.info( "Adding listener to cache watch. ICacheListener = " + obj
                 + " | ICacheObserver = " + cacheWatch );
-        }        
+        }
         cacheWatch.addCacheListener( obj );
     }
 
@@ -162,7 +156,7 @@ public class CacheWatchRepairable
         // remove-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            Set listenerSet = (Set) cacheMap.get( cacheName );
+            Set<ICacheListener> listenerSet = cacheMap.get( cacheName );
             if ( listenerSet != null )
             {
                 listenerSet.remove( obj );
@@ -187,9 +181,8 @@ public class CacheWatchRepairable
         // remove-listener operation succeeds or fails.
         synchronized ( cacheMap )
         {
-            for ( Iterator itr = cacheMap.values().iterator(); itr.hasNext(); )
+            for (Set<ICacheListener> listenerSet : cacheMap.values())
             {
-                Set listenerSet = (Set) itr.next();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Before removing [" + obj + "] the listenerSet = " + listenerSet );

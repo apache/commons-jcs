@@ -57,9 +57,9 @@ public class RemoteCacheRequest
     private Serializable key;
 
     /** The keySet, if this request has a keySet. Only getMultiple requests. */
-    private Set keySet;
+    private Set<Serializable> keySet;
 
-    /** The pattern, if this request uses a pattern. Ony getMatching requests. */
+    /** The pattern, if this request uses a pattern. Only getMatching requests. */
     private String pattern;
 
     /** The ICacheEleemnt, if this request contains a value. Only update requests will have this. */
@@ -164,7 +164,7 @@ public class RemoteCacheRequest
     /**
      * @param keySet the keySet to set
      */
-    public void setKeySet( Set keySet )
+    public void setKeySet( Set<Serializable> keySet )
     {
         this.keySet = keySet;
     }
@@ -172,12 +172,13 @@ public class RemoteCacheRequest
     /**
      * @return the keySet
      */
-    public Set getKeySet()
+    public Set<Serializable> getKeySet()
     {
         return keySet;
     }
 
     /** @return string */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

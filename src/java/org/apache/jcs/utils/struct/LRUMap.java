@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -51,17 +52,17 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * <p>
  * @author aaron smuts
  */
-public class LRUMap
-    implements Map
+public class LRUMap<K, V>
+    implements Map<K, V>
 {
     /** The logger */
     private final static Log log = LogFactory.getLog( LRUMap.class );
 
     /** double linked list for lru */
-    private DoubleLinkedList list;
+    private final DoubleLinkedList<LRUElementDescriptor<K, V>> list;
 
     /** Map where items are stored by key. */
-    protected Map map;
+    protected Map<K, LRUElementDescriptor<K, V>> map;
 
     /** stats */
     int hitCnt = 0;
@@ -84,11 +85,11 @@ public class LRUMap
      */
     public LRUMap()
     {
-        list = new DoubleLinkedList();
+        list = new DoubleLinkedList<LRUElementDescriptor<K, V>>();
 
         // normal hshtable is faster for
         // sequential keys.
-        map = new Hashtable();
+        map = new Hashtable<K, LRUElementDescriptor<K, V>>();
         // map = new ConcurrentHashMap();
     }
 
@@ -157,23 +158,27 @@ public class LRUMap
     /**
      * @return map.values();
      */
-    public Collection values()
+    public Collection<V> values()
     {
-        return map.values();
+        List<V> valueList = new ArrayList<V>(map.size());
+
+        for (LRUElementDescriptor<K, V> value : map.values())
+        {
+            valueList.add(value.getPayload());
+        }
+
+        return valueList;
     }
 
     /**
      * @param source
      */
-    public void putAll( Map source )
+    public void putAll( Map<? extends K, ? extends V> source )
     {
         if ( source != null )
         {
-            Set entries = source.entrySet();
-            Iterator it = entries.iterator();
-            while ( it.hasNext() )
+            for (Map.Entry<? extends K, ? extends V> entry : source.entrySet())
             {
-                Entry entry = (Entry) it.next();
                 this.put( entry.getKey(), entry.getValue() );
             }
         }
@@ -183,16 +188,16 @@ public class LRUMap
      * @param key
      * @return Object
      */
-    public Object get( Object key )
+    public V get( Object key )
     {
-        Object retVal = null;
+        V retVal = null;
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "getting item  for key " + key );
         }
 
-        LRUElementDescriptor me = (LRUElementDescriptor) map.get( key );
+        LRUElementDescriptor<K, V> me = map.get( key );
 
         if ( me != null )
         {
@@ -224,11 +229,11 @@ public class LRUMap
      * @param key
      * @return Object
      */
-    public Object getQuiet( Object key )
+    public V getQuiet( Object key )
     {
-        Object ce = null;
+        V ce = null;
 
-        LRUElementDescriptor me = (LRUElementDescriptor) map.get( key );
+        LRUElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
             if ( log.isDebugEnabled() )
@@ -250,7 +255,7 @@ public class LRUMap
      * @param key
      * @return Object removed
      */
-    public Object remove( Object key )
+    public V remove( Object key )
     {
         if ( log.isDebugEnabled() )
         {
@@ -258,12 +263,11 @@ public class LRUMap
         }
 
         // remove single item.
-        LRUElementDescriptor me = (LRUElementDescriptor) map.remove( key );
+        LRUElementDescriptor<K, V> me = map.remove( key );
 
         if ( me != null )
         {
             list.remove( me );
-
             return me.getPayload();
         }
 
@@ -275,20 +279,20 @@ public class LRUMap
      * @param value
      * @return Object
      */
-    public Object put( Object key, Object value )
+    public V put(K key, V value)
     {
         putCnt++;
 
-        LRUElementDescriptor old = null;
+        LRUElementDescriptor<K, V> old = null;
         synchronized ( this )
         {
             // TODO address double synchronization of addFirst, use write lock
             addFirst( key, value );
             // this must be synchronized
-            old = (LRUElementDescriptor) map.put( ( (LRUElementDescriptor) list.getFirst() ).getKey(), list.getFirst() );
+            old = map.put(list.getFirst().getKey(), list.getFirst());
 
             // If the node was the same as an existing node, remove it.
-            if ( old != null && ( (LRUElementDescriptor) list.getFirst() ).getKey().equals( old.getKey() ) )
+            if ( old != null && list.getFirst().getKey().equals(old.getKey()))
             {
                 list.remove( old );
             }
@@ -323,20 +327,19 @@ public class LRUMap
                 {
                     if ( list.getLast() != null )
                     {
-                        if ( ( (LRUElementDescriptor) list.getLast() ) != null )
+                        if (list.getLast() != null )
                         {
-                            processRemovedLRU( ( (LRUElementDescriptor) list.getLast() ).getKey(),
-                                               ( (LRUElementDescriptor) list.getLast() ).getPayload() );
-                            if ( !map.containsKey( ( (LRUElementDescriptor) list.getLast() ).getKey() ) )
+                            processRemovedLRU(list.getLast().getKey(), list.getLast().getPayload());
+                            if ( !map.containsKey(list.getLast().getKey()))
                             {
                                 log.error( "update: map does not contain key: "
-                                    + ( (LRUElementDescriptor) list.getLast() ).getKey() );
+                                    + list.getLast().getKey() );
                                 verifyCache();
                             }
-                            if ( map.remove( ( (LRUElementDescriptor) list.getLast() ).getKey() ) == null )
+                            if ( map.remove( list.getLast().getKey() ) == null )
                             {
                                 log.warn( "update: remove failed for key: "
-                                    + ( (LRUElementDescriptor) list.getLast() ).getKey() );
+                                    + list.getLast().getKey() );
                                 verifyCache();
                             }
                         }
@@ -378,10 +381,9 @@ public class LRUMap
      * @param key
      * @param val The feature to be added to the First
      */
-    private synchronized void addFirst( Object key, Object val )
+    private synchronized void addFirst(K key, V val)
     {
-
-        LRUElementDescriptor me = new LRUElementDescriptor( key, val );
+        LRUElementDescriptor<K, V> me = new LRUElementDescriptor<K, V>(key, val);
         list.addFirst( me );
         return;
     }
@@ -402,7 +404,7 @@ public class LRUMap
     public void dumpCacheEntries()
     {
         log.debug( "dumpingCacheEntries" );
-        for ( LRUElementDescriptor me = (LRUElementDescriptor) list.getFirst(); me != null; me = (LRUElementDescriptor) me.next )
+        for ( LRUElementDescriptor<K, V> me = list.getFirst(); me != null; me = (LRUElementDescriptor<K, V>) me.next )
         {
             if ( log.isDebugEnabled() )
             {
@@ -417,10 +419,9 @@ public class LRUMap
     public void dumpMap()
     {
         log.debug( "dumpingMap" );
-        for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
+        for (Map.Entry<K, LRUElementDescriptor<K, V>> e : map.entrySet())
         {
-            Map.Entry e = (Map.Entry) itr.next();
-            LRUElementDescriptor me = (LRUElementDescriptor) e.getValue();
+            LRUElementDescriptor<K, V> me = e.getValue();
             if ( log.isDebugEnabled() )
             {
                 log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.getPayload() );
@@ -443,9 +444,9 @@ public class LRUMap
         log.debug( "verifycache: mapContains " + map.size() + " elements, linked list contains " + dumpCacheSize()
             + " elements" );
         log.debug( "verifycache: checking linked list by key " );
-        for ( LRUElementDescriptor li = (LRUElementDescriptor) list.getFirst(); li != null; li = (LRUElementDescriptor) li.next )
+        for (LRUElementDescriptor<K, V> li = list.getFirst(); li != null; li = (LRUElementDescriptor<K, V>) li.next )
         {
-            Object key = li.getKey();
+            K key = li.getKey();
             if ( !map.containsKey( key ) )
             {
                 log.error( "verifycache: map does not contain key : " + li.getKey() );
@@ -470,7 +471,7 @@ public class LRUMap
         }
 
         log.debug( "verifycache: checking linked list by value " );
-        for ( LRUElementDescriptor li3 = (LRUElementDescriptor) list.getFirst(); li3 != null; li3 = (LRUElementDescriptor) li3.next )
+        for (LRUElementDescriptor<K, V> li3 = list.getFirst(); li3 != null; li3 = (LRUElementDescriptor<K, V>) li3.next )
         {
             if ( map.containsValue( li3 ) == false )
             {
@@ -480,7 +481,7 @@ public class LRUMap
         }
 
         log.debug( "verifycache: checking via keysets!" );
-        for ( Iterator itr2 = map.keySet().iterator(); itr2.hasNext(); )
+        for (Iterator<K> itr2 = map.keySet().iterator(); itr2.hasNext(); )
         {
             found = false;
             Serializable val = null;
@@ -491,9 +492,10 @@ public class LRUMap
             catch ( NoSuchElementException nse )
             {
                 log.error( "verifycache: no such element exception" );
+                continue;
             }
 
-            for ( LRUElementDescriptor li2 = (LRUElementDescriptor) list.getFirst(); li2 != null; li2 = (LRUElementDescriptor) li2.next )
+            for (LRUElementDescriptor<K, V> li2 = list.getFirst(); li2 != null; li2 = (LRUElementDescriptor<K, V>) li2.next )
             {
                 if ( val.equals( li2.getKey() ) )
                 {
@@ -532,7 +534,7 @@ public class LRUMap
         boolean found = false;
 
         // go through the linked list looking for the key
-        for ( LRUElementDescriptor li = (LRUElementDescriptor) list.getFirst(); li != null; li = (LRUElementDescriptor) li.next )
+        for (LRUElementDescriptor<K, V> li = list.getFirst(); li != null; li = (LRUElementDescriptor<K, V>) li.next )
         {
             if ( li.getKey() == key )
             {
@@ -554,7 +556,7 @@ public class LRUMap
      * @param key
      * @param value
      */
-    protected void processRemovedLRU( Object key, Object value )
+    protected void processRemovedLRU(K key, V value )
     {
         if ( log.isDebugEnabled() )
         {
@@ -589,7 +591,7 @@ public class LRUMap
         IStats stats = new Stats();
         stats.setTypeName( "LRUMap" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -619,7 +621,7 @@ public class LRUMap
         elems.add( se );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -635,19 +637,17 @@ public class LRUMap
      * <p>
      * @see java.util.Map#entrySet()
      */
-    public synchronized Set entrySet()
+    public synchronized Set<Map.Entry<K, V>> entrySet()
     {
         // todo, we should return a defensive copy
-        Set entries = map.entrySet();
+        Set<Map.Entry<K, LRUElementDescriptor<K, V>>> entries = map.entrySet();
 
-        Set unWrapped = new HashSet();
+        Set<Map.Entry<K, V>> unWrapped = new HashSet<Map.Entry<K, V>>();
 
-        Iterator it = entries.iterator();
-        while ( it.hasNext() )
+        for (Map.Entry<K, LRUElementDescriptor<K, V>> pre : entries )
         {
-            Entry pre = (Entry) it.next();
-            Entry post = new LRUMapEntry( pre.getKey(), ( (LRUElementDescriptor) pre.getValue() ).getPayload() );
-            unWrapped.add( post );
+            Map.Entry<K, V> post = new LRUMapEntry<K, V>(pre.getKey(), pre.getValue().getPayload());
+            unWrapped.add(post);
         }
 
         return unWrapped;
@@ -656,7 +656,7 @@ public class LRUMap
     /**
      * @return map.keySet();
      */
-    public Set keySet()
+    public Set<K> keySet()
     {
         // TODO fix this, it needs to return the keys inside the wrappers.
         return map.keySet();

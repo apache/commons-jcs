@@ -29,25 +29,25 @@ import java.io.Serializable;
  * It simply holds the payload and a reference to the items before and after it
  * in the list.
  */
-public class DoubleLinkedListNode
+public class DoubleLinkedListNode<T>
     implements Serializable
 {
     /** Dont' change. */
     private static final long serialVersionUID = -1114934407695836097L;
 
     /** The object in the node. */
-    private Object payload;
+    private final T payload;
 
     /** Double Linked list references */
-    public DoubleLinkedListNode prev;
+    public DoubleLinkedListNode<T> prev;
 
     /** Double Linked list references */
-    public DoubleLinkedListNode next;
+    public DoubleLinkedListNode<T> next;
 
     /**
      * @param payloadP
      */
-    public DoubleLinkedListNode( Object payloadP )
+    public DoubleLinkedListNode(T payloadP)
     {
         payload = payloadP;
     }
@@ -55,7 +55,7 @@ public class DoubleLinkedListNode
     /**
      * @return Object
      */
-    public Object getPayload()
+    public T getPayload()
     {
         return payload;
     }

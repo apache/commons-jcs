@@ -27,8 +27,8 @@ import org.apache.jcs.utils.struct.LRUMap;
  * Extension of LRUMap for logging of removals. Can switch this back to a HashMap easily. This
  * provides some abstraction. It also makes it easy to log overflow.
  */
-public class LRUMapJCS
-    extends LRUMap
+public class LRUMapJCS<K, V>
+    extends LRUMap<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 776964015449842672L;
@@ -66,7 +66,8 @@ public class LRUMapJCS
      * @param key
      * @param value
      */
-    protected void processRemovedLRU( Object key, Object value )
+    @Override
+    protected void processRemovedLRU(K key, V value)
     {
         if ( log.isDebugEnabled() )
         {

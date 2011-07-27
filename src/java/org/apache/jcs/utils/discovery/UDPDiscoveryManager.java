@@ -43,7 +43,7 @@ public class UDPDiscoveryManager
     private static UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();
 
     /** Known services */
-    private Map services = new HashMap();
+    private final Map<String, UDPDiscoveryService> services = new HashMap<String, UDPDiscoveryService>();
 
     /** private for singleton */
     private UDPDiscoveryManager()
@@ -52,7 +52,7 @@ public class UDPDiscoveryManager
     }
 
     /**
-     * Singelton
+     * Singleton
      * <p>
      * @return UDPDiscoveryManager
      */
@@ -65,7 +65,7 @@ public class UDPDiscoveryManager
      * Creates a service for the address and port if one doesn't exist already.
      * <p>
      * We need to key this using the listener port too. TODO think of making one discovery service
-     * work for mutliple types of clients.
+     * work for multiple types of clients.
      * <p>
      * @param discoveryAddress
      * @param discoveryPort
@@ -80,7 +80,7 @@ public class UDPDiscoveryManager
     {
         String key = discoveryAddress + ":" + discoveryPort + ":" + servicePort;
 
-        UDPDiscoveryService service = (UDPDiscoveryService) services.get( key );
+        UDPDiscoveryService service = services.get( key );
         if ( service == null )
         {
             if ( log.isInfoEnabled() )

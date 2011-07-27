@@ -23,14 +23,15 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheManager;
-
-import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This class serves as an abstract template for JDBCDiskCache Manager. The MySQL JDBC Disk Cache
@@ -51,22 +52,22 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected static int clients;
 
     /** A map of JDBCDiskCache objects to region names. */
-    protected static Hashtable caches = new Hashtable();
+    protected static Hashtable<String, AuxiliaryCache> caches = new Hashtable<String, AuxiliaryCache>();
 
     /**
      * A map of TableState objects to table names. Each cache has a table state object, which is
      * used to determine if any long processes such as deletes or optimizations are running.
      */
-    protected static Hashtable tableStates = new Hashtable();
+    protected static Hashtable<String, TableState> tableStates = new Hashtable<String, TableState>();
 
     /** The background disk shrinker, one for all regions. */
-    private ClockDaemon shrinkerDaemon;
+    private ScheduledExecutorService shrinkerDaemon;
 
     /**
      * A map of table name to shrinker threads. This allows each table to have a different setting.
      * It assumes that there is only one jdbc disk cache auxiliary defined per table.
      */
-    private Map shrinkerThreadMap = new Hashtable();
+    private final Map<String, ShrinkerThread> shrinkerThreadMap = new Hashtable<String, ShrinkerThread>();
 
     /**
      * Children must implement this method.
@@ -78,7 +79,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected abstract AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState );
 
     /**
-     * Creates a JDBCDiskCache for the region if one doesn't exist, else it returns the precreated
+     * Creates a JDBCDiskCache for the region if one doesn't exist, else it returns the pre-created
      * instance. It also adds the region to the shrinker thread if needed.
      * <p>
      * @param cattr
@@ -92,11 +93,11 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
 
         synchronized ( caches )
         {
-            diskCache = (AuxiliaryCache) caches.get( cattr.getCacheName() );
+            diskCache = caches.get( cattr.getCacheName() );
 
             if ( diskCache == null )
             {
-                TableState tableState = (TableState) tableStates.get( cattr.getTableName() );
+                TableState tableState = tableStates.get( cattr.getTableName() );
 
                 if ( tableState == null )
                 {
@@ -134,11 +135,10 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         {
             if ( shrinkerDaemon == null )
             {
-                shrinkerDaemon = new ClockDaemon();
-                shrinkerDaemon.setThreadFactory( new MyThreadFactory() );
+                shrinkerDaemon = Executors.newScheduledThreadPool(2, new MyThreadFactory());
             }
 
-            ShrinkerThread shrinkerThread = (ShrinkerThread) shrinkerThreadMap.get( cattr.getTableName() );
+            ShrinkerThread shrinkerThread = shrinkerThreadMap.get( cattr.getTableName() );
             if ( shrinkerThread == null )
             {
                 shrinkerThread = new ShrinkerThread();
@@ -150,7 +150,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
                     log.info( "Setting the shrinker to run every [" + intervalMillis + "] ms. for table ["
                         + cattr.getTableName() + "]" );
                 }
-                shrinkerDaemon.executePeriodically( intervalMillis, shrinkerThread, false );
+                shrinkerDaemon.scheduleAtFixedRate(shrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
             }
             shrinkerThread.addDiskCacheToShrinkList( (JDBCDiskCache) raf );
         }
@@ -195,7 +195,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         }
         synchronized ( caches )
         {
-            Enumeration allCaches = caches.elements();
+            Enumeration<AuxiliaryCache> allCaches = caches.elements();
 
             while ( allCaches.hasMoreElements() )
             {
@@ -231,7 +231,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         {
             Thread t = new Thread( runner );
             String oldName = t.getName();
-            t.setName( "JCS-JDBCDiskCacheManager-" + oldName );            
+            t.setName( "JCS-JDBCDiskCacheManager-" + oldName );
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
             return t;

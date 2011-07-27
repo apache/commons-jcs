@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /** For the framework. Insures methods a MemoryCache needs to access. */
@@ -69,7 +70,7 @@ public interface IMemoryCache
      * <p>
      * @return An iterator
      */
-    Iterator getIterator();
+    Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> getIterator();
 
     /**
      * Get an Array of the keys for all elements in the memory cache.
@@ -132,11 +133,11 @@ public interface IMemoryCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map 
+     * @return a map of Serializable key to ICacheElement element, or an empty map
      * if there is no data in cache for any of these keys
-     * @throws IOException 
+     * @throws IOException
      */
-    Map getMultiple( Set keys )
+    Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
         throws IOException;
 
     /**
@@ -202,5 +203,5 @@ public interface IMemoryCache
      * @param group
      * @return a Set of group keys.
      */
-    Set getGroupKeys( String group );
+    Set<Serializable> getGroupKeys( String group );
 }

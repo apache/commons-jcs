@@ -24,13 +24,14 @@ package org.apache.jcs.utils.struct;
  * <p>
  * @author Aaron Smuts
  */
-public class BoundedQueue
+public class BoundedQueue<T>
 {
     /** Queue size limit. */
-    private int maxSize;
+    private final int maxSize;
 
     /** The list backing the queue */
-    private DoubleLinkedList list = new DoubleLinkedList();
+    private final DoubleLinkedList<DoubleLinkedListNode<T>> list =
+        new DoubleLinkedList<DoubleLinkedListNode<T>>();
 
     /**
      * Initialize the bounded queue.
@@ -47,13 +48,13 @@ public class BoundedQueue
      * <p>
      * @param object
      */
-    public void add( Object object )
+    public void add( T object )
     {
         if ( list.size() >= maxSize )
         {
             list.removeLast();
         }
-        list.addFirst( new DoubleLinkedListNode( object ) );
+        list.addFirst( new DoubleLinkedListNode<T>( object ) );
     }
 
     /**
@@ -61,9 +62,9 @@ public class BoundedQueue
      * <p>
      * @return null if it is epmpty.
      */
-    public Object take()
+    public T take()
     {
-        DoubleLinkedListNode node = list.removeLast();
+        DoubleLinkedListNode<T> node = list.removeLast();
         if ( node != null )
         {
             return node.getPayload();

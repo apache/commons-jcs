@@ -1,5 +1,6 @@
 package org.apache.jcs.engine.match;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -18,11 +19,11 @@ public class KeyMatcherPatternImpl
      * @param keyArray
      * @return Set of the matching keys
      */
-    public Set getMatchingKeysFromArray( String pattern, Object[] keyArray )
+    public Set<Serializable> getMatchingKeysFromArray( String pattern, Object[] keyArray )
     {
         Pattern compiledPattern = Pattern.compile( pattern );
 
-        Set matchingKeys = new HashSet();
+        Set<Serializable> matchingKeys = new HashSet<Serializable>();
 
         // Look for matches
         for ( int i = 0; i < keyArray.length; i++ )
@@ -34,7 +35,7 @@ public class KeyMatcherPatternImpl
                 Matcher matcher = compiledPattern.matcher( (String) key );
                 if ( matcher.matches() )
                 {
-                    matchingKeys.add( key );
+                    matchingKeys.add( (Serializable) key );
                 }
             }
         }

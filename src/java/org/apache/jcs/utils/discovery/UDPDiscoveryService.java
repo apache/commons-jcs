@@ -22,8 +22,12 @@ package org.apache.jcs.utils.discovery;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,10 +35,6 @@ import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.jcs.utils.net.HostNameUtil;
-
-import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
-import EDU.oswego.cs.dl.util.concurrent.CopyOnWriteArraySet;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This service creates a listener that can create lateral caches and add them to the no wait list.
@@ -52,19 +52,19 @@ public class UDPDiscoveryService
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
     /** The background broadcaster. */
-    private static ClockDaemon senderDaemon;
+    private static ScheduledExecutorService senderDaemon;
 
     /** thread that listens for messages */
     private Thread udpReceiverThread;
 
-    /** the runanble that the receiver thread runs */
+    /** the runnable that the receiver thread runs */
     private UDPDiscoveryReceiver receiver;
 
-    /** the runnanble that sends messages via the clock daemon */
+    /** the runnable that sends messages via the clock daemon */
     private UDPDiscoverySenderThread sender = null;
 
     /** removes things that have been idle for too long */
-    private UDPCleanupRunner cleanup;
+    private final UDPCleanupRunner cleanup;
 
     /** attributes */
     private UDPDiscoveryAttributes udpDiscoveryAttributes = null;
@@ -73,13 +73,13 @@ public class UDPDiscoveryService
     private boolean shutdown = false;
 
     /** This is a set of services that have been discovered. */
-    private Set discoveredServices = new CopyOnWriteArraySet();
+    private Set<DiscoveredService> discoveredServices = new CopyOnWriteArraySet<DiscoveredService>();
 
     /** This a list of regions that are configured to use discovery. */
-    private Set cacheNames = new CopyOnWriteArraySet();
+    private final Set<String> cacheNames = new CopyOnWriteArraySet<String>();
 
     /** Set of listeners. */
-    private Set discoveryListeners = new CopyOnWriteArraySet();
+    private final Set<IDiscoveryListener> discoveryListeners = new CopyOnWriteArraySet<IDiscoveryListener>();
 
     /**
      * @param attributes
@@ -118,20 +118,19 @@ public class UDPDiscoveryService
 
         if ( senderDaemon == null )
         {
-            senderDaemon = new ClockDaemon();
-            senderDaemon.setThreadFactory( new MyThreadFactory() );
+            senderDaemon = Executors.newScheduledThreadPool(2, new MyThreadFactory());
         }
 
         // create a sender thread
         sender = new UDPDiscoverySenderThread( getUdpDiscoveryAttributes(), getCacheNames() );
-        senderDaemon.executePeriodically( 15 * 1000, sender, true );
+        senderDaemon.scheduleAtFixedRate(sender, 0, 15, TimeUnit.SECONDS);
 
         // add the cleanup daemon too
         cleanup = new UDPCleanupRunner( this );
         // I'm going to use this as both, but it could happen
         // that something could hang around twice the time using this as the
         // delay and the idle time.
-        senderDaemon.executePeriodically( getUdpDiscoveryAttributes().getMaxIdleTimeSec() * 1000, cleanup, false );
+        senderDaemon.scheduleAtFixedRate(cleanup, 0, getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
 
         // add shutdown hook that will issue a remove call.
         DiscoveryShutdownHook shutdownHook = new DiscoveryShutdownHook( this );
@@ -215,10 +214,9 @@ public class UDPDiscoveryService
             }
         }
 
-        Iterator it = getDiscoveryListeners().iterator();
-        while ( it.hasNext() )
+        for (IDiscoveryListener listener : getDiscoveryListeners())
         {
-            ( (IDiscoveryListener) it.next() ).removeDiscoveredService( service );
+            listener.removeDiscoveredService( service );
         }
     }
 
@@ -259,11 +257,9 @@ public class UDPDiscoveryService
 
                 // Update the list of cache names if it has changed.
                 DiscoveredService theOldServiceInformation = null;
-                Iterator it = getDiscoveredServices().iterator();
                 // need to update the time this sucks. add has no effect convert to a map
-                while ( it.hasNext() )
+                for (DiscoveredService service1 : getDiscoveredServices())
                 {
-                    DiscoveredService service1 = (DiscoveredService) it.next();
                     if ( discoveredService.equals( service1 ) )
                     {
                         theOldServiceInformation = service1;
@@ -287,13 +283,12 @@ public class UDPDiscoveryService
             }
         }
         // Always Notify the listeners
-        // If we don't do this, then if a region using the default config is initialized after notification, 
+        // If we don't do this, then if a region using the default config is initialized after notification,
         // it will never get the service in it's no wait list.
         // Leave it to the listeners to decide what to do.
-        Iterator it = getDiscoveryListeners().iterator();
-        while ( it.hasNext() )
+        for (IDiscoveryListener listener : getDiscoveryListeners())
         {
-            ( (IDiscoveryListener) it.next() ).addDiscoveredService( discoveredService );
+            listener.addDiscoveredService( discoveredService );
         }
 
     }
@@ -303,9 +298,9 @@ public class UDPDiscoveryService
      * <p>
      * @return ArrayList
      */
-    protected ArrayList getCacheNames()
+    protected ArrayList<String> getCacheNames()
     {
-        ArrayList names = new ArrayList();
+        ArrayList<String> names = new ArrayList<String>();
         names.addAll( cacheNames );
         return names;
     }
@@ -384,7 +379,7 @@ public class UDPDiscoveryService
             try
             {
                 // interrupt all the threads.
-                senderDaemon.shutDown();
+                senderDaemon.shutdownNow();
             }
             catch ( Exception e )
             {
@@ -416,6 +411,7 @@ public class UDPDiscoveryService
      * <p>
      * @throws Throwable on error
      */
+    @Override
     public void finalize()
         throws Throwable
     {
@@ -428,7 +424,7 @@ public class UDPDiscoveryService
     /**
      * @param discoveredServices The discoveredServices to set.
      */
-    public synchronized void setDiscoveredServices( Set discoveredServices )
+    public synchronized void setDiscoveredServices( Set<DiscoveredService> discoveredServices )
     {
         this.discoveredServices = discoveredServices;
     }
@@ -436,7 +432,7 @@ public class UDPDiscoveryService
     /**
      * @return Returns the discoveredServices.
      */
-    public synchronized Set getDiscoveredServices()
+    public synchronized Set<DiscoveredService> getDiscoveredServices()
     {
         return discoveredServices;
     }
@@ -444,7 +440,7 @@ public class UDPDiscoveryService
     /**
      * @return the discoveryListeners
      */
-    private Set getDiscoveryListeners()
+    private Set<IDiscoveryListener> getDiscoveryListeners()
     {
         return discoveryListeners;
     }
@@ -452,9 +448,9 @@ public class UDPDiscoveryService
     /**
      * @return the discoveryListeners
      */
-    public Set getCopyOfDiscoveryListeners()
+    public Set<IDiscoveryListener> getCopyOfDiscoveryListeners()
     {
-        Set copy = new HashSet();
+        Set<IDiscoveryListener> copy = new HashSet<IDiscoveryListener>();
         copy.addAll( getDiscoveryListeners() );
         return copy;
     }

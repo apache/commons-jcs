@@ -36,8 +36,6 @@ import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.DoubleLinkedList;
 
-import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
-
 /**
  * This is a rough implmentation of an adaptive replacement cache. ARC is a
  * hybrid LFU / LRU that adapts to user behavior.

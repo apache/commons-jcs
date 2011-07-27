@@ -64,6 +64,7 @@ public class RemoteCacheNoWaitFacade
      * <p>
      * @param i The no wait in error.
      */
+    @Override
     protected void failover( int i )
     {
         if ( log.isDebugEnabled() )
@@ -78,15 +79,10 @@ public class RemoteCacheNoWaitFacade
                 // start failover, primary recovery process
                 RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this, getCompositeCacheManager(),
                                                                                   cacheEventLogger, elementSerializer );
-                // If the returned monitor is null, it means it's already
-                // started elsewhere.
-                if ( runner != null )
-                {
-                    runner.notifyError();
-                    Thread t = new Thread( runner );
-                    t.setDaemon( true );
-                    t.start();
-                }
+                runner.notifyError();
+                Thread t = new Thread( runner );
+                t.setDaemon( true );
+                t.start();
 
                 if ( getCacheEventLogger() != null )
                 {

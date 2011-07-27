@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheEventQueue;
 
 /**
  * Used to associates a set of [cache listener to cache event queue] for a
@@ -35,7 +36,8 @@ public class CacheListeners
     public final ICache cache;
 
     /** Map ICacheListener to ICacheEventQueue */
-    public final Map eventQMap = new Hashtable();
+    public final Map<Long, ICacheEventQueue> eventQMap =
+        new Hashtable<Long, ICacheEventQueue>();
 
     /**
      * Constructs with the given cache.
@@ -50,8 +52,9 @@ public class CacheListeners
         }
         this.cache = cache;
     }
-    
+
     /** @return info on the listeners */
+    @Override
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();
@@ -64,11 +67,11 @@ public class CacheListeners
         {
             buffer.append( "\n Event Queue Map " );
             buffer.append( "\n size = " + eventQMap.size() );
-            Iterator it = eventQMap.entrySet().iterator();
+            Iterator<Map.Entry<Long, ICacheEventQueue>> it = eventQMap.entrySet().iterator();
             while ( it.hasNext() )
             {
-                buffer.append( "\n Entry: " + it.next() );               
-            }                
+                buffer.append( "\n Entry: " + it.next() );
+            }
         }
         else
         {

@@ -22,10 +22,10 @@ public class FileDiskCacheManager
     private final static Log log = LogFactory.getLog( FileDiskCacheManager.class );
 
     /** Each region has an entry here. */
-    private Hashtable caches = new Hashtable();
+    private final Hashtable<String, AuxiliaryCache> caches = new Hashtable<String, AuxiliaryCache>();
 
     /** User configurable attributes */
-    private FileDiskCacheAttributes defaultCacheAttributes;
+    private final FileDiskCacheAttributes defaultCacheAttributes;
 
     /**
      * Constructor for the DiskFileCacheManager object
@@ -77,7 +77,7 @@ public class FileDiskCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            cache = (AuxiliaryCache) caches.get( cacheName );
+            cache = caches.get( cacheName );
 
             // If it was not found, create a new one using the supplied
             // attributes

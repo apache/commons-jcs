@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,10 +61,10 @@ public class LateralCacheNoWaitFacade
     public LateralCacheNoWait[] noWaits;
 
     /** The region name */
-    private String cacheName;
+    private final String cacheName;
 
     /** User configurable attributes. */
-    private ILateralCacheAttributes lateralCacheAttributes;
+    private final ILateralCacheAttributes lateralCacheAttributes;
 
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
@@ -160,7 +159,7 @@ public class LateralCacheNoWaitFacade
                 break;
             }
         }
-        
+
         if ( position == -1 )
         {
             return false;
@@ -240,18 +239,14 @@ public class LateralCacheNoWaitFacade
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
+            for (Serializable key : keys)
             {
-                Serializable key = (Serializable) iterator.next();
-
                 ICacheElement element = get( key );
 
                 if ( element != null )
@@ -271,9 +266,9 @@ public class LateralCacheNoWaitFacade
      * @param pattern
      * @return ICacheElement
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, ICacheElement> getMatching(String pattern)
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
         for ( int i = 0; i < noWaits.length; i++ )
         {
             try
@@ -292,9 +287,9 @@ public class LateralCacheNoWaitFacade
      * @param group
      * @return Set
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
     {
-        HashSet allKeys = new HashSet();
+        HashSet<Serializable> allKeys = new HashSet<Serializable>();
         for ( int i = 0; i < noWaits.length; i++ )
         {
             AuxiliaryCache aux = noWaits[i];
@@ -422,6 +417,7 @@ public class LateralCacheNoWaitFacade
     /**
      * @return "LateralCacheNoWaitFacade: " + cacheName;
      */
+    @Override
     public String toString()
     {
         return "LateralCacheNoWaitFacade: " + cacheName;
@@ -432,6 +428,7 @@ public class LateralCacheNoWaitFacade
      * <p>
      * @return String
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return "Lateral Cache No Wait";
@@ -454,7 +451,7 @@ public class LateralCacheNoWaitFacade
         IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait Facade" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -473,7 +470,7 @@ public class LateralCacheNoWaitFacade
                     // get as array, convert to list, add list to our outer list
                     IStats sStats = noWaits[i].getStatistics();
                     IStatElement[] sSEs = sStats.getStatElements();
-                    List sL = Arrays.asList( sSEs );
+                    List<IStatElement> sL = Arrays.asList( sSEs );
                     elems.addAll( sL );
                 }
             }
@@ -481,7 +478,7 @@ public class LateralCacheNoWaitFacade
         }
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;

@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,8 +55,6 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.struct.SortedPreferentialArray;
 import org.apache.jcs.utils.timing.ElapsedTimer;
 
-import EDU.oswego.cs.dl.util.concurrent.ReentrantWriterPreferenceReadWriteLock;
-
 /**
  * Disk cache that uses a RandomAccessFile with keys stored in memory. The maximum number of keys
  * stored in memory is configurable. The disk cache tries to recycle spots on disk to limit file
@@ -68,13 +67,13 @@ public class IndexedDiskCache
     private static final long serialVersionUID = -265035607729729629L;
 
     /** The logger */
-    private static final Log log = LogFactory.getLog( IndexedDiskCache.class );
+    protected static final Log log = LogFactory.getLog( IndexedDiskCache.class );
 
     /** Cache name used in log messages */
-    private final String logCacheName;
+    protected final String logCacheName;
 
     /** The name of the file where the data is stored */
-    private String fileName;
+    private final String fileName;
 
     /** The IndexedDisk manages reads and writes to the data file. */
     private IndexedDisk dataFile;
@@ -83,10 +82,10 @@ public class IndexedDiskCache
     private IndexedDisk keyFile;
 
     /** Map containing the keys and disk offsets. */
-    private Map keyHash;
+    private Map<Serializable, IndexedDiskElementDescriptor> keyHash;
 
     /** The maximum number of keys that we will keep in memory. */
-    private int maxKeySize;
+    private final int maxKeySize;
 
     /** A handle on the data file. */
     private File rafDir;
@@ -103,11 +102,11 @@ public class IndexedDiskCache
     /** are we currently optimizing the files */
     boolean isOptimizing = false;
 
-    /** The numer of times the file has been optimized. */
+    /** The number of times the file has been optimized. */
     private int timesOptimized = 0;
 
     /** The thread optimizing the file. */
-    private volatile Thread currentOptimizationThread;
+    protected volatile Thread currentOptimizationThread;
 
     /** used for counting the number of requests */
     private int removeCount = 0;
@@ -116,13 +115,14 @@ public class IndexedDiskCache
     private boolean queueInput = false;
 
     /** list where puts made during optimization are made */
-    private LinkedList queuedPutList = new LinkedList();
+    private final LinkedList<IndexedDiskElementDescriptor> queuedPutList =
+        new LinkedList<IndexedDiskElementDescriptor>();
 
     /** RECYLCE BIN -- array of empty spots */
-    private SortedPreferentialArray recycle;
+    private SortedPreferentialArray<IndexedDiskElementDescriptor> recycle;
 
     /** User configurable parameters */
-    private IndexedDiskCacheAttributes cattr;
+    private final IndexedDiskCacheAttributes cattr;
 
     /** How many slots have we recycled. */
     private int recycleCnt = 0;
@@ -139,7 +139,7 @@ public class IndexedDiskCache
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechansism.
      */
-    protected ReentrantWriterPreferenceReadWriteLock storageLock = new ReentrantWriterPreferenceReadWriteLock();
+    protected ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock();
 
     /**
      * Constructor for the DiskCache object.
@@ -313,7 +313,7 @@ public class IndexedDiskCache
     protected void loadKeys()
         throws InterruptedException
     {
-        storageLock.writeLock().acquire();
+        storageLock.writeLock().lock();
 
         if ( log.isDebugEnabled() )
         {
@@ -325,7 +325,8 @@ public class IndexedDiskCache
             // create a key map to use.
             initializeKeyMap();
 
-            HashMap keys = (HashMap) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
+            HashMap<Serializable, IndexedDiskElementDescriptor> keys =
+                (HashMap<Serializable, IndexedDiskElementDescriptor>) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
                 - IndexedDisk.RECORD_HEADER ) );
 
             if ( keys != null )
@@ -355,7 +356,7 @@ public class IndexedDiskCache
         }
         finally
         {
-            storageLock.writeLock().release();
+            storageLock.writeLock().unlock();
         }
     }
 
@@ -379,11 +380,9 @@ public class IndexedDiskCache
         {
             fileLength = dataFile.length();
 
-            Iterator itr = keyHash.entrySet().iterator();
-            while ( itr.hasNext() )
+            for (Map.Entry<Serializable, IndexedDiskElementDescriptor> e : keyHash.entrySet())
             {
-                Map.Entry e = (Map.Entry) itr.next();
-                IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) e.getValue();
+                IndexedDiskElementDescriptor ded = e.getValue();
 
                 isOk = ( ded.pos + IndexedDisk.RECORD_HEADER + ded.len <= fileLength );
 
@@ -452,7 +451,7 @@ public class IndexedDiskCache
     }
 
     /**
-     * Saves key file to disk. This converts the LRUMap to a HashMap for deserialzation.
+     * Saves key file to disk. This converts the LRUMap to a HashMap for deserialization.
      */
     protected void saveKeys()
     {
@@ -465,7 +464,8 @@ public class IndexedDiskCache
 
             keyFile.reset();
 
-            HashMap keys = new HashMap();
+            HashMap<Serializable, IndexedDiskElementDescriptor> keys =
+                new HashMap<Serializable, IndexedDiskElementDescriptor>();
             keys.putAll( keyHash );
 
             if ( keys.size() > 0 )
@@ -490,6 +490,7 @@ public class IndexedDiskCache
      * <p>
      * @param ce The ICacheElement to put to disk.
      */
+    @Override
     protected void processUpdate( ICacheElement ce )
     {
         if ( !alive )
@@ -513,10 +514,10 @@ public class IndexedDiskCache
             byte[] data = getElementSerializer().serialize( ce );
 
             // make sure this only locks for one particular cache region
-            storageLock.writeLock().acquire();
+            storageLock.writeLock().lock();
             try
             {
-                old = (IndexedDiskElementDescriptor) keyHash.get( ce.getKey() );
+                old = keyHash.get( ce.getKey() );
 
                 // Item with the same key already exists in file.
                 // Try to reuse the location if possible.
@@ -534,7 +535,7 @@ public class IndexedDiskCache
 
                     if ( doRecycle )
                     {
-                        IndexedDiskElementDescriptor rep = (IndexedDiskElementDescriptor) recycle
+                        IndexedDiskElementDescriptor rep = recycle
                             .takeNearestLargerOrEqual( ded );
                         if ( rep != null )
                         {
@@ -573,7 +574,7 @@ public class IndexedDiskCache
             }
             finally
             {
-                storageLock.writeLock().release();
+                storageLock.writeLock().unlock();
             }
 
             if ( log.isDebugEnabled() )
@@ -605,6 +606,7 @@ public class IndexedDiskCache
      * @return ICacheElement or null
      * @see AbstractDiskCache#doGet
      */
+    @Override
     protected ICacheElement processGet( Serializable key )
     {
         if ( !alive )
@@ -621,14 +623,14 @@ public class IndexedDiskCache
         ICacheElement object = null;
         try
         {
-            storageLock.readLock().acquire();
+            storageLock.readLock().lock();
             try
             {
                 object = readElement( key );
             }
             finally
             {
-                storageLock.readLock().release();
+                storageLock.readLock().unlock();
             }
 
             if ( object != null )
@@ -655,28 +657,27 @@ public class IndexedDiskCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache matching keys
      */
-    public Map processGetMatching( String pattern )
+    @Override
+    public Map<Serializable, ICacheElement>  processGetMatching( String pattern )
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
         try
         {
             Object[] keyArray = null;
-            storageLock.readLock().acquire();
+            storageLock.readLock().lock();
             try
             {
                 keyArray = keyHash.keySet().toArray();
             }
             finally
             {
-                storageLock.readLock().release();
+                storageLock.readLock().unlock();
             }
 
-            Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+            Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
-            Iterator keyIterator = matchingKeys.iterator();
-            while ( keyIterator.hasNext() )
+            for (Serializable key : matchingKeys)
             {
-                String key = (String) keyIterator.next();
                 ICacheElement element = processGet( key );
                 if ( element != null )
                 {
@@ -703,7 +704,7 @@ public class IndexedDiskCache
     {
         ICacheElement object = null;
 
-        IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.get( key );
+        IndexedDiskElementDescriptor ded = keyHash.get( key );
 
         if ( ded != null )
         {
@@ -736,22 +737,20 @@ public class IndexedDiskCache
      * <p>
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
-    public Set getGroupKeys( String groupName )
+    @Override
+    public Set<Serializable> getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( cacheName, groupName );
-        HashSet keys = new HashSet();
+        HashSet<Serializable> keys = new HashSet<Serializable>();
         try
         {
-            storageLock.readLock().acquire();
+            storageLock.readLock().lock();
 
-            for ( Iterator itr = keyHash.keySet().iterator(); itr.hasNext(); )
+            for (Serializable k : keyHash.keySet())
             {
-                // Map.Entry entry = (Map.Entry) itr.next();
-                // Object k = entry.getKey();
-                Object k = itr.next();
                 if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
                 {
-                    keys.add( ( (GroupAttrName) k ).attrName );
+                    keys.add( (Serializable) ( (GroupAttrName) k ).attrName );
                 }
             }
         }
@@ -761,7 +760,7 @@ public class IndexedDiskCache
         }
         finally
         {
-            storageLock.readLock().release();
+            storageLock.readLock().unlock();
         }
 
         return keys;
@@ -774,6 +773,7 @@ public class IndexedDiskCache
      * @return true if at least one item was removed.
      * @param key
      */
+    @Override
     protected boolean processRemove( Serializable key )
     {
         if ( !alive )
@@ -791,7 +791,7 @@ public class IndexedDiskCache
         boolean removed = false;
         try
         {
-            storageLock.writeLock().acquire();
+            storageLock.writeLock().lock();
 
             if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
@@ -813,7 +813,7 @@ public class IndexedDiskCache
         }
         finally
         {
-            storageLock.writeLock().release();
+            storageLock.writeLock().unlock();
         }
 
         if ( reset )
@@ -845,13 +845,10 @@ public class IndexedDiskCache
         boolean removed = false;
 
         // remove all keys of the same name hierarchy.
-        List itemsToRemove = new LinkedList();
+        List<Serializable> itemsToRemove = new LinkedList<Serializable>();
 
-        Iterator iter = keyHash.entrySet().iterator();
-        while ( iter.hasNext() )
+        for (Serializable k : keyHash.keySet())
         {
-            Map.Entry entry = (Map.Entry) iter.next();
-            Object k = entry.getKey();
             if ( k instanceof String && k.toString().startsWith( key.toString() ) )
             {
                 itemsToRemove.add( k );
@@ -859,10 +856,8 @@ public class IndexedDiskCache
         }
 
         // remove matches.
-        Iterator itToRemove = itemsToRemove.iterator();
-        while ( itToRemove.hasNext() )
+        for (Serializable fullKey : itemsToRemove)
         {
-            String fullKey = (String) itToRemove.next();
             // Don't add to recycle bin here
             // https://issues.apache.org/jira/browse/JCS-67
             performSingleKeyRemoval( fullKey );
@@ -875,7 +870,7 @@ public class IndexedDiskCache
 
     /**
      * Remove all elements from the group. This does not use the iterator to remove. It builds a
-     * list of group elemetns and then removes them one by one.
+     * list of group elements and then removes them one by one.
      * <p>
      * This operates under a lock obtained in doRemove().
      * <p>
@@ -887,15 +882,11 @@ public class IndexedDiskCache
         boolean removed = false;
 
         // remove all keys of the same name group.
-        List itemsToRemove = new LinkedList();
+        List<Serializable> itemsToRemove = new LinkedList<Serializable>();
 
         // remove all keys of the same name hierarchy.
-        Iterator iter = keyHash.entrySet().iterator();
-        while ( iter.hasNext() )
+        for (Serializable k : keyHash.keySet())
         {
-            Map.Entry entry = (Map.Entry) iter.next();
-            Object k = entry.getKey();
-
             if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
             {
                 itemsToRemove.add( k );
@@ -903,15 +894,15 @@ public class IndexedDiskCache
         }
 
         // remove matches.
-        Iterator itToRemove = itemsToRemove.iterator();
-        while ( itToRemove.hasNext() )
+        for (Serializable fullKey : itemsToRemove)
         {
-            GroupAttrName keyToRemove = (GroupAttrName) itToRemove.next();
             // Don't add to recycle bin here
-            // https://issues.apache.org/jira/browse/JCS-67            
-            performSingleKeyRemoval( keyToRemove );
+            // https://issues.apache.org/jira/browse/JCS-67
+            performSingleKeyRemoval( fullKey );
             removed = true;
+            // TODO this needs to update the remove count separately
         }
+
         return removed;
     }
 
@@ -927,7 +918,7 @@ public class IndexedDiskCache
     {
         boolean removed;
         // remove single item.
-        IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) keyHash.remove( key );
+        IndexedDiskElementDescriptor ded = keyHash.remove( key );
         removed = ( ded != null );
         addToRecycleBin( ded );
 
@@ -941,6 +932,7 @@ public class IndexedDiskCache
     /**
      * Remove all the items from the disk cache by reseting everything.
      */
+    @Override
     public void processRemoveAll()
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
@@ -973,7 +965,7 @@ public class IndexedDiskCache
 
         try
         {
-            storageLock.writeLock().acquire();
+            storageLock.writeLock().lock();
 
             if ( dataFile != null )
             {
@@ -1003,7 +995,7 @@ public class IndexedDiskCache
         }
         finally
         {
-            storageLock.writeLock().release();
+            storageLock.writeLock().unlock();
         }
     }
 
@@ -1014,7 +1006,7 @@ public class IndexedDiskCache
     private void initializeRecycleBin()
     {
         int recycleBinSize = cattr.getMaxRecycleBinSize() >= 0 ? cattr.getMaxRecycleBinSize() : 0;
-        recycle = new SortedPreferentialArray( recycleBinSize );
+        recycle = new SortedPreferentialArray<IndexedDiskElementDescriptor>( recycleBinSize );
         if ( log.isDebugEnabled() )
         {
             log.debug( logCacheName + "Set recycle max Size to MaxRecycleBinSize: '" + recycleBinSize + "'" );
@@ -1038,7 +1030,7 @@ public class IndexedDiskCache
         else
         {
             // If no max size, use a plain map for memory and processing efficiency.
-            keyHash = new HashMap();
+            keyHash = new HashMap<Serializable, IndexedDiskElementDescriptor>();
             // keyHash = Collections.synchronizedMap( new HashMap() );
             if ( log.isInfoEnabled() )
             {
@@ -1053,6 +1045,7 @@ public class IndexedDiskCache
      * <p>
      * TODO make dispose window configurable.
      */
+    @Override
     public void processDispose()
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
@@ -1086,7 +1079,7 @@ public class IndexedDiskCache
     /**
      * Internal method that handles the disposal.
      */
-    private void disposeInternal()
+    protected void disposeInternal()
     {
         if ( !alive )
         {
@@ -1156,7 +1149,7 @@ public class IndexedDiskCache
      * <p>
      * @param ded
      */
-    private void addToRecycleBin( IndexedDiskElementDescriptor ded )
+    protected void addToRecycleBin( IndexedDiskElementDescriptor ded )
     {
         // reuse the spot
         if ( ded != null )
@@ -1178,7 +1171,7 @@ public class IndexedDiskCache
     /**
      * Performs the check for optimization, and if it is required, do it.
      */
-    private void doOptimizeRealTime()
+    protected void doOptimizeRealTime()
     {
         if ( isRealTimeOptimizationEnabled && !isOptimizing && ( removeCount++ >= cattr.getOptimizeAtRemoveCount() ) )
         {
@@ -1192,30 +1185,21 @@ public class IndexedDiskCache
 
             if ( currentOptimizationThread == null )
             {
-                try
+                storageLock.writeLock().lock();
+                if ( currentOptimizationThread == null )
                 {
-                    storageLock.writeLock().acquire();
-                    if ( currentOptimizationThread == null )
+                    currentOptimizationThread = new Thread( new Runnable()
                     {
-                        currentOptimizationThread = new Thread( new Runnable()
+                        public void run()
                         {
-                            public void run()
-                            {
-                                optimizeFile();
+                            optimizeFile();
 
-                                currentOptimizationThread = null;
-                            }
-                        }, "IndexedDiskCache-OptimizationThread" );
-                    }
+                            currentOptimizationThread = null;
+                        }
+                    }, "IndexedDiskCache-OptimizationThread" );
                 }
-                catch ( InterruptedException e )
-                {
-                    log.error( logCacheName + "Unable to aquire storage write lock.", e );
-                }
-                finally
-                {
-                    storageLock.writeLock().release();
-                }
+
+                storageLock.writeLock().unlock();
 
                 if ( currentOptimizationThread != null )
                 {
@@ -1252,21 +1236,14 @@ public class IndexedDiskCache
 
         // CREATE SNAPSHOT
         IndexedDiskElementDescriptor[] defragList = null;
-        try
-        {
-            storageLock.writeLock().acquire();
-            queueInput = true;
-            // shut off recycle while we're optimizing,
-            doRecycle = false;
-            defragList = createPositionSortedDescriptorList();
-            // Release iff I aquired.
-            storageLock.writeLock().release();
-        }
-        catch ( InterruptedException e )
-        {
-            log.error( logCacheName + "Error setting up optimization.", e );
-            return;
-        }
+
+        storageLock.writeLock().lock();
+        queueInput = true;
+        // shut off recycle while we're optimizing,
+        doRecycle = false;
+        defragList = createPositionSortedDescriptorList();
+        // Release if I acquired.
+        storageLock.writeLock().unlock();
 
         // Defrag the file outside of the write lock. This allows a move to be made,
         // and yet have the element still accessible for reading or writing.
@@ -1275,11 +1252,11 @@ public class IndexedDiskCache
         // ADD THE QUEUED ITEMS to the end and then truncate
         try
         {
-            storageLock.writeLock().acquire();
+            storageLock.writeLock().lock();
 
             if ( !queuedPutList.isEmpty() )
             {
-                // This is perhaps unecessary, but the list might not be as sorted as we think.
+                // This is perhaps unnecessary, but the list might not be as sorted as we think.
                 defragList = new IndexedDiskElementDescriptor[queuedPutList.size()];
                 queuedPutList.toArray( defragList );
                 Arrays.sort( defragList, new PositionComparator() );
@@ -1306,7 +1283,7 @@ public class IndexedDiskCache
             doRecycle = true;
             isOptimizing = false;
 
-            storageLock.writeLock().release();
+            storageLock.writeLock().unlock();
         }
 
         if ( log.isInfoEnabled() )
@@ -1338,7 +1315,7 @@ public class IndexedDiskCache
             expectedNextPos = startingPos;
             for ( int i = 0; i < defragList.length; i++ )
             {
-                storageLock.writeLock().acquire();
+                storageLock.writeLock().lock();
                 try
                 {
                     if ( expectedNextPos != defragList[i].pos )
@@ -1349,7 +1326,7 @@ public class IndexedDiskCache
                 }
                 finally
                 {
-                    storageLock.writeLock().release();
+                    storageLock.writeLock().unlock();
                 }
             }
 
@@ -1361,10 +1338,6 @@ public class IndexedDiskCache
         catch ( IOException e )
         {
             log.error( logCacheName + "Error occurred during defragmentation.", e );
-        }
-        catch ( InterruptedException e )
-        {
-            log.error( logCacheName + "Threading problem", e );
         }
         finally
         {
@@ -1390,11 +1363,11 @@ public class IndexedDiskCache
     private IndexedDiskElementDescriptor[] createPositionSortedDescriptorList()
     {
         IndexedDiskElementDescriptor[] defragList = new IndexedDiskElementDescriptor[keyHash.size()];
-        Iterator iterator = keyHash.entrySet().iterator();
+        Iterator<Map.Entry<Serializable, IndexedDiskElementDescriptor>> iterator = keyHash.entrySet().iterator();
         for ( int i = 0; iterator.hasNext(); i++ )
         {
-            Object next = iterator.next();
-            defragList[i] = (IndexedDiskElementDescriptor) ( (Map.Entry) next ).getValue();
+            Map.Entry<Serializable, IndexedDiskElementDescriptor> next = iterator.next();
+            defragList[i] = next.getValue();
         }
 
         Arrays.sort( defragList, new PositionComparator() );
@@ -1407,6 +1380,7 @@ public class IndexedDiskCache
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return keyHash.size();
@@ -1477,22 +1451,13 @@ public class IndexedDiskCache
     {
         long size = 0;
 
-        try
+        storageLock.readLock().lock();
+        if ( dataFile != null )
         {
-            storageLock.readLock().acquire();
-            if ( dataFile != null )
-            {
-                size = dataFile.length();
-            }
+            size = dataFile.length();
         }
-        catch ( InterruptedException e )
-        {
-            // nothing
-        }
-        finally
-        {
-            storageLock.readLock().release();
-        }
+        storageLock.readLock().unlock();
+
         return size;
     }
 
@@ -1515,13 +1480,10 @@ public class IndexedDiskCache
         {
             log.debug( logCacheName + "[dump] Number of keys: " + keyHash.size() );
 
-            Iterator itr = keyHash.entrySet().iterator();
-
-            while ( itr.hasNext() )
+            for (Map.Entry<Serializable, IndexedDiskElementDescriptor> e : keyHash.entrySet())
             {
-                Map.Entry e = (Map.Entry) itr.next();
-                Serializable key = (Serializable) e.getKey();
-                IndexedDiskElementDescriptor ded = (IndexedDiskElementDescriptor) e.getValue();
+                Serializable key = e.getKey();
+                IndexedDiskElementDescriptor ded = e.getValue();
 
                 log.debug( logCacheName + "[dump] Disk element, key: " + key + ", pos: " + ded.pos + ", ded.len"
                     + ded.len + ( ( dumpValues ) ? ( ", val: " + get( key ) ) : "" ) );
@@ -1550,6 +1512,7 @@ public class IndexedDiskCache
      * <p>
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -1561,12 +1524,13 @@ public class IndexedDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
+    @Override
     public synchronized IStats getStatistics()
     {
         IStats stats = new Stats();
         stats.setTypeName( "Indexed Disk Cache" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -1645,11 +1609,11 @@ public class IndexedDiskCache
         // get as array, convert to list, add list to our outer list
         IStats sStats = super.getStatistics();
         IStatElement[] sSEs = sStats.getStatElements();
-        List sL = Arrays.asList( sSEs );
+        List<IStatElement> sL = Arrays.asList( sSEs );
         elems.addAll( sL );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -1670,6 +1634,7 @@ public class IndexedDiskCache
      * <p>
      * @return the location of the disk, either path or ip.
      */
+    @Override
     protected String getDiskLocation()
     {
         return dataFile.getFilePath();
@@ -1679,18 +1644,18 @@ public class IndexedDiskCache
      * Compares IndexedDiskElementDescriptor based on their position.
      * <p>
      */
-    private static final class PositionComparator
-        implements Comparator
+    protected static final class PositionComparator
+        implements Comparator<IndexedDiskElementDescriptor>
     {
         /**
          * Compares two descriptors based on position.
          * <p>
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
-        public int compare( Object o1, Object o2 )
+        public int compare( IndexedDiskElementDescriptor o1, IndexedDiskElementDescriptor o2 )
         {
-            IndexedDiskElementDescriptor ded1 = (IndexedDiskElementDescriptor) o1;
-            IndexedDiskElementDescriptor ded2 = (IndexedDiskElementDescriptor) o2;
+            IndexedDiskElementDescriptor ded1 = o1;
+            IndexedDiskElementDescriptor ded2 = o2;
 
             if ( ded1.pos < ded2.pos )
             {
@@ -1708,11 +1673,11 @@ public class IndexedDiskCache
     }
 
     /**
-     * Class for recylcing and lru. This implements the LRU overflow callback, so we can add items
+     * Class for recycling and lru. This implements the LRU overflow callback, so we can add items
      * to the recycle bin.
      */
     public class LRUMap
-        extends LRUMapJCS
+        extends LRUMapJCS<Serializable, IndexedDiskElementDescriptor>
     {
         /** Don't change */
         private static final long serialVersionUID = 4955079991472142198L;
@@ -1745,9 +1710,10 @@ public class IndexedDiskCache
          * @param key
          * @param value
          */
-        protected void processRemovedLRU( Object key, Object value )
+        @Override
+        protected void processRemovedLRU(Serializable key, IndexedDiskElementDescriptor value )
         {
-            addToRecycleBin( (IndexedDiskElementDescriptor) value );
+            addToRecycleBin( value );
             if ( log.isDebugEnabled() )
             {
                 log.debug( logCacheName + "Removing key: [" + key + "] from key store." );

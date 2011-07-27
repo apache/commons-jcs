@@ -25,21 +25,20 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
-
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /** Receives UDP Discovery messages. */
 public class UDPDiscoveryReceiver
     implements Runnable, IShutdownObserver
 {
     /** The log factory */
-    private final static Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
+    protected final static Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
 
     /** buffer */
     private final byte[] mBuffer = new byte[65536];
@@ -54,7 +53,7 @@ public class UDPDiscoveryReceiver
     private static final int maxPoolSize = 2;
 
     /** The processor */
-    private PooledExecutor pooledExecutor = null;
+    private ThreadPoolExecutor pooledExecutor = null;
 
     /** number of messages received. For debugging and testing. */
     private int cnt = 0;
@@ -89,10 +88,9 @@ public class UDPDiscoveryReceiver
         this.multicastPort = multicastPort;
 
         // create a small thread pool to handle a barrage
-        pooledExecutor = new PooledExecutor( new BoundedBuffer( 100 ), maxPoolSize );
-        pooledExecutor.discardOldestWhenBlocked();
+        pooledExecutor = (ThreadPoolExecutor)Executors.newFixedThreadPool(maxPoolSize, new MyThreadFactory());
+        pooledExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
         //pooledExecutor.setMinimumPoolSize(1);
-        pooledExecutor.setThreadFactory( new MyThreadFactory() );
 
         if ( log.isInfoEnabled() )
         {
@@ -127,7 +125,7 @@ public class UDPDiscoveryReceiver
             if ( log.isInfoEnabled() )
             {
                 log.info( "Joining Group: [" + InetAddress.getByName( multicastAddressString ) + "]" );
-            }            
+            }
             mSocket.joinGroup( InetAddress.getByName( multicastAddressString ) );
         }
         catch ( IOException e )
@@ -163,15 +161,15 @@ public class UDPDiscoveryReceiver
             {
                 log.debug( "Received packet from address [" + packet.getSocketAddress() + "]" );
             }
-            
+
             final ByteArrayInputStream byteStream = new ByteArrayInputStream( mBuffer, 0, packet.getLength() );
             final ObjectInputStream objectStream = new ObjectInputStream( byteStream );
             obj = objectStream.readObject();
-            
+
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Read object from address [" + packet.getSocketAddress() + "], object=[" + obj + "]" );
-            }            
+            }
         }
         catch ( Exception e )
         {

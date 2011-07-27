@@ -19,12 +19,12 @@ public class RemoteCacheResponse
 
     /** Simple error messaging */
     private String errorMessage;
-    
+
     /**
      * The payload. Typically a key / ICacheElement map. A normal get will return a map with one
      * record.
      */
-    private Map payload = new HashMap();
+    private Map<Serializable, ? super Object> payload = new HashMap<Serializable, Object>();
 
     /**
      * @param success the success to set
@@ -61,7 +61,7 @@ public class RemoteCacheResponse
     /**
      * @param payload the payload to set
      */
-    public void setPayload( Map payload )
+    public void setPayload( Map<Serializable, ? super Object> payload )
     {
         this.payload = payload;
     }
@@ -69,12 +69,13 @@ public class RemoteCacheResponse
     /**
      * @return the payload
      */
-    public Map getPayload()
+    public Map<Serializable, ? super Object> getPayload()
     {
         return payload;
     }
 
     /** @return string */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

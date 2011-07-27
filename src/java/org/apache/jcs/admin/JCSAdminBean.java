@@ -36,6 +36,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.memory.behavior.IMemoryCache;
+import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 
 /**
  * A servlet which provides HTTP access to JCS. Allows a summary of regions to be viewed, and
@@ -48,8 +49,8 @@ public class JCSAdminBean
     /** The logger. */
     private static final Log log = LogFactory.getLog( JCSAdminBean.class );
 
-    /** The cache maanger. */
-    private CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
+    /** The cache manager. */
+    private final CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
     /**
      * Builds up info about each element in a region.
@@ -58,7 +59,7 @@ public class JCSAdminBean
      * @return List of CacheElementInfo objects
      * @throws Exception
      */
-    public LinkedList buildElementInfo( String cacheName )
+    public LinkedList<CacheElementInfo> buildElementInfo( String cacheName )
         throws Exception
     {
         CompositeCache cache = cacheHub.getCache( cacheName );
@@ -67,7 +68,6 @@ public class JCSAdminBean
 
         // Attempt to sort keys according to their natural ordering. If that
         // fails, get the key array again and continue unsorted.
-
         try
         {
             Arrays.sort( keys );
@@ -77,7 +77,7 @@ public class JCSAdminBean
             keys = cache.getMemoryCache().getKeyArray();
         }
 
-        LinkedList records = new LinkedList();
+        LinkedList<CacheElementInfo> records = new LinkedList<CacheElementInfo>();
 
         ICacheElement element;
         IElementAttributes attributes;
@@ -118,14 +118,14 @@ public class JCSAdminBean
      * @return list of CacheRegionInfo objects
      * @throws Exception
      */
-    public LinkedList buildCacheInfo()
+    public LinkedList<CacheRegionInfo> buildCacheInfo()
         throws Exception
     {
         String[] cacheNames = cacheHub.getCacheNames();
 
         Arrays.sort( cacheNames );
 
-        LinkedList cacheInfo = new LinkedList();
+        LinkedList<CacheRegionInfo> cacheInfo = new LinkedList<CacheRegionInfo>();
 
         CacheRegionInfo regionInfo;
         CompositeCache cache;
@@ -147,7 +147,7 @@ public class JCSAdminBean
 
     /**
      * Tries to estimate how much data is in a region. This is expensive. If there are any non
-     * serializable objects in the region, the count will stop when it encouters the first one.
+     * serializable objects in the region, the count will stop when it encounters the first one.
      * <p>
      * @param cache
      * @return int
@@ -158,7 +158,7 @@ public class JCSAdminBean
     {
         IMemoryCache memCache = cache.getMemoryCache();
 
-        Iterator iter = memCache.getIterator();
+        Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> iter = memCache.getIterator();
 
         CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
         ObjectOutputStream out = new ObjectOutputStream( counter );
@@ -169,18 +169,16 @@ public class JCSAdminBean
         {
             while ( iter.hasNext() )
             {
-                ICacheElement ce = (ICacheElement) ( (Map.Entry) iter.next() ).getValue();
-
-                out.writeObject( ce.getVal() );
+                MemoryElementDescriptor me = iter.next().getValue();
+                out.writeObject( me.ce.getVal() );
             }
         }
         catch ( Exception e )
         {
-            log.info( "Problem getting byte count.  Likley cause is a non serilizable object." + e.getMessage() );
+            log.info( "Problem getting byte count.  Likely cause is a non serializable object." + e.getMessage() );
         }
 
         // 4 bytes lost for the serialization header
-
         return counter.getCount() - 4;
     }
 

@@ -78,9 +78,9 @@ public class ZombieCacheService
      * @param keys
      * @return Collections.EMPTY_MAP
      */
-    public Map getMultiple( String cacheName, Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
     {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     /**
@@ -90,9 +90,9 @@ public class ZombieCacheService
      * @param pattern
      * @return Collections.EMPTY_MAP
      */
-    public Map getMatching( String cacheName, String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
     {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     /**

@@ -24,9 +24,9 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * This is a generic thread safe double linked list. It's very simple and all the operations are so
- * quick that course grained synchronization is more than acceptible.
+ * quick that course grained synchronization is more than acceptable.
  */
-public class DoubleLinkedList
+public class DoubleLinkedList<T extends DoubleLinkedListNode>
 {
     /** record size to avoid having to iterate */
     private int size = 0;
@@ -35,10 +35,10 @@ public class DoubleLinkedList
     private final static Log log = LogFactory.getLog( DoubleLinkedList.class );
 
     /** LRU double linked list head node */
-    private DoubleLinkedListNode first;
+    private T first;
 
     /** LRU double linked list tail node */
-    private DoubleLinkedListNode last;
+    private T last;
 
     /**
      * Default constructor.
@@ -53,7 +53,7 @@ public class DoubleLinkedList
      * <p>
      * @param me The feature to be added to the Last
      */
-    public synchronized void addLast( DoubleLinkedListNode me )
+    public synchronized void addLast(T me)
     {
         if ( first == null )
         {
@@ -74,7 +74,7 @@ public class DoubleLinkedList
      * <p>
      * @param me The feature to be added to the First
      */
-    public synchronized void addFirst( DoubleLinkedListNode me )
+    public synchronized void addFirst(T me)
     {
         if ( last == null )
         {
@@ -96,7 +96,7 @@ public class DoubleLinkedList
      * <p>
      * @return The last node.
      */
-    public synchronized DoubleLinkedListNode getLast()
+    public synchronized T getLast()
     {
         if ( log.isDebugEnabled() )
         {
@@ -110,7 +110,7 @@ public class DoubleLinkedList
      * <p>
      * @return DoubleLinkedListNode, the first node.
      */
-    public synchronized DoubleLinkedListNode getFirst()
+    public synchronized T getFirst()
     {
         if ( log.isDebugEnabled() )
         {
@@ -124,20 +124,20 @@ public class DoubleLinkedList
      * <p>
      * @param ln The node to set as the head.
      */
-    public synchronized void makeFirst( DoubleLinkedListNode ln )
+    public synchronized void makeFirst(T ln)
     {
         if ( ln.prev == null )
         {
             // already the first node. or not a node
             return;
         }
-        // splice: remove it from the list        
+        // splice: remove it from the list
         ln.prev.next = ln.next;
 
         if ( ln.next == null )
         {
             // last but not the first.
-            last = ln.prev;
+            last = (T) ln.prev;
             last.next = null;
         }
         else
@@ -156,7 +156,7 @@ public class DoubleLinkedList
      * <p>
      * @param ln The node to set as the head.
      */
-    public synchronized void makeLast( DoubleLinkedListNode ln )
+    public synchronized void makeLast(T ln)
     {
         if ( ln.next == null )
         {
@@ -188,13 +188,13 @@ public class DoubleLinkedList
      */
     public synchronized void removeAll()
     {
-        for ( DoubleLinkedListNode me = first; me != null; )
+        for (T me = first; me != null; )
         {
             if ( me.prev != null )
             {
                 me.prev = null;
             }
-            DoubleLinkedListNode next = me.next;
+            T next = (T) me.next;
             me = next;
         }
         first = last = null;
@@ -208,7 +208,7 @@ public class DoubleLinkedList
      * @param me Description of the Parameter
      * @return true if an element was removed.
      */
-    public synchronized boolean remove( DoubleLinkedListNode me )
+    public synchronized boolean remove(T me)
     {
         if ( log.isDebugEnabled() )
         {
@@ -232,7 +232,7 @@ public class DoubleLinkedList
             else
             {
                 // last but not the first.
-                last = me.prev;
+                last = (T) me.prev;
                 last.next = null;
                 me.prev = null;
             }
@@ -240,7 +240,7 @@ public class DoubleLinkedList
         else if ( me.prev == null )
         {
             // first but not the last.
-            first = me.next;
+            first = (T) me.next;
             first.prev = null;
             me.next = null;
         }
@@ -261,13 +261,13 @@ public class DoubleLinkedList
      * <p>
      * @return The last node if there was one to remove.
      */
-    public synchronized DoubleLinkedListNode removeLast()
+    public synchronized T removeLast()
     {
         if ( log.isDebugEnabled() )
         {
             log.debug( "removing last node" );
         }
-        DoubleLinkedListNode temp = last;
+        T temp = last;
         if ( last != null )
         {
             remove( last );
@@ -294,7 +294,7 @@ public class DoubleLinkedList
         if ( log.isDebugEnabled() )
         {
             log.debug( "dumping Entries" );
-            for ( DoubleLinkedListNode me = first; me != null; me = me.next )
+            for (T me = first; me != null; me = (T) me.next)
             {
                 log.debug( "dump Entries> payload= '" + me.getPayload() + "'" );
             }

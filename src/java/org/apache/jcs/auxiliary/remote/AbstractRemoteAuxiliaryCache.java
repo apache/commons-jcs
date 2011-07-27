@@ -21,12 +21,16 @@ package org.apache.jcs.auxiliary.remote;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,12 +50,7 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 import org.apache.jcs.utils.serialization.SerializationConversionUtil;
-import org.apache.jcs.utils.threadpool.ThreadPool;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
-
-import EDU.oswego.cs.dl.util.concurrent.Callable;
-import EDU.oswego.cs.dl.util.concurrent.FutureResult;
-import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
 
 /** Abstract base for remote caches. I'm trying to break out and reuse common functionality. */
 public abstract class AbstractRemoteAuxiliaryCache
@@ -80,7 +79,7 @@ public abstract class AbstractRemoteAuxiliaryCache
     private IRemoteCacheAttributes remoteCacheAttributes;
 
     /** A thread pool for gets if configured. */
-    private ThreadPool pool = null;
+    private ThreadPoolExecutor pool = null;
 
     /** Should we get asynchronously using a pool. */
     private boolean usePoolForGet = false;
@@ -133,6 +132,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * <p>
      * @throws IOException
      */
+    @Override
     protected void processDispose()
         throws IOException
     {
@@ -167,6 +167,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
+    @Override
     protected ICacheElement processGet( Serializable key )
         throws IOException
     {
@@ -216,21 +217,21 @@ public abstract class AbstractRemoteAuxiliaryCache
 
         try
         {
-            FutureResult future = new FutureResult();
-            Runnable command = future.setter( new Callable()
+            Callable<ICacheElement> command = new Callable<ICacheElement>()
             {
-                public Object call()
+                public ICacheElement call()
                     throws IOException
                 {
                     return getRemoteCacheService().get( cacheName, key, getListenerId() );
                 }
-            } );
+            };
 
             // execute using the pool
-            pool.execute( command );
+            Future<ICacheElement> future = pool.submit(command);
 
             // used timed get in order to timeout
-            ICacheElement ice = (ICacheElement) future.timedGet( timeout );
+            ICacheElement ice = future.get(timeout, TimeUnit.MILLISECONDS);
+
             if ( log.isDebugEnabled() )
             {
                 if ( ice == null )
@@ -254,10 +255,10 @@ public abstract class AbstractRemoteAuxiliaryCache
             log.warn( "InterruptedException, Get Request timed out after " + timeout );
             throw new IOException( "Get Request timed out after " + timeout );
         }
-        catch ( InvocationTargetException ex )
+        catch (ExecutionException ex)
         {
             // assume that this is an IOException thrown by the callable.
-            log.error( "InvocationTargetException, Assuming an IO exception thrown in the background.", ex );
+            log.error( "ExecutionException, Assuming an IO exception thrown in the background.", ex );
             throw new IOException( "Get Request timed out after " + timeout );
         }
     }
@@ -269,28 +270,26 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @return Map
      * @throws IOException
      */
-    public Map processGetMatching( String pattern )
+    @Override
+    public Map<Serializable, ICacheElement> processGetMatching( String pattern )
         throws IOException
     {
-        Map results = new HashMap();
+        Map<Serializable, ICacheElement> results = new HashMap<Serializable, ICacheElement>();
         try
         {
-            Map rawResults = getRemoteCacheService().getMatching( cacheName, pattern, getListenerId() );
+            Map<Serializable, ICacheElement> rawResults = getRemoteCacheService().getMatching( cacheName, pattern, getListenerId() );
 
             // Eventually the instance of will not be necessary.
             if ( rawResults != null )
             {
-                Set entrySet = rawResults.entrySet();
-                Iterator it = entrySet.iterator();
-                while ( it.hasNext() )
+                for (Map.Entry<Serializable, ICacheElement> entry : rawResults.entrySet())
                 {
-                    Map.Entry entry = (Map.Entry) it.next();
                     ICacheElement unwrappedResult = null;
                     if ( entry.getValue() instanceof ICacheElementSerialized )
                     {
                         // Never try to deserialize if you are a cluster client. Cluster
                         // clients are merely intra-remote cache communicators. Remote caches are assumed
-                        // to have no ability to deserialze the objects.
+                        // to have no ability to deserialize the objects.
                         if ( this.getRemoteCacheAttributes().getRemoteType() != IRemoteCacheAttributes.CLUSTER )
                         {
                             unwrappedResult = SerializationConversionUtil
@@ -300,7 +299,7 @@ public abstract class AbstractRemoteAuxiliaryCache
                     }
                     else
                     {
-                        unwrappedResult = (ICacheElement) entry.getValue();
+                        unwrappedResult = entry.getValue();
                     }
                     results.put( entry.getKey(), unwrappedResult );
                 }
@@ -322,18 +321,15 @@ public abstract class AbstractRemoteAuxiliaryCache
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected Map processGetMultiple( Set keys )
+    @Override
+    protected Map<Serializable, ICacheElement> processGetMultiple( Set<Serializable> keys )
         throws IOException
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
+            for (Serializable key : keys)
             {
-                Serializable key = (Serializable) iterator.next();
-
                 ICacheElement element = get( key );
 
                 if ( element != null )
@@ -353,6 +349,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
+    @Override
     protected boolean processRemove( Serializable key )
         throws IOException
     {
@@ -381,6 +378,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * <p>
      * @throws IOException
      */
+    @Override
     protected void processRemoveAll()
         throws IOException
     {
@@ -405,6 +403,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @param ce
      * @throws IOException
      */
+    @Override
     protected void processUpdate( ICacheElement ce )
         throws IOException
     {
@@ -450,16 +449,16 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @param groupName
      * @return Set
      * @throws java.rmi.RemoteException
-     * @throws IOException 
+     * @throws IOException
      */
-    public Set getGroupKeys( String groupName )
+    public Set<Serializable> getGroupKeys( String groupName )
         throws java.rmi.RemoteException, IOException
     {
         return getRemoteCacheService().getGroupKeys( cacheName, groupName );
     }
 
     /**
-     * Allows other member of this package to access the listerner. This is mainly needed for
+     * Allows other member of this package to access the listener. This is mainly needed for
      * deregistering a listener.
      * <p>
      * @return IRemoteCacheListener, the listener for this remote server
@@ -550,7 +549,7 @@ public abstract class AbstractRemoteAuxiliaryCache
     {
         return getStatistics().toString();
     }
-    
+
     /**
      * @return IStats object
      */
@@ -559,7 +558,7 @@ public abstract class AbstractRemoteAuxiliaryCache
         IStats stats = new Stats();
         stats.setTypeName( "AbstractRemoteAuxiliaryCache" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -584,12 +583,12 @@ public abstract class AbstractRemoteAuxiliaryCache
         {
             se = new StatElement();
             se.setName( "Pool Size" );
-            se.setData( "" + pool.getPool().getPoolSize() );
+            se.setData( "" + pool.getPoolSize() );
             elems.add( se );
 
             se = new StatElement();
             se.setName( "Maximum Pool Size" );
-            se.setData( "" + pool.getPool().getMaximumPoolSize() );
+            se.setData( "" + pool.getMaximumPoolSize() );
             elems.add( se );
         }
 
@@ -602,7 +601,7 @@ public abstract class AbstractRemoteAuxiliaryCache
         }
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -654,7 +653,7 @@ public abstract class AbstractRemoteAuxiliaryCache
         return;
     }
 
-    
+
     /**
      * Gets the cacheType attribute of the RemoteCache object
      * @return The cacheType value

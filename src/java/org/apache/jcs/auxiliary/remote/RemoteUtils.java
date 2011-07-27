@@ -104,21 +104,14 @@ public class RemoteUtils
 
             if ( log.isDebugEnabled() )
             {
-                if ( props != null )
+                Enumeration<Object> en = props.keys();
+                StringBuffer buf = new StringBuffer();
+                while ( en.hasMoreElements() )
                 {
-                    Enumeration en = props.keys();
-                    StringBuffer buf = new StringBuffer();
-                    while ( en.hasMoreElements() )
-                    {
-                        String key = (String) en.nextElement();
-                        buf.append( "\n" + key + " = " + props.getProperty( key ) );
-                    }
-                    log.debug( buf.toString() );
+                    String key = (String) en.nextElement();
+                    buf.append( "\n" + key + " = " + props.getProperty( key ) );
                 }
-                else
-                {
-                    log.debug( "props is null" );
-                }
+                log.debug( buf.toString() );
             }
 
         }
@@ -158,6 +151,7 @@ public class RemoteUtils
                 // use this socket factory to add a timeout.
                 RMISocketFactory.setSocketFactory( new RMISocketFactory()
                 {
+                    @Override
                     public Socket createSocket( String host, int port )
                         throws IOException
                     {
@@ -168,6 +162,7 @@ public class RemoteUtils
                         return socket;
                     }
 
+                    @Override
                     public ServerSocket createServerSocket( int port )
                         throws IOException
                     {

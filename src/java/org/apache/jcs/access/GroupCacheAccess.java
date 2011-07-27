@@ -19,6 +19,7 @@ package org.apache.jcs.access;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Set;
 
 import org.apache.jcs.access.behavior.IGroupCacheAccess;
@@ -36,7 +37,7 @@ import org.apache.jcs.engine.control.group.GroupId;
  */
 public class GroupCacheAccess
     extends CacheAccess
-    implements IGroupCacheAccess
+    implements IGroupCacheAccess<Serializable, Serializable>
 {
     /** The underlying cache manager. */
     private static CompositeCacheManager cacheMgr;
@@ -102,7 +103,7 @@ public class GroupCacheAccess
      *            The group name.
      * @return The cached value, null if not found.
      */
-    public Object getFromGroup( Object name, String group )
+    public Serializable getFromGroup( Serializable name, String group )
     {
         ICacheElement element = this.cacheControl.get( getGroupAttrName( group, name ) );
         return ( element != null ) ? element.getVal() : null;
@@ -115,7 +116,7 @@ public class GroupCacheAccess
      * @param name
      * @return GroupAttrName
      */
-    private GroupAttrName getGroupAttrName( String group, Object name )
+    private GroupAttrName getGroupAttrName( String group, Serializable name )
     {
         GroupId gid = new GroupId( this.cacheControl.getCacheName(), group );
         return new GroupAttrName( gid, name );
@@ -134,7 +135,7 @@ public class GroupCacheAccess
      *            The object to cache
      * @throws CacheException
      */
-    public void putInGroup( Object name, String groupName, Object value )
+    public void putInGroup( Serializable name, String groupName, Serializable value )
         throws CacheException
     {
         putInGroup( name, groupName, value, null );
@@ -155,7 +156,7 @@ public class GroupCacheAccess
      *            The objects attributes.
      * @throws CacheException
      */
-    public void putInGroup( Object name, String groupName, Object value, IElementAttributes attr )
+    public void putInGroup( Serializable name, String groupName, Serializable value, IElementAttributes attr )
         throws CacheException
     {
         // unbind object first if any.
@@ -175,7 +176,7 @@ public class GroupCacheAccess
      * @param name
      * @param group
      */
-    public void remove( Object name, String group )
+    public void remove( Serializable name, String group )
     {
         GroupAttrName key = getGroupAttrName( group, name );
         this.cacheControl.remove( key );
@@ -187,7 +188,7 @@ public class GroupCacheAccess
      * @param group
      * @return A Set of keys.
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
     {
         return this.cacheControl.getGroupKeys( group );
     }

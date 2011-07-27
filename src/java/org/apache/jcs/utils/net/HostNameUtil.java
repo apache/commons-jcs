@@ -41,13 +41,13 @@ public class HostNameUtil
      * Gets the address for the local machine.
      * <p>
      * @return InetAddress.getLocalHost().getHostAddress()
-     * @throws UnknownHostException 
+     * @throws UnknownHostException
      */
     public static String getLocalHostAddress() throws UnknownHostException
     {
         try
         {
-            String hostAddress = getLocalHostLANAddress().getHostAddress(); ;
+            String hostAddress = getLocalHostLANAddress().getHostAddress();
             if ( log.isDebugEnabled() )
             {
                 log.debug( "hostAddress = [" + hostAddress + "]" );
@@ -94,13 +94,13 @@ public class HostNameUtil
         {
             InetAddress candidateAddress = null;
             // Iterate all NICs (network interface cards)...
-            for ( Enumeration ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements(); )
+            for ( Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements(); )
             {
-                NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
+                NetworkInterface iface = ifaces.nextElement();
                 // Iterate all IP addresses assigned to each card...
-                for ( Enumeration inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
+                for ( Enumeration<InetAddress> inetAddrs = iface.getInetAddresses(); inetAddrs.hasMoreElements(); )
                 {
-                    InetAddress inetAddr = (InetAddress) inetAddrs.nextElement();
+                    InetAddress inetAddr = inetAddrs.nextElement();
                     if ( !inetAddr.isLoopbackAddress() )
                     {
                         if ( inetAddr.isSiteLocalAddress() )

@@ -26,7 +26,7 @@ import java.io.Serializable;
  * memory on startup.
  */
 public class IndexedDiskElementDescriptor
-    implements Serializable, Comparable
+    implements Serializable, Comparable<IndexedDiskElementDescriptor>
 {
     /** Don't change */
     private static final long serialVersionUID = -3029163572847659450L;
@@ -52,6 +52,7 @@ public class IndexedDiskElementDescriptor
     /**
      * @return debug string
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
@@ -68,14 +69,14 @@ public class IndexedDiskElementDescriptor
      * @param o Object
      * @return int
      */
-    public int compareTo( Object o )
+    public int compareTo( IndexedDiskElementDescriptor o )
     {
         if ( o == null )
         {
             return 1;
         }
 
-        int oLen = ( (IndexedDiskElementDescriptor) o ).len;
+        int oLen = o.len;
         if ( oLen == len )
         {
             return 0;

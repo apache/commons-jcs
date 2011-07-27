@@ -34,10 +34,10 @@ public class ElementEventQueue
     implements IElementEventQueue
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( ElementEventQueue.class );
+    protected final static Log log = LogFactory.getLog( ElementEventQueue.class );
 
     /** The cache (region) name. */
-    private String cacheName;
+    protected final String cacheName;
 
     /** default */
     private static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
@@ -55,7 +55,7 @@ public class ElementEventQueue
     private Thread processorThread;
 
     /** Internal queue implementation */
-    private Object queueLock = new Object();
+    protected final Object queueLock = new Object();
 
     /** Dummy node */
     private Node head = new Node();
@@ -142,6 +142,7 @@ public class ElementEventQueue
     /**
      * @return the region name for the event queue
      */
+    @Override
     public String toString()
     {
         return "cacheName=" + cacheName;
@@ -227,7 +228,7 @@ public class ElementEventQueue
      * <p>
      * @return AbstractElementEventRunner
      */
-    private AbstractElementEventRunner take()
+    protected AbstractElementEventRunner take()
     {
         synchronized ( queueLock )
         {
@@ -260,7 +261,7 @@ public class ElementEventQueue
     // /////////////////////////// Inner classes /////////////////////////////
 
     /** A node in the queue. These are chained forming a singly linked list */
-    private static class Node
+    protected static class Node
     {
         /** The next node. */
         Node next = null;
@@ -280,7 +281,7 @@ public class ElementEventQueue
         /**
          * Constructor for the QProcessor object
          * <p>
-         * @param aQueue 
+         * @param aQueue
          */
         QProcessor( ElementEventQueue aQueue )
         {
@@ -296,6 +297,7 @@ public class ElementEventQueue
          * Waits for a specified time (waitToDieMillis) for something to come in and if no new
          * events come in during that period the run method can exit and the thread is dereferenced.
          */
+        @Override
         public void run()
         {
             AbstractElementEventRunner event = null;
@@ -349,7 +351,7 @@ public class ElementEventQueue
     /**
      * Retries before declaring failure.
      */
-    private abstract class AbstractElementEventRunner
+    protected abstract class AbstractElementEventRunner
         implements Runnable
     {
         /**
@@ -357,27 +359,16 @@ public class ElementEventQueue
          */
         public void run()
         {
-            IOException ex = null;
-
             try
             {
-                ex = null;
                 doRun();
-                return;
                 // happy and done.
             }
             catch ( IOException e )
             {
-                ex = e;
+                // Too bad. The handler has problems.
+                log.warn( "Giving up element event handling " + ElementEventQueue.this, e );
             }
-
-            // Too bad. The handler has problems.
-            if ( ex != null )
-            {
-                log.warn( "Giving up element event handling " + ElementEventQueue.this, ex );
-
-            }
-            return;
         }
 
         /**
@@ -396,10 +387,10 @@ public class ElementEventQueue
         extends AbstractElementEventRunner
     {
         /** the handler */
-        private IElementEventHandler hand;
+        private final IElementEventHandler hand;
 
         /** event */
-        private IElementEvent event;
+        private final IElementEvent event;
 
         /**
          * Constructor for the PutEvent object.
@@ -424,6 +415,7 @@ public class ElementEventQueue
          * <p>
          * @exception IOException
          */
+        @Override
         protected void doRun()
             throws IOException
         {

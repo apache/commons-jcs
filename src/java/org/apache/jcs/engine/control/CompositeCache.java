@@ -51,6 +51,7 @@ import org.apache.jcs.engine.match.KeyMatcherPatternImpl;
 import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.jcs.engine.memory.MemoryCache;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
+import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.CacheStats;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
@@ -574,7 +575,7 @@ public class CompositeCache
                             break;
                         }
                     }
-                }                
+                }
             }
         }
         catch ( Exception e )
@@ -602,7 +603,7 @@ public class CompositeCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
     {
         return getMultiple( keys, false );
     }
@@ -615,7 +616,7 @@ public class CompositeCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map localGetMultiple( Set keys )
+    public Map<Serializable, ICacheElement> localGetMultiple( Set<Serializable> keys )
     {
         return getMultiple( keys, true );
     }
@@ -632,9 +633,9 @@ public class CompositeCache
      * @param localOnly
      * @return ICacheElement
      */
-    protected Map getMultiple( Set keys, boolean localOnly )
+    protected Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys, boolean localOnly )
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( log.isDebugEnabled() )
         {
@@ -646,10 +647,10 @@ public class CompositeCache
             // First look in memory cache
             elements.putAll( getMultipleFromMemory( keys ) );
 
-            // If fewer than all items were found in memory, then keep looking. 
+            // If fewer than all items were found in memory, then keep looking.
             if ( elements.size() != keys.size() )
             {
-                Set remainingKeys = pruneKeysFound( keys, elements );
+                Set<Serializable> remainingKeys = pruneKeysFound( keys, elements );
                 elements.putAll( getMultipleFromAuxiliaryCaches( remainingKeys, localOnly ) );
             }
         }
@@ -679,16 +680,16 @@ public class CompositeCache
      * @return the elements found in the memory cache
      * @throws IOException
      */
-    private Map getMultipleFromMemory( Set keys )
+    private Map<Serializable, ICacheElement> getMultipleFromMemory( Set<Serializable> keys )
         throws IOException
     {
-        Map elementsFromMemory = memCache.getMultiple( keys );
+        Map<Serializable, ICacheElement> elementsFromMemory = memCache.getMultiple( keys );
 
-        Iterator elementFromMemoryIterator = new HashMap( elementsFromMemory ).values().iterator();
+        Iterator<ICacheElement> elementFromMemoryIterator = new HashMap<Serializable, ICacheElement>( elementsFromMemory ).values().iterator();
 
         while ( elementFromMemoryIterator.hasNext() )
         {
-            ICacheElement element = (ICacheElement) elementFromMemoryIterator.next();
+            ICacheElement element = elementFromMemoryIterator.next();
 
             if ( element != null )
             {
@@ -728,11 +729,11 @@ public class CompositeCache
      * @return the elements found in the auxiliary caches
      * @throws IOException
      */
-    private Map getMultipleFromAuxiliaryCaches( Set keys, boolean localOnly )
+    private Map<Serializable, ICacheElement> getMultipleFromAuxiliaryCaches( Set<Serializable> keys, boolean localOnly )
         throws IOException
     {
-        Map elements = new HashMap();
-        Set remainingKeys = new HashSet( keys );
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Set<Serializable> remainingKeys = new HashSet<Serializable>( keys );
 
         for ( int i = 0; i < auxCaches.length; i++ )
         {
@@ -740,7 +741,8 @@ public class CompositeCache
 
             if ( aux != null )
             {
-                Map elementsFromAuxiliary = new HashMap();
+                Map<Serializable, ICacheElement> elementsFromAuxiliary =
+                    new HashMap<Serializable, ICacheElement>();
 
                 long cacheType = aux.getCacheType();
 
@@ -792,7 +794,7 @@ public class CompositeCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any matching keys
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String pattern )
     {
         return getMatching( pattern, false );
     }
@@ -805,7 +807,7 @@ public class CompositeCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any matching keys
      */
-    public Map localGetMatching( String pattern )
+    public Map<Serializable, ICacheElement> localGetMatching( String pattern )
     {
         return getMatching( pattern, true );
     }
@@ -823,9 +825,9 @@ public class CompositeCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any matching keys
      */
-    protected Map getMatching( String pattern, boolean localOnly )
+    protected Map<Serializable, ICacheElement> getMatching( String pattern, boolean localOnly )
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( log.isDebugEnabled() )
         {
@@ -857,14 +859,14 @@ public class CompositeCache
      *         data in cache for any matching keys
      * @throws IOException
      */
-    protected Map getMatchingFromMemory( String pattern )
+    protected Map<Serializable, ICacheElement> getMatchingFromMemory( String pattern )
         throws IOException
     {
         // find matches in key array
         // this avoids locking the memory cache, but it uses more memory
         Object[] keyArray = memCache.getKeyArray();
 
-        Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+        Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
         // call get multiple
         return getMultipleFromMemory( matchingKeys );
@@ -882,10 +884,10 @@ public class CompositeCache
      *         data in cache for any matching keys
      * @throws IOException
      */
-    private Map getMatchingFromAuxiliaryCaches( String pattern, boolean localOnly )
+    private Map<Serializable, ICacheElement> getMatchingFromAuxiliaryCaches( String pattern, boolean localOnly )
         throws IOException
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         for ( int i = auxCaches.length - 1; i >= 0; i-- )
         {
@@ -893,7 +895,8 @@ public class CompositeCache
 
             if ( aux != null )
             {
-                Map elementsFromAuxiliary = new HashMap();
+                Map<Serializable, ICacheElement> elementsFromAuxiliary =
+                    new HashMap<Serializable, ICacheElement>();
 
                 long cacheType = aux.getCacheType();
 
@@ -936,14 +939,14 @@ public class CompositeCache
      * @param elementsFromAuxiliary
      * @throws IOException
      */
-    private void processRetrievedElements( int i, Map elementsFromAuxiliary )
+    private void processRetrievedElements( int i, Map<Serializable, ICacheElement> elementsFromAuxiliary )
         throws IOException
     {
-        Iterator elementFromAuxiliaryIterator = new HashMap( elementsFromAuxiliary ).values().iterator();
+        Iterator<ICacheElement> elementFromAuxiliaryIterator = new HashMap<Serializable, ICacheElement>( elementsFromAuxiliary ).values().iterator();
 
         while ( elementFromAuxiliaryIterator.hasNext() )
         {
-            ICacheElement element = (ICacheElement) elementFromAuxiliaryIterator.next();
+            ICacheElement element = elementFromAuxiliaryIterator.next();
 
             // Item found in one of the auxiliary caches.
             if ( element != null )
@@ -1012,15 +1015,12 @@ public class CompositeCache
      * @return the original set of cache keys, minus any cache keys present in the map keys of the
      *         foundElements map
      */
-    private Set pruneKeysFound( Set keys, Map foundElements )
+    private Set<Serializable> pruneKeysFound( Set<Serializable> keys, Map<Serializable, ICacheElement> foundElements )
     {
-        Set remainingKeys = new HashSet( keys );
+        Set<Serializable> remainingKeys = new HashSet<Serializable>( keys );
 
-        Iterator foundKeys = foundElements.keySet().iterator();
-
-        while ( foundKeys.hasNext() )
+        for (Serializable key : foundElements.keySet())
         {
-            Serializable key = (Serializable) foundKeys.next();
             remainingKeys.remove( key );
         }
 
@@ -1096,9 +1096,9 @@ public class CompositeCache
      * @param group
      * @return A Set of keys, or null.
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
     {
-        HashSet allKeys = new HashSet();
+        HashSet<Serializable> allKeys = new HashSet<Serializable>();
         allKeys.addAll( memCache.getGroupKeys( group ) );
         for ( int i = 0; i < auxCaches.length; i++ )
         {
@@ -1267,15 +1267,13 @@ public class CompositeCache
         {
             ICache aux = auxCaches[i];
 
-            int cacheType = aux.getCacheType();
-
-            if ( aux != null && ( cacheType == ICache.DISK_CACHE || !localOnly ) )
+            if ( aux != null && ( aux.getCacheType() == ICache.DISK_CACHE || !localOnly ) )
             {
                 try
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( "Removing All keys from cacheType" + cacheType );
+                        log.debug( "Removing All keys from cacheType" + aux.getCacheType() );
                     }
 
                     aux.removeAll();
@@ -1418,13 +1416,14 @@ public class CompositeCache
                     if ( aux.getStatus() == CacheConstants.STATUS_ALIVE )
                     {
 
-                        Iterator itr = memCache.getIterator();
+                        Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> itr =
+                            memCache.getIterator();
 
-                        while ( itr.hasNext() )
+                        while (itr.hasNext())
                         {
-                            Map.Entry entry = (Map.Entry) itr.next();
+                            Map.Entry<Serializable, MemoryElementDescriptor> entry = itr.next();
 
-                            ICacheElement ce = (ICacheElement) entry.getValue();
+                            ICacheElement ce = entry.getValue().ce;
 
                             aux.update( ce );
                         }
@@ -1613,7 +1612,7 @@ public class CompositeCache
         {
             try
             {
-                Class c = Class.forName( cattr.getMemoryCacheName() );
+                Class<?> c = Class.forName( cattr.getMemoryCacheName() );
                 memCache = (MemoryCache) c.newInstance();
                 memCache.initialize( this );
             }
@@ -1690,7 +1689,7 @@ public class CompositeCache
     private void handleElementEvent( ICacheElement ce, int eventType )
     {
         // handle event, might move to a new method
-        ArrayList eventHandlers = ce.getElementAttributes().getElementEventHandlers();
+        ArrayList<IElementEventHandler> eventHandlers = ce.getElementAttributes().getElementEventHandlers();
         if ( eventHandlers != null )
         {
             if ( log.isDebugEnabled() )
@@ -1698,10 +1697,8 @@ public class CompositeCache
                 log.debug( "Element Handlers are registered.  Create event type " + eventType );
             }
             IElementEvent event = new ElementEvent( ce, eventType );
-            Iterator hIt = eventHandlers.iterator();
-            while ( hIt.hasNext() )
+            for (IElementEventHandler hand : eventHandlers)
             {
-                IElementEventHandler hand = (IElementEventHandler) hIt.next();
                 try
                 {
                     addElementEvent( hand, event );
@@ -1799,6 +1796,7 @@ public class CompositeCache
      * <p>
      * @return getStats()
      */
+    @Override
     public String toString()
     {
         return getStats();

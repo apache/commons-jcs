@@ -51,7 +51,8 @@ public class RemoteHttpCacheFactory
     private String name;
 
     /** store reference of facades to initiate failover */
-    private final static HashMap facades = new HashMap();
+    private final static HashMap<String, RemoteCacheNoWaitFacade> facades =
+        new HashMap<String, RemoteCacheNoWaitFacade>();
 
     /**
      * For LOCAL clients we get a handle to all the failovers, but we do not register a listener
@@ -71,7 +72,7 @@ public class RemoteHttpCacheFactory
     {
         RemoteHttpCacheAttributes rca = (RemoteHttpCacheAttributes) iaca;
 
-        ArrayList noWaits = new ArrayList();
+        ArrayList<ICache> noWaits = new ArrayList<ICache>();
 
         RemoteHttpCacheManager rcm = RemoteHttpCacheManager.getInstance( cacheMgr, cacheEventLogger, elementSerializer );
         // TODO, use the configured value.
@@ -86,7 +87,7 @@ public class RemoteHttpCacheFactory
             log.info( "noWait is null" );
         }
 
-        RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( (RemoteCacheNoWait[]) noWaits
+        RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( noWaits
             .toArray( new RemoteCacheNoWait[0] ), rca, cacheMgr, cacheEventLogger, elementSerializer );
 
         getFacades().put( rca.getCacheName(), rcnwf );
@@ -118,7 +119,7 @@ public class RemoteHttpCacheFactory
      * The facades are what the cache hub talks to.
      * @return Returns the facades.
      */
-    public static HashMap getFacades()
+    public static HashMap<String, RemoteCacheNoWaitFacade> getFacades()
     {
         return facades;
     }

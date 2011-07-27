@@ -49,7 +49,8 @@ public class RemoteCacheFactory
     private String name;
 
     /** store reference of facades to initiate failover */
-    private final static HashMap facades = new HashMap();
+    private final static HashMap<String, RemoteCacheNoWaitFacade> facades =
+        new HashMap<String, RemoteCacheNoWaitFacade>();
 
     /**
      * For LOCAL clients we get a handle to all the failovers, but we do not register a listener
@@ -69,13 +70,13 @@ public class RemoteCacheFactory
     {
         RemoteCacheAttributes rca = (RemoteCacheAttributes) iaca;
 
-        ArrayList noWaits = new ArrayList();
+        ArrayList<ICache> noWaits = new ArrayList<ICache>();
 
         // if LOCAL
         if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
             // a list to be turned into an array of failover server information
-            ArrayList failovers = new ArrayList();
+            ArrayList<String> failovers = new ArrayList<String>();
 
             // not necessary if a failover list is defined
             // REGISTER PRIMARY LISTENER
@@ -136,7 +137,7 @@ public class RemoteCacheFactory
             }
             // end if failoverList != null
 
-            rca.setFailovers( (String[]) failovers.toArray( new String[0] ) );
+            rca.setFailovers( failovers.toArray( new String[0] ) );
 
             // if CLUSTER
         }
@@ -168,7 +169,7 @@ public class RemoteCacheFactory
         }
         // end if CLUSTER
 
-        RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( (RemoteCacheNoWait[]) noWaits
+        RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( noWaits
             .toArray( new RemoteCacheNoWait[0] ), rca, cacheMgr, cacheEventLogger, elementSerializer );
 
         getFacades().put( rca.getCacheName(), rcnwf );
@@ -200,7 +201,7 @@ public class RemoteCacheFactory
      * The facades are what the cache hub talks to.
      * @return Returns the facades.
      */
-    public static HashMap getFacades()
+    public static HashMap<String, RemoteCacheNoWaitFacade> getFacades()
     {
         return facades;
     }

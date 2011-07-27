@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
+import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 
 /**
  * This helps ensure some common behavior among LateraLCacheManagers for things
@@ -39,7 +40,7 @@ public interface ILateralCacheManager
      * <p>
      * @return Map
      */
-    public abstract Map getInstances();
+    public abstract Map<String, ? extends ILateralCacheManager> getInstances();
 
     /**
      * This is a temporary solution that allows the monitor to get caches from an
@@ -47,7 +48,7 @@ public interface ILateralCacheManager
      * <p>
      * @return Map
      */
-    public abstract Map getCaches();
+    public abstract Map<String, LateralCacheNoWait> getCaches();
 
     /**
      * The restore calls this on the manger if a cache if found to be in error.

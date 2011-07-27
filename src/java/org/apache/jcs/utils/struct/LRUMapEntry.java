@@ -27,24 +27,24 @@ import java.util.Map.Entry;
  * <p>
  * @author Aaron Smuts
  */
-public class LRUMapEntry
-    implements Entry, Serializable
+public class LRUMapEntry<K, V>
+    implements Entry<K, V>, Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = -8176116317739129331L;
 
     /** key */
-    private Object key;
+    private final K key;
 
     /** value */
-    private Object value;
+    private V value;
 
     /**
      * S
      * @param key
      * @param value
      */
-    public LRUMapEntry( Object key, Object value )
+    public LRUMapEntry(K key, V value)
     {
         this.key = key;
         this.value = value;
@@ -53,7 +53,7 @@ public class LRUMapEntry
     /**
      * @return key
      */
-    public Object getKey()
+    public K getKey()
     {
         return this.key;
     }
@@ -61,7 +61,7 @@ public class LRUMapEntry
     /**
      * @return value
      */
-    public Object getValue()
+    public V getValue()
     {
         return this.value;
     }
@@ -70,9 +70,9 @@ public class LRUMapEntry
      * @param valueArg
      * @return the old value
      */
-    public Object setValue( Object valueArg )
+    public V setValue(V valueArg)
     {
-        Object old = this.value;
+        V old = this.value;
         this.value = valueArg;
         return old;
     }

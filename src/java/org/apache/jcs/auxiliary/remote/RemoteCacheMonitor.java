@@ -19,8 +19,6 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
-import java.util.Iterator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
@@ -177,35 +175,30 @@ public class RemoteCacheMonitor
             //p("cache monitor running.");
             // Monitor each RemoteCacheManager instance one after the other.
             // Each RemoteCacheManager corresponds to one remote connection.
-            for ( Iterator itr = RemoteCacheManager.instances.values().iterator(); itr.hasNext(); )
+            for (RemoteCacheManager mgr : RemoteCacheManager.instances.values())
             {
-                RemoteCacheManager mgr = (RemoteCacheManager) itr.next();
                 try
                 {
                     // If any cache is in error, it strongly suggests all caches
                     // managed by the
                     // same RmicCacheManager instance are in error. So we fix
                     // them once and for all.
-                    for ( Iterator itr2 = mgr.caches.values().iterator(); itr2.hasNext(); )
+                    for (RemoteCacheNoWait c : mgr.caches.values())
                     {
-                        if ( itr2.hasNext() )
+                        if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                         {
-                            RemoteCacheNoWait c = (RemoteCacheNoWait) itr2.next();
-                            if ( c.getStatus() == CacheConstants.STATUS_ERROR )
+                            RemoteCacheRestore repairer = new RemoteCacheRestore( mgr );
+                            // If we can't fix them, just skip and re-try in
+                            // the next round.
+                            if ( repairer.canFix() )
                             {
-                                RemoteCacheRestore repairer = new RemoteCacheRestore( mgr );
-                                // If we can't fix them, just skip and re-try in
-                                // the next round.
-                                if ( repairer.canFix() )
-                                {
-                                    repairer.fix();
-                                }
-                                else
-                                {
-                                    bad();
-                                }
-                                break;
+                                repairer.fix();
                             }
+                            else
+                            {
+                                bad();
+                            }
+                            break;
                         }
                     }
                 }

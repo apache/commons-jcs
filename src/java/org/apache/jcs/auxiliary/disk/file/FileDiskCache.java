@@ -41,7 +41,7 @@ public class FileDiskCache
     private final String logCacheName;
 
     /** The config values. */
-    private FileDiskCacheAttributes diskFileCacheAttributes;
+    private final FileDiskCacheAttributes diskFileCacheAttributes;
 
     /** The directory where the files are stored */
     private File directory;
@@ -69,7 +69,7 @@ public class FileDiskCache
         setElementSerializer( elementSerializer );
         this.diskFileCacheAttributes = cattr;
         this.logCacheName = "Region [" + getCacheName() + "] ";
-        alive = initializeFileSystem( cattr );;
+        alive = initializeFileSystem( cattr );
     }
 
     /**
@@ -138,7 +138,8 @@ public class FileDiskCache
      * @param groupName
      * @return Set
      */
-    public Set getGroupKeys( String groupName )
+    @Override
+    public Set<Serializable> getGroupKeys(String groupName)
     {
         throw new UnsupportedOperationException();
     }
@@ -146,6 +147,7 @@ public class FileDiskCache
     /**
      * @return dir.list().length
      */
+    @Override
     public int getSize()
     {
         if ( getDirectory().exists() )
@@ -166,6 +168,7 @@ public class FileDiskCache
     /**
      * @return String the path to the directory
      */
+    @Override
     protected String getDiskLocation()
     {
         return getDirectory().getAbsolutePath();
@@ -176,6 +179,7 @@ public class FileDiskCache
      * <p>
      * @throws IOException
      */
+    @Override
     protected synchronized void processDispose()
         throws IOException
     {
@@ -210,6 +214,7 @@ public class FileDiskCache
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     protected ICacheElement processGet( Serializable key )
         throws IOException
     {
@@ -287,7 +292,8 @@ public class FileDiskCache
      * @return Map
      * @throws IOException
      */
-    protected Map processGetMatching( String pattern )
+    @Override
+    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
         throws IOException
     {
         // TODO get a list of file and return those with matching keys.
@@ -302,6 +308,7 @@ public class FileDiskCache
      * @return true if the item was removed
      * @throws IOException
      */
+    @Override
     protected boolean processRemove( Serializable key )
         throws IOException
     {
@@ -321,6 +328,7 @@ public class FileDiskCache
      * <p>
      * @throws IOException
      */
+    @Override
     protected void processRemoveAll()
         throws IOException
     {
@@ -338,6 +346,7 @@ public class FileDiskCache
      * @param element
      * @throws IOException
      */
+    @Override
     protected void processUpdate( ICacheElement element )
         throws IOException
     {
@@ -459,7 +468,7 @@ public class FileDiskCache
         }
         return success;
     }
-    
+
     /**
      * Tries to set the last access time to now.
      * <p>

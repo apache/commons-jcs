@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,8 +46,6 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
-import EDU.oswego.cs.dl.util.concurrent.WriterPreferenceReadWriteLock;
-
 /**
  * There is one BlockDiskCache per region. It manages the key and data store.
  * <p>
@@ -59,22 +58,22 @@ public class BlockDiskCache
     private static final long serialVersionUID = 1L;
 
     /** The logger. */
-    private static final Log log = LogFactory.getLog( BlockDiskCache.class );
+    protected static final Log log = LogFactory.getLog( BlockDiskCache.class );
 
     /** The name to prefix all log messages with. */
     private final String logCacheName;
 
     /** The name of the file to store data. */
-    private String fileName;
+    private final String fileName;
 
     /** The data access object */
     private BlockDisk dataFile;
 
     /** Attributes governing the behavior of the block disk cache. */
-    private BlockDiskCacheAttributes blockDiskCacheAttributes;
+    private final BlockDiskCacheAttributes blockDiskCacheAttributes;
 
     /** The root directory for keys and data. */
-    private File rootDirectory;
+    private final File rootDirectory;
 
     /** Store, loads, and persists the keys */
     private BlockDiskKeyStore keyStore;
@@ -83,7 +82,7 @@ public class BlockDiskCache
      * Use this lock to synchronize reads and writes to the underlying storage mechansism. We don't
      * need a reentrant lock, since we only lock one level.
      */
-    private WriterPreferenceReadWriteLock storageLock = new WriterPreferenceReadWriteLock();
+    private final ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock();
 
     /**
      * Constructs the BlockDisk after setting up the root directory.
@@ -174,13 +173,12 @@ public class BlockDiskCache
         {
             int maxToTest = 100;
             int count = 0;
-            Set keySet = this.keyStore.entrySet();
-            Iterator it = keySet.iterator();
+            Iterator<Map.Entry<Serializable, int[]>> it = this.keyStore.entrySet().iterator();
             while ( it.hasNext() && count < maxToTest )
             {
                 count++;
-                Map.Entry entry = (Map.Entry) it.next();
-                Object data = this.dataFile.read( (int[]) entry.getValue() );
+                Map.Entry<Serializable, int[]> entry = it.next();
+                Object data = this.dataFile.read( entry.getValue() );
                 if ( data == null )
                 {
                     throw new Exception( logCacheName + "Couldn't find data for key [" + entry.getKey() + "]" );
@@ -202,20 +200,20 @@ public class BlockDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#getGroupKeys(java.lang.String)
      */
-    public Set getGroupKeys( String groupName )
+    @Override
+    public Set<Serializable> getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( cacheName, groupName );
-        HashSet keys = new HashSet();
+        HashSet<Serializable> keys = new HashSet<Serializable>();
         try
         {
-            storageLock.readLock().acquire();
+            storageLock.readLock().lock();
 
-            for ( Iterator itr = this.keyStore.keySet().iterator(); itr.hasNext(); )
+            for ( Serializable key : this.keyStore.keySet())
             {
-                Object k = itr.next();
-                if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
+                if ( key instanceof GroupAttrName && ( (GroupAttrName) key ).groupId.equals( groupId ) )
                 {
-                    keys.add( ( (GroupAttrName) k ).attrName );
+                    keys.add( (Serializable)( (GroupAttrName) key ).attrName );
                 }
             }
         }
@@ -225,7 +223,7 @@ public class BlockDiskCache
         }
         finally
         {
-            storageLock.readLock().release();
+            storageLock.readLock().unlock();
         }
 
         return keys;
@@ -238,28 +236,27 @@ public class BlockDiskCache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache matching keys
      */
-    public Map processGetMatching( String pattern )
+    @Override
+    public Map<Serializable, ICacheElement> processGetMatching( String pattern )
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
         try
         {
             Object[] keyArray = null;
-            storageLock.readLock().acquire();
+            storageLock.readLock().lock();
             try
             {
                 keyArray = this.keyStore.keySet().toArray();
             }
             finally
             {
-                storageLock.readLock().release();
+                storageLock.readLock().unlock();
             }
 
-            Set matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+            Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
-            Iterator keyIterator = matchingKeys.iterator();
-            while ( keyIterator.hasNext() )
+            for (Serializable key : matchingKeys)
             {
-                String key = (String) keyIterator.next();
                 ICacheElement element = processGet( key );
                 if ( element != null )
                 {
@@ -280,6 +277,7 @@ public class BlockDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#getSize()
      */
+    @Override
     public int getSize()
     {
         return this.keyStore.size();
@@ -297,6 +295,7 @@ public class BlockDiskCache
      * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
+    @Override
     protected ICacheElement processGet( Serializable key )
     {
         if ( !alive )
@@ -316,7 +315,7 @@ public class BlockDiskCache
         ICacheElement object = null;
         try
         {
-            storageLock.readLock().acquire();
+            storageLock.readLock().lock();
             try
             {
                 int[] ded = this.keyStore.get( key );
@@ -327,7 +326,7 @@ public class BlockDiskCache
             }
             finally
             {
-                storageLock.readLock().release();
+                storageLock.readLock().unlock();
             }
         }
         catch ( IOException ioe )
@@ -355,6 +354,7 @@ public class BlockDiskCache
      * @param element
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
      */
+    @Override
     protected void processUpdate( ICacheElement element )
     {
         if ( !alive )
@@ -370,7 +370,7 @@ public class BlockDiskCache
         try
         {
             // make sure this only locks for one particular cache region
-            storageLock.writeLock().acquire();
+            storageLock.writeLock().lock();
             try
             {
                 old = this.keyStore.get( element.getKey() );
@@ -386,7 +386,7 @@ public class BlockDiskCache
             }
             finally
             {
-                storageLock.writeLock().release();
+                storageLock.writeLock().unlock();
             }
 
             if ( log.isDebugEnabled() )
@@ -405,7 +405,7 @@ public class BlockDiskCache
     }
 
     /**
-     * Returns true if the removal was succesful; or false if there is nothing to remove. Current
+     * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always result in a disk orphan.
      * <p>
      * (non-Javadoc)
@@ -413,6 +413,7 @@ public class BlockDiskCache
      * @return true if removed anything
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doRemove(java.io.Serializable)
      */
+    @Override
     protected boolean processRemove( Serializable key )
     {
         if ( !alive )
@@ -428,18 +429,17 @@ public class BlockDiskCache
         boolean removed = false;
         try
         {
-            storageLock.writeLock().acquire();
+            storageLock.writeLock().lock();
 
             if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
 
-                Iterator iter = this.keyStore.entrySet().iterator();
+                Iterator<Map.Entry<Serializable, int[]>> iter = this.keyStore.entrySet().iterator();
 
                 while ( iter.hasNext() )
                 {
-                    Map.Entry entry = (Map.Entry) iter.next();
-
+                    Map.Entry<Serializable, int[]> entry = iter.next();
                     Object k = entry.getKey();
 
                     if ( k instanceof String && k.toString().startsWith( key.toString() ) )
@@ -448,17 +448,17 @@ public class BlockDiskCache
                         this.dataFile.freeBlocks( ded );
                         iter.remove();
                         removed = true;
-                        // TODO this needs to update the rmove count separately
+                        // TODO this needs to update the remove count separately
                     }
                 }
             }
             else if ( key instanceof GroupId )
             {
                 // remove all keys of the same name hierarchy.
-                Iterator iter = this.keyStore.entrySet().iterator();
+                Iterator<Map.Entry<Serializable, int[]>> iter = this.keyStore.entrySet().iterator();
                 while ( iter.hasNext() )
                 {
-                    Map.Entry entry = (Map.Entry) iter.next();
+                    Map.Entry<Serializable, int[]> entry = iter.next();
                     Object k = entry.getKey();
 
                     if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
@@ -494,7 +494,7 @@ public class BlockDiskCache
         }
         finally
         {
-            storageLock.writeLock().release();
+            storageLock.writeLock().unlock();
         }
 
         if ( reset )
@@ -511,6 +511,7 @@ public class BlockDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doRemoveAll()
      */
+    @Override
     protected void processRemoveAll()
     {
         try
@@ -530,6 +531,7 @@ public class BlockDiskCache
      * <p>
      * TODO make dispose window configurable.
      */
+    @Override
     public void processDispose()
     {
         Runnable disR = new Runnable()
@@ -563,7 +565,7 @@ public class BlockDiskCache
      * Internal method that handles the disposal.
      * @throws InterruptedException
      */
-    private void disposeInternal()
+    protected void disposeInternal()
         throws InterruptedException
     {
         if ( !alive )
@@ -571,7 +573,7 @@ public class BlockDiskCache
             log.error( logCacheName + "Not alive and dispose was called, filename: " + fileName );
             return;
         }
-        storageLock.writeLock().acquire();
+        storageLock.writeLock().lock();
         try
         {
             // Prevents any interaction with the cache while we're shutting down.
@@ -599,7 +601,7 @@ public class BlockDiskCache
         }
         finally
         {
-            storageLock.writeLock().release();
+            storageLock.writeLock().unlock();
         }
 
         if ( log.isInfoEnabled() )
@@ -633,7 +635,7 @@ public class BlockDiskCache
 
         try
         {
-            storageLock.writeLock().acquire();
+            storageLock.writeLock().lock();
 
             if ( dataFile != null )
             {
@@ -661,7 +663,7 @@ public class BlockDiskCache
         }
         finally
         {
-            storageLock.writeLock().release();
+            storageLock.writeLock().unlock();
         }
     }
 
@@ -680,6 +682,7 @@ public class BlockDiskCache
      * <p>
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -691,12 +694,13 @@ public class BlockDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();
         stats.setTypeName( "Block Disk Cache" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -753,11 +757,11 @@ public class BlockDiskCache
         // get as array, convert to list, add list to our outer list
         IStats sStats = super.getStatistics();
         IStatElement[] sSEs = sStats.getStatElements();
-        List sL = Arrays.asList( sSEs );
+        List<IStatElement> sL = Arrays.asList( sSEs );
         elems.addAll( sL );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -768,6 +772,7 @@ public class BlockDiskCache
      * <p>
      * @return the location of the disk, either path or ip.
      */
+    @Override
     protected String getDiskLocation()
     {
         return dataFile.getFilePath();

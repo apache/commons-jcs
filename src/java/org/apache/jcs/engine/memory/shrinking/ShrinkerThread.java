@@ -22,7 +22,6 @@ package org.apache.jcs.engine.memory.shrinking;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,7 +51,7 @@ public class ShrinkerThread
     private final long maxMemoryIdleTime;
 
     /** Maximum number of items to spool per run. Default is -1, or no limit. */
-    private int maxSpoolPerRun;
+    private final int maxSpoolPerRun;
 
     /** Should we limit the number spooled per run. If so, the maxSpoolPerRun will be used. */
     private boolean spoolLimit = false;
@@ -288,7 +287,7 @@ public class ShrinkerThread
     {
         IElementAttributes attributes = cacheElement.getElementAttributes();
 
-        ArrayList eventHandlers = attributes.getElementEventHandlers();
+        ArrayList<IElementEventHandler> eventHandlers = attributes.getElementEventHandlers();
 
         if ( eventHandlers != null )
         {
@@ -299,12 +298,8 @@ public class ShrinkerThread
 
             IElementEvent event = new ElementEvent( cacheElement, eventType );
 
-            Iterator handlerIter = eventHandlers.iterator();
-
-            while ( handlerIter.hasNext() )
+            for (IElementEventHandler hand : eventHandlers)
             {
-                IElementEventHandler hand = (IElementEventHandler) handlerIter.next();
-
                 // extra safety
                 // TODO we shouldn't be operating on a variable of another class.
                 // we did this to get away from the singleton composite cache.

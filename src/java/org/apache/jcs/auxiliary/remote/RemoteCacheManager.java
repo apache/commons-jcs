@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -60,7 +59,7 @@ public class RemoteCacheManager
     private final static Log log = LogFactory.getLog( RemoteCacheManager.class );
 
     /** Contains mappings of Location instance to RemoteCacheManager instance. */
-    final static Map instances = new HashMap();
+    final static Map<Location, RemoteCacheManager> instances = new HashMap<Location, RemoteCacheManager>();
 
     /** Monitors connections. */
     private static RemoteCacheMonitor monitor;
@@ -69,7 +68,7 @@ public class RemoteCacheManager
     private int clients;
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
-    final Map caches = new HashMap();
+    final Map<String, RemoteCacheNoWait> caches = new HashMap<String, RemoteCacheNoWait>();
 
     /** The remote host */
     final String host;
@@ -84,10 +83,10 @@ public class RemoteCacheManager
     private IRemoteCacheAttributes remoteCacheAttributes;
 
     /** The event logger. */
-    private ICacheEventLogger cacheEventLogger;
+    private final ICacheEventLogger cacheEventLogger;
 
     /** The serializer. */
-    private IElementSerializer elementSerializer;
+    private final IElementSerializer elementSerializer;
 
     /** Handle to the remote cache service; or a zombie handle if failed to connect. */
     private IRemoteCacheService remoteService;
@@ -99,7 +98,7 @@ public class RemoteCacheManager
     private RemoteCacheWatchRepairable remoteWatch;
 
     /** The cache manager listeners will need to use to get a cache. */
-    private ICompositeCacheManager cacheMgr;
+    private final ICompositeCacheManager cacheMgr;
 
     /** The service found through lookup */
     //private String registry;
@@ -248,7 +247,7 @@ public class RemoteCacheManager
     {
         synchronized ( caches )
         {
-            RemoteCacheNoWait cache = (RemoteCacheNoWait) caches.get( cattr.getCacheName() );
+            RemoteCacheNoWait cache = caches.get( cattr.getCacheName() );
             if ( cache != null )
             {
                 IRemoteCacheClient rc = cache.getRemoteCache();
@@ -290,7 +289,7 @@ public class RemoteCacheManager
     {
         synchronized ( caches )
         {
-            RemoteCacheNoWait cache = (RemoteCacheNoWait) caches.get( cacheName );
+            RemoteCacheNoWait cache = caches.get( cacheName );
             if ( cache != null )
             {
                 IRemoteCacheClient rc = cache.getRemoteCache();
@@ -342,7 +341,7 @@ public class RemoteCacheManager
         RemoteCacheManager ins = null;
         synchronized ( instances )
         {
-            ins = (RemoteCacheManager) instances.get( loc );
+            ins = instances.get( loc );
             if ( ins == null )
             {
                 // Change to use cattr and to set defaults
@@ -398,7 +397,7 @@ public class RemoteCacheManager
 
         synchronized ( caches )
         {
-            remoteCacheNoWait = (RemoteCacheNoWait) caches.get( cattr.getCacheName() );
+            remoteCacheNoWait = caches.get( cattr.getCacheName() );
             if ( remoteCacheNoWait == null )
             {
                 // create a listener first and pass it to the remotecache
@@ -453,7 +452,7 @@ public class RemoteCacheManager
         ICache c = null;
         synchronized ( caches )
         {
-            c = (ICache) caches.get( name );
+            c = caches.get( name );
         }
         if ( c != null )
         {
@@ -470,10 +469,8 @@ public class RemoteCacheManager
     public String getStats()
     {
         StringBuffer stats = new StringBuffer();
-        Iterator allCaches = caches.values().iterator();
-        while ( allCaches.hasNext() )
+        for (RemoteCacheNoWait c : caches.values())
         {
-            ICache c = (ICache) allCaches.next();
             if ( c != null )
             {
                 stats.append( c.getCacheName() );
@@ -492,10 +489,8 @@ public class RemoteCacheManager
         }
         synchronized ( caches )
         {
-            Iterator allCaches = caches.values().iterator();
-            while ( allCaches.hasNext() )
+            for (RemoteCacheNoWait c : caches.values())
             {
-                ICache c = (ICache) allCaches.next();
                 if ( c != null )
                 {
                     try
@@ -528,10 +523,9 @@ public class RemoteCacheManager
         {
             this.remoteService = remoteService;
             this.remoteWatch.setCacheWatch( remoteWatch );
-            for ( Iterator en = caches.values().iterator(); en.hasNext(); )
+            for (RemoteCacheNoWait c : caches.values())
             {
-                RemoteCacheNoWait cache = (RemoteCacheNoWait) en.next();
-                cache.fixCache( this.remoteService );
+                c.fixCache( this.remoteService );
             }
         }
     }
@@ -572,6 +566,7 @@ public class RemoteCacheManager
          * @param obj
          * @return true if the host and port are equal
          */
+        @Override
         public boolean equals( Object obj )
         {
             if ( obj == this )
@@ -593,6 +588,7 @@ public class RemoteCacheManager
         /**
          * @return int
          */
+        @Override
         public int hashCode()
         {
             return host == null ? port : host.hashCode() ^ port;

@@ -179,7 +179,7 @@ public abstract class AbsractRemoteCacheListener
             CompositeCache cache = cacheMgr.getCache( cb.getCacheName() );
 
             // Eventually the instance of will not be necessary.
-            if ( cb != null && cb instanceof ICacheElementSerialized )
+            if ( cb instanceof ICacheElementSerialized )
             {
                 if ( log.isDebugEnabled() )
                 {
@@ -324,6 +324,7 @@ public abstract class AbsractRemoteCacheListener
      * <p>
      * @return Basic info on this listener.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

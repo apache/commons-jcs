@@ -62,7 +62,7 @@ public interface ICache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
      * @throws IOException
      */
-    Map getMultiple( Set keys )
+    Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
         throws IOException;
 
     /**
@@ -76,7 +76,7 @@ public interface ICache
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data matching the pattern.
      * @throws IOException
      */
-    Map getMatching( String pattern )
+    Map<Serializable, ICacheElement> getMatching(String pattern)
         throws IOException;
 
     /**
@@ -131,9 +131,9 @@ public interface ICache
      * @return usually the region name.
      */
     String getCacheName();
-    
+
     /**
-     * Sets the key matcher used by get matching. 
+     * Sets the key matcher used by get matching.
      * <p>
      * @param keyMatcher
      */

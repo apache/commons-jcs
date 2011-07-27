@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICache;
@@ -42,7 +43,7 @@ public interface AuxiliaryCache
      * @return a set of group keys
      * @throws IOException
      */
-    Set getGroupKeys( String group )
+    Set<Serializable> getGroupKeys( String group )
         throws IOException;
 
     /**

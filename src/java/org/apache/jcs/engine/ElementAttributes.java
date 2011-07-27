@@ -25,7 +25,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
@@ -88,7 +87,7 @@ public class ElementAttributes
      * TODO we need to check that when an item is passed to a non-local cache that if the local
      * cache had a copy with event handlers, that those handlers are used.
      */
-    public transient ArrayList eventHandlers;
+    public transient ArrayList<IElementEventHandler> eventHandlers;
 
     /**
      * Constructor for the IElementAttributes object
@@ -398,7 +397,7 @@ public class ElementAttributes
         // lazy here, no concurrency problems expected
         if ( this.eventHandlers == null )
         {
-            this.eventHandlers = new ArrayList();
+            this.eventHandlers = new ArrayList<IElementEventHandler>();
         }
         this.eventHandlers.add( eventHandler );
     }
@@ -411,16 +410,16 @@ public class ElementAttributes
      * <p>
      * @param eventHandlers List of IElementEventHandler objects
      */
-    public void addElementEventHandlers( ArrayList eventHandlers )
+    public void addElementEventHandlers( ArrayList<IElementEventHandler> eventHandlers )
     {
         if ( eventHandlers == null )
         {
             return;
         }
 
-        for ( Iterator iter = eventHandlers.iterator(); iter.hasNext(); )
+        for (IElementEventHandler handler : eventHandlers)
         {
-            addElementEventHandler( (IElementEventHandler) iter.next() );
+            addElementEventHandler(handler);
         }
     }
 
@@ -429,7 +428,7 @@ public class ElementAttributes
      * <p>
      * @return The elementEventHandlers List of IElementEventHandler objects
      */
-    public ArrayList getElementEventHandlers()
+    public ArrayList<IElementEventHandler> getElementEventHandlers()
     {
         return this.eventHandlers;
     }
@@ -439,6 +438,7 @@ public class ElementAttributes
      * <p>
      * @return String info about the values.
      */
+    @Override
     public String toString()
     {
         StringBuffer dump = new StringBuffer();

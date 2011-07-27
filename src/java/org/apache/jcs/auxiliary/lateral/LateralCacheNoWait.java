@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -168,18 +167,14 @@ public class LateralCacheNoWait
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
+            for (Serializable key : keys)
             {
-                Serializable key = (Serializable) iterator.next();
-
                 ICacheElement element = get( key );
 
                 if ( element != null )
@@ -198,7 +193,7 @@ public class LateralCacheNoWait
      * @param pattern
      * @return ICacheElement if found, else empty
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, ICacheElement> getMatching(String pattern)
     {
         getCount++;
         if ( this.getStatus() != CacheConstants.STATUS_ERROR )
@@ -225,14 +220,14 @@ public class LateralCacheNoWait
                 eventQueue.destroy();
             }
         }
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     /**
      * @param groupName
      * @return Set
      */
-    public Set getGroupKeys( String groupName )
+    public Set<Serializable> getGroupKeys(String groupName)
     {
         try
         {
@@ -243,7 +238,7 @@ public class LateralCacheNoWait
             log.error( ex );
             eventQueue.destroy();
         }
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     /**
@@ -386,6 +381,7 @@ public class LateralCacheNoWait
      * <p>
      * @return String
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return "Lateral Cache No Wait";
@@ -399,7 +395,7 @@ public class LateralCacheNoWait
         IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         // IStatElement se = null;
         // no data gathered here
@@ -409,7 +405,7 @@ public class LateralCacheNoWait
         IStats eqStats = this.eventQueue.getStatistics();
 
         IStatElement[] eqSEs = eqStats.getStatElements();
-        List eqL = Arrays.asList( eqSEs );
+        List<IStatElement> eqL = Arrays.asList( eqSEs );
         elems.addAll( eqL );
 
         IStatElement se = null;
@@ -435,7 +431,7 @@ public class LateralCacheNoWait
         elems.add( se );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[elems.size()] );
+        IStatElement[] ses = elems.toArray( new StatElement[elems.size()] );
         stats.setStatElements( ses );
 
         return stats;
@@ -444,6 +440,7 @@ public class LateralCacheNoWait
     /**
      * @return debugging info.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

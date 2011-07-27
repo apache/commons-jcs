@@ -69,12 +69,13 @@ public class RemoteCache
     /**
      * @return IStats object
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();
         stats.setTypeName( "Remote Cache No Wait" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -97,11 +98,11 @@ public class RemoteCache
         // get as array, convert to list, add list to our outer list
         IStats sStats = super.getStatistics();
         IStatElement[] sSEs = sStats.getStatElements();
-        List sL = Arrays.asList( sSEs );
+        List<IStatElement> sL = Arrays.asList( sSEs );
         elems.addAll( sL );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -116,6 +117,7 @@ public class RemoteCache
      * @param eventName
      * @throws IOException
      */
+    @Override
     protected void handleException( Exception ex, String msg, String eventName )
         throws IOException
     {
@@ -167,6 +169,7 @@ public class RemoteCache
      * <p>
      * @return basic info about the RemoteCache
      */
+    @Override
     public String toString()
     {
         return "RemoteCache: " + cacheName + " attributes = " + getRemoteCacheAttributes();
@@ -177,6 +180,7 @@ public class RemoteCache
      * <p>
      * @return disk location
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return getIPAddressForService();

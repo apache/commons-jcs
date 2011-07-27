@@ -25,7 +25,6 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -272,7 +271,7 @@ public class LateralTCPService
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, getListenerId() );
@@ -288,7 +287,7 @@ public class LateralTCPService
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern, long requesterId )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         // if get is not allowed return
@@ -302,9 +301,9 @@ public class LateralTCPService
             Object response = sender.sendAndReceive( led );
             if ( response != null )
             {
-                return (Map) response;
+                return (Map<Serializable, ICacheElement>) response;
             }
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         else
         {
@@ -322,7 +321,7 @@ public class LateralTCPService
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( String cacheName, Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
         throws IOException
     {
         return getMultiple( cacheName, keys, getListenerId() );
@@ -340,19 +339,15 @@ public class LateralTCPService
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( String cacheName, Set keys, long requesterId )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
         throws IOException
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
+            for (Serializable key : keys)
             {
-                Serializable key = (Serializable) iterator.next();
-
                 ICacheElement element = get( cacheName, key );
 
                 if ( element != null )
@@ -371,7 +366,7 @@ public class LateralTCPService
      * @param group
      * @return Set
      */
-    public Set getGroupKeys( String cacheName, String group )
+    public Set<Serializable> getGroupKeys( String cacheName, String group )
     {
         if ( true )
         {

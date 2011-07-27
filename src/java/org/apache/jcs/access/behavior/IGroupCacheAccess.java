@@ -28,8 +28,8 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
  * IGroupCacheAccess defines group specific behavior for the client access
  * classes.
  */
-public interface IGroupCacheAccess
-    extends ICacheAccess
+public interface IGroupCacheAccess<K, V>
+    extends ICacheAccess<K, V>
 {
     /**
      * Gets the g attribute of the IGroupCacheAccess object
@@ -39,7 +39,7 @@ public interface IGroupCacheAccess
      *            the name of the group to associate this with.
      * @return The teh object that is keyed by the name in the group
      */
-    Object getFromGroup( Object name, String group );
+    V getFromGroup( K name, String group );
 
     /**
      * Puts an item int eh cache associated with this group.
@@ -49,7 +49,7 @@ public interface IGroupCacheAccess
      * @param obj
      * @throws CacheException
      */
-    void putInGroup( Object key, String group, Object obj )
+    void putInGroup( K key, String group, V obj )
         throws CacheException;
 
     /**
@@ -61,7 +61,7 @@ public interface IGroupCacheAccess
      * @param attr
      * @throws CacheException
      */
-    void putInGroup( Object key, String group, Object obj, IElementAttributes attr )
+    void putInGroup( K key, String group, V obj, IElementAttributes attr )
         throws CacheException;
 
     /**
@@ -70,7 +70,7 @@ public interface IGroupCacheAccess
      * @param name
      * @param group
      */
-    public void remove( Object name, String group );
+    public void remove( K name, String group );
 
     /**
      * Gets the set of keys of objects currently in the group
@@ -78,7 +78,7 @@ public interface IGroupCacheAccess
      * @param group
      * @return the set of group keys.
      */
-    public Set getGroupKeys( String group );
+    public Set<K> getGroupKeys( String group );
 
     /**
      * Invalidates a group

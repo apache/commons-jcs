@@ -26,6 +26,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,9 +44,6 @@ import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStats;
-
-import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This base includes some common code for memory caches.
@@ -63,7 +64,7 @@ public abstract class AbstractMemoryCache
     protected String cacheName;
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    protected Map map;
+    protected Map<Serializable, MemoryElementDescriptor> map;
 
     /** Region Elemental Attributes, used as a default and copied for each item. */
     public IElementAttributes elementAttributes;
@@ -82,7 +83,7 @@ public abstract class AbstractMemoryCache
 
     /** The background memory shrinker, one for all regions. */
     // TODO fix for multi-instance JCS
-    private static ClockDaemon shrinkerDaemon;
+    private static ScheduledExecutorService shrinkerDaemon;
 
     /**
      * For post reflection creation initialization
@@ -103,11 +104,10 @@ public abstract class AbstractMemoryCache
         {
             if ( shrinkerDaemon == null )
             {
-                shrinkerDaemon = new ClockDaemon();
-                shrinkerDaemon.setThreadFactory( new MyThreadFactory() );
+                shrinkerDaemon = Executors.newScheduledThreadPool(1, new MyThreadFactory());
             }
-            shrinkerDaemon.executePeriodically( cacheAttributes.getShrinkerIntervalSeconds() * 1000, new ShrinkerThread( this ),
-                                                false );
+
+            shrinkerDaemon.scheduleAtFixedRate(new ShrinkerThread(this), 0, cacheAttributes.getShrinkerIntervalSeconds(), TimeUnit.SECONDS);
         }
     }
 
@@ -117,7 +117,7 @@ public abstract class AbstractMemoryCache
      * <p>
      * @return a threadsafe Map
      */
-    public abstract Map createMap();
+    public abstract Map<Serializable, MemoryElementDescriptor> createMap();
 
     /**
      * Removes an item from the cache
@@ -147,19 +147,15 @@ public abstract class AbstractMemoryCache
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
         throws IOException
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
-
-            while ( iterator.hasNext() )
+            for (Serializable key : keys)
             {
-                Serializable key = (Serializable) iterator.next();
-
                 ICacheElement element = get( key );
 
                 if ( element != null )
@@ -185,7 +181,7 @@ public abstract class AbstractMemoryCache
     {
         ICacheElement ce = null;
 
-        MemoryElementDescriptor me = (MemoryElementDescriptor) map.get( key );
+        MemoryElementDescriptor me = map.get( key );
         if ( me != null )
         {
             if ( log.isDebugEnabled() )
@@ -201,7 +197,7 @@ public abstract class AbstractMemoryCache
         }
 
         return ce;
-    };
+    }
 
     /**
      * Puts an item to the cache.
@@ -241,7 +237,7 @@ public abstract class AbstractMemoryCache
         log.info( "Memory Cache dispose called.  Shutting down shrinker thread if it is running." );
         if ( shrinkerDaemon != null )
         {
-            shrinkerDaemon.shutDown();
+            shrinkerDaemon.shutdownNow();
         }
     }
 
@@ -302,9 +298,23 @@ public abstract class AbstractMemoryCache
      * <p>
      * @return The iterator value
      */
-    public Iterator getIterator()
+    public Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> getIterator()
     {
         return map.entrySet().iterator();
+    }
+
+    // ---------------------------------------------------------- debug method
+    /**
+     * Dump the cache map for debugging.
+     */
+    public void dumpMap()
+    {
+        log.debug( "dumpingMap" );
+        for (Map.Entry<Serializable, MemoryElementDescriptor> e : map.entrySet())
+        {
+            MemoryElementDescriptor me = e.getValue();
+            log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
+        }
     }
 
     /**
@@ -341,20 +351,19 @@ public abstract class AbstractMemoryCache
      * @param groupName
      * @return group keys
      */
-    public Set getGroupKeys( String groupName )
+    public Set<Serializable> getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( getCacheName(), groupName );
-        HashSet keys = new HashSet();
+        HashSet<Serializable> keys = new HashSet<Serializable>();
         synchronized ( map )
         {
-            for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
+            for (Map.Entry<Serializable, MemoryElementDescriptor> entry : map.entrySet())
             {
-                Map.Entry entry = (Map.Entry) itr.next();
                 Object k = entry.getKey();
 
                 if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
                 {
-                    keys.add( ( (GroupAttrName) k ).attrName );
+                    keys.add((Serializable) ( (GroupAttrName) k ).attrName );
                 }
             }
         }

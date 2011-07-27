@@ -34,7 +34,7 @@ public class SingleLinkedList
     private static final Log log = LogFactory.getLog( SingleLinkedList.class );
 
     /** for sync */
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
     /** the head of the queue */
     private Node head = new Node();
@@ -116,9 +116,9 @@ public class SingleLinkedList
      * <p>
      * @author Aaron Smuts
      */
-    private static class Node
+    protected static class Node
     {
-        /** next int he list */
+        /** next in the list */
         Node next = null;
 
         /** The data in this node */

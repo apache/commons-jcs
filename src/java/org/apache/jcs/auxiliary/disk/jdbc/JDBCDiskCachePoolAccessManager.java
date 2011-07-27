@@ -11,7 +11,7 @@ import org.apache.jcs.utils.config.PropertySetter;
 /**
  * Manages JDBCDiskCachePoolAccess instances. If a connectionPoolName value is supplied, the JDBC
  * disk cache will try to use this manager to create a pool. Assuming the name is "MyPool":
- * 
+ *
  * <pre>
  * jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
  * jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword
@@ -26,7 +26,7 @@ public class JDBCDiskCachePoolAccessManager
     private static JDBCDiskCachePoolAccessManager instance;
 
     /** Pool name to JDBCDiskCachePoolAccess */
-    private Map pools = new HashMap();
+    private final Map<String, JDBCDiskCachePoolAccess> pools = new HashMap<String, JDBCDiskCachePoolAccess>();
 
     /** props prefix */
     public static final String POOL_CONFIGURATION_PREFIX = "jcs.jdbcconnectionpool.";
@@ -76,7 +76,7 @@ public class JDBCDiskCachePoolAccessManager
      */
     public synchronized JDBCDiskCachePoolAccess getJDBCDiskCachePoolAccess( String poolName )
     {
-        JDBCDiskCachePoolAccess poolAccess = (JDBCDiskCachePoolAccess) pools.get( poolName );
+        JDBCDiskCachePoolAccess poolAccess = pools.get( poolName );
 
         if ( poolAccess == null )
         {
@@ -84,7 +84,7 @@ public class JDBCDiskCachePoolAccessManager
             try
             {
                 poolAccess = JDBCDiskCachePoolAccessFactory.createPoolAccess( poolAttributes );
-                
+
                 if ( log.isInfoEnabled() )
                 {
                     log.info( "Created shared pooled access for pool name [" + poolName + "]." );

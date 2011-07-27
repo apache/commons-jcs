@@ -19,6 +19,8 @@ package org.apache.jcs.utils.threadpool;
  * under the License.
  */
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 import junit.framework.TestCase;
 
 /**
@@ -43,16 +45,16 @@ public class ThreadPoolUnitTest
         throws Exception
     {
         //ThreadPoolManager.setPropsFileName( "thread_pool_test.properties" );
-        ThreadPool pool = ThreadPoolManager.getInstance().getPool( "maxtest" );
+        ThreadPoolExecutor pool = ThreadPoolManager.getInstance().getPool( "maxtest" );
 
         //System.out.println( "pool = " + pool );
-        pool.getPool().setMaximumPoolSize( 5 );
+        pool.setMaximumPoolSize( 5 );
         //System.out.println( "current size before execute = " + pool.getPool().getPoolSize() );
 
         // add 6
         for ( int i = 1; i < 30; i++ )
         {
-            final ThreadPool myPool = pool;
+            final ThreadPoolExecutor myPool = pool;
             final int cnt = i;
             pool.execute( new Runnable()
             {
@@ -62,7 +64,7 @@ public class ThreadPoolUnitTest
                     try
                     {
                         //System.out.println( cnt );
-                        System.out.println( "count = " + cnt + " before sleep current size = " + myPool.getPool().getPoolSize() );
+                        System.out.println( "count = " + cnt + " before sleep current size = " + myPool.getPoolSize() );
                         Thread.sleep( 200 / cnt );
                         //System.out.println( "count = " + cnt + " after sleep current size = " + myPool.getPool().getPoolSize() );
                     }
@@ -76,11 +78,11 @@ public class ThreadPoolUnitTest
         }
 
         //System.out.println( "current size = " + pool.getPool().getPoolSize() );
-        pool.getPool().setMaximumPoolSize( 4 );
+        pool.setMaximumPoolSize( 4 );
         //Thread.sleep( 200 );
         //System.out.println( "current size after set size to 4= " + pool.getPool().getPoolSize() );
         Thread.sleep( 200 );
         //System.out.println( "current size again after sleep = " + pool.getPool().getPoolSize() );
-        assertEquals( "Pool size should have been reduced.", 4, pool.getPool().getPoolSize() );
+        assertEquals( "Pool size should have been reduced.", 4, pool.getPoolSize() );
     }
 }

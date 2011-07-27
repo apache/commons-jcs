@@ -58,7 +58,7 @@ public abstract class AbstractRemoteCacheService
     private int puts = 0;
 
     /** The interval at which we will log updates. */
-    private int logInterval = 100;
+    private final int logInterval = 100;
 
     /** log instance */
     private final static Log log = LogFactory.getLog( AbstractRemoteCacheService.class );
@@ -207,7 +207,7 @@ public abstract class AbstractRemoteCacheService
      * @return Map of keys and wrapped objects
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -222,7 +222,7 @@ public abstract class AbstractRemoteCacheService
      * @return Map of keys and wrapped objects
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern, long requesterId )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, pattern, requesterId,
@@ -246,7 +246,7 @@ public abstract class AbstractRemoteCacheService
      * @return Map of keys and wrapped objects
      * @throws IOException
      */
-    abstract Map processGetMatching( String cacheName, String pattern, long requesterId )
+    abstract Map<Serializable, ICacheElement> processGetMatching( String cacheName, String pattern, long requesterId )
         throws IOException;
 
     /**
@@ -258,7 +258,7 @@ public abstract class AbstractRemoteCacheService
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( String cacheName, Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
         throws IOException
     {
         return this.getMultiple( cacheName, keys, 0 );
@@ -276,7 +276,7 @@ public abstract class AbstractRemoteCacheService
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map getMultiple( String cacheName, Set keys, long requesterId )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
         throws IOException
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId,
@@ -301,7 +301,7 @@ public abstract class AbstractRemoteCacheService
      *         data in cache for any of these keys
      * @throws IOException
      */
-    abstract Map processGetMultiple( String cacheName, Set keys, long requesterId )
+    abstract Map<Serializable, ICacheElement> processGetMultiple( String cacheName, Set<Serializable> keys, long requesterId )
         throws IOException;
 
     /**
@@ -311,7 +311,7 @@ public abstract class AbstractRemoteCacheService
      * @param group
      * @return A Set of group keys
      */
-    public Set getGroupKeys( String cacheName, String group )
+    public Set<Serializable> getGroupKeys( String cacheName, String group )
     {
         return processGetGroupKeys( cacheName, group );
     }
@@ -323,9 +323,9 @@ public abstract class AbstractRemoteCacheService
      * @param groupName
      * @return Set
      */
-    public Set processGetGroupKeys( String cacheName, String groupName )
+    public Set<Serializable> processGetGroupKeys( String cacheName, String groupName )
     {
-        CompositeCache cache = (CompositeCache) getCacheManager().getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
 
         return cache.getGroupKeys( groupName );
     }

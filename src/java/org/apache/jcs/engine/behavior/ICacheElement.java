@@ -21,19 +21,17 @@ package org.apache.jcs.engine.behavior;
 
 import java.io.Serializable;
 
-import org.apache.jcs.engine.behavior.IElementAttributes;
-
 /**
  * Every item is the cache is wrapped in an ICacheElement. This contains
  * information about the element: the region name, the key, the value, and the
  * element attributes.
  * <p>
- * The element attributes have lots of useful information about each elment,
+ * The element attributes have lots of useful information about each element,
  * such as when they were created, how long they have to live, and if they are
  * allowed to be spooled, etc.
  *
  */
-public interface ICacheElement
+public interface ICacheElement /* TODO: Should be generic */
     extends Serializable
 {
 

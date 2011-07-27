@@ -53,14 +53,14 @@ public class ZombieCacheServiceNonLocal
     private int maxQueueSize = 0;
 
     /** The queue */
-    private BoundedQueue queue;
+    private final BoundedQueue<ZombieEvent> queue;
 
     /**
      * Default.
      */
     public ZombieCacheServiceNonLocal()
     {
-        queue = new BoundedQueue( 0 );
+        queue = new BoundedQueue<ZombieEvent>( 0 );
     }
 
     /**
@@ -71,7 +71,7 @@ public class ZombieCacheServiceNonLocal
     public ZombieCacheServiceNonLocal( int maxQueueSize )
     {
         this.maxQueueSize = maxQueueSize;
-        queue = new BoundedQueue( maxQueueSize );
+        queue = new BoundedQueue<ZombieEvent>( maxQueueSize );
     }
 
     /**
@@ -161,10 +161,10 @@ public class ZombieCacheServiceNonLocal
      * @return empty map
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern, long requesterId )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     /**
@@ -173,9 +173,9 @@ public class ZombieCacheServiceNonLocal
      * @param requesterId - identity of the caller
      * @return an empty map. zombies have no internal data
      */
-    public Map getMultiple( String cacheName, Set keys, long requesterId )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
     {
-        return new HashMap();
+        return new HashMap<Serializable, ICacheElement>();
     }
 
     /**
@@ -185,9 +185,9 @@ public class ZombieCacheServiceNonLocal
      * @param groupName - group name
      * @return empty set
      */
-    public Set getGroupKeys( String cacheName, String groupName )
+    public Set<Serializable> getGroupKeys( String cacheName, String groupName )
     {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     /**
@@ -210,7 +210,7 @@ public class ZombieCacheServiceNonLocal
             cnt++;
 
             // for each item, call the appropriate service method
-            ZombieEvent event = (ZombieEvent) queue.take();
+            ZombieEvent event = queue.take();
 
             if ( event instanceof PutEvent )
             {
@@ -237,7 +237,7 @@ public class ZombieCacheServiceNonLocal
     /**
      * Base of the other events.
      */
-    private abstract class ZombieEvent
+    protected abstract class ZombieEvent
     {
         /** The name of the region. */
         String cacheName;

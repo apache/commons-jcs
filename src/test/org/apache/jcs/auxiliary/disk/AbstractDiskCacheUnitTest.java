@@ -49,11 +49,11 @@ public class AbstractDiskCacheUnitTest
         // DO WORK
         ICacheElement result = diskCache.get( key );
 
-        // VERIFY        
+        // VERIFY
         //System.out.println( diskCache.getStats() );
         assertNotNull( "Item should be in the map.", result );
     }
-    
+
     /**
      * Verify that alive is set to false..
      * <p>
@@ -79,7 +79,7 @@ public class AbstractDiskCacheUnitTest
         // DO WORK
         diskCache.dispose();
 
-        // VERIFY        
+        // VERIFY
         assertFalse( "disk cache should not be alive.", diskCache.alive );
         assertEquals( "Status should be disposed", CacheConstants.STATUS_DISPOSED, diskCache.getStatus() );
     }
@@ -113,7 +113,7 @@ public class AbstractDiskCacheUnitTest
         diskCache.removeAll();
         String result = stringWriter.toString();
 
-        // VERIFY        
+        // VERIFY
         assertTrue( "Should say not allowed.", result.indexOf( "set to false" ) != -1 );
         assertNotNull( "Item should be in the map.", diskCache.get( key ) );
     }
@@ -143,7 +143,7 @@ public class AbstractDiskCacheUnitTest
         // DO WORK
         diskCache.removeAll();
 
-        // VERIFY        
+        // VERIFY
         assertNull( "Item should not be in the map.", diskCache.get( key ) );
     }
 
@@ -177,6 +177,7 @@ public class AbstractDiskCacheUnitTest
          * <p>
          * @return "memory"
          */
+        @Override
         protected String getDiskLocation()
         {
             return "memory";
@@ -186,7 +187,8 @@ public class AbstractDiskCacheUnitTest
          * @param groupName
          * @return Collections.EMPTY_SET
          */
-        public Set getGroupKeys( String groupName )
+        @Override
+        public Set<Serializable> getGroupKeys(String groupName)
         {
             return Collections.EMPTY_SET;
         }
@@ -194,6 +196,7 @@ public class AbstractDiskCacheUnitTest
         /**
          * @return map.size()
          */
+        @Override
         public int getSize()
         {
             return map.size();
@@ -202,10 +205,11 @@ public class AbstractDiskCacheUnitTest
         /**
          * @throws IOException
          */
+        @Override
         protected void processDispose()
             throws IOException
         {
-            //System.out.println( "processDispose" );      
+            //System.out.println( "processDispose" );
         }
 
         /**
@@ -213,6 +217,7 @@ public class AbstractDiskCacheUnitTest
          * @return ICacheElement
          * @throws IOException
          */
+        @Override
         protected ICacheElement processGet( Serializable key )
             throws IOException
         {
@@ -225,10 +230,11 @@ public class AbstractDiskCacheUnitTest
          * @return Collections.EMPTY_MAP
          * @throws IOException
          */
-        protected Map processGetMatching( String pattern )
+        @Override
+        protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
             throws IOException
         {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
 
         /**
@@ -236,6 +242,7 @@ public class AbstractDiskCacheUnitTest
          * @return false
          * @throws IOException
          */
+        @Override
         protected boolean processRemove( Serializable key )
             throws IOException
         {
@@ -245,6 +252,7 @@ public class AbstractDiskCacheUnitTest
         /**
          * @throws IOException
          */
+        @Override
         protected void processRemoveAll()
             throws IOException
         {
@@ -256,6 +264,7 @@ public class AbstractDiskCacheUnitTest
          * @param cacheElement
          * @throws IOException
          */
+        @Override
         protected void processUpdate( ICacheElement cacheElement )
             throws IOException
         {

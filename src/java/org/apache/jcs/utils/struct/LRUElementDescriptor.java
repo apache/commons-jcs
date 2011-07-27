@@ -23,29 +23,29 @@ package org.apache.jcs.utils.struct;
  * This is a node in the double linked list. It is stored as the value in the underlying map used by
  * the LRUMap class.
  */
-public class LRUElementDescriptor
-    extends DoubleLinkedListNode
+public class LRUElementDescriptor<K, V>
+    extends DoubleLinkedListNode<V>
 {
     /** Don't change. */
     private static final long serialVersionUID = 8249555756363020156L;
 
     /** The key value */
-    private Object key;
+    private K key;
 
     /**
      * @param key
      * @param payloadP
      */
-    public LRUElementDescriptor( Object key, Object payloadP )
+    public LRUElementDescriptor(K key, V payloadP)
     {
-        super( payloadP );
-        this.setKey( key );
+        super(payloadP);
+        this.setKey(key);
     }
 
     /**
      * @param key The key to set.
      */
-    public void setKey( Object key )
+    public void setKey(K key)
     {
         this.key = key;
     }
@@ -53,7 +53,7 @@ public class LRUElementDescriptor
     /**
      * @return Returns the key.
      */
-    public Object getKey()
+    public K getKey()
     {
         return key;
     }

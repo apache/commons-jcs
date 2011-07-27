@@ -82,9 +82,9 @@ public class CompositeCacheConfigurator
      * jcs.auxiliary.NAME.keymatcher.attributes.CUSTOMPROPERTY=VALUE
      */
     public final static String KEY_MATCHER_PREFIX = ".keymatcher";
-    
+
     /** Can't operate on the interface. */
-    private CompositeCacheManager compositeCacheManager;
+    private final CompositeCacheManager compositeCacheManager;
 
     /**
      * Constructor for the CompositeCacheConfigurator object
@@ -218,7 +218,7 @@ public class CompositeCacheConfigurator
      */
     protected void parseSystemRegions( Properties props )
     {
-        Enumeration en = props.propertyNames();
+        Enumeration<?> en = props.propertyNames();
         while ( en.hasMoreElements() )
         {
             String key = (String) en.nextElement();
@@ -246,9 +246,9 @@ public class CompositeCacheConfigurator
      */
     protected void parseRegions( Properties props )
     {
-        List regionNames = new ArrayList();
+        List<String> regionNames = new ArrayList<String>();
 
-        Enumeration en = props.propertyNames();
+        Enumeration<?> en = props.propertyNames();
         while ( en.hasMoreElements() )
         {
             String key = (String) en.nextElement();
@@ -329,8 +329,7 @@ public class CompositeCacheConfigurator
         CompositeCache cache = new CompositeCache( regName, cca, ea );
 
         // Next, create the auxiliaries for the new cache
-
-        List auxList = new ArrayList();
+        List<AuxiliaryCache> auxList = new ArrayList<AuxiliaryCache>();
 
         if ( log.isDebugEnabled() )
         {
@@ -373,7 +372,7 @@ public class CompositeCacheConfigurator
 
         // Associate the auxiliaries with the cache
 
-        cache.setAuxCaches( (AuxiliaryCache[]) auxList.toArray( new AuxiliaryCache[0] ) );
+        cache.setAuxCaches( auxList.toArray( new AuxiliaryCache[0] ) );
 
         // Return the new cache
 
@@ -575,7 +574,7 @@ public class CompositeCacheConfigurator
         // CONFIGURE THE KEYMATCHER
         //IKeyMatcher keyMatcher = parseKeyMatcher( props, auxPrefix );
         // TODO add to factory interface
-        
+
         // Consider putting the compositeCache back in the factory interface
         // since the manager may not know about it at this point.
         // need to make sure the manager already has the cache
@@ -584,7 +583,7 @@ public class CompositeCacheConfigurator
 
         return auxCache;
     }
-    
+
     /**
      * Creates a custom key matcher if one is defined.  Else, it uses the default.
      * <p>
@@ -621,5 +620,5 @@ public class CompositeCacheConfigurator
             }
         }
         return keyMatcher;
-    }    
+    }
 }

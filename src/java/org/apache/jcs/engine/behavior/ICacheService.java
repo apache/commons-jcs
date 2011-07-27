@@ -67,7 +67,7 @@ public interface ICacheService
      * @throws ObjectNotFoundException
      * @throws IOException
      */
-    Map getMultiple( String cacheName, Set keys )
+    Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
         throws ObjectNotFoundException, IOException;
 
     /**
@@ -79,7 +79,7 @@ public interface ICacheService
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    Map getMatching( String cacheName, String pattern )
+    Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
         throws IOException;
 
     /**

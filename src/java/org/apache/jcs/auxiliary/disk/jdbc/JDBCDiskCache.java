@@ -54,7 +54,7 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * <p>
  * It expects a table created by the following script. The table name is configurable.
  * <p>
- * 
+ *
  * <pre>
  *                       drop TABLE JCS_STORE;
  *                       CREATE TABLE JCS_STORE
@@ -181,6 +181,7 @@ public class JDBCDiskCache
      * <p>
      * @param ce
      */
+    @Override
     protected void processUpdate( ICacheElement ce )
     {
         incrementUpdateCount();
@@ -219,7 +220,10 @@ public class JDBCDiskCache
             {
                 try
                 {
-                    sStatement.close();
+                    if (sStatement != null)
+                    {
+                        sStatement.close();
+                    }
                 }
                 catch ( SQLException e )
                 {
@@ -355,8 +359,8 @@ public class JDBCDiskCache
         catch ( SQLException e )
         {
             if ( e.toString().indexOf( "Violation of unique index" ) != -1
-                || e.getMessage().indexOf( "Duplicate entry" ) != -1 
-                || e.getMessage().indexOf( "duplicate key" ) != -1 
+                || e.getMessage().indexOf( "Duplicate entry" ) != -1
+                || e.getMessage().indexOf( "duplicate key" ) != -1
                 || e.getMessage().indexOf( "primary key constraint" ) != -1 )
             {
                 exists = true;
@@ -502,6 +506,7 @@ public class JDBCDiskCache
      * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
+    @Override
     protected ICacheElement processGet( Serializable key )
     {
         incrementGetCount();
@@ -565,7 +570,6 @@ public class JDBCDiskCache
                         {
                             rs.close();
                         }
-                        rs.close();
                     }
                 }
                 finally
@@ -574,7 +578,6 @@ public class JDBCDiskCache
                     {
                         psSelect.close();
                     }
-                    psSelect.close();
                 }
             }
             finally
@@ -608,7 +611,8 @@ public class JDBCDiskCache
      * @param pattern
      * @return key,value map
      */
-    protected Map processGetMatching( String pattern )
+    @Override
+    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
     {
         incrementGetMatchingCount();
 
@@ -622,7 +626,7 @@ public class JDBCDiskCache
             return null;
         }
 
-        Map results = new HashMap();
+        Map<Serializable, ICacheElement> results = new HashMap<Serializable, ICacheElement>();
 
         try
         {
@@ -672,7 +676,6 @@ public class JDBCDiskCache
                         {
                             rs.close();
                         }
-                        rs.close();
                     }
                 }
                 finally
@@ -681,7 +684,6 @@ public class JDBCDiskCache
                     {
                         psSelect.close();
                     }
-                    psSelect.close();
                 }
             }
             finally
@@ -732,6 +734,7 @@ public class JDBCDiskCache
      * @param key
      * @return boolean
      */
+    @Override
     protected boolean processRemove( Serializable key )
     {
         // remove single item.
@@ -800,6 +803,7 @@ public class JDBCDiskCache
      * This should remove all elements. The auxiliary can be configured to forbid this behavior. If
      * remove all is not allowed, the method balks.
      */
+    @Override
     protected void processRemoveAll()
     {
         // it should never get here formt he abstract dis cache.
@@ -937,6 +941,7 @@ public class JDBCDiskCache
     }
 
     /** Shuts down the pool */
+    @Override
     public void processDispose()
     {
         ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
@@ -962,6 +967,7 @@ public class JDBCDiskCache
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         int size = 0;
@@ -1003,7 +1009,6 @@ public class JDBCDiskCache
                     {
                         rs.close();
                     }
-                    rs.close();
                 }
             }
             finally
@@ -1012,7 +1017,6 @@ public class JDBCDiskCache
                 {
                     psSelect.close();
                 }
-                psSelect.close();
             }
         }
         catch ( SQLException e )
@@ -1050,7 +1054,8 @@ public class JDBCDiskCache
      * @param groupName
      * @return Set
      */
-    public Set getGroupKeys( String groupName )
+    @Override
+    public Set<Serializable> getGroupKeys( String groupName )
     {
         if ( true )
         {
@@ -1062,6 +1067,7 @@ public class JDBCDiskCache
     /**
      * @param elementSerializer The elementSerializer to set.
      */
+    @Override
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
         this.elementSerializer = elementSerializer;
@@ -1070,6 +1076,7 @@ public class JDBCDiskCache
     /**
      * @return Returns the elementSerializer.
      */
+    @Override
     public IElementSerializer getElementSerializer()
     {
         return elementSerializer;
@@ -1122,13 +1129,14 @@ public class JDBCDiskCache
      * <p>
      * @return IStats
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = super.getStatistics();
         stats.setTypeName( "JDBC/Abstract Disk Cache" );
         stats.getStatElements();
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -1177,11 +1185,11 @@ public class JDBCDiskCache
         // get the stats from the event queue too
         // get as array, convert to list, add list to our outer list
         IStatElement[] eqSEs = stats.getStatElements();
-        List eqL = Arrays.asList( eqSEs );
+        List<IStatElement> eqL = Arrays.asList( eqSEs );
         elems.addAll( eqL );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -1223,6 +1231,7 @@ public class JDBCDiskCache
      * <p>
      * @return the location of the disk, either path or ip.
      */
+    @Override
     protected String getDiskLocation()
     {
         return this.jdbcDiskCacheAttributes.getUrl();
@@ -1250,6 +1259,7 @@ public class JDBCDiskCache
      * <p>
      * @return this.getStats();
      */
+    @Override
     public String toString()
     {
         return this.getStats();

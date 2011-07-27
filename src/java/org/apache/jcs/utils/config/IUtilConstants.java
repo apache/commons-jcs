@@ -49,10 +49,10 @@ public interface IUtilConstants
         private final static Log log = LogFactory.getLog( Config.class );
 
         /** username */
-        private final static String ADMIN_USERID;
+        protected final static String ADMIN_USERID;
 
         /** password */
-        private final static String ADMIN_PASSWORD;
+        protected final static String ADMIN_PASSWORD;
 
         static
         {

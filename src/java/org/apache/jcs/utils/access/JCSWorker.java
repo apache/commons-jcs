@@ -101,12 +101,12 @@ public class JCSWorker
     /**
      * Map to hold who's doing work presently.
      */
-    private static volatile Map map = new HashMap();
+    private static volatile Map<String, JCSWorkerHelper> map = new HashMap<String, JCSWorkerHelper>();
 
     /**
      * Region for the JCS cache.
      */
-    private String region;
+    private final String region;
 
     /**
      * Constructor which takes a region for the JCS cache.
@@ -200,7 +200,7 @@ public class JCSWorker
     private Object run( Serializable aKey, String aGroup, JCSWorkerHelper aHelper )
         throws Exception
     {
-        Object result = null;
+        Serializable result = null;
         // long start = 0;
         // long dbTime = 0;
         JCSWorkerHelper helper = null;
@@ -208,7 +208,7 @@ public class JCSWorker
         synchronized ( map )
         {
             // Check to see if we allready have a thread doing this work.
-            helper = (JCSWorkerHelper) map.get( getRegion() + aKey );
+            helper = map.get( getRegion() + aKey );
             if ( helper == null )
             {
                 // If not, add ourselves as the Worker so
@@ -222,7 +222,7 @@ public class JCSWorker
             {
                 if ( logger.isDebugEnabled() )
                 {
-                    logger.debug( "Found a worker allready doing this work (" + getRegion() + ":" + aKey + ")." );
+                    logger.debug( "Found a worker already doing this work (" + getRegion() + ":" + aKey + ")." );
                 }
                 if ( !helper.isFinished() )
                 {
@@ -230,7 +230,7 @@ public class JCSWorker
                 }
                 if ( logger.isDebugEnabled() )
                 {
-                    logger.debug( "Another thread finished our work for us. Using thoes results instead. ("
+                    logger.debug( "Another thread finished our work for us. Using those results instead. ("
                         + getRegion() + ":" + aKey + ")." );
                 }
             }
@@ -242,7 +242,6 @@ public class JCSWorker
             {
                 logger.debug( getRegion() + " is doing the work." );
             }
-            result = null;
 
             // Try to get the item from the cache
             if ( aGroup != null )
@@ -256,7 +255,7 @@ public class JCSWorker
             // If the cache dosn't have it, do the work.
             if ( result == null )
             {
-                result = aHelper.doWork();
+                result = (Serializable)aHelper.doWork();
                 if ( logger.isDebugEnabled() )
                 {
                     logger.debug( "Work Done, caching: key:" + aKey + ", group:" + aGroup + ", result:" + result + "." );

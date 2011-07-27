@@ -188,12 +188,12 @@ public interface IElementAttributes
      * lost if the item goes to disk.
      * @return The elementEventHandlers value, null if there are none
      */
-    public ArrayList getElementEventHandlers();
+    public ArrayList<IElementEventHandler> getElementEventHandlers();
 
     /**
      * Sets the eventHandlers of the IElementAttributes object
      * @param eventHandlers value
      */
-    public void addElementEventHandlers( ArrayList eventHandlers );
+    public void addElementEventHandlers( ArrayList<IElementEventHandler> eventHandlers );
 
 }

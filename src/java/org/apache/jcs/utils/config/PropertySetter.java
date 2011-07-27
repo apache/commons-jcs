@@ -40,14 +40,14 @@ import org.apache.commons.logging.LogFactory;
  * reflection.
  * <p>
  * Usage:
- * 
+ *
  * <pre>
  * PropertySetter ps = new PropertySetter( anObject );
  * ps.set( &quot;name&quot;, &quot;Joe&quot; );
  * ps.set( &quot;age&quot;, &quot;32&quot; );
  * ps.set( &quot;isMale&quot;, &quot;true&quot; );
  * </pre>
- * 
+ *
  * will cause the invocations anObject.setName("Joe"), anObject.setAge(32), and setMale(true) if
  * such methods exist with those signatures. Otherwise an {@link IntrospectionException}are thrown.
  */
@@ -112,7 +112,7 @@ public class PropertySetter
     {
         int len = prefix.length();
 
-        for ( Enumeration e = properties.propertyNames(); e.hasMoreElements(); )
+        for ( Enumeration<?> e = properties.propertyNames(); e.hasMoreElements(); )
         {
             String key = (String) e.nextElement();
 
@@ -195,7 +195,7 @@ public class PropertySetter
         {
             throw new PropertySetterException( "No setter for property" );
         }
-        Class[] paramTypes = setter.getParameterTypes();
+        Class<?>[] paramTypes = setter.getParameterTypes();
         if ( paramTypes.length != 1 )
         {
             throw new PropertySetterException( "#params for setter != 1" );
@@ -231,7 +231,7 @@ public class PropertySetter
      * @param type
      * @return Object
      */
-    protected Object convertArg( String val, Class type )
+    protected Object convertArg( String val, Class<?> type )
     {
         if ( val == null )
         {

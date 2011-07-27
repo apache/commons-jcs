@@ -36,15 +36,15 @@ public class UDPDiscoverySenderThread
     /**
      * details of the host, port, and service being advertised to listen for TCP socket connections
      */
-    private UDPDiscoveryAttributes attributes;
+    private final UDPDiscoveryAttributes attributes;
 
     /** List of known regions. */
-    private ArrayList cacheNames = new ArrayList();
+    private ArrayList<String> cacheNames = new ArrayList<String>();
 
     /**
      * @param cacheNames The cacheNames to set.
      */
-    protected void setCacheNames( ArrayList cacheNames )
+    protected void setCacheNames( ArrayList<String> cacheNames )
     {
         if ( log.isInfoEnabled() )
         {
@@ -56,7 +56,7 @@ public class UDPDiscoverySenderThread
     /**
      * @return Returns the cacheNames.
      */
-    protected ArrayList getCacheNames()
+    protected ArrayList<String> getCacheNames()
     {
         return cacheNames;
     }
@@ -68,7 +68,7 @@ public class UDPDiscoverySenderThread
      * @param attributes host, port, etc.
      * @param cacheNames List of strings of the names of the region participating.
      */
-    public UDPDiscoverySenderThread( UDPDiscoveryAttributes attributes, ArrayList cacheNames )
+    public UDPDiscoverySenderThread( UDPDiscoveryAttributes attributes, ArrayList<String> cacheNames )
     {
         this.attributes = attributes;
 

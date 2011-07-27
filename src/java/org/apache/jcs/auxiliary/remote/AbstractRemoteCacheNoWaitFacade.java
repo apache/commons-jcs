@@ -61,7 +61,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
     public RemoteCacheNoWait[] noWaits;
 
     /** The cache name */
-    private String cacheName;
+    private final String cacheName;
 
     /** holds failover and cluster information */
     protected IRemoteCacheAttributes remoteCacheAttributes;
@@ -179,7 +179,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @return map
      * @throws IOException
      */
-    public Map getMatching( String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String pattern )
         throws IOException
     {
         for ( int i = 0; i < noWaits.length; i++ )
@@ -191,10 +191,10 @@ public abstract class AbstractRemoteCacheNoWaitFacade
             catch ( Exception ex )
             {
                 log.debug( "Failed to getMatching." );
-                return Collections.EMPTY_MAP;
+                return Collections.emptyMap();
             }
         }
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
     /**
@@ -204,7 +204,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map getMultiple( Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
     {
         if ( keys != null && !keys.isEmpty() )
         {
@@ -217,11 +217,11 @@ public abstract class AbstractRemoteCacheNoWaitFacade
                 catch ( Exception ex )
                 {
                     log.debug( "Failed to get." );
-                    return Collections.EMPTY_MAP;
+                    return Collections.emptyMap();
                 }
             }
         }
-        return new HashMap();
+        return new HashMap<Serializable, ICacheElement>();
     }
 
     /**
@@ -231,10 +231,10 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @return the set of keys of objects currently in the group
      * @throws IOException
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
         throws IOException
     {
-        HashSet allKeys = new HashSet();
+        HashSet<Serializable> allKeys = new HashSet<Serializable>();
         for ( int i = 0; i < noWaits.length; i++ )
         {
             AuxiliaryCache aux = noWaits[i];
@@ -357,6 +357,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * <p>
      * @return Some info for logging.
      */
+    @Override
     public String toString()
     {
         return "RemoteCacheNoWaitFacade: " + cacheName + ", rca = " + remoteCacheAttributes;
@@ -368,7 +369,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @param i The no wait in error.
      */
     abstract void failover( int i );
-    
+
 
     /**
      * @return Returns the AuxiliaryCacheAttributes.
@@ -395,7 +396,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
         IStats stats = new Stats();
         stats.setTypeName( "Remote Cache No Wait Facade" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -412,13 +413,13 @@ public abstract class AbstractRemoteCacheNoWaitFacade
                 // get as array, convert to list, add list to our outer list
                 IStats sStats = noWaits[i].getStatistics();
                 IStatElement[] sSEs = sStats.getStatElements();
-                List sL = Arrays.asList( sSEs );
+                List<IStatElement> sL = Arrays.asList( sSEs );
                 elems.addAll( sL );
             }
         }
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         return stats;
@@ -429,11 +430,12 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * <p>
      * @return the name
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return "Remote Cache No Wait Facade";
     }
-    
+
     /**
      * Gets the remoteCacheAttributes attribute of the RemoteCacheNoWaitFacade object
      * <p>

@@ -38,7 +38,7 @@ public class DiscoveredService
     private static final long serialVersionUID = -7810164772089509751L;
 
     /** region names */
-    private ArrayList cacheNames;
+    private ArrayList<String> cacheNames;
 
     /** service address */
     private String serviceAddress;
@@ -52,7 +52,7 @@ public class DiscoveredService
     /**
      * @param cacheNames the cacheNames to set
      */
-    public void setCacheNames( ArrayList cacheNames )
+    public void setCacheNames( ArrayList<String> cacheNames )
     {
         this.cacheNames = cacheNames;
     }
@@ -60,7 +60,7 @@ public class DiscoveredService
     /**
      * @return the cacheNames
      */
-    public ArrayList getCacheNames()
+    public ArrayList<String> getCacheNames()
     {
         return cacheNames;
     }
@@ -114,6 +114,7 @@ public class DiscoveredService
     }
 
     /** @return hashcode based on address/port */
+    @Override
     public int hashCode()
     {
         HashCodeBuilder builder = new HashCodeBuilder();
@@ -133,6 +134,7 @@ public class DiscoveredService
      * @param otherArg other
      * @return equality based on the address/port
      */
+    @Override
     public boolean equals( Object otherArg )
     {
         if ( otherArg instanceof DiscoveredService )
@@ -150,6 +152,7 @@ public class DiscoveredService
     /**
      * @return string for debugging purposes.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

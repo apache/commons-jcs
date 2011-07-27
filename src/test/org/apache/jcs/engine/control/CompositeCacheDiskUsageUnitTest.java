@@ -54,6 +54,7 @@ public class CompositeCacheDiskUsageUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheUsagePattern.ccf" );
@@ -341,7 +342,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @return a map of Serializable key to ICacheElement element, or an empty map if there is
          *         no data in cache for any of these keys
          */
-        public Map getMultiple( Set keys )
+        public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
         {
             return new HashMap();
         }
@@ -434,6 +435,7 @@ public class CompositeCacheDiskUsageUnitTest
         /**
          * @param cacheEventLogger
          */
+        @Override
         public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
         {
             // TODO Auto-generated method stub
@@ -443,6 +445,7 @@ public class CompositeCacheDiskUsageUnitTest
         /**
          * @param elementSerializer
          */
+        @Override
         public void setElementSerializer( IElementSerializer elementSerializer )
         {
             // TODO Auto-generated method stub
@@ -450,6 +453,7 @@ public class CompositeCacheDiskUsageUnitTest
         }
 
         /** @return null */
+        @Override
         public String getEventLoggingExtraInfo()
         {
             // TODO Auto-generated method stub
@@ -461,7 +465,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @return Collections.EMPTY_MAP;
          * @throws IOException
          */
-        public Map getMatching( String pattern )
+        public Map<Serializable, ICacheElement> getMatching(String pattern)
             throws IOException
         {
             return Collections.EMPTY_MAP;

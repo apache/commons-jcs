@@ -20,7 +20,6 @@ package org.apache.jcs.auxiliary.remote.http.client;
  */
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -31,7 +30,6 @@ import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
@@ -55,19 +53,19 @@ public class RemoteHttpCacheManager
     private static RemoteHttpCacheManager instance;
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
-    static final Map caches = new HashMap();
+    static final Map<String, RemoteCacheNoWait> caches = new HashMap<String, RemoteCacheNoWait>();
 
     /** The configuration attributes. */
     private IRemoteCacheAttributes remoteCacheAttributes;
 
     /** The event logger. */
-    private ICacheEventLogger cacheEventLogger;
+    private final ICacheEventLogger cacheEventLogger;
 
     /** The serializer. */
-    private IElementSerializer elementSerializer;
+    private final IElementSerializer elementSerializer;
 
     /** The cache manager listeners will need to use to get a cache. */
-    private ICompositeCacheManager cacheMgr;
+    private final ICompositeCacheManager cacheMgr;
 
     /** Remote cache monitor. */
     private static RemoteHttpCacheMonitor monitor;
@@ -177,7 +175,7 @@ public class RemoteHttpCacheManager
 
         synchronized ( caches )
         {
-            remoteCacheNoWait = (RemoteCacheNoWait) caches.get( cattr.getCacheName() + cattr.getUrl() );
+            remoteCacheNoWait = caches.get( cattr.getCacheName() + cattr.getUrl() );
             if ( remoteCacheNoWait == null )
             {
                 RemoteHttpClientListener listener = new RemoteHttpClientListener( cattr, cacheMgr );
@@ -232,10 +230,8 @@ public class RemoteHttpCacheManager
     public String getStats()
     {
         StringBuffer stats = new StringBuffer();
-        Iterator allCaches = caches.values().iterator();
-        while ( allCaches.hasNext() )
+        for (RemoteCacheNoWait c : caches.values())
         {
-            ICache c = (ICache) allCaches.next();
             if ( c != null )
             {
                 stats.append( c.getCacheName() );

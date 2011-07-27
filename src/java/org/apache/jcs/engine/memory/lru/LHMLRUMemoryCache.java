@@ -29,7 +29,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
@@ -51,7 +50,7 @@ public class LHMLRUMemoryCache
     private static final long serialVersionUID = 6403738094136424101L;
 
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( LRUMemoryCache.class );
+    protected final static Log log = LogFactory.getLog( LRUMemoryCache.class );
 
     /** number of hits */
     protected int hitCnt = 0;
@@ -67,6 +66,7 @@ public class LHMLRUMemoryCache
      * <p>
      * @param hub
      */
+    @Override
     public synchronized void initialize( CompositeCache hub )
     {
         super.initialize( hub );
@@ -78,7 +78,8 @@ public class LHMLRUMemoryCache
      * <p>
      * @return Collections.synchronizedMap( new LHMSpooler() )
      */
-    public Map createMap()
+    @Override
+    public Map<Serializable, MemoryElementDescriptor> createMap()
     {
         return Collections.synchronizedMap( new LHMSpooler() );
     }
@@ -89,12 +90,13 @@ public class LHMLRUMemoryCache
      * @param ce Description of the Parameter
      * @exception IOException
      */
+    @Override
     public void update( ICacheElement ce )
         throws IOException
     {
         putCnt++;
         ce.getElementAttributes().setLastAccessTimeNow();
-        map.put( ce.getKey(), ce );
+        map.put( ce.getKey(), new MemoryElementDescriptor(ce) );
     }
 
     /**
@@ -105,10 +107,11 @@ public class LHMLRUMemoryCache
      * @return Element matching key if found, or null
      * @exception IOException
      */
+    @Override
     public ICacheElement getQuiet( Serializable key )
         throws IOException
     {
-        return (ICacheElement) map.get( key );
+        return map.get( key ).ce;
     }
 
     /**
@@ -118,6 +121,7 @@ public class LHMLRUMemoryCache
      * @return ICacheElement if found, else null
      * @exception IOException
      */
+    @Override
     public synchronized ICacheElement get( Serializable key )
         throws IOException
     {
@@ -128,7 +132,7 @@ public class LHMLRUMemoryCache
             log.debug( "getting item from cache " + cacheName + " for key " + key );
         }
 
-        ce = (ICacheElement) map.get( key );
+        ce = map.get( key ).ce;
 
         if ( ce != null )
         {
@@ -157,6 +161,7 @@ public class LHMLRUMemoryCache
      * @return true if removed
      * @exception IOException
      */
+    @Override
     public synchronized boolean remove( Serializable key )
         throws IOException
     {
@@ -173,9 +178,9 @@ public class LHMLRUMemoryCache
             // remove all keys of the same name hierarchy.
             synchronized ( map )
             {
-                for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
+                for (Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> itr = map.entrySet().iterator(); itr.hasNext(); )
                 {
-                    Map.Entry entry = (Map.Entry) itr.next();
+                    Map.Entry<Serializable, MemoryElementDescriptor> entry = itr.next();
                     Object k = entry.getKey();
 
                     if ( k instanceof String && ( (String) k ).startsWith( key.toString() ) )
@@ -191,9 +196,9 @@ public class LHMLRUMemoryCache
             // remove all keys of the same name hierarchy.
             synchronized ( map )
             {
-                for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
+                for (Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> itr = map.entrySet().iterator(); itr.hasNext(); )
                 {
-                    Map.Entry entry = (Map.Entry) itr.next();
+                    Map.Entry<Serializable, MemoryElementDescriptor> entry = itr.next();
                     Object k = entry.getKey();
 
                     if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
@@ -207,8 +212,8 @@ public class LHMLRUMemoryCache
         else
         {
             // remove single item.
-            ICacheElement ce = (ICacheElement) map.remove( key );
-            if ( ce != null )
+            MemoryElementDescriptor me = map.remove( key );
+            if ( me != null )
             {
                 removed = true;
             }
@@ -222,6 +227,7 @@ public class LHMLRUMemoryCache
      * <p>
      * @return An Object[]
      */
+    @Override
     public Object[] getKeyArray()
     {
         // need a better locking strategy here.
@@ -238,12 +244,13 @@ public class LHMLRUMemoryCache
      * <p>
      * @return IStats
      */
+    @Override
     public synchronized IStats getStatistics()
     {
         IStats stats = new Stats();
         stats.setTypeName( "LHMLRU Memory Cache" );
 
-        ArrayList elems = new ArrayList();
+        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
         IStatElement se = null;
 
@@ -268,7 +275,7 @@ public class LHMLRUMemoryCache
         elems.add( se );
 
         // get an array and put them in the Stats object
-        IStatElement[] ses = (IStatElement[]) elems.toArray( new StatElement[0] );
+        IStatElement[] ses = elems.toArray( new StatElement[0] );
         stats.setStatElements( ses );
 
         // int rate = ((hitCnt + missCnt) * 100) / (hitCnt * 100) * 100;
@@ -278,24 +285,6 @@ public class LHMLRUMemoryCache
     }
 
     // ---------------------------------------------------------- debug methods
-
-    /**
-     * Dump the cache map for debugging.
-     */
-    public void dumpMap()
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "dumpingMap" );
-
-            for ( Iterator itr = map.entrySet().iterator(); itr.hasNext(); )
-            {
-                Map.Entry e = (Map.Entry) itr.next();
-                MemoryElementDescriptor me = (MemoryElementDescriptor) e.getValue();
-                log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
-            }
-        }
-    }
 
     /**
      * Dump the cache entries from first to last for debugging.
@@ -308,9 +297,9 @@ public class LHMLRUMemoryCache
     /**
      * This can't be implemented.
      * <p>
-     * @param numberToFree 
-     * @return 0 
-     * @throws IOException 
+     * @param numberToFree
+     * @return 0
+     * @throws IOException
      */
     public int freeElements( int numberToFree )
         throws IOException
@@ -325,7 +314,7 @@ public class LHMLRUMemoryCache
      * Implementation of removeEldestEntry in LinkedHashMap
      */
     public class LHMSpooler
-        extends java.util.LinkedHashMap
+        extends java.util.LinkedHashMap<Serializable, MemoryElementDescriptor>
     {
         /** Don't change. */
         private static final long serialVersionUID = -1255907868906762484L;
@@ -345,9 +334,10 @@ public class LHMLRUMemoryCache
          * @param eldest
          * @return true if removed
          */
-        protected boolean removeEldestEntry( Map.Entry eldest )
+        @Override
+        protected boolean removeEldestEntry( Map.Entry<Serializable, MemoryElementDescriptor> eldest )
         {
-            CacheElement element = (CacheElement) eldest.getValue();
+            ICacheElement element = eldest.getValue().ce;
 
             if ( size() <= cache.getCacheAttributes().getMaxObjects() )
             {
@@ -376,7 +366,7 @@ public class LHMLRUMemoryCache
          * <p>
          * @param element The CacheElement
          */
-        private void spoolToDisk( CacheElement element )
+        private void spoolToDisk( ICacheElement element )
         {
             cache.spoolToDisk( element );
 

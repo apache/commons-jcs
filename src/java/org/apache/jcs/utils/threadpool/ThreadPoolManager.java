@@ -21,20 +21,17 @@ package org.apache.jcs.utils.threadpool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.utils.props.PropertyLoader;
 import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
-
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.Channel;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
-import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 /**
  * This manages threadpools for an application using Doug Lea's Util Concurrent package.
@@ -51,23 +48,23 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
  * If set, the Properties object will take precedence.
  * <p>
  * If a value is not set for a particular pool, the hard coded defaults will be used.
- * 
+ *
  * <pre>
  * int boundarySize_DEFAULT = 2000;
- * 
+ *
  * int maximumPoolSize_DEFAULT = 150;
- * 
+ *
  * int minimumPoolSize_DEFAULT = 4;
- * 
+ *
  * int keepAliveTime_DEFAULT = 1000 * 60 * 5;
- * 
+ *
  * boolean abortWhenBlocked = false;
- * 
+ *
  * String whenBlockedPolicy_DEFAULT = IPoolConfiguration.POLICY_RUN;
- * 
+ *
  * int startUpSize_DEFAULT = 4;
  * </pre>
- * 
+ *
  * You can configure default settings by specifying a default pool in the properties, ie "cache.ccf"
  * <p>
  * @author Aaron Smuts
@@ -105,7 +102,7 @@ public class ThreadPoolManager
 
     /** This is the default value. */
     public static final String DEFAULT_PROPS_FILE_NAME = "cache.ccf";
-    
+
     /** Setting this after inialization will have no effect.  */
     private static String propsFileName = null;
 
@@ -122,7 +119,7 @@ public class ThreadPoolManager
     private static Properties props = null;
 
     /** Map of names to pools. */
-    private static HashMap pools = new HashMap();
+    private static HashMap<String, ThreadPoolExecutor> pools = new HashMap<String, ThreadPoolExecutor>();
 
     /** singleton instance */
     private static ThreadPoolManager INSTANCE = null;
@@ -141,19 +138,18 @@ public class ThreadPoolManager
      * @param config
      * @return A ThreadPoll wrapper
      */
-    private ThreadPool createPool( PoolConfiguration config )
+    private ThreadPoolExecutor createPool( PoolConfiguration config )
     {
-        PooledExecutor pool = null;
-        Channel queue = null;
+        ThreadPoolExecutor pool = null;
+        BlockingQueue<Runnable> queue = null;
         if ( config.isUseBoundary() )
         {
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Creating a Bounded Buffer to use for the pool" );
             }
-            queue = new BoundedBuffer( config.getBoundarySize() );
-            pool = new PooledExecutor( queue, config.getMaximumPoolSize() );
-            pool.setThreadFactory( new MyThreadFactory() );
+
+            queue = new LinkedBlockingQueue<Runnable>(config.getBoundarySize());
         }
         else
         {
@@ -161,38 +157,34 @@ public class ThreadPoolManager
             {
                 log.debug( "Creating a non bounded Linked Queue to use for the pool" );
             }
-            queue = new LinkedQueue();
-            pool = new PooledExecutor( queue, config.getMaximumPoolSize() );
+            queue = new LinkedBlockingQueue<Runnable>();
         }
 
-        pool.setMinimumPoolSize( config.getMinimumPoolSize() );
-        pool.setKeepAliveTime( config.getKeepAliveTime() );
+        pool = new ThreadPoolExecutor(config.getStartUpSize(), config.getMaximumPoolSize(),
+                config.getKeepAliveTime(), TimeUnit.MILLISECONDS,
+                queue, new MyThreadFactory());
 
         // when blocked policy
         if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_ABORT ) )
         {
-            pool.abortWhenBlocked();
+            pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         }
         else if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_RUN ) )
         {
-            pool.runWhenBlocked();
+            pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         }
         else if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_WAIT ) )
         {
-            pool.waitWhenBlocked();
-        }
-        else if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_ABORT ) )
-        {
-            pool.abortWhenBlocked();
+            throw new RuntimeException("POLICY_WAIT no longer supported");
         }
         else if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_DISCARDOLDEST ) )
         {
-            pool.discardOldestWhenBlocked();
+            pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
         }
 
-        pool.createThreads( config.getStartUpSize() );
+        pool.prestartAllCoreThreads();
 
-        return new ThreadPool( pool, queue );
+        return pool;
     }
 
     /**
@@ -219,13 +211,13 @@ public class ThreadPoolManager
      * @param name
      * @return The thread pool configured for the name.
      */
-    public ThreadPool getPool( String name )
+    public ThreadPoolExecutor getPool( String name )
     {
-        ThreadPool pool = null;
+        ThreadPoolExecutor pool = null;
 
         synchronized ( pools )
         {
-            pool = (ThreadPool) pools.get( name );
+            pool = pools.get( name );
             if ( pool == null )
             {
                 if ( log.isDebugEnabled() )
@@ -255,17 +247,12 @@ public class ThreadPoolManager
      * <p>
      * @return ArrayList of string names
      */
-    public ArrayList getPoolNames()
+    public ArrayList<String> getPoolNames()
     {
-        ArrayList poolNames = new ArrayList();
+        ArrayList<String> poolNames = new ArrayList<String>();
         synchronized ( pools )
         {
-            Set names = pools.keySet();
-            Iterator it = names.iterator();
-            while ( it.hasNext() )
-            {
-                poolNames.add( it.next() );
-            }
+            poolNames.addAll(pools.keySet());
         }
         return poolNames;
     }

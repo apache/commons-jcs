@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
  * Clients must manage thread safety on previous version. I synchronized the public methods to add
  * easy thread safety. I synchronized all public methods that make modifications.
  */
-public class SortedPreferentialArray
+public class SortedPreferentialArray<T extends Comparable<? super T>>
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( SortedPreferentialArray.class );
@@ -45,20 +45,20 @@ public class SortedPreferentialArray
     private int curSize = 0;
 
     /** The primary array */
-    private Comparable[] array;
+    private final T[] array;
 
     /** the number that have been inserted. */
     private int insertCnt = 0;
 
     /**
-     * Consruct the array with the maximum size.
+     * Construct the array with the maximum size.
      * <p>
      * @param maxSize int
      */
     public SortedPreferentialArray( int maxSize )
     {
         this.maxSize = maxSize;
-        array = new Comparable[maxSize];
+        array = (T[]) new Comparable<?>[maxSize];
     }
 
     /**
@@ -67,7 +67,7 @@ public class SortedPreferentialArray
      * <p>
      * @param obj Object
      */
-    public synchronized void add( Comparable obj )
+    public synchronized void add(T obj)
     {
         if ( obj == null )
         {
@@ -82,7 +82,7 @@ public class SortedPreferentialArray
         if ( preferLarge )
         {
             // insert if obj is larger than the smallest
-            Comparable sma = getSmallest();
+            T sma = getSmallest();
             if ( obj.compareTo( sma ) > 0 )
             {
                 insert( obj );
@@ -96,7 +96,7 @@ public class SortedPreferentialArray
             return;
         }
         // Not preferLarge
-        Comparable lar = getLargest();
+        T lar = getLargest();
         // insert if obj is smaller than the largest
         int diff = obj.compareTo( lar );
         if ( diff > 0 || diff == 0 )
@@ -117,7 +117,7 @@ public class SortedPreferentialArray
      * <p>
      * @return Comparable
      */
-    public synchronized Comparable getLargest()
+    public synchronized T getLargest()
     {
         return array[curSize - 1];
     }
@@ -127,7 +127,7 @@ public class SortedPreferentialArray
      * <p>
      * @return Comparable
      */
-    public synchronized Comparable getSmallest()
+    public synchronized T getSmallest()
     {
         return array[0];
     }
@@ -138,7 +138,7 @@ public class SortedPreferentialArray
      * <p>
      * @param obj Comparable
      */
-    private void insert( Comparable obj )
+    private void insert(T obj)
     {
         try
         {
@@ -269,14 +269,14 @@ public class SortedPreferentialArray
      * @param obj Comparable
      * @return Comparable, null if arg is null or none was found.
      */
-    public synchronized Comparable takeNearestLargerOrEqual( Comparable obj )
+    public synchronized T takeNearestLargerOrEqual( T obj )
     {
         if ( obj == null )
         {
             return null;
         }
 
-        Comparable retVal = null;
+        T retVal = null;
         try
         {
             int pos = findNearestOccupiedLargerOrEqualPosition( obj );
@@ -324,7 +324,7 @@ public class SortedPreferentialArray
      * @param obj Object
      * @return Object
      */
-    private int findNearestOccupiedLargerOrEqualPosition( Comparable obj )
+    private int findNearestOccupiedLargerOrEqualPosition(T obj)
     {
         if ( curSize == 0 )
         {
@@ -339,7 +339,7 @@ public class SortedPreferentialArray
         if ( pos == curSize )
         { // && curSize < maxSize ) {
             // pos will be > 0 if it equals curSize, we check for this above.
-            if ( obj.compareTo( array[pos - 1] ) <= 0 )
+            if ( obj.compareTo(array[pos - 1] ) <= 0 )
             {
                 pos = pos - 1;
             }
@@ -351,7 +351,7 @@ public class SortedPreferentialArray
         else
         {
             // the find nearest, returns the last, since it is used by insertion.
-            if ( obj.compareTo( array[pos] ) > 0 )
+            if ( obj.compareTo(array[pos] ) > 0 )
             {
                 return -1;
             }
@@ -383,7 +383,7 @@ public class SortedPreferentialArray
      * @param obj Comparable
      * @return int
      */
-    private int findNearestLargerEqualOrLastPosition( Comparable obj )
+    private int findNearestLargerEqualOrLastPosition(T obj)
     {
         // do nothing if a null was passed in
         if ( obj == null )
@@ -478,7 +478,7 @@ public class SortedPreferentialArray
                 // EQUAL TO
                 // object at current position is equal to the obj, use this,
                 // TODO could avoid some shuffling if I found a lower pos.
-                if ( array[curPos].compareTo( obj ) == 0 )
+                if ((array[curPos]).compareTo( obj ) == 0 )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -493,7 +493,7 @@ public class SortedPreferentialArray
                 // GREATER THAN
                 // array object at current position is greater than the obj, go
                 // left
-                if ( array[curPos].compareTo( obj ) > 0 )
+                if ((array[curPos]).compareTo( obj ) > 0 )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -513,7 +513,7 @@ public class SortedPreferentialArray
 
                 // LESS THAN
                 // the object at the current position is smaller, go right
-                if ( array[curPos].compareTo( obj ) < 0 )
+                if ((array[curPos]).compareTo( obj ) < 0 )
                 {
                     if ( log.isDebugEnabled() )
                     {

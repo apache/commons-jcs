@@ -90,7 +90,7 @@ public interface ICacheServiceNonLocal
      *         data in cache for any of these keys
      * @throws IOException
      */
-    Map getMultiple( String cacheName, Set keys, long requesterId )
+    Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
         throws IOException;
 
     /**
@@ -103,7 +103,7 @@ public interface ICacheServiceNonLocal
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    Map getMatching( String cacheName, String pattern, long requesterId )
+    Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException;
 
     /**
@@ -114,6 +114,6 @@ public interface ICacheServiceNonLocal
      * @return A Set of keys
      * @throws IOException
      */
-    Set getGroupKeys( String cacheName, String groupName )
+    Set<Serializable> getGroupKeys( String cacheName, String groupName )
         throws IOException;
 }

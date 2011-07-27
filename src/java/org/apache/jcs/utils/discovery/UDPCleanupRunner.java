@@ -20,7 +20,6 @@ package org.apache.jcs.utils.discovery;
  */
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -40,13 +39,13 @@ public class UDPCleanupRunner
     private static final Log log = LogFactory.getLog( UDPCleanupRunner.class );
 
     /** UDP discovery service */
-    private UDPDiscoveryService discoveryService;
+    private final UDPDiscoveryService discoveryService;
 
     /** default for max idle time, in seconds */
     private static final long DEFAULT_MAX_IDLE_TIME_SECONDS = 180;
 
     /** The configured max idle time, in seconds */
-    private long maxIdleTimeSeconds = DEFAULT_MAX_IDLE_TIME_SECONDS;
+    private final long maxIdleTimeSeconds = DEFAULT_MAX_IDLE_TIME_SECONDS;
 
     /**
      * @param service UDPDiscoveryService
@@ -72,13 +71,10 @@ public class UDPCleanupRunner
         // html
         // TODO this should get a copy.  you can't simply remove from this.
         // the listeners need to be notified.
-        Iterator it = discoveryService.getDiscoveredServices().iterator();
-
-        Set toRemove = new HashSet();
+        Set<DiscoveredService> toRemove = new HashSet<DiscoveredService>();
         // can't remove via the iterator. must remove directly
-        while ( it.hasNext() )
+        for (DiscoveredService service : discoveryService.getDiscoveredServices())
         {
-            DiscoveredService service = (DiscoveredService) it.next();
             if ( ( now - service.getLastHearFromTime() ) > ( maxIdleTimeSeconds * 1000 ) )
             {
                 if ( log.isInfoEnabled() )
@@ -91,11 +87,10 @@ public class UDPCleanupRunner
         }
 
         // remove the bad ones
-        Iterator toRemoveIt = toRemove.iterator();
-        while ( toRemoveIt.hasNext() )
+        for (DiscoveredService service : toRemove)
         {
             // call this so the listeners get notified
-            discoveryService.removeDiscoveredService( (DiscoveredService) toRemoveIt.next() );
+            discoveryService.removeDiscoveredService( service );
         }
     }
 }

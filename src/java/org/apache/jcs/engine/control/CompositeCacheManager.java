@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.security.AccessControlException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -39,6 +38,7 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
+import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
@@ -66,13 +66,13 @@ public class CompositeCacheManager
     private static final long serialVersionUID = 7598584393134401756L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( CompositeCacheManager.class );
+    protected final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 
     /** Caches managed by this cache manager */
-    protected Hashtable caches = new Hashtable();
+    protected Hashtable<String, ICache> caches = new Hashtable<String, ICache>();
 
     /** Internal system caches for this cache manager */
-    protected Hashtable systemCaches = new Hashtable();
+    protected Hashtable<String, ICache> systemCaches = new Hashtable<String, ICache>();
 
     /** Number of clients accessing this cache manager */
     private int clients;
@@ -84,10 +84,12 @@ public class CompositeCacheManager
     protected IElementAttributes defaultElementAttr = new ElementAttributes();
 
     /** Used to keep track of configured auxiliaries */
-    protected Hashtable auxiliaryFactoryRegistry = new Hashtable( 11 );
+    protected Hashtable<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
+        new Hashtable<String, AuxiliaryCacheFactory>( 11 );
 
     /** Used to keep track of attributes for auxiliaries. */
-    protected Hashtable auxiliaryAttributeRegistry = new Hashtable( 11 );
+    protected Hashtable<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
+        new Hashtable<String, AuxiliaryCacheAttributes>( 11 );
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
@@ -108,7 +110,7 @@ public class CompositeCacheManager
     private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
 
     /** Those waiting for notification of a shutdown. */
-    private Set shutdownObservers = new HashSet();
+    private final Set<IShutdownObserver> shutdownObservers = new HashSet<IShutdownObserver>();
 
     /** Indicates whether shutdown has been called. */
     private boolean isShutdown = false;
@@ -360,8 +362,8 @@ public class CompositeCacheManager
     {
         // override any setting with values from the system properties.
         Properties sysProps = System.getProperties();
-        Set keys = sysProps.keySet();
-        Iterator keyIt = keys.iterator();
+        Set<Object> keys = sysProps.keySet();
+        Iterator<Object> keyIt = keys.iterator();
         while ( keyIt.hasNext() )
         {
             String key = (String) keyIt.next();
@@ -567,10 +569,8 @@ public class CompositeCacheManager
             // We don't need to worry about locking the set.
             // since this is a shutdown command, nor do we need
             // to queue these up.
-            Iterator it = shutdownObservers.iterator();
-            while ( it.hasNext() )
+            for (IShutdownObserver observer : shutdownObservers)
             {
-                IShutdownObserver observer = (IShutdownObserver) it.next();
                 observer.shutdown();
             }
         }
@@ -619,11 +619,9 @@ public class CompositeCacheManager
                 log.debug( "Last client called release. There are " + caches.size() + " caches which will be disposed" );
             }
 
-            Enumeration allCaches = caches.elements();
-
-            while ( allCaches.hasMoreElements() )
+            for (ICache c : caches.values() )
             {
-                CompositeCache cache = (CompositeCache) allCaches.nextElement();
+                CompositeCache cache = (CompositeCache) c;
 
                 if ( cache != null )
                 {
@@ -641,9 +639,9 @@ public class CompositeCacheManager
     {
         String[] list = new String[caches.size()];
         int i = 0;
-        for ( Iterator itr = caches.keySet().iterator(); itr.hasNext(); )
+        for (String key : caches.keySet())
         {
-            list[i++] = (String) itr.next();
+            list[i++] = key;
         }
         return list;
     }
@@ -678,7 +676,7 @@ public class CompositeCacheManager
      */
     AuxiliaryCacheFactory registryFacGet( String name )
     {
-        return (AuxiliaryCacheFactory) auxiliaryFactoryRegistry.get( name );
+        return auxiliaryFactoryRegistry.get( name );
     }
 
     /**
@@ -695,7 +693,7 @@ public class CompositeCacheManager
      */
     AuxiliaryCacheAttributes registryAttrGet( String name )
     {
-        return (AuxiliaryCacheAttributes) auxiliaryAttributeRegistry.get( name );
+        return auxiliaryAttributeRegistry.get( name );
     }
 
     /**
@@ -730,17 +728,16 @@ public class CompositeCacheManager
      */
     public ICacheStats[] getStatistics()
     {
-        ArrayList cacheStats = new ArrayList();
-        Enumeration allCaches = caches.elements();
-        while ( allCaches.hasMoreElements() )
+        ArrayList<ICacheStats> cacheStats = new ArrayList<ICacheStats>();
+        for (ICache c :  caches.values())
         {
-            CompositeCache cache = (CompositeCache) allCaches.nextElement();
+            CompositeCache cache = (CompositeCache) c;
             if ( cache != null )
             {
                 cacheStats.add( cache.getStatistics() );
             }
         }
-        ICacheStats[] stats = (ICacheStats[]) cacheStats.toArray( new CacheStats[0] );
+        ICacheStats[] stats = cacheStats.toArray( new CacheStats[0] );
         return stats;
     }
 
@@ -822,6 +819,7 @@ public class CompositeCacheManager
          * <p>
          * @see java.lang.Thread#run()
          */
+        @Override
         public void run()
         {
             if ( !isShutdown() )

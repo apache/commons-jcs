@@ -823,7 +823,7 @@ public class TestCacheAccess
     {
         try
         {
-            for ( int i = 0; i < numOps; i++ )
+            for ( int i = 1; i < numOps; i++ )
             {
                 Random ran = new Random( i );
                 int n = ran.nextInt( 4 );

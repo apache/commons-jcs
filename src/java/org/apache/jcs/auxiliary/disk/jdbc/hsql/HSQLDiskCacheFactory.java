@@ -54,10 +54,10 @@ public class HSQLDiskCacheFactory
     private String name = "HSQLDiskCacheFactory";
 
     /** The databases. */
-    private Set databases = Collections.synchronizedSet( new HashSet() );
+    private final Set<String> databases = Collections.synchronizedSet( new HashSet<String>() );
 
     /**
-     * This factory method should create an instance of the mysqlcache.
+     * This factory method should create an instance of the hsqlcache.
      * <p>
      * @param rawAttr
      * @param arg1
