@@ -76,19 +76,19 @@
 			<p>
 				You can find versioned binary builds of JCS in the tempbuild
 				directory of the repository.
-				<a href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/tempbuild/">Old Location</a>
+				<a href="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/tempbuild/">Old Location</a>
 				|
-				<a href="http://svn.apache.org/viewvc/jakarta/jcs/tempbuilds/">New Location</a>
+				<a href="http://svn.apache.org/viewvc/commons/proper/jcs/tempbuilds/">New Location</a>
 			</p>
 		</section>
 		<section name="Getting The Development Source From SVN">
 			<p>
-				You can check out the latest source from the Jakarta SVN module.
+				You can check out the latest source from the Commons SVN module.
 				<br />
-				JCS resides in the jakarta/jcs module.
-				<source><![CDATA[svn checkout http://svn.apache.org/repos/asf/jakarta/jcs/trunk]]></source>
+				JCS resides in the commons/proper/jcs module.
+				<source><![CDATA[svn checkout http://svn.apache.org/repos/asf/commons/proper/jcs/trunk]]></source>
 				or browse the source code through
-				<a href="http://svn.apache.org/viewvc/jakarta/jcs">ViewVC</a>
+				<a href="http://svn.apache.org/viewvc/commons/proper/jcs">ViewVC</a>
 				.
 			</p>
 		</section>

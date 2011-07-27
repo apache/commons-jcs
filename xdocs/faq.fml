@@ -130,7 +130,7 @@
 				<p>
 					You can download the admin jsp
 					<a
-						href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/src/java/org/apache/jcs/admin/JCSAdmin.jsp">
+						href="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/src/java/org/apache/jcs/admin/JCSAdmin.jsp">
 						here
 					</a>
 					.
@@ -144,13 +144,13 @@
 				<p>
 					You can view the source
 					<a
-						href="http://svn.apache.org/viewcvs.cgi/jakarta/jcs/trunk/">
+						href="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/">
 						here
 					</a>
 					or get the source code from subversion with <code>svn co
-					http://svn.apache.org/repos/asf/jakarta/jcs/trunk</code>.
+					http://svn.apache.org/repos/asf/commons/proper/jcs/trunk</code>.
 					The tagged releases are available with <code>svn co.</code> ex.
-					http://svn.apache.org/repos/asf/jakarta/jcs/tags/jcs_1_2_7_0
+					http://svn.apache.org/repos/asf/commons/proper/jcs/tags/jcs_1_2_7_0
 				</p>
 			</answer>
 		</faq>
@@ -159,12 +159,12 @@
 			<answer>
 				<p>
 					You first need to install
-					<a href="http://maven.apache.org/">Maven 1.0.2</a>
+					<a href="http://maven.apache.org/">Maven 2</a>
 					The download is available at
-					http://maven.apache.org/maven-1.x/start/download.html.
-					Maven 2.0 is not supported yet. After installing run
-					"maven" which compiles and tests the entire package.
-					To build a jar run "maven jar".
+					http://maven.apache.org/download.html.
+					After installing run
+					"mvn" which compiles and tests the entire package.
+					To build a jar run "mvn install".
 				</p>
 			</answer>
 		</faq>
