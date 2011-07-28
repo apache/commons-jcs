@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.yajcache.lang.annotation.*;
-import org.apache.commons.lang.builder.*;
+import org.apache.commons.lang3.builder.*;
 
 
 /**
@@ -128,7 +128,7 @@ public enum CacheFileDAO {
         } catch(IOException ex) {
             countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
-        } catch(org.apache.commons.lang.SerializationException ex) {
+        } catch(org.apache.commons.lang3.SerializationException ex) {
             countReadIOException.incrementAndGet();
             log.warn(ex.getClass().getName(), ex);
        } finally {

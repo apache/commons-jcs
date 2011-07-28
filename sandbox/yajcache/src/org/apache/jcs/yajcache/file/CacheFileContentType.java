@@ -20,7 +20,7 @@ package org.apache.jcs.yajcache.file;
  */
 
 import java.io.Serializable;
-import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**

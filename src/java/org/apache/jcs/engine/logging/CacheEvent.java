@@ -2,7 +2,7 @@ package org.apache.jcs.engine.logging;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.jcs.engine.logging.behavior.ICacheEvent;
 
 /** It's returned from create and passed into log. */

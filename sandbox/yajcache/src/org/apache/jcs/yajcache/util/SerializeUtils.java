@@ -21,7 +21,7 @@ package org.apache.jcs.yajcache.util;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.jcs.yajcache.lang.annotation.*;
 
 /**

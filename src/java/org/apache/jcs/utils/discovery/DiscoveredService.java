@@ -22,8 +22,8 @@ package org.apache.jcs.utils.discovery;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * This contains info about a discovered service. These objects are stored in a set in the
