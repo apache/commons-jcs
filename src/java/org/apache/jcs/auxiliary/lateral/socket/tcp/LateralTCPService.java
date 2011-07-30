@@ -368,11 +368,8 @@ public class LateralTCPService
      */
     public Set<Serializable> getGroupKeys( String cacheName, String group )
     {
-        if ( true )
-        {
-            throw new UnsupportedOperationException( "Groups not implemented." );
-        }
-        return null;
+        throw new UnsupportedOperationException( "Groups not implemented." );
+        // return null;
     }
 
     /**

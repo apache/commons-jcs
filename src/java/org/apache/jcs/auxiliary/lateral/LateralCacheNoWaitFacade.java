@@ -227,7 +227,6 @@ public class LateralCacheNoWaitFacade
             {
                 log.error( "Failed to get", ex );
             }
-            return null;
         }
         return null;
     }

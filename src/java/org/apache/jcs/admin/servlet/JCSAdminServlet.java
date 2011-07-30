@@ -19,13 +19,15 @@ package org.apache.jcs.admin.servlet;
  * under the License.
  */
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jcs.admin.JCSAdminBean;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.servlet.VelocityServlet;
+import org.apache.velocity.tools.view.VelocityViewServlet;
 
 /**
  * A servlet which provides HTTP access to JCS. Allows a summary of regions to
@@ -59,7 +61,7 @@ import org.apache.velocity.servlet.VelocityServlet;
  * <p>
  */
 public class JCSAdminServlet
-    extends VelocityServlet
+    extends VelocityViewServlet
 {
     private static final long serialVersionUID = -5519844149238645275L;
 
@@ -90,15 +92,14 @@ public class JCSAdminServlet
     /**
      * Velocity based admin servlet.
      * <p>
-     * @param request 
-     * @param response 
-     * @param context 
+     * @param request
+     * @param response
+     * @param context
      * @return Template
-     * @throws Exception 
-     * 
+     * @throws Exception
+     *
      */
     protected Template handleRequest( HttpServletRequest request, HttpServletResponse response, Context context )
-        throws Exception
     {
         JCSAdminBean admin = new JCSAdminBean();
 
@@ -112,35 +113,43 @@ public class JCSAdminServlet
 
         String action = request.getParameter( ACTION_PARAM );
 
-        if ( action != null )
+        try
         {
-            if ( action.equals( CLEAR_ALL_REGIONS_ACTION ) )
-            {
-                admin.clearAllRegions();
-            }
-            else if ( action.equals( CLEAR_REGION_ACTION ) )
-            {
-                if ( cacheName != null )
-                {
-                    admin.clearRegion( cacheName );
-                }
-            }
-            else if ( action.equals( REMOVE_ACTION ) )
-            {
-                String[] keys = request.getParameterValues( KEY_PARAM );
+			if ( action != null )
+			{
+			    if ( action.equals( CLEAR_ALL_REGIONS_ACTION ) )
+			    {
+			        admin.clearAllRegions();
+			    }
+			    else if ( action.equals( CLEAR_REGION_ACTION ) )
+			    {
+			        if ( cacheName != null )
+			        {
+			            admin.clearRegion( cacheName );
+			        }
+			    }
+			    else if ( action.equals( REMOVE_ACTION ) )
+			    {
+			        String[] keys = request.getParameterValues( KEY_PARAM );
 
-                for ( int i = 0; i < keys.length; i++ )
-                {
-                    admin.removeItem( cacheName, keys[i] );
-                }
+			        for ( int i = 0; i < keys.length; i++ )
+			        {
+			            admin.removeItem( cacheName, keys[i] );
+			        }
 
-                templateName = REGION_DETAIL_TEMPLATE_NAME;
-            }
-            else if ( action.equals( DETAIL_ACTION ) )
-            {
-                templateName = REGION_DETAIL_TEMPLATE_NAME;
-            }
-        }
+			        templateName = REGION_DETAIL_TEMPLATE_NAME;
+			    }
+			    else if ( action.equals( DETAIL_ACTION ) )
+			    {
+			        templateName = REGION_DETAIL_TEMPLATE_NAME;
+			    }
+			}
+		}
+        catch (IOException e)
+        {
+        	getLog().error("Could not execute action.", e);
+        	return null;
+		}
 
         if ( request.getParameter( SILENT_PARAM ) != null )
         {
@@ -150,15 +159,22 @@ public class JCSAdminServlet
         }
         // Populate the context based on the template
 
-        if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
+        try
         {
-            context.put( "cacheName", cacheName );
-            context.put( "elementInfoRecords", admin.buildElementInfo( cacheName ) );
-        }
-        else if ( templateName == DEFAULT_TEMPLATE_NAME )
+			if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
+			{
+			    context.put( "cacheName", cacheName );
+			    context.put( "elementInfoRecords", admin.buildElementInfo( cacheName ) );
+			}
+			else if ( templateName == DEFAULT_TEMPLATE_NAME )
+			{
+			    context.put( "cacheInfoRecords", admin.buildCacheInfo() );
+			}
+		}
+        catch (Exception e)
         {
-            context.put( "cacheInfoRecords", admin.buildCacheInfo() );
-        }
+        	getLog().error("Could not populate context.", e);
+		}
 
         return getTemplate( templateName );
     }

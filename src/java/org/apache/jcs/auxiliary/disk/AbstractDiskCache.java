@@ -697,7 +697,7 @@ public abstract class AbstractDiskCache
                  * The cache is not alive, hence the element should be removed from purgatory. All
                  * elements should be removed eventually. Perhaps, the alive check should have been
                  * done before it went in the queue. This block handles the case where the disk
-                 * cache fails during normal opertations.
+                 * cache fails during normal operations.
                  */
                 synchronized ( purgatory )
                 {

@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -188,10 +187,9 @@ public abstract class AbstractRemoteCacheNoWaitFacade
             {
                 return noWaits[i].getMatching( pattern );
             }
-            catch ( Exception ex )
+            catch ( IOException ex )
             {
                 log.debug( "Failed to getMatching." );
-                return Collections.emptyMap();
             }
         }
         return Collections.emptyMap();
@@ -214,14 +212,13 @@ public abstract class AbstractRemoteCacheNoWaitFacade
                 {
                     return noWaits[i].getMultiple( keys );
                 }
-                catch ( Exception ex )
+                catch ( IOException ex )
                 {
                     log.debug( "Failed to get." );
-                    return Collections.emptyMap();
                 }
             }
         }
-        return new HashMap<Serializable, ICacheElement>();
+        return Collections.emptyMap();
     }
 
     /**

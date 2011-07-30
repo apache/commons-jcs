@@ -1057,11 +1057,8 @@ public class JDBCDiskCache
     @Override
     public Set<Serializable> getGroupKeys( String groupName )
     {
-        if ( true )
-        {
-            throw new UnsupportedOperationException( "Groups not implemented." );
-        }
-        return null;
+        throw new UnsupportedOperationException( "Groups not implemented." );
+        // return null;
     }
 
     /**
