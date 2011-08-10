@@ -105,12 +105,12 @@ public class BlockDiskCacheUnitTest
 
         int numBlocksNeeded = blockDisk.calculateTheNumberOfBlocksNeeded( data );
         System.out.println( numBlocksNeeded );
-        
+
         // get the individual sub arrays.
         byte[][] chunks = blockDisk.getBlockChunks( data, numBlocksNeeded );
 
         byte[] resultData = new byte[0];
-        
+
         for ( short i = 0; i < chunks.length; i++ )
         {
             byte[] chunk = chunks[i];
@@ -122,7 +122,7 @@ public class BlockDiskCacheUnitTest
             // swap the new and old.
             resultData = newTotal;
         }
-        
+
         Serializable result = (Serializable) elementSerializer.deSerialize( resultData );
         System.out.println( result );
         assertEquals( "wrong string after retrieval", string, result );
@@ -177,7 +177,7 @@ public class BlockDiskCacheUnitTest
     public void testUTF8String()
         throws Exception
     {
-        String string = "Iñtërnâtiônàlizætiøn";
+        String string = "IÃ’tÃŽrnâ€štiÃ™nâ€¡lizÃŠtiÂ¯n";
         StringBuffer sb = new StringBuffer();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
@@ -220,7 +220,7 @@ public class BlockDiskCacheUnitTest
     public void testUTF8ByteArray()
         throws Exception
     {
-        String string = "Iñtërnâtiônàlizætiøn";
+        String string = "IÃ’tÃŽrnâ€štiÃ™nâ€¡lizÃŠtiÂ¯n";
         StringBuffer sb = new StringBuffer();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
@@ -268,7 +268,7 @@ public class BlockDiskCacheUnitTest
         throws Exception
     {
         X before = new X();
-        String string = "Iñtërnâtiônàlizætiøn";
+        String string = "IÃ’tÃŽrnâ€štiÃ™nâ€¡lizÃŠtiÂ¯n";
         StringBuffer sb = new StringBuffer();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )

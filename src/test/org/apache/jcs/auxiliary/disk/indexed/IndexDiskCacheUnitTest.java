@@ -792,7 +792,7 @@ public class IndexDiskCacheUnitTest
     public void testUTF8String()
         throws Exception
     {
-        String string = "Iñtërnâtiônàlizætiøn";
+        String string = "IÃ’tÃŽrnâ€štiÃ™nâ€¡lizÃŠtiÂ¯n";
         StringBuffer sb = new StringBuffer();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
@@ -834,7 +834,7 @@ public class IndexDiskCacheUnitTest
     public void testUTF8ByteArray()
         throws Exception
     {
-        String string = "Iñtërnâtiônàlizætiøn";
+        String string = "IÃ’tÃŽrnâ€štiÃ™nâ€¡lizÃŠtiÂ¯n";
         StringBuffer sb = new StringBuffer();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
