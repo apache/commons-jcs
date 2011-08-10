@@ -143,9 +143,23 @@ public abstract class AbstractDiskCache
         // removeall
         removeAllLock.writeLock().lock();
 
-        if ( purgatory != null )
+        try
         {
-            synchronized ( purgatory )
+            if ( purgatory != null )
+            {
+                synchronized ( purgatory )
+                {
+                    if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
+                    {
+                        purgatory = new LRUMapJCS<Serializable, PurgatoryElement>( diskCacheAttributes.getMaxPurgatorySize() );
+                    }
+                    else
+                    {
+                        purgatory = new HashMap<Serializable, PurgatoryElement>();
+                    }
+                }
+            }
+            else
             {
                 if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
                 {
@@ -157,19 +171,10 @@ public abstract class AbstractDiskCache
                 }
             }
         }
-        else
+        finally
         {
-            if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
-            {
-                purgatory = new LRUMapJCS<Serializable, PurgatoryElement>( diskCacheAttributes.getMaxPurgatorySize() );
-            }
-            else
-            {
-                purgatory = new HashMap<Serializable, PurgatoryElement>();
-            }
+            removeAllLock.writeLock().unlock();
         }
-
-        removeAllLock.writeLock().unlock();
     }
 
     // ------------------------------------------------------- interface ICache
