@@ -377,7 +377,7 @@ public class UDPDiscoveryReceiver
             mSocket.close();
             pooledExecutor.shutdownNow();
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( "Problem closing socket" );
         }

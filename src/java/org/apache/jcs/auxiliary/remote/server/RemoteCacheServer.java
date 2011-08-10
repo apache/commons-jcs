@@ -289,7 +289,7 @@ class RemoteCacheServer
                     // two clustered remote caches. The failover runner will
                     // have to make sure of this. ALos, the local cache needs
                     // avoid updating this source. Will need to pass the source
-                    // id somehow. The remote cache should udate all local
+                    // id somehow. The remote cache should update all local
                     // caches
                     // but not update the cluster source. Cluster remote caches
                     // should only be updated by the server and not the
@@ -350,7 +350,7 @@ class RemoteCacheServer
                 }
             }
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             if ( cacheEventLogger != null )
             {

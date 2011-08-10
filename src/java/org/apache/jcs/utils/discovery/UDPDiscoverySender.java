@@ -111,7 +111,7 @@ public class UDPDiscoverySender
      * @throws Throwable
      */
     @Override
-    public void finalize()
+    protected void finalize()
         throws Throwable
     {
         super.finalize();

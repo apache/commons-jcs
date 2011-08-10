@@ -29,7 +29,7 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /**
  * The RemoteCacheFailoverRunner tries to establish a connection with a failover
- * server, if any are defined. Once a failover connectin is made, it will
+ * server, if any are defined. Once a failover connection is made, it will
  * attempt to replace the failover with the primary remote server.
  * <p>
  * It works by switching out the RemoteCacheNoWait inside the Facade.
@@ -153,7 +153,7 @@ public class RemoteCacheFailoverRunner
                 // Monitor each RemoteCacheManager instance one after the other.
                 // Each RemoteCacheManager corresponds to one remote connection.
                 String[] failovers = facade.remoteCacheAttributes.getFailovers();
-                // we should probalby check to see if there are any failovers,
+                // we should probably check to see if there are any failovers,
                 // even though the caller
                 // should have already.
 
@@ -177,7 +177,7 @@ public class RemoteCacheFailoverRunner
 
                 // shouldn't we see if the primary is backup?
                 // If we don't check the primary, if it gets connected in the
-                // backgorund,
+                // background,
                 // we will disconnect it only to put it right back
                 int i = fidx; // + 1; // +1 skips the primary
                 if ( log.isDebugEnabled() )
@@ -356,9 +356,9 @@ public class RemoteCacheFailoverRunner
             ICache ic = rcm.getCache( rca.getCacheName() );
             // by default the listener id should be 0, else it will be the
             // listener
-            // orignally associated with the remote cache. either way is fine.
+            // Originally associated with the remote cache. either way is fine.
             // We just don't want the listener id from a failover being used.
-            // If the remote server was rebooted this couldbe a problem if new
+            // If the remote server was rebooted this could be a problem if new
             // locals were also added.
 
             if ( ic != null )
@@ -458,7 +458,7 @@ public class RemoteCacheFailoverRunner
 
                 // else alright
                 // if the failover index was at 0 here, we would be in a bad
-                // situation, unless there were jsut
+                // situation, unless there were just
                 // no failovers configured.
                 if ( log.isDebugEnabled() )
                 {
@@ -481,10 +481,10 @@ public class RemoteCacheFailoverRunner
     }
 
     /**
-     * Sets the "alright" flag to false in a critial section. This flag
+     * Sets the "alright" flag to false in a critical section. This flag
      * indicates whether or not we are connected to any server at all. If we are
      * connected to a secondary server, then alright will be true, but we will
-     * continue to try to restore the connetion with the primary server.
+     * continue to try to restore the connection with the primary server.
      * <p>
      * The primary server is the first server defines in the FailoverServers
      * list.

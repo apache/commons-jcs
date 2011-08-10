@@ -412,7 +412,7 @@ public class UDPDiscoveryService
      * @throws Throwable on error
      */
     @Override
-    public void finalize()
+    protected void finalize()
         throws Throwable
     {
         super.finalize();
