@@ -109,7 +109,6 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
         }
         // obj is less than the largest.
         insert( obj );
-        return;
     }
 
     /**
@@ -587,7 +586,6 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
                 throw ibe;
             }
         }
-        return;
     }
 
     /**

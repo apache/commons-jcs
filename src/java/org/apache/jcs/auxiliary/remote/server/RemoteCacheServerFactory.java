@@ -543,7 +543,7 @@ public class RemoteCacheServerFactory
     /**
      * Allows us to set the daemon status on the clockdaemon
      */
-    static class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
         /**

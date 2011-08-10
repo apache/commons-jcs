@@ -659,28 +659,33 @@ public abstract class AbstractDiskCache
                         // always win
                         removeAllLock.readLock().lock();
 
-                        // TODO consider changing purgatory sync
-                        // String keyAsString = element.getKey().toString();
-                        synchronized ( purgatory )
+                        try
                         {
-                            // If the element has already been removed from
-                            // purgatory do nothing
-                            if ( !purgatory.containsKey( pe.getKey() ) )
+                            // TODO consider changing purgatory sync
+                            // String keyAsString = element.getKey().toString();
+                            synchronized ( purgatory )
                             {
-                                return;
+                                // If the element has already been removed from
+                                // purgatory do nothing
+                                if ( !purgatory.containsKey( pe.getKey() ) )
+                                {
+                                    return;
+                                }
+
+                                element = pe.getCacheElement();
                             }
 
-                            element = pe.getCacheElement();
+                            // I took this out of the purgatory sync block.
+                            // If the element is still eligible, spool it.
+                            if ( pe.isSpoolable() )
+                            {
+                                doUpdate( element );
+                            }
                         }
-
-                        // I took this out of the purgatory sync block.
-                        // If the element is still eligible, spool it.
-                        if ( pe.isSpoolable() )
+                        finally
                         {
-                            doUpdate( element );
+                            removeAllLock.readLock().unlock();
                         }
-
-                        removeAllLock.readLock().unlock();
 
                         synchronized ( purgatory )
                         {

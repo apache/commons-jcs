@@ -206,8 +206,6 @@ public abstract class AbsractRemoteCacheListener
 
             cache.localUpdate( cb );
         }
-
-        return;
     }
 
     /**

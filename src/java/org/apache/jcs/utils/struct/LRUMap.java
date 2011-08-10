@@ -385,7 +385,6 @@ public class LRUMap<K, V>
     {
         LRUElementDescriptor<K, V> me = new LRUElementDescriptor<K, V>(key, val);
         list.addFirst( me );
-        return;
     }
 
     /**

@@ -213,12 +213,11 @@ public class RemoteCacheManager
                     + "We will NOT register a listener." );
             }
         }
-        return;
     }
 
     /**
      * Removes a listener. When the primary recovers the failover must deregister itself for a
-     * region. The failover runner will call this method to de-register. We do not want to dergister
+     * region. The failover runner will call this method to de-register. We do not want to deregister
      * all listeners to a remote server, in case a failover is a primary of another region. Having
      * one regions failover act as another servers primary is not currently supported.
      * <p>
@@ -233,7 +232,6 @@ public class RemoteCacheManager
         {
             remoteWatch.removeCacheListener( cattr.getCacheName(), listener );
         }
-        return;
     }
 
     /**
@@ -275,7 +273,6 @@ public class RemoteCacheManager
                 }
             }
         }
-        return;
     }
 
     /**
@@ -302,7 +299,6 @@ public class RemoteCacheManager
                 remoteWatch.removeCacheListener( cacheName, listener );
             }
         }
-        return;
     }
 
     /**

@@ -365,8 +365,6 @@ public abstract class AbstractRemoteCacheService
         {
             logICacheEvent( cacheEvent );
         }
-
-        return;
     }
 
     /**
@@ -413,7 +411,6 @@ public abstract class AbstractRemoteCacheService
         {
             logICacheEvent( cacheEvent );
         }
-        return;
     }
 
     /**
@@ -457,7 +454,6 @@ public abstract class AbstractRemoteCacheService
         {
             logICacheEvent( cacheEvent );
         }
-        return;
     }
 
     /**

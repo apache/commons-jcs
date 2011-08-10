@@ -136,7 +136,6 @@ public class ZombieCacheService
     public void dispose( String cacheName )
     {
         // zombies have no inner life
-        return;
     }
 
     /**
@@ -145,6 +144,5 @@ public class ZombieCacheService
     public void release()
     {
         // zombies have no inner life
-        return;
     }
 }

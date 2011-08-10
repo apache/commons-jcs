@@ -174,6 +174,7 @@ public class LateralCache
             log.error( e );
             handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
         }
+
         return elements;
     }
 
@@ -399,7 +400,6 @@ public class LateralCache
         {
             this.lateralCacheService = restoredLateral;
         }
-        return;
     }
 
     /**

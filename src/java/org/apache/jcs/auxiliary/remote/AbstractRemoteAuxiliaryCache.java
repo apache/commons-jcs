@@ -650,7 +650,6 @@ public abstract class AbstractRemoteAuxiliaryCache
         {
             setRemoteCacheService( restoredRemote );
         }
-        return;
     }
 
 

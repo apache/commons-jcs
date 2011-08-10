@@ -643,7 +643,7 @@ public class LateralTCPListener
      * <p>
      * @author Aaron Smuts
      */
-    class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
         /**

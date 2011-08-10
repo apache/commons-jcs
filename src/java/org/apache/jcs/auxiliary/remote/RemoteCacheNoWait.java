@@ -396,7 +396,6 @@ public class RemoteCacheNoWait
     {
         remoteCacheClient.fixCache( remote );
         resetEventQ();
-        return;
     }
 
     /**

@@ -88,7 +88,6 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
         }
         first = me;
         size++;
-        return;
     }
 
     /**

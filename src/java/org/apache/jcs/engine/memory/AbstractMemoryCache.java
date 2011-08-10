@@ -373,7 +373,7 @@ public abstract class AbstractMemoryCache
     /**
      * Allows us to set the daemon status on the clockdaemon
      */
-    class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
         /**

@@ -405,7 +405,7 @@ public class BlockDiskKeyStore
         }
 
         /**
-         * This is called when the may key size is reaced. The least recently used item will be
+         * This is called when the may key size is reached. The least recently used item will be
          * passed here. We will store the position and size of the spot on disk in the recycle bin.
          * <p>
          * @param key
@@ -427,7 +427,7 @@ public class BlockDiskKeyStore
      * Allows us to set the daemon status on the clockdaemon
      * @author aaronsm
      */
-    class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
 

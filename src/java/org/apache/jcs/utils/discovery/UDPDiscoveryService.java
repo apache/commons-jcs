@@ -326,7 +326,7 @@ public class UDPDiscoveryService
      * <p>
      * @author aaronsm
      */
-    class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
         /**

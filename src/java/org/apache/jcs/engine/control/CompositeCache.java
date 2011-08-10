@@ -1284,7 +1284,6 @@ public class CompositeCache
                 }
             }
         }
-        return;
     }
 
     /**

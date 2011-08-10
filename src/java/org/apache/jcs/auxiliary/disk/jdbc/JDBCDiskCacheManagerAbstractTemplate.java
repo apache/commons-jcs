@@ -218,7 +218,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     /**
      * Allows us to set the daemon status on the clock-daemon
      */
-    class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
         /**

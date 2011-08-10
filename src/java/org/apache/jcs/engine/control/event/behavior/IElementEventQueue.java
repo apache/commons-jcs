@@ -21,9 +21,6 @@ package org.apache.jcs.engine.control.event.behavior;
 
 import java.io.IOException;
 
-import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
-import org.apache.jcs.engine.control.event.behavior.IElementEvent;
-
 /**
  * Interface for an element event queue. An event queue is used to propagate
  * ordered element events in one region.

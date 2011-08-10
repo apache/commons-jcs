@@ -341,7 +341,6 @@ public class LateralCacheNoWait
     {
         cache.fixCache( lateral );
         resetEventQ();
-        return;
     }
 
     /**

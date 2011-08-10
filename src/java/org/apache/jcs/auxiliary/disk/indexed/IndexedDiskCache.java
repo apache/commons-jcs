@@ -313,12 +313,12 @@ public class IndexedDiskCache
     protected void loadKeys()
         throws InterruptedException
     {
-        storageLock.writeLock().lock();
-
         if ( log.isDebugEnabled() )
         {
             log.debug( logCacheName + "Loading keys for " + keyFile.toString() );
         }
+
+        storageLock.writeLock().lock();
 
         try
         {
@@ -1186,20 +1186,26 @@ public class IndexedDiskCache
             if ( currentOptimizationThread == null )
             {
                 storageLock.writeLock().lock();
-                if ( currentOptimizationThread == null )
+
+                try
                 {
-                    currentOptimizationThread = new Thread( new Runnable()
+                    if ( currentOptimizationThread == null )
                     {
-                        public void run()
+                        currentOptimizationThread = new Thread( new Runnable()
                         {
-                            optimizeFile();
+                            public void run()
+                            {
+                                optimizeFile();
 
-                            currentOptimizationThread = null;
-                        }
-                    }, "IndexedDiskCache-OptimizationThread" );
+                                currentOptimizationThread = null;
+                            }
+                        }, "IndexedDiskCache-OptimizationThread" );
+                    }
                 }
-
-                storageLock.writeLock().unlock();
+                finally
+                {
+                    storageLock.writeLock().unlock();
+                }
 
                 if ( currentOptimizationThread != null )
                 {
@@ -1238,12 +1244,19 @@ public class IndexedDiskCache
         IndexedDiskElementDescriptor[] defragList = null;
 
         storageLock.writeLock().lock();
-        queueInput = true;
-        // shut off recycle while we're optimizing,
-        doRecycle = false;
-        defragList = createPositionSortedDescriptorList();
-        // Release if I acquired.
-        storageLock.writeLock().unlock();
+
+        try
+        {
+            queueInput = true;
+            // shut off recycle while we're optimizing,
+            doRecycle = false;
+            defragList = createPositionSortedDescriptorList();
+        }
+        finally
+        {
+            // Release if I acquired.
+            storageLock.writeLock().unlock();
+        }
 
         // Defrag the file outside of the write lock. This allows a move to be made,
         // and yet have the element still accessible for reading or writing.
@@ -1452,11 +1465,18 @@ public class IndexedDiskCache
         long size = 0;
 
         storageLock.readLock().lock();
-        if ( dataFile != null )
+
+        try
         {
-            size = dataFile.length();
+            if ( dataFile != null )
+            {
+                size = dataFile.length();
+            }
         }
-        storageLock.readLock().unlock();
+        finally
+        {
+            storageLock.readLock().unlock();
+        }
 
         return size;
     }

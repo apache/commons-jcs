@@ -886,8 +886,6 @@ class RemoteCacheServer
         {
             logICacheEvent( cacheEvent );
         }
-
-        return;
     }
 
     /**
@@ -992,7 +990,6 @@ class RemoteCacheServer
         {
             logICacheEvent( cacheEvent );
         }
-        return;
     }
 
     /**
@@ -1090,7 +1087,6 @@ class RemoteCacheServer
         {
             logICacheEvent( cacheEvent );
         }
-        return;
     }
 
     /**
@@ -1146,7 +1142,6 @@ class RemoteCacheServer
             }
             cacheManager.release();
         }
-        return;
     }
 
     /**

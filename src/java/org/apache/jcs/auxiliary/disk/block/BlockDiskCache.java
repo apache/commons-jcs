@@ -396,7 +396,7 @@ public class BlockDiskCache
         }
         catch ( Exception e )
         {
-            log.error( logCacheName + "Failure updating element, key: " + element.getKey() + " old: " + old, e );
+            log.error( logCacheName + "Failure updating element, key: " + element.getKey() + " old: " + Arrays.toString(old), e );
         }
         if ( log.isDebugEnabled() )
         {

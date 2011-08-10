@@ -445,7 +445,7 @@ public class ThreadPoolManager
      * <p>
      * @author aaronsm
      */
-    class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
         /**

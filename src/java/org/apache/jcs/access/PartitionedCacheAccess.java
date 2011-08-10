@@ -171,7 +171,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null )
         {
-            log.warn( "Bad input key [" + key + "]." );
+            log.warn( "Input key is null." );
             return null;
         }
         try
@@ -200,7 +200,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null )
         {
-            log.warn( "Bad input key [" + key + "]." );
+            log.warn( "Input key is null." );
             return null;
         }
         try
@@ -269,7 +269,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( pattern == null )
         {
-            log.warn( "Bad input keypattern [" + pattern + "]." );
+            log.warn( "Input pattern is null." );
             return null;
         }
         try
@@ -301,7 +301,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( pattern == null )
         {
-            log.warn( "Bad input keypattern [" + pattern + "]." );
+            log.warn( "Input pattern is null." );
             return null;
         }
         try
@@ -350,7 +350,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null )
         {
-            log.warn( "Bad input key [" + key + "].  Cannot remove null from the cache." );
+            log.warn( "Input key is null. Cannot remove null from the cache." );
             return;
         }
         ensureInit();
@@ -440,7 +440,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null )
         {
-            log.warn( "Bad input key [" + key + "].  Cannot getElementAttributes for null from the cache." );
+            log.warn( "Input key is null. Cannot getElementAttributes for null from the cache." );
             return null;
         }
         ensureInit();
@@ -481,7 +481,7 @@ public class PartitionedCacheAccess<K, V>
     {
         if ( key == null )
         {
-            log.warn( "Bad input key [" + key + "].  Cannot resetElementAttributes for null." );
+            log.warn( "Input key is null. Cannot resetElementAttributes for null." );
             return;
         }
         ensureInit();

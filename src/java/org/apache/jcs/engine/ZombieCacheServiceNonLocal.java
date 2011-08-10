@@ -98,7 +98,6 @@ public class ZombieCacheServiceNonLocal
             queue.add( event );
         }
         // Zombies have no inner life
-        return;
     }
 
     /**
@@ -116,7 +115,6 @@ public class ZombieCacheServiceNonLocal
             queue.add( event );
         }
         // Zombies have no inner life
-        return;
     }
 
     /**
@@ -133,7 +131,6 @@ public class ZombieCacheServiceNonLocal
             queue.add( event );
         }
         // Zombies have no inner life
-        return;
     }
 
     /**

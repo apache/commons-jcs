@@ -53,7 +53,7 @@ public class RemoteCacheFailoverRunner
     private final static Log log = LogFactory.getLog( RemoteCacheFailoverRunner.class );
 
     /** The facade returned to the composite cache. */
-    private RemoteCacheNoWaitFacade facade;
+    private final RemoteCacheNoWaitFacade facade;
 
     /** How long to wait between reconnect attempts. */
     private static long idlePeriod = 20 * 1000;
@@ -62,13 +62,13 @@ public class RemoteCacheFailoverRunner
     private boolean alright = true;
 
     /** The cache manager */
-    private ICompositeCacheManager cacheMgr;
-    
+    private final ICompositeCacheManager cacheMgr;
+
     /** The event logger. */
-    private ICacheEventLogger cacheEventLogger;
+    private final ICacheEventLogger cacheEventLogger;
 
     /** The serializer. */
-    private IElementSerializer elementSerializer;
+    private final IElementSerializer elementSerializer;
 
     /**
      * Constructor for the RemoteCacheFailoverRunner object. This allows the
@@ -77,8 +77,8 @@ public class RemoteCacheFailoverRunner
      * @param facade
      *            the facade the CompositeCache talks to.
      * @param cacheMgr
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * @param cacheEventLogger
+     * @param elementSerializer
      */
     public RemoteCacheFailoverRunner( RemoteCacheNoWaitFacade facade, ICompositeCacheManager cacheMgr,
                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
@@ -134,7 +134,6 @@ public class RemoteCacheFailoverRunner
             }
             // log if we are alright or not.
         }
-        return;
     }
 
     /**
@@ -447,12 +446,12 @@ public class RemoteCacheFailoverRunner
                     {
                         String message = "Successfully reconnected to PRIMARY remote server.  Substituted primary for failoverNoWait [" + failoverNoWait + "]";
                         log.info( message );
-                        
+
                         if ( facade.getCacheEventLogger() != null )
                         {
                             facade.getCacheEventLogger().logApplicationEvent( "RemoteCacheFailoverRunner", "RestoredPrimary",
                                                                               message );
-                        }                        
+                        }
                     }
                     return true;
                 }

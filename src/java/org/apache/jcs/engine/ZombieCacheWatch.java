@@ -19,10 +19,9 @@ package org.apache.jcs.engine;
  * under the License.
  */
 
-import org.apache.jcs.engine.behavior.ICacheObserver;
-
-import org.apache.jcs.engine.behavior.IZombie;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.behavior.ICacheObserver;
+import org.apache.jcs.engine.behavior.IZombie;
 
 /**
  * Zombie Observer.
@@ -38,7 +37,7 @@ public class ZombieCacheWatch
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
     {
-        return;
+        // empty
     }
 
     /**
@@ -48,7 +47,7 @@ public class ZombieCacheWatch
      */
     public void addCacheListener( ICacheListener obj )
     {
-        return;
+        // empty
     }
 
     /**
@@ -57,7 +56,7 @@ public class ZombieCacheWatch
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
     {
-        return;
+        // empty
     }
 
     /**
@@ -65,6 +64,6 @@ public class ZombieCacheWatch
      */
     public void removeCacheListener( ICacheListener obj )
     {
-        return;
+        // empty
     }
 }

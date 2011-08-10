@@ -237,7 +237,6 @@ public class UDPDiscoveryReceiver
                 log.error( "Problem sleeping", e2 );
             }
         }
-        return;
     }
 
     /**
@@ -348,7 +347,7 @@ public class UDPDiscoveryReceiver
     /**
      * Allows us to set the daemon status on the executor threads
      */
-    class MyThreadFactory
+    protected static class MyThreadFactory
         implements ThreadFactory
     {
         /**

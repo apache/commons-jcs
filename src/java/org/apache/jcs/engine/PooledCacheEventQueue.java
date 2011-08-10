@@ -19,16 +19,10 @@ package org.apache.jcs.engine;
  * under the License.
  */
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
@@ -47,38 +41,10 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
  * light of this, having one thread per region seems unnecessary. This may prove to be false.
  */
 public class PooledCacheEventQueue
-    implements ICacheEventQueue
+    extends AbstractCacheEventQueue
 {
     /** The type of event queue */
     private static final String queueType = POOLED_QUEUE_TYPE;
-
-    /** The logger */
-    protected static final Log log = LogFactory.getLog( PooledCacheEventQueue.class );
-
-    /** time to wait for an event before snuffing the background thread
-    if the queue is empty.   make configurable later */
-    private int waitToDieMillis = 10000;
-
-    /** The listener to process events */
-    protected ICacheListener listener;
-
-    /** The listener id */
-    private long listenerId;
-
-    /** The name of the cache */
-    protected String cacheName;
-
-    /** Max failures before self destruction */
-    protected int maxFailure;
-
-    /** in milliseconds */
-    protected int waitBeforeRetry;
-
-    /** Has the pool been destroyed */
-    private boolean destroyed = true;
-
-    /** Is it working */
-    private boolean working = true;
 
     /** The Thread Pool to execute events with. */
     private ThreadPoolExecutor pool = null;
@@ -153,59 +119,6 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * Returns the time to wait for events before killing the background thread.
-     * <p>
-     * @return the time to wait before shutting down in ms.
-     */
-    public int getWaitToDieMillis()
-    {
-        return waitToDieMillis;
-    }
-
-    /**
-     * Sets the time to wait for events before killing the background thread.
-     * <p>
-     * @param wtdm
-     */
-    public void setWaitToDieMillis( int wtdm )
-    {
-        waitToDieMillis = wtdm;
-    }
-
-    /**
-     * @return String info.
-     */
-    @Override
-    public String toString()
-    {
-        return "CacheEventQueue [listenerId=" + listenerId + ", cacheName=" + cacheName + "]";
-    }
-
-    /**
-     * @return true if not destroyed.
-     */
-    public boolean isAlive()
-    {
-        return ( !destroyed );
-    }
-
-    /**
-     * @param aState
-     */
-    public void setAlive( boolean aState )
-    {
-        destroyed = !aState;
-    }
-
-    /**
-     * @return The listenerId value
-     */
-    public long getListenerId()
-    {
-        return listenerId;
-    }
-
-    /**
      * Destroy the queue. Interrupt all threads.
      */
     public synchronized void destroy()
@@ -222,91 +135,12 @@ public class PooledCacheEventQueue
     }
 
     /**
-     * Constructs a PutEvent for the object and passes it to the event queue.
-     * <p>
-     * @param ce The feature to be added to the PutEvent attribute
-     * @exception IOException
-     */
-    public synchronized void addPutEvent( ICacheElement ce )
-        throws IOException
-    {
-        if ( isWorking() )
-        {
-            put( new PutEvent( ce ) );
-        }
-        else
-        {
-            if ( log.isWarnEnabled() )
-            {
-                log.warn( "Not enqueuing Put Event for [" + this + "] because it's non-functional." );
-            }
-        }
-    }
-
-    /**
-     * @param key The feature to be added to the RemoveEvent attribute
-     * @exception IOException
-     */
-    public synchronized void addRemoveEvent( Serializable key )
-        throws IOException
-    {
-        if ( isWorking() )
-        {
-            put( new RemoveEvent( key ) );
-        }
-        else
-        {
-            if ( log.isWarnEnabled() )
-            {
-                log.warn( "Not enqueuing Remove Event for [" + this + "] because it's non-functional." );
-            }
-        }
-    }
-
-    /**
-     * @exception IOException
-     */
-    public synchronized void addRemoveAllEvent()
-        throws IOException
-    {
-        if ( isWorking() )
-        {
-            put( new RemoveAllEvent() );
-        }
-        else
-        {
-            if ( log.isWarnEnabled() )
-            {
-                log.warn( "Not enqueuing RemoveAll Event for [" + this + "] because it's non-functional." );
-            }
-        }
-    }
-
-    /**
-     * @exception IOException
-     */
-    public synchronized void addDisposeEvent()
-        throws IOException
-    {
-        if ( isWorking() )
-        {
-            put( new DisposeEvent() );
-        }
-        else
-        {
-            if ( log.isWarnEnabled() )
-            {
-                log.warn( "Not enqueuing Dispose Event for [" + this + "] because it's non-functional." );
-            }
-        }
-    }
-
-    /**
      * Adds an event to the queue.
      * <p>
      * @param event
      */
-    private void put( AbstractCacheEvent event )
+    @Override
+    protected void put( AbstractCacheEvent event )
     {
         pool.execute( event );
     }
@@ -375,227 +209,6 @@ public class PooledCacheEventQueue
         stats.setStatElements( ses );
 
         return stats;
-    }
-
-    // /////////////////////////// Inner classes /////////////////////////////
-
-    /**
-     * Retries before declaring failure.
-     * <p>
-     * @author asmuts
-     * @created January 15, 2002
-     */
-    protected abstract class AbstractCacheEvent
-        implements Runnable
-    {
-        /** Times failed to process */
-        int failures = 0;
-
-        /** Has the event been processed */
-        boolean done = false;
-
-        /**
-         * Main processing method for the AbstractCacheEvent object. It calls the abstract doRun
-         * method that all concrete instances must implement.
-         */
-        public void run()
-        {
-            try
-            {
-                doRun();
-            }
-            catch ( IOException e )
-            {
-                if ( log.isWarnEnabled() )
-                {
-                    log.warn( e );
-                }
-                if ( ++failures >= maxFailure )
-                {
-                    if ( log.isWarnEnabled() )
-                    {
-                        log.warn( "Error while running event from Queue: " + this
-                            + ". Dropping Event and marking Event Queue as non-functional." );
-                    }
-                    setWorking( false );
-                    setAlive( false );
-                    return;
-                }
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Error while running event from Queue: " + this + ". Retrying..." );
-                }
-                try
-                {
-                    Thread.sleep( waitBeforeRetry );
-                    run();
-                }
-                catch ( InterruptedException ie )
-                {
-                    if ( log.isErrorEnabled() )
-                    {
-                        log.warn( "Interrupted while sleeping for retry on event " + this + "." );
-                    }
-                    setWorking( false );
-                    setAlive( false );
-                }
-            }
-        }
-
-        /**
-         * @exception IOException
-         */
-        protected abstract void doRun()
-            throws IOException;
-    }
-
-    /**
-     * An event that puts an item to a ICacheListener
-     */
-    private class PutEvent
-        extends AbstractCacheEvent
-    {
-        /** The payload */
-        private final ICacheElement ice;
-
-        /**
-         * Constructor for the PutEvent object
-         * @param ice
-         * @exception IOException
-         */
-        PutEvent( ICacheElement ice )
-            throws IOException
-        {
-            this.ice = ice;
-        }
-
-        /**
-         * Tells the ICacheListener to handle the put.
-         * <p>
-         * @exception IOException
-         */
-        @Override
-        protected void doRun()
-            throws IOException
-        {
-            listener.handlePut( ice );
-        }
-
-        /** @return debugging info */
-        @Override
-        public String toString()
-        {
-            return new StringBuffer( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
-                .append( ice.getVal() ).toString();
-        }
-    }
-
-    /**
-     * An event that knows how to call remove on an ICacheListener
-     */
-    private class RemoveEvent
-        extends AbstractCacheEvent
-    {
-        /** The payload, the key to remove */
-        private final Serializable key;
-
-        /**
-         * Constructor for the RemoveEvent object
-         * @param key
-         * @exception IOException
-         */
-        RemoveEvent( Serializable key )
-            throws IOException
-        {
-            this.key = key;
-        }
-
-        /**
-         * Calls remove on the listener.
-         * <p>
-         * @exception IOException
-         */
-        @Override
-        protected void doRun()
-            throws IOException
-        {
-            listener.handleRemove( cacheName, key );
-        }
-
-        /** @return debugging info */
-        @Override
-        public String toString()
-        {
-            return new StringBuffer( "RemoveEvent for " ).append( key ).toString();
-        }
-    }
-
-    /**
-     * An event that knows how to call remove all on an ICacheListener
-     */
-    protected class RemoveAllEvent
-        extends AbstractCacheEvent
-    {
-        /**
-         * Call removeAll on the listener.
-         * <p>
-         * @exception IOException
-         */
-        @Override
-        protected void doRun()
-            throws IOException
-        {
-            listener.handleRemoveAll( cacheName );
-        }
-
-        /** @return debugging info */
-        @Override
-        public String toString()
-        {
-            return "RemoveAllEvent";
-        }
-    }
-
-    /**
-     * The Event put into the queue for dispose requests.
-     */
-    protected class DisposeEvent
-        extends AbstractCacheEvent
-    {
-        /**
-         * Called when gets to the end of the queue
-         * <p>
-         * @exception IOException
-         */
-        @Override
-        protected void doRun()
-            throws IOException
-        {
-            listener.handleDispose( cacheName );
-        }
-
-        /** @return debugging info */
-        @Override
-        public String toString()
-        {
-            return "DisposeEvent";
-        }
-    }
-
-    /**
-     * @return whether or not the queue is functional
-     */
-    public boolean isWorking()
-    {
-        return working;
-    }
-
-    /**
-     * @param isWorkingArg whether the queue is functional
-     */
-    public void setWorking( boolean isWorkingArg )
-    {
-        working = isWorkingArg;
     }
 
     /**
