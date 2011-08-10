@@ -21,12 +21,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.apache</groupId>
-     <artifactId>apache</artifactId>
-     <version>9</version>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-parent</artifactId>
+    <version>21</version>
   </parent>
   <groupId>org.apache.jcs</groupId>
-  <artifactId>jcs</artifactId>
+  <artifactId>commons-jcs</artifactId>
   <packaging>jar</packaging>
   <version>1.4-SNAPSHOT</version>
   <name>Commons JCS</name>
@@ -232,7 +232,7 @@
   <distributionManagement>
 
    <!--
-     This POM's parent POM (the Apache root POM) provides repositories. Unfortunately,
+     This POM's parent POM (the Apache Commons POM) provides repositories. Unfortunately,
      this allows for accidental deployments. So we disable them here by providing
      a dummy repository. Use "mvn -Prc deploy" (Apache snapshot repository) or
      "mvn -Prelease deploy" (Apache release repository), if you really want to deploy.
@@ -242,10 +242,16 @@
      <name>Dummy to avoid accidental deploys</name>
      <url />
    </repository>
+   <site>
+      <id>stagingSite</id>
+      <name>Apache Staging Website</name>
+      <url>scp://people.apache.org/www/commons.apache.org/jcs/</url>
+   </site>
   </distributionManagement>
 
   <issueManagement>
-    <url>http://issues.apache.org/jira/</url>
+    <system>jira</system>
+    <url>http://issues.apache.org/jira/browse/JCS</url>
   </issueManagement>
 
   <scm>
@@ -256,25 +262,25 @@
 
   <mailingLists>
     <mailingList>
-      <name>JCS User List</name>
-      <subscribe>jcs-users-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>jcs-users-unsubscribe@jakarta.apache.org</unsubscribe>
+      <name>Jakarta JCS User List Archive</name>
+      <subscribe></subscribe>
+      <unsubscribe></unsubscribe>
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-users/</archive>
     </mailingList>
     <mailingList>
-      <name>JCS Developer List</name>
-      <subscribe>jcs-dev-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>jcs-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <name>Jakarta JCS Developer List Archive</name>
+      <subscribe></subscribe>
+      <unsubscribe></unsubscribe>
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-jcs-dev/</archive>
     </mailingList>
     <mailingList>
-      <name>OLD User list</name>
+      <name>Old User List Archive</name>
       <subscribe></subscribe>
       <unsubscribe></unsubscribe>
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-user/</archive>
     </mailingList>
     <mailingList>
-      <name>OLD Developer list</name>
+      <name>Old Developer List Archive</name>
       <subscribe></subscribe>
       <unsubscribe></unsubscribe>
       <archive>http://mail-archives.apache.org/mod_mbox/jakarta-turbine-jcs-dev/</archive>
@@ -306,6 +312,12 @@
       <email>tsavo@ifilm.com</email>
       <organization>IFilm</organization>
     </developer>
+    <developer>
+      <id>tv</id>
+      <name>Thomas Vandahl</name>
+      <email>tv@apache.org</email>
+      <organization />
+    </developer>
   </developers>
 
   <contributors>
@@ -316,10 +328,6 @@
     <contributor>
       <name>Michael Stevens</name>
       <email>mstevens@etla.org</email>
-    </contributor>
-    <contributor>
-      <name>Thomas Vandahl</name>
-      <email>tv@apache.org</email>
     </contributor>
   </contributors>
 
@@ -336,20 +344,11 @@
         </testResource>
     </testResources>
     <plugins>
-      <!-- TODO: later use toolchain support to do compilation on an external JDK 1.3+ compiler -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${maven.compile.source}</source>
-          <target>${maven.compile.target}</target>
-        </configuration>
-      </plugin>
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <argLine>-Xmx256m</argLine>
+            <argLine>-Xmx256m -Djava.security.manager -Djava.security.policy=${basedir}/src/conf/cache.policy</argLine>
             <forkMode>pertest</forkMode>
             <includes>
                 <include>**/*UnitTest.java</include>
@@ -411,37 +410,21 @@
             </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>src/assembly/bin.xml</descriptor>
+            <descriptor>src/assembly/src.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <reporting>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration> 
-          <aggregate>true</aggregate>
-        </configuration> 
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jxr-plugin</artifactId>
-        <configuration> 
-          <aggregate>true</aggregate>
-        </configuration> 
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <!-- Exclude the navigation file for Maven 1 sites
-               and the changes file used by the changes-plugin,
-               as they interfere with the site generation. -->
-          <moduleExcludes>
-            <xdoc>navigation.xml,changes.xml</xdoc>
-          </moduleExcludes>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
@@ -454,6 +437,37 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>rat-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <xmlPath>${basedir}/src/changes/changes.xml</xmlPath>
+          <issueLinkTemplate>%URL%/%ISSUE%</issueLinkTemplate>
+          <!-- TODO: <onlyCurrentVersion>true</onlyCurrentVersion> -->
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>changes-report</report>
+              <report>jira-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <targetJdk>1.5</targetJdk>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.3.2</version>
       </plugin>
     </plugins>
   </reporting>
@@ -590,6 +604,17 @@
       other protocols like scpexe, which some users prefer over scp.
     -->
     <jcs.deployment.protocol>scp</jcs.deployment.protocol>
+
+    <commons.componentid>jcs</commons.componentid>
+    <commons.release.version>1.5</commons.release.version>
+    <!-- The RC version used in the staging repository URL. -->
+    <commons.rc.version>RC1</commons.rc.version>
+    <commons.jira.id>JCS</commons.jira.id>
+    <!-- Ensure copies work OK (can be removed later when this is in parent POM) -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <commons.encoding>UTF-8</commons.encoding>
+    <commons.javadoc.java.link>http://download.oracle.com/javase/1.5.0/docs/api/</commons.javadoc.java.link>
 
   </properties>
 
