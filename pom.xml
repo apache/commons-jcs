@@ -245,7 +245,7 @@
    <site>
       <id>stagingSite</id>
       <name>Apache Staging Website</name>
-      <url>scp://people.apache.org/www/commons.apache.org/jcs/</url>
+      <url>${jcs.deployment.protocol}://people.apache.org/www/commons.apache.org/jcs/</url>
    </site>
   </distributionManagement>
 
@@ -603,7 +603,7 @@
       Make the deployment protocol pluggable. This allows to switch to
       other protocols like scpexe, which some users prefer over scp.
     -->
-    <jcs.deployment.protocol>scp</jcs.deployment.protocol>
+    <jcs.deployment.protocol>scpexe</jcs.deployment.protocol>
 
     <commons.componentid>jcs</commons.componentid>
     <commons.release.version>1.5</commons.release.version>
