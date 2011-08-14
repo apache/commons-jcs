@@ -301,7 +301,9 @@ public class FileDiskCacheUnitTest
 
         for ( int i = maxNumberOfFiles - 1; i >= 0; i-- )
         {
-            SleepUtil.sleepAtLeast( 5 );
+            // tv: The Mac file system has 1 sec resolution, so this is the minimum value
+            // to make this test work.
+            SleepUtil.sleepAtLeast( 500 );
             ICacheElement ice = diskCache.get( "key" + i );
             assertNotNull("Value of key" + i + " should not be null", ice);
         }
