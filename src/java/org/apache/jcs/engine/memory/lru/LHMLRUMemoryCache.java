@@ -125,23 +125,24 @@ public class LHMLRUMemoryCache
     public synchronized ICacheElement get( Serializable key )
         throws IOException
     {
-        ICacheElement ce = null;
+        MemoryElementDescriptor me = null;
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "getting item from cache " + cacheName + " for key " + key );
         }
 
-        ce = map.get( key ).ce;
+        me = map.get( key );
 
-        if ( ce != null )
+        if ( me != null )
         {
             hitCnt++;
-            ce.getElementAttributes().setLastAccessTimeNow();
+            me.ce.getElementAttributes().setLastAccessTimeNow();
             if ( log.isDebugEnabled() )
             {
                 log.debug( cacheName + ": LRUMemoryCache hit for " + key );
             }
+            return me.ce;
         }
         else
         {
@@ -149,7 +150,7 @@ public class LHMLRUMemoryCache
             log.debug( cacheName + ": LRUMemoryCache miss for " + key );
         }
 
-        return ce;
+        return null;
     }
 
     /**
