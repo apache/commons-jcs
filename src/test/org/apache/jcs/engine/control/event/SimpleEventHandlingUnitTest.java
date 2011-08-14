@@ -39,6 +39,7 @@ public class SimpleEventHandlingUnitTest
     /**
      * Test setup with expected configuration parameters.
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestSimpleEventHandling.ccf" );
@@ -174,7 +175,7 @@ public class SimpleEventHandlingUnitTest
     /**
      * Simple event counter used to verify test results.
      */
-    public class MyEventHandler
+    public static class MyEventHandler
         implements IElementEventHandler
     {
         /** times spool called */

@@ -416,12 +416,19 @@ public class LateralTCPService
             {
                 System.out.println( "enter mesage:" );
                 message = br.readLine();
+
+                if (message == null)
+                {
+                    notDone = false;
+                    continue;
+                }
+
                 CacheElement ce = new CacheElement( "test", "test", message );
                 LateralElementDescriptor led = new LateralElementDescriptor( ce );
                 sender.send( led );
             }
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             System.out.println( e.toString() );
         }

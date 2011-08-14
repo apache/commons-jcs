@@ -51,7 +51,7 @@ public class JCSWorkerUnitTest
 
             public Object doWork()
             {
-                Object results = new Long( ++timesCalled );
+                Object results = Long.valueOf( ++timesCalled );
                 return results;
             }
         };
@@ -59,11 +59,11 @@ public class JCSWorkerUnitTest
         String key = "abc";
 
         Long result = (Long) cachingWorker.getResult( key, helper );
-        assertEquals( "Called the wrong number of times", new Long( 1 ), result );
+        assertEquals( "Called the wrong number of times", Long.valueOf( 1 ), result );
 
         // should get it fromthe cache.
         Long result2 = (Long) cachingWorker.getResult( key, helper );
-        assertEquals( "Called the wrong number of times", new Long( 1 ), result2 );
+        assertEquals( "Called the wrong number of times", Long.valueOf( 1 ), result2 );
 
     }
 

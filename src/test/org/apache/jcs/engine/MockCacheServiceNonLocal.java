@@ -118,7 +118,7 @@ public class MockCacheServiceNonLocal
     {
         lastUpdate = item;
         updateRequestList.add( item );
-        updateRequestIdList.add( new Long( requesterId ) );
+        updateRequestIdList.add( Long.valueOf( requesterId ) );
     }
 
     /**

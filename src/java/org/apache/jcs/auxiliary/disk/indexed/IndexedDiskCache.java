@@ -1665,8 +1665,11 @@ public class IndexedDiskCache
      * <p>
      */
     protected static final class PositionComparator
-        implements Comparator<IndexedDiskElementDescriptor>
+        implements Comparator<IndexedDiskElementDescriptor>, Serializable
     {
+        /** serialVersionUID */
+        private static final long serialVersionUID = -8387365338590814113L;
+
         /**
          * Compares two descriptors based on position.
          * <p>
@@ -1698,6 +1701,7 @@ public class IndexedDiskCache
      */
     public class LRUMap
         extends LRUMapJCS<Serializable, IndexedDiskElementDescriptor>
+        // implements Serializable
     {
         /** Don't change */
         private static final long serialVersionUID = 4955079991472142198L;

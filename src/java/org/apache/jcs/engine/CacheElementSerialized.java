@@ -20,6 +20,7 @@ package org.apache.jcs.engine;
  */
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -113,13 +114,14 @@ public class CacheElementSerialized
      * <p>
      * @return debugging string.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
         buf.append( "\n CacheElementSerialized: " );
         buf.append( "\n CacheName = [" + getCacheName() + "]" );
         buf.append( "\n Key = [" + getKey() + "]" );
-        buf.append( "\n SerializedValue = " + getSerializedValue() );
+        buf.append( "\n SerializedValue = " + Arrays.toString(getSerializedValue()) );
         buf.append( "\n ElementAttributes = " + getElementAttributes() );
         return buf.toString();
     }

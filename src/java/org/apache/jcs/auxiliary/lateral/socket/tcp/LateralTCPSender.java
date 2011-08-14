@@ -76,7 +76,7 @@ public class LateralTCPSender
     private final static int RESET_FREQUENCY = 70;
 
     /** Use to synchronize multiple threads that may be trying to get. */
-    private Object getLock = new int[0];
+    private final Object getLock = new int[0];
 
     /**
      * Constructor for the LateralTCPSender object.
@@ -305,10 +305,7 @@ public class LateralTCPSender
                     catch ( IOException ioe )
                     {
                         String message = "Could not open ObjectInputStream to " + socket;
-                        if ( socket != null )
-                        {
-                            message += " SoTimeout [" + socket.getSoTimeout() + "] Connected [" + socket.isConnected() + "]";
-                        }
+                        message += " SoTimeout [" + socket.getSoTimeout() + "] Connected [" + socket.isConnected() + "]";
                         log.error( message, ioe );
                         throw ioe;
                     }

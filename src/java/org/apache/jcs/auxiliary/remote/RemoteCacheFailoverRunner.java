@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
@@ -425,7 +427,7 @@ public class RemoteCacheFailoverRunner
                             }
                         }
                     }
-                    catch ( Exception e )
+                    catch ( IOException e )
                     {
                         // TODO, should try again, or somehow stop the listener
                         log.error(
@@ -473,7 +475,7 @@ public class RemoteCacheFailoverRunner
                 }
             }
         }
-        catch ( Exception ex )
+        catch ( NumberFormatException ex )
         {
             log.error( ex );
         }

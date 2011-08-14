@@ -36,6 +36,7 @@ public class JCSLightLoadUnitTest
      * Test setup
      * @throws Exception
      */
+    @Override
     public void setUp()
         throws Exception
     {
@@ -90,10 +91,7 @@ public class JCSLightLoadUnitTest
         for ( int i = items; i > 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
         // test removal

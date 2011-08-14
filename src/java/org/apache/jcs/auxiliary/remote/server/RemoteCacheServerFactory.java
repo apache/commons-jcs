@@ -383,10 +383,6 @@ public class RemoteCacheServerFactory
     static void shutdownImpl( String host, int port )
         throws IOException
     {
-        if ( remoteCacheServer == null )
-        {
-            return;
-        }
         synchronized ( RemoteCacheServer.class )
         {
             if ( remoteCacheServer == null )

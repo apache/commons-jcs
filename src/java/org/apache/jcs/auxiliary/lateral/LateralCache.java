@@ -169,7 +169,7 @@ public class LateralCache
         {
             elements = lateralCacheService.getMatching( cacheName, pattern );
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( e );
             handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );

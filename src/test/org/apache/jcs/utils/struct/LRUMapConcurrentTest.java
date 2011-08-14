@@ -66,6 +66,7 @@ public class LRUMapConcurrentTest
         final LRUMap map = new LRUMap( 2000 );
         suite.addTest( new LRUMapConcurrentTest( "conc1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -74,6 +75,7 @@ public class LRUMapConcurrentTest
         } );
         suite.addTest( new LRUMapConcurrentTest( "conc2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -82,6 +84,7 @@ public class LRUMapConcurrentTest
         } );
         suite.addTest( new LRUMapConcurrentTest( "conc3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -94,6 +97,7 @@ public class LRUMapConcurrentTest
         final LRUMap map2 = new LRUMap( max2 );
         suite.addTest( new LRUMapConcurrentTest( "concB1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -102,6 +106,7 @@ public class LRUMapConcurrentTest
         } );
         suite.addTest( new LRUMapConcurrentTest( "concB1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -129,10 +134,7 @@ public class LRUMapConcurrentTest
         for ( int i = items - 1; i >= 0; i-- )
         {
             String res = (String) map.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
         // test removal
@@ -169,10 +171,7 @@ public class LRUMapConcurrentTest
         for ( int i = total - 1; i >= 0; i-- )
         {
             String res = (String) map.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
         System.out.println( map.getStatistics() );
@@ -211,10 +210,7 @@ public class LRUMapConcurrentTest
         for ( int i = ( total * 2 ) - 1; i >= total; i-- )
         {
             String res = (String) map.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
         System.out.println( map.getStatistics() );
@@ -238,12 +234,8 @@ public class LRUMapConcurrentTest
         for ( int i = items - 1; i >= 0; i-- )
         {
             String res = (String) map.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
-
     }
 
     /**
@@ -265,15 +257,11 @@ public class LRUMapConcurrentTest
         for ( int i = end - 1; i >= start; i-- )
         {
             String res = (String) map.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
         // test removal
         map.remove( start + ":key" );
         assertNull( map.get( start + ":key" ) );
-
     }
 }

@@ -87,36 +87,38 @@ public class ElementEventQueue
     /**
      * Event Q is empty.
      */
-    public synchronized void destroy()
+    public void destroy()
     {
-        if ( !destroyed )
+        synchronized ( queueLock )
         {
-            destroyed = true;
-
-            // synchronize on queue so the thread will not wait forever,
-            // and then interrupt the QueueProcessor
-            synchronized ( queueLock )
+            if ( !destroyed )
             {
+                destroyed = true;
+
+                // synchronize on queue so the thread will not wait forever,
+                // and then interrupt the QueueProcessor
                 processorThread.interrupt();
-            }
+                processorThread = null;
 
-            processorThread = null;
-
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Element event queue destroyed: " + this );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Element event queue destroyed: " + this );
+                }
             }
         }
     }
 
     /**
-     * Kill the processor thread and indicate that the queue is detroyed and no longer alive, but it
+     * Kill the processor thread and indicate that the queue is destroyed and no longer alive, but it
      * can still be working.
      */
-    public synchronized void stopProcessing()
+    public void stopProcessing()
     {
-        destroyed = true;
-        processorThread = null;
+        synchronized ( queueLock )
+        {
+            destroyed = true;
+            processorThread = null;
+        }
     }
 
     /**

@@ -449,6 +449,7 @@ public class FileDiskCache
     {
         boolean success = file.delete();
 
+        // TODO: The following should be identical to success == false, but it isn't
         if ( file.exists() )
         {
             int maxRetries = diskFileCacheAttributes.getMaxRetriesOnDelete();

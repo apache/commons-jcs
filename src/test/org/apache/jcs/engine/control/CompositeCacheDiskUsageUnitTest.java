@@ -291,7 +291,7 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @author Aaron Smuts
      */
-    public class MockAuxCache
+    public static class MockAuxCache
         extends AbstractAuxiliaryCache
     {
         /** Don't change */

@@ -253,7 +253,7 @@ public class MySQLDiskCacheManager
      * <p>
      * @author Aaron Smuts
      */
-    private class OptimizerTask
+    private static class OptimizerTask
         extends TimerTask
     {
         /** Handles optimization */

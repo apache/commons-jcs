@@ -39,7 +39,7 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /** Shared listener base. */
 public abstract class AbsractRemoteCacheListener
-    implements IRemoteCacheListener
+    implements IRemoteCacheListener, Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = 32442324243243L;

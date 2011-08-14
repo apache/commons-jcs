@@ -21,7 +21,7 @@ public class FileDiskCacheFactory
 
     /** The manager used by this factory instance */
     private FileDiskCacheManager diskFileCacheManager;
-    
+
     /**
      * Creates a manager if we don't have one, and then uses the manager to create the cache. The
      * same factory will be called multiple times by the composite cache to create a cache for each
@@ -37,6 +37,10 @@ public class FileDiskCacheFactory
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         FileDiskCacheAttributes idfca = (FileDiskCacheAttributes) attr;
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Creating DiskFileCache for attributes = " + idfca );
+        }
         synchronized( this )
         {
             if ( diskFileCacheManager == null )
@@ -47,12 +51,8 @@ public class FileDiskCacheFactory
                 }
                 diskFileCacheManager = new FileDiskCacheManager( idfca, cacheEventLogger, elementSerializer );
             }
+            return diskFileCacheManager.getCache( idfca );
         }
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Creating DiskFileCache for attributes = " + idfca );
-        }
-        return diskFileCacheManager.getCache( idfca );
     }
 
     /**

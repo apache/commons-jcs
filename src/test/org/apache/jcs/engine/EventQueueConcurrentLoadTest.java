@@ -45,13 +45,13 @@ public class EventQueueConcurrentLoadTest
     private static CacheListenerImpl listen = null;
 
     /** max failure setting */
-    private int maxFailure = 3;
+    private final int maxFailure = 3;
 
     /** time to wait before rtrying on failure. */
-    private int waitBeforeRetry = 100;
+    private final int waitBeforeRetry = 100;
 
     /** very small idle time */
-    private int idleTime = 2;
+    private final int idleTime = 2;
 
     /**
      * Constructor for the TestDiskCache object.
@@ -82,6 +82,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -91,6 +92,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -100,6 +102,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunRemoveTest1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -109,6 +112,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testStopProcessing1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -118,6 +122,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutTest4" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -127,6 +132,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunRemoveTest2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -136,6 +142,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testStopProcessing2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -145,6 +152,7 @@ public class EventQueueConcurrentLoadTest
 
         suite.addTest( new EventQueueConcurrentLoadTest( "testRunPutDelayTest" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -158,6 +166,7 @@ public class EventQueueConcurrentLoadTest
     /**
      * Test setup. Create the static queue to be used by all tests
      */
+    @Override
     public void setUp()
     {
         listen = new CacheListenerImpl();
@@ -285,7 +294,7 @@ public class EventQueueConcurrentLoadTest
     /**
      * This is a dummy cache listener to use when testing the event queue.
      */
-    private class CacheListenerImpl
+    private static class CacheListenerImpl
         implements ICacheListener
     {
         /**

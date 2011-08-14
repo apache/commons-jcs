@@ -53,7 +53,7 @@ public class BlockDiskElementDescriptorUnitTest
         for ( int i = 0; i < numElements; i++ )
         {
             BlockDiskElementDescriptor descriptor = new BlockDiskElementDescriptor();
-            descriptor.setKey( new Integer( i ) );
+            descriptor.setKey( Integer.valueOf( i ) );
             descriptor.setBlocks( new int[] { 1, 2 } );
             elements[i] = descriptor;
         }

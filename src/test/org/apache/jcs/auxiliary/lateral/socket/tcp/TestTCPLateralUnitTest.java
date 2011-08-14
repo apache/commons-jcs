@@ -292,7 +292,7 @@ public class TestTCPLateralUnitTest
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
             // add the item to the listeners cache
-            ICacheElement element = new CacheElement( "test", keyprefix1 + String.valueOf( i ), new Integer( i ) );
+            ICacheElement element = new CacheElement( "test", keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
             cacheMgr.getCache().update( element );
         }
 

@@ -274,14 +274,14 @@ public class CacheAccessUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
-            access.put( keyprefix1 + String.valueOf( i ), new Integer( i ) );
+            access.put( keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
         }
 
         int numToInsertPrefix2 = 50;
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix2; i++ )
         {
-            access.put( keyprefix2 + String.valueOf( i ), new Integer( i ) );
+            access.put( keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
         }
 
         Map result1 = access.getMatching( keyprefix1 + ".+" );
@@ -331,14 +331,14 @@ public class CacheAccessUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
-            access.put( keyprefix1 + String.valueOf( i ), new Integer( i ) );
+            access.put( keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
         }
 
         int numToInsertPrefix2 = 50;
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix2; i++ )
         {
-            access.put( keyprefix2 + String.valueOf( i ), new Integer( i ) );
+            access.put( keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
         }
 
         Map result1 = access.getMatchingCacheElements( keyprefix1 + "\\S+" );

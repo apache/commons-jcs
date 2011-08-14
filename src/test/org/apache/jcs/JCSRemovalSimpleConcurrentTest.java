@@ -38,8 +38,9 @@ public class JCSRemovalSimpleConcurrentTest
     /**
      * Test setup
      * <p>
-     * @throws Exception 
+     * @throws Exception
      */
+    @Override
     public void setUp()
         throws Exception
     {
@@ -80,10 +81,7 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             String res = (String) jcs.get( "key:" + i + ":anotherpart" );
-            if ( res == null )
-            {
-                assertNotNull( "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats(), res );
-            }
+            assertNotNull( "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats(), res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
 
@@ -121,10 +119,7 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
 
@@ -162,10 +157,7 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
 
@@ -210,10 +202,7 @@ public class JCSRemovalSimpleConcurrentTest
         for ( int i = count; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
 

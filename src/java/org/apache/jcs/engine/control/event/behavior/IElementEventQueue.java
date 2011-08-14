@@ -20,13 +20,14 @@ package org.apache.jcs.engine.control.event.behavior;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Interface for an element event queue. An event queue is used to propagate
  * ordered element events in one region.
  *
  */
-public interface IElementEventQueue
+public interface IElementEventQueue extends Serializable
 {
 
     /**

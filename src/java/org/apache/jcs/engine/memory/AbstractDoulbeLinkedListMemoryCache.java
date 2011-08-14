@@ -551,7 +551,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     /**
      * iteration aid
      */
-    public class IteratorWrapper
+    public static class IteratorWrapper
         implements Iterator<Entry<Serializable, MemoryElementDescriptor>>
     {
         /** The internal iterator */
@@ -606,7 +606,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     /**
      * @author Aaron Smuts
      */
-    public class MapEntryWrapper<K>
+    public static class MapEntryWrapper<K>
         implements Map.Entry<K, ICacheElement>
     {
         /** The internal entry */

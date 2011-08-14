@@ -25,6 +25,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -191,7 +192,7 @@ public class BlockDiskKeyStore
                     + numKeys + " keys.  Key file length [" + keyFile.length() + "]" );
             }
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( logCacheName + "Problem storing keys.", e );
         }
@@ -374,7 +375,7 @@ public class BlockDiskKeyStore
     }
 
     /**
-     * Class for recylcing and lru. This implments the LRU overflow callback, so we can mark the
+     * Class for recycling and lru. This implements the LRU overflow callback, so we can mark the
      * blocks as free.
      */
     public class LRUMap
@@ -418,7 +419,7 @@ public class BlockDiskKeyStore
             if ( log.isDebugEnabled() )
             {
                 log.debug( logCacheName + "Removing key: [" + key + "] from key store." );
-                log.debug( logCacheName + "Key store size: [" + this.size() + "]." );
+                log.debug( logCacheName + "Key store size: [" + super.size() + "]." );
             }
         }
     }

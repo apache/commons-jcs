@@ -46,7 +46,7 @@ class IndexedDisk
     private final String filepath;
 
     /** The data file. */
-    private RandomAccessFile raf;
+    private final RandomAccessFile raf;
 
     /** read buffer */
     private final byte[] buffer = new byte[16384]; // 16K
@@ -55,7 +55,7 @@ class IndexedDisk
      * Constructor for the Disk object
      * <p>
      * @param file
-     * @param elementSerializer 
+     * @param elementSerializer
      * @exception FileNotFoundException
      */
     public IndexedDisk( File file, IElementSerializer elementSerializer )
@@ -181,7 +181,11 @@ class IndexedDisk
         if ( log.isTraceEnabled() )
         {
             log.trace( "write> pos=" + pos );
-            log.trace( raf + " -- data.length = " + data.length );
+
+            synchronized (this)
+            {
+                log.trace( raf + " -- data.length = " + data.length );
+            }
         }
 
         if ( data.length != ded.len )
@@ -253,28 +257,8 @@ class IndexedDisk
         {
             log.debug( "Resetting Indexed File [" + filepath + "]" );
         }
-        raf.close();
-        File f = new File( filepath );
-        int i = 0;
-        for ( ; i < 10 && !f.delete(); i++ )
-        {
-            try
-            {
-                Thread.sleep( 1000 );
-            }
-            catch ( InterruptedException ex )
-            {
-                // swallow
-            }
-            log.warn( "Failed to delete " + f.getName() + " " + i );
-        }
-        if ( i == 10 )
-        {
-            IllegalStateException ex = new IllegalStateException( "Failed to delete " + f.getName() );
-            log.error( ex );
-            throw ex;
-        }
-        raf = new RandomAccessFile( filepath, "rw" );
+        raf.setLength(0);
+        raf.seek(0);
     }
 
     /**
@@ -283,7 +267,7 @@ class IndexedDisk
      * @param length the new length of the file
      * @throws IOException
      */
-    protected void truncate( long length )
+    protected synchronized void truncate( long length )
         throws IOException
     {
         if ( log.isInfoEnabled() )
@@ -292,7 +276,7 @@ class IndexedDisk
         }
         raf.setLength( length );
     }
-    
+
     /**
      * This is used for debugging.
      * <p>

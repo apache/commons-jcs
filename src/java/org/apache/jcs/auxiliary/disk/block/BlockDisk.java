@@ -58,7 +58,7 @@ public class BlockDisk
     private int numberOfBlocks = 0;
 
     /** Empty blocks that can be reused. */
-    private SingleLinkedList emptyBlocks = new SingleLinkedList();
+    private final SingleLinkedList emptyBlocks = new SingleLinkedList();
 
     /** The serializer. Uses a standard serializer by default. */
     protected IElementSerializer elementSerializer = new StandardSerializer();
@@ -67,7 +67,7 @@ public class BlockDisk
     private final String filepath;
 
     /** The file handle. */
-    private RandomAccessFile raf;
+    private final RandomAccessFile raf;
 
     /** How many bytes have we put to disk */
     private long putBytes = 0;
@@ -79,7 +79,7 @@ public class BlockDisk
      * Constructor for the Disk object
      * <p>
      * @param file
-     * @param elementSerializer 
+     * @param elementSerializer
      * @exception FileNotFoundException
      */
     public BlockDisk( File file, IElementSerializer elementSerializer )
@@ -90,7 +90,7 @@ public class BlockDisk
         {
             log.info( "Used default block size [" + DEFAULT_BLOCK_SIZE_BYTES + "]" );
         }
-        this.elementSerializer = elementSerializer;        
+        this.elementSerializer = elementSerializer;
     }
 
     /**
@@ -112,13 +112,13 @@ public class BlockDisk
         }
         this.blockSizeBytes = blockSizeBytes;
     }
-    
+
     /**
      * Creates the file and set the block size in bytes.
      * <p>
      * @param file
      * @param blockSizeBytes
-     * @param elementSerializer 
+     * @param elementSerializer
      * @throws FileNotFoundException
      */
     public BlockDisk( File file, int blockSizeBytes, IElementSerializer elementSerializer )
@@ -133,7 +133,7 @@ public class BlockDisk
         }
         this.blockSizeBytes = blockSizeBytes;
 
-        this.elementSerializer = elementSerializer;   
+        this.elementSerializer = elementSerializer;
     }
 
     /**
@@ -163,7 +163,7 @@ public class BlockDisk
         {
             log.debug( "write, total pre-chunking data.length = " + data.length );
         }
-        
+
         this.addToPutBytes( data.length );
         this.incrementPutCount();
 
@@ -173,7 +173,7 @@ public class BlockDisk
         {
             log.debug( "numBlocksNeeded = " + numBlocksNeeded );
         }
-        
+
         int[] blocks = new int[numBlocksNeeded];
 
         // get them from the empty list or take the next one
@@ -298,7 +298,7 @@ public class BlockDisk
         {
             log.debug( "read, total post combination data.length = " + data.length );
         }
-        
+
         return (Serializable) elementSerializer.deSerialize( data );
     }
 
@@ -362,7 +362,7 @@ public class BlockDisk
         {
             for ( short i = 0; i < blocksToFree.length; i++ )
             {
-                emptyBlocks.addLast( new Integer( blocksToFree[i] ) );
+                emptyBlocks.addLast( Integer.valueOf( blocksToFree[i] ) );
             }
         }
     }
@@ -478,7 +478,7 @@ public class BlockDisk
     /**
      * @return Returns the average size of the an element inserted.
      */
-    protected long getAveragePutSizeBytes()
+    protected synchronized long getAveragePutSizeBytes()
     {
         if ( this.putCount == 0 )
         {
@@ -500,6 +500,7 @@ public class BlockDisk
      * <p>
      * @return String with details.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
@@ -521,7 +522,7 @@ public class BlockDisk
         }
         return buf.toString();
     }
-    
+
     /**
      * This is used for debugging.
      * <p>
@@ -530,5 +531,5 @@ public class BlockDisk
     protected String getFilePath()
     {
         return filepath;
-    }    
+    }
 }

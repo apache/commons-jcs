@@ -279,7 +279,7 @@ public class ThreadPoolManager
     }
 
     /**
-     * This will be used if it is not null on initialzation. Setting this post initialization will
+     * This will be used if it is not null on initialization. Setting this post initialization will
      * have no effect.
      * <p>
      * @param props The props to set.
@@ -298,7 +298,7 @@ public class ThreadPoolManager
     }
 
     /**
-     * Intialize the ThreadPoolManager and create all the pools defined in the configuration.
+     * Initialize the ThreadPoolManager and create all the pools defined in the configuration.
      */
     protected void configure()
     {

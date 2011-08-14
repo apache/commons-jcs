@@ -21,6 +21,7 @@ package org.apache.jcs.engine;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -174,7 +175,11 @@ public class ElementAttributes
             attr.createTime = System.currentTimeMillis();
             return attr;
         }
-        catch ( Exception e )
+        catch ( IOException e )
+        {
+            // swallow
+        }
+        catch (ClassNotFoundException e)
         {
             // swallow
         }

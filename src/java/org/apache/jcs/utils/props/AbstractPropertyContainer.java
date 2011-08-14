@@ -127,7 +127,7 @@ public abstract class AbstractPropertyContainer
     /**
      * @return Returns the properties.
      */
-    public Properties getProperties()
+    public synchronized Properties getProperties()
     {
         return properties;
     }
@@ -143,7 +143,7 @@ public abstract class AbstractPropertyContainer
     /**
      * @return Returns the propertiesHeading.
      */
-    public String getPropertiesHeading()
+    public synchronized String getPropertiesHeading()
     {
         return propertiesHeading;
     }

@@ -211,8 +211,6 @@ public class ShrinkerThread
                     }
                 }
             }
-
-            keys = null;
         }
         catch ( Throwable t )
         {

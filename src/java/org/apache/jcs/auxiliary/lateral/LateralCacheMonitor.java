@@ -123,22 +123,19 @@ public class LateralCacheMonitor
                     }
                 }
 
-                if ( alright )
+                synchronized ( this )
                 {
-                    synchronized ( this )
+                    if ( alright )
                     {
-                        if ( alright )
+                        // Failure driven mode.
+                        try
                         {
-                            // Failure driven mode.
-                            try
-                            {
-                                wait();
-                                // wake up only if there is an error.
-                            }
-                            catch ( InterruptedException ignore )
-                            {
-                                //no op, this is expected
-                            }
+                            wait();
+                            // wake up only if there is an error.
+                        }
+                        catch ( InterruptedException ignore )
+                        {
+                            //no op, this is expected
                         }
                     }
                 }

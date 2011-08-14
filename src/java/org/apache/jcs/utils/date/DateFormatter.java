@@ -1,6 +1,5 @@
 package org.apache.jcs.utils.date;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -24,10 +23,10 @@ public final class DateFormatter
     private static final String dddHHmmssFormat = "DDDHHmmss";
 
     /** dddHHmmFormatter */
-    private static final DateFormat dddHHmmFormatter = new ThreadSafeSimpleDateFormat( dddHHmmFormat );
+    private static final ThreadSafeSimpleDateFormat dddHHmmFormatter = new ThreadSafeSimpleDateFormat( dddHHmmFormat );
 
     /** dddHHmmssFormatter */
-    private static final DateFormat dddHHmmssFormatter = new ThreadSafeSimpleDateFormat( dddHHmmssFormat );
+    private static final ThreadSafeSimpleDateFormat dddHHmmssFormatter = new ThreadSafeSimpleDateFormat( dddHHmmssFormat );
 
 
     /**

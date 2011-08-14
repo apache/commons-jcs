@@ -56,7 +56,7 @@ public class SingleLinkedListUnitTest
         int numToPut = 100;
         for ( int i = 0; i < numToPut; i++ )
         {
-            list.addLast( new Integer( i ) );
+            list.addLast( Integer.valueOf( i ) );
         }
 
         // VERIFY
@@ -65,7 +65,7 @@ public class SingleLinkedListUnitTest
         for ( int i = 0; i < numToPut; i++ )
         {
             Object result = list.takeFirst();
-            assertEquals( "Wrong value returned.", new Integer( i ), result );
+            assertEquals( "Wrong value returned.", Integer.valueOf( i ), result );
         }
 
         // DO WORK
@@ -87,7 +87,7 @@ public class SingleLinkedListUnitTest
         int numToPut = 100;
         for ( int i = 0; i < numToPut; i++ )
         {
-            list.addLast( new Integer( i ) );
+            list.addLast( Integer.valueOf( i ) );
         }
 
         // VERIFY

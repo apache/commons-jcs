@@ -71,7 +71,7 @@ public class CompositeCacheUnitTest
         int numToInsert = 10;
         for ( int i = 0; i < numToInsert; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), new Integer( i ) );
+            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -110,7 +110,7 @@ public class CompositeCacheUnitTest
         int numToInsert = 10;
         for ( int i = 0; i < numToInsert; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), new Integer( i ) );
+            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -153,7 +153,7 @@ public class CompositeCacheUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, keyprefix1 + String.valueOf( i ), new Integer( i ) );
+            ICacheElement element = new CacheElement( cacheName, keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -161,7 +161,7 @@ public class CompositeCacheUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix2; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, keyprefix2 + String.valueOf( i ), new Integer( i ) );
+            ICacheElement element = new CacheElement( cacheName, keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 

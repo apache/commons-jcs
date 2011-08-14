@@ -148,7 +148,7 @@ public class AbstractDiskCacheUnitTest
     }
 
     /** Concrete, testable instance. */
-    class AbstractDiskCacheTestInstance
+    protected static class AbstractDiskCacheTestInstance
         extends AbstractDiskCache
     {
         /** Internal map */

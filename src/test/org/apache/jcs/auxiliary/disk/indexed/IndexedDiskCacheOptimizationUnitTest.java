@@ -70,7 +70,7 @@ public class IndexedDiskCacheOptimizationUnitTest
         // DO WORK
         for ( int i = 0; i < removeCount; i++ )
         {
-            disk.processRemove( new Integer( i ) );
+            disk.processRemove( Integer.valueOf( i ) );
         }
 
         SleepUtil.sleepAtLeast( 1000 );

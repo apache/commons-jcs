@@ -43,6 +43,7 @@ public class CountingStreamUnitTest
         assertEquals( "Wrong number of bytes written.", 1, out.getCount() );
         out.write( 1 );
         assertEquals( "Wrong number of bytes written.", 2, out.getCount() );
+        out.close();
     }
 
     /**
@@ -56,10 +57,11 @@ public class CountingStreamUnitTest
         byte[] array = new byte[]{1,2,3,4,5};
         out.write( array );
         assertEquals( "Wrong number of bytes written.", array.length, out.getCount() );
+        out.close();
     }
 
     /**
-     * This should count the len -- the tird arg
+     * This should count the len -- the third arg
      *
      * @throws Exception
      */
@@ -70,5 +72,6 @@ public class CountingStreamUnitTest
         int len = 3;
         out.write( array, 0, len );
         assertEquals( "Wrong number of bytes written.", len, out.getCount() );
+        out.close();
     }
 }

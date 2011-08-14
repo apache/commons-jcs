@@ -123,13 +123,16 @@ public class CacheEventQueue
     }
 
     /**
-     * Kill the processor thread and indicate that the queue is detroyed and no longer alive, but it
+     * Kill the processor thread and indicate that the queue is destroyed and no longer alive, but it
      * can still be working.
      */
-    public synchronized void stopProcessing()
+    public void stopProcessing()
     {
-        destroyed = true;
-        processorThread = null;
+        synchronized (queueLock)
+        {
+            destroyed = true;
+            processorThread = null;
+        }
     }
 
     /**
@@ -137,39 +140,39 @@ public class CacheEventQueue
      * <p>
      * Calling destroy interrupts the processor thread.
      */
-    public synchronized void destroy()
+    public void destroy()
     {
-        if ( !destroyed )
+        synchronized (queueLock)
         {
-            destroyed = true;
-
-            if ( log.isInfoEnabled() )
+            if ( !destroyed )
             {
-                log.info( "Destroying queue, stats =  " + getStatistics() );
-            }
+                destroyed = true;
 
-            // Synchronize on queue so the thread will not wait forever,
-            // and then interrupt the QueueProcessor
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Destroying queue, stats =  " + getStatistics() );
+                }
 
-            if ( processorThread != null )
-            {
-                synchronized ( queueLock )
+                // Synchronize on queue so the thread will not wait forever,
+                // and then interrupt the QueueProcessor
+
+                if ( processorThread != null )
                 {
                     processorThread.interrupt();
+                    processorThread = null;
+                }
+
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Cache event queue destroyed: " + this );
                 }
             }
-            processorThread = null;
-
-            if ( log.isInfoEnabled() )
+            else
             {
-                log.info( "Cache event queue destroyed: " + this );
-            }
-        }
-        else
-        {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Destroy was called after queue was destroyed.  Doing nothing.  Stats =  " + getStatistics() );
+                if ( log.isInfoEnabled() )
+                {
+                    log.info( "Destroy was called after queue was destroyed.  Doing nothing.  Stats =  " + getStatistics() );
+                }
             }
         }
     }

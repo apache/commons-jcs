@@ -63,10 +63,7 @@ public class RemovalTestUtil
         for ( int i = end; i >= start; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
         System.out.println( "Confirmed that " + ( end - start ) + " items could be found" );
 
@@ -104,12 +101,8 @@ public class RemovalTestUtil
         for ( int i = end; i >= start; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNotNull( "[" + i + ":key] should not be null", res );
-            }
+            assertNotNull( "[" + i + ":key] should not be null", res );
         }
-
     }
 
     /**
@@ -132,13 +125,10 @@ public class RemovalTestUtil
         for ( int i = end; i >= start; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( check && res == null )
+            if ( check )
             {
                 assertNotNull( "[" + i + ":key] should not be null", res );
             }
-
         }
-
     }
-
 }

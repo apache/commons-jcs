@@ -98,7 +98,7 @@ public class BlockDiskCacheSteadyLoadTest
                 int bytes = ( kiloBytes ) * 1024;
                 totalSize += bytes;
                 totalPut++;
-                DiskTestObject object = new DiskTestObject( new Integer( i ), new byte[bytes] );
+                DiskTestObject object = new DiskTestObject( Integer.valueOf( i ), new byte[bytes] );
                 jcs.put( String.valueOf( totalPut ), object );
             }
 
@@ -122,7 +122,7 @@ public class BlockDiskCacheSteadyLoadTest
 
 
             Thread.sleep( pauseBetweenRuns );
-            if ( runCount % 1 == 0 )
+            if ( runCount % 100 == 0 )
             {
                 System.out.println( LOG_DIVIDER );
                 System.out.println( "Elapsed " + timer.getElapsedTimeString() );

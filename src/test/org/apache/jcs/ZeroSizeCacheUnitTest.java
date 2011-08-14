@@ -35,8 +35,9 @@ public class ZeroSizeCacheUnitTest
     /**
      * Test setup
      * <p>
-     * @throws Exception 
+     * @throws Exception
      */
+    @Override
     public void setUp()
         throws Exception
     {
@@ -64,10 +65,7 @@ public class ZeroSizeCacheUnitTest
         for ( int i = items; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNull( "[" + i + ":key] should be null", res );
-            }
+            assertNull( "[" + i + ":key] should be null", res );
         }
 
         // test removal, should be no exceptions
@@ -85,10 +83,7 @@ public class ZeroSizeCacheUnitTest
         for ( int i = items; i >= 0; i-- )
         {
             String res = (String) jcs.get( i + ":key" );
-            if ( res == null )
-            {
-                assertNull( "[" + i + ":key] should be null", res );
-            }
+            assertNull( "[" + i + ":key] should be null", res );
         }
 
         System.out.println( jcs.getStats() );

@@ -1394,10 +1394,6 @@ public class CompositeCache
      */
     public void save()
     {
-        if ( !alive )
-        {
-            return;
-        }
         synchronized ( this )
         {
             if ( !alive )
@@ -1466,7 +1462,7 @@ public class CompositeCache
      * <p>
      * @return The status value
      */
-    public int getStatus()
+    public synchronized int getStatus()
     {
         return alive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
     }
@@ -1761,7 +1757,7 @@ public class CompositeCache
     /**
      * @param updateCount The updateCount to set.
      */
-    public void setUpdateCount( int updateCount )
+    public synchronized void setUpdateCount( int updateCount )
     {
         this.updateCount = updateCount;
     }
@@ -1769,7 +1765,7 @@ public class CompositeCache
     /**
      * @return Returns the updateCount.
      */
-    public int getUpdateCount()
+    public synchronized int getUpdateCount()
     {
         return updateCount;
     }
@@ -1777,7 +1773,7 @@ public class CompositeCache
     /**
      * @param removeCount The removeCount to set.
      */
-    public void setRemoveCount( int removeCount )
+    public synchronized void setRemoveCount( int removeCount )
     {
         this.removeCount = removeCount;
     }
@@ -1785,7 +1781,7 @@ public class CompositeCache
     /**
      * @return Returns the removeCount.
      */
-    public int getRemoveCount()
+    public synchronized int getRemoveCount()
     {
         return removeCount;
     }

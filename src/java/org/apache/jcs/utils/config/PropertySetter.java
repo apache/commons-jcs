@@ -144,8 +144,8 @@ public class PropertySetter
      * specified in the call to this method.
      * <p>
      * If the setter expects a String no conversion is necessary. If it expects an int, then an
-     * attempt is made to convert 'value' to an int using new Integer(value). If the setter expects
-     * a boolean, the conversion is by new Boolean(value).
+     * attempt is made to convert 'value' to an int using Integer.valueOf(value). If the setter expects
+     * a boolean, the conversion is by Boolean.valueOf(value).
      * @param name name of the property
      * @param value String value of the property
      */
@@ -245,11 +245,11 @@ public class PropertySetter
         }
         else if ( Integer.TYPE.isAssignableFrom( type ) )
         {
-            return new Integer( v );
+            return Integer.valueOf( v );
         }
         else if ( Long.TYPE.isAssignableFrom( type ) )
         {
-            return new Long( v );
+            return Long.valueOf( v );
         }
         else if ( Boolean.TYPE.isAssignableFrom( type ) )
         {

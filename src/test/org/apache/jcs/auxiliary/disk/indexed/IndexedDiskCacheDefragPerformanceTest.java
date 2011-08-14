@@ -84,14 +84,14 @@ public class IndexedDiskCacheDefragPerformanceTest
         {
             int bytes = random.nextInt( 20 );
             // 4-24 KB
-            tile = new Tile( new Integer( i ), new byte[( bytes + 4 ) * 1024] );
+            tile = new Tile( Integer.valueOf( i ), new byte[( bytes + 4 ) * 1024] );
             // images
 
             jcs.put( tile.id, tile );
 
             if ( ( i != 0 ) && ( 0 == ( i % 100 ) ) )
             {
-                jcs.get( new Integer( random.nextInt( i ) ) );
+                jcs.get( Integer.valueOf( random.nextInt( i ) ) );
             }
 
             if ( 0 == ( i % LOG_INCREMENT ) )

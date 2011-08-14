@@ -20,6 +20,7 @@ package org.apache.jcs.access;
  */
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class TestCacheAccess
 
                 message = br.readLine();
 
-                if ( message.startsWith( "help" ) )
+                if ( message == null || message.startsWith( "help" ) )
                 {
                     help();
                 }
@@ -162,26 +163,26 @@ public class TestCacheAccess
                 else if ( message.startsWith( "putm" ) )
                 {
                     String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
-                    int num = Integer.parseInt( numS.trim() );
                     if ( numS == null )
                     {
                         p( "usage: putm numbertoput" );
                     }
                     else
                     {
+                        int num = Integer.parseInt( numS.trim() );
                         putMultiple( num );
                     }
                 }
                 else if ( message.startsWith( "pute" ) )
                 {
                     String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
-                    int num = Integer.parseInt( numS.trim() );
                     if ( numS == null )
                     {
                         p( "usage: putme numbertoput" );
                     }
                     else
                     {
+                        int num = Integer.parseInt( numS.trim() );
                         long n_start = System.currentTimeMillis();
                         for ( int n = 0; n < num; n++ )
                         {
@@ -198,16 +199,16 @@ public class TestCacheAccess
                 {
                     processPut( message );
                 }
-                if ( message.startsWith( "removem" ) )
+                else if ( message.startsWith( "removem" ) )
                 {
                     String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
-                    int num = Integer.parseInt( numS.trim() );
                     if ( numS == null )
                     {
                         p( "usage: removem numbertoremove" );
                     }
                     else
                     {
+                        int num = Integer.parseInt( numS.trim() );
                         removeMultiple( num );
                     }
                 }
@@ -230,13 +231,13 @@ public class TestCacheAccess
                 else if ( message.startsWith( "cloneattr" ) )
                 {
                     String numS = message.substring( message.indexOf( " " ) + 1, message.length() );
-                    int num = Integer.parseInt( numS.trim() );
                     if ( numS == null )
                     {
                         p( "usage: put numbertoput" );
                     }
                     else
                     {
+                        int num = Integer.parseInt( numS.trim() );
                         IElementAttributes attrp = new ElementAttributes();
                         long n_start = System.currentTimeMillis();
                         for ( int n = 0; n < num; n++ )
@@ -273,7 +274,12 @@ public class TestCacheAccess
                 }
             }
         }
-        catch ( Exception e )
+        catch ( CacheException e )
+        {
+            p( e.toString() );
+            e.printStackTrace( System.out );
+        }
+        catch (IOException e)
         {
             p( e.toString() );
             e.printStackTrace( System.out );
@@ -307,7 +313,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 3 )
             {
-                show = new Boolean( t ).booleanValue();
+                show = Boolean.valueOf( t ).booleanValue();
             }
         }
 
@@ -346,7 +352,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 4 )
             {
-                show = new Boolean( t ).booleanValue();
+                show = Boolean.valueOf( t ).booleanValue();
             }
         }
 
@@ -401,7 +407,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 4 )
             {
-                show = new Boolean( t ).booleanValue();
+                show = Boolean.valueOf( t ).booleanValue();
             }
         }
 
@@ -576,7 +582,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 4 )
             {
-                show = new Boolean( t ).booleanValue();
+                show = Boolean.valueOf( t ).booleanValue();
             }
         }
 
@@ -627,7 +633,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 3 )
             {
-                show = new Boolean( t ).booleanValue();
+                show = Boolean.valueOf( t ).booleanValue();
             }
         }
 
@@ -677,7 +683,7 @@ public class TestCacheAccess
             }
             else if ( tcnt == 3 )
             {
-                show = new Boolean( t ).booleanValue();
+                show = Boolean.valueOf( t ).booleanValue();
             }
         }
 

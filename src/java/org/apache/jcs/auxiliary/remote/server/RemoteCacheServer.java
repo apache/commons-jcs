@@ -744,7 +744,7 @@ class RemoteCacheServer
      */
     private boolean isRequestFromCluster( long requesterId )
     {
-        Integer remoteTypeL = idTypeMap.get( new Long( requesterId ) );
+        Integer remoteTypeL = idTypeMap.get( Long.valueOf( requesterId ) );
 
         boolean fromCluster = false;
         if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
@@ -1354,10 +1354,10 @@ class RemoteCacheServer
                 }
 
                 // relate the type to an id
-                this.idTypeMap.put( new Long( id ), new Integer( remoteType ) );
+                this.idTypeMap.put( Long.valueOf( id ), Integer.valueOf( remoteType ) );
                 if ( listenerAddress != null )
                 {
-                    this.idIPMap.put( new Long( id ), listenerAddress );
+                    this.idIPMap.put( Long.valueOf( id ), listenerAddress );
                 }
             }
             catch ( IOException ioe )
@@ -1449,7 +1449,7 @@ class RemoteCacheServer
         }
         Map<Long, ICacheEventQueue> eventQMap = cacheDesc.eventQMap;
         cleanupEventQMap( eventQMap );
-        ICacheEventQueue q = eventQMap.remove( new Long( listenerId ) );
+        ICacheEventQueue q = eventQMap.remove( Long.valueOf( listenerId ) );
 
         if ( q != null )
         {
@@ -1470,8 +1470,8 @@ class RemoteCacheServer
         }
 
         // cleanup
-        idTypeMap.remove( new Long( listenerId ) );
-        idIPMap.remove( new Long( listenerId ) );
+        idTypeMap.remove( Long.valueOf( listenerId ) );
+        idIPMap.remove( Long.valueOf( listenerId ) );
 
         if ( log.isInfoEnabled() )
         {
@@ -1663,7 +1663,7 @@ class RemoteCacheServer
      */
     protected String getExtraInfoForRequesterId( long requesterId )
     {
-        String ipAddress = idIPMap.get( new Long( requesterId ) );
+        String ipAddress = idIPMap.get( Long.valueOf( requesterId ) );
         return ipAddress;
     }
 

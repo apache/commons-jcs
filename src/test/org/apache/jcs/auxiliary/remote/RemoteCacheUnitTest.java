@@ -68,7 +68,7 @@ public class RemoteCacheUnitTest
             .getDeSerializedCacheElement( (ICacheElementSerialized) service.lastUpdate, remoteCache
                 .getElementSerializer() );
         assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
-        assertEquals( "Wrong listener id.", new Long( listenerId ), service.updateRequestIdList.get( 0 ) );
+        assertEquals( "Wrong listener id.", Long.valueOf( listenerId ), service.updateRequestIdList.get( 0 ) );
     }
 
     /**
