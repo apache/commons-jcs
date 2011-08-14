@@ -41,6 +41,7 @@ public class MRUMemoryCacheUnitTest
     extends TestCase
 {
     /** Test setup */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestMRUCache.ccf" );
@@ -137,7 +138,7 @@ public class MRUMemoryCacheUnitTest
         }
 
         // Test that first items are not in the cache
-        for ( int i = max; i >= 0; i-- )
+        for ( int i = max-1; i >= 0; i-- )
         {
             String value = (String) cache.get( i + ":key" );
             assertNull( "Should not have value for key [" + i + ":key" + "] in the cache.", value );
