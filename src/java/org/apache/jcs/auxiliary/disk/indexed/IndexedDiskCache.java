@@ -327,7 +327,7 @@ public class IndexedDiskCache
 
             HashMap<Serializable, IndexedDiskElementDescriptor> keys =
                 (HashMap<Serializable, IndexedDiskElementDescriptor>) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
-                - IndexedDisk.RECORD_HEADER ) );
+                - IndexedDisk.HEADER_SIZE_BYTES ) );
 
             if ( keys != null )
             {
@@ -384,7 +384,7 @@ public class IndexedDiskCache
             {
                 IndexedDiskElementDescriptor ded = e.getValue();
 
-                isOk = ( ded.pos + IndexedDisk.RECORD_HEADER + ded.len <= fileLength );
+                isOk = ( ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len <= fileLength );
 
                 if ( !isOk )
                 {
@@ -438,7 +438,7 @@ public class IndexedDiskCache
             }
             else
             {
-                expectedNextPos = ded.pos + IndexedDisk.RECORD_HEADER + ded.len;
+                expectedNextPos = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len;
             }
         }
         long end = System.currentTimeMillis();
@@ -1335,7 +1335,7 @@ public class IndexedDiskCache
                     {
                         dataFile.move( defragList[i], expectedNextPos );
                     }
-                    expectedNextPos = defragList[i].pos + IndexedDisk.RECORD_HEADER + defragList[i].len;
+                    expectedNextPos = defragList[i].pos + IndexedDisk.HEADER_SIZE_BYTES + defragList[i].len;
                 }
                 finally
                 {
@@ -1440,7 +1440,7 @@ public class IndexedDiskCache
     {
         if ( ded != null )
         {
-            int amount = ded.len + IndexedDisk.RECORD_HEADER;
+            int amount = ded.len + IndexedDisk.HEADER_SIZE_BYTES;
 
             if ( add )
             {

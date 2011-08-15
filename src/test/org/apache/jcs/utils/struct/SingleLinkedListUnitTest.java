@@ -35,13 +35,13 @@ public class SingleLinkedListUnitTest
     public void testTakeFromEmptyList()
     {
         // SETUP
-        SingleLinkedList list = new SingleLinkedList();
+        SingleLinkedList<Object> list = new SingleLinkedList<Object>();
 
         // DO WORK
         Object result = list.takeFirst();
 
         // VERIFY
-        assertNull( "Shounldn't have anything.", result );
+        assertNull( "Shouldn't have anything.", result );
     }
 
     /**
@@ -50,7 +50,7 @@ public class SingleLinkedListUnitTest
     public void testAddABunchAndTakeFromList()
     {
         // SETUP
-        SingleLinkedList list = new SingleLinkedList();
+        SingleLinkedList<Integer> list = new SingleLinkedList<Integer>();
 
         // DO WORK
         int numToPut = 100;
@@ -60,19 +60,19 @@ public class SingleLinkedListUnitTest
         }
 
         // VERIFY
-        assertEquals( "Wrong nubmer in list.", numToPut, list.size() );
+        assertEquals( "Wrong number in list.", numToPut, list.size() );
 
         for ( int i = 0; i < numToPut; i++ )
         {
-            Object result = list.takeFirst();
+            Integer result = list.takeFirst();
             assertEquals( "Wrong value returned.", Integer.valueOf( i ), result );
         }
 
         // DO WORK
-        Object result = list.takeFirst();
+        Integer result = list.takeFirst();
 
         // VERIFY
-        assertNull( "Shounldn't have anything left.", result );
+        assertNull( "Shouldn't have anything left.", result );
     }
 
     /**
@@ -81,7 +81,7 @@ public class SingleLinkedListUnitTest
     public void testAddABunchAndClear()
     {
         // SETUP
-        SingleLinkedList list = new SingleLinkedList();
+        SingleLinkedList<Integer> list = new SingleLinkedList<Integer>();
 
         // DO WORK
         int numToPut = 100;
@@ -91,14 +91,14 @@ public class SingleLinkedListUnitTest
         }
 
         // VERIFY
-        assertEquals( "Wrong nubmer in list.", numToPut, list.size() );
+        assertEquals( "Wrong number in list.", numToPut, list.size() );
 
         // DO WORK
         list.clear();
-        Object result = list.takeFirst();
+        Integer result = list.takeFirst();
 
         // VERIFY
-        assertEquals( "Wrong nubmer in list.", 0, list.size() );
-        assertNull( "Shounldn't have anything left.", result );
+        assertEquals( "Wrong number in list.", 0, list.size() );
+        assertNull( "Shouldn't have anything left.", result );
     }
 }

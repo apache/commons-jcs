@@ -223,7 +223,7 @@ public class IndexDiskCacheUnitTest
         for ( int i = 0; i < numDescriptors; i++ )
         {
             IndexedDiskElementDescriptor descriptor = new IndexedDiskElementDescriptor( pos, i * 2 );
-            pos = pos + ( i * 2 ) + IndexedDisk.RECORD_HEADER;
+            pos = pos + ( i * 2 ) + IndexedDisk.HEADER_SIZE_BYTES;
             sortedDescriptors[i] = descriptor;
         }
 

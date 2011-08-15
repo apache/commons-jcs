@@ -49,7 +49,7 @@ public class DiskTestObjectUtil
         long total = 0;
         for ( int i = 0; i < endPosition; i++ )
         {
-            int tileSize = serializer.serialize( testObjects[i] ).length + IndexedDisk.RECORD_HEADER;
+            int tileSize = serializer.serialize( testObjects[i] ).length + IndexedDisk.HEADER_SIZE_BYTES;
             total += tileSize;
         }
         return total;
@@ -85,7 +85,7 @@ public class DiskTestObjectUtil
         long total = 0;
         for ( int i = startPosition; i < endPosition; i++ )
         {
-            int tileSize = serializer.serialize( elements[i] ).length + IndexedDisk.RECORD_HEADER;
+            int tileSize = serializer.serialize( elements[i] ).length + IndexedDisk.HEADER_SIZE_BYTES;
             total += tileSize;
         }
         return total;

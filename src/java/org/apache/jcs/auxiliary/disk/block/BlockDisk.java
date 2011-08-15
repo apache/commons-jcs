@@ -19,11 +19,16 @@ package org.apache.jcs.auxiliary.disk.block;
  * under the License.
  */
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,10 +60,10 @@ public class BlockDisk
      * the total number of blocks that have been used. If there are no free, we will use this to
      * calculate the position of the next block.
      */
-    private int numberOfBlocks = 0;
+    private final AtomicInteger numberOfBlocks = new AtomicInteger(0);
 
     /** Empty blocks that can be reused. */
-    private final SingleLinkedList emptyBlocks = new SingleLinkedList();
+    private final SingleLinkedList<Integer> emptyBlocks = new SingleLinkedList<Integer>();
 
     /** The serializer. Uses a standard serializer by default. */
     protected IElementSerializer elementSerializer = new StandardSerializer();
@@ -66,14 +71,14 @@ public class BlockDisk
     /** Location of the spot on disk */
     private final String filepath;
 
-    /** The file handle. */
-    private final RandomAccessFile raf;
+    /** File channel for multiple concurrent reads and writes */
+    private final FileChannel fc;
 
     /** How many bytes have we put to disk */
-    private long putBytes = 0;
+    private final AtomicLong putBytes = new AtomicLong(0);
 
     /** How many items have we put to disk */
-    private long putCount = 0;
+    private final AtomicLong putCount = new AtomicLong(0);
 
     /**
      * Constructor for the Disk object
@@ -85,12 +90,7 @@ public class BlockDisk
     public BlockDisk( File file, IElementSerializer elementSerializer )
         throws FileNotFoundException
     {
-        this( file, DEFAULT_BLOCK_SIZE_BYTES );
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Used default block size [" + DEFAULT_BLOCK_SIZE_BYTES + "]" );
-        }
-        this.elementSerializer = elementSerializer;
+        this( file, DEFAULT_BLOCK_SIZE_BYTES, elementSerializer );
     }
 
     /**
@@ -103,14 +103,7 @@ public class BlockDisk
     public BlockDisk( File file, int blockSizeBytes )
         throws FileNotFoundException
     {
-        this.filepath = file.getAbsolutePath();
-        raf = new RandomAccessFile( filepath, "rw" );
-
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]" );
-        }
-        this.blockSizeBytes = blockSizeBytes;
+        this( file, blockSizeBytes, new StandardSerializer() );
     }
 
     /**
@@ -125,14 +118,14 @@ public class BlockDisk
         throws FileNotFoundException
     {
         this.filepath = file.getAbsolutePath();
-        raf = new RandomAccessFile( filepath, "rw" );
+        RandomAccessFile raf = new RandomAccessFile( filepath, "rw" );
+        this.fc = raf.getChannel();
 
         if ( log.isInfoEnabled() )
         {
             log.info( "Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]" );
         }
         this.blockSizeBytes = blockSizeBytes;
-
         this.elementSerializer = elementSerializer;
     }
 
@@ -164,8 +157,8 @@ public class BlockDisk
             log.debug( "write, total pre-chunking data.length = " + data.length );
         }
 
-        this.addToPutBytes( data.length );
-        this.incrementPutCount();
+        this.putBytes.addAndGet(data.length);
+        this.putCount.incrementAndGet();
 
         // figure out how many blocks we need.
         int numBlocksNeeded = calculateTheNumberOfBlocksNeeded( data );
@@ -179,14 +172,14 @@ public class BlockDisk
         // get them from the empty list or take the next one
         for ( int i = 0; i < numBlocksNeeded; i++ )
         {
-            Integer emptyBlock = (Integer) emptyBlocks.takeFirst();
+            Integer emptyBlock = emptyBlocks.takeFirst();
             if ( emptyBlock != null )
             {
                 blocks[i] = emptyBlock.intValue();
             }
             else
             {
-                blocks[i] = takeNextBlock();
+                blocks[i] = this.numberOfBlocks.getAndIncrement();
             }
         }
 
@@ -251,13 +244,13 @@ public class BlockDisk
     private boolean write( long position, byte[] data )
         throws IOException
     {
-        synchronized ( this )
-        {
-            raf.seek( position );
-            raf.writeInt( data.length );
-            raf.write( data, 0, data.length );
-        }
-        return true;
+        ByteBuffer buffer = ByteBuffer.allocate(HEADER_SIZE_BYTES + data.length);
+        buffer.putInt(data.length);
+        buffer.put(data);
+        buffer.flip();
+        int written = fc.write(buffer, position);
+
+        return written == data.length;
     }
 
     /**
@@ -279,19 +272,16 @@ public class BlockDisk
         }
         else
         {
-            data = new byte[0];
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(getBlockSizeBytes());
             // get all the blocks into data
             for ( short i = 0; i < blockNumbers.length; i++ )
             {
                 byte[] chunk = readBlock( blockNumbers[i] );
-                byte[] newTotal = new byte[data.length + chunk.length];
-                // copy data into the new array
-                System.arraycopy( data, 0, newTotal, 0, data.length );
-                // copy the chunk into the new array
-                System.arraycopy( chunk, 0, newTotal, data.length, chunk.length );
-                // swap the new and old.
-                data = newTotal;
+                baos.write(chunk);
             }
+
+            data = baos.toByteArray();
+            baos.close();
         }
 
         if ( log.isDebugEnabled() )
@@ -315,40 +305,42 @@ public class BlockDisk
     private byte[] readBlock( int block )
         throws IOException
     {
-        byte[] data = null;
         int datalen = 0;
-        synchronized ( this )
-        {
-            String message = null;
-            boolean corrupted = false;
-            long fileLength = raf.length();
 
-            int position = calculateByteOffsetForBlock( block );
-            if ( position > fileLength )
+        String message = null;
+        boolean corrupted = false;
+        long fileLength = fc.size();
+
+        int position = calculateByteOffsetForBlock( block );
+        if ( position > fileLength )
+        {
+            corrupted = true;
+            message = "Record " + position + " starts past EOF.";
+        }
+        else
+        {
+            ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+            fc.read(datalength, position);
+            datalength.flip();
+            datalen = datalength.getInt();
+            if ( position + datalen > fileLength )
             {
                 corrupted = true;
-                message = "Record " + position + " starts past EOF.";
+                message = "Record " + position + " exceeds file length.";
             }
-            else
-            {
-                raf.seek( position );
-                datalen = raf.readInt();
-                if ( position + datalen > fileLength )
-                {
-                    corrupted = true;
-                    message = "Record " + position + " exceeds file length.";
-                }
-            }
-
-            if ( corrupted )
-            {
-                log.warn( "\n The file is corrupt: " + "\n " + message );
-                throw new IOException( "The File Is Corrupt, need to reset" );
-            }
-
-            raf.readFully( data = new byte[datalen] );
         }
-        return data;
+
+        if ( corrupted )
+        {
+            log.warn( "\n The file is corrupt: " + "\n " + message );
+            throw new IOException( "The File Is Corrupt, need to reset" );
+        }
+
+        ByteBuffer data = ByteBuffer.allocate(datalen);
+        fc.read(data, position + HEADER_SIZE_BYTES);
+        data.flip();
+
+        return data.array();
     }
 
     /**
@@ -368,35 +360,7 @@ public class BlockDisk
     }
 
     /**
-     * Add to to total put size.
-     * <p>
-     * @param length
-     */
-    private synchronized void addToPutBytes( long length )
-    {
-        this.putBytes += length;
-    }
-
-    /**
-     * Thread safe increment.
-     */
-    private synchronized void incrementPutCount()
-    {
-        this.putCount++;
-    }
-
-    /**
-     * Returns the current number and adds one.
-     * <p>
-     * @return the block number to use.
-     */
-    private synchronized int takeNextBlock()
-    {
-        return this.numberOfBlocks++;
-    }
-
-    /**
-     * Calcuates the file offset for a particular block.
+     * Calculates the file offset for a particular block.
      * <p>
      * @param block
      * @return the offset for this block
@@ -434,7 +398,7 @@ public class BlockDisk
     }
 
     /**
-     * Returns the raf length.
+     * Returns the file length.
      * <p>
      * @return the size of the file.
      * @exception IOException
@@ -442,21 +406,32 @@ public class BlockDisk
     protected long length()
         throws IOException
     {
-        synchronized ( this )
-        {
-            return raf.length();
-        }
+        return fc.size();
     }
 
     /**
-     * Closes the raf.
+     * Closes the file.
      * <p>
      * @exception IOException
      */
-    protected synchronized void close()
+    protected void close()
         throws IOException
     {
-        raf.close();
+        fc.close();
+    }
+
+    /**
+     * Resets the file.
+     * <p>
+     * @exception IOException
+     */
+    protected void reset()
+        throws IOException
+    {
+        this.numberOfBlocks.set(0);
+        this.emptyBlocks.clear();
+        fc.truncate(0);
+        fc.force(true);
     }
 
     /**
@@ -464,7 +439,7 @@ public class BlockDisk
      */
     protected int getNumberOfBlocks()
     {
-        return numberOfBlocks;
+        return numberOfBlocks.get();
     }
 
     /**
@@ -478,13 +453,15 @@ public class BlockDisk
     /**
      * @return Returns the average size of the an element inserted.
      */
-    protected synchronized long getAveragePutSizeBytes()
+    protected long getAveragePutSizeBytes()
     {
-        if ( this.putCount == 0 )
+        long count = this.putCount.get();
+
+        if (count == 0 )
         {
             return 0;
         }
-        return this.putBytes / this.putCount;
+        return this.putBytes.get() / count;
     }
 
     /**
@@ -506,8 +483,8 @@ public class BlockDisk
         StringBuffer buf = new StringBuffer();
         buf.append( "\nBlock Disk " );
         buf.append( "\n  Filepath [" + filepath + "]" );
-        buf.append( "\n  NumberOfBlocks [" + getNumberOfBlocks() + "]" );
-        buf.append( "\n  BlockSizeBytes [" + getBlockSizeBytes() + "]" );
+        buf.append( "\n  NumberOfBlocks [" + this.numberOfBlocks.get() + "]" );
+        buf.append( "\n  BlockSizeBytes [" + this.blockSizeBytes + "]" );
         buf.append( "\n  Put Bytes [" + this.putBytes + "]" );
         buf.append( "\n  Put Count [" + this.putCount + "]" );
         buf.append( "\n  Average Size [" + getAveragePutSizeBytes() + "]" );

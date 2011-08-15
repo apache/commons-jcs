@@ -79,10 +79,10 @@ public class BlockDiskCache
     private BlockDiskKeyStore keyStore;
 
     /**
-     * Use this lock to synchronize reads and writes to the underlying storage mechansism. We don't
+     * Use this lock to synchronize reads and writes to the underlying storage mechanism. We don't
      * need a reentrant lock, since we only lock one level.
      */
-    private final ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock(true);
 
     /**
      * Constructs the BlockDisk after setting up the root directory.
@@ -151,7 +151,7 @@ public class BlockDiskCache
                 log.info( logCacheName + "Block Disk Cache is alive." );
             }
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and root directory: "
                 + rootDirName, e );
@@ -169,6 +169,9 @@ public class BlockDiskCache
         boolean alright = false;
         // simply try to read a few. If it works, then the file is probably ok.
         // TODO add more.
+
+        storageLock.readLock().lock();
+
         try
         {
             int maxToTest = 100;
@@ -191,6 +194,11 @@ public class BlockDiskCache
             log.warn( logCacheName + "Problem verifying disk.  Message [" + e.getMessage() + "]" );
             alright = false;
         }
+        finally
+        {
+            storageLock.readLock().unlock();
+        }
+
         return alright;
     }
 
@@ -205,10 +213,11 @@ public class BlockDiskCache
     {
         GroupId groupId = new GroupId( cacheName, groupName );
         HashSet<Serializable> keys = new HashSet<Serializable>();
+
+        storageLock.readLock().lock();
+
         try
         {
-            storageLock.readLock().lock();
-
             for ( Serializable key : this.keyStore.keySet())
             {
                 if ( key instanceof GroupAttrName && ( (GroupAttrName) key ).groupId.equals( groupId ) )
@@ -216,10 +225,6 @@ public class BlockDiskCache
                     keys.add( (Serializable)( (GroupAttrName) key ).attrName );
                 }
             }
-        }
-        catch ( Exception e )
-        {
-            log.error( logCacheName + "Failure getting from disk, group = " + groupName, e );
         }
         finally
         {
@@ -240,34 +245,29 @@ public class BlockDiskCache
     public Map<Serializable, ICacheElement> processGetMatching( String pattern )
     {
         Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+
+        Object[] keyArray = null;
+        storageLock.readLock().lock();
         try
         {
-            Object[] keyArray = null;
-            storageLock.readLock().lock();
-            try
-            {
-                keyArray = this.keyStore.keySet().toArray();
-            }
-            finally
-            {
-                storageLock.readLock().unlock();
-            }
-
-            Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
-
-            for (Serializable key : matchingKeys)
-            {
-                ICacheElement element = processGet( key );
-                if ( element != null )
-                {
-                    elements.put( key, element );
-                }
-            }
+            keyArray = this.keyStore.keySet().toArray();
         }
-        catch ( Exception e )
+        finally
         {
-            log.error( logCacheName + "Failure getting matching from disk, pattern = " + pattern, e );
+            storageLock.readLock().unlock();
         }
+
+        Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+
+        for (Serializable key : matchingKeys)
+        {
+            ICacheElement element = processGet( key );
+            if ( element != null )
+            {
+                elements.put( key, element );
+            }
+        }
+
         return elements;
     }
 
@@ -313,20 +313,14 @@ public class BlockDiskCache
         }
 
         ICacheElement object = null;
+        storageLock.readLock().lock();
+
         try
         {
-            storageLock.readLock().lock();
-            try
+            int[] ded = this.keyStore.get( key );
+            if ( ded != null )
             {
-                int[] ded = this.keyStore.get( key );
-                if ( ded != null )
-                {
-                    object = (ICacheElement) this.dataFile.read( ded );
-                }
-            }
-            finally
-            {
-                storageLock.readLock().unlock();
+                object = (ICacheElement) this.dataFile.read( ded );
             }
         }
         catch ( IOException ioe )
@@ -338,6 +332,10 @@ public class BlockDiskCache
         {
             log.error( logCacheName + "Failure getting from disk, key = " + key, e );
         }
+        finally
+        {
+            storageLock.readLock().unlock();
+        }
 
         return object;
     }
@@ -345,12 +343,11 @@ public class BlockDiskCache
     /**
      * Writes an element to disk. The program flow is as follows:
      * <ol>
-     * <li>Aquire write lock.</li> <li>See id an item exists for this key.</li> <li>If an itme
+     * <li>Acquire write lock.</li> <li>See id an item exists for this key.</li> <li>If an item
      * already exists, add its blocks to the remove list.</li> <li>Have the Block disk write the
      * item.</li> <li>Create a descriptor and add it to the key map.</li> <li>Release the write
      * lock.</li>
      * </ol>
-     * (non-Javadoc)
      * @param element
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
      */
@@ -367,37 +364,37 @@ public class BlockDiskCache
         }
 
         int[] old = null;
+
+        // make sure this only locks for one particular cache region
+        storageLock.writeLock().lock();
+
         try
         {
-            // make sure this only locks for one particular cache region
-            storageLock.writeLock().lock();
-            try
+            old = this.keyStore.get( element.getKey() );
+
+            if ( old != null )
             {
-                old = this.keyStore.get( element.getKey() );
-
-                if ( old != null )
-                {
-                    this.dataFile.freeBlocks( old );
-                }
-
-                int[] blocks = this.dataFile.write( element );
-
-                this.keyStore.put( element.getKey(), blocks );
+                this.dataFile.freeBlocks( old );
             }
-            finally
-            {
-                storageLock.writeLock().unlock();
-            }
+
+            int[] blocks = this.dataFile.write( element );
+
+            this.keyStore.put( element.getKey(), blocks );
 
             if ( log.isDebugEnabled() )
             {
                 log.debug( logCacheName + "Put to file [" + fileName + "] key [" + element.getKey() + "]" );
             }
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( logCacheName + "Failure updating element, key: " + element.getKey() + " old: " + Arrays.toString(old), e );
         }
+        finally
+        {
+            storageLock.writeLock().unlock();
+        }
+
         if ( log.isDebugEnabled() )
         {
             log.debug( logCacheName + "Storing element on disk, key: " + element.getKey() );
@@ -427,14 +424,14 @@ public class BlockDiskCache
 
         boolean reset = false;
         boolean removed = false;
+
+        storageLock.writeLock().lock();
+
         try
         {
-            storageLock.writeLock().lock();
-
             if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
-
                 Iterator<Map.Entry<Serializable, int[]>> iter = this.keyStore.entrySet().iterator();
 
                 while ( iter.hasNext() )
@@ -514,15 +511,7 @@ public class BlockDiskCache
     @Override
     protected void processRemoveAll()
     {
-        try
-        {
-            reset();
-        }
-        catch ( Exception e )
-        {
-            log.error( logCacheName + "Problem removing all.", e );
-            reset();
-        }
+        reset();
     }
 
     /**
@@ -630,7 +619,7 @@ public class BlockDiskCache
     {
         if ( log.isWarnEnabled() )
         {
-            log.warn( logCacheName + "Reseting cache" );
+            log.warn( logCacheName + "Resetting cache" );
         }
 
         try
@@ -639,27 +628,14 @@ public class BlockDiskCache
 
             if ( dataFile != null )
             {
-                dataFile.close();
-            }
-            // TODO have the BlockDisk do this itself
-            File dataFileTemp = new File( this.rootDirectory, fileName + ".data" );
-            dataFileTemp.delete();
-
-            if ( this.blockDiskCacheAttributes.getBlockSizeBytes() > 0 )
-            {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ),
-                                               this.blockDiskCacheAttributes.getBlockSizeBytes() );
-            }
-            else
-            {
-                this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), getElementSerializer() );
+                dataFile.reset();
             }
 
             this.keyStore.reset();
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
-            log.error( logCacheName + "Failure reseting state", e );
+            log.error( logCacheName + "Failure resetting state", e );
         }
         finally
         {

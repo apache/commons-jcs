@@ -67,6 +67,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -76,6 +77,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -85,6 +87,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -94,6 +97,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheSameRegionConcurrentUnitTest( "testBlockDiskCache4" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -109,10 +113,14 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
      * <p>
      * @throws Exception
      */
+    @Override
     public void setUp()
         throws Exception
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
+
+        // tv: For some reason this cleanup does not work as expected so the test fails if
+        // the data files already exist
         JCS.getInstance( "blockRegion4" ).clear();
     }
 

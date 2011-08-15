@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * @author Aaron Smuts
  */
-public class SingleLinkedList
+public class SingleLinkedList<T>
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( SingleLinkedList.class );
@@ -37,10 +37,10 @@ public class SingleLinkedList
     private final Object lock = new Object();
 
     /** the head of the queue */
-    private Node head = new Node();
+    private Node<T> head = new Node<T>();
 
     /** the end of the queue */
-    private Node tail = head;
+    private Node<T> tail = head;
 
     /** The size of the list */
     private int size = 0;
@@ -50,7 +50,7 @@ public class SingleLinkedList
      * <p>
      * @return null if the list is empty.
      */
-    public Object takeFirst()
+    public T takeFirst()
     {
         synchronized ( lock )
         {
@@ -60,9 +60,9 @@ public class SingleLinkedList
                 return null;
             }
 
-            Node node = head.next;
+            Node<T> node = head.next;
 
-            Object value = node.payload;
+            T value = node.payload;
 
             if ( log.isDebugEnabled() )
             {
@@ -85,9 +85,9 @@ public class SingleLinkedList
      * <p>
      * @param payload
      */
-    public void addLast( Object payload )
+    public void addLast( T payload )
     {
-        Node newNode = new Node();
+        Node<T> newNode = new Node<T>();
 
         newNode.payload = payload;
 
@@ -116,13 +116,13 @@ public class SingleLinkedList
      * <p>
      * @author Aaron Smuts
      */
-    protected static class Node
+    protected static class Node<T>
     {
         /** next in the list */
-        Node next = null;
+        Node<T> next = null;
 
         /** The data in this node */
-        Object payload;
+        T payload;
     }
 
     /**

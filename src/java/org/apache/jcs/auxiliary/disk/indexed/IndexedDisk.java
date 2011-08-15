@@ -24,6 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,8 +35,8 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
 /** Provides thread safe access to the underlying random access file. */
 class IndexedDisk
 {
-    /** The size of the header in bytes. The header describes the length of the entry.  */
-    public static final int RECORD_HEADER = 4;
+    /** The size of the header that indicates the amount of data stored in an occupied block. */
+    public static final byte HEADER_SIZE_BYTES = 4;
 
     /** The serializer. Uses a standard serializer by default. */
     protected IElementSerializer elementSerializer = new StandardSerializer();
@@ -46,10 +48,7 @@ class IndexedDisk
     private final String filepath;
 
     /** The data file. */
-    private final RandomAccessFile raf;
-
-    /** read buffer */
-    private final byte[] buffer = new byte[16384]; // 16K
+    private final FileChannel fc;
 
     /**
      * Constructor for the Disk object
@@ -63,7 +62,8 @@ class IndexedDisk
     {
         this.filepath = file.getAbsolutePath();
         this.elementSerializer = elementSerializer;
-        raf = new RandomAccessFile( filepath, "rw" );
+        RandomAccessFile raf = new RandomAccessFile( filepath, "rw" );
+        this.fc = raf.getChannel();
     }
 
     /**
@@ -80,43 +80,43 @@ class IndexedDisk
     protected Serializable readObject( IndexedDiskElementDescriptor ded )
         throws IOException, ClassNotFoundException
     {
-        byte[] data = null;
-        synchronized ( this )
+        String message = null;
+        boolean corrupted = false;
+        long fileLength = fc.size();
+        if ( ded.pos > fileLength )
         {
-            String message = null;
-            boolean corrupted = false;
-            long fileLength = raf.length();
-            if ( ded.pos > fileLength )
+            corrupted = true;
+            message = "Record " + ded + " starts past EOF.";
+        }
+        else
+        {
+            ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+            fc.read(datalength, ded.pos);
+            datalength.flip();
+            int datalen = datalength.getInt();
+            if ( ded.len != datalen )
             {
                 corrupted = true;
-                message = "Record " + ded + " starts past EOF.";
+                message = "Record " + ded + " does not match data length on disk (" + datalen + ")";
             }
-            else
+            else if ( ded.pos + ded.len > fileLength )
             {
-                raf.seek( ded.pos );
-                int datalen = raf.readInt();
-                if ( ded.len != datalen )
-                {
-                    corrupted = true;
-                    message = "Record " + ded + " does not match data length on disk (" + datalen + ")";
-                }
-                else if ( ded.pos + ded.len > fileLength )
-                {
-                    corrupted = true;
-                    message = "Record " + ded + " exceeds file length.";
-                }
+                corrupted = true;
+                message = "Record " + ded + " exceeds file length.";
             }
-
-            if ( corrupted )
-            {
-                log.warn( "\n The file is corrupt: " + "\n " + message );
-                throw new IOException( "The File Is Corrupt, need to reset" );
-            }
-
-            raf.readFully( data = new byte[ded.len] );
         }
 
-        return (Serializable) elementSerializer.deSerialize( data );
+        if ( corrupted )
+        {
+            log.warn( "\n The file is corrupt: " + "\n " + message );
+            throw new IOException( "The File Is Corrupt, need to reset" );
+        }
+
+        ByteBuffer data = ByteBuffer.allocate(ded.len);
+        fc.read(data, ded.pos + HEADER_SIZE_BYTES);
+        data.flip();
+
+        return (Serializable) elementSerializer.deSerialize( data.array() );
     }
 
     /**
@@ -129,41 +129,40 @@ class IndexedDisk
     protected void move( final IndexedDiskElementDescriptor ded, final long newPosition )
         throws IOException
     {
-        synchronized ( this )
+        ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+        fc.read(datalength, ded.pos);
+        datalength.flip();
+        int length = datalength.getInt();
+
+        if ( length != ded.len )
         {
-            raf.seek( ded.pos );
-            int length = raf.readInt();
-
-            if ( length != ded.len )
-            {
-                throw new IOException( "Mismatched memory and disk length (" + length + ") for " + ded );
-            }
-
-            // TODO: more checks?
-
-            long readPos = ded.pos;
-            long writePos = newPosition;
-
-            // header len + data len
-            int remaining = RECORD_HEADER + length;
-
-            while ( remaining > 0 )
-            {
-                // chunk it
-                int chunkSize = Math.min( remaining, buffer.length );
-                raf.seek( readPos );
-                raf.readFully( buffer, 0, chunkSize );
-
-                raf.seek( writePos );
-                raf.write( buffer, 0, chunkSize );
-
-                writePos += chunkSize;
-                readPos += chunkSize;
-                remaining -= chunkSize;
-            }
-
-            ded.pos = newPosition;
+            throw new IOException( "Mismatched memory and disk length (" + length + ") for " + ded );
         }
+
+        // TODO: more checks?
+
+        long readPos = ded.pos;
+        long writePos = newPosition;
+
+        // header len + data len
+        int remaining = HEADER_SIZE_BYTES + length;
+        ByteBuffer buffer = ByteBuffer.allocate(16384);
+
+        while ( remaining > 0 )
+        {
+            // chunk it
+            int chunkSize = Math.min( remaining, buffer.capacity() );
+            fc.read(buffer, readPos);
+            buffer.flip();
+            fc.write(buffer, writePos);
+            buffer.clear();
+
+            writePos += chunkSize;
+            readPos += chunkSize;
+            remaining -= chunkSize;
+        }
+
+        ded.pos = newPosition;
     }
 
     /**
@@ -181,11 +180,7 @@ class IndexedDisk
         if ( log.isTraceEnabled() )
         {
             log.trace( "write> pos=" + pos );
-
-            synchronized (this)
-            {
-                log.trace( raf + " -- data.length = " + data.length );
-            }
+            log.trace( fc + " -- data.length = " + data.length );
         }
 
         if ( data.length != ded.len )
@@ -193,13 +188,13 @@ class IndexedDisk
             throw new IOException( "Mismatched descriptor and data lengths" );
         }
 
-        synchronized ( this )
-        {
-            raf.seek( pos );
-            raf.writeInt( data.length );
-            raf.write( data, 0, ded.len );
-        }
-        return true;
+        ByteBuffer buffer = ByteBuffer.allocate(HEADER_SIZE_BYTES + data.length);
+        buffer.putInt(data.length);
+        buffer.put(data);
+        buffer.flip();
+        int written = fc.write(buffer, pos);
+
+        return written == data.length;
     }
 
     /**
@@ -228,10 +223,7 @@ class IndexedDisk
     protected long length()
         throws IOException
     {
-        synchronized ( this )
-        {
-            return raf.length();
-        }
+        return fc.size();
     }
 
     /**
@@ -239,10 +231,10 @@ class IndexedDisk
      * <p>
      * @exception IOException
      */
-    protected synchronized void close()
+    protected void close()
         throws IOException
     {
-        raf.close();
+        fc.close();
     }
 
     /**
@@ -257,8 +249,8 @@ class IndexedDisk
         {
             log.debug( "Resetting Indexed File [" + filepath + "]" );
         }
-        raf.setLength(0);
-        raf.seek(0);
+        fc.truncate(0);
+        fc.force(true);
     }
 
     /**
@@ -267,14 +259,14 @@ class IndexedDisk
      * @param length the new length of the file
      * @throws IOException
      */
-    protected synchronized void truncate( long length )
+    protected void truncate( long length )
         throws IOException
     {
         if ( log.isInfoEnabled() )
         {
             log.info( "Trucating file [" + filepath + "] to " + length );
         }
-        raf.setLength( length );
+        fc.truncate( length );
     }
 
     /**

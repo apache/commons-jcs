@@ -21,8 +21,11 @@
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
             <action dev="tv" type="update">
-                Update build files to make JCS a true Apache Commons component. The
-                artifact id is now commons-jcs
+                Update IndexDisk and BlockDisk to use NIO in an attempt to fix
+                a timing-dependent test failure.
+            </action>
+            <action dev="tv" type="update">
+                Update build files to make JCS a true Apache Commons component.
             </action>
             <action dev="tv" type="update">
                 Set UTF-8 encoding on all source files
