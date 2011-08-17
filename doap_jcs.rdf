@@ -26,7 +26,7 @@
     <license rdf:resource="http://usefulinc.com/doap/licenses/asl20"/>
     <bug-database rdf:resource="http://issues.apache.org/scarab/servlet/scarab/"/>
     <download-page rdf:resource="http://jakarta.apache.org/jcs/Downloads.html"/>
-    <asfext:pmc rdf:resource="http://svn.apache.org/repos/asf/jakarta/site/jakarta.rdf"/>
+    <asfext:pmc rdf:resource="http://commons.apache.org/"/>
     <shortdesc xml:lang="en">Cache</shortdesc>
     <description xml:lang="en">Comprehensive Caching System</description>
     <repository>
