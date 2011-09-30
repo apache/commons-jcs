@@ -159,23 +159,20 @@ public class LateralCache
     protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
         throws IOException
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
-
         if ( this.lateralCacheAttribures.getPutOnlyMode() )
         {
-            return Collections.emptyMap();
+            return Collections.<Serializable, ICacheElement>emptyMap();
         }
         try
         {
-            elements = lateralCacheService.getMatching( cacheName, pattern );
+            return lateralCacheService.getMatching( cacheName, pattern );
         }
         catch ( IOException e )
         {
             log.error( e );
             handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
+            return Collections.<Serializable, ICacheElement>emptyMap();
         }
-
-        return elements;
     }
 
     /**
