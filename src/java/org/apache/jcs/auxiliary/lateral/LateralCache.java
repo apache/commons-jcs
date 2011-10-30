@@ -285,7 +285,7 @@ public class LateralCache
         log.debug( "Disposing of lateral cache" );
 
         ///* HELP: This section did nothing but generate compilation warnings.
-        // TODO: may limit this funcionality. It is dangerous.
+        // TODO: may limit this functionality. It is dangerous.
         // asmuts -- Added functionality to help with warnings. I'm not getting
         // any.
         try
