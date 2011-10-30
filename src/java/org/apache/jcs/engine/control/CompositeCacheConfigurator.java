@@ -328,54 +328,56 @@ public class CompositeCacheConfigurator
 
         CompositeCache cache = new CompositeCache( regName, cca, ea );
 
-        // Next, create the auxiliaries for the new cache
-        List<AuxiliaryCache> auxList = new ArrayList<AuxiliaryCache>();
-
-        if ( log.isDebugEnabled() )
+        if (value != null)
         {
-            log.debug( "Parsing region name '" + regName + "', value '" + value + "'" );
-        }
+            // Next, create the auxiliaries for the new cache
+            List<AuxiliaryCache> auxList = new ArrayList<AuxiliaryCache>();
 
-        // We must skip over ',' but not white space
-        StringTokenizer st = new StringTokenizer( value, "," );
-
-        // If value is not in the form ", appender.." or "", then we should set
-        // the priority of the category.
-
-        if ( !( value.startsWith( "," ) || value.equals( "" ) ) )
-        {
-            // just to be on the safe side...
-            if ( !st.hasMoreTokens() )
+            if ( log.isDebugEnabled() )
             {
-                return null;
+                log.debug( "Parsing region name '" + regName + "', value '" + value + "'" );
             }
-        }
 
-        AuxiliaryCache auxCache;
-        String auxName;
-        while ( st.hasMoreTokens() )
-        {
-            auxName = st.nextToken().trim();
-            if ( auxName == null || auxName.equals( "," ) )
+            // We must skip over ',' but not white space
+            StringTokenizer st = new StringTokenizer( value, "," );
+
+            // If value is not in the form ", appender.." or "", then we should set
+            // the priority of the category.
+
+            if ( !( value.startsWith( "," ) || value.equals( "" ) ) )
             {
-                continue;
+                // just to be on the safe side...
+                if ( !st.hasMoreTokens() )
+                {
+                    return null;
+                }
             }
-            log.debug( "Parsing auxiliary named \"" + auxName + "\"." );
 
-            auxCache = parseAuxiliary( cache, props, auxName, regName );
-
-            if ( auxCache != null )
+            AuxiliaryCache auxCache;
+            String auxName;
+            while ( st.hasMoreTokens() )
             {
-                auxList.add( auxCache );
+                auxName = st.nextToken().trim();
+                if ( auxName == null || auxName.equals( "," ) )
+                {
+                    continue;
+                }
+                log.debug( "Parsing auxiliary named \"" + auxName + "\"." );
+
+                auxCache = parseAuxiliary( cache, props, auxName, regName );
+
+                if ( auxCache != null )
+                {
+                    auxList.add( auxCache );
+                }
             }
+
+            // Associate the auxiliaries with the cache
+
+            cache.setAuxCaches( auxList.toArray( new AuxiliaryCache[0] ) );
         }
-
-        // Associate the auxiliaries with the cache
-
-        cache.setAuxCaches( auxList.toArray( new AuxiliaryCache[0] ) );
 
         // Return the new cache
-
         return cache;
     }
 
