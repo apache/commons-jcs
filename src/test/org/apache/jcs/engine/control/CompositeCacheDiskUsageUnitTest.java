@@ -344,7 +344,7 @@ public class CompositeCacheDiskUsageUnitTest
          */
         public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
         {
-            return new HashMap();
+            return new HashMap<Serializable, ICacheElement>();
         }
 
         /**
@@ -395,7 +395,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @return null
          * @throws IOException
          */
-        public Set getGroupKeys( String group )
+        public Set<Serializable> getGroupKeys( String group )
             throws IOException
         {
             return null;
@@ -468,7 +468,7 @@ public class CompositeCacheDiskUsageUnitTest
         public Map<Serializable, ICacheElement> getMatching(String pattern)
             throws IOException
         {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
     }
 

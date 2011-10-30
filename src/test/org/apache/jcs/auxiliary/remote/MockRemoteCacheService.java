@@ -44,16 +44,16 @@ public class MockRemoteCacheService
     public String lastGetMatchingPattern;
 
     /** The keya last passed to getMatching */
-    public Set lastGetMultipleKeys;
+    public Set<Serializable> lastGetMultipleKeys;
 
     /** The object that was last passed to update. */
     public Object lastUpdate;
 
     /** List of updates. */
-    public List updateRequestList = new ArrayList();
+    public List<ICacheElement> updateRequestList = new ArrayList<ICacheElement>();
 
     /** List of request ids. */
-    public List updateRequestIdList = new ArrayList();
+    public List<Long> updateRequestIdList = new ArrayList<Long>();
 
     /** The key that was last passed to remove. */
     public Object lastRemoveKey;
@@ -78,9 +78,9 @@ public class MockRemoteCacheService
      * @param groupName
      * @return empty set
      */
-    public Set getGroupKeys( String cacheName, String groupName )
+    public Set<Serializable> getGroupKeys( String cacheName, String groupName )
     {
-        return new HashSet();
+        return new HashSet<Serializable>();
     }
 
     /**
@@ -186,10 +186,10 @@ public class MockRemoteCacheService
      * @param requesterId
      * @return empty map
      */
-    public Map getMultiple( String cacheName, Set keys, long requesterId )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
     {
         lastGetMultipleKeys = keys;
-        return new HashMap();
+        return new HashMap<Serializable, ICacheElement>();
     }
 
     /**
@@ -197,7 +197,7 @@ public class MockRemoteCacheService
      * @param keys
      * @return empty map
      */
-    public Map getMultiple( String cacheName, Set keys )
+    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
     {
         return getMultiple( cacheName, keys, 0 );
     }
@@ -210,7 +210,7 @@ public class MockRemoteCacheService
      * @return an empty map
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -223,10 +223,10 @@ public class MockRemoteCacheService
      * @return Map
      * @throws IOException
      */
-    public Map getMatching( String cacheName, String pattern, long requesterId )
+    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         lastGetMatchingPattern = pattern;
-        return new HashMap();
+        return new HashMap<Serializable, ICacheElement>();
     }
 }

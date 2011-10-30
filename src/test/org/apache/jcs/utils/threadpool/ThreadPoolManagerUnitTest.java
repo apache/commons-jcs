@@ -124,7 +124,7 @@ public class ThreadPoolManagerUnitTest
         String poolName2 = "testGetPoolNames2";
         mgr.getPool( poolName2 );
 
-        ArrayList names = mgr.getPoolNames();
+        ArrayList<String> names = mgr.getPoolNames();
         assertTrue( "Should have name in list.", names.contains( poolName1 ) );
         assertTrue( "Should have name in list.", names.contains( poolName2 ) );
     }

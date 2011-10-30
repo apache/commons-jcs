@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -43,7 +44,7 @@ public class MockMemoryCache
     private ICompositeCacheAttributes cacheAttr;
 
     /** Internal map */
-    private final HashMap map = new HashMap();
+    private final HashMap<Serializable, ICacheElement> map = new HashMap<Serializable, ICacheElement>();
 
     /** The number of times waterfall was called. */
     public int waterfallCallCount = 0;
@@ -57,7 +58,7 @@ public class MockMemoryCache
      */
     public void initialize( CompositeCache cache )
     {
-        // nothinh
+        // nothing
     }
 
     /**
@@ -84,7 +85,7 @@ public class MockMemoryCache
     }
 
     /** @return null */
-    public Iterator getIterator()
+    public Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> getIterator()
     {
         return null;
     }
@@ -124,7 +125,7 @@ public class MockMemoryCache
     public ICacheElement get( Serializable key )
         throws IOException
     {
-        return (ICacheElement) map.get( key );
+        return map.get( key );
     }
 
     /**
@@ -135,15 +136,15 @@ public class MockMemoryCache
     public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
         throws IOException
     {
-        Map elements = new HashMap();
+        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator iterator = keys.iterator();
+            Iterator<Serializable> iterator = keys.iterator();
 
             while ( iterator.hasNext() )
             {
-                Serializable key = (Serializable) iterator.next();
+                Serializable key = iterator.next();
 
                 ICacheElement element = get( key );
 
@@ -165,7 +166,7 @@ public class MockMemoryCache
     public ICacheElement getQuiet( Serializable key )
         throws IOException
     {
-        return (ICacheElement) map.get( key );
+        return map.get( key );
     }
 
     /**
@@ -217,7 +218,7 @@ public class MockMemoryCache
      * @param group
      * @return null
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
     {
         return null;
     }

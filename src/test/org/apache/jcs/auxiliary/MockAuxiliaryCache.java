@@ -82,7 +82,7 @@ public class MockAuxiliaryCache
         throws IOException
     {
         getMatchingCallCount++;
-        return new HashMap();
+        return new HashMap<Serializable, ICacheElement>();
     }
 
     /**
@@ -94,7 +94,7 @@ public class MockAuxiliaryCache
      */
     public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
     {
-        return new HashMap();
+        return new HashMap<Serializable, ICacheElement>();
     }
 
     /**
@@ -159,7 +159,7 @@ public class MockAuxiliaryCache
      * @return null
      * @throws IOException
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
         throws IOException
     {
         return null;

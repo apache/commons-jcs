@@ -172,7 +172,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // DO WORK
         boolean result = listener.removeNoWait( noWait );
 
-        // VERIFY    
+        // VERIFY
         assertTrue( "Should have removed the no wait.", result );
     }
 
@@ -184,7 +184,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // SETUP
         String cacheName = "testAddDiscoveredService_FacadeInList_NoWaitNot";
 
-        ArrayList cacheNames = new ArrayList();
+        ArrayList<String> cacheNames = new ArrayList<String>();
         cacheNames.add( cacheName );
 
         DiscoveredService service = new DiscoveredService();
@@ -222,7 +222,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // SETUP
         String cacheName = "testRemoveDiscoveredService_FacadeInList_NoWaitIs";
 
-        ArrayList cacheNames = new ArrayList();
+        ArrayList<String> cacheNames = new ArrayList<String>();
         cacheNames.add( cacheName );
 
         DiscoveredService service = new DiscoveredService();

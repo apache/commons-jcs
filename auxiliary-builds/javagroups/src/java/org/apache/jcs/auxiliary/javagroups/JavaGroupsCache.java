@@ -270,7 +270,7 @@ public class JavaGroupsCache
      * @param group Ignored
      * @return Always reurns null
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
     {
         return null;
     }

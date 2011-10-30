@@ -152,7 +152,7 @@ public class AbstractDiskCacheUnitTest
         extends AbstractDiskCache
     {
         /** Internal map */
-        protected Map map = new HashMap();
+        protected Map<Serializable, ICacheElement> map = new HashMap<Serializable, ICacheElement>();
 
         /** used by the abstract aux class */
         protected IDiskCacheAttributes diskCacheAttributes;
@@ -190,7 +190,7 @@ public class AbstractDiskCacheUnitTest
         @Override
         public Set<Serializable> getGroupKeys(String groupName)
         {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         /**
@@ -222,7 +222,7 @@ public class AbstractDiskCacheUnitTest
             throws IOException
         {
             //System.out.println( "processGet: " + key );
-            return (ICacheElement) map.get( key );
+            return map.get( key );
         }
 
         /**

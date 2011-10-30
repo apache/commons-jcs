@@ -198,7 +198,7 @@ public class MockRemoteCacheClient
      * @param group
      * @return null
      */
-    public Set getGroupKeys( String group )
+    public Set<Serializable> getGroupKeys( String group )
     {
         return null;
     }

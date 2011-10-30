@@ -27,9 +27,9 @@ public class MockCacheEventLogger
 
     /** times called */
     public int errorEventCalls = 0;
-    
+
     /** list of messages */
-    public List errorMessages = new ArrayList();
+    public List<String> errorMessages = new ArrayList<String>();
 
     /**
      * @param source

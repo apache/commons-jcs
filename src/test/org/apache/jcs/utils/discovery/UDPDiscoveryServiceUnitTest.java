@@ -20,7 +20,6 @@ package org.apache.jcs.utils.discovery;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
@@ -50,7 +49,7 @@ public class UDPDiscoveryServiceUnitTest
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
-        discoveredService.setCacheNames( new ArrayList() );
+        discoveredService.setCacheNames( new ArrayList<String>() );
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 
@@ -82,9 +81,9 @@ public class UDPDiscoveryServiceUnitTest
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
         service.addDiscoveryListener( discoveryListener );
 
-        ArrayList sametCacheNames = new ArrayList();
+        ArrayList<String> sametCacheNames = new ArrayList<String>();
         sametCacheNames.add( "name1" );
-        
+
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
         discoveredService.setCacheNames( sametCacheNames );
@@ -110,11 +109,9 @@ public class UDPDiscoveryServiceUnitTest
         assertTrue( "Service should be in the listener list.", discoveryListener.discoveredServices
             .contains( discoveredService ) );
 
-        Iterator it = service.getDiscoveredServices().iterator();
         // need to update the time this sucks. add has no effect convert to a map
-        while ( it.hasNext() )
+        for (DiscoveredService service1 : service.getDiscoveredServices())
         {
-            DiscoveredService service1 = (DiscoveredService) it.next();
             if ( discoveredService.equals( service1 ) )
             {
                 assertEquals( "The match should have the new last heard from time.", service1.getLastHearFromTime(),
@@ -148,11 +145,11 @@ public class UDPDiscoveryServiceUnitTest
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
-        discoveredService.setCacheNames( new ArrayList() );
+        discoveredService.setCacheNames( new ArrayList<String>() );
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 
-        ArrayList differentCacheNames = new ArrayList();
+        ArrayList<String> differentCacheNames = new ArrayList<String>();
         differentCacheNames.add( "name1" );
         DiscoveredService discoveredService2 = new DiscoveredService();
         discoveredService2.setServiceAddress( host );
@@ -172,11 +169,9 @@ public class UDPDiscoveryServiceUnitTest
         assertTrue( "Service should be in the listener list.", discoveryListener.discoveredServices
             .contains( discoveredService ) );
 
-        Iterator it = service.getDiscoveredServices().iterator();
         // need to update the time this sucks. add has no effect convert to a map
-        while ( it.hasNext() )
+        for (DiscoveredService service1 : service.getDiscoveredServices())
         {
-            DiscoveredService service1 = (DiscoveredService) it.next();
             if ( discoveredService.equals( service1 ) )
             {
                 assertEquals( "The match should have the new last heard from time.", service1.getLastHearFromTime(),
@@ -190,7 +185,7 @@ public class UDPDiscoveryServiceUnitTest
         assertEquals( "The second mock listener add should be discoveredService2", discoveredService2,
                       discoveryListener.discoveredServices.get( 1 ) );
     }
-    
+
     /** Verify that the list is updated. */
     public void testRemoveDiscoveredService()
     {
@@ -211,7 +206,7 @@ public class UDPDiscoveryServiceUnitTest
 
         DiscoveredService discoveredService = new DiscoveredService();
         discoveredService.setServiceAddress( host );
-        discoveredService.setCacheNames( new ArrayList() );
+        discoveredService.setCacheNames( new ArrayList<String>() );
         discoveredService.setServicePort( 1000 );
         discoveredService.setLastHearFromTime( 100 );
 

@@ -196,7 +196,7 @@ public class LateralXMLRPCService
      * Gets the set of keys of objects currently in the group
      * throws UnsupportedOperationException
      */
-    public Set getGroupKeys(String cacheName, String group)
+    public Set<Serializable> getGroupKeys(String cacheName, String group)
     {
         if (true)
         {

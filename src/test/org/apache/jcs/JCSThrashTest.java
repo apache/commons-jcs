@@ -165,7 +165,7 @@ public class JCSThrashTest
         jcs.put( key, value );
 
         // Create 15 threads that read the keys;
-        final List executables = new ArrayList();
+        final List<Executable> executables = new ArrayList<Executable>();
         for ( int i = 0; i < 15; i++ )
         {
             final JCSThrashTest.Executable executable = new JCSThrashTest.Executable()
@@ -221,7 +221,7 @@ public class JCSThrashTest
      * @param executables
      * @throws Exception
      */
-    protected void runThreads( final List executables )
+    protected void runThreads( final List<Executable> executables )
         throws Exception
     {
 
@@ -232,7 +232,7 @@ public class JCSThrashTest
         final Thread[] threads = new Thread[executables.size()];
         for ( int i = 0; i < threads.length; i++ )
         {
-            final JCSThrashTest.Executable executable = (JCSThrashTest.Executable) executables.get( i );
+            final JCSThrashTest.Executable executable = executables.get( i );
             threads[i] = new Thread()
             {
                 public void run()

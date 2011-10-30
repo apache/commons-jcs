@@ -36,7 +36,7 @@ public class BoundedQueueUnitTest
     {
         // SETUP
         int maxSize = 10;
-        BoundedQueue queue = new BoundedQueue( maxSize );
+        BoundedQueue<Object> queue = new BoundedQueue<Object>( maxSize );
 
         // DO WORK
         Object result = queue.take();
@@ -52,7 +52,7 @@ public class BoundedQueueUnitTest
     {
         // SETUP
         int maxSize = 10;
-        BoundedQueue queue = new BoundedQueue( maxSize );
+        BoundedQueue<String> queue = new BoundedQueue<String>( maxSize );
 
         // DO WORK
         for ( int i = 0; i < maxSize * 2; i++ )
@@ -73,7 +73,7 @@ public class BoundedQueueUnitTest
     {
         // SETUP
         int maxSize = 10;
-        BoundedQueue queue = new BoundedQueue( maxSize );
+        BoundedQueue<String> queue = new BoundedQueue<String>( maxSize );
 
         // DO WORK
         for ( int i = 0; i < maxSize; i++ )
@@ -86,7 +86,7 @@ public class BoundedQueueUnitTest
 
         for ( int i = 0; i < maxSize; i++ )
         {
-            String result = (String)queue.take();
+            String result = queue.take();
             assertEquals( "Result not as expected",  String.valueOf( i ) ,  result  );
         }
     }

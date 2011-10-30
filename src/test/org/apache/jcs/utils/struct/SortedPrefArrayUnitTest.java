@@ -56,7 +56,7 @@ public class SortedPrefArrayUnitTest
     {
         int maxSize = 25;
 
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
         String[] elem = {
@@ -104,14 +104,14 @@ public class SortedPrefArrayUnitTest
         assertEquals( "Size was not as expected.", maxSize, array.size() );
 
         // this is a fragile test, since it relies on a hardcoded array
-        String smallest = (String) array.getSmallest();
+        String smallest = array.getSmallest();
         assertEquals( "smallest should be 08", "08", smallest );
 
-        String largest = (String) array.getLargest();
+        String largest = array.getLargest();
         assertEquals( "Largest should be 96", "96", largest );
 
         // this should take 96;
-        String taken = (String) array.takeNearestLargerOrEqual( "95" );
+        String taken = array.takeNearestLargerOrEqual( "95" );
         assertEquals( "Taken should be 96", "96", taken );
         assertEquals( "Size was not as expected.", ( maxSize - 1 ), array.size() );
 
@@ -126,11 +126,11 @@ public class SortedPrefArrayUnitTest
         throws Exception
     {
         int maxSize = 25;
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         array.setPreferLarge( true );
         for ( int i = 0; i < maxSize; i++ )
         {
-            String taken = (String) array.takeNearestLargerOrEqual( String.valueOf( i ) );
+            String taken = array.takeNearestLargerOrEqual( String.valueOf( i ) );
             assertNull( "taken should be null, since nothing was in the array", taken );
         }
     }
@@ -143,7 +143,7 @@ public class SortedPrefArrayUnitTest
         throws Exception
     {
         int maxSize = 25;
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         array.setPreferLarge( true );
 
         String[] elem = {
@@ -210,12 +210,12 @@ public class SortedPrefArrayUnitTest
         throws Exception
     {
         int maxSize = 25;
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         array.setPreferLarge( true );
 
         try
         {
-            String taken = (String) array.takeNearestLargerOrEqual( null );
+            String taken = array.takeNearestLargerOrEqual( null );
             assertNull( "taken should be null, since nothing was in the array", taken );
         }
         catch ( NullPointerException e )
@@ -232,7 +232,7 @@ public class SortedPrefArrayUnitTest
         throws Exception
     {
         int maxSize = 25;
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         array.setPreferLarge( true );
 
         array.add( "10" );
@@ -240,7 +240,7 @@ public class SortedPrefArrayUnitTest
 
         try
         {
-            String taken = (String) array.takeNearestLargerOrEqual( "09" );
+            String taken = array.takeNearestLargerOrEqual( "09" );
             System.out.println( taken );
             assertNotNull( "taken should not be null, since nothing was in the array", taken );
         }
@@ -258,14 +258,14 @@ public class SortedPrefArrayUnitTest
         throws Exception
     {
         int maxSize = 25;
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         array.setPreferLarge( true );
 
         array.add( "10" );
 
         try
         {
-            String taken = (String) array.takeNearestLargerOrEqual( "11" );
+            String taken = array.takeNearestLargerOrEqual( "11" );
             assertNull( "taken should be null, since nothing smaller was in the array", taken );
         }
         catch ( NullPointerException e )
@@ -282,12 +282,12 @@ public class SortedPrefArrayUnitTest
         throws Exception
     {
         int maxSize = 25;
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         array.setPreferLarge( true );
 
         try
         {
-            String taken = (String) array.takeNearestLargerOrEqual( "11" );
+            String taken = array.takeNearestLargerOrEqual( "11" );
             assertNull( "taken should be null, since nothing was in the array", taken );
         }
         catch ( NullPointerException e )
@@ -305,7 +305,7 @@ public class SortedPrefArrayUnitTest
     {
         int maxSize = 9;
 
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
         String[] elem = { "01", "02", "03", "04", "05", "08", "07", "06", "09", };
@@ -320,14 +320,14 @@ public class SortedPrefArrayUnitTest
         assertEquals( "Size was not as expected.", maxSize, array.size() );
 
         // this is a fragile test, since it relies on a hardcoded array
-        String smallest = (String) array.getSmallest();
+        String smallest = array.getSmallest();
         assertEquals( "smallest is not as expected", "01", smallest );
 
-        String largest = (String) array.getLargest();
+        String largest = array.getLargest();
         assertEquals( "Largest is not as expected", "09", largest );
 
         // this should take 96;
-        String taken = (String) array.takeNearestLargerOrEqual( "09" );
+        String taken = array.takeNearestLargerOrEqual( "09" );
         assertEquals( "Taken is not as expected", "09", taken );
         assertEquals( "Size was not as expected.", ( maxSize - 1 ), array.size() );
 
@@ -344,7 +344,7 @@ public class SortedPrefArrayUnitTest
     {
         int maxSize = 9;
 
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
         String[] elem = { "01", "02", "03", "04", "05", "08", "07", "06", "09", };
@@ -359,14 +359,14 @@ public class SortedPrefArrayUnitTest
         assertEquals( "Size was not as expected.", maxSize, array.size() );
 
         // this is a fragile test, since it relies on a hardcoded array
-        String smallest = (String) array.getSmallest();
+        String smallest = array.getSmallest();
         assertEquals( "smallest is not as expected", "01", smallest );
 
-        String largest = (String) array.getLargest();
+        String largest = array.getLargest();
         assertEquals( "Largest is not as expected", "09", largest );
 
         // this should take 96;
-        String taken = (String) array.takeNearestLargerOrEqual( "09" );
+        String taken = array.takeNearestLargerOrEqual( "09" );
         assertEquals( "Taken is not as expected", "09", taken );
         assertEquals( "Size was not as expected. " + array.dumpArray(), ( maxSize - 1 ), array.size() );
 
@@ -390,7 +390,7 @@ public class SortedPrefArrayUnitTest
     {
         int maxSize = 3;
 
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
         String[] elem = { "01", "02", "03" };
@@ -403,7 +403,7 @@ public class SortedPrefArrayUnitTest
         }
 
         // DO WORK
-        Comparable taken = array.takeNearestLargerOrEqual( "04" );
+        Comparable<String> taken = array.takeNearestLargerOrEqual( "04" );
         System.out.println( "testTakeLargerThanGreatest" + array.dumpArray() );
 
         assertNull( "We should have nothing since the largest element was smaller than what we asked for. "
@@ -417,7 +417,7 @@ public class SortedPrefArrayUnitTest
     {
         int maxSize = 3;
 
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
         String[] elem = { "01", "02", "03", "03" };
@@ -430,7 +430,7 @@ public class SortedPrefArrayUnitTest
         }
 
         // DO WORK
-        Comparable taken = array.takeNearestLargerOrEqual( "03" );
+        Comparable<String> taken = array.takeNearestLargerOrEqual( "03" );
         System.out.println( "testEqualToGreatest_LastTwoSameSize" + array.dumpArray() );
 
         assertNotNull( "We should have something since the largest element was equal to what we asked for.", taken );
@@ -443,7 +443,7 @@ public class SortedPrefArrayUnitTest
     {
         int maxSize = 3;
 
-        SortedPreferentialArray array = new SortedPreferentialArray( maxSize );
+        SortedPreferentialArray<String> array = new SortedPreferentialArray<String>( maxSize );
         // array.setPreferLarge( false );
         array.setPreferLarge( true );
         String[] elem = { "01", "02", "03" };
@@ -456,7 +456,7 @@ public class SortedPrefArrayUnitTest
         }
 
         // DO WORK
-        Comparable taken = array.takeNearestLargerOrEqual( "03" );
+        Comparable<String> taken = array.takeNearestLargerOrEqual( "03" );
         System.out.println( "testEqualToGreatest" + array.dumpArray() );
 
         assertNotNull( "We should have something since the largest element was equal to what we asked for.", taken );

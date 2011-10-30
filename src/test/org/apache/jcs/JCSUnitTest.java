@@ -69,7 +69,7 @@ public class JCSUnitTest
     {
         JCS jcs = JCS.getInstance( "testCache1" );
 
-        LinkedList list = buildList();
+        LinkedList<HashMap<String, String>> list = buildList();
 
         jcs.put( "some:key", list );
 
@@ -79,9 +79,9 @@ public class JCSUnitTest
     /**
      * @return builds a list
      */
-    private LinkedList buildList()
+    private LinkedList<HashMap<String, String>> buildList()
     {
-        LinkedList list = new LinkedList();
+        LinkedList<HashMap<String, String>> list = new LinkedList<HashMap<String,String>>();
 
         for ( int i = 0; i < 100; i++ )
         {
@@ -94,9 +94,9 @@ public class JCSUnitTest
     /**
      * @return a map
      */
-    private HashMap buildMap()
+    private HashMap<String, String> buildMap()
     {
-        HashMap map = new HashMap();
+        HashMap<String, String> map = new HashMap<String, String>();
 
         byte[] keyBytes = new byte[32];
         byte[] valBytes = new byte[128];
