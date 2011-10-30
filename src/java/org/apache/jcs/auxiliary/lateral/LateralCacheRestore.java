@@ -55,7 +55,7 @@ public class LateralCacheRestore
     }
 
     /**
-     * Returns true iff the connection to the lateral host for the corresponding cache manager can
+     * Returns true if the connection to the lateral host for the corresponding cache manager can
      * be successfully re-established.
      * <p>
      * @return whether or not the cache can be fixed.

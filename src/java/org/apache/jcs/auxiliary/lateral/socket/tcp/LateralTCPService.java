@@ -287,6 +287,7 @@ public class LateralTCPService
      *         data in cache matching the pattern.
      * @throws IOException
      */
+    @SuppressWarnings("unchecked")
     public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {

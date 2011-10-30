@@ -45,6 +45,11 @@ public class LateralCacheMonitor
      */
     private boolean alright = true;
 
+    /**
+     * shutdown flag
+     */
+    private boolean shutdown = false;
+
     /** code for eror */
     private final static int ERROR = 1;
 
@@ -102,6 +107,18 @@ public class LateralCacheMonitor
     }
 
     /**
+     * Notifies the cache monitor that the service shall shut down
+     */
+    public void notifyShutdown()
+    {
+        synchronized ( this )
+        {
+            this.shutdown = true;
+            notify();
+        }
+    }
+
+    /**
      * Main processing method for the LateralCacheMonitor object
      */
     public void run()
@@ -148,6 +165,16 @@ public class LateralCacheMonitor
                 // will need to test not just check status
             }
 
+            // check for requested shutdown
+            synchronized ( this )
+            {
+                if (shutdown)
+                {
+                    log.info( "Shutting down cache monitor" );
+                    return;
+                }
+            }
+
             // The "alright" flag must be false here.
             // Simply presume we can fix all the errors until proven otherwise.
             synchronized ( this )
@@ -185,7 +212,7 @@ public class LateralCacheMonitor
                         // there
                         // is not a cache yet.
                         // if this is error driven mode, mark as bad,
-                        // otherwise we will come back around argain.
+                        // otherwise we will come back around again.
                         if ( mode == ERROR )
                         {
                             bad();
@@ -247,7 +274,7 @@ public class LateralCacheMonitor
     }
 
     /**
-     * Sets the "alright" flag to false in a critial section.
+     * Sets the "alright" flag to false in a critical section.
      */
     private void bad()
     {

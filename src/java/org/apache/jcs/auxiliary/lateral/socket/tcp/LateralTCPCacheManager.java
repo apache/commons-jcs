@@ -343,7 +343,7 @@ public class LateralTCPCacheManager
      */
     public void shutdown()
     {
-        // TODO revist this.
+        // TODO revisit this.
         // the name here doesn't matter.
         try
         {
@@ -352,6 +352,12 @@ public class LateralTCPCacheManager
         catch ( IOException e )
         {
             log.error( "Problem disposing of service", e );
+        }
+
+        // shut down monitor
+        if (monitor != null)
+        {
+            monitor.notifyShutdown();
         }
     }
 }

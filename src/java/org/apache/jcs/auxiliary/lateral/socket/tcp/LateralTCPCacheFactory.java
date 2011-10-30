@@ -94,6 +94,13 @@ public class LateralTCPCacheFactory
                 lacC.setTcpServer( server );
                 LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lacC, cacheMgr, cacheEventLogger,
                                                                                  elementSerializer );
+
+                // register for shutdown notification
+                if (cacheMgr instanceof IShutdownObservable )
+                {
+                    ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( lcm );
+                }
+
                 ICache ic = lcm.getCache( lacC.getCacheName() );
                 if ( ic != null )
                 {
