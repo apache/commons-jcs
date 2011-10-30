@@ -90,11 +90,8 @@ public class PooledCacheEventQueue
         this.waitBeforeRetry = waitBeforeRetry <= 0 ? 500 : waitBeforeRetry;
 
         // this will share the same pool with other event queues by default.
-        if ( threadPoolName == null )
-        {
-            threadPoolName = "cache_event_queue";
-        }
-        pool = ThreadPoolManager.getInstance().getPool( threadPoolName );
+        pool = ThreadPoolManager.getInstance().getPool(
+                (threadPoolName == null) ? "cache_event_queue" : threadPoolName );
 
         if ( log.isDebugEnabled() )
         {
