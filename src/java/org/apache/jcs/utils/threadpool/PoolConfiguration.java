@@ -32,10 +32,10 @@ public class PoolConfiguration
     /** Should we bound the queue */
     private boolean useBoundary = true;
 
-    /** If the queue is boudned, how big can it get */
+    /** If the queue is bounded, how big can it get */
     private int boundarySize = 2000;
 
-    /** only has meaning if a bounday is used */
+    /** only has meaning if a boundary is used */
     private int maximumPoolSize = 150;
 
     /**
@@ -195,13 +195,13 @@ public class PoolConfiguration
             }
             else
             {
-                // the value is invalid, dfault to RUN
+                // the value is invalid, default to RUN
                 this.whenBlockedPolicy = POLICY_RUN;
             }
         }
         else
         {
-            // the value is null, dfault to RUN
+            // the value is null, default to RUN
             this.whenBlockedPolicy = POLICY_RUN;
         }
     }
