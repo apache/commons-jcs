@@ -73,7 +73,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     {
         JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );
     }
-    
+
     /**
      * Test the basic JDBC disk cache functionality with a hsql backing.
      * @throws Exception
@@ -158,22 +158,22 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         String region = "testCache2";
         JCS jcs = JCS.getInstance( region );
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
-        
+
         // DO WORK
         for ( int i = 0; i <= items; i++ )
         {
             jcs.put( i + ":key", region + " data " + i );
         }
         Thread.sleep( 1000 );
-        
+
         Map matchingResults = jcs.getMatchingCacheElements( "1.8.+" );
-        
+
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
-        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );        
+        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
         System.out.println( "\nAFTER TEST \n" + jcs.getStats() );
     }
-    
+
     /**
      * SETUP TABLE FOR CACHE
      * @param cConn
@@ -188,8 +188,8 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
         createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
         createSql.append( "ELEMENT               BINARY, " );
-        createSql.append( "CREATE_TIME           DATE, " );
-        createSql.append( "CREATE_TIME_SECONDS   BIGINT, " );
+        createSql.append( "CREATE_TIME           TIMESTAMP, " );
+        createSql.append( "UPDATE_TIME_SECONDS   BIGINT, " );
         createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
         createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
         createSql.append( "IS_ETERNAL            CHAR(1), " );

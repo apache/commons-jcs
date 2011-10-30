@@ -226,8 +226,8 @@ public class JDBCDiskCacheShrinkUnitTest
         createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
         createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
         createSql.append( "ELEMENT               BINARY, " );
-        createSql.append( "CREATE_TIME           DATE, " );
-        createSql.append( "CREATE_TIME_SECONDS   BIGINT, " );
+        createSql.append( "CREATE_TIME           TIMESTAMP, " );
+        createSql.append( "UPDATE_TIME_SECONDS   BIGINT, " );
         createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
         createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
         createSql.append( "IS_ETERNAL            CHAR(1), " );

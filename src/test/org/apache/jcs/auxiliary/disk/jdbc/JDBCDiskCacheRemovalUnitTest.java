@@ -34,7 +34,7 @@ public class JDBCDiskCacheRemovalUnitTest
     extends TestCase
 {
     /** db name -- set in system props */
-    private String databaseName = "JCS_STORE_REMOVAL";
+    private final String databaseName = "JCS_STORE_REMOVAL";
 
     /**
      * Test setup
@@ -49,7 +49,7 @@ public class JDBCDiskCacheRemovalUnitTest
      * Verify the fix for BUG JCS-20
      * <p>
      * Setup an hsql db. Add an item. Remove using partial key.
-     * @throws Exception 
+     * @throws Exception
      */
     public void testPartialKeyRemoval_Good()
         throws Exception
@@ -81,9 +81,9 @@ public class JDBCDiskCacheRemovalUnitTest
 
     /**
      * Create the database.
-     * @throws InstantiationException 
-     * @throws IllegalAccessException 
-     * @throws ClassNotFoundException 
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
      * @throws SQLException
      */
     private void setupDatabase()
@@ -121,8 +121,8 @@ public class JDBCDiskCacheRemovalUnitTest
         createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );
         createSql.append( "REGION                VARCHAR(250)          NOT NULL, " );
         createSql.append( "ELEMENT               BINARY, " );
-        createSql.append( "CREATE_TIME           DATE, " );
-        createSql.append( "CREATE_TIME_SECONDS   BIGINT, " );
+        createSql.append( "CREATE_TIME           TIMESTAMP, " );
+        createSql.append( "UPDATE_TIME_SECONDS   BIGINT, " );
         createSql.append( "MAX_LIFE_SECONDS      BIGINT, " );
         createSql.append( "SYSTEM_EXPIRE_TIME_SECONDS      BIGINT, " );
         createSql.append( "IS_ETERNAL            CHAR(1), " );
