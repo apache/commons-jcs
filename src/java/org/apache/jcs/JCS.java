@@ -19,6 +19,8 @@ package org.apache.jcs;
  * under the License.
  */
 
+import java.util.Properties;
+
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
@@ -37,6 +39,9 @@ public class JCS
 {
     /** cache.ccf alternative. */
     private static String configFilename = null;
+
+    /** alternative configuration properties */
+    private static Properties configProps = null;
 
     /** The manager returns cache instances. */
     private static CompositeCacheManager cacheMgr;
@@ -91,15 +96,19 @@ public class JCS
     {
         if ( cacheMgr == null )
         {
-            if ( configFilename == null )
+            if ( configProps != null )
             {
-                cacheMgr = CompositeCacheManager.getInstance();
+                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+                cacheMgr.configure( configProps );
+            }
+            else if ( configFilename != null )
+            {
+                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+                cacheMgr.configure( configFilename );
             }
             else
             {
-                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-
-                cacheMgr.configure( configFilename );
+                cacheMgr = CompositeCacheManager.getInstance();
             }
         }
     }
@@ -113,5 +122,16 @@ public class JCS
     public static void setConfigFilename( String configFilename )
     {
         JCS.configFilename = configFilename;
+    }
+
+    /**
+     * Set the properties that the cache manager will be initialized with. Only
+     * matters before the instance is initialized.
+     *
+     * @param configProps
+     */
+    public static void setConfigProperties( Properties configProps )
+    {
+        JCS.configProps = configProps;
     }
 }

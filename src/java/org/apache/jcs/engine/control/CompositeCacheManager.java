@@ -302,10 +302,10 @@ public class CompositeCacheManager
     }
 
     /**
-     * Configure from properties object, overriding with values from the system properteis if
+     * Configure from properties object, overriding with values from the system properties if
      * instructed.
      * <p>
-     * You can override a specific value by passing in a ssytem property:
+     * You can override a specific value by passing in a system property:
      * <p>
      * For example, you could override this value in the cache.ccf file by starting up your program
      * with the argument: -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111
