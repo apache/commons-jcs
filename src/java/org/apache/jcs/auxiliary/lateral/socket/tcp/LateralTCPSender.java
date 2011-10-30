@@ -58,22 +58,8 @@ public class LateralTCPSender
     /** The socket connection with the server. */
     private Socket socket;
 
-    /** counter, for periodic OOS reset. */
-    int counter = 0;
-
     /** how many messages sent */
     private int sendCnt = 0;
-
-    // reset the ObjectOutputStream every 70 calls
-    // private static final int RESET_FREQUENCY = 70;
-    // Perhaps we need to reset every time until we move to jdk 1.4
-    // then we can call writeUnshared to make sure
-    // that the object definetely gets across and not
-    // a stream cached version.
-    // I can't replicate an issue that was reported, so I'm not changing the
-    // reset frequency for now.
-    /** How often we need to reset the stream. */
-    private final static int RESET_FREQUENCY = 70;
 
     /** Use to synchronize multiple threads that may be trying to get. */
     private final Object getLock = new int[0];
@@ -216,19 +202,8 @@ public class LateralTCPSender
             {
                 try
                 {
-                    oos.writeObject( led );
+                    oos.writeUnshared( led );
                     oos.flush();
-                    if ( ++counter >= RESET_FREQUENCY )
-                    {
-                        counter = 0;
-                        // Failing to reset the object output stream every now and
-                        // then creates a serious memory leak.
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Doing oos.reset()" );
-                        }
-                        oos.reset();
-                    }
                 }
                 catch ( IOException e )
                 {
@@ -292,7 +267,7 @@ public class LateralTCPSender
                     }
 
                     // write object to listener
-                    oos.writeObject( led );
+                    oos.writeUnshared( led );
                     oos.flush();
 
                     try
@@ -312,15 +287,6 @@ public class LateralTCPSender
                     catch ( Exception e )
                     {
                         log.error( e );
-                    }
-
-                    if ( ++counter >= RESET_FREQUENCY )
-                    {
-                        counter = 0;
-                        // Failing to reset the object output stream every now
-                        // and then creates a serious memory leak.
-                        log.info( "Doing oos.reset()" );
-                        oos.reset();
                     }
                 }
                 catch ( IOException e )
