@@ -22,7 +22,7 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,8 +62,8 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  *                       CACHE_KEY                  VARCHAR(250)          NOT NULL,
  *                       REGION                     VARCHAR(250)          NOT NULL,
  *                       ELEMENT                    BLOB,
- *                       CREATE_TIME                DATE,
- *                       CREATE_TIME_SECONDS        BIGINT,
+ *                       CREATE_TIME                TIMESTAMP,
+ *                       UPDATE_TIME_SECONDS        BIGINT,
  *                       MAX_LIFE_SECONDS           BIGINT,
  *                       SYSTEM_EXPIRE_TIME_SECONDS BIGINT,
  *                       IS_ETERNAL                 CHAR(1),
@@ -328,7 +328,7 @@ public class JDBCDiskCache
         {
             String sqlI = "insert into "
                 + getJdbcDiskCacheAttributes().getTableName()
-                + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, CREATE_TIME_SECONDS, SYSTEM_EXPIRE_TIME_SECONDS) "
+                + " (CACHE_KEY, REGION, ELEMENT, MAX_LIFE_SECONDS, IS_ETERNAL, CREATE_TIME, UPDATE_TIME_SECONDS, SYSTEM_EXPIRE_TIME_SECONDS) "
                 + " values (?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement psInsert = con.prepareStatement( sqlI );
@@ -344,8 +344,8 @@ public class JDBCDiskCache
             {
                 psInsert.setString( 5, "F" );
             }
-            Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
-            psInsert.setDate( 6, createTime );
+            Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
+            psInsert.setTimestamp( 6, createTime );
 
             long now = System.currentTimeMillis() / 1000;
             psInsert.setLong( 7, now );
@@ -392,13 +392,13 @@ public class JDBCDiskCache
         try
         {
             sqlU = "update " + getJdbcDiskCacheAttributes().getTableName()
-                + " set ELEMENT  = ?, CREATE_TIME = ?, CREATE_TIME_SECONDS = ?, " + " SYSTEM_EXPIRE_TIME_SECONDS = ? "
+                + " set ELEMENT  = ?, CREATE_TIME = ?, UPDATE_TIME_SECONDS = ?, " + " SYSTEM_EXPIRE_TIME_SECONDS = ? "
                 + " where CACHE_KEY = ? and REGION = ?";
             PreparedStatement psUpdate = con.prepareStatement( sqlU );
             psUpdate.setBytes( 1, element );
 
-            Date createTime = new Date( ce.getElementAttributes().getCreateTime() );
-            psUpdate.setDate( 2, createTime );
+            Timestamp createTime = new Timestamp( ce.getElementAttributes().getCreateTime() );
+            psUpdate.setTimestamp( 2, createTime );
 
             long now = System.currentTimeMillis() / 1000;
             psUpdate.setLong( 3, now );
@@ -876,7 +876,7 @@ public class JDBCDiskCache
             // String sql = "delete from " +
             // getJdbcDiskCacheAttributes().getTableName() + " where REGION = '"
             // + this.getCacheName() + "' and IS_ETERNAL = 'F' and (" + now
-            // + " - CREATE_TIME_SECONDS) > MAX_LIFE_SECONDS";
+            // + " - UPDATE_TIME_SECONDS) > MAX_LIFE_SECONDS";
 
             String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
                 + " where IS_ETERNAL = ? and REGION = ? and ? > SYSTEM_EXPIRE_TIME_SECONDS";
