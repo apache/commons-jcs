@@ -62,7 +62,7 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * between the two servers. Since caches are usually high get and low put, this should allow you to
  * scale.
  */
-class RemoteCacheServer
+public class RemoteCacheServer
     extends UnicastRemoteObject
     implements IRemoteCacheService, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
 {
@@ -117,7 +117,7 @@ class RemoteCacheServer
      * @param rcsa
      * @throws RemoteException
      */
-    RemoteCacheServer( IRemoteCacheServerAttributes rcsa )
+    protected RemoteCacheServer( IRemoteCacheServerAttributes rcsa )
         throws RemoteException
     {
         super( rcsa.getServicePort() );
@@ -133,7 +133,7 @@ class RemoteCacheServer
      * @param customRMISocketFactory
      * @throws RemoteException
      */
-    RemoteCacheServer( IRemoteCacheServerAttributes rcsa, RMISocketFactory customRMISocketFactory )
+    protected RemoteCacheServer( IRemoteCacheServerAttributes rcsa, RMISocketFactory customRMISocketFactory )
         throws RemoteException
     {
         super( rcsa.getServicePort(), customRMISocketFactory, customRMISocketFactory );

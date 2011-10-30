@@ -29,8 +29,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.remote.server.RemoteCacheServer;
+import org.apache.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
+import org.apache.jcs.engine.CacheElementSerialized;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
@@ -46,9 +47,6 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
  */
 public class JCSAdminBean
 {
-    /** The logger. */
-    private static final Log log = LogFactory.getLog( JCSAdminBean.class );
-
     /** The cache manager. */
     private final CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
 
@@ -146,80 +144,225 @@ public class JCSAdminBean
     }
 
     /**
-     * Tries to estimate how much data is in a region. This is expensive. If there are any non
-     * serializable objects in the region, the count will stop when it encounters the first one.
-     * <p>
-     * @param cache
-     * @return int
-     * @throws Exception
+     * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
+     * the region or an error occurs, suppresses exceptions and returns 0.
+     * <p/>
+     *
+     * @return int The size of the region in bytes.
      */
-    public int getByteCount( CompositeCache cache )
-        throws Exception
+    public int getByteCount(CompositeCache cache) throws Exception
     {
-        IMemoryCache memCache = cache.getMemoryCache();
+        if (cache == null)
+        {
+            throw new IllegalArgumentException("The cache object specified was null.");
+        }
 
-        Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> iter = memCache.getIterator();
-
-        CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream( counter );
-
-        // non serializable objects will cause problems here
-        // stop at the first non serializable exception.
+        long size = 0;
         try
         {
-            while ( iter.hasNext() )
+            IMemoryCache memCache = cache.getMemoryCache();
+
+            Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> iter = memCache.getIterator();
+            while (iter.hasNext())
             {
                 MemoryElementDescriptor me = iter.next().getValue();
-                out.writeObject( me.ce.getVal() );
+                ICacheElement ice = me.ce;
+
+                if (ice instanceof CacheElementSerialized)
+                {
+                    size = size + ((CacheElementSerialized) ice).getSerializedValue().length;
+                }
+                else
+                {
+                    Serializable element = ice.getVal();
+
+                    //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
+                    CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
+                    try
+                    {
+                        ObjectOutputStream out = new ObjectOutputStream(counter);
+                        out.writeObject(element);
+                    }
+                    catch (IOException e)
+                    {
+                        throw new RuntimeException("IOException while trying to measure the size of the cached element", e);
+                    }
+
+                    // 4 bytes lost for the serialization header
+                    size = size + counter.getCount() - 4;
+                }
+            }
+
+            if (size > Integer.MAX_VALUE)
+            {
+                throw new IllegalStateException("The size of cache " + cache.getCacheName() + " (" + size + " bytes) is too large to be represented as an integer.");
             }
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
-            log.info( "Problem getting byte count.  Likely cause is a non serializable object." + e.getMessage() );
+            // throw new RuntimeException("Failed to calculate the size of cache region [" + cache.getCacheName() + "]:" + e, e);
+            return 0;
         }
 
-        // 4 bytes lost for the serialization header
-        return counter.getCount() - 4;
+        return (int) size;
     }
 
     /**
      * Clears all regions in the cache.
-     * <p>
-     * @throws IOException
+     * <p/>
+     * If this class is running within a remote cache server, clears all regions via the <code>RemoteCacheServer</code>
+     * API, so that removes will be broadcast to client machines. Otherwise clears all regions in the cache directly via
+     * the usual cache API.
      */
-    public void clearAllRegions()
-        throws IOException
+    public void clearAllRegions() throws IOException
     {
-        String[] names = cacheHub.getCacheNames();
-
-        for ( int i = 0; i < names.length; i++ )
+        if (RemoteCacheServerFactory.getRemoteCacheServer() == null)
         {
-            cacheHub.getCache( names[i] ).removeAll();
+            // Not running in a remote cache server.
+            // Remove objects from the cache directly, as no need to broadcast removes to client machines...
+
+            String[] names = cacheHub.getCacheNames();
+
+            for (int i = 0; i < names.length; i++)
+            {
+                cacheHub.getCache(names[i]).removeAll();
+            }
+        }
+        else
+        {
+            // Running in a remote cache server.
+            // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
+            try
+            {
+                String[] cacheNames = CompositeCacheManager.getInstance().getCacheNames();
+
+                // Call remoteCacheServer.removeAll(String) for each cacheName...
+                RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                for (int i = 0; i < cacheNames.length; i++)
+                {
+                    String cacheName = cacheNames[i];
+                    remoteCacheServer.removeAll(cacheName);
+                }
+            }
+            catch (IOException e)
+            {
+                throw new IllegalStateException("Failed to remove all elements from all cache regions: " + e, e);
+            }
         }
     }
 
     /**
      * Clears a particular cache region.
-     * <p>
-     * @param cacheName
-     * @throws IOException
+     * <p/>
+     * If this class is running within a remote cache server, clears the region via the <code>RemoteCacheServer</code>
+     * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
+     * cache API.
      */
-    public void clearRegion( String cacheName )
-        throws IOException
+    public void clearRegion(String cacheName) throws IOException
     {
-        cacheHub.getCache( cacheName ).removeAll();
+        if (cacheName == null)
+        {
+            throw new IllegalArgumentException("The cache name specified was null.");
+        }
+        if (RemoteCacheServerFactory.getRemoteCacheServer() == null)
+        {
+            // Not running in a remote cache server.
+            // Remove objects from the cache directly, as no need to broadcast removes to client machines...
+            cacheHub.getCache(cacheName).removeAll();
+        }
+        else
+        {
+            // Running in a remote cache server.
+            // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
+            try
+            {
+                // Call remoteCacheServer.removeAll(String)...
+                RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                remoteCacheServer.removeAll(cacheName);
+            }
+            catch (IOException e)
+            {
+                throw new IllegalStateException("Failed to remove all elements from cache region [" + cacheName + "]: " + e, e);
+            }
+        }
     }
 
     /**
      * Removes a particular item from a particular region.
-     * <p>
+     * <p/>
+     * If this class is running within a remote cache server, removes the item via the <code>RemoteCacheServer</code>
+     * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
+     * cache API.
+     *
      * @param cacheName
      * @param key
+     *
      * @throws IOException
      */
-    public void removeItem( String cacheName, String key )
-        throws IOException
+    public void removeItem(String cacheName, String key) throws IOException
     {
-        cacheHub.getCache( cacheName ).remove( key );
+        if (cacheName == null)
+        {
+            throw new IllegalArgumentException("The cache name specified was null.");
+        }
+        if (key == null)
+        {
+            throw new IllegalArgumentException("The key specified was null.");
+        }
+        if (RemoteCacheServerFactory.getRemoteCacheServer() == null)
+        {
+            // Not running in a remote cache server.
+            // Remove objects from the cache directly, as no need to broadcast removes to client machines...
+            cacheHub.getCache(cacheName).remove(key);
+        }
+        else
+        {
+            // Running in a remote cache server.
+            // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
+            try
+            {
+                Object keyToRemove = null;
+                CompositeCache cache = CompositeCacheManager.getInstance().getCache(cacheName);
+
+                // A String key was supplied, but to remove elements via the RemoteCacheServer API, we need the
+                // actual key object as stored in the cache (i.e. a Serializable object). To find the key in this form,
+                // we iterate through all keys stored in the memory cache until we find one whose toString matches
+                // the string supplied...
+                Object[] allKeysInCache = cache.getMemoryCache().getKeyArray();
+                for (int i = 0; i < allKeysInCache.length; i++)
+                {
+                    Object keyInCache = allKeysInCache[i];
+                    if (keyInCache.toString().equals(key))
+                    {
+                        if (keyToRemove == null)
+                        {
+                            keyToRemove = keyInCache;
+                        }
+                        else
+                        {
+                            // A key matching the one specified was already found...
+                            throw new IllegalStateException("Unexpectedly found duplicate keys in the cache region matching the key specified.");
+                        }
+                    }
+                }
+                if (keyToRemove == null)
+                {
+                    throw new IllegalStateException("No match for this key could be found in the set of keys retrieved from the memory cache.");
+                }
+                if (!(keyToRemove instanceof Serializable))
+                {
+                    throw new IllegalStateException("Found key [" + keyToRemove + ", " + keyToRemove.getClass() + "] in cache matching key specified, however key found in cache is unexpectedly not serializable.");
+                }
+                // At this point, we have retrieved the matching Serializable key.
+
+                // Call remoteCacheServer.remove(String, Serializable)...
+                RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                remoteCacheServer.remove(cacheName, key);
+            }
+            catch (Exception e)
+            {
+                throw new IllegalStateException("Failed to remove element with key [" + key + ", " + key.getClass() + "] from cache region [" + cacheName + "]: " + e, e);
+            }
+        }
     }
 }

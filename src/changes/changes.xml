@@ -20,6 +20,10 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="fix" issue="JCS-68" due-to="Niall Gallagher">
+                Made RemoteCacheServer public, added remote cache remove feature to
+                JCSAdminBean
+            </action>
             <action dev="tv" type="fix" issue="JCS-82" due-to="Nikunj Trivedi">
                 Use oos.writeUnshared() for LateralTCPSender
             </action>
