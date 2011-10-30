@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="fix" issue="JCS-11" due-to="Peter Schwarz">
+                Add method for programmatic configuration to JCS
+            </action>
             <action dev="tv" type="fix" issue="JCS-84" due-to="Aleksandar Ivanisevic">
                 Increase precision of CREATE_TIME, fix name of UPDATE_TIME_SECONDS
                 column.
