@@ -43,7 +43,7 @@ public class JDBCDiskCachePoolAccess
     /** The logger. */
     private final static Log log = LogFactory.getLog( JDBCDiskCachePoolAccess.class );
 
-    /** The defualt Pool Name to which the connetion pool will be keyed. */
+    /** The default Pool Name to which the connection pool will be keyed. */
     public static final String DEFAULT_POOL_NAME = "jcs";
 
     /** The name of the pool. */
@@ -51,7 +51,7 @@ public class JDBCDiskCachePoolAccess
 
     /** default jdbc driver. */
     private static final String DRIVER_NAME = "jdbc:apache:commons:dbcp:";
-    
+
     /**
      * Configures the pool name to use for the pool access.
      * <p>
@@ -71,7 +71,7 @@ public class JDBCDiskCachePoolAccess
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "The pool name supplied was null.  Using default instead." );
+                log.info( "The pool name supplied was null. Using default instead." );
             }
         }
     }
@@ -92,7 +92,7 @@ public class JDBCDiskCachePoolAccess
         }
         catch ( SQLException e )
         {
-            log.error( "Problem getting conenction.", e );
+            log.error( "Problem getting connection.", e );
             throw e;
         }
 
@@ -189,7 +189,7 @@ public class JDBCDiskCachePoolAccess
      * @param connectURI
      * @param userName
      * @param password
-     * @param maxActive max connetions
+     * @param maxActive max connections
      * @throws Exception
      */
     public void setupDriver( String connectURI, String userName, String password, int maxActive )
@@ -202,7 +202,7 @@ public class JDBCDiskCachePoolAccess
         ObjectPool connectionPool = new GenericObjectPool( null, maxActive );
 
         // TODO make configurable
-        // By dfault the size is 8!!!!!!!
+        // By default the size is 8!!!!!!!
         ( (GenericObjectPool) connectionPool ).setMaxIdle( -1 );
 
         // Next, we'll create a ConnectionFactory that the
