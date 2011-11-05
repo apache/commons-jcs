@@ -93,9 +93,9 @@ public class CacheAccess
     public static CacheAccess defineRegion( String name )
         throws CacheException
     {
-        ensureCacheManager();
+        getCacheManager();
 
-        return new CacheAccess( cacheMgr.getCache( name ) );
+        return new CacheAccess( getCacheManager().getCache( name ) );
     }
 
     /**
@@ -109,9 +109,7 @@ public class CacheAccess
     public static CacheAccess defineRegion( String name, ICompositeCacheAttributes cattr )
         throws CacheException
     {
-        ensureCacheManager();
-
-        return new CacheAccess( cacheMgr.getCache( name, cattr ) );
+        return new CacheAccess( getCacheManager().getCache( name, cattr ) );
     }
 
     /**
@@ -127,9 +125,7 @@ public class CacheAccess
     public static CacheAccess defineRegion( String name, ICompositeCacheAttributes cattr, IElementAttributes attr )
         throws CacheException
     {
-        ensureCacheManager();
-
-        return new CacheAccess( cacheMgr.getCache( name, cattr, attr ) );
+        return new CacheAccess( getCacheManager().getCache( name, cattr, attr ) );
     }
 
     /**
@@ -142,9 +138,7 @@ public class CacheAccess
     public static CacheAccess getAccess( String region )
         throws CacheException
     {
-        ensureCacheManager();
-
-        return new CacheAccess( cacheMgr.getCache( region ) );
+        return new CacheAccess( getCacheManager().getCache( region ) );
     }
 
     /**
@@ -158,9 +152,7 @@ public class CacheAccess
     public static CacheAccess getAccess( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        ensureCacheManager();
-
-        return new CacheAccess( cacheMgr.getCache( region, icca ) );
+        return new CacheAccess( getCacheManager().getCache( region, icca ) );
     }
 
     /**
@@ -169,7 +161,7 @@ public class CacheAccess
      *
      * @throws CacheException if the configuration cannot be loaded
      */
-    protected static void ensureCacheManager() throws CacheException
+    protected static CompositeCacheManager getCacheManager() throws CacheException
     {
         synchronized ( CacheAccess.class )
         {
@@ -177,6 +169,8 @@ public class CacheAccess
             {
                 cacheMgr = CompositeCacheManager.getInstance();
             }
+
+            return cacheMgr;
         }
     }
 

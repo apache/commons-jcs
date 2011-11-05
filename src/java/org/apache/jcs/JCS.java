@@ -66,9 +66,7 @@ public class JCS
     public static JCS getInstance( String region )
         throws CacheException
     {
-        ensureCacheManager();
-
-        return new JCS( cacheMgr.getCache( region ) );
+        return new JCS( getCacheManager().getCache( region ) );
     }
 
     /**
@@ -82,9 +80,7 @@ public class JCS
     public static JCS getInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        ensureCacheManager();
-
-        return new JCS( cacheMgr.getCache( region, icca ) );
+        return new JCS( getCacheManager().getCache( region, icca ) );
     }
 
     /**
@@ -94,24 +90,29 @@ public class JCS
      *
      * @throws CacheException if the configuration cannot be loaded
      */
-    protected static synchronized void ensureCacheManager() throws CacheException
+    protected static CompositeCacheManager getCacheManager() throws CacheException
     {
-        if ( cacheMgr == null )
+        synchronized ( JCS.class )
         {
-            if ( configProps != null )
+            if ( cacheMgr == null )
             {
-                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-                cacheMgr.configure( configProps );
+                if ( configProps != null )
+                {
+                    cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+                    cacheMgr.configure( configProps );
+                }
+                else if ( configFilename != null )
+                {
+                    cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
+                    cacheMgr.configure( configFilename );
+                }
+                else
+                {
+                    cacheMgr = CompositeCacheManager.getInstance();
+                }
             }
-            else if ( configFilename != null )
-            {
-                cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
-                cacheMgr.configure( configFilename );
-            }
-            else
-            {
-                cacheMgr = CompositeCacheManager.getInstance();
-            }
+
+            return cacheMgr;
         }
     }
 

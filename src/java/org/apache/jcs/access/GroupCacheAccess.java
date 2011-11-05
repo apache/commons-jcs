@@ -28,7 +28,6 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
 
@@ -39,9 +38,6 @@ public class GroupCacheAccess
     extends CacheAccess
     implements IGroupCacheAccess<Serializable, Serializable>
 {
-    /** The underlying cache manager. */
-    private static CompositeCacheManager cacheMgr;
-
     /**
      * Constructor for the GroupCacheAccess object
      * <p>
@@ -62,14 +58,7 @@ public class GroupCacheAccess
     public static GroupCacheAccess getGroupAccess( String region )
         throws CacheException
     {
-        synchronized ( GroupCacheAccess.class )
-        {
-            if ( cacheMgr == null )
-            {
-                cacheMgr = CompositeCacheManager.getInstance();
-            }
-        }
-        return new GroupCacheAccess( cacheMgr.getCache( region ) );
+        return new GroupCacheAccess( getCacheManager().getCache( region ) );
     }
 
     /**
@@ -83,15 +72,7 @@ public class GroupCacheAccess
     public static GroupCacheAccess getGroupAccess( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        synchronized ( GroupCacheAccess.class )
-        {
-            if ( cacheMgr == null )
-            {
-                cacheMgr = CompositeCacheManager.getInstance();
-            }
-        }
-
-        return new GroupCacheAccess( cacheMgr.getCache( region, icca ) );
+        return new GroupCacheAccess( getCacheManager().getCache( region, icca ) );
     }
 
     /**
