@@ -20,6 +20,10 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="fix" issue="JCS-22" due-to="Michael Jordan">
+                Throw an explicit CacheException when a cache manager instance cannot
+                read its configuration.
+            </action>
             <action dev="tv" type="fix" issue="JCS-79" due-to="Graham Leggett">
                 Fix NPE in CompositeCacheConfigurator.parseRegion
             </action>

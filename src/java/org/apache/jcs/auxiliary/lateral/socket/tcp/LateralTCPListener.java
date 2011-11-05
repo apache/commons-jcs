@@ -34,6 +34,7 @@ import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
@@ -347,7 +348,7 @@ public class LateralTCPListener
      * Gets the cacheManager attribute of the LateralCacheTCPListener object.
      * <p>
      * Normally this is set by the factory. If it wasn't set the listener defaults to the expected
-     * singleton behavior of the cache amanger.
+     * singleton behavior of the cache manager.
      * <p>
      * @param name
      * @return CompositeCache
@@ -357,7 +358,14 @@ public class LateralTCPListener
         if ( getCacheManager() == null )
         {
             // revert to singleton on failure
-            setCacheManager( CompositeCacheManager.getInstance() );
+            try
+            {
+                setCacheManager( CompositeCacheManager.getInstance() );
+            }
+            catch (CacheException e)
+            {
+                throw new RuntimeException("Could not retrieve cache manager instance", e);
+            }
 
             if ( log.isDebugEnabled() )
             {

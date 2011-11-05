@@ -166,8 +166,10 @@ public class CacheAccess
     /**
      * Helper method which checks to make sure the cacheMgr class field is set, and if not requests
      * an instance from CacheManagerFactory.
+     *
+     * @throws CacheException if the configuration cannot be loaded
      */
-    protected static void ensureCacheManager()
+    protected static void ensureCacheManager() throws CacheException
     {
         synchronized ( CacheAccess.class )
         {

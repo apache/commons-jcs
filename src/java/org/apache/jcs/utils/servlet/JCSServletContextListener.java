@@ -24,6 +24,7 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
@@ -31,7 +32,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * gracefully.
  * <p>
  * Add the following to the top of your web.xml file.
- * 
+ *
  * <pre>
  *  &lt;listener&gt;
  *  &lt;listener-class&gt;
@@ -50,7 +51,6 @@ public class JCSServletContextListener
     /**
      * This does nothing. We don't want to initialize the cache here.
      * <p>
-     * (non-Javadoc)
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     public void contextInitialized( ServletContextEvent arg0 )
@@ -64,7 +64,6 @@ public class JCSServletContextListener
     /**
      * This gets the singleton instance of the CompositeCacheManager and calls shutdown.
      * <p>
-     * (non-Javadoc)
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed( ServletContextEvent arg0 )
@@ -73,6 +72,14 @@ public class JCSServletContextListener
         {
             log.info( "contextDestroyed, shutting down JCS." );
         }
-        CompositeCacheManager.getInstance().shutDown();
+
+        try
+        {
+            CompositeCacheManager.getInstance().shutDown();
+        }
+        catch (CacheException e)
+        {
+            log.error( "Could not retrieve cache manager instance", e );
+        }
     }
 }

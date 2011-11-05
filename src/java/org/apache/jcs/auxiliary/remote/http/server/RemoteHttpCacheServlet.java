@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.jcs.engine.control.CompositeCacheManager;
@@ -57,13 +58,13 @@ public class RemoteHttpCacheServlet
     private RemoteCacheServiceAdaptor remoteHttpCacheServiceAdaptor;
 
     /** This needs to be standard, since the other side is standard */
-    private StandardSerializer serializer = new StandardSerializer();
+    private final StandardSerializer serializer = new StandardSerializer();
 
     /** Number of service calls. */
     private int serviceCalls = 0;
 
     /** The interval at which we will log the count. */
-    private int logInterval = 100;
+    private final int logInterval = 100;
 
     /**
      * Initializes the cache.
@@ -76,7 +77,14 @@ public class RemoteHttpCacheServlet
     public void init( ServletConfig config )
         throws ServletException
     {
-        ensureCacheManager();
+        try
+        {
+            ensureCacheManager();
+        }
+        catch (CacheException e)
+        {
+            throw new ServletException(e);
+        }
 
         setRemoteHttpCacheServiceAdaptor( new RemoteCacheServiceAdaptor( cacheMgr ) );
 
@@ -201,8 +209,10 @@ public class RemoteHttpCacheServlet
 
     /**
      * Make sure we have a cache manager. This should have happened in the init method.
+     *
+     * @throws CacheException if the configuration cannot be loaded
      */
-    protected synchronized void ensureCacheManager()
+    protected synchronized void ensureCacheManager() throws CacheException
     {
         if ( cacheMgr == null )
         {

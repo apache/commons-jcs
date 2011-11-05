@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
@@ -124,8 +125,9 @@ public class CompositeCacheManager
      * own source, use {@link #getUnconfiguredInstance}and then call {@link #configure}
      * <p>
      * @return CompositeCacheManager
+     * @throws CacheException if the configuration cannot be loaded
      */
-    public static synchronized CompositeCacheManager getInstance()
+    public static synchronized CompositeCacheManager getInstance() throws CacheException
     {
         if ( instance == null )
         {
@@ -146,8 +148,9 @@ public class CompositeCacheManager
      * <p>
      * @param propsFilename
      * @return CompositeCacheManager configured from the give propsFileName
+     * @throws CacheException if the configuration cannot be loaded
      */
-    public static synchronized CompositeCacheManager getInstance( String propsFilename )
+    public static synchronized CompositeCacheManager getInstance( String propsFilename ) throws CacheException
     {
         if ( instance == null )
         {
@@ -200,7 +203,7 @@ public class CompositeCacheManager
         return new CompositeCacheManager();
     }
 
-    /** CreAtes a shutdown hook */
+    /** Creates a shutdown hook */
     protected CompositeCacheManager()
     {
         ShutdownHook shutdownHook = new ShutdownHook();
@@ -216,8 +219,9 @@ public class CompositeCacheManager
 
     /**
      * Configure with default properties file
+     * @throws CacheException if the configuration cannot be loaded
      */
-    public void configure()
+    public void configure() throws CacheException
     {
         configure( CacheConstants.DEFAULT_CONFIG );
     }
@@ -226,8 +230,9 @@ public class CompositeCacheManager
      * Configure from specific properties file.
      * <p>
      * @param propFile Path <u>within classpath </u> to load configuration from
+     * @throws CacheException if the configuration cannot be loaded
      */
-    public void configure( String propFile )
+    public void configure( String propFile ) throws CacheException
     {
         log.info( "Creating cache manager from config file: " + propFile );
 
@@ -248,8 +253,7 @@ public class CompositeCacheManager
             }
             catch ( IOException ex )
             {
-                log.error( "Failed to load properties for name [" + propFile + "]", ex );
-                throw new IllegalStateException( ex.getMessage() );
+                throw new CacheException("Failed to load properties for name [" + propFile + "]", ex);
             }
             finally
             {
@@ -257,7 +261,7 @@ public class CompositeCacheManager
                 {
                     is.close();
                 }
-                catch ( Exception ignore )
+                catch ( IOException ignore )
                 {
                     // Ignored
                 }
@@ -265,8 +269,7 @@ public class CompositeCacheManager
         }
         else
         {
-            log.error( "Failed to load properties for name [" + propFile + "]" );
-            throw new IllegalStateException( "Failed to load properties for name [" + propFile + "]" );
+            throw new CacheException( "Failed to read configuration file [" + propFile + "]" );
         }
 
         configure( props );
@@ -275,7 +278,7 @@ public class CompositeCacheManager
     /**
      * Configure from properties object.
      * <p>
-     * This method will call confiure, instructing it to use ssytem properties as a default.
+     * This method will call configure, instructing it to use system properties as a default.
      * @param props
      */
     public void configure( Properties props )
@@ -284,10 +287,10 @@ public class CompositeCacheManager
     }
 
     /**
-     * Configure from properties object, overriding with values from the system properteis if
+     * Configure from properties object, overriding with values from the system properties if
      * instructed.
      * <p>
-     * You can override a specific value by passing in a ssytem property:
+     * You can override a specific value by passing in a system property:
      * <p>
      * For example, you could override this value in the cache.ccf file by starting up your program
      * with the argument: -Djcs.auxiliary.LTCP.attributes.TcpListenerPort=1111

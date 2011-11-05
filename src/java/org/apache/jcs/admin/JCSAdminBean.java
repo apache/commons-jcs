@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheServer;
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
 import org.apache.jcs.engine.CacheElementSerialized;
@@ -48,7 +49,23 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 public class JCSAdminBean
 {
     /** The cache manager. */
-    private final CompositeCacheManager cacheHub = CompositeCacheManager.getInstance();
+    private final CompositeCacheManager cacheHub;
+
+    /**
+     * Default constructor
+     */
+    public JCSAdminBean()
+    {
+        super();
+        try
+        {
+            this.cacheHub = CompositeCacheManager.getInstance();
+        }
+        catch (CacheException e)
+        {
+            throw new RuntimeException("Could not retrieve cache manager instance", e);
+        }
+    }
 
     /**
      * Builds up info about each element in a region.
@@ -234,7 +251,7 @@ public class JCSAdminBean
             // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
             try
             {
-                String[] cacheNames = CompositeCacheManager.getInstance().getCacheNames();
+                String[] cacheNames = cacheHub.getCacheNames();
 
                 // Call remoteCacheServer.removeAll(String) for each cacheName...
                 RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();

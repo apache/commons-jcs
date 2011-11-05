@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.utils.net.HostNameUtil;
 import org.apache.jcs.utils.props.PropertyLoader;
@@ -77,10 +78,10 @@ public class RemoteCacheStartupServlet
     private static final String DEFAULT_PROPS_FILE_SUFFIX = "ccf";
 
     /** properties file name, must set prior to calling get instance */
-    private String propsFileName = DEFAULT_PROPS_FILE_NAME;
+    private final String propsFileName = DEFAULT_PROPS_FILE_NAME;
 
     /** properties file name, must set prior to calling get instance */
-    private String fullPropsFileName = DEFAULT_PROPS_FILE_NAME + "." + DEFAULT_PROPS_FILE_SUFFIX;
+    private final String fullPropsFileName = DEFAULT_PROPS_FILE_NAME + "." + DEFAULT_PROPS_FILE_SUFFIX;
 
     /**
      * Starts the registry and then tries to bind to it.
@@ -160,7 +161,7 @@ public class RemoteCacheStartupServlet
                 if ( log.isInfoEnabled() )
                 {
                     log.info( "Remote JCS Server started with properties from " + fullPropsFileName );
-                }                
+                }
             }
             catch ( IOException e )
             {
@@ -181,15 +182,25 @@ public class RemoteCacheStartupServlet
     /**
      * It just dumps the stats.
      * <p>
-     * @param request 
-     * @param response 
-     * @throws ServletException 
-     * @throws IOException 
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
      */
     protected void service( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
-        String stats = CompositeCacheManager.getInstance().getStats();
+        String stats = "";
+
+        try
+        {
+            stats = CompositeCacheManager.getInstance().getStats();
+        }
+        catch (CacheException e)
+        {
+            throw new ServletException(e);
+        }
+
         if ( log.isInfoEnabled() )
         {
             log.info( stats );
@@ -216,6 +227,13 @@ public class RemoteCacheStartupServlet
 
         log.info( "Shutting down remote cache " );
 
-        CompositeCacheManager.getInstance().shutDown();
+        try
+        {
+            CompositeCacheManager.getInstance().shutDown();
+        }
+        catch (CacheException e)
+        {
+            log.error("Could not retrieve cache manager instance", e);
+        }
     }
 }

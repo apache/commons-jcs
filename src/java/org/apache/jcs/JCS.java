@@ -90,9 +90,11 @@ public class JCS
     /**
      * Gets an instance of CompositeCacheManager and stores it in the cacheMgr class field, if it is
      * not already set. Unlike the implementation in CacheAccess, the cache manager is a
-     * CompositeCacheManager. NOTE: This can will be moved up into GroupCacheAccess.
+     * CompositeCacheManager. NOTE: This can be moved up into GroupCacheAccess.
+     *
+     * @throws CacheException if the configuration cannot be loaded
      */
-    protected static synchronized void ensureCacheManager()
+    protected static synchronized void ensureCacheManager() throws CacheException
     {
         if ( cacheMgr == null )
         {

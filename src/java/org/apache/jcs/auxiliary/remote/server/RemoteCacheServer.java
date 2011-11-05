@@ -30,6 +30,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
@@ -145,10 +146,18 @@ public class RemoteCacheServer
      * Initialize the RMI Cache Server from a properties file.
      * <p>
      * @param prop
+     * @throws RemoteException if the configuration of the cache manager instance fails
      */
-    private void init( String prop )
+    private void init( String prop ) throws RemoteException
     {
-        cacheManager = createCacheManager( prop );
+        try
+        {
+            cacheManager = createCacheManager( prop );
+        }
+        catch (CacheException e)
+        {
+            throw new RemoteException(e.getMessage(), e);
+        }
 
         // cacheManager would have created a number of ICache objects.
         // Use these objects to set up the cacheListenersMap.
@@ -165,8 +174,10 @@ public class RemoteCacheServer
      * <p>
      * @param prop The name of the configuration file.
      * @return The cache hub configured with this configuration file.
+     *
+     * @throws CacheException if the configuration cannot be loaded
      */
-    private CompositeCacheManager createCacheManager( String prop )
+    private CompositeCacheManager createCacheManager( String prop ) throws CacheException
     {
         CompositeCacheManager hub = CompositeCacheManager.getUnconfiguredInstance();
 

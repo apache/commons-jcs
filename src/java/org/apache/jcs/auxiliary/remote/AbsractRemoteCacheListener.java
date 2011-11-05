@@ -25,6 +25,7 @@ import java.net.UnknownHostException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -90,7 +91,7 @@ public abstract class AbsractRemoteCacheListener
     }
 
     /**
-     * Let the remote cache set a listener_id. Since there is only one listerenr for all the regions
+     * Let the remote cache set a listener_id. Since there is only one listener for all the regions
      * and every region gets registered? the id shouldn't be set if it isn't zero. If it is we
      * assume that it is a reconnect.
      * <p>
@@ -175,8 +176,7 @@ public abstract class AbsractRemoteCacheListener
                 }
             }
 
-            ensureCacheManager();
-            CompositeCache cache = cacheMgr.getCache( cb.getCacheName() );
+            CompositeCache cache = getCacheManager().getCache( cb.getCacheName() );
 
             // Eventually the instance of will not be necessary.
             if ( cb instanceof ICacheElementSerialized )
@@ -229,8 +229,7 @@ public abstract class AbsractRemoteCacheListener
             log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );
         }
 
-        ensureCacheManager();
-        CompositeCache cache = cacheMgr.getCache( cacheName );
+        CompositeCache cache = getCacheManager().getCache( cacheName );
 
         cache.localRemove( key );
     }
@@ -248,8 +247,8 @@ public abstract class AbsractRemoteCacheListener
         {
             log.debug( "handleRemoveAll> cacheName=" + cacheName );
         }
-        ensureCacheManager();
-        CompositeCache cache = cacheMgr.getCache( cacheName );
+
+        CompositeCache cache = getCacheManager().getCache( cacheName );
         cache.localRemoveAll();
     }
 
@@ -274,15 +273,23 @@ public abstract class AbsractRemoteCacheListener
      * Gets the cacheManager attribute of the RemoteCacheListener object. This is one of the few
      * places that force the cache to be a singleton.
      */
-    protected void ensureCacheManager()
+    protected ICompositeCacheManager getCacheManager()
     {
         if ( cacheMgr == null )
         {
-            cacheMgr = CompositeCacheManager.getInstance();
-            log.debug( "had to get cacheMgr" );
-            if ( log.isDebugEnabled() )
+            try
             {
-                log.debug( "cacheMgr = " + cacheMgr );
+                cacheMgr = CompositeCacheManager.getInstance();
+
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug( "had to get cacheMgr" );
+                    log.debug( "cacheMgr = " + cacheMgr );
+                }
+            }
+            catch (CacheException e)
+            {
+                log.error( "Could not get cacheMgr", e );
             }
         }
         else
@@ -292,6 +299,8 @@ public abstract class AbsractRemoteCacheListener
                 log.debug( "already got cacheMgr = " + cacheMgr );
             }
         }
+
+        return cacheMgr;
     }
 
     /**
