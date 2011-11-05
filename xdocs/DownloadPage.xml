@@ -72,15 +72,6 @@
 				</p>
 			</subsection>
 		</section>
-		<section name="Versioned Temp Builds">
-			<p>
-				You can find versioned binary builds of JCS in the tempbuild
-				directory of the repository.
-				<a href="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/tempbuild/">Old Location</a>
-				|
-				<a href="http://svn.apache.org/viewvc/commons/proper/jcs/tempbuilds/">New Location</a>
-			</p>
-		</section>
 		<section name="Getting The Development Source From SVN">
 			<p>
 				You can check out the latest source from the Commons SVN module.
