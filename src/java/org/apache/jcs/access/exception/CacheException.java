@@ -21,8 +21,6 @@ package org.apache.jcs.access.exception;
 
 /**
  * This is the most general exception the cache throws.
- * <p>
- * TODO make nested with no external dependencies.
  */
 public class CacheException
     extends Exception
