@@ -207,7 +207,7 @@
 						<td>true</td>
 					</tr>
 					<tr>
-						<td>IsRemote</td>
+                        <td>IsLateral</td>
 						<td>
 							By default, can elements in this region be
 							sent to a lateral cache if one is available.
@@ -216,7 +216,7 @@
 						<td>true</td>
 					</tr>
 					<tr>
-						<td>IsLateral</td>
+                        <td>IsRemote</td>
 						<td>
 							By default, can elements in this region be
 							sent to a remote cache if one is available.
