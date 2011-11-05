@@ -34,7 +34,7 @@ public class LateralTCPDiscoveryListenerUnitTest
     protected IElementSerializer elementSerializer;
 
     /** Create the listener for testing */
-    protected void setUp()
+    protected void setUp() throws Exception
     {
         cacheMgr = CompositeCacheManager.getInstance();
         cacheEventLogger = new MockCacheEventLogger();
