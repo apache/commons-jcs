@@ -121,7 +121,7 @@ public class LateralUDPSender
 
     // Service Methods //
     /** Description of the Method */
-    public void update( ICacheElement item, byte requesterId )
+    public void update( ICacheElement<K, V> item, byte requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -132,7 +132,7 @@ public class LateralUDPSender
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
@@ -140,7 +140,7 @@ public class LateralUDPSender
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );

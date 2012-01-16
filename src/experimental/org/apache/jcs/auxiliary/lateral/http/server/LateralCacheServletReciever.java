@@ -70,7 +70,7 @@ public class LateralCacheServletReciever
             log.debug( "The LateralCacheServlet has been called.\n" );
         }
 
-        ICacheElement item = null;
+        ICacheElement<K, V> item = null;
 
         try
         {
@@ -104,7 +104,7 @@ public class LateralCacheServletReciever
         else
         {
             String hashtableName = item.getCacheName();
-            Serializable key = item.getKey();
+            K key = item.getKey();
             Serializable val = item.getVal();
 
             log.debug( "item read in = " + item );

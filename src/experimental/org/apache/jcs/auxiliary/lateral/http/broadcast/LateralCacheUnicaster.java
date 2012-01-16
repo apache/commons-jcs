@@ -46,7 +46,7 @@ public class LateralCacheUnicaster
     private final static Log log =
         LogFactory.getLog( LateralCacheUnicaster.class );
 
-    private final ICacheElement item;
+    private final ICacheElement<K, V> item;
     private final String urlStr;
 
     private URLConnection conn;
@@ -57,7 +57,7 @@ public class LateralCacheUnicaster
      * @param item
      * @param urlStr
      */
-    public LateralCacheUnicaster( ICacheElement item, String urlStr )
+    public LateralCacheUnicaster( ICacheElement<K, V> item, String urlStr )
     {
         this.item = item;
         this.urlStr = urlStr;

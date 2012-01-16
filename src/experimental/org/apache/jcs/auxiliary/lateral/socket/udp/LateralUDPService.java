@@ -80,7 +80,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
     }
 
     /** Description of the Method */
-    public void update( ICacheElement item )
+    public void update( ICacheElement<K, V> item )
         throws IOException
     {
         update( item, LateralCacheInfo.listenerId );
@@ -88,7 +88,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public void update( ICacheElement item, long requesterId )
+    public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -99,7 +99,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
@@ -107,7 +107,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
@@ -145,7 +145,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
 
 
     /** Description of the Method */
-    public ICacheElement get( String cache, Serializable att )
+    public ICacheElement<K, V> get( String cache, Serializable att )
         throws IOException
     {
         return null;
@@ -165,7 +165,7 @@ public class LateralUDPService implements ILateralCacheService, ILateralCacheObs
      * Gets the set of keys of objects currently in the group
      * throws UnsupportedOperationException
      */
-    public Set<Serializable> getGroupKeys(String cacheName, String group)
+    public Set<K> getGroupKeys(String cacheName, String group)
     {
         if (true)
         {

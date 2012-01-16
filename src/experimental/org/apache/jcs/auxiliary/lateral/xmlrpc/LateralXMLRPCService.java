@@ -91,7 +91,7 @@ public class LateralXMLRPCService
      * @param item
      * @exception IOException
      */
-    public void update( ICacheElement item )
+    public void update( ICacheElement<K, V> item )
         throws IOException
     {
         update( item, LateralCacheInfo.listenerId );
@@ -102,7 +102,7 @@ public class LateralXMLRPCService
      * @param requesterId
      * @exception IOException
      */
-    public void update( ICacheElement item, long requesterId )
+    public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -116,7 +116,7 @@ public class LateralXMLRPCService
      * @param key
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
@@ -128,7 +128,7 @@ public class LateralXMLRPCService
      * @param requesterId
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
@@ -179,7 +179,7 @@ public class LateralXMLRPCService
      * @param key
      * @exception IOException
      */
-    public ICacheElement get( String cacheName, Serializable key )
+    public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
     {
         //p( "get(cacheName,key,container)" );
@@ -196,7 +196,7 @@ public class LateralXMLRPCService
      * Gets the set of keys of objects currently in the group
      * throws UnsupportedOperationException
      */
-    public Set<Serializable> getGroupKeys(String cacheName, String group)
+    public Set<K> getGroupKeys(String cacheName, String group)
     {
         if (true)
         {

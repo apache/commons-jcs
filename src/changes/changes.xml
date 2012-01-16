@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="update">
+                Change the interfaces to use generics
+            </action>
             <action dev="tv" type="fix" issue="JCS-86" due-to="Roman Solo">
                 Fix region properties documentation.
             </action>

@@ -100,7 +100,7 @@ public class ARCMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<K, V> ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             arc.update( ice );
         }
@@ -132,12 +132,12 @@ public class ARCMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<K, V> ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             arc.update( ice );
         }
 
-        ICacheElement element = arc.get( 0 + ":key" );
+        ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
         System.out.println( "testHitInT1BelowMax " + arc.getStats() );
 
@@ -167,12 +167,12 @@ public class ARCMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<K, V> ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             arc.update( ice );
         }
 
-        ICacheElement element = arc.get( 0 + ":key" );
+        ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
         System.out.println( "testHitInT1ThenT2BelowMax " + arc.getStats() );
 
@@ -202,12 +202,12 @@ public class ARCMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<K, V> ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             arc.update( ice );
         }
 
-        ICacheElement element = arc.get( 0 + ":key" );
+        ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
         System.out.println( "testHitInT1AtMax " + arc.getStats() );
 
@@ -237,12 +237,12 @@ public class ARCMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<K, V> ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             arc.update( ice );
         }
 
-        ICacheElement element = arc.get( 0 + ":key" );
+        ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
         System.out.println( "testHitInT1OverMax " + arc.getStats() );
 
@@ -272,12 +272,12 @@ public class ARCMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<K, V> ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             arc.update( ice );
         }
 
-        //ICacheElement element = arc.get( 0 + ":key" );
+        //ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
         System.out.println( "testPutInT1ToMax " + arc.getStats() );
 
