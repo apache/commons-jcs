@@ -60,8 +60,8 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
  * stored in memory is configurable. The disk cache tries to recycle spots on disk to limit file
  * expansion.
  */
-public class IndexedDiskCache
-    extends AbstractDiskCache
+public class IndexedDiskCache<K extends Serializable, V extends Serializable>
+    extends AbstractDiskCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -265035607729729629L;
@@ -82,7 +82,7 @@ public class IndexedDiskCache
     private IndexedDisk keyFile;
 
     /** Map containing the keys and disk offsets. */
-    private Map<Serializable, IndexedDiskElementDescriptor> keyHash;
+    private Map<K, IndexedDiskElementDescriptor> keyHash;
 
     /** The maximum number of keys that we will keep in memory. */
     private final int maxKeySize;
@@ -325,8 +325,8 @@ public class IndexedDiskCache
             // create a key map to use.
             initializeKeyMap();
 
-            HashMap<Serializable, IndexedDiskElementDescriptor> keys =
-                (HashMap<Serializable, IndexedDiskElementDescriptor>) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
+            HashMap<K, IndexedDiskElementDescriptor> keys =
+                (HashMap<K, IndexedDiskElementDescriptor>) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
                 - IndexedDisk.HEADER_SIZE_BYTES ) );
 
             if ( keys != null )
@@ -380,7 +380,7 @@ public class IndexedDiskCache
         {
             fileLength = dataFile.length();
 
-            for (Map.Entry<Serializable, IndexedDiskElementDescriptor> e : keyHash.entrySet())
+            for (Map.Entry<K, IndexedDiskElementDescriptor> e : keyHash.entrySet())
             {
                 IndexedDiskElementDescriptor ded = e.getValue();
 
@@ -464,8 +464,8 @@ public class IndexedDiskCache
 
             keyFile.reset();
 
-            HashMap<Serializable, IndexedDiskElementDescriptor> keys =
-                new HashMap<Serializable, IndexedDiskElementDescriptor>();
+            HashMap<K, IndexedDiskElementDescriptor> keys =
+                new HashMap<K, IndexedDiskElementDescriptor>();
             keys.putAll( keyHash );
 
             if ( keys.size() > 0 )
@@ -488,10 +488,10 @@ public class IndexedDiskCache
      * Update the disk cache. Called from the Queue. Makes sure the Item has not been retrieved from
      * purgatory while in queue for disk. Remove items from purgatory when they go to disk.
      * <p>
-     * @param ce The ICacheElement to put to disk.
+     * @param ce The ICacheElement<K, V> to put to disk.
      */
     @Override
-    protected void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement<K, V> ce )
     {
         if ( !alive )
         {
@@ -603,11 +603,11 @@ public class IndexedDiskCache
      * Gets the key, then goes to disk to get the object.
      * <p>
      * @param key
-     * @return ICacheElement or null
+     * @return ICacheElement<K, V> or null
      * @see AbstractDiskCache#doGet
      */
     @Override
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
     {
         if ( !alive )
         {
@@ -620,7 +620,7 @@ public class IndexedDiskCache
             log.debug( logCacheName + "Trying to get from disk: " + key );
         }
 
-        ICacheElement object = null;
+        ICacheElement<K, V> object = null;
         try
         {
             storageLock.readLock().lock();
@@ -654,31 +654,31 @@ public class IndexedDiskCache
      * Gets matching items from the cache.
      * <p>
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching keys
      */
     @Override
-    public Map<Serializable, ICacheElement>  processGetMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
         try
         {
-            Object[] keyArray = null;
+            K[] keyArray = null;
             storageLock.readLock().lock();
             try
             {
-                keyArray = keyHash.keySet().toArray();
+                keyArray = (K[]) keyHash.keySet().toArray();
             }
             finally
             {
                 storageLock.readLock().unlock();
             }
 
-            Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+            Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
-            for (Serializable key : matchingKeys)
+            for (K key : matchingKeys)
             {
-                ICacheElement element = processGet( key );
+                ICacheElement<K, V> element = processGet( key );
                 if ( element != null )
                 {
                     elements.put( key, element );
@@ -699,10 +699,10 @@ public class IndexedDiskCache
      * @return ICacheElement
      * @throws IOException
      */
-    private ICacheElement readElement( Serializable key )
+    private ICacheElement<K, V> readElement( K key )
         throws IOException
     {
-        ICacheElement object = null;
+        ICacheElement<K, V> object = null;
 
         IndexedDiskElementDescriptor ded = keyHash.get( key );
 
@@ -714,7 +714,7 @@ public class IndexedDiskCache
             }
             try
             {
-                object = (ICacheElement) dataFile.readObject( ded );
+                object = (ICacheElement<K, V>) dataFile.readObject( ded );
                 // TODO consider checking key equality and throwing if there is a failure
             }
             catch ( IOException e )
@@ -738,10 +738,10 @@ public class IndexedDiskCache
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
     @Override
-    public Set<Serializable> getGroupKeys( String groupName )
+    public Set<K> getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( cacheName, groupName );
-        HashSet<Serializable> keys = new HashSet<Serializable>();
+        HashSet<K> keys = new HashSet<K>();
         try
         {
             storageLock.readLock().lock();
@@ -774,7 +774,7 @@ public class IndexedDiskCache
      * @param key
      */
     @Override
-    protected boolean processRemove( Serializable key )
+    protected boolean processRemove( K key )
     {
         if ( !alive )
         {
@@ -845,9 +845,9 @@ public class IndexedDiskCache
         boolean removed = false;
 
         // remove all keys of the same name hierarchy.
-        List<Serializable> itemsToRemove = new LinkedList<Serializable>();
+        List<K> itemsToRemove = new LinkedList<K>();
 
-        for (Serializable k : keyHash.keySet())
+        for (K k : keyHash.keySet())
         {
             if ( k instanceof String && k.toString().startsWith( key.toString() ) )
             {
@@ -856,7 +856,7 @@ public class IndexedDiskCache
         }
 
         // remove matches.
-        for (Serializable fullKey : itemsToRemove)
+        for (K fullKey : itemsToRemove)
         {
             // Don't add to recycle bin here
             // https://issues.apache.org/jira/browse/JCS-67
@@ -882,10 +882,10 @@ public class IndexedDiskCache
         boolean removed = false;
 
         // remove all keys of the same name group.
-        List<Serializable> itemsToRemove = new LinkedList<Serializable>();
+        List<K> itemsToRemove = new LinkedList<K>();
 
         // remove all keys of the same name hierarchy.
-        for (Serializable k : keyHash.keySet())
+        for (K k : keyHash.keySet())
         {
             if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
             {
@@ -894,7 +894,7 @@ public class IndexedDiskCache
         }
 
         // remove matches.
-        for (Serializable fullKey : itemsToRemove)
+        for (K fullKey : itemsToRemove)
         {
             // Don't add to recycle bin here
             // https://issues.apache.org/jira/browse/JCS-67
@@ -914,7 +914,7 @@ public class IndexedDiskCache
      * @param key
      * @return true if an item was removed.
      */
-    private boolean performSingleKeyRemoval( Serializable key )
+    private boolean performSingleKeyRemoval( K key )
     {
         boolean removed;
         // remove single item.
@@ -935,7 +935,7 @@ public class IndexedDiskCache
     @Override
     public void processRemoveAll()
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "all", ICacheEventLogger.REMOVEALL_EVENT );
         try
         {
             reset();
@@ -1030,7 +1030,7 @@ public class IndexedDiskCache
         else
         {
             // If no max size, use a plain map for memory and processing efficiency.
-            keyHash = new HashMap<Serializable, IndexedDiskElementDescriptor>();
+            keyHash = new HashMap<K, IndexedDiskElementDescriptor>();
             // keyHash = Collections.synchronizedMap( new HashMap() );
             if ( log.isInfoEnabled() )
             {
@@ -1048,7 +1048,7 @@ public class IndexedDiskCache
     @Override
     public void processDispose()
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             Runnable disR = new Runnable()
@@ -1376,10 +1376,10 @@ public class IndexedDiskCache
     private IndexedDiskElementDescriptor[] createPositionSortedDescriptorList()
     {
         IndexedDiskElementDescriptor[] defragList = new IndexedDiskElementDescriptor[keyHash.size()];
-        Iterator<Map.Entry<Serializable, IndexedDiskElementDescriptor>> iterator = keyHash.entrySet().iterator();
+        Iterator<Map.Entry<K, IndexedDiskElementDescriptor>> iterator = keyHash.entrySet().iterator();
         for ( int i = 0; iterator.hasNext(); i++ )
         {
-            Map.Entry<Serializable, IndexedDiskElementDescriptor> next = iterator.next();
+            Map.Entry<K, IndexedDiskElementDescriptor> next = iterator.next();
             defragList[i] = next.getValue();
         }
 
@@ -1482,7 +1482,7 @@ public class IndexedDiskCache
     }
 
     /**
-     * For debugging. This dumps the values by defualt.
+     * For debugging. This dumps the values by default.
      */
     public void dump()
     {
@@ -1500,9 +1500,9 @@ public class IndexedDiskCache
         {
             log.debug( logCacheName + "[dump] Number of keys: " + keyHash.size() );
 
-            for (Map.Entry<Serializable, IndexedDiskElementDescriptor> e : keyHash.entrySet())
+            for (Map.Entry<K, IndexedDiskElementDescriptor> e : keyHash.entrySet())
             {
-                Serializable key = e.getKey();
+                K key = e.getKey();
                 IndexedDiskElementDescriptor ded = e.getValue();
 
                 log.debug( logCacheName + "[dump] Disk element, key: " + key + ", pos: " + ded.pos + ", ded.len"
@@ -1700,7 +1700,7 @@ public class IndexedDiskCache
      * to the recycle bin.
      */
     public class LRUMap
-        extends LRUMapJCS<Serializable, IndexedDiskElementDescriptor>
+        extends LRUMapJCS<K, IndexedDiskElementDescriptor>
         // implements Serializable
     {
         /** Don't change */
@@ -1735,7 +1735,7 @@ public class IndexedDiskCache
          * @param value
          */
         @Override
-        protected void processRemovedLRU(Serializable key, IndexedDiskElementDescriptor value )
+        protected void processRemovedLRU(K key, IndexedDiskElementDescriptor value )
         {
             addToRecycleBin( value );
             if ( log.isDebugEnabled() )

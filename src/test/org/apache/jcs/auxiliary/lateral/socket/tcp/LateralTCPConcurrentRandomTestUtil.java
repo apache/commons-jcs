@@ -97,7 +97,7 @@ public class LateralTCPConcurrentRandomTestUtil
                 String key = "key" + kn;
                 if ( n == 1 )
                 {
-                    ICacheElement element = new CacheElement( region, key, region + ":data" + i
+                    ICacheElement<String, String> element = new CacheElement( region, key, region + ":data" + i
                         + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                     service.update( element );
                     if ( show )
@@ -169,7 +169,7 @@ public class LateralTCPConcurrentRandomTestUtil
 
         //Thread.sleep( 1000 );
 
-        //ICacheElement element = new CacheElement( region, "abc", "testdata");
+        //ICacheElement<String, String> element = new CacheElement( region, "abc", "testdata");
         //service.update( element );
 
         //Thread.sleep( 2500 );

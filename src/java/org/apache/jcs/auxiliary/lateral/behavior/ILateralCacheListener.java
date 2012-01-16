@@ -19,14 +19,16 @@ package org.apache.jcs.auxiliary.lateral.behavior;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * Listens for lateral cache event notification.
  */
-public interface ILateralCacheListener
-    extends ICacheListener
+public interface ILateralCacheListener<K extends Serializable, V extends Serializable>
+    extends ICacheListener<K, V>
 {
     /** Description of the Method */
     public void init();

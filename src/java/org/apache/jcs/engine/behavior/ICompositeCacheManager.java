@@ -19,6 +19,7 @@ package org.apache.jcs.engine.behavior;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.jcs.engine.control.CompositeCache;
@@ -36,15 +37,15 @@ public interface ICompositeCacheManager
      * @param cacheName
      * @return CompositeCache
      */
-    CompositeCache getCache( String cacheName );
-    
+    <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( String cacheName );
+
     /**
      * This is exposed so other manager can get access to the props.
      * <p>
      * @return the configurationProperties
      */
     Properties getConfigurationProperties();
-    
+
     /**
      * Gets stats for debugging.
      * <p>

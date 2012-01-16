@@ -28,8 +28,8 @@ import org.apache.jcs.utils.timing.SleepUtil;
  * This is a fairly simple implementation. All the disk writing is handled right here. It's not
  * clear that anything more complicated is needed.
  */
-public class FileDiskCache
-    extends AbstractDiskCache
+public class FileDiskCache<K extends Serializable, V extends Serializable>
+    extends AbstractDiskCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 1L;
@@ -108,7 +108,7 @@ public class FileDiskCache
      * @param key
      * @return the file for the key
      */
-    protected File file( Serializable key )
+    protected <KK extends Serializable> File file( KK key )
     {
         StringBuffer fileNameBuffer = new StringBuffer();
 
@@ -139,7 +139,7 @@ public class FileDiskCache
      * @return Set
      */
     @Override
-    public Set<Serializable> getGroupKeys(String groupName)
+    public Set<K> getGroupKeys(String groupName)
     {
         throw new UnsupportedOperationException();
     }
@@ -183,7 +183,7 @@ public class FileDiskCache
     protected synchronized void processDispose()
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, (K)"none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             if ( !alive )
@@ -215,7 +215,7 @@ public class FileDiskCache
      * @throws IOException
      */
     @Override
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
         throws IOException
     {
         File file = file( key );
@@ -229,7 +229,7 @@ public class FileDiskCache
             return null;
         }
 
-        ICacheElement element = null;
+        ICacheElement<K, V> element = null;
 
         FileInputStream fis = null;
         try
@@ -253,7 +253,7 @@ public class FileDiskCache
                 throw new IOException( "Could not completely read file " + file.getName() );
             }
 
-            element = (ICacheElement) getElementSerializer().deSerialize( bytes );
+            element = getElementSerializer().deSerialize( bytes );
 
             // test that the retrieved object has equal key
             if ( element != null && !key.equals( element.getKey() ) )
@@ -293,7 +293,7 @@ public class FileDiskCache
      * @throws IOException
      */
     @Override
-    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
         throws IOException
     {
         // TODO get a list of file and return those with matching keys.
@@ -309,7 +309,20 @@ public class FileDiskCache
      * @throws IOException
      */
     @Override
-    protected boolean processRemove( Serializable key )
+    protected boolean processRemove( K key )
+        throws IOException
+    {
+        return _processRemove(key);
+    }
+
+    /**
+     * Removes the file.
+     * <p>
+     * @param key
+     * @return true if the item was removed
+     * @throws IOException
+     */
+    private <T extends Serializable> boolean _processRemove( T key )
         throws IOException
     {
         File file = file( key );
@@ -335,7 +348,7 @@ public class FileDiskCache
         String[] fileNames = getDirectory().list();
         for ( int i = 0; i < fileNames.length; i++ )
         {
-            processRemove( fileNames[i] );
+            _processRemove( fileNames[i] );
         }
     }
 
@@ -347,7 +360,7 @@ public class FileDiskCache
      * @throws IOException
      */
     @Override
-    protected void processUpdate( ICacheElement element )
+    protected void processUpdate( ICacheElement<K, V> element )
         throws IOException
     {
         removeIfLimitIsSetAndReached();

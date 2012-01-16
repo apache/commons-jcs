@@ -118,7 +118,7 @@ public class LRUMemoryCacheConcurrentUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", region + " data " + i );
+            ICacheElement<String, String> ice = new CacheElement( cache.getCacheName(), i + ":key", region + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             lru.update( ice );
         }
@@ -150,7 +150,7 @@ public class LRUMemoryCacheConcurrentUnitTest
         }
         for ( int i = 100; i < items; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = (ICacheElement) elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }

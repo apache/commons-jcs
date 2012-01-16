@@ -33,7 +33,7 @@ import org.apache.jcs.engine.match.behavior.IKeyMatcher;
  * This allows for a suite of reusable components for accessing such structures, for example
  * asynchronous access via an event queue.
  */
-public interface ICache
+public interface ICache<K extends Serializable, V extends Serializable>
     extends ICacheType
 {
     /**
@@ -42,7 +42,7 @@ public interface ICache
      * @param element
      * @throws IOException
      */
-    void update( ICacheElement element )
+    void update( ICacheElement<K, V> element )
         throws IOException;
 
     /**
@@ -52,17 +52,17 @@ public interface ICache
      * @return a cache element, or null if there is no data in cache for this key
      * @throws IOException
      */
-    ICacheElement get( Serializable key )
+    ICacheElement<K, V> get( K key )
         throws IOException;
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data in cache for any of these keys
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no data in cache for any of these keys
      * @throws IOException
      */
-    Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+    Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         throws IOException;
 
     /**
@@ -73,10 +73,10 @@ public interface ICache
      * Auxiliaries will do their best to handle simple expressions.  For instance, the JDBC disk cache will convert * to % and . to _
      * <p>
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no data matching the pattern.
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no data matching the pattern.
      * @throws IOException
      */
-    Map<Serializable, ICacheElement> getMatching(String pattern)
+    Map<K, ICacheElement<K, V>> getMatching(String pattern)
         throws IOException;
 
     /**
@@ -86,7 +86,7 @@ public interface ICache
      * @return false if there was an error in removal
      * @throws IOException
      */
-    boolean remove( Serializable key )
+    boolean remove( K key )
         throws IOException;
 
     /**
@@ -137,5 +137,5 @@ public interface ICache
      * <p>
      * @param keyMatcher
      */
-    void setKeyMatcher( IKeyMatcher keyMatcher );
+    void setKeyMatcher( IKeyMatcher<K> keyMatcher );
 }

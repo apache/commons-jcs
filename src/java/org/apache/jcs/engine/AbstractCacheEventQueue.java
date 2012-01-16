@@ -31,8 +31,8 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 /**
  * An abstract base class to the different implementations
  */
-public abstract class AbstractCacheEventQueue
-    implements ICacheEventQueue
+public abstract class AbstractCacheEventQueue<K extends Serializable, V extends Serializable>
+    implements ICacheEventQueue<K, V>
 {
     /** The logger. */
     protected static final Log log = LogFactory.getLog( AbstractCacheEventQueue.class );
@@ -50,7 +50,7 @@ public abstract class AbstractCacheEventQueue
      * When the events are pulled off the queue, the tell the listener to handle the specific event
      * type. The work is done by the listener.
      */
-    protected ICacheListener listener;
+    protected ICacheListener<K, V> listener;
 
     /** Id of the listener registered with this queue */
     protected long listenerId;
@@ -139,7 +139,7 @@ public abstract class AbstractCacheEventQueue
      * @param ce The feature to be added to the PutEvent attribute
      * @exception IOException
      */
-    public synchronized void addPutEvent( ICacheElement ce )
+    public synchronized void addPutEvent( ICacheElement<K, V> ce )
         throws IOException
     {
         if ( isWorking() )
@@ -162,7 +162,7 @@ public abstract class AbstractCacheEventQueue
      * @param key The feature to be added to the RemoveEvent attribute
      * @exception IOException
      */
-    public synchronized void addRemoveEvent( Serializable key )
+    public synchronized void addRemoveEvent( K key )
         throws IOException
     {
         if ( isWorking() )
@@ -236,7 +236,7 @@ public abstract class AbstractCacheEventQueue
         Node next = null;
 
         /** The payload. */
-        AbstractCacheEventQueue.AbstractCacheEvent event = null;
+        AbstractCacheEventQueue<?, ?>.AbstractCacheEvent event = null;
     }
 
     /**
@@ -250,9 +250,6 @@ public abstract class AbstractCacheEventQueue
     {
         /** Number of failures encountered processing this event. */
         int failures = 0;
-
-        /** Have we finished the job */
-        boolean done = false;
 
         /**
          * Main processing method for the AbstractCacheEvent object
@@ -295,7 +292,7 @@ public abstract class AbstractCacheEventQueue
                     {
                         log.warn( "Interrupted while sleeping for retry on event " + this + "." );
                     }
-                    // TODO consider if this is best. maybe we shoudl just
+                    // TODO consider if this is best. maybe we should just
                     // destroy
                     setWorking( false );
                     setAlive( false );
@@ -320,7 +317,7 @@ public abstract class AbstractCacheEventQueue
         extends AbstractCacheEvent
     {
         /** The element to put to the listener */
-        private final ICacheElement ice;
+        private final ICacheElement<K, V> ice;
 
         /**
          * Constructor for the PutEvent object.
@@ -328,7 +325,7 @@ public abstract class AbstractCacheEventQueue
          * @param ice
          * @exception IOException
          */
-        PutEvent( ICacheElement ice )
+        PutEvent( ICacheElement<K, V> ice )
             throws IOException
         {
             this.ice = ice;
@@ -370,7 +367,7 @@ public abstract class AbstractCacheEventQueue
         extends AbstractCacheEvent
     {
         /** The key to remove from the listener */
-        private final Serializable key;
+        private final K key;
 
         /**
          * Constructor for the RemoveEvent object
@@ -378,7 +375,7 @@ public abstract class AbstractCacheEventQueue
          * @param key
          * @exception IOException
          */
-        RemoveEvent( Serializable key )
+        RemoveEvent( K key )
             throws IOException
         {
             this.key = key;

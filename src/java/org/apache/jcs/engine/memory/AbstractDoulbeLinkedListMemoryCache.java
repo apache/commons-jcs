@@ -30,8 +30,8 @@ import org.apache.jcs.utils.struct.DoubleLinkedList;
  * the list will be the one removed when the list fills. For instance LRU should more items to the
  * front as they are used. FIFO should simply add new items to the front of the list.
  */
-public abstract class AbstractDoulbeLinkedListMemoryCache
-    extends AbstractMemoryCache
+public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable, V extends Serializable>
+    extends AbstractMemoryCache<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = 1422569420563967389L;
@@ -40,7 +40,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     private final static Log log = LogFactory.getLog( AbstractDoulbeLinkedListMemoryCache.class );
 
     /** thread-safe double linked list for lru */
-    protected DoubleLinkedList<MemoryElementDescriptor> list;
+    protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list;
 
     /** number of hits */
     protected int hitCnt = 0;
@@ -57,10 +57,10 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @param hub
      */
     @Override
-    public synchronized void initialize( CompositeCache hub )
+    public synchronized void initialize( CompositeCache<K, V> hub )
     {
         super.initialize( hub );
-        list = new DoubleLinkedList<MemoryElementDescriptor>();
+        list = new DoubleLinkedList<MemoryElementDescriptor<K, V>>();
         log.info( "initialized MemoryCache for " + cacheName );
     }
 
@@ -70,9 +70,9 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @return new Hashtable()
      */
     @Override
-    public Map<Serializable, MemoryElementDescriptor> createMap()
+    public Map<K, MemoryElementDescriptor<K, V>> createMap()
     {
-        return new Hashtable<Serializable, MemoryElementDescriptor>();
+        return new Hashtable<K, MemoryElementDescriptor<K, V>>();
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @exception IOException
      */
     @Override
-    public final void update( ICacheElement ce )
+    public final void update( ICacheElement<K, V> ce )
         throws IOException
     {
         putCnt++;
@@ -93,10 +93,10 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         synchronized ( this )
         {
             // ABSTRACT
-            MemoryElementDescriptor newNode = adjustListForUpdate( ce );
+            MemoryElementDescriptor<K, V> newNode = adjustListForUpdate( ce );
 
             // this must be synchronized
-            MemoryElementDescriptor oldNode = map.put( newNode.ce.getKey(), newNode );
+            MemoryElementDescriptor<K, V> oldNode = map.put( newNode.ce.getKey(), newNode );
 
             // If the node was the same as an existing node, remove it.
             if ( oldNode != null && ( newNode.ce.getKey().equals( oldNode.ce.getKey() ) ) )
@@ -116,7 +116,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @return MemoryElementDescriptor the new node
      * @throws IOException
      */
-    protected abstract MemoryElementDescriptor adjustListForUpdate( ICacheElement ce )
+    protected abstract MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )
         throws IOException;
 
     /**
@@ -167,21 +167,21 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * Get an item from the cache If the item is found, it is removed from the list and added first.
      * <p>
      * @param key Identifies item to find
-     * @return ICacheElement if found, else null
+     * @return ICacheElement<K, V> if found, else null
      * @exception IOException
      */
     @Override
-    public final synchronized ICacheElement get( Serializable key )
+    public final synchronized ICacheElement<K, V> get( K key )
         throws IOException
     {
-        ICacheElement ce = null;
+        ICacheElement<K, V> ce = null;
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "getting item from cache " + cacheName + " for key " + key );
         }
 
-        MemoryElementDescriptor me = map.get( key );
+        MemoryElementDescriptor<K, V> me = map.get( key );
 
         if ( me != null )
         {
@@ -214,7 +214,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * <p>
      * @param me
      */
-    protected abstract void adjustListForGet( MemoryElementDescriptor me );
+    protected abstract void adjustListForGet( MemoryElementDescriptor<K, V> me );
 
     /**
      * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
@@ -232,7 +232,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         int freed = 0;
         for ( ; freed < numberToFree; freed++ )
         {
-            ICacheElement element = spoolLastElement();
+            ICacheElement<K, V> element = spoolLastElement();
             if ( element == null )
             {
                 break;
@@ -244,13 +244,13 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     /**
      * This spools the last element in the LRU, if one exists.
      * <p>
-     * @return ICacheElement if there was a last element, else null.
+     * @return ICacheElement<K, V> if there was a last element, else null.
      * @throws Error
      */
-    protected ICacheElement spoolLastElement()
+    protected ICacheElement<K, V> spoolLastElement()
         throws Error
     {
-        ICacheElement toSpool = null;
+        ICacheElement<K, V> toSpool = null;
         synchronized ( this )
         {
             if ( list.getLast() != null )
@@ -305,7 +305,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @exception IOException
      */
     @Override
-    public synchronized boolean remove( Serializable key )
+    public synchronized boolean remove( K key )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -321,10 +321,10 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
             // remove all keys of the same name hierarchy.
             synchronized ( map )
             {
-                for (Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> itr = map.entrySet().iterator(); itr.hasNext(); )
+                for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
                 {
-                    Map.Entry<Serializable, MemoryElementDescriptor> entry = itr.next();
-                    Object k = entry.getKey();
+                    Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
+                    K k = entry.getKey();
 
                     if ( k instanceof String && ( (String) k ).startsWith( key.toString() ) )
                     {
@@ -340,10 +340,10 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
             // remove all keys of the same name hierarchy.
             synchronized ( map )
             {
-                for (Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> itr = map.entrySet().iterator(); itr.hasNext(); )
+                for (Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr = map.entrySet().iterator(); itr.hasNext(); )
                 {
-                    Map.Entry<Serializable, MemoryElementDescriptor> entry = itr.next();
-                    Object k = entry.getKey();
+                    Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
+                    K k = entry.getKey();
 
                     if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
                     {
@@ -357,7 +357,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         else
         {
             // remove single item.
-            MemoryElementDescriptor me = map.remove( key );
+            MemoryElementDescriptor<K, V> me = map.remove( key );
 
             if ( me != null )
             {
@@ -390,9 +390,9 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @param ce The feature to be added to the First
      * @return MemoryElementDescriptor
      */
-    protected synchronized MemoryElementDescriptor addFirst( ICacheElement ce )
+    protected synchronized MemoryElementDescriptor<K, V> addFirst( ICacheElement<K, V> ce )
     {
-        MemoryElementDescriptor me = new MemoryElementDescriptor( ce );
+        MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>( ce );
         list.addFirst( me );
         verifyCache( ce.getKey() );
         return me;
@@ -404,9 +404,9 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @param ce The feature to be added to the First
      * @return MemoryElementDescriptor
      */
-    protected synchronized MemoryElementDescriptor addLast( ICacheElement ce )
+    protected synchronized MemoryElementDescriptor<K, V> addLast( ICacheElement<K, V> ce )
     {
-        MemoryElementDescriptor me = new MemoryElementDescriptor( ce );
+        MemoryElementDescriptor<K, V> me = new MemoryElementDescriptor<K, V>( ce );
         list.addLast( me );
         verifyCache( ce.getKey() );
         return me;
@@ -420,7 +420,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     public void dumpCacheEntries()
     {
         log.debug( "dumpingCacheEntries" );
-        for ( MemoryElementDescriptor me = list.getFirst(); me != null; me = (MemoryElementDescriptor) me.next )
+        for ( MemoryElementDescriptor<K, V> me = list.getFirst(); me != null; me = (MemoryElementDescriptor<K, V>) me.next )
         {
             log.debug( "dumpCacheEntries> key=" + me.ce.getKey() + ", val=" + me.ce.getVal() );
         }
@@ -451,7 +451,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         log.debug( "verifycache[" + cacheName + "]: mapContains " + map.size() + " elements, linked list contains "
             + dumpCacheSize() + " elements" );
         log.debug( "verifycache: checking linked list by key " );
-        for ( MemoryElementDescriptor li = list.getFirst(); li != null; li = (MemoryElementDescriptor) li.next )
+        for ( MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next )
         {
             Object key = li.ce.getKey();
             if ( !map.containsKey( key ) )
@@ -479,7 +479,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         }
 
         log.debug( "verifycache: checking linked list by value " );
-        for ( MemoryElementDescriptor li3 = list.getFirst(); li3 != null; li3 = (MemoryElementDescriptor) li3.next )
+        for ( MemoryElementDescriptor<K, V> li3 = list.getFirst(); li3 != null; li3 = (MemoryElementDescriptor<K, V>) li3.next )
         {
             if ( map.containsValue( li3 ) == false )
             {
@@ -493,7 +493,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         {
             found = false;
 
-            for ( MemoryElementDescriptor li2 = list.getFirst(); li2 != null; li2 = (MemoryElementDescriptor) li2.next )
+            for ( MemoryElementDescriptor<K, V> li2 = list.getFirst(); li2 != null; li2 = (MemoryElementDescriptor<K, V>) li2.next )
             {
                 if ( val.equals( li2.ce.getKey() ) )
                 {
@@ -522,7 +522,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * <p>
      * @param key
      */
-    private void verifyCache( Serializable key )
+    private void verifyCache( K key )
     {
         if ( !log.isDebugEnabled() )
         {
@@ -532,7 +532,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         boolean found = false;
 
         // go through the linked list looking for the key
-        for ( MemoryElementDescriptor li = list.getFirst(); li != null; li = (MemoryElementDescriptor) li.next )
+        for ( MemoryElementDescriptor<K, V> li = list.getFirst(); li != null; li = (MemoryElementDescriptor<K, V>) li.next )
         {
             if ( li.ce.getKey() == key )
             {
@@ -551,17 +551,17 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     /**
      * iteration aid
      */
-    public static class IteratorWrapper
-        implements Iterator<Entry<Serializable, MemoryElementDescriptor>>
+    public static class IteratorWrapper<K extends Serializable, V extends Serializable>
+        implements Iterator<Entry<K, MemoryElementDescriptor<K, V>>>
     {
         /** The internal iterator */
-        private final Iterator<Entry<Serializable, MemoryElementDescriptor>> i;
+        private final Iterator<Entry<K, MemoryElementDescriptor<K, V>>> i;
 
         /**
          * Wrapped to remove our wrapper object
          * @param m
          */
-        protected IteratorWrapper(Map<Serializable, MemoryElementDescriptor> m)
+        protected IteratorWrapper(Map<K, MemoryElementDescriptor<K, V>> m)
         {
             i = m.entrySet().iterator();
         }
@@ -573,7 +573,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         }
 
         /** @return new MapEntryWrapper( (Map.Entry) i.next() ) */
-        public Entry<Serializable, MemoryElementDescriptor> next()
+        public Entry<K, MemoryElementDescriptor<K, V>> next()
         {
             // return new MapEntryWrapper<Serializable>( i.next() );
             return i.next();
@@ -606,16 +606,16 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
     /**
      * @author Aaron Smuts
      */
-    public static class MapEntryWrapper<K>
-        implements Map.Entry<K, ICacheElement>
+    public static class MapEntryWrapper<K extends Serializable, V extends Serializable>
+        implements Map.Entry<K, ICacheElement<K, V>>
     {
         /** The internal entry */
-        private final Map.Entry<K, MemoryElementDescriptor> e;
+        private final Map.Entry<K, MemoryElementDescriptor<K, V>> e;
 
         /**
          * @param e
          */
-        private MapEntryWrapper( Map.Entry<K, MemoryElementDescriptor> e )
+        private MapEntryWrapper( Map.Entry<K, MemoryElementDescriptor<K, V>> e )
         {
             this.e = e;
         }
@@ -637,7 +637,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
         }
 
         /** @return ( (MemoryElementDescriptor) e.getValue() ).ce */
-        public ICacheElement getValue()
+        public ICacheElement<K, V> getValue()
         {
             return e.getValue().ce;
         }
@@ -654,7 +654,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
          * @param value
          * @return always throws
          */
-        public ICacheElement setValue(ICacheElement value)
+        public ICacheElement<K, V> setValue(ICacheElement<K, V> value)
         {
             throw new UnsupportedOperationException( "Use normal cache methods"
                 + " to alter the contents of the cache." );
@@ -667,9 +667,9 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @return The iterator value
      */
     @Override
-    public Iterator<Entry<Serializable, MemoryElementDescriptor>> getIterator()
+    public Iterator<Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
     {
-        return new IteratorWrapper( map );
+        return new IteratorWrapper<K, V>( map );
     }
 
     /**
@@ -677,13 +677,13 @@ public abstract class AbstractDoulbeLinkedListMemoryCache
      * @return An Object[]
      */
     @Override
-    public Object[] getKeyArray()
+    public K[] getKeyArray()
     {
         // need a better locking strategy here.
         synchronized ( this )
         {
             // may need to lock to map here?
-            return map.keySet().toArray();
+            return (K[]) map.keySet().toArray();
         }
     }
 

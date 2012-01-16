@@ -28,7 +28,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * Interface for a cache event queue. An event queue is used to propagate
  * ordered cache events to one and only one target listener.
  */
-public interface ICacheEventQueue
+public interface ICacheEventQueue<K extends Serializable, V extends Serializable>
 {
     /**
      * Initializes the queue.
@@ -40,9 +40,9 @@ public interface ICacheEventQueue
      * @param waitBeforeRetry
      * @param threadPoolName
      */
-    public void initialize( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+    public void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry, String threadPoolName );
-    
+
     /**
      * Does not use a thread pool.
      */
@@ -52,7 +52,7 @@ public interface ICacheEventQueue
      * Uses a thread pool
      */
     public static final String POOLED_QUEUE_TYPE = "POOLED";
-    
+
 
     /**
      * Return the type of event queue we are using, either single or pooled.
@@ -68,7 +68,7 @@ public interface ICacheEventQueue
      *            The feature to be added to the PutEvent attribute
      * @throws IOException
      */
-    public void addPutEvent( ICacheElement ce )
+    public void addPutEvent( ICacheElement<K, V> ce )
         throws IOException;
 
     /**
@@ -79,7 +79,7 @@ public interface ICacheEventQueue
      *            The feature to be added to the RemoveEvent attribute
      * @throws IOException
      */
-    public void addRemoveEvent( Serializable key )
+    public void addRemoveEvent( K key )
         throws IOException;
 
     /**

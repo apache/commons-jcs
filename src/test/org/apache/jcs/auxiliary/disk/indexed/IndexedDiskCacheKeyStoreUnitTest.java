@@ -59,14 +59,14 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( "key:" + i );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
             assertNotNull( "presave, Should have recevied an element.", element );
             assertEquals( "presave, element is wrong.", "data:" + i, element.getVal() );
         }
@@ -79,7 +79,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( "key:" + i );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
             assertNotNull( "postsave, Should have recevied an element.", element );
             assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
         }
@@ -113,7 +113,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
@@ -122,11 +122,11 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         IElementAttributes eAttr = new ElementAttributes();
         eAttr.setIsSpool( true );
-        ICacheElement elementSetup = new CacheElement( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
+        ICacheElement<String, String> elementSetup = new CacheElement( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
         elementSetup.setElementAttributes( eAttr );
         disk.processUpdate( elementSetup );
 
-        ICacheElement elementRet = disk.processGet( "key:" + "A" );
+        ICacheElement<String, String> elementRet = disk.processGet( "key:" + "A" );
         assertNotNull( "postsave, Should have recevied an element.", elementRet );
         assertEquals( "postsave, element is wrong.", "data:" + "A", elementRet.getVal() );
 
@@ -146,7 +146,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( "key:" + i );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
             assertNotNull( "postsave, Should have recevied an element.", element );
             assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
         }

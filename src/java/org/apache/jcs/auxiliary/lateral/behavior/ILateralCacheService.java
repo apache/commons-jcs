@@ -19,11 +19,13 @@ package org.apache.jcs.auxiliary.lateral.behavior;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /** Used to retrieve and update the lateral cache. */
-public interface ILateralCacheService
-    extends ICacheServiceNonLocal
+public interface ILateralCacheService<K extends Serializable, V extends Serializable>
+    extends ICacheServiceNonLocal<K, V>
 {
     // backwards compatibility
 }

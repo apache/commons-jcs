@@ -35,9 +35,9 @@ import org.apache.jcs.access.exception.CacheException;
  * org.apache.jcs.utils.access.AbstractJCSWorkerHelper and implement Object
  * doWork() and do the work in there, returning the object to be cached. Then
  * call .getResult() with the key and the AbstractJCSWorkerHelper to get the
- * result of the work. If the object isn't allready in the Cache,
+ * result of the work. If the object isn't already in the Cache,
  * AbstractJCSWorkerHelper.doWork() will get called, and the result will be put
- * into the cache. If the object is allready in cache, the cached result will be
+ * into the cache. If the object is already in cache, the cached result will be
  * returned instead.
  * <p>
  * As an added bonus, multiple JCSWorkers with the same region, and key won't do
@@ -90,13 +90,13 @@ import org.apache.jcs.access.exception.CacheException;
  * <p>
  * @author Travis Savo
  */
-public class JCSWorker
+public class JCSWorker<K extends Serializable, V extends Serializable>
 {
     /** The logger */
     private static final Log logger = LogFactory.getLog( JCSWorker.class );
 
     /** The cache we are working with */
-    private JCS cache;
+    private JCS<K, V> cache;
 
     /**
      * Map to hold who's doing work presently.
@@ -139,7 +139,7 @@ public class JCSWorker
      * Gets the cached result for this region/key OR does the work and caches
      * the result, returning the result. If the result has not been cached yet,
      * this calls doWork() on the JCSWorkerHelper to do the work and cache the
-     * result. This is also an opertunity to do any post processing of the
+     * result. This is also an opportunity to do any post processing of the
      * result in your CachedWorker implementation.
      * @param aKey
      *            The key to get/put with on the Cache.
@@ -152,7 +152,7 @@ public class JCSWorker
      *             Throws an exception if anything goes wrong while doing the
      *             work.
      */
-    public Object getResult( Serializable aKey, JCSWorkerHelper aWorker )
+    public V getResult( K aKey, JCSWorkerHelper aWorker )
         throws Exception
     {
         return run( aKey, null, aWorker );
@@ -177,7 +177,7 @@ public class JCSWorker
      *             Throws an exception if anything goes wrong while doing the
      *             work.
      */
-    public Object getResult( Serializable aKey, String aGroup, JCSWorkerHelper aWorker )
+    public V getResult( K aKey, String aGroup, JCSWorkerHelper aWorker )
         throws Exception
     {
         return run( aKey, aGroup, aWorker );
@@ -197,17 +197,17 @@ public class JCSWorker
      *             If something goes wrong while doing the work, throw an
      *             exception.
      */
-    private Object run( Serializable aKey, String aGroup, JCSWorkerHelper aHelper )
+    private V run( K aKey, String aGroup, JCSWorkerHelper aHelper )
         throws Exception
     {
-        Serializable result = null;
+        V result = null;
         // long start = 0;
         // long dbTime = 0;
         JCSWorkerHelper helper = null;
 
         synchronized ( map )
         {
-            // Check to see if we allready have a thread doing this work.
+            // Check to see if we already have a thread doing this work.
             helper = map.get( getRegion() + aKey );
             if ( helper == null )
             {
@@ -255,7 +255,7 @@ public class JCSWorker
             // If the cache dosn't have it, do the work.
             if ( result == null )
             {
-                result = (Serializable)aHelper.doWork();
+                result = (V)aHelper.doWork();
                 if ( logger.isDebugEnabled() )
                 {
                     logger.debug( "Work Done, caching: key:" + aKey + ", group:" + aGroup + ", result:" + result + "." );

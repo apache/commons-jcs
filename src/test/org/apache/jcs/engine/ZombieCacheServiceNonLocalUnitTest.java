@@ -45,7 +45,7 @@ public class ZombieCacheServiceNonLocalUnitTest
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 
@@ -69,7 +69,7 @@ public class ZombieCacheServiceNonLocalUnitTest
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 

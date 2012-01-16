@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.lateral.behavior;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
@@ -48,7 +49,7 @@ public interface ILateralCacheManager
      * <p>
      * @return Map
      */
-    public abstract Map<String, LateralCacheNoWait> getCaches();
+    public abstract Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> getCaches();
 
     /**
      * The restore calls this on the manger if a cache if found to be in error.

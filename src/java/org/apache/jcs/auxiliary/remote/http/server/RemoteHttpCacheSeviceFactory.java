@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -41,13 +42,13 @@ public class RemoteHttpCacheSeviceFactory
      * @param cacheManager
      * @return RemoteHttpCacheService
      */
-    public static RemoteHttpCacheService createRemoteHttpCacheService( ICompositeCacheManager cacheManager )
+    public static <K extends Serializable, V extends Serializable> RemoteHttpCacheService<K, V> createRemoteHttpCacheService( ICompositeCacheManager cacheManager )
     {
         Properties props = cacheManager.getConfigurationProperties();
         ICacheEventLogger cacheEventLogger = configureCacheEventLogger( props );
         RemoteHttpCacheServerAttributes attributes = configureRemoteHttpCacheServerAttributes( props );
 
-        RemoteHttpCacheService service = new RemoteHttpCacheService( cacheManager, attributes, cacheEventLogger );
+        RemoteHttpCacheService<K, V> service = new RemoteHttpCacheService<K, V>( cacheManager, attributes, cacheEventLogger );
         if ( log.isInfoEnabled() )
         {
             log.info( "Created new RemoteHttpCacheService " + service );

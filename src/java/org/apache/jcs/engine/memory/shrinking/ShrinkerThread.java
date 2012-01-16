@@ -38,14 +38,14 @@ import org.apache.jcs.engine.memory.MemoryCache;
  * acting directly on an iterator of the underlying memory cache should have been solved.
  * @version $Id$
  */
-public class ShrinkerThread
+public class ShrinkerThread<K extends Serializable, V extends Serializable>
     implements Runnable
 {
     /** The logger */
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** The MemoryCache instance which this shrinker is watching */
-    private final MemoryCache cache;
+    private final MemoryCache<K, V> cache;
 
     /** Maximum memory idle time for the whole cache */
     private final long maxMemoryIdleTime;
@@ -61,7 +61,7 @@ public class ShrinkerThread
      * <p>
      * @param cache The MemoryCache which the new shrinker should watch.
      */
-    public ShrinkerThread( MemoryCache cache )
+    public ShrinkerThread( MemoryCache<K, V> cache )
     {
         super();
 
@@ -95,7 +95,7 @@ public class ShrinkerThread
     }
 
     /**
-     * This method is called when the thread wakes up. Frist the method obtains an array of keys for
+     * This method is called when the thread wakes up. First the method obtains an array of keys for
      * the cache region. It iterates through the keys and tries to get the item from the cache
      * without affecting the last access or position of the item. The item is checked for
      * expiration, the expiration check has 3 parts:
@@ -103,7 +103,7 @@ public class ShrinkerThread
      * <li>Has the cacheattributes.MaxMemoryIdleTimeSeconds defined for the region been exceeded? If
      * so, the item should be move to disk.</li> <li>Has the item exceeded MaxLifeSeconds defined in
      * the element attributes? If so, remove it.</li> <li>Has the item exceeded IdleTime defined in
-     * the element atributes? If so, remove it. If there are event listeners registered for the
+     * the element attributes? If so, remove it. If there are event listeners registered for the
      * cache element, they will be called.</li>
      * </ol>
      * @todo Change element event handling to use the queue, then move the queue to the region and
@@ -121,22 +121,22 @@ public class ShrinkerThread
 
         try
         {
-            Object[] keys = cache.getKeyArray();
+            K[] keys = cache.getKeyArray();
             int size = keys.length;
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Keys size: " + size );
             }
 
-            Serializable key;
-            ICacheElement cacheElement;
+            K key;
+            ICacheElement<K, V> cacheElement;
             IElementAttributes attributes;
 
             int spoolCount = 0;
 
             for ( int i = 0; i < size; i++ )
             {
-                key = (Serializable) keys[i];
+                key = keys[i];
                 cacheElement = cache.getQuiet( key );
 
                 if ( cacheElement == null )
@@ -233,7 +233,7 @@ public class ShrinkerThread
      * @return true if the element should be removed, or false.
      * @throws IOException
      */
-    protected boolean checkForRemoval( ICacheElement cacheElement, long now )
+    protected boolean checkForRemoval( ICacheElement<?, ?> cacheElement, long now )
         throws IOException
     {
         IElementAttributes attributes = cacheElement.getElementAttributes();
@@ -280,7 +280,7 @@ public class ShrinkerThread
      * @param eventType Type of event to handle
      * @throws IOException If an error occurs
      */
-    private void handleElementEvents( ICacheElement cacheElement, int eventType )
+    private void handleElementEvents( ICacheElement<?, ?> cacheElement, int eventType )
         throws IOException
     {
         IElementAttributes attributes = cacheElement.getElementAttributes();

@@ -3,7 +3,7 @@ package org.apache.jcs.engine.logging.behavior;
 import java.io.Serializable;
 
 /** Defines the common fields required by a cache event. */
-public interface ICacheEvent
+public interface ICacheEvent<K extends Serializable>
     extends Serializable
 {
     /**
@@ -49,10 +49,10 @@ public interface ICacheEvent
     /**
      * @param key the key to set
      */
-    public void setKey( Serializable key );
+    public void setKey( K key );
 
     /**
      * @return the key
      */
-    public Serializable getKey();
+    public K getKey();
 }

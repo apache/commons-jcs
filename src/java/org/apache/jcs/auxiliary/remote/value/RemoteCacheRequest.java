@@ -8,10 +8,10 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * The basic request wrapper. The different types of requests are differentiated by their types.
  * <p>
- * Rather than creating sub object types, I created on object thsat has values for all types of
+ * Rather than creating sub object types, I created on object that has values for all types of
  * requests.
  */
-public class RemoteCacheRequest
+public class RemoteCacheRequest<K extends Serializable, V extends Serializable>
     implements Serializable
 {
     /** Don't change. */
@@ -54,16 +54,16 @@ public class RemoteCacheRequest
     private String cacheName;
 
     /** The key, if this request has a key. */
-    private Serializable key;
+    private K key;
 
     /** The keySet, if this request has a keySet. Only getMultiple requests. */
-    private Set<Serializable> keySet;
+    private Set<K> keySet;
 
     /** The pattern, if this request uses a pattern. Only getMatching requests. */
     private String pattern;
 
     /** The ICacheEleemnt, if this request contains a value. Only update requests will have this. */
-    private ICacheElement cacheElement;
+    private ICacheElement<K, V> cacheElement;
 
     /**
      * @param requestType the requestType to set
@@ -100,7 +100,7 @@ public class RemoteCacheRequest
     /**
      * @param key the key to set
      */
-    public void setKey( Serializable key )
+    public void setKey( K key )
     {
         this.key = key;
     }
@@ -108,7 +108,7 @@ public class RemoteCacheRequest
     /**
      * @return the key
      */
-    public Serializable getKey()
+    public K getKey()
     {
         return key;
     }
@@ -132,7 +132,7 @@ public class RemoteCacheRequest
     /**
      * @param cacheElement the cacheElement to set
      */
-    public void setCacheElement( ICacheElement cacheElement )
+    public void setCacheElement( ICacheElement<K, V> cacheElement )
     {
         this.cacheElement = cacheElement;
     }
@@ -140,7 +140,7 @@ public class RemoteCacheRequest
     /**
      * @return the cacheElement
      */
-    public ICacheElement getCacheElement()
+    public ICacheElement<K, V> getCacheElement()
     {
         return cacheElement;
     }
@@ -164,7 +164,7 @@ public class RemoteCacheRequest
     /**
      * @param keySet the keySet to set
      */
-    public void setKeySet( Set<Serializable> keySet )
+    public void setKeySet( Set<K> keySet )
     {
         this.keySet = keySet;
     }
@@ -172,7 +172,7 @@ public class RemoteCacheRequest
     /**
      * @return the keySet
      */
-    public Set<Serializable> getKeySet()
+    public Set<K> getKeySet()
     {
         return keySet;
     }

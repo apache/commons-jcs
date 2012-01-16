@@ -23,8 +23,8 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.MockRemoteCacheListener;
+import org.apache.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.RemoteCacheManager;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -41,10 +41,10 @@ public class BasicRemoteCacheClientServerUnitTest
     extends TestCase
 {
     /** Server instance to use in the tests. */
-    private RemoteCacheServer server = null;
-    
+    private RemoteCacheServer<String, String> server = null;
+
     /** the remote server port */
-    private int remotePort;
+    private final int remotePort;
 
     /**
      * Starts the server. This is not in a setup, since the server is slow to kill right now.
@@ -81,11 +81,11 @@ public class BasicRemoteCacheClientServerUnitTest
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testSinglePut";
-        AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache( regionName );
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement element = new CacheElement( regionName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement<String, String>( regionName, "key", "value" );
         cache.update( element );
         SleepUtil.sleepAtLeast( 200 );
 
@@ -94,12 +94,12 @@ public class BasicRemoteCacheClientServerUnitTest
         assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
 
         // DO WORK
-        ICacheElement result = cache.get( "key" );
+        ICacheElement<String, String> result = cache.get( "key" );
 
         // VERIFY
         assertEquals( "Wrong element.", element.getVal(), result.getVal() );
     }
-    
+
     /**
      * Verify that we can remove an item via the remote server.
      * <p>
@@ -117,14 +117,14 @@ public class BasicRemoteCacheClientServerUnitTest
         attributes.setRemotePort( remotePort );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        
+
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, cacheEventLogger, null );
         String regionName = "testPutRemove";
-        AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache( regionName );
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement element = new CacheElement( regionName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement<String, String>( regionName, "key", "value" );
         cache.update( element );
         SleepUtil.sleepAtLeast( 50 );
 
@@ -133,7 +133,7 @@ public class BasicRemoteCacheClientServerUnitTest
         assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
 
         // DO WORK
-        ICacheElement result = cache.get( "key" );
+        ICacheElement<String, String> result = cache.get( "key" );
 
         // VERIFY
         assertEquals( "Wrong element.", element.getVal(), result.getVal() );
@@ -141,7 +141,7 @@ public class BasicRemoteCacheClientServerUnitTest
         // DO WORK
         cache.remove( "key" );
         SleepUtil.sleepAtLeast( 200 );
-        ICacheElement resultAfterRemote = cache.get( "key" );
+        ICacheElement<String, String> resultAfterRemote = cache.get( "key" );
 
         // VERIFY
         assertNull( "Element resultAfterRemote should be null.", resultAfterRemote );
@@ -164,14 +164,14 @@ public class BasicRemoteCacheClientServerUnitTest
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testPutAndListen";
-        AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache( regionName );
 
-        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
         server.addCacheListener( regionName, listener );
 
         // DO WORK
         int numPutsPrior = server.getPutCount();
-        ICacheElement element = new CacheElement( regionName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement<String, String>( regionName, "key", "value" );
         cache.update( element );
         SleepUtil.sleepAtLeast( 50 );
 
@@ -206,9 +206,9 @@ public class BasicRemoteCacheClientServerUnitTest
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
         String regionName = "testPutAndListen";
-        AuxiliaryCache cache = remoteCacheManager.getCache( regionName );
+        AuxiliaryCache<String, String> cache = remoteCacheManager.getCache( regionName );
 
-        MockRemoteCacheListener listener = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
         server.addCacheListener( regionName, listener );
 
         // DO WORK
@@ -216,7 +216,7 @@ public class BasicRemoteCacheClientServerUnitTest
         int numToPut = 100;
         for ( int i = 0; i < numToPut; i++ )
         {
-            ICacheElement element = new CacheElement( regionName, "key" + 1, "value" + i );
+            ICacheElement<String, String> element = new CacheElement<String, String>( regionName, "key" + 1, "value" + i );
             cache.update( element );
         }
         SleepUtil.sleepAtLeast( 500 );

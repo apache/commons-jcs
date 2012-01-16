@@ -26,8 +26,8 @@ import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 
 /** Either serialized value or the value should be null; */
-public class CacheElementSerialized
-    implements ICacheElementSerialized
+public class CacheElementSerialized<K extends Serializable, V extends Serializable>
+    implements ICacheElementSerialized<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -7265084818647601874L;
@@ -36,7 +36,7 @@ public class CacheElementSerialized
     private final String cacheName;
 
     /** This is the cache key by which the value can be referenced. */
-    private final Serializable key;
+    private final K key;
 
     /** The serialized value. */
     private final byte[] serializedValue;
@@ -54,7 +54,7 @@ public class CacheElementSerialized
      * @param serializedValueArg
      * @param elementAttributesArg
      */
-    public CacheElementSerialized( String cacheNameArg, Serializable keyArg, byte[] serializedValueArg,
+    public CacheElementSerialized( String cacheNameArg, K keyArg, byte[] serializedValueArg,
                                    IElementAttributes elementAttributesArg )
     {
         this.cacheName = cacheNameArg;
@@ -74,7 +74,7 @@ public class CacheElementSerialized
     }
 
     /** @return Serializable */
-    public Serializable getKey()
+    public K getKey()
     {
         return this.key;
     }
@@ -104,7 +104,7 @@ public class CacheElementSerialized
      * <p>
      * @return Serializable
      */
-    public Serializable getVal()
+    public V getVal()
     {
         return null;
     }

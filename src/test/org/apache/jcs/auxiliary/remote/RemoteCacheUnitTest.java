@@ -58,13 +58,13 @@ public class RemoteCacheUnitTest
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement( cacheName, "key", "value" );
         remoteCache.update( element );
 
         // VERIFY
         assertTrue( "The element should be in the serialized warapper.",
                     service.lastUpdate instanceof ICacheElementSerialized );
-        ICacheElement result = SerializationConversionUtil
+        ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized) service.lastUpdate, remoteCache
                 .getElementSerializer() );
         assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
@@ -91,7 +91,7 @@ public class RemoteCacheUnitTest
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement( cacheName, "key", "value" );
         remoteCache.update( element );
         // set the new service, this should call propogate
         remoteCache.fixCache( service );
@@ -99,7 +99,7 @@ public class RemoteCacheUnitTest
         // VERIFY
         assertTrue( "The element should be in the serialized warapper.",
                     service.lastUpdate instanceof ICacheElementSerialized );
-        ICacheElement result = SerializationConversionUtil
+        ICacheElement<String, String> result = SerializationConversionUtil
             .getDeSerializedCacheElement( (ICacheElementSerialized) service.lastUpdate, remoteCache
                 .getElementSerializer() );
         assertEquals( "Wrong element updated.", element.getVal(), result.getVal() );
@@ -123,7 +123,7 @@ public class RemoteCacheUnitTest
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         remoteCache.setCacheEventLogger( cacheEventLogger );
 
-        ICacheElement item = new CacheElement( "region", "key", "value" );
+        ICacheElement<String, String> item = new CacheElement( "region", "key", "value" );
 
         // DO WORK
         remoteCache.update( item );

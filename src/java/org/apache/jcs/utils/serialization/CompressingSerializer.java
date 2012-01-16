@@ -37,13 +37,13 @@ public class CompressingSerializer
     implements IElementSerializer
 {
     /**
-     * Serializes an object using default serilaization. Compresses the byte array.
+     * Serializes an object using default serialization. Compresses the byte array.
      * <p>
      * @param obj object
      * @return byte[]
      * @throws IOException on i/o problem
      */
-    public byte[] serialize( Serializable obj )
+    public <T extends Serializable> byte[] serialize( T obj )
         throws IOException
     {
         byte[] uncompressed = serializeObject( obj );
@@ -58,7 +58,7 @@ public class CompressingSerializer
      * @return byte[]
      * @throws IOException on i/o problem
      */
-    protected byte[] serializeObject( Serializable obj )
+    protected <T extends Serializable> byte[] serializeObject( T obj )
         throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -84,7 +84,7 @@ public class CompressingSerializer
      * @throws IOException on i/o problem
      * @throws ClassNotFoundException if class is not found during deserialization
      */
-    public Object deSerialize( byte[] data )
+    public <T extends Serializable> T deSerialize( byte[] data )
         throws IOException, ClassNotFoundException
     {
         if ( data == null )
@@ -103,7 +103,7 @@ public class CompressingSerializer
      * @throws IOException on i/o error
      * @throws ClassNotFoundException if class is not found during deserialization
      */
-    protected Object deserializeObject( byte[] decompressedByteArray )
+    protected <T extends Serializable> T deserializeObject( byte[] decompressedByteArray )
         throws IOException, ClassNotFoundException
     {
         ByteArrayInputStream bais = new ByteArrayInputStream( decompressedByteArray );
@@ -114,7 +114,7 @@ public class CompressingSerializer
         {
             try
             {
-                return ois.readObject();
+                return (T) ois.readObject();
             }
             catch ( IOException e )
             {

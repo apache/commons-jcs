@@ -246,7 +246,7 @@ public class RemoteCacheServerUnitTest
 
         for ( int i = 0; i < numToPut; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Long.valueOf( i ) );
+            ICacheElement<String, String> element = new CacheElement( cacheName, String.valueOf( i ), Long.valueOf( i ) );
             inputItems.add( element );
             server.update( element, 9999 );
         }
@@ -297,7 +297,7 @@ public class RemoteCacheServerUnitTest
 
         for ( int i = 0; i < numToPut; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Long.valueOf( i ) );
+            ICacheElement<String, String> element = new CacheElement( cacheName, String.valueOf( i ), Long.valueOf( i ) );
             inputItems.add( element );
             // update using the cluster listener id
             server.update( element, clusterListener.getListenerId() );
@@ -370,7 +370,7 @@ public class RemoteCacheServerUnitTest
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
 
-        ICacheElement item = new CacheElement( "region", "key", "value" );
+        ICacheElement<String, String> item = new CacheElement( "region", "key", "value" );
 
         // DO WORK
         server.update( item );

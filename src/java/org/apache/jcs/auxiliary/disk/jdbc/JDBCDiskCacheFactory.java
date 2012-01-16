@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
@@ -46,7 +48,7 @@ public class JDBCDiskCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager compositeCacheManager,
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager compositeCacheManager,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         JDBCDiskCacheManager diskCacheManager = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr,

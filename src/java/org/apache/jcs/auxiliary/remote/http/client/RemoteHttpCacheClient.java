@@ -36,8 +36,8 @@ import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /** This is the service used by the remote http auxiliary cache. */
-public class RemoteHttpCacheClient
-    implements IRemoteHttpCacheClient
+public class RemoteHttpCacheClient<K extends Serializable, V extends Serializable>
+    implements IRemoteHttpCacheClient<K, V>
 {
     /** The Logger. */
     private final static Log log = LogFactory.getLog( RemoteCacheServiceAdaptor.class );
@@ -93,7 +93,7 @@ public class RemoteHttpCacheClient
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key )
+    public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
     {
         return get( cacheName, key, 0 );
@@ -108,7 +108,7 @@ public class RemoteHttpCacheClient
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
@@ -117,20 +117,20 @@ public class RemoteHttpCacheClient
             log.warn( message );
             throw new IOException( message );
         }
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetRequest( cacheName, key,
-                                                                                                requesterId );
+        RemoteCacheRequest<K, Serializable> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
-        RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "Get [" + key + "] = " + remoteHttpCacheResponse );
         }
 
-        ICacheElement retval = null;
+        ICacheElement<K, V> retval = null;
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
-            retval = (ICacheElement)remoteHttpCacheResponse.getPayload().get( key );
+            retval = remoteHttpCacheResponse.getPayload().get( key );
         }
         return retval;
     }
@@ -140,11 +140,11 @@ public class RemoteHttpCacheClient
      * <p>
      * @param cacheName
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -156,11 +156,11 @@ public class RemoteHttpCacheClient
      * @param cacheName
      * @param pattern
      * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
@@ -170,18 +170,17 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetMatchingRequest( cacheName,
-                                                                                                        pattern,
-                                                                                                        requesterId );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern, requesterId );
 
-        RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "GetMatching [" + pattern + "] = " + remoteHttpCacheResponse );
         }
 
-        return (Map)remoteHttpCacheResponse.getPayload();
+        return remoteHttpCacheResponse.getPayload();
     }
 
     /**
@@ -189,11 +188,11 @@ public class RemoteHttpCacheClient
      * <p>
      * @param cacheName
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
         throws IOException
     {
         return getMultiple( cacheName, keys, 0 );
@@ -205,11 +204,11 @@ public class RemoteHttpCacheClient
      * @param cacheName
      * @param keys
      * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
@@ -219,18 +218,17 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetMultipleRequest( cacheName,
-                                                                                                        keys,
-                                                                                                        requesterId );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys, requesterId );
 
-        RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "GetMultiple [" + keys + "] = " + remoteHttpCacheResponse );
         }
 
-        return (Map)remoteHttpCacheResponse.getPayload();
+        return remoteHttpCacheResponse.getPayload();
     }
 
     /**
@@ -240,7 +238,7 @@ public class RemoteHttpCacheClient
      * @param key
      * @throws IOException
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, 0 );
@@ -254,7 +252,7 @@ public class RemoteHttpCacheClient
      * @param requesterId
      * @throws IOException
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
@@ -264,8 +262,8 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createRemoveRequest( cacheName, key,
-                                                                                                   requesterId );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createRemoveRequest( cacheName, key, requesterId );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
     }
@@ -299,8 +297,8 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createRemoveAllRequest( cacheName,
-                                                                                                      requesterId );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
     }
@@ -311,7 +309,7 @@ public class RemoteHttpCacheClient
      * @param item
      * @throws IOException
      */
-    public void update( ICacheElement item )
+    public void update( ICacheElement<K, V> item )
         throws IOException
     {
         update( item, 0 );
@@ -324,7 +322,7 @@ public class RemoteHttpCacheClient
      * @param requesterId
      * @throws IOException
      */
-    public void update( ICacheElement cacheElement, long requesterId )
+    public void update( ICacheElement<K, V> cacheElement, long requesterId )
         throws IOException
     {
         if ( !isInitialized() )
@@ -334,8 +332,8 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createUpdateRequest( cacheElement,
-                                                                                                   requesterId );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createUpdateRequest( cacheElement, requesterId );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
     }
@@ -356,7 +354,8 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createDisposeRequest( cacheName, 0 );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createDisposeRequest( cacheName, 0 );
 
         getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
     }
@@ -378,7 +377,7 @@ public class RemoteHttpCacheClient
      * @return A Set of keys
      * @throws IOException
      */
-    public Set<Serializable> getGroupKeys( String cacheName, String groupName )
+    public Set<K> getGroupKeys( String cacheName, String groupName )
         throws IOException
     {
         if ( !isInitialized() )
@@ -388,14 +387,15 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createGetGroupKeysRequest( cacheName,
-                                                                                                         groupName, 0 );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+            RemoteCacheRequestFactory.createGetGroupKeysRequest( cacheName, groupName, 0 );
 
-        RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
-            return (Set<Serializable>)remoteHttpCacheResponse.getPayload().get( groupName );
+            // FIXME: Unchecked cast
+            return (Set<K>)remoteHttpCacheResponse.getPayload().get( groupName );
         }
 
         return Collections.emptySet();
@@ -417,8 +417,8 @@ public class RemoteHttpCacheClient
             throw new IOException( message );
         }
 
-        RemoteCacheRequest remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
-        RemoteCacheResponse remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheRequest<K, V> remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
+        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null )
         {

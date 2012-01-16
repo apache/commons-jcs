@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.lateral;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
@@ -52,12 +54,13 @@ public abstract class LateralCacheAbstractFactory
      * <p>
      * @param attr
      * @param cacheMgr
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public abstract AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
-                                                ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
+    public abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+            AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
+            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
 
     /**
      * Makes sure a listener gets created. It will get monitored as soon as it

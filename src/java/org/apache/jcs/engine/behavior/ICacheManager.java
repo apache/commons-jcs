@@ -1,5 +1,7 @@
 package org.apache.jcs.engine.behavior;
 
+import java.io.Serializable;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +22,7 @@ package org.apache.jcs.engine.behavior;
  */
 
 /**
- * Inteface implemented by a specific cache.
+ * Interface implemented by a specific cache.
  *
  */
 public interface ICacheManager
@@ -28,12 +30,12 @@ public interface ICacheManager
 {
 
     /**
-     * methods to get a cache region from a maanger
+     * methods to get a cache region from a manager
      * @param cacheName
      *
      * @return The cache value
      */
-    public ICache getCache( String cacheName );
+    public <K extends Serializable, V extends Serializable> ICache<K, V> getCache( String cacheName );
 
 }
 // end interface

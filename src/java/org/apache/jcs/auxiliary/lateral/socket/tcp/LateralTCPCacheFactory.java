@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -67,11 +68,12 @@ public class LateralTCPCacheFactory
      * @return AuxiliaryCache
      */
     @Override
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+            AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
+           ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         ITCPLateralCacheAttributes lac = (ITCPLateralCacheAttributes) iaca;
-        ArrayList<ICache> noWaits = new ArrayList<ICache>();
+        ArrayList<ICache<K, V>> noWaits = new ArrayList<ICache<K, V>>();
 
         // pairs up the tcp servers and set the tcpServer value and
         // get the manager and then get the cache
@@ -101,7 +103,7 @@ public class LateralTCPCacheFactory
                     ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( lcm );
                 }
 
-                ICache ic = lcm.getCache( lacC.getCacheName() );
+                ICache<K, V> ic = lcm.getCache( lacC.getCacheName() );
                 if ( ic != null )
                 {
                     noWaits.add( ic );
@@ -119,7 +121,7 @@ public class LateralTCPCacheFactory
         createListener( (ILateralCacheAttributes) iaca, cacheMgr );
 
         // create the no wait facade.
-        LateralCacheNoWaitFacade lcnwf = new LateralCacheNoWaitFacade( noWaits
+        LateralCacheNoWaitFacade<K, V> lcnwf = new LateralCacheNoWaitFacade<K, V>( noWaits
             .toArray( new LateralCacheNoWait[0] ), (ILateralCacheAttributes) iaca );
 
         // create udp discovery if available.
@@ -147,7 +149,7 @@ public class LateralTCPCacheFactory
             try
             {
                 // make a listener. if one doesn't exist
-                ICacheListener listener = LateralTCPListener.getInstance( attr, cacheMgr );
+                ICacheListener<?, ?> listener = LateralTCPListener.getInstance( attr, cacheMgr );
 
                 // register for shutdown notification
                 if ( listener instanceof IShutdownObserver && cacheMgr instanceof IShutdownObservable )
@@ -179,11 +181,12 @@ public class LateralTCPCacheFactory
      * @param elementSerializer
      * @return null if none is created.
      */
-    private synchronized UDPDiscoveryService createDiscoveryService( ITCPLateralCacheAttributes lac,
-                                                                     LateralCacheNoWaitFacade lcnwf,
-                                                                     ICompositeCacheManager cacheMgr,
-                                                                     ICacheEventLogger cacheEventLogger,
-                                                                     IElementSerializer elementSerializer )
+    private synchronized <K extends Serializable, V extends Serializable> UDPDiscoveryService createDiscoveryService(
+            ITCPLateralCacheAttributes lac,
+            LateralCacheNoWaitFacade<K, V> lcnwf,
+            ICompositeCacheManager cacheMgr,
+            ICacheEventLogger cacheEventLogger,
+            IElementSerializer elementSerializer )
     {
         UDPDiscoveryService discovery = null;
 

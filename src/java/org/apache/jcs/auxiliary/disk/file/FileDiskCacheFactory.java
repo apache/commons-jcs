@@ -1,5 +1,7 @@
 package org.apache.jcs.auxiliary.disk.file;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
@@ -33,8 +35,9 @@ public class FileDiskCacheFactory
      * @param elementSerializer the serializer
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+            AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
+           ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         FileDiskCacheAttributes idfca = (FileDiskCacheAttributes) attr;
         if ( log.isDebugEnabled() )

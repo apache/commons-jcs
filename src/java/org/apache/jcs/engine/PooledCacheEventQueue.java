@@ -19,6 +19,7 @@ package org.apache.jcs.engine;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -40,8 +41,8 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
  * more than a few threads at them will serve no purpose other than to saturate the IO interface. In
  * light of this, having one thread per region seems unnecessary. This may prove to be false.
  */
-public class PooledCacheEventQueue
-    extends AbstractCacheEventQueue
+public class PooledCacheEventQueue<K extends Serializable, V extends Serializable>
+    extends AbstractCacheEventQueue<K, V>
 {
     /** The type of event queue */
     private static final String queueType = POOLED_QUEUE_TYPE;
@@ -59,7 +60,7 @@ public class PooledCacheEventQueue
      * @param waitBeforeRetry
      * @param threadPoolName
      */
-    public PooledCacheEventQueue( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+    public PooledCacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                                   int waitBeforeRetry, String threadPoolName )
     {
         initialize( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, threadPoolName );
@@ -75,7 +76,7 @@ public class PooledCacheEventQueue
      * @param waitBeforeRetry
      * @param threadPoolName
      */
-    public void initialize( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+    public void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry, String threadPoolName )
     {
         if ( listener == null )

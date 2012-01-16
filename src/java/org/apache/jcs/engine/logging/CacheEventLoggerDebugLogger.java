@@ -28,10 +28,10 @@ public class CacheEventLoggerDebugLogger
      * @param key
      * @return ICacheEvent
      */
-    public ICacheEvent createICacheEvent( String source, String region, String eventName, String optionalDetails,
-                                          Serializable key )
+    public <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region, String eventName,
+            String optionalDetails, T key )
     {
-        ICacheEvent event = new CacheEvent();
+        ICacheEvent<T> event = new CacheEvent<T>();
         event.setSource( source );
         event.setRegion( region );
         event.setEventName( eventName );
@@ -70,7 +70,7 @@ public class CacheEventLoggerDebugLogger
     /**
      * @param event
      */
-    public void logICacheEvent( ICacheEvent event )
+    public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
     {
         if ( log.isDebugEnabled() )
         {

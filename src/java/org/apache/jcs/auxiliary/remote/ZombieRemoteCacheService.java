@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 
@@ -31,9 +33,9 @@ import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
  * <p>
  * Much of this was reusable, so I moved it to engine.
  */
-public class ZombieRemoteCacheService
-    extends ZombieCacheServiceNonLocal
-    implements IRemoteCacheService
+public class ZombieRemoteCacheService<K extends Serializable, V extends Serializable>
+    extends ZombieCacheServiceNonLocal<K, V>
+    implements IRemoteCacheService<K, V>
 {
     // backwards compatibility
 

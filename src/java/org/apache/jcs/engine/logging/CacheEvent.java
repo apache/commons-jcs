@@ -6,29 +6,29 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.jcs.engine.logging.behavior.ICacheEvent;
 
 /** It's returned from create and passed into log. */
-public class CacheEvent
-    implements ICacheEvent
+public class CacheEvent<K extends Serializable>
+    implements ICacheEvent<K>
 {
     /** Don't change. */
     private static final long serialVersionUID = -5913139566421714330L;
-    
+
     /** The time at which this object was created. */
-    private long createTime = System.currentTimeMillis();
-    
+    private final long createTime = System.currentTimeMillis();
+
     /** The auxiliary or other source of the event. */
     private String source;
-    
+
     /** The cache region */
     private String region;
-    
+
     /** The event name: update, get, remove, etc. */
     private String eventName;
-    
+
     /** disk location, ip, etc. */
     private String optionalDetails;
-    
+
     /** The key that was put or retrieved. */
-    private Serializable key;
+    private K key;
 
     /**
      * @param source the source to set
@@ -97,7 +97,7 @@ public class CacheEvent
     /**
      * @param key the key to set
      */
-    public void setKey( Serializable key )
+    public void setKey( K key )
     {
         this.key = key;
     }
@@ -105,11 +105,11 @@ public class CacheEvent
     /**
      * @return the key
      */
-    public Serializable getKey()
+    public K getKey()
     {
         return key;
     }
-    
+
     /**
      * The time at which this object was created.
      * <p>
@@ -119,8 +119,8 @@ public class CacheEvent
     {
         return createTime;
     }
-    
-    /** 
+
+    /**
      * @return reflection toString
      */
     public String toString()

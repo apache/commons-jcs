@@ -30,8 +30,8 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
  * Elements are stored in purgatory when they are spooled to the auxilliary cache, but have not yet
  * been written to disk.
  */
-public class PurgatoryElement
-    implements ICacheElement, Serializable
+public class PurgatoryElement<K extends Serializable, V extends Serializable>
+    implements ICacheElement<K, V>, Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = -8152034342684135628L;
@@ -40,14 +40,14 @@ public class PurgatoryElement
     protected boolean spoolable = false;
 
     /** Wrapped cache Element */
-    protected ICacheElement cacheElement;
+    protected ICacheElement<K, V> cacheElement;
 
     /**
-     * Constructor for the PurgatoryElement object
+     * Constructor for the PurgatoryElement<K, V> object
      * <p>
      * @param cacheElement CacheElement to wrap.
      */
-    public PurgatoryElement( ICacheElement cacheElement )
+    public PurgatoryElement( ICacheElement<K, V> cacheElement )
     {
         this.cacheElement = cacheElement;
     }
@@ -77,7 +77,7 @@ public class PurgatoryElement
      * <p>
      * @return ICacheElement
      */
-    public ICacheElement getCacheElement()
+    public ICacheElement<K, V> getCacheElement()
     {
         return cacheElement;
     }
@@ -97,7 +97,7 @@ public class PurgatoryElement
      * @return cacheElement.getKey();
      * @see ICacheElement#getKey
      */
-    public Serializable getKey()
+    public K getKey()
     {
         return cacheElement.getKey();
     }
@@ -106,7 +106,7 @@ public class PurgatoryElement
      * @return cacheElement.getVal();
      * @see ICacheElement#getVal
      */
-    public Serializable getVal()
+    public V getVal()
     {
         return cacheElement.getVal();
     }
@@ -128,7 +128,7 @@ public class PurgatoryElement
     {
         cacheElement.setElementAttributes( attr );
     }
-    
+
     /**
      * @return debug string
      */
@@ -144,5 +144,5 @@ public class PurgatoryElement
         buf.append( " ElementAttributes = " + getElementAttributes() );
         buf.append( "]" );
         return buf.toString();
-    }    
+    }
 }

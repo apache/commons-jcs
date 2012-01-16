@@ -43,7 +43,7 @@ public class JCSCacheElementRetrievalUnitTest
         jcs.put( "test_key", "test_data" );
 
         long now = System.currentTimeMillis();
-        ICacheElement elem = jcs.getCacheElement( "test_key" );
+        ICacheElement<String, String> elem = jcs.getCacheElement( "test_key" );
         assertEquals( "Name wasn't right", "testCache1", elem.getCacheName() );
 
         long diff = now - elem.getElementAttributes().getCreateTime();

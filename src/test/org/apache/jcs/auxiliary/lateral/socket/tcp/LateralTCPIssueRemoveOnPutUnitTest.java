@@ -100,7 +100,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
         String keyToBeRemovedOnPut = "test1_notremoved";
 
-        ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, String> element1 = new CacheElement( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get removed, it should get to the cache." );
         service.update( element1 );
 
@@ -148,7 +148,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         String keyToBeRemovedOnPut = "test1";
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
 
-        ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, String> element1 = new CacheElement( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
@@ -161,7 +161,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
                 int kn = ran.nextInt( range );
                 String key = "key" + kn;
 
-                ICacheElement element = new CacheElement( region, key, region + ":data" + i
+                ICacheElement<String, String> element = new CacheElement( region, key, region + ":data" + i
                     + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                 service.update( element );
                 if ( show )

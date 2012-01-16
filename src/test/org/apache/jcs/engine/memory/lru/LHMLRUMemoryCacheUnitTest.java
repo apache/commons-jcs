@@ -107,7 +107,7 @@ public class LHMLRUMemoryCacheUnitTest
         }
         for ( int i = max + 2; i < items; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = (ICacheElement) elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", "myregion" + " data " + i, element.getVal() );
         }
@@ -259,7 +259,7 @@ public class LHMLRUMemoryCacheUnitTest
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
+            ICacheElement<String, String> ice = new CacheElement( cache.getCacheName(), i + ":key", cache.getCacheName() + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             mru.update( ice );
         }

@@ -39,8 +39,8 @@ import org.apache.jcs.utils.serialization.SerializationConversionUtil;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /** Shared listener base. */
-public abstract class AbsractRemoteCacheListener
-    implements IRemoteCacheListener, Serializable
+public abstract class AbsractRemoteCacheListener<K extends Serializable, V extends Serializable>
+    implements IRemoteCacheListener<K, V>, Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = 32442324243243L;
@@ -151,7 +151,7 @@ public abstract class AbsractRemoteCacheListener
      * @param cb
      * @throws IOException
      */
-    public void handlePut( ICacheElement cb )
+    public void handlePut( ICacheElement<K, V> cb )
         throws IOException
     {
         if ( irca.getRemoveUponRemotePut() )
@@ -176,7 +176,7 @@ public abstract class AbsractRemoteCacheListener
                 }
             }
 
-            CompositeCache cache = getCacheManager().getCache( cb.getCacheName() );
+            CompositeCache<K, V> cache = getCacheManager().getCache( cb.getCacheName() );
 
             // Eventually the instance of will not be necessary.
             if ( cb instanceof ICacheElementSerialized )
@@ -187,8 +187,8 @@ public abstract class AbsractRemoteCacheListener
                 }
                 try
                 {
-                    cb = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) cb,
-                                                                                  this.elementSerializer );
+                    cb = SerializationConversionUtil.getDeSerializedCacheElement(
+                            (ICacheElementSerialized<K, V>) cb, this.elementSerializer );
                     if ( log.isDebugEnabled() )
                     {
                         log.debug( "Deserialized result = " + cb );
@@ -215,7 +215,7 @@ public abstract class AbsractRemoteCacheListener
      * @param key
      * @throws IOException
      */
-    public void handleRemove( String cacheName, Serializable key )
+    public void handleRemove( String cacheName, K key )
         throws IOException
     {
         removes++;
@@ -229,7 +229,7 @@ public abstract class AbsractRemoteCacheListener
             log.debug( "handleRemove> cacheName=" + cacheName + ", key=" + key );
         }
 
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
         cache.localRemove( key );
     }
@@ -248,7 +248,7 @@ public abstract class AbsractRemoteCacheListener
             log.debug( "handleRemoveAll> cacheName=" + cacheName );
         }
 
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
         cache.localRemoveAll();
     }
 

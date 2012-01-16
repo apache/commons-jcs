@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * Description of the Class
  */
-public class GroupAttrName
+public class GroupAttrName<T extends Serializable>
     implements Serializable
 {
     /** Don't change */
@@ -34,7 +34,7 @@ public class GroupAttrName
     public final GroupId groupId;
 
     /** the name of the attribute */
-    public final Object attrName;
+    public final T attrName;
 
     /** Cached toString value */
     private String toString;
@@ -44,7 +44,7 @@ public class GroupAttrName
      * @param groupId
      * @param attrName
      */
-    public GroupAttrName( GroupId groupId, Object attrName )
+    public GroupAttrName( GroupId groupId, T attrName )
     {
         this.groupId = groupId;
         this.attrName = attrName;
@@ -67,7 +67,7 @@ public class GroupAttrName
         {
             return false;
         }
-        GroupAttrName to = (GroupAttrName) obj;
+        GroupAttrName<?> to = (GroupAttrName<?>) obj;
         return groupId.equals( to.groupId ) && attrName.equals( to.attrName );
     }
 

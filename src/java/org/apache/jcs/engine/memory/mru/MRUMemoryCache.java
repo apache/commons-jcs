@@ -20,6 +20,7 @@ package org.apache.jcs.engine.memory.mru;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.memory.AbstractDoulbeLinkedListMemoryCache;
@@ -29,8 +30,8 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
  * The most recently used items move to the front of the list and get spooled to disk if the cache
  * hub is configured to use a disk cache.
  */
-public class MRUMemoryCache
-    extends AbstractDoulbeLinkedListMemoryCache
+public class MRUMemoryCache<K extends Serializable, V extends Serializable>
+    extends AbstractDoulbeLinkedListMemoryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 5013101678192336129L;
@@ -45,7 +46,7 @@ public class MRUMemoryCache
      * @return MemoryElementDescriptor the new node
      * @exception IOException
      */
-    protected MemoryElementDescriptor adjustListForUpdate( ICacheElement ce )
+    protected MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
         return addFirst( ce );
@@ -56,7 +57,7 @@ public class MRUMemoryCache
      * <p>
      * @param me
      */
-    protected void adjustListForGet( MemoryElementDescriptor me )
+    protected void adjustListForGet( MemoryElementDescriptor<K, V> me )
     {
         list.makeLast( me );
     }

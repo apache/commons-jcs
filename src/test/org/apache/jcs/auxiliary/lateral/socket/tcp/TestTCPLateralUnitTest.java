@@ -122,7 +122,7 @@ public class TestTCPLateralUnitTest
         int cnt = 100;
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = new CacheElement( "test", "key" + i, "value1" );
+            ICacheElement<String, String> element = new CacheElement( "test", "key" + i, "value1" );
             service.update( element );
         }
 
@@ -162,18 +162,18 @@ public class TestTCPLateralUnitTest
         service.setListenerId( 123456 );
 
         // DO WORK
-        ICacheElement element = new CacheElement( "test", "key", "value1" );
+        ICacheElement<String, String> element = new CacheElement( "test", "key", "value1" );
         service.update( element );
 
         SleepUtil.sleepAtLeast( 300 );
 
-        ICacheElement element2 = new CacheElement( "test", "key", "value2" );
+        ICacheElement<String, String> element2 = new CacheElement( "test", "key", "value2" );
         service.update( element2 );
 
         SleepUtil.sleepAtLeast( 1000 );
 
         // VERIFY
-        ICacheElement cacheElement = cacheMgr.getCache().get( "key" );
+        ICacheElement<String, String> cacheElement = cacheMgr.getCache().get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
@@ -207,18 +207,18 @@ public class TestTCPLateralUnitTest
 
         // DO WORK
         String key = "key";
-        ICacheElement element = new CacheElement( "test", key, "value1" );
+        ICacheElement<String, String> element = new CacheElement( "test", key, "value1" );
         service.update( element );
 
         SleepUtil.sleepAtLeast( 300 );
 
-        ICacheElement element2 = new CacheElement( "test", key, "value2" );
+        ICacheElement<String, String> element2 = new CacheElement( "test", key, "value2" );
         service.update( element2 );
 
         SleepUtil.sleepAtLeast( 1000 );
 
         // VERIFY
-        ICacheElement cacheElement = cacheMgr.getCache().get( "key" );
+        ICacheElement<String, String> cacheElement = cacheMgr.getCache().get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
@@ -244,7 +244,7 @@ public class TestTCPLateralUnitTest
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
         // add the item to the listeners cache
-        ICacheElement element = new CacheElement( "test", "key", "value1" );
+        ICacheElement<String, String> element = new CacheElement( "test", "key", "value1" );
         cacheMgr.getCache().update( element );
 
         // setup a service to talk to the listener started above.
@@ -258,7 +258,7 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( 300 );
 
         // DO WORK
-        ICacheElement result = service.get( "test", "key" );
+        ICacheElement<String, String> result = service.get( "test", "key" );
 
         // VERIFY
         System.out.println( "testSendAndReceived, result = " + result );
@@ -292,7 +292,7 @@ public class TestTCPLateralUnitTest
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
             // add the item to the listeners cache
-            ICacheElement element = new CacheElement( "test", keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, String> element = new CacheElement( "test", keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
             cacheMgr.getCache().update( element );
         }
 

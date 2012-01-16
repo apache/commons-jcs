@@ -28,7 +28,7 @@ import org.apache.jcs.engine.control.CompositeCache;
 public class CacheRegionInfo
 {
     /** The cache region we are getting info on. */
-    CompositeCache cache = null;
+    CompositeCache<?,?> cache = null;
 
     /** number of bytes counted so far, will be a total of all items. */
     long byteCount = 0;
@@ -36,7 +36,7 @@ public class CacheRegionInfo
     /**
      * @return the underlying region
      */
-    public CompositeCache getCache()
+    public CompositeCache<?, ?> getCache()
     {
         return this.cache;
     }

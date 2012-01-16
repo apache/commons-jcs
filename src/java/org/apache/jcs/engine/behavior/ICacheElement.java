@@ -31,12 +31,12 @@ import java.io.Serializable;
  * allowed to be spooled, etc.
  *
  */
-public interface ICacheElement /* TODO: Should be generic */
+public interface ICacheElement<K extends Serializable, V extends Serializable>
     extends Serializable
 {
 
     /**
-     * Gets the cacheName attribute of the ICacheElement object. The cacheName
+     * Gets the cacheName attribute of the ICacheElement<K, V> object. The cacheName
      * is also known as the region name.
      *
      * @return The cacheName value
@@ -44,28 +44,28 @@ public interface ICacheElement /* TODO: Should be generic */
     public String getCacheName();
 
     /**
-     * Gets the key attribute of the ICacheElement object
+     * Gets the key attribute of the ICacheElement<K, V> object
      *
      * @return The key value
      */
-    public Serializable getKey();
+    public K getKey();
 
     /**
-     * Gets the val attribute of the ICacheElement object
+     * Gets the val attribute of the ICacheElement<K, V> object
      *
      * @return The val value
      */
-    public Serializable getVal();
+    public V getVal();
 
     /**
-     * Gets the attributes attribute of the ICacheElement object
+     * Gets the attributes attribute of the ICacheElement<K, V> object
      *
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes();
 
     /**
-     * Sets the attributes attribute of the ICacheElement object
+     * Sets the attributes attribute of the ICacheElement<K, V> object
      *
      * @param attr
      *            The new attributes value

@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
@@ -26,8 +28,8 @@ import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
  * <p>
  * For convenience, ICacheServiceNonLocal extends Remote.
  */
-public interface IRemoteCacheService
-    extends ICacheServiceNonLocal
+public interface IRemoteCacheService<K extends Serializable, V extends Serializable>
+    extends ICacheServiceNonLocal<K, V>
 {
     // backwards compatibility
 }

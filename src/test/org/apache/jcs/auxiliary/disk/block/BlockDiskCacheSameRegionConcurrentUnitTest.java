@@ -135,7 +135,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
     public void runTestForRegion( String region, int start, int end )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
 
@@ -149,22 +149,22 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
         for ( int i = start; i <= end; i++ )
         {
             String key = i + ":key";
-            String value = (String) jcs.get( key );
+            String value = jcs.get( key );
 
             assertEquals( "Wrong value for key [" + key + "]", region + " data " + i + "-" + region, value );
         }
 
         // Test that getElements returns all the expected values
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         for ( int i = start; i <= end; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map elements = jcs.getCacheElements( keys );
+        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = start; i <= end; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i + "-" + region, element.getVal() );
         }

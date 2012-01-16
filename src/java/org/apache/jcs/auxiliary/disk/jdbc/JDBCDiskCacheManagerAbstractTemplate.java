@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.disk.jdbc;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
@@ -52,7 +53,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected static int clients;
 
     /** A map of JDBCDiskCache objects to region names. */
-    protected static Hashtable<String, AuxiliaryCache> caches = new Hashtable<String, AuxiliaryCache>();
+    protected static Hashtable<String, AuxiliaryCache<? extends Serializable, ? extends Serializable>> caches =
+        new Hashtable<String, AuxiliaryCache<? extends Serializable, ? extends Serializable>>();
 
     /**
      * A map of TableState objects to table names. Each cache has a table state object, which is
@@ -76,7 +78,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      * @param tableState An object used by multiple processes to indicate state.
      * @return AuxiliaryCache -- a JDBCDiskCache
      */
-    protected abstract AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState );
+    protected abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState );
 
     /**
      * Creates a JDBCDiskCache for the region if one doesn't exist, else it returns the pre-created
@@ -85,15 +87,15 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      * @param cattr
      * @return The cache value
      */
-    public AuxiliaryCache getCache( JDBCDiskCacheAttributes cattr )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( JDBCDiskCacheAttributes cattr )
     {
-        AuxiliaryCache diskCache = null;
+        AuxiliaryCache<K, V> diskCache = null;
 
         log.debug( "cacheName = " + cattr.getCacheName() );
 
         synchronized ( caches )
         {
-            diskCache = caches.get( cattr.getCacheName() );
+            diskCache = (AuxiliaryCache<K, V>) caches.get( cattr.getCacheName() );
 
             if ( diskCache == null )
             {
@@ -128,7 +130,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      * @param cattr
      * @param raf
      */
-    protected void createShrinkerWhenNeeded( JDBCDiskCacheAttributes cattr, AuxiliaryCache raf )
+    protected void createShrinkerWhenNeeded( JDBCDiskCacheAttributes cattr, AuxiliaryCache<?, ?> raf )
     {
         // add cache to shrinker.
         if ( cattr.isUseDiskShrinker() )
@@ -152,7 +154,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
                 }
                 shrinkerDaemon.scheduleAtFixedRate(shrinkerThread, 0, intervalMillis, TimeUnit.MILLISECONDS);
             }
-            shrinkerThread.addDiskCacheToShrinkList( (JDBCDiskCache) raf );
+            shrinkerThread.addDiskCacheToShrinkList( (JDBCDiskCache<?, ?>) raf );
         }
     }
 
@@ -161,7 +163,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      */
     public void freeCache( String name )
     {
-        JDBCDiskCache raf = (JDBCDiskCache) caches.get( name );
+        JDBCDiskCache<?, ?> raf = (JDBCDiskCache<?, ?>) caches.get( name );
         if ( raf != null )
         {
             try
@@ -195,11 +197,11 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         }
         synchronized ( caches )
         {
-            Enumeration<AuxiliaryCache> allCaches = caches.elements();
+            Enumeration<AuxiliaryCache<?, ?>> allCaches = caches.elements();
 
             while ( allCaches.hasMoreElements() )
             {
-                JDBCDiskCache raf = (JDBCDiskCache) allCaches.nextElement();
+                JDBCDiskCache<?, ?> raf = (JDBCDiskCache<?, ?>) allCaches.nextElement();
                 if ( raf != null )
                 {
                     try

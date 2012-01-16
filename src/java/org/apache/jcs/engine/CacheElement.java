@@ -27,8 +27,8 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 /**
  * Generic element wrapper. Often stuffed inside another.
  */
-public class CacheElement
-    implements ICacheElement, Serializable
+public class CacheElement<K extends Serializable, V extends Serializable>
+    implements ICacheElement<K, V>, Serializable
 {
     /** Don't change */
     private static final long serialVersionUID = -6062305728297627263L;
@@ -37,10 +37,10 @@ public class CacheElement
     public final String cacheName;
 
     /** This is the cache key by which the value can be referenced. */
-    public final Serializable key;
+    public final K key;
 
     /** This is the cached value, reference by the key. */
-    public final Serializable val;
+    public final V val;
 
     /**
      * These attributes hold information about the element and what it is
@@ -55,7 +55,7 @@ public class CacheElement
      * @param key
      * @param val
      */
-    public CacheElement( String cacheName, Serializable key, Serializable val )
+    public CacheElement( String cacheName, K key, V val )
     {
         this.cacheName = cacheName;
         this.key = key;
@@ -70,24 +70,10 @@ public class CacheElement
      * @param val
      * @param attrArg
      */
-    public CacheElement( String cacheName, Serializable key, Serializable val, IElementAttributes attrArg )
+    public CacheElement( String cacheName, K key, V val, IElementAttributes attrArg )
     {
-        this.cacheName = cacheName;
-        this.key = key;
-        this.val = val;
+        this(cacheName, key, val);
         this.attr = attrArg;
-    }
-
-    /**
-     * Constructor for the CacheElement object
-     * <p>
-     * @param cacheName
-     * @param key
-     * @param val
-     */
-    public CacheElement( String cacheName, Serializable key, Object val )
-    {
-        this( cacheName, key, (Serializable) val );
     }
 
     /**
@@ -105,7 +91,7 @@ public class CacheElement
      * <p>
      * @return The key value
      */
-    public Serializable getKey()
+    public K getKey()
     {
         return this.key;
     }
@@ -115,7 +101,7 @@ public class CacheElement
      * <p>
      * @return The val value
      */
-    public Serializable getVal()
+    public V getVal()
     {
         return this.val;
     }
@@ -128,7 +114,7 @@ public class CacheElement
      */
     public void setElementAttributes( IElementAttributes attr )
     {
-        this.attr = (ElementAttributes) attr;
+        this.attr = attr;
     }
 
     /**

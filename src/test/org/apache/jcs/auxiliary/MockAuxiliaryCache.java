@@ -35,8 +35,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * <p>
  * @author Aaron Smuts
  */
-public class MockAuxiliaryCache
-    extends AbstractAuxiliaryCache
+public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 1L;
@@ -54,7 +54,7 @@ public class MockAuxiliaryCache
      * @param ce
      * @throws IOException
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -66,7 +66,7 @@ public class MockAuxiliaryCache
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -78,23 +78,23 @@ public class MockAuxiliaryCache
      * @return Map
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
         throws IOException
     {
         getMatchingCallCount++;
-        return new HashMap<Serializable, ICacheElement>();
+        return new HashMap<K, ICacheElement<K, V>>();
     }
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<String, String> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
-        return new HashMap<Serializable, ICacheElement>();
+        return new HashMap<K, ICacheElement<K, V>>();
     }
 
     /**
@@ -102,7 +102,7 @@ public class MockAuxiliaryCache
      * @return boolean
      * @throws IOException
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -159,7 +159,7 @@ public class MockAuxiliaryCache
      * @return null
      * @throws IOException
      */
-    public Set<Serializable> getGroupKeys( String group )
+    public Set<K> getGroupKeys( String group )
         throws IOException
     {
         return null;

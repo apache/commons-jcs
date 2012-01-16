@@ -20,6 +20,7 @@ package org.apache.jcs.engine.memory.fifo;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.memory.AbstractDoulbeLinkedListMemoryCache;
@@ -28,8 +29,8 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 /**
  * The items are spooled in the order they are added. No adjustments to the list are made on get.
  */
-public class FIFOMemoryCache
-    extends AbstractDoulbeLinkedListMemoryCache
+public class FIFOMemoryCache<K extends Serializable, V extends Serializable>
+    extends AbstractDoulbeLinkedListMemoryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 6403738094136424201L;
@@ -42,7 +43,7 @@ public class FIFOMemoryCache
      * @return MemoryElementDescriptor the new node
      * @exception IOException
      */
-    protected MemoryElementDescriptor adjustListForUpdate( ICacheElement ce )
+    protected MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
         return addFirst( ce );
@@ -53,7 +54,7 @@ public class FIFOMemoryCache
      * <p>
      * @param me
      */
-    protected void adjustListForGet( MemoryElementDescriptor me )
+    protected void adjustListForGet( MemoryElementDescriptor<K, V> me )
     {
         // DO NOTHING
     }

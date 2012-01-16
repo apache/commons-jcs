@@ -34,8 +34,8 @@ import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 /**
  * This is a mock impl of the non local cache service.
  */
-public class MockCacheServiceNonLocal
-    implements ICacheServiceNonLocal
+public class MockCacheServiceNonLocal<K extends Serializable, V extends Serializable>
+    implements ICacheServiceNonLocal<K, V>
 {
     /** The key last passed to get */
     public Serializable lastGetKey;
@@ -44,19 +44,19 @@ public class MockCacheServiceNonLocal
     public String lastGetMatchingPattern;
 
     /** The keya last passed to getMatching */
-    public Set<Serializable> lastGetMultipleKeys;
+    public Set<K> lastGetMultipleKeys;
 
     /** The object that was last passed to update. */
-    public Object lastUpdate;
+    public ICacheElement<K, V> lastUpdate;
 
     /** List of updates. */
-    public List<ICacheElement> updateRequestList = new ArrayList<ICacheElement>();
+    public List<ICacheElement<K, V>> updateRequestList = new ArrayList<ICacheElement<K,V>>();
 
     /** List of request ids. */
     public List<Long> updateRequestIdList = new ArrayList<Long>();
 
     /** The key that was last passed to remove. */
-    public Object lastRemoveKey;
+    public K lastRemoveKey;
 
     /** The cache name that was last passed to removeAll. */
     public String lastRemoveAllCacheName;
@@ -67,7 +67,7 @@ public class MockCacheServiceNonLocal
      * @param requesterId - identity of requester
      * @return null
      */
-    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
     {
         lastGetKey = key;
         return null;
@@ -78,9 +78,9 @@ public class MockCacheServiceNonLocal
      * @param groupName
      * @return empty set
      */
-    public Set<Serializable> getGroupKeys( String cacheName, String groupName )
+    public Set<K> getGroupKeys( String cacheName, String groupName )
     {
-        return new HashSet<Serializable>();
+        return new HashSet<K>();
     }
 
     /**
@@ -90,7 +90,7 @@ public class MockCacheServiceNonLocal
      * @param key
      * @param requesterId - identity of requester
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
     {
         lastRemoveKey = key;
     }
@@ -114,7 +114,7 @@ public class MockCacheServiceNonLocal
      * @param item
      * @param requesterId - identity of requester
      */
-    public void update( ICacheElement item, long requesterId )
+    public void update( ICacheElement<K, V> item, long requesterId )
     {
         lastUpdate = item;
         updateRequestList.add( item );
@@ -136,7 +136,7 @@ public class MockCacheServiceNonLocal
      * @param key
      * @return null
      */
-    public ICacheElement get( String cacheName, Serializable key )
+    public ICacheElement<K, V> get( String cacheName, K key )
     {
         return get( cacheName, key, 0 );
     }
@@ -155,7 +155,7 @@ public class MockCacheServiceNonLocal
      * @param cacheName
      * @param key
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
     {
         lastRemoveKey = key;
     }
@@ -175,7 +175,7 @@ public class MockCacheServiceNonLocal
      * <p>
      * @param item
      */
-    public void update( ICacheElement item )
+    public void update( ICacheElement<K, V> item )
     {
         lastUpdate = item;
     }
@@ -186,10 +186,10 @@ public class MockCacheServiceNonLocal
      * @param requesterId - identity of requester
      * @return empty map
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
     {
         lastGetMultipleKeys = keys;
-        return new HashMap<Serializable, ICacheElement>();
+        return new HashMap<K, ICacheElement<K, V>>();
     }
 
     /**
@@ -197,7 +197,7 @@ public class MockCacheServiceNonLocal
      * @param keys
      * @return empty map
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
     {
         return getMultiple( cacheName, keys, 0 );
     }
@@ -210,7 +210,7 @@ public class MockCacheServiceNonLocal
      * @return an empty map
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -223,10 +223,10 @@ public class MockCacheServiceNonLocal
      * @return Map
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         lastGetMatchingPattern = pattern;
-        return new HashMap<Serializable, ICacheElement>();
+        return new HashMap<K, ICacheElement<K, V>>();
     }
 }

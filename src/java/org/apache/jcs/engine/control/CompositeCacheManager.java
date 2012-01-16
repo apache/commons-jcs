@@ -70,10 +70,12 @@ public class CompositeCacheManager
     protected final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 
     /** Caches managed by this cache manager */
-    protected Hashtable<String, ICache> caches = new Hashtable<String, ICache>();
+    protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> caches =
+        new Hashtable<String, ICache<? extends Serializable, ? extends Serializable>>();
 
     /** Internal system caches for this cache manager */
-    protected Hashtable<String, ICache> systemCaches = new Hashtable<String, ICache>();
+    protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> systemCaches =
+        new Hashtable<String, ICache<? extends Serializable, ? extends Serializable>>();
 
     /** Number of clients accessing this cache manager */
     private int clients;
@@ -107,7 +109,7 @@ public class CompositeCacheManager
     /** Should we use system property substitutions. */
     private static final boolean DEFAULT_USE_SYSTEM_PROPERTIES = true;
 
-    /** Once configured, you can force a recofiguration of sorts. */
+    /** Once configured, you can force a reconfiguration of sorts. */
     private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
 
     /** Those waiting for notification of a shutdown. */
@@ -453,7 +455,7 @@ public class CompositeCacheManager
      * @param cacheName
      * @return CompositeCache -- the cache region controller
      */
-    public CompositeCache getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( String cacheName )
     {
         return getCache( cacheName, this.defaultCacheAttr.copy() );
     }
@@ -465,7 +467,7 @@ public class CompositeCacheManager
      * @param cattr
      * @return CompositeCache
      */
-    public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr )
+    public <K extends Serializable, V extends Serializable> CompositeCache<K, V> getCache( String cacheName, ICompositeCacheAttributes cattr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, this.defaultElementAttr );
@@ -479,7 +481,7 @@ public class CompositeCacheManager
      * @param attr
      * @return CompositeCache
      */
-    public CompositeCache getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         cattr.setCacheName( cacheName );
         return getCache( cattr, attr );
@@ -491,14 +493,14 @@ public class CompositeCacheManager
      * @param cattr
      * @return CompositeCache
      */
-    public CompositeCache getCache( ICompositeCacheAttributes cattr )
+    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr )
     {
         return getCache( cattr, this.defaultElementAttr );
     }
 
     /**
      * If the cache has already been created, then the CacheAttributes and the element Attributes
-     * will be ignored. Currently there is no overiding the CacheAttributes once it is set up. You
+     * will be ignored. Currently there is no overriding the CacheAttributes once it is set up. You
      * can change the default ElementAttributes for a region later.
      * <p>
      * Overriding the default elemental attributes will require changing the way the attributes are
@@ -509,9 +511,10 @@ public class CompositeCacheManager
      * @param attr
      * @return CompositeCache
      */
-    public CompositeCache getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
+    @SuppressWarnings("unchecked")
+    public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
-        CompositeCache cache;
+        CompositeCache<K, V> cache;
 
         if ( log.isDebugEnabled() )
         {
@@ -520,7 +523,7 @@ public class CompositeCacheManager
 
         synchronized ( caches )
         {
-            cache = (CompositeCache) caches.get( cattr.getCacheName() );
+            cache = (CompositeCache<K, V>) caches.get( cattr.getCacheName() );
             if ( cache == null )
             {
                 cattr.setCacheName( cattr.getCacheName() );
@@ -551,7 +554,7 @@ public class CompositeCacheManager
      */
     public void freeCache( String name, boolean fromRemote )
     {
-        CompositeCache cache = (CompositeCache) caches.remove( name );
+        CompositeCache<?, ?> cache = (CompositeCache<?, ?>) caches.remove( name );
 
         if ( cache != null )
         {
@@ -622,9 +625,9 @@ public class CompositeCacheManager
                 log.debug( "Last client called release. There are " + caches.size() + " caches which will be disposed" );
             }
 
-            for (ICache c : caches.values() )
+            for (ICache<?, ?> c : caches.values() )
             {
-                CompositeCache cache = (CompositeCache) c;
+                CompositeCache<?, ?> cache = (CompositeCache<?, ?>) c;
 
                 if ( cache != null )
                 {
@@ -732,9 +735,9 @@ public class CompositeCacheManager
     public ICacheStats[] getStatistics()
     {
         ArrayList<ICacheStats> cacheStats = new ArrayList<ICacheStats>();
-        for (ICache c :  caches.values())
+        for (ICache<?, ?> c :  caches.values())
         {
-            CompositeCache cache = (CompositeCache) c;
+            CompositeCache<?, ?> cache = (CompositeCache<?, ?>) c;
             if ( cache != null )
             {
                 cacheStats.add( cache.getStatistics() );

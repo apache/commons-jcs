@@ -46,9 +46,9 @@ import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
-/** An abstract base for the No Wait Facade.  Different implmentations will failover differently. */
-public abstract class AbstractRemoteCacheNoWaitFacade
-    extends AbstractAuxiliaryCache
+/** An abstract base for the No Wait Facade.  Different implementations will failover differently. */
+public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCache<K, V>
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -4529970797620747110L;
@@ -57,7 +57,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
     private final static Log log = LogFactory.getLog( AbstractRemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
-    public RemoteCacheNoWait[] noWaits;
+    public RemoteCacheNoWait<K, V>[] noWaits;
 
     /** The cache name */
     private final String cacheName;
@@ -77,7 +77,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @param cacheEventLogger
      * @param elementSerializer
      */
-    public AbstractRemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca,
+    public AbstractRemoteCacheNoWaitFacade( RemoteCacheNoWait<K, V>[] noWaits, RemoteCacheAttributes rca,
                                     ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
                                     IElementSerializer elementSerializer )
     {
@@ -99,7 +99,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @param ce
      * @throws IOException
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -148,21 +148,21 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * Synchronously reads from the remote cache.
      * <p>
      * @param key
-     * @return Either an ICacheElement or null if it is not found.
+     * @return Either an ICacheElement<K, V> or null if it is not found.
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
     {
         for ( int i = 0; i < noWaits.length; i++ )
         {
             try
             {
-                Object obj = noWaits[i].get( key );
+                ICacheElement<K, V> obj = noWaits[i].get( key );
                 if ( obj != null )
                 {
-                    return (ICacheElement) obj;
+                    return obj;
                 }
             }
-            catch ( Exception ex )
+            catch ( IOException ex )
             {
                 log.debug( "Failed to get." );
                 return null;
@@ -178,7 +178,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @return map
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String pattern )
         throws IOException
     {
         for ( int i = 0; i < noWaits.length; i++ )
@@ -199,10 +199,10 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
     {
         if ( keys != null && !keys.isEmpty() )
         {
@@ -218,6 +218,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
                 }
             }
         }
+
         return Collections.emptyMap();
     }
 
@@ -228,13 +229,13 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @return the set of keys of objects currently in the group
      * @throws IOException
      */
-    public Set<Serializable> getGroupKeys( String group )
+    public Set<K> getGroupKeys( String group )
         throws IOException
     {
-        HashSet<Serializable> allKeys = new HashSet<Serializable>();
+        HashSet<K> allKeys = new HashSet<K>();
         for ( int i = 0; i < noWaits.length; i++ )
         {
-            AuxiliaryCache aux = noWaits[i];
+            AuxiliaryCache<K, V> aux = noWaits[i];
             if ( aux != null )
             {
                 allKeys.addAll( aux.getGroupKeys( group ) );
@@ -249,7 +250,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade
      * @param key
      * @return whether or not it was removed, right now it return false.
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
     {
         try
         {

@@ -31,7 +31,7 @@ public class IndexedDiskCacheManagerUnitTest
         MockElementSerializer elementSerializer = new MockElementSerializer();
 
         String key = "myKey";
-        ICacheElement cacheElement = new CacheElement( "test", key, "MyValue" );
+        ICacheElement<String, String> cacheElement = new CacheElement( "test", key, "MyValue" );
 
         IndexedDiskCacheManager manager = IndexedDiskCacheManager.getInstance( defaultCacheAttributes,
                                                                                cacheEventLogger, elementSerializer );

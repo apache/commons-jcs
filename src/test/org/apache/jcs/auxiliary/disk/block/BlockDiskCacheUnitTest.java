@@ -30,16 +30,16 @@ public class BlockDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
-        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>( cattr );
 
         // DO WORK
         for ( int i = 0; i <= items; i++ )
         {
-            diskCache.update( new CacheElement( cacheName, i + ":key", cacheName + " data " + i ) );
+            diskCache.update( new CacheElement<String, String>( cacheName, i + ":key", cacheName + " data " + i ) );
         }
         Thread.sleep( 500 );
 
-        Map matchingResults = diskCache.getMatching( "1.8.+" );
+        Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching( "1.8.+" );
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
@@ -62,16 +62,16 @@ public class BlockDiskCacheUnitTest
         BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
-        cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
-        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+        cattr.setDiskPath( "target/test-sandbox/BlockDiskCache<String, String>UnitTest" );
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>( cattr );
 
         // DO WORK
         for ( int i = 0; i <= items; i++ )
         {
-            diskCache.update( new CacheElement( cacheName, i + ":key", cacheName + " data " + i ) );
+            diskCache.update( new CacheElement<String, String>( cacheName, i + ":key", cacheName + " data " + i ) );
         }
 
-        Map matchingResults = diskCache.getMatching( "1.8.+" );
+        Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching( "1.8.+" );
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
@@ -123,7 +123,7 @@ public class BlockDiskCacheUnitTest
             resultData = newTotal;
         }
 
-        Serializable result = (Serializable) elementSerializer.deSerialize( resultData );
+        Serializable result = elementSerializer.deSerialize( resultData );
         System.out.println( result );
         assertEquals( "wrong string after retrieval", string, result );
     }
@@ -152,18 +152,18 @@ public class BlockDiskCacheUnitTest
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 200 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
-        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>( cattr );
 
         // DO WORK
-        diskCache.update( new CacheElement( cacheName, "x", string ) );
+        diskCache.update( new CacheElement<String, String>( cacheName, "x", string ) );
 
         // VERIFY
         assertNotNull( diskCache.get( "x" ) );
         Thread.sleep( 1000 );
-        ICacheElement afterElement = diskCache.get( "x" );
+        ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
         System.out.println( "afterElement = " + afterElement );
-        String after = (String) afterElement.getVal();
+        String after = afterElement.getVal();
 
         assertNotNull( after );
         assertEquals( "wrong string after retrieval", string, after );
@@ -195,18 +195,18 @@ public class BlockDiskCacheUnitTest
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 200 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
-        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+        BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>( cattr );
 
         // DO WORK
-        diskCache.update( new CacheElement( cacheName, "x", string ) );
+        diskCache.update( new CacheElement<String, String>( cacheName, "x", string ) );
 
         // VERIFY
         assertNotNull( diskCache.get( "x" ) );
         Thread.sleep( 1000 );
-        ICacheElement afterElement = diskCache.get( "x" );
+        ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
         System.out.println( "afterElement = " + afterElement );
-        String after = (String) afterElement.getVal();
+        String after = afterElement.getVal();
 
         assertNotNull( after );
         assertEquals( "wrong string after retrieval", string, after );
@@ -239,18 +239,18 @@ public class BlockDiskCacheUnitTest
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 200 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
-        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+        BlockDiskCache<String, byte[]> diskCache = new BlockDiskCache<String, byte[]>( cattr );
 
         // DO WORK
-        diskCache.update( new CacheElement( cacheName, "x", bytes ) );
+        diskCache.update( new CacheElement<String, byte[]>( cacheName, "x", bytes ) );
 
         // VERIFY
         assertNotNull( diskCache.get( "x" ) );
         Thread.sleep( 1000 );
-        ICacheElement afterElement = diskCache.get( "x" );
+        ICacheElement<String, byte[]> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
         //System.out.println( "afterElement = " + afterElement );
-        byte[] after = (byte[]) afterElement.getVal();
+        byte[] after = afterElement.getVal();
 
         assertNotNull( after );
         assertEquals( "wrong bytes after retrieval", bytes.length, after.length );
@@ -288,17 +288,17 @@ public class BlockDiskCacheUnitTest
         cattr.setMaxKeySize( 100 );
         cattr.setBlockSizeBytes( 500 );
         cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
-        BlockDiskCache diskCache = new BlockDiskCache( cattr );
+        BlockDiskCache<String, X> diskCache = new BlockDiskCache<String, X>( cattr );
 
         // DO WORK
-        diskCache.update( new CacheElement( cacheName, "x", before ) );
+        diskCache.update( new CacheElement<String, X>( cacheName, "x", before ) );
 
         // VERIFY
         assertNotNull( diskCache.get( "x" ) );
         Thread.sleep( 1000 );
-        ICacheElement afterElement = diskCache.get( "x" );
+        ICacheElement<String, X> afterElement = diskCache.get( "x" );
         System.out.println( "afterElement = " + afterElement );
-        X after = (X) ( afterElement.getVal() );
+        X after = ( afterElement.getVal() );
 
         assertNotNull( after );
         assertEquals( "wrong string after retrieval", string, after.string );

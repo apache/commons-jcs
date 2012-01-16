@@ -121,12 +121,12 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // dataToPassHashCodeCompare.hashCode() );
 
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
-        ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, String> element1 = new CacheElement( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
         cache.put( keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
-        ICacheElement element2 = new CacheElement( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
+        ICacheElement<String, String> element2 = new CacheElement( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
         service.update( element2 );
 
         /*
@@ -134,7 +134,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
          * int n = ran.nextInt( 4 ); int kn = ran.nextInt( range ); String key =
          * "key" + kn;
          *
-         * ICacheElement element = new CacheElement( region, key, region +
+         * ICacheElement<String, String> element = new CacheElement( region, key, region +
          * ":data" + i + " junk asdfffffffadfasdfasf " + kn + ":" + n );
          * service.update( element ); if ( show ) { p( "put " + key ); }
          *

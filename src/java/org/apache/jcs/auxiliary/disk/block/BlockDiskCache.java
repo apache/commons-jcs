@@ -51,8 +51,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * <p>
  * @author Aaron Smuts
  */
-public class BlockDiskCache
-    extends AbstractDiskCache
+public class BlockDiskCache<K extends Serializable, V extends Serializable>
+    extends AbstractDiskCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 1L;
@@ -76,7 +76,7 @@ public class BlockDiskCache
     private final File rootDirectory;
 
     /** Store, loads, and persists the keys */
-    private BlockDiskKeyStore keyStore;
+    private BlockDiskKeyStore<K> keyStore;
 
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechanism. We don't
@@ -135,7 +135,7 @@ public class BlockDiskCache
                 this.dataFile = new BlockDisk( new File( rootDirectory, fileName + ".data" ), getElementSerializer() );
             }
 
-            keyStore = new BlockDiskKeyStore( this.blockDiskCacheAttributes, this );
+            keyStore = new BlockDiskKeyStore<K>( this.blockDiskCacheAttributes, this );
 
             boolean alright = verifyDisk();
 
@@ -176,11 +176,11 @@ public class BlockDiskCache
         {
             int maxToTest = 100;
             int count = 0;
-            Iterator<Map.Entry<Serializable, int[]>> it = this.keyStore.entrySet().iterator();
+            Iterator<Map.Entry<K, int[]>> it = this.keyStore.entrySet().iterator();
             while ( it.hasNext() && count < maxToTest )
             {
                 count++;
-                Map.Entry<Serializable, int[]> entry = it.next();
+                Map.Entry<K, int[]> entry = it.next();
                 Object data = this.dataFile.read( entry.getValue() );
                 if ( data == null )
                 {
@@ -209,16 +209,16 @@ public class BlockDiskCache
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#getGroupKeys(java.lang.String)
      */
     @Override
-    public Set<Serializable> getGroupKeys( String groupName )
+    public Set<K> getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( cacheName, groupName );
-        HashSet<Serializable> keys = new HashSet<Serializable>();
+        HashSet<K> keys = new HashSet<K>();
 
         storageLock.readLock().lock();
 
         try
         {
-            for ( Serializable key : this.keyStore.keySet())
+            for ( K key : this.keyStore.keySet())
             {
                 if ( key instanceof GroupAttrName && ( (GroupAttrName) key ).groupId.equals( groupId ) )
                 {
@@ -238,30 +238,30 @@ public class BlockDiskCache
      * Gets matching items from the cache.
      * <p>
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching keys
      */
     @Override
-    public Map<Serializable, ICacheElement> processGetMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
-        Object[] keyArray = null;
+        K[] keyArray = null;
         storageLock.readLock().lock();
         try
         {
-            keyArray = this.keyStore.keySet().toArray();
+            keyArray = (K[]) this.keyStore.keySet().toArray();
         }
         finally
         {
             storageLock.readLock().unlock();
         }
 
-        Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+        Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
-        for (Serializable key : matchingKeys)
+        for (K key : matchingKeys)
         {
-            ICacheElement element = processGet( key );
+            ICacheElement<K, V> element = processGet( key );
             if ( element != null )
             {
                 elements.put( key, element );
@@ -284,7 +284,7 @@ public class BlockDiskCache
     }
 
     /**
-     * Gets the ICacheElement for the key if it is in the cache. The program flow is as follows:
+     * Gets the ICacheElement<K, V> for the key if it is in the cache. The program flow is as follows:
      * <ol>
      * <li>Make sure the disk cache is alive.</li> <li>Get a read lock.</li> <li>See if the key is
      * in the key store.</li> <li>If we found a key, ask the BlockDisk for the object at the
@@ -296,7 +296,7 @@ public class BlockDiskCache
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
     @Override
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
     {
         if ( !alive )
         {
@@ -312,7 +312,7 @@ public class BlockDiskCache
             log.debug( logCacheName + "Trying to get from disk: " + key );
         }
 
-        ICacheElement object = null;
+        ICacheElement<K, V> object = null;
         storageLock.readLock().lock();
 
         try
@@ -320,7 +320,7 @@ public class BlockDiskCache
             int[] ded = this.keyStore.get( key );
             if ( ded != null )
             {
-                object = (ICacheElement) this.dataFile.read( ded );
+                object = (ICacheElement<K, V>) this.dataFile.read( ded );
             }
         }
         catch ( IOException ioe )
@@ -352,7 +352,7 @@ public class BlockDiskCache
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doUpdate(org.apache.jcs.engine.behavior.ICacheElement)
      */
     @Override
-    protected void processUpdate( ICacheElement element )
+    protected void processUpdate( ICacheElement<K, V> element )
     {
         if ( !alive )
         {
@@ -411,7 +411,7 @@ public class BlockDiskCache
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doRemove(java.io.Serializable)
      */
     @Override
-    protected boolean processRemove( Serializable key )
+    protected boolean processRemove( K key )
     {
         if ( !alive )
         {
@@ -432,12 +432,12 @@ public class BlockDiskCache
             if ( key instanceof String && key.toString().endsWith( CacheConstants.NAME_COMPONENT_DELIMITER ) )
             {
                 // remove all keys of the same name group.
-                Iterator<Map.Entry<Serializable, int[]>> iter = this.keyStore.entrySet().iterator();
+                Iterator<Map.Entry<K, int[]>> iter = this.keyStore.entrySet().iterator();
 
                 while ( iter.hasNext() )
                 {
-                    Map.Entry<Serializable, int[]> entry = iter.next();
-                    Object k = entry.getKey();
+                    Map.Entry<K, int[]> entry = iter.next();
+                    K k = entry.getKey();
 
                     if ( k instanceof String && k.toString().startsWith( key.toString() ) )
                     {
@@ -452,11 +452,11 @@ public class BlockDiskCache
             else if ( key instanceof GroupId )
             {
                 // remove all keys of the same name hierarchy.
-                Iterator<Map.Entry<Serializable, int[]>> iter = this.keyStore.entrySet().iterator();
+                Iterator<Map.Entry<K, int[]>> iter = this.keyStore.entrySet().iterator();
                 while ( iter.hasNext() )
                 {
-                    Map.Entry<Serializable, int[]> entry = iter.next();
-                    Object k = entry.getKey();
+                    Map.Entry<K, int[]> entry = iter.next();
+                    K k = entry.getKey();
 
                     if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
                     {

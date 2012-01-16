@@ -16,7 +16,7 @@ public class KeyMatcherPatternImpllUnitTest
         // SETUP
         int numToInsertPrefix1 = 10;
         int araySize = numToInsertPrefix1;
-        Object[] keyArray = new Object[araySize];
+        String[] keyArray = new String[araySize];
 
         String keyprefix1 = "MyPrefixC";
 
@@ -26,10 +26,10 @@ public class KeyMatcherPatternImpllUnitTest
             keyArray[i] = keyprefix1 + String.valueOf( i );
         }
 
-        KeyMatcherPatternImpl keyMatcher = new KeyMatcherPatternImpl();
+        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<String>();
 
         // DO WORK
-        Set result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".", keyArray );
+        Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".", keyArray );
 
         // VERIFY
         assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );
@@ -43,7 +43,7 @@ public class KeyMatcherPatternImpllUnitTest
         // SETUP
         int numToInsertPrefix1 = 10;
         int araySize = numToInsertPrefix1 + 1;
-        Object[] keyArray = new Object[araySize];
+        String[] keyArray = new String[araySize];
 
         String keyprefix1 = "MyPrefixC";
 
@@ -53,10 +53,10 @@ public class KeyMatcherPatternImpllUnitTest
             keyArray[i] = keyprefix1 + String.valueOf( i );
         }
 
-        KeyMatcherPatternImpl keyMatcher = new KeyMatcherPatternImpl();
+        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<String>();
 
         // DO WORK
-        Set result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + "\\S+", keyArray );
+        Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + "\\S+", keyArray );
 
         // VERIFY
         assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );
@@ -71,7 +71,7 @@ public class KeyMatcherPatternImpllUnitTest
         int numToInsertPrefix1 = 10;
         int numToInsertPrefix2 = 50;
         int araySize = numToInsertPrefix1 + numToInsertPrefix2;
-        Object[] keyArray = new Object[araySize];
+        String[] keyArray = new String[araySize];
 
         String keyprefix1 = "MyPrefixA";
         String keyprefix2 = "MyPrefixB";
@@ -88,11 +88,11 @@ public class KeyMatcherPatternImpllUnitTest
             keyArray[i] = keyprefix2 + String.valueOf( i );
         }
 
-        KeyMatcherPatternImpl keyMatcher = new KeyMatcherPatternImpl();
+        KeyMatcherPatternImpl<String> keyMatcher = new KeyMatcherPatternImpl<String>();
 
         // DO WORK
-        Set result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".+", keyArray );
-        Set result2 = keyMatcher.getMatchingKeysFromArray( keyprefix2 + ".+", keyArray );
+        Set<String> result1 = keyMatcher.getMatchingKeysFromArray( keyprefix1 + ".+", keyArray );
+        Set<String> result2 = keyMatcher.getMatchingKeysFromArray( keyprefix2 + ".+", keyArray );
 
         // VERIFY
         assertEquals( "Wrong number returned 1: " + result1, numToInsertPrefix1, result1.size() );

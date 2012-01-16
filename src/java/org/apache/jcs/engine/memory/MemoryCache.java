@@ -19,6 +19,8 @@ package org.apache.jcs.engine.memory;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
 /**
@@ -30,8 +32,8 @@ import org.apache.jcs.engine.memory.behavior.IMemoryCache;
  * of.
  * <p>
  */
-public interface MemoryCache
-    extends IMemoryCache
+public interface MemoryCache<K extends Serializable, V extends Serializable>
+    extends IMemoryCache<K, V>
 {
     // temporary, for backward compatibility.
 }

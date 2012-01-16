@@ -20,7 +20,6 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -42,13 +41,13 @@ import org.apache.jcs.engine.behavior.ICacheService;
  * Manual tester.
  */
 public class RemoteCacheClientTester
-    implements IRemoteCacheListener, IRemoteCacheConstants, Remote
+    implements IRemoteCacheListener<String, String>, IRemoteCacheConstants, Remote
 {
     /** the observer */
     protected ICacheObserver watch;
 
     /** the service */
-    protected ICacheService cache;
+    protected ICacheService<String, String> cache;
 
     /** The registry host name. */
     final String host;
@@ -65,7 +64,7 @@ public class RemoteCacheClientTester
     /**
      * Gets the remoteType attribute of the RemoteCacheClientTest object
      * @return The remoteType value
-     * @throws IOException 
+     * @throws IOException
      */
     public int getRemoteType()
         throws IOException
@@ -151,17 +150,17 @@ public class RemoteCacheClientTester
 
         p( "server found" );
 
-        cache = (ICacheService) obj;
+        cache = (ICacheService<String, String>) obj;
         watch = (ICacheObserver) obj;
 
         p( "subscribing to the server" );
 
         watch.addCacheListener( "testCache", this );
-        ICacheElement cb = new CacheElement( "testCache", "testKey", "testVal" );
+        ICacheElement<String, String> cb = new CacheElement<String, String>( "testCache", "testKey", "testVal" );
 
         for ( int i = 0; i < count; i++ )
         {
-            cb = new CacheElement( "testCache", "" + i, "" + i );
+            cb = new CacheElement<String, String>( "testCache", "" + i, "" + i );
 
             if ( delete )
             {
@@ -201,7 +200,7 @@ public class RemoteCacheClientTester
      * @param cb
      * @throws IOException
      */
-    public void handlePut( ICacheElement cb )
+    public void handlePut( ICacheElement<String, String> cb )
         throws IOException
     {
         p( "handlePut> cb=" + cb );
@@ -212,7 +211,7 @@ public class RemoteCacheClientTester
      * @param key
      * @throws IOException
      */
-    public void handleRemove( String cacheName, Serializable key )
+    public void handleRemove( String cacheName, String key )
         throws IOException
     {
         p( "handleRemove> cacheName=" + cacheName + ", key=" + key );

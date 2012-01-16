@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.Naming;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
@@ -68,7 +69,8 @@ public class RemoteCacheManager
     private int clients;
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
-    final Map<String, RemoteCacheNoWait> caches = new HashMap<String, RemoteCacheNoWait>();
+    final Map<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>> caches =
+        new HashMap<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>>();
 
     /** The remote host */
     final String host;
@@ -89,7 +91,7 @@ public class RemoteCacheManager
     private final IElementSerializer elementSerializer;
 
     /** Handle to the remote cache service; or a zombie handle if failed to connect. */
-    private IRemoteCacheService remoteService;
+    private IRemoteCacheService<?, ?> remoteService;
 
     /**
      * Wrapper of the remote cache watch service; or wrapper of a zombie service if failed to
@@ -146,7 +148,7 @@ public class RemoteCacheManager
             }
 
             // Successful connection to the remote server.
-            remoteService = (IRemoteCacheService) obj;
+            remoteService = (IRemoteCacheService<?, ?>) obj;
             if ( log.isDebugEnabled() )
             {
                 log.debug( "remoteService = " + remoteService );
@@ -161,7 +163,7 @@ public class RemoteCacheManager
             // Configure this RemoteCacheManager instance to use the "zombie"
             // services.
             log.error( "Problem finding server at [" + registry + "]", ex );
-            remoteService = new ZombieRemoteCacheService();
+            remoteService = new ZombieRemoteCacheService<String, String>();
             remoteWatch = new RemoteCacheWatchRepairable();
             remoteWatch.setCacheWatch( new ZombieRemoteCacheWatch() );
 
@@ -188,7 +190,7 @@ public class RemoteCacheManager
      * @param listener The feature to be added to the RemoteCacheListener attribute
      * @throws IOException
      */
-    public void addRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener listener )
+    public <K extends Serializable, V extends Serializable> void addRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener<K, V> listener )
         throws IOException
     {
         if ( cattr.isReceive() )
@@ -225,7 +227,7 @@ public class RemoteCacheManager
      * @param listener
      * @throws IOException
      */
-    public void removeRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener listener )
+    public <K extends Serializable, V extends Serializable> void removeRemoteCacheListener( IRemoteCacheAttributes cattr, IRemoteCacheListener<K, V> listener )
         throws IOException
     {
         synchronized ( caches )
@@ -245,16 +247,16 @@ public class RemoteCacheManager
     {
         synchronized ( caches )
         {
-            RemoteCacheNoWait cache = caches.get( cattr.getCacheName() );
+            RemoteCacheNoWait<?, ?> cache = caches.get( cattr.getCacheName() );
             if ( cache != null )
             {
-                IRemoteCacheClient rc = cache.getRemoteCache();
+                IRemoteCacheClient<?, ?> rc = cache.getRemoteCache();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Found cache for[ " + cattr.getCacheName() + "], deregistering listener." );
                 }
                 // could also store the listener for a server in the manager.
-                IRemoteCacheListener listener = rc.getListener();
+                IRemoteCacheListener<?, ?> listener = rc.getListener();
                 remoteWatch.removeCacheListener( cattr.getCacheName(), listener );
             }
             else
@@ -286,16 +288,16 @@ public class RemoteCacheManager
     {
         synchronized ( caches )
         {
-            RemoteCacheNoWait cache = caches.get( cacheName );
+            RemoteCacheNoWait<?, ?> cache = caches.get( cacheName );
             if ( cache != null )
             {
-                IRemoteCacheClient rc = cache.getRemoteCache();
+                IRemoteCacheClient<?, ?> rc = cache.getRemoteCache();
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "Found cache for [" + cacheName + "], deregistering listener." );
                 }
                 // could also store the listener for a server in the manager.
-                IRemoteCacheListener listener = rc.getListener();
+                IRemoteCacheListener<?, ?> listener = rc.getListener();
                 remoteWatch.removeCacheListener( cacheName, listener );
             }
         }
@@ -370,7 +372,7 @@ public class RemoteCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public AuxiliaryCache getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
     {
         IRemoteCacheAttributes ca = (IRemoteCacheAttributes) remoteCacheAttributes.copy();
         ca.setCacheName( cacheName );
@@ -387,21 +389,21 @@ public class RemoteCacheManager
      * @param cattr
      * @return The cache value
      */
-    public AuxiliaryCache getCache( IRemoteCacheAttributes cattr )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( IRemoteCacheAttributes cattr )
     {
-        RemoteCacheNoWait remoteCacheNoWait = null;
+        RemoteCacheNoWait<K, V> remoteCacheNoWait = null;
 
         synchronized ( caches )
         {
-            remoteCacheNoWait = caches.get( cattr.getCacheName() );
+            remoteCacheNoWait = (RemoteCacheNoWait<K, V>) caches.get( cattr.getCacheName() );
             if ( remoteCacheNoWait == null )
             {
                 // create a listener first and pass it to the remotecache
                 // sender.
-                RemoteCacheListener listener = null;
+                RemoteCacheListener<K, V> listener = null;
                 try
                 {
-                    listener = new RemoteCacheListener( cattr, cacheMgr );
+                    listener = new RemoteCacheListener<K, V>( cattr, cacheMgr );
                     addRemoteCacheListener( cattr, listener );
                 }
                 catch ( IOException ioe )
@@ -415,11 +417,11 @@ public class RemoteCacheManager
                         + listener, e );
                 }
 
-                IRemoteCacheClient remoteCacheClient = new RemoteCache( cattr, remoteService, listener );
+                IRemoteCacheClient<K, V> remoteCacheClient = new RemoteCache<K, V>( cattr, (IRemoteCacheService<K, V>) remoteService, listener );
                 remoteCacheClient.setCacheEventLogger( cacheEventLogger );
                 remoteCacheClient.setElementSerializer( elementSerializer );
 
-                remoteCacheNoWait = new RemoteCacheNoWait( remoteCacheClient );
+                remoteCacheNoWait = new RemoteCacheNoWait<K, V>( remoteCacheClient );
                 remoteCacheNoWait.setCacheEventLogger( cacheEventLogger );
                 remoteCacheNoWait.setElementSerializer( elementSerializer );
 
@@ -445,7 +447,7 @@ public class RemoteCacheManager
         {
             log.info( "freeCache [" + name + "]" );
         }
-        ICache c = null;
+        ICache<?, ?> c = null;
         synchronized ( caches )
         {
             c = caches.get( name );
@@ -465,7 +467,7 @@ public class RemoteCacheManager
     public String getStats()
     {
         StringBuffer stats = new StringBuffer();
-        for (RemoteCacheNoWait c : caches.values())
+        for (RemoteCacheNoWait<?, ?> c : caches.values())
         {
             if ( c != null )
             {
@@ -485,7 +487,7 @@ public class RemoteCacheManager
         }
         synchronized ( caches )
         {
-            for (RemoteCacheNoWait c : caches.values())
+            for (RemoteCacheNoWait<?, ?> c : caches.values())
             {
                 if ( c != null )
                 {
@@ -509,7 +511,7 @@ public class RemoteCacheManager
      * @param remoteService
      * @param remoteWatch
      */
-    public void fixCaches( IRemoteCacheService remoteService, IRemoteCacheObserver remoteWatch )
+    public void fixCaches( IRemoteCacheService<?, ?> remoteService, IRemoteCacheObserver remoteWatch )
     {
         if ( log.isInfoEnabled() )
         {
@@ -519,7 +521,7 @@ public class RemoteCacheManager
         {
             this.remoteService = remoteService;
             this.remoteWatch.setCacheWatch( remoteWatch );
-            for (RemoteCacheNoWait c : caches.values())
+            for (RemoteCacheNoWait<?, ?> c : caches.values())
             {
                 c.fixCache( this.remoteService );
             }

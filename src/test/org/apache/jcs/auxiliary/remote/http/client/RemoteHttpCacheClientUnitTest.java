@@ -56,7 +56,7 @@ public class RemoteHttpCacheClientUnitTest
         mockDispatcher.setupRemoteCacheResponse = null;
 
         // DO WORK
-        ICacheElement result = client.get( cacheName, key );
+        ICacheElement<String, String> result = client.get( cacheName, key );
 
         // VERIFY
         assertNull( "Wrong result.", result );
@@ -82,14 +82,14 @@ public class RemoteHttpCacheClientUnitTest
         String cacheName = "test";
         String key = "key";
 
-        ICacheElement expected = new CacheElement( cacheName, key, "value" );
+        ICacheElement<String, String> expected = new CacheElement( cacheName, key, "value" );
         RemoteCacheResponse remoteHttpCacheResponse = new RemoteCacheResponse();
         remoteHttpCacheResponse.getPayload().put( key, expected );
 
         mockDispatcher.setupRemoteCacheResponse = remoteHttpCacheResponse;
 
         // DO WORK
-        ICacheElement result = client.get( cacheName, key );
+        ICacheElement<String, String> result = client.get( cacheName, key );
 
         // VERIFY
         assertEquals( "Wrong result.", expected, result );
@@ -115,7 +115,7 @@ public class RemoteHttpCacheClientUnitTest
         String cacheName = "test";
         String pattern = "key";
 
-        ICacheElement expected = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> expected = new CacheElement( cacheName, "key", "value" );
         RemoteCacheResponse remoteHttpCacheResponse = new RemoteCacheResponse();
         remoteHttpCacheResponse.getPayload().put( "key", expected );
 
@@ -148,7 +148,7 @@ public class RemoteHttpCacheClientUnitTest
         String cacheName = "test";
         Set keys = Collections.EMPTY_SET;
 
-        ICacheElement expected = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> expected = new CacheElement( cacheName, "key", "value" );
         RemoteCacheResponse remoteHttpCacheResponse = new RemoteCacheResponse();
         remoteHttpCacheResponse.getPayload().put( "key", expected );
 
@@ -231,7 +231,7 @@ public class RemoteHttpCacheClientUnitTest
 
         String cacheName = "test";
 
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement( cacheName, "key", "value" );
 
         // DO WORK
         client.update( element );

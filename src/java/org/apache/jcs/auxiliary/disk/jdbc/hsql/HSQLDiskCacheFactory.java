@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.disk.jdbc.hsql;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -65,7 +66,7 @@ public class HSQLDiskCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1,
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr,

@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +40,8 @@ public class ShrinkerThread
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
-    private final Set<JDBCDiskCache> shrinkSet = Collections.synchronizedSet( new HashSet<JDBCDiskCache>() );
+    private final Set<JDBCDiskCache<? extends Serializable, ? extends Serializable>> shrinkSet =
+        Collections.synchronizedSet( new HashSet<JDBCDiskCache<? extends Serializable, ? extends Serializable>>() );
 
     /** Default time period to use. */
     private static final long DEFAULT_PAUSE_BETWEEN_REGION_CALLS_MILLIS = 5000;
@@ -64,7 +66,7 @@ public class ShrinkerThread
      * <p>
      * @param diskCache
      */
-    public void addDiskCacheToShrinkList( JDBCDiskCache diskCache )
+    public void addDiskCacheToShrinkList( JDBCDiskCache<? extends Serializable, ? extends Serializable> diskCache )
     {
         // the set will prevent dupes.
         // we could also just add these to a hashmap by region name
@@ -109,7 +111,7 @@ public class ShrinkerThread
         {
             for ( int i = 0; i < caches.length; i++ )
             {
-                JDBCDiskCache cache = (JDBCDiskCache) caches[i];
+                JDBCDiskCache<?, ?> cache = (JDBCDiskCache<?, ?>) caches[i];
 
                 long start = System.currentTimeMillis();
                 int deleted = cache.deleteExpired();

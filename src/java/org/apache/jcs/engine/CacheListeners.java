@@ -19,6 +19,7 @@ package org.apache.jcs.engine;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,21 +31,21 @@ import org.apache.jcs.engine.behavior.ICacheEventQueue;
  * Used to associates a set of [cache listener to cache event queue] for a
  * cache.
  */
-public class CacheListeners
+public class CacheListeners<K extends Serializable, V extends Serializable>
 {
     /** The cache using the queue. */
-    public final ICache cache;
+    public final ICache<K, V> cache;
 
     /** Map ICacheListener to ICacheEventQueue */
-    public final Map<Long, ICacheEventQueue> eventQMap =
-        new Hashtable<Long, ICacheEventQueue>();
+    public final Map<Long, ICacheEventQueue<K, V>> eventQMap =
+        new Hashtable<Long, ICacheEventQueue<K, V>>();
 
     /**
      * Constructs with the given cache.
      * <p>
      * @param cache
      */
-    public CacheListeners( ICache cache )
+    public CacheListeners( ICache<K, V> cache )
     {
         if ( cache == null )
         {
@@ -67,7 +68,7 @@ public class CacheListeners
         {
             buffer.append( "\n Event Queue Map " );
             buffer.append( "\n size = " + eventQMap.size() );
-            Iterator<Map.Entry<Long, ICacheEventQueue>> it = eventQMap.entrySet().iterator();
+            Iterator<Map.Entry<Long, ICacheEventQueue<K, V>>> it = eventQMap.entrySet().iterator();
             while ( it.hasNext() )
             {
                 buffer.append( "\n Entry: " + it.next() );

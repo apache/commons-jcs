@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -128,7 +129,7 @@ public class MySQLDiskCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public AuxiliaryCache getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
     {
         MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
@@ -143,9 +144,9 @@ public class MySQLDiskCacheManager
      * @return AuxiliaryCache
      */
     @Override
-    protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
-        MySQLDiskCache diskCache = new MySQLDiskCache( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
+        MySQLDiskCache<K, V> diskCache = new MySQLDiskCache<K, V>( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
 
         scheduleOptimizations( (MySQLDiskCacheAttributes) cattr, tableState, diskCache.getPoolAccess() );
 

@@ -50,8 +50,8 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * starts a listening thread, which creates a socket server. When messages are received they are
  * passed to a pooled executor which then calls the appropriate handle method.
  */
-public class LateralTCPListener
-    implements ILateralCacheListener, Serializable, IShutdownObserver
+public class LateralTCPListener<K extends Serializable, V extends Serializable>
+    implements ILateralCacheListener<K, V>, Serializable, IShutdownObserver
 {
     /** Don't change. */
     private static final long serialVersionUID = -9107062664967131738L;
@@ -66,8 +66,8 @@ public class LateralTCPListener
     private transient ICompositeCacheManager cacheManager;
 
     /** Map of available instances, keyed by port */
-    protected final static HashMap<String, ILateralCacheListener> instances =
-        new HashMap<String, ILateralCacheListener>();
+    protected final static HashMap<String, ILateralCacheListener<?, ?>> instances =
+        new HashMap<String, ILateralCacheListener<?, ?>>();
 
     /** The socket listener */
     private ListenerThread receiver;
@@ -106,14 +106,14 @@ public class LateralTCPListener
      * @param cacheMgr
      * @return The instance value
      */
-    public synchronized static ILateralCacheListener getInstance( ITCPLateralCacheAttributes ilca,
-                                                                  ICompositeCacheManager cacheMgr )
+    public synchronized static <K extends Serializable, V extends Serializable> ILateralCacheListener<K, V>
+        getInstance( ITCPLateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
     {
-        ILateralCacheListener ins = instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
+        ILateralCacheListener<K, V> ins = (ILateralCacheListener<K, V>) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
         if ( ins == null )
         {
-            ins = new LateralTCPListener( ilca );
+            ins = new LateralTCPListener<K, V>( ilca );
 
             ins.init();
 
@@ -206,7 +206,7 @@ public class LateralTCPListener
      * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handlePut(org.apache.jcs.engine.behavior.ICacheElement)
      */
-    public void handlePut( ICacheElement element )
+    public void handlePut( ICacheElement<K, V> element )
         throws IOException
     {
         putCnt++;
@@ -234,7 +234,7 @@ public class LateralTCPListener
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
      *      java.io.Serializable)
      */
-    public void handleRemove( String cacheName, Serializable key )
+    public void handleRemove( String cacheName, K key )
         throws IOException
     {
         removeCnt++;
@@ -278,7 +278,7 @@ public class LateralTCPListener
      * @return Serializable
      * @throws IOException
      */
-    public Serializable handleGet( String cacheName, Serializable key )
+    public Serializable handleGet( String cacheName, K key )
         throws IOException
     {
         getCnt++;
@@ -307,7 +307,7 @@ public class LateralTCPListener
      * @return Map
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> handleGetMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> handleGetMatching( String cacheName, String pattern )
         throws IOException
     {
         getCnt++;
@@ -353,7 +353,7 @@ public class LateralTCPListener
      * @param name
      * @return CompositeCache
      */
-    protected CompositeCache getCache( String name )
+    protected CompositeCache<K, V> getCache( String name )
     {
         if ( getCacheManager() == null )
         {
@@ -483,7 +483,7 @@ public class LateralTCPListener
     }
 
     /**
-     * A Separate thread taht runs when a command comes into the LateralTCPReceiver.
+     * A Separate thread that runs when a command comes into the LateralTCPReceiver.
      */
     public class ConnectionHandler
         implements Runnable
@@ -518,13 +518,13 @@ public class LateralTCPListener
                 return;
             }
 
-            LateralElementDescriptor led;
+            LateralElementDescriptor<K, V> led;
 
             try
             {
                 while ( true )
                 {
-                    led = (LateralElementDescriptor) ois.readObject();
+                    led = (LateralElementDescriptor<K, V>) ois.readObject();
 
                     if ( led == null )
                     {
@@ -577,11 +577,11 @@ public class LateralTCPListener
          * @param led
          * @throws IOException
          */
-        private void handle( LateralElementDescriptor led )
+        private void handle( LateralElementDescriptor<K, V> led )
             throws IOException
         {
             String cacheName = led.ce.getCacheName();
-            Serializable key = led.ce.getKey();
+            K key = led.ce.getKey();
 
             if ( led.command == LateralElementDescriptor.UPDATE )
             {
@@ -596,7 +596,7 @@ public class LateralTCPListener
                 {
                     if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
                     {
-                        ICacheElement test = getCache( cacheName ).localGet( key );
+                        ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
                         if ( test != null )
                         {
                             if ( test.getVal().hashCode() == led.valHashCode )
@@ -636,7 +636,7 @@ public class LateralTCPListener
             }
             else if ( led.command == LateralElementDescriptor.GET_MATCHING )
             {
-                Map<Serializable, ICacheElement> obj = handleGetMatching( cacheName, (String) key );
+                Map<K, ICacheElement<K, V>> obj = handleGetMatching( cacheName, (String) key );
 
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
 

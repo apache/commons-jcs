@@ -19,8 +19,8 @@ public class PurgatoryElementUnitTest
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement cacheElement = new CacheElement( cacheName, key, value, elementAttributes );
-        PurgatoryElement purgatoryElement = new PurgatoryElement( cacheElement );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
+        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<String, String>( cacheElement );
         purgatoryElement.setSpoolable( false );
 
         // DO WORK
@@ -39,8 +39,8 @@ public class PurgatoryElementUnitTest
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
 
-        ICacheElement cacheElement = new CacheElement( cacheName, key, value );
-        PurgatoryElement purgatoryElement = new PurgatoryElement( cacheElement );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value );
+        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<String, String>( cacheElement );
         purgatoryElement.setElementAttributes( elementAttributes );
 
         // DO WORK
@@ -58,8 +58,8 @@ public class PurgatoryElementUnitTest
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement cacheElement = new CacheElement( cacheName, key, value, elementAttributes );
-        PurgatoryElement purgatoryElement = new PurgatoryElement( cacheElement );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
+        PurgatoryElement<String, String> purgatoryElement = new PurgatoryElement<String, String>( cacheElement );
 
         // DO WORK
         String result = purgatoryElement.toString();

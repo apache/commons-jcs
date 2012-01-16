@@ -161,7 +161,7 @@ public class IndexedDiskCacheConcurrentUnitTest
         Map elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = (ICacheElement) elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
@@ -222,7 +222,7 @@ public class IndexedDiskCacheConcurrentUnitTest
         Map elements = jcs.getCacheElements( keys );
         for ( int i = start; i <= end; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = (ICacheElement) elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }

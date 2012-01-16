@@ -12,10 +12,10 @@ public class MockElementSerializer
 {
     /** test property */
     private String testProperty;
-    
+
     /** What's used in the background */
-    private StandardSerializer serializer = new StandardSerializer();    
-    
+    private final StandardSerializer serializer = new StandardSerializer();
+
     /** times out was called */
     public int deSerializeCount = 0;
 
@@ -23,13 +23,13 @@ public class MockElementSerializer
     public int serializeCount = 0;
 
     /**
-     * @param bytes 
+     * @param bytes
      * @return Object
-     * @throws IOException 
-     * @throws ClassNotFoundException 
-     * 
+     * @throws IOException
+     * @throws ClassNotFoundException
+     *
      */
-    public Object deSerialize( byte[] bytes )
+    public <T extends Serializable> T deSerialize( byte[] bytes )
         throws IOException, ClassNotFoundException
     {
         deSerializeCount++;
@@ -37,18 +37,18 @@ public class MockElementSerializer
     }
 
     /**
-     * @param obj 
+     * @param obj
      * @return byte[]
-     * @throws IOException 
-     * 
+     * @throws IOException
+     *
      */
-    public byte[] serialize( Serializable obj )
+    public <T extends Serializable> byte[] serialize( T obj )
         throws IOException
     {
         serializeCount++;
         return serializer.serialize( obj );
     }
-    
+
     /**
      * @param testProperty
      */
@@ -63,5 +63,5 @@ public class MockElementSerializer
     public String getTestProperty()
     {
         return testProperty;
-    }    
+    }
 }

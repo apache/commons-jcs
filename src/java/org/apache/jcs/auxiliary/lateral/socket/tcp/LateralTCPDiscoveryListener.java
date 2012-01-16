@@ -1,5 +1,6 @@
 package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import org.apache.jcs.utils.discovery.DiscoveredService;
 import org.apache.jcs.utils.discovery.behavior.IDiscoveryListener;
 
 /**
- * This knows how to add and remove discovered services. It observers UDP discovery events.
+ * This knows how to add and remove discovered services. It observes UDP discovery events.
  * <p>
  * We can have one listener per region, or one shared by all regions.
  */
@@ -35,8 +36,8 @@ public class LateralTCPDiscoveryListener
      * Map of no wait facades. these are used to determine which regions are locally configured to
      * use laterals.
      */
-    private final Map<String, LateralCacheNoWaitFacade> facades =
-        Collections.synchronizedMap( new HashMap<String, LateralCacheNoWaitFacade>() );
+    private final Map<String, LateralCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> facades =
+        Collections.synchronizedMap( new HashMap<String, LateralCacheNoWaitFacade<? extends Serializable, ? extends Serializable>>() );
 
     /**
      * List of regions that are configured differently here than on another server. We keep track of

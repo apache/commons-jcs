@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /** Key matchers need to implement this interface. */
-public interface IKeyMatcher extends Serializable
+public interface IKeyMatcher<K extends Serializable> extends Serializable
 {
     /**
      * Creates a pattern and find matches on the array.
@@ -13,5 +13,5 @@ public interface IKeyMatcher extends Serializable
      * @param keyArray
      * @return Set of the matching keys
      */
-    Set<Serializable> getMatchingKeysFromArray( String pattern, Object[] keyArray );
+    Set<K> getMatchingKeysFromArray( String pattern, K[] keyArray );
 }

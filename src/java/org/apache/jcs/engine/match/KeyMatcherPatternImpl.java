@@ -9,9 +9,12 @@ import java.util.regex.Pattern;
 import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 
 /** This implementation of the KeyMatcher uses standard Java Pattern matching. */
-public class KeyMatcherPatternImpl
-    implements IKeyMatcher
+public class KeyMatcherPatternImpl<K extends Serializable>
+    implements IKeyMatcher<K>
 {
+    /** TODO serialVersionUID */
+    private static final long serialVersionUID = 6667352064144381264L;
+
     /**
      * Creates a pattern and find matches on the array.
      * <p>
@@ -19,26 +22,26 @@ public class KeyMatcherPatternImpl
      * @param keyArray
      * @return Set of the matching keys
      */
-    public Set<Serializable> getMatchingKeysFromArray( String pattern, Object[] keyArray )
+    public Set<K> getMatchingKeysFromArray( String pattern, K[] keyArray )
     {
         Pattern compiledPattern = Pattern.compile( pattern );
 
-        Set<Serializable> matchingKeys = new HashSet<Serializable>();
+        Set<K> matchingKeys = new HashSet<K>();
 
         // Look for matches
-        for ( int i = 0; i < keyArray.length; i++ )
+        for (K key : keyArray)
         {
-            Object key = keyArray[i];
             // TODO we might want to match on the toString.
             if ( key instanceof String )
             {
                 Matcher matcher = compiledPattern.matcher( (String) key );
                 if ( matcher.matches() )
                 {
-                    matchingKeys.add( (Serializable) key );
+                    matchingKeys.add( key );
                 }
             }
         }
+
         return matchingKeys;
     }
 }

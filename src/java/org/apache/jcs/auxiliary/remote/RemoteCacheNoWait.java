@@ -67,8 +67,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * again. This is a better long term solution, but it requires some significant changes to the
  * complicated worker queues.
  */
-public class RemoteCacheNoWait
-    extends AbstractAuxiliaryCache
+public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCache<K, V>
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -3104089136003714717L;
@@ -77,10 +77,10 @@ public class RemoteCacheNoWait
     private final static Log log = LogFactory.getLog( RemoteCacheNoWait.class );
 
     /** The remote cache client */
-    private final IRemoteCacheClient remoteCacheClient;
+    private final IRemoteCacheClient<K, V> remoteCacheClient;
 
     /** Event queue for queueing up calls like put and remove. */
-    private ICacheEventQueue cacheEventQueue;
+    private ICacheEventQueue<K, V> cacheEventQueue;
 
     /** how many times get has been called. */
     private int getCount = 0;
@@ -103,12 +103,12 @@ public class RemoteCacheNoWait
      * <p>
      * @param cache
      */
-    public RemoteCacheNoWait( IRemoteCacheClient cache )
+    public RemoteCacheNoWait( IRemoteCacheClient<K, V> cache )
     {
         remoteCacheClient = cache;
 
-        CacheEventQueueFactory factory = new CacheEventQueueFactory();
-        this.cacheEventQueue = factory.createCacheEventQueue( new CacheAdaptor( remoteCacheClient ), remoteCacheClient
+        CacheEventQueueFactory<K, V> factory = new CacheEventQueueFactory<K, V>();
+        this.cacheEventQueue = factory.createCacheEventQueue( new CacheAdaptor<K, V>( remoteCacheClient ), remoteCacheClient
             .getListenerId(), remoteCacheClient.getCacheName(), remoteCacheClient.getAuxiliaryCacheAttributes()
             .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueType() );
 
@@ -124,7 +124,7 @@ public class RemoteCacheNoWait
      * @param element
      * @throws IOException
      */
-    public void update( ICacheElement element )
+    public void update( ICacheElement<K, V> element )
         throws IOException
     {
         putCount++;
@@ -147,7 +147,7 @@ public class RemoteCacheNoWait
      * @return element from the remote cache, or null if not present
      * @throws IOException
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
         throws IOException
     {
         getCount++;
@@ -191,7 +191,7 @@ public class RemoteCacheNoWait
      * @throws IOException
      *
      */
-    public Map<Serializable, ICacheElement> getMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String pattern )
         throws IOException
     {
         getMatchingCount++;
@@ -234,11 +234,11 @@ public class RemoteCacheNoWait
      * request on to the server rather than looping through the requested keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
         throws IOException
     {
         getMultipleCount++;
@@ -273,7 +273,7 @@ public class RemoteCacheNoWait
             throw ex;
         }
 
-        return new HashMap<Serializable, ICacheElement>();
+        return new HashMap<K, ICacheElement<K, V>>();
     }
 
     /**
@@ -281,7 +281,7 @@ public class RemoteCacheNoWait
      * @return the keys for the group name
      * @throws IOException
      */
-    public Set<Serializable> getGroupKeys( String groupName )
+    public Set<K> getGroupKeys( String groupName )
         throws IOException
     {
         return remoteCacheClient.getGroupKeys( groupName );
@@ -294,7 +294,7 @@ public class RemoteCacheNoWait
      * @return if this was successful
      * @throws IOException
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
         throws IOException
     {
         removeCount++;
@@ -392,7 +392,7 @@ public class RemoteCacheNoWait
      * <p>
      * @param remote
      */
-    public void fixCache( IRemoteCacheService remote )
+    public void fixCache( IRemoteCacheService<K, V> remote )
     {
         remoteCacheClient.fixCache( remote );
         resetEventQ();
@@ -407,10 +407,10 @@ public class RemoteCacheNoWait
      */
     public void resetEventQ()
     {
-        ICacheEventQueue previousQueue = cacheEventQueue;
+        ICacheEventQueue<K, V> previousQueue = cacheEventQueue;
 
-        CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor( remoteCacheClient ), remoteCacheClient
+        CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<K, V>();
+        this.cacheEventQueue = fact.createCacheEventQueue( new CacheAdaptor<K, V>( remoteCacheClient ), remoteCacheClient
             .getListenerId(), remoteCacheClient.getCacheName(), remoteCacheClient.getAuxiliaryCacheAttributes()
             .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueType() );
 
@@ -430,7 +430,7 @@ public class RemoteCacheNoWait
      * <p>
      * @return the instance of the remote cache client used by this object
      */
-    protected IRemoteCacheClient getRemoteCache()
+    protected IRemoteCacheClient<K, V> getRemoteCache()
     {
         return remoteCacheClient;
     }
@@ -448,7 +448,7 @@ public class RemoteCacheNoWait
      * <p>
      * @return ICacheEventQueue
      */
-    protected ICacheEventQueue getCacheEventQueue()
+    protected ICacheEventQueue<K, V> getCacheEventQueue()
     {
         return this.cacheEventQueue;
     }

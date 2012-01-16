@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.CacheConstants;
@@ -34,8 +36,8 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * Typically, we only connect to one remote server per facade. We use a list of one
  * RemoteCacheNoWait.
  */
-public class RemoteCacheNoWaitFacade
-    extends AbstractRemoteCacheNoWaitFacade
+public class RemoteCacheNoWaitFacade<K extends Serializable, V extends Serializable>
+    extends AbstractRemoteCacheNoWaitFacade<K, V>
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -4529970797620747111L;
@@ -52,7 +54,7 @@ public class RemoteCacheNoWaitFacade
      * @param cacheEventLogger
      * @param elementSerializer
      */
-    public RemoteCacheNoWaitFacade( RemoteCacheNoWait[] noWaits, RemoteCacheAttributes rca,
+    public RemoteCacheNoWaitFacade( RemoteCacheNoWait<K, V>[] noWaits, RemoteCacheAttributes rca,
                                     ICompositeCacheManager cacheMgr, ICacheEventLogger cacheEventLogger,
                                     IElementSerializer elementSerializer )
     {

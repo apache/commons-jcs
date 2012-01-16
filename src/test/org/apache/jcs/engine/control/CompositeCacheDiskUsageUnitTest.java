@@ -68,7 +68,7 @@ public class CompositeCacheDiskUsageUnitTest
     public void testSwapConfig()
         throws CacheException
     {
-        JCS swap = JCS.getInstance( "Swap" );
+        JCS<String, String> swap = JCS.getInstance( "Swap" );
         assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP, swap.getCacheAttributes()
             .getDiskUsagePattern() );
     }
@@ -81,7 +81,7 @@ public class CompositeCacheDiskUsageUnitTest
     public void testUpdateConfig()
         throws CacheException
     {
-        JCS swap = JCS.getInstance( "Update" );
+        JCS<String, String> swap = JCS.getInstance( "Update" );
         assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE, swap.getCacheAttributes()
             .getDiskUsagePattern() );
     }
@@ -98,14 +98,14 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
-        MockAuxCache mock = new MockAuxCache();
+        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
         cache.setAuxCaches( new AuxiliaryCache[] { mock } );
 
-        ICacheElement inputElement = new CacheElement( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
         // DO WORK
         cache.spoolToDisk( inputElement );
@@ -127,14 +127,14 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
-        MockAuxCache mock = new MockAuxCache();
+        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
         cache.setAuxCaches( new AuxiliaryCache[] { mock } );
 
-        ICacheElement inputElement = new CacheElement( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
         // DO WORK
         cache.spoolToDisk( inputElement );
@@ -160,14 +160,14 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
-        MockAuxCache mock = new MockAuxCache();
+        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
         cache.setAuxCaches( new AuxiliaryCache[] { mock } );
 
-        ICacheElement inputElement = new CacheElement( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, true );
@@ -195,14 +195,14 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
-        MockAuxCache mock = new MockAuxCache();
+        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
         cache.setAuxCaches( new AuxiliaryCache[] { mock } );
 
-        ICacheElement inputElement = new CacheElement( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, false );
@@ -230,14 +230,14 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
-        MockAuxCache mock = new MockAuxCache();
+        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
         cache.setAuxCaches( new AuxiliaryCache[] { mock } );
 
-        ICacheElement inputElement = new CacheElement( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, true );
@@ -263,17 +263,17 @@ public class CompositeCacheDiskUsageUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
-        MockAuxCache mock = new MockAuxCache();
+        MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
-        MockAuxCache mockLateral = new MockAuxCache();
+        MockAuxCache<String, String> mockLateral = new MockAuxCache<String, String>();
         mockLateral.cacheType = AuxiliaryCache.LATERAL_CACHE;
 
         cache.setAuxCaches( new AuxiliaryCache[] { mock, mockLateral } );
 
-        ICacheElement inputElement = new CacheElement( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, false );
@@ -291,14 +291,14 @@ public class CompositeCacheDiskUsageUnitTest
      * <p>
      * @author Aaron Smuts
      */
-    public static class MockAuxCache
-        extends AbstractAuxiliaryCache
+    public static class MockAuxCache<K extends Serializable, V extends Serializable>
+        extends AbstractAuxiliaryCache<K, V>
     {
         /** Don't change */
         private static final long serialVersionUID = 1L;
 
         /** The last item passed to update. */
-        public ICacheElement lastUpdatedItem;
+        public ICacheElement<K, V> lastUpdatedItem;
 
         /** The number of times update was called. */
         public int updateCount = 0;
@@ -317,7 +317,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @param ce
          * @throws IOException
          */
-        public void update( ICacheElement ce )
+        public void update( ICacheElement<K, V> ce )
             throws IOException
         {
             lastUpdatedItem = ce;
@@ -329,7 +329,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @return ICacheElement
          * @throws IOException
          */
-        public ICacheElement get( Serializable key )
+        public ICacheElement<K, V> get( K key )
             throws IOException
         {
             return null;
@@ -339,12 +339,12 @@ public class CompositeCacheDiskUsageUnitTest
          * Gets multiple items from the cache based on the given set of keys.
          * <p>
          * @param keys
-         * @return a map of Serializable key to ICacheElement element, or an empty map if there is
+         * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is
          *         no data in cache for any of these keys
          */
-        public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+        public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         {
-            return new HashMap<Serializable, ICacheElement>();
+            return new HashMap<K, ICacheElement<K, V>>();
         }
 
         /**
@@ -352,7 +352,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @return false
          * @throws IOException
          */
-        public boolean remove( Serializable key )
+        public boolean remove( K key )
             throws IOException
         {
             return false;
@@ -395,7 +395,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @return null
          * @throws IOException
          */
-        public Set<Serializable> getGroupKeys( String group )
+        public Set<K> getGroupKeys( String group )
             throws IOException
         {
             return null;
@@ -465,7 +465,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @return Collections.EMPTY_MAP;
          * @throws IOException
          */
-        public Map<Serializable, ICacheElement> getMatching(String pattern)
+        public Map<K, ICacheElement<K, V>> getMatching(String pattern)
             throws IOException
         {
             return Collections.emptyMap();

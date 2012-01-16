@@ -55,7 +55,7 @@ public class ShrinkerThreadUnitTest
         String key = "key";
         String value = "value";
 
-        ICacheElement element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -89,7 +89,7 @@ public class ShrinkerThreadUnitTest
         String key = "key";
         String value = "value";
 
-        ICacheElement element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -123,7 +123,7 @@ public class ShrinkerThreadUnitTest
         String key = "key";
         String value = "value";
 
-        ICacheElement element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -158,7 +158,7 @@ public class ShrinkerThreadUnitTest
         String key = "key";
         String value = "value";
 
-        ICacheElement element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
@@ -197,7 +197,7 @@ public class ShrinkerThreadUnitTest
         String key = "key";
         String value = "value";
 
-        ICacheElement element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
 
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
@@ -205,7 +205,7 @@ public class ShrinkerThreadUnitTest
         element.getElementAttributes().setMaxLifeSeconds( 1 );
         memory.update( element );
 
-        ICacheElement returnedElement1 = memory.get( key );
+        ICacheElement<String, String> returnedElement1 = memory.get( key );
         assertNotNull( "We should have received an element", returnedElement1 );
 
         // set this to 2 seconds ago.
@@ -219,7 +219,7 @@ public class ShrinkerThreadUnitTest
         Thread.sleep( 500 );
 
         // VERIFY
-        ICacheElement returnedElement2 = memory.get( key );
+        ICacheElement<String, String> returnedElement2 = memory.get( key );
         assertTrue( "Waterfall should have been called.", memory.waterfallCallCount > 0 );
         assertNull( "We not should have received an element.  It should have been spooled.", returnedElement2 );
     }
@@ -246,7 +246,7 @@ public class ShrinkerThreadUnitTest
             String key = "key" + i;
             String value = "value";
 
-            ICacheElement element = new CacheElement( "testRegion", key, value );
+            ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
 
             ElementAttributes elementAttr = new ElementAttributes();
             elementAttr.setIsEternal( false );
@@ -254,7 +254,7 @@ public class ShrinkerThreadUnitTest
             element.getElementAttributes().setMaxLifeSeconds( 1 );
             memory.update( element );
 
-            ICacheElement returnedElement1 = memory.get( key );
+            ICacheElement<String, String> returnedElement1 = memory.get( key );
             assertNotNull( "We should have received an element", returnedElement1 );
 
             // set this to 2 seconds ago.
@@ -298,7 +298,7 @@ public class ShrinkerThreadUnitTest
             String key = "key" + i;
             String value = "value";
 
-            ICacheElement element = new CacheElement( "testRegion", key, value );
+            ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
 
             ElementAttributes elementAttr = new ElementAttributes();
             elementAttr.addElementEventHandler( handler );
@@ -307,7 +307,7 @@ public class ShrinkerThreadUnitTest
             element.getElementAttributes().setMaxLifeSeconds( 1 );
             memory.update( element );
 
-            ICacheElement returnedElement1 = memory.get( key );
+            ICacheElement<String, String> returnedElement1 = memory.get( key );
             assertNotNull( "We should have received an element", returnedElement1 );
 
             // set this to 2 seconds ago.

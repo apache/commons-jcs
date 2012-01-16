@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
@@ -44,7 +45,8 @@ public class IndexedDiskCacheManager
     private static IndexedDiskCacheManager instance;
 
     /** Each region has an entry here. */
-    private final Hashtable<String, AuxiliaryCache> caches = new Hashtable<String, AuxiliaryCache>();
+    private final Hashtable<String, AuxiliaryCache<? extends Serializable, ? extends Serializable>> caches =
+        new Hashtable<String, AuxiliaryCache<? extends Serializable, ? extends Serializable>>();
 
     /** User configurable attributes */
     private final IndexedDiskCacheAttributes defaultCacheAttributes;
@@ -57,7 +59,7 @@ public class IndexedDiskCacheManager
      * @param elementSerializer
      */
     private IndexedDiskCacheManager( IndexedDiskCacheAttributes defaultCacheAttributes,
-                                     ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+         ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         this.defaultCacheAttributes = defaultCacheAttributes;
         setElementSerializer( elementSerializer );
@@ -93,7 +95,7 @@ public class IndexedDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
-    public AuxiliaryCache getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
     {
         IndexedDiskCacheAttributes cacheAttributes = (IndexedDiskCacheAttributes) defaultCacheAttributes.copy();
 
@@ -109,9 +111,9 @@ public class IndexedDiskCacheManager
      * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
-    public AuxiliaryCache getCache( IndexedDiskCacheAttributes cacheAttributes )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( IndexedDiskCacheAttributes cacheAttributes )
     {
-        AuxiliaryCache cache = null;
+        AuxiliaryCache<K, V> cache = null;
 
         String cacheName = cacheAttributes.getCacheName();
 
@@ -122,14 +124,14 @@ public class IndexedDiskCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            cache = caches.get( cacheName );
+            cache = (AuxiliaryCache<K, V>) caches.get( cacheName );
 
             // If it was not found, create a new one using the supplied
             // attributes
 
             if ( cache == null )
             {
-                cache = new IndexedDiskCache( cacheAttributes, getElementSerializer() );
+                cache = new IndexedDiskCache<K, V>( cacheAttributes, getElementSerializer() );
                 cache.setCacheEventLogger( getCacheEventLogger() );
                 caches.put( cacheName, cache );
             }

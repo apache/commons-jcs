@@ -48,8 +48,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * from the varies manager to lateral services. Perhaps the lateralcache factory should be able to
  * do this.
  */
-public class LateralCacheNoWaitFacade
-    extends AbstractAuxiliaryCache
+public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -9047687810358008955L;
@@ -58,7 +58,7 @@ public class LateralCacheNoWaitFacade
     private final static Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
 
     /** The queuing facade to the client. */
-    public LateralCacheNoWait[] noWaits;
+    public LateralCacheNoWait<K, V>[] noWaits;
 
     /** The region name */
     private final String cacheName;
@@ -72,7 +72,7 @@ public class LateralCacheNoWaitFacade
      * @param noWaits
      * @param cattr
      */
-    public LateralCacheNoWaitFacade( LateralCacheNoWait[] noWaits, ILateralCacheAttributes cattr )
+    public LateralCacheNoWaitFacade( LateralCacheNoWait<K, V>[] noWaits, ILateralCacheAttributes cattr )
     {
         if ( log.isDebugEnabled() )
         {
@@ -89,7 +89,7 @@ public class LateralCacheNoWaitFacade
      * @param noWait
      * @return true if the noWait is in the list.
      */
-    public boolean containsNoWait( LateralCacheNoWait noWait )
+    public boolean containsNoWait( LateralCacheNoWait<K, V> noWait )
     {
         for ( int i = 0; i < noWaits.length; i++ )
         {
@@ -108,7 +108,7 @@ public class LateralCacheNoWaitFacade
      * @param noWait
      * @return true if it wasn't already contained
      */
-    public synchronized boolean addNoWait( LateralCacheNoWait noWait )
+    public synchronized boolean addNoWait( LateralCacheNoWait<K, V> noWait )
     {
         if ( noWait == null )
         {
@@ -124,7 +124,7 @@ public class LateralCacheNoWaitFacade
             return false;
         }
 
-        LateralCacheNoWait[] newArray = new LateralCacheNoWait[noWaits.length + 1];
+        LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length + 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, noWaits.length );
 
@@ -142,7 +142,7 @@ public class LateralCacheNoWaitFacade
      * @param noWait
      * @return true if it was already in the array
      */
-    public synchronized boolean removeNoWait( LateralCacheNoWait noWait )
+    public synchronized boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
     {
         if ( noWait == null )
         {
@@ -165,7 +165,7 @@ public class LateralCacheNoWaitFacade
             return false;
         }
 
-        LateralCacheNoWait[] newArray = new LateralCacheNoWait[noWaits.length - 1];
+        LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length - 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, position );
         if ( noWaits.length != position )
@@ -181,7 +181,7 @@ public class LateralCacheNoWaitFacade
      * @param ce
      * @throws IOException
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -207,20 +207,20 @@ public class LateralCacheNoWaitFacade
      * @param key
      * @return ICacheElement
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
     {
         for ( int i = 0; i < noWaits.length; i++ )
         {
             try
             {
-                Object obj = noWaits[i].get( key );
+                ICacheElement<K, V> obj = noWaits[i].get( key );
 
                 if ( obj != null )
                 {
                     // TODO: return after first success
                     // could do this simultaneously
                     // serious blocking risk here
-                    return (ICacheElement) obj;
+                    return obj;
                 }
             }
             catch ( Exception ex )
@@ -235,18 +235,18 @@ public class LateralCacheNoWaitFacade
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            for (Serializable key : keys)
+            for (K key : keys)
             {
-                ICacheElement element = get( key );
+                ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -265,9 +265,9 @@ public class LateralCacheNoWaitFacade
      * @param pattern
      * @return ICacheElement
      */
-    public Map<Serializable, ICacheElement> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
         for ( int i = 0; i < noWaits.length; i++ )
         {
             try
@@ -286,12 +286,12 @@ public class LateralCacheNoWaitFacade
      * @param group
      * @return Set
      */
-    public Set<Serializable> getGroupKeys( String group )
+    public Set<K> getGroupKeys( String group )
     {
-        HashSet<Serializable> allKeys = new HashSet<Serializable>();
+        HashSet<K> allKeys = new HashSet<K>();
         for ( int i = 0; i < noWaits.length; i++ )
         {
-            AuxiliaryCache aux = noWaits[i];
+            AuxiliaryCache<K, V> aux = noWaits[i];
             if ( aux != null )
             {
                 try
@@ -313,7 +313,7 @@ public class LateralCacheNoWaitFacade
      * @param key
      * @return always false.
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
     {
         try
         {

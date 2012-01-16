@@ -147,7 +147,7 @@ public class CacheAccessUnitTest
 
         access.put( key, value );
 
-        ICacheElement element = access.getCacheElement( key );
+        ICacheElement<String, String> element = access.getCacheElement( key );
 
         assertEquals( "Wrong max life.  Should have the new value.", maxLife, element.getElementAttributes()
             .getMaxLifeSeconds() );
@@ -184,10 +184,10 @@ public class CacheAccessUnitTest
 
         //VERIFY
         assertEquals( "map size", 2, result.size() );
-        ICacheElement elementOne = (ICacheElement) result.get( keyOne );
+        ICacheElement<String, String> elementOne = (ICacheElement) result.get( keyOne );
         assertEquals( "value one", keyOne, elementOne.getKey() );
         assertEquals( "value one", valueOne, elementOne.getVal() );
-        ICacheElement elementTwo = (ICacheElement) result.get( keyTwo );
+        ICacheElement<String, String> elementTwo = (ICacheElement) result.get( keyTwo );
         assertEquals( "value two", keyTwo, elementTwo.getKey() );
         assertEquals( "value two", valueTwo, elementTwo.getVal() );
     }
@@ -291,7 +291,7 @@ public class CacheAccessUnitTest
         assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
         assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
         //System.out.println( result1 );
-        
+
         // verify that the elements are unwrapped
         Set keySet1 = result1.keySet();
         Iterator it1 = keySet1.iterator();
@@ -302,7 +302,7 @@ public class CacheAccessUnitTest
             assertFalse( "Should not be a cache element.", value instanceof ICacheElement );
         }
     }
-    
+
     /**
      * Verify we can get some matching elements..
      * <p>
@@ -348,7 +348,7 @@ public class CacheAccessUnitTest
         assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
         assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
         //System.out.println( result1 );
-        
+
         // verify that the elements are wrapped
         Set keySet1 = result1.keySet();
         Iterator it1 = keySet1.iterator();
@@ -357,6 +357,6 @@ public class CacheAccessUnitTest
             Object key = it1.next();
             Object value = result1.get( key );
             assertTrue( "Should be a cache element.", value instanceof ICacheElement );
-        }        
+        }
     }
 }

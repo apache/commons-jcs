@@ -63,9 +63,9 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * between the two servers. Since caches are usually high get and low put, this should allow you to
  * scale.
  */
-public class RemoteCacheServer
+public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     extends UnicastRemoteObject
-    implements IRemoteCacheService, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
+    implements IRemoteCacheService<K, V>, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -8072345435941473116L;
@@ -80,12 +80,12 @@ public class RemoteCacheServer
     private int puts = 0;
 
     /** Maps cache name to CacheListeners object. association of listeners (regions). */
-    private final Hashtable<String, CacheListeners> cacheListenersMap =
-        new Hashtable<String, CacheListeners>();
+    private final Hashtable<String, CacheListeners<K, V>> cacheListenersMap =
+        new Hashtable<String, CacheListeners<K, V>>();
 
     /** maps cluster listeners to regions. */
-    private final Hashtable<String, CacheListeners> clusterListenersMap =
-        new Hashtable<String, CacheListeners>();
+    private final Hashtable<String, CacheListeners<K, V>> clusterListenersMap =
+        new Hashtable<String, CacheListeners<K, V>>();
 
     /** The central hub */
     private CompositeCacheManager cacheManager;
@@ -107,9 +107,6 @@ public class RemoteCacheServer
 
     /** An optional event logger */
     private transient ICacheEventLogger cacheEventLogger;
-
-    /** If there is no event logger, we will return this event for all create calls. */
-    private static final ICacheEvent EMPTY_ICACHE_EVENT = new CacheEvent();
 
     /**
      * Constructor for the RemoteCacheServer object. This initializes the server with the values
@@ -165,7 +162,8 @@ public class RemoteCacheServer
         for ( int i = 0; i < list.length; i++ )
         {
             String name = list[i];
-            cacheListenersMap.put( name, new CacheListeners( cacheManager.getCache( name ) ) );
+            CompositeCache<K, V> cache = cacheManager.getCache( name );
+            cacheListenersMap.put( name, new CacheListeners<K, V>( cache ) );
         }
     }
 
@@ -202,7 +200,7 @@ public class RemoteCacheServer
      * @param item
      * @throws IOException
      */
-    public void put( ICacheElement item )
+    public void put( ICacheElement<K, V> item )
         throws IOException
     {
         update( item );
@@ -212,7 +210,7 @@ public class RemoteCacheServer
      * @param item
      * @throws IOException
      */
-    public void update( ICacheElement item )
+    public void update( ICacheElement<K, V> item )
         throws IOException
     {
         update( item, 0 );
@@ -225,10 +223,10 @@ public class RemoteCacheServer
      * @param requesterId
      * @throws IOException
      */
-    public void update( ICacheElement item, long requesterId )
+    public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
+        ICacheEvent<ICacheElement<K, V>> cacheEvent = createICacheEvent( item, requesterId, ICacheEventLogger.UPDATE_EVENT );
         try
         {
             processUpdate( item, requesterId );
@@ -262,7 +260,7 @@ public class RemoteCacheServer
      * @param item
      * @param requesterId
      */
-    private void processUpdate( ICacheElement item, long requesterId )
+    private void processUpdate( ICacheElement<K, V> item, long requesterId )
     {
         long start = 0;
         if ( timing )
@@ -274,7 +272,7 @@ public class RemoteCacheServer
 
         try
         {
-            CacheListeners cacheDesc = getCacheListeners( item.getCacheName() );
+            CacheListeners<K, V> cacheDesc = getCacheListeners( item.getCacheName() );
             /* Object val = */item.getVal();
 
             boolean fromCluster = isRequestFromCluster( requesterId );
@@ -289,7 +287,7 @@ public class RemoteCacheServer
             {
                 try
                 {
-                    CompositeCache c = (CompositeCache) cacheDesc.cache;
+                    CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
 
                     // If the source of this request was not from a cluster,
                     // then consider it a local update. The cache manager will
@@ -338,7 +336,7 @@ public class RemoteCacheServer
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
                 if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
                 {
-                    ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
+                    ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
                     if ( qlist != null )
                     {
@@ -388,7 +386,7 @@ public class RemoteCacheServer
      * <p>
      * @param item
      */
-    private void logUpdateInfo( ICacheElement item )
+    private void logUpdateInfo( ICacheElement<K, V> item )
     {
         if ( log.isInfoEnabled() )
         {
@@ -415,7 +413,7 @@ public class RemoteCacheServer
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key )
+    public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
     {
         return this.get( cacheName, key, 0 );
@@ -434,11 +432,11 @@ public class RemoteCacheServer
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
-        ICacheElement element = null;
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.GET_EVENT );
+        ICacheElement<K, V> element = null;
+        ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.GET_EVENT );
         try
         {
             element = processGet( cacheName, key, requesterId );
@@ -453,14 +451,14 @@ public class RemoteCacheServer
     /**
      * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
-     * Adding the requestor id, allows the cache to determine the source of the get.
+     * Adding the requester id, allows the cache to determine the source of the get.
      * <p>
      * @param cacheName
      * @param key
      * @param requesterId
      * @return ICacheElement
      */
-    private ICacheElement processGet( String cacheName, Serializable key, long requesterId )
+    private ICacheElement<K, V> processGet( String cacheName, K key, long requesterId )
     {
         boolean fromCluster = isRequestFromCluster( requesterId );
 
@@ -470,7 +468,7 @@ public class RemoteCacheServer
                 + "] fromCluster = " + fromCluster );
         }
 
-        CacheListeners cacheDesc = null;
+        CacheListeners<K, V> cacheDesc = null;
         try
         {
             cacheDesc = getCacheListeners( cacheName );
@@ -486,7 +484,7 @@ public class RemoteCacheServer
             }
         }
 
-        ICacheElement element = null;
+        ICacheElement<K, V> element = null;
 
         element = getFromCacheListeners( key, fromCluster, cacheDesc, element );
         return element;
@@ -501,12 +499,12 @@ public class RemoteCacheServer
      * @param element
      * @return ICacheElement
      */
-    private ICacheElement getFromCacheListeners( Serializable key, boolean fromCluster, CacheListeners cacheDesc,
-                                                 ICacheElement element )
+    private ICacheElement<K, V> getFromCacheListeners( K key, boolean fromCluster, CacheListeners<K, V> cacheDesc,
+                                                 ICacheElement<K, V> element )
     {
         if ( cacheDesc != null )
         {
-            CompositeCache c = (CompositeCache) cacheDesc.cache;
+            CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
 
             // If we have a get come in from a client and we don't have the item
             // locally, we will allow the cache to look in other non local sources,
@@ -556,7 +554,7 @@ public class RemoteCacheServer
      * @return Map of keys and wrapped objects
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, 0 );
@@ -571,10 +569,10 @@ public class RemoteCacheServer
      * @return Map of keys and wrapped objects
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, pattern, requesterId,
+        ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, pattern, requesterId,
                                                     ICacheEventLogger.GETMATCHING_EVENT );
         try
         {
@@ -594,7 +592,7 @@ public class RemoteCacheServer
      * @param requesterId
      * @return Map of keys and wrapped objects
      */
-    protected Map<Serializable, ICacheElement> processGetMatching( String cacheName, String pattern, long requesterId )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( String cacheName, String pattern, long requesterId )
     {
         boolean fromCluster = isRequestFromCluster( requesterId );
 
@@ -604,7 +602,7 @@ public class RemoteCacheServer
                 + "] fromCluster = " + fromCluster );
         }
 
-        CacheListeners cacheDesc = null;
+        CacheListeners<K, V> cacheDesc = null;
         try
         {
             cacheDesc = getCacheListeners( cacheName );
@@ -631,12 +629,12 @@ public class RemoteCacheServer
      * @param cacheDesc
      * @return Map of keys to results
      */
-    private Map<Serializable, ICacheElement> getMatchingFromCacheListeners( String pattern, boolean fromCluster, CacheListeners cacheDesc )
+    private Map<K, ICacheElement<K, V>> getMatchingFromCacheListeners( String pattern, boolean fromCluster, CacheListeners<K, V> cacheDesc )
     {
-        Map<Serializable, ICacheElement> elements = null;
+        Map<K, ICacheElement<K, V>> elements = null;
         if ( cacheDesc != null )
         {
-            CompositeCache c = (CompositeCache) cacheDesc.cache;
+            CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
 
             // We always want to go remote and then merge the items.  But this can lead to inconsistencies after
             // failover recovery.  Removed items may show up.  There is no good way to prevent this.
@@ -673,11 +671,11 @@ public class RemoteCacheServer
      * <p>
      * @param cacheName
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
         throws IOException
     {
         return this.getMultiple( cacheName, keys, 0 );
@@ -691,14 +689,14 @@ public class RemoteCacheServer
      * @param cacheName
      * @param keys
      * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId,
+        ICacheEvent<Serializable> cacheEvent = createICacheEvent( cacheName, (Serializable) keys, requesterId,
                                                     ICacheEventLogger.GETMULTIPLE_EVENT );
         try
         {
@@ -716,12 +714,12 @@ public class RemoteCacheServer
      * @param cacheName
      * @param keys
      * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    private Map<Serializable, ICacheElement> processGetMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    private Map<K, ICacheElement<K, V>> processGetMultiple( String cacheName, Set<K> keys, long requesterId )
     {
-        Map<Serializable, ICacheElement> elements = null;
+        Map<K, ICacheElement<K, V>> elements = null;
 
         boolean fromCluster = isRequestFromCluster( requesterId );
 
@@ -731,7 +729,7 @@ public class RemoteCacheServer
                 + "] fromCluster = " + fromCluster );
         }
 
-        CacheListeners cacheDesc = null;
+        CacheListeners<K, V> cacheDesc = null;
         try
         {
             cacheDesc = getCacheListeners( cacheName );
@@ -774,11 +772,11 @@ public class RemoteCacheServer
      * @param cacheDesc
      * @return Map
      */
-    private Map<Serializable, ICacheElement> getMultipleFromCacheListeners( Set<Serializable> keys, Map<Serializable, ICacheElement> elements, boolean fromCluster, CacheListeners cacheDesc )
+    private Map<K, ICacheElement<K, V>> getMultipleFromCacheListeners( Set<K> keys, Map<K, ICacheElement<K, V>> elements, boolean fromCluster, CacheListeners<K, V> cacheDesc )
     {
         if ( cacheDesc != null )
         {
-            CompositeCache c = (CompositeCache) cacheDesc.cache;
+            CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
 
             // If we have a getMultiple come in from a client and we don't have the item
             // locally, we will allow the cache to look in other non local sources,
@@ -829,7 +827,7 @@ public class RemoteCacheServer
      * @param group
      * @return A Set of group keys
      */
-    public Set<Serializable> getGroupKeys( String cacheName, String group )
+    public Set<K> getGroupKeys( String cacheName, String group )
     {
         return processGetGroupKeys( cacheName, group );
     }
@@ -841,9 +839,9 @@ public class RemoteCacheServer
      * @param group
      * @return Set
      */
-    protected Set<Serializable> processGetGroupKeys( String cacheName, String group )
+    protected Set<K> processGetGroupKeys( String cacheName, String group )
     {
-        CacheListeners cacheDesc = null;
+        CacheListeners<K, V> cacheDesc = null;
         try
         {
             cacheDesc = getCacheListeners( cacheName );
@@ -858,7 +856,7 @@ public class RemoteCacheServer
             return Collections.emptySet();
         }
 
-        CompositeCache c = (CompositeCache) cacheDesc.cache;
+        CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
         return c.getGroupKeys( group );
     }
 
@@ -869,7 +867,7 @@ public class RemoteCacheServer
      * @param key
      * @throws IOException
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, 0 );
@@ -885,10 +883,10 @@ public class RemoteCacheServer
      * @param requesterId
      * @throws IOException
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
+        ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, key, requesterId, ICacheEventLogger.REMOVE_EVENT );
         try
         {
             processRemove( cacheName, key, requesterId );
@@ -907,7 +905,7 @@ public class RemoteCacheServer
      * @param requesterId
      * @throws IOException
      */
-    private void processRemove( String cacheName, Serializable key, long requesterId )
+    private void processRemove( String cacheName, K key, long requesterId )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -915,7 +913,7 @@ public class RemoteCacheServer
             log.debug( "remove [" + key + "] from cache [" + cacheName + "]" );
         }
 
-        CacheListeners cacheDesc = cacheListenersMap.get( cacheName );
+        CacheListeners<K, V> cacheDesc = cacheListenersMap.get( cacheName );
 
         boolean fromCluster = isRequestFromCluster( requesterId );
 
@@ -928,7 +926,7 @@ public class RemoteCacheServer
                 boolean removeSuccess = false;
 
                 // No need to notify if it was not cached.
-                CompositeCache c = (CompositeCache) cacheDesc.cache;
+                CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
 
                 if ( fromCluster )
                 {
@@ -957,7 +955,7 @@ public class RemoteCacheServer
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
                 if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
                 {
-                    ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
+                    ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
                     for ( int i = 0; i < qlist.length; i++ )
                     {
@@ -992,7 +990,7 @@ public class RemoteCacheServer
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "all", requesterId, ICacheEventLogger.REMOVEALL_EVENT );
         try
         {
             processRemoveAll( cacheName, requesterId );
@@ -1013,7 +1011,7 @@ public class RemoteCacheServer
     private void processRemoveAll( String cacheName, long requesterId )
         throws IOException
     {
-        CacheListeners cacheDesc = cacheListenersMap.get( cacheName );
+        CacheListeners<K, V> cacheDesc = cacheListenersMap.get( cacheName );
 
         boolean fromCluster = isRequestFromCluster( requesterId );
 
@@ -1024,7 +1022,7 @@ public class RemoteCacheServer
             synchronized ( cacheDesc )
             {
                 // No need to broadcast, or notify if it was not cached.
-                CompositeCache c = (CompositeCache) cacheDesc.cache;
+                CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
 
                 if ( fromCluster )
                 {
@@ -1046,7 +1044,7 @@ public class RemoteCacheServer
                 // update registered listeners
                 if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
                 {
-                    ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
+                    ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
                     for ( int i = 0; i < qlist.length; i++ )
                     {
@@ -1089,7 +1087,7 @@ public class RemoteCacheServer
     public void dispose( String cacheName, long requesterId )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", requesterId, ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             processDispose( cacheName, requesterId );
@@ -1113,7 +1111,7 @@ public class RemoteCacheServer
             log.info( "Dispose request received from listener [" + requesterId + "]" );
         }
 
-        CacheListeners cacheDesc = cacheListenersMap.get( cacheName );
+        CacheListeners<K, V> cacheDesc = cacheListenersMap.get( cacheName );
 
         // this is dangerous
         if ( cacheDesc != null )
@@ -1121,7 +1119,7 @@ public class RemoteCacheServer
             // best attempt to achieve ordered free-cache-op and notification.
             synchronized ( cacheDesc )
             {
-                ICacheEventQueue[] qlist = getEventQList( cacheDesc, requesterId );
+                ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
                 for ( int i = 0; i < qlist.length; i++ )
                 {
@@ -1142,9 +1140,9 @@ public class RemoteCacheServer
     {
         synchronized ( cacheListenersMap )
         {
-            for (CacheListeners cacheDesc : cacheListenersMap.values())
+            for (CacheListeners<K, V> cacheDesc : cacheListenersMap.values())
             {
-                ICacheEventQueue[] qlist = getEventQList( cacheDesc, 0 );
+                ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, 0 );
 
                 for ( int i = 0; i < qlist.length; i++ )
                 {
@@ -1162,9 +1160,9 @@ public class RemoteCacheServer
      * @param cacheName
      * @return The cacheListeners value
      */
-    protected CacheListeners getCacheListeners( String cacheName )
+    protected CacheListeners<K, V> getCacheListeners( String cacheName )
     {
-        CacheListeners cacheListeners = cacheListenersMap.get( cacheName );
+        CacheListeners<K, V> cacheListeners = cacheListenersMap.get( cacheName );
         synchronized ( cacheListenersMap )
         {
             if ( cacheListeners == null )
@@ -1172,7 +1170,8 @@ public class RemoteCacheServer
                 cacheListeners = cacheListenersMap.get( cacheName );
                 if ( cacheListeners == null )
                 {
-                    cacheListeners = new CacheListeners( cacheManager.getCache( cacheName ) );
+                    CompositeCache<K, V> cache = cacheManager.getCache( cacheName );
+                    cacheListeners = new CacheListeners<K, V>( cache );
                     cacheListenersMap.put( cacheName, cacheListeners );
                 }
             }
@@ -1187,9 +1186,9 @@ public class RemoteCacheServer
      * @param cacheName
      * @return The clusterListeners value
      */
-    protected CacheListeners getClusterListeners( String cacheName )
+    protected CacheListeners<K, V> getClusterListeners( String cacheName )
     {
-        CacheListeners cacheListeners = clusterListenersMap.get( cacheName );
+        CacheListeners<K, V> cacheListeners = clusterListenersMap.get( cacheName );
         synchronized ( clusterListenersMap )
         {
             if ( cacheListeners == null )
@@ -1197,7 +1196,8 @@ public class RemoteCacheServer
                 cacheListeners = clusterListenersMap.get( cacheName );
                 if ( cacheListeners == null )
                 {
-                    cacheListeners = new CacheListeners( cacheManager.getCache( cacheName ) );
+                    CompositeCache<K, V> cache = cacheManager.getCache( cacheName );
+                    cacheListeners = new CacheListeners<K, V>( cache );
                     clusterListenersMap.put( cacheName, cacheListeners );
                 }
             }
@@ -1217,9 +1217,9 @@ public class RemoteCacheServer
      * @param requesterId
      * @return The eventQList value
      */
-    private ICacheEventQueue[] getEventQList( CacheListeners cacheListeners, long requesterId )
+    private ICacheEventQueue<K, V>[] getEventQList( CacheListeners<K, V> cacheListeners, long requesterId )
     {
-        ICacheEventQueue[] list = null;
+        ICacheEventQueue<K, V>[] list = null;
         synchronized ( cacheListeners.eventQMap )
         {
             list = cacheListeners.eventQMap.values().toArray( new ICacheEventQueue[0] );
@@ -1228,7 +1228,7 @@ public class RemoteCacheServer
         // Set those not qualified to null; Count those qualified.
         for ( int i = 0; i < list.length; i++ )
         {
-            ICacheEventQueue q = list[i];
+            ICacheEventQueue<K, V> q = list[i];
             if ( q.isWorking() && q.getListenerId() != requesterId )
             {
                 count++;
@@ -1245,7 +1245,7 @@ public class RemoteCacheServer
         }
 
         // Returns only the qualified.
-        ICacheEventQueue[] qq = new ICacheEventQueue[count];
+        ICacheEventQueue<K, V>[] qq = new ICacheEventQueue[count];
         count = 0;
         for ( int i = 0; i < list.length; i++ )
         {
@@ -1262,14 +1262,14 @@ public class RemoteCacheServer
      * <p>
      * @param eventQMap
      */
-    private static void cleanupEventQMap( Map<Long, ICacheEventQueue> eventQMap )
+    private static <KK extends Serializable, VV extends Serializable> void cleanupEventQMap( Map<Long, ICacheEventQueue<KK, VV>> eventQMap )
     {
         synchronized ( eventQMap )
         {
-            for (Iterator<Map.Entry<Long, ICacheEventQueue>> itr = eventQMap.entrySet().iterator(); itr.hasNext(); )
+            for (Iterator<Map.Entry<Long, ICacheEventQueue<KK, VV>>> itr = eventQMap.entrySet().iterator(); itr.hasNext(); )
             {
-                Map.Entry<Long, ICacheEventQueue> e = itr.next();
-                ICacheEventQueue q = e.getValue();
+                Map.Entry<Long, ICacheEventQueue<KK, VV>> e = itr.next();
+                ICacheEventQueue<KK, VV> q = e.getValue();
 
                 // this does not care if the q is alive (i.e. if
                 // there are active threads; it cares if the queue
@@ -1295,16 +1295,16 @@ public class RemoteCacheServer
      *            remote calls involved.
      * @throws IOException
      */
-    public void addCacheListener( String cacheName, ICacheListener listener )
+    public <KK extends Serializable, VV extends Serializable> void addCacheListener( String cacheName, ICacheListener<KK, VV> listener )
         throws IOException
     {
         if ( cacheName == null || listener == null )
         {
             throw new IllegalArgumentException( "cacheName and listener must not be null" );
         }
-        CacheListeners cacheListeners;
+        CacheListeners<KK, VV> cacheListeners;
 
-        IRemoteCacheListener ircl = (IRemoteCacheListener) listener;
+        IRemoteCacheListener<KK, VV> ircl = (IRemoteCacheListener<KK, VV>) listener;
 
         String listenerAddress = ircl.getLocalHostAddress();
 
@@ -1312,14 +1312,14 @@ public class RemoteCacheServer
         if ( remoteType == IRemoteCacheAttributes.CLUSTER )
         {
             log.debug( "adding cluster listener, listenerAddress [" + listenerAddress + "]" );
-            cacheListeners = getClusterListeners( cacheName );
+            cacheListeners = (CacheListeners<KK, VV>)getClusterListeners( cacheName );
         }
         else
         {
             log.debug( "adding normal listener, listenerAddress [" + listenerAddress + "]" );
-            cacheListeners = getCacheListeners( cacheName );
+            cacheListeners = (CacheListeners<KK, VV>)getCacheListeners( cacheName );
         }
-        Map<Long, ICacheEventQueue> eventQMap = cacheListeners.eventQMap;
+        Map<Long, ICacheEventQueue<KK, VV>> eventQMap = cacheListeners.eventQMap;
         cleanupEventQMap( eventQMap );
 
         // synchronized ( listenerId )
@@ -1383,8 +1383,8 @@ public class RemoteCacheServer
                 }
             }
 
-            CacheEventQueueFactory fact = new CacheEventQueueFactory();
-            ICacheEventQueue q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes
+            CacheEventQueueFactory<KK, VV> fact = new CacheEventQueueFactory<KK, VV>();
+            ICacheEventQueue<KK, VV> q = fact.createCacheEventQueue( listener, id, cacheName, remoteCacheServerAttributes
                 .getEventQueuePoolName(), remoteCacheServerAttributes.getEventQueueType() );
 
             eventQMap.put(Long.valueOf(listener.getListenerId()), q);
@@ -1402,7 +1402,7 @@ public class RemoteCacheServer
      * @param listener The feature to be added to the CacheListener attribute
      * @throws IOException
      */
-    public void addCacheListener( ICacheListener listener )
+    public <KK extends Serializable, VV extends Serializable> void addCacheListener( ICacheListener<KK, VV> listener )
         throws IOException
     {
         for (String cacheName : cacheListenersMap.keySet())
@@ -1424,7 +1424,7 @@ public class RemoteCacheServer
      * @param listener
      * @throws IOException
      */
-    public void removeCacheListener( String cacheName, ICacheListener listener )
+    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( String cacheName, ICacheListener<KK, VV> listener )
         throws IOException
     {
         removeCacheListener( cacheName, listener.getListenerId() );
@@ -1448,7 +1448,7 @@ public class RemoteCacheServer
 
         boolean isClusterListener = isRequestFromCluster( listenerId );
 
-        CacheListeners cacheDesc = null;
+        CacheListeners<K, V> cacheDesc = null;
 
         if ( isClusterListener )
         {
@@ -1458,9 +1458,9 @@ public class RemoteCacheServer
         {
             cacheDesc = getCacheListeners( cacheName );
         }
-        Map<Long, ICacheEventQueue> eventQMap = cacheDesc.eventQMap;
+        Map<Long, ICacheEventQueue<K, V>> eventQMap = cacheDesc.eventQMap;
         cleanupEventQMap( eventQMap );
-        ICacheEventQueue q = eventQMap.remove( Long.valueOf( listenerId ) );
+        ICacheEventQueue<K, V> q = eventQMap.remove( Long.valueOf( listenerId ) );
 
         if ( q != null )
         {
@@ -1497,7 +1497,7 @@ public class RemoteCacheServer
      * @param listener
      * @throws IOException
      */
-    public void removeCacheListener( ICacheListener listener )
+    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( ICacheListener<KK, VV> listener )
         throws IOException
     {
         for (String cacheName : cacheListenersMap.keySet())
@@ -1606,11 +1606,11 @@ public class RemoteCacheServer
      * @param eventName
      * @return ICacheEvent
      */
-    private ICacheEvent createICacheEvent( ICacheElement item, long requesterId, String eventName )
+    private ICacheEvent<ICacheElement<K, V>> createICacheEvent( ICacheElement<K, V> item, long requesterId, String eventName )
     {
         if ( cacheEventLogger == null )
         {
-            return EMPTY_ICACHE_EVENT;
+            return new CacheEvent<ICacheElement<K, V>>();
         }
         String ipAddress = getExtraInfoForRequesterId( requesterId );
         return cacheEventLogger
@@ -1626,11 +1626,11 @@ public class RemoteCacheServer
      * @param eventName
      * @return ICacheEvent
      */
-    private ICacheEvent createICacheEvent( String cacheName, Serializable key, long requesterId, String eventName )
+    private <T extends Serializable> ICacheEvent<T> createICacheEvent( String cacheName, T key, long requesterId, String eventName )
     {
         if ( cacheEventLogger == null )
         {
-            return EMPTY_ICACHE_EVENT;
+            return new CacheEvent<T>();
         }
         String ipAddress = getExtraInfoForRequesterId( requesterId );
         return cacheEventLogger.createICacheEvent( "RemoteCacheServer", cacheName, eventName, ipAddress, key );
@@ -1656,7 +1656,7 @@ public class RemoteCacheServer
      * <p>
      * @param cacheEvent
      */
-    protected void logICacheEvent( ICacheEvent cacheEvent )
+    protected <T extends Serializable> void logICacheEvent( ICacheEvent<T> cacheEvent )
     {
         if ( cacheEventLogger != null )
         {
