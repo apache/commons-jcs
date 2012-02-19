@@ -20,7 +20,7 @@
 
 <document>
 	<properties>
-		<title>Getting Started -- Intoduction</title>
+		<title>Getting Started -- Introduction</title>
 		<author email="asmuts@apache.org">Aaron Smuts</author>
 	</properties>
 
@@ -33,7 +33,7 @@
 				dependencies, (4) configure JCS, and (5) then start
 				programming to it. The purpose of the getting started
 				guide is to help you get up and running with JCS as
-				quickly as possible. In depth doumentation on the
+				quickly as possible. In depth documentation on the
 				various features of JCS is provided in the User's Guide.
 			</p>
 		</section>
@@ -69,7 +69,7 @@
 				Disk Cache, for example, allows you to swap items onto
 				disk when a memory threshold is reached. You can read
 				more about the available auxiliaries
-				<a href="../Plugins.html">HERE</a>
+				<a href="../JCSPlugins.html">HERE</a>
 				.
 			</p>
 		</section>

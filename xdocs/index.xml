@@ -28,7 +28,7 @@
 				for high read, low put applications. Latency times drop sharply and
 				bottlenecks move away from the database in an effectively cached
 				system.
-				<a href="getting_started/intro.html"> Learn how to start using JCS.</a>
+				<a href="getting_started/intro.html">Learn how to start using JCS.</a>
 			</p>
 			<p> The JCS goes beyond simply caching objects in memory. It provides
 				numerous additional features:</p>
@@ -63,7 +63,7 @@
 		<section name="JCS is a Composite Cache">
 			<p>
 				The foundation of JCS is the Composite Cache, which is the
-				<a href="Plugins.html">pluggable</a>
+				<a href="JCSPlugins.html">pluggable</a>
 				controller for a cache region. Four types of caches can be plugged
 				into the Composite Cache for any given region: (1) Memory, (2) Disk,
 				(3) Lateral, and (4) Remote. The Composite Cache orchestrates access
@@ -88,7 +88,7 @@
 			<subsection name="Indexed Disk Cache">
 				<p>
 					The
-					<a href="IndexedDiskAuxCache.html"> Indexed Disk Cache</a>
+					<a href="IndexedDiskAuxCache.html">Indexed Disk Cache</a>
 					is a fast, reliable, and
 					<a href="IndexedDiskCacheProperties.html"> highly configurable</a>
 					swap for cached data. The indexed disk cache follows the fastest
@@ -105,7 +105,7 @@
 			<subsection name="JDBC Disk Cache">
 				<p>
 					The
-					<a href="JDBCDiskCache.html"> JDBC Disk Cache</a>
+					<a href="JDBCDiskCache.html">JDBC Disk Cache</a>
 					is a fast, reliable, and
 					<a href="JDBCDiskCacheProperties.html"> highly configurable</a>
 					disk cache. It stores both the keys and elements in a JDBC
@@ -121,7 +121,7 @@
 			<subsection name="TCP Lateral Cache">
 				<p>
 					The
-					<a href="LateralTCPAuxCache.html"> TCP Lateral Cache</a>
+					<a href="LateralTCPAuxCache.html">TCP Lateral Cache</a>
 					provides an easy way to distribute cached data to multiple servers.
 					It comes with a
 					<a href="LateralUDPDiscovery.html">UDP discovery</a>
@@ -141,7 +141,7 @@
 			<subsection name="RMI Remote Cache">
 				<p>
 					JCS also provides an RMI based
-					<a href="RemoteAuxCache.html"> Remote Cache Server</a>
+					<a href="RemoteAuxCache.html">Remote Cache Server</a>
 					. Rather than having each node connect to every other node, you can
 					use the remote cache server as the connection point. Each node
 					connects to the remove server, which then broadcasts events to the
@@ -172,7 +172,7 @@
 			<p> JCS is not a fork, an offshoot, a branch, or any other derivation
 				of JCS. Nor is JCS named after another library. JCS is a mature
 				project that has been under development and in use since 2001. Over
-				the years JCS has encorporated numerous bug fixes and has added
+				the years JCS has incorporated numerous bug fixes and has added
 				dozens of features, making it the best designed and most feature
 				rich caching solution available.</p>
 		</section>
