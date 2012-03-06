@@ -18,16 +18,16 @@
  under the License.
 -->
 <rdf:RDF xmlns="http://usefulinc.com/ns/doap#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:asfext="http://projects.apache.org/ns/asfext#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:doap="http://usefulinc.com/ns/doap#" xml:lang="en">
-  <Project rdf:about="http://jakarta.apache.org/jcs/">
+  <Project rdf:about="http://commons.apache.org/jcs/">
     <name>Apache Commons JCS</name>
     <homepage rdf:resource="http://jakarta.apache.org/jcs/"/>
     <programming-language>Java</programming-language>
     <category rdf:resource="http://projects.apache.org/category/library"/>
     <license rdf:resource="http://usefulinc.com/doap/licenses/asl20"/>
-    <bug-database rdf:resource="http://issues.apache.org/scarab/servlet/scarab/"/>
-    <download-page rdf:resource="http://jakarta.apache.org/jcs/Downloads.html"/>
+    <bug-database rdf:resource="http://issues.apache.org/jira/browse/JCS"/>
+    <download-page rdf:resource="http://commons.apache.org/jcs/DownloadPage.html"/>
     <asfext:pmc rdf:resource="http://commons.apache.org/"/>
-    <shortdesc xml:lang="en">Cache</shortdesc>
+    <shortdesc xml:lang="en">Java Caching System</shortdesc>
     <description xml:lang="en">Comprehensive Caching System</description>
     <repository>
       <SVNRepository>
@@ -35,6 +35,6 @@
         <location rdf:resource="http://svn.apache.org/repos/asf/commons/proper/jcs"/>
       </SVNRepository>
     </repository>
-    <mailing-list rdf:resource="http://jakarta.apache.org/jcs/mail-lists.html"/>
+    <mailing-list rdf:resource="http://commons.apache.org/jcs/mail-lists.html"/>
   </Project>
 </rdf:RDF>
