@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.apache.jcs.access.behavior.IGroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
+import org.apache.jcs.access.exception.InvalidArgumentException;
+import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -36,17 +38,24 @@ import org.apache.jcs.engine.control.group.GroupId;
  * Access for groups.
  */
 public class GroupCacheAccess<K extends Serializable, V extends Serializable>
-    extends CacheAccess<GroupAttrName<K>, V>
+    extends CacheAccess<K, V>
     implements IGroupCacheAccess<K, V>
 {
+    /** a typesafe copy of the group cache */
+    private final CompositeCache<GroupAttrName<K>, V> groupCache;
+
     /**
      * Constructor for the GroupCacheAccess object
      * <p>
      * @param cacheControl
      */
-    public GroupCacheAccess( CompositeCache<GroupAttrName<K>, V> cacheControl )
+    @SuppressWarnings("unchecked")
+    public GroupCacheAccess( CompositeCache<K, V> cacheControl )
     {
         super( cacheControl );
+
+        // This is a HACK to allow different types of keys in group caches
+        this.groupCache = (CompositeCache<GroupAttrName<K>, V>) this.cacheControl;
     }
 
     /**
@@ -59,7 +68,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     public static <K extends Serializable, V extends Serializable> GroupCacheAccess<K, V> getGroupAccess( String region )
         throws CacheException
     {
-        CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region );
         return new GroupCacheAccess<K, V>( cache );
     }
 
@@ -74,7 +83,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     public static <K extends Serializable, V extends Serializable> GroupCacheAccess<K, V> getGroupAccess( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region, icca );
         return new GroupCacheAccess<K, V>( cache );
     }
 
@@ -89,7 +98,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      */
     public V getFromGroup( K name, String group )
     {
-        ICacheElement<GroupAttrName<K>, V> element = this.cacheControl.get( getGroupAttrName( group, name ) );
+        ICacheElement<GroupAttrName<K>, V> element = this.groupCache.get( getGroupAttrName( group, name ) );
         return ( element != null ) ? element.getVal() : null;
     }
 
@@ -143,17 +152,37 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     public void putInGroup( K name, String groupName, V value, IElementAttributes attr )
         throws CacheException
     {
+        if ( name == null )
+        {
+            throw new InvalidArgumentException( "Key must not be null" );
+        }
+
+        if ( value == null )
+        {
+            throw new InvalidArgumentException( "Value must not be null" );
+        }
+
         // unbind object first if any.
         remove( name, groupName );
 
-        if ( attr == null )
+        // Create the element and update. This may throw an IOException which
+        // should be wrapped by cache access.
+        try
         {
-            put( getGroupAttrName( groupName, name ), value );
+            GroupAttrName<K> key = getGroupAttrName( groupName, name );
+            CacheElement<GroupAttrName<K>, V> ce =
+                new CacheElement<GroupAttrName<K>, V>( this.groupCache.getCacheName(), key, value );
+
+            IElementAttributes attributes = (attr == null) ? this.groupCache.getElementAttributes() : attr;
+            ce.setElementAttributes( attributes );
+
+            this.groupCache.update( ce );
         }
-        else
+        catch ( Exception e )
         {
-            put( getGroupAttrName( groupName, name ), value, attr );
+            throw new CacheException( e );
         }
+
     }
 
     /**
@@ -163,7 +192,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     public void remove( K name, String group )
     {
         GroupAttrName<K> key = getGroupAttrName( group, name );
-        this.cacheControl.remove( key );
+        this.groupCache.remove( key );
     }
 
     /**
@@ -176,7 +205,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     {
         Set<K> groupKeys = new HashSet<K>();
 
-        for (GroupAttrName<K> gan : this.cacheControl.getGroupKeys( group ))
+        for (GroupAttrName<K> gan : this.groupCache.getGroupKeys( group ))
         {
             groupKeys.add(gan.attrName);
         }
@@ -192,6 +221,6 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      */
     public void invalidateGroup( String group )
     {
-        this.cacheControl.remove( new GroupId( this.cacheControl.getCacheName(), group ) );
+        this.groupCache.remove(getGroupAttrName(group, null));
     }
 }

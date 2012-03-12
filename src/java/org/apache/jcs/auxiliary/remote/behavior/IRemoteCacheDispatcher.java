@@ -1,6 +1,7 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
@@ -21,6 +22,7 @@ public interface IRemoteCacheDispatcher
      * @return RemoteCacheResponse
      * @throws IOException
      */
-    RemoteCacheResponse dispatchRequest( RemoteCacheRequest remoteCacheRequest )
-        throws IOException;
+    <K extends Serializable, V extends Serializable, KK extends Serializable, VV extends Serializable>
+        RemoteCacheResponse<K, V> dispatchRequest( RemoteCacheRequest<KK, VV> remoteCacheRequest )
+            throws IOException;
 }

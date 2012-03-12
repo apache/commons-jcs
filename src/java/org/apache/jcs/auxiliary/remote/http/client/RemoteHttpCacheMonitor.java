@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class RemoteHttpCacheMonitor
     private static long idlePeriod = 3 * 1000;
 
     /** Set of remote caches to monitor. This are added on error, if not before. */
-    private final Set<RemoteHttpCache> remoteHttpCaches = new HashSet<RemoteHttpCache>();
+    private final Set<RemoteHttpCache<?, ?>> remoteHttpCaches = new HashSet<RemoteHttpCache<?, ?>>();
 
     /**
      * Must make sure RemoteCacheMonitor is started before any remote error can be detected!
@@ -102,7 +103,7 @@ public class RemoteHttpCacheMonitor
      * <p>
      * @param remoteCache
      */
-    public void notifyError( RemoteHttpCache remoteCache )
+    public void notifyError( RemoteHttpCache<?, ?> remoteCache )
     {
         if ( log.isInfoEnabled() )
         {
@@ -176,7 +177,7 @@ public class RemoteHttpCacheMonitor
                 // ignore;
             }
 
-            // The "alright" flag must be false here.
+            // The "allright" flag must be false here.
             // Simply presume we can fix all the errors until proven otherwise.
             synchronized ( this )
             {
@@ -184,16 +185,20 @@ public class RemoteHttpCacheMonitor
             }
 
             // Make a copy
-            Set<RemoteHttpCache> remoteCachesToExamine = new HashSet<RemoteHttpCache>();
+            Set<RemoteHttpCache<Serializable, Serializable>> remoteCachesToExamine =
+                new HashSet<RemoteHttpCache<Serializable, Serializable>>();
             synchronized ( this )
             {
-                remoteCachesToExamine.addAll( this.remoteHttpCaches );
+                for (RemoteHttpCache<?, ?> remoteCache : this.remoteHttpCaches)
+                {
+                    remoteCachesToExamine.add( (RemoteHttpCache<Serializable, Serializable>)remoteCache );
+                }
             }
             // If any cache is in error, it strongly suggests all caches
             // managed by the
             // same RmicCacheManager instance are in error. So we fix
             // them once and for all.
-            for (RemoteHttpCache remoteCache : remoteCachesToExamine)
+            for (RemoteHttpCache<Serializable, Serializable> remoteCache : remoteCachesToExamine)
             {
                 try
                 {
@@ -201,7 +206,7 @@ public class RemoteHttpCacheMonitor
                     {
                         RemoteHttpCacheAttributes attributes = remoteCache.getRemoteHttpCacheAttributes();
 
-                        IRemoteHttpCacheClient remoteService = RemoteHttpCacheManager.getInstance()
+                        IRemoteHttpCacheClient<Serializable, Serializable> remoteService = RemoteHttpCacheManager.getInstance()
                             .createRemoteHttpCacheClientForAttributes( attributes );
 
                         if ( log.isInfoEnabled() )

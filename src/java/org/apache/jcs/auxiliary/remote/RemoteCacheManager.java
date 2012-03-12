@@ -91,7 +91,7 @@ public class RemoteCacheManager
     private final IElementSerializer elementSerializer;
 
     /** Handle to the remote cache service; or a zombie handle if failed to connect. */
-    private IRemoteCacheService<?, ?> remoteService;
+    private IRemoteCacheService<? extends Serializable, ? extends Serializable> remoteService;
 
     /**
      * Wrapper of the remote cache watch service; or wrapper of a zombie service if failed to
@@ -511,7 +511,7 @@ public class RemoteCacheManager
      * @param remoteService
      * @param remoteWatch
      */
-    public void fixCaches( IRemoteCacheService<?, ?> remoteService, IRemoteCacheObserver remoteWatch )
+    public void fixCaches( IRemoteCacheService<? extends Serializable, ? extends Serializable> remoteService, IRemoteCacheObserver remoteWatch )
     {
         if ( log.isInfoEnabled() )
         {
@@ -521,7 +521,7 @@ public class RemoteCacheManager
         {
             this.remoteService = remoteService;
             this.remoteWatch.setCacheWatch( remoteWatch );
-            for (RemoteCacheNoWait<?, ?> c : caches.values())
+            for (RemoteCacheNoWait<? extends Serializable, ? extends Serializable> c : caches.values())
             {
                 c.fixCache( this.remoteService );
             }

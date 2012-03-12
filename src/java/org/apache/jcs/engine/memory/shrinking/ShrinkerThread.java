@@ -31,7 +31,7 @@ import org.apache.jcs.engine.control.event.ElementEvent;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
-import org.apache.jcs.engine.memory.MemoryCache;
+import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
 /**
  * A background memory shrinker. Memory problems and concurrent modification exception caused by
@@ -45,7 +45,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
     private final static Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** The MemoryCache instance which this shrinker is watching */
-    private final MemoryCache<K, V> cache;
+    private final IMemoryCache<K, V> cache;
 
     /** Maximum memory idle time for the whole cache */
     private final long maxMemoryIdleTime;
@@ -61,7 +61,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
      * <p>
      * @param cache The MemoryCache which the new shrinker should watch.
      */
-    public ShrinkerThread( MemoryCache<K, V> cache )
+    public ShrinkerThread( IMemoryCache<K, V> cache )
     {
         super();
 

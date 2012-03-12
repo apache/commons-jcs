@@ -387,7 +387,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
             throw new IOException( message );
         }
 
-        RemoteCacheRequest<K, V> remoteHttpCacheRequest =
+        RemoteCacheRequest<String, String> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetGroupKeysRequest( cacheName, groupName, 0 );
 
         RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );

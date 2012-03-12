@@ -748,15 +748,11 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
 
             for (Serializable k : keyHash.keySet())
             {
-                if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
+                if ( k instanceof GroupAttrName && ( (GroupAttrName<K>) k ).groupId.equals( groupId ) )
                 {
-                    keys.add( (Serializable) ( (GroupAttrName) k ).attrName );
+                    keys.add( ( (GroupAttrName<K>) k ).attrName );
                 }
             }
-        }
-        catch ( Exception e )
-        {
-            log.error( logCacheName + "Failure getting from disk, group = " + groupName, e );
         }
         finally
         {

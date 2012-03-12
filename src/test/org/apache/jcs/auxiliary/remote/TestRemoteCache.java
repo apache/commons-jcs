@@ -79,7 +79,7 @@ public class TestRemoteCache
         log.info( "testSimpleSend" );
         System.out.println( "testSimpleSend" );
 
-        JCS cache = JCS.getInstance( "testCache" );
+        JCS<String, String> cache = JCS.getInstance( "testCache" );
 
         log.info( "cache = " + cache );
 
@@ -108,13 +108,13 @@ public class TestRemoteCache
         rca.setRemotePort( 1101 );
 
         RemoteCacheManager mgr = RemoteCacheManager.getInstance( rca, cacheMgr, new MockCacheEventLogger(), new MockElementSerializer() );
-        AuxiliaryCache cache = mgr.getCache( "testCache" );
+        AuxiliaryCache<String, String> cache = mgr.getCache( "testCache" );
 
         int numMes = 100;
         for ( int i = 0; i < numMes; i++ )
         {
             String message = "adsfasasfasfasdasf";
-            CacheElement ce = new CacheElement( "key" + 1, "data" + i, message );
+            CacheElement<String, String> ce = new CacheElement<String, String>( "key" + 1, "data" + i, message );
             cache.update( ce );
             System.out.println( "put " + ce );
         }

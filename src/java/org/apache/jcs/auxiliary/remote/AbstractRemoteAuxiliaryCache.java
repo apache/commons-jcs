@@ -623,15 +623,16 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @param restoredRemote IRemoteCacheService -- the remote server or proxy to the remote server
      */
-    public void fixCache( IRemoteCacheService<K, V> restoredRemote )
+    public void fixCache( IRemoteCacheService<?, ?> restoredRemote )
     {
+        IRemoteCacheService<K, V> remote = (IRemoteCacheService<K, V>)restoredRemote;
         if ( getRemoteCacheService() != null && getRemoteCacheService() instanceof ZombieRemoteCacheService )
         {
-            ZombieRemoteCacheService zombie = (ZombieRemoteCacheService) getRemoteCacheService();
-            setRemoteCacheService( restoredRemote );
+            ZombieRemoteCacheService<K, V> zombie = (ZombieRemoteCacheService<K, V>) getRemoteCacheService();
+            setRemoteCacheService( remote );
             try
             {
-                zombie.propagateEvents( restoredRemote );
+                zombie.propagateEvents( remote );
             }
             catch ( Exception e )
             {
@@ -648,7 +649,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
         }
         else
         {
-            setRemoteCacheService( restoredRemote );
+            setRemoteCacheService( remote );
         }
     }
 

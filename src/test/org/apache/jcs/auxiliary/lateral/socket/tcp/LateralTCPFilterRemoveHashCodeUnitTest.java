@@ -38,8 +38,8 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     //private static boolean isSysOut = false;
 
     /** The port the server will listen to. */
-    private int serverPort = 2001;
-    
+    private final int serverPort = 2001;
+
     /**
      * Constructor for the TestDiskCache object.
      *
@@ -84,7 +84,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     public void runTestForRegion( String region, int numOps, int testNum )
         throws Exception
     {
-        JCS cache = JCS.getInstance( region );
+        JCS<String, Serializable> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
 
@@ -99,7 +99,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // this service will put and remove using the lateral to
         // the cache instance above
         // the cache thinks it is different since the listenerid is different
-        LateralTCPService service = new LateralTCPService( lattr2 );
+        LateralTCPService<String, Serializable> service = new LateralTCPService<String, Serializable>( lattr2 );
         service.setListenerId( 123456 );
 
         String keyToBeRemovedOnPut = "test1";
@@ -121,12 +121,12 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         // dataToPassHashCodeCompare.hashCode() );
 
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
-        ICacheElement<String, String> element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, Serializable> element1 = new CacheElement<String, Serializable>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
         cache.put( keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
-        ICacheElement<String, String> element2 = new CacheElement( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
+        ICacheElement<String, Serializable> element2 = new CacheElement<String, Serializable>( region, keyToNotBeRemovedOnPut, dataToPassHashCodeCompare );
         service.update( element2 );
 
         /*
@@ -143,18 +143,18 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
          * e.toString() ); e.printStackTrace( System.out ); throw e; }
          */
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );
-        String value = (String) jcs.get( key );
+        String value = jcs.get( key );
         assertEquals( "Couldn't put normally.", data, value );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
         {
             String keyL = "key" + i;
-            String dataL = (String) jcs.get( keyL );
+            String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
                 assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );

@@ -27,6 +27,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
+import org.apache.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -71,7 +72,7 @@ public class IndexDiskCacheUnitTest
         for ( int i = 0; i < cnt; i++ )
         {
             ICacheElement<String, String> element = disk.processGet( "key:" + i );
-            assertNotNull( "Should have recevied an element.", element );
+            assertNotNull( "Should have received an element.", element );
             assertEquals( "Element is wrong.", "data:" + i, element.getVal() );
         }
 
@@ -122,7 +123,7 @@ public class IndexDiskCacheUnitTest
         {
             disk.remove( "key:" + i );
             ICacheElement<String, String> element = disk.processGet( "key:" + i );
-            assertNull( "Should not have recevied an element.", element );
+            assertNull( "Should not have received an element.", element );
         }
     }
 
@@ -276,11 +277,11 @@ public class IndexDiskCacheUnitTest
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testFileSize" );
         cattr.setDiskPath( "target/test-sandbox/UnitTest" );
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         int numberToInsert = 20;
         int bytes = 24;
-        ICacheElement<String, String>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         for ( int i = 0; i < elements.length; i++ )
@@ -319,10 +320,10 @@ public class IndexDiskCacheUnitTest
         cattr.setOptimizeAtRemoveCount( numberToInsert );
         cattr.setMaxKeySize( numberToInsert * 2 );
         cattr.setMaxPurgatorySize( numberToInsert );
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         int bytes = 24;
-        ICacheElement<String, String>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         for ( int i = 0; i < elements.length; i++ )
@@ -365,11 +366,11 @@ public class IndexDiskCacheUnitTest
         cattr.setOptimizeAtRemoveCount( numberToInsert );
         cattr.setMaxKeySize( numberToInsert * 2 );
         cattr.setMaxPurgatorySize( numberToInsert );
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         // we will reuse these
         int bytes = 24;
-        ICacheElement<String, String>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         // Add some to the disk
@@ -418,11 +419,11 @@ public class IndexDiskCacheUnitTest
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testBytesFreeSize" );
         cattr.setDiskPath( "target/test-sandbox/UnitTest" );
-        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         int numberToInsert = 20;
         int bytes = 24;
-        ICacheElement<String, String>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         for ( int i = 0; i < elements.length; i++ )
@@ -490,7 +491,7 @@ public class IndexDiskCacheUnitTest
         for ( int i = 0; i < cnt; i++ )
         {
             ICacheElement<String, String> element = disk.processGet( i + ":key" );
-            assertNotNull( "Shoulds have recevied an element.", element );
+            assertNotNull( "Shoulds have received an element.", element );
         }
 
         // remove each
@@ -498,7 +499,7 @@ public class IndexDiskCacheUnitTest
         {
             disk.remove( i + ":" );
             ICacheElement<String, String> element = disk.processGet( i + ":key" );
-            assertNull( "Should not have recevied an element.", element );
+            assertNull( "Should not have received an element.", element );
         }
         // https://issues.apache.org/jira/browse/JCS-67
         assertEquals( "Recylenbin should not have more elements than we removed. Check for JCS-67", cnt, disk
@@ -542,13 +543,12 @@ public class IndexDiskCacheUnitTest
         {
             GroupAttrName<String> groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
             ICacheElement<GroupAttrName<String>, String> element = disk.processGet( groupAttrName );
-            assertNotNull( "Should have recevied an element.", element );
+            assertNotNull( "Should have received an element.", element );
         }
 
         // DO WORK
         // remove the group
-        GroupId gid = new GroupId( cacheName, groupName );
-        disk.remove( gid );
+        disk.remove( getGroupAttrName( cacheName, groupName, null ) );
 
         for ( int i = 0; i < cnt; i++ )
         {
@@ -556,7 +556,7 @@ public class IndexDiskCacheUnitTest
             ICacheElement<GroupAttrName<String>, String> element = disk.processGet( groupAttrName );
 
             // VERIFY
-            assertNull( "Should not have recevied an element.", element );
+            assertNull( "Should not have received an element.", element );
         }
 
     }

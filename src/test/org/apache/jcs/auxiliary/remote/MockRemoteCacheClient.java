@@ -81,9 +81,9 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService)
      */
-    public void fixCache( IRemoteCacheService<K, V> remote )
+    public void fixCache( IRemoteCacheService<?, ?> remote )
     {
-        fixed = remote;
+        fixed = (IRemoteCacheService<K, V>)remote;
     }
 
     /**

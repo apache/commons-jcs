@@ -1,5 +1,7 @@
 package org.apache.jcs.auxiliary;
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -20,10 +22,11 @@ public class MockAuxiliaryCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V>
+        createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
+           ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
-        MockAuxiliaryCache auxCache = new MockAuxiliaryCache();
+        MockAuxiliaryCache<K, V> auxCache = new MockAuxiliaryCache<K, V>();
         auxCache.setCacheEventLogger( cacheEventLogger );
         auxCache.setElementSerializer( elementSerializer );
         return auxCache;

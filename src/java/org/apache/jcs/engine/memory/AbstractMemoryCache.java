@@ -40,6 +40,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.Stats;
@@ -52,7 +53,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * use the shrinker, the clock daemon will be setup to run the shrinker on this region.
  */
 public abstract class AbstractMemoryCache<K extends Serializable, V extends Serializable>
-    implements MemoryCache<K, V>, Serializable
+    implements IMemoryCache<K, V>, Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = -4494626991630099575L;
@@ -361,9 +362,9 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
             {
                 K k = entry.getKey();
 
-                if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
+                if ( k instanceof GroupAttrName && ( (GroupAttrName<K>) k ).groupId.equals( groupId ) )
                 {
-                    keys.add(( (GroupAttrName) k ).attrName );
+                    keys.add(( (GroupAttrName<K>) k ).attrName );
                 }
             }
         }

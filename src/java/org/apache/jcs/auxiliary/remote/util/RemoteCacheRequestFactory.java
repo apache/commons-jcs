@@ -121,9 +121,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createGetGroupKeysRequest( String cacheName, String groupName, long requesterId )
+    public static RemoteCacheRequest<String, String> createGetGroupKeysRequest( String cacheName, String groupName, long requesterId )
     {
-        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
+        RemoteCacheRequest<String, String> request = new RemoteCacheRequest<String, String>();
         request.setCacheName( cacheName );
         request.setKey( groupName );
         request.setRequesterId( requesterId );

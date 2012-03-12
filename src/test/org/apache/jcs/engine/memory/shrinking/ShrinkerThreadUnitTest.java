@@ -38,144 +38,144 @@ import org.apache.jcs.engine.memory.MockMemoryCache;
 public class ShrinkerThreadUnitTest
     extends TestCase
 {
-    /** verify the check for removal  
+    /** verify the check for removal
      * <p>
      * @throws IOException */
     public void testCheckForRemoval_Expired() throws IOException
     {
         // SETUP
-        MockMemoryCache memory = new MockMemoryCache();
+        MockMemoryCache<String, String> memory = new MockMemoryCache<String, String>();
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
         memory.setCacheAttributes( cacheAttr );
-        
-        ShrinkerThread shrinker = new ShrinkerThread( memory );
-        
+
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
+
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
         element.getElementAttributes().setMaxLifeSeconds( 1 );
-        
+
         long now = System.currentTimeMillis();
         // add two seconds
         now += 2000;
-        
+
         // DO WORK
         boolean result = shrinker.checkForRemoval( element, now );
-        
+
         // VERIFY
         assertTrue( "Item should have expired.", result );
     }
-    
-    /** verify the check for removal  
+
+    /** verify the check for removal
      * <p>
      * @throws IOException */
     public void testCheckForRemoval_NotExpired() throws IOException
     {
         // SETUP
-        MockMemoryCache memory = new MockMemoryCache();
+        MockMemoryCache<String, String> memory = new MockMemoryCache<String, String>();
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
         memory.setCacheAttributes( cacheAttr );
-        
-        ShrinkerThread shrinker = new ShrinkerThread( memory );
-        
+
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
+
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
         element.getElementAttributes().setMaxLifeSeconds( 1 );
-        
+
         long now = System.currentTimeMillis();
         // subtract two seconds
         now -= 2000;
-        
+
         // DO WORK
         boolean result = shrinker.checkForRemoval( element, now );
-        
+
         // VERIFY
         assertFalse( "Item should not have expired.", result );
     }
-    
-    /** verify the check for removal  
+
+    /** verify the check for removal
      * <p>
      * @throws IOException */
     public void testCheckForRemoval_IdleTooLong() throws IOException
     {
         // SETUP
-        MockMemoryCache memory = new MockMemoryCache();
+        MockMemoryCache<String, String> memory = new MockMemoryCache<String, String>();
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
         memory.setCacheAttributes( cacheAttr );
-        
-        ShrinkerThread shrinker = new ShrinkerThread( memory );
-        
+
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
+
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
         element.getElementAttributes().setMaxLifeSeconds( 100 );
         element.getElementAttributes().setIdleTime( 1 );
-        
+
         long now = System.currentTimeMillis();
         // add two seconds
         now += 2000;
-        
+
         // DO WORK
         boolean result = shrinker.checkForRemoval( element, now );
-        
+
         // VERIFY
         assertTrue( "Item should have expired.", result );
     }
-    
-    /** verify the check for removal  
+
+    /** verify the check for removal
      * <p>
      * @throws IOException */
     public void testCheckForRemoval_NotIdleTooLong() throws IOException
     {
         // SETUP
-        MockMemoryCache memory = new MockMemoryCache();
+        MockMemoryCache<String, String> memory = new MockMemoryCache<String, String>();
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 10 );
         cacheAttr.setMaxSpoolPerRun( 10 );
         memory.setCacheAttributes( cacheAttr );
-        
-        ShrinkerThread shrinker = new ShrinkerThread( memory );
-        
+
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
+
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
         element.setElementAttributes( elementAttr );
         element.getElementAttributes().setMaxLifeSeconds( 100 );
         element.getElementAttributes().setIdleTime( 1 );
-        
+
         long now = System.currentTimeMillis();
         // subtract two seconds
         now -= 2000;
-        
+
         // DO WORK
         boolean result = shrinker.checkForRemoval( element, now );
-        
+
         // VERIFY
         assertFalse( "Item should not have expired.", result );
     }
-    
+
     /**
      * Setup cache attributes in mock. Create the shrinker with the mock. Add some elements into the
      * mock memory cache see that they get spooled.
@@ -186,7 +186,7 @@ public class ShrinkerThreadUnitTest
         throws Exception
     {
         // SETUP
-        MockMemoryCache memory = new MockMemoryCache();
+        MockMemoryCache<String, String> memory = new MockMemoryCache<String, String>();
 
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
@@ -197,7 +197,7 @@ public class ShrinkerThreadUnitTest
         String key = "key";
         String value = "value";
 
-        ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
+        ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
 
         ElementAttributes elementAttr = new ElementAttributes();
         elementAttr.setIsEternal( false );
@@ -212,7 +212,7 @@ public class ShrinkerThreadUnitTest
         elementAttr.lastAccessTime = System.currentTimeMillis() - 2000;
 
         // DO WORK
-        ShrinkerThread shrinker = new ShrinkerThread( memory );
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
         Thread runner = new Thread( shrinker );
         runner.run();
 
@@ -233,7 +233,7 @@ public class ShrinkerThreadUnitTest
         throws Exception
     {
         // SETUP
-        MockMemoryCache memory = new MockMemoryCache();
+        MockMemoryCache<String, String> memory = new MockMemoryCache<String, String>();
 
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
@@ -246,7 +246,7 @@ public class ShrinkerThreadUnitTest
             String key = "key" + i;
             String value = "value";
 
-            ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
+            ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
 
             ElementAttributes elementAttr = new ElementAttributes();
             elementAttr.setIsEternal( false );
@@ -262,7 +262,7 @@ public class ShrinkerThreadUnitTest
         }
 
         // DO WORK
-        ShrinkerThread shrinker = new ShrinkerThread( memory );
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
         Thread runner = new Thread( shrinker );
         runner.run();
 
@@ -283,7 +283,7 @@ public class ShrinkerThreadUnitTest
         throws Exception
     {
         // SETUP
-        MockMemoryCache memory = new MockMemoryCache();
+        MockMemoryCache<String, String> memory = new MockMemoryCache<String, String>();
 
         CompositeCacheAttributes cacheAttr = new CompositeCacheAttributes();
         cacheAttr.setMaxMemoryIdleTimeSeconds( 1 );
@@ -298,7 +298,7 @@ public class ShrinkerThreadUnitTest
             String key = "key" + i;
             String value = "value";
 
-            ICacheElement<String, String> element = new CacheElement( "testRegion", key, value );
+            ICacheElement<String, String> element = new CacheElement<String, String>( "testRegion", key, value );
 
             ElementAttributes elementAttr = new ElementAttributes();
             elementAttr.addElementEventHandler( handler );
@@ -315,7 +315,7 @@ public class ShrinkerThreadUnitTest
         }
 
         // DO WORK
-        ShrinkerThread shrinker = new ShrinkerThread( memory );
+        ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
         Thread runner = new Thread( shrinker );
         runner.run();
 

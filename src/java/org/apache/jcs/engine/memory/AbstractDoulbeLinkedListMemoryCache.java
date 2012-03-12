@@ -14,7 +14,6 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
@@ -335,7 +334,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
                 }
             }
         }
-        else if ( key instanceof GroupId )
+        else if ( key instanceof GroupAttrName )
         {
             // remove all keys of the same name hierarchy.
             synchronized ( map )
@@ -345,7 +344,8 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
                     Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
                     K k = entry.getKey();
 
-                    if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
+                    if ( k instanceof GroupAttrName &&
+                        ((GroupAttrName)k).groupId.equals(((GroupAttrName)key).groupId))
                     {
                         list.remove( entry.getValue() );
                         itr.remove();
@@ -691,7 +691,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
      * This returns semi-structured information on the memory cache, such as the size, put count,
      * hit count, and miss count.
      * <p>
-     * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
+     * @see org.apache.jcs.engine.memory.IMemoryCache#getStatistics()
      */
     @Override
     public synchronized IStats getStatistics()

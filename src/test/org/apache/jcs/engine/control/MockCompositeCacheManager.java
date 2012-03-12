@@ -19,6 +19,7 @@ package org.apache.jcs.engine.control;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.jcs.engine.CompositeCacheAttributes;
@@ -26,11 +27,11 @@ import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /** For testing. */
-public class MockCompositeCacheManager
+public class MockCompositeCacheManager<K extends Serializable, V extends Serializable>
     implements ICompositeCacheManager
 {
     /** The cache that was returned. */
-    private CompositeCache cache;
+    private CompositeCache<K, V> cache;
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
@@ -39,12 +40,12 @@ public class MockCompositeCacheManager
      * @param cacheName
      * @return Returns a CompositeCache
      */
-    public CompositeCache getCache( String cacheName )
+    public CompositeCache<K, V> getCache( String cacheName )
     {
         if ( cache == null )
         {
             System.out.println( "Creating mock cache" );
-            CompositeCache newCache = new CompositeCache( cacheName, new CompositeCacheAttributes(),
+            CompositeCache<K, V> newCache = new CompositeCache<K, V>( cacheName, new CompositeCacheAttributes(),
                                                           new ElementAttributes() );
             this.setCache( newCache );
         }
@@ -54,7 +55,7 @@ public class MockCompositeCacheManager
     /**
      * @param cache The cache to set.
      */
-    public void setCache( CompositeCache cache )
+    public void setCache( CompositeCache<K, V> cache )
     {
         this.cache = cache;
     }
@@ -62,7 +63,7 @@ public class MockCompositeCacheManager
     /**
      * @return Returns the cache.
      */
-    public CompositeCache getCache()
+    public CompositeCache<K, V> getCache()
     {
         return cache;
     }

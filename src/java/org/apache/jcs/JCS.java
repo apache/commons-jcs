@@ -27,7 +27,6 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
  * Simple class for using JCS. To use JCS in your application, you can use the static methods of
@@ -53,7 +52,7 @@ public class JCS<K extends Serializable, V extends Serializable>
      * <p>
      * @param cacheControl Cache which the instance will provide access to
      */
-    protected JCS( CompositeCache<GroupAttrName<K>, V> cacheControl )
+    protected JCS( CompositeCache<K, V> cacheControl )
     {
         super( cacheControl );
     }
@@ -68,7 +67,7 @@ public class JCS<K extends Serializable, V extends Serializable>
     public static <K extends Serializable, V extends Serializable> JCS<K, V> getInstance( String region )
         throws CacheException
     {
-        CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region );
         return new JCS<K, V>( cache );
     }
 
@@ -83,7 +82,7 @@ public class JCS<K extends Serializable, V extends Serializable>
     public static <K extends Serializable, V extends Serializable> JCS<K, V> getInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        CompositeCache<GroupAttrName<K>, V> cache = getCacheManager().getCache( region, icca );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region, icca );
         return new JCS<K, V>( cache );
     }
 

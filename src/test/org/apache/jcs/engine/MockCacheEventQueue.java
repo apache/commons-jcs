@@ -1,14 +1,16 @@
 package org.apache.jcs.engine;
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.remote.MockRemoteCacheListener;
 
 /** For testing the factory */
-public class MockCacheEventQueue
-    extends CacheEventQueue
+public class MockCacheEventQueue<K extends Serializable, V extends Serializable>
+    extends CacheEventQueue<K, V>
 {
     /** junk */
     public MockCacheEventQueue()
     {
-        super( new MockRemoteCacheListener(), 1, null, 1, 1 );
+        super( new MockRemoteCacheListener<K, V>(), 1, null, 1, 1 );
     }
 }

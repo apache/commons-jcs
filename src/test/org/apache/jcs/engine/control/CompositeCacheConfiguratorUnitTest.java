@@ -41,10 +41,11 @@ public class CompositeCacheConfiguratorUnitTest
 
         CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( manager );
 
-        CompositeCache cache = new CompositeCache( regionName, new CompositeCacheAttributes(), new ElementAttributes() );
+        CompositeCache<String, String> cache =
+            new CompositeCache<String, String>( regionName, new CompositeCacheAttributes(), new ElementAttributes() );
 
         // DO WORK
-        MockAuxiliaryCache result = (MockAuxiliaryCache) configurator
+        MockAuxiliaryCache<String, String> result = (MockAuxiliaryCache<String, String>) configurator
             .parseAuxiliary( cache, props, auxName, regionName );
 
         // VERIFY
@@ -71,7 +72,7 @@ public class CompositeCacheConfiguratorUnitTest
         manager.configure( props );
 
         // VERIFY
-        CompositeCache cache = manager.getCache( regionName );
+        CompositeCache<String, String> cache = manager.getCache( regionName );
         assertEquals( "Wrong chunkSize", cache.getCacheAttributes().getSpoolChunkSize(), chunkSize );
     }
 }

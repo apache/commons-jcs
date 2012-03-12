@@ -24,14 +24,12 @@ import java.util.Set;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.IElementAttributes;
-import org.apache.jcs.engine.control.group.GroupAttrName;
 
 /**
  * IGroupCacheAccess defines group specific behavior for the client access
  * classes.
  */
 public interface IGroupCacheAccess<K extends Serializable, V extends Serializable>
-    extends ICacheAccess<GroupAttrName<K>, V>
 {
     /**
      * Gets the g attribute of the IGroupCacheAccess object

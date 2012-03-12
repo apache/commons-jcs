@@ -31,16 +31,16 @@ public class IndexedDiskCacheManagerUnitTest
         MockElementSerializer elementSerializer = new MockElementSerializer();
 
         String key = "myKey";
-        ICacheElement<String, String> cacheElement = new CacheElement( "test", key, "MyValue" );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( "test", key, "MyValue" );
 
         IndexedDiskCacheManager manager = IndexedDiskCacheManager.getInstance( defaultCacheAttributes,
                                                                                cacheEventLogger, elementSerializer );
 
         // DO WORK
-        IndexedDiskCache cache = (IndexedDiskCache) manager.getCache( cacheName );
+        IndexedDiskCache<String, String> cache = (IndexedDiskCache) manager.getCache( cacheName );
 
-        cache.update( cacheElement );        
-        SleepUtil.sleepAtLeast( 100 );        
+        cache.update( cacheElement );
+        SleepUtil.sleepAtLeast( 100 );
         cache.get( key );
 
         // VERIFY

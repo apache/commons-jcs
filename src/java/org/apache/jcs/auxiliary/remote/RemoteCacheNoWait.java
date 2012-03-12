@@ -79,7 +79,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     /** The remote cache client */
     private final IRemoteCacheClient<K, V> remoteCacheClient;
 
-    /** Event queue for queueing up calls like put and remove. */
+    /** Event queue for queuing up calls like put and remove. */
     private ICacheEventQueue<K, V> cacheEventQueue;
 
     /** how many times get has been called. */
@@ -392,7 +392,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @param remote
      */
-    public void fixCache( IRemoteCacheService<K, V> remote )
+    public void fixCache( IRemoteCacheService<?, ?> remote )
     {
         remoteCacheClient.fixCache( remote );
         resetEventQ();

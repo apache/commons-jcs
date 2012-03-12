@@ -1,10 +1,10 @@
 package org.apache.jcs.engine;
 
+import junit.framework.TestCase;
+
 import org.apache.jcs.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
-
-import junit.framework.TestCase;
 
 /** Unit tests for the CacheEventQueueFactory */
 public class CacheEventQueueFactoryUnitTest
@@ -15,50 +15,50 @@ public class CacheEventQueueFactoryUnitTest
     {
         // SETUP
         String eventQueueType = ICacheEventQueue.SINGLE_QUEUE_TYPE;
-        ICacheListener listener = new MockRemoteCacheListener();
+        ICacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
         long listenerId = 1;
-        
-        CacheEventQueueFactory factory = new CacheEventQueueFactory();
-        
+
+        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<String, String>();
+
         // DO WORK
-        ICacheEventQueue result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
-        
+        ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+
         // VERIFY
         assertNotNull( "Should have a result", result );
         assertTrue( "Wrong type", result instanceof CacheEventQueue );
     }
-    
+
     /** Test create */
     public void testCreateCacheEventQueue_Pooled()
     {
         // SETUP
         String eventQueueType = ICacheEventQueue.POOLED_QUEUE_TYPE;
-        ICacheListener listener = new MockRemoteCacheListener();
+        ICacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
         long listenerId = 1;
-        
-        CacheEventQueueFactory factory = new CacheEventQueueFactory();
-        
+
+        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<String, String>();
+
         // DO WORK
-        ICacheEventQueue result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
-        
+        ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+
         // VERIFY
         assertNotNull( "Should have a result", result );
         assertTrue( "Wrong type", result instanceof PooledCacheEventQueue );
     }
-    
+
     /** Test create */
     public void testCreateCacheEventQueue_Custom()
     {
         // SETUP
         String eventQueueType = MockCacheEventQueue.class.getName();
-        ICacheListener listener = new MockRemoteCacheListener();
+        ICacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
         long listenerId = 1;
-        
-        CacheEventQueueFactory factory = new CacheEventQueueFactory();
-        
+
+        CacheEventQueueFactory<String, String> factory = new CacheEventQueueFactory<String, String>();
+
         // DO WORK
-        ICacheEventQueue result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
-        
+        ICacheEventQueue<String, String> result = factory.createCacheEventQueue( listener, listenerId, "cacheName", "threadPoolName", eventQueueType );
+
         // VERIFY
         assertNotNull( "Should have a result", result );
         assertTrue( "Wrong type: " + result, result instanceof MockCacheEventQueue );

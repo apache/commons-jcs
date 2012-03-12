@@ -48,7 +48,7 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.match.KeyMatcherPatternImpl;
 import org.apache.jcs.engine.match.behavior.IKeyMatcher;
-import org.apache.jcs.engine.memory.MemoryCache;
+import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.jcs.engine.memory.lru.LRUMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.CacheStats;
@@ -74,7 +74,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     private final static Log log = LogFactory.getLog( CompositeCache.class );
 
     /**
-     * EventQueue for handling element events. Lazy initialized. One for each region. To be more eficient, the manager
+     * EventQueue for handling element events. Lazy initialized. One for each region. To be more efficient, the manager
      * should pass a shared queue in.
      */
     public IElementEventQueue elementEventQ;
@@ -119,7 +119,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * The cache hub can only have one memory cache. This could be made more flexible in the future,
      * but they are tied closely together. More than one doesn't make much sense.
      */
-    private MemoryCache<K, V> memCache;
+    private IMemoryCache<K, V> memCache;
 
     /** Key matcher used by the getMatching API */
     protected IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<K>();
@@ -1607,7 +1607,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             try
             {
                 Class<?> c = Class.forName( cattr.getMemoryCacheName() );
-                memCache = (MemoryCache<K, V>) c.newInstance();
+                memCache = (IMemoryCache<K, V>) c.newInstance();
                 memCache.initialize( this );
             }
             catch ( Exception e )
@@ -1629,7 +1629,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return the MemoryCache implementation
      */
-    public MemoryCache<K, V> getMemoryCache()
+    public IMemoryCache<K, V> getMemoryCache()
     {
         return memCache;
     }

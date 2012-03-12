@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
@@ -38,7 +39,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * @author Aaron Smuts
  */
 public class MockMemoryCache<K extends Serializable, V extends Serializable>
-    implements MemoryCache<K, V>
+    implements IMemoryCache<K, V>
 {
     /** Config */
     private ICompositeCacheAttributes cacheAttr;
