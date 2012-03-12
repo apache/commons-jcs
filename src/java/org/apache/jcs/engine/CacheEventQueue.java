@@ -325,7 +325,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
 
             Node node = head.next;
 
-            AbstractCacheEvent value = (org.apache.jcs.engine.AbstractCacheEventQueue<K, V>.AbstractCacheEvent) node.event;
+            AbstractCacheEvent value = (AbstractCacheEvent) node.event;
 
             if ( log.isDebugEnabled() )
             {
