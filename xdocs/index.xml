@@ -63,7 +63,7 @@
 		<section name="JCS is a Composite Cache">
 			<p>
 				The foundation of JCS is the Composite Cache, which is the
-				<a href="Plugins.html">pluggable</a>
+				<a href="JCSPlugins.html">pluggable</a>
 				controller for a cache region. Four types of caches can be plugged
 				into the Composite Cache for any given region: (1) Memory, (2) Disk,
 				(3) Lateral, and (4) Remote. The Composite Cache orchestrates access

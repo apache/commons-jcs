@@ -40,7 +40,7 @@
         <menu name="Getting Started">
             <item name="Overview" href="/getting_started/intro.html" />
             <item name="Basic JCS Config" href="/BasicJCSConfiguration.html" />
-            <item name="Plugin Overview" href="/Plugins.html" />
+            <item name="Plugin Overview" href="/JCSPlugins.html" />
             <item name="Basic Web Example" href="/UsingJCSBasicWeb.html" />
         </menu>
 
@@ -52,7 +52,7 @@
                 <item name="Region Properties" href="/RegionProperties.html" />
                 <item name="Basic Web Example" href="/UsingJCSBasicWeb.html" />
             </item>
-            <item name="Auxiliary" href="/Plugins.html" collapse="true">
+            <item name="Auxiliary" href="/JCSPlugins.html" collapse="true">
                 <item name="Cache Event Logging" href="/CacheEventLogging.html" />
                 <item name="Indexed Disk Cache" href="/IndexedDiskAuxCache.html" />
                 <item name="Indexed Disk Properties" href="/IndexedDiskCacheProperties.html" />
