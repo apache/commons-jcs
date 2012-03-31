@@ -166,9 +166,18 @@ public class UDPDiscoveryReceiver
             final ObjectInputStream objectStream = new ObjectInputStream( byteStream );
             obj = objectStream.readObject();
 
-            if ( log.isDebugEnabled() )
+            if ( (obj != null) && (obj instanceof UDPDiscoveryMessage) )
             {
-                log.debug( "Read object from address [" + packet.getSocketAddress() + "], object=[" + obj + "]" );
+            	// Ensure that the address we're supposed to send to is, indeed, the address
+            	// of the machine on the other end of this connection.  This guards against
+            	// instances where we don't exactly get the right local host address
+            	UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
+            	msg.setHost(packet.getAddress().getHostAddress());
+
+	            if ( log.isDebugEnabled() )
+	            {
+	                log.debug( "Read object from address [" + packet.getSocketAddress() + "], object=[" + obj + "]" );
+	            }
             }
         }
         catch ( Exception e )
