@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.disk.block;
  */
 
 import java.io.File;
+import java.util.Random;
 
 import junit.framework.TestCase;
 
@@ -271,14 +272,22 @@ public class BlockDiskUnitTest
         int bytes = getBytesForBlocksOfByteArrays( disk.getBlockSizeBytes(), numBlocksPerElement );
 
         int numElements = 100;
+        Random r = new Random(System.currentTimeMillis());
+        final byte[] src = new byte[bytes];
         for ( int i = 0; i < numElements; i++ )
         {
-            int[] blocks = disk.write( new byte[bytes] );
+            r.nextBytes(src);  // Ensure we don't just write zeros out
+            int[] blocks = disk.write( src );
             byte[] result = (byte[]) disk.read( blocks );
 
             // VERIFY
-            assertEquals( "Wrong item retured.", new byte[bytes].length, result.length );
+            assertEquals( "Wrong item length retured.", src.length, result.length );
             assertEquals( "Wrong number of blocks returned.", numBlocksPerElement, blocks.length );
+
+            // We check the array contents, too, to ensure we read back what we wrote out
+            for (int j = 0 ; j < src.length ; j++) {
+                assertEquals( "Mismatch at offset " + j + " in attempt # " + (i + 1), src[j], result[j] );
+            }
         }
         System.out.println( "testWriteAndReadMultipleMultiBlockElement_setSize " + disk );
         assertEquals( "Wrong number of elements.", numBlocksPerElement * numElements, disk.getNumberOfBlocks() );
