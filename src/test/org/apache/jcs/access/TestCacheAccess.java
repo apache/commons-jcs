@@ -46,7 +46,7 @@ public class TestCacheAccess
     private final static Log log = LogFactory.getLog( TestCacheAccess.class );
 
     /** cache instance to use in testing */
-    private JCS cache_control = null;
+    private JCS<String, String> cache_control = null;
 
     /** do we use system.out.println to print out debug data? */
     private static boolean isSysOut = false;

@@ -80,7 +80,7 @@ public class LateralTCPDiscoveryListener
      * @param facade - facade (for region) => multiple lateral clients.
      * @return true if the facade was not already registered.
      */
-    public synchronized boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade facade )
+    public synchronized boolean addNoWaitFacade( String cacheName, LateralCacheNoWaitFacade<? extends Serializable, ? extends Serializable> facade )
     {
         boolean isNew = !containsNoWaitFacade( cacheName );
 
@@ -109,9 +109,9 @@ public class LateralTCPDiscoveryListener
      * @param noWait - is this no wait in the facade
      * @return do we contain the no wait. true if so
      */
-    public boolean containsNoWait( String cacheName, LateralCacheNoWait noWait )
+    public <K extends Serializable, V extends Serializable> boolean containsNoWait( String cacheName, LateralCacheNoWait<K, V> noWait )
     {
-        LateralCacheNoWaitFacade facade = facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         if ( facade == null )
         {
             return false;
@@ -132,9 +132,9 @@ public class LateralTCPDiscoveryListener
      * @return true if we found the no wait and added it. False if the no wait was not present or it
      *         we already had it.
      */
-    protected boolean addNoWait( LateralCacheNoWait noWait )
+    protected <K extends Serializable, V extends Serializable> boolean addNoWait( LateralCacheNoWait<K, V> noWait )
     {
-        LateralCacheNoWaitFacade facade = facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {
             log.debug( "addNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
@@ -171,9 +171,9 @@ public class LateralTCPDiscoveryListener
      * @param noWait
      * @return true if we found the no wait and removed it. False if the no wait was not present.
      */
-    protected boolean removeNoWait( LateralCacheNoWait noWait )
+    protected <K extends Serializable, V extends Serializable> boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
     {
-        LateralCacheNoWaitFacade facade = facades.get( noWait.getCacheName() );
+        LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {
             log.debug( "removeNoWait > Got facade for " + noWait.getCacheName() + " = " + facade );
@@ -234,7 +234,7 @@ public class LateralTCPDiscoveryListener
             {
                 try
                 {
-                    ICache ic = lcm.getCache( cacheName );
+                    ICache<? extends Serializable, ? extends Serializable> ic = lcm.getCache( cacheName );
 
                     if ( log.isDebugEnabled() )
                     {
@@ -244,7 +244,7 @@ public class LateralTCPDiscoveryListener
                     // add this to the nowaits for this cachename
                     if ( ic != null )
                     {
-                        addNoWait( (LateralCacheNoWait) ic );
+                        addNoWait( (LateralCacheNoWait<? extends Serializable, ? extends Serializable>) ic );
                         if ( log.isDebugEnabled() )
                         {
                             log.debug( "Called addNoWait for cacheName [" + cacheName + "]" );
@@ -286,7 +286,7 @@ public class LateralTCPDiscoveryListener
             {
                 try
                 {
-                    ICache ic = lcm.getCache( cacheName );
+                    ICache<? extends Serializable, ? extends Serializable> ic = lcm.getCache( cacheName );
 
                     if ( log.isDebugEnabled() )
                     {
@@ -296,7 +296,7 @@ public class LateralTCPDiscoveryListener
                     // remove this to the nowaits for this cachename
                     if ( ic != null )
                     {
-                        removeNoWait( (LateralCacheNoWait) ic );
+                        removeNoWait( (LateralCacheNoWait<? extends Serializable, ? extends Serializable>) ic );
                         if ( log.isDebugEnabled() )
                         {
                             log.debug( "Called removeNoWait for cacheName [" + cacheName + "]" );

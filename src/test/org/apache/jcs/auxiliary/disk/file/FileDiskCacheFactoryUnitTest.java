@@ -29,7 +29,7 @@ public class FileDiskCacheFactoryUnitTest
         FileDiskCacheFactory factory = new FileDiskCacheFactory();
 
         // DO WORK
-        FileDiskCache<String, String> result = (FileDiskCache) factory.createCache( cattr, cacheMgr, cacheEventLogger,
+        FileDiskCache<String, String> result = factory.createCache( cattr, cacheMgr, cacheEventLogger,
                                                                     elementSerializer );
 
         // VERIFY

@@ -117,7 +117,7 @@ public class TestTCPLateralCache
     public void runTestForRegion( String region )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
 

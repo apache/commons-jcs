@@ -33,13 +33,13 @@ public class CacheEventLoggerDebugLoggerUnitTest
         CacheEventLoggerDebugLogger logger = new CacheEventLoggerDebugLogger();
         logger.setLogCategoryName( logCategoryName );
 
-        ICacheEvent event = logger.createICacheEvent( source, region, eventName, optionalDetails, key );
+        ICacheEvent<String> event = logger.createICacheEvent( source, region, eventName, optionalDetails, key );
 
         // DO WORK
         logger.logICacheEvent( event );
-        
+
         // VERIFY
-        String result = stringWriter.toString();     
+        String result = stringWriter.toString();
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the region should have been logged:" + result, result.indexOf( region ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
@@ -65,14 +65,14 @@ public class CacheEventLoggerDebugLoggerUnitTest
 
         // DO WORK
         logger.logApplicationEvent( source, eventName, optionalDetails );
-        
+
         // VERIFY
-        String result = stringWriter.toString();  
+        String result = stringWriter.toString();
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
         assertTrue( "An event with the optionalDetails should have been logged:" + result, result.indexOf( optionalDetails ) != -1 );
     }
-    
+
     /** verify that we can log */
     public void testLogError_normal()
     {
@@ -91,14 +91,14 @@ public class CacheEventLoggerDebugLoggerUnitTest
 
         // DO WORK
         logger.logError( source, eventName, errorMessage );
-        
+
         // VERIFY
-        String result = stringWriter.toString();  
+        String result = stringWriter.toString();
         assertTrue( "An event with the source should have been logged:" + result, result.indexOf( source ) != -1 );
         assertTrue( "An event with the event name should have been logged:" + result, result.indexOf( eventName ) != -1 );
         assertTrue( "An event with the errorMessage should have been logged:" + result, result.indexOf( errorMessage ) != -1 );
     }
-    
+
     /**
      * Configures a logger for the given name. This allows us to check the log output.
      * <p>

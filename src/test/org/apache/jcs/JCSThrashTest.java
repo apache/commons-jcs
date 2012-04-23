@@ -19,6 +19,7 @@ package org.apache.jcs;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class JCSThrashTest
     /**
      * the cache instance
      */
-    protected JCS jcs;
+    protected JCS<String, Serializable> jcs;
 
     /**
      * @param args

@@ -71,7 +71,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testTwoDeepRemoval" );
 
         int count = 500;
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -109,7 +109,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testSingleDepthRemoval" );
 
         int count = 500;
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -147,7 +147,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testRemoveAll" );
 
         int count = 500;
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -190,7 +190,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testRemoveAll" );
 
         int count = 500;
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.clear();
 

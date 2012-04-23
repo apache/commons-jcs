@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
@@ -35,7 +34,7 @@ public class FileDiskCacheFactory
      * @param elementSerializer the serializer
      * @return AuxiliaryCache
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+    public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {

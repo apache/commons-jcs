@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,14 +49,14 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * will try to connect to a failover until the primary is restored.
  *
  */
-public class RemoteCacheFailoverRunner
+public class RemoteCacheFailoverRunner<K extends Serializable, V extends Serializable>
     implements Runnable
 {
     /** The logger */
     private final static Log log = LogFactory.getLog( RemoteCacheFailoverRunner.class );
 
     /** The facade returned to the composite cache. */
-    private final RemoteCacheNoWaitFacade facade;
+    private final RemoteCacheNoWaitFacade<K, V> facade;
 
     /** How long to wait between reconnect attempts. */
     private static long idlePeriod = 20 * 1000;
@@ -82,7 +83,7 @@ public class RemoteCacheFailoverRunner
      * @param cacheEventLogger
      * @param elementSerializer
      */
-    public RemoteCacheFailoverRunner( RemoteCacheNoWaitFacade facade, ICompositeCacheManager cacheMgr,
+    public RemoteCacheFailoverRunner( RemoteCacheNoWaitFacade<K, V> facade, ICompositeCacheManager cacheMgr,
                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         this.facade = facade;
@@ -211,7 +212,7 @@ public class RemoteCacheFailoverRunner
 
                         // add a listener if there are none, need to tell rca
                         // what number it is at
-                        ICache ic = rcm.getCache( rca.getCacheName() );
+                        ICache<K, V> ic = rcm.getCache( rca.getCacheName() );
                         if ( ic != null )
                         {
                             if ( ic.getStatus() == CacheConstants.STATUS_ALIVE )
@@ -219,7 +220,7 @@ public class RemoteCacheFailoverRunner
                                 // may need to do this more gracefully
                                 log.debug( "reseting no wait" );
                                 facade.noWaits = new RemoteCacheNoWait[1];
-                                facade.noWaits[0] = (RemoteCacheNoWait) ic;
+                                facade.noWaits[0] = (RemoteCacheNoWait<K, V>) ic;
                                 facade.remoteCacheAttributes.setFailoverIndex( i );
 
                                 synchronized ( this )
@@ -333,7 +334,7 @@ public class RemoteCacheFailoverRunner
      * The primary server is the first server defines in the FailoverServers
      * list.
      *
-     * @return boolean value indicating whether the resoration was successful
+     * @return boolean value indicating whether the restoration was successful
      */
     private boolean restorePrimary()
     {
@@ -355,7 +356,7 @@ public class RemoteCacheFailoverRunner
 
             // add a listener if there are none, need to tell rca what number it
             // is at
-            ICache ic = rcm.getCache( rca.getCacheName() );
+            ICache<K, V> ic = rcm.getCache( rca.getCacheName() );
             // by default the listener id should be 0, else it will be the
             // listener
             // Originally associated with the remote cache. either way is fine.
@@ -437,11 +438,11 @@ public class RemoteCacheFailoverRunner
 
                     // Restore primary
                     // may need to do this more gracefully, letting the failover finish in the background
-                    RemoteCacheNoWait failoverNoWait = facade.noWaits[0];
+                    RemoteCacheNoWait<K, V> failoverNoWait = facade.noWaits[0];
 
                     // swap in a new one
                     facade.noWaits = new RemoteCacheNoWait[1];
-                    facade.noWaits[0] = (RemoteCacheNoWait) ic;
+                    facade.noWaits[0] = (RemoteCacheNoWait<K, V>) ic;
                     facade.remoteCacheAttributes.setFailoverIndex( 0 );
 
                     if ( log.isInfoEnabled() )

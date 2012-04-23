@@ -45,7 +45,7 @@ public class RemoteHttpCacheManualTester
     public void testSimpleLoad()
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.put( "TestKey", "TestValue" );
 

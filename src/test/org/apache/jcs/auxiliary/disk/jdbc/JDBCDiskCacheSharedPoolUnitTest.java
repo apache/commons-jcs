@@ -84,7 +84,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
     public void runTestForRegion( String region, int items )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
@@ -105,22 +105,22 @@ public class JDBCDiskCacheSharedPoolUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map elements = jcs.getCacheElements( keys );
+        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement<String, String> element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }

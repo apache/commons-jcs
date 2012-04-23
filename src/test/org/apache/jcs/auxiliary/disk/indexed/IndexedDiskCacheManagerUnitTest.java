@@ -37,7 +37,7 @@ public class IndexedDiskCacheManagerUnitTest
                                                                                cacheEventLogger, elementSerializer );
 
         // DO WORK
-        IndexedDiskCache<String, String> cache = (IndexedDiskCache) manager.getCache( cacheName );
+        IndexedDiskCache<String, String> cache = manager.getCache( cacheName );
 
         cache.update( cacheElement );
         SleepUtil.sleepAtLeast( 100 );

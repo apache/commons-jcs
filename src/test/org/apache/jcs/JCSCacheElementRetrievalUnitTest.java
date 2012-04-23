@@ -38,7 +38,7 @@ public class JCSCacheElementRetrievalUnitTest
     public void testSimpleElementRetrieval()
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.put( "test_key", "test_data" );
 

@@ -46,7 +46,7 @@ public class AdminBeanUnitTest
         throws Exception
     {
         String regionName = "myRegion";
-        JCS cache = JCS.getInstance( regionName );
+        JCS<String, String> cache = JCS.getInstance( regionName );
 
         cache.put( "key", "value" );
 
@@ -84,7 +84,7 @@ public class AdminBeanUnitTest
         throws Exception
     {
         String regionName = "myRegion";
-        JCS cache = JCS.getInstance( regionName );
+        JCS<String, String> cache = JCS.getInstance( regionName );
 
         // clear the region
         cache.clear();
@@ -114,7 +114,7 @@ public class AdminBeanUnitTest
         JCSAdminBean admin = new JCSAdminBean();
 
         String regionName = "myRegion";
-        JCS cache = JCS.getInstance( regionName );
+        JCS<String, String> cache = JCS.getInstance( regionName );
 
         // clear the region
         cache.clear();
@@ -148,7 +148,7 @@ public class AdminBeanUnitTest
         JCSAdminBean admin = new JCSAdminBean();
 
         String regionName = "myRegion";
-        JCS cache = JCS.getInstance( regionName );
+        JCS<String, String> cache = JCS.getInstance( regionName );
 
         String key = "myKey";
         cache.put( key, "value" );

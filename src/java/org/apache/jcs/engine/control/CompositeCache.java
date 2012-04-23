@@ -1315,7 +1315,11 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         alive = false;
 
         // Now, shut down the event queue
-        elementEventQ.destroy();
+        if (elementEventQ != null)
+        {
+            elementEventQ.destroy();
+            elementEventQ = null;
+        }
 
         // Dispose of each auxiliary cache, Remote auxiliaries will be
         // skipped if 'fromRemote' is true.

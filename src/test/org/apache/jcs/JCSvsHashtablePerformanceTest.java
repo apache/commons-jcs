@@ -114,7 +114,7 @@ public class JCSvsHashtablePerformanceTest
         {
 
             JCS.setConfigFilename( "/TestJCSvHashtablePerf.ccf" );
-            JCS cache = JCS.getInstance( "testCache1" );
+            JCS<String, String> cache = JCS.getInstance( "testCache1" );
 
             for ( int j = 0; j < loops; j++ )
             {
@@ -144,7 +144,7 @@ public class JCSvsHashtablePerformanceTest
 
                 // /////////////////////////////////////////////////////////////
                 name = "Hashtable";
-                Hashtable cache2 = new Hashtable();
+                Hashtable<String, String> cache2 = new Hashtable<String, String>();
                 start = System.currentTimeMillis();
                 for ( int i = 0; i < tries; i++ )
                 {

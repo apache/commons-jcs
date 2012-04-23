@@ -50,7 +50,7 @@ public class FileDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> getCache( String cacheName )
     {
         FileDiskCacheAttributes cacheAttributes = (FileDiskCacheAttributes) defaultCacheAttributes.copy();
 
@@ -66,9 +66,9 @@ public class FileDiskCacheManager
      * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( FileDiskCacheAttributes cacheAttributes )
+    public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> getCache( FileDiskCacheAttributes cacheAttributes )
     {
-        AuxiliaryCache<K, V> cache = null;
+        FileDiskCache<K, V> cache = null;
 
         String cacheName = cacheAttributes.getCacheName();
 
@@ -79,7 +79,7 @@ public class FileDiskCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            cache = (AuxiliaryCache<K, V>) caches.get( cacheName );
+            cache = (FileDiskCache<K, V>) caches.get( cacheName );
 
             // If it was not found, create a new one using the supplied
             // attributes

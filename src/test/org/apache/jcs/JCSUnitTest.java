@@ -67,7 +67,7 @@ public class JCSUnitTest
     public void testJCS()
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );
 
         LinkedList<HashMap<String, String>> list = buildList();
 
