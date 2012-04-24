@@ -663,11 +663,11 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
         try
         {
-            K[] keyArray = null;
+            Set<K> keyArray = null;
             storageLock.readLock().lock();
             try
             {
-                keyArray = (K[]) keyHash.keySet().toArray();
+                keyArray = new HashSet<K>(keyHash.keySet());
             }
             finally
             {

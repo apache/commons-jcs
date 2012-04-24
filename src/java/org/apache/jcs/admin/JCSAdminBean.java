@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheServer;
@@ -74,12 +75,12 @@ public class JCSAdminBean
      * @return List of CacheElementInfo objects
      * @throws Exception
      */
-    public <K extends Serializable, V extends Serializable> LinkedList<CacheElementInfo> buildElementInfo( String cacheName )
+    public LinkedList<CacheElementInfo> buildElementInfo( String cacheName )
         throws Exception
     {
-        CompositeCache<K, V> cache = cacheHub.getCache( cacheName );
+        CompositeCache<Serializable, Serializable> cache = cacheHub.getCache( cacheName );
 
-        K[] keys = cache.getMemoryCache().getKeyArray();
+        Serializable[] keys = cache.getMemoryCache().getKeySet().toArray(new Serializable[0]);
 
         // Attempt to sort keys according to their natural ordering. If that
         // fails, get the key array again and continue unsorted.
@@ -89,12 +90,12 @@ public class JCSAdminBean
         }
         catch ( Exception e )
         {
-            keys = cache.getMemoryCache().getKeyArray();
+            keys = cache.getMemoryCache().getKeySet().toArray(new Serializable[0]);
         }
 
         LinkedList<CacheElementInfo> records = new LinkedList<CacheElementInfo>();
 
-        ICacheElement<K, V> element;
+        ICacheElement<Serializable, Serializable> element;
         IElementAttributes attributes;
         CacheElementInfo elementInfo;
 
@@ -102,15 +103,15 @@ public class JCSAdminBean
 
         long now = System.currentTimeMillis();
 
-        for ( int i = 0; i < keys.length; i++ )
+        for (Serializable key : keys)
         {
-            element = cache.getMemoryCache().getQuiet( keys[i] );
+            element = cache.getMemoryCache().getQuiet( key );
 
             attributes = element.getElementAttributes();
 
             elementInfo = new CacheElementInfo();
 
-            elementInfo.key = String.valueOf( keys[i] );
+            elementInfo.key = String.valueOf( key );
             elementInfo.eternal = attributes.getIsEternal();
             elementInfo.maxLifeSeconds = attributes.getMaxLifeSeconds();
 
@@ -345,10 +346,9 @@ public class JCSAdminBean
                 // actual key object as stored in the cache (i.e. a Serializable object). To find the key in this form,
                 // we iterate through all keys stored in the memory cache until we find one whose toString matches
                 // the string supplied...
-                Object[] allKeysInCache = cache.getMemoryCache().getKeyArray();
-                for (int i = 0; i < allKeysInCache.length; i++)
+                Set<? extends Serializable> allKeysInCache = cache.getMemoryCache().getKeySet();
+                for (Serializable keyInCache : allKeysInCache)
                 {
-                    Object keyInCache = allKeysInCache[i];
                     if (keyInCache.toString().equals(key))
                     {
                         if (keyToRemove == null)

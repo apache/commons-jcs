@@ -93,9 +93,9 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
 
     /**
      * @return map.keySet().toArray( */
-    public K[] getKeyArray()
+    public Set<K> getKeySet()
     {
-        return (K[]) map.keySet().toArray();
+        return map.keySet();
     }
 
     /**

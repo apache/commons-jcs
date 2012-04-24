@@ -22,6 +22,7 @@ package org.apache.jcs.engine.memory.shrinking;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -121,22 +122,20 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
 
         try
         {
-            K[] keys = cache.getKeyArray();
-            int size = keys.length;
+            Set<K> keys = cache.getKeySet();
+            int size = keys.size();
             if ( log.isDebugEnabled() )
             {
                 log.debug( "Keys size: " + size );
             }
 
-            K key;
             ICacheElement<K, V> cacheElement;
             IElementAttributes attributes;
 
             int spoolCount = 0;
 
-            for ( int i = 0; i < size; i++ )
+            for (K key : keys)
             {
-                key = keys[i];
                 cacheElement = cache.getQuiet( key );
 
                 if ( cacheElement == null )

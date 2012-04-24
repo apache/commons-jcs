@@ -73,14 +73,14 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
     Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator();
 
     /**
-     * Get an Array of the keys for all elements in the memory cache.
+     * Get a set of the keys for all elements in the memory cache.
      * <p>
-     * @return Object[]
+     * @return a set of the key type
      * @TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.
      */
-    K[] getKeyArray();
+    Set<K> getKeySet();
 
     /**
      * Removes an item from the cache

@@ -265,9 +265,9 @@ public class MRUMemoryCacheUnitTest
             mru.update( ice );
         }
 
-        Object[] keys = mru.getKeyArray();
+        Set<String> keys = mru.getKeySet();
 
-        assertEquals( "Wrong number of keys.", items, keys.length );
+        assertEquals( "Wrong number of keys.", items, keys.size() );
     }
 
     /**

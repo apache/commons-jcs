@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -323,12 +324,12 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
         throws IOException
     {
         // Get the keys from purgatory
-        K[] keyArray = null;
+        Set<K> keyArray = null;
 
         // this avoids locking purgatory, but it uses more memory
         synchronized ( purgatory )
         {
-            keyArray = (K[]) purgatory.keySet().toArray();
+            keyArray = new HashSet<K>(purgatory.keySet());
         }
 
         Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );

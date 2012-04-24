@@ -246,11 +246,11 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     {
         Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
-        K[] keyArray = null;
+        Set<K> keyArray = null;
         storageLock.readLock().lock();
         try
         {
-            keyArray = (K[]) this.keyStore.keySet().toArray();
+            keyArray = new HashSet<K>(keyStore.keySet());
         }
         finally
         {

@@ -863,7 +863,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     {
         // find matches in key array
         // this avoids locking the memory cache, but it uses more memory
-        K[] keyArray = memCache.getKeyArray();
+        Set<K> keyArray = memCache.getKeySet();
 
         Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
@@ -874,7 +874,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     /**
      * If local invocation look in aux caches, even if not local look in disk auxiliaries.
      * <p>
-     * Moves in reverse order of definition. This will allow you to override those that are fromthe
+     * Moves in reverse order of definition. This will allow you to override those that are from the
      * remote with those on disk.
      * <p>
      * @param pattern
@@ -1317,8 +1317,8 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         // Now, shut down the event queue
         if (elementEventQ != null)
         {
-            elementEventQ.destroy();
-            elementEventQ = null;
+        	elementEventQ.destroy();
+        	elementEventQ = null;
         }
 
         // Dispose of each auxiliary cache, Remote auxiliaries will be

@@ -13,5 +13,5 @@ public interface IKeyMatcher<K extends Serializable> extends Serializable
      * @param keyArray
      * @return Set of the matching keys
      */
-    Set<K> getMatchingKeysFromArray( String pattern, K[] keyArray );
+    Set<K> getMatchingKeysFromArray( String pattern, Set<K> keyArray );
 }

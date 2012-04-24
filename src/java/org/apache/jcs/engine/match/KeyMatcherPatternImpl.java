@@ -22,7 +22,7 @@ public class KeyMatcherPatternImpl<K extends Serializable>
      * @param keyArray
      * @return Set of the matching keys
      */
-    public Set<K> getMatchingKeysFromArray( String pattern, K[] keyArray )
+    public Set<K> getMatchingKeysFromArray( String pattern, Set<K> keyArray )
     {
         Pattern compiledPattern = Pattern.compile( pattern );
 

@@ -210,11 +210,11 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
         throws IOException;
 
     /**
-     * Get an Array of the keys for all elements in the memory cache
+     * Get a set of the keys for all elements in the memory cache
      * <p>
-     * @return An Object[]
+     * @return A set of the key type
      */
-    public abstract K[] getKeyArray();
+    public abstract Set<K> getKeySet();
 
     /**
      * Removes all cached items from the cache.
