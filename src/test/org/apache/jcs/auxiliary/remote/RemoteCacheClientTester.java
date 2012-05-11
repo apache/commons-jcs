@@ -128,7 +128,6 @@ public class RemoteCacheClientTester
             // incoming calls,
             // using an anonymous port.
             UnicastRemoteObject.exportObject( this );
-            ee = null;
         }
         catch ( ExportException e )
         {

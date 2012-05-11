@@ -23,7 +23,6 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -110,7 +109,7 @@ public class JDBCDiskCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> getCache( String cacheName )
     {
         JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
@@ -124,9 +123,9 @@ public class JDBCDiskCacheManager
      * @param tableState
      * @return AuxiliaryCache
      */
-    protected <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
-        AuxiliaryCache<K, V> raf;
+        JDBCDiskCache<K, V> raf;
         raf = new JDBCDiskCache<K, V>( cattr, tableState, getCompositeCacheManager() );
         return raf;
     }

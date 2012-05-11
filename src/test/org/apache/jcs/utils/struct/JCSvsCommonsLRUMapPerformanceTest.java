@@ -113,7 +113,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
         try
         {
 
-            Map cache = new LRUMap( tries );
+            Map<String, String> cache = new LRUMap<String, String>( tries );
 
             for ( int j = 0; j < loops; j++ )
             {
@@ -144,7 +144,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
                 // /////////////////////////////////////////////////////////////
                 cache2Name = "Commons  ";
                 // or LRUMapJCS
-                Map cache2 = new org.apache.commons.collections.map.LRUMap( tries );
+                Map<String, String> cache2 = new org.apache.commons.collections.map.LRUMap( tries );
                 // cache2Name = "Hashtable";
                 // Hashtable cache2 = new Hashtable();
                 start = System.currentTimeMillis();

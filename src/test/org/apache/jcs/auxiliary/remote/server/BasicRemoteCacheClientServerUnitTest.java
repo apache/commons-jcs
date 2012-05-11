@@ -72,7 +72,7 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> compositeCacheManager = new MockCompositeCacheManager<String, String>();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
@@ -109,7 +109,7 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> compositeCacheManager = new MockCompositeCacheManager<String, String>();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
@@ -155,7 +155,7 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> compositeCacheManager = new MockCompositeCacheManager<String, String>();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );
@@ -197,7 +197,7 @@ public class BasicRemoteCacheClientServerUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> compositeCacheManager = new MockCompositeCacheManager<String, String>();
 
         RemoteCacheAttributes attributes = new RemoteCacheAttributes();
         attributes.setRemoteHost( "localhost" );

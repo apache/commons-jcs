@@ -42,7 +42,7 @@ public class JCSWorkerUnitTest
     public void testSimpleGet()
         throws Exception
     {
-        JCSWorker cachingWorker = new JCSWorker( "example region" );
+        JCSWorker<String, Long> cachingWorker = new JCSWorker<String, Long>( "example region" );
 
         // This is the helper.
         JCSWorkerHelper helper = new AbstractJCSWorkerHelper()
@@ -58,11 +58,11 @@ public class JCSWorkerUnitTest
 
         String key = "abc";
 
-        Long result = (Long) cachingWorker.getResult( key, helper );
+        Long result = cachingWorker.getResult( key, helper );
         assertEquals( "Called the wrong number of times", Long.valueOf( 1 ), result );
 
-        // should get it fromthe cache.
-        Long result2 = (Long) cachingWorker.getResult( key, helper );
+        // should get it from the cache.
+        Long result2 = cachingWorker.getResult( key, helper );
         assertEquals( "Called the wrong number of times", Long.valueOf( 1 ), result2 );
 
     }

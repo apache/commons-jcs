@@ -49,10 +49,9 @@ public class GroupAttrName<T extends Serializable>
         this.groupId = groupId;
         this.attrName = attrName;
 
-        if ( groupId == null || attrName == null )
+        if ( groupId == null )
         {
-            throw new IllegalArgumentException( "groupId " + groupId + " and attrName " + attrName
-                + ", must not be null." );
+            throw new IllegalArgumentException( "groupId must not be null." );
         }
     }
 
@@ -68,7 +67,22 @@ public class GroupAttrName<T extends Serializable>
             return false;
         }
         GroupAttrName<?> to = (GroupAttrName<?>) obj;
-        return groupId.equals( to.groupId ) && attrName.equals( to.attrName );
+
+        if (groupId.equals( to.groupId ))
+        {
+            if (attrName == null && to.attrName == null)
+            {
+                return true;
+            }
+            else if (attrName == null || to.attrName == null)
+            {
+                return false;
+            }
+
+            return  attrName.equals( to.attrName );
+        }
+
+        return false;
     }
 
     /**
@@ -76,6 +90,11 @@ public class GroupAttrName<T extends Serializable>
      */
     public int hashCode()
     {
+        if (attrName == null)
+        {
+            return groupId.hashCode();
+        }
+
         return groupId.hashCode() ^ attrName.hashCode();
     }
 

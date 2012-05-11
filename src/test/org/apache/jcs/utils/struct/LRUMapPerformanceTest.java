@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.apache.jcs.JCSvsHashtablePerformanceTest;
-import org.apache.jcs.utils.struct.LRUMap;
 
 /**
  * This ensures that the jcs version of the LRU map is as fast as the commons
@@ -108,7 +107,7 @@ public class LRUMapPerformanceTest
 
         try
         {
-            Map cache = new LRUMap( tries );
+            Map<String, String> cache = new LRUMap<String, String>( tries );
 
             for ( int j = 0; j < loops; j++ )
             {
@@ -138,7 +137,7 @@ public class LRUMapPerformanceTest
                 ///////////////////////////////////////////////////////////////
                 cache2Name = "LRUMapJCS (commons)";
                 //or LRUMapJCS
-                Map cache2 = new org.apache.commons.collections.map.LRUMap( tries );
+                Map<String, String> cache2 = new org.apache.commons.collections.map.LRUMap( tries );
                 //cache2Name = "Hashtable";
                 //Hashtable cache2 = new Hashtable();
                 start = System.currentTimeMillis();

@@ -696,7 +696,7 @@ public class TestCacheAccess
             long n_start = System.currentTimeMillis();
             try
             {
-                Map results = cache_control.getMatching( pattern );
+                Map<String, String> results = cache_control.getMatching( pattern );
                 if ( show && results != null )
                 {
                     p( results.toString() );
@@ -951,11 +951,11 @@ public class TestCacheAccess
      */
     public void getAttributeNames( String groupName )
     {
-        Iterator iter = cache_control.getGroupKeys( groupName ).iterator();
+        Iterator<String> iter = cache_control.getGroupKeys( groupName ).iterator();
 
         while ( iter.hasNext() )
         {
-            p( "=" + (String) iter.next() );
+            p( "=" + iter.next() );
         }
     }
 }

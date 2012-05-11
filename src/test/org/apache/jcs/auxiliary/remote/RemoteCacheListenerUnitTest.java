@@ -54,7 +54,7 @@ public class RemoteCacheListenerUnitTest
         // SETUP
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( false );
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager<String, String>();
         RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr );
 
         String cacheName = "testName";
@@ -97,7 +97,7 @@ public class RemoteCacheListenerUnitTest
         // SETUP
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( true );
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager<String, String>();
         RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr );
 
         String cacheName = "testName";

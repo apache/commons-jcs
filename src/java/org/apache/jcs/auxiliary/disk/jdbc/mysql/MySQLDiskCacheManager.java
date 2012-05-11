@@ -26,7 +26,7 @@ import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManagerAbstractTemplate;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
@@ -129,7 +129,7 @@ public class MySQLDiskCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> getCache( String cacheName )
     {
         MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
@@ -144,7 +144,7 @@ public class MySQLDiskCacheManager
      * @return AuxiliaryCache
      */
     @Override
-    protected <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K extends Serializable, V extends Serializable> MySQLDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
         MySQLDiskCache<K, V> diskCache = new MySQLDiskCache<K, V>( (MySQLDiskCacheAttributes) cattr, tableState, getCompositeCacheManager() );
 

@@ -455,7 +455,7 @@ public class LRUMap<K, V>
                 log.error( "key toString=" + key.toString() );
                 if ( key instanceof GroupAttrName )
                 {
-                    GroupAttrName name = (GroupAttrName) key;
+                    GroupAttrName<?> name = (GroupAttrName<?>) key;
                     log.error( "GroupID hashcode=" + name.groupId.hashCode() );
                     log.error( "GroupID.class=" + name.groupId.getClass() );
                     log.error( "AttrName hashcode=" + name.attrName.hashCode() );

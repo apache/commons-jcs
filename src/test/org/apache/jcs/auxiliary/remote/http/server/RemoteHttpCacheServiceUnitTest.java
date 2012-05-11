@@ -40,7 +40,7 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
@@ -69,7 +69,7 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
@@ -93,7 +93,7 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
@@ -117,7 +117,7 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
@@ -141,7 +141,7 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
@@ -165,7 +165,7 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
 
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();

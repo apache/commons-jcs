@@ -33,7 +33,6 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
-import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.memory.AbstractMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.StatElement;
@@ -193,7 +192,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
                 }
             }
         }
-        else if ( key instanceof GroupId )
+        else if ( key instanceof GroupAttrName && ((GroupAttrName<?>)key).attrName == null )
         {
             // remove all keys of the same name hierarchy.
             synchronized ( map )
@@ -203,7 +202,8 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
                     Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
                     K k = entry.getKey();
 
-                    if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
+                    if ( k instanceof GroupAttrName &&
+                        ((GroupAttrName<?>)k).groupId.equals(((GroupAttrName<?>)key).groupId) )
                     {
                         itr.remove();
                         removed = true;

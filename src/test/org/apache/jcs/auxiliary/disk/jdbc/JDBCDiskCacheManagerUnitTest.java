@@ -27,7 +27,7 @@ public class JDBCDiskCacheManagerUnitTest
             .getUnconfiguredInstance(), cacheEventLogger, elementSerializer );
 
         // DO WORK
-        JDBCDiskCache cache = (JDBCDiskCache) manager.getCache( cacheName );
+        JDBCDiskCache<String, String> cache = manager.getCache( cacheName );
 
         // VERIFY
         assertEquals( "wrong cacheEventLogger", cacheEventLogger, cache.getCacheEventLogger() );

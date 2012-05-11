@@ -220,7 +220,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
         {
             for ( K key : this.keyStore.keySet())
             {
-                if ( key instanceof GroupAttrName && ( (GroupAttrName<K>) key ).groupId.equals( groupId ) )
+                if ( key instanceof GroupAttrName && ( (GroupAttrName<?>) key ).groupId.equals( groupId ) )
                 {
                     keys.add( ( (GroupAttrName<K>) key ).attrName );
                 }
@@ -449,7 +449,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
                     }
                 }
             }
-            else if ( key instanceof GroupId )
+            else if ( key instanceof GroupAttrName && ((GroupAttrName<?>)key).attrName == null )
             {
                 // remove all keys of the same name hierarchy.
                 Iterator<Map.Entry<K, int[]>> iter = this.keyStore.entrySet().iterator();
@@ -458,7 +458,8 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
                     Map.Entry<K, int[]> entry = iter.next();
                     K k = entry.getKey();
 
-                    if ( k instanceof GroupAttrName && ( (GroupAttrName<K>) k ).groupId.equals( key ) )
+                    if ( k instanceof GroupAttrName &&
+                        ((GroupAttrName<?>)k).groupId.equals(((GroupAttrName<?>)key).groupId))
                     {
                         int[] ded = this.keyStore.get( key );
                         this.dataFile.freeBlocks( ded );

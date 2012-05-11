@@ -748,7 +748,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
 
             for (Serializable k : keyHash.keySet())
             {
-                if ( k instanceof GroupAttrName && ( (GroupAttrName<K>) k ).groupId.equals( groupId ) )
+                if ( k instanceof GroupAttrName && ( (GroupAttrName<?>) k ).groupId.equals( groupId ) )
                 {
                     keys.add( ( (GroupAttrName<K>) k ).attrName );
                 }
@@ -793,9 +793,9 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             {
                 removed = performPartialKeyRemoval( (String) key );
             }
-            else if ( key instanceof GroupId )
+            else if ( key instanceof GroupAttrName && ((GroupAttrName<?>)key).attrName == null )
             {
-                removed = performGroupRemoval( (GroupId) key );
+                removed = performGroupRemoval( ((GroupAttrName<?>)key).groupId );
             }
             else
             {
@@ -883,7 +883,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         // remove all keys of the same name hierarchy.
         for (K k : keyHash.keySet())
         {
-            if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( key ) )
+            if ( k instanceof GroupAttrName && ( (GroupAttrName<?>) k ).groupId.equals( key ) )
             {
                 itemsToRemove.add( k );
             }

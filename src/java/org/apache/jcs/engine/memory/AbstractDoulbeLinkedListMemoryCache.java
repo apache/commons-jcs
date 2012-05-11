@@ -346,7 +346,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
                     K k = entry.getKey();
 
                     if ( k instanceof GroupAttrName &&
-                        ((GroupAttrName)k).groupId.equals(((GroupAttrName)key).groupId))
+                        ((GroupAttrName<?>)k).groupId.equals(((GroupAttrName<?>)key).groupId))
                     {
                         list.remove( entry.getValue() );
                         itr.remove();
@@ -464,7 +464,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
                 log.error( "key toString=" + key.toString() );
                 if ( key instanceof GroupAttrName )
                 {
-                    GroupAttrName name = (GroupAttrName) key;
+                    GroupAttrName<?> name = (GroupAttrName<?>) key;
                     log.error( "GroupID hashcode=" + name.groupId.hashCode() );
                     log.error( "GroupID.class=" + name.groupId.getClass() );
                     log.error( "AttrName hashcode=" + name.attrName.hashCode() );

@@ -16,7 +16,7 @@ public class LRUMapJCSUnitTest
         // SETUP
 
         // DO WORK
-        LRUMapJCS map = new LRUMapJCS();
+        LRUMapJCS<String, String> map = new LRUMapJCS<String, String>();
 
         // VERIFY
         assertEquals( "Should be unlimted", -1, map.getMaxObjects() );
@@ -29,7 +29,7 @@ public class LRUMapJCSUnitTest
         int expected = 100;
 
         // DO WORK
-        LRUMapJCS map = new LRUMapJCS( expected );
+        LRUMapJCS<String, String> map = new LRUMapJCS<String, String>( expected );
 
         // VERIFY
         assertEquals( "Should be expected", expected, map.getMaxObjects() );
@@ -42,7 +42,7 @@ public class LRUMapJCSUnitTest
         StringWriter stringWriter = new StringWriter();
         TestLogConfigurationUtil.configureLogger( stringWriter, LRUMapJCS.class.getName() );
 
-        LRUMapJCS map = new LRUMapJCS();
+        LRUMapJCS<String, String> map = new LRUMapJCS<String, String>();
 
         String key = "myKey";
         String value = "myValue";

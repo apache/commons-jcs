@@ -20,10 +20,8 @@ package org.apache.jcs.utils.struct;
  */
 
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
-import org.apache.jcs.utils.struct.LRUMap;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -44,7 +42,7 @@ public class LRUMapUnitTest
     public void testPutWithSizeLimit()
     {
         int size = 10;
-        Map cache = new LRUMap( size );
+        Map<String, String> cache = new LRUMap<String, String>( size );
 
         for ( int i = 0; i < size; i++ )
         {
@@ -53,7 +51,7 @@ public class LRUMapUnitTest
 
         for ( int i = 0; i < size; i++ )
         {
-            String data = (String)cache.get( "key:" + i );
+            String data = cache.get( "key:" + i );
             assertEquals( "Data is wrong.", "data:" + i, data );
         }
     }
@@ -65,7 +63,7 @@ public class LRUMapUnitTest
     public void testPutWithNoSizeLimit()
     {
         int size = 10;
-        Map cache = new LRUMap( );
+        Map<String, String> cache = new LRUMap<String, String>( );
 
         for ( int i = 0; i < size; i++ )
         {
@@ -74,7 +72,7 @@ public class LRUMapUnitTest
 
         for ( int i = 0; i < size; i++ )
         {
-            String data = (String)cache.get( "key:" + i );
+            String data = cache.get( "key:" + i );
             assertEquals( "Data is wrong.", "data:" + i, data );
         }
     }
@@ -86,10 +84,10 @@ public class LRUMapUnitTest
     public void testPutAndRemove()
     {
         int size = 10;
-        Map cache = new LRUMap( size );
+        Map<String, String> cache = new LRUMap<String, String>( size );
 
         cache.put( "key:" + 1, "data:" + 1 );
-        String data = (String)cache.remove( "key:" + 1 );
+        String data = cache.remove( "key:" + 1 );
         assertEquals( "Data is wrong.", "data:" + 1, data );
     }
 
@@ -100,7 +98,7 @@ public class LRUMapUnitTest
     public void testRemoveEmpty()
     {
         int size = 10;
-        Map cache = new LRUMap( size );
+        Map<String, String> cache = new LRUMap<String, String>( size );
 
         Object returned = cache.remove( "key:" + 1 );
         assertNull( "Shouldn't hvae anything.", returned );
@@ -114,21 +112,19 @@ public class LRUMapUnitTest
     public void testGetEntrySet()
     {
         int size = 10;
-        Map cache = new LRUMap( size );
+        Map<String, String> cache = new LRUMap<String, String>( size );
 
         for ( int i = 0; i < size; i++ )
         {
             cache.put( "key:" + i, "data:" + i );
         }
 
-        Set entries = cache.entrySet();
+        Set<Entry<String, String>> entries = cache.entrySet();
         assertEquals( "Set contains the wrong number of items.", size, entries.size() );
 
         // check minimal correctness
-        Object[] entryArray = entries.toArray();
-        for ( int i = 0; i < size; i++ )
+        for (Entry<String, String> data : entries)
         {
-            Entry data = (Entry)entryArray[i];
             assertTrue( "Data is wrong.", data.getValue().toString().indexOf( "data:") != -1  );
         }
     }
