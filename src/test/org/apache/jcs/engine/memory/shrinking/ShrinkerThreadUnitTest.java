@@ -229,7 +229,7 @@ public class ShrinkerThreadUnitTest
      * <p>
      * @throws Exception
      */
-    public void testSimpleShrinkMutiple()
+    public void testSimpleShrinkMultiple()
         throws Exception
     {
         // SETUP
@@ -279,7 +279,7 @@ public class ShrinkerThreadUnitTest
      * <p>
      * @throws Exception
      */
-    public void testSimpleShrinkMutipleWithEventHandler()
+    public void testSimpleShrinkMultipleWithEventHandler()
         throws Exception
     {
         // SETUP

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,7 +96,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @return map.keySet().toArray( */
     public Set<K> getKeySet()
     {
-        return map.keySet();
+        return new LinkedHashSet<K>(map.keySet());
     }
 
     /**

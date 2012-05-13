@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -236,7 +237,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
         synchronized ( this )
         {
             // may need to lock to map here?
-            return map.keySet();
+            return new LinkedHashSet<K>(map.keySet());
         }
     }
 

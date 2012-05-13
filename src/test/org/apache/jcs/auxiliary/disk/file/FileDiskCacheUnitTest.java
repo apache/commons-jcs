@@ -303,15 +303,16 @@ public class FileDiskCacheUnitTest
         {
             // tv: The Mac file system has 1 sec resolution, so this is the minimum value
             // to make this test work.
-            SleepUtil.sleepAtLeast( 500 );
+            SleepUtil.sleepAtLeast( 501 );
             ICacheElement<String, String> ice = diskCache.get( "key" + i );
             assertNotNull("Value of key" + i + " should not be null", ice);
         }
+
         SleepUtil.sleepAtLeast( 100 );
 
         // This will push it over.  number 9, the youngest, but LRU item should be removed
         diskCache.update( new CacheElement<String, String>( cacheName, "key" + maxNumberOfFiles, "Data" ) );
-        SleepUtil.sleepAtLeast( 500 );
+        SleepUtil.sleepAtLeast( 501 );
 
         // DO WORK
         ICacheElement<String, String> result = diskCache.get( "key9" );
