@@ -50,7 +50,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         cattr.setCacheName( "testStoreKeys" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/KeyStoreUnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         disk.processRemoveAll();
 
@@ -59,15 +59,15 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement<String, String>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( "key:" + i );
-            assertNotNull( "presave, Should have recevied an element.", element );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
+            assertNotNull( "presave, Should have received an element.", element );
             assertEquals( "presave, element is wrong.", "data:" + i, element.getVal() );
         }
 
@@ -79,8 +79,8 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( "key:" + i );
-            assertNotNull( "postsave, Should have recevied an element.", element );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
+            assertNotNull( "postsave, Should have received an element.", element );
             assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
         }
 
@@ -90,7 +90,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
 
     /**
-     * Add some elements, remove 1, call optiiize, verify that the removed isn't present.
+     * Add some elements, remove 1, call optimize, verify that the removed isn't present.
      *
      * We should also compare the data file sizes. . . .
      *
@@ -104,7 +104,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         cattr.setCacheName( "testOptimize" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/KeyStoreUnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         disk.processRemoveAll();
 
@@ -113,7 +113,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( cattr.getCacheName(), "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement<String, String>( cattr.getCacheName(), "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
@@ -122,12 +122,12 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         IElementAttributes eAttr = new ElementAttributes();
         eAttr.setIsSpool( true );
-        ICacheElement elementSetup = new CacheElement( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
+        ICacheElement<String, String> elementSetup = new CacheElement<String, String>( cattr.getCacheName(), "key:" + "A", "data:" + "A" );
         elementSetup.setElementAttributes( eAttr );
         disk.processUpdate( elementSetup );
 
-        ICacheElement elementRet = disk.processGet( "key:" + "A" );
-        assertNotNull( "postsave, Should have recevied an element.", elementRet );
+        ICacheElement<String, String> elementRet = disk.processGet( "key:" + "A" );
+        assertNotNull( "postsave, Should have received an element.", elementRet );
         assertEquals( "postsave, element is wrong.", "data:" + "A", elementRet.getVal() );
 
         disk.remove( "key:" + "A" );
@@ -146,8 +146,8 @@ public class IndexedDiskCacheKeyStoreUnitTest
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( "key:" + i );
-            assertNotNull( "postsave, Should have recevied an element.", element );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
+            assertNotNull( "postsave, Should have received an element.", element );
             assertEquals( "postsave, element is wrong.", "data:" + i, element.getVal() );
         }
     }

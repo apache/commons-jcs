@@ -19,6 +19,8 @@ package org.apache.jcs.engine;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
@@ -31,7 +33,7 @@ import org.apache.jcs.utils.config.OptionConverter;
  * <p>
  * @author aaronsm
  */
-public class CacheEventQueueFactory
+public class CacheEventQueueFactory<K extends Serializable, V extends Serializable>
 {
     /** The logger. */
     private static final Log log = LogFactory.getLog( CacheEventQueueFactory.class );
@@ -46,7 +48,7 @@ public class CacheEventQueueFactory
      * @param poolType - SINGLE, QUEUED, or classname
      * @return ICacheEventQueue
      */
-    public ICacheEventQueue createCacheEventQueue( ICacheListener listener, long listenerId, String cacheName,
+    public ICacheEventQueue<K, V> createCacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName,
                                                    String threadPoolName, String poolType )
     {
         return createCacheEventQueue( listener, listenerId, cacheName, 10, 500, threadPoolName, poolType );
@@ -64,7 +66,7 @@ public class CacheEventQueueFactory
      * @param poolType single or pooled
      * @return ICacheEventQueue
      */
-    public ICacheEventQueue createCacheEventQueue( ICacheListener listener, long listenerId, String cacheName,
+    public ICacheEventQueue<K, V> createCacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName,
                                                    int maxFailure, int waitBeforeRetry, String threadPoolName,
                                                    String poolType )
     {
@@ -73,19 +75,19 @@ public class CacheEventQueueFactory
             log.debug( "threadPoolName = [" + threadPoolName + "] poolType = " + poolType + " " );
         }
 
-        ICacheEventQueue eventQueue = null;
+        ICacheEventQueue<K, V> eventQueue = null;
         if ( poolType == null || ICacheEventQueue.SINGLE_QUEUE_TYPE.equalsIgnoreCase( poolType ) )
         {
-            eventQueue = new CacheEventQueue( listener, listenerId, cacheName, maxFailure, waitBeforeRetry );
+            eventQueue = new CacheEventQueue<K, V>( listener, listenerId, cacheName, maxFailure, waitBeforeRetry );
         }
         else if ( ICacheEventQueue.POOLED_QUEUE_TYPE.equalsIgnoreCase( poolType ) )
         {
-            eventQueue = new PooledCacheEventQueue( listener, listenerId, cacheName, maxFailure, waitBeforeRetry,
+            eventQueue = new PooledCacheEventQueue<K, V>( listener, listenerId, cacheName, maxFailure, waitBeforeRetry,
                                                     threadPoolName );
         }
         else
         {
-            eventQueue = (ICacheEventQueue) OptionConverter.instantiateByClassName( poolType, ICacheEventQueue.class,
+            eventQueue = (ICacheEventQueue<K, V>) OptionConverter.instantiateByClassName( poolType, ICacheEventQueue.class,
                                                                                     null );
             if ( eventQueue != null )
             {
@@ -99,7 +101,7 @@ public class CacheEventQueueFactory
             {
                 log.warn( "Could not instantiate custom event queue [" + poolType
                     + "].  Will use standard single threaded queue." );
-                eventQueue = new CacheEventQueue( listener, listenerId, cacheName, maxFailure, waitBeforeRetry );
+                eventQueue = new CacheEventQueue<K, V>( listener, listenerId, cacheName, maxFailure, waitBeforeRetry );
             }
         }
         return eventQueue;

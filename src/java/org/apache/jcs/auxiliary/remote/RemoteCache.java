@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +41,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * This handles gets, updates, and removes. It also initiates failover recovery when an error is
  * encountered.
  */
-public class RemoteCache
-    extends AbstractRemoteAuxiliaryCache
+public class RemoteCache<K extends Serializable, V extends Serializable>
+    extends AbstractRemoteAuxiliaryCache<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -5329231850422826460L;
@@ -59,7 +60,7 @@ public class RemoteCache
      * @param remote
      * @param listener
      */
-    public RemoteCache( IRemoteCacheAttributes cattr, IRemoteCacheService remote, IRemoteCacheListener listener )
+    public RemoteCache( IRemoteCacheAttributes cattr, IRemoteCacheService<K, V> remote, IRemoteCacheListener<K, V> listener )
     {
         super( cattr, remote, listener );
 
@@ -130,7 +131,7 @@ public class RemoteCache
         if ( getRemoteCacheService() == null || !( getRemoteCacheService() instanceof ZombieRemoteCacheService ) )
         {
             // TODO make configurable
-            setRemoteCacheService( new ZombieRemoteCacheService( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
+            setRemoteCacheService( new ZombieRemoteCacheService<K, V>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
         }
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
@@ -138,7 +139,7 @@ public class RemoteCache
         RemoteCacheMonitor.getInstance().notifyError();
 
         // initiate failover if local
-        RemoteCacheNoWaitFacade rcnwf = (RemoteCacheNoWaitFacade) RemoteCacheFactory.getFacades()
+        RemoteCacheNoWaitFacade<K, V> rcnwf = (RemoteCacheNoWaitFacade<K, V>)RemoteCacheFactory.getFacades()
             .get( getRemoteCacheAttributes().getCacheName() );
 
         if ( log.isDebugEnabled() )

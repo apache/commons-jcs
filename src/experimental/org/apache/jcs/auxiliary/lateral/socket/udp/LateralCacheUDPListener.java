@@ -160,7 +160,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
 
     //////////////////////////// implements the ILateralCacheListener interface. //////////////
     /** */
-    public void handlePut( ICacheElement cb )
+    public void handlePut( ICacheElement<K, V> cb )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -173,7 +173,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
 
 
     /** Description of the Method */
-    public void handleRemove( String cacheName, Serializable key )
+    public void handleRemove( String cacheName, K key )
         throws IOException
     {
         if ( log.isDebugEnabled() )

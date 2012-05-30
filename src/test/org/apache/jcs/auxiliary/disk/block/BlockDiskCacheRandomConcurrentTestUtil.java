@@ -64,11 +64,11 @@ public class BlockDiskCacheRandomConcurrentTestUtil
 
         // make sure a simple put then get works
         // this may fail if the other tests are flooding the disk cache
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );
-        String value = (String) jcs.get( key );
+        String value = jcs.get( key );
         assertEquals( data, value );
     }
 

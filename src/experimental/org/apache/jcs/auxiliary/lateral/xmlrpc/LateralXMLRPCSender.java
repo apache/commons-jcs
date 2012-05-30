@@ -212,10 +212,10 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
      * @param led
      * @exception IOException
      */
-    public ICacheElement sendAndReceive( LateralElementDescriptor led )
+    public ICacheElement<K, V> sendAndReceive( LateralElementDescriptor led )
         throws IOException
     {
-        ICacheElement ice = null;
+        ICacheElement<K, V> ice = null;
 
         log.debug( "sendAndReceive led" );
 
@@ -242,7 +242,7 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
                 Object obj = xmlrpc.execute( IXMLRPCConstants.HANDLERNAME + ".execute", params );
                 if ( !obj.equals( IXMLRPCConstants.NO_RESULTS ) )
                 {
-                    ice = ( ICacheElement ) obj;
+                    ice = ( ICacheElement<K, V> ) obj;
                     if ( ice == null )
                     {
                         //p( "ice is null" );
@@ -277,7 +277,7 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
      * @param requesterId
      * @exception IOException
      */
-    public void update( ICacheElement item, byte requesterId )
+    public void update( ICacheElement<K, V> item, byte requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -294,7 +294,7 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
      * @param key
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
@@ -309,7 +309,7 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
      * @param requesterId
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );

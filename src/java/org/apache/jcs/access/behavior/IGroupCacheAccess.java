@@ -19,6 +19,7 @@ package org.apache.jcs.access.behavior;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Set;
 
 import org.apache.jcs.access.exception.CacheException;
@@ -28,8 +29,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
  * IGroupCacheAccess defines group specific behavior for the client access
  * classes.
  */
-public interface IGroupCacheAccess<K, V>
-    extends ICacheAccess<K, V>
+public interface IGroupCacheAccess<K extends Serializable, V extends Serializable>
 {
     /**
      * Gets the g attribute of the IGroupCacheAccess object
@@ -37,12 +37,12 @@ public interface IGroupCacheAccess<K, V>
      * @param name
      * @param group
      *            the name of the group to associate this with.
-     * @return The teh object that is keyed by the name in the group
+     * @return The object that is keyed by the name in the group
      */
     V getFromGroup( K name, String group );
 
     /**
-     * Puts an item int eh cache associated with this group.
+     * Puts an item in the cache associated with this group.
      * <p>
      * @param key
      * @param group

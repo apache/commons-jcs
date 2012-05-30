@@ -19,6 +19,8 @@ package org.apache.jcs.engine;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICacheObserver;
 import org.apache.jcs.engine.behavior.IZombie;
@@ -35,7 +37,7 @@ public class ZombieCacheWatch
      * @param cacheName The feature to be added to the CacheListener attribute
      * @param obj The feature to be added to the CacheListener attribute
      */
-    public void addCacheListener( String cacheName, ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
     {
         // empty
     }
@@ -45,7 +47,7 @@ public class ZombieCacheWatch
      * <p>
      * @param obj The feature to be added to the CacheListener attribute
      */
-    public void addCacheListener( ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void addCacheListener( ICacheListener<K, V> obj )
     {
         // empty
     }
@@ -54,7 +56,7 @@ public class ZombieCacheWatch
      * @param cacheName
      * @param obj
      */
-    public void removeCacheListener( String cacheName, ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
     {
         // empty
     }
@@ -62,7 +64,7 @@ public class ZombieCacheWatch
     /**
      * @param obj
      */
-    public void removeCacheListener( ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void removeCacheListener( ICacheListener<K, V> obj )
     {
         // empty
     }

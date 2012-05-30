@@ -72,7 +72,7 @@ public class LHMLRUMemoryCache
    *@param  ce               Description of the Parameter
    *@exception  IOException
    */
-  public void update(ICacheElement ce) throws IOException
+  public void update(ICacheElement<K, V> ce) throws IOException
   {
     // Asynchronisly create a MemoryElement
     ce.getElementAttributes().setLastAccessTimeNow();
@@ -96,9 +96,9 @@ public class LHMLRUMemoryCache
    *@return                  Element mathinh key if found, or null
    *@exception  IOException
    */
-  public ICacheElement getQuiet(Serializable key) throws IOException
+  public ICacheElement<K, V> getQuiet(K key) throws IOException
   {
-    ICacheElement ce = null;
+    ICacheElement<K, V> ce = null;
 
     ce = (ICacheElement) map.get(key);
 
@@ -122,12 +122,12 @@ public class LHMLRUMemoryCache
    *  Get an item from the cache
    *
    *@param  key              Identifies item to find
-   *@return                  ICacheElement if found, else null
+   *@return                  ICacheElement<K, V> if found, else null
    *@exception  IOException
    */
-  public synchronized ICacheElement get(Serializable key) throws IOException
+  public synchronized ICacheElement<K, V> get(K key) throws IOException
   {
-    ICacheElement ce = null;
+    ICacheElement<K, V> ce = null;
 
     if (log.isDebugEnabled())
     {
@@ -163,7 +163,7 @@ public class LHMLRUMemoryCache
    *@return
    *@exception  IOException
    */
-  public synchronized boolean remove(Serializable key) throws IOException
+  public synchronized boolean remove(K key) throws IOException
   {
     if (log.isDebugEnabled())
     {
@@ -217,7 +217,7 @@ public class LHMLRUMemoryCache
     else
     {
       // remove single item.
-      ICacheElement ce = (ICacheElement) map.remove(key);
+      ICacheElement<K, V> ce = (ICacheElement) map.remove(key);
       removed = true;
     }
 

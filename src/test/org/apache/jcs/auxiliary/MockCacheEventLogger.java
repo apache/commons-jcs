@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.logging.CacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -44,7 +43,7 @@ public class MockCacheEventLogger
     /**
      * @param cacheEvent
      */
-    public void logICacheEvent( ICacheEvent cacheEvent )
+    public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
     {
         endICacheEventCalls++;
     }
@@ -68,25 +67,10 @@ public class MockCacheEventLogger
      * @param key
      * @return ICacheEvent
      */
-    public ICacheEvent createICacheEvent( String source, String region, String eventName, String optionalDetails,
-                                          Serializable key )
+    public <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region,
+            String eventName, String optionalDetails, T key )
     {
         startICacheEventCalls++;
-        return new CacheEvent();
-    }
-
-    /**
-     * @param source
-     * @param region
-     * @param eventName
-     * @param optionalDetails
-     * @param item
-     * @return ICacheEvent
-     */
-    public ICacheEvent createICacheEvent( String source, String region, String eventName, String optionalDetails,
-                                          ICacheElement item )
-    {
-        startICacheEventCalls++;
-        return new CacheEvent();
+        return new CacheEvent<T>();
     }
 }

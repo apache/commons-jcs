@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,9 +59,9 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * persistence mechanism, this class destroys the event queue. Should it also destroy purgatory?
  * Should it dispose itself?
  */
-public abstract class AbstractDiskCache
-    extends AbstractAuxiliaryCacheEventLogging
-    implements AuxiliaryCache, Serializable
+public abstract class AbstractDiskCache<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCacheEventLogging<K, V>
+    implements AuxiliaryCache<K, V>, Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = 6541664080877628324L;
@@ -79,13 +80,13 @@ public abstract class AbstractDiskCache
      * If the elements are pulled into the memory cache while the are still in purgatory, writing to
      * disk can be canceled.
      */
-    protected Map<Serializable, PurgatoryElement> purgatory = new HashMap<Serializable, PurgatoryElement>();
+    protected Map<K, PurgatoryElement<K, V>> purgatory = new HashMap<K, PurgatoryElement<K, V>>();
 
     /**
      * The CacheEventQueue where changes will be queued for asynchronous updating of the persistent
      * storage.
      */
-    protected ICacheEventQueue cacheEventQueue;
+    protected ICacheEventQueue<K, V> cacheEventQueue;
 
     /**
      * Indicates whether the cache is 'alive': initialized, but not yet disposed. Child classes must
@@ -120,7 +121,7 @@ public abstract class AbstractDiskCache
         this.cacheName = attr.getCacheName();
 
         // create queue
-        CacheEventQueueFactory fact = new CacheEventQueueFactory();
+        CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<K, V>();
         this.cacheEventQueue = fact.createCacheEventQueue( new MyCacheListener(), CacheInfo.listenerId, cacheName,
                                                            diskCacheAttributes.getEventQueuePoolName(),
                                                            diskCacheAttributes.getEventQueueType() );
@@ -151,11 +152,11 @@ public abstract class AbstractDiskCache
                 {
                     if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
                     {
-                        purgatory = new LRUMapJCS<Serializable, PurgatoryElement>( diskCacheAttributes.getMaxPurgatorySize() );
+                        purgatory = new LRUMapJCS<K, PurgatoryElement<K, V>>( diskCacheAttributes.getMaxPurgatorySize() );
                     }
                     else
                     {
-                        purgatory = new HashMap<Serializable, PurgatoryElement>();
+                        purgatory = new HashMap<K, PurgatoryElement<K, V>>();
                     }
                 }
             }
@@ -163,11 +164,11 @@ public abstract class AbstractDiskCache
             {
                 if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
                 {
-                    purgatory = new LRUMapJCS<Serializable, PurgatoryElement>( diskCacheAttributes.getMaxPurgatorySize() );
+                    purgatory = new LRUMapJCS<K, PurgatoryElement<K, V>>( diskCacheAttributes.getMaxPurgatorySize() );
                 }
                 else
                 {
-                    purgatory = new HashMap<Serializable, PurgatoryElement>();
+                    purgatory = new HashMap<K, PurgatoryElement<K, V>>();
                 }
             }
         }
@@ -191,7 +192,7 @@ public abstract class AbstractDiskCache
      * @see org.apache.jcs.engine.behavior.ICache#update
      */
     @Override
-    public final void update( ICacheElement cacheElement )
+    public final void update( ICacheElement<K, V> cacheElement )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -202,7 +203,7 @@ public abstract class AbstractDiskCache
         try
         {
             // Wrap the CacheElement in a PurgatoryElement
-            PurgatoryElement pe = new PurgatoryElement( cacheElement );
+            PurgatoryElement<K, V> pe = new PurgatoryElement<K, V>( cacheElement );
 
             // Indicates the the element is eligible to be spooled to disk,
             // this will remain true unless the item is pulled back into
@@ -231,11 +232,11 @@ public abstract class AbstractDiskCache
      * it on disk.
      * <p>
      * @param key
-     * @return ICacheElement or null
+     * @return ICacheElement<K, V> or null
      * @see AuxiliaryCache#get
      */
     @Override
-    public final ICacheElement get( Serializable key )
+    public final ICacheElement<K, V> get( K key )
     {
         // If not alive, always return null.
 
@@ -248,7 +249,7 @@ public abstract class AbstractDiskCache
             return null;
         }
 
-        PurgatoryElement pe = null;
+        PurgatoryElement<K, V> pe = null;
         synchronized ( purgatory )
         {
             pe = purgatory.get( key );
@@ -314,30 +315,30 @@ public abstract class AbstractDiskCache
      * cache will convert * to % and . to _
      * <p>
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */
     @Override
-    public Map<Serializable, ICacheElement> getMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String pattern )
         throws IOException
     {
         // Get the keys from purgatory
-        Object[] keyArray = null;
+        Set<K> keyArray = null;
 
         // this avoids locking purgatory, but it uses more memory
         synchronized ( purgatory )
         {
-            keyArray = purgatory.keySet().toArray();
+            keyArray = new HashSet<K>(purgatory.keySet());
         }
 
-        Set<Serializable> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
+        Set<K> matchingKeys = getKeyMatcher().getMatchingKeysFromArray( pattern, keyArray );
 
         // call getMultiple with the set
-        Map<Serializable, ICacheElement> result = processGetMultiple( matchingKeys );
+        Map<K, ICacheElement<K, V>> result = processGetMultiple( matchingKeys );
 
         // Get the keys from disk
-        Map<Serializable, ICacheElement> diskMatches = doGetMatching( pattern );
+        Map<K, ICacheElement<K, V>> diskMatches = doGetMatching( pattern );
 
         result.putAll( diskMatches );
 
@@ -348,19 +349,19 @@ public abstract class AbstractDiskCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
     @Override
-    public Map<Serializable, ICacheElement> processGetMultiple(Set<Serializable> keys)
+    public Map<K, ICacheElement<K, V>> processGetMultiple(Set<K> keys)
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            for (Serializable key : keys)
+            for (K key : keys)
             {
-                ICacheElement element = get( key );
+                ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -378,7 +379,7 @@ public abstract class AbstractDiskCache
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
      */
-    public abstract Set<Serializable> getGroupKeys( String groupName );
+    public abstract Set<K> getGroupKeys( String groupName );
 
     /**
      * Removes are not queued. A call to remove is immediate.
@@ -389,10 +390,10 @@ public abstract class AbstractDiskCache
      * @see org.apache.jcs.engine.behavior.ICache#remove
      */
     @Override
-    public final boolean remove( Serializable key )
+    public final boolean remove( K key )
         throws IOException
     {
-        PurgatoryElement pe = null;
+        PurgatoryElement<K, V> pe = null;
 
         synchronized ( purgatory )
         {
@@ -605,7 +606,7 @@ public abstract class AbstractDiskCache
      * parent class.
      */
     protected class MyCacheListener
-        implements ICacheListener
+        implements ICacheListener<K, V>
     {
         /** Id of the listener */
         private long listenerId = 0;
@@ -640,16 +641,16 @@ public abstract class AbstractDiskCache
          *      added to the cache event queue, that may not be needed ( they are always
          *      PurgatoryElements ).
          */
-        public void handlePut( ICacheElement element )
+        public void handlePut( ICacheElement<K, V> element )
             throws IOException
         {
             if ( alive )
             {
-                // If the element is a PurgatoryElement we must check to see
+                // If the element is a PurgatoryElement<K, V> we must check to see
                 // if it is still spoolable, and remove it from purgatory.
                 if ( element instanceof PurgatoryElement )
                 {
-                    PurgatoryElement pe = (PurgatoryElement) element;
+                    PurgatoryElement<K, V> pe = (PurgatoryElement<K, V>) element;
 
                     synchronized ( pe.getCacheElement() )
                     {
@@ -722,7 +723,7 @@ public abstract class AbstractDiskCache
          * @throws IOException
          * @see ICacheListener#handleRemove
          */
-        public void handleRemove( String cacheName, Serializable key )
+        public void handleRemove( String cacheName, K key )
             throws IOException
         {
             if ( alive )
@@ -782,7 +783,7 @@ public abstract class AbstractDiskCache
      * @return An object matching key, or null.
      * @throws IOException
      */
-    protected final ICacheElement doGet( Serializable key )
+    protected final ICacheElement<K, V> doGet( K key )
         throws IOException
     {
         return super.getWithEventLogging( key );
@@ -799,7 +800,7 @@ public abstract class AbstractDiskCache
      * @return A map of matches..
      * @throws IOException
      */
-    protected final Map<Serializable, ICacheElement> doGetMatching( String pattern )
+    protected final Map<K, ICacheElement<K, V>> doGetMatching( String pattern )
         throws IOException
     {
         return super.getMatchingWithEventLogging( pattern );
@@ -815,7 +816,7 @@ public abstract class AbstractDiskCache
      * @param cacheElement
      * @throws IOException
      */
-    protected final void doUpdate( ICacheElement cacheElement )
+    protected final void doUpdate( ICacheElement<K, V> cacheElement )
         throws IOException
     {
         super.updateWithEventLogging( cacheElement );
@@ -832,7 +833,7 @@ public abstract class AbstractDiskCache
      * @return whether or no the item was present when removed
      * @throws IOException
      */
-    protected final boolean doRemove( Serializable key )
+    protected final boolean doRemove( K key )
         throws IOException
     {
         return super.removeWithEventLogging( key );

@@ -66,7 +66,7 @@ public class BlockDiskCacheSteadyLoadTest
         int runs = 1000;
         int upperKB = 50;
 
-        JCS jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
+        JCS<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
 
         ElapsedTimer timer = new ElapsedTimer();
         int numToGet = numPerRun * ( runs / 10 );

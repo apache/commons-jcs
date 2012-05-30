@@ -1,5 +1,7 @@
 package org.apache.jcs.auxiliary.disk.indexed;
 
+import java.io.Serializable;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -47,7 +49,7 @@ public class IndexedDiskDumper
         attr.setCacheName( args[0] );
         attr.setDiskPath( args[0] );
 
-        final IndexedDiskCache dc = new IndexedDiskCache( attr );
+        IndexedDiskCache<Serializable, Serializable> dc = new IndexedDiskCache<Serializable, Serializable>( attr );
         dc.dump( true );
         System.exit( 0 );
     }

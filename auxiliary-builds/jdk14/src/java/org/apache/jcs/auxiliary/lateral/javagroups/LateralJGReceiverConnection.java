@@ -127,7 +127,7 @@ public class LateralJGReceiverConnection
      * @param key
      * @exception Exception
      */
-    private Serializable getAndRespond( String cacheName, Serializable key )
+    private Serializable getAndRespond( String cacheName, K key )
         throws Exception
     {
         Serializable obj = ilcl.handleGet( cacheName, key );

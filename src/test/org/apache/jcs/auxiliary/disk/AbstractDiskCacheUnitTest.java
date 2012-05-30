@@ -37,17 +37,17 @@ public class AbstractDiskCacheUnitTest
         IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setCacheName( cacheName );
 
-        AbstractDiskCacheTestInstance diskCache = new AbstractDiskCacheTestInstance( diskCacheAttributes );
+        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<String, String>( diskCacheAttributes );
 
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement cacheElement = new CacheElement( cacheName, key, value, elementAttributes );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
         // DO WORK
-        ICacheElement result = diskCache.get( key );
+        ICacheElement<String, String> result = diskCache.get( key );
 
         // VERIFY
         //System.out.println( diskCache.getStats() );
@@ -67,12 +67,12 @@ public class AbstractDiskCacheUnitTest
         IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setCacheName( cacheName );
 
-        AbstractDiskCacheTestInstance diskCache = new AbstractDiskCacheTestInstance( diskCacheAttributes );
+        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<String, String>( diskCacheAttributes );
 
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement cacheElement = new CacheElement( cacheName, key, value, elementAttributes );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
@@ -99,13 +99,13 @@ public class AbstractDiskCacheUnitTest
         IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setAllowRemoveAll( false );
 
-        AbstractDiskCacheTestInstance diskCache = new AbstractDiskCacheTestInstance( diskCacheAttributes );
+        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<String, String>( diskCacheAttributes );
 
         String cacheName = "testRemoveAll_notAllowed";
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement cacheElement = new CacheElement( cacheName, key, value, elementAttributes );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
@@ -130,13 +130,13 @@ public class AbstractDiskCacheUnitTest
         IDiskCacheAttributes diskCacheAttributes = new IndexedDiskCacheAttributes();
         diskCacheAttributes.setAllowRemoveAll( true );
 
-        AbstractDiskCacheTestInstance diskCache = new AbstractDiskCacheTestInstance( diskCacheAttributes );
+        AbstractDiskCacheTestInstance<String, String> diskCache = new AbstractDiskCacheTestInstance<String, String>( diskCacheAttributes );
 
         String cacheName = "testRemoveAll_allowed";
         String key = "myKey";
         String value = "myValue";
         IElementAttributes elementAttributes = new ElementAttributes();
-        ICacheElement cacheElement = new CacheElement( cacheName, key, value, elementAttributes );
+        ICacheElement<String, String> cacheElement = new CacheElement<String, String>( cacheName, key, value, elementAttributes );
 
         diskCache.update( cacheElement );
 
@@ -148,11 +148,11 @@ public class AbstractDiskCacheUnitTest
     }
 
     /** Concrete, testable instance. */
-    protected static class AbstractDiskCacheTestInstance
-        extends AbstractDiskCache
+    protected static class AbstractDiskCacheTestInstance<K extends Serializable, V extends Serializable>
+        extends AbstractDiskCache<K, V>
     {
         /** Internal map */
-        protected Map<Serializable, ICacheElement> map = new HashMap<Serializable, ICacheElement>();
+        protected Map<K, ICacheElement<K, V>> map = new HashMap<K, ICacheElement<K, V>>();
 
         /** used by the abstract aux class */
         protected IDiskCacheAttributes diskCacheAttributes;
@@ -188,7 +188,7 @@ public class AbstractDiskCacheUnitTest
          * @return Collections.EMPTY_SET
          */
         @Override
-        public Set<Serializable> getGroupKeys(String groupName)
+        public Set<K> getGroupKeys(String groupName)
         {
             return Collections.emptySet();
         }
@@ -218,7 +218,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected ICacheElement processGet( Serializable key )
+        protected ICacheElement<K, V> processGet( K key )
             throws IOException
         {
             //System.out.println( "processGet: " + key );
@@ -231,7 +231,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
+        protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
             throws IOException
         {
             return Collections.emptyMap();
@@ -243,7 +243,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected boolean processRemove( Serializable key )
+        protected boolean processRemove( K key )
             throws IOException
         {
             return map.remove( key ) != null;
@@ -265,7 +265,7 @@ public class AbstractDiskCacheUnitTest
          * @throws IOException
          */
         @Override
-        protected void processUpdate( ICacheElement cacheElement )
+        protected void processUpdate( ICacheElement<K, V> cacheElement )
             throws IOException
         {
             //System.out.println( "processUpdate: " + cacheElement );

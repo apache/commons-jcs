@@ -48,11 +48,11 @@ public class SerializationConversionUtilUnitTest
     {
         // SETUP
         IElementSerializer elementSerializer = new StandardSerializer();
-        ICacheElement before = null;
+        ICacheElement<String, String> before = null;
 
         // DO WORK
-        ICacheElementSerialized result = SerializationConversionUtil.getSerializedCacheElement( before,
-                                                                                                elementSerializer );
+        ICacheElementSerialized<String, String> result =
+            SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
         assertNull( "Should get null for null", result );
@@ -68,10 +68,11 @@ public class SerializationConversionUtilUnitTest
     {
         // SETUP
         IElementSerializer elementSerializer = new StandardSerializer();
-        ICacheElementSerialized before = null;
+        ICacheElementSerialized<String, String> before = null;
 
         // DO WORK
-        ICacheElement result = SerializationConversionUtil.getDeSerializedCacheElement( before, elementSerializer );
+        ICacheElement<String, String> result =
+            SerializationConversionUtil.getDeSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
         assertNull( "Should get null for null", result );
@@ -95,19 +96,20 @@ public class SerializationConversionUtilUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLifeSeconds( 34 );
 
-        ICacheElement before = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK
-        ICacheElementSerialized serialized = SerializationConversionUtil.getSerializedCacheElement( before,
-                                                                                                    elementSerializer );
+        ICacheElementSerialized<String, String> serialized =
+            SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
 
         // VERIFY
         assertNotNull( "Should have a serialized object.", serialized );
         System.out.println( "testSimpleConversion, " + serialized );
 
         // DO WORK
-        ICacheElement after = SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
+        ICacheElement<String, String> after =
+            SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
 
         // VERIFY
         assertNotNull( "Should have a deserialized object.", after );
@@ -136,21 +138,22 @@ public class SerializationConversionUtilUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLifeSeconds( 34 );
 
-        ICacheElement before = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK
-        ICacheElementSerialized alreadySerialized = SerializationConversionUtil
-            .getSerializedCacheElement( before, elementSerializer );
-        ICacheElementSerialized serialized = SerializationConversionUtil.getSerializedCacheElement( alreadySerialized,
-                                                                                                    elementSerializer );
+        ICacheElementSerialized<String, String> alreadySerialized =
+            SerializationConversionUtil.getSerializedCacheElement( before, elementSerializer );
+        ICacheElementSerialized<String, String> serialized =
+            SerializationConversionUtil.getSerializedCacheElement( alreadySerialized, elementSerializer );
 
         // VERIFY
         assertNotNull( "Should have a serialized object.", serialized );
         System.out.println( "testSimpleConversion, " + serialized );
 
         // DO WORK
-        ICacheElement after = SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
+        ICacheElement<String, String> after =
+            SerializationConversionUtil.getDeSerializedCacheElement( serialized, elementSerializer );
 
         // VERIFY
         assertNotNull( "Should have a deserialized object.", after );
@@ -176,7 +179,7 @@ public class SerializationConversionUtilUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLifeSeconds( 34 );
 
-        ICacheElement before = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> before = new CacheElement<String, String>( cacheName, key, value );
         before.setElementAttributes( attr );
 
         // DO WORK

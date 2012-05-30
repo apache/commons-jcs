@@ -83,7 +83,7 @@ public class LRUMemoryCacheConcurrentUnitTest
                 this.runTestForRegion( "testRegion1" );
             }
         } );
-        
+
         return suite;
     }
 
@@ -109,16 +109,16 @@ public class LRUMemoryCacheConcurrentUnitTest
     {
         CompositeCacheManager cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
         cacheMgr.configure( "/TestDiskCache.ccf" );
-        CompositeCache cache = cacheMgr.getCache( region );
+        CompositeCache<String, String> cache = cacheMgr.getCache( region );
 
-        LRUMemoryCache lru = new LRUMemoryCache();
+        LRUMemoryCache<String, String> lru = new LRUMemoryCache<String, String>();
         lru.initialize( cache );
 
         // Add items to cache
 
         for ( int i = 0; i < items; i++ )
         {
-            ICacheElement ice = new CacheElement( cache.getCacheName(), i + ":key", region + " data " + i );
+            ICacheElement<String, String> ice = new CacheElement<String, String>( cache.getCacheName(), i + ":key", region + " data " + i );
             ice.setElementAttributes( cache.getElementAttributes() );
             lru.update( ice );
         }
@@ -132,25 +132,25 @@ public class LRUMemoryCacheConcurrentUnitTest
         // Test that last items are in cache
         for ( int i = 100; i < items; i++ )
         {
-            String value = (String) lru.get( i + ":key" ).getVal();
+            String value = lru.get( i + ":key" ).getVal();
             assertEquals( region + " data " + i, value );
         }
 
         // Test that getMultiple returns all the items remaining in cache and none of the missing ones
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         for ( int i = 0; i < items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map elements = lru.getMultiple( keys );
+        Map<String, ICacheElement<String, String>> elements = lru.getMultiple( keys );
         for ( int i = 0; i < 100; i++ )
         {
             assertNull( "Should not have " + i + ":key", elements.get( i + ":key" ) );
         }
         for ( int i = 100; i < items; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }

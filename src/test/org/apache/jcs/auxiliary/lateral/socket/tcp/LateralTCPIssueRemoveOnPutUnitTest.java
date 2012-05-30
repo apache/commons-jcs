@@ -38,8 +38,8 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     private static boolean isSysOut = true;
 
     /** The port the server will listen to. */
-    private int serverPort = 1118;
-    
+    private final int serverPort = 1118;
+
     /**
      * Constructor for the TestDiskCache object.
      * <p>
@@ -54,9 +54,9 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * Test setup
      */
     public void setUp()
-    {        
+    {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
-        
+
         JCS.setConfigFilename( "/TestTCPLateralIssueRemoveCache.ccf" );
     }
 
@@ -71,7 +71,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
     /**
      * Verify that a standard put works. Get the cache configured from a file. Create a tcp service
-     * to talk to that cache. Put via the servive. Verify that the cache got the data.
+     * to talk to that cache. Put via the service. Verify that the cache got the data.
      * <p>
      * @throws Exception
      */
@@ -80,7 +80,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     {
         String region = "region1";
 
-        JCS cache = JCS.getInstance( region );
+        JCS<String, String> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
 
@@ -95,12 +95,12 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        LateralTCPService service = new LateralTCPService( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
         service.setListenerId( 123456 );
 
         String keyToBeRemovedOnPut = "test1_notremoved";
 
-        ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, String> element1 = new CacheElement<String, String>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get removed, it should get to the cache." );
         service.update( element1 );
 
@@ -127,7 +127,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
 
         boolean show = true;// false;
 
-        JCS cache = JCS.getInstance( region );
+        JCS<String, String> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
 
@@ -142,13 +142,13 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         // Using the lateral, this service will put to and remove from
         // the cache instance above.
         // The cache thinks it is different since the listenerid is different
-        LateralTCPService service = new LateralTCPService( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
         service.setListenerId( 123456 );
 
         String keyToBeRemovedOnPut = "test1";
         cache.put( keyToBeRemovedOnPut, "this should get removed." );
 
-        ICacheElement element1 = new CacheElement( region, keyToBeRemovedOnPut, region
+        ICacheElement<String, String> element1 = new CacheElement<String, String>( region, keyToBeRemovedOnPut, region
             + ":data-this shouldn't get there" );
         service.update( element1 );
 
@@ -161,7 +161,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
                 int kn = ran.nextInt( range );
                 String key = "key" + kn;
 
-                ICacheElement element = new CacheElement( region, key, region + ":data" + i
+                ICacheElement<String, String> element = new CacheElement<String, String>( region, key, region + ":data" + i
                     + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                 service.update( element );
                 if ( show )
@@ -184,18 +184,18 @@ public class LateralTCPIssueRemoveOnPutUnitTest
             throw e;
         }
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );
-        String value = (String) jcs.get( key );
+        String value = jcs.get( key );
         assertEquals( "Couldn't put normally.", data, value );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
         {
             String keyL = "key" + i;
-            String dataL = (String) jcs.get( keyL );
+            String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
                 assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );

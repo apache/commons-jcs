@@ -30,7 +30,7 @@ public class BlockDiskCacheKeyStoreUnitTest
     extends TestCase
 {
     /** Directory name */
-    private String rootDirName = "target/test-sandbox/block";
+    private final String rootDirName = "target/test-sandbox/block";
 
     /**
      * Put a bunch of keys inthe key store and verify that they are present.
@@ -51,9 +51,9 @@ public class BlockDiskCacheKeyStoreUnitTest
         attributes.setMaxKeySize( maxKeys );
         attributes.setBlockSizeBytes( bytesPerBlock );
 
-        BlockDiskCache blockDiskCache = new BlockDiskCache( attributes );
+        BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<String, String>( attributes );
 
-        BlockDiskKeyStore keyStore = new BlockDiskKeyStore( attributes, blockDiskCache );
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>( attributes, blockDiskCache );
 
         // DO WORK
         int numElements = 100;
@@ -92,9 +92,9 @@ public class BlockDiskCacheKeyStoreUnitTest
         attributes.setMaxKeySize( maxKeys );
         attributes.setBlockSizeBytes( bytesPerBlock );
 
-        BlockDiskCache blockDiskCache = new BlockDiskCache( attributes );
+        BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<String, String>( attributes );
 
-        BlockDiskKeyStore keyStore = new BlockDiskKeyStore( attributes, blockDiskCache );
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>( attributes, blockDiskCache );
 
         // DO WORK
         int numElements = 1000;

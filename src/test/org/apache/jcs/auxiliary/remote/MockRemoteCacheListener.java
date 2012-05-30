@@ -33,8 +33,8 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * <p>
  * @author Aaron Smuts
  */
-public class MockRemoteCacheListener
-    implements IRemoteCacheListener
+public class MockRemoteCacheListener<K extends Serializable, V extends Serializable>
+    implements IRemoteCacheListener<K, V>
 {
     /** Setup the listener id that this will return. */
     private long listenerId;
@@ -46,10 +46,10 @@ public class MockRemoteCacheListener
     public int putCount;
 
     /** List of ICacheElements passed to handlePut. */
-    public List putItems = new LinkedList();
+    public List<ICacheElement<K, V>> putItems = new LinkedList<ICacheElement<K,V>>();
 
     /** List of Serializable objects passed to handleRemove. */
-    public List removedKeys = new LinkedList();
+    public List<K> removedKeys = new LinkedList<K>();
 
     /** Number of times handleRemote was called. */
     public int removeCount;
@@ -127,7 +127,7 @@ public class MockRemoteCacheListener
      * @param item
      * @throws IOException
      */
-    public void handlePut( ICacheElement item )
+    public void handlePut( ICacheElement<K, V> item )
         throws IOException
     {
         putCount++;
@@ -141,7 +141,7 @@ public class MockRemoteCacheListener
      * @param key
      * @throws IOException
      */
-    public void handleRemove( String cacheName, Serializable key )
+    public void handleRemove( String cacheName, K key )
         throws IOException
     {
         removeCount++;

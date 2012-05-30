@@ -36,27 +36,27 @@ public class RemoteHttpCacheSeviceFactoryUnitTest
     public void testCreateRemoteHttpCacheService_WithLogger()
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new  MockCompositeCacheManager<String, String>();
         String className = MockCacheEventLogger.class.getName();
 
         Properties props = new Properties();
         props.put( IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_PREFIX
             + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, className );
-        
+
         boolean allowClusterGet = false;
         props.put( IRemoteHttpCacheConstants.HTTP_CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX + ".allowClusterGet", String
             .valueOf( allowClusterGet ) );
-        
+
         manager.setConfigurationProperties( props );
 
         // DO WORK
-        RemoteHttpCacheService result = RemoteHttpCacheSeviceFactory
+        RemoteHttpCacheService<String, String> result = RemoteHttpCacheSeviceFactory
             .createRemoteHttpCacheService( manager );
 
         // VERIFY
         assertNotNull( "Should have a service.", result );
     }
-    
+
     /** verify that we get the CacheEventLogger value */
     public void testConfigureCacheEventLogger_Present()
     {

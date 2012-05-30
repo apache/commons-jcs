@@ -19,7 +19,6 @@ package org.apache.jcs.auxiliary.remote.http.server;
  * under the License.
  */
 
-import java.io.Serializable;
 import java.util.HashSet;
 
 import junit.framework.TestCase;
@@ -41,17 +40,18 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        
+
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
-        RemoteHttpCacheService server = new RemoteHttpCacheService( manager, rcsa, cacheEventLogger );
+        RemoteHttpCacheService<String, String> server =
+            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
 
         String cacheName = "test";
-        Serializable key = "key";
+        String key = "key";
         long requesterId = 2;
-        CacheElement element = new CacheElement( cacheName, key, null );
-        
+        CacheElement<String, String> element = new CacheElement<String, String>( cacheName, key, null );
+
         // DO WORK
         server.update( element, requesterId );
 
@@ -59,7 +59,7 @@ public class RemoteHttpCacheServiceUnitTest
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
-    
+
     /**
      * Verify event log calls.
      * <p>
@@ -69,11 +69,12 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        
+
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
-        RemoteHttpCacheService server = new RemoteHttpCacheService( manager, rcsa, cacheEventLogger );
+        RemoteHttpCacheService<String, String> server =
+            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.get( "region", "key" );
@@ -92,11 +93,12 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        
+
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
-        RemoteHttpCacheService server = new RemoteHttpCacheService( manager, rcsa, cacheEventLogger );
+        RemoteHttpCacheService<String, String> server =
+            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.getMatching( "region", "pattern", 0 );
@@ -115,14 +117,15 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        
+
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
-        RemoteHttpCacheService server = new RemoteHttpCacheService( manager, rcsa, cacheEventLogger );
+        RemoteHttpCacheService<String, String> server =
+            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
-        server.getMultiple( "region", new HashSet() );
+        server.getMultiple( "region", new HashSet<String>() );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
@@ -138,11 +141,12 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        
+
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
-        RemoteHttpCacheService server = new RemoteHttpCacheService( manager, rcsa, cacheEventLogger );
+        RemoteHttpCacheService<String, String> server =
+            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.remove( "region", "key" );
@@ -161,11 +165,12 @@ public class RemoteHttpCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockCompositeCacheManager manager = new  MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> manager = new MockCompositeCacheManager<String, String>();
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
-        
+
         RemoteHttpCacheServerAttributes rcsa = new RemoteHttpCacheServerAttributes();
-        RemoteHttpCacheService server = new RemoteHttpCacheService( manager, rcsa, cacheEventLogger );
+        RemoteHttpCacheService<String, String> server =
+            new RemoteHttpCacheService<String, String>( manager, rcsa, cacheEventLogger );
 
         // DO WORK
         server.removeAll( "region" );

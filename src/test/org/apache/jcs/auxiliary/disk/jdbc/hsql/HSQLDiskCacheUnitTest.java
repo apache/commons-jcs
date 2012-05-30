@@ -57,7 +57,7 @@ public class HSQLDiskCacheUnitTest
 
         String region = "testBasicPutRemove";
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
 
@@ -74,22 +74,22 @@ public class HSQLDiskCacheUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map elements = jcs.getCacheElements( keys );
+        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
@@ -120,7 +120,7 @@ public class HSQLDiskCacheUnitTest
         throws CacheException, InterruptedException
     {
         String region = "removeAllAllowed";
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         int items = 20;
 
@@ -144,7 +144,7 @@ public class HSQLDiskCacheUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertNull( "value should be null key = [" + i + ":key] value = [" + value + "]", value );
         }
@@ -160,7 +160,7 @@ public class HSQLDiskCacheUnitTest
         throws CacheException, InterruptedException
     {
         String region = "noRemoveAll";
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         int items = 20;
 
@@ -180,7 +180,7 @@ public class HSQLDiskCacheUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }

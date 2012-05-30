@@ -151,10 +151,10 @@ public class LateralJGSender
      * @param led
      * @exception IOException
      */
-    public ICacheElement sendAndReceive( LateralElementDescriptor led )
+    public ICacheElement<K, V> sendAndReceive( LateralElementDescriptor led )
         throws IOException
     {
-        ICacheElement ice = null;
+        ICacheElement<K, V> ice = null;
 
         log.debug( "SendAndReceive led" );
 
@@ -213,7 +213,7 @@ public class LateralJGSender
      * @param requesterId
      * @exception IOException
      */
-    public void update( ICacheElement item, long requesterId )
+    public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
         LateralElementDescriptor led = new LateralElementDescriptor( item );
@@ -229,7 +229,7 @@ public class LateralJGSender
      * @param key
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, LateralCacheInfo.listenerId );
@@ -243,7 +243,7 @@ public class LateralJGSender
      * @param requesterId
      * @exception IOException
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );

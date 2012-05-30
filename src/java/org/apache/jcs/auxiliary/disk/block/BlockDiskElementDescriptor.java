@@ -32,14 +32,14 @@ import java.io.Serializable;
  * <p>
  * @author Aaron Smuts
  */
-public class BlockDiskElementDescriptor
+public class BlockDiskElementDescriptor<K extends Serializable>
     implements Serializable, Externalizable
 {
     /** Don't change */
     private static final long serialVersionUID = -1400659301208101411L;
 
     /** The key */
-    private Serializable key;
+    private K key;
 
     /** The array of block numbers */
     private int[] blocks;
@@ -47,7 +47,7 @@ public class BlockDiskElementDescriptor
     /**
      * @param key The key to set.
      */
-    public void setKey( Serializable key )
+    public void setKey( K key )
     {
         this.key = key;
     }
@@ -55,7 +55,7 @@ public class BlockDiskElementDescriptor
     /**
      * @return Returns the key.
      */
-    public Serializable getKey()
+    public K getKey()
     {
         return key;
     }
@@ -109,7 +109,7 @@ public class BlockDiskElementDescriptor
     public void readExternal( ObjectInput input )
         throws IOException, ClassNotFoundException
     {
-        this.key = (Serializable) input.readObject();
+        this.key = (K) input.readObject();
         this.blocks = (int[]) input.readObject();
     }
 

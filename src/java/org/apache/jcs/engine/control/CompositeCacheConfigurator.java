@@ -21,6 +21,7 @@ package org.apache.jcs.engine.control;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -216,7 +217,7 @@ public class CompositeCacheConfigurator
      *<p>
      * @param props
      */
-    protected void parseSystemRegions( Properties props )
+    protected <K extends Serializable, V extends Serializable> void parseSystemRegions( Properties props )
     {
         Enumeration<?> en = props.propertyNames();
         while ( en.hasMoreElements() )
@@ -226,13 +227,13 @@ public class CompositeCacheConfigurator
             {
                 String regionName = key.substring( SYSTEM_REGION_PREFIX.length() );
                 String value = OptionConverter.findAndSubst( key, props );
-                ICache cache;
+                ICache<K, V> cache;
                 synchronized ( regionName )
                 {
                     cache = parseRegion( props, regionName, value, null, SYSTEM_REGION_PREFIX );
                 }
                 compositeCacheManager.systemCaches.put( regionName, cache );
-                // to be availiable for remote reference they need to be here as
+                // to be available for remote reference they need to be here as
                 // well
                 compositeCacheManager.caches.put( regionName, cache );
             }
@@ -244,7 +245,7 @@ public class CompositeCacheConfigurator
      *<p>
      * @param props
      */
-    protected void parseRegions( Properties props )
+    protected <K extends Serializable, V extends Serializable> void parseRegions( Properties props )
     {
         List<String> regionNames = new ArrayList<String>();
 
@@ -259,7 +260,7 @@ public class CompositeCacheConfigurator
                 regionNames.add( regionName );
 
                 String auxiliaryList = OptionConverter.findAndSubst( key, props );
-                ICache cache;
+                ICache<K, V> cache;
                 synchronized ( regionName )
                 {
                     cache = parseRegion( props, regionName, auxiliaryList );
@@ -282,7 +283,8 @@ public class CompositeCacheConfigurator
      * @param value
      * @return CompositeCache
      */
-    protected CompositeCache parseRegion( Properties props, String regName, String value )
+    protected <K extends Serializable, V extends Serializable> CompositeCache<K, V> parseRegion(
+            Properties props, String regName, String value )
     {
         return parseRegion( props, regName, value, null, REGION_PREFIX );
     }
@@ -298,7 +300,8 @@ public class CompositeCacheConfigurator
      * @param cca
      * @return CompositeCache
      */
-    protected CompositeCache parseRegion( Properties props, String regName, String value, ICompositeCacheAttributes cca )
+    protected <K extends Serializable, V extends Serializable> CompositeCache<K, V> parseRegion(
+            Properties props, String regName, String value, ICompositeCacheAttributes cca )
     {
         return parseRegion( props, regName, value, cca, REGION_PREFIX );
     }
@@ -313,8 +316,9 @@ public class CompositeCacheConfigurator
      * @param regionPrefix
      * @return CompositeCache
      */
-    protected CompositeCache parseRegion( Properties props, String regName, String value,
-                                          ICompositeCacheAttributes cca, String regionPrefix )
+    protected <K extends Serializable, V extends Serializable> CompositeCache<K, V> parseRegion(
+            Properties props, String regName, String value,
+            ICompositeCacheAttributes cca, String regionPrefix )
     {
         // First, create or get the cache and element attributes, and create
         // the cache.
@@ -326,12 +330,12 @@ public class CompositeCacheConfigurator
 
         IElementAttributes ea = parseElementAttributes( props, regName, regionPrefix );
 
-        CompositeCache cache = new CompositeCache( regName, cca, ea );
+        CompositeCache<K, V> cache = new CompositeCache<K, V>( regName, cca, ea );
 
         if (value != null)
         {
             // Next, create the auxiliaries for the new cache
-            List<AuxiliaryCache> auxList = new ArrayList<AuxiliaryCache>();
+            List<AuxiliaryCache<K, V>> auxList = new ArrayList<AuxiliaryCache<K, V>>();
 
             if ( log.isDebugEnabled() )
             {
@@ -353,7 +357,7 @@ public class CompositeCacheConfigurator
                 }
             }
 
-            AuxiliaryCache auxCache;
+            AuxiliaryCache<K, V> auxCache;
             String auxName;
             while ( st.hasMoreTokens() )
             {
@@ -499,9 +503,9 @@ public class CompositeCacheConfigurator
      * @param regName the name of the region.
      * @return AuxiliaryCache
      */
-    protected AuxiliaryCache parseAuxiliary( CompositeCache cache, Properties props, String auxName, String regName )
+    protected <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> parseAuxiliary( CompositeCache<K, V> cache, Properties props, String auxName, String regName )
     {
-        AuxiliaryCache auxCache;
+        AuxiliaryCache<K, V> auxCache;
 
         if ( log.isDebugEnabled() )
         {
@@ -593,13 +597,13 @@ public class CompositeCacheConfigurator
      * @param auxPrefix - ex. AUXILIARY_PREFIX + auxName
      * @return IKeyMatcher
      */
-    public static IKeyMatcher parseKeyMatcher( Properties props, String auxPrefix )
+    public static <K extends Serializable> IKeyMatcher<K> parseKeyMatcher( Properties props, String auxPrefix )
     {
-        IKeyMatcher keyMatcher = null;
+        IKeyMatcher<K> keyMatcher = null;
 
         // auxFactory was not previously initialized.
         String keyMatcherClassName = auxPrefix + KEY_MATCHER_PREFIX;
-        keyMatcher = (IKeyMatcher) OptionConverter
+        keyMatcher = (IKeyMatcher<K>) OptionConverter
             .instantiateByKey( props, keyMatcherClassName,
                                IKeyMatcher.class, null );
         if ( keyMatcher != null )
@@ -615,7 +619,7 @@ public class CompositeCacheConfigurator
         else
         {
             // use the default standard serializer
-            keyMatcher = new KeyMatcherPatternImpl();
+            keyMatcher = new KeyMatcherPatternImpl<K>();
             if ( log.isInfoEnabled() )
             {
                 log.info( "Using standard key matcher [" + keyMatcher + "] for auxiliary [" + auxPrefix + "]" );

@@ -33,7 +33,7 @@ import org.apache.jcs.access.exception.ObjectNotFoundException;
  * Note: server which implements this interface provides a local cache service, whereas server which
  * implements IRmiCacheService provides a remote cache service.
  */
-public interface ICacheService
+public interface ICacheService<K extends Serializable, V extends Serializable>
 {
     /**
      * Puts a cache item to the cache.
@@ -42,7 +42,7 @@ public interface ICacheService
      * @throws ObjectExistsException
      * @throws IOException
      */
-    void update( ICacheElement item )
+    void update( ICacheElement<K, V> item )
         throws ObjectExistsException, IOException;
 
     /**
@@ -50,11 +50,11 @@ public interface ICacheService
      * <p>
      * @param cacheName
      * @param key
-     * @return the ICacheElement or null if not found
+     * @return the ICacheElement<K, V> or null if not found
      * @throws ObjectNotFoundException
      * @throws IOException
      */
-    ICacheElement get( String cacheName, Serializable key )
+    ICacheElement<K, V> get( String cacheName, K key )
         throws ObjectNotFoundException, IOException;
 
     /**
@@ -62,12 +62,12 @@ public interface ICacheService
      * <p>
      * @param cacheName
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws ObjectNotFoundException
      * @throws IOException
      */
-    Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
+    Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
         throws ObjectNotFoundException, IOException;
 
     /**
@@ -75,11 +75,11 @@ public interface ICacheService
      * <p>
      * @param cacheName
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
+    Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException;
 
     /**
@@ -89,11 +89,11 @@ public interface ICacheService
      * @param key
      * @throws IOException
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException;
 
     /**
-     * Remove all keys from the sepcified cache.
+     * Remove all keys from the specified cache.
      * @param cacheName
      * @throws IOException
      */

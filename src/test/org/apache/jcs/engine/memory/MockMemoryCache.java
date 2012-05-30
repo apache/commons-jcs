@@ -23,12 +23,14 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
@@ -37,14 +39,14 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * <p>
  * @author Aaron Smuts
  */
-public class MockMemoryCache
-    implements MemoryCache
+public class MockMemoryCache<K extends Serializable, V extends Serializable>
+    implements IMemoryCache<K, V>
 {
     /** Config */
     private ICompositeCacheAttributes cacheAttr;
 
     /** Internal map */
-    private final HashMap<Serializable, ICacheElement> map = new HashMap<Serializable, ICacheElement>();
+    private final HashMap<K, ICacheElement<K, V>> map = new HashMap<K, ICacheElement<K, V>>();
 
     /** The number of times waterfall was called. */
     public int waterfallCallCount = 0;
@@ -56,7 +58,7 @@ public class MockMemoryCache
      * Does nothing
      * @param cache
      */
-    public void initialize( CompositeCache cache )
+    public void initialize( CompositeCache<K, V> cache )
     {
         // nothing
     }
@@ -85,16 +87,16 @@ public class MockMemoryCache
     }
 
     /** @return null */
-    public Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> getIterator()
+    public Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
     {
         return null;
     }
 
     /**
      * @return map.keySet().toArray( */
-    public Object[] getKeyArray()
+    public Set<K> getKeySet()
     {
-        return map.keySet().toArray();
+        return new LinkedHashSet<K>(map.keySet());
     }
 
     /**
@@ -102,7 +104,7 @@ public class MockMemoryCache
      * @return map.remove( key ) != null
      * @throws IOException
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
         throws IOException
     {
         return map.remove( key ) != null;
@@ -122,7 +124,7 @@ public class MockMemoryCache
      * @return (ICacheElement) map.get( key )
      * @throws IOException
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
         throws IOException
     {
         return map.get( key );
@@ -133,20 +135,20 @@ public class MockMemoryCache
      * @return elements
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         throws IOException
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            Iterator<Serializable> iterator = keys.iterator();
+            Iterator<K> iterator = keys.iterator();
 
             while ( iterator.hasNext() )
             {
-                Serializable key = iterator.next();
+                K key = iterator.next();
 
-                ICacheElement element = get( key );
+                ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -163,7 +165,7 @@ public class MockMemoryCache
      * @return (ICacheElement) map.get( key )
      * @throws IOException
      */
-    public ICacheElement getQuiet( Serializable key )
+    public ICacheElement<K, V> getQuiet( K key )
         throws IOException
     {
         return map.get( key );
@@ -173,7 +175,7 @@ public class MockMemoryCache
      * @param ce
      * @throws IOException
      */
-    public void waterfal( ICacheElement ce )
+    public void waterfal( ICacheElement<K, V> ce )
         throws IOException
     {
         waterfallCallCount++;
@@ -183,7 +185,7 @@ public class MockMemoryCache
      * @param ce
      * @throws IOException
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
         throws IOException
     {
         if ( ce != null )
@@ -209,7 +211,7 @@ public class MockMemoryCache
     }
 
     /** @return null */
-    public CompositeCache getCompositeCache()
+    public CompositeCache<K, V> getCompositeCache()
     {
         return null;
     }
@@ -218,7 +220,7 @@ public class MockMemoryCache
      * @param group
      * @return null
      */
-    public Set<Serializable> getGroupKeys( String group )
+    public Set<K> getGroupKeys( String group )
     {
         return null;
     }

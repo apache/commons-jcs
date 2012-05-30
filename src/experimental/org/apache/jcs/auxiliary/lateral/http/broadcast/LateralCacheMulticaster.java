@@ -46,7 +46,7 @@ public class LateralCacheMulticaster
         LogFactory.getLog( LateralCacheMulticaster.class );
 
     private final static String servlet = "/cache/cache/LateralCacheServletReceiver";
-    private final ICacheElement ice;
+    private final ICacheElement<K, V> ice;
     private final ArrayList servers;
 
     /**
@@ -55,7 +55,7 @@ public class LateralCacheMulticaster
      * @param ice
      * @param servers
      */
-    public LateralCacheMulticaster( ICacheElement ice, ArrayList servers )
+    public LateralCacheMulticaster( ICacheElement<K, V> ice, ArrayList servers )
     {
         this.servers = servers;
         this.ice = ice;

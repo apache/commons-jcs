@@ -22,14 +22,14 @@ public class FileDiskCacheFactoryUnitTest
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/FileDiskCacheFactoryUnitTest" );
 
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager<String, String>();
         ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         IElementSerializer elementSerializer = new MockElementSerializer();
 
         FileDiskCacheFactory factory = new FileDiskCacheFactory();
 
         // DO WORK
-        FileDiskCache result = (FileDiskCache) factory.createCache( cattr, cacheMgr, cacheEventLogger,
+        FileDiskCache<String, String> result = factory.createCache( cattr, cacheMgr, cacheEventLogger,
                                                                     elementSerializer );
 
         // VERIFY

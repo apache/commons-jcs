@@ -22,11 +22,11 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -79,8 +79,8 @@ import org.apache.jcs.utils.serialization.StandardSerializer;
  * <p>
  * @author Aaron Smuts
  */
-public class JDBCDiskCache
-    extends AbstractDiskCache
+public class JDBCDiskCache<K extends Serializable, V extends Serializable>
+    extends AbstractDiskCache<K, V>
 {
     /** The local logger. */
     private final static Log log = LogFactory.getLog( JDBCDiskCache.class );
@@ -182,7 +182,7 @@ public class JDBCDiskCache
      * @param ce
      */
     @Override
-    protected void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement<K, V> ce )
     {
         incrementUpdateCount();
 
@@ -290,7 +290,7 @@ public class JDBCDiskCache
      * @param con
      * @param element
      */
-    private void insertOrUpdate( ICacheElement ce, Connection con, byte[] element )
+    private void insertOrUpdate( ICacheElement<K, V> ce, Connection con, byte[] element )
     {
         boolean exists = false;
 
@@ -321,7 +321,7 @@ public class JDBCDiskCache
      * @param element
      * @return true if the insertion fails because the record exists.
      */
-    private boolean insertRow( ICacheElement ce, Connection con, byte[] element )
+    private boolean insertRow( ICacheElement<K, V> ce, Connection con, byte[] element )
     {
         boolean exists = false;
         try
@@ -386,7 +386,7 @@ public class JDBCDiskCache
      * @param con
      * @param element
      */
-    private void updateRow( ICacheElement ce, Connection con, byte[] element )
+    private void updateRow( ICacheElement<K, V> ce, Connection con, byte[] element )
     {
         String sqlU = null;
         try
@@ -428,7 +428,7 @@ public class JDBCDiskCache
      * @param ce
      * @return boolean
      */
-    protected boolean doesElementExist( ICacheElement ce )
+    protected boolean doesElementExist( ICacheElement<K, V> ce )
     {
         boolean exists = false;
 
@@ -507,7 +507,7 @@ public class JDBCDiskCache
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
     @Override
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
     {
         incrementGetCount();
 
@@ -521,7 +521,7 @@ public class JDBCDiskCache
             return null;
         }
 
-        ICacheElement obj = null;
+        ICacheElement<K, V> obj = null;
 
         byte[] data = null;
         try
@@ -552,7 +552,7 @@ public class JDBCDiskCache
                             try
                             {
                                 // USE THE SERIALIZER
-                                obj = (ICacheElement) getElementSerializer().deSerialize( data );
+                                obj = getElementSerializer().deSerialize( data );
                             }
                             catch ( IOException ioe )
                             {
@@ -612,7 +612,7 @@ public class JDBCDiskCache
      * @return key,value map
      */
     @Override
-    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
     {
         incrementGetMatchingCount();
 
@@ -626,7 +626,7 @@ public class JDBCDiskCache
             return null;
         }
 
-        Map<Serializable, ICacheElement> results = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> results = new HashMap<K, ICacheElement<K, V>>();
 
         try
         {
@@ -656,8 +656,8 @@ public class JDBCDiskCache
                                 try
                                 {
                                     // USE THE SERIALIZER
-                                    ICacheElement value = (ICacheElement) getElementSerializer().deSerialize( data );
-                                    results.put( key, value );
+                                    ICacheElement<K, V> value = getElementSerializer().deSerialize( data );
+                                    results.put( (K) key, value );
                                 }
                                 catch ( IOException ioe )
                                 {
@@ -735,7 +735,7 @@ public class JDBCDiskCache
      * @return boolean
      */
     @Override
-    protected boolean processRemove( Serializable key )
+    protected boolean processRemove( K key )
     {
         // remove single item.
         String sql = "delete from " + getJdbcDiskCacheAttributes().getTableName()
@@ -944,7 +944,7 @@ public class JDBCDiskCache
     @Override
     public void processDispose()
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, (K)"none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             try
@@ -1044,7 +1044,7 @@ public class JDBCDiskCache
      * @return byte[]
      * @throws IOException
      */
-    protected byte[] serialize( Serializable obj )
+    protected byte[] serialize( ICacheElement<K, V> obj )
         throws IOException
     {
         return getElementSerializer().serialize( obj );
@@ -1055,7 +1055,7 @@ public class JDBCDiskCache
      * @return Set
      */
     @Override
-    public Set<Serializable> getGroupKeys( String groupName )
+    public Set<K> getGroupKeys( String groupName )
     {
         throw new UnsupportedOperationException( "Groups not implemented." );
         // return null;

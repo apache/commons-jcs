@@ -19,10 +19,10 @@ package org.apache.jcs.engine.control;
  * under the License.
  */
 
+import junit.framework.TestCase;
+
 import org.apache.jcs.JCS;
 import org.apache.jcs.engine.stats.behavior.ICacheStats;
-
-import junit.framework.TestCase;
 
 /**
  * @author Aaron Smuts
@@ -39,7 +39,7 @@ public class CacheManagerStatsUnitTest
      */
     public void testSimpleGetStats() throws Exception
     {
-        JCS cache = JCS.getInstance( "testCache1" );
+        JCS<String, String> cache = JCS.getInstance( "testCache1" );
 
         // 1 miss, 1 hit, 1 put
         cache.get( "testKey" );

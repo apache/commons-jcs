@@ -33,8 +33,8 @@ import org.apache.jcs.engine.behavior.IZombie;
 /**
  * Zombie adapter for any cache service. Balks at every call.
  */
-public class ZombieCacheService
-    implements ICacheService, IZombie
+public class ZombieCacheService<K extends Serializable, V extends Serializable>
+    implements ICacheService<K, V>, IZombie
 {
     /** The logger. */
     private static final Log log = LogFactory.getLog( ZombieCacheService.class );
@@ -42,7 +42,7 @@ public class ZombieCacheService
     /**
      * @param item
      */
-    public void put( ICacheElement item )
+    public void put( ICacheElement<K, V> item )
     {
         if ( log.isDebugEnabled() )
         {
@@ -56,7 +56,7 @@ public class ZombieCacheService
      * <p>
      * @param item
      */
-    public void update( ICacheElement item )
+    public void update( ICacheElement<K, V> item )
     {
         // zombies have no inner life
     }
@@ -66,7 +66,7 @@ public class ZombieCacheService
      * @param key
      * @return null. zombies have no internal data
      */
-    public ICacheElement get( String cacheName, Serializable key )
+    public ICacheElement<K, V> get( String cacheName, K key )
     {
         return null;
     }
@@ -78,7 +78,7 @@ public class ZombieCacheService
      * @param keys
      * @return Collections.EMPTY_MAP
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
     {
         return Collections.emptyMap();
     }
@@ -90,7 +90,7 @@ public class ZombieCacheService
      * @param pattern
      * @return Collections.EMPTY_MAP
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
     {
         return Collections.emptyMap();
     }
@@ -103,7 +103,7 @@ public class ZombieCacheService
      * @param container
      * @return null always
      */
-    public Serializable get( String cacheName, Serializable key, boolean container )
+    public Serializable get( String cacheName, K key, boolean container )
     {
         if ( log.isDebugEnabled() )
         {
@@ -117,7 +117,7 @@ public class ZombieCacheService
      * @param cacheName
      * @param key
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
     {
         // zombies have no inner life
     }

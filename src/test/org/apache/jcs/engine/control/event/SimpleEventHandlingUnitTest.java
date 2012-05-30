@@ -56,7 +56,7 @@ public class SimpleEventHandlingUnitTest
         // SETUP
         MyEventHandler meh = new MyEventHandler();
 
-        JCS jcs = JCS.getInstance( "WithDisk" );
+        JCS<String, String> jcs = JCS.getInstance( "WithDisk" );
         // this should add the event handler to all items as they are created.
         IElementAttributes attributes = jcs.getDefaultElementAttributes();
         attributes.addElementEventHandler( meh );
@@ -86,7 +86,7 @@ public class SimpleEventHandlingUnitTest
     public void testSpoolNoDiskEvent()
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "NoDisk" );
+        JCS<String, String> jcs = JCS.getInstance( "NoDisk" );
 
         MyEventHandler meh = new MyEventHandler();
 
@@ -119,7 +119,7 @@ public class SimpleEventHandlingUnitTest
     {
         MyEventHandler meh = new MyEventHandler();
 
-        JCS jcs = JCS.getInstance( "DiskButNotAllowed" );
+        JCS<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
         IElementAttributes attributes = jcs.getDefaultElementAttributes();
         attributes.addElementEventHandler( meh );
@@ -149,7 +149,7 @@ public class SimpleEventHandlingUnitTest
     {
         MyEventHandler meh = new MyEventHandler();
 
-        JCS jcs = JCS.getInstance( "DiskButNotAllowed" );
+        JCS<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
         //IElementAttributes attributes = jcs.getDefaultElementAttributes();
         //attributes.addElementEventHandler( meh );

@@ -37,7 +37,7 @@ public interface ILateralCacheJGListener
     public void init();
 
     /** Tries to get a requested item from the cache. */
-    public Serializable handleGet( String cacheName, Serializable key )
+    public Serializable handleGet( String cacheName, K key )
         throws IOException;
 
 }

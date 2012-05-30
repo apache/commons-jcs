@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.lateral;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,16 +59,11 @@ public abstract class LateralCacheAbstractManager
     private final static Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
     /** Each manager instance has caches.   */
-    protected final Map<String, LateralCacheNoWait> caches = new HashMap<String, LateralCacheNoWait>();
+    protected final Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> caches =
+        new HashMap<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>>();
 
     /** Configuration */
     protected ILateralCacheAttributes lca;
-
-    /**
-     * Handle to the lateral cache service; or a zombie handle if failed to
-     * connect.
-     */
-    private ILateralCacheService lateralService;
 
     /**
      * Wrapper of the lateral cache watch service; or wrapper of a zombie
@@ -90,7 +86,7 @@ public abstract class LateralCacheAbstractManager
      *            The feature to be added to the LateralCacheListener attribute
      * @exception IOException
      */
-    public void addLateralCacheListener( String cacheName, ILateralCacheListener listener )
+    public <K extends Serializable, V extends Serializable> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )
         throws IOException
     {
         synchronized ( this.caches )
@@ -100,7 +96,7 @@ public abstract class LateralCacheAbstractManager
     }
 
     /**
-     * Called to access a precreated region or construct one with defaults.
+     * Called to access a pre-created region or construct one with defaults.
      * Since all aux cache access goes through the manager, this will never be
      * called.
      * <p>
@@ -113,7 +109,7 @@ public abstract class LateralCacheAbstractManager
      * @return AuxiliaryCache
      * @param cacheName
      */
-    public abstract AuxiliaryCache getCache( String cacheName );
+    public abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName );
 
     /**
      * Gets the cacheType attribute of the LateralCacheManager object
@@ -148,13 +144,12 @@ public abstract class LateralCacheAbstractManager
 
         synchronized ( this.caches )
         {
-            this.lateralService = lateralService;
             // need to implement an observer for some types of laterals( http and
             // tcp)
             //this.lateralWatch.setCacheWatch(lateralWatch);
-            for (LateralCacheNoWait cache : this.caches.values())
+            for (LateralCacheNoWait<? extends Serializable, ? extends Serializable> cache : this.caches.values())
             {
-                cache.fixCache( this.lateralService );
+                cache.fixCache( lateralService );
             }
         }
     }
@@ -163,7 +158,7 @@ public abstract class LateralCacheAbstractManager
      * @return Map
      *
      */
-    public Map<String, LateralCacheNoWait> getCaches()
+    public Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> getCaches()
     {
         return caches;
     }

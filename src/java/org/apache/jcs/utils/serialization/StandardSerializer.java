@@ -40,14 +40,14 @@ public class StandardSerializer
     /**
      * Serializes an object using default serialization.
      * <p>
-     * @param obj 
+     * @param obj
      * @return byte[]
-     * @throws IOException 
+     * @throws IOException
      */
-    public byte[] serialize( Serializable obj )
+    public <T extends Serializable> byte[] serialize( T obj )
         throws IOException
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();        
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream( baos );
         try
         {
@@ -69,7 +69,7 @@ public class StandardSerializer
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public Object deSerialize( byte[] data )
+    public <T extends Serializable> T deSerialize( byte[] data )
         throws IOException, ClassNotFoundException
     {
         ByteArrayInputStream bais = new ByteArrayInputStream( data );
@@ -79,7 +79,7 @@ public class StandardSerializer
         {
             try
             {
-                return ois.readObject();
+                return (T) ois.readObject();
             }
             catch ( IOException e )
             {

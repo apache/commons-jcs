@@ -19,27 +19,29 @@ package org.apache.jcs.engine.memory.util;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.struct.DoubleLinkedListNode;
 
 /**
  * This wrapper is needed for double linked lists.
  */
-public class MemoryElementDescriptor
-    extends DoubleLinkedListNode<ICacheElement>
+public class MemoryElementDescriptor<K extends Serializable, V extends Serializable>
+    extends DoubleLinkedListNode<ICacheElement<K, V>>
 {
     /** Don't change */
     private static final long serialVersionUID = -1905161209035522460L;
 
     /** The CacheElement wrapped by this descriptor */
-    public ICacheElement ce;
+    public ICacheElement<K, V> ce;
 
     /**
      * Constructs a usable MemoryElementDescriptor.
      * <p>
      * @param ce
      */
-    public MemoryElementDescriptor( ICacheElement ce )
+    public MemoryElementDescriptor( ICacheElement<K, V> ce )
     {
         super( ce );
         this.ce = ce;

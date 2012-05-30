@@ -82,7 +82,7 @@ public class JDBCDiskCacheShrinkUnitTest
         String regionExpire = "expire1Second";
         int items = 200;
 
-        JCS jcsExpire = JCS.getInstance( regionExpire );
+        JCS<String, String> jcsExpire = JCS.getInstance( regionExpire );
 
         System.out.println( "BEFORE PUT \n" + jcsExpire.getStats() );
 
@@ -119,7 +119,7 @@ public class JDBCDiskCacheShrinkUnitTest
         String region = "expire100Second";
         int items = 200;
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
@@ -171,7 +171,7 @@ public class JDBCDiskCacheShrinkUnitTest
         String region = "eternal";
         int items = 200;
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 

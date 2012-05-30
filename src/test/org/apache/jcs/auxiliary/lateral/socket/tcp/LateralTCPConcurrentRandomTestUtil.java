@@ -74,7 +74,7 @@ public class LateralTCPConcurrentRandomTestUtil
     {
         boolean show = true;//false;
 
-        JCS cache = JCS.getInstance( region );
+        JCS<String, String> cache = JCS.getInstance( region );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1103 );
@@ -84,7 +84,7 @@ public class LateralTCPConcurrentRandomTestUtil
         // this service will put and remove using the lateral to
         // the cache instance above
         // the cache thinks it is different since the listenerid is different
-        LateralTCPService service = new LateralTCPService( lattr2 );
+        LateralTCPService<String, String> service = new LateralTCPService<String, String>( lattr2 );
         service.setListenerId( 123456 );
 
         try
@@ -97,7 +97,7 @@ public class LateralTCPConcurrentRandomTestUtil
                 String key = "key" + kn;
                 if ( n == 1 )
                 {
-                    ICacheElement element = new CacheElement( region, key, region + ":data" + i
+                    ICacheElement<String, String> element = new CacheElement<String, String>( region, key, region + ":data" + i
                         + " junk asdfffffffadfasdfasf " + kn + ":" + n );
                     service.update( element );
                     if ( show )
@@ -148,18 +148,18 @@ public class LateralTCPConcurrentRandomTestUtil
             throw e;
         }
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );
-        String value = (String) jcs.get( key );
+        String value = jcs.get( key );
         assertEquals( "Couldn't put normally.", data, value );
 
         // make sure the items we can find are in the correct region.
         for ( int i = 1; i < numOps; i++ )
         {
             String keyL = "key" + i;
-            String dataL = (String) jcs.get( keyL );
+            String dataL = jcs.get( keyL );
             if ( dataL != null )
             {
                 assertTrue( "Incorrect region detected.", dataL.startsWith( region ) );
@@ -169,7 +169,7 @@ public class LateralTCPConcurrentRandomTestUtil
 
         //Thread.sleep( 1000 );
 
-        //ICacheElement element = new CacheElement( region, "abc", "testdata");
+        //ICacheElement<String, String> element = new CacheElement( region, "abc", "testdata");
         //service.update( element );
 
         //Thread.sleep( 2500 );

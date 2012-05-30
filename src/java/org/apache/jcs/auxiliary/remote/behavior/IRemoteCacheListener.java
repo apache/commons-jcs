@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote.behavior;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.Remote;
 
 import org.apache.jcs.engine.behavior.ICacheListener;
@@ -27,8 +28,8 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 /**
  * Listens for remote cache event notification ( rmi callback ).
  */
-public interface IRemoteCacheListener
-    extends ICacheListener, Remote
+public interface IRemoteCacheListener<K extends Serializable, V extends Serializable>
+    extends ICacheListener<K, V>, Remote
 {
     /** SERVER_LISTENER -- for the cluster */
     public final static int SERVER_LISTENER = 0;

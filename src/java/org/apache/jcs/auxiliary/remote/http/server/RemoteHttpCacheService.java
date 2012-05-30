@@ -36,8 +36,8 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * For now we assume that all clients are non-cluster clients. And listener notification is not
  * supported.
  */
-public class RemoteHttpCacheService
-    extends AbstractRemoteCacheService
+public class RemoteHttpCacheService<K extends Serializable, V extends Serializable>
+    extends AbstractRemoteCacheService<K, V>
 {
     /** The name used in the event logs. */
     private static final String EVENT_LOG_SOURCE_NAME = "RemoteHttpCacheServer";
@@ -73,10 +73,10 @@ public class RemoteHttpCacheService
      * @throws IOException
      */
     @Override
-    public ICacheElement processGet( String cacheName, Serializable key, long requesterId )
+    public ICacheElement<K, V> processGet( String cacheName, K key, long requesterId )
         throws IOException
     {
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
         if ( keepLocal )
@@ -102,10 +102,10 @@ public class RemoteHttpCacheService
      * @throws IOException
      */
     @Override
-    public Map<Serializable, ICacheElement> processGetMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> processGetMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException
     {
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
         if ( keepLocal )
@@ -131,10 +131,10 @@ public class RemoteHttpCacheService
      * @throws IOException
      */
     @Override
-    public Map<Serializable, ICacheElement> processGetMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> processGetMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isAllowClusterGet();
         if ( keepLocal )
@@ -158,10 +158,10 @@ public class RemoteHttpCacheService
      * @throws IOException
      */
     @Override
-    public void processUpdate( ICacheElement item, long requesterId )
+    public void processUpdate( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
-        CompositeCache cache = getCacheManager().getCache( item.getCacheName() );
+        CompositeCache<K, V> cache = getCacheManager().getCache( item.getCacheName() );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
         if ( keepLocal )
@@ -186,10 +186,10 @@ public class RemoteHttpCacheService
      * @throws IOException
      */
     @Override
-    public void processRemove( String cacheName, Serializable key, long requesterId )
+    public void processRemove( String cacheName, K key, long requesterId )
         throws IOException
     {
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
         if ( keepLocal )
@@ -216,7 +216,7 @@ public class RemoteHttpCacheService
     public void processRemoveAll( String cacheName, long requesterId )
         throws IOException
     {
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
         boolean keepLocal = !remoteHttpCacheServerAttributes.isLocalClusterConsistency();
         if ( keepLocal )
@@ -240,7 +240,7 @@ public class RemoteHttpCacheService
     public void processDispose( String cacheName, long requesterId )
         throws IOException
     {
-        CompositeCache cache = getCacheManager().getCache( cacheName );
+        CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
         cache.dispose();
     }
 

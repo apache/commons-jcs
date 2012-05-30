@@ -37,8 +37,8 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * <p>
  * @author Aaron Smuts
  */
-public class MySQLDiskCache
-    extends JDBCDiskCache
+public class MySQLDiskCache<K extends Serializable, V extends Serializable>
+    extends JDBCDiskCache<K, V>
 {
     /** don't change */
     private static final long serialVersionUID = -7169488308515823491L;
@@ -77,7 +77,7 @@ public class MySQLDiskCache
      * @return An object matching key, or null.
      */
     @Override
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {
@@ -97,7 +97,7 @@ public class MySQLDiskCache
      * @return An object matching key, or null.
      */
     @Override
-    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {
@@ -134,7 +134,7 @@ public class MySQLDiskCache
      * @param element
      */
     @Override
-    protected void processUpdate( ICacheElement element )
+    protected void processUpdate( ICacheElement<K, V> element )
     {
         if ( this.getTableState().getState() == TableState.OPTIMIZATION_RUNNING )
         {

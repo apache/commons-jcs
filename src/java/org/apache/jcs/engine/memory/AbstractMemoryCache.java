@@ -40,6 +40,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
+import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.jcs.engine.memory.shrinking.ShrinkerThread;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.Stats;
@@ -51,8 +52,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * This keeps a static reference to a memory shrinker clock daemon. If this region is configured to
  * use the shrinker, the clock daemon will be setup to run the shrinker on this region.
  */
-public abstract class AbstractMemoryCache
-    implements MemoryCache, Serializable
+public abstract class AbstractMemoryCache<K extends Serializable, V extends Serializable>
+    implements IMemoryCache<K, V>, Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = -4494626991630099575L;
@@ -64,7 +65,7 @@ public abstract class AbstractMemoryCache
     protected String cacheName;
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    protected Map<Serializable, MemoryElementDescriptor> map;
+    protected Map<K, MemoryElementDescriptor<K, V>> map;
 
     /** Region Elemental Attributes, used as a default and copied for each item. */
     public IElementAttributes elementAttributes;
@@ -73,7 +74,7 @@ public abstract class AbstractMemoryCache
     public ICompositeCacheAttributes cacheAttributes;
 
     /** The cache region this store is associated with */
-    protected CompositeCache cache;
+    protected CompositeCache<K, V> cache;
 
     /** status */
     protected int status;
@@ -90,7 +91,7 @@ public abstract class AbstractMemoryCache
      * <p>
      * @param hub
      */
-    public synchronized void initialize( CompositeCache hub )
+    public synchronized void initialize( CompositeCache<K, V> hub )
     {
         this.cacheName = hub.getCacheName();
         this.cacheAttributes = hub.getCacheAttributes();
@@ -107,7 +108,7 @@ public abstract class AbstractMemoryCache
                 shrinkerDaemon = Executors.newScheduledThreadPool(1, new MyThreadFactory());
             }
 
-            shrinkerDaemon.scheduleAtFixedRate(new ShrinkerThread(this), 0, cacheAttributes.getShrinkerIntervalSeconds(), TimeUnit.SECONDS);
+            shrinkerDaemon.scheduleAtFixedRate(new ShrinkerThread<K, V>(this), 0, cacheAttributes.getShrinkerIntervalSeconds(), TimeUnit.SECONDS);
         }
     }
 
@@ -117,7 +118,7 @@ public abstract class AbstractMemoryCache
      * <p>
      * @return a threadsafe Map
      */
-    public abstract Map<Serializable, MemoryElementDescriptor> createMap();
+    public abstract Map<K, MemoryElementDescriptor<K, V>> createMap();
 
     /**
      * Removes an item from the cache
@@ -126,7 +127,7 @@ public abstract class AbstractMemoryCache
      * @return Description of the Return Value
      * @exception IOException Description of the Exception
      */
-    public abstract boolean remove( Serializable key )
+    public abstract boolean remove( K key )
         throws IOException;
 
     /**
@@ -136,27 +137,27 @@ public abstract class AbstractMemoryCache
      * @return Description of the Return Value
      * @exception IOException Description of the Exception
      */
-    public abstract ICacheElement get( Serializable key )
+    public abstract ICacheElement<K, V> get( K key )
         throws IOException;
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
         throws IOException
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            for (Serializable key : keys)
+            for (K key : keys)
             {
-                ICacheElement element = get( key );
+                ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -176,12 +177,12 @@ public abstract class AbstractMemoryCache
      * @return Element matching key if found, or null
      * @exception IOException
      */
-    public ICacheElement getQuiet( Serializable key )
+    public ICacheElement<K, V> getQuiet( K key )
         throws IOException
     {
-        ICacheElement ce = null;
+        ICacheElement<K, V> ce = null;
 
-        MemoryElementDescriptor me = map.get( key );
+        MemoryElementDescriptor<K, V> me = map.get( key );
         if ( me != null )
         {
             if ( log.isDebugEnabled() )
@@ -205,15 +206,15 @@ public abstract class AbstractMemoryCache
      * @param ce Description of the Parameter
      * @exception IOException Description of the Exception
      */
-    public abstract void update( ICacheElement ce )
+    public abstract void update( ICacheElement<K, V> ce )
         throws IOException;
 
     /**
-     * Get an Array of the keys for all elements in the memory cache
+     * Get a set of the keys for all elements in the memory cache
      * <p>
-     * @return An Object[]
+     * @return A set of the key type
      */
-    public abstract Object[] getKeyArray();
+    public abstract Set<K> getKeySet();
 
     /**
      * Removes all cached items from the cache.
@@ -287,7 +288,7 @@ public abstract class AbstractMemoryCache
      * @param ce
      * @exception IOException
      */
-    public void waterfal( ICacheElement ce )
+    public void waterfal( ICacheElement<K, V> ce )
         throws IOException
     {
         this.cache.spoolToDisk( ce );
@@ -298,7 +299,7 @@ public abstract class AbstractMemoryCache
      * <p>
      * @return The iterator value
      */
-    public Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> getIterator()
+    public Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
     {
         return map.entrySet().iterator();
     }
@@ -310,9 +311,9 @@ public abstract class AbstractMemoryCache
     public void dumpMap()
     {
         log.debug( "dumpingMap" );
-        for (Map.Entry<Serializable, MemoryElementDescriptor> e : map.entrySet())
+        for (Map.Entry<K, MemoryElementDescriptor<K, V>> e : map.entrySet())
         {
-            MemoryElementDescriptor me = e.getValue();
+            MemoryElementDescriptor<K, V> me = e.getValue();
             log.debug( "dumpMap> key=" + e.getKey() + ", val=" + me.ce.getVal() );
         }
     }
@@ -342,7 +343,7 @@ public abstract class AbstractMemoryCache
      * <p>
      * @return The cache value
      */
-    public CompositeCache getCompositeCache()
+    public CompositeCache<K, V> getCompositeCache()
     {
         return this.cache;
     }
@@ -351,19 +352,19 @@ public abstract class AbstractMemoryCache
      * @param groupName
      * @return group keys
      */
-    public Set<Serializable> getGroupKeys( String groupName )
+    public Set<K> getGroupKeys( String groupName )
     {
         GroupId groupId = new GroupId( getCacheName(), groupName );
-        HashSet<Serializable> keys = new HashSet<Serializable>();
+        HashSet<K> keys = new HashSet<K>();
         synchronized ( map )
         {
-            for (Map.Entry<Serializable, MemoryElementDescriptor> entry : map.entrySet())
+            for (Map.Entry<K, MemoryElementDescriptor<K, V>> entry : map.entrySet())
             {
-                Object k = entry.getKey();
+                K k = entry.getKey();
 
-                if ( k instanceof GroupAttrName && ( (GroupAttrName) k ).groupId.equals( groupId ) )
+                if ( k instanceof GroupAttrName && ( (GroupAttrName<K>) k ).groupId.equals( groupId ) )
                 {
-                    keys.add((Serializable) ( (GroupAttrName) k ).attrName );
+                    keys.add(( (GroupAttrName<K>) k ).attrName );
                 }
             }
         }

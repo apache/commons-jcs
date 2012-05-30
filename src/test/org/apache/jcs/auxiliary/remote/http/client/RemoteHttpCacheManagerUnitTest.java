@@ -47,14 +47,14 @@ public class RemoteHttpCacheManagerUnitTest
                                                                              elementSerializer );
 
         // DO WORK
-        IRemoteHttpCacheClient result = manager.createRemoteHttpCacheClientForAttributes( cattr );
+        IRemoteHttpCacheClient<String, String> result = manager.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );
         assertTrue( "Wrong default.", result instanceof RemoteHttpCacheClient );
         assertTrue( "Should be initialized", ((RemoteHttpCacheClient)result).isInitialized() );
     }
-    
+
     /** Verify that we get the default. */
     public void testCreateRemoteHttpCacheClient_deafult()
     {
@@ -69,13 +69,13 @@ public class RemoteHttpCacheManagerUnitTest
                                                                              elementSerializer );
 
         // DO WORK
-        IRemoteHttpCacheClient result = manager.createRemoteHttpCacheClientForAttributes( cattr );
+        IRemoteHttpCacheClient<String, String> result = manager.createRemoteHttpCacheClientForAttributes( cattr );
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );
         assertTrue( "Wrong default.", result instanceof RemoteHttpCacheClient );
     }
-    
+
     /** Verify that we get a cache no wait. */
     public void testGetCache_normal()
     {
@@ -90,7 +90,7 @@ public class RemoteHttpCacheManagerUnitTest
                                                                              elementSerializer );
 
         // DO WORK
-        AuxiliaryCache result = manager.getCache( cattr );
+        AuxiliaryCache<String, String> result = manager.getCache( cattr );
 
         // VEIFY
         assertNotNull( "Should have a cache.", result );

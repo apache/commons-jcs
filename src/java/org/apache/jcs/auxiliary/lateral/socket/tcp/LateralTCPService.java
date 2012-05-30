@@ -42,8 +42,8 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
  */
-public class LateralTCPService
-    implements ILateralCacheService, ILateralCacheObserver
+public class LateralTCPService<K extends Serializable, V extends Serializable>
+    implements ILateralCacheService<K, V>, ILateralCacheObserver
 {
     /** The logger. */
     private final static Log log = LogFactory.getLog( LateralTCPService.class );
@@ -93,7 +93,7 @@ public class LateralTCPService
      * @param item
      * @throws IOException
      */
-    public void update( ICacheElement item )
+    public void update( ICacheElement<K, V> item )
         throws IOException
     {
         update( item, getListenerId() );
@@ -107,7 +107,7 @@ public class LateralTCPService
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
      *      long)
      */
-    public void update( ICacheElement item, long requesterId )
+    public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
         // if we don't allow put, see if we should remove on put
@@ -123,7 +123,7 @@ public class LateralTCPService
         // if we shouldn't remove on put, then put
         if ( !this.getTcpLateralCacheAttributes().isIssueRemoveOnPut() )
         {
-            LateralElementDescriptor led = new LateralElementDescriptor( item );
+            LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( item );
             led.requesterId = requesterId;
             led.command = LateralElementDescriptor.UPDATE;
             sender.send( led );
@@ -137,8 +137,8 @@ public class LateralTCPService
                 log.debug( "Issuing a remove for a put" );
             }
             // set the value to null so we don't send the item
-            CacheElement ce = new CacheElement( item.getCacheName(), item.getKey(), null );
-            LateralElementDescriptor led = new LateralElementDescriptor( ce );
+            CacheElement<K, V> ce = new CacheElement<K, V>( item.getCacheName(), item.getKey(), null );
+            LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
             led.requesterId = requesterId;
             led.command = LateralElementDescriptor.REMOVE;
             led.valHashCode = item.getVal().hashCode();
@@ -152,7 +152,7 @@ public class LateralTCPService
      * @see org.apache.jcs.engine.behavior.ICacheService#remove(java.lang.String,
      *      java.io.Serializable)
      */
-    public void remove( String cacheName, Serializable key )
+    public void remove( String cacheName, K key )
         throws IOException
     {
         remove( cacheName, key, getListenerId() );
@@ -164,11 +164,11 @@ public class LateralTCPService
      * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String,
      *      java.io.Serializable, long)
      */
-    public void remove( String cacheName, Serializable key, long requesterId )
+    public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
-        CacheElement ce = new CacheElement( cacheName, key, null );
-        LateralElementDescriptor led = new LateralElementDescriptor( ce );
+        CacheElement<K, V> ce = new CacheElement<K, V>( cacheName, key, null );
+        LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
         led.requesterId = requesterId;
         led.command = LateralElementDescriptor.REMOVE;
         sender.send( led );
@@ -220,10 +220,10 @@ public class LateralTCPService
     /**
      * @param cacheName
      * @param key
-     * @return ICacheElement if found.
+     * @return ICacheElement<K, V> if found.
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key )
+    public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
     {
         return get( cacheName, key, getListenerId() );
@@ -235,23 +235,23 @@ public class LateralTCPService
      * @param cacheName
      * @param key
      * @param requesterId
-     * @return ICacheElement if found.
+     * @return ICacheElement<K, V> if found.
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
         // if get is not allowed return
         if ( this.getTcpLateralCacheAttributes().isAllowGet() )
         {
-            CacheElement ce = new CacheElement( cacheName, key, null );
-            LateralElementDescriptor led = new LateralElementDescriptor( ce );
+            CacheElement<K, V> ce = new CacheElement<K, V>( cacheName, key, null );
+            LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
             // led.requesterId = requesterId; // later
             led.command = LateralElementDescriptor.GET;
             Object response = sender.sendAndReceive( led );
             if ( response != null )
             {
-                return (ICacheElement) response;
+                return (ICacheElement<K, V>) response;
             }
             return null;
         }
@@ -267,11 +267,11 @@ public class LateralTCPService
      * <p>
      * @param cacheName
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException
     {
         return getMatching( cacheName, pattern, getListenerId() );
@@ -283,26 +283,26 @@ public class LateralTCPService
      * @param cacheName
      * @param pattern
      * @param requesterId - our identity
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching the pattern.
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         // if get is not allowed return
         if ( this.getTcpLateralCacheAttributes().isAllowGet() )
         {
-            CacheElement ce = new CacheElement( cacheName, pattern, null );
-            LateralElementDescriptor led = new LateralElementDescriptor( ce );
+            CacheElement<String, String> ce = new CacheElement<String, String>( cacheName, pattern, null );
+            LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
             // led.requesterId = requesterId; // later
             led.command = LateralElementDescriptor.GET_MATCHING;
 
             Object response = sender.sendAndReceive( led );
             if ( response != null )
             {
-                return (Map<Serializable, ICacheElement>) response;
+                return (Map<K, ICacheElement<K, V>>) response;
             }
             return Collections.emptyMap();
         }
@@ -318,11 +318,11 @@ public class LateralTCPService
      * <p>
      * @param cacheName
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
         throws IOException
     {
         return getMultiple( cacheName, keys, getListenerId() );
@@ -336,20 +336,20 @@ public class LateralTCPService
      * @param cacheName
      * @param keys
      * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            for (Serializable key : keys)
+            for (K key : keys)
             {
-                ICacheElement element = get( cacheName, key );
+                ICacheElement<K, V> element = get( cacheName, key );
 
                 if ( element != null )
                 {
@@ -367,7 +367,7 @@ public class LateralTCPService
      * @param group
      * @return Set
      */
-    public Set<Serializable> getGroupKeys( String cacheName, String group )
+    public Set<K> getGroupKeys( String cacheName, String group )
     {
         throw new UnsupportedOperationException( "Groups not implemented." );
         // return null;
@@ -391,8 +391,8 @@ public class LateralTCPService
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
-        CacheElement ce = new CacheElement( cacheName, "ALL", null );
-        LateralElementDescriptor led = new LateralElementDescriptor( ce );
+        CacheElement<String, String> ce = new CacheElement<String, String>( cacheName, "ALL", null );
+        LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
         led.requesterId = requesterId;
         led.command = LateralElementDescriptor.REMOVEALL;
         sender.send( led );
@@ -424,8 +424,8 @@ public class LateralTCPService
                     continue;
                 }
 
-                CacheElement ce = new CacheElement( "test", "test", message );
-                LateralElementDescriptor led = new LateralElementDescriptor( ce );
+                CacheElement<String, String> ce = new CacheElement<String, String>( "test", "test", message );
+                LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
                 sender.send( led );
             }
         }
@@ -444,7 +444,7 @@ public class LateralTCPService
      * @param obj
      * @throws IOException
      */
-    public void addCacheListener( String cacheName, ICacheListener obj )
+    public <KK extends Serializable, VV extends Serializable> void addCacheListener( String cacheName, ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty
@@ -454,7 +454,7 @@ public class LateralTCPService
      * @param obj
      * @throws IOException
      */
-    public void addCacheListener( ICacheListener obj )
+    public <KK extends Serializable, VV extends Serializable> void addCacheListener( ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty
@@ -465,7 +465,7 @@ public class LateralTCPService
      * @param obj
      * @throws IOException
      */
-    public void removeCacheListener( String cacheName, ICacheListener obj )
+    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( String cacheName, ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty
@@ -475,7 +475,7 @@ public class LateralTCPService
      * @param obj
      * @throws IOException
      */
-    public void removeCacheListener( ICacheListener obj )
+    public <KK extends Serializable, VV extends Serializable> void removeCacheListener( ICacheListener<KK, VV> obj )
         throws IOException
     {
         // Empty

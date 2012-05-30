@@ -27,6 +27,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
+import org.apache.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -54,7 +55,7 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testSimplePutAndGet" );
         cattr.setMaxKeySize( 1000 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         disk.processRemoveAll();
 
@@ -63,29 +64,29 @@ public class IndexDiskCacheUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( "testSimplePutAndGet", "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement<String, String>( "testSimplePutAndGet", "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
 
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( "key:" + i );
-            assertNotNull( "Should have recevied an element.", element );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
+            assertNotNull( "Should have received an element.", element );
             assertEquals( "Element is wrong.", "data:" + i, element.getVal() );
         }
 
         // Test that getMultiple returns all the expected values
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         for ( int i = 0; i < cnt; i++ )
         {
             keys.add( "key:" + i );
         }
 
-        Map elements = disk.getMultiple( keys );
+        Map<String, ICacheElement<String, String>> elements = disk.getMultiple( keys );
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( "key:" + i );
+            ICacheElement<String, String> element = elements.get( "key:" + i );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value key:" + i, "data:" + i, element.getVal() );
         }
@@ -103,7 +104,7 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testRemoveItems" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         disk.processRemoveAll();
 
@@ -112,7 +113,7 @@ public class IndexDiskCacheUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( "testRemoveItems", "key:" + i, "data:" + i );
+            ICacheElement<String, String> element = new CacheElement<String, String>( "testRemoveItems", "key:" + i, "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
@@ -121,8 +122,8 @@ public class IndexDiskCacheUnitTest
         for ( int i = 0; i < cnt; i++ )
         {
             disk.remove( "key:" + i );
-            ICacheElement element = disk.processGet( "key:" + i );
-            assertNull( "Should not have recevied an element.", element );
+            ICacheElement<String, String> element = disk.processGet( "key:" + i );
+            assertNull( "Should not have received an element.", element );
         }
     }
 
@@ -141,7 +142,7 @@ public class IndexDiskCacheUnitTest
         cattr.setMaxKeySize( 5 );
         cattr.setMaxPurgatorySize( 0 );
         cattr.setDiskPath( "target/test-sandbox/BreakIndexTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         String[] test = { "a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhhh", "iiiiiiiiii" };
         String[] expect = { null, "bb", "ccc", null, null, "ffffff", null, "hhhhhhhhh", "iiiiiiiiii" };
@@ -150,7 +151,7 @@ public class IndexDiskCacheUnitTest
 
         for ( int i = 0; i < 6; i++ )
         {
-            ICacheElement element = new CacheElement( "testRecycleBin", "key:" + test[i], test[i] );
+            ICacheElement<String, String> element = new CacheElement<String, String>( "testRecycleBin", "key:" + test[i], test[i] );
             //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
@@ -165,7 +166,7 @@ public class IndexDiskCacheUnitTest
         // will not fit.
         for ( int i = 7; i < 9; i++ )
         {
-            ICacheElement element = new CacheElement( "testRecycleBin", "key:" + test[i], test[i] );
+            ICacheElement<String, String> element = new CacheElement<String, String>( "testRecycleBin", "key:" + test[i], test[i] );
             //System.out.println( "About to add " + "key:" + test[i] + " i = " + i );
             disk.processUpdate( element );
         }
@@ -174,7 +175,7 @@ public class IndexDiskCacheUnitTest
         {
             for ( int i = 0; i < 9; i++ )
             {
-                ICacheElement element = disk.get( "key:" + test[i] );
+                ICacheElement<String, String> element = disk.get( "key:" + test[i] );
                 if ( element != null )
                 {
                     //System.out.println( "element = " + element.getVal() );
@@ -215,7 +216,7 @@ public class IndexDiskCacheUnitTest
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testCheckForDedOverlaps_noOverlap" );
         cattr.setDiskPath( "target/test-sandbox/UnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         int numDescriptors = 5;
         int pos = 0;
@@ -243,7 +244,7 @@ public class IndexDiskCacheUnitTest
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testCheckForDedOverlaps_overlaps" );
         cattr.setDiskPath( "target/test-sandbox/UnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         int numDescriptors = 5;
         int pos = 0;
@@ -276,11 +277,11 @@ public class IndexDiskCacheUnitTest
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testFileSize" );
         cattr.setDiskPath( "target/test-sandbox/UnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         int numberToInsert = 20;
         int bytes = 24;
-        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         for ( int i = 0; i < elements.length; i++ )
@@ -301,7 +302,7 @@ public class IndexDiskCacheUnitTest
     }
 
     /**
-     * Verify that items are added to the recyle bin on removal.
+     * Verify that items are added to the recycle bin on removal.
      * <p>
      * @throws IOException
      * @throws InterruptedException
@@ -319,10 +320,10 @@ public class IndexDiskCacheUnitTest
         cattr.setOptimizeAtRemoveCount( numberToInsert );
         cattr.setMaxKeySize( numberToInsert * 2 );
         cattr.setMaxPurgatorySize( numberToInsert );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         int bytes = 24;
-        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         for ( int i = 0; i < elements.length; i++ )
@@ -341,7 +342,7 @@ public class IndexDiskCacheUnitTest
             disk.processRemove( elements[i].getKey() );
         }
 
-        // verify that the recyle bin has the correct amount.
+        // verify that the recycle bin has the correct amount.
         assertEquals( "The recycle bin should have the number removed.", numberToRemove, disk.getRecyleBinSize() );
     }
 
@@ -365,11 +366,11 @@ public class IndexDiskCacheUnitTest
         cattr.setOptimizeAtRemoveCount( numberToInsert );
         cattr.setMaxKeySize( numberToInsert * 2 );
         cattr.setMaxPurgatorySize( numberToInsert );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         // we will reuse these
         int bytes = 24;
-        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         // Add some to the disk
@@ -389,7 +390,7 @@ public class IndexDiskCacheUnitTest
             disk.processRemove( elements[i].getKey() );
         }
 
-        // verify that the recyle bin has the correct amount.
+        // verify that the recycle bin has the correct amount.
         assertEquals( "The recycle bin should have the number removed.", numberToRemove, disk.getRecyleBinSize() );
 
         // add half as many as we removed. These should all use spots in the recycle bin.
@@ -418,11 +419,11 @@ public class IndexDiskCacheUnitTest
         IndexedDiskCacheAttributes cattr = new IndexedDiskCacheAttributes();
         cattr.setCacheName( "testBytesFreeSize" );
         cattr.setDiskPath( "target/test-sandbox/UnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         int numberToInsert = 20;
         int bytes = 24;
-        ICacheElement[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil.createCacheElementsWithTestObjects( numberToInsert, bytes, cattr
             .getCacheName() );
 
         for ( int i = 0; i < elements.length; i++ )
@@ -472,7 +473,7 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testRemove_PartialKey" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> disk = new IndexedDiskCache<String, String>( cattr );
 
         disk.processRemoveAll();
 
@@ -481,7 +482,7 @@ public class IndexDiskCacheUnitTest
         {
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
-            ICacheElement element = new CacheElement( "testRemove_PartialKey", i + ":key", "data:" + i );
+            ICacheElement<String, String> element = new CacheElement<String, String>( "testRemove_PartialKey", i + ":key", "data:" + i );
             element.setElementAttributes( eAttr );
             disk.processUpdate( element );
         }
@@ -489,16 +490,16 @@ public class IndexDiskCacheUnitTest
         // verif each
         for ( int i = 0; i < cnt; i++ )
         {
-            ICacheElement element = disk.processGet( i + ":key" );
-            assertNotNull( "Shoulds have recevied an element.", element );
+            ICacheElement<String, String> element = disk.processGet( i + ":key" );
+            assertNotNull( "Shoulds have received an element.", element );
         }
 
         // remove each
         for ( int i = 0; i < cnt; i++ )
         {
             disk.remove( i + ":" );
-            ICacheElement element = disk.processGet( i + ":key" );
-            assertNull( "Should not have recevied an element.", element );
+            ICacheElement<String, String> element = disk.processGet( i + ":key" );
+            assertNull( "Should not have received an element.", element );
         }
         // https://issues.apache.org/jira/browse/JCS-67
         assertEquals( "Recylenbin should not have more elements than we removed. Check for JCS-67", cnt, disk
@@ -517,7 +518,7 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testRemove_Group" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<GroupAttrName<String>, String> disk = new IndexedDiskCache<GroupAttrName<String>, String>( cattr );
 
         disk.processRemoveAll();
 
@@ -527,9 +528,8 @@ public class IndexDiskCacheUnitTest
         int cnt = 25;
         for ( int i = 0; i < cnt; i++ )
         {
-            GroupAttrName groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
-
-            CacheElement element = new CacheElement( cacheName, groupAttrName, "data:" + i );
+            GroupAttrName<String> groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
+            CacheElement<GroupAttrName<String>, String> element = new CacheElement<GroupAttrName<String>, String>( cacheName, groupAttrName, "data:" + i );
 
             IElementAttributes eAttr = new ElementAttributes();
             eAttr.setIsSpool( true );
@@ -541,23 +541,22 @@ public class IndexDiskCacheUnitTest
         // verify each
         for ( int i = 0; i < cnt; i++ )
         {
-            GroupAttrName groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
-            ICacheElement element = disk.processGet( groupAttrName );
-            assertNotNull( "Should have recevied an element.", element );
+            GroupAttrName<String> groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
+            ICacheElement<GroupAttrName<String>, String> element = disk.processGet( groupAttrName );
+            assertNotNull( "Should have received an element.", element );
         }
 
         // DO WORK
         // remove the group
-        GroupId gid = new GroupId( cacheName, groupName );
-        disk.remove( gid );
+        disk.remove( getGroupAttrName( cacheName, groupName, null ) );
 
         for ( int i = 0; i < cnt; i++ )
         {
-            GroupAttrName groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
-            ICacheElement element = disk.processGet( groupAttrName );
+            GroupAttrName<String> groupAttrName = getGroupAttrName( cacheName, groupName, i + ":key" );
+            ICacheElement<GroupAttrName<String>, String> element = disk.processGet( groupAttrName );
 
             // VERIFY
-            assertNull( "Should not have recevied an element.", element );
+            assertNull( "Should not have received an element.", element );
         }
 
     }
@@ -570,10 +569,10 @@ public class IndexDiskCacheUnitTest
      * @param name
      * @return GroupAttrName
      */
-    private GroupAttrName getGroupAttrName( String cacheName, String group, Object name )
+    private GroupAttrName<String> getGroupAttrName( String cacheName, String group, String name )
     {
         GroupId gid = new GroupId( cacheName, group );
-        return new GroupAttrName( gid, name );
+        return new GroupAttrName<String>( gid, name );
     }
 
     /**
@@ -589,13 +588,13 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testUpdate_EventLogging_simple" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         diskCache.setCacheEventLogger( cacheEventLogger );
 
-        ICacheElement item = new CacheElement( "region", "key", "value" );
+        ICacheElement<String, String> item = new CacheElement<String, String>( "region", "key", "value" );
 
         // DO WORK
         diskCache.update( item );
@@ -620,7 +619,7 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testGet_EventLogging_simple" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -647,13 +646,13 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testGetMultiple_EventLogging_simple" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         diskCache.setCacheEventLogger( cacheEventLogger );
 
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         keys.add( "junk" );
 
         // DO WORK
@@ -678,7 +677,7 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testRemoveAll_EventLogging_simple" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -705,7 +704,7 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( "testRemoveAll_EventLogging_simple" );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTestCEL" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
         diskCache.processRemoveAll();
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
@@ -735,16 +734,16 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
 
         // DO WORK
         for ( int i = 0; i <= items; i++ )
         {
-            diskCache.update( new CacheElement( cacheName, i + ":key", cacheName + " data " + i ) );
+            diskCache.update( new CacheElement<String, String>( cacheName, i + ":key", cacheName + " data " + i ) );
         }
         Thread.sleep( 500 );
 
-        Map matchingResults = diskCache.getMatching( "1.8.+" );
+        Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching( "1.8.+" );
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
@@ -768,15 +767,15 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
 
         // DO WORK
         for ( int i = 0; i <= items; i++ )
         {
-            diskCache.update( new CacheElement( cacheName, i + ":key", cacheName + " data " + i ) );
+            diskCache.update( new CacheElement<String, String>( cacheName, i + ":key", cacheName + " data " + i ) );
         }
 
-        Map matchingResults = diskCache.getMatching( "1.8.+" );
+        Map<String, ICacheElement<String, String>> matchingResults = diskCache.getMatching( "1.8.+" );
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
@@ -809,18 +808,18 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
 
         // DO WORK
-        diskCache.update( new CacheElement( cacheName, "x", string ) );
+        diskCache.update( new CacheElement<String, String>( cacheName, "x", string ) );
 
         // VERIFY
         assertNotNull( diskCache.get( "x" ) );
         Thread.sleep( 1000 );
-        ICacheElement afterElement = diskCache.get( "x" );
+        ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
         System.out.println( "afterElement = " + afterElement );
-        String after = (String) afterElement.getVal();
+        String after = afterElement.getVal();
 
         assertNotNull( after );
         assertEquals( "wrong string after retrieval", string, after );
@@ -852,18 +851,18 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, byte[]> diskCache = new IndexedDiskCache<String, byte[]>( cattr );
 
         // DO WORK
-        diskCache.update( new CacheElement( cacheName, "x", bytes ) );
+        diskCache.update( new CacheElement<String, byte[]>( cacheName, "x", bytes ) );
 
         // VERIFY
         assertNotNull( diskCache.get( "x" ) );
         Thread.sleep( 1000 );
-        ICacheElement afterElement = diskCache.get( "x" );
+        ICacheElement<String, byte[]> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
         System.out.println( "afterElement = " + afterElement );
-        byte[] after = (byte[]) afterElement.getVal();
+        byte[] after = afterElement.getVal();
 
         assertNotNull( after );
         assertEquals( "wrong bytes after retrieval", string, new String( after, UTF8 ) );
@@ -883,15 +882,15 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
 
         String key = "myKey";
         String value = "myValue";
-        ICacheElement ce = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> ce = new CacheElement<String, String>( cacheName, key, value );
 
         // DO WORK
         diskCache.processUpdate( ce );
-        ICacheElement result = diskCache.processGet( key );
+        ICacheElement<String, String> result = diskCache.processGet( key );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -913,20 +912,20 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
 
         String key = "myKey";
         String value = "myValue";
-        ICacheElement ce1 = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> ce1 = new CacheElement<String, String>( cacheName, key, value );
 
         // DO WORK
         diskCache.processUpdate( ce1 );
         long fileSize1 = diskCache.getDataFileSize();
 
         // DO WORK
-        ICacheElement ce2 = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> ce2 = new CacheElement<String, String>( cacheName, key, value );
         diskCache.processUpdate( ce2 );
-        ICacheElement result = diskCache.processGet( key );
+        ICacheElement<String, String> result = diskCache.processGet( key );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -950,21 +949,21 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
 
         String key = "myKey";
         String value = "myValue";
         String value2 = "myValu";
-        ICacheElement ce1 = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> ce1 = new CacheElement<String, String>( cacheName, key, value );
 
         // DO WORK
         diskCache.processUpdate( ce1 );
         long fileSize1 = diskCache.getDataFileSize();
 
         // DO WORK
-        ICacheElement ce2 = new CacheElement( cacheName, key, value2 );
+        ICacheElement<String, String> ce2 = new CacheElement<String, String>( cacheName, key, value2 );
         diskCache.processUpdate( ce2 );
-        ICacheElement result = diskCache.processGet( key );
+        ICacheElement<String, String> result = diskCache.processGet( key );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -988,21 +987,21 @@ public class IndexDiskCacheUnitTest
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
         cattr.setDiskPath( "target/test-sandbox/IndexDiskCacheUnitTest" );
-        IndexedDiskCache diskCache = new IndexedDiskCache( cattr );
+        IndexedDiskCache<String, String> diskCache = new IndexedDiskCache<String, String>( cattr );
 
         String key = "myKey";
         String value = "myValue";
         String value2 = "myValue2";
-        ICacheElement ce1 = new CacheElement( cacheName, key, value );
+        ICacheElement<String, String> ce1 = new CacheElement<String, String>( cacheName, key, value );
 
         // DO WORK
         diskCache.processUpdate( ce1 );
         long fileSize1 = diskCache.getDataFileSize();
 
         // DO WORK
-        ICacheElement ce2 = new CacheElement( cacheName, key, value2 );
+        ICacheElement<String, String> ce2 = new CacheElement<String, String>( cacheName, key, value2 );
         diskCache.processUpdate( ce2 );
-        ICacheElement result = diskCache.processGet( key );
+        ICacheElement<String, String> result = diskCache.processGet( key );
 
         // VERIFY
         assertNotNull( "Should have a result", result );

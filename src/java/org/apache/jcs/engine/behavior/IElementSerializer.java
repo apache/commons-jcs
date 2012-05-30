@@ -36,7 +36,7 @@ public interface IElementSerializer
      * @return byte[]
      * @throws IOException
      */
-    public abstract byte[] serialize( Serializable obj )
+    <T extends Serializable> byte[] serialize( T obj )
         throws IOException;
 
     /**
@@ -46,6 +46,6 @@ public interface IElementSerializer
      * @throws IOException
      * @throws ClassNotFoundException thrown if we don't know the object.
      */
-    public abstract Object deSerialize( byte[] bytes )
+    <T extends Serializable> T deSerialize( byte[] bytes )
         throws IOException, ClassNotFoundException;
 }

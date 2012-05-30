@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Random;
 
 import org.apache.jcs.auxiliary.disk.DiskTestObject;
@@ -63,7 +64,7 @@ public class DiskTestObjectUtil
      * @return size
      * @throws IOException
      */
-    public static long totalSize( ICacheElement[] elements, int endPosition )
+    public static <K extends Serializable, V extends Serializable> long totalSize( ICacheElement<K, V>[] elements, int endPosition )
         throws IOException
     {
         return totalSize( elements, 0, endPosition );
@@ -78,7 +79,7 @@ public class DiskTestObjectUtil
      * @return size
      * @throws IOException
      */
-    public static long totalSize( ICacheElement[] elements, int startPosition, int endPosition )
+    public static <K extends Serializable, V extends Serializable> long totalSize( ICacheElement<K, V>[] elements, int startPosition, int endPosition )
         throws IOException
     {
         StandardSerializer serializer = new StandardSerializer();
@@ -99,16 +100,16 @@ public class DiskTestObjectUtil
      * @param cacheName
      * @return ICacheElement[]
      */
-    public static ICacheElement[] createCacheElementsWithTestObjects( int numToCreate, int bytes, String cacheName )
+    public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjects( int numToCreate, int bytes, String cacheName )
     {
-        ICacheElement[] elements = new ICacheElement[numToCreate];
+        ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
         for ( int i = 0; i < numToCreate; i++ )
         {
             // 24 KB
             int size = bytes * 1024;
             DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size] );
 
-            ICacheElement element = new CacheElement( cacheName, tile.id, tile );
+            ICacheElement<Integer, DiskTestObject> element = new CacheElement<Integer, DiskTestObject>( cacheName, tile.id, tile );
             elements[i] = element;
         }
         return elements;
@@ -121,9 +122,9 @@ public class DiskTestObjectUtil
      * @param cacheName
      * @return ICacheElement[]
      */
-    public static ICacheElement[] createCacheElementsWithTestObjectsOfVariableSizes( int numToCreate, String cacheName )
+    public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjectsOfVariableSizes( int numToCreate, String cacheName )
     {
-        ICacheElement[] elements = new ICacheElement[numToCreate];
+        ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
         Random random = new Random( 89 );
         for ( int i = 0; i < numToCreate; i++ )
         {
@@ -132,7 +133,7 @@ public class DiskTestObjectUtil
             int size = ( bytes + 4 ) * 1024;
             DiskTestObject tile = new DiskTestObject( Integer.valueOf( i ), new byte[size] );
 
-            ICacheElement element = new CacheElement( cacheName, tile.id, tile );
+            ICacheElement<Integer, DiskTestObject> element = new CacheElement<Integer, DiskTestObject>( cacheName, tile.id, tile );
             elements[i] = element;
         }
         return elements;

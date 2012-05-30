@@ -115,7 +115,7 @@ public class JavaGroupsCache
         log.info( "Initialized for cache: " + cacheName );
     }
 
-    public void send( ICacheElement element, int command )
+    public void send( ICacheElement<K, V> element, int command )
     {
         Request request = new Request( element, command );
 
@@ -141,7 +141,7 @@ public class JavaGroupsCache
      * @throws IOException
      *             Never thrown by this implementation
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
         throws IOException
     {
         send( ce, Request.UPDATE );
@@ -156,7 +156,7 @@ public class JavaGroupsCache
      * @throws IOException
      *             Never thrown by this implementation
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
         throws IOException
     {
         if ( getFromPeers )
@@ -197,7 +197,7 @@ public class JavaGroupsCache
      * @throws IOException
      *             Never thrown by this implementation
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
@@ -282,7 +282,7 @@ public class JavaGroupsCache
      *            Ignored
      * @return Always reurns null
      */
-    public Set<Serializable> getGroupKeys( String group )
+    public Set<K> getGroupKeys( String group )
     {
         return null;
     }
@@ -430,17 +430,17 @@ public class JavaGroupsCache
 
         public final static int GET = 5;
 
-        private ICacheElement cacheElement;
+        private ICacheElement<K, V> cacheElement;
 
         private int command;
 
-        public Request( ICacheElement cacheElement, int command )
+        public Request( ICacheElement<K, V> cacheElement, int command )
         {
             this.cacheElement = cacheElement;
             this.command = command;
         }
 
-        public ICacheElement getCacheElement()
+        public ICacheElement<K, V> getCacheElement()
         {
             return cacheElement;
         }

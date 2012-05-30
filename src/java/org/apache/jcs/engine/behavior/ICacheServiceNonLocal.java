@@ -32,8 +32,8 @@ import java.util.Set;
  * <p>
  * TODO consider not extending ICacheService
  */
-public interface ICacheServiceNonLocal
-    extends Remote, ICacheService
+public interface ICacheServiceNonLocal<K extends Serializable, V extends Serializable>
+    extends Remote, ICacheService<K, V>
 {
     /**
      * Puts a cache item to the cache.
@@ -42,7 +42,7 @@ public interface ICacheServiceNonLocal
      * @param requesterId
      * @throws IOException
      */
-    void update( ICacheElement item, long requesterId )
+    void update( ICacheElement<K, V> item, long requesterId )
         throws IOException;
 
     /**
@@ -53,7 +53,7 @@ public interface ICacheServiceNonLocal
      * @param requesterId
      * @throws IOException
      */
-    void remove( String cacheName, Serializable key, long requesterId )
+    void remove( String cacheName, K key, long requesterId )
         throws IOException;
 
     /**
@@ -77,7 +77,7 @@ public interface ICacheServiceNonLocal
      * @return ICacheElement
      * @throws IOException
      */
-    ICacheElement get( String cacheName, Serializable key, long requesterId )
+    ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException;
 
     /**
@@ -86,11 +86,11 @@ public interface ICacheServiceNonLocal
      * @param cacheName
      * @param keys
      * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException;
 
     /**
@@ -99,11 +99,11 @@ public interface ICacheServiceNonLocal
      * @param cacheName
      * @param pattern
      * @param requesterId
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
+    Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException;
 
     /**
@@ -114,6 +114,6 @@ public interface ICacheServiceNonLocal
      * @return A Set of keys
      * @throws IOException
      */
-    Set<Serializable> getGroupKeys( String cacheName, String groupName )
+    Set<K> getGroupKeys( String cacheName, String groupName )
         throws IOException;
 }

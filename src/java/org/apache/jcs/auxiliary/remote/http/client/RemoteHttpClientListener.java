@@ -19,14 +19,19 @@ package org.apache.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.remote.AbsractRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /** Does nothing */
-public class RemoteHttpClientListener
-    extends AbsractRemoteCacheListener
+public class RemoteHttpClientListener<K extends Serializable, V extends Serializable>
+    extends AbsractRemoteCacheListener<K, V>
 {
+    /** TODO serialVersionUID */
+    private static final long serialVersionUID = -9078366610772128010L;
+
     /**
      * Only need one since it does work for all regions, just reference by multiple region names.
      * <p>

@@ -62,7 +62,7 @@ public class JDBCDiskCacheRemovalUnitTest
         String region = "testCache1";
         String data = "adfadsfasfddsafasasd";
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         // DO WORK
         jcs.put( keyPart1 + ":" + keyPart2, data );

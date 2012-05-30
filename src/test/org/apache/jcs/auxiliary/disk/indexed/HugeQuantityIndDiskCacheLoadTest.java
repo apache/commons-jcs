@@ -49,7 +49,7 @@ public class HugeQuantityIndDiskCacheLoadTest
         int items = 300000;
         String region = "testCache1";
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         try
         {

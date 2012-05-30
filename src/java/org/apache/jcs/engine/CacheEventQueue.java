@@ -19,6 +19,7 @@ package org.apache.jcs.engine;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.apache.jcs.engine.behavior.ICacheListener;
@@ -34,8 +35,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * thread, and kill the thread if the queue goes empty for a specified period, now set to 1 minute.
  * If something comes in after that a new processor thread should be created.
  */
-public class CacheEventQueue
-    extends AbstractCacheEventQueue
+public class CacheEventQueue<K extends Serializable, V extends Serializable>
+    extends AbstractCacheEventQueue<K, V>
 {
     /** The type of queue -- there are pooled and single */
     private static final String queueType = SINGLE_QUEUE_TYPE;
@@ -62,7 +63,7 @@ public class CacheEventQueue
      * @param listenerId
      * @param cacheName
      */
-    public CacheEventQueue( ICacheListener listener, long listenerId, String cacheName )
+    public CacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName )
     {
         this( listener, listenerId, cacheName, 10, 500 );
     }
@@ -76,7 +77,7 @@ public class CacheEventQueue
      * @param maxFailure
      * @param waitBeforeRetry
      */
-    public CacheEventQueue( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+    public CacheEventQueue( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry )
     {
         initialize( listener, listenerId, cacheName, maxFailure, waitBeforeRetry, null );
@@ -92,7 +93,7 @@ public class CacheEventQueue
      * @param waitBeforeRetry
      * @param threadPoolName
      */
-    public void initialize( ICacheListener listener, long listenerId, String cacheName, int maxFailure,
+    public void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry, String threadPoolName )
     {
         if ( listener == null )
@@ -230,14 +231,14 @@ public class CacheEventQueue
         extends Thread
     {
         /** The queue to work */
-        CacheEventQueue queue;
+        CacheEventQueue<K, V> queue;
 
         /**
          * Constructor for the QProcessor object
          * <p>
          * @param aQueue the event queue to take items from.
          */
-        QProcessor( CacheEventQueue aQueue )
+        QProcessor( CacheEventQueue<K, V> aQueue )
         {
             super( "CacheEventQueue.QProcessor-" + aQueue.cacheName );
 
@@ -324,7 +325,7 @@ public class CacheEventQueue
 
             Node node = head.next;
 
-            AbstractCacheEvent value = node.event;
+            AbstractCacheEvent value = (AbstractCacheEvent) node.event;
 
             if ( log.isDebugEnabled() )
             {

@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.remote.http.client;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +54,8 @@ public class RemoteHttpCacheManager
     private static RemoteHttpCacheManager instance;
 
     /** Contains instances of RemoteCacheNoWait managed by a RemoteCacheManager instance. */
-    static final Map<String, RemoteCacheNoWait> caches = new HashMap<String, RemoteCacheNoWait>();
+    static final Map<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>> caches =
+        new HashMap<String, RemoteCacheNoWait<? extends Serializable, ? extends Serializable>>();
 
     /** The configuration attributes. */
     private IRemoteCacheAttributes remoteCacheAttributes;
@@ -150,7 +152,7 @@ public class RemoteHttpCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public AuxiliaryCache getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
     {
         // TODO get some defaults!
         // Perhaps we will need a manager per URL????
@@ -169,24 +171,24 @@ public class RemoteHttpCacheManager
      * @param cattr
      * @return The cache value
      */
-    public AuxiliaryCache getCache( RemoteHttpCacheAttributes cattr )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( RemoteHttpCacheAttributes cattr )
     {
-        RemoteCacheNoWait remoteCacheNoWait = null;
+        RemoteCacheNoWait<K, V> remoteCacheNoWait = null;
 
         synchronized ( caches )
         {
-            remoteCacheNoWait = caches.get( cattr.getCacheName() + cattr.getUrl() );
+            remoteCacheNoWait = (RemoteCacheNoWait<K, V>) caches.get( cattr.getCacheName() + cattr.getUrl() );
             if ( remoteCacheNoWait == null )
             {
-                RemoteHttpClientListener listener = new RemoteHttpClientListener( cattr, cacheMgr );
+                RemoteHttpClientListener<K, V> listener = new RemoteHttpClientListener<K, V>( cattr, cacheMgr );
 
-                IRemoteHttpCacheClient remoteService = createRemoteHttpCacheClientForAttributes( cattr );
+                IRemoteHttpCacheClient<K, V> remoteService = createRemoteHttpCacheClientForAttributes( cattr );
 
-                IRemoteCacheClient remoteCacheClient = new RemoteHttpCache( cattr, remoteService, listener );
+                IRemoteCacheClient<K, V> remoteCacheClient = new RemoteHttpCache<K, V>( cattr, remoteService, listener );
                 remoteCacheClient.setCacheEventLogger( cacheEventLogger );
                 remoteCacheClient.setElementSerializer( elementSerializer );
 
-                remoteCacheNoWait = new RemoteCacheNoWait( remoteCacheClient );
+                remoteCacheNoWait = new RemoteCacheNoWait<K, V>( remoteCacheClient );
                 remoteCacheNoWait.setCacheEventLogger( cacheEventLogger );
                 remoteCacheNoWait.setElementSerializer( elementSerializer );
 
@@ -205,9 +207,9 @@ public class RemoteHttpCacheManager
      * @param cattr
      * @return IRemoteHttpCacheClient
      */
-    protected IRemoteHttpCacheClient createRemoteHttpCacheClientForAttributes( RemoteHttpCacheAttributes cattr )
+    protected <K extends Serializable, V extends Serializable> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes( RemoteHttpCacheAttributes cattr )
     {
-        IRemoteHttpCacheClient client = (IRemoteHttpCacheClient) OptionConverter.instantiateByClassName( cattr
+        IRemoteHttpCacheClient<K, V> client = (IRemoteHttpCacheClient<K, V>) OptionConverter.instantiateByClassName( cattr
             .getRemoteHttpClientClassName(), IRemoteHttpCacheClient.class, null );
 
         if ( client == null )
@@ -216,7 +218,7 @@ public class RemoteHttpCacheManager
             {
                 log.info( "Creating the default client." );
             }
-            client = new RemoteHttpCacheClient( );
+            client = new RemoteHttpCacheClient<K, V>( );
         }
         client.initialize( cattr );
         return client;
@@ -230,7 +232,7 @@ public class RemoteHttpCacheManager
     public String getStats()
     {
         StringBuffer stats = new StringBuffer();
-        for (RemoteCacheNoWait c : caches.values())
+        for (RemoteCacheNoWait<?, ?> c : caches.values())
         {
             if ( c != null )
             {

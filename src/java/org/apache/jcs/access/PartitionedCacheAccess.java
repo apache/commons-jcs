@@ -19,6 +19,7 @@ package org.apache.jcs.access;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ import org.apache.jcs.utils.props.AbstractPropertyContainer;
  * <p>
  * @author Aaron Smuts
  */
-public class PartitionedCacheAccess<K, V>
+public class PartitionedCacheAccess<K extends Serializable, V extends Serializable>
     extends AbstractPropertyContainer
     implements ICacheAccess<K, V>
 {
@@ -191,12 +192,12 @@ public class PartitionedCacheAccess<K, V>
     }
 
     /**
-     * Gets the ICacheElement (the wrapped object) for the key from the desired partition.
+     * Gets the ICacheElement<K, V> (the wrapped object) for the key from the desired partition.
      * <p>
      * @param key key
      * @return result, null if not found.
      */
-    public ICacheElement getCacheElement( K key )
+    public ICacheElement<K, V> getCacheElement( K key )
     {
         if ( key == null )
         {
@@ -225,7 +226,7 @@ public class PartitionedCacheAccess<K, V>
      * @param names
      * @return Map of keys to ICacheElement
      */
-    public Map<K, ICacheElement> getCacheElements( Set<K> names )
+    public Map<K, ICacheElement<K, V>> getCacheElements( Set<K> names )
     {
         if ( names == null )
         {
@@ -245,7 +246,7 @@ public class PartitionedCacheAccess<K, V>
             dividedNames[partition].add( key );
         }
 
-        Map<K, ICacheElement> result = new HashMap<K, ICacheElement>();
+        Map<K, ICacheElement<K, V>> result = new HashMap<K, ICacheElement<K, V>>();
         for ( int i = 0; i < partitions.length; i++ )
         {
             if ( dividedNames[i] != null && !dividedNames[i].isEmpty() )
@@ -283,7 +284,7 @@ public class PartitionedCacheAccess<K, V>
             return null;
         }
 
-        Map<K, V> result = new HashMap<K,V>();
+        Map<K, V> result = new HashMap<K, V>();
         for ( int i = 0; i < partitions.length; i++ )
         {
             result.putAll( partitions[i].getMatching( pattern ) );
@@ -297,7 +298,7 @@ public class PartitionedCacheAccess<K, V>
      * @param pattern
      * @return HashMap key to ICacheElement
      */
-    public Map<K, ICacheElement> getMatchingCacheElements( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern )
     {
         if ( pattern == null )
         {
@@ -315,7 +316,7 @@ public class PartitionedCacheAccess<K, V>
             return null;
         }
 
-        Map<K, ICacheElement> result = new HashMap<K, ICacheElement>();
+        Map<K, ICacheElement<K, V>> result = new HashMap<K, ICacheElement<K, V>>();
         for ( int i = 0; i < partitions.length; i++ )
         {
             result.putAll( partitions[i].getMatchingCacheElements( pattern ) );
@@ -596,7 +597,7 @@ public class PartitionedCacheAccess<K, V>
             String regionName = this.getPartitionRegionNamePrefix() + "_" + i;
             try
             {
-                tempPartitions[i] = (ICacheAccess<K, V>) CacheAccess.getAccess( regionName );
+                tempPartitions[i] = CacheAccess.getAccess( regionName );
             }
             catch ( CacheException e )
             {

@@ -49,8 +49,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * Used to queue up update requests to the underlying cache. These requests will be processed in
  * their order of arrival via the cache event queue processor.
  */
-public class LateralCacheNoWait
-    extends AbstractAuxiliaryCache
+public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -7251187566116178475L;
@@ -59,10 +59,10 @@ public class LateralCacheNoWait
     private final static Log log = LogFactory.getLog( LateralCacheNoWait.class );
 
     /** The cache */
-    private final LateralCache cache;
+    private final LateralCache<K, V> cache;
 
     /** The event queue */
-    private ICacheEventQueue eventQueue;
+    private ICacheEventQueue<K, V> eventQueue;
 
     /** times get called */
     private int getCount = 0;
@@ -79,7 +79,7 @@ public class LateralCacheNoWait
      * <p>
      * @param cache
      */
-    public LateralCacheNoWait( LateralCache cache )
+    public LateralCacheNoWait( LateralCache<K, V> cache )
     {
         this.cache = cache;
 
@@ -88,15 +88,15 @@ public class LateralCacheNoWait
             log.debug( "Constructing LateralCacheNoWait, LateralCache = [" + cache + "]" );
         }
 
-        CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
+        CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<K, V>();
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<K, V>( cache ), LateralCacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
 
         // need each no wait to handle each of its real updates and removes,
         // since there may
         // be more than one per cache? alternative is to have the cache
-        // perform updates using a different method that spcifies the listener
+        // perform updates using a different method that specifies the listener
         // this.q = new CacheEventQueue(new CacheAdaptor(this),
         // LateralCacheInfo.listenerId, cache.getCacheName());
         if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
@@ -109,7 +109,7 @@ public class LateralCacheNoWait
      * @param ce
      * @throws IOException
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
         throws IOException
     {
         putCount++;
@@ -128,9 +128,9 @@ public class LateralCacheNoWait
      * Synchronously reads from the lateral cache.
      * <p>
      * @param key
-     * @return ICacheElement if found, else null
+     * @return ICacheElement<K, V> if found, else null
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
     {
         getCount++;
         if ( this.getStatus() != CacheConstants.STATUS_ERROR )
@@ -164,18 +164,18 @@ public class LateralCacheNoWait
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            for (Serializable key : keys)
+            for (K key : keys)
             {
-                ICacheElement element = get( key );
+                ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -191,9 +191,9 @@ public class LateralCacheNoWait
      * Synchronously reads from the lateral cache.
      * <p>
      * @param pattern
-     * @return ICacheElement if found, else empty
+     * @return ICacheElement<K, V> if found, else empty
      */
-    public Map<Serializable, ICacheElement> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
     {
         getCount++;
         if ( this.getStatus() != CacheConstants.STATUS_ERROR )
@@ -227,7 +227,7 @@ public class LateralCacheNoWait
      * @param groupName
      * @return Set
      */
-    public Set<Serializable> getGroupKeys(String groupName)
+    public Set<K> getGroupKeys(String groupName)
     {
         try
         {
@@ -247,7 +247,7 @@ public class LateralCacheNoWait
      * @param key
      * @return always false
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
     {
         removeCount++;
         try
@@ -337,7 +337,7 @@ public class LateralCacheNoWait
      * <p>
      * @param lateral
      */
-    public void fixCache( ILateralCacheService lateral )
+    public void fixCache( ILateralCacheService<K, V> lateral )
     {
         cache.fixCache( lateral );
         resetEventQ();
@@ -352,8 +352,8 @@ public class LateralCacheNoWait
         {
             eventQueue.destroy();
         }
-        CacheEventQueueFactory fact = new CacheEventQueueFactory();
-        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor( cache ), LateralCacheInfo.listenerId, cache
+        CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<K, V>();
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<K, V>( cache ), LateralCacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
     }

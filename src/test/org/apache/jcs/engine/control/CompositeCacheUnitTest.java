@@ -60,25 +60,25 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
 
-        MockAuxiliaryCache diskMock = new MockAuxiliaryCache();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.DISK_CACHE;
-        AuxiliaryCache[] aux = new AuxiliaryCache[] { diskMock };
+        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
         // DO WORK
         int numToInsert = 10;
         for ( int i = 0; i < numToInsert; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
         cache.dispose();
 
         // VERIFY
-        MockMemoryCache memoryCache = (MockMemoryCache) cache.getMemoryCache();
+        MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
         assertEquals( "Wrong number freed.", numToInsert, memoryCache.lastNumberOfFreedElements );
     }
 
@@ -99,25 +99,25 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
 
-        MockAuxiliaryCache diskMock = new MockAuxiliaryCache();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.REMOTE_CACHE;
-        AuxiliaryCache[] aux = new AuxiliaryCache[] { diskMock };
+        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
         // DO WORK
         int numToInsert = 10;
         for ( int i = 0; i < numToInsert; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
         cache.dispose();
 
         // VERIFY
-        MockMemoryCache memoryCache = (MockMemoryCache) cache.getMemoryCache();
+        MockMemoryCache<String, Integer> memoryCache = (MockMemoryCache<String, Integer>) cache.getMemoryCache();
         assertEquals( "Wrong number freed.", 0, memoryCache.lastNumberOfFreedElements );
     }
 
@@ -141,11 +141,11 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
 
-        MockAuxiliaryCache diskMock = new MockAuxiliaryCache();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.DISK_CACHE;
-        AuxiliaryCache[] aux = new AuxiliaryCache[] { diskMock };
+        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
         // DO WORK
@@ -153,7 +153,7 @@ public class CompositeCacheUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix1; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
@@ -161,18 +161,18 @@ public class CompositeCacheUnitTest
         // insert with prefix1
         for ( int i = 0; i < numToInsertPrefix2; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
+            ICacheElement<String, Integer> element = new CacheElement<String, Integer>( cacheName, keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
             cache.update( element, false );
         }
 
-        Map result1 = cache.getMatching( keyprefix1 + "\\S+" );
-        Map result2 = cache.getMatching( keyprefix2 + "\\S+" );
+        Map<?, ?> result1 = cache.getMatching( keyprefix1 + "\\S+" );
+        Map<?, ?> result2 = cache.getMatching( keyprefix2 + "\\S+" );
 
         // VERIFY
         assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
         assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
     }
-    
+
     /**
      * Verify we try a disk aux on a getMatching call.
      * <p>
@@ -191,11 +191,11 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
 
-        MockAuxiliaryCache diskMock = new MockAuxiliaryCache();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.DISK_CACHE;
-        AuxiliaryCache[] aux = new AuxiliaryCache[] { diskMock };
+        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
         // DO WORK
@@ -204,7 +204,7 @@ public class CompositeCacheUnitTest
         // VERIFY
         assertEquals( "Wrong number of calls", 1, diskMock.getMatchingCallCount );
     }
-    
+
     /**
      * Verify we try a remote  aux on a getMatching call.
      * <p>
@@ -223,11 +223,11 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache cache = new CompositeCache( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
 
-        MockAuxiliaryCache diskMock = new MockAuxiliaryCache();
+        MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.REMOTE_CACHE;
-        AuxiliaryCache[] aux = new AuxiliaryCache[] { diskMock };
+        AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
         // DO WORK

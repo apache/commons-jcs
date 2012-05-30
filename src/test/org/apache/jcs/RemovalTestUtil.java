@@ -53,7 +53,7 @@ public class RemovalTestUtil
     public void runTestPutThenRemoveCategorical( int start, int end )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = start; i <= end; i++ )
         {
@@ -91,7 +91,7 @@ public class RemovalTestUtil
     public void runPutInRange( int start, int end )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = start; i <= end; i++ )
         {
@@ -119,7 +119,7 @@ public class RemovalTestUtil
     public void runGetInRange( int start, int end, boolean check )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         // don't care if they are found
         for ( int i = end; i >= start; i-- )

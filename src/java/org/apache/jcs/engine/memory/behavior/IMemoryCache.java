@@ -32,14 +32,14 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /** For the framework. Insures methods a MemoryCache needs to access. */
-public interface IMemoryCache
+public interface IMemoryCache<K extends Serializable, V extends Serializable>
 {
     /**
      * Initialize the memory cache
      * <p>
      * @param cache The cache (region) this memory store is attached to.
      */
-    void initialize( CompositeCache cache );
+    void initialize( CompositeCache<K, V> cache );
 
     /**
      * Destroy the memory cache
@@ -70,17 +70,17 @@ public interface IMemoryCache
      * <p>
      * @return An iterator
      */
-    Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> getIterator();
+    Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator();
 
     /**
-     * Get an Array of the keys for all elements in the memory cache.
+     * Get a set of the keys for all elements in the memory cache.
      * <p>
-     * @return Object[]
+     * @return a set of the key type
      * @TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.
      */
-    Object[] getKeyArray();
+    Set<K> getKeySet();
 
     /**
      * Removes an item from the cache
@@ -91,7 +91,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    boolean remove( Serializable key )
+    boolean remove( K key )
         throws IOException;
 
     /**
@@ -126,18 +126,18 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    ICacheElement get( Serializable key )
+    ICacheElement<K, V> get( K key )
         throws IOException;
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map
      * if there is no data in cache for any of these keys
      * @throws IOException
      */
-    Map<Serializable, ICacheElement> getMultiple( Set<Serializable> keys )
+    Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
         throws IOException;
 
     /**
@@ -150,7 +150,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    ICacheElement getQuiet( Serializable key )
+    ICacheElement<K, V> getQuiet( K key )
         throws IOException;
 
     /**
@@ -161,7 +161,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    void waterfal( ICacheElement ce )
+    void waterfal( ICacheElement<K, V> ce )
         throws IOException;
 
     /**
@@ -172,7 +172,7 @@ public interface IMemoryCache
      * @exception IOException
      *                Description of the Exception
      */
-    void update( ICacheElement ce )
+    void update( ICacheElement<K, V> ce )
         throws IOException;
 
     /**
@@ -195,7 +195,7 @@ public interface IMemoryCache
      * <p>
      * @return The cache value
      */
-    CompositeCache getCompositeCache();
+    CompositeCache<K, V> getCompositeCache();
 
     /**
      * Gets the set of keys of objects currently in the group.
@@ -203,5 +203,5 @@ public interface IMemoryCache
      * @param group
      * @return a Set of group keys.
      */
-    Set<Serializable> getGroupKeys( String group );
+    Set<K> getGroupKeys( String group );
 }

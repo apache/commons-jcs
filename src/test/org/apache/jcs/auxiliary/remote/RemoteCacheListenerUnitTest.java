@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.engine.CacheElementSerialized;
 import org.apache.jcs.engine.ElementAttributes;
+import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
@@ -53,8 +54,8 @@ public class RemoteCacheListenerUnitTest
         // SETUP
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( false );
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        RemoteCacheListener listener = new RemoteCacheListener( irca, cacheMgr );
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager<String, String>();
+        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr );
 
         String cacheName = "testName";
         String key = "key";
@@ -64,14 +65,16 @@ public class RemoteCacheListenerUnitTest
 
         IElementSerializer elementSerializer = new StandardSerializer();
 
-        ICacheElementSerialized element = new CacheElementSerialized( cacheName, key, elementSerializer
+        ICacheElementSerialized<String, String> element =
+            new CacheElementSerialized<String, String>( cacheName, key, elementSerializer
             .serialize( value ), attr );
-        
+
         // DO WORK
         listener.handlePut( element );
 
         // VERIFY
-        ICacheElement after = cacheMgr.getCache( cacheName ).get( key );
+        ICache<String, String> cache = cacheMgr.getCache( cacheName );
+        ICacheElement<String, String> after = cache.get( key );
 
         assertNotNull( "Should have a deserialized object.", after );
         assertEquals( "Values should be the same.", value, after.getVal() );
@@ -94,8 +97,8 @@ public class RemoteCacheListenerUnitTest
         // SETUP
         IRemoteCacheAttributes irca = new RemoteCacheAttributes();
         irca.setRemoveUponRemotePut( true );
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        RemoteCacheListener listener = new RemoteCacheListener( irca, cacheMgr );
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager<String, String>();
+        RemoteCacheListener<String, String> listener = new RemoteCacheListener<String, String>( irca, cacheMgr );
 
         String cacheName = "testName";
         String key = "key";
@@ -105,14 +108,16 @@ public class RemoteCacheListenerUnitTest
 
         IElementSerializer elementSerializer = new StandardSerializer();
 
-        ICacheElementSerialized element = new CacheElementSerialized( cacheName, key, elementSerializer
+        ICacheElementSerialized<String, String> element =
+            new CacheElementSerialized<String, String>( cacheName, key, elementSerializer
             .serialize( value ), attr );
-        
+
         // DO WORK
         listener.handlePut( element );
 
         // VERIFY
-        ICacheElement after = cacheMgr.getCache( cacheName ).get( key );
+        ICache<String, String> cache = cacheMgr.getCache( cacheName );
+        ICacheElement<String, String> after = cache.get( key );
 
         assertNull( "Should not have a deserialized object since remove on put is true.", after );
     }

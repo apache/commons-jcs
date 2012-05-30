@@ -49,7 +49,7 @@ public class CacheAccessUnitTest
     public void testPutSafe()
         throws Exception
     {
-        CacheAccess access = CacheAccess.getAccess( "test" );
+        CacheAccess<String, String> access = CacheAccess.getAccess( "test" );
         assertNotNull( "We should have an access class", access );
 
         String key = "mykey";
@@ -57,7 +57,7 @@ public class CacheAccessUnitTest
 
         access.put( key, value );
 
-        String returnedValue1 = (String) access.get( key );
+        String returnedValue1 = access.get( key );
         assertEquals( "Wrong value returned.", value, returnedValue1 );
 
         try
@@ -71,7 +71,7 @@ public class CacheAccessUnitTest
             assertTrue( "Should have the key in the error message.", e.getMessage().indexOf( "[" + key + "]" ) != -1 );
         }
 
-        String returnedValue2 = (String) access.get( key );
+        String returnedValue2 = access.get( key );
         assertEquals( "Wrong value returned.  Shoudl still be the original.", value, returnedValue2 );
     }
 
@@ -82,7 +82,7 @@ public class CacheAccessUnitTest
     public void testPutNullKey()
         throws Exception
     {
-        CacheAccess access = CacheAccess.getAccess( "test" );
+        CacheAccess<String, String> access = CacheAccess.getAccess( "test" );
         assertNotNull( "We should have an access class", access );
 
         String key = null;
@@ -106,7 +106,7 @@ public class CacheAccessUnitTest
     public void testPutNullValue()
         throws Exception
     {
-        CacheAccess access = CacheAccess.getAccess( "test" );
+        CacheAccess<String, String> access = CacheAccess.getAccess( "test" );
         assertNotNull( "We should have an access class", access );
 
         String key = "myKey";
@@ -124,13 +124,13 @@ public class CacheAccessUnitTest
     }
 
     /**
-     * Verify that elements that go in the region after this call takethe new attributes.
+     * Verify that elements that go in the region after this call take the new attributes.
      * @throws Exception
      */
     public void testSetDefaultElementAttributes()
         throws Exception
     {
-        CacheAccess access = CacheAccess.getAccess( "test" );
+        CacheAccess<String, String> access = CacheAccess.getAccess( "test" );
         assertNotNull( "We should have an access class", access );
 
         long maxLife = 9876;
@@ -147,7 +147,7 @@ public class CacheAccessUnitTest
 
         access.put( key, value );
 
-        ICacheElement element = access.getCacheElement( key );
+        ICacheElement<String, String> element = access.getCacheElement( key );
 
         assertEquals( "Wrong max life.  Should have the new value.", maxLife, element.getElementAttributes()
             .getMaxLifeSeconds() );
@@ -161,7 +161,7 @@ public class CacheAccessUnitTest
         throws Exception
     {
         //SETUP
-        CacheAccess access = CacheAccess.getAccess( "test" );
+        CacheAccess<String, String> access = CacheAccess.getAccess( "test" );
         assertNotNull( "We should have an access class", access );
 
         String keyOne = "mykeyone";
@@ -175,19 +175,19 @@ public class CacheAccessUnitTest
         access.put( keyTwo, valueTwo );
         access.put( keyThree, valueThree );
 
-        Set input = new HashSet();
+        Set<String> input = new HashSet<String>();
         input.add( keyOne );
         input.add( keyTwo );
 
         //DO WORK
-        Map result = access.getCacheElements( input );
+        Map<String, ICacheElement<String, String>> result = access.getCacheElements( input );
 
         //VERIFY
         assertEquals( "map size", 2, result.size() );
-        ICacheElement elementOne = (ICacheElement) result.get( keyOne );
+        ICacheElement<String, String> elementOne = result.get( keyOne );
         assertEquals( "value one", keyOne, elementOne.getKey() );
         assertEquals( "value one", valueOne, elementOne.getVal() );
-        ICacheElement elementTwo = (ICacheElement) result.get( keyTwo );
+        ICacheElement<String, String> elementTwo = result.get( keyTwo );
         assertEquals( "value two", keyTwo, elementTwo.getKey() );
         assertEquals( "value two", valueTwo, elementTwo.getVal() );
     }
@@ -199,7 +199,7 @@ public class CacheAccessUnitTest
     public void testRegionDefiniton()
         throws Exception
     {
-        CacheAccess access = CacheAccess.defineRegion( "test" );
+        CacheAccess<String, String> access = CacheAccess.defineRegion( "test" );
         assertNotNull( "We should have an access class", access );
     }
 
@@ -215,7 +215,7 @@ public class CacheAccessUnitTest
         long maxIdleTime = 8765;
         ca.setMaxMemoryIdleTimeSeconds( maxIdleTime );
 
-        CacheAccess access = CacheAccess.defineRegion( "testRegionDefinitonWithAttributes", ca );
+        CacheAccess<String, String> access = CacheAccess.defineRegion( "testRegionDefinitonWithAttributes", ca );
         assertNotNull( "We should have an access class", access );
 
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
@@ -239,7 +239,7 @@ public class CacheAccessUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLifeSeconds( maxLife );
 
-        CacheAccess access = CacheAccess.defineRegion( "testRegionDefinitonWithAttributes", ca, attr );
+        CacheAccess<String, String> access = CacheAccess.defineRegion( "testRegionDefinitonWithAttributes", ca, attr );
         assertNotNull( "We should have an access class", access );
 
         ICompositeCacheAttributes ca2 = access.getCacheAttributes();
@@ -267,7 +267,7 @@ public class CacheAccessUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLifeSeconds( maxLife );
 
-        CacheAccess access = CacheAccess.defineRegion( "testGetMatching_Normal", cattr, attr );
+        CacheAccess<String, Integer> access = CacheAccess.defineRegion( "testGetMatching_Normal", cattr, attr );
 
         // DO WORK
         int numToInsertPrefix1 = 10;
@@ -284,17 +284,17 @@ public class CacheAccessUnitTest
             access.put( keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
         }
 
-        Map result1 = access.getMatching( keyprefix1 + ".+" );
-        Map result2 = access.getMatching( keyprefix2 + "\\S+" );
+        Map<String, Integer> result1 = access.getMatching( keyprefix1 + ".+" );
+        Map<String, Integer> result2 = access.getMatching( keyprefix2 + "\\S+" );
 
         // VERIFY
         assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
         assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
         //System.out.println( result1 );
-        
+
         // verify that the elements are unwrapped
-        Set keySet1 = result1.keySet();
-        Iterator it1 = keySet1.iterator();
+        Set<String> keySet1 = result1.keySet();
+        Iterator<String> it1 = keySet1.iterator();
         while ( it1.hasNext() )
         {
             Object key = it1.next();
@@ -302,7 +302,7 @@ public class CacheAccessUnitTest
             assertFalse( "Should not be a cache element.", value instanceof ICacheElement );
         }
     }
-    
+
     /**
      * Verify we can get some matching elements..
      * <p>
@@ -324,7 +324,7 @@ public class CacheAccessUnitTest
         IElementAttributes attr = new ElementAttributes();
         attr.setMaxLifeSeconds( maxLife );
 
-        CacheAccess access = CacheAccess.defineRegion( "testGetMatching_Normal", cattr, attr );
+        CacheAccess<String, Integer> access = CacheAccess.defineRegion( "testGetMatching_Normal", cattr, attr );
 
         // DO WORK
         int numToInsertPrefix1 = 10;
@@ -341,22 +341,22 @@ public class CacheAccessUnitTest
             access.put( keyprefix2 + String.valueOf( i ), Integer.valueOf( i ) );
         }
 
-        Map result1 = access.getMatchingCacheElements( keyprefix1 + "\\S+" );
-        Map result2 = access.getMatchingCacheElements( keyprefix2 + ".+" );
+        Map<String, ICacheElement<String, Integer>> result1 = access.getMatchingCacheElements( keyprefix1 + "\\S+" );
+        Map<String, ICacheElement<String, Integer>> result2 = access.getMatchingCacheElements( keyprefix2 + ".+" );
 
         // VERIFY
         assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result1.size() );
         assertEquals( "Wrong number returned 2:", numToInsertPrefix2, result2.size() );
         //System.out.println( result1 );
-        
+
         // verify that the elements are wrapped
-        Set keySet1 = result1.keySet();
-        Iterator it1 = keySet1.iterator();
+        Set<String> keySet1 = result1.keySet();
+        Iterator<String> it1 = keySet1.iterator();
         while ( it1.hasNext() )
         {
             Object key = it1.next();
             Object value = result1.get( key );
             assertTrue( "Should be a cache element.", value instanceof ICacheElement );
-        }        
+        }
     }
 }

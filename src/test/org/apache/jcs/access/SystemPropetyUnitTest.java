@@ -50,7 +50,7 @@ public class SystemPropetyUnitTest
 
         JCS.setConfigFilename( "/TestSystemProperties.ccf" );
 
-        JCS cache = JCS.getInstance( "test1" );
+        JCS<String, String> cache = JCS.getInstance( "test1" );
         assertEquals( "We should have used the system property for the memory size", maxMemory, cache
             .getCacheAttributes().getMaxObjects() );
 
@@ -72,7 +72,7 @@ public class SystemPropetyUnitTest
         CompositeCacheManager mgr = CompositeCacheManager.getUnconfiguredInstance();
         mgr.configure( "/TestSystemProperties.ccf" );
 
-        JCS cache = JCS.getInstance( "missing" );
+        JCS<String, String> cache = JCS.getInstance( "missing" );
         // TODO check against the actual default def
         assertEquals( "We should have used the default property for the memory size", 100, cache.getCacheAttributes()
             .getMaxObjects() );

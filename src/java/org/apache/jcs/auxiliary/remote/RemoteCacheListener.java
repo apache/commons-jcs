@@ -38,9 +38,9 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * One listener is used per remote cache server. The same listener is used for all the regions that
  * talk to a particular server.
  */
-public class RemoteCacheListener
-    extends AbsractRemoteCacheListener
-    implements IRemoteCacheConstants, Serializable, IRemoteCacheListener
+public class RemoteCacheListener<K extends Serializable, V extends Serializable>
+    extends AbsractRemoteCacheListener<K, V>
+    implements IRemoteCacheConstants, Serializable, IRemoteCacheListener<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 25345252345322345L;

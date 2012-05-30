@@ -6,7 +6,6 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.apache.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.jcs.engine.CacheElement;
 
@@ -23,7 +22,8 @@ public class RemoteCacheRequestFactoryUnitTest
         long requesterId = 2;
 
         // DO WORK
-        RemoteCacheRequest result = RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
+        RemoteCacheRequest<Serializable, Serializable> result =
+            RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -40,8 +40,8 @@ public class RemoteCacheRequestFactoryUnitTest
         long requesterId = 2;
 
         // DO WORK
-        RemoteCacheRequest result = RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern,
-                                                                                                 requesterId );
+        RemoteCacheRequest<Serializable, Serializable> result =
+            RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern, requesterId );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -54,12 +54,12 @@ public class RemoteCacheRequestFactoryUnitTest
     {
         // SETUP
         String cacheName = "test";
-        Set keys = Collections.EMPTY_SET;
+        Set<Serializable> keys = Collections.emptySet();
         long requesterId = 2;
 
         // DO WORK
-        RemoteCacheRequest result = RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys,
-                                                                                                 requesterId );
+        RemoteCacheRequest<Serializable, Serializable> result =
+            RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys, requesterId );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -76,7 +76,7 @@ public class RemoteCacheRequestFactoryUnitTest
         long requesterId = 2;
 
         // DO WORK
-        RemoteCacheRequest result = RemoteCacheRequestFactory
+        RemoteCacheRequest<Serializable, Serializable> result = RemoteCacheRequestFactory
             .createRemoveRequest( cacheName, key, requesterId );
 
         // VERIFY
@@ -93,7 +93,8 @@ public class RemoteCacheRequestFactoryUnitTest
         long requesterId = 2;
 
         // DO WORK
-        RemoteCacheRequest result = RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
+        RemoteCacheRequest<Serializable, Serializable> result =
+            RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
 
         // VERIFY
         assertNotNull( "Should have a result", result );
@@ -109,10 +110,12 @@ public class RemoteCacheRequestFactoryUnitTest
         Serializable key = "key";
         long requesterId = 2;
 
-        CacheElement element = new CacheElement( cacheName, key, null );
+        CacheElement<Serializable, Serializable> element =
+            new CacheElement<Serializable, Serializable>( cacheName, key, null );
 
         // DO WORK
-        RemoteCacheRequest result = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
+        RemoteCacheRequest<Serializable, Serializable> result =
+            RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
 
         // VERIFY
         assertNotNull( "Should have a result", result );

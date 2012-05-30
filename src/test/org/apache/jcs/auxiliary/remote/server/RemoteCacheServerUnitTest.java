@@ -57,12 +57,12 @@ public class RemoteCacheServerUnitTest
 
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
-        MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
         mockListener1.remoteType = IRemoteCacheAttributes.LOCAL;
         mockListener1.localAddress = expectedIp1;
-        MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
         mockListener1.remoteType = IRemoteCacheAttributes.LOCAL;
         mockListener2.localAddress = expectedIp2;
 
@@ -94,12 +94,12 @@ public class RemoteCacheServerUnitTest
 
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
-        MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
         mockListener1.remoteType = IRemoteCacheAttributes.CLUSTER;
         mockListener1.localAddress = expectedIp1;
-        MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
         mockListener1.remoteType = IRemoteCacheAttributes.CLUSTER;
         mockListener2.localAddress = expectedIp2;
 
@@ -115,7 +115,7 @@ public class RemoteCacheServerUnitTest
         assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
         assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
     }
-    
+
     /**
      * Add a listener. Pass the id of 0, verify that the server sets a new listener id. Do another
      * and verify that the second gets an id of 2.
@@ -128,14 +128,14 @@ public class RemoteCacheServerUnitTest
         // SETUP
         String expectedIp1 = "adfasdf";
         String expectedIp2 = "adsfadsafaf";
-        
+
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
-        MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
         mockListener1.localAddress = expectedIp1;
-        MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
         mockListener2.localAddress = expectedIp2;
 
         // DO WORK
@@ -147,7 +147,7 @@ public class RemoteCacheServerUnitTest
         assertEquals( "Wrong listener id.", 1, mockListener1.getListenerId() );
         assertEquals( "Wrong listener id.", 2, mockListener2.getListenerId() );
         assertEquals( "Wrong ip.", expectedIp1, server.getExtraInfoForRequesterId( 1 ) );
-        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );        
+        assertEquals( "Wrong ip.", expectedIp2, server.getExtraInfoForRequesterId( 2 ) );
     }
 
     /**
@@ -163,10 +163,10 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
-        MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
-        MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
 
         String cacheName = "testAddListenerToAllThenRemove";
 
@@ -197,11 +197,11 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
-        MockRemoteCacheListener mockListener1 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
         mockListener1.remoteType = IRemoteCacheServerAttributes.CLUSTER;
-        MockRemoteCacheListener mockListener2 = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
         mockListener2.remoteType = IRemoteCacheServerAttributes.CLUSTER;
 
         String cacheName = "testAddListenerToAllThenRemove";
@@ -234,19 +234,19 @@ public class RemoteCacheServerUnitTest
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
 
-        MockRemoteCacheListener mockListener = new MockRemoteCacheListener();
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        MockRemoteCacheListener<String, Long> mockListener = new MockRemoteCacheListener<String, Long>();
+        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa );
 
         String cacheName = "testSimpleRegisterListenerAndPut";
         server.addCacheListener( cacheName, mockListener );
 
         // DO WORK
-        List inputItems = new LinkedList();
+        List<ICacheElement<String, Long>> inputItems = new LinkedList<ICacheElement<String, Long>>();
         int numToPut = 10;
 
         for ( int i = 0; i < numToPut; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Long.valueOf( i ) );
+            ICacheElement<String, Long> element = new CacheElement<String, Long>( cacheName, String.valueOf( i ), Long.valueOf( i ) );
             inputItems.add( element );
             server.update( element, 9999 );
         }
@@ -277,14 +277,14 @@ public class RemoteCacheServerUnitTest
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setLocalClusterConsistency( true );
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, Long> server = new RemoteCacheServer<String, Long>( rcsa );
 
         // this is to get the listener id for inserts.
-        MockRemoteCacheListener clusterListener = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, Long> clusterListener = new MockRemoteCacheListener<String, Long>();
         clusterListener.remoteType = IRemoteCacheAttributes.CLUSTER;
 
         // this should get the updates
-        MockRemoteCacheListener localListener = new MockRemoteCacheListener();
+        MockRemoteCacheListener<String, Long> localListener = new MockRemoteCacheListener<String, Long>();
         localListener.remoteType = IRemoteCacheAttributes.LOCAL;
 
         String cacheName = "testSimpleRegisterListenerAndPut_FromClusterWithLCC";
@@ -292,12 +292,12 @@ public class RemoteCacheServerUnitTest
         server.addCacheListener( cacheName, localListener );
 
         // DO WORK
-        List inputItems = new LinkedList();
+        List<ICacheElement<String, Long>> inputItems = new LinkedList<ICacheElement<String,Long>>();
         int numToPut = 10;
 
         for ( int i = 0; i < numToPut; i++ )
         {
-            ICacheElement element = new CacheElement( cacheName, String.valueOf( i ), Long.valueOf( i ) );
+            ICacheElement<String, Long> element = new CacheElement<String, Long>( cacheName, String.valueOf( i ), Long.valueOf( i ) );
             inputItems.add( element );
             // update using the cluster listener id
             server.update( element, clusterListener.getListenerId() );
@@ -327,8 +327,8 @@ public class RemoteCacheServerUnitTest
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
 
-        MockRemoteCacheListener mockListener = new MockRemoteCacheListener();
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        MockRemoteCacheListener<String, String> mockListener = new MockRemoteCacheListener<String, String>();
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         String cacheName = "testSimpleRegisterListenerAndPut";
         server.addCacheListener( cacheName, mockListener );
@@ -365,12 +365,12 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
 
-        ICacheElement item = new CacheElement( "region", "key", "value" );
+        ICacheElement<String, String> item = new CacheElement<String, String>( "region", "key", "value" );
 
         // DO WORK
         server.update( item );
@@ -391,7 +391,7 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
@@ -415,7 +415,7 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
@@ -427,7 +427,7 @@ public class RemoteCacheServerUnitTest
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
-    
+
     /**
      * Verify event log calls.
      * <p>
@@ -439,19 +439,19 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
 
         // DO WORK
-        server.getMultiple( "region", new HashSet() );
+        server.getMultiple( "region", new HashSet<String>() );
 
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
-    
+
     /**
      * Verify event log calls.
      * <p>
@@ -463,7 +463,7 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
@@ -475,7 +475,7 @@ public class RemoteCacheServerUnitTest
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
     }
-    
+
     /**
      * Verify event log calls.
      * <p>
@@ -487,7 +487,7 @@ public class RemoteCacheServerUnitTest
         // SETUP
         IRemoteCacheServerAttributes rcsa = new RemoteCacheServerAttributes();
         rcsa.setConfigFileName( "/TestRemoteCacheServer.ccf" );
-        RemoteCacheServer server = new RemoteCacheServer( rcsa );
+        RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockCacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         server.setCacheEventLogger( cacheEventLogger );
@@ -498,5 +498,5 @@ public class RemoteCacheServerUnitTest
         // VERIFY
         assertEquals( "Start should have been called.", 1, cacheEventLogger.startICacheEventCalls );
         assertEquals( "End should have been called.", 1, cacheEventLogger.endICacheEventCalls );
-    }    
+    }
 }

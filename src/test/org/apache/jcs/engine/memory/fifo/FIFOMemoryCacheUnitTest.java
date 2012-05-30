@@ -30,17 +30,17 @@ public class FIFOMemoryCacheUnitTest
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );
 
-        FIFOMemoryCache cache = new FIFOMemoryCache();
-        cache.initialize( new CompositeCache( cacheName, attributes,
+        FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<String, String>();
+        cache.initialize( new CompositeCache<String, String>( cacheName, attributes,
                                               new ElementAttributes() ) );
-        
+
         for ( int i = 0; i <= maxObjects; i++ )
         {
-            CacheElement element = new CacheElement( cacheName, "key" + i, "value" + i );
+            CacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key" + i, "value" + i );
             cache.update( element );
         }
 
-        CacheElement oneMoreElement = new CacheElement( cacheName, "onemore", "onemore" );
+        CacheElement<String, String> oneMoreElement = new CacheElement<String, String>( cacheName, "onemore", "onemore" );
 
         // DO WORK
         cache.update( oneMoreElement );
@@ -53,7 +53,7 @@ public class FIFOMemoryCacheUnitTest
         }
         assertNotNull( "Shjould have oneMoreElement", cache.get( "onemore" ) );
     }
-    
+
     /**
      * Verify that the oldest inserted item is removed
      * <p>
@@ -70,16 +70,16 @@ public class FIFOMemoryCacheUnitTest
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );
 
-        FIFOMemoryCache cache = new FIFOMemoryCache();
-        cache.initialize( new CompositeCache( cacheName, attributes,
+        FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<String, String>();
+        cache.initialize( new CompositeCache<String, String>( cacheName, attributes,
                                               new ElementAttributes() ) );
 
         // DO WORK
         for ( int i = 0; i <= (maxObjects * 2); i++ )
         {
-            CacheElement element = new CacheElement( cacheName, "key" + i, "value" + i );
+            CacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key" + i, "value" + i );
             cache.update( element );
-        }       
+        }
 
         // VERIFY
         assertEquals( "Should have max elements", maxObjects, cache.getSize() );

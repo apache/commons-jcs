@@ -38,12 +38,12 @@ public class JCSCacheElementRetrievalUnitTest
     public void testSimpleElementRetrieval()
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.put( "test_key", "test_data" );
 
         long now = System.currentTimeMillis();
-        ICacheElement elem = jcs.getCacheElement( "test_key" );
+        ICacheElement<String, String> elem = jcs.getCacheElement( "test_key" );
         assertEquals( "Name wasn't right", "testCache1", elem.getCacheName() );
 
         long diff = now - elem.getElementAttributes().getCreateTime();

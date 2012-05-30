@@ -26,15 +26,15 @@ import java.io.Serializable;
  * <p>
  * The value is stored as a byte array. This should allow for a variety of serialization mechanisms.
  * <p>
- * This currently extends ICacheElement for backward compatibility.
+ * This currently extends ICacheElement<K, V> for backward compatibility.
  *<p>
  * @author Aaron Smuts
  */
-public interface ICacheElementSerialized
-    extends ICacheElement
+public interface ICacheElementSerialized<K extends Serializable, V extends Serializable>
+    extends ICacheElement<K, V>
 {
     /**
-     * Gets the cacheName attribute of the ICacheElement object. The cacheName is also known as the
+     * Gets the cacheName attribute of the ICacheElement<K, V> object. The cacheName is also known as the
      * region name.
      *<p>
      * @return The cacheName value
@@ -47,7 +47,7 @@ public interface ICacheElementSerialized
      *<p>
      * @return The key value
      */
-    public Serializable getKey();
+    public K getKey();
 
     /**
      * Gets the value attribute of the ICacheElementSerialized object. This is the value the client
@@ -58,14 +58,14 @@ public interface ICacheElementSerialized
     public byte[] getSerializedValue();
 
     /**
-     * Gets the attributes attribute of the ICacheElement object
+     * Gets the attributes attribute of the ICacheElement<K, V> object
      *<p>
      * @return The attributes value
      */
     public IElementAttributes getElementAttributes();
 
     /**
-     * Sets the attributes attribute of the ICacheElement object
+     * Sets the attributes attribute of the ICacheElement<K, V> object
      *<p>
      * @param attr The new attributes value
      */

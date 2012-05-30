@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.server.RemoteCacheServer;
@@ -77,9 +78,9 @@ public class JCSAdminBean
     public LinkedList<CacheElementInfo> buildElementInfo( String cacheName )
         throws Exception
     {
-        CompositeCache cache = cacheHub.getCache( cacheName );
+        CompositeCache<Serializable, Serializable> cache = cacheHub.getCache( cacheName );
 
-        Object[] keys = cache.getMemoryCache().getKeyArray();
+        Serializable[] keys = cache.getMemoryCache().getKeySet().toArray(new Serializable[0]);
 
         // Attempt to sort keys according to their natural ordering. If that
         // fails, get the key array again and continue unsorted.
@@ -89,12 +90,12 @@ public class JCSAdminBean
         }
         catch ( Exception e )
         {
-            keys = cache.getMemoryCache().getKeyArray();
+            keys = cache.getMemoryCache().getKeySet().toArray(new Serializable[0]);
         }
 
         LinkedList<CacheElementInfo> records = new LinkedList<CacheElementInfo>();
 
-        ICacheElement element;
+        ICacheElement<Serializable, Serializable> element;
         IElementAttributes attributes;
         CacheElementInfo elementInfo;
 
@@ -102,15 +103,15 @@ public class JCSAdminBean
 
         long now = System.currentTimeMillis();
 
-        for ( int i = 0; i < keys.length; i++ )
+        for (Serializable key : keys)
         {
-            element = cache.getMemoryCache().getQuiet( (Serializable) keys[i] );
+            element = cache.getMemoryCache().getQuiet( key );
 
             attributes = element.getElementAttributes();
 
             elementInfo = new CacheElementInfo();
 
-            elementInfo.key = String.valueOf( keys[i] );
+            elementInfo.key = String.valueOf( key );
             elementInfo.eternal = attributes.getIsEternal();
             elementInfo.maxLifeSeconds = attributes.getMaxLifeSeconds();
 
@@ -143,7 +144,7 @@ public class JCSAdminBean
         LinkedList<CacheRegionInfo> cacheInfo = new LinkedList<CacheRegionInfo>();
 
         CacheRegionInfo regionInfo;
-        CompositeCache cache;
+        CompositeCache<?, ?> cache;
 
         for ( int i = 0; i < cacheNames.length; i++ )
         {
@@ -167,7 +168,7 @@ public class JCSAdminBean
      *
      * @return int The size of the region in bytes.
      */
-    public int getByteCount(CompositeCache cache) throws Exception
+    public <K extends Serializable, V extends Serializable> int getByteCount(CompositeCache<K, V> cache) throws Exception
     {
         if (cache == null)
         {
@@ -177,17 +178,17 @@ public class JCSAdminBean
         long size = 0;
         try
         {
-            IMemoryCache memCache = cache.getMemoryCache();
+            IMemoryCache<K, V> memCache = cache.getMemoryCache();
 
-            Iterator<Map.Entry<Serializable, MemoryElementDescriptor>> iter = memCache.getIterator();
+            Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> iter = memCache.getIterator();
             while (iter.hasNext())
             {
-                MemoryElementDescriptor me = iter.next().getValue();
-                ICacheElement ice = me.ce;
+                MemoryElementDescriptor<K, V> me = iter.next().getValue();
+                ICacheElement<K, V> ice = me.ce;
 
                 if (ice instanceof CacheElementSerialized)
                 {
-                    size = size + ((CacheElementSerialized) ice).getSerializedValue().length;
+                    size = size + ((CacheElementSerialized<K, V>) ice).getSerializedValue().length;
                 }
                 else
                 {
@@ -254,7 +255,7 @@ public class JCSAdminBean
                 String[] cacheNames = cacheHub.getCacheNames();
 
                 // Call remoteCacheServer.removeAll(String) for each cacheName...
-                RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
                 for (int i = 0; i < cacheNames.length; i++)
                 {
                     String cacheName = cacheNames[i];
@@ -294,7 +295,7 @@ public class JCSAdminBean
             try
             {
                 // Call remoteCacheServer.removeAll(String)...
-                RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                RemoteCacheServer<?, ?> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
                 remoteCacheServer.removeAll(cacheName);
             }
             catch (IOException e)
@@ -339,16 +340,15 @@ public class JCSAdminBean
             try
             {
                 Object keyToRemove = null;
-                CompositeCache cache = CompositeCacheManager.getInstance().getCache(cacheName);
+                CompositeCache<? extends Serializable, ? extends Serializable> cache = CompositeCacheManager.getInstance().getCache(cacheName);
 
                 // A String key was supplied, but to remove elements via the RemoteCacheServer API, we need the
                 // actual key object as stored in the cache (i.e. a Serializable object). To find the key in this form,
                 // we iterate through all keys stored in the memory cache until we find one whose toString matches
                 // the string supplied...
-                Object[] allKeysInCache = cache.getMemoryCache().getKeyArray();
-                for (int i = 0; i < allKeysInCache.length; i++)
+                Set<? extends Serializable> allKeysInCache = cache.getMemoryCache().getKeySet();
+                for (Serializable keyInCache : allKeysInCache)
                 {
-                    Object keyInCache = allKeysInCache[i];
                     if (keyInCache.toString().equals(key))
                     {
                         if (keyToRemove == null)
@@ -370,7 +370,7 @@ public class JCSAdminBean
                 {
                     throw new IllegalStateException("Found key [" + keyToRemove + ", " + keyToRemove.getClass() + "] in cache matching key specified, however key found in cache is unexpectedly not serializable.");
                 }
-                // At this point, we have retrieved the matching Serializable key.
+                // At this point, we have retrieved the matching K key.
 
                 // Call remoteCacheServer.remove(String, Serializable)...
                 RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();

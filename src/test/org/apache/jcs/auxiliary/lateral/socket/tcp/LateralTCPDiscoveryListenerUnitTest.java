@@ -50,11 +50,11 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         String cacheName = "testAddNoWaitFacade_NotInList";
-        LateralCacheNoWait[] noWaits = new LateralCacheNoWait[0];
+        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
-        LateralCacheNoWaitFacade facade = new LateralCacheNoWaitFacade( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
 
         // DO WORK
         listener.addNoWaitFacade( cacheName, facade );
@@ -70,15 +70,15 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         String cacheName = "testAddNoWaitFacade_FacadeInList";
-        LateralCacheNoWait[] noWaits = new LateralCacheNoWait[0];
+        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
-        LateralCacheNoWaitFacade facade = new LateralCacheNoWaitFacade( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
         listener.addNoWaitFacade( cacheName, facade );
 
-        LateralCache cache = new LateralCache( cattr );
-        LateralCacheNoWait noWait = new LateralCacheNoWait( cache );
+        LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
+        LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
 
         // DO WORK
         boolean result = listener.addNoWait( noWait );
@@ -97,8 +97,8 @@ public class LateralTCPDiscoveryListenerUnitTest
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
-        LateralCache cache = new LateralCache( cattr );
-        LateralCacheNoWait noWait = new LateralCacheNoWait( cache );
+        LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
+        LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
 
         // DO WORK
         boolean result = listener.addNoWait( noWait );
@@ -117,8 +117,8 @@ public class LateralTCPDiscoveryListenerUnitTest
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
-        LateralCache cache = new LateralCache( cattr );
-        LateralCacheNoWait noWait = new LateralCacheNoWait( cache );
+        LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
+        LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
 
         // DO WORK
         boolean result = listener.removeNoWait( noWait );
@@ -134,15 +134,15 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         String cacheName = "testAddNoWaitFacade_FacadeInList";
-        LateralCacheNoWait[] noWaits = new LateralCacheNoWait[0];
+        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
-        LateralCacheNoWaitFacade facade = new LateralCacheNoWaitFacade( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
         listener.addNoWaitFacade( cacheName, facade );
 
-        LateralCache cache = new LateralCache( cattr );
-        LateralCacheNoWait noWait = new LateralCacheNoWait( cache );
+        LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
+        LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
 
         // DO WORK
         boolean result = listener.removeNoWait( noWait );
@@ -158,15 +158,15 @@ public class LateralTCPDiscoveryListenerUnitTest
     {
         // SETUP
         String cacheName = "testRemoveNoWaitFacade_FacadeInListNoWaitIs";
-        LateralCacheNoWait[] noWaits = new LateralCacheNoWait[0];
+        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
 
-        LateralCacheNoWaitFacade facade = new LateralCacheNoWaitFacade( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
         listener.addNoWaitFacade( cacheName, facade );
 
-        LateralCache cache = new LateralCache( cattr );
-        LateralCacheNoWait noWait = new LateralCacheNoWait( cache );
+        LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
+        LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
         listener.addNoWait( noWait );
 
         // DO WORK
@@ -199,12 +199,12 @@ public class LateralTCPDiscoveryListenerUnitTest
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );
-        LateralCacheNoWait noWait = (LateralCacheNoWait) lcm.getCache( cacheName );
+        LateralCacheNoWait<String, String> noWait = (LateralCacheNoWait) lcm.getCache( cacheName );
 
-        LateralCacheNoWait[] noWaits = new LateralCacheNoWait[0];
+        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
-        LateralCacheNoWaitFacade facade = new LateralCacheNoWaitFacade( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
         listener.addNoWaitFacade( cacheName, facade );
 
         // DO WORK
@@ -237,12 +237,12 @@ public class LateralTCPDiscoveryListenerUnitTest
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );
-        LateralCacheNoWait noWait = (LateralCacheNoWait) lcm.getCache( cacheName );
+        LateralCacheNoWait<String, String> noWait = (LateralCacheNoWait) lcm.getCache( cacheName );
 
-        LateralCacheNoWait[] noWaits = new LateralCacheNoWait[0];
+        LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( cacheName );
-        LateralCacheNoWaitFacade facade = new LateralCacheNoWaitFacade( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
         listener.addNoWaitFacade( cacheName, facade );
         listener.addDiscoveredService( service );
 

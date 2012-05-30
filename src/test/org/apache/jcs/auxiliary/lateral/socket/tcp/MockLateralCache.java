@@ -30,9 +30,9 @@ import org.apache.jcs.engine.behavior.ICacheElement;
 /**
  * For testing things that need a lateral cache
  */
-public class MockLateralCache
-    extends LateralCache
-    implements ICache
+public class MockLateralCache<K extends Serializable, V extends Serializable>
+    extends LateralCache<K, V>
+    implements ICache<K, V>
 {
     /** junk */
     private static final long serialVersionUID = 1L;
@@ -50,7 +50,7 @@ public class MockLateralCache
      * @param ce
      * @throws IOException
      */
-    protected void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
         // nothing
@@ -61,7 +61,7 @@ public class MockLateralCache
      * @return ICacheElement
      * @throws IOException
      */
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
         throws IOException
     {
         return null;
@@ -72,7 +72,7 @@ public class MockLateralCache
      * @return false
      * @throws IOException
      */
-    protected boolean processRemove( Serializable key )
+    protected boolean processRemove( K key )
         throws IOException
     {
         return false;

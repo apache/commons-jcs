@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.lateral;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 
@@ -29,9 +31,9 @@ import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
  * <p>
  * Extends a queing non-local service.
  */
-public class ZombieLateralCacheService
-    extends ZombieCacheServiceNonLocal
-    implements ILateralCacheService
+public class ZombieLateralCacheService<K extends Serializable, V extends Serializable>
+    extends ZombieCacheServiceNonLocal<K, V>
+    implements ILateralCacheService<K, V>
 {
     // backwards compatibility
 

@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 
 /**
@@ -29,8 +31,8 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
  * <p>
  * @author Aaron Smuts
  */
-public interface IRemoteCacheClient
-    extends AuxiliaryCache
+public interface IRemoteCacheClient<K extends Serializable, V extends Serializable>
+    extends AuxiliaryCache<K, V>
 {
     /**
      * Replaces the current remote cache service handle with the given handle. If the current remote
@@ -38,7 +40,7 @@ public interface IRemoteCacheClient
      * <p>
      * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
      */
-    public void fixCache( IRemoteCacheService remote );
+    public void fixCache( IRemoteCacheService<?, ?> remote );
 
     /**
      * Gets the listenerId attribute of the RemoteCacheListener object.
@@ -56,5 +58,5 @@ public interface IRemoteCacheClient
      * <p>
      * @return IRemoteCacheListener
      */
-    public IRemoteCacheListener getListener();
+    public IRemoteCacheListener<K, V> getListener();
 }

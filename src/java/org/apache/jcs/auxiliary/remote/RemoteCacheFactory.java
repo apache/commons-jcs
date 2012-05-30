@@ -19,6 +19,7 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -49,8 +50,8 @@ public class RemoteCacheFactory
     private String name;
 
     /** store reference of facades to initiate failover */
-    private final static HashMap<String, RemoteCacheNoWaitFacade> facades =
-        new HashMap<String, RemoteCacheNoWaitFacade>();
+    private final static HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> facades =
+        new HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>>();
 
     /**
      * For LOCAL clients we get a handle to all the failovers, but we do not register a listener
@@ -65,12 +66,13 @@ public class RemoteCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+            AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
+           ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         RemoteCacheAttributes rca = (RemoteCacheAttributes) iaca;
 
-        ArrayList<ICache> noWaits = new ArrayList<ICache>();
+        ArrayList<ICache<K, V>> noWaits = new ArrayList<ICache<K, V>>();
 
         // if LOCAL
         if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
@@ -90,7 +92,7 @@ public class RemoteCacheFactory
 
                 RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );
-                ICache ic = rcm.getCache( rca );
+                ICache<K, V> ic = rcm.getCache( rca );
                 if ( ic != null )
                 {
                     noWaits.add( ic );
@@ -122,7 +124,7 @@ public class RemoteCacheFactory
                     // number it is at
                     if ( ( !primayDefined && fCnt == 1 ) || noWaits.size() <= 0 )
                     {
-                        ICache ic = rcm.getCache( rca );
+                        ICache<K, V> ic = rcm.getCache( rca );
                         if ( ic != null )
                         {
                             noWaits.add( ic );
@@ -155,7 +157,7 @@ public class RemoteCacheFactory
                 RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );
                 rca.setRemoteType( RemoteCacheAttributes.CLUSTER );
-                ICache ic = rcm.getCache( rca );
+                ICache<K, V> ic = rcm.getCache( rca );
                 if ( ic != null )
                 {
                     noWaits.add( ic );
@@ -169,7 +171,7 @@ public class RemoteCacheFactory
         }
         // end if CLUSTER
 
-        RemoteCacheNoWaitFacade rcnwf = new RemoteCacheNoWaitFacade( noWaits
+        RemoteCacheNoWaitFacade<K, V> rcnwf = new RemoteCacheNoWaitFacade<K, V>( noWaits
             .toArray( new RemoteCacheNoWait[0] ), rca, cacheMgr, cacheEventLogger, elementSerializer );
 
         getFacades().put( rca.getCacheName(), rcnwf );
@@ -201,7 +203,7 @@ public class RemoteCacheFactory
      * The facades are what the cache hub talks to.
      * @return Returns the facades.
      */
-    public static HashMap<String, RemoteCacheNoWaitFacade> getFacades()
+    public static HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> getFacades()
     {
         return facades;
     }

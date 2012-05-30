@@ -42,8 +42,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
 /**
  * Lateral distributor. Returns null on get by default. Net search not implemented.
  */
-public class LateralCache
-    extends AbstractAuxiliaryCacheEventLogging
+public class LateralCache<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCacheEventLogging<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = 6274549256562382782L;
@@ -58,7 +58,7 @@ public class LateralCache
     final String cacheName;
 
     /** either http, socket.udp, or socket.tcp can set in config */
-    private ILateralCacheService lateralCacheService;
+    private ILateralCacheService<K, V> lateralCacheService;
 
     /** Monitors the connection. */
     private LateralCacheMonitor monitor;
@@ -70,7 +70,7 @@ public class LateralCache
      * @param lateral
      * @param monitor
      */
-    public LateralCache( ILateralCacheAttributes cattr, ILateralCacheService lateral, LateralCacheMonitor monitor )
+    public LateralCache( ILateralCacheAttributes cattr, ILateralCacheService<K, V> lateral, LateralCacheMonitor monitor )
     {
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttribures = cattr;
@@ -96,7 +96,7 @@ public class LateralCache
      * @throws IOException
      */
     @Override
-    protected void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
         try
@@ -124,14 +124,14 @@ public class LateralCache
      * The performance costs are too great. It is not recommended that you enable lateral gets.
      * <p>
      * @param key
-     * @return ICacheElement or null
+     * @return ICacheElement<K, V> or null
      * @throws IOException
      */
     @Override
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
         throws IOException
     {
-        ICacheElement obj = null;
+        ICacheElement<K, V> obj = null;
 
         if ( this.lateralCacheAttribures.getPutOnlyMode() )
         {
@@ -151,17 +151,17 @@ public class LateralCache
 
     /**
      * @param pattern
-     * @return A map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return A map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
     @Override
-    protected Map<Serializable, ICacheElement> processGetMatching( String pattern )
+    protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
         throws IOException
     {
         if ( this.lateralCacheAttribures.getPutOnlyMode() )
         {
-            return Collections.<Serializable, ICacheElement>emptyMap();
+            return Collections.emptyMap();
         }
         try
         {
@@ -171,7 +171,7 @@ public class LateralCache
         {
             log.error( e );
             handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
-            return Collections.<Serializable, ICacheElement>emptyMap();
+            return Collections.emptyMap();
         }
     }
 
@@ -179,21 +179,21 @@ public class LateralCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
     @Override
-    protected Map<Serializable, ICacheElement> processGetMultiple( Set<Serializable> keys )
+    protected Map<K, ICacheElement<K, V>> processGetMultiple( Set<K> keys )
         throws IOException
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
 
         if ( keys != null && !keys.isEmpty() )
         {
-            for (Serializable key : keys)
+            for (K key : keys)
             {
-                ICacheElement element = get( key );
+                ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -210,7 +210,7 @@ public class LateralCache
      * @return A set of group keys.
      * @throws IOException
      */
-    public Set<Serializable> getGroupKeys( String groupName )
+    public Set<K> getGroupKeys( String groupName )
         throws IOException
     {
         try
@@ -234,7 +234,7 @@ public class LateralCache
      * @throws IOException
      */
     @Override
-    protected boolean processRemove( Serializable key )
+    protected boolean processRemove( K key )
         throws IOException
     {
         if ( log.isDebugEnabled() )
@@ -352,13 +352,13 @@ public class LateralCache
     {
         log.error( "Disabling lateral cache due to error " + msg, ex );
 
-        lateralCacheService = new ZombieLateralCacheService( lateralCacheAttribures.getZombieQueueMaxSize() );
+        lateralCacheService = new ZombieLateralCacheService<K, V>( lateralCacheAttribures.getZombieQueueMaxSize() );
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
         // process.
         monitor.notifyError();
 
-        // could stop the net serach if it is built and try to reconnect?
+        // could stop the net search if it is built and try to reconnect?
         if ( ex instanceof IOException )
         {
             throw (IOException) ex;
@@ -371,11 +371,11 @@ public class LateralCache
      * <p>
      * @param restoredLateral
      */
-    public void fixCache( ILateralCacheService restoredLateral )
+    public void fixCache( ILateralCacheService<K, V> restoredLateral )
     {
         if ( this.lateralCacheService != null && this.lateralCacheService instanceof ZombieLateralCacheService )
         {
-            ZombieLateralCacheService zombie = (ZombieLateralCacheService) this.lateralCacheService;
+            ZombieLateralCacheService<K, V> zombie = (ZombieLateralCacheService<K, V>) this.lateralCacheService;
             this.lateralCacheService = restoredLateral;
             try
             {

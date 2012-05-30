@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * Description of the Class
  */
-public class GroupAttrName
+public class GroupAttrName<T extends Serializable>
     implements Serializable
 {
     /** Don't change */
@@ -34,7 +34,7 @@ public class GroupAttrName
     public final GroupId groupId;
 
     /** the name of the attribute */
-    public final Object attrName;
+    public final T attrName;
 
     /** Cached toString value */
     private String toString;
@@ -44,15 +44,14 @@ public class GroupAttrName
      * @param groupId
      * @param attrName
      */
-    public GroupAttrName( GroupId groupId, Object attrName )
+    public GroupAttrName( GroupId groupId, T attrName )
     {
         this.groupId = groupId;
         this.attrName = attrName;
 
-        if ( groupId == null || attrName == null )
+        if ( groupId == null )
         {
-            throw new IllegalArgumentException( "groupId " + groupId + " and attrName " + attrName
-                + ", must not be null." );
+            throw new IllegalArgumentException( "groupId must not be null." );
         }
     }
 
@@ -67,8 +66,23 @@ public class GroupAttrName
         {
             return false;
         }
-        GroupAttrName to = (GroupAttrName) obj;
-        return groupId.equals( to.groupId ) && attrName.equals( to.attrName );
+        GroupAttrName<?> to = (GroupAttrName<?>) obj;
+
+        if (groupId.equals( to.groupId ))
+        {
+            if (attrName == null && to.attrName == null)
+            {
+                return true;
+            }
+            else if (attrName == null || to.attrName == null)
+            {
+                return false;
+            }
+
+            return  attrName.equals( to.attrName );
+        }
+
+        return false;
     }
 
     /**
@@ -76,6 +90,11 @@ public class GroupAttrName
      */
     public int hashCode()
     {
+        if (attrName == null)
+        {
+            return groupId.hashCode();
+        }
+
         return groupId.hashCode() ^ attrName.hashCode();
     }
 

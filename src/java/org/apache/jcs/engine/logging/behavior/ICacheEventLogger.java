@@ -44,15 +44,15 @@ public interface ICacheEventLogger
      * @param key - the cache key
      * @return ICacheEvent
      */
-    ICacheEvent createICacheEvent( String source, String region, String eventName, String optionalDetails,
-                                   Serializable key );
+    <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region,
+            String eventName, String optionalDetails, T key );
 
     /**
      * Logs an event.
      * <p>
      * @param event - the event created in createICacheEvent
      */
-    void logICacheEvent( ICacheEvent event );
+    <T extends Serializable> void logICacheEvent( ICacheEvent<T> event );
 
     /**
      * Logs an event. These are internal application events that do not correspond to ICache calls.

@@ -47,7 +47,7 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
  * <p>
  * @author Aaron Smuts
  */
-public class BlockDiskKeyStore
+public class BlockDiskKeyStore<K extends Serializable>
 {
     /** The logger */
     protected static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );
@@ -56,7 +56,7 @@ public class BlockDiskKeyStore
     private final BlockDiskCacheAttributes blockDiskCacheAttributes;
 
     /** The key to block map */
-    private Map<Serializable, int[]> keyHash;
+    private Map<K, int[]> keyHash;
 
     /** The file where we persist the keys */
     private final File keyFile;
@@ -71,7 +71,7 @@ public class BlockDiskKeyStore
     private final int maxKeySize;
 
     /** we need this so we can communicate free blocks to the data store when keys fall off the LRU */
-    protected final BlockDiskCache blockDiskCache;
+    protected final BlockDiskCache<K, ?> blockDiskCache;
 
     /**
      * The background key persister, one for all regions.
@@ -84,7 +84,7 @@ public class BlockDiskKeyStore
      * @param cacheAttributes
      * @param blockDiskCache used for freeing
      */
-    public BlockDiskKeyStore( BlockDiskCacheAttributes cacheAttributes, BlockDiskCache blockDiskCache )
+    public BlockDiskKeyStore( BlockDiskCacheAttributes cacheAttributes, BlockDiskCache<K, ?> blockDiskCache )
     {
         this.blockDiskCacheAttributes = cacheAttributes;
         this.logCacheName = "Region [" + this.blockDiskCacheAttributes.getCacheName() + "] ";
@@ -165,9 +165,9 @@ public class BlockDiskKeyStore
                 try
                 {
                     // don't need to synchronize, since the underlying collection makes a copy
-                    for (Map.Entry<Serializable, int[]> entry : keyHash.entrySet())
+                    for (Map.Entry<K, int[]> entry : keyHash.entrySet())
                     {
-                        BlockDiskElementDescriptor descriptor = new BlockDiskElementDescriptor();
+                        BlockDiskElementDescriptor<K> descriptor = new BlockDiskElementDescriptor<K>();
                         descriptor.setKey( entry.getKey() );
                         descriptor.setBlocks( entry.getValue() );
                         // stream these out in the loop.
@@ -231,7 +231,7 @@ public class BlockDiskKeyStore
         else
         {
             // If no max size, use a plain map for memory and processing efficiency.
-            keyHash = new HashMap<Serializable, int[]>();
+            keyHash = new HashMap<K, int[]>();
             // keyHash = Collections.synchronizedMap( new HashMap() );
             if ( log.isInfoEnabled() )
             {
@@ -256,7 +256,7 @@ public class BlockDiskKeyStore
             // create a key map to use.
             initKeyMap();
 
-            HashMap<Serializable, int[]> keys = new HashMap<Serializable, int[]>();
+            HashMap<K, int[]> keys = new HashMap<K, int[]>();
 
             synchronized (keyFile)
             {
@@ -267,7 +267,7 @@ public class BlockDiskKeyStore
                 {
                     while ( true )
                     {
-                        BlockDiskElementDescriptor descriptor = (BlockDiskElementDescriptor) ois.readObject();
+                        BlockDiskElementDescriptor<K> descriptor = (BlockDiskElementDescriptor<K>) ois.readObject();
                         if ( descriptor != null )
                         {
                             keys.put( descriptor.getKey(), descriptor.getBlocks() );
@@ -311,7 +311,7 @@ public class BlockDiskKeyStore
      * <p>
      * @return entry set.
      */
-    public Set<Map.Entry<Serializable, int[]>> entrySet()
+    public Set<Map.Entry<K, int[]>> entrySet()
     {
         return this.keyHash.entrySet();
     }
@@ -321,7 +321,7 @@ public class BlockDiskKeyStore
      * <p>
      * @return key set.
      */
-    public Set<Serializable> keySet()
+    public Set<K> keySet()
     {
         return this.keyHash.keySet();
     }
@@ -342,7 +342,7 @@ public class BlockDiskKeyStore
      * @param key
      * @return Object
      */
-    public int[] get( Object key )
+    public int[] get( K key )
     {
         return this.keyHash.get( key );
     }
@@ -353,7 +353,7 @@ public class BlockDiskKeyStore
      * @param key
      * @param value
      */
-    public void put( Serializable key, int[] value )
+    public void put( K key, int[] value )
     {
         this.keyHash.put( key, value );
     }
@@ -364,7 +364,7 @@ public class BlockDiskKeyStore
      * @param key
      * @return BlockDiskElementDescriptor if it was present, else null
      */
-    public int[] remove( Serializable key )
+    public int[] remove( K key )
     {
         return this.keyHash.remove( key );
     }
@@ -374,7 +374,7 @@ public class BlockDiskKeyStore
      * blocks as free.
      */
     public class LRUMap
-        extends LRUMapJCS<Serializable, int[]>
+        extends LRUMapJCS<K, int[]>
     {
         /** Don't change */
         private static final long serialVersionUID = 4955079991472142198L;
@@ -408,7 +408,7 @@ public class BlockDiskKeyStore
          * @param value
          */
         @Override
-        protected void processRemovedLRU( Serializable key, int[] value )
+        protected void processRemovedLRU( K key, int[] value )
         {
             blockDiskCache.freeBlocks( value );
             if ( log.isDebugEnabled() )

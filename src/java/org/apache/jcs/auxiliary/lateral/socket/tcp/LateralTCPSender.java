@@ -22,6 +22,7 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -169,7 +170,7 @@ public class LateralTCPSender
      * @param led
      * @throws IOException
      */
-    public void send( LateralElementDescriptor led )
+    public <K extends Serializable, V extends Serializable> void send( LateralElementDescriptor<K, V> led )
         throws IOException
     {
         sendCnt++;
@@ -225,7 +226,7 @@ public class LateralTCPSender
      * @return ICacheElement
      * @throws IOException
      */
-    public Object sendAndReceive( LateralElementDescriptor led )
+    public <K extends Serializable, V extends Serializable> Object sendAndReceive( LateralElementDescriptor<K, V> led )
         throws IOException
     {
         if ( led == null )
@@ -302,8 +303,8 @@ public class LateralTCPSender
     }
 
     /**
-     * Closes connection used by all LateralTCPSenders for this lateral conneciton. Dispose request
-     * should come into the facade and be sent to all lateral cache sevices. The lateral cache
+     * Closes connection used by all LateralTCPSenders for this lateral connection. Dispose request
+     * should come into the facade and be sent to all lateral cache services. The lateral cache
      * service will then call this method.
      * <p>
      * @param cache

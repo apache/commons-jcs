@@ -51,8 +51,8 @@ import org.apache.jcs.engine.stats.behavior.ICacheStats;
  * <p>
  * The JCS class is the preferred way to access these methods.
  */
-public class CacheAccess
-    implements ICacheAccess<Serializable, Serializable>
+public class CacheAccess<K extends Serializable, V extends Serializable>
+    implements ICacheAccess<K, V>
 {
     /** The logger. */
     private static final Log log = LogFactory.getLog( CacheAccess.class );
@@ -65,14 +65,14 @@ public class CacheAccess
      * <p>
      * @TODO Should this be the interface?
      */
-    protected CompositeCache cacheControl;
+    protected CompositeCache<K, V> cacheControl;
 
     /**
      * Constructor for the CacheAccess object.
      * <p>
      * @param cacheControl The cache which the created instance accesses
      */
-    public CacheAccess( CompositeCache cacheControl )
+    public CacheAccess( CompositeCache<K, V> cacheControl )
     {
         this.cacheControl = cacheControl;
     }
@@ -90,12 +90,11 @@ public class CacheAccess
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
-    public static CacheAccess defineRegion( String name )
+    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name )
         throws CacheException
     {
-        getCacheManager();
-
-        return new CacheAccess( getCacheManager().getCache( name ) );
+        CompositeCache<K, V> cache = getCacheManager().getCache( name );
+        return new CacheAccess<K, V>( cache );
     }
 
     /**
@@ -106,10 +105,11 @@ public class CacheAccess
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
-    public static CacheAccess defineRegion( String name, ICompositeCacheAttributes cattr )
+    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr )
         throws CacheException
     {
-        return new CacheAccess( getCacheManager().getCache( name, cattr ) );
+        CompositeCache<K, V> cache = getCacheManager().getCache( name, cattr );
+        return new CacheAccess<K, V>( cache );
     }
 
     /**
@@ -122,10 +122,11 @@ public class CacheAccess
      * @return CacheAccess instance for the new region
      * @exception CacheException
      */
-    public static CacheAccess defineRegion( String name, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr, IElementAttributes attr )
         throws CacheException
     {
-        return new CacheAccess( getCacheManager().getCache( name, cattr, attr ) );
+        CompositeCache<K, V> cache = getCacheManager().getCache( name, cattr, attr );
+        return new CacheAccess<K, V>( cache );
     }
 
     /**
@@ -135,10 +136,11 @@ public class CacheAccess
      * @return CacheAccess instance for region
      * @exception CacheException
      */
-    public static CacheAccess getAccess( String region )
+    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> getAccess( String region )
         throws CacheException
     {
-        return new CacheAccess( getCacheManager().getCache( region ) );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region );
+        return new CacheAccess<K, V>( cache );
     }
 
     /**
@@ -149,10 +151,11 @@ public class CacheAccess
      * @return CacheAccess instance for region
      * @exception CacheException
      */
-    public static CacheAccess getAccess( String region, ICompositeCacheAttributes icca )
+    public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> getAccess( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        return new CacheAccess( getCacheManager().getCache( region, icca ) );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region, icca );
+        return new CacheAccess<K, V>( cache );
     }
 
     /**
@@ -182,9 +185,9 @@ public class CacheAccess
      * @param name Key the object is stored as
      * @return The object if found or null
      */
-    public Serializable get( Serializable name )
+    public V get( K name )
     {
-        ICacheElement element = this.cacheControl.get( name );
+        ICacheElement<K, V> element = this.cacheControl.get( name );
 
         return ( element != null ) ? element.getVal() : null;
     }
@@ -195,16 +198,16 @@ public class CacheAccess
      * @param pattern - a key pattern for the objects stored
      * @return A map of key to values.  These are stripped from the wrapper.
      */
-    public Map<Serializable, Serializable> getMatching( String pattern )
+    public Map<K, V> getMatching( String pattern )
     {
-        HashMap<Serializable, Serializable> unwrappedResults = new HashMap<Serializable, Serializable>();
+        HashMap<K, V> unwrappedResults = new HashMap<K, V>();
 
-        Map<Serializable, ICacheElement> wrappedResults = this.cacheControl.getMatching( pattern );
+        Map<K, ICacheElement<K, V>> wrappedResults = this.cacheControl.getMatching( pattern );
         if ( wrappedResults != null )
         {
-            for (Map.Entry<Serializable, ICacheElement> entry : wrappedResults.entrySet())
+            for (Map.Entry<K, ICacheElement<K, V>> entry : wrappedResults.entrySet())
             {
-                ICacheElement element = wrappedResults.get( entry.getKey() );
+                ICacheElement<K, V> element = entry.getValue();
                 if ( element != null )
                 {
                     unwrappedResults.put( entry.getKey(), element.getVal() );
@@ -215,7 +218,7 @@ public class CacheAccess
     }
 
     /**
-     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * This method returns the ICacheElement<K, V> wrapper which provides access to element info and other
      * attributes.
      * <p>
      * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
@@ -227,9 +230,9 @@ public class CacheAccess
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param name Key the Serializable is stored as
-     * @return The ICacheElement if the object is found or null
+     * @return The ICacheElement<K, V> if the object is found or null
      */
-    public ICacheElement getCacheElement( Serializable name )
+    public ICacheElement<K, V> getCacheElement( K name )
     {
         return this.cacheControl.get( name );
     }
@@ -237,7 +240,7 @@ public class CacheAccess
     /**
      * Get multiple elements from the cache based on a set of cache keys.
      * <p>
-     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * This method returns the ICacheElement<K, V> wrapper which provides access to element info and other
      * attributes.
      * <p>
      * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
@@ -249,9 +252,9 @@ public class CacheAccess
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param names set of Serializable cache keys
-     * @return a map of Serializable key to ICacheElement element, or empty map if none of the keys are present
+     * @return a map of K key to ICacheElement<K, V> element, or empty map if none of the keys are present
      */
-    public Map<Serializable, ICacheElement> getCacheElements( Set<Serializable> names )
+    public Map<K, ICacheElement<K, V>> getCacheElements( Set<K> names )
     {
         return this.cacheControl.getMultiple( names );
     }
@@ -259,7 +262,7 @@ public class CacheAccess
     /**
      * Get multiple elements from the cache based on a set of cache keys.
      * <p>
-     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * This method returns the ICacheElement<K, V> wrapper which provides access to element info and other
      * attributes.
      * <p>
      * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
@@ -271,9 +274,9 @@ public class CacheAccess
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param pattern key search pattern
-     * @return a map of Serializable key to ICacheElement element, or empty map if no keys match the pattern
+     * @return a map of K key to ICacheElement<K, V> element, or empty map if no keys match the pattern
      */
-    public Map<Serializable, ICacheElement> getMatchingCacheElements( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern )
     {
         return this.cacheControl.getMatching( pattern );
     }
@@ -288,7 +291,7 @@ public class CacheAccess
      * @exception CacheException and ObjectExistsException is thrown if the item is already in the
      *                cache.
      */
-    public void putSafe( Serializable key, Serializable value )
+    public void putSafe( K key, V value )
         throws CacheException
     {
         if ( this.cacheControl.get( key ) != null )
@@ -307,7 +310,7 @@ public class CacheAccess
      * @param obj Object to store
      * @exception CacheException
      */
-    public void put( Serializable name, Serializable obj )
+    public void put( K name, V obj )
         throws CacheException
     {
         // Call put with a copy of the contained caches default attributes.
@@ -323,14 +326,15 @@ public class CacheAccess
      * @see org.apache.jcs.access.behavior.ICacheAccess#put(java.lang.Object, java.lang.Object,
      *      org.apache.jcs.engine.behavior.IElementAttributes)
      */
-    public void put( Serializable key, Serializable val, IElementAttributes attr )
+    public void put( K key, V val, IElementAttributes attr )
         throws CacheException
     {
         if ( key == null )
         {
             throw new InvalidArgumentException( "Key must not be null" );
         }
-        else if ( val == null )
+
+        if ( val == null )
         {
             throw new InvalidArgumentException( "Value must not be null" );
         }
@@ -339,7 +343,7 @@ public class CacheAccess
         // should be wrapped by cache access.
         try
         {
-            CacheElement ce = new CacheElement( this.cacheControl.getCacheName(), key,
+            CacheElement<K, V> ce = new CacheElement<K, V>( this.cacheControl.getCacheName(), key,
                                                 val );
 
             ce.setElementAttributes( attr );
@@ -413,7 +417,7 @@ public class CacheAccess
      * @deprecated use remove
      */
     @Deprecated
-    public void destroy( Serializable name )
+    public void destroy( K name )
         throws CacheException
     {
         this.cacheControl.remove( name );
@@ -425,7 +429,7 @@ public class CacheAccess
      * @param name the name of the item to remove.
      * @throws CacheException
      */
-    public void remove( Serializable name )
+    public void remove( K name )
         throws CacheException
     {
         this.cacheControl.remove( name );
@@ -483,10 +487,10 @@ public class CacheAccess
      * @exception CacheException
      * @exception InvalidHandleException if the item does not exist.
      */
-    public void resetElementAttributes( Serializable name, IElementAttributes attr )
+    public void resetElementAttributes( K name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        ICacheElement element = this.cacheControl.get( name );
+        ICacheElement<K, V> element = this.cacheControl.get( name );
 
         if ( element == null )
         {
@@ -544,7 +548,7 @@ public class CacheAccess
      * @return Attributes for the object, null if object not in cache
      * @exception CacheException
      */
-    public IElementAttributes getElementAttributes( Serializable name )
+    public IElementAttributes getElementAttributes( K name )
         throws CacheException
     {
         IElementAttributes attr = null;

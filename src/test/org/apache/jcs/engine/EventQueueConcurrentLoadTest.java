@@ -39,15 +39,15 @@ public class EventQueueConcurrentLoadTest
     extends TestCase
 {
     /** The queue implementation */
-    private static CacheEventQueue queue = null;
+    private static CacheEventQueue<String, String> queue = null;
 
     /** The mock listener */
-    private static CacheListenerImpl listen = null;
+    private static CacheListenerImpl<String, String> listen = null;
 
     /** max failure setting */
     private final int maxFailure = 3;
 
-    /** time to wait before rtrying on failure. */
+    /** time to wait before retrying on failure. */
     private final int waitBeforeRetry = 100;
 
     /** very small idle time */
@@ -169,8 +169,8 @@ public class EventQueueConcurrentLoadTest
     @Override
     public void setUp()
     {
-        listen = new CacheListenerImpl();
-        queue = new CacheEventQueue( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
+        listen = new CacheListenerImpl<String, String>();
+        queue = new CacheEventQueue<String, String>( listen, 1L, "testCache1", maxFailure, waitBeforeRetry );
 
         queue.setWaitToDieMillis( idleTime );
     }
@@ -186,7 +186,7 @@ public class EventQueueConcurrentLoadTest
     {
         for ( int i = 0; i <= end; i++ )
         {
-            CacheElement elem = new CacheElement( "testCache1", i + ":key", i + "data" );
+            CacheElement<String, String> elem = new CacheElement<String, String>( "testCache1", i + ":key", i + "data" );
             queue.addPutEvent( elem );
         }
 
@@ -252,7 +252,7 @@ public class EventQueueConcurrentLoadTest
         System.out.println( "queue is empty, begin" );
 
         // get it going
-        CacheElement elem = new CacheElement( "testCache1", "a:key", "adata" );
+        CacheElement<String, String> elem = new CacheElement<String, String>( "testCache1", "a:key", "adata" );
         queue.addPutEvent( elem );
 
         for ( int i = 0; i <= end; i++ )
@@ -268,7 +268,7 @@ public class EventQueueConcurrentLoadTest
                     this.wait( idleTime / 2 );
                 }
             }
-            CacheElement elem2 = new CacheElement( "testCache1", i + ":key", i + "data" );
+            CacheElement<String, String> elem2 = new CacheElement<String, String>( "testCache1", i + ":key", i + "data" );
             queue.addPutEvent( elem2 );
         }
 
@@ -294,8 +294,8 @@ public class EventQueueConcurrentLoadTest
     /**
      * This is a dummy cache listener to use when testing the event queue.
      */
-    private static class CacheListenerImpl
-        implements ICacheListener
+    protected static class CacheListenerImpl<K extends Serializable, V extends Serializable>
+        implements ICacheListener<K, V>
     {
         /**
          * <code>putCount</code>
@@ -311,7 +311,7 @@ public class EventQueueConcurrentLoadTest
          * @param item
          * @throws IOException
          */
-        public void handlePut( ICacheElement item )
+        public void handlePut( ICacheElement<K, V> item )
             throws IOException
         {
             synchronized ( this )
@@ -325,7 +325,7 @@ public class EventQueueConcurrentLoadTest
          * @param key
          * @throws IOException
          */
-        public void handleRemove( String cacheName, Serializable key )
+        public void handleRemove( String cacheName, K key )
             throws IOException
         {
             synchronized ( this )

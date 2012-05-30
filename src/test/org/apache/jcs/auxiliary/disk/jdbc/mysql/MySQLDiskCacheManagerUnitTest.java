@@ -27,7 +27,7 @@ public class MySQLDiskCacheManagerUnitTest
                                                                            elementSerializer );
 
         // DO WORK
-        MySQLDiskCache cache = (MySQLDiskCache) manager.getCache( cacheName );
+        MySQLDiskCache<String, String> cache = (MySQLDiskCache) manager.getCache( cacheName );
 
         // VERIFY
         assertEquals( "wrong cacheEventLogger", cacheEventLogger, cache.getCacheEventLogger() );

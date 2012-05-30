@@ -53,9 +53,9 @@ import org.apache.jcs.utils.serialization.SerializationConversionUtil;
 import org.apache.jcs.utils.threadpool.ThreadPoolManager;
 
 /** Abstract base for remote caches. I'm trying to break out and reuse common functionality. */
-public abstract class AbstractRemoteAuxiliaryCache
-    extends AbstractAuxiliaryCacheEventLogging
-    implements IRemoteCacheClient
+public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCacheEventLogging<K, V>
+    implements IRemoteCacheClient<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -5329231850422826461L;
@@ -67,13 +67,13 @@ public abstract class AbstractRemoteAuxiliaryCache
      * This does the work. In an RMI instances, it will be a remote reference. In an http remote
      * cache it will be an http client. In zombie mode it is replaced with a balking facade.
      */
-    private IRemoteCacheService remoteCacheService;
+    private IRemoteCacheService<K, V> remoteCacheService;
 
     /** The cacheName */
     protected final String cacheName;
 
     /** The listener. This can be null. */
-    private IRemoteCacheListener remoteCacheListener;
+    private IRemoteCacheListener<K, V> remoteCacheListener;
 
     /** The configuration values. TODO, we'll need a base here. */
     private IRemoteCacheAttributes remoteCacheAttributes;
@@ -91,8 +91,8 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @param remote
      * @param listener
      */
-    public AbstractRemoteAuxiliaryCache( IRemoteCacheAttributes cattr, IRemoteCacheService remote,
-                                         IRemoteCacheListener listener )
+    public AbstractRemoteAuxiliaryCache( IRemoteCacheAttributes cattr, IRemoteCacheService<K, V> remote,
+                                         IRemoteCacheListener<K, V> listener )
     {
         this.setRemoteCacheAttributes( cattr );
         this.cacheName = cattr.getCacheName();
@@ -168,10 +168,10 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @throws IOException
      */
     @Override
-    protected ICacheElement processGet( Serializable key )
+    protected ICacheElement<K, V> processGet( K key )
         throws IOException
     {
-        ICacheElement retVal = null;
+        ICacheElement<K, V> retVal = null;
         try
         {
             if ( usePoolForGet )
@@ -191,7 +191,7 @@ public abstract class AbstractRemoteAuxiliaryCache
                 // to have no ability to deserialze the objects.
                 if ( this.getRemoteCacheAttributes().getRemoteType() != IRemoteCacheAttributes.CLUSTER )
                 {
-                    retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized) retVal,
+                    retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
                                                                                       this.elementSerializer );
                 }
             }
@@ -210,16 +210,16 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @return ICacheElement
      * @throws IOException
      */
-    public ICacheElement getUsingPool( final Serializable key )
+    public ICacheElement<K, V> getUsingPool( final K key )
         throws IOException
     {
         int timeout = getRemoteCacheAttributes().getGetTimeoutMillis();
 
         try
         {
-            Callable<ICacheElement> command = new Callable<ICacheElement>()
+            Callable<ICacheElement<K, V>> command = new Callable<ICacheElement<K, V>>()
             {
-                public ICacheElement call()
+                public ICacheElement<K, V> call()
                     throws IOException
                 {
                     return getRemoteCacheService().get( cacheName, key, getListenerId() );
@@ -227,10 +227,10 @@ public abstract class AbstractRemoteAuxiliaryCache
             };
 
             // execute using the pool
-            Future<ICacheElement> future = pool.submit(command);
+            Future<ICacheElement<K, V>> future = pool.submit(command);
 
             // used timed get in order to timeout
-            ICacheElement ice = future.get(timeout, TimeUnit.MILLISECONDS);
+            ICacheElement<K, V> ice = future.get(timeout, TimeUnit.MILLISECONDS);
 
             if ( log.isDebugEnabled() )
             {
@@ -271,20 +271,20 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @throws IOException
      */
     @Override
-    public Map<Serializable, ICacheElement> processGetMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
         throws IOException
     {
-        Map<Serializable, ICacheElement> results = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> results = new HashMap<K, ICacheElement<K, V>>();
         try
         {
-            Map<Serializable, ICacheElement> rawResults = getRemoteCacheService().getMatching( cacheName, pattern, getListenerId() );
+            Map<K, ICacheElement<K, V>> rawResults = getRemoteCacheService().getMatching( cacheName, pattern, getListenerId() );
 
             // Eventually the instance of will not be necessary.
             if ( rawResults != null )
             {
-                for (Map.Entry<Serializable, ICacheElement> entry : rawResults.entrySet())
+                for (Map.Entry<K, ICacheElement<K, V>> entry : rawResults.entrySet())
                 {
-                    ICacheElement unwrappedResult = null;
+                    ICacheElement<K, V> unwrappedResult = null;
                     if ( entry.getValue() instanceof ICacheElementSerialized )
                     {
                         // Never try to deserialize if you are a cluster client. Cluster
@@ -293,7 +293,7 @@ public abstract class AbstractRemoteAuxiliaryCache
                         if ( this.getRemoteCacheAttributes().getRemoteType() != IRemoteCacheAttributes.CLUSTER )
                         {
                             unwrappedResult = SerializationConversionUtil
-                                .getDeSerializedCacheElement( (ICacheElementSerialized) entry.getValue(),
+                                .getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) entry.getValue(),
                                                               this.elementSerializer );
                         }
                     }
@@ -317,20 +317,20 @@ public abstract class AbstractRemoteAuxiliaryCache
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
     @Override
-    protected Map<Serializable, ICacheElement> processGetMultiple( Set<Serializable> keys )
+    protected Map<K, ICacheElement<K, V>> processGetMultiple( Set<K> keys )
         throws IOException
     {
-        Map<Serializable, ICacheElement> elements = new HashMap<Serializable, ICacheElement>();
+        Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
         if ( keys != null && !keys.isEmpty() )
         {
-            for (Serializable key : keys)
+            for (K key : keys)
             {
-                ICacheElement element = get( key );
+                ICacheElement<K, V> element = get( key );
 
                 if ( element != null )
                 {
@@ -350,7 +350,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @throws IOException
      */
     @Override
-    protected boolean processRemove( Serializable key )
+    protected boolean processRemove( K key )
         throws IOException
     {
         if ( !this.getRemoteCacheAttributes().getGetOnly() )
@@ -404,12 +404,12 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @throws IOException
      */
     @Override
-    protected void processUpdate( ICacheElement ce )
+    protected void processUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
         if ( !getRemoteCacheAttributes().getGetOnly() )
         {
-            ICacheElementSerialized serialized = null;
+            ICacheElementSerialized<K, V> serialized = null;
             try
             {
                 if ( log.isDebugEnabled() )
@@ -451,7 +451,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * @throws java.rmi.RemoteException
      * @throws IOException
      */
-    public Set<Serializable> getGroupKeys( String groupName )
+    public Set<K> getGroupKeys( String groupName )
         throws java.rmi.RemoteException, IOException
     {
         return getRemoteCacheService().getGroupKeys( cacheName, groupName );
@@ -463,7 +463,7 @@ public abstract class AbstractRemoteAuxiliaryCache
      * <p>
      * @return IRemoteCacheListener, the listener for this remote server
      */
-    public IRemoteCacheListener getListener()
+    public IRemoteCacheListener<K, V> getListener()
     {
         return getRemoteCacheListener();
     }
@@ -623,15 +623,16 @@ public abstract class AbstractRemoteAuxiliaryCache
      * <p>
      * @param restoredRemote IRemoteCacheService -- the remote server or proxy to the remote server
      */
-    public void fixCache( IRemoteCacheService restoredRemote )
+    public void fixCache( IRemoteCacheService<?, ?> restoredRemote )
     {
+        IRemoteCacheService<K, V> remote = (IRemoteCacheService<K, V>)restoredRemote;
         if ( getRemoteCacheService() != null && getRemoteCacheService() instanceof ZombieRemoteCacheService )
         {
-            ZombieRemoteCacheService zombie = (ZombieRemoteCacheService) getRemoteCacheService();
-            setRemoteCacheService( restoredRemote );
+            ZombieRemoteCacheService<K, V> zombie = (ZombieRemoteCacheService<K, V>) getRemoteCacheService();
+            setRemoteCacheService( remote );
             try
             {
-                zombie.propagateEvents( restoredRemote );
+                zombie.propagateEvents( remote );
             }
             catch ( Exception e )
             {
@@ -648,7 +649,7 @@ public abstract class AbstractRemoteAuxiliaryCache
         }
         else
         {
-            setRemoteCacheService( restoredRemote );
+            setRemoteCacheService( remote );
         }
     }
 
@@ -675,7 +676,7 @@ public abstract class AbstractRemoteAuxiliaryCache
     /**
      * @param remote the remote to set
      */
-    protected void setRemoteCacheService( IRemoteCacheService remote )
+    protected void setRemoteCacheService( IRemoteCacheService<K, V> remote )
     {
         this.remoteCacheService = remote;
     }
@@ -683,7 +684,7 @@ public abstract class AbstractRemoteAuxiliaryCache
     /**
      * @return the remote
      */
-    protected IRemoteCacheService getRemoteCacheService()
+    protected IRemoteCacheService<K, V> getRemoteCacheService()
     {
         return remoteCacheService;
     }
@@ -715,7 +716,7 @@ public abstract class AbstractRemoteAuxiliaryCache
     /**
      * @param remoteCacheListener the remoteCacheListener to set
      */
-    protected void setRemoteCacheListener( IRemoteCacheListener remoteCacheListener )
+    protected void setRemoteCacheListener( IRemoteCacheListener<K, V> remoteCacheListener )
     {
         this.remoteCacheListener = remoteCacheListener;
     }
@@ -723,7 +724,7 @@ public abstract class AbstractRemoteAuxiliaryCache
     /**
      * @return the remoteCacheListener
      */
-    protected IRemoteCacheListener getRemoteCacheListener()
+    protected IRemoteCacheListener<K, V> getRemoteCacheListener()
     {
         return remoteCacheListener;
     }

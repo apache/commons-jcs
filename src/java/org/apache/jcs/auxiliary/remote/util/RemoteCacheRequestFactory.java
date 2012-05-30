@@ -25,9 +25,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createGetRequest( String cacheName, Serializable key, long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createGetRequest( String cacheName, K key, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setKey( key );
         request.setRequesterId( requesterId );
@@ -49,9 +49,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createGetMatchingRequest( String cacheName, String pattern, long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createGetMatchingRequest( String cacheName, String pattern, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setPattern( pattern );
         request.setRequesterId( requesterId );
@@ -73,9 +73,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createGetMultipleRequest( String cacheName, Set<Serializable> keys, long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createGetMultipleRequest( String cacheName, Set<K> keys, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setKeySet( keys );
         request.setRequesterId( requesterId );
@@ -97,9 +97,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createRemoveRequest( String cacheName, Serializable key, long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createRemoveRequest( String cacheName, K key, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setKey( key );
         request.setRequesterId( requesterId );
@@ -121,9 +121,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createGetGroupKeysRequest( String cacheName, String groupName, long requesterId )
+    public static RemoteCacheRequest<String, String> createGetGroupKeysRequest( String cacheName, String groupName, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<String, String> request = new RemoteCacheRequest<String, String>();
         request.setCacheName( cacheName );
         request.setKey( groupName );
         request.setRequesterId( requesterId );
@@ -144,9 +144,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createRemoveAllRequest( String cacheName, long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createRemoveAllRequest( String cacheName, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setRequesterId( requesterId );
         request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_REMOVE_ALL );
@@ -166,9 +166,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createDisposeRequest( String cacheName, long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createDisposeRequest( String cacheName, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setRequesterId( requesterId );
         request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_DISPOSE );
@@ -188,9 +188,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createUpdateRequest( ICacheElement cacheElement, long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createUpdateRequest( ICacheElement<K, V> cacheElement, long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         if ( cacheElement != null )
         {
             request.setCacheName( cacheElement.getCacheName() );
@@ -218,9 +218,9 @@ public class RemoteCacheRequestFactory
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest createAliveCheckRequest( long requesterId )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheRequest<K, V> createAliveCheckRequest( long requesterId )
     {
-        RemoteCacheRequest request = new RemoteCacheRequest();
+        RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setRequesterId( requesterId );
         request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_ALIVE_CHECK );
 

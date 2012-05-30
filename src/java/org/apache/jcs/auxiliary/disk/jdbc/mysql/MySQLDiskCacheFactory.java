@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary.disk.jdbc.mysql;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
@@ -40,13 +42,13 @@ public class MySQLDiskCacheFactory
     /**
      * This factory method should create an instance of the mysqlcache.
      * <p>
-     * @param rawAttr 
-     * @param cacheManager 
-     * @param cacheEventLogger 
-     * @param elementSerializer 
+     * @param rawAttr
+     * @param cacheManager
+     * @param cacheEventLogger
+     * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager cacheManager,
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager cacheManager,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
         MySQLDiskCacheManager mgr = MySQLDiskCacheManager.getInstance( (MySQLDiskCacheAttributes) rawAttr, cacheManager, cacheEventLogger, elementSerializer );
@@ -56,7 +58,7 @@ public class MySQLDiskCacheFactory
     /**
      * The name of the factory.
      * <p>
-     * @param nameArg 
+     * @param nameArg
      */
     public void setName( String nameArg )
     {

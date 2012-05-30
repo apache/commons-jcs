@@ -12,8 +12,8 @@ import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.jcs.utils.serialization.StandardSerializer;
 
 /** This holds convenience methods used by most auxiliary caches. */
-public abstract class AbstractAuxiliaryCache
-    implements AuxiliaryCache
+public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends Serializable>
+    implements AuxiliaryCache<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -1285708398502576617L;
@@ -24,11 +24,8 @@ public abstract class AbstractAuxiliaryCache
     /** The serializer. Uses a standard serializer by default. */
     protected IElementSerializer elementSerializer = new StandardSerializer();
 
-    /** If there is no event logger, we will return this event for all create calls. */
-    private static final ICacheEvent EMPTY_ICACHE_EVENT = new CacheEvent();
-
     /** Key matcher used by the getMatching API */
-    protected IKeyMatcher keyMatcher = new KeyMatcherPatternImpl();
+    protected IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<K>();
 
     /**
      * Logs an event if an event logger is configured.
@@ -37,20 +34,22 @@ public abstract class AbstractAuxiliaryCache
      * @param eventName
      * @return ICacheEvent
      */
-    protected ICacheEvent createICacheEvent( ICacheElement item, String eventName )
+    protected ICacheEvent<K> createICacheEvent( ICacheElement<K, V> item, String eventName )
     {
         if ( cacheEventLogger == null )
         {
-            return EMPTY_ICACHE_EVENT;
+            return new CacheEvent<K>();
         }
         String diskLocation = getEventLoggingExtraInfo();
         String regionName = null;
+        K key = null;
         if ( item != null )
         {
             regionName = item.getCacheName();
+            key = item.getKey();
         }
         return cacheEventLogger.createICacheEvent( getAuxiliaryCacheAttributes().getName(), regionName, eventName,
-                                                   diskLocation, item );
+                                                   diskLocation, key );
     }
 
     /**
@@ -61,11 +60,11 @@ public abstract class AbstractAuxiliaryCache
      * @param eventName
      * @return ICacheEvent
      */
-    protected ICacheEvent createICacheEvent( String regionName, Serializable key, String eventName )
+    protected <T extends Serializable> ICacheEvent<T> createICacheEvent( String regionName, T key, String eventName )
     {
         if ( cacheEventLogger == null )
         {
-            return EMPTY_ICACHE_EVENT;
+            return new CacheEvent<T>();
         }
         String diskLocation = getEventLoggingExtraInfo();
         return cacheEventLogger.createICacheEvent( getAuxiliaryCacheAttributes().getName(), regionName, eventName,
@@ -78,7 +77,7 @@ public abstract class AbstractAuxiliaryCache
      * <p>
      * @param cacheEvent
      */
-    protected void logICacheEvent( ICacheEvent cacheEvent )
+    protected <T extends Serializable> void logICacheEvent( ICacheEvent<T> cacheEvent )
     {
         if ( cacheEventLogger != null )
         {
@@ -174,7 +173,7 @@ public abstract class AbstractAuxiliaryCache
      * <p>
      * @param keyMatcher
      */
-    public void setKeyMatcher( IKeyMatcher keyMatcher )
+    public void setKeyMatcher( IKeyMatcher<K> keyMatcher )
     {
         if ( keyMatcher != null )
         {
@@ -187,7 +186,7 @@ public abstract class AbstractAuxiliaryCache
      * <p>
      * @return keyMatcher
      */
-    public IKeyMatcher getKeyMatcher()
+    public IKeyMatcher<K> getKeyMatcher()
     {
         return this.keyMatcher;
     }

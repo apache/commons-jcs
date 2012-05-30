@@ -44,7 +44,7 @@ public class BlockDiskElementDescriptorUnitTest
         System.out.println( "Before: " + memoryBefore );
 
         int numElements = 25000;
-        BlockDiskElementDescriptor[] elements = new BlockDiskElementDescriptor[numElements];
+        BlockDiskElementDescriptor<Integer>[] elements = new BlockDiskElementDescriptor[numElements];
 
         long memoryStart = measureMemoryUse();
         System.out.println( "Start: " + memoryStart );
@@ -52,7 +52,7 @@ public class BlockDiskElementDescriptorUnitTest
         // DO WORK
         for ( int i = 0; i < numElements; i++ )
         {
-            BlockDiskElementDescriptor descriptor = new BlockDiskElementDescriptor();
+            BlockDiskElementDescriptor<Integer> descriptor = new BlockDiskElementDescriptor<Integer>();
             descriptor.setKey( Integer.valueOf( i ) );
             descriptor.setBlocks( new int[] { 1, 2 } );
             elements[i] = descriptor;

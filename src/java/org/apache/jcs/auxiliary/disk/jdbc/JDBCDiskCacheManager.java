@@ -19,9 +19,10 @@ package org.apache.jcs.auxiliary.disk.jdbc;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -43,8 +44,8 @@ public class JDBCDiskCacheManager
     private static JDBCDiskCacheManager instance;
 
     /** User configurable settings. */
-    private JDBCDiskCacheAttributes defaultJDBCDiskCacheAttributes;
-    
+    private final JDBCDiskCacheAttributes defaultJDBCDiskCacheAttributes;
+
     /** The cache manager instance */
     private ICompositeCacheManager compositeCacheManager;
 
@@ -52,12 +53,12 @@ public class JDBCDiskCacheManager
      * Constructor for the HSQLCacheManager object
      * <p>
      * @param cattr
-     * @param compositeCacheManager 
+     * @param compositeCacheManager
      * @param cacheEventLogger
      * @param elementSerializer
      */
     private JDBCDiskCacheManager( JDBCDiskCacheAttributes cattr, ICompositeCacheManager compositeCacheManager, ICacheEventLogger cacheEventLogger,
-                                  IElementSerializer elementSerializer )
+          IElementSerializer elementSerializer )
     {
         if ( log.isInfoEnabled() )
         {
@@ -83,13 +84,13 @@ public class JDBCDiskCacheManager
      * Gets the instance attribute of the HSQLCacheManager class
      * <p>
      * @param cattr
-     * @param compositeCacheManager 
+     * @param compositeCacheManager
      * @param cacheEventLogger
      * @param elementSerializer
      * @return The instance value
      */
     public static JDBCDiskCacheManager getInstance( JDBCDiskCacheAttributes cattr, ICompositeCacheManager compositeCacheManager, ICacheEventLogger cacheEventLogger,
-                                                    IElementSerializer elementSerializer )
+        IElementSerializer elementSerializer )
     {
         synchronized ( JDBCDiskCacheManager.class )
         {
@@ -108,7 +109,7 @@ public class JDBCDiskCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public AuxiliaryCache getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> getCache( String cacheName )
     {
         JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
@@ -122,10 +123,10 @@ public class JDBCDiskCacheManager
      * @param tableState
      * @return AuxiliaryCache
      */
-    protected AuxiliaryCache createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
+    protected <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
-        AuxiliaryCache raf;
-        raf = new JDBCDiskCache( cattr, tableState, getCompositeCacheManager() );
+        JDBCDiskCache<K, V> raf;
+        raf = new JDBCDiskCache<K, V>( cattr, tableState, getCompositeCacheManager() );
         return raf;
     }
 

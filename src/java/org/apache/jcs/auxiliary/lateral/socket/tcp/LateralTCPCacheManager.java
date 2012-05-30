@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -215,7 +216,7 @@ public class LateralTCPCacheManager
      * @exception IOException
      */
     @Override
-    public void addLateralCacheListener( String cacheName, ILateralCacheListener listener )
+    public <K extends Serializable, V extends Serializable> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )
         throws IOException
     {
         synchronized ( this.caches )
@@ -237,18 +238,18 @@ public class LateralTCPCacheManager
      * @param cacheName
      */
     @Override
-    public AuxiliaryCache getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
     {
-        LateralCacheNoWait lateralNoWait = null;
+        LateralCacheNoWait<K, V> lateralNoWait = null;
         synchronized ( caches )
         {
-            lateralNoWait = caches.get( cacheName );
+            lateralNoWait = (LateralCacheNoWait<K, V>) caches.get( cacheName );
             if ( lateralNoWait == null )
             {
                 LateralCacheAttributes attr = (LateralCacheAttributes) lateralCacheAttribures.copy();
                 attr.setCacheName( cacheName );
 
-                LateralCache cache = new LateralCache( attr, this.lateralService, monitor );
+                LateralCache<K, V> cache = new LateralCache<K, V>( attr, this.lateralService, monitor );
                 cache.setCacheEventLogger( cacheEventLogger );
                 cache.setElementSerializer( elementSerializer );
 
@@ -257,7 +258,7 @@ public class LateralTCPCacheManager
                     log.debug( "Created cache for noWait, cache [" + cache + "]" );
                 }
 
-                lateralNoWait = new LateralCacheNoWait( cache );
+                lateralNoWait = new LateralCacheNoWait<K, V>( cache );
                 lateralNoWait.setCacheEventLogger( cacheEventLogger );
                 lateralNoWait.setElementSerializer( elementSerializer );
 

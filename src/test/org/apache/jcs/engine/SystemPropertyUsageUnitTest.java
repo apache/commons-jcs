@@ -46,7 +46,7 @@ public class SystemPropertyUsageUnitTest
 
         JCS.setConfigFilename( "/TestSystemPropertyUsage.ccf" );
 
-        JCS jcs = JCS.getInstance( "someCacheNotInFile" );
+        JCS<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
         assertEquals( "System property value is not reflected", jcs.getCacheAttributes().getMaxObjects(), Integer
             .parseInt( "6789" ) );
@@ -70,7 +70,7 @@ public class SystemPropertyUsageUnitTest
 
         mgr.configure( props, false );
 
-        JCS jcs = JCS.getInstance( "someCacheNotInFile" );
+        JCS<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
         assertFalse( "System property value should not be reflected",
                      jcs.getCacheAttributes().getMaxObjects() == Integer.parseInt( props

@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote.http.client;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,8 +32,8 @@ import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 /**
  * This uses an http client as the service.
  */
-public class RemoteHttpCache
-    extends AbstractRemoteAuxiliaryCache
+public class RemoteHttpCache<K extends Serializable, V extends Serializable>
+    extends AbstractRemoteAuxiliaryCache<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -5329231850422826461L;
@@ -53,8 +54,8 @@ public class RemoteHttpCache
      * @param remote
      * @param listener
      */
-    public RemoteHttpCache( RemoteHttpCacheAttributes remoteHttpCacheAttributes, IRemoteCacheService remote,
-                            IRemoteCacheListener listener )
+    public RemoteHttpCache( RemoteHttpCacheAttributes remoteHttpCacheAttributes, IRemoteCacheService<K, V> remote,
+                            IRemoteCacheListener<K, V> listener )
     {
         super( remoteHttpCacheAttributes, remote, listener );
 
@@ -79,7 +80,7 @@ public class RemoteHttpCache
             logError( cacheName, "", message );
             log.error( message, ex );
 
-            setRemoteCacheService( new ZombieRemoteCacheService( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
+            setRemoteCacheService( new ZombieRemoteCacheService<K, V>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
 
             RemoteHttpCacheMonitor.getInstance().notifyError( this );
         }

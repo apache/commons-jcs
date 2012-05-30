@@ -43,9 +43,9 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * <p>
  * @author Aaron Smuts
  */
-public class MockRemoteCacheClient
-    extends AbstractAuxiliaryCache
-    implements IRemoteCacheClient
+public class MockRemoteCacheClient<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCache<K, V>
+    implements IRemoteCacheClient<K, V>
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = 1L;
@@ -53,23 +53,24 @@ public class MockRemoteCacheClient
     /** log instance */
     private final static Log log = LogFactory.getLog( MockRemoteCacheClient.class );
 
-    /** List of ICacheElement objects passed into update. */
-    public List updateList = new LinkedList();
+    /** List of ICacheElement<K, V> objects passed into update. */
+    public List<ICacheElement<K, V>> updateList = new LinkedList<ICacheElement<K,V>>();
 
     /** List of key objects passed into remove. */
-    public List removeList = new LinkedList();
+    public List<K> removeList = new LinkedList<K>();
 
     /** status to return. */
     public int status = CacheConstants.STATUS_ALIVE;
 
-    /** Can setup values to return from get. values must be ICacheElement */
-    public Map getSetupMap = new HashMap();
+    /** Can setup values to return from get. values must be ICacheElement<K, V> */
+    public Map<K, ICacheElement<K, V>> getSetupMap = new HashMap<K, ICacheElement<K,V>>();
 
-    /** Can setup values to return from get. values must be Map<Serializable, ICacheElement> */
-    public Map getMultipleSetupMap = new HashMap();
+    /** Can setup values to return from get. values must be Map<K, ICacheElement<K, V>> */
+    public Map<Set<K>, Map<K, ICacheElement<K, V>>> getMultipleSetupMap =
+        new HashMap<Set<K>, Map<K,ICacheElement<K,V>>>();
 
     /** The last service passed to fixCache */
-    public IRemoteCacheService fixed;
+    public IRemoteCacheService<K, V> fixed;
 
     /** Attributes. */
     public RemoteCacheAttributes attributes = new RemoteCacheAttributes();
@@ -80,9 +81,9 @@ public class MockRemoteCacheClient
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService)
      */
-    public void fixCache( IRemoteCacheService remote )
+    public void fixCache( IRemoteCacheService<?, ?> remote )
     {
-        fixed = remote;
+        fixed = (IRemoteCacheService<K, V>)remote;
     }
 
     /**
@@ -96,7 +97,7 @@ public class MockRemoteCacheClient
     /**
      * @return null
      */
-    public IRemoteCacheListener getListener()
+    public IRemoteCacheListener<K, V> getListener()
     {
         return null;
     }
@@ -107,7 +108,7 @@ public class MockRemoteCacheClient
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#update(org.apache.jcs.engine.behavior.ICacheElement)
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
     {
         updateList.add( ce );
     }
@@ -118,23 +119,23 @@ public class MockRemoteCacheClient
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#get(java.io.Serializable)
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
     {
         log.info( "get [" + key + "]" );
-        return (ICacheElement) getSetupMap.get( key );
+        return getSetupMap.get( key );
     }
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
-    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
         log.info( "get [" + keys + "]" );
-        return (Map) getMultipleSetupMap.get( keys );
+        return getMultipleSetupMap.get( keys );
     }
 
     /**
@@ -143,7 +144,7 @@ public class MockRemoteCacheClient
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#remove(java.io.Serializable)
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
     {
         removeList.add( key );
         return false;
@@ -198,7 +199,7 @@ public class MockRemoteCacheClient
      * @param group
      * @return null
      */
-    public Set<Serializable> getGroupKeys( String group )
+    public Set<K> getGroupKeys( String group )
     {
         return null;
     }
@@ -243,10 +244,10 @@ public class MockRemoteCacheClient
      * @return Map
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching(String pattern)
+    public Map<K, ICacheElement<K, V>> getMatching(String pattern)
         throws IOException
     {
-        return new HashMap();
+        return new HashMap<K, ICacheElement<K,V>>();
     }
 
     /**

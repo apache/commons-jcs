@@ -28,7 +28,7 @@ import org.apache.jcs.engine.behavior.ICacheElement;
  * JCS-TCP-Lateral packet. The headers specify the action the receiver should
  * take.
  */
-public class LateralElementDescriptor
+public class LateralElementDescriptor<K extends Serializable, V extends Serializable>
     implements Serializable
 {
     /** Don't change */
@@ -53,7 +53,7 @@ public class LateralElementDescriptor
     public final static int GET_MATCHING = 6;
 
     /** The Cache Element that we are distributing. */
-    public ICacheElement ce;
+    public ICacheElement<K, V> ce;
 
     /**
      * The id of the the source of the request. This is used to prevent infinite
@@ -78,9 +78,9 @@ public class LateralElementDescriptor
     /**
      * Constructor for the LateralElementDescriptor object
      * <p>
-     * @param ce ICacheElement payload
+     * @param ce ICacheElement<K, V> payload
      */
-    public LateralElementDescriptor( ICacheElement ce )
+    public LateralElementDescriptor( ICacheElement<K, V> ce )
     {
         this.ce = ce;
     }

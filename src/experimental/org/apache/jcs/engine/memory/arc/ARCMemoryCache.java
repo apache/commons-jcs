@@ -114,7 +114,7 @@ public class ARCMemoryCache
         }
     }
 
-    public ICacheElement getQuiet( Serializable key )
+    public ICacheElement<K, V> getQuiet( K key )
         throws IOException
     {
         return get( key );
@@ -136,12 +136,12 @@ public class ARCMemoryCache
     /**
      * Looks for the item in the lists.
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
         throws IOException
     {
         CacheElement ce = new CacheElement( cacheName, key, null );
 
-        ICacheElement ice = null;
+        ICacheElement<K, V> ice = null;
         try
         {
             ice = ARC( ce, true );
@@ -156,7 +156,7 @@ public class ARCMemoryCache
     /**
      * Adds an element to the cache.
      */
-    public void update( ICacheElement ce )
+    public void update( ICacheElement<K, V> ce )
     {
         try
         {
@@ -204,7 +204,7 @@ public class ARCMemoryCache
      *            boolean
      * @return ICacheElement
      */
-    public ICacheElement ARC( ICacheElement ce, boolean isGet )
+    public ICacheElement<K, V> ARC( ICacheElement<K, V> ce, boolean isGet )
     {
         cnt++;
         logStatsOccassionally( ce, isGet );
@@ -300,7 +300,7 @@ public class ARCMemoryCache
                     if ( T1.size() + T2.size() + B1.size() + B2.size() >= 2 * maxSize )
                     {
                         /* cache is full: */
-                        /* x find and reuse B2’s LRU */
+                        /* x find and reuse B2ï¿½s LRU */
                         temp = (ElementDescriptor) B2.removeLast();
                         if ( temp != null )
                         {
@@ -391,7 +391,7 @@ public class ARCMemoryCache
      * @param temp
      * @return
      */
-    protected ElementDescriptor handleFoundInB1( ICacheElement ce, boolean isGet, ElementDescriptor temp )
+    protected ElementDescriptor handleFoundInB1( ICacheElement<K, V> ce, boolean isGet, ElementDescriptor temp )
     {
         // B1 hit: favor recency
 
@@ -439,7 +439,7 @@ public class ARCMemoryCache
      * @param temp
      * @return
      */
-    protected ElementDescriptor handleFoundInB2( ICacheElement ce, boolean isGet, ElementDescriptor temp )
+    protected ElementDescriptor handleFoundInB2( ICacheElement<K, V> ce, boolean isGet, ElementDescriptor temp )
     {
         // adapt the target size
         target_T1 = Math.max( target_T1 - Math.max( B1.size() / B2.size(), 1 ), 0 );
@@ -486,7 +486,7 @@ public class ARCMemoryCache
      * @param ce
      * @param isGet
      */
-    protected void logStatsOccassionally( ICacheElement ce, boolean isGet )
+    protected void logStatsOccassionally( ICacheElement<K, V> ce, boolean isGet )
     {
         if ( cnt % 10000 == 0 )
         // if ( true )
@@ -519,7 +519,7 @@ public class ARCMemoryCache
             ElementDescriptor temp;
             if ( T1.size() >= Math.max( 1, target_T1 ) )
             {
-                // T1’s size exceeds target?
+                // T1ï¿½s size exceeds target?
                 // yes: T1 is too big
                 temp = (ElementDescriptor) T1.getLast();
                 if ( orig == null || !orig.key.equals( temp.key ) )
@@ -544,7 +544,7 @@ public class ARCMemoryCache
                     temp.ce = null;
                     temp.listNum = _B1_; // note that fact
                     B1.addFirst( temp ); // put it on B1
-                    // T1Length—; B1Length++; // bookkeep
+                    // T1Lengthï¿½; B1Length++; // bookkeep
                 }
                 else
                 {
@@ -586,7 +586,7 @@ public class ARCMemoryCache
                     temp.ce = null;
                     temp.listNum = _B2_; // note that fact
                     B2.addFirst( temp ); // put it on B2
-                    // T2Length—; B2Length++; // bookkeep
+                    // T2Lengthï¿½; B2Length++; // bookkeep
                 }
                 else
                 {
@@ -609,7 +609,7 @@ public class ARCMemoryCache
      *            Serializable
      * @return boolean
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
     {
         ElementDescriptor temp = (ElementDescriptor) map.remove( key );
         if ( temp != null )
@@ -739,13 +739,13 @@ public class ARCMemoryCache
         public int listNum;
 
         /** Its key */
-        public Serializable key;
+        public K key;
 
         /**
          * Constructs a usable object
          * @param ce
          */
-        public ElementDescriptor( ICacheElement ce )
+        public ElementDescriptor( ICacheElement<K, V> ce )
         {
             super( ce );
             key = ce.getKey();

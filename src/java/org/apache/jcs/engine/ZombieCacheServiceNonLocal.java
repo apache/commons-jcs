@@ -42,9 +42,9 @@ import org.apache.jcs.utils.timing.ElapsedTimer;
  * <p>
  * This originated in the remote cache.
  */
-public class ZombieCacheServiceNonLocal
-    extends ZombieCacheService
-    implements ICacheServiceNonLocal
+public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serializable>
+    extends ZombieCacheService<K, V>
+    implements ICacheServiceNonLocal<K, V>
 {
     /** The logger */
     private final static Log log = LogFactory.getLog( ZombieCacheServiceNonLocal.class );
@@ -90,11 +90,11 @@ public class ZombieCacheServiceNonLocal
      * @param item ICacheElement
      * @param listenerId - identifies the caller.
      */
-    public void update( ICacheElement item, long listenerId )
+    public void update( ICacheElement<K, V> item, long listenerId )
     {
         if ( maxQueueSize > 0 )
         {
-            PutEvent event = new PutEvent( item, listenerId );
+            PutEvent<K, V> event = new PutEvent<K, V>( item, listenerId );
             queue.add( event );
         }
         // Zombies have no inner life
@@ -107,11 +107,11 @@ public class ZombieCacheServiceNonLocal
      * @param key - item key
      * @param listenerId - identifies the caller.
      */
-    public void remove( String cacheName, Serializable key, long listenerId )
+    public void remove( String cacheName, K key, long listenerId )
     {
         if ( maxQueueSize > 0 )
         {
-            RemoveEvent event = new RemoveEvent( cacheName, key, listenerId );
+            RemoveEvent<K, V> event = new RemoveEvent<K, V>( cacheName, key, listenerId );
             queue.add( event );
         }
         // Zombies have no inner life
@@ -142,7 +142,7 @@ public class ZombieCacheServiceNonLocal
      * @return null
      * @throws IOException
      */
-    public ICacheElement get( String cacheName, Serializable key, long requesterId )
+    public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
         // Zombies have no inner life
@@ -158,7 +158,7 @@ public class ZombieCacheServiceNonLocal
      * @return empty map
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String cacheName, String pattern, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
         return Collections.emptyMap();
@@ -170,9 +170,9 @@ public class ZombieCacheServiceNonLocal
      * @param requesterId - identity of the caller
      * @return an empty map. zombies have no internal data
      */
-    public Map<Serializable, ICacheElement> getMultiple( String cacheName, Set<Serializable> keys, long requesterId )
+    public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
     {
-        return new HashMap<Serializable, ICacheElement>();
+        return new HashMap<K, ICacheElement<K, V>>();
     }
 
     /**
@@ -182,7 +182,7 @@ public class ZombieCacheServiceNonLocal
      * @param groupName - group name
      * @return empty set
      */
-    public Set<Serializable> getGroupKeys( String cacheName, String groupName )
+    public Set<K> getGroupKeys( String cacheName, String groupName )
     {
         return Collections.emptySet();
     }
@@ -193,7 +193,7 @@ public class ZombieCacheServiceNonLocal
      * @param service
      * @throws Exception
      */
-    public synchronized void propagateEvents( ICacheServiceNonLocal service )
+    public synchronized void propagateEvents( ICacheServiceNonLocal<K, V> service )
         throws Exception
     {
         int cnt = 0;
@@ -211,12 +211,12 @@ public class ZombieCacheServiceNonLocal
 
             if ( event instanceof PutEvent )
             {
-                PutEvent putEvent = (PutEvent) event;
+                PutEvent<K, V> putEvent = (PutEvent<K, V>) event;
                 service.update( putEvent.element, event.requesterId );
             }
             else if ( event instanceof RemoveEvent )
             {
-                RemoveEvent removeEvent = (RemoveEvent) event;
+                RemoveEvent<K, V> removeEvent = (RemoveEvent<K, V>) event;
                 service.remove( event.cacheName, removeEvent.key, event.requesterId );
             }
             else if ( event instanceof RemoveAllEvent )
@@ -234,7 +234,7 @@ public class ZombieCacheServiceNonLocal
     /**
      * Base of the other events.
      */
-    protected abstract class ZombieEvent
+    protected static abstract class ZombieEvent
     {
         /** The name of the region. */
         String cacheName;
@@ -246,18 +246,18 @@ public class ZombieCacheServiceNonLocal
     /**
      * A basic put event.
      */
-    private class PutEvent
+    private static class PutEvent<K extends Serializable, V extends Serializable>
         extends ZombieEvent
     {
         /** The element to put */
-        ICacheElement element;
+        ICacheElement<K, V> element;
 
         /**
          * Set the element
          * @param element
          * @param requesterId
          */
-        public PutEvent( ICacheElement element, long requesterId )
+        public PutEvent( ICacheElement<K, V> element, long requesterId )
         {
             this.requesterId = requesterId;
             this.element = element;
@@ -267,11 +267,11 @@ public class ZombieCacheServiceNonLocal
     /**
      * A basic Remove event.
      */
-    private class RemoveEvent
+    private static class RemoveEvent<K extends Serializable, V extends Serializable>
         extends ZombieEvent
     {
         /** The key to remove */
-        Serializable key;
+        K key;
 
         /**
          * Set the element
@@ -279,7 +279,7 @@ public class ZombieCacheServiceNonLocal
          * @param key
          * @param requesterId
          */
-        public RemoveEvent( String cacheName, Serializable key, long requesterId )
+        public RemoveEvent( String cacheName, K key, long requesterId )
         {
             this.cacheName = cacheName;
             this.requesterId = requesterId;
@@ -290,7 +290,7 @@ public class ZombieCacheServiceNonLocal
     /**
      * A basic RemoveAll event.
      */
-    private class RemoveAllEvent
+    private static class RemoveAllEvent
         extends ZombieEvent
     {
         /**

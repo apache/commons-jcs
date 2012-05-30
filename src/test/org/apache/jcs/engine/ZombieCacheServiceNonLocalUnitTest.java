@@ -38,14 +38,14 @@ public class ZombieCacheServiceNonLocalUnitTest
         throws Exception
     {
         // SETUP
-        MockCacheServiceNonLocal service = new MockCacheServiceNonLocal();
+        MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<String, String>();
 
-        ZombieCacheServiceNonLocal zombie = new ZombieCacheServiceNonLocal( 10 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
 
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 
@@ -62,14 +62,14 @@ public class ZombieCacheServiceNonLocalUnitTest
         throws Exception
     {
         // SETUP
-        MockCacheServiceNonLocal service = new MockCacheServiceNonLocal();
+        MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<String, String>();
 
-        ZombieCacheServiceNonLocal zombie = new ZombieCacheServiceNonLocal( 0 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 0 );
 
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 
@@ -86,9 +86,9 @@ public class ZombieCacheServiceNonLocalUnitTest
         throws Exception
     {
         // SETUP
-        MockCacheServiceNonLocal service = new MockCacheServiceNonLocal();
+        MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<String, String>();
 
-        ZombieCacheServiceNonLocal zombie = new ZombieCacheServiceNonLocal( 10 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
 
         String cacheName = "testRemoveThenWalk";
         String key = "myKey";
@@ -110,9 +110,9 @@ public class ZombieCacheServiceNonLocalUnitTest
         throws Exception
     {
         // SETUP
-        MockCacheServiceNonLocal service = new MockCacheServiceNonLocal();
+        MockCacheServiceNonLocal<String, String> service = new MockCacheServiceNonLocal<String, String>();
 
-        ZombieCacheServiceNonLocal zombie = new ZombieCacheServiceNonLocal( 10 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
 
         String cacheName = "testRemoveThenWalk";
 

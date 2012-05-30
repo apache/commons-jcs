@@ -34,8 +34,8 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * the type (disk/lateral/remote) of the auxiliary here -- and the existing getCacheType will be
  * removed from ICache.
  */
-public interface AuxiliaryCache
-    extends ICache
+public interface AuxiliaryCache<K extends Serializable, V extends Serializable>
+    extends ICache<K, V>
 {
     /**
      * Gets the set of keys of objects currently in the group
@@ -43,7 +43,7 @@ public interface AuxiliaryCache
      * @return a set of group keys
      * @throws IOException
      */
-    Set<Serializable> getGroupKeys( String group )
+    Set<K> getGroupKeys( String group )
         throws IOException;
 
     /**

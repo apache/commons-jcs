@@ -95,7 +95,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     public void runTestForRegion( String region, int items )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
         //System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
@@ -111,22 +111,22 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         // Test that all items are in cache
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map elements = jcs.getCacheElements( keys );
+        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
@@ -156,7 +156,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         // SETUP
         int items = 200;
         String region = "testCache2";
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // DO WORK
@@ -166,7 +166,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         }
         Thread.sleep( 1000 );
 
-        Map matchingResults = jcs.getMatchingCacheElements( "1.8.+" );
+        Map<String, ICacheElement<String, String>> matchingResults = jcs.getMatchingCacheElements( "1.8.+" );
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
@@ -178,7 +178,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
      * SETUP TABLE FOR CACHE
      * @param cConn
      */
-    void setupTABLE( Connection cConn )
+    void setupTABLE( Connection cConn ) throws SQLException
     {
         boolean newT = true;
 
@@ -196,15 +196,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
         createSql.append( ");" );
 
-        Statement sStatement = null;
-        try
-        {
-            sStatement = cConn.createStatement();
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
+        Statement sStatement = cConn.createStatement();
 
         try
         {
@@ -221,7 +213,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
             {
                 // TODO figure out if it exists prior to trying to create it.
                 // log.error( "Problem creating table.", e );
-                e.printStackTrace();
+                throw e;
             }
         }
 

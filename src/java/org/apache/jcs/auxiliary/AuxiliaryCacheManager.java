@@ -19,6 +19,8 @@ package org.apache.jcs.auxiliary;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.jcs.engine.behavior.ICacheType;
 
 /**
@@ -36,7 +38,7 @@ public interface AuxiliaryCacheManager
      * @param cacheName
      * @return AuxiliaryCache
      */
-    public AuxiliaryCache getCache( String cacheName );
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName );
 
     /**
      * This allows the cache manager to be plugged into the auxiliary caches,

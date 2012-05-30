@@ -15,8 +15,8 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * <p>
  * You can override the public method, but if you don't, the default will call getWithTiming.
  */
-public abstract class AbstractAuxiliaryCacheEventLogging
-    extends AbstractAuxiliaryCache
+public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable, V extends Serializable>
+    extends AbstractAuxiliaryCache<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -3921738303365238919L;
@@ -27,7 +27,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @param cacheElement
      * @throws IOException
      */
-    public void update( ICacheElement cacheElement )
+    public void update( ICacheElement<K, V> cacheElement )
         throws IOException
     {
         updateWithEventLogging( cacheElement );
@@ -39,10 +39,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @param cacheElement
      * @throws IOException
      */
-    protected final void updateWithEventLogging( ICacheElement cacheElement )
+    protected final void updateWithEventLogging( ICacheElement<K, V> cacheElement )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( cacheElement, ICacheEventLogger.UPDATE_EVENT );
+        ICacheEvent<K> cacheEvent = createICacheEvent( cacheElement, ICacheEventLogger.UPDATE_EVENT );
         try
         {
             processUpdate( cacheElement );
@@ -59,7 +59,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @param cacheElement
      * @throws IOException
      */
-    protected abstract void processUpdate( ICacheElement cacheElement )
+    protected abstract void processUpdate( ICacheElement<K, V> cacheElement )
         throws IOException;
 
     /**
@@ -69,7 +69,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
-    public ICacheElement get( Serializable key )
+    public ICacheElement<K, V> get( K key )
         throws IOException
     {
         return getWithEventLogging( key );
@@ -82,10 +82,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
-    protected final ICacheElement getWithEventLogging( Serializable key )
+    protected final ICacheElement<K, V> getWithEventLogging( K key )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.GET_EVENT );
+        ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.GET_EVENT );
         try
         {
             return processGet( key );
@@ -103,18 +103,18 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
-    protected abstract ICacheElement processGet( Serializable key )
+    protected abstract ICacheElement<K, V> processGet( K key )
         throws IOException;
 
     /**
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMultiple(Set<Serializable> keys)
+    public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         throws IOException
     {
         return getMultipleWithEventLogging( keys );
@@ -124,14 +124,14 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * Gets multiple items from the cache based on the given set of keys.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected final Map<Serializable, ICacheElement> getMultipleWithEventLogging(Set<Serializable> keys )
+    protected final Map<K, ICacheElement<K, V>> getMultipleWithEventLogging(Set<K> keys )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
+        ICacheEvent<Serializable> cacheEvent = createICacheEvent( getCacheName(), (Serializable) keys,
                                                     ICacheEventLogger.GETMULTIPLE_EVENT );
         try
         {
@@ -147,11 +147,11 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * Implementation of getMultiple.
      * <p>
      * @param keys
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      * @throws IOException
      */
-    protected abstract Map<Serializable, ICacheElement> processGetMultiple(Set<Serializable> keys)
+    protected abstract Map<K, ICacheElement<K, V>> processGetMultiple(Set<K> keys)
         throws IOException;
 
     /**
@@ -164,11 +164,11 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * cache will convert * to % and . to _
      * <p>
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */
-    public Map<Serializable, ICacheElement> getMatching( String pattern )
+    public Map<K, ICacheElement<K, V>> getMatching( String pattern )
         throws IOException
     {
         return getMatchingWithEventLogging( pattern );
@@ -178,14 +178,14 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * Gets mmatching items from the cache based on the given pattern.
      * <p>
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */
-    protected final Map<Serializable, ICacheElement> getMatchingWithEventLogging( String pattern )
+    protected final Map<K, ICacheElement<K, V>> getMatchingWithEventLogging( String pattern )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), pattern, ICacheEventLogger.GETMATCHING_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), pattern, ICacheEventLogger.GETMATCHING_EVENT );
         try
         {
             return processGetMatching( pattern );
@@ -200,11 +200,11 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * Implementation of getMatching.
      * <p>
      * @param pattern
-     * @return a map of Serializable key to ICacheElement element, or an empty map if there is no
+     * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data matching the pattern.
      * @throws IOException
      */
-    protected abstract Map<Serializable, ICacheElement> processGetMatching( String pattern )
+    protected abstract Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
         throws IOException;
 
     /**
@@ -214,7 +214,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
-    public boolean remove( Serializable key )
+    public boolean remove( K key )
         throws IOException
     {
         return removeWithEventLogging( key );
@@ -227,10 +227,10 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
-    protected final boolean removeWithEventLogging( Serializable key )
+    protected final boolean removeWithEventLogging( K key )
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.REMOVE_EVENT );
+        ICacheEvent<K> cacheEvent = createICacheEvent( getCacheName(), key, ICacheEventLogger.REMOVE_EVENT );
         try
         {
             return processRemove( key );
@@ -248,7 +248,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
-    protected abstract boolean processRemove( Serializable key )
+    protected abstract boolean processRemove( K key )
         throws IOException;
 
     /**
@@ -270,7 +270,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
     protected final void removeAllWithEventLogging()
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), "all", ICacheEventLogger.REMOVEALL_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "all", ICacheEventLogger.REMOVEALL_EVENT );
         try
         {
             processRemoveAll();
@@ -309,7 +309,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging
     protected final void disposeWithEventLogging()
         throws IOException
     {
-        ICacheEvent cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( getCacheName(), "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             processDispose();

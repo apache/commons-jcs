@@ -20,6 +20,7 @@ package org.apache.jcs.engine.memory.lru;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.memory.AbstractDoulbeLinkedListMemoryCache;
@@ -36,8 +37,8 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
  * The LRUMemoryCache is most efficient when the first element is selected. The smaller the region,
  * the better the chance that this will be the case. < .04 ms per put, p3 866, 1/10 of that per get
  */
-public class LRUMemoryCache
-    extends AbstractDoulbeLinkedListMemoryCache
+public class LRUMemoryCache<K extends Serializable, V extends Serializable>
+    extends AbstractDoulbeLinkedListMemoryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 6403738094136424201L;
@@ -50,7 +51,7 @@ public class LRUMemoryCache
      * @return MemoryElementDescriptor the new node
      * @exception IOException
      */
-    protected MemoryElementDescriptor adjustListForUpdate( ICacheElement ce )
+    protected MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
         return addFirst( ce );
@@ -61,7 +62,7 @@ public class LRUMemoryCache
      * <p>
      * @param me
      */
-    protected void adjustListForGet( MemoryElementDescriptor me )
+    protected void adjustListForGet( MemoryElementDescriptor<K, V> me )
     {
         list.makeFirst( me );
     }

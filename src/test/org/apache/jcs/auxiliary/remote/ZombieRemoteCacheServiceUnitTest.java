@@ -39,14 +39,14 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 10 );
+        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 10 );
 
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 
@@ -63,14 +63,14 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 0 );
+        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 0 );
 
         String cacheName = "testUpdate";
 
         // DO WORK
-        ICacheElement element = new CacheElement( cacheName, "key", "value" );
+        ICacheElement<String, String> element = new CacheElement<String, String>( cacheName, "key", "value" );
         zombie.update( element, 123l );
         zombie.propagateEvents( service );
 
@@ -87,9 +87,9 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 10 );
+        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 10 );
 
         String cacheName = "testRemoveThenWalk";
         String key = "myKey";
@@ -111,9 +111,9 @@ public class ZombieRemoteCacheServiceUnitTest
         throws Exception
     {
         // SETUP
-        MockRemoteCacheService service = new MockRemoteCacheService();
+        MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService zombie = new ZombieRemoteCacheService( 10 );
+        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 10 );
 
         String cacheName = "testRemoveThenWalk";
 

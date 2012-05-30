@@ -32,14 +32,14 @@ import org.apache.jcs.engine.behavior.ICacheListener;
  * Used for Cache-to-Cache messaging purposes. These are used in the balking
  * facades in the lateral and remote caches.
  */
-public class CacheAdaptor
-    implements ICacheListener
+public class CacheAdaptor<K extends Serializable, V extends Serializable>
+    implements ICacheListener<K, V>
 {
     /** The logger */
     private final static Log log = LogFactory.getLog( CacheAdaptor.class );
 
-    /** The cache we are adadpting. */
-    private final ICache cache;
+    /** The cache we are adapting. */
+    private final ICache<K, V> cache;
 
     /** The unique id of this listener. */
     protected long listenerId = 0;
@@ -75,7 +75,7 @@ public class CacheAdaptor
      * <p>
      * @param cache
      */
-    public CacheAdaptor( ICache cache )
+    public CacheAdaptor( ICache<K, V> cache )
     {
         this.cache = cache;
     }
@@ -86,7 +86,7 @@ public class CacheAdaptor
      * @param item
      * @throws IOException
      */
-    public void handlePut( ICacheElement item )
+    public void handlePut( ICacheElement<K, V> item )
         throws IOException
     {
         try
@@ -102,11 +102,11 @@ public class CacheAdaptor
     /**
      * Removes an item.
      * <p>
-     * @param cacheName 
-     * @param key 
-     * @throws IOException 
+     * @param cacheName
+     * @param key
+     * @throws IOException
      */
-    public void handleRemove( String cacheName, Serializable key )
+    public void handleRemove( String cacheName, K key )
         throws IOException
     {
         cache.remove( key );
@@ -115,8 +115,8 @@ public class CacheAdaptor
     /**
      * Clears the region.
      * <p>
-     * @param cacheName 
-     * @throws IOException 
+     * @param cacheName
+     * @throws IOException
      */
     public void handleRemoveAll( String cacheName )
         throws IOException
@@ -127,8 +127,8 @@ public class CacheAdaptor
     /**
      * Shutdown call.
      * <p>
-     * @param cacheName 
-     * @throws IOException 
+     * @param cacheName
+     * @throws IOException
      */
     public void handleDispose( String cacheName )
         throws IOException

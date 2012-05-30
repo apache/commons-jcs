@@ -2,6 +2,7 @@ package org.apache.jcs.auxiliary.disk.block;
 
 import junit.framework.TestCase;
 
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.control.MockElementSerializer;
@@ -26,7 +27,8 @@ public class BlockDiskCacheManagerUnitTest
                                                                            elementSerializer );
 
         // DO WORK
-        BlockDiskCache cache = (BlockDiskCache) manager.getCache( cacheName );
+        AuxiliaryCache<String, String> auxcache = manager.getCache(cacheName);
+        BlockDiskCache<String, String> cache = (BlockDiskCache<String, String>) auxcache;
 
         // VERIFY
         assertEquals( "wrong cacheEventLogger", cacheEventLogger, cache.getCacheEventLogger() );

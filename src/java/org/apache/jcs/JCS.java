@@ -19,6 +19,7 @@ package org.apache.jcs;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.jcs.access.GroupCacheAccess;
@@ -34,8 +35,8 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * want to access. If you have several regions, then get instances for each. For best performance
  * the getInstance call should be made in an initialization method.
  */
-public class JCS
-    extends GroupCacheAccess
+public class JCS<K extends Serializable, V extends Serializable>
+    extends GroupCacheAccess<K, V>
 {
     /** cache.ccf alternative. */
     private static String configFilename = null;
@@ -51,7 +52,7 @@ public class JCS
      * <p>
      * @param cacheControl Cache which the instance will provide access to
      */
-    protected JCS( CompositeCache cacheControl )
+    protected JCS( CompositeCache<K, V> cacheControl )
     {
         super( cacheControl );
     }
@@ -63,10 +64,11 @@ public class JCS
      * @return A JCS which provides access to a given region.
      * @exception CacheException
      */
-    public static JCS getInstance( String region )
+    public static <K extends Serializable, V extends Serializable> JCS<K, V> getInstance( String region )
         throws CacheException
     {
-        return new JCS( getCacheManager().getCache( region ) );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region );
+        return new JCS<K, V>( cache );
     }
 
     /**
@@ -77,10 +79,11 @@ public class JCS
      * @return A JCS which provides access to a given region.
      * @exception CacheException
      */
-    public static JCS getInstance( String region, ICompositeCacheAttributes icca )
+    public static <K extends Serializable, V extends Serializable> JCS<K, V> getInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException
     {
-        return new JCS( getCacheManager().getCache( region, icca ) );
+        CompositeCache<K, V> cache = getCacheManager().getCache( region, icca );
+        return new JCS<K, V>( cache );
     }
 
     /**

@@ -19,6 +19,7 @@ package org.apache.jcs.access.behavior;
  * under the License.
  */
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ import org.apache.jcs.engine.behavior.IElementAttributes;
 /**
  * ICacheAccess defines the behavior for client access.
  */
-public interface ICacheAccess<K, V>
+public interface ICacheAccess<K extends Serializable, V extends Serializable>
 {
     /**
      * Basic get method.
@@ -80,7 +81,7 @@ public interface ICacheAccess<K, V>
         throws CacheException;
 
     /**
-     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * This method returns the ICacheElement<K, V> wrapper which provides access to element info and other
      * attributes.
      * <p>
      * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
@@ -92,14 +93,14 @@ public interface ICacheAccess<K, V>
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param name Key the object is stored as
-     * @return The ICacheElement if the object is found or null
+     * @return The ICacheElement<K, V> if the object is found or null
      */
-    ICacheElement getCacheElement( K name );
+    ICacheElement<K, V> getCacheElement( K name );
 
     /**
      * Get multiple elements from the cache based on a set of cache keys.
      * <p>
-     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * This method returns the ICacheElement<K, V> wrapper which provides access to element info and other
      * attributes.
      * <p>
      * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
@@ -111,15 +112,15 @@ public interface ICacheAccess<K, V>
      * The last access time in the ElementAttributes should be current.
      * <p>
      * @param names set of Object cache keys
-     * @return a map of Object key to ICacheElement element, or empty map if none of the keys are
+     * @return a map of Object key to ICacheElement<K, V> element, or empty map if none of the keys are
      *         present
      */
-    Map<K, ICacheElement> getCacheElements( Set<K> names );
+    Map<K, ICacheElement<K, V>> getCacheElements( Set<K> names );
 
     /**
      * Get multiple elements from the cache based on a set of cache keys.
      * <p>
-     * This method returns the ICacheElement wrapper which provides access to element info and other
+     * This method returns the ICacheElement<K, V> wrapper which provides access to element info and other
      * attributes.
      * <p>
      * This returns a reference to the wrapper. Any modifications will be reflected in the cache. No
@@ -130,11 +131,11 @@ public interface ICacheAccess<K, V>
      * <p>
      * The last access time in the ElementAttributes should be current.
      * <p>
-     * @param pattern key search patern
-     * @return a map of Object key to ICacheElement element, or empty map if no keys match the
+     * @param pattern key search pattern
+     * @return a map of Object key to ICacheElement<K, V> element, or empty map if no keys match the
      *         pattern
      */
-    Map<K, ICacheElement> getMatchingCacheElements( String pattern );
+    Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern );
 
     /**
      * Old remove all method.

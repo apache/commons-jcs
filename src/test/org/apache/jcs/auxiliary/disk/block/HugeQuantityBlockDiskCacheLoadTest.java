@@ -57,7 +57,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
         long initialMemory = measureMemoryUse();
         System.out.println( "Before getting JCS: " + initialMemory );
 
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
         jcs.clear();
 
         try

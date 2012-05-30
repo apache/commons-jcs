@@ -93,8 +93,8 @@ public class LRUvsMRUPerformanceTest
         {
 
             JCS.setConfigFilename( "/TestMRUCache.ccf" );
-            JCS cache = JCS.getInstance( "lruDefined" );
-            JCS mru = JCS.getInstance( "mruDefined" );
+            JCS<String, String> cache = JCS.getInstance( "lruDefined" );
+            JCS<String, String> mru = JCS.getInstance( "mruDefined" );
 
             System.out.println( "LRU = " + cache );
 

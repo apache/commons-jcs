@@ -21,6 +21,7 @@ package org.apache.jcs.auxiliary.disk.indexed;
 
 import junit.framework.TestCase;
 
+import org.apache.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.timing.SleepUtil;
 
@@ -49,12 +50,12 @@ public class IndexedDiskCacheOptimizationUnitTest
         cattr.setOptimizeAtRemoveCount( removeCount );
         cattr.setMaxRecycleBinSize( removeCount * 3 );
         cattr.setDiskPath( "target/test-sandbox/testOptimization" );
-        IndexedDiskCache disk = new IndexedDiskCache( cattr );
+        IndexedDiskCache<Integer, DiskTestObject> disk = new IndexedDiskCache<Integer, DiskTestObject>( cattr );
 
         disk.removeAll();
 
         int numberToInsert = removeCount * 2;
-        ICacheElement[] elements = DiskTestObjectUtil
+        ICacheElement<Integer, DiskTestObject>[] elements = DiskTestObjectUtil
             .createCacheElementsWithTestObjectsOfVariableSizes( numberToInsert, cattr.getCacheName() );
 
         for ( int i = 0; i < elements.length; i++ )

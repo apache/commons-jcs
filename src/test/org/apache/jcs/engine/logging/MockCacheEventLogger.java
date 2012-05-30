@@ -2,8 +2,6 @@ package org.apache.jcs.engine.logging;
 
 import java.io.Serializable;
 
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.logging.CacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
@@ -23,7 +21,7 @@ public class MockCacheEventLogger
      */
     public void logApplicationEvent( String source, String eventName, String optionalDetails )
     {
-        // TODO Auto-generated method stub            
+        // TODO Auto-generated method stub
     }
 
     /**
@@ -33,7 +31,7 @@ public class MockCacheEventLogger
      */
     public void logError( String source, String eventName, String errorMessage )
     {
-        // TODO Auto-generated method stub            
+        // TODO Auto-generated method stub
     }
 
     /**
@@ -44,32 +42,18 @@ public class MockCacheEventLogger
      * @param key
      * @return ICacheEvent
      */
-    public ICacheEvent createICacheEvent( String source, String region, String eventName, String optionalDetails,
-                                          Serializable key )
+    public <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region, String eventName, String optionalDetails,
+                                          T key )
     {
-        return new CacheEvent();
-    }
-
-    /**
-     * @param source
-     * @param region
-     * @param eventName
-     * @param optionalDetails
-     * @param item
-     * @return ICacheEvent
-     */
-    public ICacheEvent createICacheEvent( String source, String region, String eventName, String optionalDetails,
-                                          ICacheElement item )
-    {
-        return new CacheEvent();
+        return new CacheEvent<T>();
     }
 
     /**
      * @param event
      */
-    public void logICacheEvent( ICacheEvent event )
+    public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
     {
-        // TODO Auto-generated method stub        
+        // TODO Auto-generated method stub
     }
 
     /**

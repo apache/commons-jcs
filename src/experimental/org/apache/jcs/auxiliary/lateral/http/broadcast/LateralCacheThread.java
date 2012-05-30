@@ -83,7 +83,7 @@ public class LateralCacheThread extends Thread
         {
             long start = System.currentTimeMillis();
             //if ( running ) {
-            ICacheElement cb = new CacheElement( hashtableName, key, val );
+            ICacheElement<K, V> cb = new CacheElement( hashtableName, key, val );
             log.debug( "key = " + key );
             String result = sendCache( cb );
             sleep( 100 );
@@ -104,7 +104,7 @@ public class LateralCacheThread extends Thread
     // end run
 
     /** Description of the Method */
-    public String sendCache( ICacheElement cb )
+    public String sendCache( ICacheElement<K, V> cb )
     {
         String response = "";
         try
@@ -163,7 +163,7 @@ public class LateralCacheThread extends Thread
 
     // Write the Answer to the Connection
     /** Description of the Method */
-    public void writeObj( URLConnection connection, ICacheElement cb )
+    public void writeObj( URLConnection connection, ICacheElement<K, V> cb )
     {
         try
         {

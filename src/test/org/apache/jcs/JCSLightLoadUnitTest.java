@@ -78,7 +78,7 @@ public class JCSLightLoadUnitTest
     public void testSimpleLoad()
         throws Exception
     {
-        JCS jcs = JCS.getInstance( "testCache1" );
+        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
         //        ICompositeCacheAttributes cattr = jcs.getCacheAttributes();
         //        cattr.setMaxObjects( 20002 );
         //        jcs.setCacheAttributes( cattr );

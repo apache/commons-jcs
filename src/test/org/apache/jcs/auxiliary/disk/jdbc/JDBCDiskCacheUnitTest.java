@@ -83,7 +83,7 @@ public class JDBCDiskCacheUnitTest
     public void runTestForRegion( String region, int items )
         throws Exception
     {
-        JCS jcs = JCS.getInstance( region );
+        JCS<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
@@ -104,22 +104,22 @@ public class JDBCDiskCacheUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
 
         // Test that getElements returns all the expected values
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         for ( int i = 0; i <= items; i++ )
         {
             keys.add( i + ":key" );
         }
 
-        Map elements = jcs.getCacheElements( keys );
+        Map<String, ICacheElement<String, String>> elements = jcs.getCacheElements( keys );
         for ( int i = 0; i <= items; i++ )
         {
-            ICacheElement element = (ICacheElement) elements.get( i + ":key" );
+            ICacheElement<String, String> element = elements.get( i + ":key" );
             assertNotNull( "element " + i + ":key is missing", element );
             assertEquals( "value " + i + ":key", region + " data " + i, element.getVal() );
         }
@@ -167,10 +167,10 @@ public class JDBCDiskCacheUnitTest
         cattr.setConnectionPoolName( poolName );
 
         TableState tableState = new TableState( "JCSTESTTABLE_InitializePoolAccess" );
-        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
+        MockCompositeCacheManager<String, String> compositeCacheManager = new MockCompositeCacheManager<String, String>();
         compositeCacheManager.setConfigurationProperties( props );
 
-        JDBCDiskCache diskCache = new JDBCDiskCache( cattr, tableState, compositeCacheManager );
+        JDBCDiskCache<String, String> diskCache = new JDBCDiskCache<String, String>( cattr, tableState, compositeCacheManager );
 
         System.setProperty( "hsqldb.cache_scale", "8" );
 
@@ -180,7 +180,7 @@ public class JDBCDiskCacheUnitTest
         new org.hsqldb.jdbcDriver();
         Class.forName( driverClassName ).newInstance();
         Connection cConn = DriverManager.getConnection( url + database, userName, password );
-        
+
         HsqlSetupTableUtil.setupTABLE( cConn, "JCSTESTTABLE_InitializePoolAccess" );
 
         // DO WORK

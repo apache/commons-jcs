@@ -20,6 +20,7 @@ package org.apache.jcs.engine.behavior;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Used to register interest in receiving cache changes. <br>
@@ -40,7 +41,7 @@ public interface ICacheObserver
      *            object to notify for cache changes.
      * @throws IOException
      */
-    public void addCacheListener( String cacheName, ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void addCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException;
 
     //, CacheNotFoundException;
@@ -52,7 +53,7 @@ public interface ICacheObserver
      *            object to notify for all cache changes.
      * @throws IOException
      */
-    public void addCacheListener( ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void addCacheListener( ICacheListener<K, V> obj )
         throws IOException;
 
     /**
@@ -63,7 +64,7 @@ public interface ICacheObserver
      *            existing subscriber.
      * @throws IOException
      */
-    public void removeCacheListener( String cacheName, ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void removeCacheListener( String cacheName, ICacheListener<K, V> obj )
         throws IOException;
 
     /**
@@ -73,6 +74,6 @@ public interface ICacheObserver
      *            existing subscriber.
      * @throws IOException
      */
-    public void removeCacheListener( ICacheListener obj )
+    public <K extends Serializable, V extends Serializable> void removeCacheListener( ICacheListener<K, V> obj )
         throws IOException;
 }

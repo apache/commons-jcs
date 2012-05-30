@@ -74,7 +74,7 @@ public class IndexedDiskCacheDefragPerformanceTest
         throws Exception
     {
         JCS.setConfigFilename( "/TestDiskCacheDefragPerformance.ccf" );
-        JCS jcs = JCS.getInstance( "defrag" );
+        JCS<Integer, Tile> jcs = JCS.getInstance( "defrag" );
 
         Tile tile;
         System.out.println( "Cache Defrag Test" );
