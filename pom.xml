@@ -231,17 +231,6 @@
 
   <distributionManagement>
 
-   <!--
-     This POM's parent POM (the Apache root POM) provides repositories. Unfortunately,
-     this allows for accidental deployments. So we disable them here by providing
-     a dummy repository. Use "mvn -Prc deploy" (Apache snapshot repository) or
-     "mvn -Prelease deploy" (Apache release repository), if you really want to deploy.
-   -->
-   <repository>
-     <id>dummy</id>
-     <name>Dummy to avoid accidental deploys</name>
-     <url />
-   </repository>
    <site>
       <id>stagingSite</id>
       <name>Apache Staging Website</name>
