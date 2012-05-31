@@ -80,6 +80,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     public IElementEventQueue elementEventQ;
 
     /** Auxiliary caches. */
+    @SuppressWarnings("unchecked") // OK because this is an empty array
     private AuxiliaryCache<K, V>[] auxCaches = new AuxiliaryCache[0];
 
     /** is this alive? */
