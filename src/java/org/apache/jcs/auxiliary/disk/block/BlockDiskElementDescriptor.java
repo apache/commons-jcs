@@ -83,6 +83,7 @@ public class BlockDiskElementDescriptor<K extends Serializable>
      * <p>
      * @return Info on the descriptor.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

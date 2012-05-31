@@ -59,6 +59,7 @@ public class ConcurrentRemovalLoadTest
 
         suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -68,6 +69,7 @@ public class ConcurrentRemovalLoadTest
 
         suite.addTest( new RemovalTestUtil( "testPutCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -77,6 +79,7 @@ public class ConcurrentRemovalLoadTest
 
         suite.addTest( new RemovalTestUtil( "testPutCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -87,6 +90,7 @@ public class ConcurrentRemovalLoadTest
         // stomp on previous put
         suite.addTest( new RemovalTestUtil( "testPutCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -96,6 +100,7 @@ public class ConcurrentRemovalLoadTest
 
         suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -105,6 +110,7 @@ public class ConcurrentRemovalLoadTest
 
         suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -114,6 +120,7 @@ public class ConcurrentRemovalLoadTest
         
         suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -124,6 +131,7 @@ public class ConcurrentRemovalLoadTest
         suite.addTest( new RemovalTestUtil( "testPutCache2" )
         {
             // verify that there are no errors with concurrent gets.
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -138,6 +146,7 @@ public class ConcurrentRemovalLoadTest
      * <p>
      * @throws Exception
      */
+    @Override
     public void setUp()
         throws Exception
     {

@@ -84,6 +84,7 @@ public class BlockDiskCacheConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -93,6 +94,7 @@ public class BlockDiskCacheConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -102,6 +104,7 @@ public class BlockDiskCacheConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -111,6 +114,7 @@ public class BlockDiskCacheConcurrentUnitTest
 
         suite.addTest( new BlockDiskCacheConcurrentUnitTest( "testBlockDiskCache4" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -124,6 +128,7 @@ public class BlockDiskCacheConcurrentUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCache.ccf" );

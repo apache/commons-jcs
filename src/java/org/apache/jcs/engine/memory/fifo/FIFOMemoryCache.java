@@ -43,6 +43,7 @@ public class FIFOMemoryCache<K extends Serializable, V extends Serializable>
      * @return MemoryElementDescriptor the new node
      * @exception IOException
      */
+    @Override
     protected MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -54,6 +55,7 @@ public class FIFOMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param me
      */
+    @Override
     protected void adjustListForGet( MemoryElementDescriptor<K, V> me )
     {
         // DO NOTHING

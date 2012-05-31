@@ -60,6 +60,7 @@ public class GroupAttrName<T extends Serializable>
      * @param obj The <code>GroupAttrName</code> instance to test.
      * @return Whether equal.
      */
+    @Override
     public boolean equals( Object obj )
     {
         if ( obj == null || !( obj instanceof GroupAttrName ) )
@@ -88,6 +89,7 @@ public class GroupAttrName<T extends Serializable>
     /**
      * @return A hash code based on the hash code of @ #groupid} and {@link #attrName}.
      */
+    @Override
     public int hashCode()
     {
         if (attrName == null)
@@ -101,6 +103,7 @@ public class GroupAttrName<T extends Serializable>
     /**
      * @return the cached value.
      */
+    @Override
     public String toString()
     {
         if ( toString == null )

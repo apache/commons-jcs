@@ -307,6 +307,7 @@ public class LateralCacheAttributes
     /**
      * @return debug string.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

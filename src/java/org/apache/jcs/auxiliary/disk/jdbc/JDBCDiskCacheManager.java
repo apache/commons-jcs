@@ -123,6 +123,7 @@ public class JDBCDiskCacheManager
      * @param tableState
      * @return AuxiliaryCache
      */
+    @Override
     protected <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> createJDBCDiskCache( JDBCDiskCacheAttributes cattr, TableState tableState )
     {
         JDBCDiskCache<K, V> raf;

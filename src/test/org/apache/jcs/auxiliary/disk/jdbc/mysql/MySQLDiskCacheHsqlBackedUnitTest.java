@@ -69,6 +69,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestMySQLDiskCache.ccf" );

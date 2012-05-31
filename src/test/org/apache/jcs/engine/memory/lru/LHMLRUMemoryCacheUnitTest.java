@@ -41,6 +41,7 @@ public class LHMLRUMemoryCacheUnitTest
     extends TestCase
 {
     /** Test setup */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestLHMLRUCache.ccf" );

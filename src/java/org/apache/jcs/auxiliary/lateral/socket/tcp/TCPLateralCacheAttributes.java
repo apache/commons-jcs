@@ -287,6 +287,7 @@ public class TCPLateralCacheAttributes
     /**
      * @return AuxiliaryCacheAttributes
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -366,6 +367,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return String
      */
+    @Override
     public String toString()
     {
         return this.getTcpServer() + ":" + this.getTcpListenerPort();

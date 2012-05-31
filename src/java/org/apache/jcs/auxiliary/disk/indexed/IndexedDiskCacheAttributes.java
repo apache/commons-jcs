@@ -170,6 +170,7 @@ public class IndexedDiskCacheAttributes
      * <p>
      * @return AuxiliaryCacheAttributes
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -188,6 +189,7 @@ public class IndexedDiskCacheAttributes
      * <p>
      * @return String
      */
+    @Override
     public String toString()
     {
         StringBuffer str = new StringBuffer();

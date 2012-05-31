@@ -39,6 +39,7 @@ public class HSQLDiskCacheUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestHSQLDiskCache.ccf" );

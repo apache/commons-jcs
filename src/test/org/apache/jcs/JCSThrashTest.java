@@ -66,6 +66,7 @@ public class JCSThrashTest
      * Sets up the test
      * @throws Exception
      */
+    @Override
     protected void setUp()
         throws Exception
     {
@@ -77,6 +78,7 @@ public class JCSThrashTest
     /**
      * @throws Exception
      */
+    @Override
     protected void tearDown()
         throws Exception
     {
@@ -236,6 +238,7 @@ public class JCSThrashTest
             final JCSThrashTest.Executable executable = executables.get( i );
             threads[i] = new Thread()
             {
+                @Override
                 public void run()
                 {
                     try

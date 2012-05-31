@@ -84,6 +84,7 @@ public class CacheElementInfo
     /**
      * @return string info on the item
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

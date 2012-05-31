@@ -40,6 +40,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
     extends TestCase
 {
     /** Test setup */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestJDBCDiskCacheSharedPool.ccf" );

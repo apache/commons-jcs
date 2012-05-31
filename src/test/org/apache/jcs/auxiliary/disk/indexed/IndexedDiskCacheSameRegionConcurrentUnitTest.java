@@ -69,6 +69,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -78,6 +79,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -87,6 +89,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -96,6 +99,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache4" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -105,6 +109,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
 
         suite.addTest( new IndexedDiskCacheSameRegionConcurrentUnitTest( "testIndexedDiskCache5" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -118,6 +123,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );

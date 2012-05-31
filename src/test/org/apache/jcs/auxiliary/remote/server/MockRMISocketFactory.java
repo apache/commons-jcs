@@ -24,6 +24,7 @@ public class MockRMISocketFactory
      * @return Socket
      * @throws IOException
      */
+    @Override
     public Socket createSocket( String host, int port )
         throws IOException
     {
@@ -41,6 +42,7 @@ public class MockRMISocketFactory
      * @return ServerSocket
      * @throws IOException
      */
+    @Override
     public ServerSocket createServerSocket( int port )
         throws IOException
     {

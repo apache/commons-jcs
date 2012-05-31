@@ -74,6 +74,7 @@ public class StatElement
     /**
      * @return a readable string.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

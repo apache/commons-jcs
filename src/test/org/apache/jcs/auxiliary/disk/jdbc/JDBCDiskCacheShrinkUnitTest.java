@@ -48,6 +48,7 @@ public class JDBCDiskCacheShrinkUnitTest
      * @throws InstantiationException
      * @throws SQLException
      */
+    @Override
     public void setUp()
         throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
     {

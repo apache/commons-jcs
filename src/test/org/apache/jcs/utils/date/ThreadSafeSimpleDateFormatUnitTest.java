@@ -121,6 +121,7 @@ public class ThreadSafeSimpleDateFormatUnitTest
     {
         Thread thread = new Thread()
         {
+            @Override
             public void run()
             {
                 Date date = new Date( System.currentTimeMillis() + random.nextInt( 60 * 60 * 1000 ) );

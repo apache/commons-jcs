@@ -75,6 +75,7 @@ public class BlockDiskCacheRandomConcurrentTestUtil
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );

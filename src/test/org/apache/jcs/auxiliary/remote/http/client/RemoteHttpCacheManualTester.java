@@ -33,6 +33,7 @@ public class RemoteHttpCacheManualTester
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestRemoteHttpCache.ccf" );

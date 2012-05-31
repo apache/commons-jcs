@@ -78,6 +78,7 @@ public class CacheRegionInfo
     /**
      * @return string info on the region
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

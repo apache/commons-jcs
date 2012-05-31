@@ -70,6 +70,7 @@ public class TestTCPLateralCache
 
         suite.addTest( new TestTCPLateralCache( "testTcpRegion1_no_receiver" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -99,6 +100,7 @@ public class TestTCPLateralCache
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCache.ccf" );

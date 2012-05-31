@@ -50,6 +50,7 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
      * @param ce
      * @throws IOException
      */
+    @Override
     protected void processUpdate( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -61,6 +62,7 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     protected ICacheElement<K, V> processGet( K key )
         throws IOException
     {
@@ -72,6 +74,7 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
      * @return false
      * @throws IOException
      */
+    @Override
     protected boolean processRemove( K key )
         throws IOException
     {
@@ -81,6 +84,7 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
     /**
      * @throws IOException
      */
+    @Override
     public void processRemoveAll()
         throws IOException
     {
@@ -90,6 +94,7 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
     /**
      * @throws IOException
      */
+    @Override
     public void processDispose()
         throws IOException
     {
@@ -97,30 +102,35 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
     }
 
     /** @return 0 */
+    @Override
     public int getSize()
     {
         return 0;
     }
 
     /** @return 0 */
+    @Override
     public int getStatus()
     {
         return 0;
     }
 
     /** @return String */
+    @Override
     public String getStats()
     {
         return null;
     }
 
     /** @return String */
+    @Override
     public String getCacheName()
     {
         return super.getCacheName();
     }
 
     /** @return type */
+    @Override
     public int getCacheType()
     {
         return super.getCacheType();

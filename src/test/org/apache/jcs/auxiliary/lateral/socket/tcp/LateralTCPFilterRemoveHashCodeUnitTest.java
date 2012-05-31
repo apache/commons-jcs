@@ -53,6 +53,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );
@@ -110,6 +111,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
         {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public int hashCode()
             {
                 return 1;

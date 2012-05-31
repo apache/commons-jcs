@@ -234,6 +234,7 @@ public class PoolConfiguration
      * To string for debugging purposes.
      * @return String
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
@@ -252,6 +253,7 @@ public class PoolConfiguration
      * <p>
      * @return PoolConfiguration
      */
+    @Override
     public Object clone()
     {
         return new PoolConfiguration( isUseBoundary(), boundarySize, maximumPoolSize, minimumPoolSize, keepAliveTime,

@@ -91,6 +91,7 @@ public class RemoteCacheStartupServlet
      * <p>
      * @throws ServletException
      */
+    @Override
     public void init()
         throws ServletException
     {
@@ -187,6 +188,7 @@ public class RemoteCacheStartupServlet
      * @throws ServletException
      * @throws IOException
      */
+    @Override
     protected void service( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
@@ -221,6 +223,7 @@ public class RemoteCacheStartupServlet
     /**
      * shuts the cache down.
      */
+    @Override
     public void destroy()
     {
         super.destroy();

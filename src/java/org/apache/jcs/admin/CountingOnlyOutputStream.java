@@ -37,6 +37,7 @@ public class CountingOnlyOutputStream
      * @param b
      * @throws IOException
      */
+    @Override
     public void write( byte[] b )
         throws IOException
     {
@@ -51,6 +52,7 @@ public class CountingOnlyOutputStream
      * @param len
      * @throws IOException
      */
+    @Override
     public void write( byte[] b, int off, int len )
         throws IOException
     {
@@ -63,6 +65,7 @@ public class CountingOnlyOutputStream
      * @param b
      * @throws IOException
      */
+    @Override
     public void write( int b )
         throws IOException
     {

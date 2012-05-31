@@ -50,6 +50,7 @@ public class DiscoveryShutdownHook
     /**
      * Just calls shutdown on the service.
      */
+    @Override
     public void run()
     {
         if ( log.isInfoEnabled() )

@@ -99,6 +99,7 @@ public class RemoteHttpCacheServerAttributes
     /**
      * @return String details
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

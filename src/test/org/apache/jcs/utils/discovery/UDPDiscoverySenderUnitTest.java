@@ -53,6 +53,7 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Override
     protected void setUp()
         throws Exception
     {
@@ -66,6 +67,7 @@ public class UDPDiscoverySenderUnitTest
      * <p>
      * @throws Exception on error
      */
+    @Override
     protected void tearDown()
         throws Exception
     {

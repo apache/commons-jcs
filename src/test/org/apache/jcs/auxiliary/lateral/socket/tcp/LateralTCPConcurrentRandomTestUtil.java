@@ -50,6 +50,7 @@ public class LateralTCPConcurrentRandomTestUtil
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCacheConcurrent.ccf" );

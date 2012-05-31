@@ -70,6 +70,7 @@ public class ThreadSafeSimpleDateFormat
      * @param fieldPosition field position
      * @return a string buffer with more data in it
      */
+    @Override
     public synchronized StringBuffer format( Date date, StringBuffer toAppendTo, FieldPosition fieldPosition )
     {
         return super.format( date, toAppendTo, fieldPosition );
@@ -80,6 +81,7 @@ public class ThreadSafeSimpleDateFormat
      * @param pos parse position
      * @return date
      */
+    @Override
     public synchronized Date parse( String source, ParsePosition pos )
     {
         return super.parse( source, pos );

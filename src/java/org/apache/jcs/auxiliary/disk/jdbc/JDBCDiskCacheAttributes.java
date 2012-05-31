@@ -270,6 +270,7 @@ public class JDBCDiskCacheAttributes
      * <p>
      * @return debug string with most of the properties.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

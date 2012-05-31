@@ -77,6 +77,7 @@ public class IndexedDiskCacheRandomConcurrentTestUtil
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheCon.ccf" );

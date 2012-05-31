@@ -86,6 +86,7 @@ public class CacheStats
      * <p>
      * @return IStatElement[]
      */
+    @Override
     public IStatElement[] getStatElements()
     {
         return stats;
@@ -94,6 +95,7 @@ public class CacheStats
     /**
      * @param stats
      */
+    @Override
     public void setStatElements( IStatElement[] stats )
     {
         this.stats = stats;
@@ -102,6 +104,7 @@ public class CacheStats
     /**
      * @return readable string that can be logged.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

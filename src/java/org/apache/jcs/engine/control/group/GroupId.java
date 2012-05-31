@@ -65,6 +65,7 @@ public class GroupId
      * @param obj
      * @return cacheName.equals( g.cacheName ) && groupName.equals( g.groupName );
      */
+    @Override
     public boolean equals( Object obj )
     {
         if ( obj == null || !( obj instanceof GroupId ) )
@@ -78,6 +79,7 @@ public class GroupId
     /**
      * @return cacheName.hashCode() + groupName.hashCode();
      */
+    @Override
     public int hashCode()
     {
         return cacheName.hashCode() + groupName.hashCode();
@@ -88,6 +90,7 @@ public class GroupId
      * <p>
      * @return debugging string.
      */
+    @Override
     public String toString()
     {
         if ( toString == null )

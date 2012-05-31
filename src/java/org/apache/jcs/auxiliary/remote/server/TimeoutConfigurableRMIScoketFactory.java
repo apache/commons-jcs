@@ -34,6 +34,7 @@ public class TimeoutConfigurableRMIScoketFactory
      * @return ServerSocket
      * @throws IOException
      */
+    @Override
     public ServerSocket createServerSocket( int port )
         throws IOException
     {
@@ -46,6 +47,7 @@ public class TimeoutConfigurableRMIScoketFactory
      * @return Socket
      * @throws IOException
      */
+    @Override
     public Socket createSocket( String host, int port )
         throws IOException
     {

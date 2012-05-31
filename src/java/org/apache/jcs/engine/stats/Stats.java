@@ -72,6 +72,7 @@ public class Stats
     /**
      * @return the stats in a readable string
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

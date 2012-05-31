@@ -74,6 +74,7 @@ public class RemoteHttpCacheServlet
      * @param config
      * @throws ServletException
      */
+    @Override
     public void init( ServletConfig config )
         throws ServletException
     {
@@ -99,6 +100,7 @@ public class RemoteHttpCacheServlet
      * @throws ServletException
      * @throws IOException
      */
+    @Override
     public void service( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
@@ -221,6 +223,7 @@ public class RemoteHttpCacheServlet
     }
 
     /** Release the cache manager. */
+    @Override
     public void destroy()
     {
         if ( log.isInfoEnabled() )
@@ -235,6 +238,7 @@ public class RemoteHttpCacheServlet
      * <p>
      * @return basic info
      */
+    @Override
     public String getServletInfo()
     {
         return "RemoteHttpCacheServlet";

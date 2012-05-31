@@ -70,6 +70,7 @@ public class RemoteHttpCache<K extends Serializable, V extends Serializable>
      * @param eventName
      * @throws IOException
      */
+    @Override
     protected void handleException( Exception ex, String msg, String eventName )
         throws IOException
     {
@@ -95,6 +96,7 @@ public class RemoteHttpCache<K extends Serializable, V extends Serializable>
     /**
      * @return url of service
      */
+    @Override
     public String getEventLoggingExtraInfo()
     {
         return null;

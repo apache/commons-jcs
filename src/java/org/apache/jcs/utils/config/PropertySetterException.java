@@ -61,6 +61,7 @@ public class PropertySetterException
      * <p>
      * @return The message value
      */
+    @Override
     public String getMessage()
     {
         String msg = super.getMessage();

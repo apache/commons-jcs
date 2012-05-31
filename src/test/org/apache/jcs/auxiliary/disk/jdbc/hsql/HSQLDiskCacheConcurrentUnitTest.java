@@ -73,6 +73,7 @@ public class HSQLDiskCacheConcurrentUnitTest
 
         suite.addTest( new HSQLDiskCacheConcurrentUnitTest( "testHSQLDiskCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -82,6 +83,7 @@ public class HSQLDiskCacheConcurrentUnitTest
 
         suite.addTest( new HSQLDiskCacheConcurrentUnitTest( "testHSQLDiskCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -91,6 +93,7 @@ public class HSQLDiskCacheConcurrentUnitTest
 
         suite.addTest( new HSQLDiskCacheConcurrentUnitTest( "testHSQLDiskCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -104,6 +107,7 @@ public class HSQLDiskCacheConcurrentUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestHSQLDiskCacheConcurrent.ccf" );

@@ -207,6 +207,7 @@ public class RemoteHttpCacheDispatcher
      * @return HttpState
      * @throws IOException
      */
+    @Override
     public HttpState preProcessWebserviceCall( HttpMethod post )
         throws IOException
     {
@@ -221,6 +222,7 @@ public class RemoteHttpCacheDispatcher
      * @param httpState state
      * @throws IOException
      */
+    @Override
     public void postProcessWebserviceCall( HttpMethod post, HttpState httpState )
         throws IOException
     {

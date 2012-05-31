@@ -196,6 +196,7 @@ public class UDPDiscoveryAttributes
     }
 
     /** @return a clone of this object */
+    @Override
     public Object clone()
     {
         UDPDiscoveryAttributes attributes = new UDPDiscoveryAttributes();
@@ -212,6 +213,7 @@ public class UDPDiscoveryAttributes
     /**
      * @return string for debugging purposes.
      */
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();

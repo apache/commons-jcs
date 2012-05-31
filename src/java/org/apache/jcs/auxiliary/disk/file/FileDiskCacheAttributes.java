@@ -45,6 +45,7 @@ public class FileDiskCacheAttributes
      * <p>
      * @return AuxiliaryCacheAttributes
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -127,6 +128,7 @@ public class FileDiskCacheAttributes
      * <p>
      * @return String
      */
+    @Override
     public String toString()
     {
         StringBuffer str = new StringBuffer();

@@ -39,6 +39,7 @@ public class JDBCDiskCacheRemovalUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         System.setProperty( "DATABASE_NAME", databaseName );

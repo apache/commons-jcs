@@ -32,6 +32,7 @@ public class HugeQuantityIndDiskCacheLoadTest
     extends TestCase
 {
     /** Test setup.  */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheHuge.ccf" );

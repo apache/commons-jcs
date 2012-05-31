@@ -77,6 +77,7 @@ public class LHMLRUMemoryCacheConcurrentUnitTest
 
         suite.addTest( new LHMLRUMemoryCacheConcurrentUnitTest( "testLHMLRUMemoryCache" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -90,6 +91,7 @@ public class LHMLRUMemoryCacheConcurrentUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         //JCS.setConfigFilename( "/TestLHMLRUCache.ccf" );

@@ -53,6 +53,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         System.setProperty( "jcs.auxiliary.LTCP.attributes.TcpServers", "localhost:" + serverPort );

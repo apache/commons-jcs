@@ -68,6 +68,7 @@ public class LateralTCPNoDeadLockConcurrentTest
 
         suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -77,6 +78,7 @@ public class LateralTCPNoDeadLockConcurrentTest
 
         suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -86,6 +88,7 @@ public class LateralTCPNoDeadLockConcurrentTest
 
         suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -95,6 +98,7 @@ public class LateralTCPNoDeadLockConcurrentTest
 
         suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache4" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -104,6 +108,7 @@ public class LateralTCPNoDeadLockConcurrentTest
 
         suite.addTest( new LateralTCPConcurrentRandomTestUtil( "testLateralTCPCache5" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -117,6 +122,7 @@ public class LateralTCPNoDeadLockConcurrentTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestTCPLateralCacheConcurrent.ccf" );
@@ -125,6 +131,7 @@ public class LateralTCPNoDeadLockConcurrentTest
     /**
      * Test tearDown. Dispose of the cache.
      */
+    @Override
     public void tearDown()
     {
         try

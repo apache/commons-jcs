@@ -137,6 +137,7 @@ public class CacheElement<K extends Serializable, V extends Serializable>
     /**
      * @return a hash of the key only
      */
+    @Override
     public int hashCode()
     {
         return key.hashCode();
@@ -147,6 +148,7 @@ public class CacheElement<K extends Serializable, V extends Serializable>
      * <p>
      * @return String representation
      */
+    @Override
     public String toString()
     {
         return "[CacheElement: cacheName [" + cacheName + "], key [" + key + "], val [" + val + "], attr [" + attr

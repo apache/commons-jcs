@@ -63,6 +63,7 @@ public class TestRemoteCache
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestRemoteClient.ccf" );

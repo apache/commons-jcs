@@ -74,6 +74,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
         suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache1" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -83,6 +84,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
         suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache2" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -92,6 +94,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
 
         suite.addTest( new IndexedDiskCacheNoMemoryUnitTest( "testIndexedDiskCache3" )
         {
+            @Override
             public void runTest()
                 throws Exception
             {
@@ -105,6 +108,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestDiskCacheNoMemory.ccf" );

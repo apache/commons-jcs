@@ -36,6 +36,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
     /**
      * Test setup
      */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheHuge.ccf" );

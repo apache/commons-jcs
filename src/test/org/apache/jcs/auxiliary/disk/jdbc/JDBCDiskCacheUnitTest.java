@@ -41,6 +41,7 @@ public class JDBCDiskCacheUnitTest
     extends TestCase
 {
     /** Test setup */
+    @Override
     public void setUp()
     {
         JCS.setConfigFilename( "/TestJDBCDiskCache.ccf" );
