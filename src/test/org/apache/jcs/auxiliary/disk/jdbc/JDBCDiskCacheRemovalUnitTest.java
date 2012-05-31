@@ -69,11 +69,11 @@ public class JDBCDiskCacheRemovalUnitTest
         Thread.sleep( 1000 );
 
         // VERIFY
-        String resultBeforeRemove = (String) jcs.get( keyPart1 + ":" + keyPart2 );
+        String resultBeforeRemove = jcs.get( keyPart1 + ":" + keyPart2 );
         assertEquals( "Wrong result", data, resultBeforeRemove );
 
         jcs.remove( keyPart1 + ":" );
-        String resultAfterRemove = (String) jcs.get( keyPart1 + ":" + keyPart2 );
+        String resultAfterRemove = jcs.get( keyPart1 + ":" + keyPart2 );
         assertNull( "Should not have a result after removal.", resultAfterRemove );
 
         System.out.println( jcs.getStats() );

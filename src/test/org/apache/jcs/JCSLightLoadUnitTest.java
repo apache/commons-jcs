@@ -90,7 +90,7 @@ public class JCSLightLoadUnitTest
 
         for ( int i = items; i > 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 

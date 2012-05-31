@@ -80,7 +80,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = (String) jcs.get( "key:" + i + ":anotherpart" );
+            String res = jcs.get( "key:" + i + ":anotherpart" );
             assertNotNull( "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats(), res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
@@ -118,7 +118,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
@@ -156,7 +156,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
@@ -167,7 +167,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             if ( res != null )
             {
                 assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );
@@ -201,7 +201,7 @@ public class JCSRemovalSimpleConcurrentTest
 
         for ( int i = count; i >= 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
         System.out.println( "Confirmed that " + count + " items could be found" );
@@ -212,7 +212,7 @@ public class JCSRemovalSimpleConcurrentTest
         {
             jcs.put( i + ":key", "data" + i );
             jcs.clear();
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             if ( res != null )
             {
                 assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );

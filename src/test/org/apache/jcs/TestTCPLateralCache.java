@@ -130,7 +130,7 @@ public class TestTCPLateralCache
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( region + " data " + i, value );
         }

@@ -96,7 +96,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
             for ( int i = 0; i <= items; i++ )
             {
                 //System.out.print(  "\033[s" );
-                String value = (String) jcs.get( i + ":key" );
+                String value = jcs.get( i + ":key" );
                 if ( i % 1000 == 0 )
                 {
                     //System.out.print(  "\033[r" );

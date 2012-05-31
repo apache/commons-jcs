@@ -116,7 +116,7 @@ class IndexedDisk
         fc.read(data, ded.pos + HEADER_SIZE_BYTES);
         data.flip();
 
-        return (Serializable) elementSerializer.deSerialize( data.array() );
+        return elementSerializer.deSerialize( data.array() );
     }
 
     /**

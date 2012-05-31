@@ -140,7 +140,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }
@@ -192,7 +192,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
         for ( int i = 0; i <= items; i++ )
         {
-            String value = (String) jcs.get( i + ":key" );
+            String value = jcs.get( i + ":key" );
 
             assertEquals( "key = [" + i + ":key] value = [" + value + "]", region + " data " + i, value );
         }

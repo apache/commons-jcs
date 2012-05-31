@@ -64,7 +64,7 @@ public class ZeroSizeCacheUnitTest
         // all the gets should be null
         for ( int i = items; i >= 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             assertNull( "[" + i + ":key] should be null", res );
         }
 
@@ -82,7 +82,7 @@ public class ZeroSizeCacheUnitTest
 
         for ( int i = items; i >= 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             assertNull( "[" + i + ":key] should be null", res );
         }
 

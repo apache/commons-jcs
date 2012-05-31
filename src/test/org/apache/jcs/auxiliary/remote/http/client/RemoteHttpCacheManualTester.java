@@ -58,7 +58,7 @@ public class RemoteHttpCacheManualTester
 
         for ( int i = items; i > 0; i-- )
         {
-            String res = (String) jcs.get( i + ":key" );
+            String res = jcs.get( i + ":key" );
             if ( res == null )
             {
                 //assertNotNull( "[" + i + ":key] should not be null", res );

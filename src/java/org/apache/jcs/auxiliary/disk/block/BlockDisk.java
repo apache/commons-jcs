@@ -289,7 +289,7 @@ public class BlockDisk
             log.debug( "read, total post combination data.length = " + data.length );
         }
 
-        return (Serializable) elementSerializer.deSerialize( data );
+        return elementSerializer.deSerialize( data );
     }
 
     /**
