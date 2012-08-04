@@ -44,6 +44,7 @@ public class BlockDiskElementDescriptorUnitTest
         System.out.println( "Before: " + memoryBefore );
 
         int numElements = 25000;
+        @SuppressWarnings("unchecked")
         BlockDiskElementDescriptor<Integer>[] elements = new BlockDiskElementDescriptor[numElements];
 
         long memoryStart = measureMemoryUse();

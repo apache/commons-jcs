@@ -22,6 +22,7 @@ package org.apache.jcs.auxiliary.remote;
 import junit.framework.TestCase;
 
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -41,7 +42,7 @@ public class ZombieRemoteCacheServiceUnitTest
         // SETUP
         MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 10 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
 
         String cacheName = "testUpdate";
 
@@ -65,7 +66,7 @@ public class ZombieRemoteCacheServiceUnitTest
         // SETUP
         MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 0 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 0 );
 
         String cacheName = "testUpdate";
 
@@ -89,7 +90,7 @@ public class ZombieRemoteCacheServiceUnitTest
         // SETUP
         MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 10 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
 
         String cacheName = "testRemoveThenWalk";
         String key = "myKey";
@@ -113,7 +114,7 @@ public class ZombieRemoteCacheServiceUnitTest
         // SETUP
         MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
 
-        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 10 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
 
         String cacheName = "testRemoveThenWalk";
 

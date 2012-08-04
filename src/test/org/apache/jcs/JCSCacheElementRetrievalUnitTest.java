@@ -19,9 +19,9 @@ package org.apache.jcs;
  * under the License.
  */
 
-import org.apache.jcs.engine.behavior.ICacheElement;
-
 import junit.framework.TestCase;
+
+import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * @author Aaron Smuts

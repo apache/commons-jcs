@@ -144,6 +144,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
                 // /////////////////////////////////////////////////////////////
                 cache2Name = "Commons  ";
                 // or LRUMapJCS
+                @SuppressWarnings("unchecked")
                 Map<String, String> cache2 = new org.apache.commons.collections.map.LRUMap( tries );
                 // cache2Name = "Hashtable";
                 // Hashtable cache2 = new Hashtable();

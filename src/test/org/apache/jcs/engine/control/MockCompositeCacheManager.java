@@ -27,11 +27,11 @@ import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /** For testing. */
-public class MockCompositeCacheManager<K extends Serializable, V extends Serializable>
+public class MockCompositeCacheManager
     implements ICompositeCacheManager
 {
     /** The cache that was returned. */
-    private CompositeCache<K, V> cache;
+    private CompositeCache<? extends Serializable, ? extends Serializable> cache;
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
@@ -40,7 +40,8 @@ public class MockCompositeCacheManager<K extends Serializable, V extends Seriali
      * @param cacheName
      * @return Returns a CompositeCache
      */
-    public CompositeCache<K, V> getCache( String cacheName )
+    @SuppressWarnings("unchecked")
+    public <K extends Serializable, V extends Serializable> CompositeCache<K, V> getCache( String cacheName )
     {
         if ( cache == null )
         {
@@ -49,13 +50,14 @@ public class MockCompositeCacheManager<K extends Serializable, V extends Seriali
                                                           new ElementAttributes() );
             this.setCache( newCache );
         }
-        return cache;
+
+        return (CompositeCache<K, V>)cache;
     }
 
     /**
      * @param cache The cache to set.
      */
-    public void setCache( CompositeCache<K, V> cache )
+    public void setCache( CompositeCache<? extends Serializable, ? extends Serializable> cache )
     {
         this.cache = cache;
     }
@@ -63,7 +65,7 @@ public class MockCompositeCacheManager<K extends Serializable, V extends Seriali
     /**
      * @return Returns the cache.
      */
-    public CompositeCache<K, V> getCache()
+    public CompositeCache<? extends Serializable, ? extends Serializable> getCache()
     {
         return cache;
     }

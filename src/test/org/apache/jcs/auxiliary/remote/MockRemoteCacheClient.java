@@ -33,9 +33,9 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -70,7 +70,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
         new HashMap<Set<K>, Map<K,ICacheElement<K,V>>>();
 
     /** The last service passed to fixCache */
-    public IRemoteCacheService<K, V> fixed;
+    public ICacheServiceNonLocal<K, V> fixed;
 
     /** Attributes. */
     public RemoteCacheAttributes attributes = new RemoteCacheAttributes();
@@ -79,11 +79,12 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * Stores the last argument as fixed.
      * <p>
      * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService)
+     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.jcs.auxiliary.remote.behavior.ICacheServiceNonLocal)
      */
-    public void fixCache( IRemoteCacheService<?, ?> remote )
+    @SuppressWarnings("unchecked")
+    public void fixCache( ICacheServiceNonLocal<?, ?> remote )
     {
-        fixed = (IRemoteCacheService<K, V>)remote;
+        fixed = (ICacheServiceNonLocal<K, V>)remote;
     }
 
     /**

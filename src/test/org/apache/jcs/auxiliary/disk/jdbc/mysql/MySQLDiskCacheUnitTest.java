@@ -53,11 +53,11 @@ public class MySQLDiskCacheUnitTest
         TableState tableState = new TableState( tableName );
         tableState.setState( TableState.OPTIMIZATION_RUNNING );
 
-        MySQLDiskCache cache = new MySQLDiskCache( attributes, tableState, CompositeCacheManager.getUnconfiguredInstance() );
+        MySQLDiskCache<String, String> cache = new MySQLDiskCache<String, String>( attributes, tableState, CompositeCacheManager.getUnconfiguredInstance() );
 
         // DO WORK
         Object result = cache.processGet( "myKey" );
-        
+
         // VERIFY
         assertNull( "The result should be null", result );
     }

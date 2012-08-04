@@ -31,16 +31,16 @@ public class ThreadSafeSimpleDateFormatUnitTest
     private static final int NUM_THREADS = 50;
 
     /** random number generator */
-    private static final Random random = new Random();
+    protected static final Random random = new Random();
 
     /** number wrong */
-    private int numWrong = 0;
+    protected int numWrong = 0;
 
     /** number of loops? */
-    private int numLoops = 0;
+    protected int numLoops = 0;
 
     /** run? */
-    private boolean run = false;
+    protected boolean run = false;
 
     /** a simpledateformat instance */
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat( DATE_FORMAT_STRING );
@@ -49,7 +49,7 @@ public class ThreadSafeSimpleDateFormatUnitTest
     private ThreadSafeSimpleDateFormat threadSafeSimpleDateFormat = new ThreadSafeSimpleDateFormat( DATE_FORMAT_STRING );
 
     /** date format */
-    private DateFormat dateFormat;
+    protected DateFormat dateFormat;
 
     /**
      * Tests to make sure that format produces the same string on the thread-safe implementation as

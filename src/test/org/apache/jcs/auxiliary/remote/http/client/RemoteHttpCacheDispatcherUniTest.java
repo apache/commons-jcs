@@ -17,7 +17,7 @@ public class RemoteHttpCacheDispatcherUniTest
         RemoteHttpCacheAttributes remoteHttpCacheAttributes = new RemoteHttpCacheAttributes();
         RemoteHttpCacheDispatcher dispatcher = new RemoteHttpCacheDispatcher( remoteHttpCacheAttributes );
 
-        RemoteCacheRequest remoteCacheRequest = new RemoteCacheRequest();
+        RemoteCacheRequest<String, String> remoteCacheRequest = new RemoteCacheRequest<String, String>();
         remoteCacheRequest.setRequestType( RemoteCacheRequest.REQUEST_TYPE_REMOVE_ALL );
         String cacheName = "myCache";
         remoteCacheRequest.setCacheName( cacheName );

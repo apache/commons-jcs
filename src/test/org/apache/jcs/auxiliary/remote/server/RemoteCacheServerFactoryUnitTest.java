@@ -3,9 +3,9 @@ package org.apache.jcs.auxiliary.remote.server;
 import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
 
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-
 import junit.framework.TestCase;
+
+import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 
 /** Unit tests for the factory */
 public class RemoteCacheServerFactoryUnitTest

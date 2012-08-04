@@ -113,6 +113,7 @@ public class RemoteCacheClientTester
      * @exception NotBoundException
      * @exception IOException
      */
+    @SuppressWarnings("unchecked")
     public RemoteCacheClientTester( String host, int port, int count, boolean write, boolean read, boolean delete )
         throws MalformedURLException, NotBoundException, IOException
     {

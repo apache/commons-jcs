@@ -111,8 +111,10 @@ public class JDBCDiskCacheRemovalUnitTest
      * SETUP TABLE FOR CACHE
      * <p>
      * @param cConn
+     *
+     * @throws SQLException if database problems occur
      */
-    private void setupTABLE( Connection cConn )
+    private void setupTABLE( Connection cConn ) throws SQLException
     {
         boolean newT = true;
 
@@ -130,33 +132,27 @@ public class JDBCDiskCacheRemovalUnitTest
         createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
         createSql.append( ");" );
 
-        Statement sStatement = null;
-        try
-        {
-            sStatement = cConn.createStatement();
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
+        Statement sStatement = cConn.createStatement();
 
         try
         {
             sStatement.executeQuery( createSql.toString() );
-            sStatement.close();
         }
         catch ( SQLException e )
         {
+            // FIXME: This is unreliable
             if ( e.toString().indexOf( "already exists" ) != -1 )
             {
                 newT = false;
             }
             else
             {
-                // TODO figure out if it exists prior to trying to create it.
-                // log.error( "Problem creating table.", e );
-                e.printStackTrace();
+                throw e;
             }
+        }
+        finally
+        {
+            sStatement.close();
         }
 
         String setupData[] = { "create index iKEY on " + databaseName + " (CACHE_KEY, REGION)" };

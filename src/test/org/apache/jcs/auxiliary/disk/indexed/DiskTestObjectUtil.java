@@ -102,6 +102,7 @@ public class DiskTestObjectUtil
      */
     public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjects( int numToCreate, int bytes, String cacheName )
     {
+        @SuppressWarnings("unchecked")
         ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
         for ( int i = 0; i < numToCreate; i++ )
         {
@@ -124,6 +125,7 @@ public class DiskTestObjectUtil
      */
     public static ICacheElement<Integer, DiskTestObject>[] createCacheElementsWithTestObjectsOfVariableSizes( int numToCreate, String cacheName )
     {
+        @SuppressWarnings("unchecked")
         ICacheElement<Integer, DiskTestObject>[] elements = new ICacheElement[numToCreate];
         Random random = new Random( 89 );
         for ( int i = 0; i < numToCreate; i++ )

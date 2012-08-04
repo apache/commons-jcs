@@ -216,8 +216,10 @@ public class JDBCDiskCacheShrinkUnitTest
     /**
      * SETUP TABLE FOR CACHE
      * @param cConn
+     *
+     * @throws SQLException if database problems occur
      */
-    void setupTABLE( Connection cConn )
+    void setupTABLE( Connection cConn ) throws SQLException
     {
         boolean newT = true;
 
@@ -235,20 +237,11 @@ public class JDBCDiskCacheShrinkUnitTest
         createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
         createSql.append( ");" );
 
-        Statement sStatement = null;
-        try
-        {
-            sStatement = cConn.createStatement();
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
+        Statement sStatement = cConn.createStatement();
 
         try
         {
             sStatement.executeQuery( createSql.toString() );
-            sStatement.close();
         }
         catch ( SQLException e )
         {
@@ -258,10 +251,12 @@ public class JDBCDiskCacheShrinkUnitTest
             }
             else
             {
-                // TODO figure out if it exists prior to trying to create it.
-                // log.error( "Problem creating table.", e );
-                e.printStackTrace();
+                throw e;
             }
+        }
+        finally
+        {
+            sStatement.close();
         }
 
         String setupData[] = { "create index iKEY on JCS_STORE_SHRINK (CACHE_KEY, REGION)" };

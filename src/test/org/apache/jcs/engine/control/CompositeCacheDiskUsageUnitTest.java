@@ -103,7 +103,9 @@ public class CompositeCacheDiskUsageUnitTest
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
-        cache.setAuxCaches( new AuxiliaryCache[] { mock } );
+        @SuppressWarnings("unchecked")
+        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
+        cache.setAuxCaches( auxArray );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
@@ -132,7 +134,9 @@ public class CompositeCacheDiskUsageUnitTest
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
-        cache.setAuxCaches( new AuxiliaryCache[] { mock } );
+        @SuppressWarnings("unchecked")
+        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
+        cache.setAuxCaches( auxArray );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
@@ -165,7 +169,9 @@ public class CompositeCacheDiskUsageUnitTest
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
-        cache.setAuxCaches( new AuxiliaryCache[] { mock } );
+        @SuppressWarnings("unchecked")
+        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
+        cache.setAuxCaches( auxArray );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
@@ -200,7 +206,9 @@ public class CompositeCacheDiskUsageUnitTest
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
-        cache.setAuxCaches( new AuxiliaryCache[] { mock } );
+        @SuppressWarnings("unchecked")
+        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
+        cache.setAuxCaches( auxArray );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
@@ -235,7 +243,9 @@ public class CompositeCacheDiskUsageUnitTest
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = AuxiliaryCache.DISK_CACHE;
 
-        cache.setAuxCaches( new AuxiliaryCache[] { mock } );
+        @SuppressWarnings("unchecked")
+        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
+        cache.setAuxCaches( auxArray );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 
@@ -271,7 +281,9 @@ public class CompositeCacheDiskUsageUnitTest
         MockAuxCache<String, String> mockLateral = new MockAuxCache<String, String>();
         mockLateral.cacheType = AuxiliaryCache.LATERAL_CACHE;
 
-        cache.setAuxCaches( new AuxiliaryCache[] { mock, mockLateral } );
+        @SuppressWarnings("unchecked")
+        AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock, mockLateral };
+        cache.setAuxCaches( auxArray );
 
         ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
 

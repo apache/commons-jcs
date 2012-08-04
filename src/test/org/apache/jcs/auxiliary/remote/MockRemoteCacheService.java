@@ -28,14 +28,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * This is a mock impl of the remote cache service.
  */
 public class MockRemoteCacheService<K extends Serializable, V extends Serializable>
-    implements IRemoteCacheService<K, V>
+    implements ICacheServiceNonLocal<K, V>
 {
     /** The key last passed to get */
     public Serializable lastGetKey;
@@ -99,7 +99,7 @@ public class MockRemoteCacheService<K extends Serializable, V extends Serializab
      * Set the lastRemoveAllCacheName to the cacheName.
      * <p>
      * (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService#removeAll(java.lang.String,
+     * @see org.apache.jcs.auxiliary.remote.behavior.ICacheServiceNonLocal#removeAll(java.lang.String,
      *      long)
      */
     public void removeAll( String cacheName, long requesterId )

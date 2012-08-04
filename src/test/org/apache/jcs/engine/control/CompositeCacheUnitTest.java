@@ -64,6 +64,7 @@ public class CompositeCacheUnitTest
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.DISK_CACHE;
+        @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
@@ -103,6 +104,7 @@ public class CompositeCacheUnitTest
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.REMOTE_CACHE;
+        @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
@@ -145,6 +147,7 @@ public class CompositeCacheUnitTest
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.DISK_CACHE;
+        @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
@@ -195,6 +198,7 @@ public class CompositeCacheUnitTest
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.DISK_CACHE;
+        @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 
@@ -227,6 +231,7 @@ public class CompositeCacheUnitTest
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = ICache.REMOTE_CACHE;
+        @SuppressWarnings("unchecked")
         AuxiliaryCache<String, Integer>[] aux = new AuxiliaryCache[] { diskMock };
         cache.setAuxCaches( aux );
 

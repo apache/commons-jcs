@@ -36,7 +36,7 @@ public class RemoteHttpCacheSeviceFactoryUnitTest
     public void testCreateRemoteHttpCacheService_WithLogger()
     {
         // SETUP
-        MockCompositeCacheManager<String, String> manager = new  MockCompositeCacheManager<String, String>();
+        MockCompositeCacheManager manager = new MockCompositeCacheManager();
         String className = MockCacheEventLogger.class.getName();
 
         Properties props = new Properties();

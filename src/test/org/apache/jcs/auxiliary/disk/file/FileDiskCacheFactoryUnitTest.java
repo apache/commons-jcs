@@ -22,7 +22,7 @@ public class FileDiskCacheFactoryUnitTest
         cattr.setCacheName( cacheName );
         cattr.setDiskPath( "target/test-sandbox/FileDiskCacheFactoryUnitTest" );
 
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager<String, String>();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         ICacheEventLogger cacheEventLogger = new MockCacheEventLogger();
         IElementSerializer elementSerializer = new MockElementSerializer();
 

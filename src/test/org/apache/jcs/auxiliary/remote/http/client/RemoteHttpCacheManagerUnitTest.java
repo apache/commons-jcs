@@ -52,7 +52,7 @@ public class RemoteHttpCacheManagerUnitTest
         // VEIFY
         assertNotNull( "Should have a cache.", result );
         assertTrue( "Wrong default.", result instanceof RemoteHttpCacheClient );
-        assertTrue( "Should be initialized", ((RemoteHttpCacheClient)result).isInitialized() );
+        assertTrue( "Should be initialized", ((RemoteHttpCacheClient<String, String>)result).isInitialized() );
     }
 
     /** Verify that we get the default. */

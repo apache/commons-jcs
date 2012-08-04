@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.utils.serialization.SerializationConversionUtil;
@@ -81,7 +82,7 @@ public class RemoteCacheUnitTest
     {
         // SETUP
         IRemoteCacheAttributes cattr = new RemoteCacheAttributes();
-        ZombieRemoteCacheService<String, String> zombie = new ZombieRemoteCacheService<String, String>( 10 );
+        ZombieCacheServiceNonLocal<String, String> zombie = new ZombieCacheServiceNonLocal<String, String>( 10 );
         MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();
         MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
 

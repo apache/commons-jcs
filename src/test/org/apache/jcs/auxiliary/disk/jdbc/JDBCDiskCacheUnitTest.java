@@ -168,7 +168,7 @@ public class JDBCDiskCacheUnitTest
         cattr.setConnectionPoolName( poolName );
 
         TableState tableState = new TableState( "JCSTESTTABLE_InitializePoolAccess" );
-        MockCompositeCacheManager<String, String> compositeCacheManager = new MockCompositeCacheManager<String, String>();
+        MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
         compositeCacheManager.setConfigurationProperties( props );
 
         JDBCDiskCache<String, String> diskCache = new JDBCDiskCache<String, String>( cattr, tableState, compositeCacheManager );

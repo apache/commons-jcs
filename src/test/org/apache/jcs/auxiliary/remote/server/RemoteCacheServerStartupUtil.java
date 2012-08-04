@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote.server;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -49,7 +50,7 @@ public class RemoteCacheServerStartupUtil
      * @param propsFileName
      * @return RemoteCacheServer
      */
-    public static RemoteCacheServer startServerUsingProperties( String propsFileName )
+    public static <K extends Serializable, V extends Serializable> RemoteCacheServer<K, V> startServerUsingProperties( String propsFileName )
     {
         // TODO load from props file or get as init param or get from jndi, or
         // all three

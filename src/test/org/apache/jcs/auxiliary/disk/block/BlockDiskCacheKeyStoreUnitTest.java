@@ -92,9 +92,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         attributes.setMaxKeySize( maxKeys );
         attributes.setBlockSizeBytes( bytesPerBlock );
 
-        BlockDiskCache<String, String> blockDiskCache = new BlockDiskCache<String, String>( attributes );
-
-        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>( attributes, blockDiskCache );
+        BlockDiskKeyStore<String> keyStore = new BlockDiskKeyStore<String>( attributes, null );
 
         // DO WORK
         int numElements = 1000;

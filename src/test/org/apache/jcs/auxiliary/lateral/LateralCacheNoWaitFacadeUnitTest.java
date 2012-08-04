@@ -16,6 +16,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     public void testAddThenRemoveNoWait_InList()
     {
         // SETUP
+        @SuppressWarnings("unchecked")
         LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
@@ -45,6 +46,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     public void testAddThenRemoveNoWait_InListSize2()
     {
         // SETUP
+        @SuppressWarnings("unchecked")
         LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
@@ -79,6 +81,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     public void testAdd_InList()
     {
         // SETUP
+        @SuppressWarnings("unchecked")
         LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
@@ -103,6 +106,7 @@ public class LateralCacheNoWaitFacadeUnitTest
     public void testAddThenRemoveNoWait_NotInList()
     {
         // SETUP
+        @SuppressWarnings("unchecked")
         LateralCacheNoWait<String, String>[] noWaits = new LateralCacheNoWait[0];
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );

@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote.http.client;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheDispatcher;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
@@ -30,20 +31,23 @@ public class MockRemoteCacheDispatcher
     implements IRemoteCacheDispatcher
 {
     /** The last request passes to dispatch */
-    public RemoteCacheRequest lastRemoteCacheRequest;
-    
+    public RemoteCacheRequest<?, ?> lastRemoteCacheRequest;
+
     /** The response setup */
-    public RemoteCacheResponse setupRemoteCacheResponse;
-    
-    /** Records the last and returns setupRemoteCacheResponse. 
+    public RemoteCacheResponse<?, ?> setupRemoteCacheResponse;
+
+    /** Records the last and returns setupRemoteCacheResponse.
      * <p>
-     * @param remoteCacheRequest 
+     * @param remoteCacheRequest
      * @return RemoteCacheResponse
-     * @throws IOException */
-    public RemoteCacheResponse dispatchRequest( RemoteCacheRequest remoteCacheRequest )
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+    public <K extends Serializable, V extends Serializable, KK extends Serializable, VV extends Serializable>
+        RemoteCacheResponse<K, V> dispatchRequest( RemoteCacheRequest<KK, VV> remoteCacheRequest )
         throws IOException
     {
         this.lastRemoteCacheRequest = remoteCacheRequest;
-        return setupRemoteCacheResponse;
+        return (RemoteCacheResponse<K, V>)setupRemoteCacheResponse;
     }
 }

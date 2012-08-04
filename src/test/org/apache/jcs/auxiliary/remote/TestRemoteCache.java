@@ -102,7 +102,7 @@ public class TestRemoteCache
 
         Thread.sleep( 100 );
 
-        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager<String, String>();
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
 
         RemoteCacheAttributes rca = new RemoteCacheAttributes();
         rca.setRemoteHost( "localhost" );

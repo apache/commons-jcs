@@ -29,6 +29,7 @@ import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.jcs.utils.timing.SleepUtil;
@@ -72,7 +73,7 @@ public class TestTCPLateralUnitTest
         ICompositeCacheManager cacheMgr = CompositeCacheManager.getInstance();
 
         // start the listener
-        LateralTCPListener<String, String> listener = (LateralTCPListener) LateralTCPListener.getInstance( lac, cacheMgr );
+        LateralTCPListener<String, String> listener = LateralTCPListener.getInstance( lac, cacheMgr );
 
         // send to the listener
         LateralTCPSender lur = new LateralTCPSender( lac );
@@ -106,7 +107,7 @@ public class TestTCPLateralUnitTest
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1101 );
         lattr.setTransmissionTypeName( "TCP" );
-        MockCompositeCacheManager<String, String> cacheMgr = new MockCompositeCacheManager<String, String>();
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
         LateralTCPListener.getInstance( lattr, cacheMgr );
@@ -146,8 +147,9 @@ public class TestTCPLateralUnitTest
         // setup a listener
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1103 );
-        MockCompositeCacheManager<String, String> cacheMgr = new MockCompositeCacheManager<String, String>();
-        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        CompositeCache<String, String> cache = cacheMgr.getCache( "test" );
+        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -174,7 +176,7 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( 1000 );
 
         // VERIFY
-        ICacheElement<String, String> cacheElement = cacheMgr.getCache().get( "key" );
+        ICacheElement<String, String> cacheElement = cache.get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
@@ -190,8 +192,9 @@ public class TestTCPLateralUnitTest
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1105 );
         lattr.setTransmissionTypeName( "TCP" );
-        MockCompositeCacheManager<String, String> cacheMgr = new MockCompositeCacheManager<String, String>();
-        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        CompositeCache<String, String> cache = cacheMgr.getCache( "test" );
+        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -219,7 +222,7 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( 1000 );
 
         // VERIFY
-        ICacheElement<String, String> cacheElement = cacheMgr.getCache().get( "key" );
+        ICacheElement<String, String> cacheElement = cache.get( "key" );
         System.out.println( "cacheElement = " + cacheElement );
         assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
     }
@@ -237,8 +240,9 @@ public class TestTCPLateralUnitTest
         // setup a listener
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1107 );
-        MockCompositeCacheManager<String, String> cacheMgr = new MockCompositeCacheManager<String, String>();
-        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        CompositeCache<String, String> cache = cacheMgr.getCache( "test" );
+        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -246,7 +250,7 @@ public class TestTCPLateralUnitTest
 
         // add the item to the listeners cache
         ICacheElement<String, String> element = new CacheElement<String, String>( "test", "key", "value1" );
-        cacheMgr.getCache().update( element );
+        cache.update( element );
 
         // setup a service to talk to the listener started above.
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
@@ -280,8 +284,9 @@ public class TestTCPLateralUnitTest
         // setup a listener
         TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
         lattr.setTcpListenerPort( 1108 );
-        MockCompositeCacheManager<String, Integer> cacheMgr = new MockCompositeCacheManager<String, Integer>();
-        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
+        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
+        CompositeCache<String, Integer> cache = cacheMgr.getCache( "test" );
+        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -294,7 +299,7 @@ public class TestTCPLateralUnitTest
         {
             // add the item to the listeners cache
             ICacheElement<String, Integer> element = new CacheElement<String, Integer>( "test", keyprefix1 + String.valueOf( i ), Integer.valueOf( i ) );
-            cacheMgr.getCache().update( element );
+            cache.update( element );
         }
 
         // setup a service to talk to the listener started above.
