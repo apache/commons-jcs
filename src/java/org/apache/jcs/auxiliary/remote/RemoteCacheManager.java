@@ -28,14 +28,14 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICache;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
@@ -91,7 +91,7 @@ public class RemoteCacheManager
     private final IElementSerializer elementSerializer;
 
     /** Handle to the remote cache service; or a zombie handle if failed to connect. */
-    private IRemoteCacheService<? extends Serializable, ? extends Serializable> remoteService;
+    private ICacheServiceNonLocal<? extends Serializable, ? extends Serializable> remoteService;
 
     /**
      * Wrapper of the remote cache watch service; or wrapper of a zombie service if failed to
@@ -148,7 +148,7 @@ public class RemoteCacheManager
             }
 
             // Successful connection to the remote server.
-            remoteService = (IRemoteCacheService<?, ?>) obj;
+            remoteService = (ICacheServiceNonLocal<?, ?>) obj;
             if ( log.isDebugEnabled() )
             {
                 log.debug( "remoteService = " + remoteService );
@@ -163,7 +163,7 @@ public class RemoteCacheManager
             // Configure this RemoteCacheManager instance to use the "zombie"
             // services.
             log.error( "Problem finding server at [" + registry + "]", ex );
-            remoteService = new ZombieRemoteCacheService<String, String>();
+            remoteService = new ZombieCacheServiceNonLocal<String, String>();
             remoteWatch = new RemoteCacheWatchRepairable();
             remoteWatch.setCacheWatch( new ZombieRemoteCacheWatch() );
 
@@ -372,7 +372,7 @@ public class RemoteCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         IRemoteCacheAttributes ca = (IRemoteCacheAttributes) remoteCacheAttributes.copy();
         ca.setCacheName( cacheName );
@@ -389,13 +389,15 @@ public class RemoteCacheManager
      * @param cattr
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( IRemoteCacheAttributes cattr )
+    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( IRemoteCacheAttributes cattr )
     {
         RemoteCacheNoWait<K, V> remoteCacheNoWait = null;
 
         synchronized ( caches )
         {
-            remoteCacheNoWait = (RemoteCacheNoWait<K, V>) caches.get( cattr.getCacheName() );
+            @SuppressWarnings("unchecked")
+            RemoteCacheNoWait<K, V> remoteCacheNoWait2 = (RemoteCacheNoWait<K, V>) caches.get( cattr.getCacheName() );
+            remoteCacheNoWait = remoteCacheNoWait2;
             if ( remoteCacheNoWait == null )
             {
                 // create a listener first and pass it to the remotecache
@@ -417,7 +419,8 @@ public class RemoteCacheManager
                         + listener, e );
                 }
 
-                IRemoteCacheClient<K, V> remoteCacheClient = new RemoteCache<K, V>( cattr, (IRemoteCacheService<K, V>) remoteService, listener );
+                @SuppressWarnings("unchecked")
+                IRemoteCacheClient<K, V> remoteCacheClient = new RemoteCache<K, V>( cattr, (ICacheServiceNonLocal<K, V>) remoteService, listener );
                 remoteCacheClient.setCacheEventLogger( cacheEventLogger );
                 remoteCacheClient.setElementSerializer( elementSerializer );
 
@@ -511,11 +514,11 @@ public class RemoteCacheManager
      * @param remoteService
      * @param remoteWatch
      */
-    public void fixCaches( IRemoteCacheService<? extends Serializable, ? extends Serializable> remoteService, IRemoteCacheObserver remoteWatch )
+    public void fixCaches( ICacheServiceNonLocal<? extends Serializable, ? extends Serializable> remoteService, IRemoteCacheObserver remoteWatch )
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "Fixing caches. IRemoteCacheService " + remoteService + " | IRemoteCacheObserver " + remoteWatch );
+            log.info( "Fixing caches. ICacheServiceNonLocal " + remoteService + " | IRemoteCacheObserver " + remoteWatch );
         }
         synchronized ( caches )
         {
@@ -576,9 +579,9 @@ public class RemoteCacheManager
                 return false;
             }
             Location l = (Location) obj;
-            if ( this.host == null && l.host != null )
+            if ( this.host == null )
             {
-                return false;
+                return l.host == null && port == l.port;
             }
             return host.equals( l.host ) && port == l.port;
         }

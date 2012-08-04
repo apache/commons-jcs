@@ -255,7 +255,9 @@ public class JCSWorker<K extends Serializable, V extends Serializable>
             // If the cache dosn't have it, do the work.
             if ( result == null )
             {
-                result = (V)aHelper.doWork();
+                @SuppressWarnings("unchecked")
+                V doWork = (V)aHelper.doWork();
+                result = doWork;
                 if ( logger.isDebugEnabled() )
                 {
                     logger.debug( "Work Done, caching: key:" + aKey + ", group:" + aGroup + ", result:" + result + "." );

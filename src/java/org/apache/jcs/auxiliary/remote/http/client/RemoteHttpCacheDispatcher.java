@@ -20,6 +20,7 @@ package org.apache.jcs.auxiliary.remote.http.client;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -74,7 +75,8 @@ public class RemoteHttpCacheDispatcher
      * @return RemoteCacheResponse
      * @throws IOException
      */
-    public RemoteCacheResponse dispatchRequest( RemoteCacheRequest remoteCacheRequest )
+    public <K extends Serializable, V extends Serializable, KK extends Serializable, VV extends Serializable>
+        RemoteCacheResponse<K, V> dispatchRequest( RemoteCacheRequest<KK, VV> remoteCacheRequest )
         throws IOException
     {
         try
@@ -85,10 +87,10 @@ public class RemoteHttpCacheDispatcher
 
             byte[] responseAsByteArray = processRequest( requestAsByteArray, url );
 
-            RemoteCacheResponse remoteCacheResponse = null;
+            RemoteCacheResponse<K, V> remoteCacheResponse = null;
             try
             {
-                remoteCacheResponse = (RemoteCacheResponse) serializer.deSerialize( responseAsByteArray );
+                remoteCacheResponse = serializer.deSerialize( responseAsByteArray );
             }
             catch ( ClassNotFoundException e )
             {
@@ -126,7 +128,7 @@ public class RemoteHttpCacheDispatcher
      * @param baseUrl
      * @return String
      */
-    protected String addParameters( RemoteCacheRequest remoteCacheRequest, String baseUrl )
+    protected <K extends Serializable, V extends Serializable> String addParameters( RemoteCacheRequest<K, V> remoteCacheRequest, String baseUrl )
     {
         StringBuffer url = new StringBuffer( baseUrl );
 

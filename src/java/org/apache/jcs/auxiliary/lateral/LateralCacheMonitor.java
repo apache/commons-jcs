@@ -219,7 +219,7 @@ public class LateralCacheMonitor
                         }
                     }
 
-                    for (LateralCacheNoWait c : mgr.getCaches().values())
+                    for (LateralCacheNoWait<?, ?> c : mgr.getCaches().values())
                     {
                         if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                         {

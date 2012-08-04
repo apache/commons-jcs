@@ -144,6 +144,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
      * continue until the primary is re-connected. If no failovers are defined,
      * this will exit automatically.
      */
+    @SuppressWarnings("unchecked")
     private void connectAndRestore()
     {
         do
@@ -218,7 +219,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                             if ( ic.getStatus() == CacheConstants.STATUS_ALIVE )
                             {
                                 // may need to do this more gracefully
-                                log.debug( "reseting no wait" );
+                                log.debug( "resetting no wait" );
                                 facade.noWaits = new RemoteCacheNoWait[1];
                                 facade.noWaits[0] = (RemoteCacheNoWait<K, V>) ic;
                                 facade.remoteCacheAttributes.setFailoverIndex( i );
@@ -263,15 +264,17 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                         // Problem encountered in fixing the caches managed by a
                         // RemoteCacheManager instance.
                         // Soldier on to the next RemoteCacheManager instance.
+                        String remoteHost = (rca == null) ? "null" : rca.getRemoteHost();
+                        int remotePort = (rca == null) ? 0 : rca.getRemotePort();
                         if ( i == 0 )
                         {
-                            log.warn( "FAILED to connect, as expected, to primary" + rca.getRemoteHost() + ":"
-                                + rca.getRemotePort(), ex );
+                            log.warn( "FAILED to connect, as expected, to primary" + remoteHost + ":"
+                                + remotePort, ex );
                         }
                         else
                         {
-                            log.error( "FAILED to connect to failover [" + rca.getRemoteHost() + ":"
-                                + rca.getRemotePort() + "]", ex );
+                            log.error( "FAILED to connect to failover [" + remoteHost + ":"
+                                + remotePort + "]", ex );
                         }
                     }
                 }
@@ -336,6 +339,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
      *
      * @return boolean value indicating whether the restoration was successful
      */
+    @SuppressWarnings("unchecked")
     private boolean restorePrimary()
     {
         // try to move back to the primary
@@ -459,7 +463,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                     return true;
                 }
 
-                // else alright
+                // else all right
                 // if the failover index was at 0 here, we would be in a bad
                 // situation, unless there were just
                 // no failovers configured.

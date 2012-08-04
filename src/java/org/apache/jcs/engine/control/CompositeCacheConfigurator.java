@@ -377,8 +377,9 @@ public class CompositeCacheConfigurator
             }
 
             // Associate the auxiliaries with the cache
-
-            cache.setAuxCaches( auxList.toArray( new AuxiliaryCache[0] ) );
+            @SuppressWarnings("unchecked")
+            AuxiliaryCache<K, V>[] auxArray = auxList.toArray( new AuxiliaryCache[0] );
+            cache.setAuxCaches( auxArray );
         }
 
         // Return the new cache
@@ -414,8 +415,7 @@ public class CompositeCacheConfigurator
 
         // auxFactory was not previously initialized.
         // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
-        ccAttr = (ICompositeCacheAttributes) OptionConverter
-            .instantiateByKey( props, attrName, org.apache.jcs.engine.behavior.ICompositeCacheAttributes.class, null );
+        ccAttr = OptionConverter.instantiateByKey( props, attrName, null );
 
         if ( ccAttr == null )
         {
@@ -463,8 +463,7 @@ public class CompositeCacheConfigurator
 
         // auxFactory was not previously initialized.
         // String prefix = regionPrefix + regName + ATTRIBUTE_PREFIX;
-        eAttr = (IElementAttributes) OptionConverter
-            .instantiateByKey( props, attrName, org.apache.jcs.engine.behavior.IElementAttributes.class, null );
+        eAttr = OptionConverter.instantiateByKey( props, attrName, null );
         if ( eAttr == null )
         {
             if ( log.isInfoEnabled() )
@@ -520,8 +519,7 @@ public class CompositeCacheConfigurator
         {
             // auxFactory was not previously initialized.
             String prefix = AUXILIARY_PREFIX + auxName;
-            auxFac = (AuxiliaryCacheFactory) OptionConverter
-                .instantiateByKey( props, prefix, org.apache.jcs.auxiliary.AuxiliaryCacheFactory.class, null );
+            auxFac = OptionConverter.instantiateByKey( props, prefix, null );
             if ( auxFac == null )
             {
                 log.error( "Could not instantiate auxFactory named \"" + auxName + "\"." );
@@ -540,8 +538,7 @@ public class CompositeCacheConfigurator
         {
             // auxFactory was not previously initialized.
             String prefix = AUXILIARY_PREFIX + auxName + ATTRIBUTE_PREFIX;
-            auxAttr = (AuxiliaryCacheAttributes) OptionConverter
-                .instantiateByKey( props, prefix, org.apache.jcs.auxiliary.AuxiliaryCacheAttributes.class, null );
+            auxAttr = OptionConverter.instantiateByKey( props, prefix, null );
             if ( auxAttr == null )
             {
                 log.error( "Could not instantiate auxAttr named '" + attrName + "'" );
@@ -599,13 +596,10 @@ public class CompositeCacheConfigurator
      */
     public static <K extends Serializable> IKeyMatcher<K> parseKeyMatcher( Properties props, String auxPrefix )
     {
-        IKeyMatcher<K> keyMatcher = null;
 
         // auxFactory was not previously initialized.
         String keyMatcherClassName = auxPrefix + KEY_MATCHER_PREFIX;
-        keyMatcher = (IKeyMatcher<K>) OptionConverter
-            .instantiateByKey( props, keyMatcherClassName,
-                               IKeyMatcher.class, null );
+        IKeyMatcher<K> keyMatcher = OptionConverter.instantiateByKey( props, keyMatcherClassName, null );
         if ( keyMatcher != null )
         {
             String attributePrefix = auxPrefix + KEY_MATCHER_PREFIX + ATTRIBUTE_PREFIX;

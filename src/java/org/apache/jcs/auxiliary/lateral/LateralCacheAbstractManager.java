@@ -31,7 +31,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -138,7 +138,8 @@ public abstract class LateralCacheAbstractManager
      * @param lateralService
      * @param lateralWatch
      */
-    public void fixCaches( ILateralCacheService lateralService, ILateralCacheObserver lateralWatch )
+    @SuppressWarnings("unchecked")
+    public void fixCaches( ICacheServiceNonLocal<Serializable, Serializable> lateralService, ILateralCacheObserver lateralWatch )
     {
         log.debug( "Fixing lateral caches:" );
 
@@ -149,7 +150,7 @@ public abstract class LateralCacheAbstractManager
             //this.lateralWatch.setCacheWatch(lateralWatch);
             for (LateralCacheNoWait<? extends Serializable, ? extends Serializable> cache : this.caches.values())
             {
-                cache.fixCache( lateralService );
+                ((LateralCacheNoWait<Serializable, Serializable>)cache).fixCache( lateralService );
             }
         }
     }

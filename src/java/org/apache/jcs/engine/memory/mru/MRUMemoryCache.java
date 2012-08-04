@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.memory.AbstractDoulbeLinkedListMemoryCache;
+import org.apache.jcs.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 
 /**
@@ -31,7 +31,7 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
  * hub is configured to use a disk cache.
  */
 public class MRUMemoryCache<K extends Serializable, V extends Serializable>
-    extends AbstractDoulbeLinkedListMemoryCache<K, V>
+    extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 5013101678192336129L;

@@ -27,19 +27,18 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.lateral.LateralCache;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAbstractManager;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.LateralCacheMonitor;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheWatchRepairable;
-import org.apache.jcs.auxiliary.lateral.ZombieLateralCacheService;
 import org.apache.jcs.auxiliary.lateral.ZombieLateralCacheWatch;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -72,7 +71,7 @@ public class LateralTCPCacheManager
         Collections.synchronizedMap( new HashMap<String, LateralTCPCacheManager>() );
 
     /** ITCPLateralCacheAttributes */
-    protected ITCPLateralCacheAttributes lateralCacheAttribures;
+    protected ITCPLateralCacheAttributes lateralCacheAttributes;
 
     /** number of clients, we can remove this. */
     private int clients;
@@ -80,7 +79,7 @@ public class LateralTCPCacheManager
     /**
      * Handle to the lateral cache service; or a zombie handle if failed to connect.
      */
-    private ILateralCacheService lateralService;
+    private ICacheServiceNonLocal<? extends Serializable, ? extends Serializable> lateralService;
 
     /**
      * Wrapper of the lateral cache watch service; or wrapper of a zombie service if failed to
@@ -141,13 +140,9 @@ public class LateralTCPCacheManager
         if ( monitor == null )
         {
             monitor = new LateralCacheMonitor( instance );
-            // Should never be null
-            if ( monitor != null )
-            {
-                Thread t = new Thread( monitor );
-                t.setDaemon( true );
-                t.start();
-            }
+            Thread t = new Thread( monitor );
+            t.setDaemon( true );
+            t.start();
         }
     }
 
@@ -162,14 +157,17 @@ public class LateralTCPCacheManager
     private LateralTCPCacheManager( ITCPLateralCacheAttributes lcaA, ICompositeCacheManager cacheMgr,
                                     ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
-        this.lateralCacheAttribures = lcaA;
+        this.lateralCacheAttributes = lcaA;
         this.cacheMgr = cacheMgr;
         this.cacheEventLogger = cacheEventLogger;
         this.elementSerializer = elementSerializer;
 
+        this.lateralWatch = new LateralCacheWatchRepairable();
+        this.lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
+
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Creating lateral cache service, lca = " + this.lateralCacheAttribures );
+            log.debug( "Creating lateral cache service, lca = " + this.lateralCacheAttributes );
         }
 
         // Create the service
@@ -177,18 +175,10 @@ public class LateralTCPCacheManager
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Creating TCP service, lca = " + this.lateralCacheAttribures );
-            }
-            this.lateralService = new LateralTCPService( this.lateralCacheAttribures );
-
-            if ( this.lateralService == null )
-            {
-                log.error( "No service created, must zombie" );
-                throw new Exception( "No service created for lateral cache." );
+                log.info( "Creating TCP service, lca = " + this.lateralCacheAttributes );
             }
 
-            this.lateralWatch = new LateralCacheWatchRepairable();
-            this.lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
+            this.lateralService = new LateralTCPService<Serializable, Serializable>( this.lateralCacheAttributes );
         }
         catch ( Exception ex )
         {
@@ -197,9 +187,7 @@ public class LateralTCPCacheManager
             // "zombie" services.
             log.error( "Failure, lateral instance will use zombie service", ex );
 
-            this.lateralService = new ZombieLateralCacheService( lateralCacheAttribures.getZombieQueueMaxSize() );
-            this.lateralWatch = new LateralCacheWatchRepairable();
-            this.lateralWatch.setCacheWatch( new ZombieLateralCacheWatch() );
+            this.lateralService = new ZombieCacheServiceNonLocal<Serializable, Serializable>( lateralCacheAttributes.getZombieQueueMaxSize() );
 
             // Notify the cache monitor about the error, and kick off
             // the recovery process.
@@ -237,8 +225,9 @@ public class LateralTCPCacheManager
      * @return AuxiliaryCache
      * @param cacheName
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> LateralCacheNoWait<K, V> getCache( String cacheName )
     {
         LateralCacheNoWait<K, V> lateralNoWait = null;
         synchronized ( caches )
@@ -246,10 +235,11 @@ public class LateralTCPCacheManager
             lateralNoWait = (LateralCacheNoWait<K, V>) caches.get( cacheName );
             if ( lateralNoWait == null )
             {
-                LateralCacheAttributes attr = (LateralCacheAttributes) lateralCacheAttribures.copy();
+                LateralCacheAttributes attr = (LateralCacheAttributes) lateralCacheAttributes.copy();
                 attr.setCacheName( cacheName );
 
-                LateralCache<K, V> cache = new LateralCache<K, V>( attr, this.lateralService, monitor );
+                LateralCache<K, V> cache = new LateralCache<K, V>( attr,
+                        (ICacheServiceNonLocal<K, V>)this.lateralService, monitor );
                 cache.setCacheEventLogger( cacheEventLogger );
                 cache.setElementSerializer( elementSerializer );
 
@@ -266,7 +256,7 @@ public class LateralTCPCacheManager
 
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "Created LateralCacheNoWait for [" + lateralCacheAttribures + "] LateralCacheNoWait = [" + lateralNoWait
+                    log.info( "Created LateralCacheNoWait for [" + lateralCacheAttributes + "] LateralCacheNoWait = [" + lateralNoWait
                         + "]" );
                 }
 
@@ -286,11 +276,11 @@ public class LateralTCPCacheManager
     private void addListenerIfNeeded( String cacheName )
     {
         // don't create a listener if we are not receiving.
-        if ( lateralCacheAttribures.isReceive() )
+        if ( lateralCacheAttributes.isReceive() )
         {
             try
             {
-                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lateralCacheAttribures, cacheMgr ) );
+                addLateralCacheListener( cacheName, LateralTCPListener.getInstance( lateralCacheAttributes, cacheMgr ) );
             }
             catch ( IOException ioe )
             {
@@ -328,7 +318,7 @@ public class LateralTCPCacheManager
         Object service = null;
         try
         {
-            service = new LateralTCPService( lateralCacheAttribures );
+            service = new LateralTCPService<Serializable, Serializable>( lateralCacheAttributes );
         }
         catch ( Exception ex )
         {

@@ -39,10 +39,11 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.IZombie;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.stats.StatElement;
@@ -67,7 +68,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * This does the work. In an RMI instances, it will be a remote reference. In an http remote
      * cache it will be an http client. In zombie mode it is replaced with a balking facade.
      */
-    private IRemoteCacheService<K, V> remoteCacheService;
+    private ICacheServiceNonLocal<K, V> remoteCacheService;
 
     /** The cacheName */
     protected final String cacheName;
@@ -91,7 +92,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * @param remote
      * @param listener
      */
-    public AbstractRemoteAuxiliaryCache( IRemoteCacheAttributes cattr, IRemoteCacheService<K, V> remote,
+    public AbstractRemoteAuxiliaryCache( IRemoteCacheAttributes cattr, ICacheServiceNonLocal<K, V> remote,
                                          IRemoteCacheListener<K, V> listener )
     {
         this.setRemoteCacheAttributes( cattr );
@@ -592,11 +593,11 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
             elems.add( se );
         }
 
-        if ( getRemoteCacheService() instanceof ZombieRemoteCacheService )
+        if ( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
         {
             se = new StatElement();
             se.setName( "Zombie Queue Size" );
-            se.setData( "" + ( (ZombieRemoteCacheService) getRemoteCacheService() ).getQueueSize() );
+            se.setData( "" + ( (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService() ).getQueueSize() );
             elems.add( se );
         }
 
@@ -621,14 +622,15 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * Replaces the current remote cache service handle with the given handle. If the current remote
      * is a Zombie, then it propagates any events that are queued to the restored service.
      * <p>
-     * @param restoredRemote IRemoteCacheService -- the remote server or proxy to the remote server
+     * @param restoredRemote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
-    public void fixCache( IRemoteCacheService<?, ?> restoredRemote )
+    public void fixCache( ICacheServiceNonLocal<?, ?> restoredRemote )
     {
-        IRemoteCacheService<K, V> remote = (IRemoteCacheService<K, V>)restoredRemote;
-        if ( getRemoteCacheService() != null && getRemoteCacheService() instanceof ZombieRemoteCacheService )
+        @SuppressWarnings("unchecked")
+        ICacheServiceNonLocal<K, V> remote = (ICacheServiceNonLocal<K, V>)restoredRemote;
+        if ( getRemoteCacheService() != null && getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
         {
-            ZombieRemoteCacheService<K, V> zombie = (ZombieRemoteCacheService<K, V>) getRemoteCacheService();
+            ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService();
             setRemoteCacheService( remote );
             try
             {
@@ -676,7 +678,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     /**
      * @param remote the remote to set
      */
-    protected void setRemoteCacheService( IRemoteCacheService<K, V> remote )
+    protected void setRemoteCacheService( ICacheServiceNonLocal<K, V> remote )
     {
         this.remoteCacheService = remote;
     }
@@ -684,7 +686,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     /**
      * @return the remote
      */
-    protected IRemoteCacheService<K, V> getRemoteCacheService()
+    protected ICacheServiceNonLocal<K, V> getRemoteCacheService()
     {
         return remoteCacheService;
     }

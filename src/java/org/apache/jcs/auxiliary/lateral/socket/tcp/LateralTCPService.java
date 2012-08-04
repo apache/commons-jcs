@@ -33,17 +33,17 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * A lateral cache service implementation. Does not implement getGroupKey
  */
 public class LateralTCPService<K extends Serializable, V extends Serializable>
-    implements ILateralCacheService<K, V>, ILateralCacheObserver
+    implements ICacheServiceNonLocal<K, V>, ILateralCacheObserver
 {
     /** The logger. */
     private final static Log log = LogFactory.getLog( LateralTCPService.class );
@@ -104,7 +104,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * remove. Either way, we create a lateral element descriptor, which is essentially a JCS TCP
      * packet. It describes what operation the receiver should take when it gets the packet.
      * <p>
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#update(org.apache.jcs.engine.behavior.ICacheElement,
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal#update(org.apache.jcs.engine.behavior.ICacheElement,
      *      long)
      */
     public void update( ICacheElement<K, V> item, long requesterId )
@@ -161,7 +161,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
     /**
      * Wraps the key in a LateralElementDescriptor.
      * <p>
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService#remove(java.lang.String,
+     * @see org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal#remove(java.lang.String,
      *      java.io.Serializable, long)
      */
     public void remove( String cacheName, K key, long requesterId )
@@ -248,10 +248,11 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
             // led.requesterId = requesterId; // later
             led.command = LateralElementDescriptor.GET;
-            Object response = sender.sendAndReceive( led );
+            @SuppressWarnings("unchecked")
+            ICacheElement<K, V> response = (ICacheElement<K, V>)sender.sendAndReceive( led );
             if ( response != null )
             {
-                return (ICacheElement<K, V>) response;
+                return response;
             }
             return null;
         }

@@ -143,13 +143,16 @@ public class UDPDiscoverySenderThread
         }
         finally
         {
-            try
+            if (sender != null)
             {
-                sender.destroy();
-            }
-            catch ( Exception e )
-            {
-                log.error( "Problem closing Passive Broadcast sender", e );
+                try
+                {
+                    sender.destroy();
+                }
+                catch ( Exception e )
+                {
+                    log.error( "Problem closing Passive Broadcast sender", e );
+                }
             }
         }
     }

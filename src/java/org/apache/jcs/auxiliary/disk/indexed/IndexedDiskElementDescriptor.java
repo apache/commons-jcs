@@ -64,6 +64,29 @@ public class IndexedDiskElementDescriptor
     }
 
     /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode()
+    {
+        return Long.valueOf(this.pos).hashCode() ^ Integer.valueOf(len).hashCode();
+    }
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof IndexedDiskElementDescriptor)
+        {
+            return compareTo((IndexedDiskElementDescriptor) o) == 0;
+        }
+
+        return false;
+    }
+
+    /**
      * Compares based on length.
      * <p>
      * @param o Object

@@ -19,12 +19,14 @@ package org.apache.jcs.auxiliary.lateral;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.behavior.ICacheRestore;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * Used to repair the lateral caches managed by the associated instance of LateralCacheManager.
@@ -83,13 +85,14 @@ public class LateralCacheRestore
     /**
      * Fixes up all the caches managed by the associated cache manager.
      */
+    @SuppressWarnings("unchecked")
     public void fix()
     {
         if ( !canFix )
         {
             return;
         }
-        lcm.fixCaches( (ILateralCacheService) lateralObj, (ILateralCacheObserver) lateralObj );
+        lcm.fixCaches( (ICacheServiceNonLocal<Serializable, Serializable>) lateralObj, (ILateralCacheObserver) lateralObj );
         String msg = "Lateral connection resumed.";
         log.info( msg );
     }

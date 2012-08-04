@@ -52,7 +52,7 @@ public class UDPDiscoveryService
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
     /** The background broadcaster. */
-    private static ScheduledExecutorService senderDaemon;
+    private static volatile ScheduledExecutorService senderDaemon;
 
     /** thread that listens for messages */
     private Thread udpReceiverThread;

@@ -25,9 +25,9 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.AbstractRemoteAuxiliaryCache;
-import org.apache.jcs.auxiliary.remote.ZombieRemoteCacheService;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * This uses an http client as the service.
@@ -54,7 +54,7 @@ public class RemoteHttpCache<K extends Serializable, V extends Serializable>
      * @param remote
      * @param listener
      */
-    public RemoteHttpCache( RemoteHttpCacheAttributes remoteHttpCacheAttributes, IRemoteCacheService<K, V> remote,
+    public RemoteHttpCache( RemoteHttpCacheAttributes remoteHttpCacheAttributes, ICacheServiceNonLocal<K, V> remote,
                             IRemoteCacheListener<K, V> listener )
     {
         super( remoteHttpCacheAttributes, remote, listener );
@@ -75,13 +75,13 @@ public class RemoteHttpCache<K extends Serializable, V extends Serializable>
         throws IOException
     {
         // we should not switch if the existing is a zombie.
-        if ( !( getRemoteCacheService() instanceof ZombieRemoteCacheService ) )
+        if ( !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal ) )
         {
             String message = "Disabling remote cache due to error: " + msg;
             logError( cacheName, "", message );
             log.error( message, ex );
 
-            setRemoteCacheService( new ZombieRemoteCacheService<K, V>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
+            setRemoteCacheService( new ZombieCacheServiceNonLocal<K, V>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
 
             RemoteHttpCacheMonitor.getInstance().notifyError( this );
         }

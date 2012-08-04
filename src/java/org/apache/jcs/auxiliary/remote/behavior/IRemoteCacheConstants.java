@@ -1,5 +1,7 @@
 package org.apache.jcs.auxiliary.remote.behavior;
 
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,7 +27,7 @@ package org.apache.jcs.auxiliary.remote.behavior;
 public interface IRemoteCacheConstants
 {
     /** Mapping to props file value */
-    public final static String REMOTE_CACHE_SERVICE_VAL = IRemoteCacheService.class.getName();
+    public final static String REMOTE_CACHE_SERVICE_VAL = ICacheServiceNonLocal.class.getName();
 
     /** The prefix for cache server config. */
     public final static String CACHE_SERVER_PREFIX = "jcs.remotecache";

@@ -22,6 +22,7 @@ package org.apache.jcs.auxiliary.remote.behavior;
 import java.io.Serializable;
 
 import org.apache.jcs.auxiliary.AuxiliaryCache;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * This defines the behavior expected of a remote cache client. This extends Auxiliary cache which
@@ -38,9 +39,9 @@ public interface IRemoteCacheClient<K extends Serializable, V extends Serializab
      * Replaces the current remote cache service handle with the given handle. If the current remote
      * is a Zombie, the propagate the events that may be queued to the restored service.
      * <p>
-     * @param remote IRemoteCacheService -- the remote server or proxy to the remote server
+     * @param remote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
-    public void fixCache( IRemoteCacheService<?, ?> remote );
+    public void fixCache( ICacheServiceNonLocal<?, ?> remote );
 
     /**
      * Gets the listenerId attribute of the RemoteCacheListener object.

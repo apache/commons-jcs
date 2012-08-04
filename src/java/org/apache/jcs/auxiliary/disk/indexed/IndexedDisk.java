@@ -193,6 +193,7 @@ class IndexedDisk
         buffer.put(data);
         buffer.flip();
         int written = fc.write(buffer, pos);
+        fc.force(true);
 
         return written == data.length;
     }
@@ -264,7 +265,7 @@ class IndexedDisk
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "Trucating file [" + filepath + "] to " + length );
+            log.info( "Truncating file [" + filepath + "] to " + length );
         }
         fc.truncate( length );
     }

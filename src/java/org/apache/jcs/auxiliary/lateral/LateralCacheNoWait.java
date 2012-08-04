@@ -34,12 +34,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.CacheAdaptor;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -337,7 +337,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @param lateral
      */
-    public void fixCache( ILateralCacheService<K, V> lateral )
+    public void fixCache( ICacheServiceNonLocal<K, V> lateral )
     {
         cache.fixCache( lateral );
         resetEventQ();

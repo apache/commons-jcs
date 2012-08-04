@@ -20,7 +20,6 @@ package org.apache.jcs.auxiliary.lateral;
  */
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-
 import org.apache.jcs.engine.ZombieCacheWatch;
 
 /**

@@ -121,8 +121,9 @@ public class LateralTCPCacheFactory
         createListener( (ILateralCacheAttributes) iaca, cacheMgr );
 
         // create the no wait facade.
-        LateralCacheNoWaitFacade<K, V> lcnwf = new LateralCacheNoWaitFacade<K, V>( noWaits
-            .toArray( new LateralCacheNoWait[0] ), (ILateralCacheAttributes) iaca );
+        @SuppressWarnings("unchecked")
+        LateralCacheNoWait<K, V>[] lcnwArray = noWaits.toArray( new LateralCacheNoWait[0] );
+        LateralCacheNoWaitFacade<K, V> lcnwf = new LateralCacheNoWaitFacade<K, V>(lcnwArray, (ILateralCacheAttributes) iaca );
 
         // create udp discovery if available.
         createDiscoveryService( lac, lcnwf, cacheMgr, cacheEventLogger, elementSerializer );

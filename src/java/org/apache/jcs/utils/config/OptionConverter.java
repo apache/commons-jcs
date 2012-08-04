@@ -158,11 +158,10 @@ public class OptionConverter
      * <p>
      * @param props
      * @param key
-     * @param superClass
      * @param defaultValue
      * @return Object that was created
      */
-    public static Object instantiateByKey( Properties props, String key, Class<?> superClass, Object defaultValue )
+    public static <T> T instantiateByKey( Properties props, String key, T defaultValue )
     {
 
         // Get the value of the property in string form
@@ -176,7 +175,7 @@ public class OptionConverter
             return defaultValue;
         }
         // Trim className to avoid trailing spaces that cause problems.
-        return OptionConverter.instantiateByClassName( className.trim(), superClass, defaultValue );
+        return OptionConverter.instantiateByClassName( className.trim(), defaultValue );
     }
 
     /**
@@ -312,25 +311,30 @@ public class OptionConverter
      * <code>defaultValue</code> is returned.
      * <p>
      * @param className The fully qualified class name of the object to instantiate.
-     * @param superClass The class to which the new object should belong.
      * @param defaultValue The object to return in case of non-fulfillment
      * @return instantiated object
      */
 
-    public static Object instantiateByClassName( String className, Class<?> superClass, Object defaultValue )
+    public static <T> T instantiateByClassName( String className, T defaultValue )
     {
         if ( className != null )
         {
             try
             {
                 Class<?> classObj = Class.forName( className );
-                if ( !superClass.isAssignableFrom( classObj ) )
+                Object o = classObj.newInstance();
+
+                try
                 {
-                    log.error( "A \"" + className + "\" object is not assignable to a \"" + superClass.getName()
-                        + "\" variable." );
+                    @SuppressWarnings("unchecked")
+                    T t = (T) o;
+                    return t;
+                }
+                catch (ClassCastException e)
+                {
+                    log.error( "A \"" + className + "\" object is not assignable to the generic variable." );
                     return defaultValue;
                 }
-                return classObj.newInstance();
             }
             catch ( Exception e )
             {

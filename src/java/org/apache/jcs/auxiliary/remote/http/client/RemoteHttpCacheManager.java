@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
@@ -152,7 +151,7 @@ public class RemoteHttpCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         // TODO get some defaults!
         // Perhaps we will need a manager per URL????
@@ -171,13 +170,15 @@ public class RemoteHttpCacheManager
      * @param cattr
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( RemoteHttpCacheAttributes cattr )
+    public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( RemoteHttpCacheAttributes cattr )
     {
         RemoteCacheNoWait<K, V> remoteCacheNoWait = null;
 
         synchronized ( caches )
         {
-            remoteCacheNoWait = (RemoteCacheNoWait<K, V>) caches.get( cattr.getCacheName() + cattr.getUrl() );
+            @SuppressWarnings("unchecked")
+            RemoteCacheNoWait<K, V> remoteCacheNoWait2 = (RemoteCacheNoWait<K, V>) caches.get( cattr.getCacheName() + cattr.getUrl() );
+            remoteCacheNoWait = remoteCacheNoWait2;
             if ( remoteCacheNoWait == null )
             {
                 RemoteHttpClientListener<K, V> listener = new RemoteHttpClientListener<K, V>( cattr, cacheMgr );
@@ -209,8 +210,8 @@ public class RemoteHttpCacheManager
      */
     protected <K extends Serializable, V extends Serializable> IRemoteHttpCacheClient<K, V> createRemoteHttpCacheClientForAttributes( RemoteHttpCacheAttributes cattr )
     {
-        IRemoteHttpCacheClient<K, V> client = (IRemoteHttpCacheClient<K, V>) OptionConverter.instantiateByClassName( cattr
-            .getRemoteHttpClientClassName(), IRemoteHttpCacheClient.class, null );
+        IRemoteHttpCacheClient<K, V> client = OptionConverter.instantiateByClassName( cattr
+            .getRemoteHttpClientClassName(), null );
 
         if ( client == null )
         {

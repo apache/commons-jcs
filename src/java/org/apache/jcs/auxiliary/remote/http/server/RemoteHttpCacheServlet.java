@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -55,7 +56,7 @@ public class RemoteHttpCacheServlet
     private static CompositeCacheManager cacheMgr;
 
     /** Processes requests */
-    private RemoteCacheServiceAdaptor remoteHttpCacheServiceAdaptor;
+    private RemoteCacheServiceAdaptor<Serializable, Serializable> remoteHttpCacheServiceAdaptor;
 
     /** This needs to be standard, since the other side is standard */
     private final StandardSerializer serializer = new StandardSerializer();
@@ -87,7 +88,7 @@ public class RemoteHttpCacheServlet
             throw new ServletException(e);
         }
 
-        setRemoteHttpCacheServiceAdaptor( new RemoteCacheServiceAdaptor( cacheMgr ) );
+        setRemoteHttpCacheServiceAdaptor( new RemoteCacheServiceAdaptor<Serializable, Serializable>( cacheMgr ) );
 
         super.init( config );
     }
@@ -110,9 +111,9 @@ public class RemoteHttpCacheServlet
             log.debug( "Servicing a request. " + request );
         }
 
-        RemoteCacheRequest remoteRequest = readRequest( request );
+        RemoteCacheRequest<Serializable, Serializable> remoteRequest = readRequest( request );
 
-        RemoteCacheResponse cacheResponse = getRemoteHttpCacheServiceAdaptor().processRequest( remoteRequest );
+        RemoteCacheResponse<Serializable, Serializable> cacheResponse = getRemoteHttpCacheServiceAdaptor().processRequest( remoteRequest );
 
         writeResponse( response, cacheResponse );
     }
@@ -123,9 +124,9 @@ public class RemoteHttpCacheServlet
      * @param request
      * @return RemoteHttpCacheRequest
      */
-    protected RemoteCacheRequest readRequest( HttpServletRequest request )
+    protected RemoteCacheRequest<Serializable, Serializable> readRequest( HttpServletRequest request )
     {
-        RemoteCacheRequest remoteRequest = null;
+        RemoteCacheRequest<Serializable, Serializable> remoteRequest = null;
         try
         {
             InputStream inputStream = request.getInputStream();
@@ -151,13 +152,14 @@ public class RemoteHttpCacheServlet
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected RemoteCacheRequest readRequestFromStream( InputStream inputStream )
+    @SuppressWarnings("unchecked")
+    protected RemoteCacheRequest<Serializable, Serializable> readRequestFromStream( InputStream inputStream )
         throws IOException, ClassNotFoundException
     {
-        RemoteCacheRequest remoteRequest;
+        RemoteCacheRequest<Serializable, Serializable> remoteRequest;
         ObjectInputStream ois = new ObjectInputStream( inputStream );
 
-        remoteRequest = (RemoteCacheRequest) ois.readObject();
+        remoteRequest = (RemoteCacheRequest<Serializable, Serializable>) ois.readObject();
         ois.close();
         return remoteRequest;
     }
@@ -168,7 +170,7 @@ public class RemoteHttpCacheServlet
      * @param response
      * @param cacheResponse
      */
-    protected void writeResponse( HttpServletResponse response, RemoteCacheResponse cacheResponse )
+    protected void writeResponse( HttpServletResponse response, RemoteCacheResponse<Serializable, Serializable> cacheResponse )
     {
         try
         {
@@ -247,7 +249,7 @@ public class RemoteHttpCacheServlet
     /**
      * @param remoteHttpCacheProcessor the remoteHttpCacheProcessor to set
      */
-    public void setRemoteHttpCacheServiceAdaptor( RemoteCacheServiceAdaptor remoteHttpCacheProcessor )
+    public void setRemoteHttpCacheServiceAdaptor( RemoteCacheServiceAdaptor<Serializable, Serializable> remoteHttpCacheProcessor )
     {
         this.remoteHttpCacheServiceAdaptor = remoteHttpCacheProcessor;
     }
@@ -255,7 +257,7 @@ public class RemoteHttpCacheServlet
     /**
      * @return the remoteHttpCacheProcessor
      */
-    public RemoteCacheServiceAdaptor getRemoteHttpCacheServiceAdaptor()
+    public RemoteCacheServiceAdaptor<Serializable, Serializable> getRemoteHttpCacheServiceAdaptor()
     {
         return remoteHttpCacheServiceAdaptor;
     }

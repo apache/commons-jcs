@@ -183,7 +183,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
     protected synchronized void processDispose()
         throws IOException
     {
-        ICacheEvent<K> cacheEvent = createICacheEvent( cacheName, (K)"none", ICacheEventLogger.DISPOSE_EVENT );
+        ICacheEvent<String> cacheEvent = createICacheEvent( cacheName, "none", ICacheEventLogger.DISPOSE_EVENT );
         try
         {
             if ( !alive )

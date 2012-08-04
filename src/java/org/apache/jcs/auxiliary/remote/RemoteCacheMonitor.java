@@ -183,7 +183,7 @@ public class RemoteCacheMonitor
                     // managed by the
                     // same RmicCacheManager instance are in error. So we fix
                     // them once and for all.
-                    for (RemoteCacheNoWait c : mgr.caches.values())
+                    for (RemoteCacheNoWait<?, ?> c : mgr.caches.values())
                     {
                         if ( c.getStatus() == CacheConstants.STATUS_ERROR )
                         {

@@ -20,7 +20,6 @@ package org.apache.jcs.auxiliary.remote;
  */
 
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
-
 import org.apache.jcs.engine.ZombieCacheWatch;
 
 /**

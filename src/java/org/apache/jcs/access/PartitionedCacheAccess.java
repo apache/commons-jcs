@@ -234,6 +234,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             return Collections.emptyMap();
         }
 
+        @SuppressWarnings("unchecked")
         Set<K>[] dividedNames = new Set[this.getNumberOfPartitions()];
 
         for (K key : names)
@@ -591,6 +592,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
     {
         ensureProperties();
 
+        @SuppressWarnings("unchecked")
         ICacheAccess<K, V>[] tempPartitions = new ICacheAccess[this.getNumberOfPartitions()];
         for ( int i = 0; i < this.getNumberOfPartitions(); i++ )
         {

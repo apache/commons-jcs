@@ -95,7 +95,9 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
 
         synchronized ( caches )
         {
-            diskCache = (JDBCDiskCache<K, V>) caches.get( cattr.getCacheName() );
+            @SuppressWarnings("unchecked")
+            JDBCDiskCache<K, V> jdbcDiskCache = (JDBCDiskCache<K, V>) caches.get( cattr.getCacheName() );
+            diskCache = jdbcDiskCache;
 
             if ( diskCache == null )
             {

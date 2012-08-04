@@ -85,19 +85,18 @@ public abstract class PropertyLoader
         if ( name == null )
             throw new IllegalArgumentException( "null input: name" );
 
-        if ( name.startsWith( "/" ) )
+        ClassLoader classLoader = ( loader == null ) ? ClassLoader.getSystemClassLoader() : loader;
+
+        String fileName = name.startsWith( "/" ) ? name.substring( 1 ) : name;
+
+        if ( fileName.endsWith( SUFFIX ) )
         {
-            name = name.substring( 1 );
+            fileName = fileName.substring( 0, fileName.length() - SUFFIX.length() );
         }
 
-        if ( name.endsWith( SUFFIX ) )
+        if ( fileName.endsWith( SUFFIX_PROPERTIES ) )
         {
-            name = name.substring( 0, name.length() - SUFFIX.length() );
-        }
-
-        if ( name.endsWith( SUFFIX_PROPERTIES ) )
-        {
-            name = name.substring( 0, name.length() - SUFFIX_PROPERTIES.length() );
+            fileName = fileName.substring( 0, fileName.length() - SUFFIX_PROPERTIES.length() );
             isCCFSuffix = false;
         }
 
@@ -106,24 +105,19 @@ public abstract class PropertyLoader
         InputStream in = null;
         try
         {
-            if ( loader == null )
-            {
-                loader = ClassLoader.getSystemClassLoader();
-            }
+            fileName = fileName.replace( '.', '/' );
 
-            name = name.replace( '.', '/' );
-
-            if ( !name.endsWith( SUFFIX ) && isCCFSuffix )
+            if ( !fileName.endsWith( SUFFIX ) && isCCFSuffix )
             {
-                name = name.concat( SUFFIX );
+                fileName = fileName.concat( SUFFIX );
             }
-            else if ( !name.endsWith( SUFFIX_PROPERTIES ) && !isCCFSuffix )
+            else if ( !fileName.endsWith( SUFFIX_PROPERTIES ) && !isCCFSuffix )
             {
-                name = name.concat( SUFFIX_PROPERTIES );
+                fileName = fileName.concat( SUFFIX_PROPERTIES );
             }
 
             // returns null on lookup failures:
-            in = loader.getResourceAsStream( name );
+            in = classLoader.getResourceAsStream( fileName );
             if ( in != null )
             {
                 result = new Properties();
@@ -149,7 +143,7 @@ public abstract class PropertyLoader
 
         if ( THROW_ON_LOAD_FAILURE && ( result == null ) )
         {
-            throw new IllegalArgumentException( "could not load [" + name + "]" + " as " + "a classloader resource" );
+            throw new IllegalArgumentException( "could not load [" + fileName + "]" + " as " + "a classloader resource" );
         }
 
         return result;

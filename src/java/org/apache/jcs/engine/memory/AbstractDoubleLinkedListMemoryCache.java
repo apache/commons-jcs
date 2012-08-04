@@ -31,14 +31,14 @@ import org.apache.jcs.utils.struct.DoubleLinkedList;
  * the list will be the one removed when the list fills. For instance LRU should more items to the
  * front as they are used. FIFO should simply add new items to the front of the list.
  */
-public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable, V extends Serializable>
+public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable, V extends Serializable>
     extends AbstractMemoryCache<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = 1422569420563967389L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( AbstractDoulbeLinkedListMemoryCache.class );
+    private final static Log log = LogFactory.getLog( AbstractDoubleLinkedListMemoryCache.class );
 
     /** thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list;
@@ -419,6 +419,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
     /**
      * Dump the cache entries from first to list for debugging.
      */
+    @SuppressWarnings("unchecked")
     public void dumpCacheEntries()
     {
         log.debug( "dumpingCacheEntries" );
@@ -442,6 +443,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
      * Checks to see if all the items that should be in the cache are. Checks consistency between
      * List and map.
      */
+    @SuppressWarnings("unchecked")
     protected void verifyCache()
     {
         if ( !log.isDebugEnabled() )
@@ -524,6 +526,7 @@ public abstract class AbstractDoulbeLinkedListMemoryCache<K extends Serializable
      * <p>
      * @param key
      */
+    @SuppressWarnings("unchecked")
     private void verifyCache( K key )
     {
         if ( !log.isDebugEnabled() )

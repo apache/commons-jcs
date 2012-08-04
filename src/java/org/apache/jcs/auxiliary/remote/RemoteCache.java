@@ -29,7 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -60,7 +61,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
      * @param remote
      * @param listener
      */
-    public RemoteCache( IRemoteCacheAttributes cattr, IRemoteCacheService<K, V> remote, IRemoteCacheListener<K, V> listener )
+    public RemoteCache( IRemoteCacheAttributes cattr, ICacheServiceNonLocal<K, V> remote, IRemoteCacheListener<K, V> listener )
     {
         super( cattr, remote, listener );
 
@@ -128,10 +129,10 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
         log.error( message, ex );
 
         // we should not switch if the existing is a zombie.
-        if ( getRemoteCacheService() == null || !( getRemoteCacheService() instanceof ZombieRemoteCacheService ) )
+        if ( getRemoteCacheService() == null || !( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal ) )
         {
             // TODO make configurable
-            setRemoteCacheService( new ZombieRemoteCacheService<K, V>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
+            setRemoteCacheService( new ZombieCacheServiceNonLocal<K, V>( getRemoteCacheAttributes().getZombieQueueMaxSize() ) );
         }
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
@@ -139,6 +140,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
         RemoteCacheMonitor.getInstance().notifyError();
 
         // initiate failover if local
+        @SuppressWarnings("unchecked")
         RemoteCacheNoWaitFacade<K, V> rcnwf = (RemoteCacheNoWaitFacade<K, V>)RemoteCacheFactory.getFacades()
             .get( getRemoteCacheAttributes().getCacheName() );
 

@@ -76,7 +76,7 @@ public class BlockDiskKeyStore<K extends Serializable>
     /**
      * The background key persister, one for all regions.
      */
-    private static ScheduledExecutorService persistenceDaemon;
+    private static volatile ScheduledExecutorService persistenceDaemon;
 
     /**
      * Set the configuration options.
@@ -135,7 +135,7 @@ public class BlockDiskKeyStore<K extends Serializable>
                                                 saveKeys();
                                             }
                                         },
-                        0,
+                        this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
                         this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
                         TimeUnit.SECONDS);
         }
@@ -267,6 +267,7 @@ public class BlockDiskKeyStore<K extends Serializable>
                 {
                     while ( true )
                     {
+                        @SuppressWarnings("unchecked")
                         BlockDiskElementDescriptor<K> descriptor = (BlockDiskElementDescriptor<K>) ois.readObject();
                         if ( descriptor != null )
                         {

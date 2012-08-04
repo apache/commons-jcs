@@ -19,13 +19,15 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
+import java.io.IOException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.behavior.ICacheRestore;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * Used to repair the remote caches managed by the associated instance of RemoteCacheManager.
@@ -88,11 +90,17 @@ public class RemoteCacheRestore
                 log.info( "Found server " + remoteObj );
             }
         }
-        catch ( Exception ex )
+        catch (IOException e)
         {
             log.error( "host=" + remoteCacheManager.host + "; port" + remoteCacheManager.port + "; service=" + remoteCacheManager.service );
             canFix = false;
         }
+        catch (NotBoundException e)
+        {
+            log.error( "host=" + remoteCacheManager.host + "; port" + remoteCacheManager.port + "; service=" + remoteCacheManager.service );
+            canFix = false;
+        }
+
         return canFix;
     }
 
@@ -105,7 +113,7 @@ public class RemoteCacheRestore
         {
             return;
         }
-        remoteCacheManager.fixCaches( (IRemoteCacheService) remoteObj, (IRemoteCacheObserver) remoteObj );
+        remoteCacheManager.fixCaches( (ICacheServiceNonLocal<?, ?>) remoteObj, (IRemoteCacheObserver) remoteObj );
 
         if ( log.isInfoEnabled() )
         {

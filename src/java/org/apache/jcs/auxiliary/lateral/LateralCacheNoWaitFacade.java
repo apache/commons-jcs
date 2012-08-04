@@ -124,6 +124,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
             return false;
         }
 
+        @SuppressWarnings("unchecked")
         LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length + 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, noWaits.length );
@@ -165,6 +166,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
             return false;
         }
 
+        @SuppressWarnings("unchecked")
         LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length - 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, position );

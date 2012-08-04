@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.memory.AbstractDoulbeLinkedListMemoryCache;
+import org.apache.jcs.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 
 /**
@@ -38,7 +38,7 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
  * the better the chance that this will be the case. < .04 ms per put, p3 866, 1/10 of that per get
  */
 public class LRUMemoryCache<K extends Serializable, V extends Serializable>
-    extends AbstractDoulbeLinkedListMemoryCache<K, V>
+    extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 6403738094136424201L;

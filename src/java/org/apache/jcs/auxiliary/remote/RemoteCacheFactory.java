@@ -171,8 +171,10 @@ public class RemoteCacheFactory
         }
         // end if CLUSTER
 
-        RemoteCacheNoWaitFacade<K, V> rcnwf = new RemoteCacheNoWaitFacade<K, V>( noWaits
-            .toArray( new RemoteCacheNoWait[0] ), rca, cacheMgr, cacheEventLogger, elementSerializer );
+        @SuppressWarnings("unchecked")
+        RemoteCacheNoWait<K, V>[] rcnwArray = noWaits.toArray( new RemoteCacheNoWait[0] );
+        RemoteCacheNoWaitFacade<K, V> rcnwf =
+            new RemoteCacheNoWaitFacade<K, V>(rcnwArray, rca, cacheMgr, cacheEventLogger, elementSerializer );
 
         getFacades().put( rca.getCacheName(), rcnwf );
 

@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.logging.Log;
@@ -134,10 +135,10 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     private long bytesFree = 0;
 
     /** simple stat */
-    private int hitCount = 0;
+    private AtomicInteger hitCount = new AtomicInteger(0);
 
     /**
-     * Use this lock to synchronize reads and writes to the underlying storage mechansism.
+     * Use this lock to synchronize reads and writes to the underlying storage mechanism.
      */
     protected ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock();
 
@@ -299,7 +300,10 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             }
             else
             {
-                startupSize = keyHash.size();
+                synchronized (this)
+                {
+                    startupSize = keyHash.size();
+                }
             }
         }
     }
@@ -325,6 +329,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             // create a key map to use.
             initializeKeyMap();
 
+            @SuppressWarnings("unchecked")
             HashMap<K, IndexedDiskElementDescriptor> keys =
                 (HashMap<K, IndexedDiskElementDescriptor>) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
                 - IndexedDisk.HEADER_SIZE_BYTES ) );
@@ -635,7 +640,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
 
             if ( object != null )
             {
-                incrementHitCount();
+                hitCount.incrementAndGet();
             }
         }
         catch ( IOException ioe )
@@ -714,7 +719,9 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             }
             try
             {
-                object = (ICacheElement<K, V>) dataFile.readObject( ded );
+                @SuppressWarnings("unchecked")
+                ICacheElement<K, V> readObject = (ICacheElement<K, V>) dataFile.readObject( ded );
+                object = readObject;
                 // TODO consider checking key equality and throwing if there is a failure
             }
             catch ( IOException e )
@@ -750,7 +757,9 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             {
                 if ( k instanceof GroupAttrName && ( (GroupAttrName<?>) k ).groupId.equals( groupId ) )
                 {
-                    keys.add( ( (GroupAttrName<K>) k ).attrName );
+                    @SuppressWarnings("unchecked")
+                    GroupAttrName<K> groupAttrName = (GroupAttrName<K>) k;
+                    keys.add( groupAttrName.attrName );
                 }
             }
         }
@@ -996,7 +1005,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * If the maxKeySize is < 0, use 5000, no way to have an unlimted recycle bin right now, or one
+     * If the maxKeySize is < 0, use 5000, no way to have an unlimited recycle bin right now, or one
      * less than the mazKeySize.
      */
     private void initializeRecycleBin()
@@ -1259,39 +1268,42 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         long expectedNextPos = defragFile( defragList, 0 );
 
         // ADD THE QUEUED ITEMS to the end and then truncate
+        storageLock.writeLock().lock();
+
         try
         {
-            storageLock.writeLock().lock();
-
-            if ( !queuedPutList.isEmpty() )
+            try
             {
-                // This is perhaps unnecessary, but the list might not be as sorted as we think.
-                defragList = new IndexedDiskElementDescriptor[queuedPutList.size()];
-                queuedPutList.toArray( defragList );
-                Arrays.sort( defragList, new PositionComparator() );
+                if ( !queuedPutList.isEmpty() )
+                {
+                    // This is perhaps unnecessary, but the list might not be as sorted as we think.
+                    defragList = new IndexedDiskElementDescriptor[queuedPutList.size()];
+                    queuedPutList.toArray( defragList );
+                    Arrays.sort( defragList, new PositionComparator() );
 
-                // pack them at the end
-                expectedNextPos = defragFile( defragList, expectedNextPos );
+                    // pack them at the end
+                    expectedNextPos = defragFile( defragList, expectedNextPos );
+                }
+                // TRUNCATE THE FILE
+                dataFile.truncate( expectedNextPos );
             }
-            // TRUNCATE THE FILE
-            dataFile.truncate( expectedNextPos );
-        }
-        catch ( Exception e )
-        {
-            log.error( logCacheName + "Error optimizing queued puts.", e );
-        }
-        finally
-        {
+            catch ( Exception e )
+            {
+                log.error( logCacheName + "Error optimizing queued puts.", e );
+            }
+
             // RESTORE NORMAL OPERATION
             removeCount = 0;
-            bytesFree = 0;
+            resetBytesFree();
             initializeRecycleBin();
             queuedPutList.clear();
             queueInput = false;
             // turn recycle back on.
             doRecycle = true;
             isOptimizing = false;
-
+        }
+        finally
+        {
             storageLock.writeLock().unlock();
         }
 
@@ -1427,6 +1439,14 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
+     * Resets the number of bytes that are free.
+     */
+    private synchronized void resetBytesFree()
+    {
+        this.bytesFree = 0;
+    }
+
+    /**
      * To subtract you can pass in false for add..
      * <p>
      * @param ded
@@ -1516,14 +1536,6 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Increments the hit count in a thread safe manner.
-     */
-    private synchronized void incrementHitCount()
-    {
-        hitCount++;
-    }
-
-    /**
      * Gets basic stats for the disk cache.
      * <p>
      * @return String
@@ -1588,7 +1600,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
 
         se = new StatElement();
         se.setName( "Hit Count" );
-        se.setData( "" + this.hitCount );
+        se.setData( "" + this.hitCount.get() );
         elems.add( se );
 
         se = new StatElement();

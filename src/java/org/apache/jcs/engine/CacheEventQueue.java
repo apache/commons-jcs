@@ -325,6 +325,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
 
             Node node = head.next;
 
+            @SuppressWarnings("unchecked")
             AbstractCacheEvent value = (AbstractCacheEvent) node.event;
 
             if ( log.isDebugEnabled() )

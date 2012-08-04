@@ -23,14 +23,14 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.memory.AbstractDoulbeLinkedListMemoryCache;
+import org.apache.jcs.engine.memory.AbstractDoubleLinkedListMemoryCache;
 import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 
 /**
  * The items are spooled in the order they are added. No adjustments to the list are made on get.
  */
 public class FIFOMemoryCache<K extends Serializable, V extends Serializable>
-    extends AbstractDoulbeLinkedListMemoryCache<K, V>
+    extends AbstractDoubleLinkedListMemoryCache<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = 6403738094136424201L;

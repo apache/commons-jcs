@@ -54,7 +54,7 @@ public class BlockDisk
     private static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
 
     /** Size of the blocks */
-    private int blockSizeBytes = DEFAULT_BLOCK_SIZE_BYTES;
+    private int blockSizeBytes;
 
     /**
      * the total number of blocks that have been used. If there are no free, we will use this to
@@ -65,8 +65,8 @@ public class BlockDisk
     /** Empty blocks that can be reused. */
     private final SingleLinkedList<Integer> emptyBlocks = new SingleLinkedList<Integer>();
 
-    /** The serializer. Uses a standard serializer by default. */
-    protected IElementSerializer elementSerializer = new StandardSerializer();
+    /** The serializer. */
+    protected IElementSerializer elementSerializer;
 
     /** Location of the spot on disk */
     private final String filepath;
@@ -125,6 +125,7 @@ public class BlockDisk
         {
             log.info( "Constructing BlockDisk, blockSizeBytes [" + blockSizeBytes + "]" );
         }
+
         this.blockSizeBytes = blockSizeBytes;
         this.elementSerializer = elementSerializer;
     }
@@ -249,6 +250,7 @@ public class BlockDisk
         buffer.put(data);
         buffer.flip();
         int written = fc.write(buffer, position);
+        fc.force(true);
 
         return written == data.length;
     }
@@ -312,12 +314,12 @@ public class BlockDisk
         long fileLength = fc.size();
 
         int position = calculateByteOffsetForBlock( block );
-        if ( position > fileLength )
-        {
-            corrupted = true;
-            message = "Record " + position + " starts past EOF.";
-        }
-        else
+//        if ( position > fileLength )
+//        {
+//            corrupted = true;
+//            message = "Record " + position + " starts past EOF.";
+//        }
+//        else
         {
             ByteBuffer datalength = ByteBuffer.allocate(HEADER_SIZE_BYTES);
             fc.read(datalength, position);
@@ -425,7 +427,7 @@ public class BlockDisk
      * <p>
      * @exception IOException
      */
-    protected void reset()
+    protected synchronized void reset()
         throws IOException
     {
         this.numberOfBlocks.set(0);

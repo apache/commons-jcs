@@ -116,15 +116,15 @@ public class MySQLDiskCache<K extends Serializable, V extends Serializable>
     @Override
     public String constructLikeParameterFromPattern( String pattern )
     {
-        pattern = pattern.replaceAll( "\\.\\+", "%" );
-        pattern = pattern.replaceAll( "\\.", "_" );
+        String likePattern = pattern.replaceAll( "\\.\\+", "%" );
+        likePattern = likePattern.replaceAll( "\\.", "_" );
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "pattern = [" + pattern + "]" );
+            log.debug( "pattern = [" + likePattern + "]" );
         }
 
-        return pattern;
+        return likePattern;
     }
 
     /**

@@ -106,10 +106,11 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * @param cacheMgr
      * @return The instance value
      */
-    public synchronized static <K extends Serializable, V extends Serializable> ILateralCacheListener<K, V>
+    public synchronized static <K extends Serializable, V extends Serializable> LateralTCPListener<K, V>
         getInstance( ITCPLateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
     {
-        ILateralCacheListener<K, V> ins = (ILateralCacheListener<K, V>) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
+        @SuppressWarnings("unchecked")
+        LateralTCPListener<K, V> ins = (LateralTCPListener<K, V>) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
         if ( ins == null )
         {
@@ -503,6 +504,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         /**
          * Main processing method for the LateralTCPReceiverConnection object
          */
+        @SuppressWarnings("unchecked")
         public void run()
         {
             ObjectInputStream ois;

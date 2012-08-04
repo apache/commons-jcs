@@ -168,7 +168,7 @@ public class JCSAdminBean
      *
      * @return int The size of the region in bytes.
      */
-    public <K extends Serializable, V extends Serializable> int getByteCount(CompositeCache<K, V> cache) throws Exception
+    public <K extends Serializable, V extends Serializable> int getByteCount(CompositeCache<K, V> cache)
     {
         if (cache == null)
         {
@@ -176,50 +176,42 @@ public class JCSAdminBean
         }
 
         long size = 0;
-        try
+        IMemoryCache<K, V> memCache = cache.getMemoryCache();
+
+        Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> iter = memCache.getIterator();
+        while (iter.hasNext())
         {
-            IMemoryCache<K, V> memCache = cache.getMemoryCache();
+            MemoryElementDescriptor<K, V> me = iter.next().getValue();
+            ICacheElement<K, V> ice = me.ce;
 
-            Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> iter = memCache.getIterator();
-            while (iter.hasNext())
+            if (ice instanceof CacheElementSerialized)
             {
-                MemoryElementDescriptor<K, V> me = iter.next().getValue();
-                ICacheElement<K, V> ice = me.ce;
-
-                if (ice instanceof CacheElementSerialized)
-                {
-                    size = size + ((CacheElementSerialized<K, V>) ice).getSerializedValue().length;
-                }
-                else
-                {
-                    Serializable element = ice.getVal();
-
-                    //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
-                    CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
-                    try
-                    {
-                        ObjectOutputStream out = new ObjectOutputStream(counter);
-                        out.writeObject(element);
-                    }
-                    catch (IOException e)
-                    {
-                        throw new RuntimeException("IOException while trying to measure the size of the cached element", e);
-                    }
-
-                    // 4 bytes lost for the serialization header
-                    size = size + counter.getCount() - 4;
-                }
+                size = size + ((CacheElementSerialized<K, V>) ice).getSerializedValue().length;
             }
-
-            if (size > Integer.MAX_VALUE)
+            else
             {
-                throw new IllegalStateException("The size of cache " + cache.getCacheName() + " (" + size + " bytes) is too large to be represented as an integer.");
+                Serializable element = ice.getVal();
+
+                //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
+                CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
+                try
+                {
+                    ObjectOutputStream out = new ObjectOutputStream(counter);
+                    out.writeObject(element);
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException("IOException while trying to measure the size of the cached element", e);
+                }
+
+                // 4 bytes lost for the serialization header
+                size = size + counter.getCount() - 4;
             }
         }
-        catch (Exception e)
+
+        if (size > Integer.MAX_VALUE)
         {
-            // throw new RuntimeException("Failed to calculate the size of cache region [" + cache.getCacheName() + "]:" + e, e);
-            return 0;
+            throw new IllegalStateException("The size of cache " + cache.getCacheName() + " (" + size + " bytes) is too large to be represented as an integer.");
         }
 
         return (int) size;
@@ -339,7 +331,7 @@ public class JCSAdminBean
             // Remove objects via the RemoteCacheServer API, so that removes will be broadcast to client machines...
             try
             {
-                Object keyToRemove = null;
+                Serializable keyToRemove = null;
                 CompositeCache<? extends Serializable, ? extends Serializable> cache = CompositeCacheManager.getInstance().getCache(cacheName);
 
                 // A String key was supplied, but to remove elements via the RemoteCacheServer API, we need the
@@ -366,14 +358,10 @@ public class JCSAdminBean
                 {
                     throw new IllegalStateException("No match for this key could be found in the set of keys retrieved from the memory cache.");
                 }
-                if (!(keyToRemove instanceof Serializable))
-                {
-                    throw new IllegalStateException("Found key [" + keyToRemove + ", " + keyToRemove.getClass() + "] in cache matching key specified, however key found in cache is unexpectedly not serializable.");
-                }
                 // At this point, we have retrieved the matching K key.
 
                 // Call remoteCacheServer.remove(String, Serializable)...
-                RemoteCacheServer remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
+                RemoteCacheServer<Serializable, Serializable> remoteCacheServer = RemoteCacheServerFactory.getRemoteCacheServer();
                 remoteCacheServer.remove(cacheName, key);
             }
             catch (Exception e)

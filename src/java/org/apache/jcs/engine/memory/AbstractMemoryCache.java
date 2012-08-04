@@ -65,7 +65,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     protected String cacheName;
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    protected Map<K, MemoryElementDescriptor<K, V>> map;
+    public Map<K, MemoryElementDescriptor<K, V>> map;
 
     /** Region Elemental Attributes, used as a default and copied for each item. */
     public IElementAttributes elementAttributes;
@@ -74,7 +74,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     public ICompositeCacheAttributes cacheAttributes;
 
     /** The cache region this store is associated with */
-    protected CompositeCache<K, V> cache;
+    public CompositeCache<K, V> cache;
 
     /** status */
     protected int status;

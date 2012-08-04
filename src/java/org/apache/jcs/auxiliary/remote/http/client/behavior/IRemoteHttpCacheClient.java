@@ -3,8 +3,8 @@ package org.apache.jcs.auxiliary.remote.http.client.behavior;
 import java.io.IOException;
 import java.io.Serializable;
 
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,7 +30,7 @@ import org.apache.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
  * This could be added to the ICacheSerice method.
  */
 public interface IRemoteHttpCacheClient<K extends Serializable, V extends Serializable>
-    extends IRemoteCacheService<K, V>
+    extends ICacheServiceNonLocal<K, V>
 {
     /**
      * The provides an extension point. If you want to extend this and use a special dispatcher,

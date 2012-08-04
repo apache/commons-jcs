@@ -75,7 +75,7 @@ public class MySQLTableOptimizer
      * if a deletion is in progress.
      * <p>
      * This restores when there is an optimization error. The error output looks like this:
-     * 
+     *
      * <pre>
      *           mysql&gt; optimize table JCS_STORE_FLIGHT_OPTION_ITINERARY;
      *               +---------------------------------------------+----------+----------+---------------------+
@@ -86,9 +86,9 @@ public class MySQLTableOptimizer
      *               +---------------------------------------------+----------+----------+---------------------+
      *               2 rows in set (51.78 sec)
      * </pre>
-     * 
+     *
      * A successful repair response looks like this:
-     * 
+     *
      * <pre>
      *        mysql&gt; REPAIR TABLE JCS_STORE_FLIGHT_OPTION_ITINERARY;
      *            +---------------------------------------------+--------+----------+----------------------------------------------+
@@ -100,9 +100,9 @@ public class MySQLTableOptimizer
      *            +---------------------------------------------+--------+----------+----------------------------------------------+
      *            3 rows in set (3 min 5.94 sec)
      * </pre>
-     * 
+     *
      * A successful optimization looks like this:
-     * 
+     *
      * <pre>
      *       mysql&gt; optimize table JCS_STORE_DEFAULT;
      *           +-----------------------------+----------+----------+----------+
@@ -198,13 +198,16 @@ public class MySQLTableOptimizer
                 }
                 finally
                 {
-                    try
+                    if (sStatement != null)
                     {
-                        sStatement.close();
-                    }
-                    catch ( SQLException e )
-                    {
-                        log.error( "Problem closing statement.", e );
+                        try
+                        {
+                            sStatement.close();
+                        }
+                        catch ( SQLException e )
+                        {
+                            log.error( "Problem closing statement.", e );
+                        }
                     }
                 }
             }

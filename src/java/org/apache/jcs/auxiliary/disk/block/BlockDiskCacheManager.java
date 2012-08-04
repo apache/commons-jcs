@@ -24,7 +24,6 @@ import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -45,7 +44,8 @@ public class BlockDiskCacheManager
     private static BlockDiskCacheManager instance;
 
     /** block disks for a region. */
-    private final Hashtable<String, AuxiliaryCache<?, ?>> caches = new Hashtable<String, AuxiliaryCache<?, ?>>();
+    private final Hashtable<String, BlockDiskCache<? extends Serializable, ? extends Serializable>> caches =
+        new Hashtable<String, BlockDiskCache<? extends Serializable, ? extends Serializable>>();
 
     /** Attributes. */
     private final BlockDiskCacheAttributes defaultCacheAttributes;
@@ -94,7 +94,7 @@ public class BlockDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName )
+    public <K extends Serializable, V extends Serializable> BlockDiskCache<K, V> getCache( String cacheName )
     {
         BlockDiskCacheAttributes cacheAttributes = (BlockDiskCacheAttributes) defaultCacheAttributes.copy();
 
@@ -110,9 +110,9 @@ public class BlockDiskCacheManager
      * @param cacheAttributes Attributes the cache should have.
      * @return A cache, either from the existing set or newly created.
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( BlockDiskCacheAttributes cacheAttributes )
+    public <K extends Serializable, V extends Serializable> BlockDiskCache<K, V> getCache( BlockDiskCacheAttributes cacheAttributes )
     {
-        AuxiliaryCache<K, V> cache = null;
+        BlockDiskCache<K, V> cache = null;
 
         String cacheName = cacheAttributes.getCacheName();
 
@@ -123,7 +123,9 @@ public class BlockDiskCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            cache = (AuxiliaryCache<K, V>) caches.get( cacheName );
+            @SuppressWarnings("unchecked")
+            BlockDiskCache<K, V> blockDiskCache = (BlockDiskCache<K, V>) caches.get( cacheName );
+            cache = blockDiskCache;
 
             // If it was not found, create a new one using the supplied
             // attributes

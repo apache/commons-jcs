@@ -146,21 +146,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
 
         try
         {
-            if ( purgatory != null )
-            {
-                synchronized ( purgatory )
-                {
-                    if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
-                    {
-                        purgatory = new LRUMapJCS<K, PurgatoryElement<K, V>>( diskCacheAttributes.getMaxPurgatorySize() );
-                    }
-                    else
-                    {
-                        purgatory = new HashMap<K, PurgatoryElement<K, V>>();
-                    }
-                }
-            }
-            else
+            synchronized (this)
             {
                 if ( diskCacheAttributes.getMaxPurgatorySize() >= 0 )
                 {

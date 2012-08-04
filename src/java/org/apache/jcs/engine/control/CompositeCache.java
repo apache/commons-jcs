@@ -1614,7 +1614,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             try
             {
                 Class<?> c = Class.forName( cattr.getMemoryCacheName() );
-                memCache = (IMemoryCache<K, V>) c.newInstance();
+                @SuppressWarnings("unchecked")
+                IMemoryCache<K, V> newInstance = (IMemoryCache<K, V>) c.newInstance();
+                memCache = newInstance;
                 memCache.initialize( this );
             }
             catch ( Exception e )

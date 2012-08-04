@@ -26,8 +26,8 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
@@ -40,7 +40,7 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  * much of the RMI server to use this as well. I'm starting with the Http service.
  */
 public abstract class AbstractRemoteCacheService<K extends Serializable, V extends Serializable>
-    implements IRemoteCacheService<K, V>
+    implements ICacheServiceNonLocal<K, V>
 {
     /** An optional event logger */
     private transient ICacheEventLogger cacheEventLogger;

@@ -79,8 +79,9 @@ public class RemoteCacheNoWaitFacade<K extends Serializable, V extends Serializa
             if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
             {
                 // start failover, primary recovery process
-                RemoteCacheFailoverRunner runner = new RemoteCacheFailoverRunner( this, getCompositeCacheManager(),
-                                                                                  cacheEventLogger, elementSerializer );
+                RemoteCacheFailoverRunner<K, V> runner =
+                    new RemoteCacheFailoverRunner<K, V>( this, getCompositeCacheManager(),
+                      cacheEventLogger, elementSerializer );
                 runner.notifyError();
                 Thread t = new Thread( runner );
                 t.setDaemon( true );

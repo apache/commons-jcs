@@ -114,7 +114,9 @@ public class CompressingSerializer
         {
             try
             {
-                return (T) ois.readObject();
+                @SuppressWarnings("unchecked")
+                T readObject = (T) ois.readObject();
+                return readObject;
             }
             catch ( IOException e )
             {

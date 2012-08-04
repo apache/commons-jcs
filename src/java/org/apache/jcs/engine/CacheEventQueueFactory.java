@@ -87,8 +87,7 @@ public class CacheEventQueueFactory<K extends Serializable, V extends Serializab
         }
         else
         {
-            eventQueue = (ICacheEventQueue<K, V>) OptionConverter.instantiateByClassName( poolType, ICacheEventQueue.class,
-                                                                                    null );
+            eventQueue = OptionConverter.instantiateByClassName( poolType, null );
             if ( eventQueue != null )
             {
                 if ( log.isInfoEnabled() )

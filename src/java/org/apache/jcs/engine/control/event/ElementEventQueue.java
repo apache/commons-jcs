@@ -33,6 +33,9 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
 public class ElementEventQueue
     implements IElementEventQueue
 {
+    /** serial version */
+    private static final long serialVersionUID = -2966341524571838475L;
+
     /** The logger */
     protected final static Log log = LogFactory.getLog( ElementEventQueue.class );
 

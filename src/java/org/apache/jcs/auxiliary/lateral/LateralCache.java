@@ -31,9 +31,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
 import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.IZombie;
 import org.apache.jcs.engine.stats.Stats;
@@ -58,7 +59,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     final String cacheName;
 
     /** either http, socket.udp, or socket.tcp can set in config */
-    private ILateralCacheService<K, V> lateralCacheService;
+    private ICacheServiceNonLocal<K, V> lateralCacheService;
 
     /** Monitors the connection. */
     private LateralCacheMonitor monitor;
@@ -70,7 +71,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * @param lateral
      * @param monitor
      */
-    public LateralCache( ILateralCacheAttributes cattr, ILateralCacheService<K, V> lateral, LateralCacheMonitor monitor )
+    public LateralCache( ILateralCacheAttributes cattr, ICacheServiceNonLocal<K, V> lateral, LateralCacheMonitor monitor )
     {
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttribures = cattr;
@@ -352,7 +353,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     {
         log.error( "Disabling lateral cache due to error " + msg, ex );
 
-        lateralCacheService = new ZombieLateralCacheService<K, V>( lateralCacheAttribures.getZombieQueueMaxSize() );
+        lateralCacheService = new ZombieCacheServiceNonLocal<K, V>( lateralCacheAttribures.getZombieQueueMaxSize() );
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
         // process.
@@ -371,11 +372,11 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param restoredLateral
      */
-    public void fixCache( ILateralCacheService<K, V> restoredLateral )
+    public void fixCache( ICacheServiceNonLocal<K, V> restoredLateral )
     {
-        if ( this.lateralCacheService != null && this.lateralCacheService instanceof ZombieLateralCacheService )
+        if ( this.lateralCacheService != null && this.lateralCacheService instanceof ZombieCacheServiceNonLocal )
         {
-            ZombieLateralCacheService<K, V> zombie = (ZombieLateralCacheService<K, V>) this.lateralCacheService;
+            ZombieCacheServiceNonLocal<K, V> zombie = (ZombieCacheServiceNonLocal<K, V>) this.lateralCacheService;
             this.lateralCacheService = restoredLateral;
             try
             {

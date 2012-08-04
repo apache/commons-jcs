@@ -34,7 +34,6 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.jcs.engine.CacheEventQueueFactory;
@@ -42,6 +41,7 @@ import org.apache.jcs.engine.CacheListeners;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheListener;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.apache.jcs.engine.logging.CacheEvent;
@@ -65,7 +65,7 @@ import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
  */
 public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     extends UnicastRemoteObject
-    implements IRemoteCacheService<K, V>, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
+    implements ICacheServiceNonLocal<K, V>, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -8072345435941473116L;
@@ -502,6 +502,8 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     private ICacheElement<K, V> getFromCacheListeners( K key, boolean fromCluster, CacheListeners<K, V> cacheDesc,
                                                  ICacheElement<K, V> element )
     {
+        ICacheElement<K, V> returnElement = element;
+
         if ( cacheDesc != null )
         {
             CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
@@ -527,7 +529,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                     log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
                         + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
-                element = c.get( key );
+                returnElement = c.get( key );
             }
             else
             {
@@ -540,10 +542,11 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                     log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
                         + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
-                element = c.localGet( key );
+                returnElement = c.localGet( key );
             }
         }
-        return element;
+
+        return returnElement;
     }
 
     /**
@@ -774,6 +777,8 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      */
     private Map<K, ICacheElement<K, V>> getMultipleFromCacheListeners( Set<K> keys, Map<K, ICacheElement<K, V>> elements, boolean fromCluster, CacheListeners<K, V> cacheDesc )
     {
+        Map<K, ICacheElement<K, V>> returnElements = elements;
+
         if ( cacheDesc != null )
         {
             CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
@@ -800,7 +805,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                         + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
 
-                elements = c.getMultiple( keys );
+                returnElements = c.getMultiple( keys );
             }
             else
             {
@@ -814,10 +819,11 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                         + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
                 }
 
-                elements = c.localGetMultiple( keys );
+                returnElements = c.localGetMultiple( keys );
             }
         }
-        return elements;
+
+        return returnElements;
     }
 
     /**
@@ -1217,6 +1223,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * @param requesterId
      * @return The eventQList value
      */
+    @SuppressWarnings("unchecked")
     private ICacheEventQueue<K, V>[] getEventQList( CacheListeners<K, V> cacheListeners, long requesterId )
     {
         ICacheEventQueue<K, V>[] list = null;
@@ -1295,6 +1302,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      *            remote calls involved.
      * @throws IOException
      */
+    @SuppressWarnings("unchecked")
     public <KK extends Serializable, VV extends Serializable> void addCacheListener( String cacheName, ICacheListener<KK, VV> listener )
         throws IOException
     {

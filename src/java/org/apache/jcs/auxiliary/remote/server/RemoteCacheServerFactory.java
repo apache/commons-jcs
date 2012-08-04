@@ -20,13 +20,13 @@ package org.apache.jcs.auxiliary.remote.server;
  */
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMISocketFactory;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -55,7 +55,7 @@ public class RemoteCacheServerFactory
     private final static Log log = LogFactory.getLog( RemoteCacheServerFactory.class );
 
     /** The single instance of the RemoteCacheServer object. */
-    private static RemoteCacheServer remoteCacheServer;
+    private static RemoteCacheServer<? extends Serializable, ? extends Serializable> remoteCacheServer;
 
     /** The name of the service. */
     private static String serviceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
@@ -76,9 +76,10 @@ public class RemoteCacheServerFactory
      * A remote cache is either a local cache or a cluster cache. <p.
      * @return Returns the remoteCacheServer.
      */
-    public static RemoteCacheServer getRemoteCacheServer()
+    @SuppressWarnings("unchecked")
+    public static <K extends Serializable, V extends Serializable> RemoteCacheServer<K, V> getRemoteCacheServer()
     {
-        return remoteCacheServer;
+        return (RemoteCacheServer<K, V>)remoteCacheServer;
     }
 
     // ///////////////////// Startup/shutdown methods. //////////////////
@@ -137,11 +138,11 @@ public class RemoteCacheServerFactory
             // CREATE SERVER
             if ( customRMISocketFactory != null )
             {
-                remoteCacheServer = new RemoteCacheServer( rcsa, customRMISocketFactory );
+                remoteCacheServer = new RemoteCacheServer<Serializable, Serializable>( rcsa, customRMISocketFactory );
             }
             else
             {
-                remoteCacheServer = new RemoteCacheServer( rcsa );
+                remoteCacheServer = new RemoteCacheServer<Serializable, Serializable>( rcsa );
             }
             remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
@@ -194,8 +195,8 @@ public class RemoteCacheServerFactory
      */
     protected static RMISocketFactory configureObjectSpecificCustomFactory( Properties props )
     {
-        RMISocketFactory customRMISocketFactory = (RMISocketFactory) OptionConverter
-            .instantiateByKey( props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, RMIClientSocketFactory.class, null );
+        RMISocketFactory customRMISocketFactory =
+            OptionConverter.instantiateByKey( props, CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX, null );
 
         if ( customRMISocketFactory != null )
         {

@@ -116,7 +116,7 @@ public class ThreadPoolManager
      * You can specify the properties to be used to configure the thread pool. Setting this post
      * initialization will have no effect.
      */
-    private static Properties props = null;
+    private static volatile Properties props = null;
 
     /** Map of names to pools. */
     private static HashMap<String, ThreadPoolExecutor> pools = new HashMap<String, ThreadPoolExecutor>();

@@ -58,7 +58,9 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
     public SortedPreferentialArray( int maxSize )
     {
         this.maxSize = maxSize;
-        array = (T[]) new Comparable<?>[maxSize];
+        @SuppressWarnings("unchecked")
+        T[] ts = (T[]) new Comparable<?>[maxSize];
+        array = ts;
     }
 
     /**

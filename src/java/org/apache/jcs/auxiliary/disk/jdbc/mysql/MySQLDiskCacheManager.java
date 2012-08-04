@@ -26,7 +26,6 @@ import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManagerAbstractTemplate;
 import org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
@@ -129,11 +128,12 @@ public class MySQLDiskCacheManager
      * @param cacheName
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> getCache( String cacheName )
+    @SuppressWarnings("unchecked")
+    public <K extends Serializable, V extends Serializable> MySQLDiskCache<K, V> getCache( String cacheName )
     {
         MySQLDiskCacheAttributes cattr = (MySQLDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();
         cattr.setCacheName( cacheName );
-        return getCache( cattr );
+        return (MySQLDiskCache<K, V>) getCache( cattr );
     }
 
     /**
@@ -239,7 +239,7 @@ public class MySQLDiskCacheManager
         // get the runnable from the factory
         TimerTask runnable = new OptimizerTask( optimizer );
 
-        // have the daemon execut our runnable
+        // have the daemon execute our runnable
         // false to not execute immediately.
         daemon.scheduleAtFixedRate( runnable, startTime, DAILY_INTERVAL );
 

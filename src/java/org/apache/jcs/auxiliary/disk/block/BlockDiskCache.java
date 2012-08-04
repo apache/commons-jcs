@@ -82,7 +82,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
      * Use this lock to synchronize reads and writes to the underlying storage mechanism. We don't
      * need a reentrant lock, since we only lock one level.
      */
-    private final ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock(true);
+    private final ReentrantReadWriteLock storageLock = new ReentrantReadWriteLock();
 
     /**
      * Constructs the BlockDisk after setting up the root directory.
@@ -208,6 +208,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#getGroupKeys(java.lang.String)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Set<K> getGroupKeys( String groupName )
     {
@@ -295,6 +296,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
      * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected ICacheElement<K, V> processGet( K key )
     {
@@ -627,12 +629,12 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
         {
             storageLock.writeLock().lock();
 
+            this.keyStore.reset();
+
             if ( dataFile != null )
             {
                 dataFile.reset();
             }
-
-            this.keyStore.reset();
         }
         catch ( IOException e )
         {

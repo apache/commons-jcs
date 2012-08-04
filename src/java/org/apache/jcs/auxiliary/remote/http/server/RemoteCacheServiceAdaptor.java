@@ -27,10 +27,10 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheService;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 
 /**
@@ -45,7 +45,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
     private final static Log log = LogFactory.getLog( RemoteCacheServiceAdaptor.class );
 
     /** The service that does the work. */
-    private IRemoteCacheService<K, V> remoteCacheService;
+    private ICacheServiceNonLocal<K, V> remoteCacheService;
 
     /** This is for testing without the factory. */
     protected RemoteCacheServiceAdaptor()
@@ -60,7 +60,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
      */
     public RemoteCacheServiceAdaptor( CompositeCacheManager cacheManager )
     {
-        IRemoteCacheService<K, V> rcs = RemoteHttpCacheSeviceFactory.createRemoteHttpCacheService( cacheManager );
+        ICacheServiceNonLocal<K, V> rcs = RemoteHttpCacheSeviceFactory.createRemoteHttpCacheService( cacheManager );
         setRemoteCacheService( rcs );
     }
 
@@ -163,7 +163,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
     /**
      * @param remoteHttpCacheService the remoteHttpCacheService to set
      */
-    public void setRemoteCacheService( IRemoteCacheService<K, V> remoteHttpCacheService )
+    public void setRemoteCacheService( ICacheServiceNonLocal<K, V> remoteHttpCacheService )
     {
         this.remoteCacheService = remoteHttpCacheService;
     }
@@ -171,7 +171,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
     /**
      * @return the remoteHttpCacheService
      */
-    public IRemoteCacheService<K, V> getRemoteCacheService()
+    public ICacheServiceNonLocal<K, V> getRemoteCacheService()
     {
         return remoteCacheService;
     }

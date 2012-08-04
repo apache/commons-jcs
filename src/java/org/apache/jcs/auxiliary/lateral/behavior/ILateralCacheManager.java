@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.jcs.auxiliary.AuxiliaryCacheManager;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
+import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 
 /**
  * This helps ensure some common behavior among LateraLCacheManagers for things
@@ -41,7 +42,7 @@ public interface ILateralCacheManager
      * <p>
      * @return Map
      */
-    public abstract Map<String, ? extends ILateralCacheManager> getInstances();
+    Map<String, ? extends ILateralCacheManager> getInstances();
 
     /**
      * This is a temporary solution that allows the monitor to get caches from an
@@ -49,7 +50,7 @@ public interface ILateralCacheManager
      * <p>
      * @return Map
      */
-    public abstract Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> getCaches();
+    Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> getCaches();
 
     /**
      * The restore calls this on the manger if a cache if found to be in error.
@@ -58,8 +59,7 @@ public interface ILateralCacheManager
      * @throws IOException
      *             if the service cannot be fixed.
      */
-    public abstract Object fixService()
-        throws IOException;
+    Object fixService() throws IOException;
 
     /**
      * Sets the corrected service. The restore process will call this if it gets
@@ -68,5 +68,5 @@ public interface ILateralCacheManager
      * @param lateralService
      * @param lateralWatch
      */
-    public void fixCaches( ILateralCacheService lateralService, ILateralCacheObserver lateralWatch );
+    void fixCaches( ICacheServiceNonLocal<Serializable, Serializable> lateralService, ILateralCacheObserver lateralWatch );
 }

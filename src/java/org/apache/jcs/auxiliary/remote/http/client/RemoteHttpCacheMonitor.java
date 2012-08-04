@@ -185,20 +185,20 @@ public class RemoteHttpCacheMonitor
             }
 
             // Make a copy
-            Set<RemoteHttpCache<Serializable, Serializable>> remoteCachesToExamine =
-                new HashSet<RemoteHttpCache<Serializable, Serializable>>();
+            Set<RemoteHttpCache<? extends Serializable, ? extends Serializable>> remoteCachesToExamine =
+                new HashSet<RemoteHttpCache<? extends Serializable, ? extends Serializable>>();
             synchronized ( this )
             {
-                for (RemoteHttpCache<?, ?> remoteCache : this.remoteHttpCaches)
+                for (RemoteHttpCache<? extends Serializable, ? extends Serializable> remoteCache : this.remoteHttpCaches)
                 {
-                    remoteCachesToExamine.add( (RemoteHttpCache<Serializable, Serializable>)remoteCache );
+                    remoteCachesToExamine.add( remoteCache );
                 }
             }
             // If any cache is in error, it strongly suggests all caches
             // managed by the
             // same RmicCacheManager instance are in error. So we fix
             // them once and for all.
-            for (RemoteHttpCache<Serializable, Serializable> remoteCache : remoteCachesToExamine)
+            for (RemoteHttpCache<? extends Serializable, ? extends Serializable> remoteCache : remoteCachesToExamine)
             {
                 try
                 {

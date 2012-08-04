@@ -5,7 +5,6 @@ import java.util.Hashtable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.AbstractDiskCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -23,8 +22,8 @@ public class FileDiskCacheManager
     private final static Log log = LogFactory.getLog( FileDiskCacheManager.class );
 
     /** Each region has an entry here. */
-    private final Hashtable<String, AuxiliaryCache<? extends Serializable, ? extends Serializable>> caches =
-        new Hashtable<String, AuxiliaryCache<? extends Serializable, ? extends Serializable>>();
+    private final Hashtable<String, FileDiskCache<? extends Serializable, ? extends Serializable>> caches =
+        new Hashtable<String, FileDiskCache<? extends Serializable, ? extends Serializable>>();
 
     /** User configurable attributes */
     private final FileDiskCacheAttributes defaultCacheAttributes;
@@ -79,7 +78,9 @@ public class FileDiskCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            cache = (FileDiskCache<K, V>) caches.get( cacheName );
+            @SuppressWarnings("unchecked")
+            FileDiskCache<K, V> fileDiskCache = (FileDiskCache<K, V>) caches.get( cacheName );
+            cache = fileDiskCache;
 
             // If it was not found, create a new one using the supplied
             // attributes

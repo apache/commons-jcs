@@ -168,7 +168,7 @@ public class HSQLDiskCacheFactory
      * @param cConn
      * @param tableName
      */
-    private void setupTABLE( Connection cConn, String tableName )
+    private void setupTABLE( Connection cConn, String tableName ) throws SQLException
     {
         boolean newT = true;
 
@@ -187,15 +187,7 @@ public class HSQLDiskCacheFactory
         createSql.append( "PRIMARY KEY (CACHE_KEY, REGION) " );
         createSql.append( ");" );
 
-        Statement sStatement = null;
-        try
-        {
-            sStatement = cConn.createStatement();
-        }
-        catch ( SQLException e )
-        {
-            log.error( "problem creating a statement.", e );
-        }
+        Statement sStatement = cConn.createStatement();
 
         try
         {
@@ -204,13 +196,14 @@ public class HSQLDiskCacheFactory
         }
         catch ( SQLException e )
         {
+            // FIXME: This is not reliable
             if ( e.toString().indexOf( "already exists" ) != -1 )
             {
                 newT = false;
             }
             else
             {
-                log.error( "Problem creating table.", e );
+                throw e;
             }
         }
 
