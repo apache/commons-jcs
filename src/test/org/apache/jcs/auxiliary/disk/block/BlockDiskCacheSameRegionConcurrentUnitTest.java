@@ -50,11 +50,15 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
      * Main method passes this test to the text test runner.
      * <p>
      * @param args
+     * @throws InterruptedException
      */
-    public static void main( String args[] )
+    public static void main( String args[] ) throws InterruptedException
     {
         String[] testCaseName = { BlockDiskCacheSameRegionConcurrentUnitTest.class.getName() };
         junit.textui.TestRunner.main( testCaseName );
+
+        // Give test threads some time to finish
+        Thread.sleep(2000);
     }
 
     /**
@@ -118,10 +122,6 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
         throws Exception
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheCon.ccf" );
-
-        // tv: For some reason this cleanup does not work as expected so the test fails if
-        // the data files already exist
-        JCS.getInstance( "blockRegion4" ).clear();
     }
 
     /**
