@@ -185,18 +185,18 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             {
                 log.info( logCacheName + "Indexed Disk Cache is alive." );
             }
+
+            // TODO: Should we improve detection of whether or not the file should be optimized.
+            if ( isRealTimeOptimizationEnabled && keyHash.size() > 0 )
+            {
+                // Kick off a real time optimization, in case we didn't do a final optimization.
+                doOptimizeRealTime();
+            }
         }
         catch ( Exception e )
         {
             log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and directory: "
                 + this.rafDir.getAbsolutePath(), e );
-        }
-
-        // TODO: Should we improve detection of whether or not the file should be optimized.
-        if ( isRealTimeOptimizationEnabled && keyHash.size() > 0 )
-        {
-            // Kick off a real time optimization, in case we didn't do a final optimization.
-            doOptimizeRealTime();
         }
     }
 
