@@ -62,7 +62,7 @@ public class BlockDiskCacheUnitTest
         BlockDiskCacheAttributes cattr = new BlockDiskCacheAttributes();
         cattr.setCacheName( cacheName );
         cattr.setMaxKeySize( 100 );
-        cattr.setDiskPath( "target/test-sandbox/BlockDiskCache<String, String>UnitTest" );
+        cattr.setDiskPath( "target/test-sandbox/BlockDiskCacheUnitTest" );
         BlockDiskCache<String, String> diskCache = new BlockDiskCache<String, String>( cattr );
 
         // DO WORK
