@@ -31,7 +31,7 @@ import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
 
 import org.apache.jcs.engine.CacheElement;
 
@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  *      $
  */
 public class LateralXMLRPCService
-     implements ILateralCacheService, ILateralCacheObserver
+     implements ICacheServiceNonLocal, ILateralCacheObserver
 {
     private final static Log log =
         LogFactory.getLog( LateralXMLRPCService.class );

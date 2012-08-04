@@ -31,7 +31,7 @@ import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
 import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
@@ -76,7 +76,7 @@ public class LateralCacheManager
      * Handle to the lateral cache service; or a zombie handle if failed to
      * connect.
      */
-    private ILateralCacheService lateralService;
+    private ICacheServiceNonLocal lateralService;
 
     /**
      * Wrapper of the lateral cache watch service; or wrapper of a zombie
@@ -305,7 +305,7 @@ public class LateralCacheManager
      * @param lateralService
      * @param lateralWatch
      */
-    public void fixCaches( ILateralCacheService lateralService, ILateralCacheObserver lateralWatch )
+    public void fixCaches( ICacheServiceNonLocal lateralService, ILateralCacheObserver lateralWatch )
     {
         log.debug( "Fixing lateral caches:" );
 

@@ -32,7 +32,7 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheListener;
@@ -43,7 +43,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
  * @version $Id: LateralJGService.java 240226 2005-08-26 12:47:59Z asmuts $
  */
 public class LateralJGService
-    implements ILateralCacheService, ILateralCacheObserver
+    implements ICacheServiceNonLocal, ILateralCacheObserver
 {
     private final static Log log = LogFactory.getLog( LateralJGService.class );
 

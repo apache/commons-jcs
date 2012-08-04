@@ -34,7 +34,7 @@ import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
 
 import org.apache.jcs.engine.CacheElement;
 
@@ -44,7 +44,7 @@ import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class LateralUDPService implements ILateralCacheService, ILateralCacheObserver
+public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheObserver
 {
     private final static Log log =
         LogFactory.getLog( LateralUDPService.class );

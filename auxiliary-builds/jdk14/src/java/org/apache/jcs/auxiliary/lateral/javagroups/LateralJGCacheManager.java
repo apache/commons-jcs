@@ -37,7 +37,7 @@ import org.apache.jcs.auxiliary.lateral.ZombieLateralCacheWatch;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheService;
+import org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
@@ -78,7 +78,7 @@ public class LateralJGCacheManager
      * Handle to the lateral cache service; or a zombie handle if failed to
      * connect.
      */
-    private ILateralCacheService lateralService;
+    private ICacheServiceNonLocal lateralService;
 
     /**
      * Wrapper of the lateral cache watch service; or wrapper of a zombie
