@@ -135,7 +135,7 @@ public class AdminBeanUnitTest
     }
 
     /**
-     * Add an item toa region. Cal clear all and verify that it doesn't exist.
+     * Add an item to a region. Call clear all and verify that it doesn't exist.
      *
      * @throws Exception
      */
