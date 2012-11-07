@@ -228,9 +228,9 @@ public abstract class AbstractDeleteCacheServlet
                 out.print( cache.getSize() );
                 out.print( "</td><td>" );
                 int status = cache.getStatus();
-                out.print( status == CacheConstants.STATUS_ALIVE ? "ALIVE"
-                     : status == CacheConstants.STATUS_DISPOSED ? "DISPOSED"
-                     : status == CacheConstants.STATUS_ERROR ? "ERROR"
+                out.print( status == CacheStatus.ALIVE ? "ALIVE"
+                     : status == CacheStatus.DISPOSED ? "DISPOSED"
+                     : status == CacheStatus.ERROR ? "ERROR"
                      : "UNKNOWN" );
                 out.print( "</td>" );
                 out.println( "<td><a href=?task=stats&hashtableName=" + name + "&key=NONE&antiCacheRandom="

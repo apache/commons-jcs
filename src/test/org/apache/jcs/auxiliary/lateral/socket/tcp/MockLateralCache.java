@@ -24,6 +24,7 @@ import java.io.Serializable;
 
 import org.apache.jcs.auxiliary.lateral.LateralCache;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
@@ -110,9 +111,9 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
 
     /** @return 0 */
     @Override
-    public int getStatus()
+    public CacheStatus getStatus()
     {
-        return 0;
+        return CacheStatus.ALIVE;
     }
 
     /** @return String */

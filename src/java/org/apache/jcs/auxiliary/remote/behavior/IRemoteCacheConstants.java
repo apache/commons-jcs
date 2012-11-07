@@ -27,43 +27,43 @@ import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 public interface IRemoteCacheConstants
 {
     /** Mapping to props file value */
-    public final static String REMOTE_CACHE_SERVICE_VAL = ICacheServiceNonLocal.class.getName();
+    String REMOTE_CACHE_SERVICE_VAL = ICacheServiceNonLocal.class.getName();
 
     /** The prefix for cache server config. */
-    public final static String CACHE_SERVER_PREFIX = "jcs.remotecache";
+    String CACHE_SERVER_PREFIX = "jcs.remotecache";
 
     /**
      * I'm trying to migrate everything to use this prefix. All those below will be replaced. Any of
      * the RemoteCacheServerAttributes can be configured this way.
      */
-    public final static String CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX = CACHE_SERVER_PREFIX + ".serverattributes";
+    String CACHE_SERVER_ATTRIBUTES_PROPERTY_PREFIX = CACHE_SERVER_PREFIX + ".serverattributes";
 
     /**
      * This is the name of the class that will be used for an object specific socket factory.
      */
-    public final static String CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX = CACHE_SERVER_PREFIX + ".customrmisocketfactory";
+    String CUSTOM_RMI_SOCKET_FACTORY_PROPERTY_PREFIX = CACHE_SERVER_PREFIX + ".customrmisocketfactory";
 
     /** Property prefix, should be jcs.remote but this would break existing config. */
-    public final static String PROPERTY_PREFIX = "remote";    
+    String PROPERTY_PREFIX = "remote";
 
     /** Mapping to props file value */
-    public final static String SOCKET_TIMEOUT_MILLIS = PROPERTY_PREFIX + ".cache.rmiSocketFactoryTimeoutMillis";
+    String SOCKET_TIMEOUT_MILLIS = PROPERTY_PREFIX + ".cache.rmiSocketFactoryTimeoutMillis";
 
     /** Mapping to props file value */
-    public final static String REMOTE_CACHE_SERVICE_NAME = PROPERTY_PREFIX + ".cache.service.name";
+    String REMOTE_CACHE_SERVICE_NAME = PROPERTY_PREFIX + ".cache.service.name";
 
     /** Mapping to props file value */
-    public final static String TOMCAT_XML = PROPERTY_PREFIX + ".tomcat.xml";
+    String TOMCAT_XML = PROPERTY_PREFIX + ".tomcat.xml";
 
     /** Mapping to props file value */
-    public final static String TOMCAT_ON = PROPERTY_PREFIX + ".tomcat.on";
+    String TOMCAT_ON = PROPERTY_PREFIX + ".tomcat.on";
 
     /** Mapping to props file value */
-    public final static String REMOTE_CACHE_SERVICE_PORT = PROPERTY_PREFIX + ".cache.service.port";
+    String REMOTE_CACHE_SERVICE_PORT = PROPERTY_PREFIX + ".cache.service.port";
 
     /** Mapping to props file value */
-    public final static String REMOTE_LOCAL_CLUSTER_CONSISTENCY = PROPERTY_PREFIX + ".cluster.LocalClusterConsistency";
+    String REMOTE_LOCAL_CLUSTER_CONSISTENCY = PROPERTY_PREFIX + ".cluster.LocalClusterConsistency";
 
     /** Mapping to props file value */
-    public final static String REMOTE_ALLOW_CLUSTER_GET = PROPERTY_PREFIX + ".cluster.AllowClusterGet";
+    String REMOTE_ALLOW_CLUSTER_GET = PROPERTY_PREFIX + ".cluster.AllowClusterGet";
 }

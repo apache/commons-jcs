@@ -22,7 +22,7 @@ package org.apache.jcs.auxiliary.lateral;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 
 /**
  * Used to monitor and repair any failed connection for the lateral cache service. By default the
@@ -221,7 +221,7 @@ public class LateralCacheMonitor
 
                     for (LateralCacheNoWait<?, ?> c : mgr.getCaches().values())
                     {
-                        if ( c.getStatus() == CacheConstants.STATUS_ERROR )
+                        if ( c.getStatus() == CacheStatus.ERROR )
                         {
                             log.info( "found LateralCacheNoWait in error, " + c.toString() );
 

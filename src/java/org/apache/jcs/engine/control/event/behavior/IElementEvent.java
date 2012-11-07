@@ -33,7 +33,7 @@ public interface IElementEvent
      *<p>
      * @return The elementEvent value
      */
-    public int getElementEvent();
+    public ElementEventType getElementEvent();
 
     /**
      * @return the source of the event.

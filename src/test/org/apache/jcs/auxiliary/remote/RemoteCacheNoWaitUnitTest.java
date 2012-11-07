@@ -26,8 +26,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.utils.timing.SleepUtil;
@@ -148,7 +148,7 @@ public class RemoteCacheNoWaitUnitTest
     {
         // SETUP
         MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<String, String>();
-        client.status = CacheConstants.STATUS_ALIVE;
+        client.status = CacheStatus.ALIVE;
         RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<String, String>( client );
 
         // DO WORK
@@ -168,14 +168,14 @@ public class RemoteCacheNoWaitUnitTest
     {
         // SETUP
         MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<String, String>();
-        client.status = CacheConstants.STATUS_ERROR;
+        client.status = CacheStatus.ERROR;
         RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<String, String>( client );
 
         // DO WORK
-        int result = noWait.getStatus();
+        CacheStatus result = noWait.getStatus();
 
         // VERIFY
-        assertEquals( "Wrong status", CacheConstants.STATUS_ERROR, result );
+        assertEquals( "Wrong status", CacheStatus.ERROR, result );
     }
 
     /**
@@ -189,7 +189,7 @@ public class RemoteCacheNoWaitUnitTest
     {
         // SETUP
         MockRemoteCacheClient<String, String> client = new MockRemoteCacheClient<String, String>();
-        client.status = CacheConstants.STATUS_ALIVE;
+        client.status = CacheStatus.ALIVE;
         RemoteCacheNoWait<String, String> noWait = new RemoteCacheNoWait<String, String>( client );
 
         MockRemoteCacheService<String, String> service = new MockRemoteCacheService<String, String>();

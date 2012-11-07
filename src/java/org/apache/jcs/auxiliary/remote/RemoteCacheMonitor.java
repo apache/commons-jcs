@@ -21,7 +21,7 @@ package org.apache.jcs.auxiliary.remote;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 
 /**
  * Used to monitor and repair any failed connection for the remote cache service. By default the
@@ -185,7 +185,7 @@ public class RemoteCacheMonitor
                     // them once and for all.
                     for (RemoteCacheNoWait<?, ?> c : mgr.caches.values())
                     {
-                        if ( c.getStatus() == CacheConstants.STATUS_ERROR )
+                        if ( c.getStatus() == CacheStatus.ERROR )
                         {
                             RemoteCacheRestore repairer = new RemoteCacheRestore( mgr );
                             // If we can't fix them, just skip and re-try in

@@ -35,6 +35,7 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
@@ -400,9 +401,9 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * Gets the status attribute of the LateralCacheNoWaitFacade object
      * @return The status value
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
-        return 0;
+        return CacheStatus.ALIVE;
         //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
     }
 

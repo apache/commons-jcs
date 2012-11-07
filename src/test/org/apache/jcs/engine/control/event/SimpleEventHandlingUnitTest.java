@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import org.apache.jcs.JCS;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
+import org.apache.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 
 /**
@@ -195,17 +195,17 @@ public class SimpleEventHandlingUnitTest
             //System.out.println( "Handling Event of Type " +
             // event.getElementEvent() );
 
-            if ( event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE )
+            if ( event.getElementEvent() == ElementEventType.SPOOLED_DISK_AVAILABLE )
             {
                 //System.out.println( "Handling Event of Type
                 // ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE, " + getSpoolCount() );
                 setSpoolCount( getSpoolCount() + 1 );
             }
-            else if ( event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_NOT_ALLOWED )
+            else if ( event.getElementEvent() == ElementEventType.SPOOLED_NOT_ALLOWED )
             {
                 setSpoolNotAllowedCount( getSpoolNotAllowedCount() + 1 );
             }
-            else if ( event.getElementEvent() == IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE )
+            else if ( event.getElementEvent() == ElementEventType.SPOOLED_DISK_NOT_AVAILABLE )
             {
                 setSpoolNoDiskCount( getSpoolNoDiskCount() + 1 );
             }

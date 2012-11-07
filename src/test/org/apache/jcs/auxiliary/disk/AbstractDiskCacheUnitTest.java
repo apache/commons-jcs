@@ -14,8 +14,8 @@ import org.apache.jcs.TestLogConfigurationUtil;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -81,7 +81,7 @@ public class AbstractDiskCacheUnitTest
 
         // VERIFY
         assertFalse( "disk cache should not be alive.", diskCache.alive );
-        assertEquals( "Status should be disposed", CacheConstants.STATUS_DISPOSED, diskCache.getStatus() );
+        assertEquals( "Status should be disposed", CacheStatus.DISPOSED, diskCache.getStatus() );
     }
 
     /**

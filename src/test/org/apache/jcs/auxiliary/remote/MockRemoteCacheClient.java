@@ -33,7 +33,7 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.stats.behavior.IStats;
@@ -60,7 +60,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     public List<K> removeList = new LinkedList<K>();
 
     /** status to return. */
-    public int status = CacheConstants.STATUS_ALIVE;
+    public CacheStatus status = CacheStatus.ALIVE;
 
     /** Can setup values to return from get. values must be ICacheElement<K, V> */
     public Map<K, ICacheElement<K, V>> getSetupMap = new HashMap<K, ICacheElement<K,V>>();
@@ -181,7 +181,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * Returns the status setup variable. (non-Javadoc)
      * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatus()
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
         return status;
     }

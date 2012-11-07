@@ -95,7 +95,7 @@ public class CompositeCacheAttributes
     private String memoryCacheName;
 
     /** Set via DISK_USAGE_PATTERN_NAME */
-    private short diskUsagePattern = DISK_USAGE_PATTERN_SWAP;
+    private DiskUsagePattern diskUsagePattern = DiskUsagePattern.SWAP;
 
     /** How many to spool to disk at a time. */
     private int spoolChunkSize = DEFAULT_CHUNK_SIZE;
@@ -321,7 +321,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param diskUsagePattern The diskUsagePattern to set.
      */
-    public void setDiskUsagePattern( short diskUsagePattern )
+    public void setDiskUsagePattern( DiskUsagePattern diskUsagePattern )
     {
         this.diskUsagePattern = diskUsagePattern;
     }
@@ -337,14 +337,14 @@ public class CompositeCacheAttributes
     {
         if ( diskUsagePatternName != null )
         {
-            diskUsagePatternName = diskUsagePatternName.toUpperCase().trim();
-            if ( diskUsagePatternName.startsWith( "SWAP" ) )
+            String name = diskUsagePatternName.toUpperCase().trim();
+            if ( name.startsWith( "SWAP" ) )
             {
-                this.setDiskUsagePattern( DISK_USAGE_PATTERN_SWAP );
+                this.setDiskUsagePattern( DiskUsagePattern.SWAP );
             }
-            else if ( diskUsagePatternName.startsWith( "UPDATE" ) )
+            else if ( name.startsWith( "UPDATE" ) )
             {
-                this.setDiskUsagePattern( DISK_USAGE_PATTERN_UPDATE );
+                this.setDiskUsagePattern( DiskUsagePattern.UPDATE );
             }
         }
     }
@@ -372,7 +372,7 @@ public class CompositeCacheAttributes
     /**
      * @return Returns the diskUsagePattern.
      */
-    public short getDiskUsagePattern()
+    public DiskUsagePattern getDiskUsagePattern()
     {
         return diskUsagePattern;
     }

@@ -22,19 +22,22 @@ package org.apache.jcs.engine.behavior;
 import java.io.Serializable;
 
 /**
- * This defines the minimla behavior for the Cache Configuration settings.
+ * This defines the minimal behavior for the Cache Configuration settings.
  */
 public interface ICompositeCacheAttributes
     extends Serializable
 {
-    /** Items will only go to disk when the memory limit is reached. This is the default. */
-    public static final short DISK_USAGE_PATTERN_SWAP = 0;
+    enum DiskUsagePattern
+    {
+        /** Items will only go to disk when the memory limit is reached. This is the default. */
+        SWAP,
 
-    /**
-     * Items will go to disk on a normal put. If The disk usage pattern is UPDATE, the swap will be
-     * disabled.
-     */
-    public static final short DISK_USAGE_PATTERN_UPDATE = 1;
+        /**
+         * Items will go to disk on a normal put. If The disk usage pattern is UPDATE, the swap will be
+         * disabled.
+         */
+        UPDATE
+    }
 
     /**
      * SetMaxObjects is used to set the attribute to determine the maximum
@@ -47,14 +50,14 @@ public interface ICompositeCacheAttributes
      * @param size
      *            The new maxObjects value
      */
-    public void setMaxObjects( int size );
+    void setMaxObjects( int size );
 
     /**
      * Gets the maxObjects attribute of the ICompositeCacheAttributes object
      * <p>
      * @return The maxObjects value
      */
-    public int getMaxObjects();
+    int getMaxObjects();
 
     /**
      * Sets the useDisk attribute of the ICompositeCacheAttributes object
@@ -62,14 +65,14 @@ public interface ICompositeCacheAttributes
      * @param useDisk
      *            The new useDisk value
      */
-    public void setUseDisk( boolean useDisk );
+    void setUseDisk( boolean useDisk );
 
     /**
      * Gets the useDisk attribute of the ICompositeCacheAttributes object
      * <p>
      * @return The useDisk value
      */
-    public boolean getUseDisk();
+    boolean getUseDisk();
 
     /**
      * set whether the cache should use a lateral cache
@@ -77,14 +80,14 @@ public interface ICompositeCacheAttributes
      * @param d
      *            The new useLateral value
      */
-    public void setUseLateral( boolean d );
+    void setUseLateral( boolean d );
 
     /**
      * Gets the useLateral attribute of the ICompositeCacheAttributes object
      * <p>
      * @return The useLateral value
      */
-    public boolean getUseLateral();
+    boolean getUseLateral();
 
     /**
      * Sets whether the cache is remote enabled
@@ -92,14 +95,14 @@ public interface ICompositeCacheAttributes
      * @param isRemote
      *            The new useRemote value
      */
-    public void setUseRemote( boolean isRemote );
+    void setUseRemote( boolean isRemote );
 
     /**
      * returns whether the cache is remote enabled
      * <p>
      * @return The useRemote value
      */
-    public boolean getUseRemote();
+    boolean getUseRemote();
 
     /**
      * Sets the name of the cache, referenced by the appropriate manager.
@@ -107,14 +110,14 @@ public interface ICompositeCacheAttributes
      * @param s
      *            The new cacheName value
      */
-    public void setCacheName( String s );
+    void setCacheName( String s );
 
     /**
      * Gets the cacheName attribute of the ICompositeCacheAttributes object
      * <p>
      * @return The cacheName value
      */
-    public String getCacheName();
+    String getCacheName();
 
     /**
      * Sets the name of the MemoryCache, referenced by the appropriate manager.
@@ -123,7 +126,7 @@ public interface ICompositeCacheAttributes
      * @param s
      *            The new memoryCacheName value
      */
-    public void setMemoryCacheName( String s );
+    void setMemoryCacheName( String s );
 
     /**
      * Gets the memoryCacheName attribute of the ICompositeCacheAttributes
@@ -131,7 +134,7 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The memoryCacheName value
      */
-    public String getMemoryCacheName();
+    String getMemoryCacheName();
 
     /**
      * Whether the memory cache should perform background memory shrinkage.
@@ -139,14 +142,14 @@ public interface ICompositeCacheAttributes
      * @param useShrinker
      *            The new UseMemoryShrinker value
      */
-    public void setUseMemoryShrinker( boolean useShrinker );
+    void setUseMemoryShrinker( boolean useShrinker );
 
     /**
      * Whether the memory cache should perform background memory shrinkage.
      * <p>
      * @return The UseMemoryShrinker value
      */
-    public boolean getUseMemoryShrinker();
+    boolean getUseMemoryShrinker();
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -155,7 +158,7 @@ public interface ICompositeCacheAttributes
      * @param seconds
      *            The new MaxMemoryIdleTimeSeconds value
      */
-    public void setMaxMemoryIdleTimeSeconds( long seconds );
+    void setMaxMemoryIdleTimeSeconds( long seconds );
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -163,7 +166,7 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The MaxMemoryIdleTimeSeconds value
      */
-    public long getMaxMemoryIdleTimeSeconds();
+    long getMaxMemoryIdleTimeSeconds();
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -172,7 +175,7 @@ public interface ICompositeCacheAttributes
      * @param seconds
      *            The new ShrinkerIntervalSeconds value
      */
-    public void setShrinkerIntervalSeconds( long seconds );
+    void setShrinkerIntervalSeconds( long seconds );
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -180,7 +183,7 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The ShrinkerIntervalSeconds value
      */
-    public long getShrinkerIntervalSeconds();
+    long getShrinkerIntervalSeconds();
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -189,7 +192,7 @@ public interface ICompositeCacheAttributes
      * @param maxSpoolPerRun
      *            The new maxSpoolPerRun value
      */
-    public void setMaxSpoolPerRun( int maxSpoolPerRun );
+    void setMaxSpoolPerRun( int maxSpoolPerRun );
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements
@@ -197,21 +200,21 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The maxSpoolPerRun value
      */
-    public int getMaxSpoolPerRun();
+    int getMaxSpoolPerRun();
 
     /**
      * Clones the attributes.
      * <p>
      * @return a new object with the same settings.
      */
-    public ICompositeCacheAttributes copy();
+    ICompositeCacheAttributes copy();
 
     /**
      * By default this is SWAP_ONLY.
      * <p>
      * @param diskUsagePattern The diskUsagePattern to set.
      */
-    public void setDiskUsagePattern( short diskUsagePattern );
+    void setDiskUsagePattern( DiskUsagePattern diskUsagePattern );
 
     /**
      * Translates the name to the disk usage pattern short value.
@@ -220,24 +223,24 @@ public interface ICompositeCacheAttributes
      * <p>
      * @param diskUsagePatternName The diskUsagePattern to set.
      */
-    public void setDiskUsagePatternName( String diskUsagePatternName );
+    void setDiskUsagePatternName( String diskUsagePatternName );
 
     /**
      * @return Returns the diskUsagePattern.
      */
-    public short getDiskUsagePattern();
-    
+    DiskUsagePattern getDiskUsagePattern();
+
     /**
      * Number to send to disk at at time when memory is full.
      * <p>
      * @return int
      */
-    public int getSpoolChunkSize();
-    
+    int getSpoolChunkSize();
+
     /**
      * Number to send to disk at a time.
      * <p>
      * @param spoolChunkSize
      */
-    public void setSpoolChunkSize( int spoolChunkSize );
+    void setSpoolChunkSize( int spoolChunkSize );
 }

@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -76,7 +76,7 @@ public class RemoteCacheNoWaitFacade<K extends Serializable, V extends Serializa
 
         if ( remoteCacheAttributes.getRemoteType() == RemoteCacheAttributes.LOCAL )
         {
-            if ( noWaits[i].getStatus() == CacheConstants.STATUS_ERROR )
+            if ( noWaits[i].getStatus() == CacheStatus.ERROR )
             {
                 // start failover, primary recovery process
                 RemoteCacheFailoverRunner<K, V> runner =

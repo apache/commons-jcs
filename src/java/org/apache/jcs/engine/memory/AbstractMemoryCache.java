@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -77,7 +77,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     public CompositeCache<K, V> cache;
 
     /** status */
-    protected int status;
+    protected CacheStatus status;
 
     /** How many to spool at a time. */
     protected int chunkSize;
@@ -99,7 +99,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
         map = createMap();
 
         chunkSize = cacheAttributes.getSpoolChunkSize();
-        status = CacheConstants.STATUS_ALIVE;
+        status = CacheStatus.ALIVE;
 
         if ( cacheAttributes.getUseMemoryShrinker() )
         {
@@ -267,7 +267,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @return The status value
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
         return this.status;
     }

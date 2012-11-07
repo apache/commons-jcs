@@ -35,7 +35,7 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
@@ -337,16 +337,17 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * <p>
      * @return The status value
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
         for ( int i = 0; i < noWaits.length; i++ )
         {
-            if ( noWaits[i].getStatus() == CacheConstants.STATUS_ALIVE )
+            if ( noWaits[i].getStatus() == CacheStatus.ALIVE )
             {
-                return CacheConstants.STATUS_ALIVE;
+                return CacheStatus.ALIVE;
             }
         }
-        return 0;
+
+        return CacheStatus.DISPOSED;
     }
 
     /**

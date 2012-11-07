@@ -29,8 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.ElementEvent;
+import org.apache.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.memory.behavior.IMemoryCache;
 
@@ -248,7 +248,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
                 log.info( "Exceeded maxLifeSeconds: " + cacheElement.getKey() );
             }
 
-            handleElementEvents( cacheElement, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND );
+            handleElementEvents( cacheElement, ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND );
 
             return true;
         }
@@ -264,7 +264,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
                 log.info( "Exceeded maxIdleTime " + cacheElement.getKey() );
             }
 
-            handleElementEvents( cacheElement, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_BACKGROUND );
+            handleElementEvents( cacheElement, ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
             return true;
         }
@@ -279,7 +279,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
      * @param eventType Type of event to handle
      * @throws IOException If an error occurs
      */
-    private void handleElementEvents( ICacheElement<?, ?> cacheElement, int eventType )
+    private void handleElementEvents( ICacheElement<?, ?> cacheElement, ElementEventType eventType )
         throws IOException
     {
         IElementAttributes attributes = cacheElement.getElementAttributes();

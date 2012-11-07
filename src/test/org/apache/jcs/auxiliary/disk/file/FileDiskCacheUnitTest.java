@@ -4,8 +4,8 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.timing.SleepUtil;
 
@@ -38,7 +38,7 @@ public class FileDiskCacheUnitTest
             .getAbsolutePath().indexOf( cacheName ) != -1 );
         assertTrue( "Directory should include the disk path. " + directory.getAbsolutePath(), directory
             .getAbsolutePath().indexOf( "DiskFileCacheUnitTest" ) != -1 );
-        assertTrue( "Should be alive", diskCache.getStatus() == CacheConstants.STATUS_ALIVE );
+        assertTrue( "Should be alive", diskCache.getStatus() == CacheStatus.ALIVE );
     }
 
     /**
@@ -60,7 +60,7 @@ public class FileDiskCacheUnitTest
         diskCache.dispose();
 
         // VERIFY
-        assertTrue( "Should not be alive", diskCache.getStatus() == CacheConstants.STATUS_DISPOSED );
+        assertTrue( "Should not be alive", diskCache.getStatus() == CacheStatus.DISPOSED );
     }
 
     /**
@@ -86,7 +86,7 @@ public class FileDiskCacheUnitTest
         // VERIFY
         assertNotNull( "Should have a directory", directory );
         assertFalse( "Should not have an existing directory", directory.exists() );
-        assertTrue( "Should not be alive", diskCache.getStatus() == CacheConstants.STATUS_DISPOSED );
+        assertTrue( "Should not be alive", diskCache.getStatus() == CacheStatus.DISPOSED );
     }
 
     /**

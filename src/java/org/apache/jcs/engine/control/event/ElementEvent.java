@@ -21,8 +21,8 @@ package org.apache.jcs.engine.control.event;
 
 import java.util.EventObject;
 
+import org.apache.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 
 /**
  * Element events will trigger the creation of Element Event objects. This is a wrapper around the
@@ -30,21 +30,21 @@ import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
  */
 public class ElementEvent
     extends EventObject
-    implements IElementEventConstants, IElementEvent
+    implements IElementEvent
 {
     /** Don't change */
     private static final long serialVersionUID = -5364117411457467056L;
 
     /** default event code */
-    private int elementEvent = ElementEvent.ELEMENT_EVENT_EXCEEDED_MAXLIFE_BACKGROUND;
+    private ElementEventType elementEvent = ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND;
 
     /**
      * Constructor for the ElementEvent object
      * <p>
      * @param source The Cache Element (should restrict?)
-     * @param elementEvent The event id defined in the constants class.
+     * @param elementEvent The event id defined in the enum class.
      */
-    public ElementEvent( Object source, int elementEvent )
+    public ElementEvent( Object source, ElementEventType elementEvent )
     {
         super( source );
         this.elementEvent = elementEvent;
@@ -53,9 +53,9 @@ public class ElementEvent
     /**
      * Gets the elementEvent attribute of the ElementEvent object
      * <p>
-     * @return The elementEvent value. The List of values is defined in IElementEventConstants.
+     * @return The elementEvent value. The List of values is defined in ElementEventType.
      */
-    public int getElementEvent()
+    public ElementEventType getElementEvent()
     {
         return elementEvent;
     }

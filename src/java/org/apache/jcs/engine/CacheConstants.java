@@ -27,17 +27,8 @@ package org.apache.jcs.engine;
 public interface CacheConstants
 {
     /** This is the name of the config file that we will look for by default. */
-    public static final String DEFAULT_CONFIG = "/cache.ccf";
-
-    /** Cache alive status. */
-    public final static int STATUS_ALIVE = 1;
-
-    /** Cache disposed status. */
-    public final static int STATUS_DISPOSED = 2;
-
-    /** Cache in error. */
-    public final static int STATUS_ERROR = 3;
+    String DEFAULT_CONFIG = "/cache.ccf";
 
     /** Delimiter of a cache name component. This is used for hierarchical deletion */
-    public final static String NAME_COMPONENT_DELIMITER = ":";
+    String NAME_COMPONENT_DELIMITER = ":";
 }

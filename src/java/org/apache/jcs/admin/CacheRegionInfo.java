@@ -19,7 +19,6 @@ package org.apache.jcs.admin;
  * under the License.
  */
 
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.control.CompositeCache;
 
 /**
@@ -54,15 +53,7 @@ public class CacheRegionInfo
      */
     public String getStatus()
     {
-        int status = this.cache.getStatus();
-
-        return ( status == CacheConstants.STATUS_ALIVE
-                                                      ? "ALIVE"
-                                                      : status == CacheConstants.STATUS_DISPOSED
-                                                                                                ? "DISPOSED"
-                                                                                                : status == CacheConstants.STATUS_ERROR
-                                                                                                                                       ? "ERROR"
-                                                                                                                                       : "UNKNOWN" );
+        return this.cache.getStatus().toString();
     }
 
     /**

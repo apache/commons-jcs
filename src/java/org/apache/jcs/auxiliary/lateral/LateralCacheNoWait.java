@@ -35,8 +35,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheAdaptor;
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
@@ -99,7 +99,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
         // perform updates using a different method that specifies the listener
         // this.q = new CacheEventQueue(new CacheAdaptor(this),
         // LateralCacheInfo.listenerId, cache.getCacheName());
-        if ( cache.getStatus() == CacheConstants.STATUS_ERROR )
+        if ( cache.getStatus() == CacheStatus.ERROR )
         {
             eventQueue.destroy();
         }
@@ -133,7 +133,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     public ICacheElement<K, V> get( K key )
     {
         getCount++;
-        if ( this.getStatus() != CacheConstants.STATUS_ERROR )
+        if ( this.getStatus() != CacheStatus.ERROR )
         {
             try
             {
@@ -196,7 +196,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     public Map<K, ICacheElement<K, V>> getMatching(String pattern)
     {
         getCount++;
-        if ( this.getStatus() != CacheConstants.STATUS_ERROR )
+        if ( this.getStatus() != CacheStatus.ERROR )
         {
             try
             {
@@ -316,9 +316,9 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The status value
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
-        return eventQueue.isWorking() ? cache.getStatus() : CacheConstants.STATUS_ERROR;
+        return eventQueue.isWorking() ? cache.getStatus() : CacheStatus.ERROR;
     }
 
     /**

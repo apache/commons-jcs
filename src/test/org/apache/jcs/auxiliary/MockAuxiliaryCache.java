@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
@@ -44,7 +44,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     public CacheType cacheType = CacheType.DISK_CACHE;
 
     /** Can setup status */
-    public int status = CacheConstants.STATUS_ALIVE;
+    public CacheStatus status = CacheStatus.ALIVE;
 
     /** Times getMatching was Called */
     public int getMatchingCallCount = 0;
@@ -140,7 +140,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return int
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
         return status;
     }

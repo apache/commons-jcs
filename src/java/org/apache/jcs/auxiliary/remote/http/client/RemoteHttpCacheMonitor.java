@@ -26,7 +26,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 
 /**
  * Upon the notification of a connection error, the monitor changes to operate in a time driven
@@ -202,7 +202,7 @@ public class RemoteHttpCacheMonitor
             {
                 try
                 {
-                    if ( remoteCache.getStatus() == CacheConstants.STATUS_ERROR )
+                    if ( remoteCache.getStatus() == CacheStatus.ERROR )
                     {
                         RemoteHttpCacheAttributes attributes = remoteCache.getRemoteHttpCacheAttributes();
 

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.match.behavior.IKeyMatcher;
 
 /**
@@ -116,7 +117,7 @@ public interface ICache<K extends Serializable, V extends Serializable>
      * <p>
      * @return Alive or Error
      */
-    int getStatus();
+    CacheStatus getStatus();
 
     /**
      * Returns the cache stats.

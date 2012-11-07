@@ -34,14 +34,16 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.ObjectNotFoundException;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.jcs.engine.behavior.ICompositeCacheAttributes.DiskUsagePattern;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.ElementEvent;
 import org.apache.jcs.engine.control.event.ElementEventQueue;
+import org.apache.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.jcs.engine.control.event.behavior.IElementEventConstants;
 import org.apache.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.jcs.engine.control.event.behavior.IElementEventQueue;
 import org.apache.jcs.engine.control.group.GroupId;
@@ -330,7 +332,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                     log.debug( "diskcache in aux list: cattr " + cacheAttr.getUseDisk() );
                 }
                 if ( cacheAttr.getUseDisk()
-                    && ( cacheAttr.getDiskUsagePattern() == ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE )
+                    && ( cacheAttr.getDiskUsagePattern() == DiskUsagePattern.UPDATE )
                     && cacheElement.getElementAttributes().getIsSpool() )
                 {
                     aux.update( cacheElement );
@@ -358,7 +360,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         if ( !ce.getElementAttributes().getIsSpool() )
         {
             // there is an event defined for this.
-            handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_NOT_ALLOWED );
+            handleElementEvent( ce, ElementEventType.SPOOLED_NOT_ALLOWED );
             return;
         }
 
@@ -373,13 +375,12 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             {
                 diskAvailable = true;
 
-                if ( cacheAttr.getDiskUsagePattern() == ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP )
+                if ( cacheAttr.getDiskUsagePattern() == DiskUsagePattern.SWAP )
                 {
                     // write the last items to disk.2
                     try
                     {
-                        handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE );
-
+                        handleElementEvent( ce, ElementEventType.SPOOLED_DISK_AVAILABLE );
                         aux.update( ce );
                     }
                     catch ( IOException ex )
@@ -411,7 +412,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         {
             try
             {
-                handleElementEvent( ce, IElementEventConstants.ELEMENT_EVENT_SPOOLED_DISK_NOT_AVAILABLE );
+                handleElementEvent( ce, ElementEventType.SPOOLED_DISK_NOT_AVAILABLE );
             }
             catch ( Exception e )
             {
@@ -1054,7 +1055,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                         log.debug( "Exceeded maxLife: " + element.getKey() );
                     }
 
-                    handleElementEvent( element, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST );
+                    handleElementEvent( element, ElementEventType.EXCEEDED_MAXLIFE_ONREQUEST );
 
                     return true;
                 }
@@ -1073,7 +1074,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                         log.info( "Exceeded maxIdle: " + element.getKey() );
                     }
 
-                    handleElementEvent( element, IElementEventConstants.ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST );
+                    handleElementEvent( element, ElementEventType.EXCEEDED_IDLETIME_ONREQUEST );
 
                     return true;
                 }
@@ -1334,7 +1335,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 // - The auxiliary is not alive
                 // - The auxiliary is remote and the invocation was remote
 
-                if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE
+                if ( aux == null || aux.getStatus() != CacheStatus.ALIVE
                     || ( fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE ) )
                 {
                     if ( log.isInfoEnabled() )
@@ -1413,7 +1414,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 {
                     ICache<K, V> aux = auxCaches[i];
 
-                    if ( aux.getStatus() == CacheConstants.STATUS_ALIVE )
+                    if ( aux.getStatus() == CacheStatus.ALIVE )
                     {
 
                         Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr =
@@ -1467,9 +1468,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The status value
      */
-    public synchronized int getStatus()
+    public synchronized CacheStatus getStatus()
     {
-        return alive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED;
+        return alive ? CacheStatus.ALIVE : CacheStatus.DISPOSED;
     }
 
     /**
@@ -1688,7 +1689,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * @param ce
      * @param eventType
      */
-    private void handleElementEvent( ICacheElement<K, V> ce, int eventType )
+    private void handleElementEvent( ICacheElement<K, V> ce, ElementEventType eventType )
     {
         // handle event, might move to a new method
         ArrayList<IElementEventHandler> eventHandlers = ce.getElementAttributes().getElementEventHandlers();

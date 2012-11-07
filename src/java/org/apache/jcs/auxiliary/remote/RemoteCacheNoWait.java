@@ -36,8 +36,8 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.engine.CacheAdaptor;
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
@@ -111,7 +111,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
             .getListenerId(), remoteCacheClient.getCacheName(), remoteCacheClient.getAuxiliaryCacheAttributes()
             .getEventQueuePoolName(), remoteCacheClient.getAuxiliaryCacheAttributes().getEventQueueType() );
 
-        if ( remoteCacheClient.getStatus() == CacheConstants.STATUS_ERROR )
+        if ( remoteCacheClient.getStatus() == CacheStatus.ERROR )
         {
             cacheEventQueue.destroy();
         }
@@ -370,9 +370,9 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The status value
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
-        return cacheEventQueue.isWorking() ? remoteCacheClient.getStatus() : CacheConstants.STATUS_ERROR;
+        return cacheEventQueue.isWorking() ? remoteCacheClient.getStatus() : CacheStatus.ERROR;
     }
 
     /**
@@ -488,23 +488,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
 
         se = new StatElement();
         se.setName( "Status" );
-        int status = this.getStatus();
-        if ( status == CacheConstants.STATUS_ERROR )
-        {
-            se.setData( "ERROR" );
-        }
-        else if ( status == CacheConstants.STATUS_ALIVE )
-        {
-            se.setData( "ALIVE" );
-        }
-        else if ( status == CacheConstants.STATUS_DISPOSED )
-        {
-            se.setData( "DISPOSED" );
-        }
-        else
-        {
-            se.setData( "" + status );
-        }
+        se.setData( getStatus().toString() );
         elems.add( se );
 
         // no data gathered here

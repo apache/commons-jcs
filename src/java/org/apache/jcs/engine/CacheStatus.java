@@ -1,4 +1,4 @@
-package org.apache.jcs.engine.control.event.behavior;
+package org.apache.jcs.engine;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,21 +20,18 @@ package org.apache.jcs.engine.control.event.behavior;
  */
 
 /**
- * This interface defines the behavior for event handler. Event handlers are
- * transient. They are not replicated and are not written to disk.
+ * Cache statuses
  * <p>
- * If you want an event handler by default for all elements in a region, then
- * you can add it to the default element attributes. This way it will get create
- * whenever an item gets put into the cache.
- *
+ * @version $Id: CacheStatus.java 536904 2007-05-10 16:03:42Z tv $
  */
-public interface IElementEventHandler
+public enum CacheStatus
 {
-    /**
-     * Handle events for this element. The events are typed.
-     *
-     * @param event
-     *            The event created by the cache.
-     */
-    public void handleElementEvent( IElementEvent event );
+    /** Cache alive status. */
+    ALIVE,
+
+    /** Cache disposed status. */
+    DISPOSED,
+
+    /** Cache in error. */
+    ERROR
 }

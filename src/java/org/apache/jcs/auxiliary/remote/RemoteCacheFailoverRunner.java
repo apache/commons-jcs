@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
@@ -216,7 +216,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                         ICache<K, V> ic = rcm.getCache( rca.getCacheName() );
                         if ( ic != null )
                         {
-                            if ( ic.getStatus() == CacheConstants.STATUS_ALIVE )
+                            if ( ic.getStatus() == CacheStatus.ALIVE )
                             {
                                 // may need to do this more gracefully
                                 log.debug( "resetting no wait" );
@@ -370,7 +370,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
 
             if ( ic != null )
             {
-                if ( ic.getStatus() == CacheConstants.STATUS_ALIVE )
+                if ( ic.getStatus() == CacheStatus.ALIVE )
                 {
                     try
                     {
@@ -378,7 +378,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                         // now.
                         // this will not result in a loop, only duplication
                         // stop duplicate listening.
-                        if ( facade.noWaits[0] != null && facade.noWaits[0].getStatus() == CacheConstants.STATUS_ALIVE )
+                        if ( facade.noWaits[0] != null && facade.noWaits[0].getStatus() == CacheStatus.ALIVE )
                         {
                             int fidx = facade.remoteCacheAttributes.getFailoverIndex();
 

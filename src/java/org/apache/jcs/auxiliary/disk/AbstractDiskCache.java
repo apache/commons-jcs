@@ -35,9 +35,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
-import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheInfo;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
@@ -564,9 +564,9 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * @return the status -- alive or disposed from CacheConstants
      * @see ICache#getStatus
      */
-    public int getStatus()
+    public CacheStatus getStatus()
     {
-        return ( alive ? CacheConstants.STATUS_ALIVE : CacheConstants.STATUS_DISPOSED );
+        return ( alive ? CacheStatus.ALIVE : CacheStatus.DISPOSED );
     }
 
     /**

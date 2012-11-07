@@ -110,7 +110,7 @@ public class JavaGroupsCache
 
         // If all the above succeed, the cache is now alive.
 
-        this.status = CacheConstants.STATUS_ALIVE;
+        this.status = CacheStatus.ALIVE;
 
         log.info( "Initialized for cache: " + cacheName );
     }
@@ -239,7 +239,7 @@ public class JavaGroupsCache
         channel.disconnect();
         channel.close();
 
-        status = CacheConstants.STATUS_DISPOSED;
+        status = CacheStatus.DISPOSED;
 
         log.info( "Disposed for cache: " + cacheName );
     }

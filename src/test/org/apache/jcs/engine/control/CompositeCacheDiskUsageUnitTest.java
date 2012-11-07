@@ -34,6 +34,7 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.engine.CacheElement;
+import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -70,7 +71,7 @@ public class CompositeCacheDiskUsageUnitTest
         throws CacheException
     {
         JCS<String, String> swap = JCS.getInstance( "Swap" );
-        assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP, swap.getCacheAttributes()
+        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.SWAP, swap.getCacheAttributes()
             .getDiskUsagePattern() );
     }
 
@@ -83,7 +84,7 @@ public class CompositeCacheDiskUsageUnitTest
         throws CacheException
     {
         JCS<String, String> swap = JCS.getInstance( "Update" );
-        assertEquals( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE, swap.getCacheAttributes()
+        assertEquals( ICompositeCacheAttributes.DiskUsagePattern.UPDATE, swap.getCacheAttributes()
             .getDiskUsagePattern() );
     }
 
@@ -95,7 +96,7 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP );
+        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
 
         IElementAttributes attr = new ElementAttributes();
 
@@ -126,7 +127,7 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE );
+        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
@@ -161,7 +162,7 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE );
+        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
@@ -198,7 +199,7 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE );
+        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
@@ -235,7 +236,7 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DISK_USAGE_PATTERN_SWAP );
+        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
 
         IElementAttributes attr = new ElementAttributes();
 
@@ -270,7 +271,7 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
-        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DISK_USAGE_PATTERN_UPDATE );
+        cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
@@ -392,9 +393,9 @@ public class CompositeCacheDiskUsageUnitTest
         }
 
         /** @return 0 */
-        public int getStatus()
+        public CacheStatus getStatus()
         {
-            return 0;
+            return CacheStatus.ALIVE;
         }
 
         /** @return null */
