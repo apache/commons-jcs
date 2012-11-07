@@ -25,6 +25,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import junit.framework.TestCase;
 
 import org.apache.jcs.utils.props.PropertyLoader;
+import org.apache.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 
 /**
  * Verify that the manager can create pools as intended by the default and
@@ -157,8 +158,7 @@ public class ThreadPoolManagerUnitTest
 
         PoolConfiguration config = mgr.loadConfig( "thread_pool.waittest" );
 
-        assertEquals( "Policy is wrong.", PoolConfiguration.POLICY_WAIT, config.getWhenBlockedPolicy() );
-
+        assertEquals( "Policy is wrong.", WhenBlockedPolicy.WAIT, config.getWhenBlockedPolicy() );
     }
 
     /**

@@ -329,9 +329,8 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             // create a key map to use.
             initializeKeyMap();
 
-            @SuppressWarnings("unchecked")
             HashMap<K, IndexedDiskElementDescriptor> keys =
-                (HashMap<K, IndexedDiskElementDescriptor>) keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
+                keyFile.readObject( new IndexedDiskElementDescriptor( 0, (int) keyFile.length()
                 - IndexedDisk.HEADER_SIZE_BYTES ) );
 
             if ( keys != null )
@@ -719,8 +718,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             }
             try
             {
-                @SuppressWarnings("unchecked")
-                ICacheElement<K, V> readObject = (ICacheElement<K, V>) dataFile.readObject( ded );
+                ICacheElement<K, V> readObject = dataFile.readObject( ded );
                 object = readObject;
                 // TODO consider checking key equality and throwing if there is a failure
             }
@@ -757,7 +755,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             {
                 if ( k instanceof GroupAttrName && ( (GroupAttrName<?>) k ).groupId.equals( groupId ) )
                 {
-                    @SuppressWarnings("unchecked")
+                    @SuppressWarnings("unchecked") // Type checked with instanceof
                     GroupAttrName<K> groupAttrName = (GroupAttrName<K>) k;
                     keys.add( groupAttrName.attrName );
                 }

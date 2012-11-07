@@ -36,7 +36,6 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -124,7 +123,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
             return false;
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // No generic arrays in java
         LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length + 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, noWaits.length );
@@ -166,7 +165,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
             return false;
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // No generic arrays in java
         LateralCacheNoWait<K, V>[] newArray = new LateralCacheNoWait[noWaits.length - 1];
 
         System.arraycopy( noWaits, 0, newArray, 0, position );
@@ -380,9 +379,9 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * <p>
      * @return The cacheType value
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return ICacheType.LATERAL_CACHE;
+        return CacheType.LATERAL_CACHE;
     }
 
     /**

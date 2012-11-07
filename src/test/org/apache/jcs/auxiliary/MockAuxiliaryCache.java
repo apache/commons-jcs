@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.stats.behavior.IStats;
 
@@ -42,7 +41,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = 1L;
 
     /** Can setup the cache type */
-    public int cacheType = ICache.DISK_CACHE;
+    public CacheType cacheType = CacheType.DISK_CACHE;
 
     /** Can setup status */
     public int status = CacheConstants.STATUS_ALIVE;
@@ -184,7 +183,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return cacheType
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
         return cacheType;
     }

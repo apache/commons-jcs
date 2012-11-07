@@ -58,7 +58,7 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
     public SortedPreferentialArray( int maxSize )
     {
         this.maxSize = maxSize;
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // No generic arrays in java
         T[] ts = (T[]) new Comparable<?>[maxSize];
         array = ts;
     }

@@ -267,7 +267,7 @@ public class BlockDiskKeyStore<K extends Serializable>
                 {
                     while ( true )
                     {
-                        @SuppressWarnings("unchecked")
+                        @SuppressWarnings("unchecked") // Need to cast from Object
                         BlockDiskElementDescriptor<K> descriptor = (BlockDiskElementDescriptor<K>) ois.readObject();
                         if ( descriptor != null )
                         {

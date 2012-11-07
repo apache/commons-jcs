@@ -63,7 +63,7 @@ public class PropertySetter
     protected PropertyDescriptor[] props;
 
     /**
-     * Create a new PropertySetter for the specified Object. This is done in prepartion for invoking
+     * Create a new PropertySetter for the specified Object. This is done in preparation for invoking
      * {@link #setProperty}one or more times.
      * @param obj the object for which to set properties
      */
@@ -73,7 +73,7 @@ public class PropertySetter
     }
 
     /**
-     * Uses JavaBeans {@link Introspector}to computer setters of object to be configured.
+     * Uses JavaBeans {@link Introspector}to compute setters of object to be configured.
      */
     protected void introspect()
     {
@@ -116,7 +116,7 @@ public class PropertySetter
         {
             String key = (String) e.nextElement();
 
-            // handle only properties that start with the desired frefix.
+            // handle only properties that start with the desired prefix.
             if ( key.startsWith( prefix ) )
             {
 

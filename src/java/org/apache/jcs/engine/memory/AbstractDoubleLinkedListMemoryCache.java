@@ -419,7 +419,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
     /**
      * Dump the cache entries from first to list for debugging.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generics for public fields
     public void dumpCacheEntries()
     {
         log.debug( "dumpingCacheEntries" );
@@ -443,7 +443,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
      * Checks to see if all the items that should be in the cache are. Checks consistency between
      * List and map.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache()
     {
         if ( !log.isDebugEnabled() )
@@ -526,7 +526,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
      * <p>
      * @param key
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generics for public fields
     private void verifyCache( K key )
     {
         if ( !log.isDebugEnabled() )

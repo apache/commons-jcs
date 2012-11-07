@@ -21,7 +21,6 @@ package org.apache.jcs.auxiliary.disk.jdbc;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -95,7 +94,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
 
         synchronized ( caches )
         {
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
             JDBCDiskCache<K, V> jdbcDiskCache = (JDBCDiskCache<K, V>) caches.get( cattr.getCacheName() );
             diskCache = jdbcDiskCache;
 
@@ -179,16 +178,6 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         }
     }
 
-    /**
-     * Gets the cacheType attribute of the HSQLCacheManager object
-     * <p>
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return DISK_CACHE;
-    }
-
     /** Disposes of all regions. */
     public void release()
     {
@@ -199,11 +188,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         }
         synchronized ( caches )
         {
-            Enumeration<JDBCDiskCache<?, ?>> allCaches = caches.elements();
-
-            while ( allCaches.hasMoreElements() )
+            for (JDBCDiskCache<?, ?> raf : caches.values())
             {
-                JDBCDiskCache<?, ?> raf = allCaches.nextElement();
                 if ( raf != null )
                 {
                     try

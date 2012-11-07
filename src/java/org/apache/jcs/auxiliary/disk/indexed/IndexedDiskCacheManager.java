@@ -123,7 +123,7 @@ public class IndexedDiskCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
             IndexedDiskCache<K, V> indexedDiskCache = (IndexedDiskCache<K, V>) caches.get( cacheName );
             cache = indexedDiskCache;
 
@@ -139,15 +139,5 @@ public class IndexedDiskCacheManager
         }
 
         return cache;
-    }
-
-    /**
-     * Gets the cacheType attribute of the DiskCacheManager object
-     * <p>
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return DISK_CACHE;
     }
 }

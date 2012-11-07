@@ -326,7 +326,7 @@ public class OptionConverter
 
                 try
                 {
-                    @SuppressWarnings("unchecked")
+                    @SuppressWarnings("unchecked") // CCE catched
                     T t = (T) o;
                     return t;
                 }

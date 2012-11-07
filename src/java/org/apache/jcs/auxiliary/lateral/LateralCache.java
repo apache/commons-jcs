@@ -35,7 +35,6 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
-import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.IZombie;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStats;
@@ -326,9 +325,9 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return ICacheType.LATERAL_CACHE;
+        return CacheType.LATERAL_CACHE;
     }
 
     /**

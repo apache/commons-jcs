@@ -1223,7 +1223,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * @param requesterId
      * @return The eventQList value
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generic arrays in java
     private ICacheEventQueue<K, V>[] getEventQList( CacheListeners<K, V> cacheListeners, long requesterId )
     {
         ICacheEventQueue<K, V>[] list = null;
@@ -1302,7 +1302,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      *            remote calls involved.
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // Need to cast to specific return type from getClusterListeners()
     public <KK extends Serializable, VV extends Serializable> void addCacheListener( String cacheName, ICacheListener<KK, VV> listener )
         throws IOException
     {

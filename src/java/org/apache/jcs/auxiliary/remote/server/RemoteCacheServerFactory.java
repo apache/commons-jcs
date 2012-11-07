@@ -73,10 +73,11 @@ public class RemoteCacheServerFactory
      * This will allow you to get stats from the server, etc. Perhaps we should provide methods on
      * the factory to do this instead.
      * <p>
-     * A remote cache is either a local cache or a cluster cache. <p.
+     * A remote cache is either a local cache or a cluster cache.
+     * </p>
      * @return Returns the remoteCacheServer.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // Need cast to specific RemoteCacheServer
     public static <K extends Serializable, V extends Serializable> RemoteCacheServer<K, V> getRemoteCacheServer()
     {
         return (RemoteCacheServer<K, V>)remoteCacheServer;

@@ -37,7 +37,6 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -316,9 +315,9 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * <p>
      * @return The cacheType value
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return ICacheType.REMOTE_CACHE;
+        return CacheType.REMOTE_CACHE;
     }
 
     /**

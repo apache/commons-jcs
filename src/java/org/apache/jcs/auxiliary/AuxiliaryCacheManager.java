@@ -21,16 +21,10 @@ package org.apache.jcs.auxiliary;
 
 import java.io.Serializable;
 
-import org.apache.jcs.engine.behavior.ICacheType;
-
 /**
  * AuxiliaryCacheManager
- *
- * FIXME: Should not need to extend ICacheType
- *
  */
 public interface AuxiliaryCacheManager
-    extends ICacheType
 {
     /**
      * Return the appropriate auxiliary cache for this region.

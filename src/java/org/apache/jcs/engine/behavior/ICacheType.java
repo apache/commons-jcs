@@ -19,32 +19,32 @@ package org.apache.jcs.engine.behavior;
  * under the License.
  */
 
-import java.io.Serializable;
 
 /**
  * Interface implemented by a specific cache.
  *
  */
 public interface ICacheType
-    extends Serializable
 {
-    /** Composite/ memory cache type, cetral hub. */
-    public final static int CACHE_HUB = 1;
+    public enum CacheType {
+        /** Composite/ memory cache type, central hub. */
+        CACHE_HUB,
 
-    /** Disk cache type. */
-    public final static int DISK_CACHE = 2;
+        /** Disk cache type. */
+        DISK_CACHE,
 
-    /** Lateral cache type. */
-    public final static int LATERAL_CACHE = 3;
+        /** Lateral cache type. */
+        LATERAL_CACHE,
 
-    /** Remote cache type. */
-    public final static int REMOTE_CACHE = 4;
+        /** Remote cache type. */
+        REMOTE_CACHE
+    }
 
     /**
      * Returns the cache type.
      * <p>
      * @return The cacheType value
      */
-    public int getCacheType();
+    public CacheType getCacheType();
 
 }

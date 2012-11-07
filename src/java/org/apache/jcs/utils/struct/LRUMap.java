@@ -400,7 +400,7 @@ public class LRUMap<K, V>
     /**
      * Dump the cache entries from first to list for debugging.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generics for public fields
     public void dumpCacheEntries()
     {
         log.debug( "dumpingCacheEntries" );
@@ -433,7 +433,7 @@ public class LRUMap<K, V>
      * Checks to see if all the items that should be in the cache are. Checks consistency between
      * List and map.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache()
     {
         if ( !log.isDebugEnabled() )
@@ -525,7 +525,7 @@ public class LRUMap<K, V>
      * <p>
      * @param key
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generics for public fields
     protected void verifyCache( Object key )
     {
         if ( !log.isDebugEnabled() )

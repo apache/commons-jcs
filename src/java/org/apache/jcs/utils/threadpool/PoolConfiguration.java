@@ -19,7 +19,6 @@ package org.apache.jcs.utils.threadpool;
  * under the License.
  */
 
-import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
 
 /**
  * This object holds configuration data for a thread pool.
@@ -27,7 +26,7 @@ import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
  * @author Aaron Smuts
  */
 public class PoolConfiguration
-    implements Cloneable, IPoolConfiguration
+    implements Cloneable
 {
     /** Should we bound the queue */
     private boolean useBoundary = true;
@@ -47,8 +46,25 @@ public class PoolConfiguration
     /** How long idle threads above the minimum should be kept alive. */
     private int keepAliveTime = 1000 * 60 * 5;
 
+    public enum WhenBlockedPolicy {
+        /** abort when queue is full and max threads is reached. */
+        ABORT,
+
+        /** block when queue is full and max threads is reached. */
+        BLOCK,
+
+        /** run in current thread when queue is full and max threads is reached. */
+        RUN,
+
+        /** wait when queue is full and max threads is reached. */
+        WAIT,
+
+        /** discard oldest when queue is full and max threads is reached. */
+        DISCARDOLDEST
+    }
+
     /** should be ABORT, BLOCK, RUN, WAIT, DISCARDOLDEST, */
-    private String whenBlockedPolicy = POLICY_RUN;
+    private WhenBlockedPolicy whenBlockedPolicy = WhenBlockedPolicy.RUN;
 
     /** The number of threads to create on startup */
     private int startUpSize = 4;
@@ -89,7 +105,7 @@ public class PoolConfiguration
      * @param startUpSize
      */
     public PoolConfiguration( boolean useBoundary, int boundarySize, int maximumPoolSize, int minimumPoolSize,
-                              int keepAliveTime, String whenBlockedPolicy, int startUpSize )
+                              int keepAliveTime, WhenBlockedPolicy whenBlockedPolicy, int startUpSize )
     {
         setUseBoundary( useBoundary );
         setBoundarySize( boundarySize );
@@ -171,45 +187,36 @@ public class PoolConfiguration
     {
         if ( whenBlockedPolicy != null )
         {
-            whenBlockedPolicy = whenBlockedPolicy.trim();
-
-            if ( whenBlockedPolicy.equalsIgnoreCase( POLICY_ABORT ) )
-            {
-                this.whenBlockedPolicy = POLICY_ABORT;
-            }
-            else if ( whenBlockedPolicy.equalsIgnoreCase( POLICY_RUN ) )
-            {
-                this.whenBlockedPolicy = POLICY_RUN;
-            }
-            else if ( whenBlockedPolicy.equalsIgnoreCase( POLICY_BLOCK ) )
-            {
-                this.whenBlockedPolicy = POLICY_BLOCK;
-            }
-            else if ( whenBlockedPolicy.equalsIgnoreCase( POLICY_DISCARDOLDEST ) )
-            {
-                this.whenBlockedPolicy = POLICY_DISCARDOLDEST;
-            }
-            else if ( whenBlockedPolicy.equalsIgnoreCase( POLICY_WAIT ) )
-            {
-                this.whenBlockedPolicy = POLICY_WAIT;
-            }
-            else
-            {
-                // the value is invalid, default to RUN
-                this.whenBlockedPolicy = POLICY_RUN;
-            }
+            WhenBlockedPolicy policy = WhenBlockedPolicy.valueOf(whenBlockedPolicy.trim().toUpperCase());
+            setWhenBlockedPolicy(policy);
         }
         else
         {
             // the value is null, default to RUN
-            this.whenBlockedPolicy = POLICY_RUN;
+            this.whenBlockedPolicy = WhenBlockedPolicy.RUN;
+        }
+    }
+
+    /**
+     * @param whenBlockedPolicy The whenBlockedPolicy to set.
+     */
+    public void setWhenBlockedPolicy( WhenBlockedPolicy whenBlockedPolicy )
+    {
+        if ( whenBlockedPolicy != null )
+        {
+            this.whenBlockedPolicy = whenBlockedPolicy;
+        }
+        else
+        {
+            // the value is null, default to RUN
+            this.whenBlockedPolicy = WhenBlockedPolicy.RUN;
         }
     }
 
     /**
      * @return Returns the whenBlockedPolicy.
      */
-    public String getWhenBlockedPolicy()
+    public WhenBlockedPolicy getWhenBlockedPolicy()
     {
         return whenBlockedPolicy;
     }

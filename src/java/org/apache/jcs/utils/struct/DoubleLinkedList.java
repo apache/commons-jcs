@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
  * This is a generic thread safe double linked list. It's very simple and all the operations are so
  * quick that course grained synchronization is more than acceptable.
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({ "unchecked", "rawtypes" }) // Don't know how to resolve this with generics
 public class DoubleLinkedList<T extends DoubleLinkedListNode>
 {
     /** record size to avoid having to iterate */

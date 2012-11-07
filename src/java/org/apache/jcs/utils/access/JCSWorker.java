@@ -255,7 +255,7 @@ public class JCSWorker<K extends Serializable, V extends Serializable>
             // If the cache dosn't have it, do the work.
             if ( result == null )
             {
-                @SuppressWarnings("unchecked")
+                @SuppressWarnings("unchecked") // Need to cast from Object
                 V doWork = (V)aHelper.doWork();
                 result = doWork;
                 if ( logger.isDebugEnabled() )

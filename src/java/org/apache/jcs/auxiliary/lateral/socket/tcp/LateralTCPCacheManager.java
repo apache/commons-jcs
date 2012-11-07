@@ -232,12 +232,14 @@ public class LateralTCPCacheManager
         LateralCacheNoWait<K, V> lateralNoWait = null;
         synchronized ( caches )
         {
+            // Need to cast because of common map for all caches
             lateralNoWait = (LateralCacheNoWait<K, V>) caches.get( cacheName );
             if ( lateralNoWait == null )
             {
                 LateralCacheAttributes attr = (LateralCacheAttributes) lateralCacheAttributes.copy();
                 attr.setCacheName( cacheName );
 
+                // Need to cast to specific type
                 LateralCache<K, V> cache = new LateralCache<K, V>( attr,
                         (ICacheServiceNonLocal<K, V>)this.lateralService, monitor );
                 cache.setCacheEventLogger( cacheEventLogger );

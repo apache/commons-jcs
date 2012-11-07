@@ -198,7 +198,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
         }
         catch ( SQLException e )
         {
-            log.error( "Problem getting conenction.", e );
+            log.error( "Problem getting connection.", e );
             return;
         }
 
@@ -249,7 +249,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
 
             try
             {
-                element = serialize( ce );
+                element = getElementSerializer().serialize( ce );
             }
             catch ( IOException e )
             {
@@ -439,7 +439,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
         }
         catch ( SQLException e )
         {
-            log.error( "Problem getting conenction.", e );
+            log.error( "Problem getting connection.", e );
             return exists;
         }
 
@@ -983,7 +983,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
         }
         catch ( SQLException e1 )
         {
-            log.error( "Problem getting conenction.", e1 );
+            log.error( "Problem getting connection.", e1 );
             return size;
         }
         try
@@ -1035,19 +1035,6 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
             }
         }
         return size;
-    }
-
-    /**
-     * Returns the serialized form of the given object in a byte array.
-     * <p>
-     * @param obj
-     * @return byte[]
-     * @throws IOException
-     */
-    protected byte[] serialize( ICacheElement<K, V> obj )
-        throws IOException
-    {
-        return getElementSerializer().serialize( obj );
     }
 
     /**

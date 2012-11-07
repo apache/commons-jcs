@@ -305,14 +305,14 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
         return cache.getCacheType();
     }
 
     /**
      * Returns the asyn cache status. An error status indicates either the lateral connection is not
-     * available, or the asyn queue has been unexpectedly destroyed. No lateral invokation.
+     * available, or the asyn queue has been unexpectedly destroyed. No lateral invocation.
      * <p>
      * @return The status value
      */

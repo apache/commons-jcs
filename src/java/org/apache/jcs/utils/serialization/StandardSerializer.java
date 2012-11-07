@@ -77,20 +77,9 @@ public class StandardSerializer
         ObjectInputStream ois = new ObjectInputStream( bis );
         try
         {
-            try
-            {
-                @SuppressWarnings("unchecked")
-                T readObject = (T) ois.readObject();
-                return readObject;
-            }
-            catch ( IOException e )
-            {
-                throw e;
-            }
-            catch ( ClassNotFoundException e )
-            {
-                throw e;
-            }
+            @SuppressWarnings("unchecked") // Need to cast from Object
+            T readObject = (T) ois.readObject();
+            return readObject;
         }
         finally
         {

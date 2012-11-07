@@ -109,7 +109,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     public synchronized static <K extends Serializable, V extends Serializable> LateralTCPListener<K, V>
         getInstance( ITCPLateralCacheAttributes ilca, ICompositeCacheManager cacheMgr )
     {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // Need to cast because of common map for all instances
         LateralTCPListener<K, V> ins = (LateralTCPListener<K, V>) instances.get( String.valueOf( ilca.getTcpListenerPort() ) );
 
         if ( ins == null )
@@ -504,7 +504,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         /**
          * Main processing method for the LateralTCPReceiverConnection object
          */
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // Nee to cast from Object
         public void run()
         {
             ObjectInputStream ois;
@@ -566,7 +566,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
             {
                 ois.close();
             }
-            catch ( Exception e )
+            catch ( IOException e )
             {
                 log.error( "Could not close object input stream.", e );
             }

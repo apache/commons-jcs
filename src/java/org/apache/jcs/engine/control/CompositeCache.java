@@ -36,7 +36,6 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.control.event.ElementEvent;
@@ -276,7 +275,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             }
 
             // SEND TO REMOTE STORE
-            if ( aux.getCacheType() == ICache.REMOTE_CACHE )
+            if ( aux.getCacheType() == CacheType.REMOTE_CACHE )
             {
                 if ( log.isDebugEnabled() )
                 {
@@ -303,7 +302,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 }
                 // SEND LATERALLY
             }
-            else if ( aux.getCacheType() == ICache.LATERAL_CACHE )
+            else if ( aux.getCacheType() == CacheType.LATERAL_CACHE )
             {
                 // lateral can't do the checking since it is dependent on the
                 // cache region restrictions
@@ -324,7 +323,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 }
             }
             // update disk if the usage pattern permits
-            else if ( aux.getCacheType() == ICache.DISK_CACHE )
+            else if ( aux.getCacheType() == CacheType.DISK_CACHE )
             {
                 if ( log.isDebugEnabled() )
                 {
@@ -370,7 +369,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         {
             ICache<K, V> aux = auxCaches[i];
 
-            if ( aux != null && aux.getCacheType() == ICache.DISK_CACHE )
+            if ( aux != null && aux.getCacheType() == CacheType.DISK_CACHE )
             {
                 diskAvailable = true;
 
@@ -511,9 +510,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
                     if ( aux != null )
                     {
-                        long cacheType = aux.getCacheType();
+                        CacheType cacheType = aux.getCacheType();
 
-                        if ( !localOnly || cacheType == AuxiliaryCache.DISK_CACHE )
+                        if ( !localOnly || cacheType == CacheType.DISK_CACHE )
                         {
                             if ( log.isDebugEnabled() )
                             {
@@ -744,9 +743,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 Map<K, ICacheElement<K, V>> elementsFromAuxiliary =
                     new HashMap<K, ICacheElement<K, V>>();
 
-                long cacheType = aux.getCacheType();
+                CacheType cacheType = aux.getCacheType();
 
-                if ( !localOnly || cacheType == AuxiliaryCache.DISK_CACHE )
+                if ( !localOnly || cacheType == CacheType.DISK_CACHE )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -898,9 +897,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 Map<K, ICacheElement<K, V>> elementsFromAuxiliary =
                     new HashMap<K, ICacheElement<K, V>>();
 
-                long cacheType = aux.getCacheType();
+                CacheType cacheType = aux.getCacheType();
 
-                if ( !localOnly || cacheType == AuxiliaryCache.DISK_CACHE )
+                if ( !localOnly || cacheType == CacheType.DISK_CACHE )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -1184,11 +1183,11 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 continue;
             }
 
-            int cacheType = aux.getCacheType();
+            CacheType cacheType = aux.getCacheType();
 
             // for now let laterals call remote remove but not vice versa
 
-            if ( localOnly && ( cacheType == REMOTE_CACHE || cacheType == LATERAL_CACHE ) )
+            if ( localOnly && ( cacheType == CacheType.REMOTE_CACHE || cacheType == CacheType.LATERAL_CACHE ) )
             {
                 continue;
             }
@@ -1202,7 +1201,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 boolean b = aux.remove( key );
 
                 // Don't take the remote removal into account.
-                if ( !removed && cacheType != REMOTE_CACHE )
+                if ( !removed && cacheType != CacheType.REMOTE_CACHE )
                 {
                     removed = b;
                 }
@@ -1267,7 +1266,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         {
             ICache<K, V> aux = auxCaches[i];
 
-            if ( aux != null && ( aux.getCacheType() == ICache.DISK_CACHE || !localOnly ) )
+            if ( aux != null && ( aux.getCacheType() == CacheType.DISK_CACHE || !localOnly ) )
             {
                 try
                 {
@@ -1336,7 +1335,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 // - The auxiliary is remote and the invocation was remote
 
                 if ( aux == null || aux.getStatus() != CacheConstants.STATUS_ALIVE
-                    || ( fromRemote && aux.getCacheType() == REMOTE_CACHE ) )
+                    || ( fromRemote && aux.getCacheType() == CacheType.REMOTE_CACHE ) )
                 {
                     if ( log.isInfoEnabled() )
                     {
@@ -1359,7 +1358,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 // the disk cache
                 // is in a situation to not get items on a put.
 
-                if ( aux.getCacheType() == ICacheType.DISK_CACHE )
+                if ( aux.getCacheType() == CacheType.DISK_CACHE )
                 {
                     int numToFree = memCache.getSize();
                     memCache.freeElements( numToFree );
@@ -1458,9 +1457,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return CACHE_HUB;
+        return CacheType.CACHE_HUB;
     }
 
     /**
@@ -1601,9 +1600,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Create the MemoryCache based on the config parameters. TODO: consider making this an
-     * auxiliary, despite its close tie to the CacheHub. TODO: might want to create a memory cache
-     * config file separate from that of the hub -- ICompositeCacheAttributes
+     * Create the MemoryCache based on the config parameters.
+     * TODO: consider making this an auxiliary, despite its close tie to the CacheHub.
+     * TODO: might want to create a memory cache config file separate from that of the hub -- ICompositeCacheAttributes
      * <p>
      * @param cattr
      */
@@ -1614,7 +1613,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             try
             {
                 Class<?> c = Class.forName( cattr.getMemoryCacheName() );
-                @SuppressWarnings("unchecked")
+                @SuppressWarnings("unchecked") // Need cast
                 IMemoryCache<K, V> newInstance = (IMemoryCache<K, V>) c.newInstance();
                 memCache = newInstance;
                 memCache.initialize( this );

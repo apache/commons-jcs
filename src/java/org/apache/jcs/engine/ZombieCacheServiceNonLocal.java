@@ -211,13 +211,13 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
 
             if ( event instanceof PutEvent )
             {
-                @SuppressWarnings("unchecked")
+                @SuppressWarnings("unchecked") // Type checked by instanceof
                 PutEvent<K, V> putEvent = (PutEvent<K, V>) event;
                 service.update( putEvent.element, event.requesterId );
             }
             else if ( event instanceof RemoveEvent )
             {
-                @SuppressWarnings("unchecked")
+                @SuppressWarnings("unchecked") // Type checked by instanceof
                 RemoveEvent<K, V> removeEvent = (RemoveEvent<K, V>) event;
                 service.remove( event.cacheName, removeEvent.key, event.requesterId );
             }

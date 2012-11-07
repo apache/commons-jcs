@@ -112,16 +112,6 @@ public abstract class LateralCacheAbstractManager
     public abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName );
 
     /**
-     * Gets the cacheType attribute of the LateralCacheManager object
-     *
-     * @return The cache type value
-     */
-    public int getCacheType()
-    {
-        return LATERAL_CACHE;
-    }
-
-    /**
      * Gets the stats attribute of the LateralCacheManager object
      *
      * @return String
@@ -138,7 +128,7 @@ public abstract class LateralCacheAbstractManager
      * @param lateralService
      * @param lateralWatch
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // Need downcast to satisfy common interface
     public void fixCaches( ICacheServiceNonLocal<Serializable, Serializable> lateralService, ILateralCacheObserver lateralWatch )
     {
         log.debug( "Fixing lateral caches:" );

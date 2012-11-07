@@ -40,7 +40,7 @@ import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheType;
+import org.apache.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementAttributes;
@@ -511,7 +511,7 @@ public class CompositeCacheManager
      * @param attr
      * @return CompositeCache
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
     public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
         CompositeCache<K, V> cache;
@@ -655,9 +655,9 @@ public class CompositeCacheManager
     /**
      * @return ICacheType.CACHE_HUB
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return ICacheType.CACHE_HUB;
+        return CacheType.CACHE_HUB;
     }
 
     /**

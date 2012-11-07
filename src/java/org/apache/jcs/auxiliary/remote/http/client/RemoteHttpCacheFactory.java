@@ -88,7 +88,7 @@ public class RemoteHttpCacheFactory
             log.info( "noWait is null" );
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // No generic arrays in java
         RemoteCacheNoWait<K, V>[] rcnwArray = noWaits.toArray( new RemoteCacheNoWait[0] );
         RemoteCacheNoWaitFacade<K, V> rcnwf =
             new RemoteCacheNoWaitFacade<K, V>(rcnwArray, rca, cacheMgr, cacheEventLogger, elementSerializer );

@@ -325,7 +325,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
 
             Node node = head.next;
 
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked") // No generics for public fields
             AbstractCacheEvent value = (AbstractCacheEvent) node.event;
 
             if ( log.isDebugEnabled() )

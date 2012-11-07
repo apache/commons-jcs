@@ -111,7 +111,7 @@ public class LateralTCPDiscoveryListener
      */
     public <K extends Serializable, V extends Serializable> boolean containsNoWait( String cacheName, LateralCacheNoWait<K, V> noWait )
     {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         if ( facade == null )
         {
@@ -135,7 +135,7 @@ public class LateralTCPDiscoveryListener
      */
     protected <K extends Serializable, V extends Serializable> boolean addNoWait( LateralCacheNoWait<K, V> noWait )
     {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {
@@ -175,7 +175,7 @@ public class LateralTCPDiscoveryListener
      */
     protected <K extends Serializable, V extends Serializable> boolean removeNoWait( LateralCacheNoWait<K, V> noWait )
     {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         LateralCacheNoWaitFacade<K, V> facade = (LateralCacheNoWaitFacade<K, V>)facades.get( noWait.getCacheName() );
         if ( log.isDebugEnabled() )
         {

@@ -140,7 +140,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
         RemoteCacheMonitor.getInstance().notifyError();
 
         // initiate failover if local
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // Need to cast because of common map for all facades
         RemoteCacheNoWaitFacade<K, V> rcnwf = (RemoteCacheNoWaitFacade<K, V>)RemoteCacheFactory.getFacades()
             .get( getRemoteCacheAttributes().getCacheName() );
 

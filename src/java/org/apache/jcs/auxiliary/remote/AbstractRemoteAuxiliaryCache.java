@@ -626,7 +626,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      */
     public void fixCache( ICacheServiceNonLocal<?, ?> restoredRemote )
     {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // Don't know how to do this properly
         ICacheServiceNonLocal<K, V> remote = (ICacheServiceNonLocal<K, V>)restoredRemote;
         if ( getRemoteCacheService() != null && getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
         {
@@ -660,9 +660,9 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * Gets the cacheType attribute of the RemoteCache object
      * @return The cacheType value
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return REMOTE_CACHE;
+        return CacheType.REMOTE_CACHE;
     }
 
     /**

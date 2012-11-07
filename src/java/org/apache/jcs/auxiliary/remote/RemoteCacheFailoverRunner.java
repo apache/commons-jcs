@@ -144,7 +144,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
      * continue until the primary is re-connected. If no failovers are defined,
      * this will exit automatically.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generic arrays in java
     private void connectAndRestore()
     {
         do
@@ -339,7 +339,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
      *
      * @return boolean value indicating whether the restoration was successful
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // No generic arrays in java
     private boolean restorePrimary()
     {
         // try to move back to the primary

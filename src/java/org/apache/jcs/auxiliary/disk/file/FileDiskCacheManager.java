@@ -78,7 +78,7 @@ public class FileDiskCacheManager
             // Try to load the cache from the set that have already been
             // created. This only looks at the name attribute.
 
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
             FileDiskCache<K, V> fileDiskCache = (FileDiskCache<K, V>) caches.get( cacheName );
             cache = fileDiskCache;
 
@@ -94,15 +94,5 @@ public class FileDiskCacheManager
         }
 
         return cache;
-    }
-
-    /**
-     * Gets the cacheType attribute of the DiskCacheManager object
-     * <p>
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return DISK_CACHE;
     }
 }

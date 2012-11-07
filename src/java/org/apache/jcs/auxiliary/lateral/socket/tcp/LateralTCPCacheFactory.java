@@ -121,7 +121,7 @@ public class LateralTCPCacheFactory
         createListener( (ILateralCacheAttributes) iaca, cacheMgr );
 
         // create the no wait facade.
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked") // No generic arrays in java
         LateralCacheNoWait<K, V>[] lcnwArray = noWaits.toArray( new LateralCacheNoWait[0] );
         LateralCacheNoWaitFacade<K, V> lcnwf = new LateralCacheNoWaitFacade<K, V>(lcnwArray, (ILateralCacheAttributes) iaca );
 

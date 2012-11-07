@@ -85,7 +85,7 @@ public class LateralCacheRestore
     /**
      * Fixes up all the caches managed by the associated cache manager.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // TODO: Strange cast. Need to revisit
     public void fix()
     {
         if ( !canFix )

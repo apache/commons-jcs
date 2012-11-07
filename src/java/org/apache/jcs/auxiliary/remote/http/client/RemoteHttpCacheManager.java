@@ -176,7 +176,7 @@ public class RemoteHttpCacheManager
 
         synchronized ( caches )
         {
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked") // Need to cast because of common map for all caches
             RemoteCacheNoWait<K, V> remoteCacheNoWait2 = (RemoteCacheNoWait<K, V>) caches.get( cattr.getCacheName() + cattr.getUrl() );
             remoteCacheNoWait = remoteCacheNoWait2;
             if ( remoteCacheNoWait == null )
@@ -241,15 +241,6 @@ public class RemoteHttpCacheManager
             }
         }
         return stats.toString();
-    }
-
-    /**
-     * Gets the cacheType attribute of the RemoteCacheManager object
-     * @return The cacheType value
-     */
-    public int getCacheType()
-    {
-        return REMOTE_CACHE;
     }
 
     /**

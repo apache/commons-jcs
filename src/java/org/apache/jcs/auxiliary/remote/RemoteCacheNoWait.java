@@ -41,7 +41,6 @@ import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
-import org.apache.jcs.engine.behavior.ICacheType;
 import org.apache.jcs.engine.stats.StatElement;
 import org.apache.jcs.engine.stats.Stats;
 import org.apache.jcs.engine.stats.behavior.IStatElement;
@@ -360,9 +359,9 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return ICacheType.REMOTE_CACHE;
+        return CacheType.REMOTE_CACHE;
     }
 
     /**

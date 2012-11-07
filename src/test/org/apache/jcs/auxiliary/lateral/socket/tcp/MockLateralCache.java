@@ -121,18 +121,4 @@ public class MockLateralCache<K extends Serializable, V extends Serializable>
     {
         return null;
     }
-
-    /** @return String */
-    @Override
-    public String getCacheName()
-    {
-        return super.getCacheName();
-    }
-
-    /** @return type */
-    @Override
-    public int getCacheType()
-    {
-        return super.getCacheType();
-    }
 }

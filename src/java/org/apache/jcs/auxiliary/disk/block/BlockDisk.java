@@ -263,7 +263,7 @@ public class BlockDisk
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected Serializable read( int[] blockNumbers )
+    protected <T extends Serializable> T read( int[] blockNumbers )
         throws IOException, ClassNotFoundException
     {
         byte[] data = null;

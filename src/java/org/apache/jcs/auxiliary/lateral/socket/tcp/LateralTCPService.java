@@ -248,7 +248,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
             // led.requesterId = requesterId; // later
             led.command = LateralElementDescriptor.GET;
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked") // Need to cast from Object
             ICacheElement<K, V> response = (ICacheElement<K, V>)sender.sendAndReceive( led );
             if ( response != null )
             {
@@ -288,7 +288,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      *         data in cache matching the pattern.
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // Need to cast from Object
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {

@@ -61,7 +61,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  */
 public abstract class AbstractDiskCache<K extends Serializable, V extends Serializable>
     extends AbstractAuxiliaryCacheEventLogging<K, V>
-    implements AuxiliaryCache<K, V>, Serializable
+    implements AuxiliaryCache<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = 6541664080877628324L;
@@ -582,9 +582,9 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType
      * @return Always returns DISK_CACHE since subclasses should all be of that type.
      */
-    public int getCacheType()
+    public CacheType getCacheType()
     {
-        return DISK_CACHE;
+        return CacheType.DISK_CACHE;
     }
 
     /**

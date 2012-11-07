@@ -77,7 +77,7 @@ class IndexedDisk
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected Serializable readObject( IndexedDiskElementDescriptor ded )
+    protected <T extends Serializable> T readObject( IndexedDiskElementDescriptor ded )
         throws IOException, ClassNotFoundException
     {
         String message = null;

@@ -152,14 +152,14 @@ public class RemoteHttpCacheServlet
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    @SuppressWarnings("unchecked")
     protected RemoteCacheRequest<Serializable, Serializable> readRequestFromStream( InputStream inputStream )
         throws IOException, ClassNotFoundException
     {
-        RemoteCacheRequest<Serializable, Serializable> remoteRequest;
         ObjectInputStream ois = new ObjectInputStream( inputStream );
 
-        remoteRequest = (RemoteCacheRequest<Serializable, Serializable>) ois.readObject();
+        @SuppressWarnings("unchecked") // Need to cast from Object
+        RemoteCacheRequest<Serializable, Serializable> remoteRequest
+            = (RemoteCacheRequest<Serializable, Serializable>) ois.readObject();
         ois.close();
         return remoteRequest;
     }

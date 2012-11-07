@@ -208,7 +208,6 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
      * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#getGroupKeys(java.lang.String)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Set<K> getGroupKeys( String groupName )
     {
@@ -223,7 +222,9 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
             {
                 if ( key instanceof GroupAttrName && ( (GroupAttrName<?>) key ).groupId.equals( groupId ) )
                 {
-                    keys.add( ( (GroupAttrName<K>) key ).attrName );
+                    @SuppressWarnings("unchecked") // Type checked with instanceof
+                    K newKey = ((GroupAttrName<K>) key ).attrName;
+                    keys.add( newKey );
                 }
             }
         }
@@ -296,7 +297,6 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
      * @return ICacheElement
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#doGet(java.io.Serializable)
      */
-    @SuppressWarnings("unchecked")
     @Override
     protected ICacheElement<K, V> processGet( K key )
     {
@@ -322,7 +322,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
             int[] ded = this.keyStore.get( key );
             if ( ded != null )
             {
-                object = (ICacheElement<K, V>) this.dataFile.read( ded );
+                object = this.dataFile.read( ded );
             }
         }
         catch ( IOException ioe )

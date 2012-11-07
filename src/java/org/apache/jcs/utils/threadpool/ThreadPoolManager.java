@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.utils.props.PropertyLoader;
-import org.apache.jcs.utils.threadpool.behavior.IPoolConfiguration;
+import org.apache.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 
 /**
  * This manages threadpools for an application using Doug Lea's Util Concurrent package.
@@ -92,18 +92,18 @@ public class ThreadPoolManager
     private static int keepAliveTime_DEFAULT = 1000 * 60 * 5;
 
     /** Default when blocked */
-    private static String whenBlockedPolicy_DEFAULT = IPoolConfiguration.POLICY_RUN;
+    private static WhenBlockedPolicy whenBlockedPolicy_DEFAULT = WhenBlockedPolicy.RUN;
 
     /** Default startup size */
     private static int startUpSize_DEFAULT = 4;
 
-    /** The deafult config, created using propety defaults if present, else those above. */
+    /** The default config, created using property defaults if present, else those above. */
     private static PoolConfiguration defaultConfig;
 
     /** This is the default value. */
     public static final String DEFAULT_PROPS_FILE_NAME = "cache.ccf";
 
-    /** Setting this after inialization will have no effect.  */
+    /** Setting this after initialization will have no effect.  */
     private static String propsFileName = null;
 
     /** the root property name */
@@ -165,21 +165,25 @@ public class ThreadPoolManager
                 queue, new MyThreadFactory());
 
         // when blocked policy
-        if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_ABORT ) )
+        switch (config.getWhenBlockedPolicy())
         {
-            pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-        }
-        else if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_RUN ) )
-        {
-            pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        }
-        else if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_WAIT ) )
-        {
-            throw new RuntimeException("POLICY_WAIT no longer supported");
-        }
-        else if ( config.getWhenBlockedPolicy().equals( IPoolConfiguration.POLICY_DISCARDOLDEST ) )
-        {
-            pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+            case ABORT:
+                pool.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+                break;
+
+            case RUN:
+                pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+                break;
+
+            case WAIT:
+                throw new RuntimeException("POLICY_WAIT no longer supported");
+
+            case DISCARDOLDEST:
+                pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+                break;
+
+            default:
+                break;
         }
 
         pool.prestartAllCoreThreads();
@@ -188,7 +192,7 @@ public class ThreadPoolManager
     }
 
     /**
-     * Returns a configured instance of the ThreadPoolManger To specify a configuation file or
+     * Returns a configured instance of the ThreadPoolManger To specify a configuration file or
      * Properties object to use call the appropriate setter prior to calling getInstance.
      * <p>
      * @return The single instance of the ThreadPoolManager

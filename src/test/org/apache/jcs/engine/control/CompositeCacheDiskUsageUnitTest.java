@@ -37,6 +37,7 @@ import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.CompositeCacheAttributes;
 import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
@@ -101,7 +102,7 @@ public class CompositeCacheDiskUsageUnitTest
         CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
-        mock.cacheType = AuxiliaryCache.DISK_CACHE;
+        mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
@@ -132,7 +133,7 @@ public class CompositeCacheDiskUsageUnitTest
         CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
-        mock.cacheType = AuxiliaryCache.DISK_CACHE;
+        mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
@@ -167,7 +168,7 @@ public class CompositeCacheDiskUsageUnitTest
         CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
-        mock.cacheType = AuxiliaryCache.DISK_CACHE;
+        mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
@@ -204,7 +205,7 @@ public class CompositeCacheDiskUsageUnitTest
         CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
-        mock.cacheType = AuxiliaryCache.DISK_CACHE;
+        mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
@@ -241,7 +242,7 @@ public class CompositeCacheDiskUsageUnitTest
         CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
-        mock.cacheType = AuxiliaryCache.DISK_CACHE;
+        mock.cacheType = CacheType.DISK_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
@@ -276,10 +277,10 @@ public class CompositeCacheDiskUsageUnitTest
         CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
-        mock.cacheType = AuxiliaryCache.DISK_CACHE;
+        mock.cacheType = CacheType.DISK_CACHE;
 
         MockAuxCache<String, String> mockLateral = new MockAuxCache<String, String>();
-        mockLateral.cacheType = AuxiliaryCache.LATERAL_CACHE;
+        mockLateral.cacheType = CacheType.LATERAL_CACHE;
 
         @SuppressWarnings("unchecked")
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock, mockLateral };
@@ -316,7 +317,7 @@ public class CompositeCacheDiskUsageUnitTest
         public int updateCount = 0;
 
         /** The type that should be returned from getCacheType. */
-        public int cacheType = AuxiliaryCache.DISK_CACHE;
+        public CacheType cacheType = CacheType.DISK_CACHE;
 
         /** Resets counters and catchers. */
         public void reset()
@@ -431,7 +432,7 @@ public class CompositeCacheDiskUsageUnitTest
          * @see org.apache.jcs.engine.behavior.ICacheType#getCacheType()
          * @return cacheType
          */
-        public int getCacheType()
+        public CacheType getCacheType()
         {
             return cacheType;
         }
