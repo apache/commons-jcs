@@ -211,7 +211,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Updating memory cache" );
+            log.debug( "Updating memory cache " + cacheElement.getKey() );
         }
 
         synchronized ( this )
@@ -466,121 +466,124 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             log.debug( "get: key = " + key + ", localOnly = " + localOnly );
         }
 
-        try
+        synchronized (this)
         {
-            // First look in memory cache
-            element = memCache.get( key );
-
-            if ( element != null )
+            try
             {
-                // Found in memory cache
-                if ( isExpired( element ) )
+                // First look in memory cache
+                element = memCache.get( key );
+
+                if ( element != null )
                 {
-                    if ( log.isDebugEnabled() )
+                    // Found in memory cache
+                    if ( isExpired( element ) )
                     {
-                        log.debug( cacheName + " - Memory cache hit, but element expired" );
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( cacheName + " - Memory cache hit, but element expired" );
+                        }
+
+                        missCountExpired++;
+
+                        remove( key );
+
+                        element = null;
+                    }
+                    else
+                    {
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( cacheName + " - Memory cache hit" );
+                        }
+
+                        // Update counters
+                        hitCountRam++;
                     }
 
-                    missCountExpired++;
-
-                    remove( key );
-
-                    element = null;
+                    found = true;
                 }
                 else
                 {
-                    if ( log.isDebugEnabled() )
+                    // Item not found in memory. If local invocation look in aux
+                    // caches, even if not local look in disk auxiliaries
+
+                    for ( int i = 0; i < auxCaches.length; i++ )
                     {
-                        log.debug( cacheName + " - Memory cache hit" );
-                    }
+                        AuxiliaryCache<K, V> aux = auxCaches[i];
 
-                    // Update counters
-                    hitCountRam++;
-                }
-
-                found = true;
-            }
-            else
-            {
-                // Item not found in memory. If local invocation look in aux
-                // caches, even if not local look in disk auxiliaries
-
-                for ( int i = 0; i < auxCaches.length; i++ )
-                {
-                    AuxiliaryCache<K, V> aux = auxCaches[i];
-
-                    if ( aux != null )
-                    {
-                        CacheType cacheType = aux.getCacheType();
-
-                        if ( !localOnly || cacheType == CacheType.DISK_CACHE )
+                        if ( aux != null )
                         {
+                            CacheType cacheType = aux.getCacheType();
+
+                            if ( !localOnly || cacheType == CacheType.DISK_CACHE )
+                            {
+                                if ( log.isDebugEnabled() )
+                                {
+                                    log.debug( "Attempting to get from aux [" + aux.getCacheName() + "] which is of type: "
+                                        + cacheType );
+                                }
+
+                                try
+                                {
+                                    element = aux.get( key );
+                                }
+                                catch ( IOException e )
+                                {
+                                    log.error( "Error getting from aux", e );
+                                }
+                            }
+
                             if ( log.isDebugEnabled() )
                             {
-                                log.debug( "Attempting to get from aux [" + aux.getCacheName() + "] which is of type: "
-                                    + cacheType );
+                                log.debug( "Got CacheElement: " + element );
                             }
 
-                            try
+                            // Item found in one of the auxiliary caches.
+                            if ( element != null )
                             {
-                                element = aux.get( key );
-                            }
-                            catch ( IOException e )
-                            {
-                                log.error( "Error getting from aux", e );
-                            }
-                        }
-
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Got CacheElement: " + element );
-                        }
-
-                        // Item found in one of the auxiliary caches.
-                        if ( element != null )
-                        {
-                            if ( isExpired( element ) )
-                            {
-                                if ( log.isDebugEnabled() )
+                                if ( isExpired( element ) )
                                 {
-                                    log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
+                                    if ( log.isDebugEnabled() )
+                                    {
+                                        log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
+                                    }
+
+                                    missCountExpired++;
+
+                                    // This will tell the remotes to remove the item
+                                    // based on the element's expiration policy. The elements attributes
+                                    // associated with the item when it created govern its behavior
+                                    // everywhere.
+                                    remove( key );
+
+                                    element = null;
+                                }
+                                else
+                                {
+                                    if ( log.isDebugEnabled() )
+                                    {
+                                        log.debug( cacheName + " - Aux cache[" + i + "] hit" );
+                                    }
+
+                                    // Update counters
+                                    hitCountAux++;
+                                    auxHitCountByIndex[i]++;
+
+                                    copyAuxiliaryRetrievedItemToMemory( element );
                                 }
 
-                                missCountExpired++;
+                                found = true;
 
-                                // This will tell the remotes to remove the item
-                                // based on the element's expiration policy. The elements attributes
-                                // associated with the item when it created govern its behavior
-                                // everywhere.
-                                remove( key );
-
-                                element = null;
+                                break;
                             }
-                            else
-                            {
-                                if ( log.isDebugEnabled() )
-                                {
-                                    log.debug( cacheName + " - Aux cache[" + i + "] hit" );
-                                }
-
-                                // Update counters
-                                hitCountAux++;
-                                auxHitCountByIndex[i]++;
-
-                                copyAuxiliaryRetrievedItemToMemory( element );
-                            }
-
-                            found = true;
-
-                            break;
                         }
                     }
                 }
             }
-        }
-        catch ( Exception e )
-        {
-            log.error( "Problem encountered getting element.", e );
+            catch ( Exception e )
+            {
+                log.error( "Problem encountered getting element.", e );
+            }
         }
 
         if ( !found )

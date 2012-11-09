@@ -29,7 +29,7 @@ import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
 /**
  * A fast reference management system. The least recently used items move to the end of the list and
  * get spooled to disk if the cache hub is configured to use a disk cache. Most of the cache
- * bottelnecks are in IO. There are no io bottlenecks here, it's all about processing power.
+ * bottlenecks are in IO. There are no io bottlenecks here, it's all about processing power.
  * <p>
  * Even though there are only a few adjustments necessary to maintain the double linked list, we
  * might want to find a more efficient memory manager for large cache regions.

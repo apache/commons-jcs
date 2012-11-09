@@ -162,9 +162,6 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
             throw new InvalidArgumentException( "Value must not be null" );
         }
 
-        // unbind object first if any.
-        remove( name, groupName );
-
         // Create the element and update. This may throw an IOException which
         // should be wrapped by cache access.
         try
