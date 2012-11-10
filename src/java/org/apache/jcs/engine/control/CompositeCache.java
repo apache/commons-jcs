@@ -163,6 +163,16 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     }
 
     /**
+     * Get the list of auxiliary caches for this region.
+     * <p>
+     * @return an array of auxiliary caches, may be empty, never null
+     */
+    public AuxiliaryCache<K, V>[] getAuxCaches()
+    {
+        return this.auxCaches;
+    }
+
+    /**
      * Standard update method.
      * <p>
      * @param ce
@@ -1036,7 +1046,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * @param element
      * @return true if the element is expired, else false.
      */
-    private boolean isExpired( ICacheElement<K, V> element )
+    protected boolean isExpired( ICacheElement<K, V> element )
     {
         try
         {
