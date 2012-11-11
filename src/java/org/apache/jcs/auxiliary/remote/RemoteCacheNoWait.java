@@ -285,6 +285,16 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     {
         return remoteCacheClient.getGroupKeys( groupName );
     }
+    
+    /**
+     * @return the group names
+     * @throws IOException
+     */
+    public Set<String> getGroupNames()
+        throws IOException
+    {
+        return remoteCacheClient.getGroupNames( );
+    }
 
     /**
      * Adds a remove request to the remote cache.

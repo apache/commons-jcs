@@ -279,7 +279,10 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      */
     public String getCacheName()
     {
-        return this.cacheAttributes.getCacheName();
+        String attributeCacheName = this.cacheAttributes.getCacheName();
+        if(attributeCacheName != null)
+        	return attributeCacheName;
+        return cacheName;
     }
 
     /**
@@ -369,6 +372,29 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
             }
         }
         return keys;
+    }
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @return a Set of group names.
+     */
+    public Set<String> getGroupNames()
+    {
+        HashSet<String> names = new HashSet<String>();
+        synchronized ( map )
+        {
+            for (Map.Entry<K, MemoryElementDescriptor<K, V>> entry : map.entrySet())
+            {
+                K k = entry.getKey();
+
+                if ( k instanceof GroupAttrName )
+                {
+                    names.add(( (GroupAttrName<K>) k ).groupId.groupName );
+                }
+            }
+        }
+        return names;
     }
 
     /**

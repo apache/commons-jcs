@@ -29,6 +29,8 @@ public class RemoteCacheRequestUtil
                 return "Update";
             case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_KEYS:
                 return "GetGroupKeys";
+            case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_NAMES:
+                return "GetGroupNames";
             case RemoteCacheRequest.REQUEST_TYPE_DISPOSE:
                 return "Dispose";
             default:

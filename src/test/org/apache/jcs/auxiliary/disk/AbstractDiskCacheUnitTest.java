@@ -194,6 +194,15 @@ public class AbstractDiskCacheUnitTest
         }
 
         /**
+         * @return Collections.EMPTY_SET
+         */
+        @Override
+        public Set<String> getGroupNames()
+        {
+            return Collections.emptySet();
+        }
+
+        /**
          * @return map.size()
          */
         @Override

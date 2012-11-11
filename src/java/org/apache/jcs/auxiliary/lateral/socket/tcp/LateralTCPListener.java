@@ -28,6 +28,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -303,8 +304,8 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     /**
      * Gets the cache that was injected by the lateral factory. Calls get on the cache.
      * <p>
-     * @param cacheName
-     * @param pattern
+     * @param cacheName the name of the cache
+     * @param pattern the matching pattern
      * @return Map
      * @throws IOException
      */
@@ -327,6 +328,31 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         }
 
         return getCache( cacheName ).localGetMatching( pattern );
+    }
+
+    /**
+     * Gets the cache that was injected by the lateral factory. Calls getGroupKeys on the cache.
+     * <p>
+     * @param cacheName the name of the cache
+     * @param group the group name
+     * @return a set of keys
+     * @throws IOException
+     */
+    public Set<K> handleGetGroupKeys( String cacheName, String group ) throws IOException
+    {
+    	return getCache( cacheName ).getGroupKeys(group, true);
+    }
+
+    /**
+     * Gets the cache that was injected by the lateral factory. Calls getGroupNames on the cache.
+     * <p>
+     * @param cacheName the name of the cache
+     * @return a set of group names
+     * @throws IOException
+     */
+    public Set<String> handleGetGroupNames( String cacheName ) throws IOException
+    {
+    	return getCache( cacheName ).getGroupNames(true);
     }
 
     /**
@@ -632,7 +658,6 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                 Serializable obj = handleGet( cacheName, key );
 
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
-
                 oos.writeObject( obj );
                 oos.flush();
             }
@@ -641,7 +666,23 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                 Map<K, ICacheElement<K, V>> obj = handleGetMatching( cacheName, (String) key );
 
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
+                oos.writeObject( obj );
+                oos.flush();
+            }
+            else if ( led.command == LateralElementDescriptor.GET_GROUP_KEYS )
+            {
+            	String groupName = (String) key;
+            	Set<K> obj = handleGetGroupKeys(cacheName, groupName);
 
+                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
+                oos.writeObject( obj );
+                oos.flush();
+            }
+            else if ( led.command == LateralElementDescriptor.GET_GROUP_NAMES )
+            {
+            	Set<String> obj = handleGetGroupNames(cacheName);
+
+                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
                 oos.writeObject( obj );
                 oos.flush();
             }

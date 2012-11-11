@@ -867,6 +867,44 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     }
 
     /**
+     * Gets the set of group names currently in the cache.
+     * <p>
+     * @param cacheName the name of the region
+     * @return A Set of group names
+     */
+    public Set<String> getGroupNames(String cacheName)
+    {
+        return processGetGroupNames(cacheName);
+    }
+
+    /**
+     * Gets the set of group names currently in the cache.
+     * <p>
+     * @param cacheName the name of the region
+     * @return A Set of group names
+     */
+    protected Set<String> processGetGroupNames(String cacheName)
+    {
+        CacheListeners<K, V> cacheDesc = null;
+        try
+        {
+            cacheDesc = getCacheListeners(cacheName);
+        }
+        catch (Exception e)
+        {
+            log.error("Problem getting listeners.", e);
+        }
+
+        if (cacheDesc == null)
+        {
+            return Collections.emptySet();
+        }
+
+        CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
+        return c.getGroupNames();
+    }
+
+    /**
      * Removes the given key from the specified remote cache. Defaults the listener id to 0.
      * <p>
      * @param cacheName

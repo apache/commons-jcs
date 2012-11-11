@@ -52,6 +52,12 @@ public class LateralElementDescriptor<K extends Serializable, V extends Serializ
     /** Command to return an object. */
     public final static int GET_MATCHING = 6;
 
+    /** Command to get all group keys */
+    public final static int GET_GROUP_KEYS = 7;
+
+    /** Command to get all group keys */
+    public final static int GET_GROUP_NAMES = 8;
+
     /** The Cache Element that we are distributing. */
     public ICacheElement<K, V> ce;
 

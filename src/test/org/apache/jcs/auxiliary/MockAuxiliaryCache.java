@@ -163,6 +163,16 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     {
         return null;
     }
+    
+    /**
+     * @return null
+     * @throws IOException
+     */
+    public Set<String> getGroupNames()
+        throws IOException
+    {
+        return null;
+    }
 
     /**
      * @return null

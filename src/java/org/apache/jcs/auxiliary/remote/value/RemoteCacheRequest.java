@@ -38,11 +38,14 @@ public class RemoteCacheRequest<K extends Serializable, V extends Serializable>
     /** Remove All request type. */
     public static final byte REQUEST_TYPE_REMOVE_ALL = 6;
 
-    /** Remove All request type. */
+    /** Get group keys request type. */
     public static final byte REQUEST_TYPE_GET_GROUP_KEYS = 7;
 
-    /** Remove All request type. */
+    /** Dispose request type. */
     public static final byte REQUEST_TYPE_DISPOSE = 8;
+
+    /** Get group keys request type. */
+    public static final byte REQUEST_TYPE_GET_GROUP_NAMES = 9;
 
     /** The request type specifies the type of request: get, put, remove, . . */
     private byte requestType = -1;

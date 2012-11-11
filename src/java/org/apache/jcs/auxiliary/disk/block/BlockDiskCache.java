@@ -205,7 +205,6 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     /**
      * This requires a full iteration through the keys.
      * <p>
-     * (non-Javadoc)
      * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#getGroupKeys(java.lang.String)
      */
     @Override
@@ -234,6 +233,38 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
         }
 
         return keys;
+    }
+
+    /**
+     * This requires a full iteration through the keys.
+     * <p>
+     * @see org.apache.jcs.auxiliary.disk.AbstractDiskCache#getGroupNames()
+     */
+    @Override
+    public Set<String> getGroupNames()
+    {
+        HashSet<String> names = new HashSet<String>();
+
+        storageLock.readLock().lock();
+
+        try
+        {
+            for ( Serializable key : this.keyStore.keySet())
+            {
+                if ( key instanceof GroupAttrName )
+                {
+                    @SuppressWarnings("unchecked") // Type checked with instanceof
+                    GroupId groupID = ((GroupAttrName<K>) key ).groupId;
+                    names.add( groupID.groupName );
+                }
+            }
+        }
+        finally
+        {
+            storageLock.readLock().unlock();
+        }
+
+        return names;
     }
 
     /**

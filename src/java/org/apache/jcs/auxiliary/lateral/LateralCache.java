@@ -206,8 +206,10 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * @param groupName
-     * @return A set of group keys.
+     * Gets the set of keys of objects currently in the group.
+     * <p>
+     * @param group
+     * @return a Set of group keys.
      * @throws IOException
      */
     public Set<K> getGroupKeys( String groupName )
@@ -220,6 +222,27 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         catch ( Exception ex )
         {
             handleException( ex, "Failed to remove groupName [" + groupName + "] from " + lateralCacheAttribures.getCacheName() + "@"
+                + lateralCacheAttribures );
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @return a Set of group names.
+     * @throws IOException
+     */
+    public Set<String> getGroupNames()
+        throws IOException
+    {
+        try
+        {
+            return lateralCacheService.getGroupNames( cacheName );
+        }
+        catch ( Exception ex )
+        {
+            handleException( ex, "Failed to get group names from " + lateralCacheAttribures.getCacheName() + "@"
                 + lateralCacheAttribures );
         }
         return Collections.emptySet();

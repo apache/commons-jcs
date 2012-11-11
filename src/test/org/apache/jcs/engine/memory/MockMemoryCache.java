@@ -224,6 +224,14 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
     {
         return null;
     }
+    
+    /**
+     * @return null
+     */
+    public Set<String> getGroupNames()
+    {
+        return null;
+    }
 
     /**
      * @param numberToFree

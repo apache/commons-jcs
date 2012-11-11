@@ -414,6 +414,16 @@ public class CompositeCacheDiskUsageUnitTest
         {
             return null;
         }
+        
+        /**
+         * @return null
+         * @throws IOException
+         */
+        public Set<String> getGroupNames()
+            throws IOException
+        {
+            return null;
+        }
 
         /** @return null */
         public IStats getStatistics()
@@ -484,6 +494,8 @@ public class CompositeCacheDiskUsageUnitTest
         {
             return Collections.emptyMap();
         }
+
+		
     }
 
 }

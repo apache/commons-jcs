@@ -457,6 +457,19 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     {
         return getRemoteCacheService().getGroupKeys( cacheName, groupName );
     }
+    
+    /**
+     * Returns all the group names for a cache.
+     * <p>
+     * @return Set
+     * @throws java.rmi.RemoteException
+     * @throws IOException
+     */
+    public Set<String> getGroupNames()
+        throws java.rmi.RemoteException, IOException
+    {
+        return getRemoteCacheService().getGroupNames( cacheName );
+    }
 
     /**
      * Allows other member of this package to access the listener. This is mainly needed for

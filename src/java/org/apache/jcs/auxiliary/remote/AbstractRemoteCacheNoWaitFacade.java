@@ -237,10 +237,40 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
             AuxiliaryCache<K, V> aux = noWaits[i];
             if ( aux != null )
             {
-                allKeys.addAll( aux.getGroupKeys( group ) );
+                Set<K> groupKeys = aux.getGroupKeys( group );
+                if(groupKeys != null)
+                {
+                    allKeys.addAll( groupKeys );
+                }
             }
         }
         return allKeys;
+    }
+
+    /**
+     * Gets the group names in the cache
+     * <p>
+     *
+     * @return the set of group names
+     * @throws IOException
+     */
+    public Set<String> getGroupNames() throws IOException
+    {
+        HashSet<String> names = new HashSet<String>();
+        for (int i = 0; i < noWaits.length; i++)
+        {
+            AuxiliaryCache<K, V> aux = noWaits[i];
+            if (aux != null)
+            {
+                Set<String> groupNames = aux.getGroupNames();
+                if (groupNames != null)
+                {
+                    names.addAll(groupNames);
+                }
+            }
+        }
+
+        return names;
     }
 
     /**

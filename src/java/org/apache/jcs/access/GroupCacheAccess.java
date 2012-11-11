@@ -211,6 +211,16 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     }
 
     /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @return A Set of group names.
+     */
+    public Set<String> getGroupNames()
+    {
+        return this.cacheControl.getGroupNames();
+    }
+
+    /**
      * Invalidates a group: remove all the group members
      * <p>
      * @param group

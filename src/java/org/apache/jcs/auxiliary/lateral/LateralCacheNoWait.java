@@ -240,6 +240,23 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
         }
         return Collections.emptySet();
     }
+    
+    /**
+     * @return Set
+     */
+    public Set<String> getGroupNames()
+    {
+        try
+        {
+            return cache.getGroupNames( );
+        }
+        catch ( IOException ex )
+        {
+            log.error( ex );
+            eventQueue.destroy();
+        }
+        return Collections.emptySet();
+    }
 
     /**
      * Adds a remove request to the lateral cache.

@@ -204,6 +204,14 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     {
         return null;
     }
+  
+    /**
+     * @return null
+     */
+    public Set<String> getGroupNames()
+    {
+        return null;
+    }
 
     /**
      * @return null

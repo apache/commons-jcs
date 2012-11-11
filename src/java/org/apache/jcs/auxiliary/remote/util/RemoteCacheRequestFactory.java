@@ -138,6 +138,29 @@ public class RemoteCacheRequestFactory
     }
 
     /**
+     * Creates a GetGroupNames Request.
+     * <p>
+     * @param cacheName
+     * @param requesterId
+     * @return RemoteHttpCacheRequest
+     */
+	public static RemoteCacheRequest<String, String> createGetGroupNamesRequest( String cacheName, int requesterId)
+	{
+	    RemoteCacheRequest<String, String> request = new RemoteCacheRequest<String, String>();
+	    request.setCacheName( cacheName );
+	    request.setKey( cacheName );
+	    request.setRequesterId( requesterId );
+	    request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_NAMES );
+
+	    if ( log.isDebugEnabled() )
+	    {
+	        log.debug( "Created: " + request );
+	    }
+
+	    return request;
+	}
+
+    /**
      * Creates a removeAll Request.
      * <p>
      * @param cacheName
@@ -231,4 +254,6 @@ public class RemoteCacheRequestFactory
 
         return request;
     }
+
+
 }

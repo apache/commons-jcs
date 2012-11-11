@@ -328,6 +328,31 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
     }
 
     /**
+     * Gets the set of group names currently in the cache.
+     * <p>
+     * @param cacheName
+     * @param group
+     * @return A Set of group names
+     */
+    public Set<String> getGroupNames( String cacheName )
+    {
+        return processGetGroupNames( cacheName );
+    }
+
+    /**
+     * Gets the set of keys of objects currently in the group.
+     * <p>
+     * @param cacheName
+     * @param groupName
+     * @return Set
+     */
+    public Set<String> processGetGroupNames( String cacheName )
+    {
+        CompositeCache<?, ?> cache = getCacheManager().getCache( cacheName );
+        return cache.getGroupNames();
+    }
+
+    /**
      * Removes the given key from the specified remote cache. Defaults the listener id to 0.
      * <p>
      * @param cacheName

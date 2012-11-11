@@ -1047,6 +1047,16 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
         throw new UnsupportedOperationException( "Groups not implemented." );
         // return null;
     }
+    
+    /**
+     * @return Set
+     */
+    @Override
+    public Set<String> getGroupNames()
+    {
+        throw new UnsupportedOperationException( "Groups not implemented." );
+        // return null;
+    }
 
     /**
      * @param elementSerializer The elementSerializer to set.

@@ -1106,10 +1106,21 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     /**
      * Gets the set of keys of objects currently in the group.
      * <p>
-     * @param group
+     * @param group the name of the group
      * @return A Set of keys, or null.
      */
     public Set<K> getGroupKeys( String group )
+    {
+       return getGroupKeys(group, false);
+    }
+
+    /**
+     * Gets the set of keys of objects currently in the group.
+     * <p>
+     * @param group the name of the group
+     * @return A Set of keys, or null.
+     */
+    public Set<K> getGroupKeys( String group, boolean localOnly )
     {
         HashSet<K> allKeys = new HashSet<K>();
         allKeys.addAll( memCache.getGroupKeys( group ) );
@@ -1118,13 +1129,61 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             AuxiliaryCache<K, V> aux = auxCaches[i];
             if ( aux != null )
             {
-                try
+                if(!localOnly || aux.getCacheType() == CacheType.DISK_CACHE)
                 {
-                    allKeys.addAll( aux.getGroupKeys( group ) );
+                    try
+                    {
+                        allKeys.addAll( aux.getGroupKeys( group ) );
+                    }
+                    catch ( IOException e )
+                    {
+                        // ignore
+                    }
                 }
-                catch ( IOException e )
+            }
+        }
+        return allKeys;
+    }
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @return a Set of group names.
+     */
+    public Set<String> getGroupNames()
+    {
+        return getGroupNames( false );
+    }
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @param localOnly whether to get the group names only from local caches or not
+     * @return a Set of group names.
+     */
+    public Set<String> getGroupNames(boolean localOnly)
+    {
+        HashSet<String> allKeys = new HashSet<String>();
+        allKeys.addAll( memCache.getGroupNames() );
+        for ( int i = 0; i < auxCaches.length; i++ )
+        {
+            AuxiliaryCache<K, V> aux = auxCaches[i];
+            if ( aux != null )
+            {
+                if(!localOnly || aux.getCacheType() == CacheType.DISK_CACHE)
                 {
-                    // ignore
+                    try
+                    {
+                        Set<String> groupNames = aux.getGroupNames();
+                        if(groupNames != null)
+                        {
+                            allKeys.addAll( groupNames );
+                        }
+                    }
+                    catch ( IOException e )
+                    {
+                        // ignore
+                    }
                 }
             }
         }

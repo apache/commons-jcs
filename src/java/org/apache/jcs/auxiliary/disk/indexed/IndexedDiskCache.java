@@ -770,6 +770,37 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
+     * Gets the group names from the disk.
+     * <p>
+     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+     */
+    @Override
+    public Set<String> getGroupNames()
+    {
+        HashSet<String> names = new HashSet<String>();
+        try
+        {
+            storageLock.readLock().lock();
+
+            for (K k : keyHash.keySet())
+            {
+                if ( k instanceof GroupAttrName )
+                {
+                    @SuppressWarnings("unchecked") // Type checked with instanceof
+                    GroupAttrName<K> groupAttrName = (GroupAttrName<K>) k;
+                    names.add( groupAttrName.groupId.groupName );
+                }
+            }
+        }
+        finally
+        {
+            storageLock.readLock().unlock();
+        }
+
+        return names;
+    }
+
+    /**
      * Returns true if the removal was successful; or false if there is nothing to remove. Current
      * implementation always result in a disk orphan.
      * <p>

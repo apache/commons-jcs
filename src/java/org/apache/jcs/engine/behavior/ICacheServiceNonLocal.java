@@ -107,13 +107,23 @@ public interface ICacheServiceNonLocal<K extends Serializable, V extends Seriali
         throws IOException;
 
     /**
-     * Likely not implemented.  This probably should be deprecated.
+     * Gets the set of keys of objects currently in the group.
      * <p>
-     * @param cacheName
-     * @param groupName
-     * @return A Set of keys
+     * @param cacheName the name of the cache
+     * @param groupName the name of the group
+     * @return a Set of group keys.
      * @throws IOException
      */
     Set<K> getGroupKeys( String cacheName, String groupName )
+        throws IOException;
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @param cacheName the name of the cache
+     * @return a Set of group names.
+     * @throws IOException
+     */
+    Set<String> getGroupNames( String cacheName )
         throws IOException;
 }

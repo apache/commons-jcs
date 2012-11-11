@@ -171,6 +171,9 @@ public class RemoteHttpCacheDispatcher
                     case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_KEYS:
                         keyValue = remoteCacheRequest.getKey() + "";
                         break;
+                    case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_NAMES:
+                        keyValue = remoteCacheRequest.getKey() + "";
+                        break;
                     case RemoteCacheRequest.REQUEST_TYPE_UPDATE:
                         keyValue = remoteCacheRequest.getCacheElement().getKey() + "";
                         break;

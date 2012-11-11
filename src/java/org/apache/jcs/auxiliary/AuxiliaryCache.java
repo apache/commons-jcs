@@ -47,6 +47,14 @@ public interface AuxiliaryCache<K extends Serializable, V extends Serializable>
         throws IOException;
 
     /**
+     * Gets the set of group names currently in the cache
+     * @return a set of group names
+     * @throws IOException
+     */
+    Set<String> getGroupNames()
+        throws IOException;
+
+    /**
      * @return the historical and statistical data for a region's auxiliary cache.
      */
     IStats getStatistics();

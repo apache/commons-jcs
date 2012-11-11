@@ -59,7 +59,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
     /**
      * Returns the historical and statistical data for a region's memory cache.
      * <p>
-     * @return Statistics and Infor for the Memory Cache.
+     * @return Statistics and Info for the Memory Cache.
      */
     IStats getStatistics();
 
@@ -204,4 +204,11 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * @return a Set of group keys.
      */
     Set<K> getGroupKeys( String group );
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @return a Set of group names.
+     */
+    Set<String> getGroupNames();
 }

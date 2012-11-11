@@ -285,8 +285,10 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     }
 
     /**
+     * Gets the set of keys of objects currently in the group.
+     * <p>
      * @param group
-     * @return Set
+     * @return a Set of group keys.
      */
     public Set<K> getGroupKeys( String group )
     {
@@ -298,7 +300,41 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
             {
                 try
                 {
-                    allKeys.addAll( aux.getGroupKeys( group ) );
+                    Set<K> groupKeys = aux.getGroupKeys( group );
+                    if(groupKeys != null)
+                    {
+                    	allKeys.addAll( groupKeys );
+                    }
+                }
+                catch ( IOException e )
+                {
+                    // ignore
+                }
+            }
+        }
+        return allKeys;
+    }
+
+    /**
+     * Gets the set of group names in the cache
+     * <p>
+     * @return a Set of group names.
+     */
+    public Set<String> getGroupNames()
+    {
+        HashSet<String> allKeys = new HashSet<String>();
+        for ( int i = 0; i < noWaits.length; i++ )
+        {
+            AuxiliaryCache<K, V> aux = noWaits[i];
+            if ( aux != null )
+            {
+                try
+                {
+                    Set<String> groupNames = aux.getGroupNames();
+                    if(groupNames != null)
+                    {
+                    	allKeys.addAll( groupNames );
+                    }
                 }
                 catch ( IOException e )
                 {

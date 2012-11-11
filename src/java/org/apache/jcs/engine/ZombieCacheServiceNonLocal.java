@@ -188,6 +188,17 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
     }
 
     /**
+     * Does nothing.
+     * <p>
+     * @param cacheName - region name
+     * @return empty set
+     */
+    public Set<String> getGroupNames( String cacheName )
+    {
+        return Collections.emptySet();
+    }
+
+    /**
      * Walk the queue, calling the service for each queue operation.
      * <p>
      * @param service

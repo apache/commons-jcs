@@ -362,16 +362,52 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the set of keys of objects currently in the group throws UnsupportedOperationException
+     * Gets the set of keys of objects currently in the group
      * <p>
      * @param cacheName
      * @param group
      * @return Set
      */
+    @SuppressWarnings("unchecked") // Need cast from Object
     public Set<K> getGroupKeys( String cacheName, String group )
+        throws IOException
     {
-        throw new UnsupportedOperationException( "Groups not implemented." );
-        // return null;
+        CacheElement<String, String> ce = new CacheElement<String, String>(cacheName, group, null);
+        LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>(ce);
+        // led.requesterId = requesterId; // later
+        led.command = LateralElementDescriptor.GET_GROUP_KEYS;
+        Object response = sender.sendAndReceive(led);
+        if (response != null)
+        {
+            return (Set<K>) response;
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the set of groups currently in the cache throws
+     * UnsupportedOperationException
+     * <p>
+     *
+     * @param cacheName
+     * @return Set
+     */
+    @SuppressWarnings("unchecked") // Need cast from Object
+    public Set<String> getGroupNames(String cacheName)
+        throws IOException
+    {
+        CacheElement<String, String> ce = new CacheElement<String, String>(cacheName, null, null);
+        LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>(ce);
+        // led.requesterId = requesterId; // later
+        led.command = LateralElementDescriptor.GET_GROUP_NAMES;
+        Object response = sender.sendAndReceive(led);
+        if (response != null)
+        {
+            return (Set<String>) response;
+        }
+
+        return null;
     }
 
     /**
@@ -513,4 +549,6 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
     {
         return tcpLateralCacheAttributes;
     }
+
+
 }

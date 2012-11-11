@@ -140,6 +140,15 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                         // FIXME: Re-enable
                         //response.getPayload().put( request.getKey(), groupKeys );
                         break;
+                    case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_NAMES:
+                        Set<String> groupNames = getRemoteCacheService().getGroupNames( request.getCacheName() );
+                        if ( groupNames == null )
+                        {
+                            groupNames = Collections.emptySet();
+                        }
+                        // FIXME: Re-enable
+                        //response.getPayload().put( request.getKey(), groupNames );
+                        break;
                     default:
                         String message = "Unknown event type.  Cannot process " + request;
                         log.warn( message );
