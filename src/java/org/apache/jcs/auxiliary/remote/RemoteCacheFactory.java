@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
@@ -75,7 +76,7 @@ public class RemoteCacheFactory
         ArrayList<ICache<K, V>> noWaits = new ArrayList<ICache<K, V>>();
 
         // if LOCAL
-        if ( rca.getRemoteType() == RemoteCacheAttributes.LOCAL )
+        if ( rca.getRemoteType() == RemoteType.LOCAL )
         {
             // a list to be turned into an array of failover server information
             ArrayList<String> failovers = new ArrayList<String>();
@@ -143,7 +144,7 @@ public class RemoteCacheFactory
 
             // if CLUSTER
         }
-        else if ( rca.getRemoteType() == RemoteCacheAttributes.CLUSTER )
+        else if ( rca.getRemoteType() == RemoteType.CLUSTER )
         {
             // REGISTER LISTENERS FOR EACH SYSTEM CLUSTERED CACHEs
             StringTokenizer it = new StringTokenizer( rca.getClusterServers(), "," );
@@ -156,7 +157,7 @@ public class RemoteCacheFactory
                 rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
                 RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );
-                rca.setRemoteType( RemoteCacheAttributes.CLUSTER );
+                rca.setRemoteType( RemoteType.CLUSTER );
                 ICache<K, V> ic = rcm.getCache( rca );
                 if ( ic != null )
                 {

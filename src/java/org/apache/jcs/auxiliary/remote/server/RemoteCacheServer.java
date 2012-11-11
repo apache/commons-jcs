@@ -31,11 +31,11 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.exception.CacheException;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.CacheEventQueueFactory;
 import org.apache.jcs.engine.CacheListeners;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -91,7 +91,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     private CompositeCacheManager cacheManager;
 
     /** relates listener id with a type */
-    private final Hashtable<Long, Integer> idTypeMap = new Hashtable<Long, Integer>();
+    private final Hashtable<Long, RemoteType> idTypeMap = new Hashtable<Long, RemoteType>();
 
     /** relates listener id with an ip address */
     private final Hashtable<Long, String> idIPMap = new Hashtable<Long, String>();
@@ -334,7 +334,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
+                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
@@ -522,12 +522,12 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
             // data from those that were up when the failed server comes back o
             // line.
 
-            if ( !fromCluster && this.remoteCacheServerAttributes.getAllowClusterGet() )
+            if ( !fromCluster && this.remoteCacheServerAttributes.isAllowClusterGet() )
             {
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "NonLocalGet. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
                 }
                 returnElement = c.get( key );
             }
@@ -540,7 +540,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "LocalGet.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
                 }
                 returnElement = c.localGet( key );
             }
@@ -643,12 +643,12 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
             // failover recovery.  Removed items may show up.  There is no good way to prevent this.
             // We should make it configurable.
 
-            if ( !fromCluster && this.remoteCacheServerAttributes.getAllowClusterGet() )
+            if ( !fromCluster && this.remoteCacheServerAttributes.isAllowClusterGet() )
             {
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "NonLocalGetMatching. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
                 }
                 elements = c.getMatching( pattern );
             }
@@ -661,7 +661,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "LocalGetMatching.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
                 }
                 elements = c.localGetMatching( pattern );
             }
@@ -756,14 +756,8 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      */
     private boolean isRequestFromCluster( long requesterId )
     {
-        Integer remoteTypeL = idTypeMap.get( Long.valueOf( requesterId ) );
-
-        boolean fromCluster = false;
-        if ( remoteTypeL != null && remoteTypeL.intValue() == IRemoteCacheAttributes.CLUSTER )
-        {
-            fromCluster = true;
-        }
-        return fromCluster;
+        RemoteType remoteTypeL = idTypeMap.get( Long.valueOf( requesterId ) );
+        return remoteTypeL == RemoteType.CLUSTER;
     }
 
     /**
@@ -797,12 +791,12 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
             // data from those that were up when the failed server comes back on
             // line.
 
-            if ( !fromCluster && this.remoteCacheServerAttributes.getAllowClusterGet() )
+            if ( !fromCluster && this.remoteCacheServerAttributes.isAllowClusterGet() )
             {
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "NonLocalGetMultiple. fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
                 }
 
                 returnElements = c.getMultiple( keys );
@@ -816,7 +810,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                 if ( log.isDebugEnabled() )
                 {
                     log.debug( "LocalGetMultiple.  fromCluster [" + fromCluster + "] AllowClusterGet ["
-                        + this.remoteCacheServerAttributes.getAllowClusterGet() + "]" );
+                        + this.remoteCacheServerAttributes.isAllowClusterGet() + "]" );
                 }
 
                 returnElements = c.localGetMultiple( keys );
@@ -997,7 +991,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
 
                 // UPDATE LOCALS IF A REQUEST COMES FROM A CLUSTER
                 // IF LOCAL CLUSTER CONSISTENCY IS CONFIGURED
-                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
+                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
@@ -1086,7 +1080,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                 }
 
                 // update registered listeners
-                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.getLocalClusterConsistency() ) )
+                if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
 
@@ -1354,8 +1348,8 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
 
         String listenerAddress = ircl.getLocalHostAddress();
 
-        int remoteType = ircl.getRemoteType();
-        if ( remoteType == IRemoteCacheAttributes.CLUSTER )
+        RemoteType remoteType = ircl.getRemoteType();
+        if ( remoteType == RemoteType.CLUSTER )
         {
             log.debug( "adding cluster listener, listenerAddress [" + listenerAddress + "]" );
             cacheListeners = (CacheListeners<KK, VV>)getClusterListeners( cacheName );
@@ -1411,7 +1405,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                 }
 
                 // relate the type to an id
-                this.idTypeMap.put( Long.valueOf( id ), Integer.valueOf( remoteType ) );
+                this.idTypeMap.put( Long.valueOf( id ), remoteType);
                 if ( listenerAddress != null )
                 {
                     this.idIPMap.put( Long.valueOf( id ), listenerAddress );

@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.jcs.engine.stats.StatElement;
@@ -91,7 +92,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
         se.setData( this.getRemoteCacheAttributes().getRemoteTypeName() + "" );
         elems.add( se );
 
-        if ( this.getRemoteCacheAttributes().getRemoteType() == IRemoteCacheAttributes.CLUSTER )
+        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
         {
             // something cluster specific
         }
@@ -149,7 +150,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
             log.debug( "Initiating failover, rcnf = " + rcnwf );
         }
 
-        if ( rcnwf != null && rcnwf.remoteCacheAttributes.getRemoteType() == RemoteCacheAttributes.LOCAL )
+        if ( rcnwf != null && rcnwf.remoteCacheAttributes.getRemoteType() == RemoteType.LOCAL )
         {
             if ( log.isDebugEnabled() )
             {

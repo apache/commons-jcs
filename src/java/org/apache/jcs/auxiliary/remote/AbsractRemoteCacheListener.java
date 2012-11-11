@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheElementSerialized;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
@@ -131,7 +132,7 @@ public abstract class AbsractRemoteCacheListener<K extends Serializable, V exten
      * @return The remoteType value
      * @throws IOException
      */
-    public int getRemoteType()
+    public RemoteType getRemoteType()
         throws IOException
     {
         if ( log.isDebugEnabled() )

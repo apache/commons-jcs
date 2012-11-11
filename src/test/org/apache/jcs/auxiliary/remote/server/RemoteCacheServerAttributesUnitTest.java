@@ -21,7 +21,7 @@ package org.apache.jcs.auxiliary.remote.server;
 
 import junit.framework.TestCase;
 
-import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 
 /**
  * Tests for the remote cache server attributes.
@@ -48,7 +48,7 @@ public class RemoteCacheServerAttributesUnitTest
     {
         RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
         attributes.setRemoteTypeName( "LOCAL" );
-        assertEquals( "Wrong type.", IRemoteCacheServerAttributes.LOCAL, attributes.getRemoteType() );
+        assertEquals( "Wrong type.", RemoteType.LOCAL, attributes.getRemoteType() );
         assertEquals( "Wrong name", "LOCAL", attributes.getRemoteTypeName() );
     }
 
@@ -59,7 +59,7 @@ public class RemoteCacheServerAttributesUnitTest
     {
         RemoteCacheServerAttributes attributes = new RemoteCacheServerAttributes();
         attributes.setRemoteTypeName( "CLUSTER" );
-        assertEquals( "Wrong type.", IRemoteCacheServerAttributes.CLUSTER, attributes.getRemoteType() );
+        assertEquals( "Wrong type.", RemoteType.CLUSTER, attributes.getRemoteType() );
         assertEquals( "Wrong name", "CLUSTER", attributes.getRemoteTypeName() );
     }
 }

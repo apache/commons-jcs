@@ -19,87 +19,21 @@ package org.apache.jcs.auxiliary.remote.server.behavior;
  * under the License.
  */
 
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.jcs.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
 
 /**
- * This defeines the minimal behavior for the objects that are used to configure
+ * This defines the minimal behavior for the objects that are used to configure
  * the remote cache server.
  */
 public interface IRemoteCacheServerAttributes
-    extends AuxiliaryCacheAttributes
+    extends ICommonRemoteCacheAttributes
 {
-    /** A remote cache is either a local cache or a cluster cache */
-    public static int LOCAL = 0;
-
-    /** A remote cache is either a local cache or a cluster cache */
-    public static int CLUSTER = 1;
-
-    /**
-     * Gets the remoteTypeName attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @return The remoteTypeName value
-     */
-    public String getRemoteTypeName();
-
-    /**
-     * Sets the remoteTypeName attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @param s
-     *            The new remoteTypeName value
-     */
-    public void setRemoteTypeName( String s );
-
-    /**
-     * Gets the remoteType attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @return The remoteType value
-     */
-    public int getRemoteType();
-
-    /**
-     * Sets the remoteType attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @param p
-     *            The new remoteType value
-     */
-    public void setRemoteType( int p );
-
-    /**
-     * Gets the remoteHost attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @return The remoteHost value
-     */
-    public String getRemoteHost();
-
-    /**
-     * Sets the remoteHost attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @param s
-     *            The new remoteHost value
-     */
-    public void setRemoteHost( String s );
-
-    /**
-     * Gets the remotePort attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @return The remotePort value
-     */
-    public int getRemotePort();
-
-    /**
-     * Sets the remotePort attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @param p
-     *            The new remotePort value
-     */
-    public void setRemotePort( int p );
-
     /**
      * Gets the localPort attribute of the IRemoteCacheAttributes object.
      * <p>
      * @return The localPort value
      */
-    public int getServicePort();
+    int getServicePort();
 
     /**
      * Sets the localPort attribute of the IRemoteCacheAttributes object.
@@ -107,69 +41,7 @@ public interface IRemoteCacheServerAttributes
      * @param p
      *            The new localPort value
      */
-    public void setServicePort( int p );
-
-    /**
-     * Gets the clusterServers attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @return The clusterServers value
-     */
-    public String getClusterServers();
-
-    /**
-     * Sets the clusterServers attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @param s
-     *            The new clusterServers value
-     */
-    public void setClusterServers( String s );
-
-    /**
-     * Gets the removeUponRemotePut attribute of the IRemoteCacheAttributes.
-     * object.
-     * <p>
-     * @return The removeUponRemotePut value
-     */
-    public boolean getRemoveUponRemotePut();
-
-    /**
-     * Sets the removeUponRemotePut attribute of the IRemoteCacheAttributes.
-     * object
-     * <p>
-     * @param r
-     *            The new removeUponRemotePut value
-     */
-    public void setRemoveUponRemotePut( boolean r );
-
-    /**
-     * Gets the getOnly attribute of the IRemoteCacheAttributes object.
-     * A remote cache is either a local cache or a cluster cache
-     * @return The getOnly value
-     */
-    public boolean getGetOnly();
-
-    /**
-     * Sets the getOnly attribute of the IRemoteCacheAttributes object.
-     * <p>
-     * @param r
-     *            The new getOnly value
-     */
-    public void setGetOnly( boolean r );
-
-    /**
-     * Should cluster updates be propogated to the locals.
-     * <p>
-     * @return The localClusterConsistency value
-     */
-    public boolean getLocalClusterConsistency();
-
-    /**
-     * Should cluster updates be propogated to the locals.
-     * <p>
-     * @param r
-     *            The new localClusterConsistency value
-     */
-    public void setLocalClusterConsistency( boolean r );
+    void setServicePort( int p );
 
     /**
      * Should we try to get remotely when the request does not come in from a
@@ -181,22 +53,22 @@ public interface IRemoteCacheServerAttributes
      * <p>
      * @return The localClusterConsistency value
      */
-    public boolean getAllowClusterGet();
+    boolean isAllowClusterGet();
 
     /**
-     * Should cluster updates be propogated to the locals.
+     * Should cluster updates be propagated to the locals.
      * <p>
      * @param r
      *            The new localClusterConsistency value
      */
-    public void setAllowClusterGet( boolean r );
+    void setAllowClusterGet( boolean r );
 
     /**
      * Gets the ConfigFileName attribute of the IRemoteCacheAttributes object.
      * <p>
      * @return The clusterServers value
      */
-    public String getConfigFileName();
+    String getConfigFileName();
 
     /**
      * Sets the ConfigFileName attribute of the IRemoteCacheAttributes object.
@@ -204,53 +76,43 @@ public interface IRemoteCacheServerAttributes
      * @param s
      *            The new clusterServers value
      */
-    public void setConfigFileName( String s );
-    
-    /**
-     * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
-     */
-    public void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis );
-
-    /**
-     * @return Returns the rmiSocketFactoryTimeoutMillis.
-     */
-    public int getRmiSocketFactoryTimeoutMillis();
+    void setConfigFileName( String s );
 
     /**
      * Should we try to keep the registry alive
      * <p>
      * @param useRegistryKeepAlive the useRegistryKeepAlive to set
      */
-    public void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );
+    void setUseRegistryKeepAlive( boolean useRegistryKeepAlive );
 
     /**
      * Should we start the registry
      * <p>
      * @param startRegistry the startRegistry to set
      */
-    public void setStartRegistry( boolean startRegistry );
+    void setStartRegistry( boolean startRegistry );
 
     /**
      * Should we start the registry
      * <p>
      * @return the startRegistry
      */
-    public boolean isStartRegistry();
+    boolean isStartRegistry();
 
     /**
      * Should we try to keep the registry alive
      * <p>
      * @return the useRegistryKeepAlive
      */
-    public boolean isUseRegistryKeepAlive();
+    boolean isUseRegistryKeepAlive();
 
     /**
      * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
      */
-    public void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis );
+    void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis );
 
     /**
      * @return the registryKeepAliveDelayMillis
      */
-    public long getRegistryKeepAliveDelayMillis();
+    long getRegistryKeepAliveDelayMillis();
 }

@@ -19,66 +19,28 @@ package org.apache.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * This specifies what a remote cache configuration object should look like.
  */
 public interface IRemoteCacheAttributes
-    extends AuxiliaryCacheAttributes
+    extends ICommonRemoteCacheAttributes
 {
-    /** A remote cache is either a local cache or a cluster cache.  */
-    public static final int LOCAL = 0;
-
-    /** A remote cache is either a local cache or a cluster cache. */
-    public static final int CLUSTER = 1;
-
-    /** The default timeout for the custom RMI socket facfory */
-    public static final int DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS = 10000;
-
     /**
      * If RECEIVE is false then the remote cache will not register a listener with the remote
      * server. This allows you to configure a remote server as a repository from which you can get
-     * and to which you put, but from which you do not reveive any notifications. That is, you will
+     * and to which you put, but from which you do not receive any notifications. That is, you will
      * not receive updates or removes.
      * <p>
-     * If you set this option to false, you should set your locl memory size to 0.
+     * If you set this option to false, you should set your local memory size to 0.
      */
-    public static final boolean DEFAULT_RECEIVE = true;
+    boolean DEFAULT_RECEIVE = true;
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
-     * loose our conenction with the server.
+     * loose our connection with the server.
      */
-    public static final int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
-
-    /**
-     * Gets the remoteTypeName attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The remoteTypeName value
-     */
-    public String getRemoteTypeName();
-
-    /**
-     * Sets the remoteTypeName attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param s The new remoteTypeName value
-     */
-    public void setRemoteTypeName( String s );
-
-    /**
-     * Gets the remoteType attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The remoteType value
-     */
-    public int getRemoteType();
-
-    /**
-     * Sets the remoteType attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param p The new remoteType value
-     */
-    public void setRemoteType( int p );
+    int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
 
     /**
      * Gets the failoverIndex attribute of the IRemoteCacheAttributes object.
@@ -88,154 +50,56 @@ public interface IRemoteCacheAttributes
      * <p>
      * @return The failoverIndex value
      */
-    public int getFailoverIndex();
+    int getFailoverIndex();
 
     /**
      * Sets the failoverIndex attribute of the IRemoteCacheAttributes object
      * <p>
      * @param p The new failoverIndex value
      */
-    public void setFailoverIndex( int p );
+    void setFailoverIndex( int p );
 
     /**
      * Gets the failovers attribute of the IRemoteCacheAttributes object
      * <p>
      * @return The failovers value
      */
-    public String[] getFailovers();
+    String[] getFailovers();
 
     /**
      * Sets the failovers attribute of the IRemoteCacheAttributes object
      * <p>
      * @param f The new failovers value
      */
-    public void setFailovers( String[] f );
-
-    /**
-     * Gets the remoteServiceName attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The remoteServiceName value
-     */
-    public String getRemoteServiceName();
-
-    /**
-     * Sets the remoteServiceName attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param s The new remoteServiceName value
-     */
-    public void setRemoteServiceName( String s );
-
-    /**
-     * Gets the remoteHost attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The remoteHost value
-     */
-    public String getRemoteHost();
-
-    /**
-     * Sets the remoteHost attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param s The new remoteHost value
-     */
-    public void setRemoteHost( String s );
-
-    /**
-     * Gets the remotePort attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The remotePort value
-     */
-    public int getRemotePort();
-
-    /**
-     * Sets the remotePort attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param p The new remotePort value
-     */
-    public void setRemotePort( int p );
+    void setFailovers( String[] f );
 
     /**
      * Gets the localPort attribute of the IRemoteCacheAttributes object
      * <p>
      * @return The localPort value
      */
-    public int getLocalPort();
+    int getLocalPort();
 
     /**
      * Sets the localPort attribute of the IRemoteCacheAttributes object
      * <p>
      * @param p The new localPort value
      */
-    public void setLocalPort( int p );
-
-    /**
-     * Gets the clusterServers attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The clusterServers value
-     */
-    public String getClusterServers();
-
-    /**
-     * Sets the clusterServers attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param s The new clusterServers value
-     */
-    public void setClusterServers( String s );
+    void setLocalPort( int p );
 
     /**
      * Gets the failoverServers attribute of the IRemoteCacheAttributes object
      * <p>
      * @return The failoverServers value
      */
-    public String getFailoverServers();
+    String getFailoverServers();
 
     /**
      * Sets the failoverServers attribute of the IRemoteCacheAttributes object
      * <p>
      * @param s The new failoverServers value
      */
-    public void setFailoverServers( String s );
-
-    /**
-     * Gets the removeUponRemotePut attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The removeUponRemotePut value
-     */
-    public boolean getRemoveUponRemotePut();
-
-    /**
-     * Sets the removeUponRemotePut attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param r The new removeUponRemotePut value
-     */
-    public void setRemoveUponRemotePut( boolean r );
-
-    /**
-     * Gets the getOnly attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @return The getOnly value
-     */
-    public boolean getGetOnly();
-
-    /**
-     * Sets the getOnly attribute of the IRemoteCacheAttributes object
-     * <p>
-     * @param r The new getOnly value
-     */
-    public void setGetOnly( boolean r );
-
-    /**
-     * Should cluster updates be propogated to the locals
-     * <p>
-     * @return The localClusterConsistency value
-     */
-    public boolean getLocalClusterConsistency();
-
-    /**
-     * Should cluster updates be propogated to the locals
-     * <p>
-     * @param r The new localClusterConsistency value
-     */
-    public void setLocalClusterConsistency( boolean r );
+    void setFailoverServers( String s );
 
     /**
      * The thread pool the remote cache should use. At first this will only be for gets.
@@ -244,14 +108,14 @@ public interface IRemoteCacheAttributes
      * <p>
      * @return the name of the pool
      */
-    public abstract String getThreadPoolName();
+    String getThreadPoolName();
 
     /**
-     * Set the anme of the pool to use. Pools should be defined in the cache.ccf.
+     * Set the name of the pool to use. Pools should be defined in the cache.ccf.
      * <p>
      * @param name
      */
-    public abstract void setThreadPoolName( String name );
+    void setThreadPoolName( String name );
 
     /**
      * -1 and 0 mean no timeout, this is the default if the timeout is -1 or 0, no threadpool will
@@ -259,7 +123,7 @@ public interface IRemoteCacheAttributes
      * <p>
      * @return the time in millis
      */
-    public abstract int getGetTimeoutMillis();
+    int getGetTimeoutMillis();
 
     /**
      * -1 means no timeout, this is the default if the timeout is -1 or 0, no threadpool will be
@@ -267,25 +131,7 @@ public interface IRemoteCacheAttributes
      * <p>
      * @param millis
      */
-    public abstract void setGetTimeoutMillis( int millis );
-
-    /**
-     * This sets a general timeout on the rmi socket factory. By default the socket factory will
-     * block forever.
-     * <p>
-     * We have a default setting. The default rmi behavior should never be used.
-     * <p>
-     * @return int milliseconds
-     */
-    public abstract int getRmiSocketFactoryTimeoutMillis();
-
-    /**
-     * This sets a general timeout on the RMI socket factory. By default the socket factory will
-     * block forever.
-     * <p>
-     * @param rmiSocketFactoryTimeoutMillis
-     */
-    public abstract void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis );
+    void setGetTimeoutMillis( int millis );
 
     /**
      * By default this option is true. If you set it to false, you will not receive updates or
@@ -293,15 +139,15 @@ public interface IRemoteCacheAttributes
      * <p>
      * @param receive
      */
-    public void setReceive( boolean receive );
+    void setReceive( boolean receive );
 
     /**
      * If RECEIVE is false then the remote cache will not register a listener with the remote
      * server. This allows you to configure a remote server as a repository from which you can get
-     * and to which you put, but from which you do not reveive any notifications. That is, you will
+     * and to which you put, but from which you do not receive any notifications. That is, you will
      * not receive updates or removes.
      * <p>
-     * If you set this option to false, you should set your locl memory size to 0.
+     * If you set this option to false, you should set your local memory size to 0.
      * <p>
      * The remote cache manager uses this value to decide whether or not to register a listener.
      * <p>
@@ -313,7 +159,7 @@ public interface IRemoteCacheAttributes
      * <p>
      * @return the receive value.
      */
-    public boolean isReceive();
+    boolean isReceive();
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
@@ -321,7 +167,7 @@ public interface IRemoteCacheAttributes
      * <p>
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
-    public void setZombieQueueMaxSize( int zombieQueueMaxSize );
+    void setZombieQueueMaxSize( int zombieQueueMaxSize );
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
@@ -329,5 +175,5 @@ public interface IRemoteCacheAttributes
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */
-    public int getZombieQueueMaxSize();
+    int getZombieQueueMaxSize();
 }

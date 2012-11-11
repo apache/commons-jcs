@@ -19,29 +19,17 @@ package org.apache.jcs.auxiliary.remote;
  * under the License.
  */
 
-import org.apache.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 
 /**
  * These objects are used to configure the remote cache client.
  */
 public class RemoteCacheAttributes
-    extends AbstractAuxiliaryCacheAttributes
+    extends CommonRemoteCacheAttributes
     implements IRemoteCacheAttributes
 {
     /** Don't change */
     private static final long serialVersionUID = -1555143736942374000L;
-
-    /** The service name */
-    private String remoteServiceName = IRemoteCacheConstants.REMOTE_CACHE_SERVICE_VAL;
-
-    /** server host */
-    private String remoteHost;
-
-    /** server port */
-    private int remotePort;
 
     /**
      * Failover servers will be used by local caches one at a time. Listeners will be registered
@@ -50,14 +38,8 @@ public class RemoteCacheAttributes
      */
     private String failoverServers = "";
 
-    /** Cluster chain */
-    private String clusterServers = "";
-
     /** callback */
     private int localPort = 0;
-
-    /** THe type of remote cache, local or cluster */
-    private int remoteType = LOCAL;
 
     /** what failover server we are connected to. */
     private int failoverIndex = 0;
@@ -65,23 +47,11 @@ public class RemoteCacheAttributes
     /** Array of failover server addresses */
     private String[] failovers;
 
-    /** Should we issue a local remove if we get a put from a remote server */
-    private boolean removeUponRemotePut = true;
-
-    /** Can we receive from or put to the remote. this probably shouldn't be used. Use receive. */
-    private boolean getOnly = false;
-
-    /** Should we put and get from the clusters. */
-    private boolean localClusterConsistency = false;
-
     /** default name is remote_cache_client */
     private String threadPoolName = "remote_cache_client";
 
     /** must be greater than 0 for a pool to be used. */
     private int getTimeoutMillis = -1;
-
-    /** read and connect timeout */
-    private int rmiSocketFactoryTimeoutMillis = DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS;
 
     /**
      * Can we receive from the server. You might have a 0 local store and keep everything on the
@@ -96,41 +66,6 @@ public class RemoteCacheAttributes
     public RemoteCacheAttributes()
     {
         super();
-    }
-
-    /**
-     * Gets the remoteTypeName attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The remoteTypeName value
-     */
-    public String getRemoteTypeName()
-    {
-        if ( remoteType == LOCAL )
-        {
-            return "LOCAL";
-        }
-        else if ( remoteType == CLUSTER )
-        {
-            return "CLUSTER";
-        }
-        return "LOCAL";
-    }
-
-    /**
-     * Sets the remoteTypeName attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param s The new remoteTypeName value
-     */
-    public void setRemoteTypeName( String s )
-    {
-        if ( s.equals( "LOCAL" ) )
-        {
-            remoteType = LOCAL;
-        }
-        else if ( s.equals( "CLUSTER" ) )
-        {
-            remoteType = CLUSTER;
-        }
     }
 
     /**
@@ -174,122 +109,6 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * Gets the remoteType attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The remoteType value
-     */
-    public int getRemoteType()
-    {
-        return remoteType;
-    }
-
-    /**
-     * Sets the remoteType attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param p The new remoteType value
-     */
-    public void setRemoteType( int p )
-    {
-        this.remoteType = p;
-    }
-
-    /**
-     * @return AuxiliaryCacheAttributes
-     */
-    public AuxiliaryCacheAttributes copy()
-    {
-        try
-        {
-            return (AuxiliaryCacheAttributes) this.clone();
-        }
-        catch ( Exception e )
-        {
-            // swallow
-        }
-        return this;
-    }
-
-    /**
-     * Gets the remoteServiceName attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The remoteServiceName value
-     */
-    public String getRemoteServiceName()
-    {
-        return this.remoteServiceName;
-    }
-
-    /**
-     * Sets the remoteServiceName attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param s The new remoteServiceName value
-     */
-    public void setRemoteServiceName( String s )
-    {
-        this.remoteServiceName = s;
-    }
-
-    /**
-     * Gets the remoteHost attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The remoteHost value
-     */
-    public String getRemoteHost()
-    {
-        return this.remoteHost;
-    }
-
-    /**
-     * Sets the remoteHost attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param s The new remoteHost value
-     */
-    public void setRemoteHost( String s )
-    {
-        this.remoteHost = s;
-    }
-
-    /**
-     * Gets the remotePort attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The remotePort value
-     */
-    public int getRemotePort()
-    {
-        return this.remotePort;
-    }
-
-    /**
-     * Sets the remotePort attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param p The new remotePort value
-     */
-    public void setRemotePort( int p )
-    {
-        this.remotePort = p;
-    }
-
-    /**
-     * Gets the clusterServers attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The clusterServers value
-     */
-    public String getClusterServers()
-    {
-        return this.clusterServers;
-    }
-
-    /**
-     * Sets the clusterServers attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param s The new clusterServers value
-     */
-    public void setClusterServers( String s )
-    {
-        this.clusterServers = s;
-    }
-
-    /**
      * Gets the failoverServers attribute of the RemoteCacheAttributes object.
      * <p>
      * @return The failoverServers value
@@ -329,65 +148,6 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * Gets the removeUponRemotePut attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The removeUponRemotePut value
-     */
-    public boolean getRemoveUponRemotePut()
-    {
-        return this.removeUponRemotePut;
-    }
-
-    /**
-     * Sets the removeUponRemotePut attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @param r The new removeUponRemotePut value
-     */
-    public void setRemoveUponRemotePut( boolean r )
-    {
-        this.removeUponRemotePut = r;
-    }
-
-    /**
-     * Gets the getOnly attribute of the RemoteCacheAttributes object.
-     * <p>
-     * @return The getOnly value
-     */
-    public boolean getGetOnly()
-    {
-        return this.getOnly;
-    }
-
-    /**
-     * Sets the getOnly attribute of the RemoteCacheAttributes object
-     * @param r The new getOnly value
-     */
-    public void setGetOnly( boolean r )
-    {
-        this.getOnly = r;
-    }
-
-    /**
-     * Should cluster updates be propogated to the locals.
-     * <p>
-     * @return The localClusterConsistency value
-     */
-    public boolean getLocalClusterConsistency()
-    {
-        return localClusterConsistency;
-    }
-
-    /**
-     * Should cluster updates be propogated to the locals.
-     * <p>
-     * @param r The new localClusterConsistency value
-     */
-    public void setLocalClusterConsistency( boolean r )
-    {
-        this.localClusterConsistency = r;
-    }
-
-    /**
      * @return the name of the pool
      */
     public String getThreadPoolName()
@@ -420,22 +180,6 @@ public class RemoteCacheAttributes
     }
 
     /**
-     * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
-     */
-    public void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis )
-    {
-        this.rmiSocketFactoryTimeoutMillis = rmiSocketFactoryTimeoutMillis;
-    }
-
-    /**
-     * @return Returns the rmiSocketFactoryTimeoutMillis.
-     */
-    public int getRmiSocketFactoryTimeoutMillis()
-    {
-        return rmiSocketFactoryTimeoutMillis;
-    }
-
-    /**
      * By default this option is true. If you set it to false, you will not receive updates or
      * removes from the remote server.
      * <p>
@@ -449,10 +193,10 @@ public class RemoteCacheAttributes
     /**
      * If RECEIVE is false then the remote cache will not register a listener with the remote
      * server. This allows you to configure a remote server as a repository from which you can get
-     * and to which you put, but from which you do not reveive any notifications. That is, you will
+     * and to which you put, but from which you do not receive any notifications. That is, you will
      * not receive updates or removes.
      * <p>
-     * If you set this option to false, you should set your locl memory size to 0.
+     * If you set this option to false, you should set your local memory size to 0.
      * <p>
      * The remote cache manager uses this value to decide whether or not to register a listener.
      * @return the receive value.
@@ -490,18 +234,11 @@ public class RemoteCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
-        buf.append( "\n RemoteCacheAttributes " );
-        buf.append( "\n remoteHost = [" + this.remoteHost + "]" );
-        buf.append( "\n remotePort = [" + this.remotePort + "]" );
-        buf.append( "\n cacheName = [" + this.cacheName + "]" );
-        buf.append( "\n removeUponRemotePut = [" + this.removeUponRemotePut + "]" );
-        buf.append( "\n getOnly = [" + getOnly + "]" );
+        StringBuffer buf = new StringBuffer(super.toString());
         buf.append( "\n receive = [" + isReceive() + "]" );
         buf.append( "\n getTimeoutMillis = [" + getGetTimeoutMillis() + "]" );
         buf.append( "\n threadPoolName = [" + getThreadPoolName() + "]" );
-        buf.append( "\n remoteType = [" + remoteType + "]" );
-        buf.append( "\n localClusterConsistency = [" + getLocalClusterConsistency() + "]" );
+        buf.append( "\n localClusterConsistency = [" + isLocalClusterConsistency() + "]" );
         buf.append( "\n zombieQueueMaxSize = [" + getZombieQueueMaxSize() + "]" );
         return buf.toString();
     }

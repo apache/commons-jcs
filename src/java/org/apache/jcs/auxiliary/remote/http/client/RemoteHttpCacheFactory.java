@@ -28,9 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.jcs.auxiliary.remote.RemoteCacheNoWaitFacade;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
@@ -77,7 +77,7 @@ public class RemoteHttpCacheFactory
 
         RemoteHttpCacheManager rcm = RemoteHttpCacheManager.getInstance( cacheMgr, cacheEventLogger, elementSerializer );
         // TODO, use the configured value.
-        rca.setRemoteType( RemoteCacheAttributes.LOCAL );
+        rca.setRemoteType( RemoteType.LOCAL );
         ICache<K, V> ic = rcm.getCache( rca );
         if ( ic != null )
         {

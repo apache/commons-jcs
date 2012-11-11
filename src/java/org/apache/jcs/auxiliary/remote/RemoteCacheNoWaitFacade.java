@@ -23,6 +23,7 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
@@ -74,7 +75,7 @@ public class RemoteCacheNoWaitFacade<K extends Serializable, V extends Serializa
             log.info( "in failover for " + i );
         }
 
-        if ( remoteCacheAttributes.getRemoteType() == RemoteCacheAttributes.LOCAL )
+        if ( remoteCacheAttributes.getRemoteType() == RemoteType.LOCAL )
         {
             if ( noWaits[i].getStatus() == CacheStatus.ERROR )
             {

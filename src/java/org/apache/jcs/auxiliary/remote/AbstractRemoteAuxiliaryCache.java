@@ -39,6 +39,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -189,8 +190,8 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
             {
                 // Never try to deserialize if you are a cluster client. Cluster
                 // clients are merely intra-remote cache communicators. Remote caches are assumed
-                // to have no ability to deserialze the objects.
-                if ( this.getRemoteCacheAttributes().getRemoteType() != IRemoteCacheAttributes.CLUSTER )
+                // to have no ability to deserialize the objects.
+                if ( this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
                 {
                     retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
                                                                                       this.elementSerializer );
@@ -291,7 +292,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
                         // Never try to deserialize if you are a cluster client. Cluster
                         // clients are merely intra-remote cache communicators. Remote caches are assumed
                         // to have no ability to deserialize the objects.
-                        if ( this.getRemoteCacheAttributes().getRemoteType() != IRemoteCacheAttributes.CLUSTER )
+                        if ( this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
                         {
                             unwrappedResult = SerializationConversionUtil
                                 .getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) entry.getValue(),
@@ -457,7 +458,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     {
         return getRemoteCacheService().getGroupKeys( cacheName, groupName );
     }
-    
+
     /**
      * Returns all the group names for a cache.
      * <p>
@@ -581,7 +582,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
         se.setData( this.getRemoteCacheAttributes().getRemoteTypeName() + "" );
         elems.add( se );
 
-        if ( this.getRemoteCacheAttributes().getRemoteType() == IRemoteCacheAttributes.CLUSTER )
+        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
         {
             // something cluster specific
         }

@@ -32,6 +32,7 @@ import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.access.exception.ObjectExistsException;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICacheObserver;
@@ -66,10 +67,10 @@ public class RemoteCacheClientTester
      * @return The remoteType value
      * @throws IOException
      */
-    public int getRemoteType()
+    public RemoteType getRemoteType()
         throws IOException
     {
-        return 0;
+        return RemoteType.LOCAL;
     }
 
     /**

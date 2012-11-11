@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.Remote;
 
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.behavior.ICacheListener;
 
 /**
@@ -62,7 +63,7 @@ public interface IRemoteCacheListener<K extends Serializable, V extends Serializ
      * @return The remoteType value
      * @throws IOException
      */
-    public int getRemoteType()
+    public RemoteType getRemoteType()
         throws IOException;
 
     /**

@@ -24,8 +24,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -55,7 +55,7 @@ public class MockRemoteCacheListener<K extends Serializable, V extends Serializa
     public int removeCount;
 
     /** The type of remote listener */
-    public int remoteType = IRemoteCacheAttributes.LOCAL;
+    public RemoteType remoteType = RemoteType.LOCAL;
 
     /**
      * @throws IOException
@@ -92,7 +92,7 @@ public class MockRemoteCacheListener<K extends Serializable, V extends Serializa
      * @return remoteType
      * @throws IOException
      */
-    public int getRemoteType()
+    public RemoteType getRemoteType()
         throws IOException
     {
         return remoteType;

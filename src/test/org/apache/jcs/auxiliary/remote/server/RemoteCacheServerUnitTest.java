@@ -27,8 +27,8 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.jcs.auxiliary.remote.MockRemoteCacheListener;
-import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
+import org.apache.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.utils.timing.SleepUtil;
@@ -60,10 +60,10 @@ public class RemoteCacheServerUnitTest
         RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
-        mockListener1.remoteType = IRemoteCacheAttributes.LOCAL;
+        mockListener1.remoteType = RemoteType.LOCAL;
         mockListener1.localAddress = expectedIp1;
         MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
-        mockListener1.remoteType = IRemoteCacheAttributes.LOCAL;
+        mockListener1.remoteType = RemoteType.LOCAL;
         mockListener2.localAddress = expectedIp2;
 
         String cacheName = "testAddListener";
@@ -97,10 +97,10 @@ public class RemoteCacheServerUnitTest
         RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
-        mockListener1.remoteType = IRemoteCacheAttributes.CLUSTER;
+        mockListener1.remoteType = RemoteType.CLUSTER;
         mockListener1.localAddress = expectedIp1;
         MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
-        mockListener1.remoteType = IRemoteCacheAttributes.CLUSTER;
+        mockListener1.remoteType = RemoteType.CLUSTER;
         mockListener2.localAddress = expectedIp2;
 
         String cacheName = "testAddListener";
@@ -200,9 +200,9 @@ public class RemoteCacheServerUnitTest
         RemoteCacheServer<String, String> server = new RemoteCacheServer<String, String>( rcsa );
 
         MockRemoteCacheListener<String, String> mockListener1 = new MockRemoteCacheListener<String, String>();
-        mockListener1.remoteType = IRemoteCacheServerAttributes.CLUSTER;
+        mockListener1.remoteType = RemoteType.CLUSTER;
         MockRemoteCacheListener<String, String> mockListener2 = new MockRemoteCacheListener<String, String>();
-        mockListener2.remoteType = IRemoteCacheServerAttributes.CLUSTER;
+        mockListener2.remoteType = RemoteType.CLUSTER;
 
         String cacheName = "testAddListenerToAllThenRemove";
 
@@ -281,11 +281,11 @@ public class RemoteCacheServerUnitTest
 
         // this is to get the listener id for inserts.
         MockRemoteCacheListener<String, Long> clusterListener = new MockRemoteCacheListener<String, Long>();
-        clusterListener.remoteType = IRemoteCacheAttributes.CLUSTER;
+        clusterListener.remoteType = RemoteType.CLUSTER;
 
         // this should get the updates
         MockRemoteCacheListener<String, Long> localListener = new MockRemoteCacheListener<String, Long>();
-        localListener.remoteType = IRemoteCacheAttributes.LOCAL;
+        localListener.remoteType = RemoteType.LOCAL;
 
         String cacheName = "testSimpleRegisterListenerAndPut_FromClusterWithLCC";
         server.addCacheListener( cacheName, clusterListener );

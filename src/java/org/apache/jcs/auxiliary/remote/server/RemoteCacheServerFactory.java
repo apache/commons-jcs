@@ -109,16 +109,48 @@ public class RemoteCacheServerFactory
             {
                 return;
             }
-            if ( host == null )
-            {
-                host = "";
-            }
             if ( log.isInfoEnabled() )
             {
                 log.info( "ConfigFileName = [" + propFile + "]" );
             }
             Properties props = RemoteUtils.loadProps( propFile );
-            RemoteCacheServerAttributes rcsa = configureServerAttributes( propFile );
+            startup(host, port, props);
+        }
+    }
+
+    /**
+     * Starts up the remote cache server on this JVM, and binds it to the registry on the given host
+     * and port.
+     * <p>
+     * A remote cache is either a local cache or a cluster cache.
+     * <p>
+     * @param host
+     * @param port
+     * @param props
+     * @throws IOException
+     */
+    public static void startup( String host, int port, Properties props )
+        throws IOException
+    {
+        if ( remoteCacheServer != null )
+        {
+            throw new IllegalArgumentException( "Server already started." );
+        }
+
+        synchronized ( RemoteCacheServer.class )
+        {
+            if ( remoteCacheServer != null )
+            {
+                return;
+            }
+            if ( host == null )
+            {
+                host = "";
+            }
+
+            RemoteCacheServerAttributes rcsa = configureRemoteCacheServerAttributes(props);
+            //rcsa.setConfigFileName( propFile );
+
             // These should come from the file!
             rcsa.setRemotePort( port );
             rcsa.setRemoteHost( host );
@@ -275,25 +307,6 @@ public class RemoteCacheServerFactory
             // impossible case.
             throw new IllegalArgumentException( ex.getMessage() + "; host=" + host + ", port=" + port );
         }
-    }
-
-    /**
-     * Configures the RemoteCacheServerAttributes from the props file.
-     * <p>
-     * @param propFile
-     * @return RemoteCacheServerAttributes
-     * @throws IOException
-     */
-    protected static RemoteCacheServerAttributes configureServerAttributes( String propFile )
-        throws IOException
-    {
-        Properties prop = RemoteUtils.loadProps( propFile );
-        // Properties prop = PropertyLoader.loadProperties( propFile );
-
-        RemoteCacheServerAttributes rcsa = configureRemoteCacheServerAttributes( prop );
-        rcsa.setConfigFileName( propFile );
-
-        return rcsa;
     }
 
     /**
