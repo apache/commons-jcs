@@ -25,6 +25,7 @@ import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -70,8 +71,11 @@ public abstract class LateralCacheAbstractFactory
      * <p>
      * @param lac  ILateralCacheAttributes
      * @param cacheMgr
+     *
+     * @return the listener if created, else null
      */
-    public abstract void createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr );
+    public abstract <K extends Serializable, V extends Serializable>
+        ILateralCacheListener<K, V> createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr );
 
     /**
      * Gets the name attribute of the LateralCacheFactory object

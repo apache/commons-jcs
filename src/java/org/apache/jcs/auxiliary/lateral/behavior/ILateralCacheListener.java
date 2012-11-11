@@ -30,18 +30,24 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 public interface ILateralCacheListener<K extends Serializable, V extends Serializable>
     extends ICacheListener<K, V>
 {
-    /** Description of the Method */
-    public void init();
+    /**
+     * Initialize this listener
+     */
+    void init();
 
     /**
      * @param cacheMgr
      *            The cacheMgr to set.
      */
-    public void setCacheManager( ICompositeCacheManager cacheMgr );
+    void setCacheManager( ICompositeCacheManager cacheMgr );
 
     /**
      * @return Returns the cacheMgr.
      */
-    public ICompositeCacheManager getCacheManager();
+    ICompositeCacheManager getCacheManager();
 
+    /**
+     * Dispose this listener
+     */
+    void dispose();
 }

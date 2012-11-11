@@ -20,6 +20,11 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="fix" issue="JCS-94" due-to="Diego Rivera">
+                JCS fails to properly dispose of the lateral TCP listener thread. 
+                If a webapp that uses JCS lateral TCP cache is undeployed, the listener is left 
+                hanging with no hope for exit.
+            </action>
             <action dev="tv" type="fix" issue="JCS-49" due-to="David Easley">
                 Contradictory documentation on RemoveUponRemotePut default value.
             </action>

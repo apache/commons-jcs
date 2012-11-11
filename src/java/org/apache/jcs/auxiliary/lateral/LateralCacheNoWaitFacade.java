@@ -35,6 +35,7 @@ import org.apache.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.stats.StatElement;
@@ -63,8 +64,14 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     /** The region name */
     private final String cacheName;
 
+    /** A cache listener */
+    private ILateralCacheListener<K, V> listener;
+
     /** User configurable attributes. */
     private final ILateralCacheAttributes lateralCacheAttributes;
+
+    /** Disposed state of this facade */
+    private boolean disposed = false;
 
     /**
      * Constructs with the given lateral cache, and fires events to any listeners.
@@ -72,12 +79,13 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * @param noWaits
      * @param cattr
      */
-    public LateralCacheNoWaitFacade( LateralCacheNoWait<K, V>[] noWaits, ILateralCacheAttributes cattr )
+    public LateralCacheNoWaitFacade(ILateralCacheListener<K, V> listener, LateralCacheNoWait<K, V>[] noWaits, ILateralCacheAttributes cattr )
     {
         if ( log.isDebugEnabled() )
         {
             log.debug( "CONSTRUCTING NO WAIT FACADE" );
         }
+        this.listener = listener;
         this.noWaits = noWaits;
         this.cacheName = cattr.getCacheName();
         this.lateralCacheAttributes = cattr;
@@ -390,6 +398,12 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     {
         try
         {
+            if ( listener != null )
+            {
+                listener.dispose();
+                listener = null;
+            }
+
             for ( int i = 0; i < noWaits.length; i++ )
             {
                 noWaits[i].dispose();
@@ -398,6 +412,10 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
         catch ( Exception ex )
         {
             log.error( ex );
+        }
+        finally
+        {
+            disposed = true;
         }
     }
 
@@ -432,15 +450,47 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
         //cache.getCacheName();
     }
 
-    // need to do something with this
     /**
      * Gets the status attribute of the LateralCacheNoWaitFacade object
      * @return The status value
      */
     public CacheStatus getStatus()
     {
-        return CacheStatus.ALIVE;
-        //q.isAlive() ? cache.getStatus() : cache.STATUS_ERROR;
+        if (disposed)
+        {
+            return CacheStatus.DISPOSED;
+        }
+
+        if ((noWaits.length == 0) || (listener != null))
+        {
+            return CacheStatus.ALIVE;
+        }
+
+        CacheStatus[] statii = new CacheStatus[noWaits.length];
+        for (int i = 0; i < noWaits.length; i++)
+        {
+            statii[i] = noWaits[i].getStatus();
+        }
+        // It's alive if ANY of its nowaits is alive
+        for (int i = 0; i < noWaits.length; i++)
+        {
+            if (statii[i] == CacheStatus.ALIVE)
+            {
+                return CacheStatus.ALIVE;
+            }
+        }
+        // It's alive if ANY of its nowaits is in error, but
+        // none are alive, then it's in error
+        for (int i = 0; i < noWaits.length; i++)
+        {
+            if (statii[i] == CacheStatus.ERROR)
+            {
+                return CacheStatus.ERROR;
+            }
+        }
+
+        // Otherwise, it's been disposed, since it's the only status left
+        return CacheStatus.DISPOSED;
     }
 
     /**

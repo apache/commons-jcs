@@ -31,9 +31,9 @@ import org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
 import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheListener;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementSerializer;
 import org.apache.jcs.engine.behavior.IShutdownObservable;
@@ -118,12 +118,13 @@ public class LateralTCPCacheFactory
             }
         }
 
-        createListener( (ILateralCacheAttributes) iaca, cacheMgr );
+        ILateralCacheListener<K, V> listener = createListener( (ILateralCacheAttributes) iaca, cacheMgr );
 
         // create the no wait facade.
         @SuppressWarnings("unchecked") // No generic arrays in java
         LateralCacheNoWait<K, V>[] lcnwArray = noWaits.toArray( new LateralCacheNoWait[0] );
-        LateralCacheNoWaitFacade<K, V> lcnwf = new LateralCacheNoWaitFacade<K, V>(lcnwArray, (ILateralCacheAttributes) iaca );
+        LateralCacheNoWaitFacade<K, V> lcnwf =
+            new LateralCacheNoWaitFacade<K, V>(listener, lcnwArray, (ILateralCacheAttributes) iaca );
 
         // create udp discovery if available.
         createDiscoveryService( lac, lcnwf, cacheMgr, cacheEventLogger, elementSerializer );
@@ -132,13 +133,23 @@ public class LateralTCPCacheFactory
     }
 
     /**
-     * @param lac
+     * Makes sure a listener gets created. It will get monitored as soon as it
+     * is used.
+     * <p>
+     * This should be called by create cache.
+     * <p>
+     * @param lac  ILateralCacheAttributes
      * @param cacheMgr
+     *
+     * @return the listener if created, else null
      */
     @Override
-    public void createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
+    public <K extends Serializable, V extends Serializable>
+        ILateralCacheListener<K, V> createListener( ILateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {
         ITCPLateralCacheAttributes attr = (ITCPLateralCacheAttributes) lac;
+        ILateralCacheListener<K, V> listener = null;
+
         // don't create a listener if we are not receiving.
         if ( attr.isReceive() )
         {
@@ -150,7 +161,7 @@ public class LateralTCPCacheFactory
             try
             {
                 // make a listener. if one doesn't exist
-                ICacheListener<?, ?> listener = LateralTCPListener.getInstance( attr, cacheMgr );
+                listener = LateralTCPListener.getInstance( attr, cacheMgr );
 
                 // register for shutdown notification
                 if ( listener instanceof IShutdownObserver && cacheMgr instanceof IShutdownObservable )
@@ -170,6 +181,8 @@ public class LateralTCPCacheFactory
                 log.debug( "Not creating a listener since we are not receiving." );
             }
         }
+
+        return listener;
     }
 
     /**

@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     protected final static Log log = LogFactory.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinite. */
-    private final static int acceptTimeOut = 0;
+    private final static int acceptTimeOut = 1000;
 
     /** The CacheHub this listener is associated with */
     private transient ICompositeCacheManager cacheManager;
@@ -99,6 +100,9 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
 
     /** is this shut down? */
     protected boolean shutdown = false;
+
+    /** is this terminated? */
+    protected boolean terminated = false;
 
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
@@ -156,17 +160,18 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
             receiver.start();
 
             pooledExecutor = Executors.newCachedThreadPool(new MyThreadFactory());
+            terminated = false;
+            shutdown = false;
         }
         catch ( Exception ex )
         {
             log.error( ex );
-
             throw new IllegalStateException( ex.getMessage() );
         }
     }
 
     /**
-     * Let the lateral cache set a listener_id. Since there is only one listerenr for all the
+     * Let the lateral cache set a listener_id. Since there is only one listener for all the
      * regions and every region gets registered? the id shouldn't be set if it isn't zero. If it is
      * we assume that it is a reconnect.
      * <p>
@@ -277,10 +282,10 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * <p>
      * @param cacheName
      * @param key
-     * @return Serializable
+     * @return a ICacheElement
      * @throws IOException
      */
-    public Serializable handleGet( String cacheName, K key )
+    public ICacheElement<K, V> handleGet( String cacheName, K key )
         throws IOException
     {
         getCnt++;
@@ -356,7 +361,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Right now this does nothing.
+     * This marks this instance as terminated.
      * <p>
      * @see org.apache.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
      */
@@ -369,6 +374,16 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         }
 
         // TODO handle active deregistration, rather than passive detection
+        synchronized (this)
+        {
+            terminated = true;
+        }
+    }
+
+    public synchronized void dispose()
+    {
+        terminated = true;
+        notify();
     }
 
     /**
@@ -481,24 +496,47 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
 
                 ConnectionHandler handler;
 
-                while ( !shutdown )
+                outer: while ( true )
                 {
                     if ( log.isDebugEnabled() )
                     {
                         log.debug( "Waiting for clients to connect " );
                     }
 
-                    Socket socket = serverSocket.accept();
+                    Socket socket = null;
+                    inner: while (true)
+                    {
+                        // Check to see if we've been asked to exit, and exit
+                        synchronized (this)
+                        {
+                            if (terminated)
+                            {
+                                if (log.isDebugEnabled())
+                                {
+                                    log.debug("Thread terminated, exiting gracefully");
+                                }
+                                break outer;
+                            }
+                        }
+                        try
+                        {
+                            socket = serverSocket.accept();
+                            break inner;
+                        }
+                        catch (SocketTimeoutException e)
+                        {
+                            // No problem! We loop back up!
+                            continue inner;
+                        }
+                    }
 
-                    if ( log.isDebugEnabled() )
+                    if ( socket != null && log.isDebugEnabled() )
                     {
                         InetAddress inetAddress = socket.getInetAddress();
-
                         log.debug( "Connected to client at " + inetAddress );
                     }
 
                     handler = new ConnectionHandler( socket );
-
                     pooledExecutor.execute( handler );
                 }
             }

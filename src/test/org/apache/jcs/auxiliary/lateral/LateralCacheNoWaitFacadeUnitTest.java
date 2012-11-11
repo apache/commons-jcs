@@ -21,7 +21,7 @@ public class LateralCacheNoWaitFacadeUnitTest
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
 
-        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( null, noWaits, cattr );
 
         LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
         LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
@@ -51,7 +51,7 @@ public class LateralCacheNoWaitFacadeUnitTest
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
 
-        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( null, noWaits, cattr );
 
         LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
         LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
@@ -86,7 +86,7 @@ public class LateralCacheNoWaitFacadeUnitTest
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
 
-        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( null, noWaits, cattr );
 
         LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
         LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
@@ -111,7 +111,7 @@ public class LateralCacheNoWaitFacadeUnitTest
         ILateralCacheAttributes cattr = new LateralCacheAttributes();
         cattr.setCacheName( "testCache1" );
 
-        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( noWaits, cattr );
+        LateralCacheNoWaitFacade<String, String> facade = new LateralCacheNoWaitFacade<String, String>( null, noWaits, cattr );
 
         LateralCache<String, String> cache = new LateralCache<String, String>( cattr );
         LateralCacheNoWait<String, String> noWait = new LateralCacheNoWait<String, String>( cache );
