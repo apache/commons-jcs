@@ -39,7 +39,7 @@ import org.apache.jcs.engine.behavior.ICompositeCacheManager;
  * talk to a particular server.
  */
 public class RemoteCacheListener<K extends Serializable, V extends Serializable>
-    extends AbsractRemoteCacheListener<K, V>
+    extends AbstractRemoteCacheListener<K, V>
     implements IRemoteCacheConstants, Serializable, IRemoteCacheListener<K, V>
 {
     /** Don't change */

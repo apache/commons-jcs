@@ -21,13 +21,13 @@ package org.apache.jcs.auxiliary.remote.http.client;
 
 import java.io.Serializable;
 
-import org.apache.jcs.auxiliary.remote.AbsractRemoteCacheListener;
+import org.apache.jcs.auxiliary.remote.AbstractRemoteCacheListener;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 
 /** Does nothing */
 public class RemoteHttpClientListener<K extends Serializable, V extends Serializable>
-    extends AbsractRemoteCacheListener<K, V>
+    extends AbstractRemoteCacheListener<K, V>
 {
     /** TODO serialVersionUID */
     private static final long serialVersionUID = -9078366610772128010L;
