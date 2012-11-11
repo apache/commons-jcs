@@ -33,7 +33,6 @@ import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheDispatcher;
-import org.apache.jcs.auxiliary.remote.util.RemoteCacheRequestUtil;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.jcs.utils.serialization.StandardSerializer;
@@ -156,25 +155,25 @@ public class RemoteHttpCacheDispatcher
                 String keyValue = "";
                 switch ( remoteCacheRequest.getRequestType() )
                 {
-                    case RemoteCacheRequest.REQUEST_TYPE_GET:
+                    case GET:
                         keyValue = remoteCacheRequest.getKey() + "";
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_REMOVE:
+                    case REMOVE:
                         keyValue = remoteCacheRequest.getKey() + "";
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_MATCHING:
+                    case GET_MATCHING:
                         keyValue = remoteCacheRequest.getPattern();
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_MULTIPLE:
+                    case GET_MULTIPLE:
                         keyValue = remoteCacheRequest.getKeySet() + "";
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_KEYS:
+                    case GET_GROUP_KEYS:
                         keyValue = remoteCacheRequest.getKey() + "";
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_NAMES:
+                    case GET_GROUP_NAMES:
                         keyValue = remoteCacheRequest.getKey() + "";
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_UPDATE:
+                    case UPDATE:
                         keyValue = remoteCacheRequest.getCacheElement().getKey() + "";
                         break;
                     default:
@@ -188,8 +187,7 @@ public class RemoteHttpCacheDispatcher
                 url.append( "&"
                     + PARAMETER_REQUEST_TYPE
                     + "="
-                    + URLEncoder.encode( RemoteCacheRequestUtil
-                        .getRequestTypeName( remoteCacheRequest.getRequestType() ), "UTF-8" ) );
+                    + URLEncoder.encode( remoteCacheRequest.getRequestType().toString(), "UTF-8" ) );
             }
         }
         catch ( UnsupportedEncodingException e )

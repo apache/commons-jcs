@@ -3,6 +3,7 @@ package org.apache.jcs.auxiliary.remote.http.client;
 import junit.framework.TestCase;
 
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
+import org.apache.jcs.auxiliary.remote.value.RemoteRequestType;
 
 /** Unit tests for the dispatcher. */
 public class RemoteHttpCacheDispatcherUniTest
@@ -18,7 +19,7 @@ public class RemoteHttpCacheDispatcherUniTest
         RemoteHttpCacheDispatcher dispatcher = new RemoteHttpCacheDispatcher( remoteHttpCacheAttributes );
 
         RemoteCacheRequest<String, String> remoteCacheRequest = new RemoteCacheRequest<String, String>();
-        remoteCacheRequest.setRequestType( RemoteCacheRequest.REQUEST_TYPE_REMOVE_ALL );
+        remoteCacheRequest.setRequestType( RemoteRequestType.REMOVE_ALL );
         String cacheName = "myCache";
         remoteCacheRequest.setCacheName( cacheName );
 
@@ -28,6 +29,6 @@ public class RemoteHttpCacheDispatcherUniTest
         String result = dispatcher.addParameters( remoteCacheRequest, baseUrl );
 
         // VERIFY
-        assertEquals( "Wrong url", baseUrl + "&CacheName=" + cacheName + "&Key=&RequestType=RemoveAll", result  );
+        assertEquals( "Wrong url", baseUrl + "&CacheName=" + cacheName + "&Key=&RequestType=REMOVE_ALL", result  );
     }
 }

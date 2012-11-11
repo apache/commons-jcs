@@ -31,6 +31,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.jcs.auxiliary.lateral.LateralCommand;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
@@ -125,7 +126,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
         {
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( item );
             led.requesterId = requesterId;
-            led.command = LateralElementDescriptor.UPDATE;
+            led.command = LateralCommand.UPDATE;
             sender.send( led );
         }
         // else issue a remove with the hashcode for remove check on
@@ -140,7 +141,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
             CacheElement<K, V> ce = new CacheElement<K, V>( item.getCacheName(), item.getKey(), null );
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
             led.requesterId = requesterId;
-            led.command = LateralElementDescriptor.REMOVE;
+            led.command = LateralCommand.REMOVE;
             led.valHashCode = item.getVal().hashCode();
             sender.send( led );
         }
@@ -170,7 +171,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
         CacheElement<K, V> ce = new CacheElement<K, V>( cacheName, key, null );
         LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
         led.requesterId = requesterId;
-        led.command = LateralElementDescriptor.REMOVE;
+        led.command = LateralCommand.REMOVE;
         sender.send( led );
     }
 
@@ -247,7 +248,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
             CacheElement<K, V> ce = new CacheElement<K, V>( cacheName, key, null );
             LateralElementDescriptor<K, V> led = new LateralElementDescriptor<K, V>( ce );
             // led.requesterId = requesterId; // later
-            led.command = LateralElementDescriptor.GET;
+            led.command = LateralCommand.GET;
             @SuppressWarnings("unchecked") // Need to cast from Object
             ICacheElement<K, V> response = (ICacheElement<K, V>)sender.sendAndReceive( led );
             if ( response != null )
@@ -298,7 +299,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
             CacheElement<String, String> ce = new CacheElement<String, String>( cacheName, pattern, null );
             LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
             // led.requesterId = requesterId; // later
-            led.command = LateralElementDescriptor.GET_MATCHING;
+            led.command = LateralCommand.GET_MATCHING;
 
             Object response = sender.sendAndReceive( led );
             if ( response != null )
@@ -375,7 +376,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
         CacheElement<String, String> ce = new CacheElement<String, String>(cacheName, group, null);
         LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>(ce);
         // led.requesterId = requesterId; // later
-        led.command = LateralElementDescriptor.GET_GROUP_KEYS;
+        led.command = LateralCommand.GET_GROUP_KEYS;
         Object response = sender.sendAndReceive(led);
         if (response != null)
         {
@@ -400,7 +401,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
         CacheElement<String, String> ce = new CacheElement<String, String>(cacheName, null, null);
         LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>(ce);
         // led.requesterId = requesterId; // later
-        led.command = LateralElementDescriptor.GET_GROUP_NAMES;
+        led.command = LateralCommand.GET_GROUP_NAMES;
         Object response = sender.sendAndReceive(led);
         if (response != null)
         {
@@ -431,7 +432,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
         CacheElement<String, String> ce = new CacheElement<String, String>( cacheName, "ALL", null );
         LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
         led.requesterId = requesterId;
-        led.command = LateralElementDescriptor.REMOVEALL;
+        led.command = LateralCommand.REMOVEALL;
         sender.send( led );
     }
 

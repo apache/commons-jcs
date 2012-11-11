@@ -34,30 +34,6 @@ public class LateralElementDescriptor<K extends Serializable, V extends Serializ
     /** Don't change */
     private static final long serialVersionUID = 5268222498076063575L;
 
-    /** The int for updates */
-    public final static int UPDATE = 1;
-
-    /** The int for removes */
-    public final static int REMOVE = 2;
-
-    /** The int instructing us to remove all */
-    public final static int REMOVEALL = 3;
-
-    /** The int for disposing the cache. */
-    public final static int DISPOSE = 4;
-
-    /** Command to return an object. */
-    public final static int GET = 5;
-
-    /** Command to return an object. */
-    public final static int GET_MATCHING = 6;
-
-    /** Command to get all group keys */
-    public final static int GET_GROUP_KEYS = 7;
-
-    /** Command to get all group keys */
-    public final static int GET_GROUP_NAMES = 8;
-
     /** The Cache Element that we are distributing. */
     public ICacheElement<K, V> ce;
 
@@ -68,7 +44,7 @@ public class LateralElementDescriptor<K extends Serializable, V extends Serializ
     public long requesterId;
 
     /** The operation has been requested by the client. */
-    public int command = UPDATE;
+    public LateralCommand command = LateralCommand.UPDATE;
 
     /**
      * The hashcode value for this element.

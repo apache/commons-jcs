@@ -17,38 +17,8 @@ public class RemoteCacheRequest<K extends Serializable, V extends Serializable>
     /** Don't change. */
     private static final long serialVersionUID = -8858447417390442569L;
 
-    /** Alive check request type. */
-    public static final byte REQUEST_TYPE_ALIVE_CHECK = 0;
-
-    /** Get request type. */
-    public static final byte REQUEST_TYPE_GET = 1;
-
-    /** Get Multiple request type. */
-    public static final byte REQUEST_TYPE_GET_MULTIPLE = 2;
-
-    /** Get Matching request type. */
-    public static final byte REQUEST_TYPE_GET_MATCHING = 3;
-
-    /** Update request type. */
-    public static final byte REQUEST_TYPE_UPDATE = 4;
-
-    /** Remove request type. */
-    public static final byte REQUEST_TYPE_REMOVE = 5;
-
-    /** Remove All request type. */
-    public static final byte REQUEST_TYPE_REMOVE_ALL = 6;
-
-    /** Get group keys request type. */
-    public static final byte REQUEST_TYPE_GET_GROUP_KEYS = 7;
-
-    /** Dispose request type. */
-    public static final byte REQUEST_TYPE_DISPOSE = 8;
-
-    /** Get group keys request type. */
-    public static final byte REQUEST_TYPE_GET_GROUP_NAMES = 9;
-
     /** The request type specifies the type of request: get, put, remove, . . */
-    private byte requestType = -1;
+    private RemoteRequestType requestType = null;
 
     /** Used to identify the source. Same as listener id on the client side. */
     private long requesterId = 0;
@@ -71,7 +41,7 @@ public class RemoteCacheRequest<K extends Serializable, V extends Serializable>
     /**
      * @param requestType the requestType to set
      */
-    public void setRequestType( byte requestType )
+    public void setRequestType( RemoteRequestType requestType )
     {
         this.requestType = requestType;
     }
@@ -79,7 +49,7 @@ public class RemoteCacheRequest<K extends Serializable, V extends Serializable>
     /**
      * @return the requestType
      */
-    public byte getRequestType()
+    public RemoteRequestType getRequestType()
     {
         return requestType;
     }

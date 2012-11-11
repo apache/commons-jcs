@@ -38,6 +38,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.jcs.auxiliary.lateral.LateralCommand;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
@@ -649,11 +650,11 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
             String cacheName = led.ce.getCacheName();
             K key = led.ce.getKey();
 
-            if ( led.command == LateralElementDescriptor.UPDATE )
+            if ( led.command == LateralCommand.UPDATE )
             {
                 handlePut( led.ce );
             }
-            else if ( led.command == LateralElementDescriptor.REMOVE )
+            else if ( led.command == LateralCommand.REMOVE )
             {
                 // if a hashcode was given and filtering is on
                 // check to see if they are the same
@@ -687,11 +688,11 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                 }
                 handleRemove( cacheName, key );
             }
-            else if ( led.command == LateralElementDescriptor.REMOVEALL )
+            else if ( led.command == LateralCommand.REMOVEALL )
             {
                 handleRemoveAll( cacheName );
             }
-            else if ( led.command == LateralElementDescriptor.GET )
+            else if ( led.command == LateralCommand.GET )
             {
                 Serializable obj = handleGet( cacheName, key );
 
@@ -699,7 +700,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                 oos.writeObject( obj );
                 oos.flush();
             }
-            else if ( led.command == LateralElementDescriptor.GET_MATCHING )
+            else if ( led.command == LateralCommand.GET_MATCHING )
             {
                 Map<K, ICacheElement<K, V>> obj = handleGetMatching( cacheName, (String) key );
 
@@ -707,7 +708,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                 oos.writeObject( obj );
                 oos.flush();
             }
-            else if ( led.command == LateralElementDescriptor.GET_GROUP_KEYS )
+            else if ( led.command == LateralCommand.GET_GROUP_KEYS )
             {
             	String groupName = (String) key;
             	Set<K> obj = handleGetGroupKeys(cacheName, groupName);
@@ -716,7 +717,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                 oos.writeObject( obj );
                 oos.flush();
             }
-            else if ( led.command == LateralElementDescriptor.GET_GROUP_NAMES )
+            else if ( led.command == LateralCommand.GET_GROUP_NAMES )
             {
             	Set<String> obj = handleGetGroupNames(cacheName);
 

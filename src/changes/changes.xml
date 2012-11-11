@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="update">
+                Use type-safe enums instead of integer constants to clean up the code.
+            </action>
             <action dev="tv" type="fix" issue="JCS-91" due-to="Diego Rivera">
                 JCS fails to properly dispose of the lateral TCP listener thread. 
                 If a webapp that uses JCS lateral TCP cache is undeployed, the listener is left 

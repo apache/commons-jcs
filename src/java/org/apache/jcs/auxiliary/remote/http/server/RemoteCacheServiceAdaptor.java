@@ -87,7 +87,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
             {
                 switch ( request.getRequestType() )
                 {
-                    case RemoteCacheRequest.REQUEST_TYPE_GET:
+                    case GET:
                         ICacheElement<K, V> element = getRemoteCacheService().get( request.getCacheName(), request.getKey(),
                                                                              request.getRequesterId() );
                         if ( element != null )
@@ -95,7 +95,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                             response.getPayload().put( element.getKey(), element );
                         }
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_MULTIPLE:
+                    case GET_MULTIPLE:
                         Map<K, ICacheElement<K, V>> elementMap = getRemoteCacheService().getMultiple( request.getCacheName(),
                                                                               request.getKeySet(),
                                                                               request.getRequesterId() );
@@ -104,7 +104,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                             response.getPayload().putAll( elementMap );
                         }
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_MATCHING:
+                    case GET_MATCHING:
                         Map<K, ICacheElement<K, V>> elementMapMatching = getRemoteCacheService().getMatching( request.getCacheName(),
                                                                                       request.getPattern(),
                                                                                       request.getRequesterId() );
@@ -113,24 +113,24 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                             response.getPayload().putAll( elementMapMatching );
                         }
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_REMOVE:
+                    case REMOVE:
                         getRemoteCacheService().remove( request.getCacheName(), request.getKey(),
                                                         request.getRequesterId() );
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_REMOVE_ALL:
+                    case REMOVE_ALL:
                         getRemoteCacheService().removeAll( request.getCacheName(), request.getRequesterId() );
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_UPDATE:
+                    case UPDATE:
                         getRemoteCacheService().update( request.getCacheElement(), request.getRequesterId() );
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_ALIVE_CHECK:
+                    case ALIVE_CHECK:
                         response.setSuccess( true );
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_DISPOSE:
+                    case DISPOSE:
                         response.setSuccess( true );
                         // DO NOTHING
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_KEYS:
+                    case GET_GROUP_KEYS:
                         Set<K> groupKeys = getRemoteCacheService().getGroupKeys( request.getCacheName(),
                                                                               request.getKey() + "" );
                         if ( groupKeys == null )
@@ -140,7 +140,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                         // FIXME: Re-enable
                         //response.getPayload().put( request.getKey(), groupKeys );
                         break;
-                    case RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_NAMES:
+                    case GET_GROUP_NAMES:
                         Set<String> groupNames = getRemoteCacheService().getGroupNames( request.getCacheName() );
                         if ( groupNames == null )
                         {

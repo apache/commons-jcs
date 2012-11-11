@@ -6,6 +6,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
+import org.apache.jcs.auxiliary.remote.value.RemoteRequestType;
 import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -31,7 +32,7 @@ public class RemoteCacheRequestFactory
         request.setCacheName( cacheName );
         request.setKey( key );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_GET );
+        request.setRequestType( RemoteRequestType.GET );
 
         if ( log.isDebugEnabled() )
         {
@@ -55,7 +56,7 @@ public class RemoteCacheRequestFactory
         request.setCacheName( cacheName );
         request.setPattern( pattern );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_GET_MATCHING );
+        request.setRequestType( RemoteRequestType.GET_MATCHING );
 
         if ( log.isDebugEnabled() )
         {
@@ -79,7 +80,7 @@ public class RemoteCacheRequestFactory
         request.setCacheName( cacheName );
         request.setKeySet( keys );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_GET_MULTIPLE );
+        request.setRequestType( RemoteRequestType.GET_MULTIPLE );
 
         if ( log.isDebugEnabled() )
         {
@@ -103,7 +104,7 @@ public class RemoteCacheRequestFactory
         request.setCacheName( cacheName );
         request.setKey( key );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_REMOVE );
+        request.setRequestType( RemoteRequestType.REMOVE );
 
         if ( log.isDebugEnabled() )
         {
@@ -127,7 +128,7 @@ public class RemoteCacheRequestFactory
         request.setCacheName( cacheName );
         request.setKey( groupName );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_KEYS );
+        request.setRequestType( RemoteRequestType.GET_GROUP_KEYS );
 
         if ( log.isDebugEnabled() )
         {
@@ -150,7 +151,7 @@ public class RemoteCacheRequestFactory
 	    request.setCacheName( cacheName );
 	    request.setKey( cacheName );
 	    request.setRequesterId( requesterId );
-	    request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_GET_GROUP_NAMES );
+	    request.setRequestType( RemoteRequestType.GET_GROUP_NAMES );
 
 	    if ( log.isDebugEnabled() )
 	    {
@@ -172,7 +173,7 @@ public class RemoteCacheRequestFactory
         RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_REMOVE_ALL );
+        request.setRequestType( RemoteRequestType.REMOVE_ALL );
 
         if ( log.isDebugEnabled() )
         {
@@ -194,7 +195,7 @@ public class RemoteCacheRequestFactory
         RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setCacheName( cacheName );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_DISPOSE );
+        request.setRequestType( RemoteRequestType.DISPOSE );
 
         if ( log.isDebugEnabled() )
         {
@@ -225,7 +226,7 @@ public class RemoteCacheRequestFactory
             log.error( "Can't create a proper update request for a null cache element." );
         }
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_UPDATE );
+        request.setRequestType( RemoteRequestType.UPDATE );
 
         if ( log.isDebugEnabled() )
         {
@@ -245,7 +246,7 @@ public class RemoteCacheRequestFactory
     {
         RemoteCacheRequest<K, V> request = new RemoteCacheRequest<K, V>();
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteCacheRequest.REQUEST_TYPE_ALIVE_CHECK );
+        request.setRequestType( RemoteRequestType.ALIVE_CHECK );
 
         if ( log.isDebugEnabled() )
         {

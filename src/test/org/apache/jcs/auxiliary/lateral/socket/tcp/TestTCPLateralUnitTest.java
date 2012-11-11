@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 
 import org.apache.jcs.JCS;
 import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.jcs.auxiliary.lateral.LateralCommand;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.engine.CacheElement;
 import org.apache.jcs.engine.behavior.ICacheElement;
@@ -88,7 +89,7 @@ public class TestTCPLateralUnitTest
             String message = "adsfasasfasfasdasf";
             CacheElement<String, String> ce = new CacheElement<String, String>( "test", "test", message );
             LateralElementDescriptor<String, String> led = new LateralElementDescriptor<String, String>( ce );
-            led.command = LateralElementDescriptor.UPDATE;
+            led.command = LateralCommand.UPDATE;
             led.requesterId = 1;
             lur.send( led );
         }
