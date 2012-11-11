@@ -87,7 +87,7 @@
 							the default.
 						</td>
 						<td>N</td>
-						<td>false</td>
+						<td>true</td>
 					</tr>
 					<tr>
 						<td>RmiSocketFactoryTimeoutMillis</td>

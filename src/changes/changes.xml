@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="fix" issue="JCS-49" due-to="David Easley">
+                Contradictory documentation on RemoveUponRemotePut default value.
+            </action>
             <action dev="tv" type="add" issue="JCS-94" due-to="Andrew Leamon">
                 Add getGroupNames() to all caches.
             </action>
