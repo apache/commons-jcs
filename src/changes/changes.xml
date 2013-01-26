@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="fix" issue="JCS-103" due-to="Pavel Novak">
+                MaxMemoryIdleTimeSeconds default value is wrongly documented.
+            </action>
             <action dev="tv" type="update">
                 Use central thread pool instance to clean up the code.
             </action>

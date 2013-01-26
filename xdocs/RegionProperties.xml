@@ -122,7 +122,7 @@
 							register an event handler on this event.
 						</td>
 						<td>N</td>
-						<td>-1</td>
+						<td>7200</td>
 					</tr>
 					<tr>
 						<td>ShrinkerIntervalSeconds</td>
