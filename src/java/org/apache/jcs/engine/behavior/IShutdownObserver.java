@@ -26,18 +26,16 @@ package org.apache.jcs.engine.behavior;
  * <p>
  * Most shutdown operations will occur outside this framework for now.  The initial
  * goal is to allow background threads that are not reachable through any reference
- * that the cahe manager maintains to be killed on shutdown.
+ * that the cache manager maintains to be killed on shutdown.
  *
  * @author Aaron Smuts
  *
  */
 public interface IShutdownObserver
 {
-
     /**
      * Tells the observer that the observable has received a shutdown command.
      *
      */
-    abstract void shutdown();
-
+    void shutdown();
 }

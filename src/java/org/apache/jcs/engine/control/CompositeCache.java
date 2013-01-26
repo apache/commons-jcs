@@ -320,9 +320,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 // cache region restrictions
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "lateralcache in aux list: cattr " + cacheAttr.getUseLateral() );
+                    log.debug( "lateralcache in aux list: cattr " + cacheAttr.isUseLateral() );
                 }
-                if ( cacheAttr.getUseLateral() && cacheElement.getElementAttributes().getIsLateral() && !localOnly )
+                if ( cacheAttr.isUseLateral() && cacheElement.getElementAttributes().getIsLateral() && !localOnly )
                 {
                     // DISTRIBUTE LATERALLY
                     // Currently always multicast even if the value is
@@ -339,9 +339,9 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "diskcache in aux list: cattr " + cacheAttr.getUseDisk() );
+                    log.debug( "diskcache in aux list: cattr " + cacheAttr.isUseDisk() );
                 }
-                if ( cacheAttr.getUseDisk()
+                if ( cacheAttr.isUseDisk()
                     && ( cacheAttr.getDiskUsagePattern() == DiskUsagePattern.UPDATE )
                     && cacheElement.getElementAttributes().getIsSpool() )
                 {

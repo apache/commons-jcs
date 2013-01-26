@@ -26,9 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
@@ -37,6 +35,7 @@ import org.apache.jcs.engine.CacheStatus;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.IRequireScheduler;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
@@ -53,7 +52,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  * use the shrinker, the clock daemon will be setup to run the shrinker on this region.
  */
 public abstract class AbstractMemoryCache<K extends Serializable, V extends Serializable>
-    implements IMemoryCache<K, V>, Serializable
+    implements IMemoryCache<K, V>, Serializable, IRequireScheduler
 {
     /** Don't change. */
     private static final long serialVersionUID = -4494626991630099575L;
@@ -82,10 +81,6 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     /** How many to spool at a time. */
     protected int chunkSize;
 
-    /** The background memory shrinker, one for all regions. */
-    // TODO fix for multi-instance JCS
-    private static ScheduledExecutorService shrinkerDaemon;
-
     /**
      * For post reflection creation initialization
      * <p>
@@ -100,15 +95,18 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
 
         chunkSize = cacheAttributes.getSpoolChunkSize();
         status = CacheStatus.ALIVE;
+    }
 
-        if ( cacheAttributes.getUseMemoryShrinker() )
+    /**
+     * @see org.apache.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+     */
+    public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
+    {
+        if ( cacheAttributes.isUseMemoryShrinker() )
         {
-            if ( shrinkerDaemon == null )
-            {
-                shrinkerDaemon = Executors.newScheduledThreadPool(1, new MyThreadFactory());
-            }
-
-            shrinkerDaemon.scheduleAtFixedRate(new ShrinkerThread<K, V>(this), 0, cacheAttributes.getShrinkerIntervalSeconds(), TimeUnit.SECONDS);
+            scheduledExecutor.scheduleAtFixedRate(
+                    new ShrinkerThread<K, V>(this), 0, cacheAttributes.getShrinkerIntervalSeconds(),
+                    TimeUnit.SECONDS);
         }
     }
 
@@ -235,11 +233,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     public void dispose()
         throws IOException
     {
-        log.info( "Memory Cache dispose called.  Shutting down shrinker thread if it is running." );
-        if ( shrinkerDaemon != null )
-        {
-            shrinkerDaemon.shutdownNow();
-        }
+        log.info( "Memory Cache dispose called." );
     }
 
     /**
@@ -395,26 +389,5 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
             }
         }
         return names;
-    }
-
-    /**
-     * Allows us to set the daemon status on the clockdaemon
-     */
-    protected static class MyThreadFactory
-        implements ThreadFactory
-    {
-        /**
-         * @param runner
-         * @return a new thread for the given Runnable
-         */
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            String oldName = t.getName();
-            t.setName( "JCS-AbstractMemoryCache-" + oldName );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            return t;
-        }
     }
 }

@@ -46,7 +46,7 @@ public class RemoteCacheServiceAdaptorUnitTest
         RemoteCacheRequest<String, String> request = null;
 
         // DO WORK
-        RemoteCacheResponse<String, String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<String> result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -69,7 +69,7 @@ public class RemoteCacheServiceAdaptorUnitTest
         RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String, String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -92,7 +92,7 @@ public class RemoteCacheServiceAdaptorUnitTest
                                                                                                   requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String, String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -115,7 +115,7 @@ public class RemoteCacheServiceAdaptorUnitTest
                                                                                                   requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String, String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<Object> result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -139,7 +139,7 @@ public class RemoteCacheServiceAdaptorUnitTest
         RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createUpdateRequest( element, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String, String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<String> result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -161,7 +161,7 @@ public class RemoteCacheServiceAdaptorUnitTest
         RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createRemoveRequest( cacheName, key, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String, String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<String> result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );
@@ -182,7 +182,7 @@ public class RemoteCacheServiceAdaptorUnitTest
         RemoteCacheRequest<String, String> request = RemoteCacheRequestFactory.createRemoveAllRequest( cacheName, requesterId );
 
         // DO WORK
-        RemoteCacheResponse<String, String> result = adaptor.processRequest( request );
+        RemoteCacheResponse<String> result = adaptor.processRequest( request );
 
         // VERIFY
         assertNotNull( "Should have a result.", result );

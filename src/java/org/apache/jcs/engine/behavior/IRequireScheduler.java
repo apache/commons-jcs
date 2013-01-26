@@ -1,5 +1,7 @@
 package org.apache.jcs.engine.behavior;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,18 +22,17 @@ package org.apache.jcs.engine.behavior;
  */
 
 /**
- * TODO: Description of the Interface
+ * Marker interface to allow the injection of a central ScheduledExecutorService
+ * for all modules requiring scheduled background operations.
+ * <p>
+ * @author Thomas Vandahl
  *
  */
-public interface ICacheRestore
+public interface IRequireScheduler
 {
     /**
-     * Tries to fix the cache, returns true if successful.
-     *
-     * @return true if fixed
+     * Inject an instance of a central ScheduledExecutorService
+     * @param scheduledExecutor
      */
-    boolean canFix();
-
-    /** Fix the cache */
-    void fix();
+    void setScheduledExecutorService( ScheduledExecutorService scheduledExecutor );
 }

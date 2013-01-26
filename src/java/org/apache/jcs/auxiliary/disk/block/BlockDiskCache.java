@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.logging.Log;
@@ -39,6 +41,7 @@ import org.apache.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.jcs.engine.CacheConstants;
 import org.apache.jcs.engine.behavior.ICacheElement;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.behavior.IRequireScheduler;
 import org.apache.jcs.engine.control.group.GroupAttrName;
 import org.apache.jcs.engine.control.group.GroupId;
 import org.apache.jcs.engine.stats.StatElement;
@@ -53,6 +56,7 @@ import org.apache.jcs.engine.stats.behavior.IStats;
  */
 public class BlockDiskCache<K extends Serializable, V extends Serializable>
     extends AbstractDiskCache<K, V>
+    implements IRequireScheduler
 {
     /** Don't change */
     private static final long serialVersionUID = 1L;
@@ -76,7 +80,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     private final File rootDirectory;
 
     /** Store, loads, and persists the keys */
-    private BlockDiskKeyStore<K> keyStore;
+    protected BlockDiskKeyStore<K> keyStore;
 
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechanism. We don't
@@ -155,6 +159,29 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
         {
             log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and root directory: "
                 + rootDirName, e );
+        }
+    }
+
+    /**
+     * @see org.apache.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+     */
+    public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
+    {
+        // add this region to the persistence thread.
+        // TODO we might need to stagger this a bit.
+        if ( this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds() > 0 )
+        {
+            scheduledExecutor.scheduleAtFixedRate(
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            keyStore.saveKeys();
+                        }
+                    },
+                    this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
+                    this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
+                    TimeUnit.SECONDS);
         }
     }
 

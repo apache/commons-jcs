@@ -21,7 +21,7 @@ package org.apache.jcs.auxiliary.remote.http.server;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -70,13 +70,14 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
      * @param request
      * @return RemoteHttpCacheResponse, never null
      */
-    public RemoteCacheResponse<K, V> processRequest( RemoteCacheRequest<K, V> request )
+    @SuppressWarnings( "unchecked" ) // need to cast to correct return type
+    public <T> RemoteCacheResponse<T> processRequest( RemoteCacheRequest<K, V> request )
     {
-        RemoteCacheResponse<K, V> response = new RemoteCacheResponse<K, V>();
+        RemoteCacheResponse<Object> response = new RemoteCacheResponse<Object>();
 
         if ( request == null )
         {
-            String message = "The request is null.  Cannot process";
+            String message = "The request is null. Cannot process";
             log.warn( message );
             response.setSuccess( false );
             response.setErrorMessage( message );
@@ -90,10 +91,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                     case GET:
                         ICacheElement<K, V> element = getRemoteCacheService().get( request.getCacheName(), request.getKey(),
                                                                              request.getRequesterId() );
-                        if ( element != null )
-                        {
-                            response.getPayload().put( element.getKey(), element );
-                        }
+                        response.setPayload(element);
                         break;
                     case GET_MULTIPLE:
                         Map<K, ICacheElement<K, V>> elementMap = getRemoteCacheService().getMultiple( request.getCacheName(),
@@ -101,7 +99,9 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                                                                               request.getRequesterId() );
                         if ( elementMap != null )
                         {
-                            response.getPayload().putAll( elementMap );
+                            Map<K, ICacheElement<K, V>> map = new HashMap<K, ICacheElement<K,V>>();
+                            map.putAll(elementMap);
+                            response.setPayload(map);
                         }
                         break;
                     case GET_MATCHING:
@@ -110,7 +110,9 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                                                                                       request.getRequesterId() );
                         if ( elementMapMatching != null )
                         {
-                            response.getPayload().putAll( elementMapMatching );
+                            Map<K, ICacheElement<K, V>> map = new HashMap<K, ICacheElement<K,V>>();
+                            map.putAll(elementMapMatching);
+                            response.setPayload(map);
                         }
                         break;
                     case REMOVE:
@@ -133,21 +135,11 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                     case GET_GROUP_KEYS:
                         Set<K> groupKeys = getRemoteCacheService().getGroupKeys( request.getCacheName(),
                                                                               request.getKey() + "" );
-                        if ( groupKeys == null )
-                        {
-                            groupKeys = Collections.emptySet();
-                        }
-                        // FIXME: Re-enable
-                        //response.getPayload().put( request.getKey(), groupKeys );
+                        response.setPayload( groupKeys );
                         break;
                     case GET_GROUP_NAMES:
                         Set<String> groupNames = getRemoteCacheService().getGroupNames( request.getCacheName() );
-                        if ( groupNames == null )
-                        {
-                            groupNames = Collections.emptySet();
-                        }
-                        // FIXME: Re-enable
-                        //response.getPayload().put( request.getKey(), groupNames );
+                        response.setPayload( groupNames );
                         break;
                     default:
                         String message = "Unknown event type.  Cannot process " + request;
@@ -166,7 +158,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
             }
         }
 
-        return response;
+        return (RemoteCacheResponse<T>)response;
     }
 
     /**

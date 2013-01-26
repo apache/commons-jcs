@@ -72,7 +72,7 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The useDisk value
      */
-    boolean getUseDisk();
+    boolean isUseDisk();
 
     /**
      * set whether the cache should use a lateral cache
@@ -87,7 +87,7 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The useLateral value
      */
-    boolean getUseLateral();
+    boolean isUseLateral();
 
     /**
      * Sets whether the cache is remote enabled
@@ -102,7 +102,7 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The useRemote value
      */
-    boolean getUseRemote();
+    boolean isUseRemote();
 
     /**
      * Sets the name of the cache, referenced by the appropriate manager.
@@ -149,7 +149,7 @@ public interface ICompositeCacheAttributes
      * <p>
      * @return The UseMemoryShrinker value
      */
-    boolean getUseMemoryShrinker();
+    boolean isUseMemoryShrinker();
 
     /**
      * If UseMemoryShrinker is true the memory cache should auto-expire elements

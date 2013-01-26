@@ -20,16 +20,16 @@ package org.apache.jcs.engine.behavior;
  */
 
 /**
- * ShutdownObservers can observer ShutdownObservable objects.
+ * ShutdownObservers can observe ShutdownObservable objects.
  * The CacheManager is the primary observable that this is intended for.
  * <p>
  * Most shutdown operations will occur outside this framework for now.  The initial
  * goal is to allow background threads that are not reachable through any reference
- * that the cahe manager maintains to be killed on shutdown.
+ * that the cache manager maintains to be killed on shutdown.
  * <p>
  * Perhaps the composite cache itself should be the observable object.
  * It doesn't make much of a difference.  There are some problems with
- * region by region shutdown.  Some auxiliaries are glocal.  They will
+ * region by region shutdown.  Some auxiliaries are local.  They will
  * need to track when every region has shutdown before doing things like
  * closing the socket with a lateral.
  * <p>

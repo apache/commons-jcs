@@ -35,7 +35,7 @@ public interface IElementAttributes
      * <p>
      * @param mls The new MaxLifeSeconds value
      */
-    public void setMaxLifeSeconds( long mls );
+    void setMaxLifeSeconds( long mls );
 
     /**
      * Sets the maxLife attribute of the IAttributes object. How many seconds it can live after
@@ -45,7 +45,7 @@ public interface IElementAttributes
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @return The MaxLifeSeconds value
      */
-    public long getMaxLifeSeconds();
+    long getMaxLifeSeconds();
 
     /**
      * Sets the idleTime attribute of the IAttributes object. This is the maximum time the item can
@@ -55,21 +55,21 @@ public interface IElementAttributes
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @param idle The new idleTime value
      */
-    public void setIdleTime( long idle );
+    void setIdleTime( long idle );
 
     /**
      * Size in bytes. This is not used except in the admin pages. It will be -1 by default.
      * <p>
      * @param size The new size value
      */
-    public void setSize( int size );
+    void setSize( int size );
 
     /**
      * Gets the size attribute of the IAttributes object
      * <p>
      * @return The size value
      */
-    public int getSize();
+    int getSize();
 
     /**
      * Gets the createTime attribute of the IAttributes object.
@@ -80,25 +80,25 @@ public interface IElementAttributes
      * Putting an item in the cache overrides any existing items.
      * @return The createTime value
      */
-    public long getCreateTime();
+    long getCreateTime();
 
     /**
      * Gets the LastAccess attribute of the IAttributes object.
      * <p>
      * @return The LastAccess value.
      */
-    public long getLastAccessTime();
+    long getLastAccessTime();
 
     /**
      * Sets the LastAccessTime as now of the IElementAttributes object
      */
-    public void setLastAccessTimeNow();
+    void setLastAccessTimeNow();
 
     /**
      * Gets the idleTime attribute of the IAttributes object
      * @return The idleTime value
      */
-    public long getIdleTime();
+    long getIdleTime();
 
     /**
      * Gets the time left to live of the IAttributes object.
@@ -106,13 +106,13 @@ public interface IElementAttributes
      * This is the (max life + create time) - current time.
      * @return The TimeToLiveSeconds value
      */
-    public long getTimeToLiveSeconds();
+    long getTimeToLiveSeconds();
 
     /**
      * Returns a copy of the object.
      * @return IElementAttributes
      */
-    public IElementAttributes copy();
+    IElementAttributes copy();
 
     /**
      * Can this item be spooled to disk
@@ -120,7 +120,7 @@ public interface IElementAttributes
      * By default this is true.
      * @return The spoolable value
      */
-    public boolean getIsSpool();
+    boolean getIsSpool();
 
     /**
      * Sets the isSpool attribute of the IElementAttributes object
@@ -128,7 +128,7 @@ public interface IElementAttributes
      * By default this is true.
      * @param val The new isSpool value
      */
-    public void setIsSpool( boolean val );
+    void setIsSpool( boolean val );
 
     /**
      * Is this item laterally distributable. Can it be sent to auxiliaries of type lateral.
@@ -136,7 +136,7 @@ public interface IElementAttributes
      * By default this is true.
      * @return The isLateral value
      */
-    public boolean getIsLateral();
+    boolean getIsLateral();
 
     /**
      * Sets the isLateral attribute of the IElementAttributes object
@@ -144,7 +144,7 @@ public interface IElementAttributes
      * By default this is true.
      * @param val The new isLateral value
      */
-    public void setIsLateral( boolean val );
+    void setIsLateral( boolean val );
 
     /**
      * Can this item be sent to the remote cache.
@@ -152,7 +152,7 @@ public interface IElementAttributes
      * By default this is true.
      * @return The isRemote value
      */
-    public boolean getIsRemote();
+    boolean getIsRemote();
 
     /**
      * Sets the isRemote attribute of the IElementAttributes object.
@@ -160,26 +160,26 @@ public interface IElementAttributes
      * By default this is true.
      * @param val The new isRemote value
      */
-    public void setIsRemote( boolean val );
+    void setIsRemote( boolean val );
 
     /**
      * This turns off expiration if it is true.
      * @return The IsEternal value
      */
-    public boolean getIsEternal();
+    boolean getIsEternal();
 
     /**
      * Sets the isEternal attribute of the IElementAttributes object
      * @param val The new isEternal value
      */
-    public void setIsEternal( boolean val );
+    void setIsEternal( boolean val );
 
     /**
      * Adds a ElementEventHandler. Handler's can be registered for multiple events. A registered
      * handler will be called at every recognized event.
      * @param eventHandler The feature to be added to the ElementEventHandler
      */
-    public void addElementEventHandler( IElementEventHandler eventHandler );
+    void addElementEventHandler( IElementEventHandler eventHandler );
 
     /**
      * Gets the elementEventHandlers.
@@ -188,12 +188,12 @@ public interface IElementAttributes
      * lost if the item goes to disk.
      * @return The elementEventHandlers value, null if there are none
      */
-    public ArrayList<IElementEventHandler> getElementEventHandlers();
+    ArrayList<IElementEventHandler> getElementEventHandlers();
 
     /**
      * Sets the eventHandlers of the IElementAttributes object
      * @param eventHandlers value
      */
-    public void addElementEventHandlers( ArrayList<IElementEventHandler> eventHandlers );
+    void addElementEventHandlers( ArrayList<IElementEventHandler> eventHandlers );
 
 }

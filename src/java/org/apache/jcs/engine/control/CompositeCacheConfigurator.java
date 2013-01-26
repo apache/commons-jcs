@@ -38,6 +38,7 @@ import org.apache.jcs.engine.behavior.ICache;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.IElementAttributes;
 import org.apache.jcs.engine.behavior.IElementSerializer;
+import org.apache.jcs.engine.behavior.IRequireScheduler;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.engine.match.KeyMatcherPatternImpl;
 import org.apache.jcs.engine.match.behavior.IKeyMatcher;
@@ -322,18 +323,21 @@ public class CompositeCacheConfigurator
     {
         // First, create or get the cache and element attributes, and create
         // the cache.
-
-        if ( cca == null )
-        {
-            cca = parseCompositeCacheAttributes( props, regName, regionPrefix );
-        }
-
         IElementAttributes ea = parseElementAttributes( props, regName, regionPrefix );
 
-        CompositeCache<K, V> cache = new CompositeCache<K, V>( regName, cca, ea );
+        CompositeCache<K, V> cache = ( cca == null )
+            ? new CompositeCache<K, V>( regName, parseCompositeCacheAttributes( props, regName, regionPrefix ), ea )
+            : new CompositeCache<K, V>( regName, cca, ea );
 
         if (value != null)
         {
+            // Inject scheduler service
+            if (cache.getMemoryCache() instanceof IRequireScheduler)
+            {
+                ((IRequireScheduler)cache.getMemoryCache()).setScheduledExecutorService(
+                        compositeCacheManager.getScheduledExecutorService());
+            }
+
             // Next, create the auxiliaries for the new cache
             List<AuxiliaryCache<K, V>> auxList = new ArrayList<AuxiliaryCache<K, V>>();
 
@@ -368,10 +372,16 @@ public class CompositeCacheConfigurator
                 }
                 log.debug( "Parsing auxiliary named \"" + auxName + "\"." );
 
-                auxCache = parseAuxiliary( cache, props, auxName, regName );
+                auxCache = parseAuxiliary( props, auxName, regName );
 
                 if ( auxCache != null )
                 {
+                    if (auxCache instanceof IRequireScheduler)
+                    {
+                        ((IRequireScheduler)auxCache).setScheduledExecutorService(
+                                compositeCacheManager.getScheduledExecutorService());
+                    }
+
                     auxList.add( auxCache );
                 }
             }
@@ -496,21 +506,18 @@ public class CompositeCacheConfigurator
     /**
      * Get an aux cache for the listed aux for a region.
      *<p>
-     * @param cache the cache manager
      * @param props the configuration properties
      * @param auxName the name of the auxiliary cache
      * @param regName the name of the region.
      * @return AuxiliaryCache
      */
-    protected <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> parseAuxiliary( CompositeCache<K, V> cache, Properties props, String auxName, String regName )
+    protected <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> parseAuxiliary( Properties props, String auxName, String regName )
     {
         AuxiliaryCache<K, V> auxCache;
 
         if ( log.isDebugEnabled() )
         {
-            // cache isn't used.
-            // TODO change method signature if is isn't needed.
-            log.debug( "parseAuxiliary, Cache = " + cache );
+            log.debug( "parseAuxiliary " + auxName );
         }
 
         // GET FACTORY

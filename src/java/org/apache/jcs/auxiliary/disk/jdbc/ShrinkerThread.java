@@ -129,7 +129,7 @@ public class ShrinkerThread
                     if ( log.isInfoEnabled() )
                     {
                         log.info( "Pausing for [" + this.getPauseBetweenRegionCallsMillis()
-                            + "] ms. before shinker the next region." );
+                            + "] ms. before shrinking the next region." );
                     }
 
                     try

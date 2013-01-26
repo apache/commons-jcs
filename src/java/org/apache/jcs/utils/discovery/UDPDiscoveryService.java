@@ -24,13 +24,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jcs.engine.behavior.IRequireScheduler;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.jcs.utils.discovery.behavior.IDiscoveryListener;
@@ -46,13 +45,10 @@ import org.apache.jcs.utils.net.HostNameUtil;
  * @author Aaron Smuts
  */
 public class UDPDiscoveryService
-    implements IShutdownObserver
+    implements IShutdownObserver, IRequireScheduler
 {
     /** The logger */
     private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
-
-    /** The background broadcaster. */
-    private static volatile ScheduledExecutorService senderDaemon;
 
     /** thread that listens for messages */
     private Thread udpReceiverThread;
@@ -62,9 +58,6 @@ public class UDPDiscoveryService
 
     /** the runnable that sends messages via the clock daemon */
     private UDPDiscoverySenderThread sender = null;
-
-    /** removes things that have been idle for too long */
-    private final UDPCleanupRunner cleanup;
 
     /** attributes */
     private UDPDiscoveryAttributes udpDiscoveryAttributes = null;
@@ -116,25 +109,26 @@ public class UDPDiscoveryService
                 + getUdpDiscoveryAttributes().getUdpDiscoveryPort() + "] we won't be able to find any other caches", e );
         }
 
-        if ( senderDaemon == null )
-        {
-            senderDaemon = Executors.newScheduledThreadPool(2, new MyThreadFactory());
-        }
-
         // create a sender thread
         sender = new UDPDiscoverySenderThread( getUdpDiscoveryAttributes(), getCacheNames() );
-        senderDaemon.scheduleAtFixedRate(sender, 0, 15, TimeUnit.SECONDS);
+    }
 
-        // add the cleanup daemon too
-        cleanup = new UDPCleanupRunner( this );
+    /**
+     * @see org.apache.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+     */
+    public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
+    {
+        if (sender != null)
+        {
+            scheduledExecutor.scheduleAtFixedRate(sender, 0, 15, TimeUnit.SECONDS);
+        }
+
+        /** removes things that have been idle for too long */
+        UDPCleanupRunner cleanup = new UDPCleanupRunner( this );
         // I'm going to use this as both, but it could happen
         // that something could hang around twice the time using this as the
         // delay and the idle time.
-        senderDaemon.scheduleAtFixedRate(cleanup, 0, getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
-
-        // add shutdown hook that will issue a remove call.
-        DiscoveryShutdownHook shutdownHook = new DiscoveryShutdownHook( this );
-        Runtime.getRuntime().addShutdownHook( shutdownHook );
+        scheduledExecutor.scheduleAtFixedRate(cleanup, 0, getUdpDiscoveryAttributes().getMaxIdleTimeSec(), TimeUnit.SECONDS);
     }
 
     /**
@@ -322,31 +316,6 @@ public class UDPDiscoveryService
     }
 
     /**
-     * Allows us to set the daemon status on the clockdaemon
-     * <p>
-     * @author aaronsm
-     */
-    protected static class MyThreadFactory
-        implements ThreadFactory
-    {
-        /**
-         * Sets the thread to daemon.
-         * <p>
-         * @param runner
-         * @return a daemon thread
-         */
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            String oldName = t.getName();
-            t.setName( "JCS-UDPDiscoveryService-" + oldName );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            return t;
-        }
-    }
-
-    /**
      * Shuts down the receiver.
      */
     public void shutdown()
@@ -374,16 +343,6 @@ public class UDPDiscoveryService
             if ( log.isInfoEnabled() )
             {
                 log.info( "Shutting down UDP discovery service sender." );
-            }
-
-            try
-            {
-                // interrupt all the threads.
-                senderDaemon.shutdownNow();
-            }
-            catch ( Exception e )
-            {
-                log.error( "Problem shutting down UDP sender." );
             }
 
             // also call the shutdown on the sender thread itself, which

@@ -32,10 +32,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,17 +70,13 @@ public class BlockDiskKeyStore<K extends Serializable>
     protected final BlockDiskCache<K, ?> blockDiskCache;
 
     /**
-     * The background key persister, one for all regions.
-     */
-    private static volatile ScheduledExecutorService persistenceDaemon;
-
-    /**
      * Set the configuration options.
      * <p>
      * @param cacheAttributes
      * @param blockDiskCache used for freeing
      */
-    public BlockDiskKeyStore( BlockDiskCacheAttributes cacheAttributes, BlockDiskCache<K, ?> blockDiskCache )
+    public BlockDiskKeyStore( BlockDiskCacheAttributes cacheAttributes,
+            BlockDiskCache<K, ?> blockDiskCache)
     {
         this.blockDiskCacheAttributes = cacheAttributes;
         this.logCacheName = "Region [" + this.blockDiskCacheAttributes.getCacheName() + "] ";
@@ -116,28 +108,6 @@ public class BlockDiskKeyStore<K extends Serializable>
         else
         {
             initKeyMap();
-        }
-
-        // add this region to the persistence thread.
-        // TODO we might need to stagger this a bit.
-        if ( this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds() > 0 )
-        {
-            if ( persistenceDaemon == null )
-            {
-                persistenceDaemon = Executors.newScheduledThreadPool(1, new MyThreadFactory());
-            }
-
-            persistenceDaemon
-                .scheduleAtFixedRate(new Runnable()
-                                        {
-                                            public void run()
-                                            {
-                                                saveKeys();
-                                            }
-                                        },
-                        this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
-                        this.blockDiskCacheAttributes.getKeyPersistenceIntervalSeconds(),
-                        TimeUnit.SECONDS);
         }
     }
 
@@ -417,31 +387,6 @@ public class BlockDiskKeyStore<K extends Serializable>
                 log.debug( logCacheName + "Removing key: [" + key + "] from key store." );
                 log.debug( logCacheName + "Key store size: [" + super.size() + "]." );
             }
-        }
-    }
-
-    /**
-     * Allows us to set the daemon status on the clockdaemon
-     * @author aaronsm
-     */
-    protected static class MyThreadFactory
-        implements ThreadFactory
-    {
-
-        /**
-         * Ensures that we create daemon threads.
-         * <p>
-         * (non-Javadoc)
-         * @see EDU.oswego.cs.dl.util.concurrent.ThreadFactory#newThread(java.lang.Runnable)
-         */
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            String oldName = t.getName();
-            t.setName( "JCS-BlockDiskKeyStore-" + oldName );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            return t;
         }
     }
 }

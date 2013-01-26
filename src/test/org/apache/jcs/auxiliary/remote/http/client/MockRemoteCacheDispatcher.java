@@ -34,7 +34,7 @@ public class MockRemoteCacheDispatcher
     public RemoteCacheRequest<?, ?> lastRemoteCacheRequest;
 
     /** The response setup */
-    public RemoteCacheResponse<?, ?> setupRemoteCacheResponse;
+    public RemoteCacheResponse<?> setupRemoteCacheResponse;
 
     /** Records the last and returns setupRemoteCacheResponse.
      * <p>
@@ -43,11 +43,11 @@ public class MockRemoteCacheDispatcher
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public <K extends Serializable, V extends Serializable, KK extends Serializable, VV extends Serializable>
-        RemoteCacheResponse<K, V> dispatchRequest( RemoteCacheRequest<KK, VV> remoteCacheRequest )
+    public <K extends Serializable, V extends Serializable, T>
+        RemoteCacheResponse<T> dispatchRequest( RemoteCacheRequest<K, V> remoteCacheRequest )
         throws IOException
     {
         this.lastRemoteCacheRequest = remoteCacheRequest;
-        return (RemoteCacheResponse<K, V>)setupRemoteCacheResponse;
+        return (RemoteCacheResponse<T>)setupRemoteCacheResponse;
     }
 }

@@ -112,8 +112,8 @@ public class RemoteHttpCacheServlet
         }
 
         RemoteCacheRequest<Serializable, Serializable> remoteRequest = readRequest( request );
-
-        RemoteCacheResponse<Serializable, Serializable> cacheResponse = getRemoteHttpCacheServiceAdaptor().processRequest( remoteRequest );
+        RemoteCacheResponse<Serializable> cacheResponse =
+            getRemoteHttpCacheServiceAdaptor().processRequest( remoteRequest );
 
         writeResponse( response, cacheResponse );
     }
@@ -170,7 +170,7 @@ public class RemoteHttpCacheServlet
      * @param response
      * @param cacheResponse
      */
-    protected void writeResponse( HttpServletResponse response, RemoteCacheResponse<Serializable, Serializable> cacheResponse )
+    protected void writeResponse( HttpServletResponse response, RemoteCacheResponse<Serializable> cacheResponse )
     {
         try
         {

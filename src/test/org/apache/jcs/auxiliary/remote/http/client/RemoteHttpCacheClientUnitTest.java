@@ -21,6 +21,7 @@ package org.apache.jcs.auxiliary.remote.http.client;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -83,8 +84,9 @@ public class RemoteHttpCacheClientUnitTest
         String key = "key";
 
         ICacheElement<String, String> expected = new CacheElement<String, String>( cacheName, key, "value" );
-        RemoteCacheResponse<String, String> remoteHttpCacheResponse = new RemoteCacheResponse<String, String>();
-        remoteHttpCacheResponse.getPayload().put( key, expected );
+        RemoteCacheResponse<ICacheElement<String, String>> remoteHttpCacheResponse =
+            new RemoteCacheResponse<ICacheElement<String,String>>();
+        remoteHttpCacheResponse.setPayload( expected );
 
         mockDispatcher.setupRemoteCacheResponse = remoteHttpCacheResponse;
 
@@ -116,8 +118,11 @@ public class RemoteHttpCacheClientUnitTest
         String pattern = "key";
 
         ICacheElement<String, String> expected = new CacheElement<String, String>( cacheName, "key", "value" );
-        RemoteCacheResponse<String, String> remoteHttpCacheResponse = new RemoteCacheResponse<String, String>();
-        remoteHttpCacheResponse.getPayload().put( "key", expected );
+        Map<String, ICacheElement<String, String>> expectedMap = new HashMap<String, ICacheElement<String,String>>();
+        expectedMap.put( "key", expected );
+        RemoteCacheResponse<Map<String, ICacheElement<String, String>>> remoteHttpCacheResponse =
+            new RemoteCacheResponse<Map<String,ICacheElement<String,String>>>();
+        remoteHttpCacheResponse.setPayload( expectedMap );
 
         mockDispatcher.setupRemoteCacheResponse = remoteHttpCacheResponse;
 
@@ -149,8 +154,11 @@ public class RemoteHttpCacheClientUnitTest
         Set<String> keys = Collections.emptySet();
 
         ICacheElement<String, String> expected = new CacheElement<String, String>( cacheName, "key", "value" );
-        RemoteCacheResponse<String, String> remoteHttpCacheResponse = new RemoteCacheResponse<String, String>();
-        remoteHttpCacheResponse.getPayload().put( "key", expected );
+        Map<String, ICacheElement<String, String>> expectedMap = new HashMap<String, ICacheElement<String,String>>();
+        expectedMap.put( "key", expected );
+        RemoteCacheResponse<Map<String, ICacheElement<String, String>>> remoteHttpCacheResponse =
+            new RemoteCacheResponse<Map<String,ICacheElement<String,String>>>();
+        remoteHttpCacheResponse.setPayload( expectedMap );
 
         mockDispatcher.setupRemoteCacheResponse = remoteHttpCacheResponse;
 

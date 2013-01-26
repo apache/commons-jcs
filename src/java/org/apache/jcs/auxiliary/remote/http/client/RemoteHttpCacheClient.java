@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.remote.behavior.IRemoteCacheDispatcher;
 import org.apache.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
-import org.apache.jcs.auxiliary.remote.http.server.RemoteCacheServiceAdaptor;
 import org.apache.jcs.auxiliary.remote.util.RemoteCacheRequestFactory;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.jcs.auxiliary.remote.value.RemoteCacheResponse;
@@ -40,7 +39,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
     implements IRemoteHttpCacheClient<K, V>
 {
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( RemoteCacheServiceAdaptor.class );
+    private final static Log log = LogFactory.getLog( RemoteHttpCacheClient.class );
 
     /** The internal client. */
     private IRemoteCacheDispatcher remoteDispatcher;
@@ -120,19 +119,20 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
         RemoteCacheRequest<K, Serializable> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetRequest( cacheName, key, requesterId );
 
-        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<ICacheElement<K, V>> remoteHttpCacheResponse =
+            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( log.isDebugEnabled() )
         {
             log.debug( "Get [" + key + "] = " + remoteHttpCacheResponse );
         }
 
-        ICacheElement<K, V> retval = null;
-        if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
+        if ( remoteHttpCacheResponse != null)
         {
-            retval = remoteHttpCacheResponse.getPayload().get( key );
+            return remoteHttpCacheResponse.getPayload();
         }
-        return retval;
+
+        return null;
     }
 
     /**
@@ -173,7 +173,8 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
         RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetMatchingRequest( cacheName, pattern, requesterId );
 
-        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
+            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( log.isDebugEnabled() )
         {
@@ -221,7 +222,8 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
         RemoteCacheRequest<K, V> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetMultipleRequest( cacheName, keys, requesterId );
 
-        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<Map<K, ICacheElement<K, V>>> remoteHttpCacheResponse =
+            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( log.isDebugEnabled() )
         {
@@ -392,12 +394,11 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
         RemoteCacheRequest<String, String> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetGroupKeysRequest( cacheName, groupName, 0 );
 
-        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<Set<K>> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
-            // FIXME: Unchecked cast
-            return (Set<K>)remoteHttpCacheResponse.getPayload().get( groupName );
+            return remoteHttpCacheResponse.getPayload();
         }
 
         return Collections.emptySet();
@@ -422,12 +423,12 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
         RemoteCacheRequest<String, String> remoteHttpCacheRequest =
             RemoteCacheRequestFactory.createGetGroupNamesRequest( cacheName, 0 );
 
-        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<Set<String>> remoteHttpCacheResponse =
+            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {
-            // FIXME: Unchecked cast
-            return (Set<String>)remoteHttpCacheResponse.getPayload().get( cacheName );
+            return remoteHttpCacheResponse.getPayload();
         }
 
         return Collections.emptySet();
@@ -450,7 +451,8 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
         }
 
         RemoteCacheRequest<K, V> remoteHttpCacheRequest = RemoteCacheRequestFactory.createAliveCheckRequest( 0 );
-        RemoteCacheResponse<K, V> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
+        RemoteCacheResponse<String> remoteHttpCacheResponse =
+            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null )
         {

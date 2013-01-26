@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.jcs.engine.behavior.IProvideScheduler;
 import org.apache.jcs.engine.behavior.IShutdownObservable;
 import org.apache.jcs.engine.logging.behavior.ICacheEventLogger;
 
@@ -100,6 +101,13 @@ public class UDPDiscoveryManager
             {
                 ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( service );
             }
+
+            // inject scheduler
+            if ( cacheMgr instanceof IProvideScheduler)
+            {
+                service.setScheduledExecutorService(((IProvideScheduler)cacheMgr).getScheduledExecutorService());
+            }
+
             services.put( key, service );
         }
 

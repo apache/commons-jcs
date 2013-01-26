@@ -29,6 +29,9 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +47,7 @@ import org.apache.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.jcs.engine.behavior.IProvideScheduler;
 import org.apache.jcs.engine.behavior.IShutdownObservable;
 import org.apache.jcs.engine.behavior.IShutdownObserver;
 import org.apache.jcs.engine.stats.CacheStats;
@@ -61,7 +65,7 @@ import org.apache.jcs.utils.threadpool.ThreadPoolManager;
  * It is recommended that you use the JCS convenience class for all cache access.
  */
 public class CompositeCacheManager
-    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, IShutdownObservable
+    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, IShutdownObservable, IProvideScheduler
 {
     /** Don't change */
     private static final long serialVersionUID = 7598584393134401756L;
@@ -114,6 +118,9 @@ public class CompositeCacheManager
 
     /** Those waiting for notification of a shutdown. */
     private final Set<IShutdownObserver> shutdownObservers = new HashSet<IShutdownObserver>();
+
+    /** The central background scheduler. */
+    private ScheduledExecutorService scheduledExecutor;
 
     /** Indicates whether shutdown has been called. */
     private boolean isShutdown = false;
@@ -205,7 +212,7 @@ public class CompositeCacheManager
         return new CompositeCacheManager();
     }
 
-    /** Creates a shutdown hook */
+    /** Creates a shutdown hook and starts the scheduler service */
     protected CompositeCacheManager()
     {
         ShutdownHook shutdownHook = new ShutdownHook();
@@ -217,6 +224,29 @@ public class CompositeCacheManager
         {
             log.error( "Could not register shutdown hook.", e );
         }
+
+        this.scheduledExecutor = Executors.newScheduledThreadPool(4, new ThreadFactory()
+        {
+            public Thread newThread(Runnable runner)
+            {
+                Thread t = new Thread( runner );
+                String oldName = t.getName();
+                t.setName( "JCS-Scheduler-" + oldName );
+                t.setDaemon( true );
+                t.setPriority( Thread.MIN_PRIORITY );
+                return t;
+            }
+        });
+    }
+
+    /**
+     * Get the scheduler service
+     *
+     * @return the scheduledExecutor
+     */
+    public ScheduledExecutorService getScheduledExecutorService()
+    {
+        return scheduledExecutor;
     }
 
     /**
@@ -568,6 +598,9 @@ public class CompositeCacheManager
     public void shutDown()
     {
         isShutdown = true;
+
+        // shutdown all scheduled jobs
+        this.scheduledExecutor.shutdownNow();
 
         // notify any observers
         synchronized ( shutdownObservers )

@@ -145,7 +145,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The useDisk value
      */
-    public boolean getUseDisk()
+    public boolean isUseDisk()
     {
         return useDisk;
     }
@@ -165,7 +165,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The useLateral value
      */
-    public boolean getUseLateral()
+    public boolean isUseLateral()
     {
         return this.useLateral;
     }
@@ -185,7 +185,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The useRemote value
      */
-    public boolean getUseRemote()
+    public boolean isUseRemote()
     {
         return this.useRemote;
     }
@@ -245,7 +245,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The UseMemoryShrinker value
      */
-    public boolean getUseMemoryShrinker()
+    public boolean isUseMemoryShrinker()
     {
         return this.useMemoryShrinker;
     }

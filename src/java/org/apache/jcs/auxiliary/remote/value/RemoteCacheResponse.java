@@ -1,16 +1,12 @@
 package org.apache.jcs.auxiliary.remote.value;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.jcs.engine.behavior.ICacheElement;
 
 /**
  * This is the response wrapper. The servlet wraps all different type of responses in one of these
  * objects.
  */
-public class RemoteCacheResponse<K extends Serializable, V extends Serializable>
+public class RemoteCacheResponse<T>
     implements Serializable
 {
     /** Don't change. */
@@ -26,7 +22,7 @@ public class RemoteCacheResponse<K extends Serializable, V extends Serializable>
      * The payload. Typically a key / ICacheElement<K, V> map. A normal get will return a map with one
      * record.
      */
-    private Map<K, ICacheElement<K, V>> payload = new HashMap<K, ICacheElement<K,V>>();
+    private T payload;
 
     /**
      * @param success the success to set
@@ -63,7 +59,7 @@ public class RemoteCacheResponse<K extends Serializable, V extends Serializable>
     /**
      * @param payload the payload to set
      */
-    public void setPayload( Map<K, ICacheElement<K, V>> payload )
+    public void setPayload( T payload )
     {
         this.payload = payload;
     }
@@ -71,7 +67,7 @@ public class RemoteCacheResponse<K extends Serializable, V extends Serializable>
     /**
      * @return the payload
      */
-    public Map<K, ICacheElement<K, V>> getPayload()
+    public T getPayload()
     {
         return payload;
     }

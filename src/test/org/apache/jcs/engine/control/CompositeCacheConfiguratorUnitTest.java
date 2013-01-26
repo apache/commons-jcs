@@ -4,12 +4,11 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.apache.jcs.auxiliary.AuxiliaryCache;
 import org.apache.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.jcs.auxiliary.MockAuxiliaryCache;
 import org.apache.jcs.auxiliary.MockAuxiliaryCacheAttributes;
 import org.apache.jcs.auxiliary.MockAuxiliaryCacheFactory;
-import org.apache.jcs.engine.CompositeCacheAttributes;
-import org.apache.jcs.engine.ElementAttributes;
 import org.apache.jcs.engine.logging.MockCacheEventLogger;
 
 /** Unit tests for the configurator. */
@@ -41,12 +40,9 @@ public class CompositeCacheConfiguratorUnitTest
 
         CompositeCacheConfigurator configurator = new CompositeCacheConfigurator( manager );
 
-        CompositeCache<String, String> cache =
-            new CompositeCache<String, String>( regionName, new CompositeCacheAttributes(), new ElementAttributes() );
-
         // DO WORK
-        MockAuxiliaryCache<String, String> result = (MockAuxiliaryCache<String, String>) configurator
-            .parseAuxiliary( cache, props, auxName, regionName );
+        AuxiliaryCache<String, String> aux = configurator.parseAuxiliary( props, auxName, regionName );
+        MockAuxiliaryCache<String, String> result = (MockAuxiliaryCache<String, String>)aux;
 
         // VERIFY
         assertNotNull( "Should have an auxcache.", result );

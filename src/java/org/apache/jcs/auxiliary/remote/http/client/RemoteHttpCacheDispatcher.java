@@ -74,8 +74,8 @@ public class RemoteHttpCacheDispatcher
      * @return RemoteCacheResponse
      * @throws IOException
      */
-    public <K extends Serializable, V extends Serializable, KK extends Serializable, VV extends Serializable>
-        RemoteCacheResponse<K, V> dispatchRequest( RemoteCacheRequest<KK, VV> remoteCacheRequest )
+    public <K extends Serializable, V extends Serializable, T>
+        RemoteCacheResponse<T> dispatchRequest( RemoteCacheRequest<K, V> remoteCacheRequest )
         throws IOException
     {
         try
@@ -86,7 +86,7 @@ public class RemoteHttpCacheDispatcher
 
             byte[] responseAsByteArray = processRequest( requestAsByteArray, url );
 
-            RemoteCacheResponse<K, V> remoteCacheResponse = null;
+            RemoteCacheResponse<T> remoteCacheResponse = null;
             try
             {
                 remoteCacheResponse = serializer.deSerialize( responseAsByteArray );
