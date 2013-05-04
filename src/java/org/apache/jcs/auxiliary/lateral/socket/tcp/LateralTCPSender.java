@@ -24,13 +24,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.utils.SocketOpener;
 
 /**
  * This class is based on the log4j SocketAppender class. I'm using a different repair structure, so
@@ -118,11 +118,19 @@ public class LateralTCPSender
             }
 
             // have time out socket open do this for us
-            socket = SocketOpener.openSocket( host, port, tcpLateralCacheAttributes.getOpenTimeOut() );
-
-            if ( socket == null )
+            try
             {
-                throw new IOException( "Socket is null, cannot connect to " + host + ":" + port );
+                InetSocketAddress address = new InetSocketAddress( host, port );
+                socket = new Socket();
+                socket.connect( address, tcpLateralCacheAttributes.getOpenTimeOut() );
+            }
+            catch ( IOException ioe )
+            {
+                if (socket != null)
+                {
+                    socket.close();
+                }
+                throw new IOException( "Cannot connect to " + host + ":" + port, ioe );
             }
 
             socket.setSoTimeout( tcpLateralCacheAttributes.getSocketTimeOut() );
