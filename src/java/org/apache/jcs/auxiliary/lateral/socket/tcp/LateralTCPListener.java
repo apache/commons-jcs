@@ -658,7 +658,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
             {
                 // if a hashcode was given and filtering is on
                 // check to see if they are the same
-                // if so, then don't remvoe, otherwise issue a remove
+                // if so, then don't remove, otherwise issue a remove
                 if ( led.valHashCode != -1 )
                 {
                     if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
