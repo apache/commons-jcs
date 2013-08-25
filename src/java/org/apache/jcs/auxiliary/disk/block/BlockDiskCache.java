@@ -117,7 +117,8 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
             log.info( logCacheName + "Constructing BlockDiskCache with attributes " + cacheAttributes );
         }
 
-        this.fileName = getCacheName();
+        // Make a clean file name
+        this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
         String rootDirName = cacheAttributes.getDiskPath();
         this.rootDirectory = new File( rootDirName );
         this.rootDirectory.mkdirs();

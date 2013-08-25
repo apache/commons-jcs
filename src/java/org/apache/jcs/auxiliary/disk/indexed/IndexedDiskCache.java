@@ -169,7 +169,8 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         this.isRealTimeOptimizationEnabled = cattr.getOptimizeAtRemoveCount() > 0;
         this.isShutdownOptimizationEnabled = cattr.isOptimizeOnShutdown();
         this.logCacheName = "Region [" + getCacheName() + "] ";
-        this.fileName = getCacheName();
+        // Make a clean file name
+        this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
 
         try
         {
