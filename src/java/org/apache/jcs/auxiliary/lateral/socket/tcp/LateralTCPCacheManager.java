@@ -21,9 +21,8 @@ package org.apache.jcs.auxiliary.lateral.socket.tcp;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -68,7 +67,7 @@ public class LateralTCPCacheManager
 
     /** Address to instance map. */
     protected static Map<String, LateralTCPCacheManager> instances =
-        Collections.synchronizedMap( new HashMap<String, LateralTCPCacheManager>() );
+        new ConcurrentHashMap<String, LateralTCPCacheManager>();
 
     /** ITCPLateralCacheAttributes */
     protected ITCPLateralCacheAttributes lateralCacheAttributes;
