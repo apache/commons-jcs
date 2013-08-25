@@ -1603,7 +1603,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     private long nextListenerId()
     {
         long id = 0;
-        if ( listenerId[0] == Long.MAX_VALUE )
+        if ( listenerId[0] == Integer.MAX_VALUE )
         {
             synchronized ( listenerId )
             {
