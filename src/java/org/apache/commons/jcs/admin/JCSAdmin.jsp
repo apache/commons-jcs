@@ -19,10 +19,10 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Iterator" %>
-<%@ page import="org.apache.jcs.admin.*" %>
-<%@ page import="org.apache.jcs.*" %>
+<%@ page import="org.apache.commons.jcs.admin.*" %>
+<%@ page import="org.apache.commons.jcs.*" %>
 
-<jsp:useBean id="jcsBean" scope="request" class="org.apache.jcs.admin.JCSAdminBean" />
+<jsp:useBean id="jcsBean" scope="request" class="org.apache.commons.jcs.admin.JCSAdminBean" />
 
 <html>
 
@@ -151,7 +151,7 @@
 
 			    JCS cache = JCS.getInstance( cacheName );
 
-				org.apache.jcs.engine.behavior.ICacheElement element = cache.getCacheElement( key );
+				org.apache.commons.jcs.engine.behavior.ICacheElement element = cache.getCacheElement( key );
 %>
 <h1> Item for key [<%=key%>] in region [<%=cacheName%>] </h1>
 

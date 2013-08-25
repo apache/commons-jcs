@@ -34,7 +34,7 @@ Usage
 -----
 All caches should be retrieved or removed via
 
-    org.apache.jcs.yajcache.core.CacheManager
+    org.apache.commons.jcs.yajcache.core.CacheManager
 
 Pre-requisite
 -------------
