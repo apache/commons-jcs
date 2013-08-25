@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.util;
+package org.apache.commons.jcs.yajcache.util;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

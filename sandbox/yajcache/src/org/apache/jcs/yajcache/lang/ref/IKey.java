@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.lang.ref;
+package org.apache.commons.jcs.yajcache.lang.ref;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,7 @@ package org.apache.jcs.yajcache.lang.ref;
  * under the License.
  */
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  * Interface for accessing a key.
  *

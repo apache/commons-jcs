@@ -1,4 +1,4 @@
-package org.apache.jcs.engine.memory.lru;
+package org.apache.commons.jcs.engine.memory.lru;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,15 +26,15 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.memory.AbstractMemoryCache;
-import org.apache.jcs.engine.control.group.GroupId;
-import org.apache.jcs.engine.control.group.GroupAttrName;
+import org.apache.commons.jcs.engine.CacheConstants;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.memory.AbstractMemoryCache;
+import org.apache.commons.jcs.engine.control.group.GroupId;
+import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 
-import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
+import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 
 /**
  *  This is a test memory manager using the jdk1.4 LinkedHashMap.

@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.file;
+package org.apache.commons.jcs.yajcache.file;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +23,7 @@ import junit.framework.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  *
@@ -34,7 +34,7 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 public class FileContentTypeTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     /**
-     * Test of toByte method, of class org.apache.jcs.yajcache.config.FileContentType.
+     * Test of toByte method, of class org.apache.commons.jcs.yajcache.config.FileContentType.
      */
     public void test() {
         log.debug("test toByte");

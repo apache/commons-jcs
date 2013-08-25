@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.http.broadcast;
+package org.apache.commons.jcs.auxiliary.lateral.http.broadcast;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,14 +22,14 @@ package org.apache.jcs.auxiliary.lateral.http.broadcast;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.jcs.auxiliary.lateral.http.broadcast.LateralCacheUnicaster;
+import org.apache.commons.jcs.auxiliary.lateral.http.broadcast.LateralCacheUnicaster;
 
-import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.utils.threads.ThreadPoolManager;
+import org.apache.commons.jcs.utils.threads.ThreadPoolManager;
 
 /*
  * Used to multi-cast a key/val pair to the named cache on multiple servers.

@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.udp;
+package org.apache.commons.jcs.auxiliary.lateral.socket.udp;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -29,10 +29,10 @@ import java.net.MulticastSocket;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 
 /**
  * A highly unreliable UDP receiver. It is easy to outrun. Uncaught message will

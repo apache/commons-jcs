@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.file;
+package org.apache.commons.jcs.yajcache.file;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.jcs.yajcache.config.YajCacheConfig;
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.config.YajCacheConfig;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache File Utilities.

@@ -18,38 +18,38 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=bdbje
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 # #### CACHE REGIONS FOR TEST
 
 jcs.region.indexedRegion1=bdbje
-jcs.region.indexedRegion1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.indexedRegion1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.indexedRegion1.cacheattributes.MaxObjects=100
-jcs.region.indexedRegion1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.indexedRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.indexedRegion2=bdbje
-jcs.region.indexedRegion2.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.indexedRegion2.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.indexedRegion2.cacheattributes.MaxObjects=100
-jcs.region.indexedRegion2.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.indexedRegion2.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.indexedRegion3=bdbje
-jcs.region.indexedRegion3.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.indexedRegion3.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.indexedRegion3.cacheattributes.MaxObjects=100
-jcs.region.indexedRegion3.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.indexedRegion3.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.indexedRegion4=bdbje
-jcs.region.indexedRegion4.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.indexedRegion4.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.indexedRegion4.cacheattributes.MaxObjects=100
-jcs.region.indexedRegion4.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.indexedRegion4.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.indexedRegion4.cacheattributes.UseMemoryShrinker=false
 
 
 # #### AUXILIARY CACHES
 
 # Berkeley DB JE
-jcs.auxiliary.bdbje=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
-jcs.auxiliary.bdbje.attributes=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
+jcs.auxiliary.bdbje=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
+jcs.auxiliary.bdbje.attributes=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
 jcs.auxiliary.bdbje.attributes.DiskPath=target/
 jcs.auxiliary.bdbje.attributes.MaxPurgatorySize=100000

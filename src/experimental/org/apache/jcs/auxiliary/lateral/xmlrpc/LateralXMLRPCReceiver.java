@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.xmlrpc;
+package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,9 +24,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
 
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
-import org.apache.jcs.auxiliary.lateral.xmlrpc.behavior.IXMLRPCConstants;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
+import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.IXMLRPCConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.javagroups;
+package org.apache.commons.jcs.auxiliary.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,10 +21,10 @@ package org.apache.jcs.auxiliary.javagroups;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.AuxiliaryCacheFactory;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.jgroups.Channel;
 import org.jgroups.ChannelFactory;
 
@@ -45,8 +45,8 @@ public class JavaGroupsCacheFactory
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
-     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes,
+     *      org.apache.commons.jcs.engine.behavior.ICompositeCacheManager)
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {

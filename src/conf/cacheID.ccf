@@ -18,13 +18,13 @@
 # ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=DC
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=0
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=700
 jcs.default.elementattributes.IdleTime=1800
@@ -37,14 +37,14 @@ jcs.default.elementattributes.IsLateral=true
 # ################# CACHE REGIONS AVAILABLE ###################
 # Regions preconfirgured for caching
 jcs.region.testCache1=DC
-jcs.region.testCache1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.testCache1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=0
-jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.testCache1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=30
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=300
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=100
-jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
 jcs.region.testCache1.elementattributes.MaxLifeSeconds=60000
 jcs.region.testCache1.elementattributes.IsLateral=true
@@ -55,8 +55,8 @@ jcs.region.testCache1.elementattributes.IsRemote=true
 # ################# AUXILIARY CACHES AVAILABLE ################
 
 # Primary Disk Cache-- faster than the rest because of memory key storage
-jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=target/test-sandbox/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000

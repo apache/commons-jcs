@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.http.broadcast;
+package org.apache.commons.jcs.auxiliary.lateral.http.broadcast;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,12 +30,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.utils.threads.IThreadPoolRunnable;
+import org.apache.commons.jcs.utils.threads.IThreadPoolRunnable;
 
 /**
  * Used to uni-cast a ICacheItem to the named cache on the target server.

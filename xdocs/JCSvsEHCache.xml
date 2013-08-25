@@ -236,7 +236,7 @@
 
 				<source>
 					<![CDATA[
-package org.apache.jcs;
+package org.apache.commons.jcs;
 
 import junit.framework.TestCase;
 import net.sf.ehcache.Cache;
@@ -245,9 +245,9 @@ import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CompositeCacheAttributes;
-import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.jcs.utils.struct.LRUMap;
+import org.apache.commons.jcs.engine.CompositeCacheAttributes;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
+import org.apache.commons.jcs.utils.struct.LRUMap;
 
 /**
  * Compare JCS vs ehcache performance.

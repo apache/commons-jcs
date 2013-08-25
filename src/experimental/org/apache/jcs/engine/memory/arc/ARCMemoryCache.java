@@ -1,4 +1,4 @@
-package org.apache.jcs.engine.memory.arc;
+package org.apache.commons.jcs.engine.memory.arc;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,16 +25,16 @@ import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.memory.AbstractMemoryCache;
-import org.apache.jcs.engine.memory.util.MemoryElementDescriptor;
-import org.apache.jcs.engine.stats.StatElement;
-import org.apache.jcs.engine.stats.Stats;
-import org.apache.jcs.engine.stats.behavior.IStatElement;
-import org.apache.jcs.engine.stats.behavior.IStats;
-import org.apache.jcs.utils.struct.DoubleLinkedList;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.memory.AbstractMemoryCache;
+import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
+import org.apache.commons.jcs.engine.stats.StatElement;
+import org.apache.commons.jcs.engine.stats.Stats;
+import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
+import org.apache.commons.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.utils.struct.DoubleLinkedList;
 
 /**
  * This is a rough implmentation of an adaptive replacement cache. ARC is a
@@ -660,7 +660,7 @@ public class ARCMemoryCache
 
     /*
      * (non-Javadoc)
-     * @see org.apache.jcs.engine.memory.MemoryCache#getStatistics()
+     * @see org.apache.commons.jcs.engine.memory.MemoryCache#getStatistics()
      */
     public IStats getStatistics()
     {
@@ -757,7 +757,7 @@ public class ARCMemoryCache
      * there are none in t2, it should move them to t2 and then remove them.
      * <p>
      * (non-Javadoc)
-     * @see org.apache.jcs.engine.memory.MemoryCache#freeElements(int)
+     * @see org.apache.commons.jcs.engine.memory.MemoryCache#freeElements(int)
      */
     public int freeElements( int numberToFree )
         throws IOException

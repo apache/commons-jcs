@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.soft;
+package org.apache.commons.jcs.yajcache.soft;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,10 +23,10 @@ import junit.framework.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.core.CacheManager;
-import org.apache.jcs.yajcache.core.CacheType;
-import org.apache.jcs.yajcache.core.ICache;
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.core.CacheManager;
+import org.apache.commons.jcs.yajcache.core.CacheType;
+import org.apache.commons.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  *

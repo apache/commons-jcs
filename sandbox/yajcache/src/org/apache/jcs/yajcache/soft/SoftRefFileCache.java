@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.soft;
+package org.apache.commons.jcs.yajcache.soft;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -38,26 +38,26 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import org.apache.jcs.yajcache.beans.CacheChangeSupport;
-import org.apache.jcs.yajcache.beans.ICacheChangeListener;
-import org.apache.jcs.yajcache.lang.annotation.*;
-import org.apache.jcs.yajcache.config.PerCacheConfig;
-import org.apache.jcs.yajcache.beans.ICacheChangeListener;
-import org.apache.jcs.yajcache.beans.CacheChangeSupport;
-import org.apache.jcs.yajcache.core.CacheEntry;
-import org.apache.jcs.yajcache.core.CacheManager;
-import org.apache.jcs.yajcache.core.CacheType;
-import org.apache.jcs.yajcache.core.ICache;
-import org.apache.jcs.yajcache.file.CacheFileContent;
-import org.apache.jcs.yajcache.file.CacheFileContentType;
-import org.apache.jcs.yajcache.file.CacheFileDAO;
-import org.apache.jcs.yajcache.file.CacheFileUtils;
-import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
-import org.apache.jcs.yajcache.lang.ref.KeyedSoftReference;
-import org.apache.jcs.yajcache.util.CollectionUtils;
-import org.apache.jcs.yajcache.util.EqualsUtils;
-import org.apache.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
-import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
+import org.apache.commons.jcs.yajcache.beans.CacheChangeSupport;
+import org.apache.commons.jcs.yajcache.beans.ICacheChangeListener;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.config.PerCacheConfig;
+import org.apache.commons.jcs.yajcache.beans.ICacheChangeListener;
+import org.apache.commons.jcs.yajcache.beans.CacheChangeSupport;
+import org.apache.commons.jcs.yajcache.core.CacheEntry;
+import org.apache.commons.jcs.yajcache.core.CacheManager;
+import org.apache.commons.jcs.yajcache.core.CacheType;
+import org.apache.commons.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.file.CacheFileContent;
+import org.apache.commons.jcs.yajcache.file.CacheFileContentType;
+import org.apache.commons.jcs.yajcache.file.CacheFileDAO;
+import org.apache.commons.jcs.yajcache.file.CacheFileUtils;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedSoftReference;
+import org.apache.commons.jcs.yajcache.util.CollectionUtils;
+import org.apache.commons.jcs.yajcache.util.EqualsUtils;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 
 
 /**

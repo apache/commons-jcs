@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.xmlrpc.behavior;
+package org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,7 +22,7 @@ package org.apache.jcs.auxiliary.lateral.xmlrpc.behavior;
 import java.io.Serializable;
 import java.io.IOException;
 
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 
 /**
  * Listens for lateral cache event notification.

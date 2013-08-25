@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.file;
+package org.apache.commons.jcs.yajcache.file;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,7 +21,7 @@ package org.apache.jcs.yajcache.file;
 
 import java.io.Serializable;
 import org.apache.commons.lang3.SerializationUtils;
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache File Content Type.  A cache file represents the file persistence
@@ -68,7 +68,7 @@ public enum CacheFileContentType {
             case JAVA_SERIALIZATION:
                 return SerializationUtils.serialize((Serializable)obj);
             case XML_ENCODER:
-                return org.apache.jcs.yajcache.util.BeanUtils.inst.toXmlByteArray(obj);
+                return org.apache.commons.jcs.yajcache.util.BeanUtils.inst.toXmlByteArray(obj);
             default:
                 throw new AssertionError(this);
         }
@@ -78,7 +78,7 @@ public enum CacheFileContentType {
             case JAVA_SERIALIZATION:
                 return SerializationUtils.deserialize(ba);
             case XML_ENCODER:
-                return org.apache.jcs.yajcache.util.BeanUtils.inst.fromXmlByteArray(ba);
+                return org.apache.commons.jcs.yajcache.util.BeanUtils.inst.fromXmlByteArray(ba);
             default:
                 throw new AssertionError(this);
         }

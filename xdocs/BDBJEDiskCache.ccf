@@ -58,22 +58,22 @@
 # #############################################################
 # #### Default Region Configuration
 jcs.default=BDBDC
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 # #############################################################
 # #### CACHE REGIONS
 jcs.region.myRegion1=BDBDC
-jcs.region.myRegion1.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.myRegion1.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.myRegion1.cacheattributes.MaxObjects=1000
-jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.myRegion1.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 # #############################################################
 # #### AUXILIARY CACHES
 # Berkeley DB JE
-jcs.auxiliary.BDBDC=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
-jcs.auxiliary.BDBDC.attributes=org.apache.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
+jcs.auxiliary.BDBDC=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheFactory
+jcs.auxiliary.BDBDC.attributes=org.apache.commons.jcs.auxiliary.disk.bdbje.BDBJECacheAttributes
 jcs.auxiliary.BDBDC.attributes.DiskPath=target/
 jcs.auxiliary.BDBDC.attributes.MaxPurgatorySize=100000
         ]]></source>

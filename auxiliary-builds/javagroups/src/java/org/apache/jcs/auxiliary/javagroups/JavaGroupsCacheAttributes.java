@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.javagroups;
+package org.apache.commons.jcs.auxiliary.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,7 @@ package org.apache.jcs.auxiliary.javagroups;
  * under the License.
  */
 
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
  * Attributes used by {@link JavaGroupsCacheFactory#createCache} to configure

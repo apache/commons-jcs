@@ -147,14 +147,14 @@
 # DEFAULT CACHE REGION
 jcs.default=DC
 jcs.default.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=false
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=21600
 jcs.default.elementattributes.IdleTime=1800
@@ -165,22 +165,22 @@ jcs.default.elementattributes.IsLateral=true
 # PRE-DEFINED CACHE REGIONS
 jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=false
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
-jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
 
 # AVAILABLE AUXILIARY CACHES
 jcs.auxiliary.DC=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=${user.dir}/jcs_swap
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000000
 jcs.auxiliary.DC.attributes.MaxKeySize=1000000
@@ -207,7 +207,7 @@ jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 			<p>
 				JCS provides a convenient class that should meet all
 				your needs. It is called, appropriately enough,
-				<code>org.apache.jcs.JCS</code>
+				<code>org.apache.commons.jcs.JCS</code>
 			</p>
 			<p>
 				To get a cache region you simply ask JCS for the region
@@ -216,8 +216,8 @@ jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 			</p>
 			<source>
 				<![CDATA[
-import org.apache.jcs.JCS;
-import org.apache.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.exception.CacheException;
 
 . . .
 

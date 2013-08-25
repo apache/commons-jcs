@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.javagroups;
+package org.apache.commons.jcs.auxiliary.lateral.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,12 +26,12 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.jgroups.Channel;
 import org.jgroups.Message;
 import org.jgroups.blocks.GroupRequest;

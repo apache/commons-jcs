@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.javagroups.behavior;
+package org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

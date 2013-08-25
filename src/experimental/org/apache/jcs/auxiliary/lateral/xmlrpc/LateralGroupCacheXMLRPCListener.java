@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.xmlrpc;
+package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,11 +19,11 @@ package org.apache.jcs.auxiliary.lateral.xmlrpc;
  * under the License.
  */
 
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
-import org.apache.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.ILateralCacheXMLRPCListener;
 
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

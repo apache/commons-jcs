@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.javagroups;
+package org.apache.commons.jcs.auxiliary.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,12 +21,12 @@ package org.apache.jcs.auxiliary.javagroups;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.engine.CacheConstants;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheType;
+import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.javagroups.Channel;
 import org.javagroups.Message;
 import org.javagroups.View;

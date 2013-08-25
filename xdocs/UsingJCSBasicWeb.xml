@@ -141,9 +141,9 @@ public class BookVObj implements Serializable
         <source><![CDATA[
 package com.genericbookstore.data;
 
-import org.apache.jcs.JCS;
+import org.apache.commons.jcs.JCS;
 // in case we want to set some special behavior
-import org.apache.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
 public class BookVObjManager
 {
@@ -367,10 +367,10 @@ public class BookVObjManager
 # sets the default aux value for any non configured caches
 jcs.default=DC,RFailover
 jcs.default.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=3600
 jcs.default.elementattributes.IdleTime=1800
@@ -384,10 +384,10 @@ jcs.default.elementattributes.IsLateral=true
 # Regions preconfigured for caching
 jcs.region.bookCache=DC,RFailover
 jcs.region.bookCache.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.bookCache.cacheattributes.MaxObjects=1200
 jcs.region.bookCache.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.bookCache.elementattributes.IsEternal=false
 jcs.region.bookCache.elementattributes.MaxLifeSeconds=7200
 jcs.region.bookCache.elementattributes.IdleTime=1800
@@ -399,9 +399,9 @@ jcs.region.bookCache.elementattributes.IsLateral=true
 
 # Primary Disk Cache -- faster than the rest because of memory key storage
 jcs.auxiliary.DC=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=/usr/opt/bookstore/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
@@ -410,9 +410,9 @@ jcs.auxiliary.DC.attributes.MaxRecycleBinSize=7500
 
 # Remote RMI Cache set up to failover
 jcs.auxiliary.RFailover=
-    org.apache.jcs.auxiliary.remote.RemoteCacheFactory
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheFactory
 jcs.auxiliary.RFailover.attributes=
-    org.apache.jcs.auxiliary.remote.RemoteCacheAttributes
+    org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RFailover.attributes.RemoteTypeName=LOCAL
 jcs.auxiliary.RFailover.attributes.FailoverServers=scriptserver:1102
 jcs.auxiliary.RFailover.attributes.GetOnly=false

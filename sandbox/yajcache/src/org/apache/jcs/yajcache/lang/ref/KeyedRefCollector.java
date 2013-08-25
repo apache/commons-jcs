@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.lang.ref;
+package org.apache.commons.jcs.yajcache.lang.ref;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Keyed Reference garbage collector which removes stale

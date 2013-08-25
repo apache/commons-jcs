@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.javagroups;
+package org.apache.commons.jcs.auxiliary.lateral.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,14 +23,14 @@ import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAbstractFactory;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
+import org.apache.commons.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * Constructs a LateralCacheNoWaitFacade for the given configuration. Each
@@ -49,8 +49,8 @@ public class LateralJGCacheFactory
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.jcs.auxiliary.AuxiliaryCacheAttributes,
-     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory#createCache(org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes,
+     *      org.apache.commons.jcs.engine.behavior.ICompositeCacheManager)
      */
     public AuxiliaryCache createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr )
     {
@@ -77,8 +77,8 @@ public class LateralJGCacheFactory
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.jcs.auxiliary.lateral.LateralCacheAbstractFactory#createListener(org.apache.jcs.auxiliary.lateral.LateralCacheAttributes,
-     *      org.apache.jcs.engine.behavior.ICompositeCacheManager)
+     * @see org.apache.commons.jcs.auxiliary.lateral.LateralCacheAbstractFactory#createListener(org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes,
+     *      org.apache.commons.jcs.engine.behavior.ICompositeCacheManager)
      */
     public void createListener( LateralCacheAttributes lac, ICompositeCacheManager cacheMgr )
     {

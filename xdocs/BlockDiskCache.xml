@@ -50,16 +50,16 @@
 ##### DEFAULT REGION  ########################################
 
 jcs.default=blockDiskCache
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=0
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 ##############################################################
 ##### AUXILIARY CACHES  ######################################
 
 # Block Disk Cache
-jcs.auxiliary.blockDiskCache=org.apache.jcs.auxiliary.disk.block.BlockDiskCacheFactory
-jcs.auxiliary.blockDiskCache.attributes=org.apache.jcs.auxiliary.disk.block.BlockDiskCacheAttributes
+jcs.auxiliary.blockDiskCache=org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheFactory
+jcs.auxiliary.blockDiskCache.attributes=org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheAttributes
 jcs.auxiliary.blockDiskCache.attributes.DiskPath=target/test-sandbox/block-disk-cache-huge
 jcs.auxiliary.blockDiskCache.attributes.MaxPurgatorySize=300000
 jcs.auxiliary.blockDiskCache.attributes.MaxKeySize=1000000

@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.core;
+package org.apache.commons.jcs.yajcache.core;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,12 +24,12 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.jcs.yajcache.file.CacheFileUtils;
+import org.apache.commons.jcs.yajcache.file.CacheFileUtils;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
-import org.apache.jcs.yajcache.soft.SoftRefFileCache;
-import org.apache.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
-import org.apache.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.soft.SoftRefFileCache;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.IKeyedReadWriteLock;
+import org.apache.commons.jcs.yajcache.util.concurrent.locks.KeyedReadWriteLock;
 
 /**
  * Cache Manager for getting, creating and removing named caches.

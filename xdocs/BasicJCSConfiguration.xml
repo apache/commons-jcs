@@ -46,10 +46,10 @@
 
 jcs.default=
 jcs.default.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
         ]]></source>
         <p>
           If you want to add memory shrinking then you can add these
@@ -60,7 +60,7 @@ jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.default.cacheattributes.MaxSpoolPerRun=500
-jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
         ]]></source>
         <p>
@@ -72,9 +72,9 @@ jcs.default.elementattributes.IsEternal=false
         </p>
         <source><![CDATA[
 jcs.auxiliary.DC=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:/dev/jcs/raf
         ]]></source>
         <p>
@@ -90,15 +90,15 @@ jcs.default=DC
         <source><![CDATA[
 jcs.region.testCache1=DC
 jcs.region.testCache1.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
-jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
 
         ]]></source>
@@ -110,9 +110,9 @@ jcs.region.testCache1.elementattributes.IsEternal=false
         </p>
         <source><![CDATA[
 jcs.auxiliary.LTCP=
-    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+    org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LTCP.attributes=
-    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+    org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110
@@ -150,39 +150,39 @@ jcs.region.testCache1=DC,LTCP
 
 jcs.default=DC,LTCP
 jcs.default.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
 jcs.default.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 # PRE-DEFINED CACHE REGIONS
 
 jcs.region.testCache1=DC,LTCP
 jcs.region.testCache1.cacheattributes=
-    org.apache.jcs.engine.CompositeCacheAttributes
+    org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.testCache1.cacheattributes.MaxObjects=1000
 jcs.region.testCache1.cacheattributes.MemoryCacheName=
-    org.apache.jcs.engine.memory.lru.LRUMemoryCache
+    org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.testCache1.cacheattributes.UseMemoryShrinker=true
 jcs.region.testCache1.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.region.testCache1.cacheattributes.ShrinkerIntervalSeconds=60
 jcs.region.testCache1.cacheattributes.MaxSpoolPerRun=500
-jcs.region.testCache1.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.testCache1.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.testCache1.elementattributes.IsEternal=false
 
 
 # AVAILABLE AUXILIARY CACHES
 jcs.auxiliary.DC=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
 jcs.auxiliary.DC.attributes=
-    org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+    org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=g:/dev/jcs/raf
 jcs.auxiliary.DC.attributes.maxKeySize=100000
 
 jcs.auxiliary.LTCP=
-    org.apache.jcs.auxiliary.lateral.LateralCacheFactory
+    org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
 jcs.auxiliary.LTCP.attributes=
-    org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+    org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LTCP.attributes.TransmissionTypeName=TCP
 jcs.auxiliary.LTCP.attributes.TcpServers=localhost:1111
 jcs.auxiliary.LTCP.attributes.TcpListenerPort=1110

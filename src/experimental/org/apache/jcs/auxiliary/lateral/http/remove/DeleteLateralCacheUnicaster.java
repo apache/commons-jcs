@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.http.remove;
+package org.apache.commons.jcs.auxiliary.lateral.http.remove;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,7 +28,7 @@ import java.net.URLConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.utils.threads.IThreadPoolRunnable;
+import org.apache.commons.jcs.utils.threads.IThreadPoolRunnable;
 
 /**
  * Used to uni-cast a ICacheItem to the named cache on the target server.

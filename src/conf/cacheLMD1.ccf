@@ -18,13 +18,13 @@
 # ################# DEFAULT CACHE REGION  #####################
 # sets the default aux value for any non configured caches
 jcs.default=DC,LJG
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=1000
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.default.cacheattributes.UseMemoryShrinker=true
 jcs.default.cacheattributes.MaxMemoryIdleTimeSeconds=3600
 jcs.default.cacheattributes.ShrinkerIntervalSeconds=60
-jcs.default.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.default.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.default.elementattributes.IsEternal=false
 jcs.default.elementattributes.MaxLifeSeconds=600
 jcs.default.elementattributes.IdleTime=1800
@@ -38,15 +38,15 @@ jcs.default.elementattributes.IsLateral=true
 # Regions preconfirgured for caching
 # LEAD_PRICE_CACHE_NAME
 jcs.region.LeadPrice=DC,LJG
-jcs.region.LeadPrice.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.LeadPrice.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.LeadPrice.cacheattributes.MaxObjects=1000
 # set it to zero, was 1000
-jcs.region.LeadPrice.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.LeadPrice.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.LeadPrice.cacheattributes.UseMemoryShrinker=true
 jcs.region.LeadPrice.cacheattributes.ShrinkerIntervalSeconds=30
 jcs.region.LeadPrice.cacheattributes.MaxMemoryIdleTimeSeconds=300
 jcs.region.LeadPrice.cacheattributes.MaxSpoolPerRun=100
-jcs.region.LeadPrice.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.LeadPrice.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.LeadPrice.elementattributes.IsEternal=false
 jcs.region.LeadPrice.elementattributes.MaxLifeSeconds=600
 jcs.region.LeadPrice.elementattributes.IsSpool=true
@@ -55,15 +55,15 @@ jcs.region.LeadPrice.elementattributes.IsRemote=true
 
 # HOTEL_OPTION_CACHE_NAME
 jcs.region.HotelOption=DC,LJG
-jcs.region.HotelOption.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.HotelOption.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.HotelOption.cacheattributes.MaxObjects=1000
 # set it to zero, was 1000
-jcs.region.HotelOption.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.HotelOption.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.HotelOption.cacheattributes.UseMemoryShrinker=true
 jcs.region.HotelOption.cacheattributes.ShrinkerIntervalSeconds=30
 jcs.region.HotelOption.cacheattributes.MaxMemoryIdleTimeSeconds=300
 jcs.region.HotelOption.cacheattributes.MaxSpoolPerRun=100
-jcs.region.HotelOption.elementattributes=org.apache.jcs.engine.ElementAttributes
+jcs.region.HotelOption.elementattributes=org.apache.commons.jcs.engine.ElementAttributes
 jcs.region.HotelOption.elementattributes.IsEternal=false
 jcs.region.HotelOption.elementattributes.MaxLifeSeconds=600
 jcs.region.HotelOption.elementattributes.IsSpool=true
@@ -75,8 +75,8 @@ jcs.region.HotelOption.elementattributes.IsRemote=true
 # ################# AUXILIARY CACHES AVAILABLE ################
 
 # Primary Disk Cache-- faster than the rest because of memory key storage
-jcs.auxiliary.DC=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.DC.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.DC=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.DC.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.DC.attributes.DiskPath=log/raf
 jcs.auxiliary.DC.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.DC.attributes.MaxKeySize=10000
@@ -84,8 +84,8 @@ jcs.auxiliary.DC.attributes.MaxRecycleBinSize=5000
 jcs.auxiliary.DC.attributes.OptimizeAtRemoveCount=300000
 
 # Lateral JavaGroups Distribution
-jcs.auxiliary.LJG=org.apache.jcs.auxiliary.lateral.LateralCacheFactory
-jcs.auxiliary.LJG.attributes=org.apache.jcs.auxiliary.lateral.LateralCacheAttributes
+jcs.auxiliary.LJG=org.apache.commons.jcs.auxiliary.lateral.LateralCacheFactory
+jcs.auxiliary.LJG.attributes=org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes
 jcs.auxiliary.LJG.attributes.TransmissionTypeName=JAVAGROUPS
 jcs.auxiliary.LJG.attributes.PutOnlyMode=true
 jcs.auxiliary.LJG.attributes.JGChannelProperties=UDP(mcast_addr=224.0.0.100;mcast_port=751):PING(timeout=3000):FD:STABLE:NAKACK:UNICAST:FRAG:FLUSH:GMS:VIEW_ENFORCER:QUEUE

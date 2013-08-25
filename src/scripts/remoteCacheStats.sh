@@ -38,7 +38,7 @@ ARGS="$HEAP $DEBUG $POLICY"
 
 echo $ARGS
 
-java  $ARGS org.apache.jcs.auxiliary.remote.server.RemoteCacheServerFactory -stats "$1"
+java  $ARGS org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerFactory -stats "$1"
 
 
 

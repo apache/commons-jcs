@@ -92,8 +92,8 @@
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
 # MYSQL disk cache
-jcs.auxiliary.MYSQL=org.apache.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheFactory
-jcs.auxiliary.MYSQL.attributes=org.apache.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes
+jcs.auxiliary.MYSQL=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheFactory
+jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes
 jcs.auxiliary.MYSQL.attributes.userName=sa
 jcs.auxiliary.MYSQL.attributes.password=
 jcs.auxiliary.MYSQL.attributes.url=jdbc:hsqldb:target/cache_hsql_db
@@ -160,8 +160,8 @@ jcs.auxiliary.MYSQL.attributes.balkDuringOptimization=true
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
 # MYSQL disk cache
-jcs.auxiliary.MYSQL=org.apache.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheFactory
-jcs.auxiliary.MYSQL.attributes=org.apache.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes
+jcs.auxiliary.MYSQL=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheFactory
+jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes
 jcs.auxiliary.MYSQL.attributes.userName=sa
 jcs.auxiliary.MYSQL.attributes.password=
 jcs.auxiliary.MYSQL.attributes.url=jdbc:hsqldb:target/cache_hsql_db

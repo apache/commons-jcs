@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.beans;
+package org.apache.commons.jcs.yajcache.beans;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,12 +22,12 @@ package org.apache.jcs.yajcache.beans;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
-import org.apache.jcs.yajcache.beans.CacheChangeEvent;
-import org.apache.jcs.yajcache.beans.CacheClearEvent;
-import org.apache.jcs.yajcache.beans.CachePutEvent;
-import org.apache.jcs.yajcache.beans.CacheRemoveEvent;
-import org.apache.jcs.yajcache.core.ICache;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.beans.CacheChangeEvent;
+import org.apache.commons.jcs.yajcache.beans.CacheClearEvent;
+import org.apache.commons.jcs.yajcache.beans.CachePutEvent;
+import org.apache.commons.jcs.yajcache.beans.CacheRemoveEvent;
+import org.apache.commons.jcs.yajcache.core.ICache;
 
 /**
  *

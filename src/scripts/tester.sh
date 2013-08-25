@@ -32,4 +32,4 @@ done
 echo ${CLASSPATH}
 # -Xrunhprof:cpu=samples,depth=6,thread=y
 
-${JAVA_HOME}/bin/java  -ms90m -mx400m -verbosegc -classpath "${CLASSPATH}" org.apache.jcs.access.TestCacheAccess /cache$argv.ccf
+${JAVA_HOME}/bin/java  -ms90m -mx400m -verbosegc -classpath "${CLASSPATH}" org.apache.commons.jcs.access.TestCacheAccess /cache$argv.ccf

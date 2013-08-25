@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.javagroups;
+package org.apache.commons.jcs.auxiliary.lateral.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,15 +25,15 @@ import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
+import org.apache.commons.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 /**
  * JavaGroups listener. Good for distributing cache data accross multiple vms on
@@ -288,7 +288,7 @@ public class LateralCacheJGListener
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener#setCacheManager(org.apache.jcs.engine.behavior.ICompositeCacheManager)
+     * @see org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener#setCacheManager(org.apache.commons.jcs.engine.behavior.ICompositeCacheManager)
      */
     public void setCacheManager( ICompositeCacheManager cacheMgr )
     {
@@ -298,7 +298,7 @@ public class LateralCacheJGListener
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener#getCacheManager()
+     * @see org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener#getCacheManager()
      */
     public ICompositeCacheManager getCacheManager()
     {

@@ -23,6 +23,6 @@ rem set DBUGPARM=-classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:trans
 
 rem -XX:+PrintTenuringDistribution
 
-java %DBUGPARM% -verbosegc  -ms10m -mx200m -classpath %CLASSPATH% "-Djava.security.policy=%CURDIR%\src\conf\cache.policy" org.apache.jcs.auxiliary.remote.server.RemoteCacheServerFactory /remote.cache%1.ccf
+java %DBUGPARM% -verbosegc  -ms10m -mx200m -classpath %CLASSPATH% "-Djava.security.policy=%CURDIR%\src\conf\cache.policy" org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerFactory /remote.cache%1.ccf
 
 

@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.lang.ref;
+package org.apache.commons.jcs.yajcache.lang.ref;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,7 +22,7 @@ package org.apache.jcs.yajcache.lang.ref;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  * {@link WeakReference} with an embedded key.
  *

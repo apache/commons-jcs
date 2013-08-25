@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.file;
+package org.apache.commons.jcs.yajcache.file;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +25,7 @@ import java.util.Arrays;
 import junit.framework.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  *

@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.javagroups;
+package org.apache.commons.jcs.auxiliary.lateral.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,9 +23,9 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
-import org.apache.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.IJGConstants;
+import org.apache.commons.jcs.auxiliary.lateral.javagroups.behavior.ILateralCacheJGListener;
 import org.jgroups.Channel;
 import org.jgroups.ChannelNotConnectedException;
 import org.jgroups.Message;

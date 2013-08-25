@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.util.concurrent.locks;
+package org.apache.commons.jcs.yajcache.util.concurrent.locks;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,7 +21,7 @@ package org.apache.jcs.yajcache.util.concurrent.locks;
 
 import java.util.concurrent.locks.Lock;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  * Factory Interface for key specific ReadWriteLock.
  *

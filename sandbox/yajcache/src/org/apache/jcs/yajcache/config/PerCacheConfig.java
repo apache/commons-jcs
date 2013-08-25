@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.config;
+package org.apache.commons.jcs.yajcache.config;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,7 +21,7 @@ package org.apache.jcs.yajcache.config;
 
 import java.io.File;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * @author Hanson Char

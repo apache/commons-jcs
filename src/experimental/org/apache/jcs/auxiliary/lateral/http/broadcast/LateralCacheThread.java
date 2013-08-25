@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.http.broadcast;
+package org.apache.commons.jcs.auxiliary.lateral.http.broadcast;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,9 +30,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.CacheElement;
 
-import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

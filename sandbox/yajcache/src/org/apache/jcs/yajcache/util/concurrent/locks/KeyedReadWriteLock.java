@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.util.concurrent.locks;
+package org.apache.commons.jcs.yajcache.util.concurrent.locks;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,10 +27,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.jcs.yajcache.lang.ref.KeyedRefCollector;
-import org.apache.jcs.yajcache.lang.ref.KeyedWeakReference;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedRefCollector;
+import org.apache.commons.jcs.yajcache.lang.ref.KeyedWeakReference;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 
 /**

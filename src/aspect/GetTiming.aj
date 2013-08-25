@@ -28,10 +28,10 @@ aspect GetTiming {
   pointcut allExecs():
 
 //       !within(GetTiming)
-     !withincode(void org.apache.jcs.utils.log.Logger.*(..))
-     && !withincode(void org.apache.jcs.utils.log.Logger.*(..))
-   && (cflow(this(org.apache.jcs.engine.control.Cache))
-//    || cflow(this(org.apache.jcs.engine.group.GroupCache))
+     !withincode(void org.apache.commons.jcs.utils.log.Logger.*(..))
+     && !withincode(void org.apache.commons.jcs.utils.log.Logger.*(..))
+   && (cflow(this(org.apache.commons.jcs.engine.control.Cache))
+//    || cflow(this(org.apache.commons.jcs.engine.group.GroupCache))
     )
 //    && !withincode(* *.getValueObj(..))
 //

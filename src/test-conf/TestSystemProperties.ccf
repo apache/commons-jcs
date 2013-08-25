@@ -18,22 +18,22 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=indexedDiskCache
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=${MY_SYSTEM_PROPERTY_MAX_SIZE}
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 
 jcs.region.missing=
-jcs.region.missing.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.missing.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.missing.cacheattributes.MaxObjects=${NO_SUCH_PROPERTY}
-jcs.region.missing.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.missing.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 
 # #### AUXILIARY CACHES
 
 # Indexed Disk Cache
-jcs.auxiliary.indexedDiskCache=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/${MY_SYSTEM_PROPERTY_DISK_DIR}
 
 

@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.javagroups;
+package org.apache.commons.jcs.auxiliary.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,8 +19,8 @@ package org.apache.jcs.auxiliary.javagroups;
  * under the License.
  */
 
-import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.access.CacheAccess;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.javagroups.log.Tracer;
 import org.javagroups.log.Trace;
 

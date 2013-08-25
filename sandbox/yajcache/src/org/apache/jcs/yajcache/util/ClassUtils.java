@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.util;
+package org.apache.commons.jcs.yajcache.util;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,7 +22,7 @@ package org.apache.jcs.yajcache.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 /**
  *
  * @author Hanson Char

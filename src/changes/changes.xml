@@ -20,6 +20,10 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="update">
+                Change package to org.apache.commons.jcs, groupId to org.apache.commons,
+                artifactId to commons-jcs and version to 2.0-SNAPSHOT
+            </action>
             <action dev="tv" type="fix" issue="JCS-95" due-to="Nicolas Gomez Navarrete">
                 Map region names to valid file names.
             </action>

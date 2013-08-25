@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.javagroups;
+package org.apache.commons.jcs.auxiliary.javagroups;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,17 +27,17 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.engine.CacheConstants;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICacheType;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.stats.StatElement;
-import org.apache.jcs.engine.stats.Stats;
-import org.apache.jcs.engine.stats.behavior.IStatElement;
-import org.apache.jcs.engine.stats.behavior.IStats;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.engine.CacheConstants;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheType;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.stats.StatElement;
+import org.apache.commons.jcs.engine.stats.Stats;
+import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
+import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.jgroups.Address;
 import org.jgroups.Channel;
 import org.jgroups.MembershipListener;
@@ -393,7 +393,7 @@ public class JavaGroupsCache
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.jcs.auxiliary.AuxiliaryCache#getStatistics()
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
     public IStats getStatistics()
     {

@@ -48,7 +48,7 @@
 			<p>
 				The various events that you can handle have all been
 				assigned integer codes. The codes are defined in the
-				org.apache.jcs.engine.control.event.behavior.IElementEventConstants
+				org.apache.commons.jcs.engine.control.event.behavior.IElementEventConstants
 				interface. The events are named descriptively and
 				include:
 			</p>
@@ -112,7 +112,7 @@
 			</table>
 			<p>
 				To create an event handler you must implement the
-				org.apache.jcs.engine.control.event.behavior.IElementEventHandler
+				org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler
 				interface. This interface contains only one method:
 			</p>
 			<source>

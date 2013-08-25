@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.xmlrpc;
+package org.apache.commons.jcs.auxiliary.lateral.xmlrpc;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -35,21 +35,21 @@ import java.util.Vector;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.jcs.auxiliary.lateral.LateralElementDescriptor;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.LateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 
-import org.apache.jcs.auxiliary.lateral.xmlrpc.utils.XMLRPCSocketOpener;
-import org.apache.jcs.auxiliary.lateral.xmlrpc.behavior.IXMLRPCConstants;
+import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.utils.XMLRPCSocketOpener;
+import org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior.IXMLRPCConstants;
 
 import org.apache.xmlrpc.XmlRpcClientLite;
 import org.apache.xmlrpc.XmlRpcClient;
 
-import org.apache.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.CacheElement;
 
-import org.apache.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

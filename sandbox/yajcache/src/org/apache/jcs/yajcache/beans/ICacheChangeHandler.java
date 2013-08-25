@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.beans;
+package org.apache.commons.jcs.yajcache.beans;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,7 @@ package org.apache.jcs.yajcache.beans;
  * under the License.
  */
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache change beans listener/handler.

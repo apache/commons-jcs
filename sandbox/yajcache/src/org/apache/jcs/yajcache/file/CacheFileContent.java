@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.file;
+package org.apache.commons.jcs.yajcache.file;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache File Content which represents the file persistence format

@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.javagroups.utils;
+package org.apache.commons.jcs.auxiliary.lateral.javagroups.utils;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,7 +21,7 @@ package org.apache.jcs.auxiliary.lateral.javagroups.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 import org.jgroups.Channel;
 import org.jgroups.ChannelFactory;
 import org.jgroups.JChannelFactory;

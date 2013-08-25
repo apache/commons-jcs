@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.core;
+package org.apache.commons.jcs.yajcache.core;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,10 +19,10 @@ package org.apache.jcs.yajcache.core;
  * under the License.
  */
 
-import org.apache.jcs.yajcache.soft.SoftRefCache;
-import org.apache.jcs.yajcache.soft.SoftRefFileCache;
+import org.apache.commons.jcs.yajcache.soft.SoftRefCache;
+import org.apache.commons.jcs.yajcache.soft.SoftRefFileCache;
 
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  * Cache Type.

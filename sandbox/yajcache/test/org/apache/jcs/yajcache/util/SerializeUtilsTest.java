@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.util;
+package org.apache.commons.jcs.yajcache.util;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +23,7 @@ import junit.framework.*;
 import java.util.Arrays;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  *
@@ -34,7 +34,7 @@ import org.apache.jcs.yajcache.lang.annotation.*;
 public class SerializeUtilsTest extends TestCase {
     private Log log = LogFactory.getLog(this.getClass());
     /**
-     * Test of dup method, of class org.apache.jcs.yajcache.util.SerializeUtils.
+     * Test of dup method, of class org.apache.commons.jcs.yajcache.util.SerializeUtils.
      */
     public void testDup() {
         // Test string dup: no clone

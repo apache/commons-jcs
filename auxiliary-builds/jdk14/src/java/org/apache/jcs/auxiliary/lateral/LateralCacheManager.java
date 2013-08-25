@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral;
+package org.apache.commons.jcs.auxiliary.lateral;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,17 +26,17 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jcs.auxiliary.AuxiliaryCache;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
-import org.apache.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
-import org.apache.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
-import org.apache.jcs.auxiliary.lateral.javagroups.LateralJGService;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
-import org.apache.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-import org.apache.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal;
+import org.apache.commons.jcs.auxiliary.lateral.javagroups.LateralCacheJGListener;
+import org.apache.commons.jcs.auxiliary.lateral.javagroups.LateralJGService;
+import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
+import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 
 /**
  * Creates lateral caches. Lateral caches are primarily used for removing non
@@ -326,7 +326,7 @@ public class LateralCacheManager
     /*
      * (non-Javadoc)
      *
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager#getInstances()
+     * @see org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager#getInstances()
      */
     public Map getInstances()
     {
@@ -334,7 +334,7 @@ public class LateralCacheManager
     }
 
     /* (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager#getCaches()
+     * @see org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager#getCaches()
      */
     public Map getCaches()
     {
@@ -343,7 +343,7 @@ public class LateralCacheManager
     }
 
     /* (non-Javadoc)
-     * @see org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheManager#fixService()
+     * @see org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager#fixService()
      */
     public Object fixService()
         throws IOException

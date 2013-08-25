@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.xmlrpc.behavior;
+package org.apache.commons.jcs.auxiliary.lateral.xmlrpc.behavior;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

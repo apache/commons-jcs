@@ -145,8 +145,8 @@
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
 # JDBC disk cache
-jcs.auxiliary.JDBC=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC.attributes.userName=sa
 jcs.auxiliary.JDBC.attributes.password=
 jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:
@@ -214,8 +214,8 @@ jcs.auxiliary.JDBC.attributes.ShrinkerIntervalSeconds=300
 ##############################################################
 ################## AUXILIARY CACHES AVAILABLE ################
 # JDBC disk cache
-jcs.auxiliary.JDBC=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
-jcs.auxiliary.JDBC.attributes=org.apache.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
+jcs.auxiliary.JDBC=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFactory
+jcs.auxiliary.JDBC.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.JDBC.attributes.userName=sa
 jcs.auxiliary.JDBC.attributes.password=
 jcs.auxiliary.JDBC.attributes.url=jdbc:hsqldb:

@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.socket.udp;
+package org.apache.commons.jcs.auxiliary.lateral.socket.udp;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,17 +24,17 @@ import java.io.Serializable;
 
 import java.util.HashMap;
 
-import org.apache.jcs.auxiliary.lateral.LateralCacheInfo;
+import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
-import org.apache.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 
-import org.apache.jcs.engine.behavior.ICache;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICache;
 
-import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

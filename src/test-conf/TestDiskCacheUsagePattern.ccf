@@ -18,29 +18,29 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=indexedDiskCache
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 
 # #### CACHE REGIONS FOR TEST
 jcs.region.Swap=indexedDiskCache
-jcs.region.Swap.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.Swap.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.Swap.cacheattributes.MaxObjects=100
-jcs.region.Swap.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.Swap.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.Swap.cacheattributes.DiskUsagePatternName=SWAP
 
 jcs.region.Update=indexedDiskCache
-jcs.region.Update.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.Update.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.Update.cacheattributes.MaxObjects=100
-jcs.region.Update.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.Update.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.Update.cacheattributes.DiskUsagePatternName=UPDATE
 
 
 # #### AUXILIARY CACHES
 # Indexed Disk Cache
-jcs.auxiliary.indexedDiskCache=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache-conc
 jcs.auxiliary.indexedDiskCache.attributes.MaxPurgatorySize=10000
 jcs.auxiliary.indexedDiskCache.attributes.MaxKeySize=10000

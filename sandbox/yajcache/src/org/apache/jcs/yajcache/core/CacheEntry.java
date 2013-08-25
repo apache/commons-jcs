@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.core;
+package org.apache.commons.jcs.yajcache.core;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,7 +22,7 @@ package org.apache.jcs.yajcache.core;
 import java.util.Map;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.jcs.yajcache.lang.annotation.*;
+import org.apache.commons.jcs.yajcache.lang.annotation.*;
 
 /**
  *

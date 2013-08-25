@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.http.server;
+package org.apache.commons.jcs.auxiliary.lateral.http.server;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -37,16 +37,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICache;
 
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.engine.CacheConstants;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.engine.CacheConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.jcs.utils.servlet.BasicHttpAuthenticator;
+import org.apache.commons.jcs.utils.servlet.BasicHttpAuthenticator;
 
 public abstract class AbstractDeleteCacheServlet
      extends HttpServlet implements SingleThreadModel

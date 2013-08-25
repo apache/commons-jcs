@@ -1,4 +1,4 @@
-package org.apache.jcs.yajcache.lang.annotation;
+package org.apache.commons.jcs.yajcache.lang.annotation;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

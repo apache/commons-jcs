@@ -1,4 +1,4 @@
-package org.apache.jcs.auxiliary.lateral.xmlrpc.utils;
+package org.apache.commons.jcs.auxiliary.lateral.xmlrpc.utils;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

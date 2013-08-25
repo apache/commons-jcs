@@ -1,4 +1,4 @@
-package org.apache.jcs.engine.memory.arc;
+package org.apache.commons.jcs.engine.memory.arc;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,12 +21,12 @@ package org.apache.jcs.engine.memory.arc;
 
 import junit.framework.TestCase;
 
-import org.apache.jcs.JCS;
-import org.apache.jcs.access.exception.CacheException;
-import org.apache.jcs.engine.CacheElement;
-import org.apache.jcs.engine.behavior.ICacheElement;
-import org.apache.jcs.engine.control.CompositeCache;
-import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 /**
  * Initial tests for the ARCMemoryCache

@@ -18,34 +18,34 @@
 # a maximum of 100 objects, so objects should get pushed into the disk cache
 
 jcs.default=indexedDiskCache
-jcs.default.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.default.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.default.cacheattributes.MaxObjects=100
-jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.default.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 
 
 # #### CACHE REGIONS FOR TEST
 jcs.region.WithDisk=indexedDiskCache
-jcs.region.WithDisk.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.WithDisk.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.WithDisk.cacheattributes.MaxObjects=0
-jcs.region.WithDisk.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.WithDisk.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.WithDisk.elementattributes.IsSpool=true
 
 jcs.region.NoDisk=
-jcs.region.NoDisk.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.NoDisk.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.NoDisk.cacheattributes.MaxObjects=0
-jcs.region.NoDisk.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.NoDisk.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.NoDisk.elementattributes.IsSpool=true
 
 jcs.region.DiskButNotAllowed=indexedDiskCache
-jcs.region.DiskButNotAllowed.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.DiskButNotAllowed.cacheattributes=org.apache.commons.jcs.engine.CompositeCacheAttributes
 jcs.region.DiskButNotAllowed.cacheattributes.MaxObjects=0
-jcs.region.DiskButNotAllowed.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+jcs.region.DiskButNotAllowed.cacheattributes.MemoryCacheName=org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache
 jcs.region.DiskButNotAllowed.elementattributes.IsSpool=false
 
 
 # #### AUXILIARY CACHES
 # Indexed Disk Cache
-jcs.auxiliary.indexedDiskCache=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
-jcs.auxiliary.indexedDiskCache.attributes=org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
+jcs.auxiliary.indexedDiskCache=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory
+jcs.auxiliary.indexedDiskCache.attributes=org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes
 jcs.auxiliary.indexedDiskCache.attributes.DiskPath=target/test-sandbox/indexed-disk-cache
 
