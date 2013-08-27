@@ -130,7 +130,10 @@ public class LateralTCPSender
                 {
                     socket.close();
                 }
-                throw new IOException( "Cannot connect to " + host + ":" + port, ioe );
+                // Java 1.6+ only throw new IOException( "Cannot connect to " + host + ":" + port, ioe );
+                final IOException ioException = new IOException( "Cannot connect to " + host + ":" + port);
+                ioException.initCause(ioe);
+                throw ioException;
             }
 
             socket.setSoTimeout( tcpLateralCacheAttributes.getSocketTimeOut() );
