@@ -359,7 +359,7 @@
                 <!-- <exclude>**/JDBCDiskCacheRemovalUnitTest.java</exclude> -->
                 <!-- <exclude>**/JDBCDiskCacheUnitTest.java</exclude> -->
             </excludes>
-            <source>${maven.compile.source}</source>
+            <source>${maven.compiler.source}</source>
           </configuration>
         </plugin>
         <plugin>
@@ -446,9 +446,9 @@
   <properties>
 
     <!-- Default configuration for compiler source and target JVM -->
-    <maven.compile.sourceEncoding>UTF-8</maven.compile.sourceEncoding>
-  	<maven.compile.source>1.5</maven.compile.source>
-  	<maven.compile.target>1.5</maven.compile.target>
+    <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
+  	<maven.compiler.source>1.5</maven.compiler.source>
+  	<maven.compiler.target>1.5</maven.compiler.target>
 
   	<!--
       Make the deployment protocol pluggable. This allows to switch to
