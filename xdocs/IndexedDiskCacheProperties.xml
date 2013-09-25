@@ -74,7 +74,7 @@
 					<tr>
 						<td>ClearDiskOnStartup</td>
 						<td> By default the Indexed Disk Cache will use items found on
-							disk on startup. If you set this value to try, the old key and
+							disk on startup. If you set this value to true, the old key and
 							data files will be cleared.</td>
 						<td>N</td>
 						<td>false</td>
