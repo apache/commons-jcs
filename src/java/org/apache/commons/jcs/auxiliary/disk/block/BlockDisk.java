@@ -252,7 +252,7 @@ public class BlockDisk
         int written = fc.write(buffer, position);
         fc.force(true);
 
-        return written == data.length;
+        return written == data.length + HEADER_SIZE_BYTES;
     }
 
     /**

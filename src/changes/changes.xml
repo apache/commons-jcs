@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+            <action dev="tv" type="fix" issue="JCS-108" due-to="Xiong LIU">
+                Fix return value of BlockDisk.write(long, byte[])
+            </action>
             <action dev="tv" type="update">
                 Change package to org.apache.commons.jcs, groupId to org.apache.commons,
                 artifactId to commons-jcs and version to 2.0-SNAPSHOT
