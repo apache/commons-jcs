@@ -488,11 +488,13 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         @Override
         public void run()
         {
+        	ServerSocket serverSocket = null;
+        	
             try
             {
                 log.info( "Listening on port " + port );
 
-                ServerSocket serverSocket = new ServerSocket( port );
+                serverSocket = new ServerSocket( port );
                 serverSocket.setSoTimeout( acceptTimeOut );
 
                 ConnectionHandler handler;
@@ -541,9 +543,23 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                     pooledExecutor.execute( handler );
                 }
             }
-            catch ( Exception e )
+            catch ( IOException e )
             {
                 log.error( "Exception caught in TCP listener", e );
+            }
+            finally
+            {
+            	if (serverSocket != null)
+            	{
+            		try 
+            		{
+						serverSocket.close();
+					}
+            		catch (IOException e) 
+            		{
+                        log.error( "Exception caught closing socket", e );
+					}
+            	}
             }
         }
     }
@@ -569,7 +585,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         /**
          * Main processing method for the LateralTCPReceiverConnection object
          */
-        @SuppressWarnings("unchecked") // Nee to cast from Object
+        @SuppressWarnings("unchecked") // Need to cast from Object
         public void run()
         {
             ObjectInputStream ois;
