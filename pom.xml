@@ -28,7 +28,7 @@
   <artifactId>commons-jcs</artifactId>
   <packaging>jar</packaging>
   <version>2.0-SNAPSHOT</version>
-  <name>Commons JCS</name>
+  <name>Apache Commons JCS</name>
   <url>http://commons.apache.org/proper/commons-jcs/</url>
   <inceptionYear>2002</inceptionYear>
 
