@@ -30,7 +30,7 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
  * @author Aaron Smuts
  *
  */
-public class SystemPropetyUnitTest
+public class SystemPropertyUnitTest
     extends TestCase
 {
 
@@ -40,7 +40,7 @@ public class SystemPropetyUnitTest
      * @throws Exception
      *
      */
-    public void testSystemPropertyInValueDelimeter()
+    public void testSystemPropertyInValueDelimiter()
         throws Exception
     {
 
