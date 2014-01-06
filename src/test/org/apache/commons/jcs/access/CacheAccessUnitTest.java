@@ -360,4 +360,51 @@ public class CacheAccessUnitTest
             assertTrue( "Should be a cache element.", value instanceof ICacheElement );
         }
     }
+
+    /**
+     * Verify we can use the group cache.
+     * <p>
+     * @throws Exception
+     */
+    public void testGroupCache()
+        throws Exception
+    {
+        GroupCacheAccess<String, Integer> access = JCS.getGroupCacheInstance( "testGroup" );
+        String groupName1 = "testgroup1";
+        String groupName2 = "testgroup2";
+
+        Set<String> keys1 = access.getGroupKeys( groupName1 );
+        assertNotNull(keys1);
+        assertEquals(0, keys1.size());
+
+        Set<String> keys2 = access.getGroupKeys( groupName2 );
+        assertNotNull(keys2);
+        assertEquals(0, keys2.size());
+
+        // DO WORK
+        int numToInsertGroup1 = 10;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertGroup1; i++ )
+        {
+            access.putInGroup(String.valueOf( i ), groupName1, Integer.valueOf( i ) );
+        }
+
+        int numToInsertGroup2 = 50;
+        // insert with prefix1
+        for ( int i = 0; i < numToInsertGroup2; i++ )
+        {
+            access.putInGroup(String.valueOf( i ), groupName2, Integer.valueOf( i + 1 ) );
+        }
+
+        keys1 = access.getGroupKeys( groupName1 ); // Test for JCS-102
+        assertNotNull(keys1);
+        assertEquals("Wrong number returned 1:", 10, keys1.size());
+
+        keys2 = access.getGroupKeys( groupName2 );
+        assertNotNull(keys2);
+        assertEquals("Wrong number returned 2:", 50, keys2.size());
+
+        assertEquals(Integer.valueOf(5), access.getFromGroup("5", groupName1));
+        assertEquals(Integer.valueOf(6), access.getFromGroup("5", groupName2));
+    }
 }
