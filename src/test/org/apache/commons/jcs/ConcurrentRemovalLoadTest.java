@@ -19,8 +19,6 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import org.apache.commons.jcs.JCS;
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;

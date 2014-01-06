@@ -3,8 +3,6 @@ package org.apache.commons.jcs.engine.match;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.jcs.engine.match.KeyMatcherPatternImpl;
-
 import junit.framework.TestCase;
 
 /** Unit tests for the key matcher. */

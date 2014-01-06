@@ -22,11 +22,9 @@ package org.apache.commons.jcs.auxiliary.remote;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes;
-import org.apache.commons.jcs.auxiliary.remote.RemoteCacheManager;
-import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -83,7 +81,7 @@ public class TestRemoteCache
         log.info( "testSimpleSend" );
         System.out.println( "testSimpleSend" );
 
-        JCS<String, String> cache = JCS.getInstance( "testCache" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testCache" );
 
         log.info( "cache = " + cache );
 

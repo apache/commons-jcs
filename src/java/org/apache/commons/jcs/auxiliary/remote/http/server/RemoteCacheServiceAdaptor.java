@@ -132,14 +132,9 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
                         response.setSuccess( true );
                         // DO NOTHING
                         break;
-                    case GET_GROUP_KEYS:
-                        Set<K> groupKeys = getRemoteCacheService().getGroupKeys( request.getCacheName(),
-                                                                              request.getKey() + "" );
-                        response.setPayload( groupKeys );
-                        break;
-                    case GET_GROUP_NAMES:
-                        Set<String> groupNames = getRemoteCacheService().getGroupNames( request.getCacheName() );
-                        response.setPayload( groupNames );
+                    case GET_KEYSET:
+                        Set<K> keys = getRemoteCacheService().getKeySet( request.getCacheName() );
+                        response.setPayload( keys );
                         break;
                     default:
                         String message = "Unknown event type.  Cannot process " + request;

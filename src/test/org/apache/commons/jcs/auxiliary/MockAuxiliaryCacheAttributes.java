@@ -1,7 +1,5 @@
 package org.apache.commons.jcs.auxiliary;
 
-import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /** For testing. */
 public class MockAuxiliaryCacheAttributes

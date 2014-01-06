@@ -21,8 +21,6 @@ package org.apache.commons.jcs.utils.serialization;
 
 import java.io.IOException;
 
-import org.apache.commons.jcs.utils.serialization.CompressingSerializer;
-
 import junit.framework.TestCase;
 
 /**

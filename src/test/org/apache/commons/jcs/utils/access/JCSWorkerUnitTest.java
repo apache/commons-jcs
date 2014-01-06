@@ -19,10 +19,6 @@ package org.apache.commons.jcs.utils.access;
  * under the License.
  */
 
-import org.apache.commons.jcs.utils.access.AbstractJCSWorkerHelper;
-import org.apache.commons.jcs.utils.access.JCSWorker;
-import org.apache.commons.jcs.utils.access.JCSWorkerHelper;
-
 import junit.framework.TestCase;
 
 /**

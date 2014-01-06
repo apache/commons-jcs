@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,7 +13,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.jcs.TestLogConfigurationUtil;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache;
 import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
@@ -185,22 +185,14 @@ public class AbstractDiskCacheUnitTest
         }
 
         /**
-         * @param groupName
-         * @return Collections.EMPTY_SET
+         * Return the keys in this cache.
+         * <p>
+         * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
          */
         @Override
-        public Set<K> getGroupKeys(String groupName)
+        public Set<K> getKeySet() throws IOException
         {
-            return Collections.emptySet();
-        }
-
-        /**
-         * @return Collections.EMPTY_SET
-         */
-        @Override
-        public Set<String> getGroupNames()
-        {
-            return Collections.emptySet();
+            return new HashSet<K>(map.keySet());
         }
 
         /**

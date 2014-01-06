@@ -5,8 +5,6 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.TestLogConfigurationUtil;
-import org.apache.commons.jcs.utils.struct.DoubleLinkedList;
-import org.apache.commons.jcs.utils.struct.DoubleLinkedListNode;
 
 /** Unit tests for the double linked list. */
 public class DoubleLinkedListUnitTest

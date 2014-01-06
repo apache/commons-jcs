@@ -6,9 +6,6 @@ import java.util.Properties;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerAttributes;
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
-import org.apache.commons.jcs.auxiliary.remote.server.TimeoutConfigurableRMIScoketFactory;
 
 /** Unit tests for the factory */
 public class RemoteCacheServerFactoryUnitTest

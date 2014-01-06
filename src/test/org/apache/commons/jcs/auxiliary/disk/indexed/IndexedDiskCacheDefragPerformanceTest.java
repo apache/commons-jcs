@@ -26,6 +26,7 @@ import java.util.Random;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * This is for manually testing the defrag process.
@@ -74,7 +75,7 @@ public class IndexedDiskCacheDefragPerformanceTest
         throws Exception
     {
         JCS.setConfigFilename( "/TestDiskCacheDefragPerformance.ccf" );
-        JCS<Integer, Tile> jcs = JCS.getInstance( "defrag" );
+        CacheAccess<Integer, Tile> jcs = JCS.getInstance( "defrag" );
 
         Tile tile;
         System.out.println( "Cache Defrag Test" );

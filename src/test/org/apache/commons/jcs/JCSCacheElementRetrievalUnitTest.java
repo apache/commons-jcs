@@ -21,7 +21,7 @@ package org.apache.commons.jcs;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -39,7 +39,7 @@ public class JCSCacheElementRetrievalUnitTest
     public void testSimpleElementRetrieval()
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.put( "test_key", "test_data" );
 

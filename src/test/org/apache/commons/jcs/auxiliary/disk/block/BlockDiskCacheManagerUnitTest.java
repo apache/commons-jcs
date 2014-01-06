@@ -4,9 +4,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;

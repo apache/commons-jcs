@@ -115,20 +115,19 @@ public class RemoteCacheRequestFactory
     }
 
     /**
-     * Creates a GetGroupKeys Request.
+     * Creates a GetKeySet Request.
      * <p>
      * @param cacheName
-     * @param groupName
      * @param requesterId
      * @return RemoteHttpCacheRequest
      */
-    public static RemoteCacheRequest<String, String> createGetGroupKeysRequest( String cacheName, String groupName, long requesterId )
+    public static RemoteCacheRequest<String, String> createGetKeySetRequest( String cacheName, long requesterId )
     {
         RemoteCacheRequest<String, String> request = new RemoteCacheRequest<String, String>();
         request.setCacheName( cacheName );
-        request.setKey( groupName );
+        request.setKey( cacheName );
         request.setRequesterId( requesterId );
-        request.setRequestType( RemoteRequestType.GET_GROUP_KEYS );
+        request.setRequestType( RemoteRequestType.GET_KEYSET );
 
         if ( log.isDebugEnabled() )
         {
@@ -137,29 +136,6 @@ public class RemoteCacheRequestFactory
 
         return request;
     }
-
-    /**
-     * Creates a GetGroupNames Request.
-     * <p>
-     * @param cacheName
-     * @param requesterId
-     * @return RemoteHttpCacheRequest
-     */
-	public static RemoteCacheRequest<String, String> createGetGroupNamesRequest( String cacheName, int requesterId)
-	{
-	    RemoteCacheRequest<String, String> request = new RemoteCacheRequest<String, String>();
-	    request.setCacheName( cacheName );
-	    request.setKey( cacheName );
-	    request.setRequesterId( requesterId );
-	    request.setRequestType( RemoteRequestType.GET_GROUP_NAMES );
-
-	    if ( log.isDebugEnabled() )
-	    {
-	        log.debug( "Created: " + request );
-	    }
-
-	    return request;
-	}
 
     /**
      * Creates a removeAll Request.

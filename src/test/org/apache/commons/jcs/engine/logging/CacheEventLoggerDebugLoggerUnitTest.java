@@ -4,7 +4,6 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.engine.logging.CacheEventLoggerDebugLogger;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

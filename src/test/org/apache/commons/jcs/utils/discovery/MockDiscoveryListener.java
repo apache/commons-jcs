@@ -22,7 +22,6 @@ package org.apache.commons.jcs.utils.discovery;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.jcs.utils.discovery.DiscoveredService;
 import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
 
 /** Mock listener, for testing. */

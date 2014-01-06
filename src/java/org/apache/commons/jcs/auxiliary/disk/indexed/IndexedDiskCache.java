@@ -739,28 +739,20 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the group keys from the disk.
+     * Return the keys in this cache.
      * <p>
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+     * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
-    public Set<K> getGroupKeys( String groupName )
+    public Set<K> getKeySet() throws IOException
     {
-        GroupId groupId = new GroupId( cacheName, groupName );
         HashSet<K> keys = new HashSet<K>();
+
+        storageLock.readLock().lock();
+
         try
         {
-            storageLock.readLock().lock();
-
-            for (Serializable k : keyHash.keySet())
-            {
-                if ( k instanceof GroupAttrName && ( (GroupAttrName<?>) k ).groupId.equals( groupId ) )
-                {
-                    @SuppressWarnings("unchecked") // Type checked with instanceof
-                    GroupAttrName<K> groupAttrName = (GroupAttrName<K>) k;
-                    keys.add( groupAttrName.attrName );
-                }
-            }
+            keys.addAll(this.keyHash.keySet());
         }
         finally
         {
@@ -768,37 +760,6 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         }
 
         return keys;
-    }
-
-    /**
-     * Gets the group names from the disk.
-     * <p>
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
-     */
-    @Override
-    public Set<String> getGroupNames()
-    {
-        HashSet<String> names = new HashSet<String>();
-        try
-        {
-            storageLock.readLock().lock();
-
-            for (K k : keyHash.keySet())
-            {
-                if ( k instanceof GroupAttrName )
-                {
-                    @SuppressWarnings("unchecked") // Type checked with instanceof
-                    GroupAttrName<K> groupAttrName = (GroupAttrName<K>) k;
-                    names.add( groupAttrName.groupId.groupName );
-                }
-            }
-        }
-        finally
-        {
-            storageLock.readLock().unlock();
-        }
-
-        return names;
     }
 
     /**

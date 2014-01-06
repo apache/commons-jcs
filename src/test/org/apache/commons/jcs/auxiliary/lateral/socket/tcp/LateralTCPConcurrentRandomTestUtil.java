@@ -24,8 +24,7 @@ import java.util.Random;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
@@ -77,7 +76,7 @@ public class LateralTCPConcurrentRandomTestUtil
     {
         boolean show = true;//false;
 
-        JCS<String, String> cache = JCS.getInstance( region );
+        CacheAccess<String, String> cache = JCS.getInstance( region );
 
         TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
         lattr2.setTcpListenerPort( 1103 );
@@ -151,7 +150,7 @@ public class LateralTCPConcurrentRandomTestUtil
             throw e;
         }
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );

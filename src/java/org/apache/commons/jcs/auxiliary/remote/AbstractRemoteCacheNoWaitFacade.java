@@ -222,14 +222,11 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Return the keys in this cache.
      * <p>
-     * @param group
-     * @return the set of keys of objects currently in the group
-     * @throws IOException
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String group )
-        throws IOException
+    public Set<K> getKeySet() throws IOException
     {
         HashSet<K> allKeys = new HashSet<K>();
         for ( int i = 0; i < noWaits.length; i++ )
@@ -237,40 +234,14 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
             AuxiliaryCache<K, V> aux = noWaits[i];
             if ( aux != null )
             {
-                Set<K> groupKeys = aux.getGroupKeys( group );
-                if(groupKeys != null)
+                Set<K> keys = aux.getKeySet();
+                if(keys != null)
                 {
-                    allKeys.addAll( groupKeys );
+                    allKeys.addAll( keys );
                 }
             }
         }
         return allKeys;
-    }
-
-    /**
-     * Gets the group names in the cache
-     * <p>
-     *
-     * @return the set of group names
-     * @throws IOException
-     */
-    public Set<String> getGroupNames() throws IOException
-    {
-        HashSet<String> names = new HashSet<String>();
-        for (int i = 0; i < noWaits.length; i++)
-        {
-            AuxiliaryCache<K, V> aux = noWaits[i];
-            if (aux != null)
-            {
-                Set<String> groupNames = aux.getGroupNames();
-                if (groupNames != null)
-                {
-                    names.addAll(groupNames);
-                }
-            }
-        }
-
-        return names;
     }
 
     /**

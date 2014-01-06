@@ -6,9 +6,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDisk;
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;

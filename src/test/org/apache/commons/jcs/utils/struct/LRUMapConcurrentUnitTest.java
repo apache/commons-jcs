@@ -21,8 +21,6 @@ package org.apache.commons.jcs.utils.struct;
 
 import java.util.Iterator;
 
-import org.apache.commons.jcs.utils.struct.LRUMap;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

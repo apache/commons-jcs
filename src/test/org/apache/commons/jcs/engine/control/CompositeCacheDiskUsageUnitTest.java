@@ -29,6 +29,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
@@ -38,11 +39,10 @@ import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
-import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 
@@ -71,7 +71,7 @@ public class CompositeCacheDiskUsageUnitTest
     public void testSwapConfig()
         throws CacheException
     {
-        JCS<String, String> swap = JCS.getInstance( "Swap" );
+        CacheAccess<String, String> swap = JCS.getInstance( "Swap" );
         assertEquals( ICompositeCacheAttributes.DiskUsagePattern.SWAP, swap.getCacheAttributes()
             .getDiskUsagePattern() );
     }
@@ -84,7 +84,7 @@ public class CompositeCacheDiskUsageUnitTest
     public void testUpdateConfig()
         throws CacheException
     {
-        JCS<String, String> swap = JCS.getInstance( "Update" );
+        CacheAccess<String, String> swap = JCS.getInstance( "Update" );
         assertEquals( ICompositeCacheAttributes.DiskUsagePattern.UPDATE, swap.getCacheAttributes()
             .getDiskUsagePattern() );
     }
@@ -406,21 +406,10 @@ public class CompositeCacheDiskUsageUnitTest
         }
 
         /**
-         * @param group
          * @return null
          * @throws IOException
          */
-        public Set<K> getGroupKeys( String group )
-            throws IOException
-        {
-            return null;
-        }
-        
-        /**
-         * @return null
-         * @throws IOException
-         */
-        public Set<String> getGroupNames()
+        public Set<K> getKeySet( )
             throws IOException
         {
             return null;
@@ -496,7 +485,7 @@ public class CompositeCacheDiskUsageUnitTest
             return Collections.emptyMap();
         }
 
-		
+
     }
 
 }

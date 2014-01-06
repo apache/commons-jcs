@@ -28,10 +28,6 @@ import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCommand;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPListener;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPSender;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
@@ -280,7 +276,7 @@ public class TestTCPLateralUnitTest
     }
 
     /**
-     * Create a listener. Add an element to the listeners cache. Setup a service. Try to get group keys from
+     * Create a listener. Add an element to the listeners cache. Setup a service. Try to get keys from
      * the service.
      * <p>
      * @throws Exception
@@ -317,7 +313,7 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( 500 );
 
         // DO WORK
-        Set<GroupAttrName<String>> result = service.getGroupKeys("test", "group");
+        Set<GroupAttrName<String>> result = service.getKeySet("test");
 
        // SleepUtil.sleepAtLeast( 5000000 );
 
@@ -325,64 +321,6 @@ public class TestTCPLateralUnitTest
         System.out.println( "testSendAndReceived, result = " + result );
         assertNotNull( "Result should not be null.", result );
         assertEquals( "Didn't get the correct object", "key", result.toArray()[0] );
-
-        result = service.getGroupKeys("test", "");
-        System.out.println( "testSendAndReceived, result = " + result );
-        assertTrue("List should be empty", result.size() == 0);
-    }
-
-    /**
-     * Create a listener. Add an element to the listeners cache. Setup a service. Try to get group names from
-     * the service.
-     * <p>
-     * @throws Exception
-     */
-    public void testGetGroupNames_SendAndReceived()  throws Exception
-    {
-        // SETUP
-        // setup a listener
-        TCPLateralCacheAttributes lattr = new TCPLateralCacheAttributes();
-        lattr.setTcpListenerPort( 1157 );
-        MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        CompositeCache<GroupAttrName<String>, String> cache = cacheMgr.getCache( "test" );
-        System.out.println( "mock cache = " + cache );
-
-        // get the listener started
-        // give it our mock cache manager
-        LateralTCPListener.getInstance( lattr, cacheMgr );
-
-        // add the item to the listeners cache
-        GroupAttrName<String> groupKey = new GroupAttrName<String>(new GroupId("test", "group"), "key");
-        ICacheElement<GroupAttrName<String>, String> element =
-            new CacheElement<GroupAttrName<String>, String>( "test", groupKey, "value1" );
-        cache.update( element );
-
-        groupKey = new GroupAttrName<String>(new GroupId("test", "group2"), "key2");
-        element = new CacheElement<GroupAttrName<String>, String>( "test", groupKey, "value2" );
-        cache.update( element );
-
-        // setup a service to talk to the listener started above.
-        TCPLateralCacheAttributes lattr2 = new TCPLateralCacheAttributes();
-        lattr2.setTcpListenerPort( 1156 );
-        lattr2.setTcpServer( "localhost:1157" );
-
-        LateralTCPService<GroupAttrName<String>, String> service =
-            new LateralTCPService<GroupAttrName<String>, String>( lattr2 );
-        service.setListenerId( 123469 );
-
-        SleepUtil.sleepAtLeast( 500 );
-
-        // DO WORK
-        Set<String> result = service.getGroupNames("test");
-
-       // SleepUtil.sleepAtLeast( 5000000 );
-
-        // VERIFY
-        System.out.println( "testSendAndReceived, result = " + result );
-        assertNotNull( "Result should not be null.", result );
-        assertTrue( "Size is wrong" , result.size() == 2);
-        assertTrue( "Didn't get the correct object", result.contains("group"));
-        assertTrue( "Didn't get the correct object", result.contains("group2"));
     }
 
     /**

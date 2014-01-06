@@ -24,7 +24,6 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDisk;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 /**

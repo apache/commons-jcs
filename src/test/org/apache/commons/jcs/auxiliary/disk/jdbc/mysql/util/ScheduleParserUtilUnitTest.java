@@ -21,9 +21,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util;
 
 import java.util.Date;
 
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleFormatException;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.util.ScheduleParser;
-
 import junit.framework.TestCase;
 
 /**

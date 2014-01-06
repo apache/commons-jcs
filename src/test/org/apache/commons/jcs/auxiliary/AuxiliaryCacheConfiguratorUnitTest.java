@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;

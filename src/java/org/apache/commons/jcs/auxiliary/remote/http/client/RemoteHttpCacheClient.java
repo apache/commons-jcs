@@ -374,15 +374,12 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Return the keys in this cache.
      * <p>
      * @param cacheName the name of the cache
-     * @param groupName the name of the group
-     * @return a Set of group keys.
-     * @throws IOException
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String cacheName, String groupName )
-        throws IOException
+    public Set<K> getKeySet( String cacheName ) throws IOException
     {
         if ( !isInitialized() )
         {
@@ -392,39 +389,9 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
         }
 
         RemoteCacheRequest<String, String> remoteHttpCacheRequest =
-            RemoteCacheRequestFactory.createGetGroupKeysRequest( cacheName, groupName, 0 );
+            RemoteCacheRequestFactory.createGetKeySetRequest(cacheName, 0 );
 
         RemoteCacheResponse<Set<K>> remoteHttpCacheResponse = getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
-
-        if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
-        {
-            return remoteHttpCacheResponse.getPayload();
-        }
-
-        return Collections.emptySet();
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return a Set of group names.
-     * @throws IOException
-     */
-    public Set<String> getGroupNames( String cacheName )
-        throws IOException
-    {
-        if ( !isInitialized() )
-        {
-            String message = "The Remote Http Client is not initialized.  Cannot process request.";
-            log.warn( message );
-            throw new IOException( message );
-        }
-
-        RemoteCacheRequest<String, String> remoteHttpCacheRequest =
-            RemoteCacheRequestFactory.createGetGroupNamesRequest( cacheName, 0 );
-
-        RemoteCacheResponse<Set<String>> remoteHttpCacheResponse =
-            getRemoteDispatcher().dispatchRequest( remoteHttpCacheRequest );
 
         if ( remoteHttpCacheResponse != null && remoteHttpCacheResponse.getPayload() != null )
         {

@@ -22,8 +22,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 
 /**

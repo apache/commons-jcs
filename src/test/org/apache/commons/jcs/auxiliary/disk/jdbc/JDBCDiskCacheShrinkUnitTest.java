@@ -28,6 +28,7 @@ import java.util.Properties;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
@@ -83,7 +84,7 @@ public class JDBCDiskCacheShrinkUnitTest
         String regionExpire = "expire1Second";
         int items = 200;
 
-        JCS<String, String> jcsExpire = JCS.getInstance( regionExpire );
+        CacheAccess<String, String> jcsExpire = JCS.getInstance( regionExpire );
 
         System.out.println( "BEFORE PUT \n" + jcsExpire.getStats() );
 
@@ -120,7 +121,7 @@ public class JDBCDiskCacheShrinkUnitTest
         String region = "expire100Second";
         int items = 200;
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
@@ -172,7 +173,7 @@ public class JDBCDiskCacheShrinkUnitTest
         String region = "eternal";
         int items = 200;
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 

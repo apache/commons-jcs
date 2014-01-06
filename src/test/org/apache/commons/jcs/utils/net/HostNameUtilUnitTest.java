@@ -2,8 +2,6 @@ package org.apache.commons.jcs.utils.net;
 
 import java.net.UnknownHostException;
 
-import org.apache.commons.jcs.utils.net.HostNameUtil;
-
 import junit.framework.TestCase;
 
 /** Tests for the host name util. */

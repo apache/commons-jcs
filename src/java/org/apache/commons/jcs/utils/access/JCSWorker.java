@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -96,7 +98,10 @@ public class JCSWorker<K extends Serializable, V extends Serializable>
     private static final Log logger = LogFactory.getLog( JCSWorker.class );
 
     /** The cache we are working with */
-    private JCS<K, V> cache;
+    private CacheAccess<K, V> cache;
+
+    /** The cache we are working with */
+    private GroupCacheAccess<K, V> groupCache;
 
     /**
      * Map to hold who's doing work presently.
@@ -119,6 +124,7 @@ public class JCSWorker<K extends Serializable, V extends Serializable>
         try
         {
             cache = JCS.getInstance( aRegion );
+            groupCache = JCS.getGroupCacheInstance( aRegion );
         }
         catch ( CacheException e )
         {
@@ -246,7 +252,7 @@ public class JCSWorker<K extends Serializable, V extends Serializable>
             // Try to get the item from the cache
             if ( aGroup != null )
             {
-                result = cache.getFromGroup( aKey, aGroup );
+                result = groupCache.getFromGroup( aKey, aGroup );
             }
             else
             {
@@ -265,7 +271,7 @@ public class JCSWorker<K extends Serializable, V extends Serializable>
                 // Stick the result of the work in the cache.
                 if ( aGroup != null )
                 {
-                    cache.putInGroup( aKey, aGroup, result );
+                    groupCache.putInGroup( aKey, aGroup, result );
                 }
                 else
                 {

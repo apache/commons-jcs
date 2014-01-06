@@ -446,30 +446,14 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     }
 
     /**
-     * Returns all the keys for a group.
+     * Return the keys in this cache.
      * <p>
-     * @param groupName
-     * @return Set
-     * @throws java.rmi.RemoteException
-     * @throws IOException
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String groupName )
+    public Set<K> getKeySet()
         throws java.rmi.RemoteException, IOException
     {
-        return getRemoteCacheService().getGroupKeys( cacheName, groupName );
-    }
-
-    /**
-     * Returns all the group names for a cache.
-     * <p>
-     * @return Set
-     * @throws java.rmi.RemoteException
-     * @throws IOException
-     */
-    public Set<String> getGroupNames()
-        throws java.rmi.RemoteException, IOException
-    {
-        return getRemoteCacheService().getGroupNames( cacheName );
+        return getRemoteCacheService().getKeySet(cacheName);
     }
 
     /**

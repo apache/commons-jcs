@@ -224,31 +224,15 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * @param groupName
-     * @return Set
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys(String groupName)
+    public Set<K> getKeySet() throws IOException
     {
         try
         {
-            return cache.getGroupKeys( groupName );
-        }
-        catch ( IOException ex )
-        {
-            log.error( ex );
-            eventQueue.destroy();
-        }
-        return Collections.emptySet();
-    }
-    
-    /**
-     * @return Set
-     */
-    public Set<String> getGroupNames()
-    {
-        try
-        {
-            return cache.getGroupNames( );
+            return cache.getKeySet();
         }
         catch ( IOException ex )
         {

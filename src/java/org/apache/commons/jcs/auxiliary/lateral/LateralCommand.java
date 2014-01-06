@@ -42,9 +42,6 @@ public enum LateralCommand
     /** Command to return an object. */
     GET_MATCHING,
 
-    /** Command to get all group keys */
-    GET_GROUP_KEYS,
-
-    /** Command to get all group keys */
-    GET_GROUP_NAMES
+    /** Command to get all keys */
+    GET_KEYSET
 }

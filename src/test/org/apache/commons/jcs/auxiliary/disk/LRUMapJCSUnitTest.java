@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.TestLogConfigurationUtil;
-import org.apache.commons.jcs.auxiliary.disk.LRUMapJCS;
 
 /** Unit tests for the LRUMapJCS implementation. */
 public class LRUMapJCSUnitTest

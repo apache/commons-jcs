@@ -25,9 +25,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.auxiliary.remote.http.behavior.IRemoteHttpCacheConstants;
-import org.apache.commons.jcs.auxiliary.remote.http.server.RemoteHttpCacheServerAttributes;
-import org.apache.commons.jcs.auxiliary.remote.http.server.RemoteHttpCacheService;
-import org.apache.commons.jcs.auxiliary.remote.http.server.RemoteHttpCacheSeviceFactory;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
 

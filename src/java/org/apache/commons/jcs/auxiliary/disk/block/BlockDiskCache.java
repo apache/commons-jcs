@@ -41,7 +41,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
@@ -231,29 +230,20 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * This requires a full iteration through the keys.
+     * Return the keys in this cache.
      * <p>
-     * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getGroupKeys(java.lang.String)
+     * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
-    public Set<K> getGroupKeys( String groupName )
+    public Set<K> getKeySet() throws IOException
     {
-        GroupId groupId = new GroupId( cacheName, groupName );
         HashSet<K> keys = new HashSet<K>();
 
         storageLock.readLock().lock();
 
         try
         {
-            for ( K key : this.keyStore.keySet())
-            {
-                if ( key instanceof GroupAttrName && ( (GroupAttrName<?>) key ).groupId.equals( groupId ) )
-                {
-                    @SuppressWarnings("unchecked") // Type checked with instanceof
-                    K newKey = ((GroupAttrName<K>) key ).attrName;
-                    keys.add( newKey );
-                }
-            }
+            keys.addAll(this.keyStore.keySet());
         }
         finally
         {
@@ -261,38 +251,6 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
         }
 
         return keys;
-    }
-
-    /**
-     * This requires a full iteration through the keys.
-     * <p>
-     * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getGroupNames()
-     */
-    @Override
-    public Set<String> getGroupNames()
-    {
-        HashSet<String> names = new HashSet<String>();
-
-        storageLock.readLock().lock();
-
-        try
-        {
-            for ( Serializable key : this.keyStore.keySet())
-            {
-                if ( key instanceof GroupAttrName )
-                {
-                    @SuppressWarnings("unchecked") // Type checked with instanceof
-                    GroupId groupID = ((GroupAttrName<K>) key ).groupId;
-                    names.add( groupID.groupName );
-                }
-            }
-        }
-        finally
-        {
-            storageLock.readLock().unlock();
-        }
-
-        return names;
     }
 
     /**

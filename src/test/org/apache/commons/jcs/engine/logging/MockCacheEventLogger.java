@@ -2,7 +2,6 @@ package org.apache.commons.jcs.engine.logging;
 
 import java.io.Serializable;
 
-import org.apache.commons.jcs.engine.logging.CacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 

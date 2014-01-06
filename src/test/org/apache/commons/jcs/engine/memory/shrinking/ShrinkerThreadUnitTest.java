@@ -29,7 +29,6 @@ import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs.engine.memory.MockMemoryCache;
-import org.apache.commons.jcs.engine.memory.shrinking.ShrinkerThread;
 
 /**
  * This tests the functionality of the shrinker thread.

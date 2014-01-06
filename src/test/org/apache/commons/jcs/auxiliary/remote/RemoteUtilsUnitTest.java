@@ -21,8 +21,6 @@ package org.apache.commons.jcs.auxiliary.remote;
 
 import java.rmi.RemoteException;
 
-import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
-
 import junit.framework.TestCase;
 
 /**

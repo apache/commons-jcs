@@ -9,7 +9,6 @@ import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.memory.fifo.FIFOMemoryCache;
 
 /** Unit tests for the fifo implementation. */
 public class FIFOMemoryCacheUnitTest

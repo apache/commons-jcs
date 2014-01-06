@@ -1038,21 +1038,12 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * @param groupName
-     * @return Set
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
-    public Set<K> getGroupKeys( String groupName )
-    {
-        throw new UnsupportedOperationException( "Groups not implemented." );
-        // return null;
-    }
-    
-    /**
-     * @return Set
-     */
-    @Override
-    public Set<String> getGroupNames()
+    public Set<K> getKeySet() throws IOException
     {
         throw new UnsupportedOperationException( "Groups not implemented." );
         // return null;

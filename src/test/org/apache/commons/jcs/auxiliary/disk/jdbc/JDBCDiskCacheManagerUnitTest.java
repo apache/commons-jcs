@@ -3,9 +3,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;

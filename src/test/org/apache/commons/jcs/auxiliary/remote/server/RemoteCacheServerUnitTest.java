@@ -27,8 +27,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServer;
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerAttributes;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.CacheElement;

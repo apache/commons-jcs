@@ -24,8 +24,6 @@ import java.util.HashSet;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.remote.http.server.RemoteHttpCacheServerAttributes;
-import org.apache.commons.jcs.auxiliary.remote.http.server.RemoteHttpCacheService;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 

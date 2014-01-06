@@ -196,19 +196,4 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * @return The cache value
      */
     CompositeCache<K, V> getCompositeCache();
-
-    /**
-     * Gets the set of keys of objects currently in the group.
-     * <p>
-     * @param group
-     * @return a Set of group keys.
-     */
-    Set<K> getGroupKeys( String group );
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return a Set of group names.
-     */
-    Set<String> getGroupNames();
 }

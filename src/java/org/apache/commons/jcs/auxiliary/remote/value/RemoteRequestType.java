@@ -27,12 +27,9 @@ public enum RemoteRequestType
     /** Remove All request type. */
     REMOVE_ALL,
 
-    /** Get group keys request type. */
-    GET_GROUP_KEYS,
+    /** Get keys request type. */
+    GET_KEYSET,
 
     /** Dispose request type. */
     DISPOSE,
-
-    /** Get group keys request type. */
-    GET_GROUP_NAMES
 }

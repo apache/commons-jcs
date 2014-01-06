@@ -19,8 +19,6 @@ package org.apache.commons.jcs.admin;
  * under the License.
  */
 
-import org.apache.commons.jcs.admin.CountingOnlyOutputStream;
-
 import junit.framework.TestCase;
 
 /**

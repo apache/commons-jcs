@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
@@ -156,22 +154,11 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * @param group
-     * @return null
-     * @throws IOException
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String group )
-        throws IOException
-    {
-        return null;
-    }
-    
-    /**
-     * @return null
-     * @throws IOException
-     */
-    public Set<String> getGroupNames()
-        throws IOException
+    public Set<K> getKeySet() throws IOException
     {
         return null;
     }

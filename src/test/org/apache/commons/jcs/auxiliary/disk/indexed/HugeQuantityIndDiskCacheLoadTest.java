@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Put a few hundred thousand entries in the disk cache.
@@ -50,7 +51,7 @@ public class HugeQuantityIndDiskCacheLoadTest
         int items = 300000;
         String region = "testCache1";
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         try
         {

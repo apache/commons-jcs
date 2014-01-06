@@ -36,8 +36,8 @@ import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
-import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes.DiskUsagePattern;
+import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.event.ElementEvent;
 import org.apache.commons.jcs.engine.control.event.ElementEventQueue;
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
@@ -1104,26 +1104,27 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Get a set of the keys for all elements in the cache
      * <p>
-     * @param group the name of the group
-     * @return A Set of keys, or null.
+     * @return A set of the key type
      */
-    public Set<K> getGroupKeys( String group )
+    public Set<K> getKeySet()
     {
-       return getGroupKeys(group, false);
+        return getKeySet(false);
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Get a set of the keys for all elements in the cache
      * <p>
-     * @param group the name of the group
-     * @return A Set of keys, or null.
+     * @param localOnly true if only memory keys are requested
+     *
+     * @return A set of the key type
      */
-    public Set<K> getGroupKeys( String group, boolean localOnly )
+    public Set<K> getKeySet(boolean localOnly)
     {
         HashSet<K> allKeys = new HashSet<K>();
-        allKeys.addAll( memCache.getGroupKeys( group ) );
+
+        allKeys.addAll( memCache.getKeySet() );
         for ( int i = 0; i < auxCaches.length; i++ )
         {
             AuxiliaryCache<K, V> aux = auxCaches[i];
@@ -1133,52 +1134,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 {
                     try
                     {
-                        allKeys.addAll( aux.getGroupKeys( group ) );
-                    }
-                    catch ( IOException e )
-                    {
-                        // ignore
-                    }
-                }
-            }
-        }
-        return allKeys;
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return a Set of group names.
-     */
-    public Set<String> getGroupNames()
-    {
-        return getGroupNames( false );
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @param localOnly whether to get the group names only from local caches or not
-     * @return a Set of group names.
-     */
-    public Set<String> getGroupNames(boolean localOnly)
-    {
-        HashSet<String> allKeys = new HashSet<String>();
-        allKeys.addAll( memCache.getGroupNames() );
-        for ( int i = 0; i < auxCaches.length; i++ )
-        {
-            AuxiliaryCache<K, V> aux = auxCaches[i];
-            if ( aux != null )
-            {
-                if(!localOnly || aux.getCacheType() == CacheType.DISK_CACHE)
-                {
-                    try
-                    {
-                        Set<String> groupNames = aux.getGroupNames();
-                        if(groupNames != null)
-                        {
-                            allKeys.addAll( groupNames );
-                        }
+                        allKeys.addAll( aux.getKeySet() );
                     }
                     catch ( IOException e )
                     {
@@ -1607,7 +1563,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the default element attribute of the Cache object This returna a copy. It does not
+     * Gets the default element attribute of the Cache object This returns a copy. It does not
      * return a reference to the attributes.
      * <p>
      * @return The attributes value

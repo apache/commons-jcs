@@ -26,12 +26,12 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.engine.memory.lru.LHMLRUMemoryCache;
 
 /**
  * Tests for the test LHMLRU implementation.
@@ -57,7 +57,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testLoadFromCCF()
         throws CacheException
     {
-        JCS<String, String> cache = JCS.getInstance( "testPutGet" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testPutGet" );
         String memoryCacheName = cache.getCacheAttributes().getMemoryCacheName();
         assertTrue( "Cache name should have LHMLRU in it.", memoryCacheName.indexOf( "LHMLRUMemoryCache" ) != -1 );
     }
@@ -70,7 +70,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testPutGetThroughHub()
         throws CacheException
     {
-        JCS<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -123,7 +123,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testPutGetThroughHubTwice()
         throws CacheException
     {
-        JCS<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -163,7 +163,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testPutRemoveThroughHub()
         throws CacheException
     {
-        JCS<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -194,7 +194,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testClearThroughHub()
         throws CacheException
     {
-        JCS<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -222,7 +222,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testGetStatsThroughHub()
         throws CacheException
     {
-        JCS<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -279,7 +279,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testRemovePartialThroughHub()
         throws CacheException
     {
-        JCS<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max / 2;

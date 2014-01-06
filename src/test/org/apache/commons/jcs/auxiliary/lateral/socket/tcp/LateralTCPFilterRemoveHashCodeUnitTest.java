@@ -24,8 +24,7 @@ import java.io.Serializable;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.LateralTCPService;
-import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.TCPLateralCacheAttributes;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
@@ -87,7 +86,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
     public void runTestForRegion( String region, int numOps, int testNum )
         throws Exception
     {
-        JCS<String, Serializable> cache = JCS.getInstance( region );
+        CacheAccess<String, Serializable> cache = JCS.getInstance( region );
 
         Thread.sleep( 100 );
 
@@ -147,7 +146,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
          * e.toString() ); e.printStackTrace( System.out ); throw e; }
          */
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );

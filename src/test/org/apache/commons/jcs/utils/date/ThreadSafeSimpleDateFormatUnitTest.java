@@ -8,7 +8,6 @@ import java.util.Random;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.utils.date.ThreadSafeSimpleDateFormat;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

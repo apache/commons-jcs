@@ -9,9 +9,6 @@ import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.MockAuxiliaryCacheFactory;
-import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.control.CompositeCacheConfigurator;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.MockCacheEventLogger;
 
 /** Unit tests for the configurator. */

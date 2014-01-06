@@ -22,9 +22,6 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
-import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheClient;
-import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheManager;
 import org.apache.commons.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;

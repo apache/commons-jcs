@@ -19,8 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskElementDescriptor;
-
 import junit.framework.TestCase;
 
 /**

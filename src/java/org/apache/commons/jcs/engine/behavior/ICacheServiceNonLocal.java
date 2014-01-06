@@ -69,7 +69,7 @@ public interface ICacheServiceNonLocal<K extends Serializable, V extends Seriali
     /**
      * Returns a cache bean from the specified cache; or null if the key does not exist.
      * <p>
-     * Adding the requestor id, allows the cache to determine the sournce of the get.
+     * Adding the requestor id, allows the cache to determine the source of the get.
      * <p>
      * @param cacheName
      * @param key
@@ -107,23 +107,13 @@ public interface ICacheServiceNonLocal<K extends Serializable, V extends Seriali
         throws IOException;
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Get a set of the keys for all elements in the cache.
      * <p>
      * @param cacheName the name of the cache
-     * @param groupName the name of the group
-     * @return a Set of group keys.
-     * @throws IOException
+     * @return a set of the key type
+     * @TODO This should probably be done in chunks with a range passed in. This
+     *       will be a problem if someone puts a 1,000,000 or so items in a
+     *       region.
      */
-    Set<K> getGroupKeys( String cacheName, String groupName )
-        throws IOException;
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @param cacheName the name of the cache
-     * @return a Set of group names.
-     * @throws IOException
-     */
-    Set<String> getGroupNames( String cacheName )
-        throws IOException;
+    Set<K> getKeySet( String cacheName ) throws IOException;
 }

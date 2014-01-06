@@ -30,10 +30,9 @@ import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
-import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.memory.MockMemoryCache;
 
 /**

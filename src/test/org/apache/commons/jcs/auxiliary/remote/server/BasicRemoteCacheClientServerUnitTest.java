@@ -26,7 +26,6 @@ import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheManager;
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServer;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;

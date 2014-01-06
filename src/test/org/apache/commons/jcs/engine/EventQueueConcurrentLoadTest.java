@@ -26,8 +26,6 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.engine.CacheElement;
-import org.apache.commons.jcs.engine.CacheEventQueue;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
 

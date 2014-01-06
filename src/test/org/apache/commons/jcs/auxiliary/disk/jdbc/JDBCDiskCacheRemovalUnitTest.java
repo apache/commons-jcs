@@ -28,6 +28,7 @@ import java.util.Properties;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 
 /** Tests for the removal functionality. */
 public class JDBCDiskCacheRemovalUnitTest
@@ -63,7 +64,7 @@ public class JDBCDiskCacheRemovalUnitTest
         String region = "testCache1";
         String data = "adfadsfasfddsafasasd";
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // DO WORK
         jcs.put( keyPart1 + ":" + keyPart2, data );

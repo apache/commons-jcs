@@ -24,10 +24,6 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryAttributes;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryReceiver;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoverySender;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryService;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**

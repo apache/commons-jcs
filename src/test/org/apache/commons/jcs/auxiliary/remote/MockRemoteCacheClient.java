@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs.engine.CacheStatus;
@@ -198,18 +197,9 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     }
 
     /**
-     * @param group
      * @return null
      */
-    public Set<K> getGroupKeys( String group )
-    {
-        return null;
-    }
-  
-    /**
-     * @return null
-     */
-    public Set<String> getGroupNames()
+    public Set<K> getKeySet( )
     {
         return null;
     }

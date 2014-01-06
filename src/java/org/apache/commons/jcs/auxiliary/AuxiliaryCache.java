@@ -38,21 +38,15 @@ public interface AuxiliaryCache<K extends Serializable, V extends Serializable>
     extends ICache<K, V>
 {
     /**
-     * Gets the set of keys of objects currently in the group
-     * @param group
-     * @return a set of group keys
-     * @throws IOException
+     * Get a set of the keys for all elements in the auxiliary cache.
+     * <p>
+     * @return a set of the key type
+     * @TODO This should probably be done in chunks with a range passed in. This
+     *       will be a problem if someone puts a 1,000,000 or so items in a
+     *       region.
+     * @throws IOException if access to the auxiliary cache fails
      */
-    Set<K> getGroupKeys( String group )
-        throws IOException;
-
-    /**
-     * Gets the set of group names currently in the cache
-     * @return a set of group names
-     * @throws IOException
-     */
-    Set<String> getGroupNames()
-        throws IOException;
+    Set<K> getKeySet() throws IOException;
 
     /**
      * @return the historical and statistical data for a region's auxiliary cache.

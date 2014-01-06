@@ -19,11 +19,11 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import org.apache.commons.jcs.JCS;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Runs a few thousand queries.
@@ -80,7 +80,7 @@ public class JCSLightLoadUnitTest
     public void testSimpleLoad()
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
         //        ICompositeCacheAttributes cattr = jcs.getCacheAttributes();
         //        cattr.setMaxObjects( 20002 );
         //        jcs.setCacheAttributes( cattr );

@@ -31,7 +31,6 @@ import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
 
 /**
  * Test which exercises the LRUMemory cache. This one uses three different

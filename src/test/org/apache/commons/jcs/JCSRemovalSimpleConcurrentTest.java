@@ -19,9 +19,9 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import org.apache.commons.jcs.JCS;
-
 import junit.framework.TestCase;
+
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Verify that basic removal functionality works.
@@ -73,7 +73,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testTwoDeepRemoval" );
 
         int count = 500;
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -111,7 +111,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testSingleDepthRemoval" );
 
         int count = 500;
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -149,7 +149,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testRemoveAll" );
 
         int count = 500;
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= count; i++ )
         {
@@ -192,7 +192,7 @@ public class JCSRemovalSimpleConcurrentTest
         System.out.println( "testRemoveAll" );
 
         int count = 500;
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.clear();
 

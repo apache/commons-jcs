@@ -23,8 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.jcs.utils.zip.CompressionUtil;
-
 import junit.framework.TestCase;
 
 /** Unit tests for the compression util */

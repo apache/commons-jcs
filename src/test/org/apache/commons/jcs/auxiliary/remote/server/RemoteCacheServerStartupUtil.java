@@ -27,8 +27,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Properties;
 
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServer;
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerFactory;
 import org.apache.commons.jcs.utils.props.PropertyLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

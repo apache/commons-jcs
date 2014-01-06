@@ -276,24 +276,13 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * @param groupName
-     * @return the keys for the group name
-     * @throws IOException
+     * Return the keys in this cache.
+     * <p>
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String groupName )
-        throws IOException
+    public Set<K> getKeySet() throws IOException
     {
-        return remoteCacheClient.getGroupKeys( groupName );
-    }
-    
-    /**
-     * @return the group names
-     * @throws IOException
-     */
-    public Set<String> getGroupNames()
-        throws IOException
-    {
-        return remoteCacheClient.getGroupNames( );
+        return remoteCacheClient.getKeySet();
     }
 
     /**

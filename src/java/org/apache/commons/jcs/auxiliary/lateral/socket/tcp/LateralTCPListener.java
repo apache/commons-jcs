@@ -36,7 +36,6 @@ import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCommand;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
@@ -337,28 +336,15 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the cache that was injected by the lateral factory. Calls getGroupKeys on the cache.
+     * Gets the cache that was injected by the lateral factory. Calls getKeySet on the cache.
      * <p>
      * @param cacheName the name of the cache
-     * @param group the group name
      * @return a set of keys
      * @throws IOException
      */
-    public Set<K> handleGetGroupKeys( String cacheName, String group ) throws IOException
+    public Set<K> handleGetKeySet( String cacheName ) throws IOException
     {
-    	return getCache( cacheName ).getGroupKeys(group, true);
-    }
-
-    /**
-     * Gets the cache that was injected by the lateral factory. Calls getGroupNames on the cache.
-     * <p>
-     * @param cacheName the name of the cache
-     * @return a set of group names
-     * @throws IOException
-     */
-    public Set<String> handleGetGroupNames( String cacheName ) throws IOException
-    {
-    	return getCache( cacheName ).getGroupNames(true);
+    	return getCache( cacheName ).getKeySet(true);
     }
 
     /**
@@ -489,7 +475,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         public void run()
         {
         	ServerSocket serverSocket = null;
-        	
+
             try
             {
                 log.info( "Listening on port " + port );
@@ -551,11 +537,11 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
             {
             	if (serverSocket != null)
             	{
-            		try 
+            		try
             		{
 						serverSocket.close();
 					}
-            		catch (IOException e) 
+            		catch (IOException e)
             		{
                         log.error( "Exception caught closing socket", e );
 					}
@@ -665,78 +651,69 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         {
             String cacheName = led.ce.getCacheName();
             K key = led.ce.getKey();
+            Serializable obj = null;
 
-            if ( led.command == LateralCommand.UPDATE )
+            switch (led.command)
             {
-                handlePut( led.ce );
-            }
-            else if ( led.command == LateralCommand.REMOVE )
-            {
-                // if a hashcode was given and filtering is on
-                // check to see if they are the same
-                // if so, then don't remove, otherwise issue a remove
-                if ( led.valHashCode != -1 )
-                {
-                    if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
+                case UPDATE:
+                    handlePut( led.ce );
+                    break;
+
+                case REMOVE:
+                    // if a hashcode was given and filtering is on
+                    // check to see if they are the same
+                    // if so, then don't remove, otherwise issue a remove
+                    if ( led.valHashCode != -1 )
                     {
-                        ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
-                        if ( test != null )
+                        if ( getTcpLateralCacheAttributes().isFilterRemoveByHashCode() )
                         {
-                            if ( test.getVal().hashCode() == led.valHashCode )
+                            ICacheElement<K, V> test = getCache( cacheName ).localGet( key );
+                            if ( test != null )
                             {
-                                if ( log.isDebugEnabled() )
+                                if ( test.getVal().hashCode() == led.valHashCode )
                                 {
-                                    log.debug( "Filtering detected identical hashCode [" + led.valHashCode
-                                        + "], not issuing a remove for led " + led );
+                                    if ( log.isDebugEnabled() )
+                                    {
+                                        log.debug( "Filtering detected identical hashCode [" + led.valHashCode
+                                            + "], not issuing a remove for led " + led );
+                                    }
+                                    return;
                                 }
-                                return;
-                            }
-                            else
-                            {
-                                if ( log.isDebugEnabled() )
+                                else
                                 {
-                                    log.debug( "Different hashcodes, in cache [" + test.getVal().hashCode()
-                                        + "] sent [" + led.valHashCode + "]" );
+                                    if ( log.isDebugEnabled() )
+                                    {
+                                        log.debug( "Different hashcodes, in cache [" + test.getVal().hashCode()
+                                            + "] sent [" + led.valHashCode + "]" );
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                handleRemove( cacheName, key );
-            }
-            else if ( led.command == LateralCommand.REMOVEALL )
-            {
-                handleRemoveAll( cacheName );
-            }
-            else if ( led.command == LateralCommand.GET )
-            {
-                Serializable obj = handleGet( cacheName, key );
+                    handleRemove( cacheName, key );
+                    break;
 
-                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
-                oos.writeObject( obj );
-                oos.flush();
-            }
-            else if ( led.command == LateralCommand.GET_MATCHING )
-            {
-                Map<K, ICacheElement<K, V>> obj = handleGetMatching( cacheName, (String) key );
+                case REMOVEALL:
+                    handleRemoveAll( cacheName );
+                    break;
 
-                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
-                oos.writeObject( obj );
-                oos.flush();
-            }
-            else if ( led.command == LateralCommand.GET_GROUP_KEYS )
-            {
-            	String groupName = (String) key;
-            	Set<K> obj = handleGetGroupKeys(cacheName, groupName);
+                case GET:
+                    obj = handleGet( cacheName, key );
+                    break;
 
-                ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
-                oos.writeObject( obj );
-                oos.flush();
-            }
-            else if ( led.command == LateralCommand.GET_GROUP_NAMES )
-            {
-            	Set<String> obj = handleGetGroupNames(cacheName);
+                case GET_MATCHING:
+                    obj = (Serializable) handleGetMatching( cacheName, (String) key );
+                    break;
 
+                case GET_KEYSET:
+                	obj = (Serializable) handleGetKeySet(cacheName);
+                    break;
+
+                default: break;
+            }
+
+            if (obj != null)
+            {
                 ObjectOutputStream oos = new ObjectOutputStream( socket.getOutputStream() );
                 oos.writeObject( obj );
                 oos.flush();

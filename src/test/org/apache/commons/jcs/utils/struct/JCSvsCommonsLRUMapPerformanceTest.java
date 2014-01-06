@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.apache.commons.jcs.JCSvsHashtablePerformanceTest;
-import org.apache.commons.jcs.utils.struct.LRUMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

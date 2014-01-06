@@ -22,7 +22,6 @@ package org.apache.commons.jcs.engine.memory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -35,8 +34,6 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.control.group.GroupAttrName;
-import org.apache.commons.jcs.engine.control.group.GroupId;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs.engine.memory.shrinking.ShrinkerThread;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
@@ -343,51 +340,5 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     public CompositeCache<K, V> getCompositeCache()
     {
         return this.cache;
-    }
-
-    /**
-     * @param groupName
-     * @return group keys
-     */
-    public Set<K> getGroupKeys( String groupName )
-    {
-        GroupId groupId = new GroupId( getCacheName(), groupName );
-        HashSet<K> keys = new HashSet<K>();
-        synchronized ( map )
-        {
-            for (Map.Entry<K, MemoryElementDescriptor<K, V>> entry : map.entrySet())
-            {
-                K k = entry.getKey();
-
-                if ( k instanceof GroupAttrName && ( (GroupAttrName<K>) k ).groupId.equals( groupId ) )
-                {
-                    keys.add(( (GroupAttrName<K>) k ).attrName );
-                }
-            }
-        }
-        return keys;
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return a Set of group names.
-     */
-    public Set<String> getGroupNames()
-    {
-        HashSet<String> names = new HashSet<String>();
-        synchronized ( map )
-        {
-            for (Map.Entry<K, MemoryElementDescriptor<K, V>> entry : map.entrySet())
-            {
-                K k = entry.getKey();
-
-                if ( k instanceof GroupAttrName )
-                {
-                    names.add(( (GroupAttrName<K>) k ).groupId.groupName );
-                }
-            }
-        }
-        return names;
     }
 }

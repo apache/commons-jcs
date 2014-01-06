@@ -75,21 +75,11 @@ public class MockRemoteCacheService<K extends Serializable, V extends Serializab
 
     /**
      * @param cacheName
-     * @param groupName
      * @return empty set
      */
-    public Set<K> getGroupKeys( String cacheName, String groupName )
+    public Set<K> getKeySet( String cacheName )
     {
         return new HashSet<K>();
-    }
-
-    /**
-     * @param cacheName
-     * @return empty set
-     */
-    public Set<String> getGroupNames(String cacheName) throws IOException
-    {
-        return new HashSet<String>();
     }
 
     /**

@@ -821,25 +821,23 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Return the keys in the cache.
      * <p>
-     * @param cacheName
-     * @param group
-     * @return A Set of group keys
+     * @param cacheName the name of the cache region
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String cacheName, String group )
+    public Set<K> getKeySet(String cacheName) throws IOException
     {
-        return processGetGroupKeys( cacheName, group );
+        return processGetKeySet( cacheName );
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Gets the set of keys of objects currently in the cache.
      * <p>
      * @param cacheName
-     * @param group
      * @return Set
      */
-    protected Set<K> processGetGroupKeys( String cacheName, String group )
+    protected Set<K> processGetKeySet( String cacheName )
     {
         CacheListeners<K, V> cacheDesc = null;
         try
@@ -857,45 +855,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
         }
 
         CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
-        return c.getGroupKeys( group );
-    }
-
-    /**
-     * Gets the set of group names currently in the cache.
-     * <p>
-     * @param cacheName the name of the region
-     * @return A Set of group names
-     */
-    public Set<String> getGroupNames(String cacheName)
-    {
-        return processGetGroupNames(cacheName);
-    }
-
-    /**
-     * Gets the set of group names currently in the cache.
-     * <p>
-     * @param cacheName the name of the region
-     * @return A Set of group names
-     */
-    protected Set<String> processGetGroupNames(String cacheName)
-    {
-        CacheListeners<K, V> cacheDesc = null;
-        try
-        {
-            cacheDesc = getCacheListeners(cacheName);
-        }
-        catch (Exception e)
-        {
-            log.error("Problem getting listeners.", e);
-        }
-
-        if (cacheDesc == null)
-        {
-            return Collections.emptySet();
-        }
-
-        CompositeCache<K, V> c = (CompositeCache<K, V>) cacheDesc.cache;
-        return c.getGroupNames();
+        return c.getKeySet();
     }
 
     /**

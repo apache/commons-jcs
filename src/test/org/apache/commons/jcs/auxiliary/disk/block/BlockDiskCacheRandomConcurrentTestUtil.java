@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.disk.block;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.TestCacheAccess;
 
 /**
@@ -64,7 +65,7 @@ public class BlockDiskCacheRandomConcurrentTestUtil
 
         // make sure a simple put then get works
         // this may fail if the other tests are flooding the disk cache
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
         String key = "testKey" + testNum;
         String data = "testData" + testNum;
         jcs.put( key, data );

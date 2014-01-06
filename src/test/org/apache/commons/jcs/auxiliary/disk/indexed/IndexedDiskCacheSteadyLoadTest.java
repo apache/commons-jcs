@@ -25,6 +25,7 @@ import java.util.Random;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 
@@ -66,7 +67,7 @@ public class IndexedDiskCacheSteadyLoadTest
         int runs = 1000;
         int upperKB = 50;
 
-        JCS<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
+        CacheAccess<String, DiskTestObject> jcs = JCS.getInstance( ( numPerRun / 2 ) + "aSecond" );
 
         ElapsedTimer timer = new ElapsedTimer();
         int numToGet = numPerRun * ( runs / 10 );

@@ -26,6 +26,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
@@ -58,7 +59,7 @@ public class HSQLDiskCacheUnitTest
 
         String region = "testBasicPutRemove";
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
 
@@ -121,7 +122,7 @@ public class HSQLDiskCacheUnitTest
         throws CacheException, InterruptedException
     {
         String region = "removeAllAllowed";
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         int items = 20;
 
@@ -161,7 +162,7 @@ public class HSQLDiskCacheUnitTest
         throws CacheException, InterruptedException
     {
         String region = "noRemoveAll";
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         int items = 20;
 

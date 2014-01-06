@@ -30,6 +30,7 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
  * classes.
  */
 public interface IGroupCacheAccess<K extends Serializable, V extends Serializable>
+    extends ICacheAccessManagement
 {
     /**
      * Gets the g attribute of the IGroupCacheAccess object
@@ -70,7 +71,7 @@ public interface IGroupCacheAccess<K extends Serializable, V extends Serializabl
      * @param name
      * @param group
      */
-    public void remove( K name, String group );
+    public void removeFromGroup( K name, String group );
 
     /**
      * Gets the set of keys of objects currently in the group

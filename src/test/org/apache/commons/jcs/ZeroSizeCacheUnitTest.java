@@ -19,9 +19,9 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import org.apache.commons.jcs.JCS;
-
 import junit.framework.TestCase;
+
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  *
@@ -56,7 +56,7 @@ public class ZeroSizeCacheUnitTest
     public void testPutGetRemove()
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         for ( int i = 0; i <= items; i++ )
         {

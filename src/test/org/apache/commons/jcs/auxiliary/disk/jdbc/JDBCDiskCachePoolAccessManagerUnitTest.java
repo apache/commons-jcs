@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessAttributes;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessManager;
-
 import junit.framework.TestCase;
 
 /** Unit tests for the pool manager */

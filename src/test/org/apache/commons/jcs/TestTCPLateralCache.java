@@ -19,11 +19,11 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import org.apache.commons.jcs.JCS;
-
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Test which exercises the indexed disk cache. This one uses three different
@@ -121,7 +121,7 @@ public class TestTCPLateralCache
     public void runTestForRegion( String region )
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
 

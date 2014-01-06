@@ -1,7 +1,5 @@
 package org.apache.commons.jcs.utils.net;
 
-import org.apache.commons.jcs.utils.net.AddressUtil;
-
 import junit.framework.TestCase;
 
 /**

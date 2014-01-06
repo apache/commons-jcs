@@ -3,9 +3,6 @@ package org.apache.commons.jcs.auxiliary.disk.file;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.disk.file.FileDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.file.FileDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.file.FileDiskCacheFactory;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;

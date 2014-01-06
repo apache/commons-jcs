@@ -5,9 +5,6 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDiskCacheManager;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;

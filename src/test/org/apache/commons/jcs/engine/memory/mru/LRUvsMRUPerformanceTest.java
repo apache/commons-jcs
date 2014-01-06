@@ -22,8 +22,8 @@ package org.apache.commons.jcs.engine.memory.mru;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
-import org.apache.commons.jcs.engine.memory.mru.MRUMemoryCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -94,8 +94,8 @@ public class LRUvsMRUPerformanceTest
         {
 
             JCS.setConfigFilename( "/TestMRUCache.ccf" );
-            JCS<String, String> cache = JCS.getInstance( "lruDefined" );
-            JCS<String, String> mru = JCS.getInstance( "mruDefined" );
+            CacheAccess<String, String> cache = JCS.getInstance( "lruDefined" );
+            CacheAccess<String, String> mru = JCS.getInstance( "mruDefined" );
 
             System.out.println( "LRU = " + cache );
 

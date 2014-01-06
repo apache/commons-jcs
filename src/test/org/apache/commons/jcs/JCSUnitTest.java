@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
-import org.apache.commons.jcs.JCS;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Simple test for the JCS class.
@@ -69,7 +69,7 @@ public class JCSUnitTest
     public void testJCS()
         throws Exception
     {
-        JCS<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, LinkedList<HashMap<String, String>>> jcs = JCS.getInstance( "testCache1" );
 
         LinkedList<HashMap<String, String>> list = buildList();
 

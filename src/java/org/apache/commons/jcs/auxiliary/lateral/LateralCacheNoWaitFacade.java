@@ -293,12 +293,11 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Return the keys in this cache.
      * <p>
-     * @param group
-     * @return a Set of group keys.
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String group )
+    public Set<K> getKeySet() throws IOException
     {
         HashSet<K> allKeys = new HashSet<K>();
         for ( int i = 0; i < noWaits.length; i++ )
@@ -306,47 +305,10 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
             AuxiliaryCache<K, V> aux = noWaits[i];
             if ( aux != null )
             {
-                try
+                Set<K> keys = aux.getKeySet();
+                if(keys != null)
                 {
-                    Set<K> groupKeys = aux.getGroupKeys( group );
-                    if(groupKeys != null)
-                    {
-                    	allKeys.addAll( groupKeys );
-                    }
-                }
-                catch ( IOException e )
-                {
-                    // ignore
-                }
-            }
-        }
-        return allKeys;
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return a Set of group names.
-     */
-    public Set<String> getGroupNames()
-    {
-        HashSet<String> allKeys = new HashSet<String>();
-        for ( int i = 0; i < noWaits.length; i++ )
-        {
-            AuxiliaryCache<K, V> aux = noWaits[i];
-            if ( aux != null )
-            {
-                try
-                {
-                    Set<String> groupNames = aux.getGroupNames();
-                    if(groupNames != null)
-                    {
-                    	allKeys.addAll( groupNames );
-                    }
-                }
-                catch ( IOException e )
-                {
-                    // ignore
+                    allKeys.addAll( keys );
                 }
             }
         }

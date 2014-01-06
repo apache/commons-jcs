@@ -21,8 +21,6 @@ package org.apache.commons.jcs.utils.threadpool;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
-
 import junit.framework.TestCase;
 
 /**

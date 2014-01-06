@@ -7,7 +7,6 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.utils.date.DateFormatter;
-import org.apache.commons.jcs.utils.key.KeyGeneratorUtil;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**

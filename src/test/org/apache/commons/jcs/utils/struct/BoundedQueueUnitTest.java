@@ -19,8 +19,6 @@ package org.apache.commons.jcs.utils.struct;
  * under the License.
  */
 
-import org.apache.commons.jcs.utils.struct.BoundedQueue;
-
 import junit.framework.TestCase;
 
 /**

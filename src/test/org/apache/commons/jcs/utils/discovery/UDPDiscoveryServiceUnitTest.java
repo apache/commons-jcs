@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.utils.discovery.DiscoveredService;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryAttributes;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryService;
 
 /** Unit tests for the service. */
 public class UDPDiscoveryServiceUnitTest

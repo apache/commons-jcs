@@ -21,7 +21,6 @@ package org.apache.commons.jcs.auxiliary.remote.server;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.remote.server.RemoteCacheServerAttributes;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 
 /**

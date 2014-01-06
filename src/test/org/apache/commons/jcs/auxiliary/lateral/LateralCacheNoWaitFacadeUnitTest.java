@@ -2,10 +2,6 @@ package org.apache.commons.jcs.auxiliary.lateral;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.lateral.LateralCache;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheAttributes;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWait;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheNoWaitFacade;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
 
 /**

@@ -25,13 +25,13 @@ import java.util.Set;
 
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
 /**
  * ICacheAccess defines the behavior for client access.
  */
 public interface ICacheAccess<K extends Serializable, V extends Serializable>
+    extends ICacheAccessManagement
 {
     /**
      * Basic get method.
@@ -138,34 +138,12 @@ public interface ICacheAccess<K extends Serializable, V extends Serializable>
     Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern );
 
     /**
-     * Old remove all method.
-     * @throws CacheException
-     */
-    void remove()
-        throws CacheException;
-
-    /**
      * Remove an object for this key if one exists, else do nothing.
      * <p>
      * @param name
      * @throws CacheException
      */
     void remove( K name )
-        throws CacheException;
-
-    /**
-     * ResetAttributes allows for some of the attributes of a region to be reset in particular
-     * expiration time attributes, time to live, default time to live and idle time, and event
-     * handlers. The cacheloader object and attributes set as flags can't be reset with
-     * resetAttributes, the object must be destroyed and redefined to cache those parameters.
-     * Changing default settings on groups and regions will not affect existing objects. Only object
-     * loaded after the reset will use the new defaults. If no name argument is provided, the reset
-     * is applied to the region.
-     * <p>
-     * @param attributes
-     * @throws CacheException
-     */
-    void resetElementAttributes( IElementAttributes attributes )
         throws CacheException;
 
     /**
@@ -179,18 +157,6 @@ public interface ICacheAccess<K extends Serializable, V extends Serializable>
         throws CacheException;
 
     /**
-     * GetElementAttributes will return an attribute object describing the current attributes
-     * associated with the object name. If no name parameter is available, the attributes for the
-     * region will be returned. The name object must override the Object.equals and Object.hashCode
-     * methods.
-     * <p>
-     * @return The elementAttributes value
-     * @throws CacheException
-     */
-    IElementAttributes getElementAttributes()
-        throws CacheException;
-
-    /**
      * Gets the elementAttributes attribute of the ICacheAccess object
      * <p>
      * @param name
@@ -198,32 +164,5 @@ public interface ICacheAccess<K extends Serializable, V extends Serializable>
      * @throws CacheException
      */
     IElementAttributes getElementAttributes( K name )
-        throws CacheException;
-
-    /**
-     * Gets the ICompositeCacheAttributes of the cache region
-     * <p>
-     * @return ICompositeCacheAttributes
-     */
-    public ICompositeCacheAttributes getCacheAttributes();
-
-    /**
-     * Sets the ICompositeCacheAttributes of the cache region
-     * <p>
-     * @param cattr The new ICompositeCacheAttribute value
-     */
-    public void setCacheAttributes( ICompositeCacheAttributes cattr );
-
-    /**
-     * This instructs the memory cache to remove the <i>numberToFree</i> according to its eviction
-     * policy. For example, the LRUMemoryCache will remove the <i>numberToFree</i> least recently
-     * used items. These will be spooled to disk if a disk auxiliary is available.
-     * <p>
-     * @param numberToFree
-     * @return the number that were removed. if you ask to free 5, but there are only 3, you will
-     *         get 3.
-     * @throws CacheException
-     */
-    public int freeMemoryElements( int numberToFree )
         throws CacheException;
 }

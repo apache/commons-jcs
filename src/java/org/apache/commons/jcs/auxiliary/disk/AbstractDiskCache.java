@@ -360,18 +360,11 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
     }
 
     /**
-     * The keys in a group.
+     * The keys in the cache.
      * <p>
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getGroupKeys(java.lang.String)
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public abstract Set<K> getGroupKeys( String groupName );
-
-    /**
-     * The group names in the cache.
-     * <p>
-     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getGroupNames()
-     */
-    public abstract Set<String> getGroupNames();
+    public abstract Set<K> getKeySet() throws IOException;
 
     /**
      * Removes are not queued. A call to remove is immediate.

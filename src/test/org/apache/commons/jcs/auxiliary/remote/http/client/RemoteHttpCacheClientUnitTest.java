@@ -27,8 +27,6 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
-import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheClient;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteRequestType;
 import org.apache.commons.jcs.engine.CacheElement;

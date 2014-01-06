@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.disk.block;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
@@ -58,7 +59,7 @@ public class HugeQuantityBlockDiskCacheLoadTest
         long initialMemory = measureMemoryUse();
         System.out.println( "Before getting JCS: " + initialMemory );
 
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
         jcs.clear();
 
         try

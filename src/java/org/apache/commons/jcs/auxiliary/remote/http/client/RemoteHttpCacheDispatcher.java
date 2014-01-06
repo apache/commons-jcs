@@ -167,10 +167,7 @@ public class RemoteHttpCacheDispatcher
                     case GET_MULTIPLE:
                         keyValue = remoteCacheRequest.getKeySet() + "";
                         break;
-                    case GET_GROUP_KEYS:
-                        keyValue = remoteCacheRequest.getKey() + "";
-                        break;
-                    case GET_GROUP_NAMES:
+                    case GET_KEYSET:
                         keyValue = remoteCacheRequest.getKey() + "";
                         break;
                     case UPDATE:

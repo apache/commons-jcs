@@ -19,8 +19,6 @@ package org.apache.commons.jcs.utils.serialization;
  * under the License.
  */
 
-import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-
 import junit.framework.TestCase;
 
 /**

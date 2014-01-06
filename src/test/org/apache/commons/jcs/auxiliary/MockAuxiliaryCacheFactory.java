@@ -2,9 +2,6 @@ package org.apache.commons.jcs.auxiliary;
 
 import java.io.Serializable;
 
-import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
-import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;

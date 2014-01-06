@@ -19,10 +19,6 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  * under the License.
  */
 
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.block.BlockDiskKeyStore;
-
 import junit.framework.TestCase;
 
 /**

@@ -52,7 +52,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     private final static Log log = LogFactory.getLog( LateralCache.class );
 
     /** generalize this, use another interface */
-    private final ILateralCacheAttributes lateralCacheAttribures;
+    private final ILateralCacheAttributes lateralCacheAttributes;
 
     /** The region name */
     final String cacheName;
@@ -73,7 +73,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     public LateralCache( ILateralCacheAttributes cattr, ICacheServiceNonLocal<K, V> lateral, LateralCacheMonitor monitor )
     {
         this.cacheName = cattr.getCacheName();
-        this.lateralCacheAttribures = cattr;
+        this.lateralCacheAttributes = cattr;
         this.lateralCacheService = lateral;
         this.monitor = monitor;
     }
@@ -86,7 +86,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     public LateralCache( ILateralCacheAttributes cattr )
     {
         this.cacheName = cattr.getCacheName();
-        this.lateralCacheAttribures = cattr;
+        this.lateralCacheAttributes = cattr;
     }
 
     /**
@@ -111,12 +111,12 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         catch ( NullPointerException npe )
         {
             log.error( "Failure updating lateral. lateral = " + lateralCacheService, npe );
-            handleException( npe, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttribures );
+            handleException( npe, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttributes );
             return;
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttribures );
+            handleException( ex, "Failed to put [" + ce.getKey() + "] to " + ce.getCacheName() + "@" + lateralCacheAttributes );
         }
     }
 
@@ -133,7 +133,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     {
         ICacheElement<K, V> obj = null;
 
-        if ( this.lateralCacheAttribures.getPutOnlyMode() )
+        if ( this.lateralCacheAttributes.getPutOnlyMode() )
         {
             return null;
         }
@@ -144,7 +144,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         catch ( Exception e )
         {
             log.error( e );
-            handleException( e, "Failed to get [" + key + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
+            handleException( e, "Failed to get [" + key + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
         }
         return obj;
     }
@@ -159,7 +159,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     protected Map<K, ICacheElement<K, V>> processGetMatching( String pattern )
         throws IOException
     {
-        if ( this.lateralCacheAttribures.getPutOnlyMode() )
+        if ( this.lateralCacheAttributes.getPutOnlyMode() )
         {
             return Collections.emptyMap();
         }
@@ -170,7 +170,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         catch ( IOException e )
         {
             log.error( e );
-            handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
+            handleException( e, "Failed to getMatching [" + pattern + "] from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
             return Collections.emptyMap();
         }
     }
@@ -206,44 +206,20 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Return the keys in this cache.
      * <p>
-     * @param group
-     * @return a Set of group keys.
-     * @throws IOException
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String groupName )
-        throws IOException
+    public Set<K> getKeySet() throws IOException
     {
         try
         {
-            return lateralCacheService.getGroupKeys( cacheName, groupName );
+            return lateralCacheService.getKeySet( cacheName );
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove groupName [" + groupName + "] from " + lateralCacheAttribures.getCacheName() + "@"
-                + lateralCacheAttribures );
-        }
-        return Collections.emptySet();
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return a Set of group names.
-     * @throws IOException
-     */
-    public Set<String> getGroupNames()
-        throws IOException
-    {
-        try
-        {
-            return lateralCacheService.getGroupNames( cacheName );
-        }
-        catch ( Exception ex )
-        {
-            handleException( ex, "Failed to get group names from " + lateralCacheAttribures.getCacheName() + "@"
-                + lateralCacheAttribures );
+            handleException( ex, "Failed to get key set from " + lateralCacheAttributes.getCacheName() + "@"
+                + lateralCacheAttributes );
         }
         return Collections.emptySet();
     }
@@ -271,7 +247,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove " + key + " from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
+            handleException( ex, "Failed to remove " + key + " from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
         }
         return false;
     }
@@ -292,7 +268,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         }
         catch ( Exception ex )
         {
-            handleException( ex, "Failed to remove all from " + lateralCacheAttribures.getCacheName() + "@" + lateralCacheAttribures );
+            handleException( ex, "Failed to remove all from " + lateralCacheAttributes.getCacheName() + "@" + lateralCacheAttributes );
         }
     }
 
@@ -313,13 +289,13 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         // any.
         try
         {
-            lateralCacheService.dispose( this.lateralCacheAttribures.getCacheName() );
+            lateralCacheService.dispose( this.lateralCacheAttributes.getCacheName() );
             // Should remove connection
         }
         catch ( Exception ex )
         {
             log.error( "Couldn't dispose", ex );
-            handleException( ex, "Failed to dispose " + lateralCacheAttribures.getCacheName() );
+            handleException( ex, "Failed to dispose " + lateralCacheAttributes.getCacheName() );
         }
     }
 
@@ -375,7 +351,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     {
         log.error( "Disabling lateral cache due to error " + msg, ex );
 
-        lateralCacheService = new ZombieCacheServiceNonLocal<K, V>( lateralCacheAttribures.getZombieQueueMaxSize() );
+        lateralCacheService = new ZombieCacheServiceNonLocal<K, V>( lateralCacheAttributes.getZombieQueueMaxSize() );
         // may want to flush if region specifies
         // Notify the cache monitor about the error, and kick off the recovery
         // process.
@@ -437,7 +413,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      */
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
-        return lateralCacheAttribures;
+        return lateralCacheAttributes;
     }
 
     /**
@@ -448,8 +424,8 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     {
         StringBuffer buf = new StringBuffer();
         buf.append( "\n LateralCache " );
-        buf.append( "\n Cache Name [" + lateralCacheAttribures.getCacheName() + "]" );
-        buf.append( "\n cattr =  [" + lateralCacheAttribures + "]" );
+        buf.append( "\n Cache Name [" + lateralCacheAttributes.getCacheName() + "]" );
+        buf.append( "\n cattr =  [" + lateralCacheAttributes + "]" );
         return buf.toString();
     }
 

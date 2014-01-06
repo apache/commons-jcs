@@ -28,6 +28,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -140,7 +141,7 @@ public class IndexedDiskCacheConcurrentUnitTest
     public void runTestForRegion( String region )
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
         for ( int i = 0; i <= items; i++ )
@@ -201,7 +202,7 @@ public class IndexedDiskCacheConcurrentUnitTest
     public void runTestForRegionInRange( String region, int start, int end )
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         // Add items to cache
         for ( int i = start; i <= end; i++ )

@@ -31,6 +31,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -96,7 +97,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
     public void runTestForRegion( String region, int items )
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
         //System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
@@ -157,7 +158,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         // SETUP
         int items = 200;
         String region = "testCache2";
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // DO WORK

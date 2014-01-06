@@ -3,8 +3,6 @@ package org.apache.commons.jcs.utils.date;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.jcs.utils.date.DateFormatter;
-
 import junit.framework.TestCase;
 
 /** Simple tests for the date formatter utility. */

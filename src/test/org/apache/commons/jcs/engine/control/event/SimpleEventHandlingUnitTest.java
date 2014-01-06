@@ -22,6 +22,7 @@ package org.apache.commons.jcs.engine.control.event;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
@@ -56,7 +57,7 @@ public class SimpleEventHandlingUnitTest
         // SETUP
         MyEventHandler meh = new MyEventHandler();
 
-        JCS<String, String> jcs = JCS.getInstance( "WithDisk" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "WithDisk" );
         // this should add the event handler to all items as they are created.
         IElementAttributes attributes = jcs.getDefaultElementAttributes();
         attributes.addElementEventHandler( meh );
@@ -86,7 +87,7 @@ public class SimpleEventHandlingUnitTest
     public void testSpoolNoDiskEvent()
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( "NoDisk" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "NoDisk" );
 
         MyEventHandler meh = new MyEventHandler();
 
@@ -119,7 +120,7 @@ public class SimpleEventHandlingUnitTest
     {
         MyEventHandler meh = new MyEventHandler();
 
-        JCS<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
         IElementAttributes attributes = jcs.getDefaultElementAttributes();
         attributes.addElementEventHandler( meh );
@@ -149,7 +150,7 @@ public class SimpleEventHandlingUnitTest
     {
         MyEventHandler meh = new MyEventHandler();
 
-        JCS<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "DiskButNotAllowed" );
         // this should add the event handler to all items as they are created.
         //IElementAttributes attributes = jcs.getDefaultElementAttributes();
         //attributes.addElementEventHandler( meh );

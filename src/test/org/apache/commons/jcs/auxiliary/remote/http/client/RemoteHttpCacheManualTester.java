@@ -22,6 +22,7 @@ package org.apache.commons.jcs.auxiliary.remote.http.client;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 
 /** Manual tester for a JCS instance configured to use the http client. */
 public class RemoteHttpCacheManualTester
@@ -46,7 +47,7 @@ public class RemoteHttpCacheManualTester
     public void testSimpleLoad()
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
         jcs.put( "TestKey", "TestValue" );
 

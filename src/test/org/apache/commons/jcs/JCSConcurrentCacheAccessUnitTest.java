@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 
 /**
@@ -38,7 +39,7 @@ public class JCSConcurrentCacheAccessUnitTest
     /**
      * the cache instance
      */
-    protected JCS<Integer, String> cache;
+    protected GroupCacheAccess<Integer, String> cache;
 
     /**
      * the group name
@@ -55,7 +56,7 @@ public class JCSConcurrentCacheAccessUnitTest
 	{
         super.setUp();
         JCS.setConfigFilename( "/TestJCS-73.ccf" );
-        cache = JCS.getInstance( "cache" );
+        cache = JCS.getGroupCacheInstance( "cache" );
         errcount = new AtomicInteger(0);
 	}
 
@@ -71,7 +72,7 @@ public class JCSConcurrentCacheAccessUnitTest
     /**
      * Worker thread
      */
-    private class Worker extends Thread
+    protected class Worker extends Thread
     {
     	@Override
 		public void run()

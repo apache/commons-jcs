@@ -24,9 +24,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.admin.CacheElementInfo;
-import org.apache.commons.jcs.admin.CacheRegionInfo;
-import org.apache.commons.jcs.admin.JCSAdminBean;
+import org.apache.commons.jcs.access.CacheAccess;
 
 /**
  * Test the admin bean that is used by the JCSAdmin.jsp
@@ -48,7 +46,7 @@ public class AdminBeanUnitTest
         throws Exception
     {
         String regionName = "myRegion";
-        JCS<String, String> cache = JCS.getInstance( regionName );
+        CacheAccess<String, String> cache = JCS.getInstance( regionName );
 
         cache.put( "key", "value" );
 
@@ -84,7 +82,7 @@ public class AdminBeanUnitTest
         throws Exception
     {
         String regionName = "myRegion";
-        JCS<String, String> cache = JCS.getInstance( regionName );
+        CacheAccess<String, String> cache = JCS.getInstance( regionName );
 
         // clear the region
         cache.clear();
@@ -114,7 +112,7 @@ public class AdminBeanUnitTest
         JCSAdminBean admin = new JCSAdminBean();
 
         String regionName = "myRegion";
-        JCS<String, String> cache = JCS.getInstance( regionName );
+        CacheAccess<String, String> cache = JCS.getInstance( regionName );
 
         // clear the region
         cache.clear();
@@ -148,7 +146,7 @@ public class AdminBeanUnitTest
         JCSAdminBean admin = new JCSAdminBean();
 
         String regionName = "myRegion";
-        JCS<String, String> cache = JCS.getInstance( regionName );
+        CacheAccess<String, String> cache = JCS.getInstance( regionName );
 
         String key = "myKey";
         cache.put( key, "value" );

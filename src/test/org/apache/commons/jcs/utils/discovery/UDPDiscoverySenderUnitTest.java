@@ -21,10 +21,6 @@ package org.apache.commons.jcs.utils.discovery;
 
 import java.util.ArrayList;
 
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoveryReceiver;
-import org.apache.commons.jcs.utils.discovery.UDPDiscoverySender;
-
 import junit.framework.TestCase;
 
 /**

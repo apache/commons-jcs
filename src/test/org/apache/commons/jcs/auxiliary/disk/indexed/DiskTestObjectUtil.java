@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.util.Random;
 
 import org.apache.commons.jcs.auxiliary.disk.DiskTestObject;
-import org.apache.commons.jcs.auxiliary.disk.indexed.IndexedDisk;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;

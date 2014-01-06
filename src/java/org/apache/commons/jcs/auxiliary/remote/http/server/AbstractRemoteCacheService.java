@@ -302,54 +302,26 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
         throws IOException;
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Return the keys in this cache.
      * <p>
-     * @param cacheName
-     * @param group
-     * @return A Set of group keys
+     * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
-    public Set<K> getGroupKeys( String cacheName, String group )
+    public Set<K> getKeySet( String cacheName )
     {
-        return processGetGroupKeys( cacheName, group );
+        return processGetKeySet( cacheName );
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Gets the set of keys of objects currently in the cache.
      * <p>
      * @param cacheName
-     * @param groupName
      * @return Set
      */
-    public Set<K> processGetGroupKeys( String cacheName, String groupName )
+    public Set<K> processGetKeySet( String cacheName )
     {
         CompositeCache<K, V> cache = getCacheManager().getCache( cacheName );
 
-        return cache.getGroupKeys( groupName );
-    }
-
-    /**
-     * Gets the set of group names currently in the cache.
-     * <p>
-     * @param cacheName
-     * @param group
-     * @return A Set of group names
-     */
-    public Set<String> getGroupNames( String cacheName )
-    {
-        return processGetGroupNames( cacheName );
-    }
-
-    /**
-     * Gets the set of keys of objects currently in the group.
-     * <p>
-     * @param cacheName
-     * @param groupName
-     * @return Set
-     */
-    public Set<String> processGetGroupNames( String cacheName )
-    {
-        CompositeCache<?, ?> cache = getCacheManager().getCache( cacheName );
-        return cache.getGroupNames();
+        return cache.getKeySet();
     }
 
     /**

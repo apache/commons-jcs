@@ -26,12 +26,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.behavior.ICacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.ConfigurationException;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs.utils.props.AbstractPropertyContainer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
  * System properties will override values in the properties file.
  * <p>
  * We use a JCS region name for each partition that looks like this: partitionRegionNamePrefix + "_"
- * + patitionNuber. The number is ) indexed based.
+ * + partitionNumber. The number is 0 indexed based.
  * <p>
  * @author Aaron Smuts
  */
@@ -98,7 +100,11 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Bad input key [" + key + "].  Cannot put null into the cache." );
             return;
         }
-        ensureInit();
+
+        if (!ensureInit())
+        {
+            return;
+        }
 
         int partition = getPartitionNumberForKey( key );
         try
@@ -126,7 +132,11 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
         {
             log.warn( "Bad input key [" + key + "].  Cannot putSafe null into the cache." );
         }
-        ensureInit();
+
+        if (!ensureInit())
+        {
+            return;
+        }
 
         int partition = getPartitionNumberForKey( key );
         partitions[partition].putSafe( key, object );
@@ -148,9 +158,14 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Bad input key [" + key + "].  Cannot put null into the cache." );
             return;
         }
-        ensureInit();
+
+        if (!ensureInit())
+        {
+            return;
+        }
 
         int partition = getPartitionNumberForKey( key );
+
         try
         {
             partitions[partition].put( key, object, attr );
@@ -175,14 +190,9 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Input key is null." );
             return null;
         }
-        try
+
+        if (!ensureInit())
         {
-            ensureInit();
-        }
-        catch ( ConfigurationException e )
-        {
-            // TODO add exception to interface method.
-            log.error( "Couldn't configure partioned access.", e );
             return null;
         }
 
@@ -204,14 +214,9 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Input key is null." );
             return null;
         }
-        try
+
+        if (!ensureInit())
         {
-            ensureInit();
-        }
-        catch ( ConfigurationException e )
-        {
-            // TODO add exception to interface method.
-            log.error( "Couldn't configure partioned access.", e );
             return null;
         }
 
@@ -231,6 +236,11 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
         if ( names == null )
         {
             log.warn( "Bad input names cannot be null." );
+            return Collections.emptyMap();
+        }
+
+        if (!ensureInit())
+        {
             return Collections.emptyMap();
         }
 
@@ -274,22 +284,18 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Input pattern is null." );
             return null;
         }
-        try
+
+        if (!ensureInit())
         {
-            ensureInit();
-        }
-        catch ( ConfigurationException e )
-        {
-            // TODO add exception to interface method.
-            log.error( "Couldn't configure partioned access.", e );
             return null;
         }
 
         Map<K, V> result = new HashMap<K, V>();
-        for ( int i = 0; i < partitions.length; i++ )
+        for (ICacheAccess<K, V> partition : partitions)
         {
-            result.putAll( partitions[i].getMatching( pattern ) );
+            result.putAll( partition.getMatching( pattern ) );
         }
+
         return result;
     }
 
@@ -306,39 +312,18 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Input pattern is null." );
             return null;
         }
-        try
+
+        if (!ensureInit())
         {
-            ensureInit();
-        }
-        catch ( ConfigurationException e )
-        {
-            // TODO add exception to interface method.
-            log.error( "Couldn't configure partioned access.", e );
             return null;
         }
 
         Map<K, ICacheElement<K, V>> result = new HashMap<K, ICacheElement<K, V>>();
-        for ( int i = 0; i < partitions.length; i++ )
+        for (ICacheAccess<K, V> partition : partitions)
         {
-            result.putAll( partitions[i].getMatchingCacheElements( pattern ) );
+            result.putAll( partition.getMatchingCacheElements( pattern ) );
         }
         return result;
-    }
-
-    /**
-     * Calls remove on all partitions. This gets translated into a removeAll call.
-     * <p>
-     * @throws CacheException
-     */
-    public void remove()
-        throws CacheException
-    {
-        ensureInit();
-
-        for ( int i = 0; i < partitions.length; i++ )
-        {
-            partitions[i].remove();
-        }
     }
 
     /**
@@ -355,7 +340,11 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Input key is null. Cannot remove null from the cache." );
             return;
         }
-        ensureInit();
+
+        if (!ensureInit())
+        {
+            return;
+        }
 
         int partition = getPartitionNumberForKey( key );
         try
@@ -379,12 +368,15 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
     public int freeMemoryElements( int numberToFree )
         throws CacheException
     {
-        ensureInit();
+        if (!ensureInit())
+        {
+            return 0;
+        }
 
         int count = 0;
-        for ( int i = 0; i < partitions.length; i++ )
+        for (ICacheAccess<K, V> partition : partitions)
         {
-            count += partitions[i].freeMemoryElements( numberToFree );
+            count += partition.freeMemoryElements( numberToFree );
         }
         return count;
     }
@@ -394,14 +386,8 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      */
     public ICompositeCacheAttributes getCacheAttributes()
     {
-        try
+        if (!ensureInit())
         {
-            ensureInit();
-        }
-        catch ( ConfigurationException e )
-        {
-            // TODO add exception to interface method.
-            log.error( "Couldn't configure partioned access.", e );
             return null;
         }
 
@@ -417,17 +403,20 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @return IElementAttributes from the first partition.
      * @throws CacheException
      */
-    public IElementAttributes getElementAttributes()
+    public IElementAttributes getDefaultElementAttributes()
         throws CacheException
     {
-        ensureInit();
+        if (!ensureInit())
+        {
+            return null;
+        }
 
         if ( partitions.length == 0 )
         {
             return null;
         }
 
-        return partitions[0].getElementAttributes();
+        return partitions[0].getDefaultElementAttributes();
     }
 
     /**
@@ -445,29 +434,15 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Input key is null. Cannot getElementAttributes for null from the cache." );
             return null;
         }
-        ensureInit();
+
+        if (!ensureInit())
+        {
+            return null;
+        }
 
         int partition = getPartitionNumberForKey( key );
 
         return partitions[partition].getElementAttributes( key );
-    }
-
-    /**
-     * Resets the default element attributes on all partitions. This does not change items that are
-     * already in the cache.
-     * <p>
-     * @param attributes
-     * @throws CacheException
-     */
-    public void resetElementAttributes( IElementAttributes attributes )
-        throws CacheException
-    {
-        ensureInit();
-
-        for ( int i = 0; i < partitions.length; i++ )
-        {
-            partitions[i].resetElementAttributes( attributes );
-        }
     }
 
     /**
@@ -486,7 +461,11 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             log.warn( "Input key is null. Cannot resetElementAttributes for null." );
             return;
         }
-        ensureInit();
+
+        if (!ensureInit())
+        {
+            return;
+        }
 
         int partition = getPartitionNumberForKey( key );
 
@@ -500,21 +479,121 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      */
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
-        try
+        if (!ensureInit())
         {
-            ensureInit();
-        }
-        catch ( ConfigurationException e )
-        {
-            // TODO add exception to interface method.
-            log.error( "Couldn't configure partioned access.", e );
             return;
         }
 
-        for ( int i = 0; i < partitions.length; i++ )
+        for (ICacheAccess<K, V> partition : partitions)
         {
-            partitions[i].setCacheAttributes( cattr );
+            partition.setCacheAttributes( cattr );
         }
+    }
+
+    /**
+     * Removes all of the elements from a region.
+     * <p>
+     * @throws CacheException
+     */
+    public void clear()
+        throws CacheException
+    {
+        if (!ensureInit())
+        {
+            return;
+        }
+
+        for (ICacheAccess<K, V> partition : partitions)
+        {
+            partition.clear();
+        }
+    }
+
+    /**
+     * This method is does not reset the attributes for items already in the cache. It could
+     * potentially do this for items in memory, and maybe on disk (which would be slow) but not
+     * remote items. Rather than have unpredictable behavior, this method just sets the default
+     * attributes. Items subsequently put into the cache will use these defaults if they do not
+     * specify specific attributes.
+     * <p>
+     * @param attr the default attributes.
+     * @throws CacheException if something goes wrong.
+     */
+    public void setDefaultElementAttributes( IElementAttributes attr )
+        throws CacheException
+    {
+        if (!ensureInit())
+        {
+            return;
+        }
+
+        for (ICacheAccess<K, V> partition : partitions)
+        {
+            partition.setDefaultElementAttributes(attr);
+        }
+    }
+
+    /**
+     * This returns the ICacheStats object with information on this region and its auxiliaries.
+     * <p>
+     * This data can be formatted as needed.
+     * <p>
+     * @return ICacheStats
+     */
+    public ICacheStats getStatistics()
+    {
+        if (!ensureInit())
+        {
+            return null;
+        }
+
+        if ( partitions.length == 0 )
+        {
+            return null;
+        }
+
+        return partitions[0].getStatistics();
+    }
+
+    /**
+     * @return A String version of the stats.
+     */
+    public String getStats()
+    {
+        if (!ensureInit())
+        {
+            return "";
+        }
+
+        StringBuilder stats = new StringBuilder();
+        for (ICacheAccess<K, V> partition : partitions)
+        {
+            stats.append(partition.getStats());
+            stats.append("\n");
+        }
+
+        return stats.toString();
+    }
+
+    /**
+     * Dispose this region. Flushes objects to and closes auxiliary caches. This is a shutdown
+     * command!
+     * <p>
+     * To simply remove all elements from the region use clear().
+     */
+    public synchronized void dispose()
+    {
+        if (!ensureInit())
+        {
+            return;
+        }
+
+        for (ICacheAccess<K, V> partition : partitions)
+        {
+            partition.dispose();
+        }
+
+        initialized = false;
     }
 
     /**
@@ -573,13 +652,22 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * <p>
      * @throws ConfigurationException on configuration problem
      */
-    protected synchronized void ensureInit()
-        throws ConfigurationException
+    protected synchronized boolean ensureInit()
     {
         if ( !initialized )
         {
-            initialize();
+            try
+            {
+                initialize();
+            }
+            catch ( ConfigurationException e )
+            {
+                log.error( "Couldn't configure partioned access.", e );
+                return false;
+            }
         }
+
+        return true;
     }
 
     /**
@@ -599,13 +687,14 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
             String regionName = this.getPartitionRegionNamePrefix() + "_" + i;
             try
             {
-                tempPartitions[i] = CacheAccess.getAccess( regionName );
+                tempPartitions[i] = JCS.getInstance( regionName );
             }
             catch ( CacheException e )
             {
                 log.error( "Problem getting cache for region [" + regionName + "]" );
             }
         }
+
         partitions = tempPartitions;
         initialized = true;
     }

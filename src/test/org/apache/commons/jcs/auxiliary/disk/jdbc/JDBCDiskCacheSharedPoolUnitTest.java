@@ -29,6 +29,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 
 /**
@@ -85,7 +86,7 @@ public class JDBCDiskCacheSharedPoolUnitTest
     public void runTestForRegion( String region, int items )
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 

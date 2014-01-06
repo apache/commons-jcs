@@ -23,8 +23,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessFactory;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLTableOptimizer;
 
 /**
  * Hand run tests for the MySQL table optimizer.

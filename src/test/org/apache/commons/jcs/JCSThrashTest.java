@@ -25,7 +25,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.logging.Log;
@@ -45,7 +45,7 @@ public class JCSThrashTest
     /**
      * the cache instance
      */
-    protected JCS<String, Serializable> jcs;
+    protected CacheAccess<String, Serializable> jcs;
 
     /**
      * @param args

@@ -179,21 +179,9 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * Does nothing.
      * <p>
      * @param cacheName - region name
-     * @param groupName - group name
      * @return empty set
      */
-    public Set<K> getGroupKeys( String cacheName, String groupName )
-    {
-        return Collections.emptySet();
-    }
-
-    /**
-     * Does nothing.
-     * <p>
-     * @param cacheName - region name
-     * @return empty set
-     */
-    public Set<String> getGroupNames( String cacheName )
+    public Set<K> getKeySet( String cacheName )
     {
         return Collections.emptySet();
     }

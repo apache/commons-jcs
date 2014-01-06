@@ -22,7 +22,7 @@ package org.apache.commons.jcs.engine.control;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
 
 /**
@@ -40,7 +40,7 @@ public class CacheManagerStatsUnitTest
      */
     public void testSimpleGetStats() throws Exception
     {
-        JCS<String, String> cache = JCS.getInstance( "testCache1" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );
 
         // 1 miss, 1 hit, 1 put
         cache.get( "testKey" );

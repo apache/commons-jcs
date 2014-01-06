@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.apache.commons.jcs.auxiliary.remote.server.TimeoutConfigurableRMIScoketFactory;
-
 import junit.framework.TestCase;
 
 /** Unit tests for the custom factory */

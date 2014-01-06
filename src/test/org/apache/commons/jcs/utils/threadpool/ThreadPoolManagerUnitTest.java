@@ -25,8 +25,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.utils.props.PropertyLoader;
-import org.apache.commons.jcs.utils.threadpool.PoolConfiguration;
-import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.jcs.utils.threadpool.PoolConfiguration.WhenBlockedPolicy;
 
 /**

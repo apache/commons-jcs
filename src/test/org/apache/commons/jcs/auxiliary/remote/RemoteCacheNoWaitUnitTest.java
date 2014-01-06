@@ -26,7 +26,6 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.remote.RemoteCacheNoWait;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;

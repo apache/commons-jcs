@@ -25,8 +25,6 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.remote.RemoteCache;
-import org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.ZombieCacheServiceNonLocal;

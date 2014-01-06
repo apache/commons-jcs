@@ -46,7 +46,10 @@ public class TestCacheAccess
     private final static Log log = LogFactory.getLog( TestCacheAccess.class );
 
     /** cache instance to use in testing */
-    private JCS<String, String> cache_control = null;
+    private CacheAccess<String, String> cache_control = null;
+
+    /** cache instance to use in testing */
+    private GroupCacheAccess<String, String> group_cache_control = null;
 
     /** do we use system.out.println to print out debug data? */
     private static boolean isSysOut = false;
@@ -65,6 +68,7 @@ public class TestCacheAccess
         try
         {
             cache_control = JCS.getInstance( regionName );
+            group_cache_control = JCS.getGroupCacheInstance( regionName );
         }
         catch ( Exception e )
         {
@@ -365,7 +369,7 @@ public class TestCacheAccess
             long n_start = System.currentTimeMillis();
             try
             {
-                Object obj = cache_control.getFromGroup( key, group );
+                Object obj = group_cache_control.getFromGroup( key, group );
                 if ( show && obj != null )
                 {
                     p( obj.toString() );
@@ -422,7 +426,7 @@ public class TestCacheAccess
             {
                 for ( int a = 0; a < num; a++ )
                 {
-                    Object obj = cache_control.getFromGroup( "keygr" + a, group );
+                    Object obj = group_cache_control.getFromGroup( "keygr" + a, group );
                     if ( show && obj != null )
                     {
                         p( obj.toString() );
@@ -470,7 +474,7 @@ public class TestCacheAccess
         else
         {
             long n_start = System.currentTimeMillis();
-            cache_control.putInGroup( key, group, "data from putg ----asdfasfas-asfasfas-asfas in group " + group );
+            group_cache_control.putInGroup( key, group, "data from putg ----asdfasfas-asfasfas-asfas in group " + group );
             long n_end = System.currentTimeMillis();
             p( "---put " + key + " in group " + group + " in " + String.valueOf( n_end - n_start ) + " millis ---" );
         }
@@ -510,7 +514,7 @@ public class TestCacheAccess
             long n_start = System.currentTimeMillis();
             for ( int a = 0; a < num; a++ )
             {
-                cache_control.putInGroup( "keygr" + a, group, "data " + a
+                group_cache_control.putInGroup( "keygr" + a, group, "data " + a
                     + " from putag ----asdfasfas-asfasfas-asfas in group " + group );
             }
             long n_end = System.currentTimeMillis();
@@ -951,7 +955,7 @@ public class TestCacheAccess
      */
     public void getAttributeNames( String groupName )
     {
-        Iterator<String> iter = cache_control.getGroupKeys( groupName ).iterator();
+        Iterator<String> iter = group_cache_control.getGroupKeys( groupName ).iterator();
 
         while ( iter.hasNext() )
         {

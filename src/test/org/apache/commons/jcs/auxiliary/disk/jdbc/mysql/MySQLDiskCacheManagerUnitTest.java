@@ -3,9 +3,6 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc.mysql;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.mysql.MySQLDiskCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;

@@ -29,11 +29,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCache;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccess;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCachePoolAccessManager;
-import org.apache.commons.jcs.auxiliary.disk.jdbc.TableState;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 
@@ -89,7 +85,7 @@ public class JDBCDiskCacheUnitTest
     public void runTestForRegion( String region, int items )
         throws Exception
     {
-        JCS<String, String> jcs = JCS.getInstance( region );
+        CacheAccess<String, String> jcs = JCS.getInstance( region );
 
         System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 

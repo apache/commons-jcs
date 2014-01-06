@@ -135,24 +135,12 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
     }
 
     /**
-     * Gets the set of keys of objects currently in the group.
+     * Return the keys in this cache.
      * <p>
-     * @param group
-     * @return a Set of group keys.
+     * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
     @Override
-    public Set<K> getGroupKeys(String groupName)
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Gets the set of group names in the cache
-     * <p>
-     * @return a Set of group names.
-     */
-    @Override
-    public Set<String> getGroupNames()
+    public Set<K> getKeySet() throws IOException
     {
         throw new UnsupportedOperationException();
     }

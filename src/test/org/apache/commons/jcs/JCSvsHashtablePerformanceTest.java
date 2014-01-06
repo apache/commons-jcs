@@ -25,7 +25,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -115,7 +115,7 @@ public class JCSvsHashtablePerformanceTest
         {
 
             JCS.setConfigFilename( "/TestJCSvHashtablePerf.ccf" );
-            JCS<String, String> cache = JCS.getInstance( "testCache1" );
+            CacheAccess<String, String> cache = JCS.getInstance( "testCache1" );
 
             for ( int j = 0; j < loops; j++ )
             {

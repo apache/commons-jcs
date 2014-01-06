@@ -25,7 +25,6 @@ import java.util.Properties;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
-import org.apache.commons.jcs.engine.control.CompositeCache;
 
 /** For testing. */
 public class MockCompositeCacheManager
