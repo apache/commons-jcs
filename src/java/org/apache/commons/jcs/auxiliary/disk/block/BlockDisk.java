@@ -48,7 +48,7 @@ public class BlockDisk
     private static final Log log = LogFactory.getLog( BlockDisk.class );
 
     /** The size of the header that indicates the amount of data stored in an occupied block. */
-    public static final byte HEADER_SIZE_BYTES = 4; 
+    public static final byte HEADER_SIZE_BYTES = 4;
     // N.B. 4 bytes is the size used for ByteBuffer.putInt(int value) and ByteBuffer.getInt()
 
     /** defaults to 4kb */
@@ -132,6 +132,31 @@ public class BlockDisk
     }
 
     /**
+     * Allocate a given number of blocks from the available set
+     *
+     * @param numBlocksNeeded
+     * @return an array of allocated blocks
+     */
+    private int[] allocateBlocks(int numBlocksNeeded)
+    {
+        assert numBlocksNeeded >= 1;
+
+        int[] blocks = new int[numBlocksNeeded];
+        // get them from the empty list or take the next one
+        for (int i = 0; i < numBlocksNeeded; i++)
+        {
+            Integer emptyBlock = emptyBlocks.takeFirst();
+            if (emptyBlock == null)
+            {
+                emptyBlock = numberOfBlocks.getAndIncrement();
+            }
+            blocks[i] = emptyBlock;
+        }
+
+        return blocks;
+    }
+
+    /**
      * This writes an object to disk and returns the blocks it was stored in.
      * <p>
      * The program flow is as follows:
@@ -152,7 +177,7 @@ public class BlockDisk
         throws IOException
     {
         // serialize the object
-        byte[] data = elementSerializer.serialize( object );
+        byte[] data = elementSerializer.serialize(object);
 
         if ( log.isDebugEnabled() )
         {
@@ -163,37 +188,42 @@ public class BlockDisk
         this.putCount.incrementAndGet();
 
         // figure out how many blocks we need.
-        int numBlocksNeeded = calculateTheNumberOfBlocksNeeded( data );
+        int numBlocksNeeded = calculateTheNumberOfBlocksNeeded(data);
+
         if ( log.isDebugEnabled() )
         {
             log.debug( "numBlocksNeeded = " + numBlocksNeeded );
         }
 
-        int[] blocks = new int[numBlocksNeeded];
+        // allocate blocks
+        int[] blocks = allocateBlocks(numBlocksNeeded);
 
-        // get them from the empty list or take the next one
-        for ( int i = 0; i < numBlocksNeeded; i++ )
+        int offset = 0;
+        final int maxChunkSize = blockSizeBytes - HEADER_SIZE_BYTES;
+        ByteBuffer headerBuffer = ByteBuffer.allocate(HEADER_SIZE_BYTES);
+
+        for (int i = 0; i < numBlocksNeeded; i++)
         {
-            Integer emptyBlock = emptyBlocks.takeFirst();
-            if ( emptyBlock != null )
-            {
-                blocks[i] = emptyBlock.intValue();
-            }
-            else
-            {
-                blocks[i] = this.numberOfBlocks.getAndIncrement();
-            }
+            headerBuffer.clear();
+            int length = Math.min(maxChunkSize, data.length - offset);
+            headerBuffer.putInt(length);
+
+            ByteBuffer dataBuffer = ByteBuffer.wrap(data, offset, length);
+
+            long position = calculateByteOffsetForBlock(blocks[i]);
+            // write the header
+            headerBuffer.flip();
+            int written = fc.write(headerBuffer, position);
+            assert written == HEADER_SIZE_BYTES;
+
+            //write the data
+            written = fc.write(dataBuffer, position + HEADER_SIZE_BYTES);
+            assert written == length;
+
+            offset += length;
         }
 
-        // get the individual sub arrays.
-        byte[][] chunks = getBlockChunks( data, numBlocksNeeded );
-
-        // write the blocks
-        for ( int i = 0; i < numBlocksNeeded; i++ )
-        {
-            int position = calculateByteOffsetForBlock( blocks[i] );
-            write( position, chunks[i] );
-        }
+        fc.force(false);
 
         return blocks;
     }
@@ -233,27 +263,6 @@ public class BlockDisk
         }
 
         return chunks;
-    }
-
-    /**
-     * Writes the given byte array to the Disk at the specified position.
-     * <p>
-     * @param position
-     * @param data
-     * @return true if we wrote successfully
-     * @throws IOException
-     */
-    private boolean write( long position, byte[] data )
-        throws IOException
-    {
-        ByteBuffer buffer = ByteBuffer.allocate(HEADER_SIZE_BYTES + data.length);
-        buffer.putInt(data.length);
-        buffer.put(data);
-        buffer.flip();
-        int written = fc.write(buffer, position);
-        fc.force(true);
-
-        return written == data.length + HEADER_SIZE_BYTES;
     }
 
     /**
