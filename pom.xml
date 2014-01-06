@@ -36,49 +36,24 @@
 
   <dependencies>
 
-    <!--  For comparative performance tests only -->
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
-      <version>1.4</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-
     <!--  REQUIRED FOR JCS CORE -->
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.1.1</version>
-      <type>jar</type>
-      <scope>compile</scope>
+      <version>1.1.3</version>
     </dependency>
 
-    <!--  REQUIRED FOR JCS CORE -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
+      <version>3.1</version>
     </dependency>
 
     <!--  JDBC DISK CACHE -->
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
-      <version>1.2.2</version>
-      <type>jar</type>
-      <scope>compile</scope>
+      <version>1.3</version>
       <optional>true</optional>
     </dependency>
 
@@ -86,20 +61,7 @@
     <dependency>
       <groupId>commons-pool</groupId>
       <artifactId>commons-pool</artifactId>
-      <version>1.4</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <!--  REQUIRED FOR JCS CORE -->
-
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.0.4</version>
-      <type>jar</type>
-      <scope>compile</scope>
+      <version>1.5.4</version>
       <optional>true</optional>
     </dependency>
 
@@ -108,18 +70,29 @@
       <artifactId>hsqldb</artifactId>
       <version>1.7.3.3</version>
       <!-- <version>1.8.0.7</version> -->
-      <type>jar</type>
-      <scope>compile</scope>
       <optional>true</optional>
+    </dependency>
+
+    <!--  For comparative performance tests only -->
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.12</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
+      <scope>test</scope>
     </dependency>
 
     <!-- LGPL! -->
@@ -135,64 +108,9 @@
     -->
 
     <dependency>
-      <groupId>tomcat</groupId>
-      <artifactId>tomcat-util</artifactId>
-      <version>3.2.1</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.velocity</groupId>
       <artifactId>velocity-tools</artifactId>
       <version>2.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>xmlrpc</groupId>
-      <artifactId>xmlrpc</artifactId>
-      <version>2.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>2.6.2</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <version>2.0.2</version>
-      <type>jar</type>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>berkeleydb</groupId>
-      <artifactId>berkeleydb</artifactId>
-      <version>1.5.1</version>
-      <type>jar</type>
-      <scope>compile</scope>
       <optional>true</optional>
     </dependency>
 
@@ -200,17 +118,13 @@
        <groupId>commons-httpclient</groupId>
        <artifactId>commons-httpclient</artifactId>
        <version>3.0.1</version>
-       <type>jar</type>
-       <scope>compile</scope>
        <optional>true</optional>
     </dependency>
 
     <dependency>
        <groupId>javax.servlet</groupId>
        <artifactId>servlet-api</artifactId>
-       <version>2.3</version>
-       <type>jar</type>
-       <scope>compile</scope>
+       <version>2.5</version>
        <optional>true</optional>
     </dependency>
 
@@ -229,14 +143,6 @@
     </notifiers>
   </ciManagement>
   -->
-
-  <distributionManagement>
-   <site>
-      <id>stagingSite</id>
-      <name>Apache Staging Website</name>
-      <url>${jcs.deployment.protocol}://people.apache.org/www/commons.apache.org/jcs/</url>
-   </site>
-  </distributionManagement>
 
   <issueManagement>
     <system>jira</system>
@@ -450,12 +356,6 @@
     <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
   	<maven.compiler.source>1.5</maven.compiler.source>
   	<maven.compiler.target>1.5</maven.compiler.target>
-
-  	<!--
-      Make the deployment protocol pluggable. This allows to switch to
-      other protocols like scpexe, which some users prefer over scp.
-    -->
-    <jcs.deployment.protocol>scpexe</jcs.deployment.protocol>
 
     <commons.componentid>jcs</commons.componentid>
     <commons.release.version>1.5</commons.release.version>
