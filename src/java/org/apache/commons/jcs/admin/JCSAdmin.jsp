@@ -16,16 +16,16 @@
  specific language governing permissions and limitations
  under the License.
 --%>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="org.apache.commons.jcs.admin.*" %>
-<%@ page import="org.apache.commons.jcs.*" %>
+<%@page import="java.io.Serializable"%>
+<%@page import="java.util.HashMap" %>
+<%@page import="java.util.List" %>
+<%@page import="org.apache.commons.jcs.admin.*" %>
+<%@page import="org.apache.commons.jcs.access.*" %>
+<%@page import="org.apache.commons.jcs.*" %>
 
 <jsp:useBean id="jcsBean" scope="request" class="org.apache.commons.jcs.admin.JCSAdminBean" />
 
 <html>
-
 <head>
 
 <SCRIPT LANGUAGE="Javascript">
@@ -63,7 +63,7 @@
 
 			String templateName = DEFAULT_TEMPLATE_NAME;
 
-			HashMap context = new HashMap();
+			HashMap<String, Object> context = new HashMap<String, Object>();
 
 			// Get cacheName for actions from request (might be null)
 			String cacheName = request.getParameter( CACHE_NAME_PARAM );
@@ -149,9 +149,8 @@
 			        key = key.trim();
 			    }
 
-			    JCS cache = JCS.getInstance( cacheName );
-
-				org.apache.commons.jcs.engine.behavior.ICacheElement element = cache.getCacheElement( key );
+			    CacheAccess<Serializable, Serializable> cache = JCS.getInstance( cacheName );
+				org.apache.commons.jcs.engine.behavior.ICacheElement<?, ?> element = cache.getCacheElement( key );
 %>
 <h1> Item for key [<%=key%>] in region [<%=cacheName%>] </h1>
 
@@ -163,8 +162,7 @@
   </pre>
 <%
 			}
-			else
-			if ( templateName == REGION_SUMMARY_TEMPLATE_NAME )
+			else if ( templateName == REGION_SUMMARY_TEMPLATE_NAME )
 			{
 %>
 
@@ -173,7 +171,7 @@
 <a href="JCSAdmin.jsp">All Regions</a>
 
 <%
-    JCS cache = JCS.getInstance( cacheName );
+    CacheAccess<?, ?> cache = JCS.getInstance( cacheName );
     String stats = cache.getStats();
 %>
 
@@ -186,8 +184,7 @@
 
 <%
 			}
-			else
-			if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
+			else if ( templateName == REGION_DETAIL_TEMPLATE_NAME )
 			{
 %>
 
@@ -204,10 +201,10 @@
         <th> Till Expiration (s) </th>
     </tr>
 <%
-	List list = (List)context.get( "elementInfoRecords" );
-    Iterator it = list.iterator();
-    while ( it.hasNext() ) {
-    	CacheElementInfo element = (CacheElementInfo)it.next();
+    @SuppressWarnings("unchecked")
+	List<CacheElementInfo> list = (List<CacheElementInfo>) context.get( "elementInfoRecords" );
+    for (CacheElementInfo element : list)
+    {
 %>
         <tr>
             <td> <%=element.getKey()%> </td>
@@ -223,7 +220,7 @@
 <%
     }
 
-    JCS cache = JCS.getInstance( cacheName );
+    CacheAccess<?, ?> cache = JCS.getInstance( cacheName );
     String stats = cache.getStats();
 %>
     </table>
@@ -255,11 +252,10 @@ which empties the entire cache.
 		Retrieve (key) <input type="text" name="key"> &nbsp;
 		(region) <select name="cacheName">
 <%
-  List listSelect = (List)context.get( "cacheInfoRecords" );
-  Iterator itSelect = listSelect.iterator();
-  while ( itSelect.hasNext() )
+  @SuppressWarnings("unchecked")
+  List<CacheRegionInfo> listSelect = (List<CacheRegionInfo>) context.get( "cacheInfoRecords" );
+  for (CacheRegionInfo record : listSelect)
   {
-	CacheRegionInfo record = (CacheRegionInfo)itSelect.next();
 	%>
     <option value="<%=record.getCache().getCacheName()%>"><%=record.getCache().getCacheName()%></option>
 	<%
@@ -283,12 +279,10 @@ which empties the entire cache.
     </tr>
 
 <%
-	List list = (List)context.get( "cacheInfoRecords" );
-    Iterator it = list.iterator();
-    while (it.hasNext() )
+	@SuppressWarnings("unchecked")
+	List<CacheRegionInfo> list = (List<CacheRegionInfo>) context.get( "cacheInfoRecords" );
+    for (CacheRegionInfo record : listSelect)
     {
-    	CacheRegionInfo record = (CacheRegionInfo)it.next();
-
 %>
         <tr>
             <td> <%=record.getCache().getCacheName()%> </td>
