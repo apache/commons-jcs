@@ -33,12 +33,12 @@ import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 
 /**
  * Simple class for using JCS. To use JCS in your application, you can use the static methods of
- * this class to get access objects (instances of this class) for your cache regions. Ideally this
- * class should be all you need to import to use JCS. One JCS should be created for each region you
- * want to access. If you have several regions, then get instances for each. For best performance
- * the getInstance call should be made in an initialization method.
+ * this class to get access objects (instances of this class) for your cache regions. One CacheAccess
+ * object should be created for each region you want to access. If you have several regions, then
+ * get instances for each. For best performance the getInstance call should be made in an
+ * initialization method.
  */
-public abstract class JCS<K extends Serializable, V extends Serializable>
+public abstract class JCS
 {
     /** cache.ccf alternative. */
     private static String configFilename = null;
