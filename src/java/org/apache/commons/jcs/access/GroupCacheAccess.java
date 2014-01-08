@@ -19,6 +19,7 @@ package org.apache.commons.jcs.access;
  * under the License.
  */
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -138,7 +139,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
 
             this.cacheControl.update( ce );
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             throw new CacheException( e );
         }

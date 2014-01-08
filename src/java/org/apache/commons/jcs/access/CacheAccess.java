@@ -236,7 +236,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
 
             this.cacheControl.update( ce );
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             throw new CacheException( e );
         }
