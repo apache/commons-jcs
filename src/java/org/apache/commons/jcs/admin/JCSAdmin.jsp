@@ -201,8 +201,7 @@
         <th> Till Expiration (s) </th>
     </tr>
 <%
-    @SuppressWarnings("unchecked")
-	List<CacheElementInfo> list = (List<CacheElementInfo>) context.get( "elementInfoRecords" );
+	CacheElementInfo[] list = (CacheElementInfo[]) context.get( "elementInfoRecords" );
     for (CacheElementInfo element : list)
     {
 %>
@@ -252,12 +251,11 @@ which empties the entire cache.
 		Retrieve (key) <input type="text" name="key"> &nbsp;
 		(region) <select name="cacheName">
 <%
-  @SuppressWarnings("unchecked")
-  List<CacheRegionInfo> listSelect = (List<CacheRegionInfo>) context.get( "cacheInfoRecords" );
+  CacheRegionInfo[] listSelect = (CacheRegionInfo[]) context.get( "cacheInfoRecords" );
   for (CacheRegionInfo record : listSelect)
   {
 	%>
-    <option value="<%=record.getCache().getCacheName()%>"><%=record.getCache().getCacheName()%></option>
+    <option value="<%=record.getCacheName()%>"><%=record.getCacheName()%></option>
 	<%
   }
 %>
@@ -279,24 +277,23 @@ which empties the entire cache.
     </tr>
 
 <%
-	@SuppressWarnings("unchecked")
-	List<CacheRegionInfo> list = (List<CacheRegionInfo>) context.get( "cacheInfoRecords" );
+	CacheRegionInfo[] list = (CacheRegionInfo[]) context.get( "cacheInfoRecords" );
     for (CacheRegionInfo record : listSelect)
     {
 %>
         <tr>
-            <td> <%=record.getCache().getCacheName()%> </td>
-            <td> <%=record.getCache().getSize()%> </td>
+            <td> <%=record.getCacheName()%> </td>
+            <td> <%=record.getCacheSize()%> </td>
             <td> <%=record.getByteCount()%> </td>
-            <td> <%=record.getStatus()%> </td>
-            <td> <%=record.getCache().getHitCountRam()%> </td>
-            <td> <%=record.getCache().getHitCountAux()%> </td>
-            <td> <%=record.getCache().getMissCountNotFound()%> </td>
-            <td> <%=record.getCache().getMissCountExpired()%> </td>
+            <td> <%=record.getCacheStatus()%> </td>
+            <td> <%=record.getHitCountRam()%> </td>
+            <td> <%=record.getHitCountAux()%> </td>
+            <td> <%=record.getMissCountNotFound()%> </td>
+            <td> <%=record.getMissCountExpired()%> </td>
             <td>
-                <a href="JCSAdmin.jsp?action=regionSummary&cacheName=<%=record.getCache().getCacheName()%>"> Summary </a>
-                | <a href="JCSAdmin.jsp?action=detail&cacheName=<%=record.getCache().getCacheName()%>"> Detail </a>
-                | <a href="javascript:decision('Clicking OK will remove all the data from the region [<%=record.getCache().getCacheName()%>]!','JCSAdmin.jsp?action=clearRegion&cacheName=<%=record.getCache().getCacheName()%>')"> Clear </a>
+                <a href="JCSAdmin.jsp?action=regionSummary&cacheName=<%=record.getCacheName()%>"> Summary </a>
+                | <a href="JCSAdmin.jsp?action=detail&cacheName=<%=record.getCacheName()%>"> Detail </a>
+                | <a href="javascript:decision('Clicking OK will remove all the data from the region [<%=record.getCacheName()%>]!','JCSAdmin.jsp?action=clearRegion&cacheName=<%=record.getCacheName()%>')"> Clear </a>
             </td>
         </tr>
 <%

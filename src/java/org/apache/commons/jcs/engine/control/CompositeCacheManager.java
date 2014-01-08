@@ -22,6 +22,7 @@ package org.apache.commons.jcs.engine.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.management.ManagementFactory;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +34,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.admin.JCSAdminBean;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheFactory;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
@@ -41,13 +46,13 @@ import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICache;
+import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IProvideScheduler;
 import org.apache.commons.jcs.engine.behavior.IShutdownObservable;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs.engine.behavior.ICacheType.CacheType;
 import org.apache.commons.jcs.engine.stats.CacheStats;
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
@@ -72,6 +77,9 @@ public class CompositeCacheManager
 
     /** The logger */
     protected final static Log log = LogFactory.getLog( CompositeCacheManager.class );
+
+    /** JMX object name */
+    private final static String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
     /** Caches managed by this cache manager */
     protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> caches =
@@ -127,6 +135,9 @@ public class CompositeCacheManager
 
     /** Indicates whether configure has been called. */
     private boolean isConfigured = false;
+
+    /** Indicates whether JMX bean has been registered. */
+    private boolean isJMXRegistered = false;
 
     /**
      * Gets the CacheHub instance. For backward compatibility, if this creates the instance it will
@@ -237,6 +248,23 @@ public class CompositeCacheManager
                 return t;
             }
         });
+
+        // Register JMX bean
+        if (!isJMXRegistered)
+        {
+	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+	        JCSAdminBean adminBean = new JCSAdminBean(this);
+	        try
+	        {
+	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
+				mbs.registerMBean(adminBean, jmxObjectName);
+				isJMXRegistered = true;
+			}
+	        catch (Exception e)
+	        {
+	            log.warn( "Could not register JMX bean.", e );
+			}
+        }
     }
 
     /**
@@ -614,6 +642,23 @@ public class CompositeCacheManager
             }
         }
 
+        // Unregister JMX bean
+        if (isJMXRegistered)
+        {
+	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+	        try
+	        {
+	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
+				mbs.unregisterMBean(jmxObjectName);
+			}
+	        catch (Exception e)
+	        {
+	            log.warn( "Could not unregister JMX bean.", e );
+			}
+
+			isJMXRegistered = false;
+        }
+
         // do the traditional shutdown of the regions.
         String[] names = getCacheNames();
         int len = names.length;
@@ -676,13 +721,7 @@ public class CompositeCacheManager
      */
     public String[] getCacheNames()
     {
-        String[] list = new String[caches.size()];
-        int i = 0;
-        for (String key : caches.keySet())
-        {
-            list[i++] = key;
-        }
-        return list;
+    	return caches.keySet().toArray(new String[caches.size()]);
     }
 
     /**

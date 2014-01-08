@@ -25,9 +25,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs.access.exception.CacheException;
@@ -39,7 +37,6 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
-import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 
 /**
  * A servlet which provides HTTP access to JCS. Allows a summary of regions to be viewed, and
@@ -47,7 +44,7 @@ import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
  * items (any number of key arguments can be provided with action 'remove'). Should be initialized
  * with a properties file that provides at least a classpath resource loader.
  */
-public class JCSAdminBean
+public class JCSAdminBean implements JCSJMXBean
 {
     /** The cache manager. */
     private final CompositeCacheManager cacheHub;
@@ -69,13 +66,24 @@ public class JCSAdminBean
     }
 
     /**
+     * Parameterized constructor
+     *
+	 * @param cacheHub the cache manager instance
+	 */
+	public JCSAdminBean(CompositeCacheManager cacheHub)
+	{
+		super();
+		this.cacheHub = cacheHub;
+	}
+
+	/**
      * Builds up info about each element in a region.
      * <p>
      * @param cacheName
-     * @return List of CacheElementInfo objects
+     * @return Array of CacheElementInfo objects
      * @throws Exception
      */
-    public LinkedList<CacheElementInfo> buildElementInfo( String cacheName )
+    public CacheElementInfo[] buildElementInfo( String cacheName )
         throws Exception
     {
         CompositeCache<Serializable, Serializable> cache = cacheHub.getCache( cacheName );
@@ -109,21 +117,17 @@ public class JCSAdminBean
 
             attributes = element.getElementAttributes();
 
-            elementInfo = new CacheElementInfo();
-
-            elementInfo.key = String.valueOf( key );
-            elementInfo.eternal = attributes.getIsEternal();
-            elementInfo.maxLifeSeconds = attributes.getMaxLifeSeconds();
-
-            elementInfo.createTime = format.format( new Date( attributes.getCreateTime() ) );
-
-            elementInfo.expiresInSeconds = ( now - attributes.getCreateTime() - ( attributes.getMaxLifeSeconds() * 1000 ) )
-                / -1000;
+            elementInfo = new CacheElementInfo(
+            		String.valueOf( key ),
+            		attributes.getIsEternal(),
+            		format.format(new Date(attributes.getCreateTime())),
+            		attributes.getMaxLifeSeconds(),
+            		(now - attributes.getCreateTime() - (attributes.getMaxLifeSeconds() * 1000 )) / -1000);
 
             records.add( elementInfo );
         }
 
-        return records;
+        return records.toArray(new CacheElementInfo[0]);
     }
 
     /**
@@ -134,7 +138,7 @@ public class JCSAdminBean
      * @return list of CacheRegionInfo objects
      * @throws Exception
      */
-    public LinkedList<CacheRegionInfo> buildCacheInfo()
+    public CacheRegionInfo[] buildCacheInfo()
         throws Exception
     {
         String[] cacheNames = cacheHub.getCacheNames();
@@ -150,18 +154,37 @@ public class JCSAdminBean
         {
             cache = cacheHub.getCache( cacheNames[i] );
 
-            regionInfo = new CacheRegionInfo();
-
-            regionInfo.cache = cache;
-            regionInfo.byteCount = getByteCount( cache );
+            regionInfo = new CacheRegionInfo(
+                    cache.getCacheName(),
+                    cache.getSize(),
+                    cache.getStatus().toString(),
+                    cache.getStats(),
+                    cache.getHitCountRam(),
+                    cache.getHitCountAux(),
+                    cache.getMissCountNotFound(),
+                    cache.getMissCountExpired(),
+                    getByteCount( cache ));
 
             cacheInfo.add( regionInfo );
         }
 
-        return cacheInfo;
+        return cacheInfo.toArray(new CacheRegionInfo[0]);
     }
 
-    /**
+
+	/**
+     * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
+     * the region or an error occurs, suppresses exceptions and returns 0.
+     * <p/>
+     *
+     * @return int The size of the region in bytes.
+     */
+	public int getByteCount(String cacheName)
+	{
+		return getByteCount(cacheHub.getCache(cacheName));
+	}
+
+	/**
      * Tries to estimate how much data is in a region. This is expensive. If there are any non serializable objects in
      * the region or an error occurs, suppresses exceptions and returns 0.
      * <p/>
@@ -178,13 +201,23 @@ public class JCSAdminBean
         long size = 0;
         IMemoryCache<K, V> memCache = cache.getMemoryCache();
 
-        Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> iter = memCache.getIterator();
-        while (iter.hasNext())
+        for (K key : memCache.getKeySet())
         {
-            MemoryElementDescriptor<K, V> me = iter.next().getValue();
-            ICacheElement<K, V> ice = me.ce;
+            ICacheElement<K, V> ice = null;
+			try
+			{
+				ice = memCache.get(key);
+			}
+			catch (IOException e)
+			{
+                throw new RuntimeException("IOException while trying to get a cached element", e);
+			}
 
-            if (ice instanceof CacheElementSerialized)
+			if (ice == null)
+			{
+				continue;
+			}
+			else if (ice instanceof CacheElementSerialized)
             {
                 size = size + ((CacheElementSerialized<K, V>) ice).getSerializedValue().length;
             }
@@ -194,14 +227,37 @@ public class JCSAdminBean
 
                 //CountingOnlyOutputStream: Keeps track of the number of bytes written to it, but doesn't write them anywhere.
                 CountingOnlyOutputStream counter = new CountingOnlyOutputStream();
+                ObjectOutputStream out = null;
                 try
                 {
-                    ObjectOutputStream out = new ObjectOutputStream(counter);
+                    out = new ObjectOutputStream(counter);
                     out.writeObject(element);
                 }
                 catch (IOException e)
                 {
                     throw new RuntimeException("IOException while trying to measure the size of the cached element", e);
+                }
+                finally
+                {
+                	try
+                	{
+                		if (out != null)
+                		{
+                			out.close();
+                		}
+					}
+                	catch (IOException e)
+                	{
+                		// ignore
+					}
+                	try
+                	{
+						counter.close();
+					}
+                	catch (IOException e)
+                	{
+                		// ignore
+					}
                 }
 
                 // 4 bytes lost for the serialization header

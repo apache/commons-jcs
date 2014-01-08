@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.admin;
 
+import java.beans.ConstructorProperties;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,21 +27,42 @@ package org.apache.commons.jcs.admin;
 public class CacheElementInfo
 {
     /** element key */
-    String key = null;
+    private String key = null;
 
     /** is it eternal */
-    boolean eternal = false;
+    private boolean eternal = false;
 
     /** when it was created */
-    String createTime = null;
+    private String createTime = null;
 
     /** max life */
-    long maxLifeSeconds = -1;
+    private long maxLifeSeconds = -1;
 
     /** when it will expire */
-    long expiresInSeconds = -1;
+    private long expiresInSeconds = -1;
 
     /**
+     * Parameterized constructor
+     *
+	 * @param key element key
+	 * @param eternal is it eternal
+	 * @param createTime when it was created
+	 * @param maxLifeSeconds max life
+	 * @param expiresInSeconds when it will expire
+	 */
+    @ConstructorProperties({"key", "eternal", "createTime", "maxLifeSeconds", "expiresInSeconds"})
+    public CacheElementInfo(String key, boolean eternal, String createTime,
+			long maxLifeSeconds, long expiresInSeconds)
+    {
+		super();
+		this.key = key;
+		this.eternal = eternal;
+		this.createTime = createTime;
+		this.maxLifeSeconds = maxLifeSeconds;
+		this.expiresInSeconds = expiresInSeconds;
+	}
+
+	/**
      * @return a string representation of the key
      */
     public String getKey()
