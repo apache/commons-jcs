@@ -22,9 +22,6 @@ package org.apache.commons.jcs.utils.discovery;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * This contains info about a discovered service. These objects are stored in a set in the
  * UDPDiscoveryService.
@@ -114,17 +111,18 @@ public class DiscoveredService
     }
 
     /** @return hashcode based on address/port */
-    @Override
-    public int hashCode()
-    {
-        HashCodeBuilder builder = new HashCodeBuilder();
-        builder.append( this.getServiceAddress() );
-        builder.append( this.getServicePort() );
-        //builder.append( this.getCacheNames().toString() );
-        return builder.toHashCode();
-    }
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((serviceAddress == null) ? 0 : serviceAddress.hashCode());
+		result = prime * result + servicePort;
+		return result;
+	}
 
-    /**
+	/**
      * NOTE - this object is often put into sets, so equals needs to be overridden.
      * <p>
      * We can't use cache names as part of the equals unless we manually only use the address and
@@ -134,20 +132,39 @@ public class DiscoveredService
      * @param otherArg other
      * @return equality based on the address/port
      */
-    @Override
-    public boolean equals( Object otherArg )
-    {
-        if ( otherArg instanceof DiscoveredService )
-        {
-            DiscoveredService other = (DiscoveredService) otherArg;
-            EqualsBuilder builder = new EqualsBuilder();
-            builder.append( this.getServiceAddress(), other.getServiceAddress() );
-            builder.append( this.getServicePort(), other.getServicePort() );
-            //builder.append( this.getCacheNames().toString(), other.getCacheNames().toString() );
-            return builder.isEquals();
-        }
-        return false;
-    }
+	@Override
+	public boolean equals(Object otherArg)
+	{
+		if (this == otherArg)
+		{
+			return true;
+		}
+		if (otherArg == null)
+		{
+			return false;
+		}
+		if (!(otherArg instanceof DiscoveredService))
+		{
+			return false;
+		}
+		DiscoveredService other = (DiscoveredService) otherArg;
+		if (serviceAddress == null)
+		{
+			if (other.serviceAddress != null)
+			{
+				return false;
+			}
+		} else if (!serviceAddress.equals(other.serviceAddress))
+		{
+			return false;
+		}
+		if (servicePort != other.servicePort)
+		{
+			return false;
+		}
+
+		return true;
+	}
 
     /**
      * @return string for debugging purposes.

@@ -1,9 +1,9 @@
 package org.apache.commons.jcs.engine.logging;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /** It's returned from create and passed into log. */
 public class CacheEvent<K extends Serializable>
@@ -33,7 +33,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @param source the source to set
      */
-    public void setSource( String source )
+    @Override
+	public void setSource( String source )
     {
         this.source = source;
     }
@@ -41,7 +42,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @return the source
      */
-    public String getSource()
+    @Override
+	public String getSource()
     {
         return source;
     }
@@ -49,7 +51,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @param region the region to set
      */
-    public void setRegion( String region )
+    @Override
+	public void setRegion( String region )
     {
         this.region = region;
     }
@@ -57,7 +60,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @return the region
      */
-    public String getRegion()
+    @Override
+	public String getRegion()
     {
         return region;
     }
@@ -65,7 +69,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @param eventName the eventName to set
      */
-    public void setEventName( String eventName )
+    @Override
+	public void setEventName( String eventName )
     {
         this.eventName = eventName;
     }
@@ -73,7 +78,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @return the eventName
      */
-    public String getEventName()
+    @Override
+	public String getEventName()
     {
         return eventName;
     }
@@ -81,7 +87,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @param optionalDetails the optionalDetails to set
      */
-    public void setOptionalDetails( String optionalDetails )
+    @Override
+	public void setOptionalDetails( String optionalDetails )
     {
         this.optionalDetails = optionalDetails;
     }
@@ -89,7 +96,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @return the optionalDetails
      */
-    public String getOptionalDetails()
+    @Override
+	public String getOptionalDetails()
     {
         return optionalDetails;
     }
@@ -97,7 +105,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @param key the key to set
      */
-    public void setKey( K key )
+    @Override
+	public void setKey( K key )
     {
         this.key = key;
     }
@@ -105,7 +114,8 @@ public class CacheEvent<K extends Serializable>
     /**
      * @return the key
      */
-    public K getKey()
+    @Override
+	public K getKey()
     {
         return key;
     }
@@ -126,6 +136,24 @@ public class CacheEvent<K extends Serializable>
     @Override
     public String toString()
     {
-        return ToStringBuilder.reflectionToString( this );
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("CacheEvent: ").append(eventName).append(" Created: ").append(new Date(createTime));
+    	if (source != null)
+    	{
+        	sb.append(" Source: ").append(source);
+    	}
+    	if (region != null)
+    	{
+        	sb.append(" Region: ").append(region);
+    	}
+    	if (key != null)
+    	{
+        	sb.append(" Key: ").append(key);
+    	}
+    	if (optionalDetails != null)
+    	{
+        	sb.append(" Details: ").append(optionalDetails);
+    	}
+        return sb.toString();
     }
 }
