@@ -350,11 +350,11 @@
 
     <!-- Default configuration for compiler source and target JVM -->
     <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
-  	<maven.compiler.source>1.5</maven.compiler.source>
-  	<maven.compiler.target>1.5</maven.compiler.target>
+  	<maven.compiler.source>1.6</maven.compiler.source>
+  	<maven.compiler.target>1.6</maven.compiler.target>
 
     <commons.componentid>jcs</commons.componentid>
-    <commons.release.version>1.5</commons.release.version>
+    <commons.release.version>2.0</commons.release.version>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>JCS</commons.jira.id>
@@ -364,7 +364,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <commons.encoding>UTF-8</commons.encoding>
-    <commons.javadoc.java.link>http://download.oracle.com/javase/1.5.0/docs/api/</commons.javadoc.java.link>
+    <commons.javadoc.java.link>http://docs.oracle.com/javase/6/docs/api/</commons.javadoc.java.link>
 
     <test.type>Unit</test.type>
   </properties>

@@ -19,7 +19,7 @@
 		<author email="asmuts@apache.org">Aaron Smuts</author>
 	</properties>
 	<body>
-		<release version="2.0" date="unreleased" description="JDK 1.5 based major release">
+		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
             <action dev="tv" type="add">
                 Add simple JMX monitoring feature by exposing the JCSAdminBean to JMX 
             </action>
