@@ -296,7 +296,8 @@
 
   <profiles>
     <profile>
-      <id>apache-release</id>
+      <!-- Override Commons parent release profile -->
+      <id>release</id>
       <build>
         <plugins>
           <plugin>
@@ -305,12 +306,12 @@
             <artifactId>maven-assembly-plugin</artifactId>
             <executions>
               <execution>
-                <id>jcs-source-release-assembly</id>
                 <phase>package</phase>
                 <goals>
                   <goal>single</goal>
                 </goals>
                 <configuration>
+                  <!-- only the parent has assembly descriptors -->
                   <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
                   <descriptors>
                     <descriptor>src/assembly/bin.xml</descriptor>
