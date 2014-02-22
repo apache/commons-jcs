@@ -149,7 +149,7 @@ public class BookVObjManager
 {
     private static BookVObjManager instance;
     private static int checkedOut = 0;
-    private static JCS bookCache;
+    private static CacheAccess<String, BookVObj> bookCache;
 
     private BookVObjManager()
     {
@@ -218,7 +218,7 @@ public class BookVObjManager
 
         if (fromCache)
         {
-            vObj = (BookVObj) bookCache.get("BookVObj" + id);
+            vObj = bookCache.get("BookVObj" + id);
         }
 
         // Either fromCache was false or the object was not found, so

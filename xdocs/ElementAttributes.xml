@@ -145,7 +145,7 @@ jcs.default.elementattributes.IsLateral=true
 				</p>
 				<source>
 				<![CDATA[
-    JCS jcs = JCS.getInstance( "myregion" );
+    CacheAccess<String, String> jcs = JCS.getInstance( "myregion" );
 
     . . .
 
@@ -165,7 +165,7 @@ jcs.default.elementattributes.IsLateral=true
 
 				<source>
 					<![CDATA[
-    JCS jcs = JCS.getInstance( "myregion" );
+    CacheAccess<String, String> jcs = JCS.getInstance( "myregion" );
 
     . . .
 

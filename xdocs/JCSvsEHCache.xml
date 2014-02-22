@@ -320,7 +320,7 @@ public class JCSvsEHCachePerformanceTest
         // maxSize elements that are not eternal. No disk cache is configured.
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
         cattr.setMaxObjects( maxSize );
-        JCS jcs = JCS.getInstance( "testJCSvsEHCache", cattr );
+        CacheAccess<String, String> jcs = JCS.getInstance( "testJCSvsEHCache", cattr );
 
         // run settings
         long start = 0;

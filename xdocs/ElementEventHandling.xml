@@ -161,7 +161,7 @@
 			</p>
 			<source>
 				<![CDATA[
-    JCS jcs = JCS.getInstance( "myregion" );
+    CacheAccess<String, String> jcs = JCS.getInstance( "myregion" );
 
     . . .
 
@@ -179,7 +179,7 @@
 			</p>
 			<source>
 				<![CDATA[
-    JCS jcs = JCS.getInstance( "myregion" );
+    CacheAccess<String, String> jcs = JCS.getInstance( "myregion" );
 
     . . .
 
