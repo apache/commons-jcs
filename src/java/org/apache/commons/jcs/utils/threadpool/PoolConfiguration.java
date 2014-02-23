@@ -24,7 +24,7 @@ package org.apache.commons.jcs.utils.threadpool;
  * <p>
  * @author Aaron Smuts
  */
-public class PoolConfiguration
+public final class PoolConfiguration
     implements Cloneable
 {
     /** Should we bound the queue */

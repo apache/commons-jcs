@@ -26,7 +26,7 @@ package org.apache.commons.jcs.utils.discovery;
  * <p>
  * @author Aaron Smuts
  */
-public class UDPDiscoveryAttributes
+public final class UDPDiscoveryAttributes
     implements Cloneable
 {
     /** service name */

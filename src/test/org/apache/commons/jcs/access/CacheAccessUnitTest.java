@@ -20,7 +20,6 @@ package org.apache.commons.jcs.access;
  */
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -294,12 +293,9 @@ public class CacheAccessUnitTest
         //System.out.println( result1 );
 
         // verify that the elements are unwrapped
-        Set<String> keySet1 = result1.keySet();
-        Iterator<String> it1 = keySet1.iterator();
-        while ( it1.hasNext() )
+        for (Map.Entry<String, Integer> entry : result1.entrySet())
         {
-            Object key = it1.next();
-            Object value = result1.get( key );
+            Object value = entry.getValue();
             assertFalse( "Should not be a cache element.", value instanceof ICacheElement );
         }
     }
@@ -351,12 +347,9 @@ public class CacheAccessUnitTest
         //System.out.println( result1 );
 
         // verify that the elements are wrapped
-        Set<String> keySet1 = result1.keySet();
-        Iterator<String> it1 = keySet1.iterator();
-        while ( it1.hasNext() )
+        for (Map.Entry<String, ICacheElement<String, Integer>> entry : result1.entrySet())
         {
-            Object key = it1.next();
-            Object value = result1.get( key );
+            Object value = entry.getValue();
             assertTrue( "Should be a cache element.", value instanceof ICacheElement );
         }
     }

@@ -791,7 +791,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
                 }
             }
         }
-        catch ( Exception e )
+        catch ( SQLException e )
         {
             log.error( "Problem updating cache.", e );
             reset();

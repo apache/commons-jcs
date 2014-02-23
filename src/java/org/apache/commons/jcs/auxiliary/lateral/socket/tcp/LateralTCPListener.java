@@ -149,7 +149,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     /**
      * This starts the ListenerThread on the specified port.
      */
-    public void init()
+    public synchronized void init()
     {
         try
         {
@@ -496,7 +496,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                     inner: while (true)
                     {
                         // Check to see if we've been asked to exit, and exit
-                        synchronized (this)
+                        synchronized (LateralTCPListener.this)
                         {
                             if (terminated)
                             {
