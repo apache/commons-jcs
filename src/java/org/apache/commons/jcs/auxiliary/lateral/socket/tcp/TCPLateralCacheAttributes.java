@@ -90,13 +90,13 @@ public class TCPLateralCacheAttributes
 
     /** don't remove it the hashcode is the same */
     private boolean filterRemoveByHashCode = DEFAULT_FILTER_REMOVE_BY_HASH_CODE;
-   
+
     /** Only block for socketTimeOut seconds before timing out on a read.  */
     private int socketTimeOut = DEFAULT_SOCKET_TIME_OUT;
 
     /** Only block for openTimeOut seconds before timing out on startup. */
     private int openTimeOut = DEFAULT_OPEN_TIMEOUT;
-    
+
     /**
      * Sets the tcpServer attribute of the ILateralCacheAttributes object
      * <p>

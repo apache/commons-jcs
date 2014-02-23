@@ -1,7 +1,5 @@
 package org.apache.commons.jcs.auxiliary.remote.behavior;
 
-import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +18,9 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
+
 
 /**
  * This holds constants that are used by the remote cache.

@@ -51,13 +51,13 @@ public class RemoteHttpCacheAttributes
 
     /** keys and patterns will be included in the parameters */
     private boolean includeRequestTypeasAsParameter = true;
-    
+
     /** The complete URL to the service. */
     private String url;
-    
+
     /** The default classname for the client.  */
     public static final String DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME = RemoteHttpCacheClient.class.getName();
-    
+
     /** This allows users to inject their own client implementation. */
     private String remoteHttpClientClassName = DEFAULT_REMOTE_HTTP_CLIENT_CLASS_NAME;
 

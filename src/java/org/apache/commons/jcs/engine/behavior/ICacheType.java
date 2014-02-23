@@ -19,7 +19,6 @@ package org.apache.commons.jcs.engine.behavior;
  * under the License.
  */
 
-
 /**
  * Interface implemented by a specific cache.
  *

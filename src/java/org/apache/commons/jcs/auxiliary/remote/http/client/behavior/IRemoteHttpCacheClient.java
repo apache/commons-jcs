@@ -1,11 +1,5 @@
 package org.apache.commons.jcs.auxiliary.remote.http.client.behavior;
 
-import java.io.IOException;
-import java.io.Serializable;
-
-import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
-import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +18,13 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.io.IOException;
+import java.io.Serializable;
+
+import org.apache.commons.jcs.auxiliary.remote.http.client.RemoteHttpCacheAttributes;
+import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
+
 
 /**
  * It's not entirely clear that this interface is needed. I simply wanted the initialization method.

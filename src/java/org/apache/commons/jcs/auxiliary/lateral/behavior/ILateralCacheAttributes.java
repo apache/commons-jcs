@@ -49,7 +49,7 @@ public interface ILateralCacheAttributes
      * loose our connection with the server.
      */
     public static final int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
-    
+
     /**
      * Sets the httpServer attribute of the ILateralCacheAttributes object
      * <p>
@@ -180,7 +180,7 @@ public interface ILateralCacheAttributes
      * @return true if we should have a listener connection
      */
     public boolean isReceive();
-    
+
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
@@ -195,5 +195,5 @@ public interface ILateralCacheAttributes
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */
-    public int getZombieQueueMaxSize();      
+    public int getZombieQueueMaxSize();
 }

@@ -19,7 +19,6 @@ package org.apache.commons.jcs.utils.threadpool;
  * under the License.
  */
 
-
 /**
  * This object holds configuration data for a thread pool.
  * <p>

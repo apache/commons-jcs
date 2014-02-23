@@ -24,10 +24,10 @@
                 Update documentation to reflect generics and API changes
             </action>
             <action dev="tv" type="remove">
-                Remove dependency on commons-lang3 
+                Remove dependency on commons-lang3
             </action>
             <action dev="tv" type="add">
-                Add simple JMX monitoring feature by exposing the JCSAdminBean to JMX 
+                Add simple JMX monitoring feature by exposing the JCSAdminBean to JMX
             </action>
             <action dev="tv" type="update" issue="JCS-109" due-to="Xiong LIU">
                 Improve performance of BlockDisk.write(Serializable)
@@ -58,8 +58,8 @@
                 Use type-safe enums instead of integer constants to clean up the code.
             </action>
             <action dev="tv" type="fix" issue="JCS-91" due-to="Diego Rivera">
-                JCS fails to properly dispose of the lateral TCP listener thread. 
-                If a webapp that uses JCS lateral TCP cache is undeployed, the listener is left 
+                JCS fails to properly dispose of the lateral TCP listener thread.
+                If a webapp that uses JCS lateral TCP cache is undeployed, the listener is left
                 hanging with no hope for exit.
             </action>
             <action dev="tv" type="fix" issue="JCS-49" due-to="David Easley">
@@ -79,16 +79,16 @@
                 Concurrent cache access causes values loss.
             </action>
             <action dev="tv" type="fix" issue="JCS-77" due-to="Matt Morrisson">
-                NullPointerException thrown by IndexedDiskCache if IndexedDisk calls fail to 
+                NullPointerException thrown by IndexedDiskCache if IndexedDisk calls fail to
                 initialize.
             </action>
             <action dev="tv" type="fix" issue="JCS-90" due-to="Diego Rivera">
-                When issuing a shutDown() command, JCS fails to clean up the Queue Processor 
+                When issuing a shutDown() command, JCS fails to clean up the Queue Processor
                 thread.
             </action>
             <action dev="tv" type="fix" issue="JCS-89" due-to="Diego Rivera">
-                UDP Discovery fails to report correct IP address to peers for back-connect 
-                when InetAddress.getLocalHost() fails to return an externally-visible 
+                UDP Discovery fails to report correct IP address to peers for back-connect
+                when InetAddress.getLocalHost() fails to return an externally-visible
                 address (i.e. returns a local address)
             </action>
             <action dev="tv" type="fix" issue="JCS-88" due-to="Diego Rivera">

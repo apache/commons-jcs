@@ -193,7 +193,7 @@ public class BlockDiskUnitTest
         assertEquals( "Wrong number of blocks returned.", 2, blocks.length );
         assertEquals( "Wrong block returned.", 0, blocks[0] );
     }
-    
+
     /**
      * Test writing an element that takes 128 blocks.  There was a byte in a for loop that limited the number to 127.  I fixed this.
      * <p>
@@ -204,7 +204,7 @@ public class BlockDiskUnitTest
     {
         // SETUP
         int numBlocks = 128;
-        
+
         String fileName = "testWrite_128BlockElement";
         File file = new File( rafDir, fileName + ".data" );
         BlockDisk disk = new BlockDisk( file, new StandardSerializer() );
@@ -364,7 +364,7 @@ public class BlockDiskUnitTest
         int[] blocks = disk.write( string );
         String result = (String) disk.read( blocks );
 
-        // VERIFY 
+        // VERIFY
         assertEquals( "Wrong item retured.", string, result );
     }
 }

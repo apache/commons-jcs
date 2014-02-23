@@ -36,7 +36,7 @@ public class CompressionUtilUnitTest
         {
             // DO WORK
             CompressionUtil.decompressByteArray( null );
-            
+
             // VERIFY
             fail( "excepted an IllegalArgumentException" );
         }

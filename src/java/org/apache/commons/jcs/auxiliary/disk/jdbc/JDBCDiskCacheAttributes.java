@@ -74,7 +74,7 @@ public class JDBCDiskCacheAttributes
     /**
      * If a pool name is supplied, the manager will attempt to load it. It should be configured in a
      * separate section as follows. Assuming the name is "MyPool":
-     * 
+     *
      * <pre>
      * jcs.jdbcconnectionpool.MyPool.attributes.userName=MyUserName
      * jcs.jdbcconnectionpool.MyPool.attributes.password=MyPassword

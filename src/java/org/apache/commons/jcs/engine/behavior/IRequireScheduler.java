@@ -1,7 +1,5 @@
 package org.apache.commons.jcs.engine.behavior;
 
-import java.util.concurrent.ScheduledExecutorService;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +18,9 @@ import java.util.concurrent.ScheduledExecutorService;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.util.concurrent.ScheduledExecutorService;
+
 
 /**
  * Marker interface to allow the injection of a central ScheduledExecutorService

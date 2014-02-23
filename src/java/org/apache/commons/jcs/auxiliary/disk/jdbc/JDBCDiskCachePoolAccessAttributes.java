@@ -1,20 +1,39 @@
 package org.apache.commons.jcs.auxiliary.disk.jdbc;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 /** These are used to configure the JDBCDiskCachePoolAccess class. */
 public class JDBCDiskCachePoolAccessAttributes
 {
     /** The name of the pool.  */
     private String poolName;
-    
+
     /** URI to the db. */
     private String url;
-    
+
     /** username for the db */
     private String userName;
-    
+
     /** password for the database */
     private String password;
-    
+
     /** This is the default limit on the maximum number of active connections. */
     public static final int DEFAULT_MAX_ACTIVE = 10;
 
@@ -26,7 +45,7 @@ public class JDBCDiskCachePoolAccessAttributes
 
     /** The driver */
     private String driverClassName;
-    
+
     /**
      * @param poolName the poolName to set
      */
@@ -106,7 +125,7 @@ public class JDBCDiskCachePoolAccessAttributes
     {
         return maxActive;
     }
-    
+
     /**
      * @param database the database to set
      */

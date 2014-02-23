@@ -1,7 +1,5 @@
 package org.apache.commons.jcs.auxiliary.disk.indexed;
 
-import java.io.Serializable;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +18,9 @@ import java.io.Serializable;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.io.Serializable;
+
 
 /**
  * Used to dump out a Disk cache from disk for debugging. This is meant to be

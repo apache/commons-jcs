@@ -72,7 +72,7 @@ public class StandardSerializerUnitTest
         // VERIFY
         assertNull( "Should have nothing.", after );
     }
-    
+
     /**
      * Test simple back and forth with a string.
      *<p>

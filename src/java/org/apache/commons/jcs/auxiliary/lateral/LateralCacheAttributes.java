@@ -40,10 +40,10 @@ public class LateralCacheAttributes
 
     /** THe type of lateral */
     private String transmissionTypeName = "UDP";
-    
+
     /** indicates the lateral type, this needs to change */
     private int transmissionType = UDP;
-    
+
     /** The heep servers */
     private String httpServers;
 
@@ -70,7 +70,7 @@ public class LateralCacheAttributes
 
     /** If the primary fails, we will queue items before reconnect.  This limits the number of items that can be queued. */
     private int zombieQueueMaxSize = DEFAULT_ZOMBIE_QUEUE_MAX_SIZE;
-    
+
     /**
      * Sets the httpServer attribute of the LateralCacheAttributes object
      * <P>
@@ -303,7 +303,7 @@ public class LateralCacheAttributes
     {
         return zombieQueueMaxSize;
     }
-    
+
     /**
      * @return debug string.
      */

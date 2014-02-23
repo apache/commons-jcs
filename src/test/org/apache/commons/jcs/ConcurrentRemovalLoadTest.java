@@ -117,7 +117,7 @@ public class ConcurrentRemovalLoadTest
                 runTestPutThenRemoveCategorical( 701, 800 );
             }
         } );
-        
+
         suite.addTest( new RemovalTestUtil( "testRemoveCache1" )
         {
             @Override

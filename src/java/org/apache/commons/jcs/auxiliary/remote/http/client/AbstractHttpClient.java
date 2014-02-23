@@ -142,7 +142,7 @@ public abstract class AbstractHttpClient
      */
     public abstract void postProcessWebserviceCall( HttpMethod post, HttpState httpState )
         throws IOException;
-    
+
     /**
      * @return Returns the httpClient.
      */

@@ -19,7 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.behavior;
  * under the License.
  */
 
-
 /**
  * This specifies what a remote cache configuration object should look like.
  */
