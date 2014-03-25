@@ -231,6 +231,8 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             memCache.update( cacheElement );
 
             updateAuxiliaries( cacheElement, localOnly );
+
+            cacheElement.getElementAttributes().setLastAccessTimeNow();
         }
     }
 
@@ -604,6 +606,11 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             {
                 log.debug( cacheName + " - Miss" );
             }
+        }
+
+        if (element != null)
+        {
+            element.getElementAttributes().setLastAccessTimeNow();
         }
 
         return element;

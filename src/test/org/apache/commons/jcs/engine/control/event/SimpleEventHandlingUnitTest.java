@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 
@@ -174,6 +173,89 @@ public class SimpleEventHandlingUnitTest
     }
 
     /**
+     * Test the ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST event.
+     * @throws Exception
+     */
+    public void testExceededMaxlifeOnrequestEvent()
+        throws Exception
+    {
+        MyEventHandler meh = new MyEventHandler();
+
+        CacheAccess<String, String> jcs = JCS.getInstance( "Maxlife" );
+        // this should add the event handler to all items as they are created.
+        IElementAttributes attributes = jcs.getDefaultElementAttributes();
+        attributes.addElementEventHandler( meh );
+        jcs.setDefaultElementAttributes( attributes );
+
+        // put them in
+        for ( int i = 0; i < 200; i++ )
+        {
+            jcs.put( i + ":key", "data" + i);
+        }
+
+        // wait a bit for the items to expire
+        Thread.sleep( 3000 );
+
+        for ( int i = 0; i < 200; i++ )
+        {
+            String value = jcs.get( i + ":key");
+            assertNull("Item should be null for key " + i + ":key, but is " + value, value);
+        }
+
+        // wait a bit for it to finish
+        Thread.sleep( 100 );
+
+        // test to see if the count is right
+        assertTrue( "The number of ELEMENT_EVENT_EXCEEDED_MAXLIFE_ONREQUEST events [" + meh.getExceededMaxlifeCount()
+            + "] does not equal the number expected.", meh.getExceededMaxlifeCount() >= 200 );
+    }
+
+    /**
+     * Test the ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST event.
+     * @throws Exception
+     */
+    public void testExceededIdletimeOnrequestEvent()
+        throws Exception
+    {
+        MyEventHandler meh = new MyEventHandler();
+
+        CacheAccess<String, String> jcs = JCS.getInstance( "Idletime" );
+        // this should add the event handler to all items as they are created.
+        IElementAttributes attributes = jcs.getDefaultElementAttributes();
+        attributes.addElementEventHandler( meh );
+        jcs.setDefaultElementAttributes( attributes );
+
+        // put them in
+        for ( int i = 0; i < 200; i++ )
+        {
+            jcs.put( i + ":key", "data" + i);
+        }
+
+        // update access time
+        for ( int i = 0; i < 200; i++ )
+        {
+            String value = jcs.get( i + ":key");
+            assertNotNull("Item should not be null for key " + i + ":key", value);
+        }
+
+        // wait a bit for the items to expire
+        Thread.sleep( 1500 );
+
+        for ( int i = 0; i < 200; i++ )
+        {
+            String value = jcs.get( i + ":key");
+            assertNull("Item should be null for key " + i + ":key, but is " + value, value);
+        }
+
+        // wait a bit for it to finish
+        Thread.sleep( 100 );
+
+        // test to see if the count is right
+        assertTrue( "The number of ELEMENT_EVENT_EXCEEDED_IDLETIME_ONREQUEST events [" + meh.getExceededIdletimeCount()
+            + "] does not equal the number expected.", meh.getExceededIdletimeCount() >= 200 );
+    }
+
+    /**
      * Simple event counter used to verify test results.
      */
     public static class MyEventHandler
@@ -188,6 +270,12 @@ public class SimpleEventHandlingUnitTest
         /** times spool without disk */
         private int spoolNoDiskCount = 0;
 
+        /** times exceeded maxlife */
+        private int exceededMaxlifeCount = 0;
+
+        /** times exceeded idle time */
+        private int exceededIdletimeCount = 0;
+
         /**
          * @param event
          */
@@ -196,28 +284,30 @@ public class SimpleEventHandlingUnitTest
             //System.out.println( "Handling Event of Type " +
             // event.getElementEvent() );
 
-            if ( event.getElementEvent() == ElementEventType.SPOOLED_DISK_AVAILABLE )
+            switch (event.getElementEvent())
             {
+                case SPOOLED_DISK_AVAILABLE:
                 //System.out.println( "Handling Event of Type
                 // ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE, " + getSpoolCount() );
-                setSpoolCount( getSpoolCount() + 1 );
-            }
-            else if ( event.getElementEvent() == ElementEventType.SPOOLED_NOT_ALLOWED )
-            {
-                setSpoolNotAllowedCount( getSpoolNotAllowedCount() + 1 );
-            }
-            else if ( event.getElementEvent() == ElementEventType.SPOOLED_DISK_NOT_AVAILABLE )
-            {
-                setSpoolNoDiskCount( getSpoolNoDiskCount() + 1 );
-            }
-        }
+                spoolCount++;
+                break;
 
-        /**
-         * @param spoolCount The spoolCount to set.
-         */
-        protected void setSpoolCount( int spoolCount )
-        {
-            this.spoolCount = spoolCount;
+                case SPOOLED_NOT_ALLOWED:
+                spoolNotAllowedCount++;
+                break;
+
+                case SPOOLED_DISK_NOT_AVAILABLE:
+                spoolNoDiskCount++;
+                break;
+
+                case EXCEEDED_MAXLIFE_ONREQUEST:
+                exceededMaxlifeCount++;
+                break;
+
+                case EXCEEDED_IDLETIME_ONREQUEST:
+                exceededIdletimeCount++;
+                break;
+            }
         }
 
         /**
@@ -229,27 +319,11 @@ public class SimpleEventHandlingUnitTest
         }
 
         /**
-         * @param spoolNotAllowedCount The spoolNotAllowedCount to set.
-         */
-        protected void setSpoolNotAllowedCount( int spoolNotAllowedCount )
-        {
-            this.spoolNotAllowedCount = spoolNotAllowedCount;
-        }
-
-        /**
          * @return Returns the spoolNotAllowedCount.
          */
         protected int getSpoolNotAllowedCount()
         {
             return spoolNotAllowedCount;
-        }
-
-        /**
-         * @param spoolNoDiskCount The spoolNoDiskCount to set.
-         */
-        protected void setSpoolNoDiskCount( int spoolNoDiskCount )
-        {
-            this.spoolNoDiskCount = spoolNoDiskCount;
         }
 
         /**
@@ -260,6 +334,21 @@ public class SimpleEventHandlingUnitTest
             return spoolNoDiskCount;
         }
 
+        /**
+         * @return the exceededMaxlifeCount
+         */
+        protected int getExceededMaxlifeCount()
+        {
+            return exceededMaxlifeCount;
+        }
+
+        /**
+         * @return the exceededIdletimeCount
+         */
+        protected int getExceededIdletimeCount()
+        {
+            return exceededIdletimeCount;
+        }
     }
 
 }

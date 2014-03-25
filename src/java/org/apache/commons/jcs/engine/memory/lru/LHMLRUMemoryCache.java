@@ -96,7 +96,6 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
         throws IOException
     {
         putCnt++;
-        ce.getElementAttributes().setLastAccessTimeNow();
         map.put( ce.getKey(), new MemoryElementDescriptor<K, V>(ce) );
     }
 
@@ -138,7 +137,6 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
         if ( me != null )
         {
             hitCnt++;
-            me.ce.getElementAttributes().setLastAccessTimeNow();
             if ( log.isDebugEnabled() )
             {
                 log.debug( cacheName + ": LRUMemoryCache hit for " + key );

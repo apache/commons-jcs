@@ -108,7 +108,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
         throws IOException
     {
         putCnt++;
-        ce.getElementAttributes().setLastAccessTimeNow();
 
         synchronized ( this )
         {
@@ -207,7 +206,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
         {
             ce = me.ce;
             hitCnt++;
-            ce.getElementAttributes().setLastAccessTimeNow();
             if ( log.isDebugEnabled() )
             {
                 log.debug( cacheName + ": LRUMemoryCache hit for " + ce.getKey() );
