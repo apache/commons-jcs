@@ -47,18 +47,18 @@
 				<li>Remote synchronization</li>
 				<li>Remote store recovery</li>
 				<li>Non-blocking "zombie" (balking facade) pattern</li>
-				<li> Lateral distribution of elements via HTTP, TCP, or UDP</li>
+				<li>Lateral distribution of elements via HTTP, TCP, or UDP</li>
 				<li>UDP Discovery of other caches</li>
 				<li>Element event handling</li>
-				<li> Remote server chaining (or clustering) and failover</li>
+				<li>Remote server chaining (or clustering) and failover</li>
 				<li>Custom event logging hooks</li>
 				<li>Custom event queue injection</li>
 				<li>Custom object serializer injection</li>
 				<li>Key pattern matching retrieval</li>
 				<li>Network efficient multi-key retrieval</li>
 			</ul>
-			<p> JCS works on JDK versions 1.4 and up. It only has two
-				dependencies: Commons Logging and Doug Lea's Util Concurrent.</p>
+			<p> JCS 2.0 works on JDK versions 1.6 and up. It only has a
+				dependency on Commons Logging.</p>
 		</section>
 		<section name="JCS is a Composite Cache">
 			<p>

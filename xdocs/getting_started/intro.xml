@@ -80,28 +80,33 @@
 				Download the latest version of JCS. The latest JCS
 				builds are located
 				<a
-					href="http://svn.apache.org/viewcvs.cgi/commons/proper/jcs/trunk/tempbuild/">
+					href="http://www.apache.org/dist/commons/jcs/">
 					HERE
 				</a>
 			</p>
 			<p>
 				If you would like to build JCS yourself, check it out
 				from Subversion and build it as you would any other
-				project built by Maven 1.x. The location of the
+				project built by Maven. The location of the
 				repository is documented in the project info pages that
 				are linked via the left nav.
 			</p>
 		</section>
 
 		<section name="STEP 3: Get the Required Dependencies">
+            <p>
+                Beginning with version 2.0 the core of JCS (the LRU memory
+                cache, the indexed disk cache, the TCP lateral, and the
+                RMI remote server) requires only commons-logging.
+            </p>
 			<p>
-				As of version 1.2.7.0, the core of JCS (the LRU memory
+				Beginning with version 1.2.7.0 and up to version 1.3, the core of 
+                JCS (the LRU memory
 				cache, the indexed disk cache, the TCP lateral, and the
 				RMI remote server) requires only two other jars.
 			</p>
 			<p>
-				<a
-					href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
+				<a	href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">
 					concurrent
 				</a>
 			</p>
@@ -205,9 +210,8 @@ jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 
 		<section name="STEP 5: Programming to JCS">
 			<p>
-				JCS provides a convenient class that should meet all
-				your needs. It is called, appropriately enough,
-				<code>org.apache.commons.jcs.JCS</code>
+				JCS provides a few convenient classes that should meet all
+				your needs. 
 			</p>
 			<p>
 				To get a cache region you simply ask JCS for the region
@@ -217,51 +221,53 @@ jcs.auxiliary.DC.attributes.ShutdownSpoolTimeLimit=60
 			<source>
 				<![CDATA[
 import org.apache.commons.jcs.JCS;
+import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 
 . . .
 
     private static final String cacheRegionName = "city";
 
-    private JCS cache = null;
+    private CacheAccess<String, City> cache = null;
 
 . . .
-			// in your constructor you might do this
-            try
-            {
-                setCache( JCS.getInstance( this.getCacheRegionName() ) );
-            }
-            catch ( CacheException e )
-            {
-                log.error( "Problem initializing cache for region name ["
-                  + this.getCacheRegionName() + "].", e );
-            }
-
-. . .
-
-            // to get a city out of the cache by id you might do this:
-            String key = "cityId:" + String.valueOf( id );
-
-            City city = (City) cache.get( key );
+	// in your constructor you might do this
+    try
+    {
+        CacheAccess<String, City> c = JCS.getInstance( this.getCacheRegionName() );
+        setCache( c );
+    }
+    catch ( CacheException e )
+    {
+        log.error( "Problem initializing cache for region name ["
+          + this.getCacheRegionName() + "].", e );
+    }
 
 . . .
 
-            // to put a city object in the cache, you could do this:
-            try
-            {
-                // if it isn't null, insert it
-                if ( city != null )
-                {
-                    cache.put( key, city );
-                }
-            }
-            catch ( CacheException e )
-            {
-                 log.error( "Problem putting "
-                   + city + " in the cache, for key " + key, e );
-            }
+    // to get a city out of the cache by id you might do this:
+    String key = "cityId:" + String.valueOf( id );
+
+    City city = cache.get( key );
+
+. . .
+
+    // to put a city object in the cache, you could do this:
+    try
+    {
+        // if it isn't null, insert it
+        if ( city != null )
+        {
+            cache.put( key, city );
+        }
+    }
+    catch ( CacheException e )
+    {
+         log.error( "Problem putting "
+           + city + " in the cache, for key " + key, e );
+    }
         ]]>
-			</source>
+</source>
 		</section>
 
 	</body>
