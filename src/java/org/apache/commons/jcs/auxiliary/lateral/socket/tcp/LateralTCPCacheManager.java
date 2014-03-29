@@ -200,7 +200,7 @@ public class LateralTCPCacheManager
      * <p>
      * @param cacheName The feature to be added to the LateralCacheListener attribute
      * @param listener The feature to be added to the LateralCacheListener attribute
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public <K extends Serializable, V extends Serializable> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )

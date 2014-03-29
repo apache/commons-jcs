@@ -73,7 +73,7 @@ public class JCSvsCommonsLRUMapPerformanceTest
     /**
      * A unit test for JUnit
      *
-     * @exception Exception
+     * @throws Exception
      *                Description of the Exception
      */
     public void testSimpleLoad()

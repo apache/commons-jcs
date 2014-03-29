@@ -89,7 +89,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
      * Puts an item to the cache.
      * <p>
      * @param ce Description of the Parameter
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public void update( ICacheElement<K, V> ce )
@@ -105,7 +105,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param key Identifies item to find
      * @return Element matching key if found, or null
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public ICacheElement<K, V> getQuiet( K key )
@@ -119,7 +119,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param key Identifies item to find
      * @return ICacheElement<K, V> if found, else null
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public synchronized ICacheElement<K, V> get( K key )
@@ -159,7 +159,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param key
      * @return true if removed
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public synchronized boolean remove( K key )

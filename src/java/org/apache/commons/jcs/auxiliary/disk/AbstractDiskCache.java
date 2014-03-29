@@ -134,7 +134,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * Purgatory size of -1 means to use a HashMap with no size limit. Anything greater will use an
      * LRU map of some sort.
      * <p>
-     * @TODO Currently setting this to 0 will cause nothing to be put to disk, since it will assume
+     * TODO Currently setting this to 0 will cause nothing to be put to disk, since it will assume
      *       that if an item is not in purgatory, then it must have been plucked. We should make 0
      *       work, a way to not use purgatory.
      */

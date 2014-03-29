@@ -131,7 +131,7 @@ public class BlockDiskCacheSameRegionConcurrentUnitTest
      * @param region Name of the region to access
      * @param start
      * @param end
-     * @exception Exception If an error occurs
+     * @throws Exception If an error occurs
      */
     public void runTestForRegion( String region, int start, int end )
         throws Exception

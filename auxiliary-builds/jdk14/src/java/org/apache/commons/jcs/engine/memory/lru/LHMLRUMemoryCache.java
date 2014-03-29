@@ -70,7 +70,7 @@ public class LHMLRUMemoryCache
    *  Puts an item to the cache.
    *
    *@param  ce               Description of the Parameter
-   *@exception  IOException
+   *@throws  IOException
    */
   public void update(ICacheElement<K, V> ce) throws IOException
   {
@@ -94,7 +94,7 @@ public class LHMLRUMemoryCache
    *
    *@param  key              Identifies item to find
    *@return                  Element mathinh key if found, or null
-   *@exception  IOException
+   *@throws  IOException
    */
   public ICacheElement<K, V> getQuiet(K key) throws IOException
   {
@@ -123,7 +123,7 @@ public class LHMLRUMemoryCache
    *
    *@param  key              Identifies item to find
    *@return                  ICacheElement<K, V> if found, else null
-   *@exception  IOException
+   *@throws  IOException
    */
   public synchronized ICacheElement<K, V> get(K key) throws IOException
   {
@@ -161,7 +161,7 @@ public class LHMLRUMemoryCache
    *
    *@param  key
    *@return
-   *@exception  IOException
+   *@throws  IOException
    */
   public synchronized boolean remove(K key) throws IOException
   {

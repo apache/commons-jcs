@@ -46,7 +46,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     /**
      * The cache that a given instance of this class provides access to.
      * <p>
-     * @TODO Should this be the interface?
+     * TODO Should this be the interface?
      */
     protected CompositeCache<K, V> cacheControl;
 

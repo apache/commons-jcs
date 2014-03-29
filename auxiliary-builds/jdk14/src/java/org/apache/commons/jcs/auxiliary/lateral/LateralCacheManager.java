@@ -48,7 +48,7 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
  * This is currently not implemented in the lateral cache.
  * <p>
  *
- * @TODO: - need freeCache, release, getStats - need to find an interface
+ * TODO: - need freeCache, release, getStats - need to find an interface
  *        acceptible for all - cache managers or a manager within a type
  *
  * @deprecated use individual cache managers
@@ -199,7 +199,7 @@ public class LateralCacheManager
      *            The feature to be added to the LateralCacheListener attribute
      * @param listener
      *            The feature to be added to the LateralCacheListener attribute
-     * @exception IOException
+     * @throws IOException
      */
     public void addLateralCacheListener( String cacheName, ILateralCacheListener listener )
         throws IOException

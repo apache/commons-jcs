@@ -66,7 +66,7 @@ public class LateralJGSender
      * Constructor for the LateralJGSender object
      *
      * @param lca
-     * @exception IOException
+     * @throws IOException
      */
     public LateralJGSender( ILateralCacheAttributes lca )
         throws IOException
@@ -78,7 +78,7 @@ public class LateralJGSender
     /**
      * Create holder.
      *
-     * @exception IOException
+     * @throws IOException
      */
     protected void init()
         throws IOException
@@ -116,7 +116,7 @@ public class LateralJGSender
      * Sends commands to the lateral cache listener.
      *
      * @param led
-     * @exception IOException
+     * @throws IOException
      */
     public void send( LateralElementDescriptor led )
         throws IOException
@@ -149,7 +149,7 @@ public class LateralJGSender
      *
      * @return
      * @param led
-     * @exception IOException
+     * @throws IOException
      */
     public ICacheElement<K, V> sendAndReceive( LateralElementDescriptor led )
         throws IOException
@@ -211,7 +211,7 @@ public class LateralJGSender
      *
      * @param item
      * @param requesterId
-     * @exception IOException
+     * @throws IOException
      */
     public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
@@ -227,7 +227,7 @@ public class LateralJGSender
      *
      * @param cacheName
      * @param key
-     * @exception IOException
+     * @throws IOException
      */
     public void remove( String cacheName, K key )
         throws IOException
@@ -241,7 +241,7 @@ public class LateralJGSender
      * @param cacheName
      * @param key
      * @param requesterId
-     * @exception IOException
+     * @throws IOException
      */
     public void remove( String cacheName, K key, long requesterId )
         throws IOException
@@ -256,7 +256,7 @@ public class LateralJGSender
     /**
      * Description of the Method
      *
-     * @exception IOException
+     * @throws IOException
      */
     public void release()
         throws IOException
@@ -271,7 +271,7 @@ public class LateralJGSender
      * method.
      *
      * @param cache
-     * @exception IOException
+     * @throws IOException
      */
     public void dispose( String cache )
         throws IOException
@@ -283,7 +283,7 @@ public class LateralJGSender
      * Description of the Method
      *
      * @param cacheName
-     * @exception IOException
+     * @throws IOException
      */
     public void removeAll( String cacheName )
         throws IOException
@@ -296,7 +296,7 @@ public class LateralJGSender
      *
      * @param cacheName
      * @param requesterId
-     * @exception IOException
+     * @throws IOException
      */
     public void removeAll( String cacheName, long requesterId )
         throws IOException

@@ -119,7 +119,7 @@ public class HSQLDiskCacheConcurrentUnitTest
      * memory cache, so items should spool to disk.
      * <p>
      * @param region Name of the region to access
-     * @exception Exception If an error occurs
+     * @throws Exception If an error occurs
      */
     public void runTestForRegion( String region )
         throws Exception

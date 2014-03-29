@@ -176,7 +176,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * Standard update method.
      * <p>
      * @param ce
-     * @exception IOException
+     * @throws IOException
      */
     public void update( ICacheElement<K, V> ce )
         throws IOException
@@ -188,7 +188,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * Standard update method.
      * <p>
      * @param ce
-     * @exception IOException
+     * @throws IOException
      */
     public void localUpdate( ICacheElement<K, V> ce )
         throws IOException
@@ -202,7 +202,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param cacheElement the ICacheElement<K, V>
      * @param localOnly Whether the operation should be restricted to local auxiliaries.
-     * @exception IOException
+     * @throws IOException
      */
     protected void update( ICacheElement<K, V> cacheElement, boolean localOnly )
         throws IOException
@@ -1621,8 +1621,8 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param key
      * @return The elementAttributes value
-     * @exception CacheException
-     * @exception IOException
+     * @throws CacheException
+     * @throws IOException
      */
     public IElementAttributes getElementAttributes( K key )
         throws CacheException, IOException
@@ -1754,7 +1754,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param hand The IElementEventHandler
      * @param event The IElementEventHandler IElementEvent event
-     * @exception IOException Description of the Exception
+     * @throws IOException Description of the Exception
      */
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException

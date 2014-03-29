@@ -119,7 +119,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Just test that we can put, get and remove as expected.
-     * @exception Exception Description of the Exception
+     * @throws Exception Description of the Exception
      */
     public void testSimpleLoad()
         throws Exception
@@ -145,7 +145,7 @@ public class LRUMapConcurrentTest
 
     /**
      * Just make sure that the LRU functions int he most simple case.
-     * @exception Exception Description of the Exception
+     * @throws Exception Description of the Exception
      */
     public void testLRURemoval()
         throws Exception

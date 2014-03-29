@@ -80,7 +80,7 @@ public class JDBCDiskCacheUnitTest
      * <p>
      * @param region Name of the region to access
      * @param items
-     * @exception Exception If an error occurs
+     * @throws Exception If an error occurs
      */
     public void runTestForRegion( String region, int items )
         throws Exception

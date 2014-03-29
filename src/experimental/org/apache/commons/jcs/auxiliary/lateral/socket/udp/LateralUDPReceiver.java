@@ -54,7 +54,7 @@ public class LateralUDPReceiver implements Runnable
      *
      * @param lca
      * @param ilcl
-     * @exception IOException
+     * @throws IOException
      */
     public LateralUDPReceiver( ILateralCacheAttributes lca, ILateralCacheListener ilcl )
         throws IOException
@@ -69,7 +69,7 @@ public class LateralUDPReceiver implements Runnable
      *
      * @param multicastAddressString
      * @param multicastPort
-     * @exception IOException
+     * @throws IOException
      */
     protected LateralUDPReceiver( String multicastAddressString, int multicastPort )
         throws IOException

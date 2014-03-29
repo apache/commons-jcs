@@ -49,7 +49,7 @@ public class RemovalTestUtil
      * @param start
      * @param end
      *
-     * @exception Exception
+     * @throws Exception
      *                Description of the Exception
      */
     public void runTestPutThenRemoveCategorical( int start, int end )

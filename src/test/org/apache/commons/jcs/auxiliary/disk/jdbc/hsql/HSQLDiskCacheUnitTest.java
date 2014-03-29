@@ -50,7 +50,7 @@ public class HSQLDiskCacheUnitTest
      * Adds items to cache, gets them, and removes them. The item count is more than the size of the
      * memory cache, so items should spool to disk.
      * <p>
-     * @exception Exception If an error occurs
+     * @throws Exception If an error occurs
      */
     public void testBasicPutRemove()
         throws Exception

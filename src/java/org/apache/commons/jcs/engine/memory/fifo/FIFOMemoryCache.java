@@ -41,7 +41,7 @@ public class FIFOMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param ce The cache element, or entry wrapper
      * @return MemoryElementDescriptor the new node
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     protected MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )

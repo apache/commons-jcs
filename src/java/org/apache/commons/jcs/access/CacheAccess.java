@@ -174,7 +174,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * <p>
      * @param key Key object will be stored with
      * @param value Object to store
-     * @exception CacheException and ObjectExistsException is thrown if the item is already in the
+     * @throws CacheException and ObjectExistsException is thrown if the item is already in the
      *                cache.
      */
     public void putSafe( K key, V value )
@@ -191,10 +191,10 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     /**
      * Place a new object in the cache, associated with key name. If there is currently an object
      * associated with name in the region it is replaced. Names are scoped to a region so they must
-     * be unique within the region they are placed. ObjectExistsException
+     * be unique within the region they are placed.
      * @param name Key object will be stored with
      * @param obj Object to store
-     * @exception CacheException
+     * @throws CacheException
      */
     public void put( K name, V obj )
         throws CacheException
@@ -209,7 +209,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * <p>
      * If the key or the value is null, and InvalidArgumentException is thrown.
      * <p>
-     * @see org.apache.commons.jcs.access.behavior.ICacheAccess#put(java.lang.Object, java.lang.Object,
+     * @see org.apache.commons.jcs.access.behavior.ICacheAccess#put(java.io.Serializable, java.io.Serializable,
      *      org.apache.commons.jcs.engine.behavior.IElementAttributes)
      */
     public void put( K key, V val, IElementAttributes attr )
@@ -260,8 +260,8 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * <p>
      * @param name Key of object to reset attributes for
      * @param attr New attributes for the object
-     * @exception CacheException
-     * @exception InvalidHandleException if the item does not exist.
+     * @throws CacheException
+     * @throws InvalidHandleException if the item does not exist.
      */
     public void resetElementAttributes( K name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
@@ -288,7 +288,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * <p>
      * @param name Key of object to get attributes for
      * @return Attributes for the object, null if object not in cache
-     * @exception CacheException
+     * @throws CacheException
      */
     public IElementAttributes getElementAttributes( K name )
         throws CacheException

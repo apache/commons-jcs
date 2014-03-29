@@ -48,7 +48,7 @@ public class SimpleEventHandlingUnitTest
     /**
      * Verify that the spooled event is called as expected.
      * <p>
-     * @exception Exception Description of the Exception
+     * @throws Exception Description of the Exception
      */
     public void testSpoolEvent()
         throws Exception

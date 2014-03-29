@@ -102,7 +102,7 @@ public class LateralCacheJGListener
      *
      * @param id
      *            The new listenerId value
-     * @exception IOException
+     * @throws IOException
      */
     public void setListenerId( long id )
         throws IOException
@@ -118,7 +118,7 @@ public class LateralCacheJGListener
      * Gets the listenerId attribute of the LateralCacheJGListener object
      *
      * @return The listenerId value
-     * @exception IOException
+     * @throws IOException
      */
     public long getListenerId()
         throws IOException
@@ -169,7 +169,7 @@ public class LateralCacheJGListener
     /**
      * @param element
      * @param cb
-     * @exception IOException
+     * @throws IOException
      */
     public void handlePut( ICacheElement<K, V> element )
         throws IOException
@@ -197,7 +197,7 @@ public class LateralCacheJGListener
      *
      * @param cacheName
      * @param key
-     * @exception IOException
+     * @throws IOException
      */
     public void handleRemove( String cacheName, K key )
         throws IOException
@@ -214,7 +214,7 @@ public class LateralCacheJGListener
      * Description of the Method
      *
      * @param cacheName
-     * @exception IOException
+     * @throws IOException
      */
     public void handleRemoveAll( String cacheName )
         throws IOException
@@ -234,7 +234,7 @@ public class LateralCacheJGListener
      * @return
      * @param cacheName
      * @param key
-     * @exception IOException
+     * @throws IOException
      */
     public Serializable handleGet( String cacheName, K key )
         throws IOException
@@ -251,7 +251,7 @@ public class LateralCacheJGListener
      * Description of the Method
      *
      * @param cacheName
-     * @exception IOException
+     * @throws IOException
      */
     public void handleDispose( String cacheName )
         throws IOException

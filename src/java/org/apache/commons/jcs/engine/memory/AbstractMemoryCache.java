@@ -120,7 +120,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @param key Identifies item to be removed
      * @return Description of the Return Value
-     * @exception IOException Description of the Exception
+     * @throws IOException Description of the Exception
      */
     public abstract boolean remove( K key )
         throws IOException;
@@ -130,7 +130,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @param key Description of the Parameter
      * @return Description of the Return Value
-     * @exception IOException Description of the Exception
+     * @throws IOException Description of the Exception
      */
     public abstract ICacheElement<K, V> get( K key )
         throws IOException;
@@ -170,7 +170,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @param key Identifies item to find
      * @return Element matching key if found, or null
-     * @exception IOException
+     * @throws IOException
      */
     public ICacheElement<K, V> getQuiet( K key )
         throws IOException
@@ -199,7 +199,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * Puts an item to the cache.
      * <p>
      * @param ce Description of the Parameter
-     * @exception IOException Description of the Exception
+     * @throws IOException Description of the Exception
      */
     public abstract void update( ICacheElement<K, V> ce )
         throws IOException;
@@ -214,7 +214,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     /**
      * Removes all cached items from the cache.
      * <p>
-     * @exception IOException
+     * @throws IOException
      */
     public void removeAll()
         throws IOException
@@ -225,7 +225,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     /**
      * Prepares for shutdown.
      * <p>
-     * @exception IOException
+     * @throws IOException
      */
     public void dispose()
         throws IOException
@@ -280,7 +280,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * Puts an item to the cache.
      * <p>
      * @param ce
-     * @exception IOException
+     * @throws IOException
      */
     public void waterfal( ICacheElement<K, V> ce )
         throws IOException

@@ -57,7 +57,7 @@ public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheOb
      * Constructor for the LateralUDPService object
      *
      * @param lca
-     * @exception IOException
+     * @throws IOException
      */
     public LateralUDPService( ILateralCacheAttributes lca )
         throws IOException

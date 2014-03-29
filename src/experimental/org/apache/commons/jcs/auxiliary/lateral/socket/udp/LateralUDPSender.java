@@ -62,7 +62,7 @@ public class LateralUDPSender
      * Constructor for the LateralUDPSender object
      *
      * @param lca
-     * @exception IOException
+     * @throws IOException
      */
     public LateralUDPSender( ILateralCacheAttributes lca )
         throws IOException

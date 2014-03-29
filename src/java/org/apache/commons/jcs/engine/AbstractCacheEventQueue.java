@@ -137,7 +137,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * listener.
      * <p>
      * @param ce The feature to be added to the PutEvent attribute
-     * @exception IOException
+     * @throws IOException
      */
     public synchronized void addPutEvent( ICacheElement<K, V> ce )
         throws IOException
@@ -160,7 +160,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * called for the key.
      * <p>
      * @param key The feature to be added to the RemoveEvent attribute
-     * @exception IOException
+     * @throws IOException
      */
     public synchronized void addRemoveEvent( K key )
         throws IOException
@@ -182,7 +182,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * This adds a remove all event to the queue. When it is processed, all elements will be removed
      * from the cache.
      * <p>
-     * @exception IOException
+     * @throws IOException
      */
     public synchronized void addRemoveAllEvent()
         throws IOException
@@ -201,7 +201,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
     }
 
     /**
-     * @exception IOException
+     * @throws IOException
      */
     public synchronized void addDisposeEvent()
         throws IOException
@@ -243,7 +243,6 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * Retries before declaring failure.
      * <p>
      * @author asmuts
-     * @created January 15, 2002
      */
     protected abstract class AbstractCacheEvent
         implements Runnable
@@ -301,7 +300,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         }
 
         /**
-         * @exception IOException
+         * @throws IOException
          */
         protected abstract void doRun()
             throws IOException;
@@ -311,7 +310,6 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * An element should be put in the cache.
      * <p>
      * @author asmuts
-     * @created January 15, 2002
      */
     protected class PutEvent
         extends AbstractCacheEvent
@@ -323,7 +321,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
          * Constructor for the PutEvent object.
          * <p>
          * @param ice
-         * @exception IOException
+         * @throws IOException
          */
         PutEvent( ICacheElement<K, V> ice )
             throws IOException
@@ -334,7 +332,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         /**
          * Call put on the listener.
          * <p>
-         * @exception IOException
+         * @throws IOException
          */
         @Override
         protected void doRun()
@@ -361,7 +359,6 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * An element should be removed from the cache.
      * <p>
      * @author asmuts
-     * @created January 15, 2002
      */
     protected class RemoveEvent
         extends AbstractCacheEvent
@@ -373,7 +370,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
          * Constructor for the RemoveEvent object
          * <p>
          * @param key
-         * @exception IOException
+         * @throws IOException
          */
         RemoveEvent( K key )
             throws IOException
@@ -384,7 +381,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         /**
          * Call remove on the listener.
          * <p>
-         * @exception IOException
+         * @throws IOException
          */
         @Override
         protected void doRun()
@@ -410,7 +407,6 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * All elements should be removed from the cache when this event is processed.
      * <p>
      * @author asmuts
-     * @created January 15, 2002
      */
     protected class RemoveAllEvent
         extends AbstractCacheEvent
@@ -418,7 +414,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         /**
          * Call removeAll on the listener.
          * <p>
-         * @exception IOException
+         * @throws IOException
          */
         @Override
         protected void doRun()
@@ -444,7 +440,6 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * The cache should be disposed when this event is processed.
      * <p>
      * @author asmuts
-     * @created January 15, 2002
      */
     protected class DisposeEvent
         extends AbstractCacheEvent
@@ -452,7 +447,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         /**
          * Called when gets to the end of the queue
          * <p>
-         * @exception IOException
+         * @throws IOException
          */
         @Override
         protected void doRun()

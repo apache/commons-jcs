@@ -393,7 +393,7 @@ public class RemoteCacheServerFactory
      * <p>
      * @param host
      * @param port
-     * @exception IOException
+     * @throws IOException
      */
     static void shutdownImpl( String host, int port )
         throws IOException

@@ -76,9 +76,9 @@ public class RemoteCacheClientTester
     /**
      * Constructor for the RemoteCacheClientTest object
      * @param count
-     * @exception MalformedURLException
-     * @exception NotBoundException
-     * @exception IOException
+     * @throws MalformedURLException
+     * @throws NotBoundException
+     * @throws IOException
      */
     public RemoteCacheClientTester( int count )
         throws MalformedURLException, NotBoundException, IOException
@@ -92,9 +92,9 @@ public class RemoteCacheClientTester
      * @param write
      * @param read
      * @param delete
-     * @exception MalformedURLException
-     * @exception NotBoundException
-     * @exception IOException
+     * @throws MalformedURLException
+     * @throws NotBoundException
+     * @throws IOException
      */
     public RemoteCacheClientTester( int count, boolean write, boolean read, boolean delete )
         throws MalformedURLException, NotBoundException, IOException
@@ -110,9 +110,9 @@ public class RemoteCacheClientTester
      * @param write
      * @param read
      * @param delete
-     * @exception MalformedURLException
-     * @exception NotBoundException
-     * @exception IOException
+     * @throws MalformedURLException
+     * @throws NotBoundException
+     * @throws IOException
      */
     @SuppressWarnings("unchecked")
     public RemoteCacheClientTester( String host, int port, int count, boolean write, boolean read, boolean delete )

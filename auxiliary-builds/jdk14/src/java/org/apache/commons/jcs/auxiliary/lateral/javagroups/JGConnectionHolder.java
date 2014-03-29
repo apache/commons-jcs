@@ -99,7 +99,7 @@ public class JGConnectionHolder
      * Creates a channel.
      *
      * @return channel
-     * @exception IOException
+     * @throws IOException
      */
     public synchronized Channel getChannel()
         throws IOException
@@ -124,7 +124,7 @@ public class JGConnectionHolder
      * Gets the Dispatcher attribute of the JGConnectionHolder object
      *
      * @return The Dispatcher value
-     * @exception IOException
+     * @throws IOException
      */
     public synchronized RpcDispatcher getDispatcher()
         throws IOException

@@ -44,7 +44,7 @@ public class MRUMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param ce
      * @return MemoryElementDescriptor the new node
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     protected MemoryElementDescriptor<K, V> adjustListForUpdate( ICacheElement<K, V> ce )

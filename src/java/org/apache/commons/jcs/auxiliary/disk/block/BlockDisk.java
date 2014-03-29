@@ -86,7 +86,7 @@ public class BlockDisk
      * <p>
      * @param file
      * @param elementSerializer
-     * @exception FileNotFoundException
+     * @throws FileNotFoundException
      */
     public BlockDisk( File file, IElementSerializer elementSerializer )
         throws FileNotFoundException
@@ -413,7 +413,7 @@ public class BlockDisk
      * Returns the file length.
      * <p>
      * @return the size of the file.
-     * @exception IOException
+     * @throws IOException
      */
     protected long length()
         throws IOException
@@ -424,7 +424,7 @@ public class BlockDisk
     /**
      * Closes the file.
      * <p>
-     * @exception IOException
+     * @throws IOException
      */
     protected void close()
         throws IOException
@@ -435,7 +435,7 @@ public class BlockDisk
     /**
      * Resets the file.
      * <p>
-     * @exception IOException
+     * @throws IOException
      */
     protected synchronized void reset()
         throws IOException

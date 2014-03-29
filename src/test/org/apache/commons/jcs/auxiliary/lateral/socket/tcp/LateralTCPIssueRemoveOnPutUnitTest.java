@@ -121,7 +121,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
      * @param range
      * @param numOps
      * @param testNum
-     * @exception Exception If an error occurs
+     * @throws Exception If an error occurs
      */
     public void runTestForRegion( String region, int range, int numOps, int testNum )
         throws Exception

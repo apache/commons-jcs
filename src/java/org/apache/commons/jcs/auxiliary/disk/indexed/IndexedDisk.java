@@ -55,7 +55,7 @@ class IndexedDisk
      * <p>
      * @param file
      * @param elementSerializer
-     * @exception FileNotFoundException
+     * @throws FileNotFoundException
      */
     public IndexedDisk( File file, IElementSerializer elementSerializer )
         throws FileNotFoundException
@@ -219,7 +219,7 @@ class IndexedDisk
      * Returns the raf length.
      * <p>
      * @return the length of the file.
-     * @exception IOException
+     * @throws IOException
      */
     protected long length()
         throws IOException
@@ -230,7 +230,7 @@ class IndexedDisk
     /**
      * Closes the raf.
      * <p>
-     * @exception IOException
+     * @throws IOException
      */
     protected void close()
         throws IOException
@@ -241,7 +241,7 @@ class IndexedDisk
     /**
      * Sets the raf to empty.
      * <p>
-     * @exception IOException
+     * @throws IOException
      */
     protected synchronized void reset()
         throws IOException

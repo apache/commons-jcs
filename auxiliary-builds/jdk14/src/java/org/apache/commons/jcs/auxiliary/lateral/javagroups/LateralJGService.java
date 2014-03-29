@@ -55,7 +55,7 @@ public class LateralJGService
      * Constructor for the LateralJGService object
      *
      * @param lca
-     * @exception IOException
+     * @throws IOException
      */
     public LateralJGService( ILateralCacheAttributes lca )
         throws IOException
@@ -83,7 +83,7 @@ public class LateralJGService
 
     /**
      * @param item
-     * @exception IOException
+     * @throws IOException
      */
     public void update( ICacheElement<K, V> item )
         throws IOException
@@ -94,7 +94,7 @@ public class LateralJGService
     /**
      * @param item
      * @param requesterId
-     * @exception IOException
+     * @throws IOException
      */
     public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
@@ -108,7 +108,7 @@ public class LateralJGService
     /**
      * @param cacheName
      * @param key
-     * @exception IOException
+     * @throws IOException
      */
     public void remove( String cacheName, K key )
         throws IOException
@@ -120,7 +120,7 @@ public class LateralJGService
      * @param cacheName
      * @param key
      * @param requesterId
-     * @exception IOException
+     * @throws IOException
      */
     public void remove( String cacheName, K key, long requesterId )
         throws IOException
@@ -133,7 +133,7 @@ public class LateralJGService
     }
 
     /**
-     * @exception IOException
+     * @throws IOException
      */
     public void release()
         throws IOException
@@ -145,7 +145,7 @@ public class LateralJGService
      * Will close the connection.
      *
      * @param cache
-     * @exception IOException
+     * @throws IOException
      */
     public void dispose( String cache )
         throws IOException
@@ -157,7 +157,7 @@ public class LateralJGService
      * @return
      * @param cacheName
      * @param key
-     * @exception IOException
+     * @throws IOException
      */
     public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
@@ -174,7 +174,7 @@ public class LateralJGService
 
     /**
      * @param cacheName
-     * @exception IOException
+     * @throws IOException
      */
     public void removeAll( String cacheName )
         throws IOException
@@ -185,7 +185,7 @@ public class LateralJGService
     /**
      * @param cacheName
      * @param requesterId
-     * @exception IOException
+     * @throws IOException
      */
     public void removeAll( String cacheName, long requesterId )
         throws IOException
@@ -249,7 +249,7 @@ public class LateralJGService
      *            The feature to be added to the CacheListener attribute
      * @param obj
      *            The feature to be added to the CacheListener attribute
-     * @exception IOException
+     * @throws IOException
      */
     public void addCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -260,7 +260,7 @@ public class LateralJGService
     /**
      * @param obj
      *            The feature to be added to the CacheListener attribute
-     * @exception IOException
+     * @throws IOException
      */
     public void addCacheListener( ICacheListener obj )
         throws IOException
@@ -271,7 +271,7 @@ public class LateralJGService
     /**
      * @param cacheName
      * @param obj
-     * @exception IOException
+     * @throws IOException
      */
     public void removeCacheListener( String cacheName, ICacheListener obj )
         throws IOException
@@ -281,7 +281,7 @@ public class LateralJGService
 
     /**
      * @param obj
-     * @exception IOException
+     * @throws IOException
      */
     public void removeCacheListener( ICacheListener obj )
         throws IOException

@@ -84,7 +84,7 @@ public abstract class LateralCacheAbstractManager
      *            The feature to be added to the LateralCacheListener attribute
      * @param listener
      *            The feature to be added to the LateralCacheListener attribute
-     * @exception IOException
+     * @throws IOException
      */
     public <K extends Serializable, V extends Serializable> void addLateralCacheListener( String cacheName, ILateralCacheListener<K, V> listener )
         throws IOException

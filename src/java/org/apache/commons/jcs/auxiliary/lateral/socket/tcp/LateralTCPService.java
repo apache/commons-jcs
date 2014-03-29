@@ -62,7 +62,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * Constructor for the LateralTCPService object
      * <p>
      * @param lca ITCPLateralCacheAttributes
-     * @exception IOException
+     * @throws IOException
      */
     public LateralTCPService( ITCPLateralCacheAttributes lca )
         throws IOException
@@ -105,7 +105,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * remove. Either way, we create a lateral element descriptor, which is essentially a JCS TCP
      * packet. It describes what operation the receiver should take when it gets the packet.
      * <p>
-     * @see org.apache.commons.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal#update(org.apache.commons.jcs.engine.behavior.ICacheElement,
+     * @see org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal#update(org.apache.commons.jcs.engine.behavior.ICacheElement,
      *      long)
      */
     public void update( ICacheElement<K, V> item, long requesterId )
@@ -162,7 +162,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
     /**
      * Wraps the key in a LateralElementDescriptor.
      * <p>
-     * @see org.apache.commons.jcs.auxiliary.lateral.behavior.ICacheServiceNonLocal#remove(java.lang.String,
+     * @see org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal#remove(java.lang.String,
      *      java.io.Serializable, long)
      */
     public void remove( String cacheName, K key, long requesterId )

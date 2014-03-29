@@ -58,7 +58,7 @@ public abstract class JCS
      * <p>
      * @param name Name that will identify the region
      * @return CacheAccess instance for the new region
-     * @exception CacheException
+     * @throws CacheException
      */
     public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name )
         throws CacheException
@@ -73,7 +73,7 @@ public abstract class JCS
      * @param name Name that will identify the region
      * @param cattr CompositeCacheAttributes for the region
      * @return CacheAccess instance for the new region
-     * @exception CacheException
+     * @throws CacheException
      */
     public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr )
         throws CacheException
@@ -90,7 +90,7 @@ public abstract class JCS
      * @param cattr CompositeCacheAttributes for the region
      * @param attr Attributes for the region
      * @return CacheAccess instance for the new region
-     * @exception CacheException
+     * @throws CacheException
      */
     public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> defineRegion( String name, ICompositeCacheAttributes cattr, IElementAttributes attr )
         throws CacheException
@@ -158,7 +158,7 @@ public abstract class JCS
      * <p>
      * @param region Region that return CacheAccess will provide access to
      * @return A CacheAccess which provides access to a given region.
-     * @exception CacheException
+     * @throws CacheException
      */
     public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> getInstance( String region )
         throws CacheException
@@ -173,7 +173,7 @@ public abstract class JCS
      * @param region Region that return CacheAccess will provide access to
      * @param icca CacheAttributes for region
      * @return A CacheAccess which provides access to a given region.
-     * @exception CacheException
+     * @throws CacheException
      */
     public static <K extends Serializable, V extends Serializable> CacheAccess<K, V> getInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException
@@ -187,7 +187,7 @@ public abstract class JCS
      * <p>
      * @param region Region that return GroupCacheAccess will provide access to
      * @return A GroupCacheAccess which provides access to a given region.
-     * @exception CacheException
+     * @throws CacheException
      */
     public static <K extends Serializable, V extends Serializable> GroupCacheAccess<K, V> getGroupCacheInstance( String region )
         throws CacheException
@@ -202,7 +202,7 @@ public abstract class JCS
      * @param region Region that return GroupCacheAccess will provide access to
      * @param icca CacheAttributes for region
      * @return A GroupCacheAccess which provides access to a given region.
-     * @exception CacheException
+     * @throws CacheException
      */
     public static <K extends Serializable, V extends Serializable> GroupCacheAccess<K, V> getGroupCacheInstance( String region, ICompositeCacheAttributes icca )
         throws CacheException

@@ -379,7 +379,7 @@ public class ElementEventQueue
         /**
          * This will do the work or trigger the work to be done.
          * <p>
-         * @exception IOException
+         * @throws IOException
          */
         protected abstract void doRun()
             throws IOException;
@@ -402,7 +402,7 @@ public class ElementEventQueue
          * <p>
          * @param hand
          * @param event
-         * @exception IOException
+         * @throws IOException
          */
         ElementEventRunner( IElementEventHandler hand, IElementEvent event )
             throws IOException
@@ -418,7 +418,7 @@ public class ElementEventQueue
         /**
          * Tells the handler to handle the event.
          * <p>
-         * @exception IOException
+         * @throws IOException
          */
         @Override
         protected void doRun()

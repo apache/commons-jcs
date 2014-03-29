@@ -80,7 +80,7 @@ public class LateralTCPFilterRemoveHashCodeUnitTest
      * @param numOps
      * @param testNum
      *
-     * @exception Exception
+     * @throws Exception
      *                If an error occurs
      */
     public void runTestForRegion( String region, int numOps, int testNum )

@@ -122,7 +122,7 @@ public class IndexedDiskCacheNoMemoryUnitTest
      * @param region
      *            Name of the region to access
      *
-     * @exception Exception
+     * @throws Exception
      *                If an error occurs
      */
     public void runTestForRegion( String region )

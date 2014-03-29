@@ -157,7 +157,7 @@ public class IndexedDiskCacheSameRegionConcurrentUnitTest
      * @param start
      * @param end
      *
-     * @exception Exception
+     * @throws Exception
      *                If an error occurs
      */
     public void runTestForRegion( String region, int start, int end )

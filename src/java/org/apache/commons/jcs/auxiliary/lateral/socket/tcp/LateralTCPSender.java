@@ -69,7 +69,7 @@ public class LateralTCPSender
      * Constructor for the LateralTCPSender object.
      * <p>
      * @param lca
-     * @exception IOException
+     * @throws IOException
      */
     public LateralTCPSender( ITCPLateralCacheAttributes lca )
         throws IOException

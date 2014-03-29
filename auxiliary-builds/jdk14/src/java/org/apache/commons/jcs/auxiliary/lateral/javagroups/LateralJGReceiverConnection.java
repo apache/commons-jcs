@@ -125,7 +125,7 @@ public class LateralJGReceiverConnection
      * @return The {3} value
      * @param cacheName
      * @param key
-     * @exception Exception
+     * @throws Exception
      */
     private Serializable getAndRespond( String cacheName, K key )
         throws Exception

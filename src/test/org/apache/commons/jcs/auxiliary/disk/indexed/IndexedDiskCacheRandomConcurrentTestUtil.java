@@ -53,7 +53,7 @@ public class IndexedDiskCacheRandomConcurrentTestUtil
      * @param numOps
      * @param testNum
      *
-     * @exception Exception
+     * @throws Exception
      *                If an error occurs
      */
     public void runTestForRegion( String region, int range, int numOps, int testNum )

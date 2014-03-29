@@ -49,7 +49,7 @@ public class SortedPrefArrayUnitTest
     }
 
     /**
-     * @exception Exception
+     * @throws Exception
      */
     public void testLargePref()
         throws Exception
@@ -298,7 +298,7 @@ public class SortedPrefArrayUnitTest
 
     /**
      * Test taking the largest item.
-     * @exception Exception
+     * @throws Exception
      */
     public void testTakeLargestItem()
         throws Exception
@@ -337,7 +337,7 @@ public class SortedPrefArrayUnitTest
     /**
      * Test taking every last item.
      * <p>
-     * @exception Exception
+     * @throws Exception
      */
     public void testTakeEveryLastItem()
         throws Exception

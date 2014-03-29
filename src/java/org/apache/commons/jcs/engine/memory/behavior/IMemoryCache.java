@@ -76,7 +76,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * Get a set of the keys for all elements in the memory cache.
      * <p>
      * @return a set of the key type
-     * @TODO This should probably be done in chunks with a range passed in. This
+     * TODO This should probably be done in chunks with a range passed in. This
      *       will be a problem if someone puts a 1,000,000 or so items in a
      *       region.
      */
@@ -88,7 +88,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * @param key
      *            Identifies item to be removed
      * @return Description of the Return Value
-     * @exception IOException
+     * @throws IOException
      *                Description of the Exception
      */
     boolean remove( K key )
@@ -97,7 +97,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
     /**
      * Removes all cached items from the cache.
      * <p>
-     * @exception IOException
+     * @throws IOException
      *                Description of the Exception
      */
     void removeAll()
@@ -123,7 +123,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * @param key
      *            Description of the Parameter
      * @return Description of the Return Value
-     * @exception IOException
+     * @throws IOException
      *                Description of the Exception
      */
     ICacheElement<K, V> get( K key )
@@ -147,7 +147,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * @param key
      *            Description of the Parameter
      * @return The quiet value
-     * @exception IOException
+     * @throws IOException
      *                Description of the Exception
      */
     ICacheElement<K, V> getQuiet( K key )
@@ -158,7 +158,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param ce
      *            Description of the Parameter
-     * @exception IOException
+     * @throws IOException
      *                Description of the Exception
      */
     void waterfal( ICacheElement<K, V> ce )
@@ -169,7 +169,7 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param ce
      *            Description of the Parameter
-     * @exception IOException
+     * @throws IOException
      *                Description of the Exception
      */
     void update( ICacheElement<K, V> ce )

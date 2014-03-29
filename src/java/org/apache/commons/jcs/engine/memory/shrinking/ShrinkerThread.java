@@ -107,7 +107,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
      * the element attributes? If so, remove it. If there are event listeners registered for the
      * cache element, they will be called.</li>
      * </ol>
-     * @todo Change element event handling to use the queue, then move the queue to the region and
+     * TODO Change element event handling to use the queue, then move the queue to the region and
      *       access via the Cache.
      */
     protected void shrink()

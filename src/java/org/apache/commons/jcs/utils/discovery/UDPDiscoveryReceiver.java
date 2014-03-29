@@ -78,7 +78,7 @@ public class UDPDiscoveryReceiver
      * @param service
      * @param multicastAddressString
      * @param multicastPort
-     * @exception IOException
+     * @throws IOException
      */
     public UDPDiscoveryReceiver( UDPDiscoveryService service, String multicastAddressString, int multicastPort )
         throws IOException

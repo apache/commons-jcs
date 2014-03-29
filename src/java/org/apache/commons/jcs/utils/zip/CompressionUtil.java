@@ -110,7 +110,7 @@ public final class CompressionUtil
      * <p>
      * @param input byte array
      * @return compressed byte array
-     * @exception IOException thrown if we can't close the output stream
+     * @throws IOException thrown if we can't close the output stream
      */
     public static byte[] compressByteArray( byte[] input )
         throws IOException
@@ -124,7 +124,7 @@ public final class CompressionUtil
      * @param input byte array
      * @param bufferLength buffer length
      * @return compressed byte array
-     * @exception IOException thrown if we can't close the output stream
+     * @throws IOException thrown if we can't close the output stream
      */
     public static byte[] compressByteArray( byte[] input, int bufferLength )
         throws IOException

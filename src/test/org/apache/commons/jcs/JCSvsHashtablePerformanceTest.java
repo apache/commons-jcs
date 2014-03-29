@@ -73,7 +73,7 @@ public class JCSvsHashtablePerformanceTest
 
     /**
      * A unit test for JUnit
-     * @exception Exception Description of the Exception
+     * @throws Exception Description of the Exception
      */
     public void testSimpleLoad()
         throws Exception

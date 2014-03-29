@@ -101,7 +101,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
      * If the max size is reached, an element will be put to disk.
      * <p>
      * @param ce The cache element, or entry wrapper
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public final void update( ICacheElement<K, V> ce )
@@ -187,7 +187,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
      * <p>
      * @param key Identifies item to find
      * @return ICacheElement<K, V> if found, else null
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public final synchronized ICacheElement<K, V> get( K key )
@@ -320,7 +320,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
      * <p>
      * @param key
      * @return true if the removal was successful
-     * @exception IOException
+     * @throws IOException
      */
     @Override
     public synchronized boolean remove( K key )
@@ -713,7 +713,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
      * This returns semi-structured information on the memory cache, such as the size, put count,
      * hit count, and miss count.
      * <p>
-     * @see org.apache.commons.jcs.engine.memory.IMemoryCache#getStatistics()
+     * @see org.apache.commons.jcs.engine.memory.behavior.IMemoryCache#getStatistics()
      */
     @Override
     public synchronized IStats getStatistics()
