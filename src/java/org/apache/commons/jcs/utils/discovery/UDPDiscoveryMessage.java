@@ -31,24 +31,27 @@ public class UDPDiscoveryMessage
     /** Don't change */
     private static final long serialVersionUID = -5332377899560951793L;
 
-    /**
-     * This is the periodic broadcast of a servers location. This type of message is also sent in
-     * response to a REQUEST_BROADCAST.
-     */
-    public static final int PASSIVE_BROADCAST = 0;
+    public enum BroadcastType
+    {
+        /**
+         * This is the periodic broadcast of a servers location. This type of message is also sent in
+         * response to a REQUEST_BROADCAST.
+         */
+        PASSIVE,
 
-    /**
-     * This asks recipients to broadcast their location. This is used on startup.
-     */
-    public static final int REQUEST_BROADCAST = 1;
+        /**
+         * This asks recipients to broadcast their location. This is used on startup.
+         */
+        REQUEST,
 
-    /**
-     * This message instructs the receiver to remove this service from its list.
-     */
-    public static final int REMOVE_BROADCAST = 2;
+        /**
+         * This message instructs the receiver to remove this service from its list.
+         */
+        REMOVE
+    }
 
     /** The message type */
-    private int messageType = PASSIVE_BROADCAST;
+    private BroadcastType messageType = BroadcastType.PASSIVE;
 
     /** udp port */
     private int port = 6789;
@@ -56,7 +59,7 @@ public class UDPDiscoveryMessage
     /** UDP host */
     private String host = "228.5.6.7";
 
-    /** Id of the requestor, allows self-filtration */
+    /** Id of the requester, allows self-filtration */
     private long requesterId;
 
     /** Names of regions */
@@ -113,7 +116,7 @@ public class UDPDiscoveryMessage
     /**
      * @param messageType The messageType to set.
      */
-    public void setMessageType( int messageType )
+    public void setMessageType( BroadcastType messageType )
     {
         this.messageType = messageType;
     }
@@ -121,7 +124,7 @@ public class UDPDiscoveryMessage
     /**
      * @return Returns the messageType.
      */
-    public int getMessageType()
+    public BroadcastType getMessageType()
     {
         return messageType;
     }

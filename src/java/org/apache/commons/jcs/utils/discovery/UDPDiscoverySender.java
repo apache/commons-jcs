@@ -26,6 +26,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.ArrayList;
 
+import org.apache.commons.jcs.engine.CacheInfo;
+import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -180,8 +182,8 @@ public class UDPDiscoverySender
         }
 
         UDPDiscoveryMessage message = new UDPDiscoveryMessage();
-        message.setRequesterId( UDPDiscoveryInfo.listenerId );
-        message.setMessageType( UDPDiscoveryMessage.REQUEST_BROADCAST );
+        message.setRequesterId( CacheInfo.listenerId );
+        message.setMessageType( BroadcastType.REQUEST );
         send( message );
     }
 
@@ -197,7 +199,7 @@ public class UDPDiscoverySender
     public void passiveBroadcast( String host, int port, ArrayList<String> cacheNames )
         throws IOException
     {
-        passiveBroadcast( host, port, cacheNames, UDPDiscoveryInfo.listenerId );
+        passiveBroadcast( host, port, cacheNames, CacheInfo.listenerId );
     }
 
     /**
@@ -222,7 +224,7 @@ public class UDPDiscoverySender
         message.setPort( port );
         message.setCacheNames( cacheNames );
         message.setRequesterId( listenerId );
-        message.setMessageType( UDPDiscoveryMessage.PASSIVE_BROADCAST );
+        message.setMessageType( BroadcastType.PASSIVE );
         send( message );
     }
 
@@ -239,7 +241,7 @@ public class UDPDiscoverySender
     public void removeBroadcast( String host, int port, ArrayList<String> cacheNames )
         throws IOException
     {
-        removeBroadcast( host, port, cacheNames, UDPDiscoveryInfo.listenerId );
+        removeBroadcast( host, port, cacheNames, CacheInfo.listenerId );
     }
 
     /**
@@ -264,7 +266,7 @@ public class UDPDiscoverySender
         message.setPort( port );
         message.setCacheNames( cacheNames );
         message.setRequesterId( listenerId );
-        message.setMessageType( UDPDiscoveryMessage.REMOVE_BROADCAST );
+        message.setMessageType( BroadcastType.REMOVE );
         send( message );
     }
 }

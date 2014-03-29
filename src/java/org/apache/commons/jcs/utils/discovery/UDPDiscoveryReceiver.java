@@ -29,7 +29,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -287,7 +289,7 @@ public class UDPDiscoveryReceiver
         public void run()
         {
             // consider comparing ports here instead.
-            if ( message.getRequesterId() == UDPDiscoveryInfo.listenerId )
+            if ( message.getRequesterId() == CacheInfo.listenerId )
             {
                 if ( log.isDebugEnabled() )
                 {
@@ -329,16 +331,16 @@ public class UDPDiscoveryReceiver
 
             // if this is a request message, have the service handle it and
             // return
-            if ( message.getMessageType() == UDPDiscoveryMessage.REQUEST_BROADCAST )
+            if ( message.getMessageType() == BroadcastType.REQUEST )
             {
                 if ( log.isDebugEnabled() )
                 {
-                    log.debug( "Message is a Request Broadcase, will have the service handle it." );
+                    log.debug( "Message is a Request Broadcast, will have the service handle it." );
                 }
                 service.serviceRequestBroadcast();
                 return;
             }
-            else if ( message.getMessageType() == UDPDiscoveryMessage.REMOVE_BROADCAST )
+            else if ( message.getMessageType() == BroadcastType.REMOVE )
             {
                 if ( log.isDebugEnabled() )
                 {

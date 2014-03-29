@@ -20,10 +20,11 @@ package org.apache.commons.jcs.utils.key;
  */
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.jcs.utils.date.DateFormatter;
+import org.apache.commons.jcs.utils.net.AddressUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -48,7 +49,7 @@ public final class KeyGeneratorUtil
     private static final long DEFAULT_COUNTER_RESET_INTERVAL_MILLIS = 2 * 60 * 60 * 1000;
 
     /** How often should we reset the counter. */
-    protected static long counterResetIntervalMillis = DEFAULT_COUNTER_RESET_INTERVAL_MILLIS;
+    static long counterResetIntervalMillis = DEFAULT_COUNTER_RESET_INTERVAL_MILLIS;
 
     /** The size of the data portion. */
     private static final int LENGTH_OF_DATE_STRING = 8;
@@ -63,7 +64,10 @@ public final class KeyGeneratorUtil
     public static final int DEFAULT_LEAD_NUMBER = 3;
 
     /** We lead with a number so it can be converted to a number. This is the prefix to all ids. */
-    protected static int leadNumber = DEFAULT_LEAD_NUMBER;
+    static int leadNumber = DEFAULT_LEAD_NUMBER;
+
+    /** DDDHHmm */
+    static final String dddHHmmFormat = "DDDHHmm";
 
     static
     {
@@ -102,8 +106,9 @@ public final class KeyGeneratorUtil
         int counter = getNextRequestCounter();
 
         Date d = new Date();
-        String dateString = DateFormatter.getDddHHmm( d );
-        String finalOctetOfIp = org.apache.commons.jcs.utils.net.AddressUtil.obtainFinalThreeDigitsOfAddressAsString();
+        SimpleDateFormat sdf = new SimpleDateFormat(dddHHmmFormat);
+        String dateString = sdf.format( d );
+        String finalOctetOfIp = AddressUtil.obtainFinalThreeDigitsOfAddressAsString();
         String queryId = leadNumber + dateString + finalOctetOfIp + counter;
         return queryId;
     }
