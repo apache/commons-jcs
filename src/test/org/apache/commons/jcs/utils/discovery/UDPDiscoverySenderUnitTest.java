@@ -23,6 +23,8 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+
 /**
  * Tests for the sender.
  */
@@ -100,7 +102,7 @@ public class UDPDiscoverySenderUnitTest
         // disabled test because of JCS-89
         // assertEquals( "wrong host", SENDING_HOST, msg.getHost() );
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
-        assertEquals( "wrong message type", UDPDiscoveryMessage.PASSIVE_BROADCAST, msg.getMessageType() );
+        assertEquals( "wrong message type", BroadcastType.PASSIVE, msg.getMessageType() );
     }
 
     /**
@@ -127,7 +129,7 @@ public class UDPDiscoverySenderUnitTest
         // disabled test because of JCS-89
         // assertEquals( "wrong host", SENDING_HOST, msg.getHost() );
         assertEquals( "wrong port", SENDING_PORT, msg.getPort() );
-        assertEquals( "wrong message type", UDPDiscoveryMessage.REMOVE_BROADCAST, msg.getMessageType() );
+        assertEquals( "wrong message type", BroadcastType.REMOVE, msg.getMessageType() );
     }
 
     /**
@@ -148,6 +150,6 @@ public class UDPDiscoverySenderUnitTest
         assertTrue( "unexpected crap received", obj instanceof UDPDiscoveryMessage );
 
         UDPDiscoveryMessage msg = (UDPDiscoveryMessage) obj;
-        assertEquals( "wrong message type", UDPDiscoveryMessage.REQUEST_BROADCAST, msg.getMessageType() );
+        assertEquals( "wrong message type", BroadcastType.REQUEST, msg.getMessageType() );
     }
 }

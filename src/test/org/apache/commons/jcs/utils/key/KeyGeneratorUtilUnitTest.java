@@ -20,12 +20,12 @@ package org.apache.commons.jcs.utils.key;
  */
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.utils.date.DateFormatter;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**
@@ -34,6 +34,12 @@ import org.apache.commons.jcs.utils.timing.SleepUtil;
 public class KeyGeneratorUtilUnitTest
     extends TestCase
 {
+    private String getDddHHmm( Date d )
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat(KeyGeneratorUtil.dddHHmmFormat);
+        return sdf.format( d );
+    }
+
     /**
      * Creates a query id. Verify that we lead with the system lead.
      */
@@ -44,7 +50,7 @@ public class KeyGeneratorUtilUnitTest
         System.setProperty( KeyGeneratorUtil.KEY_LEAD_NUMBER_PROPERTY_NAME, lead );
         // have to force this since it might have already been loaded.
         KeyGeneratorUtil.setLeadFromSystemProperty();
-        String expectedDate = DateFormatter.getDddHHmm( new Date() );
+        String expectedDate = getDddHHmm( new Date() );
 
         // DO WORK
         String result = KeyGeneratorUtil.generateRequestId();
@@ -66,7 +72,7 @@ public class KeyGeneratorUtilUnitTest
         System.setProperty( KeyGeneratorUtil.KEY_LEAD_NUMBER_PROPERTY_NAME, lead );
         // have to force this since it might have already been loaded.
         KeyGeneratorUtil.setLeadFromSystemProperty();
-        String expectedDate = DateFormatter.getDddHHmm( new Date() );
+        String expectedDate = getDddHHmm( new Date() );
 
         // DO WORK
         String result = KeyGeneratorUtil.generateRequestId();
@@ -83,7 +89,7 @@ public class KeyGeneratorUtilUnitTest
     public void testGetQueryId()
     {
         // SETUP
-        String expectedDate = DateFormatter.getDddHHmm( new Date() );
+        String expectedDate = getDddHHmm( new Date() );
 
         // DO WORK
         String result = KeyGeneratorUtil.generateRequestId();
@@ -102,7 +108,7 @@ public class KeyGeneratorUtilUnitTest
         cal.set( Calendar.HOUR_OF_DAY, 13 );
         cal.set( Calendar.MINUTE, 59 );
 
-        String inputDate = DateFormatter.getDddHHmm( cal.getTime() );
+        String inputDate = getDddHHmm( cal.getTime() );
 
         // DO WORK
         try
@@ -132,7 +138,7 @@ public class KeyGeneratorUtilUnitTest
         cal.set( Calendar.HOUR_OF_DAY, 13 );
         cal.set( Calendar.MINUTE, 59 );
 
-        String inputDate = DateFormatter.getDddHHmm( cal.getTime() );
+        String inputDate = getDddHHmm( cal.getTime() );
 
         // DO WORK
         try
