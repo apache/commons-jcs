@@ -19,6 +19,8 @@ package org.apache.commons.jcs.auxiliary.disk.behavior;
  * under the License.
  */
 
+import java.io.File;
+
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 
 /**
@@ -32,7 +34,7 @@ public interface IDiskCacheAttributes
      * items to be spooled are temporarily stored. It basically provides access
      * to items on the to-be-spooled queue.
      */
-    int MAX_PURGATORY_SIZE_DEFUALT = 5000;
+    int MAX_PURGATORY_SIZE_DEFAULT = 5000;
 
     /**
      * Sets the diskPath attribute of the IJISPCacheAttributes object
@@ -47,7 +49,7 @@ public interface IDiskCacheAttributes
      * <p>
      * @return The diskPath value
      */
-    String getDiskPath();
+    File getDiskPath();
 
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object

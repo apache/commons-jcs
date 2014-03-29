@@ -100,12 +100,11 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
     private boolean initializeFileSystem( FileDiskCacheAttributes cattr )
     {
         // TODO, we might need to make this configurable
-        String rootDirName = cattr.getDiskPath() + "/" + cattr.getCacheName();
-        this.setDirectory( new File( rootDirName ) );
+        this.setDirectory( new File( cattr.getDiskPath(), cattr.getCacheName() ) );
         boolean createdDirectories = getDirectory().mkdirs();
         if ( log.isInfoEnabled() )
         {
-            log.info( logCacheName + "Cache file root directory: " + rootDirName );
+            log.info( logCacheName + "Cache file root directory: " + getDirectory() );
             log.info( logCacheName + "Created root directory: " + createdDirectories );
         }
 
@@ -408,10 +407,10 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
                 os.close();
             }
             deleteWithRetry( file );
-            tmp.renameTo( file );
+            boolean result = tmp.renameTo( file );
             if ( log.isDebugEnabled() )
             {
-                log.debug( logCacheName + "Renamed to: " + file );
+                log.debug( logCacheName + "Renamed to: " + file + " Result: " + result);
             }
         }
         catch ( IOException e )

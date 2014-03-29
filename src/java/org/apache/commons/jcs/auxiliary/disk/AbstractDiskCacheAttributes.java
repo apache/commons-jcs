@@ -19,9 +19,13 @@ package org.apache.commons.jcs.auxiliary.disk;
  * under the License.
  */
 
+import java.io.File;
+
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.behavior.IDiskCacheAttributes;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This has common attributes that any conceivable disk cache would need.
@@ -33,14 +37,17 @@ public abstract class AbstractDiskCacheAttributes
     /** Don't change. */
     private static final long serialVersionUID = 8306631920391711229L;
 
+    /** The logger */
+    private final static Log log = LogFactory.getLog( AbstractDiskCacheAttributes.class );
+
     /** path to disk */
-    protected String diskPath;
+    protected File diskPath;
 
     /** if this is false, we will not execute remove all */
     private boolean allowRemoveAll = true;
 
     /** default to 5000 */
-    protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFUALT;
+    protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFAULT;
 
     /** Default amount of time to allow for key persistence on shutdown */
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
@@ -58,7 +65,13 @@ public abstract class AbstractDiskCacheAttributes
      */
     public void setDiskPath( String path )
     {
-        this.diskPath = path.trim();
+        this.diskPath = new File( path );
+        boolean result = this.diskPath.mkdirs();
+
+        if (!result)
+        {
+            log.error("Failed to create directory " + path);
+        }
     }
 
     /**
@@ -66,7 +79,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @return The diskPath value
      */
-    public String getDiskPath()
+    public File getDiskPath()
     {
         return this.diskPath;
     }

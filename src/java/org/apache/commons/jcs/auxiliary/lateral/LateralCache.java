@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCacheEventLogging;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheAttributes;
+import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.ZombieCacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
@@ -103,10 +104,10 @@ public class LateralCache<K extends Serializable, V extends Serializable>
         {
             if ( log.isDebugEnabled() )
             {
-                log.debug( "update: lateral = [" + lateralCacheService + "], " + "LateralCacheInfo.listenerId = "
-                    + LateralCacheInfo.listenerId );
+                log.debug( "update: lateral = [" + lateralCacheService + "], " + "CacheInfo.listenerId = "
+                    + CacheInfo.listenerId );
             }
-            lateralCacheService.update( ce, LateralCacheInfo.listenerId );
+            lateralCacheService.update( ce, CacheInfo.listenerId );
         }
         catch ( NullPointerException npe )
         {
@@ -243,7 +244,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
 
         try
         {
-            lateralCacheService.remove( cacheName, key, LateralCacheInfo.listenerId );
+            lateralCacheService.remove( cacheName, key, CacheInfo.listenerId );
         }
         catch ( Exception ex )
         {
@@ -264,7 +265,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     {
         try
         {
-            lateralCacheService.removeAll( cacheName, LateralCacheInfo.listenerId );
+            lateralCacheService.removeAll( cacheName, CacheInfo.listenerId );
         }
         catch ( Exception ex )
         {

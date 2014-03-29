@@ -93,7 +93,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
         new Hashtable<String, CacheListeners<K, V>>();
 
     /** The central hub */
-    private CompositeCacheManager cacheManager;
+    private transient CompositeCacheManager cacheManager;
 
     /** relates listener id with a type */
     private final Hashtable<Long, RemoteType> idTypeMap = new Hashtable<Long, RemoteType>();
@@ -342,24 +342,13 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
                 if ( !fromCluster || ( fromCluster && remoteCacheServerAttributes.isLocalClusterConsistency() ) )
                 {
                     ICacheEventQueue<K, V>[] qlist = getEventQList( cacheDesc, requesterId );
-
-                    if ( qlist != null )
+                    if ( log.isDebugEnabled() )
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "qlist.length = " + qlist.length );
-                        }
-                        for ( int i = 0; i < qlist.length; i++ )
-                        {
-                            qlist[i].addPutEvent( item );
-                        }
+                        log.debug( "qlist.length = " + qlist.length );
                     }
-                    else
+                    for ( int i = 0; i < qlist.length; i++ )
                     {
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "q list is null" );
-                        }
+                        qlist[i].addPutEvent( item );
                     }
                 }
             }

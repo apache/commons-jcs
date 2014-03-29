@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.engine.stats.behavior;
 
+import java.io.Serializable;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,7 +24,7 @@ package org.apache.commons.jcs.engine.stats.behavior;
 /**
  * IAuxiliaryCacheStats will hold these IStatElements.
  */
-public interface IStatElement
+public interface IStatElement extends Serializable
 {
     /**
      * Get the name of the stat element, ex. HitCount

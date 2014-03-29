@@ -210,8 +210,14 @@ public class RemoteCacheStartupServlet
 
         try
         {
+            String characterEncoding = response.getCharacterEncoding();
+            if (characterEncoding == null)
+            {
+                characterEncoding = "UTF-8";
+                response.setCharacterEncoding(characterEncoding);
+            }
             OutputStream os = response.getOutputStream();
-            os.write( stats.getBytes() );
+            os.write( stats.getBytes(characterEncoding) );
             os.close();
         }
         catch ( IOException e )

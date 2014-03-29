@@ -84,13 +84,11 @@ public class BlockDiskKeyStore<K extends Serializable>
         this.maxKeySize = cacheAttributes.getMaxKeySize();
         this.blockDiskCache = blockDiskCache;
 
-        String rootDirName = cacheAttributes.getDiskPath();
-        File rootDirectory = new File( rootDirName );
-        rootDirectory.mkdirs();
+        File rootDirectory = cacheAttributes.getDiskPath();
 
         if ( log.isInfoEnabled() )
         {
-            log.info( logCacheName + "Cache file root directory [" + rootDirName + "]" );
+            log.info( logCacheName + "Cache file root directory [" + rootDirectory + "]" );
         }
 
         this.keyFile = new File( rootDirectory, fileName + ".key" );

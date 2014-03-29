@@ -32,8 +32,6 @@ import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * The RemoteCacheFactory creates remote caches for the cache hub. It returns a no wait facade which
@@ -44,9 +42,6 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheFactory
     implements AuxiliaryCacheFactory
 {
-    /** The logger. */
-    private final static Log log = LogFactory.getLog( RemoteCacheFactory.class );
-
     /** The name of this auxiliary */
     private String name;
 
@@ -94,14 +89,7 @@ public class RemoteCacheFactory
                 RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );
                 ICache<K, V> ic = rcm.getCache( rca );
-                if ( ic != null )
-                {
-                    noWaits.add( ic );
-                }
-                else
-                {
-                    log.info( "noWait is null" );
-                }
+                noWaits.add( ic );
             }
 
             // GET HANDLE BUT DONT REGISTER A LISTENER FOR FAILOVERS
@@ -126,14 +114,7 @@ public class RemoteCacheFactory
                     if ( ( !primayDefined && fCnt == 1 ) || noWaits.size() <= 0 )
                     {
                         ICache<K, V> ic = rcm.getCache( rca );
-                        if ( ic != null )
-                        {
-                            noWaits.add( ic );
-                        }
-                        else
-                        {
-                            log.info( "noWait is null" );
-                        }
+                        noWaits.add( ic );
                     }
                 }
                 // end while
@@ -159,14 +140,7 @@ public class RemoteCacheFactory
                                                                          elementSerializer );
                 rca.setRemoteType( RemoteType.CLUSTER );
                 ICache<K, V> ic = rcm.getCache( rca );
-                if ( ic != null )
-                {
-                    noWaits.add( ic );
-                }
-                else
-                {
-                    log.info( "noWait is null" );
-                }
+                noWaits.add( ic );
             }
 
         }

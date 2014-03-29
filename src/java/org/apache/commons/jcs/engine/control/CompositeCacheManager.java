@@ -70,11 +70,8 @@ import org.apache.commons.logging.LogFactory;
  * It is recommended that you use the JCS convenience class for all cache access.
  */
 public class CompositeCacheManager
-    implements IRemoteCacheConstants, Serializable, ICompositeCacheManager, IShutdownObservable, IProvideScheduler
+    implements IRemoteCacheConstants, ICompositeCacheManager, IShutdownObservable, IProvideScheduler
 {
-    /** Don't change */
-    private static final long serialVersionUID = 7598584393134401756L;
-
     /** The logger */
     protected final static Log log = LogFactory.getLog( CompositeCacheManager.class );
 

@@ -118,13 +118,11 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
 
         // Make a clean file name
         this.fileName = getCacheName().replaceAll("[^a-zA-Z0-9-_\\.]", "_");
-        String rootDirName = cacheAttributes.getDiskPath();
-        this.rootDirectory = new File( rootDirName );
-        this.rootDirectory.mkdirs();
+        this.rootDirectory = cacheAttributes.getDiskPath();
 
         if ( log.isInfoEnabled() )
         {
-            log.info( logCacheName + "Cache file root directory: [" + rootDirName + "]" );
+            log.info( logCacheName + "Cache file root directory: [" + rootDirectory + "]");
         }
 
         try
@@ -158,7 +156,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
         catch ( IOException e )
         {
             log.error( logCacheName + "Failure initializing for fileName: " + fileName + " and root directory: "
-                + rootDirName, e );
+                + rootDirectory, e );
         }
     }
 

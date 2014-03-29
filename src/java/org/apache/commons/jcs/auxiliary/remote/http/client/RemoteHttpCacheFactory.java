@@ -33,8 +33,6 @@ import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * The RemoteCacheFactory creates remote caches for the cache hub. It returns a no wait facade which
@@ -45,9 +43,6 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteHttpCacheFactory
     implements AuxiliaryCacheFactory
 {
-    /** The logger. */
-    private final static Log log = LogFactory.getLog( RemoteHttpCacheFactory.class );
-
     /** The name of this auxiliary */
     private String name;
 
@@ -79,14 +74,7 @@ public class RemoteHttpCacheFactory
         // TODO, use the configured value.
         rca.setRemoteType( RemoteType.LOCAL );
         ICache<K, V> ic = rcm.getCache( rca );
-        if ( ic != null )
-        {
-            noWaits.add( ic );
-        }
-        else
-        {
-            log.info( "noWait is null" );
-        }
+        noWaits.add( ic );
 
         @SuppressWarnings("unchecked") // No generic arrays in java
         RemoteCacheNoWait<K, V>[] rcnwArray = noWaits.toArray( new RemoteCacheNoWait[0] );

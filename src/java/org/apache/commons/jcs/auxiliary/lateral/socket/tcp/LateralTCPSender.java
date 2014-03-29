@@ -87,7 +87,7 @@ public class LateralTCPSender
                 log.debug( "po = " + po );
             }
 
-            if ( h2 == null )
+            if ( h2.length() == 0 )
             {
                 throw new IOException( "Cannot connect to invalid address [" + h2 + ":" + po + "]" );
             }

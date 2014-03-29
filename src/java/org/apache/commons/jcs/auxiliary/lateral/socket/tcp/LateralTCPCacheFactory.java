@@ -104,17 +104,7 @@ public class LateralTCPCacheFactory
                 }
 
                 ICache<K, V> ic = lcm.getCache( lacC.getCacheName() );
-                if ( ic != null )
-                {
-                    noWaits.add( ic );
-                }
-                else
-                {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "noWait is null, no lateral connection made" );
-                    }
-                }
+                noWaits.add( ic );
             }
         }
 

@@ -109,16 +109,31 @@ public class CompositeCacheConfigurator
     protected void doConfigure( String configFileName )
     {
         Properties props = new Properties();
+        FileInputStream istream = null;
+
         try
         {
-            FileInputStream istream = new FileInputStream( configFileName );
+            istream = new FileInputStream( configFileName );
             props.load( istream );
-            istream.close();
         }
         catch ( IOException e )
         {
             log.error( "Could not read configuration file, ignored: " + configFileName, e );
             return;
+        }
+        finally
+        {
+            if (istream != null)
+            {
+                try
+                {
+                    istream.close();
+                }
+                catch (IOException e)
+                {
+                    log.error( "Could not close configuration file " + configFileName, e );
+                }
+            }
         }
 
         // If we reach here, then the config file is alright.
@@ -155,8 +170,8 @@ public class CompositeCacheConfigurator
         // set default element attr
         setDefaultElementAttributes( properties );
 
-        // set up ssytem caches to be used by non system caches
-        // need to make sure there is no circuarity of reference
+        // set up system caches to be used by non system caches
+        // need to make sure there is no circularity of reference
         parseSystemRegions( properties );
 
         // setup preconfigured caches

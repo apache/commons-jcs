@@ -205,13 +205,10 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
      */
     private void initializeFileSystem( IndexedDiskCacheAttributes cattr )
     {
-        String rootDirName = cattr.getDiskPath();
-        this.rafDir = new File( rootDirName );
-        boolean createdDirectories = this.rafDir.mkdirs();
+        this.rafDir = cattr.getDiskPath();
         if ( log.isInfoEnabled() )
         {
-            log.info( logCacheName + "Cache file root directory: " + rootDirName );
-            log.info( logCacheName + "Created root directory: " + createdDirectories );
+            log.info( logCacheName + "Cache file root directory: " + rafDir );
         }
     }
 
@@ -964,24 +961,31 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
                 dataFile.close();
             }
             File dataFileTemp = new File( rafDir, fileName + ".data" );
-            dataFileTemp.delete();
+            boolean result = dataFileTemp.delete();
+            if (!result && log.isDebugEnabled())
+            {
+                log.debug("Could not delete file " + dataFileTemp);
+            }
 
             if ( keyFile != null )
             {
                 keyFile.close();
             }
             File keyFileTemp = new File( rafDir, fileName + ".key" );
-            keyFileTemp.delete();
+            result = keyFileTemp.delete();
+            if (!result && log.isDebugEnabled())
+            {
+                log.debug("Could not delete file " + keyFileTemp);
+            }
 
             dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ), getElementSerializer() );
-
             keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ), getElementSerializer() );
 
             initializeRecycleBin();
 
             initializeKeyMap();
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( logCacheName + "Failure reseting state", e );
         }

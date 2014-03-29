@@ -28,12 +28,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.LateralCommand;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
 import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
@@ -56,7 +56,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
     private LateralTCPSender sender;
 
     /** use the vmid by default */
-    private long listenerId = LateralCacheInfo.listenerId;
+    private long listenerId = CacheInfo.listenerId;
 
     /**
      * Constructor for the LateralTCPService object
@@ -422,7 +422,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
             boolean notDone = true;
             String message = null;
             // wait to dispose
-            BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
+            BufferedReader br = new BufferedReader( new InputStreamReader( System.in, "UTF-8" ) );
 
             while ( notDone )
             {

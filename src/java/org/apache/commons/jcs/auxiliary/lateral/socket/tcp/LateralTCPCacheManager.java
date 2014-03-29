@@ -66,7 +66,7 @@ public class LateralTCPCacheManager
     private static LateralCacheMonitor monitor;
 
     /** Address to instance map. */
-    protected static Map<String, LateralTCPCacheManager> instances =
+    protected static final Map<String, LateralTCPCacheManager> instances =
         new ConcurrentHashMap<String, LateralTCPCacheManager>();
 
     /** ITCPLateralCacheAttributes */

@@ -35,10 +35,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.jcs.auxiliary.lateral.LateralCacheInfo;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
@@ -53,11 +53,8 @@ import org.apache.commons.logging.LogFactory;
  * passed to a pooled executor which then calls the appropriate handle method.
  */
 public class LateralTCPListener<K extends Serializable, V extends Serializable>
-    implements ILateralCacheListener<K, V>, Serializable, IShutdownObserver
+    implements ILateralCacheListener<K, V>, IShutdownObserver
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -9107062664967131738L;
-
     /** The logger */
     protected final static Log log = LogFactory.getLog( LateralTCPListener.class );
 
@@ -96,7 +93,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * Use the vmid by default. This can be set for testing. If we ever need to run more than one
      * per vm, then we need a new technique.
      */
-    private long listenerId = LateralCacheInfo.listenerId;
+    private long listenerId = CacheInfo.listenerId;
 
     /** is this shut down? */
     protected boolean shutdown = false;

@@ -19,11 +19,6 @@ package org.apache.commons.jcs.engine;
  * under the License.
  */
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -43,7 +38,7 @@ import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler
  * </ol>
  */
 public class ElementAttributes
-    implements IElementAttributes, Serializable, Cloneable
+    implements IElementAttributes, Serializable
 {
     /** Don't change. */
     private static final long serialVersionUID = 7814990748035017441L;
@@ -148,42 +143,6 @@ public class ElementAttributes
         {
             return new ElementAttributes();
         }
-    }
-
-    /**
-     * Deep clone the attributes.
-     * <p>
-     * @return a clone of these attributes
-     */
-    public Object clone2()
-    {
-        try
-        {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream( 100 );
-            ObjectOutputStream oos = new ObjectOutputStream( baos );
-            oos.writeObject( this );
-            byte buf[] = baos.toByteArray();
-            oos.close();
-
-            // deserialize byte array into ArrayList
-
-            ByteArrayInputStream bais = new ByteArrayInputStream( buf );
-            ObjectInputStream ois = new ObjectInputStream( bais );
-            ElementAttributes attr = (ElementAttributes) ois.readObject();
-            ois.close();
-
-            attr.createTime = System.currentTimeMillis();
-            return attr;
-        }
-        catch ( IOException e )
-        {
-            // swallow
-        }
-        catch (ClassNotFoundException e)
-        {
-            // swallow
-        }
-        return null;
     }
 
     /**

@@ -34,6 +34,7 @@ import org.apache.commons.jcs.auxiliary.AbstractAuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 import org.apache.commons.jcs.engine.CacheAdaptor;
 import org.apache.commons.jcs.engine.CacheEventQueueFactory;
+import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
@@ -89,7 +90,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
         }
 
         CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<K, V>();
-        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<K, V>( cache ), LateralCacheInfo.listenerId, cache
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<K, V>( cache ), CacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
 
@@ -354,7 +355,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
             eventQueue.destroy();
         }
         CacheEventQueueFactory<K, V> fact = new CacheEventQueueFactory<K, V>();
-        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<K, V>( cache ), LateralCacheInfo.listenerId, cache
+        this.eventQueue = fact.createCacheEventQueue( new CacheAdaptor<K, V>( cache ), CacheInfo.listenerId, cache
             .getCacheName(), cache.getAuxiliaryCacheAttributes().getEventQueuePoolName(), cache
             .getAuxiliaryCacheAttributes().getEventQueueType() );
     }
