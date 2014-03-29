@@ -45,7 +45,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
     extends AbstractCacheEventQueue<K, V>
 {
     /** The type of event queue */
-    private static final String queueType = POOLED_QUEUE_TYPE;
+    private static final QueueType queueType = QueueType.POOLED;
 
     /** The Thread Pool to execute events with. */
     private ThreadPoolExecutor pool = null;
@@ -103,7 +103,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
     /**
      * @return the queue type
      */
-    public String getQueueType()
+    public QueueType getQueueType()
     {
         return queueType;
     }

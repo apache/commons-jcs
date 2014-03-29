@@ -423,7 +423,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
             return CacheStatus.DISPOSED;
         }
 
-        if ((noWaits.length == 0) || (listener != null))
+        if (noWaits.length == 0 || listener != null)
         {
             return CacheStatus.ALIVE;
         }

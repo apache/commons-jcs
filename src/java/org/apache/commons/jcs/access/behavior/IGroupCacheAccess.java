@@ -71,7 +71,7 @@ public interface IGroupCacheAccess<K extends Serializable, V extends Serializabl
      * @param name
      * @param group
      */
-    public void removeFromGroup( K name, String group );
+    void removeFromGroup( K name, String group );
 
     /**
      * Gets the set of keys of objects currently in the group
@@ -79,12 +79,12 @@ public interface IGroupCacheAccess<K extends Serializable, V extends Serializabl
      * @param group
      * @return the set of group keys.
      */
-    public Set<K> getGroupKeys( String group );
+    Set<K> getGroupKeys( String group );
 
     /**
      * Invalidates a group
      * <p>
      * @param group
      */
-    public void invalidateGroup( String group );
+    void invalidateGroup( String group );
 }

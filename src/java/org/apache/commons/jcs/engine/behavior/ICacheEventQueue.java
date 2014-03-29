@@ -30,6 +30,15 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
  */
 public interface ICacheEventQueue<K extends Serializable, V extends Serializable>
 {
+    enum QueueType
+    {
+        /** Does not use a thread pool. */
+        SINGLE,
+
+        /** Uses a thread pool. */
+        POOLED
+    }
+
     /**
      * Initializes the queue.
      * <,p>
@@ -40,26 +49,15 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      * @param waitBeforeRetry
      * @param threadPoolName
      */
-    public void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
+    void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry, String threadPoolName );
-
-    /**
-     * Does not use a thread pool.
-     */
-    public static final String SINGLE_QUEUE_TYPE = "SINGLE";
-
-    /**
-     * Uses a thread pool
-     */
-    public static final String POOLED_QUEUE_TYPE = "POOLED";
-
 
     /**
      * Return the type of event queue we are using, either single or pooled.
      * <p>
      * @return the queue type: single or pooled
      */
-    public abstract String getQueueType();
+    QueueType getQueueType();
 
     /**
      * Adds a feature to the PutEvent attribute of the ICacheEventQueue object
@@ -68,7 +66,7 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      *            The feature to be added to the PutEvent attribute
      * @throws IOException
      */
-    public void addPutEvent( ICacheElement<K, V> ce )
+    void addPutEvent( ICacheElement<K, V> ce )
         throws IOException;
 
     /**
@@ -79,7 +77,7 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      *            The feature to be added to the RemoveEvent attribute
      * @throws IOException
      */
-    public void addRemoveEvent( K key )
+    void addRemoveEvent( K key )
         throws IOException;
 
     /**
@@ -88,7 +86,7 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      * <p>
      * @throws IOException
      */
-    public void addRemoveAllEvent()
+    void addRemoveAllEvent()
         throws IOException;
 
     /**
@@ -97,7 +95,7 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      * <p>
      * @throws IOException
      */
-    public void addDisposeEvent()
+    void addDisposeEvent()
         throws IOException;
 
     /**
@@ -105,10 +103,10 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      *
      * @return The listenerId value
      */
-    public long getListenerId();
+    long getListenerId();
 
     /** Description of the Method */
-    public void destroy();
+    void destroy();
 
     /**
      * Gets the alive attribute of the ICacheEventQueue object. Alive just
@@ -117,14 +115,14 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      * <p>
      * @return The alive value
      */
-    public boolean isAlive();
+    boolean isAlive();
 
     /**
      * A Queue is working unless it has reached its max failure count.
      * <p>
      * @return boolean
      */
-    public boolean isWorking();
+    boolean isWorking();
 
     /**
      * Returns the number of elements in the queue.  If the queue cannot
@@ -132,19 +130,19 @@ public interface ICacheEventQueue<K extends Serializable, V extends Serializable
      * <p>
      * @return number of items in the queue.
      */
-    public int size();
+    int size();
 
     /**
      * Are there elements in the queue.
      * <p>
      * @return true if there are stil elements.
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 
     /**
      * Returns the historical and statistical data for an event queue cache.
      * <p>
      * @return IStats
      */
-    public IStats getStatistics();
+    IStats getStatistics();
 }

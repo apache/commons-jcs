@@ -37,9 +37,6 @@ import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable, V extends Serializable>
     extends AbstractAuxiliaryCache<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -3921738303365238919L;
-
     /**
      * Puts an item into the cache.
      * <p>

@@ -41,7 +41,7 @@ public interface IRemoteCacheClient<K extends Serializable, V extends Serializab
      * <p>
      * @param remote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
-    public void fixCache( ICacheServiceNonLocal<?, ?> remote );
+    void fixCache( ICacheServiceNonLocal<?, ?> remote );
 
     /**
      * Gets the listenerId attribute of the RemoteCacheListener object.
@@ -51,7 +51,7 @@ public interface IRemoteCacheClient<K extends Serializable, V extends Serializab
      * <p>
      * @return The listenerId value
      */
-    public long getListenerId();
+    long getListenerId();
 
     /**
      * This returns the listener associated with this remote cache. TODO we should try to get this
@@ -59,5 +59,5 @@ public interface IRemoteCacheClient<K extends Serializable, V extends Serializab
      * <p>
      * @return IRemoteCacheListener
      */
-    public IRemoteCacheListener<K, V> getListener();
+    IRemoteCacheListener<K, V> getListener();
 }

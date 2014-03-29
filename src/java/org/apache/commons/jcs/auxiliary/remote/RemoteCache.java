@@ -92,10 +92,10 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
         se.setData( this.getRemoteCacheAttributes().getRemoteTypeName() + "" );
         elems.add( se );
 
-        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
-        {
-            // something cluster specific
-        }
+//        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
+//        {
+//            // something cluster specific
+//        }
 
         // get the stats from the super too
         // get as array, convert to list, add list to our outer list

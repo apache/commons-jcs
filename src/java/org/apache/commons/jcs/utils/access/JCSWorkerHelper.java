@@ -32,20 +32,20 @@ package org.apache.commons.jcs.utils.access;
 public interface JCSWorkerHelper
 {
     /**
-     * Tells us weather or not the work has been completed. This will be called
+     * Tells us whether or not the work has been completed. This will be called
      * automatically by JCSWorker. You should not call it yourself.
      * <p>
-     * @return True if the work has allready been done, otherwise false.
+     * @return True if the work has already been done, otherwise false.
      */
-    public boolean isFinished();
+    boolean isFinished();
 
     /**
-     * Sets weather or not the work has been done.
+     * Sets whether or not the work has been done.
      * <p>
      * @param isFinished
-     *            True if the work has allready been done, otherwise false.
+     *            True if the work has already been done, otherwise false.
      */
-    public void setFinished( boolean isFinished );
+    void setFinished( boolean isFinished );
 
     /**
      * The method to implement to do the work that should be cached. JCSWorker
@@ -56,6 +56,6 @@ public interface JCSWorkerHelper
      *             If anything goes wrong while doing the work, an Exception
      *             should be thrown.
      */
-    public Object doWork()
+    Object doWork()
         throws Exception;
 }

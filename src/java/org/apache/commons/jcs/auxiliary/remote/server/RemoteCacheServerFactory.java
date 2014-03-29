@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
 import org.apache.commons.jcs.auxiliary.remote.RemoteUtils;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
-import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
+import org.apache.commons.jcs.engine.behavior.ICacheServiceAdmin;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.config.OptionConverter;
 import org.apache.commons.jcs.utils.config.PropertySetter;
@@ -473,7 +473,7 @@ public class RemoteCacheServerFactory
             {
                 log.debug( "server found" );
             }
-            IRemoteCacheServiceAdmin admin = (IRemoteCacheServiceAdmin) obj;
+            ICacheServiceAdmin admin = (ICacheServiceAdmin) obj;
             try
             {
                 admin.shutdown();
@@ -501,7 +501,7 @@ public class RemoteCacheServerFactory
                 log.debug( "server found" );
 
                 log.debug( "obj = " + obj );
-                IRemoteCacheServiceAdmin admin = (IRemoteCacheServiceAdmin) obj;
+                ICacheServiceAdmin admin = (ICacheServiceAdmin) obj;
 
                 try
                 {

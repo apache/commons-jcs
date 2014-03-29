@@ -421,7 +421,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
         finally
         {
             silentClose( os );
-            if ( ( tmp != null ) && tmp.exists() )
+            if ( tmp != null && tmp.exists() )
             {
                 deleteWithRetry( tmp );
             }

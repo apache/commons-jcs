@@ -491,8 +491,8 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
             {
                 // remove single item.
                 int[] ded = this.keyStore.remove( key );
-                removed = ( ded != null );
-                if ( ded != null )
+                removed = ded != null;
+                if ( removed )
                 {
                     this.dataFile.freeBlocks( ded );
                 }
@@ -525,7 +525,6 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     /**
      * Resets the keyfile, the disk file, and the memory key map.
      * <p>
-     * (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#doRemoveAll()
      */
     @Override

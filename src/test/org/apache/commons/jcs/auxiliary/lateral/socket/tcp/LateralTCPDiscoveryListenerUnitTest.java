@@ -223,7 +223,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // since the no waits are compared by object equality, I have to do this
         // TODO add an equals method to the noWait.  the problem if is figuring out what to compare.
         ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        lca.setTransmissionType( LateralCacheAttributes.TCP );
+        lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );
@@ -262,7 +262,7 @@ public class LateralTCPDiscoveryListenerUnitTest
         // since the no waits are compared by object equality, I have to do this
         // TODO add an equals method to the noWait.  the problem if is figuring out what to compare.
         ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        lca.setTransmissionType( LateralCacheAttributes.TCP );
+        lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );

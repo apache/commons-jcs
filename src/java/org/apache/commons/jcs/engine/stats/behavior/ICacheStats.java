@@ -30,20 +30,20 @@ public interface ICacheStats
      * <p>
      * @return The region name
      */
-    public abstract String getRegionName();
+    String getRegionName();
 
     /**
      * @param name
      */
-    public abstract void setRegionName( String name );
+    void setRegionName( String name );
 
     /**
      * @return IStats[]
      */
-    public abstract IStats[] getAuxiliaryCacheStats();
+    IStats[] getAuxiliaryCacheStats();
 
     /**
      * @param stats
      */
-    public abstract void setAuxiliaryCacheStats( IStats[] stats );
+    void setAuxiliaryCacheStats( IStats[] stats );
 }

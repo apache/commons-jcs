@@ -36,21 +36,21 @@ public interface IStats
      *
      * @return IStatElement[]
      */
-    public abstract IStatElement[] getStatElements();
+    IStatElement[] getStatElements();
 
     /**
      * Set the generic statistical or historical data.
      *
      * @param stats
      */
-    public abstract void setStatElements( IStatElement[] stats );
+    void setStatElements( IStatElement[] stats );
 
     /**
      * Get the type name, such as "LRU Memory Cache." No formal type is defined.
      *
      * @return String
      */
-    public abstract String getTypeName();
+    String getTypeName();
 
     /**
      * Set the type name, such as "LRU Memory Cache." No formal type is defined.
@@ -58,5 +58,5 @@ public interface IStats
      *
      * @param name
      */
-    public abstract void setTypeName( String name );
+    void setTypeName( String name );
 }

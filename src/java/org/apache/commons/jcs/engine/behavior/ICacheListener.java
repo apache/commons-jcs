@@ -36,7 +36,7 @@ public interface ICacheListener<K extends Serializable, V extends Serializable>
      * @param item
      * @throws IOException
      */
-    public void handlePut( ICacheElement<K, V> item )
+    void handlePut( ICacheElement<K, V> item )
         throws IOException;
 
     /**
@@ -46,7 +46,7 @@ public interface ICacheListener<K extends Serializable, V extends Serializable>
      * @param key
      * @throws IOException
      */
-    public void handleRemove( String cacheName, K key )
+    void handleRemove( String cacheName, K key )
         throws IOException;
 
     /**
@@ -55,7 +55,7 @@ public interface ICacheListener<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
-    public void handleRemoveAll( String cacheName )
+    void handleRemoveAll( String cacheName )
         throws IOException;
 
     /**
@@ -64,7 +64,7 @@ public interface ICacheListener<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
-    public void handleDispose( String cacheName )
+    void handleDispose( String cacheName )
         throws IOException;
 
     /**
@@ -73,7 +73,7 @@ public interface ICacheListener<K extends Serializable, V extends Serializable>
      * @param id The new listenerId value
      * @throws IOException
      */
-    public void setListenerId( long id )
+    void setListenerId( long id )
         throws IOException;
 
     /**
@@ -82,6 +82,6 @@ public interface ICacheListener<K extends Serializable, V extends Serializable>
      * @return The listenerId value
      * @throws IOException
      */
-    public long getListenerId()
+    long getListenerId()
         throws IOException;
 }

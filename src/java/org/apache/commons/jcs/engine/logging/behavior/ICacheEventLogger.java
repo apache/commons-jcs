@@ -31,28 +31,28 @@ import java.io.Serializable;
 public interface ICacheEventLogger
 {
     /** ICache update */
-    static final String UPDATE_EVENT = "update";
+    String UPDATE_EVENT = "update";
 
     /** ICache get */
-    static final String GET_EVENT = "get";
+    String GET_EVENT = "get";
 
     /** ICache getMultiple */
-    static final String GETMULTIPLE_EVENT = "getMultiple";
+    String GETMULTIPLE_EVENT = "getMultiple";
 
     /** ICache getMatching */
-    static final String GETMATCHING_EVENT = "getMatching";
+    String GETMATCHING_EVENT = "getMatching";
 
     /** ICache remove */
-    static final String REMOVE_EVENT = "remove";
+    String REMOVE_EVENT = "remove";
 
     /** ICache removeAll */
-    static final String REMOVEALL_EVENT = "removeAll";
+    String REMOVEALL_EVENT = "removeAll";
 
     /** ICache dispose */
-    static final String DISPOSE_EVENT = "dispose";
+    String DISPOSE_EVENT = "dispose";
 
     /** ICache enqueue. The time in the queue. */
-    //static final String ENQUEUE_EVENT = "enqueue";
+    //String ENQUEUE_EVENT = "enqueue";
     /**
      * Creates an event.
      * <p>

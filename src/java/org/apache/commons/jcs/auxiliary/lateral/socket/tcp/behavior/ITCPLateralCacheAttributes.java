@@ -37,14 +37,14 @@ public interface ITCPLateralCacheAttributes
      * @param val
      *            The new tcpServer value
      */
-    public void setTcpServer( String val );
+    void setTcpServer( String val );
 
     /**
      * Gets the tcpServer attribute of the ILateralCacheAttributes object
      * <p>
      * @return The tcpServer value
      */
-    public String getTcpServer();
+    String getTcpServer();
 
     /**
      * Sets the tcpServers attribute of the ILateralCacheAttributes object
@@ -52,14 +52,14 @@ public interface ITCPLateralCacheAttributes
      * @param val
      *            The new tcpServers value
      */
-    public void setTcpServers( String val );
+    void setTcpServers( String val );
 
     /**
      * Gets the tcpServers attribute of the ILateralCacheAttributes object
      * <p>
      * @return The tcpServers value
      */
-    public String getTcpServers();
+    String getTcpServers();
 
     /**
      * Sets the tcpListenerPort attribute of the ILateralCacheAttributes object
@@ -67,14 +67,14 @@ public interface ITCPLateralCacheAttributes
      * @param val
      *            The new tcpListenerPort value
      */
-    public void setTcpListenerPort( int val );
+    void setTcpListenerPort( int val );
 
     /**
      * Gets the tcpListenerPort attribute of the ILateralCacheAttributes object
      * <p>
      * @return The tcpListenerPort value
      */
-    public int getTcpListenerPort();
+    int getTcpListenerPort();
 
     /**
      * Can setup UDP Discovery. This only works for TCp laterals right now. It
@@ -84,7 +84,7 @@ public interface ITCPLateralCacheAttributes
      * @param udpDiscoveryEnabled
      *            The udpDiscoveryEnabled to set.
      */
-    public void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled );
+    void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled );
 
     /**
      * Whether or not TCP laterals can try to find each other by multicast
@@ -92,14 +92,14 @@ public interface ITCPLateralCacheAttributes
      * <p>
      * @return Returns the udpDiscoveryEnabled.
      */
-    public boolean isUdpDiscoveryEnabled();
+    boolean isUdpDiscoveryEnabled();
 
     /**
      * The port to use if UDPDiscovery is enabled.
      * <p>
      * @return Returns the udpDiscoveryPort.
      */
-    public int getUdpDiscoveryPort();
+    int getUdpDiscoveryPort();
 
     /**
      * Sets the port to use if UDPDiscovery is enabled.
@@ -107,14 +107,14 @@ public interface ITCPLateralCacheAttributes
      * @param udpDiscoveryPort
      *            The udpDiscoveryPort to set.
      */
-    public void setUdpDiscoveryPort( int udpDiscoveryPort );
+    void setUdpDiscoveryPort( int udpDiscoveryPort );
 
     /**
      * The address to broadcast to if UDPDiscovery is enabled.
      * <p>
      * @return Returns the udpDiscoveryAddr.
      */
-    public String getUdpDiscoveryAddr();
+    String getUdpDiscoveryAddr();
 
     /**
      * Sets the address to broadcast to if UDPDiscovery is enabled.
@@ -122,7 +122,7 @@ public interface ITCPLateralCacheAttributes
      * @param udpDiscoveryAddr
      *            The udpDiscoveryAddr to set.
      */
-    public void setUdpDiscoveryAddr( String udpDiscoveryAddr );
+    void setUdpDiscoveryAddr( String udpDiscoveryAddr );
 
     /**
      * Is the lateral allowed to try and get from other laterals.
@@ -131,28 +131,28 @@ public interface ITCPLateralCacheAttributes
      * <p>
      * @param allowGet
      */
-    public void setAllowGet( boolean allowGet );
+    void setAllowGet( boolean allowGet );
 
     /**
      * Is the lateral allowed to try and get from other laterals.
      * <p>
      * @return true if the lateral will try to get
      */
-    public boolean isAllowGet();
+    boolean isAllowGet();
 
     /**
      * Is the lateral allowed to put objects to other laterals.
      * <p>
      * @param allowPut
      */
-    public void setAllowPut( boolean allowPut );
+    void setAllowPut( boolean allowPut );
 
     /**
      * Is the lateral allowed to put objects to other laterals.
      * <p>
      * @return true if puts are allowed
      */
-    public boolean isAllowPut();
+    boolean isAllowPut();
 
     /**
      * Should the client send a remove command rather than a put when update is
@@ -161,7 +161,7 @@ public interface ITCPLateralCacheAttributes
      * <p>
      * @param issueRemoveOnPut
      */
-    public void setIssueRemoveOnPut( boolean issueRemoveOnPut );
+    void setIssueRemoveOnPut( boolean issueRemoveOnPut );
 
     /**
      * Should the client send a remove command rather than a put when update is
@@ -170,11 +170,11 @@ public interface ITCPLateralCacheAttributes
      * <p>
      * @return true if updates will result in a remove command being sent.
      */
-    public boolean isIssueRemoveOnPut();
+    boolean isIssueRemoveOnPut();
 
     /**
      * Should the receiver try to match hashcodes. If true, the receiver will
-     * see if the client supplied a hshcode. If it did, then it will try to get
+     * see if the client supplied a hashcode. If it did, then it will try to get
      * the item locally. If the item exists, then it will compare the hashcode.
      * if they are the same, it will not remove. This isn't perfect since
      * different objects can have the same hashcode, but it is unlikely of
@@ -182,11 +182,11 @@ public interface ITCPLateralCacheAttributes
      * <p>
      * @return boolean
      */
-    public boolean isFilterRemoveByHashCode();
+    boolean isFilterRemoveByHashCode();
 
     /**
      * Should the receiver try to match hashcodes. If true, the receiver will
-     * see if the client supplied a hshcode. If it did, then it will try to get
+     * see if the client supplied a hashcode. If it did, then it will try to get
      * the item locally. If the item exists, then it will compare the hashcode.
      * if they are the same, it will not remove. This isn't perfect since
      * different objects can have the same hashcode, but it is unlikely of
@@ -194,25 +194,25 @@ public interface ITCPLateralCacheAttributes
      * <p>
      * @param filter
      */
-    public void setFilterRemoveByHashCode( boolean filter );
+    void setFilterRemoveByHashCode( boolean filter );
 
     /**
      * @param socketTimeOut the socketTimeOut to set
      */
-    public void setSocketTimeOut( int socketTimeOut );
+    void setSocketTimeOut( int socketTimeOut );
 
     /**
      * @return the socketTimeOut
      */
-    public int getSocketTimeOut();
+    int getSocketTimeOut();
 
     /**
      * @param openTimeOut the openTimeOut to set
      */
-    public void setOpenTimeOut( int openTimeOut );
+    void setOpenTimeOut( int openTimeOut );
 
     /**
      * @return the openTimeOut
      */
-    public int getOpenTimeOut();
+    int getOpenTimeOut();
 }

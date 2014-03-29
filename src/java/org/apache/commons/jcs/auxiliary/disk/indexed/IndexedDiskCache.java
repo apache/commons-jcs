@@ -64,9 +64,6 @@ import org.apache.commons.logging.LogFactory;
 public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     extends AbstractDiskCache<K, V>
 {
-    /** Don't change */
-    private static final long serialVersionUID = -265035607729729629L;
-
     /** The logger */
     protected static final Log log = LogFactory.getLog( IndexedDiskCache.class );
 
@@ -232,7 +229,6 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         throws FileNotFoundException, IOException, InterruptedException
     {
         this.dataFile = new IndexedDisk( new File( rafDir, fileName + ".data" ), getElementSerializer() );
-
         this.keyFile = new IndexedDisk( new File( rafDir, fileName + ".key" ), getElementSerializer() );
 
         if ( cattr.isClearDiskOnStartup() )
@@ -389,7 +385,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
             {
                 IndexedDiskElementDescriptor ded = e.getValue();
 
-                isOk = ( ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len <= fileLength );
+                isOk = ded.pos + IndexedDisk.HEADER_SIZE_BYTES + ded.len <= fileLength;
 
                 if ( !isOk )
                 {
@@ -915,7 +911,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         boolean removed;
         // remove single item.
         IndexedDiskElementDescriptor ded = keyHash.remove( key );
-        removed = ( ded != null );
+        removed = ded != null;
         addToRecycleBin( ded );
 
         if ( log.isDebugEnabled() )
@@ -1169,7 +1165,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
      */
     protected void doOptimizeRealTime()
     {
-        if ( isRealTimeOptimizationEnabled && !isOptimizing && ( removeCount++ >= cattr.getOptimizeAtRemoveCount() ) )
+        if ( isRealTimeOptimizationEnabled && !isOptimizing && removeCount++ >= cattr.getOptimizeAtRemoveCount() )
         {
             isOptimizing = true;
 
@@ -1513,7 +1509,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
                 IndexedDiskElementDescriptor ded = e.getValue();
 
                 log.debug( logCacheName + "[dump] Disk element, key: " + key + ", pos: " + ded.pos + ", ded.len"
-                    + ded.len + ( ( dumpValues ) ? ( ", val: " + get( key ) ) : "" ) );
+                    + ded.len + ( dumpValues ? ", val: " + get( key ) : "" ) );
             }
         }
     }

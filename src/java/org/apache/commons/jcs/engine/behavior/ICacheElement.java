@@ -41,28 +41,28 @@ public interface ICacheElement<K extends Serializable, V extends Serializable>
      *
      * @return The cacheName value
      */
-    public String getCacheName();
+    String getCacheName();
 
     /**
      * Gets the key attribute of the ICacheElement<K, V> object
      *
      * @return The key value
      */
-    public K getKey();
+    K getKey();
 
     /**
      * Gets the val attribute of the ICacheElement<K, V> object
      *
      * @return The val value
      */
-    public V getVal();
+    V getVal();
 
     /**
      * Gets the attributes attribute of the ICacheElement<K, V> object
      *
      * @return The attributes value
      */
-    public IElementAttributes getElementAttributes();
+    IElementAttributes getElementAttributes();
 
     /**
      * Sets the attributes attribute of the ICacheElement<K, V> object
@@ -70,5 +70,5 @@ public interface ICacheElement<K extends Serializable, V extends Serializable>
      * @param attr
      *            The new attributes value
      */
-    public void setElementAttributes( IElementAttributes attr );
+    void setElementAttributes( IElementAttributes attr );
 }

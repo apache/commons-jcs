@@ -42,9 +42,9 @@ public class LateralCacheAttributes
     private String transmissionTypeName = "UDP";
 
     /** indicates the lateral type, this needs to change */
-    private int transmissionType = UDP;
+    private Type transmissionType = Type.UDP;
 
-    /** The heep servers */
+    /** The http servers */
     private String httpServers;
 
     /** used to identify the service that this manager will be operating on */
@@ -166,32 +166,17 @@ public class LateralCacheAttributes
      * Sets the transmissionType attribute of the LateralCacheAttributes object
      * @param val The new transmissionType value
      */
-    public void setTransmissionType( int val )
+    public void setTransmissionType( Type val )
     {
         this.transmissionType = val;
-        if ( val == UDP )
-        {
-            transmissionTypeName = "UDP";
-        }
-        else if ( val == HTTP )
-        {
-            transmissionTypeName = "HTTP";
-        }
-        else if ( val == TCP )
-        {
-            transmissionTypeName = "TCP";
-        }
-        else if ( val == XMLRPC )
-        {
-            transmissionTypeName = "XMLRPC";
-        }
+        this.transmissionTypeName = val.toString();
     }
 
     /**
      * Gets the transmissionType attribute of the LateralCacheAttributes object
      * @return The transmissionType value
      */
-    public int getTransmissionType()
+    public Type getTransmissionType()
     {
         return this.transmissionType;
     }
@@ -203,22 +188,7 @@ public class LateralCacheAttributes
     public void setTransmissionTypeName( String val )
     {
         this.transmissionTypeName = val;
-        if ( val.equals( "UDP" ) )
-        {
-            transmissionType = UDP;
-        }
-        else if ( val.equals( "HTTP" ) )
-        {
-            transmissionType = HTTP;
-        }
-        else if ( val.equals( "TCP" ) )
-        {
-            transmissionType = TCP;
-        }
-        else if ( val.equals( "XMLRPC" ) )
-        {
-            transmissionType = XMLRPC;
-        }
+        this.transmissionType = Type.valueOf(val);
     }
 
     /**

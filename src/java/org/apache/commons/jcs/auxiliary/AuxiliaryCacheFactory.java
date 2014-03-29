@@ -41,7 +41,7 @@ public interface AuxiliaryCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
+    <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
             ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
 
@@ -50,12 +50,12 @@ public interface AuxiliaryCacheFactory
      * <p>
      * @param s The new name value
      */
-    public void setName( String s );
+    void setName( String s );
 
     /**
      * Gets the name attribute of the AuxiliaryCacheFactory object
      * <p>
      * @return The name value
      */
-    public String getName();
+    String getName();
 }

@@ -34,18 +34,18 @@ public interface ICacheServiceAdmin
      * @return The stats value
      * @throws IOException
      */
-    public String getStats()
+    String getStats()
         throws IOException;
 
     /** Description of the Method
      * @throws IOException*/
-    public void shutdown()
+    void shutdown()
         throws IOException;
 
     /** Description of the Method
      * @param host
      * @param port
      * @throws IOException*/
-    public void shutdown( String host, int port )
+    void shutdown( String host, int port )
         throws IOException;
 }

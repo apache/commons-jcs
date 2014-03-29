@@ -89,7 +89,7 @@ public interface ICacheService<K extends Serializable, V extends Serializable>
      * @param key
      * @throws IOException
      */
-    public void remove( String cacheName, K key )
+    void remove( String cacheName, K key )
         throws IOException;
 
     /**
@@ -97,7 +97,7 @@ public interface ICacheService<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
-    public void removeAll( String cacheName )
+    void removeAll( String cacheName )
         throws IOException;
 
     /**
@@ -106,13 +106,13 @@ public interface ICacheService<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
-    public void dispose( String cacheName )
+    void dispose( String cacheName )
         throws IOException;
 
     /**
      * Frees all caches.
      * @throws IOException
      */
-    public void release()
+    void release()
         throws IOException;
 }

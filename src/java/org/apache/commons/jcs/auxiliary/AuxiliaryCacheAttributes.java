@@ -21,59 +21,54 @@ package org.apache.commons.jcs.auxiliary;
 
 import java.io.Serializable;
 
+import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
+
 /**
  * This is a nominal interface that auxiliary cache attributes should implement. This allows the
  * auxiliary mangers to share a common interface.
  */
 public interface AuxiliaryCacheAttributes
-    extends Cloneable, Serializable
+    extends Serializable
 {
-    /** Does not use a thread pool. */
-    public static final String SINGLE_QUEUE_TYPE = "SINGLE";
-
-    /** Uses a thread pool. */
-    public static final String POOLED_QUEUE_TYPE = "POOLED";
-
-
     /**
      * Sets the name of the cache, referenced by the appropriate manager.
      * <p>
      * @param s The new cacheName value
      */
-    public void setCacheName( String s );
+    void setCacheName( String s );
 
     /**
      * Gets the cacheName attribute of the AuxiliaryCacheAttributes object
      * <p>
      * @return The cacheName value
      */
-    public String getCacheName();
+    String getCacheName();
 
     /**
      * Name known by by configurator
      * <p>
      * @param s The new name value
      */
-    public void setName( String s );
+    void setName( String s );
 
     /**
      * Gets the name attribute of the AuxiliaryCacheAttributes object
      * <p>
      * @return The name value
      */
-    public String getName();
+    String getName();
 
     /**
      * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
      * <p>
      * @param s SINGLE or POOLED
      */
-    public void setEventQueueType( String s );
+    void setEventQueueType( ICacheEventQueue.QueueType s );
 
     /**
      * @return SINGLE or POOLED
      */
-    public String getEventQueueType();
+    ICacheEventQueue.QueueType getEventQueueType();
 
     /**
      * If you choose a POOLED event queue type, the value of EventQueuePoolName will be used. This
@@ -81,7 +76,7 @@ public interface AuxiliaryCacheAttributes
      * <p>
      * @param s SINGLE or POOLED
      */
-    public void setEventQueuePoolName( String s );
+    void setEventQueuePoolName( String s );
 
     /**
      * Sets the pool name to use. If a pool is not found by this name, the thread pool manager will
@@ -89,12 +84,12 @@ public interface AuxiliaryCacheAttributes
      * <p>
      * @return name of thread pool to use for this auxiliary
      */
-    public String getEventQueuePoolName();
+    String getEventQueuePoolName();
 
     /**
      * Clones
      * <p>
      * @return a copy
      */
-    public AuxiliaryCacheAttributes copy();
+    AuxiliaryCacheAttributes copy();
 }

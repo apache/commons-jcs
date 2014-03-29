@@ -114,7 +114,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
         catch ( CacheException e )
         {
             log.error( "Problem putting value for key [" + key + "] in cache [" + partitions[partition] + "]" );
-            throw ( e );
+            throw e;
         }
     }
 
@@ -173,7 +173,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
         catch ( CacheException e )
         {
             log.error( "Problem putting value for key [" + key + "] in cache [" + partitions[partition] + "]" );
-            throw ( e );
+            throw e;
         }
     }
 
@@ -354,7 +354,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
         catch ( CacheException e )
         {
             log.error( "Problem removing value for key [" + key + "] in cache [" + partitions[partition] + "]" );
-            throw ( e );
+            throw e;
         }
     }
 

@@ -25,7 +25,7 @@ package org.apache.commons.jcs.engine.behavior;
  */
 public interface ICacheType
 {
-    public enum CacheType {
+    enum CacheType {
         /** Composite/ memory cache type, central hub. */
         CACHE_HUB,
 
@@ -44,6 +44,6 @@ public interface ICacheType
      * <p>
      * @return The cacheType value
      */
-    public CacheType getCacheType();
+    CacheType getCacheType();
 
 }

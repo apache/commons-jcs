@@ -70,7 +70,7 @@ public class TestTCPLateralUnitTest
         JCS.getInstance( "test" );
 
         TCPLateralCacheAttributes lac = new TCPLateralCacheAttributes();
-        lac.setTransmissionType( LateralCacheAttributes.TCP );
+        lac.setTransmissionType( LateralCacheAttributes.Type.TCP );
         lac.setTcpServer( "localhost" + ":" + 8111 );
         lac.setTcpListenerPort( 8111 );
 

@@ -33,12 +33,12 @@ public interface IDiscoveryListener
      * <p>
      * @param service the service to add
      */
-    public void addDiscoveredService( DiscoveredService service );
+    void addDiscoveredService( DiscoveredService service );
 
     /**
      * Remove the service from the list.
      * <p>
      * @param service the service to remove
      */
-    public void removeDiscoveredService( DiscoveredService service );
+    void removeDiscoveredService( DiscoveredService service );
 }

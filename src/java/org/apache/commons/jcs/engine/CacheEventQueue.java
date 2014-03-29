@@ -39,7 +39,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
     extends AbstractCacheEventQueue<K, V>
 {
     /** The type of queue -- there are pooled and single */
-    private static final String queueType = SINGLE_QUEUE_TYPE;
+    private static final QueueType queueType = QueueType.SINGLE;
 
     /** the thread that works the queue. */
     private Thread processorThread;
@@ -118,7 +118,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
      * <p>
      * @return queueType
      */
-    public String getQueueType()
+    public QueueType getQueueType()
     {
         return queueType;
     }

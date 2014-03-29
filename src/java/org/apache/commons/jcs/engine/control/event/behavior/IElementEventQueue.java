@@ -39,17 +39,17 @@ public interface IElementEventQueue extends Serializable
      *            The IElementEventHandler IElementEvent event
      * @throws IOException
      */
-    public void addElementEvent( IElementEventHandler hand, IElementEvent event )
+    void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException;
 
     /** Description of the Method */
-    public void destroy();
+    void destroy();
 
     /**
      * Gets the alive attribute of the IElementEventQueue object
      *
      * @return The alive value
      */
-    public boolean isAlive();
+    boolean isAlive();
 
 }

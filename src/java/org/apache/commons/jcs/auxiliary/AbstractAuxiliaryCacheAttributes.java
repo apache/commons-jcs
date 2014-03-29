@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.auxiliary;
 
+import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -34,8 +36,8 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /** name */
     protected String name;
 
-    /** eventQueueType -- custom classname, pooled, or single threaded */
-    protected String eventQueueType;
+    /** eventQueueType -- pooled, or single threaded */
+    protected ICacheEventQueue.QueueType eventQueueType;
 
     /** Named when pooled */
     protected String eventQueuePoolName;
@@ -81,9 +83,9 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * SINGLE is the default. If you choose POOLED, the value of EventQueuePoolName will be used
      * <p>
-     * @param queueType SINGLE or POOLED or a classname
+     * @param queueType SINGLE or POOLED
      */
-    public void setEventQueueType( String queueType )
+    public void setEventQueueType( ICacheEventQueue.QueueType queueType )
     {
         this.eventQueueType = queueType;
     }
@@ -91,7 +93,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * @return SINGLE or POOLED
      */
-    public String getEventQueueType()
+    public ICacheEventQueue.QueueType getEventQueueType()
     {
         return eventQueueType;
     }

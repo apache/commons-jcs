@@ -29,24 +29,24 @@ public interface IStatElement
      * <p>
      * @return the stat element name
      */
-    public abstract String getName();
+    String getName();
 
     /**
      * @param name
      */
-    public abstract void setName( String name );
+    void setName( String name );
 
     /**
      * Get the data, ex. for hit count you would get a String value for some number.
      * <p>
      * @return String data
      */
-    public abstract String getData();
+    String getData();
 
     /**
      * Set the data for this element.
      * <p>
      * @param data
      */
-    public abstract void setData( String data );
+    void setData( String data );
 }

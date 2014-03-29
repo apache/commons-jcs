@@ -566,10 +566,10 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
         se.setData( this.getRemoteCacheAttributes().getRemoteTypeName() + "" );
         elems.add( se );
 
-        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
-        {
-            // something cluster specific
-        }
+//        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
+//        {
+//            // something cluster specific
+//        }
 
         // no data gathered here
 

@@ -34,9 +34,6 @@ import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends Serializable>
     implements AuxiliaryCache<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -1285708398502576617L;
-
     /** An optional event logger */
     protected ICacheEventLogger cacheEventLogger;
 

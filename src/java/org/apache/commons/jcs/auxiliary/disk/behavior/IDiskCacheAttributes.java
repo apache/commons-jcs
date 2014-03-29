@@ -32,7 +32,7 @@ public interface IDiskCacheAttributes
      * items to be spooled are temporarily stored. It basically provides access
      * to items on the to-be-spooled queue.
      */
-    public static final int MAX_PURGATORY_SIZE_DEFUALT = 5000;
+    int MAX_PURGATORY_SIZE_DEFUALT = 5000;
 
     /**
      * Sets the diskPath attribute of the IJISPCacheAttributes object
@@ -40,21 +40,21 @@ public interface IDiskCacheAttributes
      * @param path
      *            The new diskPath value
      */
-    public void setDiskPath( String path );
+    void setDiskPath( String path );
 
     /**
      * Gets the diskPath attribute of the attributes object
      * <p>
      * @return The diskPath value
      */
-    public String getDiskPath();
+    String getDiskPath();
 
     /**
      * Gets the maxKeySize attribute of the DiskCacheAttributes object
      * <p>
      * @return The maxPurgatorySize value
      */
-    public int getMaxPurgatorySize();
+    int getMaxPurgatorySize();
 
     /**
      * Sets the maxPurgatorySize attribute of the DiskCacheAttributes object
@@ -62,7 +62,7 @@ public interface IDiskCacheAttributes
      * @param maxPurgatorySize
      *            The new maxPurgatorySize value
      */
-    public void setMaxPurgatorySize( int maxPurgatorySize );
+    void setMaxPurgatorySize( int maxPurgatorySize );
 
     /**
      * Get the amount of time in seconds we will wait for elements to move to
@@ -70,7 +70,7 @@ public interface IDiskCacheAttributes
      * <p>
      * @return the time in seconds.
      */
-    public int getShutdownSpoolTimeLimit();
+    int getShutdownSpoolTimeLimit();
 
     /**
      * Sets the amount of time in seconds we will wait for elements to move to
@@ -83,14 +83,14 @@ public interface IDiskCacheAttributes
      * @param shutdownSpoolTimeLimit
      *            the time in seconds
      */
-    public void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit );
+    void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit );
 
     /**
      * If this is true then remove all is not prohibited.
      * <p>
      * @return boolean
      */
-    public boolean isAllowRemoveAll();
+    boolean isAllowRemoveAll();
 
     /**
      * If this is false, then remove all requests will not be honored.
@@ -99,5 +99,5 @@ public interface IDiskCacheAttributes
      * <p>
      * @param allowRemoveAll
      */
-    public void setAllowRemoveAll( boolean allowRemoveAll );
+    void setAllowRemoveAll( boolean allowRemoveAll );
 }

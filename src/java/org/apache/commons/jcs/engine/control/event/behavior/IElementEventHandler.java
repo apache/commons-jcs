@@ -36,5 +36,5 @@ public interface IElementEventHandler
      * @param event
      *            The event created by the cache.
      */
-    public void handleElementEvent( IElementEvent event );
+    void handleElementEvent( IElementEvent event );
 }

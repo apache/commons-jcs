@@ -63,9 +63,6 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
     extends AbstractAuxiliaryCacheEventLogging<K, V>
     implements AuxiliaryCache<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = 6541664080877628324L;
-
     /** The logger */
     protected static final Log log = LogFactory.getLog( AbstractDiskCache.class );
 

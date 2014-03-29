@@ -346,7 +346,7 @@ public class LateralTCPDiscoveryListener
     private LateralTCPCacheManager findManagerForServiceEndPoint( DiscoveredService service )
     {
         ITCPLateralCacheAttributes lca = new TCPLateralCacheAttributes();
-        lca.setTransmissionType( LateralCacheAttributes.TCP );
+        lca.setTransmissionType( LateralCacheAttributes.Type.TCP );
         lca.setTcpServer( service.getServiceAddress() + ":" + service.getServicePort() );
         LateralTCPCacheManager lcm = LateralTCPCacheManager.getInstance( lca, cacheMgr, cacheEventLogger,
                                                                          elementSerializer );

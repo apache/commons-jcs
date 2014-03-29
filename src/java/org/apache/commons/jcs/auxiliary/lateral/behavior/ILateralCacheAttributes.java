@@ -32,121 +32,124 @@ import org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes;
 public interface ILateralCacheAttributes
     extends Serializable, AuxiliaryCacheAttributes
 {
-    /** HTTP type */
-    final static int HTTP = 1;
+    enum Type
+    {
+        /** HTTP type */
+        HTTP, // 1
 
-    /** UDP type */
-    final static int UDP = 2;
+        /** UDP type */
+        UDP, // 2
 
-    /** TCP type */
-    final static int TCP = 3;
+        /** TCP type */
+        TCP, // 3
 
-    /** XMLRPC type */
-    final static int XMLRPC = 4;
+        /** XMLRPC type */
+        XMLRPC // 4
+    }
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
      * loose our connection with the server.
      */
-    public static final int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
+    int DEFAULT_ZOMBIE_QUEUE_MAX_SIZE = 1000;
 
     /**
      * Sets the httpServer attribute of the ILateralCacheAttributes object
      * <p>
      * @param val The new httpServer value
      */
-    public void setHttpServer( String val );
+    void setHttpServer( String val );
 
     /**
      * Gets the httpServer attribute of the ILateralCacheAttributes object
      * <p>
      * @return The httpServer value
      */
-    public String getHttpServer();
+    String getHttpServer();
 
     /**
      * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
      * <p>
      * @param val The new tcpListenerPort value
      */
-    public void setHttpListenerPort( int val );
+    void setHttpListenerPort( int val );
 
     /**
      * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
      * <p>
      * @return The httpListenerPort value
      */
-    public int getHttpListenerPort();
+    int getHttpListenerPort();
 
     /**
      * Sets the httpServers attribute of the LateralCacheAttributes object
      * <p>
      * @param val The new httpServers value
      */
-    public void setHttpServers( String val );
+    void setHttpServers( String val );
 
     /**
      * Gets the httpSrvers attribute of the LateralCacheAttributes object
      * <p>
      * @return The httpServers value
      */
-    public String getHttpServers();
+    String getHttpServers();
 
     /**
      * Sets the udpMulticastAddr attribute of the ILateralCacheAttributes object
      * <p>
      * @param val The new udpMulticastAddr value
      */
-    public void setUdpMulticastAddr( String val );
+    void setUdpMulticastAddr( String val );
 
     /**
      * Gets the udpMulticastAddr attribute of the ILateralCacheAttributes object
      * <p>
      * @return The udpMulticastAddr value
      */
-    public String getUdpMulticastAddr();
+    String getUdpMulticastAddr();
 
     /**
      * Sets the udpMulticastPort attribute of the ILateralCacheAttributes object
      * <p>
      * @param val The new udpMulticastPort value
      */
-    public void setUdpMulticastPort( int val );
+    void setUdpMulticastPort( int val );
 
     /**
      * Gets the udpMulticastPort attribute of the ILateralCacheAttributes object
      * <p>
      * @return The udpMulticastPort value
      */
-    public int getUdpMulticastPort();
+    int getUdpMulticastPort();
 
     /**
      * Sets the transmissionType attribute of the ILateralCacheAttributes object
      * <p>
      * @param val The new transmissionType value
      */
-    public void setTransmissionType( int val );
+    void setTransmissionType( Type val );
 
     /**
      * Gets the transmissionType attribute of the ILateralCacheAttributes object
      * <p>
      * @return The transmissionType value
      */
-    public int getTransmissionType();
+    Type getTransmissionType();
 
     /**
      * Sets the transmissionTypeName attribute of the ILateralCacheAttributes object
      * <p>
      * @param val The new transmissionTypeName value
      */
-    public void setTransmissionTypeName( String val );
+    void setTransmissionTypeName( String val );
 
     /**
      * Gets the transmissionTypeName attribute of the ILateralCacheAttributes object
      * <p>
      * @return The transmissionTypeName value
      */
-    public String getTransmissionTypeName();
+    String getTransmissionTypeName();
 
     /**
      * Sets the putOnlyMode attribute of the ILateralCacheAttributes. When this is true the lateral
@@ -155,17 +158,17 @@ public interface ILateralCacheAttributes
      * <p>
      * @param val The new transmissionTypeName value
      */
-    public void setPutOnlyMode( boolean val );
+    void setPutOnlyMode( boolean val );
 
     /**
      * @return The outgoingOnlyMode value. Stops gets from going remote.
      */
-    public boolean getPutOnlyMode();
+    boolean getPutOnlyMode();
 
     /**
      * @param receive The receive to set.
      */
-    public void setReceive( boolean receive );
+    void setReceive( boolean receive );
 
     /**
      * Should a listener be created. By default this is true.
@@ -179,7 +182,7 @@ public interface ILateralCacheAttributes
      * <p>
      * @return true if we should have a listener connection
      */
-    public boolean isReceive();
+    boolean isReceive();
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
@@ -187,7 +190,7 @@ public interface ILateralCacheAttributes
      * <p>
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
-    public void setZombieQueueMaxSize( int zombieQueueMaxSize );
+    void setZombieQueueMaxSize( int zombieQueueMaxSize );
 
     /**
      * The number of elements the zombie queue will hold. This queue is used to store events if we
@@ -195,5 +198,5 @@ public interface ILateralCacheAttributes
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */
-    public int getZombieQueueMaxSize();
+    int getZombieQueueMaxSize();
 }

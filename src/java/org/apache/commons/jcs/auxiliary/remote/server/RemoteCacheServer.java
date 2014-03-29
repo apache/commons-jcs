@@ -21,6 +21,7 @@ package org.apache.commons.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
@@ -35,7 +36,6 @@ import java.util.Set;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheObserver;
-import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheServiceAdmin;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.IRemoteCacheServerAttributes;
 import org.apache.commons.jcs.auxiliary.remote.server.behavior.RemoteType;
 import org.apache.commons.jcs.engine.CacheEventQueueFactory;
@@ -43,6 +43,7 @@ import org.apache.commons.jcs.engine.CacheListeners;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
 import org.apache.commons.jcs.engine.behavior.ICacheListener;
+import org.apache.commons.jcs.engine.behavior.ICacheServiceAdmin;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
@@ -69,7 +70,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     extends UnicastRemoteObject
-    implements ICacheServiceNonLocal<K, V>, IRemoteCacheObserver, IRemoteCacheServiceAdmin, Unreferenced
+    implements ICacheServiceNonLocal<K, V>, IRemoteCacheObserver, ICacheServiceAdmin, Remote, Unreferenced
 {
     /** For serialization. Don't change. */
     private static final long serialVersionUID = -8072345435941473116L;

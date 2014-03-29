@@ -34,40 +34,10 @@ public interface ICacheElementSerialized<K extends Serializable, V extends Seria
     extends ICacheElement<K, V>
 {
     /**
-     * Gets the cacheName attribute of the ICacheElement<K, V> object. The cacheName is also known as the
-     * region name.
-     *<p>
-     * @return The cacheName value
-     */
-    public String getCacheName();
-
-    /**
-     * Gets the key attribute of the ICacheElementSerialized object. This is the standard key that
-     * the value can be reference by.
-     *<p>
-     * @return The key value
-     */
-    public K getKey();
-
-    /**
      * Gets the value attribute of the ICacheElementSerialized object. This is the value the client
      * cached serialized by some mechanism.
      *<p>
      * @return The serialized value
      */
-    public byte[] getSerializedValue();
-
-    /**
-     * Gets the attributes attribute of the ICacheElement<K, V> object
-     *<p>
-     * @return The attributes value
-     */
-    public IElementAttributes getElementAttributes();
-
-    /**
-     * Sets the attributes attribute of the ICacheElement<K, V> object
-     *<p>
-     * @param attr The new attributes value
-     */
-    public void setElementAttributes( IElementAttributes attr );
+    byte[] getSerializedValue();
 }

@@ -32,19 +32,13 @@ import org.apache.commons.jcs.engine.behavior.ICacheListener;
 public interface IRemoteCacheListener<K extends Serializable, V extends Serializable>
     extends ICacheListener<K, V>, Remote
 {
-    /** SERVER_LISTENER -- for the cluster */
-    public final static int SERVER_LISTENER = 0;
-
-    /** CLIENT_LISTENER -- these aren't used any longer. remove */
-    public final static int CLIENT_LISTENER = 1;
-
     /**
      * Get the id to be used by this manager.
      * <p>
      * @return long
      * @throws IOException
      */
-    public long getListenerId()
+    long getListenerId()
         throws IOException;
 
     /**
@@ -54,7 +48,7 @@ public interface IRemoteCacheListener<K extends Serializable, V extends Serializ
      * @param id
      * @throws IOException
      */
-    public void setListenerId( long id )
+    void setListenerId( long id )
         throws IOException;
 
     /**
@@ -63,7 +57,7 @@ public interface IRemoteCacheListener<K extends Serializable, V extends Serializ
      * @return The remoteType value
      * @throws IOException
      */
-    public RemoteType getRemoteType()
+    RemoteType getRemoteType()
         throws IOException;
 
     /**
@@ -73,7 +67,7 @@ public interface IRemoteCacheListener<K extends Serializable, V extends Serializ
      * @return the local host address.
      * @throws IOException
      */
-    public String getLocalHostAddress()
+    String getLocalHostAddress()
         throws IOException;
 
     /**
@@ -81,6 +75,6 @@ public interface IRemoteCacheListener<K extends Serializable, V extends Serializ
      * <p>
      * @throws IOException
      */
-    public void dispose()
+    void dispose()
         throws IOException;
 }

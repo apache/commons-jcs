@@ -36,7 +36,7 @@ public interface ICacheManager
      *
      * @return The cache value
      */
-    public <K extends Serializable, V extends Serializable> ICache<K, V> getCache( String cacheName );
+    <K extends Serializable, V extends Serializable> ICache<K, V> getCache( String cacheName );
 
 }
 // end interface
