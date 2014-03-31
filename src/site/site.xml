@@ -25,7 +25,7 @@
         <menu name="JCS">
             <item name="Overview"      href="/index.html"/>
             <item name="JCS and JCACHE" href="/JCSandJCACHE.html" />
-            <item name="Downloads" href="/DownloadPage.html" />
+            <item name="Downloads" href="/download_jcs.cgi" />
             <item name="FAQ" href="/faq.html" />
         </menu>
 

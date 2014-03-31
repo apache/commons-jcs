@@ -27,6 +27,7 @@
                 <include>checkstyle.xml</include>
                 <include>default.properties</include>
                 <include>LICENSE.txt</include>
+                <include>LICENSE.xerox</include>
                 <include>LICENSE-header.txt</include>
                 <include>NOTICE.txt</include>
                 <include>pom.xml</include>

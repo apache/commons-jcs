@@ -30,8 +30,9 @@
   <artifactId>commons-jcs</artifactId>
   <packaging>jar</packaging>
   <version>2.0-SNAPSHOT</version>
-  <name>Apache Commons JCS</name>
+  <name>Commons JCS</name>
   <url>http://commons.apache.org/proper/commons-jcs/</url>
+  <description>Apache Commons JCS is a distributed, versatile caching system.</description>
   <inceptionYear>2002</inceptionYear>
 
   <dependencies>
@@ -398,6 +399,7 @@
 
     <commons.componentid>jcs</commons.componentid>
     <commons.release.version>2.0</commons.release.version>
+    <commons.release.desc>(Java 6.0+)</commons.release.desc>
     <!-- The RC version used in the staging repository URL. -->
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>JCS</commons.jira.id>

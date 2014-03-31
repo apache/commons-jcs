@@ -21,7 +21,7 @@
 	<body>
 		<section name="Java Caching System">
 			<p>
-				JCS is a distributed caching system written in java. It is intended
+				JCS is a distributed caching system written in Java. It is intended
 				to speed up applications by providing a means to manage cached data
 				of various dynamic natures. Like any caching system, JCS is
 				<a href="UsingJCSBasicWeb.html">most useful</a>

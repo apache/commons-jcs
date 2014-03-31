@@ -25,6 +25,7 @@
         <fileSet>
             <includes>
                 <include>LICENSE.txt</include>
+                <include>LICENSE.xerox</include>
                 <include>NOTICE.txt</include>
                 <include>RELEASE-NOTES.txt</include>
             </includes>
