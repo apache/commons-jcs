@@ -216,7 +216,7 @@
               connectionName="scott"
               connectionPassword="tiger"
 
-              driverName="org.gjt.mm.mysql.Driver"
+              driverName="com.mysql.jdbc.Driver"
               connectionURL="jdbc:mysql://localhost/authority"
               connectionName="test"
               connectionPassword="test"

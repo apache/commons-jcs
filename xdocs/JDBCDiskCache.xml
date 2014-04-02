@@ -62,8 +62,8 @@ jcs.auxiliary.MYSQL=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheFact
 jcs.auxiliary.MYSQL.attributes=org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes
 jcs.auxiliary.MYSQL.attributes.userName=myUsername
 jcs.auxiliary.MYSQL.attributes.password=myPassword
-jcs.auxiliary.MYSQL.attributes.url=${MYSQL}
-jcs.auxiliary.MYSQL.attributes.driverClassName=org.gjt.mm.mysql.Driver
+jcs.auxiliary.MYSQL.attributes.url=jdbc:mysql://localhost:3306/YOURDBNAME?autoReconnect=true
+jcs.auxiliary.MYSQL.attributes.driverClassName=com.mysql.jdbc.Driver
 jcs.auxiliary.MYSQL.attributes.tableName=JCS_STORE
 jcs.auxiliary.MYSQL.attributes.testBeforeInsert=false
 jcs.auxiliary.MYSQL.attributes.maxActive=100

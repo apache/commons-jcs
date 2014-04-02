@@ -45,7 +45,7 @@ public class MySQLTableOptimizerManualTester
         attributes.setUserName( "java" );
         attributes.setPassword( "letmein" );
         attributes.setUrl( "jdbc:mysql://10.19.98.43:3306/flight_option_cache" );
-        attributes.setDriverClassName( "org.gjt.mm.mysql.Driver" );
+        attributes.setDriverClassName( "com.mysql.jdbc.Driver" );
         String tableName = "JCS_STORE_FLIGHT_OPTION_ITINERARY";
         attributes.setTableName( tableName );
         TableState tableState = new TableState( tableName );
@@ -70,7 +70,7 @@ public class MySQLTableOptimizerManualTester
         attributes.setUserName( "java" );
         attributes.setPassword( "letmein" );
         attributes.setUrl( "jdbc:mysql://10.19.98.43:3306/flight_option_cache" );
-        attributes.setDriverClassName( "org.gjt.mm.mysql.Driver" );
+        attributes.setDriverClassName( "com.mysql.jdbc.Driver" );
         String tableName = "DOESNTEXIST";
         attributes.setTableName( tableName );
         TableState tableState = new TableState( tableName );

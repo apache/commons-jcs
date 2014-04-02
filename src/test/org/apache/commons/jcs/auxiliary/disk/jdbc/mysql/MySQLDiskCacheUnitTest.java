@@ -46,7 +46,7 @@ public class MySQLDiskCacheUnitTest
         // SETUP
         MySQLDiskCacheAttributes attributes = new MySQLDiskCacheAttributes();
         String tableName = "JCS_TEST";
-        attributes.setDriverClassName( "org.gjt.mm.mysql.Driver" );
+        attributes.setDriverClassName( "com.mysql.jdbc.Driver" );
         attributes.setTableName( tableName );
         attributes.setBalkDuringOptimization( true );
 

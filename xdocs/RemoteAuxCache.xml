@@ -155,7 +155,7 @@ jcs.auxiliary.RFailover.attributes=
     org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes
 jcs.auxiliary.RFailover.attributes.FailoverServers=
     localhost:1102,localhost:1103
-jcs.auxiliary.RC.attributes.RemoveUponRemotePut=true
+jcs.auxiliary.RFailover.attributes.RemoveUponRemotePut=true
 jcs.auxiliary.RFailover.attributes.GetOnly=false
         ]]>
 				</source>
@@ -328,7 +328,7 @@ jcs.auxiliary.RCluster1.attributes.GetOnly=false
 					purpose. It will start the registry and bind the
 					JCS server to the registry. To use the startup
 					servlet, add the following to the web.xml file and
-					make sure you have the remote.cache.ccf file in the
+					make sure you have the cache.ccf file in the
 					WEB-INF/classes directly of your war file.
 				</p>
 				<source>

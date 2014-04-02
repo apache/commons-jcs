@@ -80,7 +80,7 @@ public class JDBCDiskCachePoolAccessFactory
 
         try
         {
-            // org.gjt.mm.mysql.Driver
+            // com.mysql.jdbc.Driver
             Class.forName( driverClassName );
         }
         catch ( ClassNotFoundException e )
