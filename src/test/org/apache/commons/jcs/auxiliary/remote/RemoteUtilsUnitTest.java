@@ -44,19 +44,17 @@ public class RemoteUtilsUnitTest
         }
         catch ( RemoteException e )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            fail("RemoteException unexpected " + e);
         }
 
         try
         {
             RemoteUtils.createRegistry( 1102 );
+            fail("Second RemoteException expected");
         }
         catch ( Exception e )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            // Expected
         }
-
     }
 }

@@ -36,7 +36,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
     extends TestCase
 {
     /** Should log data go to system out. */
-    private static boolean isSysOut = true;
+    private static boolean isSysOut = false;
 
     /** The port the server will listen to. */
     private final int serverPort = 1118;
@@ -171,7 +171,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
                     p( "put " + key );
                 }
 
-                if ( i % 100 == 0 )
+                if (show && i % 100 == 0 )
                 {
                     System.out.println( cache.getStats() );
                 }
