@@ -184,7 +184,7 @@ public class UDPDiscoveryReceiver
         }
         catch ( Exception e )
         {
-            log.error( "Error receving multicast packet", e );
+            log.error( "Error receiving multicast packet", e );
         }
         return obj;
     }

@@ -75,7 +75,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;
 
     /** Listening port */
-    protected int port;
+    private int port;
 
     /** The processor. We should probably use an event queue here. */
     protected ExecutorService pooledExecutor;
@@ -119,7 +119,6 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
             ins = new LateralTCPListener<K, V>( ilca );
 
             ins.init();
-
             ins.setCacheManager( cacheMgr );
 
             instances.put( String.valueOf( ilca.getTcpListenerPort() ), ins );
@@ -152,13 +151,18 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         {
             this.port = getTcpLateralCacheAttributes().getTcpListenerPort();
 
-            receiver = new ListenerThread();
-            receiver.setDaemon( true );
-            receiver.start();
-
             pooledExecutor = Executors.newCachedThreadPool(new MyThreadFactory());
             terminated = false;
             shutdown = false;
+
+            log.info( "Listening on port " + port );
+
+            ServerSocket serverSocket = new ServerSocket( port );
+            serverSocket.setSoTimeout( acceptTimeOut );
+
+            receiver = new ListenerThread(serverSocket);
+            receiver.setDaemon( true );
+            receiver.start();
         }
         catch ( Exception ex )
         {
@@ -368,6 +372,8 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     {
         terminated = true;
         notify();
+
+        pooledExecutor.shutdownNow();
     }
 
     /**
@@ -467,19 +473,26 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     public class ListenerThread
         extends Thread
     {
+        /** The socket listener */
+        private ServerSocket serverSocket;
+
+        /**
+         * Constructor
+         *
+         * @param serverSocket
+         */
+        public ListenerThread(ServerSocket serverSocket)
+        {
+            super();
+            this.serverSocket = serverSocket;
+        }
+
         /** Main processing method for the ListenerThread object */
         @Override
         public void run()
         {
-        	ServerSocket serverSocket = null;
-
             try
             {
-                log.info( "Listening on port " + port );
-
-                serverSocket = new ServerSocket( port );
-                serverSocket.setSoTimeout( acceptTimeOut );
-
                 ConnectionHandler handler;
 
                 outer: while ( true )

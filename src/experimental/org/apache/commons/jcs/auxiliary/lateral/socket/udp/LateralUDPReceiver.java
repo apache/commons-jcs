@@ -116,7 +116,7 @@ public class LateralUDPReceiver implements Runnable
         catch ( Exception e )
         {
             log.error( e );
-            //throw new CacheException( "Error receving multicast packet", e);
+            //throw new CacheException( "Error receiving multicast packet", e);
         }
         return obj;
     }
