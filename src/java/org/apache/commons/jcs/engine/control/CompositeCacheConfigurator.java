@@ -239,7 +239,7 @@ public class CompositeCacheConfigurator
         while ( en.hasMoreElements() )
         {
             String key = (String) en.nextElement();
-            if ( key.startsWith( SYSTEM_REGION_PREFIX ) && ( key.indexOf( "attributes" ) == -1 ) )
+            if ( key.startsWith( SYSTEM_REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
             {
                 String regionName = key.substring( SYSTEM_REGION_PREFIX.length() );
                 String value = OptionConverter.findAndSubst( key, props );
@@ -269,7 +269,7 @@ public class CompositeCacheConfigurator
         while ( en.hasMoreElements() )
         {
             String key = (String) en.nextElement();
-            if ( key.startsWith( REGION_PREFIX ) && ( key.indexOf( "attributes" ) == -1 ) )
+            if ( key.startsWith( REGION_PREFIX ) && key.indexOf( "attributes" ) == -1 )
             {
                 String regionName = key.substring( REGION_PREFIX.length() );
 

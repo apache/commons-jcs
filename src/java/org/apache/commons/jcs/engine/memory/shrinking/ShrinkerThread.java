@@ -164,9 +164,9 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
                 // If the item is not removed, check is it has been idle
                 // long enough to be spooled.
 
-                if ( !remove && ( maxMemoryIdleTime != -1 ) )
+                if ( !remove && maxMemoryIdleTime != -1 )
                 {
-                    if ( !spoolLimit || ( spoolCount < this.maxSpoolPerRun ) )
+                    if ( !spoolLimit || spoolCount < this.maxSpoolPerRun )
                     {
                         final long lastAccessTime = attributes.getLastAccessTime();
 
@@ -202,7 +202,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
                         }
 
                         // stop processing if limit has been reached.
-                        if ( spoolLimit && ( spoolCount >= this.maxSpoolPerRun ) )
+                        if ( spoolLimit && spoolCount >= this.maxSpoolPerRun )
                         {
                             keys = null;
                             return;

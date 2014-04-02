@@ -118,7 +118,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
             MemoryElementDescriptor<K, V> oldNode = map.put( newNode.ce.getKey(), newNode );
 
             // If the node was the same as an existing node, remove it.
-            if ( oldNode != null && ( newNode.ce.getKey().equals( oldNode.ce.getKey() ) ) )
+            if ( oldNode != null && newNode.ce.getKey().equals( oldNode.ce.getKey() ) )
             {
                 list.remove( oldNode );
             }

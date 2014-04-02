@@ -242,7 +242,7 @@ public class ElementAttributes
     public long getTimeToLiveSeconds()
     {
         long now = System.currentTimeMillis();
-        return ( ( this.getCreateTime() + ( this.getMaxLifeSeconds() * 1000 ) ) - now ) / 1000;
+        return ( this.getCreateTime() + this.getMaxLifeSeconds() * 1000 - now ) / 1000;
     }
 
     /**

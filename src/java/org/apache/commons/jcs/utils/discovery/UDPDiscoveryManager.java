@@ -25,7 +25,6 @@ import java.util.Map;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IProvideScheduler;
 import org.apache.commons.jcs.engine.behavior.IShutdownObservable;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -72,12 +71,10 @@ public class UDPDiscoveryManager
      * @param discoveryPort
      * @param servicePort
      * @param cacheMgr
-     * @param cacheEventLogger
      * @return UDPDiscoveryService
      */
     public synchronized UDPDiscoveryService getService( String discoveryAddress, int discoveryPort, int servicePort,
-                                                        ICompositeCacheManager cacheMgr,
-                                                        ICacheEventLogger cacheEventLogger )
+                                                        ICompositeCacheManager cacheMgr )
     {
         String key = discoveryAddress + ":" + discoveryPort + ":" + servicePort;
 
@@ -94,7 +91,7 @@ public class UDPDiscoveryManager
             attributes.setUdpDiscoveryPort( discoveryPort );
             attributes.setServicePort( servicePort );
 
-            service = new UDPDiscoveryService( attributes, cacheEventLogger );
+            service = new UDPDiscoveryService( attributes );
 
             // register for shutdown notification
             if ( cacheMgr instanceof IShutdownObservable )

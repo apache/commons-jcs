@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**
@@ -45,7 +44,7 @@ public class UDPDiscoveryUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( attributes, new MockCacheEventLogger() );
+        UDPDiscoveryService service = new UDPDiscoveryService( attributes );
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();

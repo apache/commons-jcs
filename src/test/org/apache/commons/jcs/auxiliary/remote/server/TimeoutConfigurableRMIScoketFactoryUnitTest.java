@@ -39,7 +39,7 @@ public class TimeoutConfigurableRMIScoketFactoryUnitTest
         // SETUP
         int port = 3455;
         String host = "localhost";
-        TimeoutConfigurableRMIScoketFactory factory = new TimeoutConfigurableRMIScoketFactory();
+        TimeoutConfigurableRMISocketFactory factory = new TimeoutConfigurableRMISocketFactory();
 
         // DO WORK
         ServerSocket serverSocket = factory.createServerSocket( port );

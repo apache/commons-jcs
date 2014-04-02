@@ -168,7 +168,7 @@ public class ElementEventQueue
      */
     public boolean isAlive()
     {
-        return ( !destroyed );
+        return !destroyed;
     }
 
     /**

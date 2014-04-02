@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.discovery.behavior.IDiscoveryListener;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.logging.Log;
@@ -76,9 +75,8 @@ public class UDPDiscoveryService
 
     /**
      * @param attributes
-     * @param cacheEventLogger
      */
-    public UDPDiscoveryService( UDPDiscoveryAttributes attributes, ICacheEventLogger cacheEventLogger )
+    public UDPDiscoveryService( UDPDiscoveryAttributes attributes)
     {
         udpDiscoveryAttributes = (UDPDiscoveryAttributes) attributes.clone();
 

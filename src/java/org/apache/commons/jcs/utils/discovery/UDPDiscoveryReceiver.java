@@ -168,7 +168,7 @@ public class UDPDiscoveryReceiver
             final ObjectInputStream objectStream = new ObjectInputStream( byteStream );
             obj = objectStream.readObject();
 
-            if ( (obj != null) && (obj instanceof UDPDiscoveryMessage) )
+            if ( obj != null && obj instanceof UDPDiscoveryMessage )
             {
             	// Ensure that the address we're supposed to send to is, indeed, the address
             	// of the machine on the other end of this connection.  This guards against

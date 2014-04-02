@@ -23,8 +23,6 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
-
 /** Unit tests for the service. */
 public class UDPDiscoveryServiceUnitTest
     extends TestCase
@@ -41,7 +39,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( attributes, new MockCacheEventLogger() );
+        UDPDiscoveryService service = new UDPDiscoveryService( attributes );
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
@@ -75,7 +73,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( attributes, new MockCacheEventLogger() );
+        UDPDiscoveryService service = new UDPDiscoveryService( attributes );
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
@@ -137,7 +135,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( attributes, new MockCacheEventLogger() );
+        UDPDiscoveryService service = new UDPDiscoveryService( attributes );
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();
@@ -198,7 +196,7 @@ public class UDPDiscoveryServiceUnitTest
         attributes.setServicePort( 1000 );
 
         // create the service
-        UDPDiscoveryService service = new UDPDiscoveryService( attributes, new MockCacheEventLogger() );
+        UDPDiscoveryService service = new UDPDiscoveryService( attributes );
         service.addParticipatingCacheName( "testCache1" );
 
         MockDiscoveryListener discoveryListener = new MockDiscoveryListener();

@@ -111,7 +111,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      */
     public synchronized boolean isAlive()
     {
-        return ( !destroyed );
+        return !destroyed;
     }
 
     /**

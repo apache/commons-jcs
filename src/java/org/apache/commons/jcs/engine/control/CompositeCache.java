@@ -108,9 +108,6 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     /** Auxiliary cache hit count (number of times found in ANY auxiliary) */
     private int hitCountAux;
 
-    /** Auxiliary hit counts broken down by auxiliary. */
-    private int[] auxHitCountByIndex;
-
     /** Count of misses where element was not found. */
     private int missCountNotFound = 0;
 
@@ -155,11 +152,6 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     public void setAuxCaches( AuxiliaryCache<K, V>[] auxCaches )
     {
         this.auxCaches = auxCaches;
-
-        if ( auxCaches != null )
-        {
-            this.auxHitCountByIndex = new int[auxCaches.length];
-        }
     }
 
     /**
@@ -344,7 +336,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                     log.debug( "diskcache in aux list: cattr " + cacheAttr.isUseDisk() );
                 }
                 if ( cacheAttr.isUseDisk()
-                    && ( cacheAttr.getDiskUsagePattern() == DiskUsagePattern.UPDATE )
+                    && cacheAttr.getDiskUsagePattern() == DiskUsagePattern.UPDATE
                     && cacheElement.getElementAttributes().getIsSpool() )
                 {
                     aux.update( cacheElement );
@@ -579,8 +571,6 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
                                     // Update counters
                                     hitCountAux++;
-                                    auxHitCountByIndex[i]++;
-
                                     copyAuxiliaryRetrievedItemToMemory( element );
                                 }
 
@@ -682,7 +672,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         // if we didn't find all the elements, increment the miss count by the number of elements not found
         if ( elements.size() != keys.size() )
         {
-            missCountNotFound += ( keys.size() - elements.size() );
+            missCountNotFound += keys.size() - elements.size();
 
             if ( log.isDebugEnabled() )
             {
@@ -996,8 +986,6 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
                     // Update counters
                     hitCountAux++;
-                    auxHitCountByIndex[i]++;
-
                     copyAuxiliaryRetrievedItemToMemory( element );
                 }
             }
@@ -1087,7 +1075,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 // not get updated.
                 // you will need to set the idle time to -1.
 
-                if ( ( idleTime != -1 ) && ( now - lastAccessTime ) > ( idleTime * 1000 ) )
+                if ( ( idleTime != -1 ) && ( now - lastAccessTime ) > idleTime * 1000 )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -1553,7 +1541,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             auxStats[i + 1] = aux.getStatistics();
         }
 
-        // sore the auxiliary stats
+        // store the auxiliary stats
         stats.setAuxiliaryCacheStats( auxStats );
 
         return stats;

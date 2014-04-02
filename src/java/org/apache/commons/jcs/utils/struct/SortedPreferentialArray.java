@@ -479,7 +479,7 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
                 // EQUAL TO
                 // object at current position is equal to the obj, use this,
                 // TODO could avoid some shuffling if I found a lower pos.
-                if ((array[curPos]).compareTo( obj ) == 0 )
+                if (array[curPos].compareTo( obj ) == 0 )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -494,7 +494,7 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
                 // GREATER THAN
                 // array object at current position is greater than the obj, go
                 // left
-                if ((array[curPos]).compareTo( obj ) > 0 )
+                if (array[curPos].compareTo( obj ) > 0 )
                 {
                     if ( log.isDebugEnabled() )
                     {
@@ -514,7 +514,7 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
 
                 // LESS THAN
                 // the object at the current position is smaller, go right
-                if ((array[curPos]).compareTo( obj ) < 0 )
+                if (array[curPos].compareTo( obj ) < 0 )
                 {
                     if ( log.isDebugEnabled() )
                     {

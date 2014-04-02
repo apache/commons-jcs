@@ -133,7 +133,7 @@ public class RemoteHttpCacheDispatcher
 
         try
         {
-            if ( baseUrl != null && ( baseUrl.indexOf( "?" ) == -1 ) )
+            if ( baseUrl != null && baseUrl.indexOf( "?" ) == -1 )
             {
                 url.append( "?" );
             }

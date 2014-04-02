@@ -30,12 +30,12 @@ import java.rmi.server.RMISocketFactory;
  * This can be injected into the the remote cache server as follows:
  *
  * <pre>
- * jcs.remotecache.customrmisocketfactory=org.apache.commons.jcs.auxiliary.remote.server.TimeoutConfigurableRMIScoketFactory
+ * jcs.remotecache.customrmisocketfactory=org.apache.commons.jcs.auxiliary.remote.server.TimeoutConfigurableRMISocketFactory
  * jcs.remotecache.customrmisocketfactory.readTimeout=5000
  * jcs.remotecache.customrmisocketfactory.openTimeout=5000
  * </pre>
  */
-public class TimeoutConfigurableRMIScoketFactory
+public class TimeoutConfigurableRMISocketFactory
     extends RMISocketFactory
     implements Serializable
 {
