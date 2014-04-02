@@ -283,7 +283,7 @@ public class FileDiskCacheUnitTest
         {
             diskCache.update( new CacheElement<String, String>( cacheName, "key" + i, "Data" ) );
         }
-        SleepUtil.sleepAtLeast( 100 );
+        SleepUtil.sleepAtLeast( 500 );
 
         // DO WORK
         ICacheElement<String, String> result = diskCache.get( "key0" );
@@ -364,7 +364,7 @@ public class FileDiskCacheUnitTest
         {
             diskCache.update( new CacheElement<String, String>( cacheName, "key" + i, "Data" ) );
         }
-        SleepUtil.sleepAtLeast( 100 );
+        SleepUtil.sleepAtLeast( 500 );
 
         for ( int i = maxNumberOfFiles - 1; i >= 0; i-- )
         {
