@@ -127,7 +127,7 @@ public class LateralTCPIssueRemoveOnPutUnitTest
         throws Exception
     {
 
-        boolean show = true;// false;
+        boolean show = false;
 
         CacheAccess<String, String> cache = JCS.getInstance( region );
 

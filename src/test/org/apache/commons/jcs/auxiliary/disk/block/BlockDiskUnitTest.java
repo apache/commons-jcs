@@ -335,9 +335,9 @@ public class BlockDiskUnitTest
         String result = (String) disk.read( blocks );
 
         // VERIFY
-        System.out.println( string );
-        System.out.println( result );
-        System.out.println( disk );
+//        System.out.println( string );
+//        System.out.println( result );
+//        System.out.println( disk );
         assertEquals( "Wrong item retured.", string, result );
     }
 

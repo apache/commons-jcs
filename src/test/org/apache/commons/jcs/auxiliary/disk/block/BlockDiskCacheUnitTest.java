@@ -143,7 +143,7 @@ public class BlockDiskCacheUnitTest
         }
 
         Serializable result = elementSerializer.deSerialize( resultData );
-        System.out.println( result );
+        // System.out.println( result );
         assertEquals( "wrong string after retrieval", string, result );
     }
 
@@ -181,7 +181,7 @@ public class BlockDiskCacheUnitTest
         Thread.sleep( 1000 );
         ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
-        System.out.println( "afterElement = " + afterElement );
+        // System.out.println( "afterElement = " + afterElement );
         String after = afterElement.getVal();
 
         assertNotNull( after );
@@ -224,7 +224,7 @@ public class BlockDiskCacheUnitTest
         Thread.sleep( 1000 );
         ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
-        System.out.println( "afterElement = " + afterElement );
+        // System.out.println( "afterElement = " + afterElement );
         String after = afterElement.getVal();
 
         assertNotNull( after );
@@ -316,7 +316,7 @@ public class BlockDiskCacheUnitTest
         assertNotNull( diskCache.get( "x" ) );
         Thread.sleep( 1000 );
         ICacheElement<String, X> afterElement = diskCache.get( "x" );
-        System.out.println( "afterElement = " + afterElement );
+        // System.out.println( "afterElement = " + afterElement );
         X after = ( afterElement.getVal() );
 
         assertNotNull( after );

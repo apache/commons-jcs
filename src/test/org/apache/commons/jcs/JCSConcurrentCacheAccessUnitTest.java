@@ -130,10 +130,10 @@ public class JCSConcurrentCacheAccessUnitTest
 		        	// continue
 				}
 
-		        if ((idx % 1000) == 0)
-		        {
-		        	System.out.println(name + " " + idx);
-		        }
+//		        if ((idx % 1000) == 0)
+//		        {
+//		        	System.out.println(name + " " + idx);
+//		        }
 			}
 
 		}
