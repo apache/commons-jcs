@@ -60,7 +60,7 @@ public class MockCacheEventLogger
     }
 
     /**
-     * @param cacheEvent
+     * @param event
      */
     public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
     {

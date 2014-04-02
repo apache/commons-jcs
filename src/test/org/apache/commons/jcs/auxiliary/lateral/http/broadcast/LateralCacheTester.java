@@ -21,7 +21,6 @@ package org.apache.commons.jcs.auxiliary.lateral.http.broadcast;
 
 /**
  * @author Aaron Smuts
- * @created January 15, 2002
  * @version 1.0
  */
 public class LateralCacheTester

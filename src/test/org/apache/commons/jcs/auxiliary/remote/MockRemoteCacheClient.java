@@ -78,8 +78,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /**
      * Stores the last argument as fixed.
      * <p>
-     * (non-Javadoc)
-     * @see org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.commons.jcs.auxiliary.remote.behavior.ICacheServiceNonLocal)
+     * @see org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal)
      */
     @SuppressWarnings("unchecked") // Don't know how to do this properly
     public void fixCache( ICacheServiceNonLocal<?, ?> remote )
