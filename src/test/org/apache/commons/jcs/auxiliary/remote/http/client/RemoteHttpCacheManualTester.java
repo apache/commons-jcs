@@ -51,7 +51,7 @@ public class RemoteHttpCacheManualTester
 
         jcs.put( "TestKey", "TestValue" );
 
-        System.out.println( jcs.getStats() );
+        System.out.println( jcs.getStats() ); // TODO replace noise with an assertion
 
         for ( int i = 1; i <= items; i++ )
         {
@@ -71,6 +71,6 @@ public class RemoteHttpCacheManualTester
         jcs.remove( "300:key" );
         assertNull( jcs.get( "TestKey" ) );
 
-        System.out.println( jcs.getStats() );
+        System.out.println( jcs.getStats() ); // TODO replace noise with an assertion
     }
 }

@@ -56,7 +56,7 @@ public class AdminBeanUnitTest
 
         for (CacheRegionInfo info : regions)
         {
-            System.out.println( info );
+            System.out.println( info ); // TODO replace noise with an assertion
 
             if ( info.getCacheName().equals( regionName ) )
             {
@@ -95,8 +95,7 @@ public class AdminBeanUnitTest
         assertEquals( "Wrong number of elements in the region.", 1, elements.length );
 
         CacheElementInfo elementInfo = elements[0];
-        System.out.println( elementInfo );
-        assertEquals( "Wrong key.", key, elementInfo.getKey() );
+        assertEquals( "Wrong key." + elementInfo, key, elementInfo.getKey() );
     }
 
     /**

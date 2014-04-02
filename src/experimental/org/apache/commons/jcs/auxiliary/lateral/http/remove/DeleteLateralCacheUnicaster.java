@@ -135,7 +135,6 @@ public class DeleteLateralCacheUnicaster implements IThreadPoolRunnable
             }
             out.close();
             in.close();
-            // System.out.println("closed inputstream" );
         }
         catch ( Exception e )
         {

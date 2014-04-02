@@ -161,9 +161,9 @@ public class LRUMapConcurrentUnitTest
         Iterator<?> it = map.entrySet().iterator();
         while ( it.hasNext() )
         {
-            System.out.println( it.next() );
+            System.out.println( it.next() ); // TODO replace noise with an assertion
         }
-        System.out.println( map.getStatistics() );
+        System.out.println( map.getStatistics() ); // TODO replace noise with an assertion
 
         // get the max out backwards
         for ( int i = total - 1; i >= 0; i-- )
@@ -172,7 +172,7 @@ public class LRUMapConcurrentUnitTest
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
-        System.out.println( map.getStatistics() );
+        System.out.println( map.getStatistics() ); // TODO replace noise with an assertion
 
         //since we got them backwards the total should be at the end.
         // add one confirm that total is gone.
@@ -211,7 +211,7 @@ public class LRUMapConcurrentUnitTest
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
-        System.out.println( map.getStatistics() );
+        System.out.println( map.getStatistics() ); // TODO replace noise with an assertion
 
     }
 

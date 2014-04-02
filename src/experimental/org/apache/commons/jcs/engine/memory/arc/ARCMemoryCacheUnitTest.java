@@ -76,7 +76,7 @@ public class ARCMemoryCacheUnitTest
             assertEquals( "myregion" + " data " + i, value );
         }
 
-        System.out.println( cache.getStats() );
+        System.out.println( cache.getStats() ); // TODO replace noise with an assertion
     }
 
     /**
@@ -105,7 +105,7 @@ public class ARCMemoryCacheUnitTest
             arc.update( ice );
         }
 
-        System.out.println( "testGetKeyArray " + arc.getStats() );
+        System.out.println( "testGetKeyArray " + arc.getStats() ); // TODO replace noise with an assertion
 
         Object[] keys = arc.getKeyArray();
         assertEquals( "Wrong number of keys.", items, keys.length );
@@ -139,7 +139,7 @@ public class ARCMemoryCacheUnitTest
 
         ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
-        System.out.println( "testHitInT1BelowMax " + arc.getStats() );
+        System.out.println( "testHitInT1BelowMax " + arc.getStats() ); // TODO replace noise with an assertion
 
         assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
@@ -174,7 +174,7 @@ public class ARCMemoryCacheUnitTest
 
         ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
-        System.out.println( "testHitInT1ThenT2BelowMax " + arc.getStats() );
+        System.out.println( "testHitInT1ThenT2BelowMax " + arc.getStats() ); // TODO replace noise with an assertion
 
         assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
@@ -209,7 +209,7 @@ public class ARCMemoryCacheUnitTest
 
         ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
-        System.out.println( "testHitInT1AtMax " + arc.getStats() );
+        System.out.println( "testHitInT1AtMax " + arc.getStats() ); // TODO replace noise with an assertion
 
         assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
@@ -244,7 +244,7 @@ public class ARCMemoryCacheUnitTest
 
         ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
-        System.out.println( "testHitInT1OverMax " + arc.getStats() );
+        System.out.println( "testHitInT1OverMax " + arc.getStats() ); // TODO replace noise with an assertion
 
         assertNull( "Should not have the element since it was the first.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
@@ -279,7 +279,7 @@ public class ARCMemoryCacheUnitTest
 
         //ICacheElement<K, V> element = arc.get( 0 + ":key" );
 
-        System.out.println( "testPutInT1ToMax " + arc.getStats() );
+        System.out.println( "testPutInT1ToMax " + arc.getStats() ); // TODO replace noise with an assertion
 
         //assertNotNull( "Should have the element.", element );
         assertEquals( "Target t1 should be 1/2 until dupe gets or puts.", max / 2, arc.getTarget_T1() );
