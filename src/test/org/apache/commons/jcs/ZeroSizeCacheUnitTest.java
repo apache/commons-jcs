@@ -87,7 +87,5 @@ public class ZeroSizeCacheUnitTest
             String res = jcs.get( i + ":key" );
             assertNull( "[" + i + ":key] should be null", res );
         }
-
-        System.out.println( jcs.getStats() );
     }
 }

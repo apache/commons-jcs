@@ -57,8 +57,6 @@ public class BlockDiskCacheSteadyLoadTest
     {
         JCS.setConfigFilename( "/TestBlockDiskCacheSteadyLoad.ccf" );
 
-        System.out.println( "runSteadyLoadTest" );
-
         logMemoryUsage();
 
         int numPerRun = 250;
@@ -75,15 +73,15 @@ public class BlockDiskCacheSteadyLoadTest
         {
             jcs.get( String.valueOf( i ) );
         }
-        System.out.println( LOG_DIVIDER );
-        System.out.println( "After getting " + numToGet );
-        System.out.println( "Elapsed " + timer.getElapsedTimeString() );
+//        System.out.println( LOG_DIVIDER );
+//        System.out.println( "After getting " + numToGet );
+//        System.out.println( "Elapsed " + timer.getElapsedTimeString() );
         logMemoryUsage();
 
         jcs.clear();
         Thread.sleep( 3000 );
-        System.out.println( LOG_DIVIDER );
-        System.out.println( "Start putting" );
+//        System.out.println( LOG_DIVIDER );
+//        System.out.println( "Start putting" );
 
         long totalSize = 0;
         int totalPut = 0;
@@ -125,26 +123,26 @@ public class BlockDiskCacheSteadyLoadTest
             Thread.sleep( pauseBetweenRuns );
             if ( runCount % 100 == 0 )
             {
-                System.out.println( LOG_DIVIDER );
-                System.out.println( "Elapsed " + timer.getElapsedTimeString() );
-                System.out.println( "Run count: " + runCount + " Average size: " + ( totalSize / totalPut ) + "\n"
-                    + jcs.getStats() );
+//                System.out.println( LOG_DIVIDER );
+//                System.out.println( "Elapsed " + timer.getElapsedTimeString() );
+//                System.out.println( "Run count: " + runCount + " Average size: " + ( totalSize / totalPut ) + "\n"
+//                    + jcs.getStats() );
                 logMemoryUsage();
             }
         }
 
         Thread.sleep( 3000 );
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
         logMemoryUsage();
 
         Thread.sleep( 10000 );
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
         logMemoryUsage();
 
         System.gc();
         Thread.sleep( 3000 );
         System.gc();
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
         logMemoryUsage();
     }
 

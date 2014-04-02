@@ -61,7 +61,7 @@ public class BlockDiskCacheKeyStoreUnitTest
         {
             keyStore.put( String.valueOf( i ), new int[i] );
         }
-        System.out.println( "testPutKeys " + keyStore );
+//        System.out.println( "testPutKeys " + keyStore );
 
         // VERIFY
         assertEquals( "Wrong number of keys", numElements, keyStore.size() );
@@ -103,7 +103,7 @@ public class BlockDiskCacheKeyStoreUnitTest
             keyStore.put( String.valueOf( i ), new int[blocks] );
             keyStore.put( String.valueOf( i ), new int[i] );
         }
-        System.out.println( "testSaveLoadKeys " + keyStore );
+//        System.out.println( "testSaveLoadKeys " + keyStore );
 
         // VERIFY
         assertEquals( "Wrong number of keys", numElements, keyStore.size() );

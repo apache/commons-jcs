@@ -67,17 +67,12 @@ public class RemovalTestUtil
             String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
-        System.out.println( "Confirmed that " + ( end - start ) + " items could be found" );
 
         for ( int i = start; i <= end; i++ )
         {
             jcs.remove( i + ":" );
             assertNull( jcs.get( i + ":key" ) );
         }
-        System.out.println( "Confirmed that " + ( end - start ) + " items were removed" );
-
-        System.out.println( jcs.getStats() );
-
     }
 
     /**

@@ -69,9 +69,6 @@ public class JCSRemovalSimpleConcurrentTest
     public void testTwoDeepRemoval()
         throws Exception
     {
-        System.out.println( "------------------------------------------" );
-        System.out.println( "testTwoDeepRemoval" );
-
         int count = 500;
         CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
@@ -85,16 +82,12 @@ public class JCSRemovalSimpleConcurrentTest
             String res = jcs.get( "key:" + i + ":anotherpart" );
             assertNotNull( "[key:" + i + ":anotherpart] should not be null, " + jcs.getStats(), res );
         }
-        System.out.println( "Confirmed that " + count + " items could be found" );
 
         for ( int i = 0; i <= count; i++ )
         {
             jcs.remove( "key:" + i + ":" );
             assertNull( jcs.getStats(), jcs.get( "key:" + i + ":anotherpart" ) );
         }
-        System.out.println( "Confirmed that " + count + " items were removed" );
-
-        System.out.println( jcs.getStats() );
 
     }
 
@@ -107,9 +100,6 @@ public class JCSRemovalSimpleConcurrentTest
         throws Exception
     {
 
-        System.out.println( "------------------------------------------" );
-        System.out.println( "testSingleDepthRemoval" );
-
         int count = 500;
         CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
@@ -123,17 +113,12 @@ public class JCSRemovalSimpleConcurrentTest
             String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
-        System.out.println( "Confirmed that " + count + " items could be found" );
 
         for ( int i = 0; i <= count; i++ )
         {
             jcs.remove( i + ":" );
             assertNull( jcs.get( i + ":key" ) );
         }
-        System.out.println( "Confirmed that " + count + " items were removed" );
-
-        System.out.println( jcs.getStats() );
-
     }
 
     /**
@@ -145,9 +130,6 @@ public class JCSRemovalSimpleConcurrentTest
         throws Exception
     {
 
-        System.out.println( "------------------------------------------" );
-        System.out.println( "testRemoveAll" );
-
         int count = 500;
         CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
@@ -161,10 +143,6 @@ public class JCSRemovalSimpleConcurrentTest
             String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
-        System.out.println( "Confirmed that " + count + " items could be found" );
-
-        System.out.println( jcs.getStats() );
-
         jcs.clear();
 
         for ( int i = count; i >= 0; i-- )
@@ -175,8 +153,6 @@ public class JCSRemovalSimpleConcurrentTest
                 assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );
             }
         }
-        System.out.println( "Confirmed that all items were removed" );
-
     }
 
     /**
@@ -187,10 +163,6 @@ public class JCSRemovalSimpleConcurrentTest
     public void testClearRepeatedlyWithoutError()
         throws Exception
     {
-
-        System.out.println( "------------------------------------------" );
-        System.out.println( "testRemoveAll" );
-
         int count = 500;
         CacheAccess<String, String> jcs = JCS.getInstance( "testCache1" );
 
@@ -206,9 +178,6 @@ public class JCSRemovalSimpleConcurrentTest
             String res = jcs.get( i + ":key" );
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
-        System.out.println( "Confirmed that " + count + " items could be found" );
-
-        System.out.println( jcs.getStats() );
 
         for ( int i = count; i >= 0; i-- )
         {
@@ -220,6 +189,5 @@ public class JCSRemovalSimpleConcurrentTest
                 assertNull( "[" + i + ":key] should be null after remvoeall" + jcs.getStats(), res );
             }
         }
-        System.out.println( "Confirmed that all items were removed" );
     }
 }

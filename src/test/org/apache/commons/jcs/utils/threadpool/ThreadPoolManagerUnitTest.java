@@ -57,12 +57,10 @@ public class ThreadPoolManagerUnitTest
         // int qs = ((BoundedBuffer)pool.getQueue()).size();
 
         int max = pool.getMaximumPoolSize();
-        System.out.println( max );
 
         int expected = Integer.parseInt( PropertyLoader.loadProperties( "thread_pool.properties" )
             .getProperty( "thread_pool.test1.maximumPoolSize" ) );
-        // "Max should be " + expected",
-        assertEquals( max, expected );
+        assertEquals(expected, max );
     }
 
     /**
@@ -78,12 +76,10 @@ public class ThreadPoolManagerUnitTest
         assertNotNull( pool );
 
         int max = pool.getMaximumPoolSize();
-        System.out.println( max );
 
         int expected = Integer.parseInt( PropertyLoader.loadProperties( "thread_pool.properties" )
             .getProperty( "thread_pool.default.maximumPoolSize" ) );
-        // "Max should be " + expected",
-        assertEquals( max, expected );
+        assertEquals( expected, max );
     }
 
     /**
@@ -100,14 +96,12 @@ public class ThreadPoolManagerUnitTest
         assertNotNull( "Should have gotten back a pool configured like the default", pool );
 
         int max = pool.getMaximumPoolSize();
-        System.out.println( max );
 
         // it will load from the default file
         int expected = Integer.parseInt( PropertyLoader.loadProperties( "cache.ccf" )
             .getProperty( "thread_pool.default.maximumPoolSize" ) );
 
-        // "Max should be " + expected",
-        assertEquals( max, expected );
+        assertEquals( expected, max );
     }
 
     /**
@@ -147,14 +141,12 @@ public class ThreadPoolManagerUnitTest
         assertNotNull( "Should have gotten back a pool.", pool );
 
         int max = pool.getMaximumPoolSize();
-        System.out.println( "testWaitPolicyConfig " + max );
 
         // it will load from the default file
         int expected = Integer.parseInt( PropertyLoader.loadProperties( "thread_pool.properties" )
             .getProperty( "thread_pool.waittest.maximumPoolSize" ) );
 
-        // "Max should be " + expected",
-        assertEquals( "Max is wrong", max, expected );
+        assertEquals( "Max is wrong", expected, max );
 
         PoolConfiguration config = mgr.loadConfig( "thread_pool.waittest" );
 
