@@ -59,18 +59,28 @@ public abstract class AbstractDiskCacheAttributes
     protected int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
 
     /**
-     * Sets the diskPath attribute of the IJISPCacheAttributes object
+     * Sets the diskPath attribute of the DiskCacheAttributes object
      * <p>
      * @param path The new diskPath value
      */
     public void setDiskPath( String path )
     {
-        this.diskPath = new File( path );
+        setDiskPath( new File( path ) );
+    }
+
+    /**
+     * Sets the diskPath attribute of the DiskCacheAttributes object
+     * <p>
+     * @param diskPath The new diskPath value
+     */
+    public void setDiskPath( File diskPath )
+    {
+        this.diskPath = diskPath;
         boolean result = this.diskPath.mkdirs();
 
         if (!result)
         {
-            log.error("Failed to create directory " + path);
+            log.error("Failed to create directory " + diskPath);
         }
     }
 

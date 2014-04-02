@@ -23,6 +23,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -261,6 +262,10 @@ public class PropertySetter
             {
                 return Boolean.FALSE;
             }
+        }
+        else if ( File.class.isAssignableFrom( type ) )
+        {
+            return new File( v );
         }
         return null;
     }
