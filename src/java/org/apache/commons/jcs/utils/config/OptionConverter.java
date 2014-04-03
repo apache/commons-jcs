@@ -35,19 +35,16 @@ public class OptionConverter
     private static final Log log = LogFactory.getLog( OptionConverter.class );
 
     /** System property delimter */
-    static String DELIM_START = "${";
+    private static final String DELIM_START = "${";
 
     /** System property delimter */
-    static char DELIM_STOP = '}';
+    private static final char DELIM_STOP = '}';
 
     /** System property delimter start length */
-    static int DELIM_START_LEN = 2;
+    private static final int DELIM_START_LEN = 2;
 
     /** System property delimter end length */
-    static int DELIM_STOP_LEN = 1;
-
-    /** working buffer */
-    static StringBuffer sbuf = new StringBuffer(); // TODO can this be changed to StringBuilder?? 
+    private static final int DELIM_STOP_LEN = 1;
 
     /** No instances please. */
     private OptionConverter()
@@ -385,7 +382,7 @@ public class OptionConverter
     public static String substVars( String val, Properties props )
         throws IllegalArgumentException
     {
-        sbuf.setLength( 0 );
+        StringBuilder sbuf = new StringBuilder();
 
         int i = 0;
         int j;
