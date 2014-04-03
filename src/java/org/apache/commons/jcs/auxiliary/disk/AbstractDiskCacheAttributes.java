@@ -63,6 +63,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @param path The new diskPath value
      */
+    @Override
     public void setDiskPath( String path )
     {
         setDiskPath( new File( path ) );
@@ -89,6 +90,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @return The diskPath value
      */
+    @Override
     public File getDiskPath()
     {
         return this.diskPath;
@@ -99,6 +101,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @return The maxPurgatorySize value
      */
+    @Override
     public int getMaxPurgatorySize()
     {
         return maxPurgatorySize;
@@ -109,6 +112,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @param maxPurgatorySize The new maxPurgatorySize value
      */
+    @Override
     public void setMaxPurgatorySize( int maxPurgatorySize )
     {
         this.maxPurgatorySize = maxPurgatorySize;
@@ -120,6 +124,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @return the time in seconds.
      */
+    @Override
     public int getShutdownSpoolTimeLimit()
     {
         return this.shutdownSpoolTimeLimit;
@@ -135,6 +140,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @param shutdownSpoolTimeLimit the time in seconds
      */
+    @Override
     public void setShutdownSpoolTimeLimit( int shutdownSpoolTimeLimit )
     {
         this.shutdownSpoolTimeLimit = shutdownSpoolTimeLimit;
@@ -145,6 +151,7 @@ public abstract class AbstractDiskCacheAttributes
      * <p>
      * @return AuxiliaryCacheAttributes
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -161,6 +168,7 @@ public abstract class AbstractDiskCacheAttributes
     /**
      * @param allowRemoveAll The allowRemoveAll to set.
      */
+    @Override
     public void setAllowRemoveAll( boolean allowRemoveAll )
     {
         this.allowRemoveAll = allowRemoveAll;
@@ -169,6 +177,7 @@ public abstract class AbstractDiskCacheAttributes
     /**
      * @return Returns the allowRemoveAll.
      */
+    @Override
     public boolean isAllowRemoveAll()
     {
         return allowRemoveAll;

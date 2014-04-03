@@ -109,6 +109,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * <p>
      * @return The alive value
      */
+    @Override
     public synchronized boolean isAlive()
     {
         return !destroyed;
@@ -127,6 +128,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
     /**
      * @return The listenerId value
      */
+    @Override
     public long getListenerId()
     {
         return listenerId;
@@ -139,6 +141,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * @param ce The feature to be added to the PutEvent attribute
      * @throws IOException
      */
+    @Override
     public synchronized void addPutEvent( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -162,6 +165,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * @param key The feature to be added to the RemoveEvent attribute
      * @throws IOException
      */
+    @Override
     public synchronized void addRemoveEvent( K key )
         throws IOException
     {
@@ -184,6 +188,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * <p>
      * @throws IOException
      */
+    @Override
     public synchronized void addRemoveAllEvent()
         throws IOException
     {
@@ -203,6 +208,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
     /**
      * @throws IOException
      */
+    @Override
     public synchronized void addDisposeEvent()
         throws IOException
     {
@@ -253,6 +259,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         /**
          * Main processing method for the AbstractCacheEvent object
          */
+        @Override
         public void run()
         {
             try
@@ -471,6 +478,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
     /**
      * @return whether the queue is functional.
      */
+    @Override
     public boolean isWorking()
     {
         return working;

@@ -90,6 +90,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * @param item ICacheElement
      * @param listenerId - identifies the caller.
      */
+    @Override
     public void update( ICacheElement<K, V> item, long listenerId )
     {
         if ( maxQueueSize > 0 )
@@ -107,6 +108,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * @param key - item key
      * @param listenerId - identifies the caller.
      */
+    @Override
     public void remove( String cacheName, K key, long listenerId )
     {
         if ( maxQueueSize > 0 )
@@ -123,6 +125,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * @param cacheName - name of the region
      * @param listenerId - identifies the caller.
      */
+    @Override
     public void removeAll( String cacheName, long listenerId )
     {
         if ( maxQueueSize > 0 )
@@ -142,6 +145,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * @return null
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
@@ -158,6 +162,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * @return empty map
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
@@ -170,6 +175,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * @param requesterId - identity of the caller
      * @return an empty map. zombies have no internal data
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
     {
         return new HashMap<K, ICacheElement<K, V>>();
@@ -181,6 +187,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
      * @param cacheName - region name
      * @return empty set
      */
+    @Override
     public Set<K> getKeySet( String cacheName )
     {
         return Collections.emptySet();

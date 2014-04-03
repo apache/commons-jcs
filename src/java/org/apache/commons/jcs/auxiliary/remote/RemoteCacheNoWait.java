@@ -123,6 +123,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * @param element
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> element )
         throws IOException
     {
@@ -146,6 +147,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * @return element from the remote cache, or null if not present
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( K key )
         throws IOException
     {
@@ -190,6 +192,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * @throws IOException
      *
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String pattern )
         throws IOException
     {
@@ -237,6 +240,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
         throws IOException
     {
@@ -280,6 +284,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet() throws IOException
     {
         return remoteCacheClient.getKeySet();
@@ -292,6 +297,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * @return if this was successful
      * @throws IOException
      */
+    @Override
     public boolean remove( K key )
         throws IOException
     {
@@ -314,6 +320,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @throws IOException
      */
+    @Override
     public void removeAll()
         throws IOException
     {
@@ -330,6 +337,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     }
 
     /** Adds a dispose request to the remote cache. */
+    @Override
     public void dispose()
     {
         try
@@ -348,6 +356,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return remoteCacheClient.getSize();
@@ -358,6 +367,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.REMOTE_CACHE;
@@ -369,6 +379,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The status value
      */
+    @Override
     public CacheStatus getStatus()
     {
         return cacheEventQueue.isWorking() ? remoteCacheClient.getStatus() : CacheStatus.ERROR;
@@ -379,6 +390,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return remoteCacheClient.getCacheName();
@@ -436,6 +448,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return remoteCacheClient.getAuxiliaryCacheAttributes();
@@ -468,6 +481,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -476,6 +490,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     /**
      * @return statistics about this communication
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();

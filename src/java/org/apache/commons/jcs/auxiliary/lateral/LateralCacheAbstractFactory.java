@@ -59,6 +59,7 @@ public abstract class LateralCacheAbstractFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
+    @Override
     public abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
             ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer );
@@ -82,6 +83,7 @@ public abstract class LateralCacheAbstractFactory
      * <p>
      * @return The name value
      */
+    @Override
     public String getName()
     {
         return this.name;
@@ -93,6 +95,7 @@ public abstract class LateralCacheAbstractFactory
      * @param name
      *            The new name value
      */
+    @Override
     public void setName( String name )
     {
         this.name = name;

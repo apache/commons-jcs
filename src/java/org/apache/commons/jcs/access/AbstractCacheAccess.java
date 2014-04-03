@@ -65,6 +65,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * <p>
      * @throws CacheException
      */
+    @Override
     public void clear()
         throws CacheException
     {
@@ -88,6 +89,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * @param attr the default attributes.
      * @throws CacheException if something goes wrong.
      */
+    @Override
     public void setDefaultElementAttributes( IElementAttributes attr )
         throws CacheException
     {
@@ -104,6 +106,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * @return the default element attributes used by this region.
      * @throws CacheException
      */
+    @Override
     public IElementAttributes getDefaultElementAttributes()
         throws CacheException
     {
@@ -117,6 +120,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * <p>
      * @return ICacheStats
      */
+    @Override
     public ICacheStats getStatistics()
     {
         return this.cacheControl.getStatistics();
@@ -125,6 +129,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     /**
      * @return A String version of the stats.
      */
+    @Override
     public String getStats()
     {
         return this.cacheControl.getStats();
@@ -136,6 +141,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * <p>
      * To simply remove all elements from the region use clear().
      */
+    @Override
     public void dispose()
     {
         this.cacheControl.dispose();
@@ -147,6 +153,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * @return ICompositeCacheAttributes, the controllers config info, defined in the top section of
      *         a region definition.
      */
+    @Override
     public ICompositeCacheAttributes getCacheAttributes()
     {
         return this.cacheControl.getCacheAttributes();
@@ -157,6 +164,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * <p>
      * @param cattr The new ICompositeCacheAttribute value
      */
+    @Override
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
         this.cacheControl.setCacheAttributes( cattr );
@@ -172,6 +180,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      *         get 3.
      * @throws CacheException
      */
+    @Override
     public int freeMemoryElements( int numberToFree )
         throws CacheException
     {

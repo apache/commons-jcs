@@ -71,6 +71,7 @@ public class RemoteCacheRestore
      * <p>
      * @return true if we found a failover server
      */
+    @Override
     public boolean canFix()
     {
         if ( !canFix )
@@ -107,6 +108,7 @@ public class RemoteCacheRestore
     /**
      * Fixes up all the caches managed by the associated cache manager.
      */
+    @Override
     public void fix()
     {
         if ( !canFix )

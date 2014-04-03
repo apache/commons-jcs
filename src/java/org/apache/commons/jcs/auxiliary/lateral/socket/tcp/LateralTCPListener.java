@@ -145,6 +145,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     /**
      * This starts the ListenerThread on the specified port.
      */
+    @Override
     public synchronized void init()
     {
         try
@@ -186,6 +187,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * @param id The new listenerId value
      * @throws IOException
      */
+    @Override
     public void setListenerId( long id )
         throws IOException
     {
@@ -202,6 +204,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * @return The listenerId value
      * @throws IOException
      */
+    @Override
     public long getListenerId()
         throws IOException
     {
@@ -214,6 +217,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.engine.behavior.ICacheListener#handlePut(org.apache.commons.jcs.engine.behavior.ICacheElement)
      */
+    @Override
     public void handlePut( ICacheElement<K, V> element )
         throws IOException
     {
@@ -242,6 +246,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * @see org.apache.commons.jcs.engine.behavior.ICacheListener#handleRemove(java.lang.String,
      *      java.io.Serializable)
      */
+    @Override
     public void handleRemove( String cacheName, K key )
         throws IOException
     {
@@ -267,6 +272,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.engine.behavior.ICacheListener#handleRemoveAll(java.lang.String)
      */
+    @Override
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
@@ -353,6 +359,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.engine.behavior.ICacheListener#handleDispose(java.lang.String)
      */
+    @Override
     public void handleDispose( String cacheName )
         throws IOException
     {
@@ -368,6 +375,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         }
     }
 
+    @Override
     public synchronized void dispose()
     {
         terminated = true;
@@ -437,6 +445,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     /**
      * @param cacheMgr The cacheMgr to set.
      */
+    @Override
     public void setCacheManager( ICompositeCacheManager cacheMgr )
     {
         this.cacheManager = cacheMgr;
@@ -445,6 +454,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     /**
      * @return Returns the cacheMgr.
      */
+    @Override
     public ICompositeCacheManager getCacheManager()
     {
         return cacheManager;
@@ -581,6 +591,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         /**
          * Main processing method for the LateralTCPReceiverConnection object
          */
+        @Override
         @SuppressWarnings("unchecked") // Need to cast from Object
         public void run()
         {
@@ -743,6 +754,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
          * @param runner
          * @return daemon thread
          */
+        @Override
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );
@@ -755,6 +767,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     /**
      * Shuts down the receiver.
      */
+    @Override
     public void shutdown()
     {
         if ( !shutdown )

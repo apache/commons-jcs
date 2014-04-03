@@ -98,6 +98,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * @param ce
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -149,6 +150,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * @param key
      * @return Either an ICacheElement<K, V> or null if it is not found.
      */
+    @Override
     public ICacheElement<K, V> get( K key )
     {
         for ( int i = 0; i < noWaits.length; i++ )
@@ -177,6 +179,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * @return map
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String pattern )
         throws IOException
     {
@@ -201,6 +204,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
     {
         if ( keys != null && !keys.isEmpty() )
@@ -226,6 +230,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet() throws IOException
     {
         HashSet<K> allKeys = new HashSet<K>();
@@ -250,6 +255,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * @param key
      * @return whether or not it was removed, right now it return false.
      */
+    @Override
     public boolean remove( K key )
     {
         try
@@ -269,6 +275,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
     /**
      * Adds a removeAll request to the remote cache.
      */
+    @Override
     public void removeAll()
     {
         try
@@ -285,6 +292,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
     }
 
     /** Adds a dispose request to the remote cache. */
+    @Override
     public void dispose()
     {
         try
@@ -305,6 +313,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return 0;
@@ -316,6 +325,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * <p>
      * @return The cacheType value
      */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.REMOTE_CACHE;
@@ -326,6 +336,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return remoteCacheAttributes.getCacheName();
@@ -338,6 +349,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * <p>
      * @return The status value
      */
+    @Override
     public CacheStatus getStatus()
     {
         for ( int i = 0; i < noWaits.length; i++ )
@@ -373,6 +385,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.remoteCacheAttributes;
@@ -382,6 +395,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
      * getStats
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -390,6 +404,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
     /**
      * @return statistics about the cache region
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();

@@ -76,6 +76,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
      * @param waitBeforeRetry
      * @param threadPoolName
      */
+    @Override
     public void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry, String threadPoolName )
     {
@@ -103,6 +104,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
     /**
      * @return the queue type
      */
+    @Override
     public QueueType getQueueType()
     {
         return queueType;
@@ -119,6 +121,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
     /**
      * Destroy the queue. Interrupt all threads.
      */
+    @Override
     public synchronized void destroy()
     {
         if ( !destroyed )
@@ -154,6 +157,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
     /**
      * @return IStats
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();
@@ -215,6 +219,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
      * <p>
      * @return whether or not there are items in the queue
      */
+    @Override
     public boolean isEmpty()
     {
         if ( pool.getQueue() == null )
@@ -233,6 +238,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
      * <p>
      * @return number of items in the queue.
      */
+    @Override
     public int size()
     {
         if ( pool.getQueue() == null )

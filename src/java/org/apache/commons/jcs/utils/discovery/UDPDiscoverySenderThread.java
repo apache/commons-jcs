@@ -116,6 +116,7 @@ public class UDPDiscoverySenderThread
     /**
      * Send a message.
      */
+    @Override
     public void run()
     {
         UDPDiscoverySender sender = null;

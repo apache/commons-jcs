@@ -124,6 +124,7 @@ public class RemoteHttpCacheMonitor
     // If exception is thrown owing to synchronization,
     // just skip the monitoring until the next round.
     /** Main processing method for the RemoteCacheMonitor object */
+    @Override
     public void run()
     {
         if ( log.isInfoEnabled() )

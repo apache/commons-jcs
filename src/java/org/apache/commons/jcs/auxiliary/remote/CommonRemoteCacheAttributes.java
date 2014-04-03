@@ -73,6 +73,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The remoteTypeName value
      */
+    @Override
     public String getRemoteTypeName()
     {
         return remoteType != null ? remoteType.toString() : RemoteType.LOCAL.toString();
@@ -83,6 +84,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param s The new remoteTypeName value
      */
+    @Override
     public void setRemoteTypeName( String s )
     {
         RemoteType rt = RemoteType.valueOf(s);
@@ -97,6 +99,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The remoteType value
      */
+    @Override
     public RemoteType getRemoteType()
     {
         return remoteType;
@@ -107,6 +110,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param p The new remoteType value
      */
+    @Override
     public void setRemoteType( RemoteType p )
     {
         this.remoteType = p;
@@ -115,6 +119,7 @@ public class CommonRemoteCacheAttributes
     /**
      * @return AuxiliaryCacheAttributes
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -133,6 +138,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The remoteServiceName value
      */
+    @Override
     public String getRemoteServiceName()
     {
         return this.remoteServiceName;
@@ -143,6 +149,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param s The new remoteServiceName value
      */
+    @Override
     public void setRemoteServiceName( String s )
     {
         this.remoteServiceName = s;
@@ -153,6 +160,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The remoteHost value
      */
+    @Override
     public String getRemoteHost()
     {
         return this.remoteHost;
@@ -163,6 +171,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param s The new remoteHost value
      */
+    @Override
     public void setRemoteHost( String s )
     {
         this.remoteHost = s;
@@ -173,6 +182,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The remotePort value
      */
+    @Override
     public int getRemotePort()
     {
         return this.remotePort;
@@ -183,6 +193,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param p The new remotePort value
      */
+    @Override
     public void setRemotePort( int p )
     {
         this.remotePort = p;
@@ -193,6 +204,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The clusterServers value
      */
+    @Override
     public String getClusterServers()
     {
         return this.clusterServers;
@@ -203,6 +215,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param s The new clusterServers value
      */
+    @Override
     public void setClusterServers( String s )
     {
         this.clusterServers = s;
@@ -213,6 +226,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The removeUponRemotePut value
      */
+    @Override
     public boolean getRemoveUponRemotePut()
     {
         return this.removeUponRemotePut;
@@ -223,6 +237,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param r The new removeUponRemotePut value
      */
+    @Override
     public void setRemoveUponRemotePut( boolean r )
     {
         this.removeUponRemotePut = r;
@@ -233,6 +248,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The getOnly value
      */
+    @Override
     public boolean getGetOnly()
     {
         return this.getOnly;
@@ -242,6 +258,7 @@ public class CommonRemoteCacheAttributes
      * Sets the getOnly attribute of the RemoteCacheAttributes object
      * @param r The new getOnly value
      */
+    @Override
     public void setGetOnly( boolean r )
     {
         this.getOnly = r;
@@ -252,6 +269,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @return The localClusterConsistency value
      */
+    @Override
     public boolean isLocalClusterConsistency()
     {
         return localClusterConsistency;
@@ -262,6 +280,7 @@ public class CommonRemoteCacheAttributes
      * <p>
      * @param r The new localClusterConsistency value
      */
+    @Override
     public void setLocalClusterConsistency( boolean r )
     {
         this.localClusterConsistency = r;
@@ -270,6 +289,7 @@ public class CommonRemoteCacheAttributes
     /**
      * @param rmiSocketFactoryTimeoutMillis The rmiSocketFactoryTimeoutMillis to set.
      */
+    @Override
     public void setRmiSocketFactoryTimeoutMillis( int rmiSocketFactoryTimeoutMillis )
     {
         this.rmiSocketFactoryTimeoutMillis = rmiSocketFactoryTimeoutMillis;
@@ -278,6 +298,7 @@ public class CommonRemoteCacheAttributes
     /**
      * @return Returns the rmiSocketFactoryTimeoutMillis.
      */
+    @Override
     public int getRmiSocketFactoryTimeoutMillis()
     {
         return rmiSocketFactoryTimeoutMillis;

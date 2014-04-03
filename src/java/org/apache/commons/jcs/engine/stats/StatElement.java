@@ -41,6 +41,7 @@ public class StatElement
      * <p>
      * @return the stat element name
      */
+    @Override
     public String getName()
     {
         return name;
@@ -49,6 +50,7 @@ public class StatElement
     /**
      * @param name
      */
+    @Override
     public void setName( String name )
     {
         this.name = name;
@@ -59,6 +61,7 @@ public class StatElement
      * <p>
      * @return String data
      */
+    @Override
     public String getData()
     {
         return data;
@@ -69,6 +72,7 @@ public class StatElement
      * <p>
      * @param data
      */
+    @Override
     public void setData( String data )
     {
         this.data = data;

@@ -109,6 +109,7 @@ public abstract class LateralCacheAbstractManager
      * @return AuxiliaryCache
      * @param cacheName
      */
+    @Override
     public abstract <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> getCache( String cacheName );
 
     /**
@@ -128,6 +129,7 @@ public abstract class LateralCacheAbstractManager
      * @param lateralService
      * @param lateralWatch
      */
+    @Override
     @SuppressWarnings("unchecked") // Need downcast to satisfy common interface
     public void fixCaches( ICacheServiceNonLocal<Serializable, Serializable> lateralService, ILateralCacheObserver lateralWatch )
     {
@@ -149,6 +151,7 @@ public abstract class LateralCacheAbstractManager
      * @return Map
      *
      */
+    @Override
     public Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> getCaches()
     {
         return caches;

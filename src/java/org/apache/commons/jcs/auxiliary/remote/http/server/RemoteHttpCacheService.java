@@ -249,6 +249,7 @@ public class RemoteHttpCacheService<K extends Serializable, V extends Serializab
      * <p>
      * @throws IOException
      */
+    @Override
     public void release()
         throws IOException
     {

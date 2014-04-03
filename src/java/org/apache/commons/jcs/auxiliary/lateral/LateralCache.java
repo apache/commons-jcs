@@ -211,6 +211,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet() throws IOException
     {
         try
@@ -305,6 +306,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The status value
      */
+    @Override
     public CacheStatus getStatus()
     {
         return this.lateralCacheService instanceof IZombie ? CacheStatus.ERROR : CacheStatus.ALIVE;
@@ -315,6 +317,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return 0;
@@ -325,6 +328,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.LATERAL_CACHE;
@@ -335,6 +339,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return cacheName;
@@ -404,6 +409,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return String
      */
+    @Override
     public String getStats()
     {
         return "";
@@ -412,6 +418,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return lateralCacheAttributes;
@@ -444,6 +451,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return almost nothing
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();

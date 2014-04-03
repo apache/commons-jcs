@@ -32,6 +32,7 @@ public class PropertiesFactoryFileImpl
      * @param groupName property group name
      * @return Properties
      */
+    @Override
     public Properties getProperties( String groupName )
     {
         return PropertyLoader.loadProperties( groupName );

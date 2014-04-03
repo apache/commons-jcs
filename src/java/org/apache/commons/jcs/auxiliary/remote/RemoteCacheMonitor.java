@@ -116,6 +116,7 @@ public class RemoteCacheMonitor
     // If exception is thrown owing to synchronization,
     // just skip the monitoring until the next round.
     /** Main processing method for the RemoteCacheMonitor object */
+    @Override
     public void run()
     {
         log.debug( "Monitoring daemon started" );

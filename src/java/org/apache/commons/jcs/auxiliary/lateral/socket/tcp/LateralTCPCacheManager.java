@@ -304,6 +304,7 @@ public class LateralTCPCacheManager
     /**
      * @return Map
      */
+    @Override
     public Map<String, ? extends ILateralCacheManager> getInstances()
     {
         return instances;
@@ -313,6 +314,7 @@ public class LateralTCPCacheManager
      * @return a new service
      * @throws IOException
      */
+    @Override
     public Object fixService()
         throws IOException
     {
@@ -333,6 +335,7 @@ public class LateralTCPCacheManager
      * Shuts down the lateral sender. This does not shutdown the listener. This can be called if the
      * end point is taken out of service.
      */
+    @Override
     public void shutdown()
     {
         // TODO revisit this.

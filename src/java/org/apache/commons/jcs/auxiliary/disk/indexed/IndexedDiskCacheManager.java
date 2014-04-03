@@ -94,6 +94,7 @@ public class IndexedDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
+    @Override
     public <K extends Serializable, V extends Serializable> IndexedDiskCache<K, V> getCache( String cacheName )
     {
         IndexedDiskCacheAttributes cacheAttributes = (IndexedDiskCacheAttributes) defaultCacheAttributes.copy();

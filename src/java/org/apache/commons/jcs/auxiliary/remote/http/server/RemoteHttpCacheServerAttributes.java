@@ -43,6 +43,7 @@ public class RemoteHttpCacheServerAttributes
      * <p>
      * @return AuxiliaryCacheAttributes clone
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         try

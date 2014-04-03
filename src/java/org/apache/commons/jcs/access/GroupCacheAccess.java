@@ -60,6 +60,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      *            The group name.
      * @return The cached value, null if not found.
      */
+    @Override
     public V getFromGroup( K name, String group )
     {
         ICacheElement<GroupAttrName<K>, V> element = this.cacheControl.get( getGroupAttrName( group, name ) );
@@ -92,6 +93,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      *            The object to cache
      * @throws CacheException
      */
+    @Override
     public void putInGroup( K name, String groupName, V value )
         throws CacheException
     {
@@ -113,6 +115,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      *            The objects attributes.
      * @throws CacheException
      */
+    @Override
     public void putInGroup( K name, String groupName, V value, IElementAttributes attr )
         throws CacheException
     {
@@ -150,6 +153,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      * @param name
      * @param group
      */
+    @Override
     public void removeFromGroup( K name, String group )
     {
         GroupAttrName<K> key = getGroupAttrName( group, name );
@@ -162,6 +166,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      * @param group
      * @return A Set of keys.
      */
+    @Override
     public Set<K> getGroupKeys( String group )
     {
         Set<K> groupKeys = new HashSet<K>();
@@ -199,6 +204,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      * @param group
      *            The name of the group to invalidate
      */
+    @Override
     public void invalidateGroup( String group )
     {
         this.cacheControl.remove(getGroupAttrName(group, null));

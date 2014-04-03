@@ -68,24 +68,28 @@ public class CacheElementSerialized<K extends Serializable, V extends Serializab
      * <p>
      * @return this.cacheName;
      */
+    @Override
     public String getCacheName()
     {
         return this.cacheName;
     }
 
     /** @return Serializable */
+    @Override
     public K getKey()
     {
         return this.key;
     }
 
     /** @return byte[] */
+    @Override
     public byte[] getSerializedValue()
     {
         return this.serializedValue;
     }
 
     /** @return IElementAttributes */
+    @Override
     public IElementAttributes getElementAttributes()
     {
         return this.elementAttributes;
@@ -94,6 +98,7 @@ public class CacheElementSerialized<K extends Serializable, V extends Serializab
     /**
      * @param attr
      */
+    @Override
     public void setElementAttributes( IElementAttributes attr )
     {
         this.elementAttributes = attr;
@@ -104,6 +109,7 @@ public class CacheElementSerialized<K extends Serializable, V extends Serializab
      * <p>
      * @return Serializable
      */
+    @Override
     public V getVal()
     {
         return null;

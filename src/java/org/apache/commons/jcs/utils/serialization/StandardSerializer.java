@@ -44,6 +44,7 @@ public class StandardSerializer
      * @return byte[]
      * @throws IOException
      */
+    @Override
     public <T extends Serializable> byte[] serialize( T obj )
         throws IOException
     {
@@ -69,6 +70,7 @@ public class StandardSerializer
      * @throws IOException
      * @throws ClassNotFoundException
      */
+    @Override
     public <T extends Serializable> T deSerialize( byte[] data )
         throws IOException, ClassNotFoundException
     {

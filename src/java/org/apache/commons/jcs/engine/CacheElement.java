@@ -81,6 +81,7 @@ public class CacheElement<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return this.cacheName;
@@ -91,6 +92,7 @@ public class CacheElement<K extends Serializable, V extends Serializable>
      * <p>
      * @return The key value
      */
+    @Override
     public K getKey()
     {
         return this.key;
@@ -101,6 +103,7 @@ public class CacheElement<K extends Serializable, V extends Serializable>
      * <p>
      * @return The val value
      */
+    @Override
     public V getVal()
     {
         return this.val;
@@ -112,6 +115,7 @@ public class CacheElement<K extends Serializable, V extends Serializable>
      * @param attr
      *            The new IElementAttributes value
      */
+    @Override
     public void setElementAttributes( IElementAttributes attr )
     {
         this.attr = attr;
@@ -122,6 +126,7 @@ public class CacheElement<K extends Serializable, V extends Serializable>
      * <p>
      * @return The IElementAttributes value, never null
      */
+    @Override
     public IElementAttributes getElementAttributes()
     {
         // create default attributes if they are null

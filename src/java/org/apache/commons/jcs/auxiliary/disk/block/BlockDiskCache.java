@@ -163,6 +163,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     /**
      * @see org.apache.commons.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
      */
+    @Override
     public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
     {
         // add this region to the persistence thread.
@@ -172,6 +173,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
             scheduledExecutor.scheduleAtFixedRate(
                     new Runnable()
                     {
+                        @Override
                         public void run()
                         {
                             keyStore.saveKeys();
@@ -542,6 +544,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     {
         Runnable disR = new Runnable()
         {
+            @Override
             public void run()
             {
                 try
@@ -622,6 +625,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
      * (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getAuxiliaryCacheAttributes()
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.blockDiskCacheAttributes;

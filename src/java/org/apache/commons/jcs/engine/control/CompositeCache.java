@@ -170,6 +170,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * @param ce
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -432,6 +433,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * @return element from the cache, or null if not present
      * @see org.apache.commons.jcs.engine.behavior.ICache#get(java.io.Serializable)
      */
+    @Override
     public ICacheElement<K, V> get( K key )
     {
         return get( key, false );
@@ -613,6 +615,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
     {
         return getMultiple( keys, false );
@@ -804,6 +807,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any matching keys
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String pattern )
     {
         return getMatching( pattern, false );
@@ -1148,6 +1152,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * @return true is it was removed
      * @see org.apache.commons.jcs.engine.behavior.ICache#remove(java.io.Serializable)
      */
+    @Override
     public boolean remove( K key )
     {
         return remove( key, false );
@@ -1244,6 +1249,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.engine.behavior.ICache#removeAll()
      */
+    @Override
     public void removeAll()
         throws IOException
     {
@@ -1312,6 +1318,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     /**
      * Flushes all cache items from memory to auxiliary caches and close the auxiliary caches.
      */
+    @Override
     public void dispose()
     {
         dispose( false );
@@ -1471,6 +1478,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return memCache.getSize();
@@ -1481,6 +1489,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.CACHE_HUB;
@@ -1491,6 +1500,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The status value
      */
+    @Override
     public synchronized CacheStatus getStatus()
     {
         return alive ? CacheStatus.ALIVE : CacheStatus.DISPOSED;
@@ -1501,6 +1511,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -1552,6 +1563,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return cacheName;
@@ -1767,6 +1779,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * <p>
      * @param keyMatcher
      */
+    @Override
     public void setKeyMatcher( IKeyMatcher<K> keyMatcher )
     {
         if ( keyMatcher != null )

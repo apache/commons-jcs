@@ -42,6 +42,7 @@ public abstract class AbstractJCSWorkerHelper
     /**
      * @return finished
      */
+    @Override
     public boolean isFinished()
     {
         return finished;
@@ -50,6 +51,7 @@ public abstract class AbstractJCSWorkerHelper
     /**
      * @param isFinished
      */
+    @Override
     public void setFinished( boolean isFinished )
     {
         finished = isFinished;

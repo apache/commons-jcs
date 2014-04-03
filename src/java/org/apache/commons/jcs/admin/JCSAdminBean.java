@@ -83,6 +83,7 @@ public class JCSAdminBean implements JCSJMXBean
      * @return Array of CacheElementInfo objects
      * @throws Exception
      */
+    @Override
     public CacheElementInfo[] buildElementInfo( String cacheName )
         throws Exception
     {
@@ -138,6 +139,7 @@ public class JCSAdminBean implements JCSJMXBean
      * @return list of CacheRegionInfo objects
      * @throws Exception
      */
+    @Override
     public CacheRegionInfo[] buildCacheInfo()
         throws Exception
     {
@@ -179,7 +181,8 @@ public class JCSAdminBean implements JCSJMXBean
      *
      * @return int The size of the region in bytes.
      */
-	public int getByteCount(String cacheName)
+	@Override
+    public int getByteCount(String cacheName)
 	{
 		return getByteCount(cacheHub.getCache(cacheName));
 	}
@@ -280,6 +283,7 @@ public class JCSAdminBean implements JCSJMXBean
      * API, so that removes will be broadcast to client machines. Otherwise clears all regions in the cache directly via
      * the usual cache API.
      */
+    @Override
     public void clearAllRegions() throws IOException
     {
         if (RemoteCacheServerFactory.getRemoteCacheServer() == null)
@@ -324,6 +328,7 @@ public class JCSAdminBean implements JCSJMXBean
      * API, so that removes will be broadcast to client machines. Otherwise clears the region directly via the usual
      * cache API.
      */
+    @Override
     public void clearRegion(String cacheName) throws IOException
     {
         if (cacheName == null)
@@ -365,6 +370,7 @@ public class JCSAdminBean implements JCSJMXBean
      *
      * @throws IOException
      */
+    @Override
     public void removeItem(String cacheName, String key) throws IOException
     {
         if (cacheName == null)

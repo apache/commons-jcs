@@ -43,6 +43,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable,
      * @param cacheElement
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> cacheElement )
         throws IOException
     {
@@ -85,6 +86,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable,
      * @return ICacheElement, a wrapper around the key, value, and attributes
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( K key )
         throws IOException
     {
@@ -130,6 +132,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable,
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         throws IOException
     {
@@ -184,6 +187,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable,
      *         data matching the pattern.
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String pattern )
         throws IOException
     {
@@ -230,6 +234,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable,
      * @return boolean, whether or not the item was removed
      * @throws IOException
      */
+    @Override
     public boolean remove( K key )
         throws IOException
     {
@@ -272,6 +277,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable,
      * <p>
      * @throws IOException
      */
+    @Override
     public void removeAll()
         throws IOException
     {
@@ -310,6 +316,7 @@ public abstract class AbstractAuxiliaryCacheEventLogging<K extends Serializable,
      * <p>
      * @throws IOException
      */
+    @Override
     public void dispose()
         throws IOException
     {

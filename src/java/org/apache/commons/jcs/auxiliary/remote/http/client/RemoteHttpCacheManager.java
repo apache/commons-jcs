@@ -151,6 +151,7 @@ public class RemoteHttpCacheManager
      * @param cacheName
      * @return The cache value
      */
+    @Override
     public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         // TODO get some defaults!
@@ -248,6 +249,7 @@ public class RemoteHttpCacheManager
      * <p>
      * @see org.apache.commons.jcs.engine.behavior.IShutdownObserver#shutdown()
      */
+    @Override
     public void shutdown()
     {
         if ( log.isInfoEnabled() )

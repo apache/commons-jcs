@@ -68,6 +68,7 @@ public class FileDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
+    @Override
     public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> getCache( String cacheName )
     {
         FileDiskCacheAttributes cacheAttributes = (FileDiskCacheAttributes) defaultCacheAttributes.copy();

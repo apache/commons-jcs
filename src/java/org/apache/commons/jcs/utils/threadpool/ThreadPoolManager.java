@@ -458,6 +458,7 @@ public class ThreadPoolManager
          * @param runner
          * @return a daemon thread
          */
+        @Override
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );

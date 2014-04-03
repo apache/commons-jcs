@@ -47,6 +47,7 @@ public class CacheEventLoggerDebugLogger
      * @param key
      * @return ICacheEvent
      */
+    @Override
     public <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region, String eventName,
             String optionalDetails, T key )
     {
@@ -65,6 +66,7 @@ public class CacheEventLoggerDebugLogger
      * @param eventName
      * @param optionalDetails
      */
+    @Override
     public void logApplicationEvent( String source, String eventName, String optionalDetails )
     {
         if ( log.isDebugEnabled() )
@@ -78,6 +80,7 @@ public class CacheEventLoggerDebugLogger
      * @param eventName
      * @param errorMessage
      */
+    @Override
     public void logError( String source, String eventName, String errorMessage )
     {
         if ( log.isDebugEnabled() )
@@ -89,6 +92,7 @@ public class CacheEventLoggerDebugLogger
     /**
      * @param event
      */
+    @Override
     public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
     {
         if ( log.isDebugEnabled() )

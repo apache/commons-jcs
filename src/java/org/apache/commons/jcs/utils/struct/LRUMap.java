@@ -109,6 +109,7 @@ public class LRUMap<K, V>
      * <p>
      * @see java.util.Map#size()
      */
+    @Override
     public int size()
     {
         return map.size();
@@ -119,6 +120,7 @@ public class LRUMap<K, V>
      * <p>
      * @see java.util.Map#clear()
      */
+    @Override
     public void clear()
     {
         map.clear();
@@ -130,6 +132,7 @@ public class LRUMap<K, V>
      * <p>
      * @see java.util.Map#isEmpty()
      */
+    @Override
     public boolean isEmpty()
     {
         return map.size() == 0;
@@ -140,6 +143,7 @@ public class LRUMap<K, V>
      * <p>
      * @see java.util.Map#containsKey(java.lang.Object)
      */
+    @Override
     public boolean containsKey( Object key )
     {
         return map.containsKey( key );
@@ -150,6 +154,7 @@ public class LRUMap<K, V>
      * <p>
      * @see java.util.Map#containsValue(java.lang.Object)
      */
+    @Override
     public boolean containsValue( Object value )
     {
         return map.containsValue( value );
@@ -158,6 +163,7 @@ public class LRUMap<K, V>
     /**
      * @return map.values();
      */
+    @Override
     public Collection<V> values()
     {
         List<V> valueList = new ArrayList<V>(map.size());
@@ -173,6 +179,7 @@ public class LRUMap<K, V>
     /**
      * @param source
      */
+    @Override
     public void putAll( Map<? extends K, ? extends V> source )
     {
         if ( source != null )
@@ -188,6 +195,7 @@ public class LRUMap<K, V>
      * @param key
      * @return Object
      */
+    @Override
     public V get( Object key )
     {
         V retVal = null;
@@ -255,6 +263,7 @@ public class LRUMap<K, V>
      * @param key
      * @return Object removed
      */
+    @Override
     public V remove( Object key )
     {
         if ( log.isDebugEnabled() )
@@ -279,6 +288,7 @@ public class LRUMap<K, V>
      * @param value
      * @return Object
      */
+    @Override
     public V put(K key, V value)
     {
         putCnt++;
@@ -639,6 +649,7 @@ public class LRUMap<K, V>
      * <p>
      * @see java.util.Map#entrySet()
      */
+    @Override
     public synchronized Set<Map.Entry<K, V>> entrySet()
     {
         // todo, we should return a defensive copy
@@ -658,6 +669,7 @@ public class LRUMap<K, V>
     /**
      * @return map.keySet();
      */
+    @Override
     public Set<K> keySet()
     {
         // TODO fix this, it needs to return the keys inside the wrappers.

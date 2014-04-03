@@ -62,6 +62,7 @@ public class LateralCacheRestore
      * <p>
      * @return whether or not the cache can be fixed.
      */
+    @Override
     public boolean canFix()
     {
         if ( !canFix )
@@ -85,6 +86,7 @@ public class LateralCacheRestore
     /**
      * Fixes up all the caches managed by the associated cache manager.
      */
+    @Override
     @SuppressWarnings("unchecked") // TODO: Strange cast. Need to revisit
     public void fix()
     {

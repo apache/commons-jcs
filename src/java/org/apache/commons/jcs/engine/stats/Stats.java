@@ -40,6 +40,7 @@ public class Stats
     /**
      * @return IStatElement[]
      */
+    @Override
     public IStatElement[] getStatElements()
     {
         return stats;
@@ -48,6 +49,7 @@ public class Stats
     /**
      * @param stats
      */
+    @Override
     public void setStatElements( IStatElement[] stats )
     {
         this.stats = stats;
@@ -56,6 +58,7 @@ public class Stats
     /**
      * @return typeName
      */
+    @Override
     public String getTypeName()
     {
         return typeName;
@@ -64,6 +67,7 @@ public class Stats
     /**
      * @param name
      */
+    @Override
     public void setTypeName( String name )
     {
         typeName = name;

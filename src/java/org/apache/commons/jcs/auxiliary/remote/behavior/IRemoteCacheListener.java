@@ -38,6 +38,7 @@ public interface IRemoteCacheListener<K extends Serializable, V extends Serializ
      * @return long
      * @throws IOException
      */
+    @Override
     long getListenerId()
         throws IOException;
 
@@ -48,6 +49,7 @@ public interface IRemoteCacheListener<K extends Serializable, V extends Serializ
      * @param id
      * @throws IOException
      */
+    @Override
     void setListenerId( long id )
         throws IOException;
 

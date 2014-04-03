@@ -191,6 +191,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * @param ce
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -217,6 +218,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * @param key
      * @return ICacheElement
      */
+    @Override
     public ICacheElement<K, V> get( K key )
     {
         for ( int i = 0; i < noWaits.length; i++ )
@@ -248,6 +250,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
         Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
@@ -275,6 +278,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * @param pattern
      * @return ICacheElement
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching(String pattern)
     {
         Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
@@ -297,6 +301,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet() throws IOException
     {
         HashSet<K> allKeys = new HashSet<K>();
@@ -321,6 +326,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * @param key
      * @return always false.
      */
+    @Override
     public boolean remove( K key )
     {
         try
@@ -340,6 +346,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     /**
      * Adds a removeAll request to the lateral cache.
      */
+    @Override
     public void removeAll()
     {
         try
@@ -356,6 +363,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     }
 
     /** Adds a dispose request to the lateral cache. */
+    @Override
     public void dispose()
     {
         try
@@ -385,6 +393,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * No lateral invocation.
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return 0;
@@ -396,6 +405,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * <p>
      * @return The cacheType value
      */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.LATERAL_CACHE;
@@ -406,6 +416,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return "";
@@ -416,6 +427,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * Gets the status attribute of the LateralCacheNoWaitFacade object
      * @return The status value
      */
+    @Override
     public CacheStatus getStatus()
     {
         if (disposed)
@@ -458,6 +470,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.lateralCacheAttributes;
@@ -487,6 +500,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
      * getStats
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -495,6 +509,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     /**
      * @return IStats
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();

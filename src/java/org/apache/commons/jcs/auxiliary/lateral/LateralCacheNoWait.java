@@ -110,6 +110,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * @param ce
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -131,6 +132,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * @param key
      * @return ICacheElement<K, V> if found, else null
      */
+    @Override
     public ICacheElement<K, V> get( K key )
     {
         getCount++;
@@ -168,6 +170,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
         Map<K, ICacheElement<K, V>> elements = new HashMap<K, ICacheElement<K, V>>();
@@ -194,6 +197,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * @param pattern
      * @return ICacheElement<K, V> if found, else empty
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching(String pattern)
     {
         getCount++;
@@ -229,6 +233,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet() throws IOException
     {
         try
@@ -249,6 +254,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * @param key
      * @return always false
      */
+    @Override
     public boolean remove( K key )
     {
         removeCount++;
@@ -265,6 +271,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     }
 
     /** Adds a removeAll request to the lateral cache. */
+    @Override
     public void removeAll()
     {
         try
@@ -279,6 +286,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     }
 
     /** Adds a dispose request to the lateral cache. */
+    @Override
     public void dispose()
     {
         try
@@ -297,6 +305,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return cache.getSize();
@@ -307,6 +316,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheType value
      */
+    @Override
     public CacheType getCacheType()
     {
         return cache.getCacheType();
@@ -318,6 +328,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The status value
      */
+    @Override
     public CacheStatus getStatus()
     {
         return eventQueue.isWorking() ? cache.getStatus() : CacheStatus.ERROR;
@@ -328,6 +339,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return cache.getCacheName();
@@ -363,6 +375,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return cache.getAuxiliaryCacheAttributes();
@@ -372,6 +385,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
      * getStats
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -391,6 +405,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     /**
      * @return statistics about this communication
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();

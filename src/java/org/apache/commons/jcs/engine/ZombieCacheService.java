@@ -56,6 +56,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
      * <p>
      * @param item
      */
+    @Override
     public void update( ICacheElement<K, V> item )
     {
         // zombies have no inner life
@@ -66,6 +67,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
      * @param key
      * @return null. zombies have no internal data
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key )
     {
         return null;
@@ -78,6 +80,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
      * @param keys
      * @return Collections.EMPTY_MAP
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
     {
         return Collections.emptyMap();
@@ -90,6 +93,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
      * @param pattern
      * @return Collections.EMPTY_MAP
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
     {
         return Collections.emptyMap();
@@ -117,6 +121,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @param key
      */
+    @Override
     public void remove( String cacheName, K key )
     {
         // zombies have no inner life
@@ -125,6 +130,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
     /**
      * @param cacheName
      */
+    @Override
     public void removeAll( String cacheName )
     {
         // zombies have no inner life
@@ -133,6 +139,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
     /**
      * @param cacheName
      */
+    @Override
     public void dispose( String cacheName )
     {
         // zombies have no inner life
@@ -141,6 +148,7 @@ public class ZombieCacheService<K extends Serializable, V extends Serializable>
     /**
      * Frees all caches.
      */
+    @Override
     public void release()
     {
         // zombies have no inner life

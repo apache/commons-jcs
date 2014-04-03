@@ -51,6 +51,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
      *            The new listenerId value
      * @throws IOException
      */
+    @Override
     public void setListenerId( long id )
         throws IOException
     {
@@ -64,6 +65,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
      * @return The listenerId value
      * @throws IOException
      */
+    @Override
     public long getListenerId()
         throws IOException
     {
@@ -86,6 +88,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
      * @param item
      * @throws IOException
      */
+    @Override
     public void handlePut( ICacheElement<K, V> item )
         throws IOException
     {
@@ -106,6 +109,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
      * @param key
      * @throws IOException
      */
+    @Override
     public void handleRemove( String cacheName, K key )
         throws IOException
     {
@@ -118,6 +122,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
@@ -130,6 +135,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void handleDispose( String cacheName )
         throws IOException
     {

@@ -179,6 +179,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
     /**
      * @return AuxiliaryCacheAttributes
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return diskFileCacheAttributes;

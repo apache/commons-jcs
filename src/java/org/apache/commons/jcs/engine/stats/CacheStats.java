@@ -49,6 +49,7 @@ public class CacheStats
      * <p>
      * @return The region name
      */
+    @Override
     public String getRegionName()
     {
         return regionName;
@@ -59,6 +60,7 @@ public class CacheStats
      * <p>
      * @param name - The region name
      */
+    @Override
     public void setRegionName( String name )
     {
         regionName = name;
@@ -67,6 +69,7 @@ public class CacheStats
     /**
      * @return IStats[]
      */
+    @Override
     public IStats[] getAuxiliaryCacheStats()
     {
         return auxStats;
@@ -75,6 +78,7 @@ public class CacheStats
     /**
      * @param stats
      */
+    @Override
     public void setAuxiliaryCacheStats( IStats[] stats )
     {
         auxStats = stats;

@@ -221,6 +221,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
         {
             Callable<ICacheElement<K, V>> command = new Callable<ICacheElement<K, V>>()
             {
+                @Override
                 public ICacheElement<K, V> call()
                     throws IOException
                 {
@@ -450,6 +451,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet()
         throws java.rmi.RemoteException, IOException
     {
@@ -462,6 +464,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @return IRemoteCacheListener, the listener for this remote server
      */
+    @Override
     public IRemoteCacheListener<K, V> getListener()
     {
         return getRemoteCacheListener();
@@ -499,6 +502,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @return The listenerId value
      */
+    @Override
     public long getListenerId()
     {
         if ( getRemoteCacheListener() != null )
@@ -523,6 +527,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * Returns the current cache size.
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return 0;
@@ -544,6 +549,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @return The stats value
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -552,6 +558,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     /**
      * @return IStats object
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();
@@ -611,6 +618,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @return The status value
      */
+    @Override
     public CacheStatus getStatus()
     {
         return getRemoteCacheService() instanceof IZombie ? CacheStatus.ERROR : CacheStatus.ALIVE;
@@ -622,6 +630,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @param restoredRemote ICacheServiceNonLocal -- the remote server or proxy to the remote server
      */
+    @Override
     public void fixCache( ICacheServiceNonLocal<?, ?> restoredRemote )
     {
         @SuppressWarnings("unchecked") // Don't know how to do this properly
@@ -658,6 +667,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * Gets the cacheType attribute of the RemoteCache object
      * @return The cacheType value
      */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.REMOTE_CACHE;
@@ -668,6 +678,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return cacheName;
@@ -692,6 +703,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return getRemoteCacheAttributes();

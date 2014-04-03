@@ -94,6 +94,7 @@ public class BlockDiskCacheManager
      * @param cacheName Name that will be used when creating attributes.
      * @return A cache.
      */
+    @Override
     public <K extends Serializable, V extends Serializable> BlockDiskCache<K, V> getCache( String cacheName )
     {
         BlockDiskCacheAttributes cacheAttributes = (BlockDiskCacheAttributes) defaultCacheAttributes.copy();

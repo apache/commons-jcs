@@ -66,6 +66,7 @@ public class RegistryKeepAliveRunner
      * rebind method.
      * <p>
      */
+    @Override
     public void run()
     {
         checkAndRestoreIfNeeded();

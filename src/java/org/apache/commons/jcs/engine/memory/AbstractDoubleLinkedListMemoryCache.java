@@ -244,6 +244,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
      *         get 3.
      * @throws IOException
      */
+    @Override
     public int freeElements( int numberToFree )
         throws IOException
     {
@@ -589,12 +590,14 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
         }
 
         /** @return i.hasNext() */
+        @Override
         public boolean hasNext()
         {
             return i.hasNext();
         }
 
         /** @return new MapEntryWrapper( (Map.Entry) i.next() ) */
+        @Override
         public Entry<K, MemoryElementDescriptor<K, V>> next()
         {
             // return new MapEntryWrapper<Serializable>( i.next() );
@@ -602,6 +605,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
         }
 
         /** i.remove(); */
+        @Override
         public void remove()
         {
             i.remove();
@@ -653,12 +657,14 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
         }
 
         /** @return e.getKey() */
+        @Override
         public K getKey()
         {
             return e.getKey();
         }
 
         /** @return ( (MemoryElementDescriptor) e.getValue() ).ce */
+        @Override
         public ICacheElement<K, V> getValue()
         {
             return e.getValue().ce;
@@ -676,6 +682,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
          * @param value
          * @return always throws
          */
+        @Override
         public ICacheElement<K, V> setValue(ICacheElement<K, V> value)
         {
             throw new UnsupportedOperationException( "Use normal cache methods"

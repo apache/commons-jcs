@@ -109,6 +109,7 @@ public class JDBCDiskCacheManager
      * @param cacheName
      * @return The cache value
      */
+    @Override
     public <K extends Serializable, V extends Serializable> JDBCDiskCache<K, V> getCache( String cacheName )
     {
         JDBCDiskCacheAttributes cattr = (JDBCDiskCacheAttributes) defaultJDBCDiskCacheAttributes.copy();

@@ -561,6 +561,7 @@ public class RemoteCacheServerFactory
          * @param runner
          * @return a new thread for the given Runnable
          */
+        @Override
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );

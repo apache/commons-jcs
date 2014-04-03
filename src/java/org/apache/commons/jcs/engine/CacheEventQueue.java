@@ -93,6 +93,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
      * @param waitBeforeRetry
      * @param threadPoolName
      */
+    @Override
     public void initialize( ICacheListener<K, V> listener, long listenerId, String cacheName, int maxFailure,
                             int waitBeforeRetry, String threadPoolName )
     {
@@ -118,6 +119,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
      * <p>
      * @return queueType
      */
+    @Override
     public QueueType getQueueType()
     {
         return queueType;
@@ -141,6 +143,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
      * <p>
      * Calling destroy interrupts the processor thread.
      */
+    @Override
     public void destroy()
     {
         synchronized (queueLock)
@@ -350,6 +353,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
      * @see org.apache.commons.jcs.engine.behavior.ICacheEventQueue#getStatistics()
      * @return information on the status and history of the queue
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();
@@ -408,6 +412,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
     /**
      * @return whether there are any items in the queue.
      */
+    @Override
     public boolean isEmpty()
     {
         return tail == head;
@@ -418,6 +423,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
      * <p>
      * @return number of items in the queue.
      */
+    @Override
     public int size()
     {
         return size;

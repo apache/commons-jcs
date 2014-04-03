@@ -76,6 +76,7 @@ public class LateralCacheAttributes
      * <P>
      * @param val The new httpServer value
      */
+    @Override
     public void setHttpServer( String val )
     {
         httpServer = val;
@@ -85,6 +86,7 @@ public class LateralCacheAttributes
      * Gets the httpServer attribute of the LateralCacheAttributes object
      * @return The httpServer value
      */
+    @Override
     public String getHttpServer()
     {
         return httpServer;
@@ -94,6 +96,7 @@ public class LateralCacheAttributes
      * Sets the httpServers attribute of the LateralCacheAttributes object
      * @param val The new httpServers value
      */
+    @Override
     public void setHttpServers( String val )
     {
         httpServers = val;
@@ -103,6 +106,7 @@ public class LateralCacheAttributes
      * Gets the httpSrvers attribute of the LateralCacheAttributes object
      * @return The httpServers value
      */
+    @Override
     public String getHttpServers()
     {
         return httpServers;
@@ -112,6 +116,7 @@ public class LateralCacheAttributes
      * Sets the httpListenerPort attribute of the ILateralCacheAttributes object
      * @param val The new tcpListenerPort value
      */
+    @Override
     public void setHttpListenerPort( int val )
     {
         this.httpListenerPort = val;
@@ -121,6 +126,7 @@ public class LateralCacheAttributes
      * Gets the httpListenerPort attribute of the ILateralCacheAttributes object
      * @return The httpListenerPort value
      */
+    @Override
     public int getHttpListenerPort()
     {
         return this.httpListenerPort;
@@ -130,6 +136,7 @@ public class LateralCacheAttributes
      * Sets the udpMulticastAddr attribute of the LateralCacheAttributes object
      * @param val The new udpMulticastAddr value
      */
+    @Override
     public void setUdpMulticastAddr( String val )
     {
         udpMulticastAddr = val;
@@ -139,6 +146,7 @@ public class LateralCacheAttributes
      * Gets the udpMulticastAddr attribute of the LateralCacheAttributes object
      * @return The udpMulticastAddr value
      */
+    @Override
     public String getUdpMulticastAddr()
     {
         return udpMulticastAddr;
@@ -148,6 +156,7 @@ public class LateralCacheAttributes
      * Sets the udpMulticastPort attribute of the LateralCacheAttributes object
      * @param val The new udpMulticastPort value
      */
+    @Override
     public void setUdpMulticastPort( int val )
     {
         udpMulticastPort = val;
@@ -157,6 +166,7 @@ public class LateralCacheAttributes
      * Gets the udpMulticastPort attribute of the LateralCacheAttributes object
      * @return The udpMulticastPort value
      */
+    @Override
     public int getUdpMulticastPort()
     {
         return udpMulticastPort;
@@ -166,6 +176,7 @@ public class LateralCacheAttributes
      * Sets the transmissionType attribute of the LateralCacheAttributes object
      * @param val The new transmissionType value
      */
+    @Override
     public void setTransmissionType( Type val )
     {
         this.transmissionType = val;
@@ -176,6 +187,7 @@ public class LateralCacheAttributes
      * Gets the transmissionType attribute of the LateralCacheAttributes object
      * @return The transmissionType value
      */
+    @Override
     public Type getTransmissionType()
     {
         return this.transmissionType;
@@ -185,6 +197,7 @@ public class LateralCacheAttributes
      * Sets the transmissionTypeName attribute of the LateralCacheAttributes object
      * @param val The new transmissionTypeName value
      */
+    @Override
     public void setTransmissionTypeName( String val )
     {
         this.transmissionTypeName = val;
@@ -195,6 +208,7 @@ public class LateralCacheAttributes
      * Gets the transmissionTypeName attribute of the LateralCacheAttributes object
      * @return The transmissionTypeName value
      */
+    @Override
     public String getTransmissionTypeName()
     {
         return this.transmissionTypeName;
@@ -206,6 +220,7 @@ public class LateralCacheAttributes
      * other lateral caches.
      * @param val The new transmissionTypeName value
      */
+    @Override
     public void setPutOnlyMode( boolean val )
     {
         this.putOnlyMode = val;
@@ -214,6 +229,7 @@ public class LateralCacheAttributes
     /**
      * @return The outgoingOnlyMode value. Stops gets from going remote.
      */
+    @Override
     public boolean getPutOnlyMode()
     {
         return putOnlyMode;
@@ -223,6 +239,7 @@ public class LateralCacheAttributes
      * Returns a clone of the attributes.
      * @return Self
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         try
@@ -239,6 +256,7 @@ public class LateralCacheAttributes
     /**
      * @param receive The receive to set.
      */
+    @Override
     public void setReceive( boolean receive )
     {
         this.receive = receive;
@@ -247,6 +265,7 @@ public class LateralCacheAttributes
     /**
      * @return Returns the receive.
      */
+    @Override
     public boolean isReceive()
     {
         return receive;
@@ -258,6 +277,7 @@ public class LateralCacheAttributes
      * <p>
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
+    @Override
     public void setZombieQueueMaxSize( int zombieQueueMaxSize )
     {
         this.zombieQueueMaxSize = zombieQueueMaxSize;
@@ -269,6 +289,7 @@ public class LateralCacheAttributes
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */
+    @Override
     public int getZombieQueueMaxSize()
     {
         return zombieQueueMaxSize;

@@ -73,6 +73,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * <p>
      * @param attributes
      */
+    @Override
     public void initialize( RemoteHttpCacheAttributes attributes )
     {
         setRemoteDispatcher( new RemoteHttpCacheDispatcher( attributes ) );
@@ -92,6 +93,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
     {
@@ -107,6 +109,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
@@ -144,6 +147,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      *         data in cache matching the pattern.
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException
     {
@@ -160,6 +164,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      *         data in cache matching the pattern.
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
@@ -193,6 +198,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
         throws IOException
     {
@@ -209,6 +215,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException
     {
@@ -240,6 +247,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param key
      * @throws IOException
      */
+    @Override
     public void remove( String cacheName, K key )
         throws IOException
     {
@@ -254,6 +262,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
@@ -276,6 +285,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void removeAll( String cacheName )
         throws IOException
     {
@@ -289,6 +299,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
@@ -311,6 +322,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param item
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> item )
         throws IOException
     {
@@ -324,6 +336,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> cacheElement, long requesterId )
         throws IOException
     {
@@ -346,6 +359,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void dispose( String cacheName )
         throws IOException
     {
@@ -367,6 +381,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * <p>
      * @throws IOException
      */
+    @Override
     public void release()
         throws IOException
     {
@@ -379,6 +394,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @param cacheName the name of the cache
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet( String cacheName ) throws IOException
     {
         if ( !isInitialized() )
@@ -407,6 +423,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
      * @return true if we make a successful alive request.
      * @throws IOException
      */
+    @Override
     public boolean isAlive()
         throws IOException
     {

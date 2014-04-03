@@ -58,6 +58,7 @@ public class BlockDiskCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
+    @Override
     public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes iaca, ICompositeCacheManager cacheMgr,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
@@ -75,6 +76,7 @@ public class BlockDiskCacheFactory
      * <p>
      * @return The name value
      */
+    @Override
     public String getName()
     {
         return this.name;
@@ -85,6 +87,7 @@ public class BlockDiskCacheFactory
      * <p>
      * @param name The new name value
      */
+    @Override
     public void setName( String name )
     {
         this.name = name;

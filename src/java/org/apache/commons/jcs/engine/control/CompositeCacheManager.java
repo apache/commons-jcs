@@ -235,6 +235,7 @@ public class CompositeCacheManager
 
         this.scheduledExecutor = Executors.newScheduledThreadPool(4, new ThreadFactory()
         {
+            @Override
             public Thread newThread(Runnable runner)
             {
                 Thread t = new Thread( runner );
@@ -269,6 +270,7 @@ public class CompositeCacheManager
      *
      * @return the scheduledExecutor
      */
+    @Override
     public ScheduledExecutorService getScheduledExecutorService()
     {
         return scheduledExecutor;
@@ -510,6 +512,7 @@ public class CompositeCacheManager
      * @param cacheName
      * @return CompositeCache -- the cache region controller
      */
+    @Override
     public <K extends Serializable, V extends Serializable> CompositeCache<K, V>  getCache( String cacheName )
     {
         return getCache( cacheName, this.defaultCacheAttr.copy() );
@@ -777,6 +780,7 @@ public class CompositeCacheManager
      * <p>
      * @return String
      */
+    @Override
     public String getStats()
     {
         ICacheStats[] stats = getStatistics();
@@ -824,6 +828,7 @@ public class CompositeCacheManager
      * <p>
      * @param observer
      */
+    @Override
     public void registerShutdownObserver( IShutdownObserver observer )
     {
         // synchronized to take care of iteration safety
@@ -838,6 +843,7 @@ public class CompositeCacheManager
     /**
      * @param observer
      */
+    @Override
     public void deregisterShutdownObserver( IShutdownObserver observer )
     {
         synchronized ( shutdownObservers )
@@ -861,6 +867,7 @@ public class CompositeCacheManager
      * <p>
      * @return the configurationProperties
      */
+    @Override
     public Properties getConfigurationProperties()
     {
         return configurationProperties;

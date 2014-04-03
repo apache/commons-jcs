@@ -73,6 +73,7 @@ public class RemoteCacheAttributes
      * <p>
      * @return The failoverIndex value
      */
+    @Override
     public int getFailoverIndex()
     {
         return failoverIndex;
@@ -83,6 +84,7 @@ public class RemoteCacheAttributes
      * <p>
      * @param p The new failoverIndex value
      */
+    @Override
     public void setFailoverIndex( int p )
     {
         this.failoverIndex = p;
@@ -93,6 +95,7 @@ public class RemoteCacheAttributes
      * <p>
      * @return The failovers value
      */
+    @Override
     public String[] getFailovers()
     {
         return this.failovers;
@@ -103,6 +106,7 @@ public class RemoteCacheAttributes
      * <p>
      * @param f The new failovers value
      */
+    @Override
     public void setFailovers( String[] f )
     {
         this.failovers = f;
@@ -113,6 +117,7 @@ public class RemoteCacheAttributes
      * <p>
      * @return The failoverServers value
      */
+    @Override
     public String getFailoverServers()
     {
         return this.failoverServers;
@@ -123,6 +128,7 @@ public class RemoteCacheAttributes
      * <p>
      * @param s The new failoverServers value
      */
+    @Override
     public void setFailoverServers( String s )
     {
         this.failoverServers = s;
@@ -133,6 +139,7 @@ public class RemoteCacheAttributes
      * <p>
      * @return The localPort value
      */
+    @Override
     public int getLocalPort()
     {
         return this.localPort;
@@ -142,6 +149,7 @@ public class RemoteCacheAttributes
      * Sets the localPort attribute of the RemoteCacheAttributes object
      * @param p The new localPort value
      */
+    @Override
     public void setLocalPort( int p )
     {
         this.localPort = p;
@@ -150,6 +158,7 @@ public class RemoteCacheAttributes
     /**
      * @return the name of the pool
      */
+    @Override
     public String getThreadPoolName()
     {
         return threadPoolName;
@@ -158,6 +167,7 @@ public class RemoteCacheAttributes
     /**
      * @param name
      */
+    @Override
     public void setThreadPoolName( String name )
     {
         threadPoolName = name;
@@ -166,6 +176,7 @@ public class RemoteCacheAttributes
     /**
      * @return getTimeoutMillis
      */
+    @Override
     public int getGetTimeoutMillis()
     {
         return getTimeoutMillis;
@@ -174,6 +185,7 @@ public class RemoteCacheAttributes
     /**
      * @param millis
      */
+    @Override
     public void setGetTimeoutMillis( int millis )
     {
         getTimeoutMillis = millis;
@@ -185,6 +197,7 @@ public class RemoteCacheAttributes
      * <p>
      * @param receive
      */
+    @Override
     public void setReceive( boolean receive )
     {
         this.receive = receive;
@@ -201,6 +214,7 @@ public class RemoteCacheAttributes
      * The remote cache manager uses this value to decide whether or not to register a listener.
      * @return the receive value.
      */
+    @Override
     public boolean isReceive()
     {
         return this.receive;
@@ -212,6 +226,7 @@ public class RemoteCacheAttributes
      * <p>
      * @param zombieQueueMaxSize The zombieQueueMaxSize to set.
      */
+    @Override
     public void setZombieQueueMaxSize( int zombieQueueMaxSize )
     {
         this.zombieQueueMaxSize = zombieQueueMaxSize;
@@ -223,6 +238,7 @@ public class RemoteCacheAttributes
      * <p>
      * @return Returns the zombieQueueMaxSize.
      */
+    @Override
     public int getZombieQueueMaxSize()
     {
         return zombieQueueMaxSize;

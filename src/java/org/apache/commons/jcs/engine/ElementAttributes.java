@@ -123,6 +123,7 @@ public class ElementAttributes
      * <p>
      * @return a copy of the Attributes
      */
+    @Override
     public IElementAttributes copy()
     {
         try
@@ -150,6 +151,7 @@ public class ElementAttributes
      * <p>
      * @param mls The new MaxLifeSeconds value
      */
+    @Override
     public void setMaxLifeSeconds( long mls )
     {
         this.maxLifeSeconds = mls;
@@ -163,6 +165,7 @@ public class ElementAttributes
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @return The MaxLifeSeconds value
      */
+    @Override
     public long getMaxLifeSeconds()
     {
         return this.maxLifeSeconds;
@@ -176,6 +179,7 @@ public class ElementAttributes
      * removed on retrieval, or removed actively if the memory shrinker is turned on.
      * @param idle The new idleTime value
      */
+    @Override
     public void setIdleTime( long idle )
     {
         this.maxIdleTimeSeconds = idle;
@@ -186,6 +190,7 @@ public class ElementAttributes
      * <p>
      * @param size The new size value
      */
+    @Override
     public void setSize( int size )
     {
         this.size = size;
@@ -196,6 +201,7 @@ public class ElementAttributes
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return size;
@@ -210,6 +216,7 @@ public class ElementAttributes
      * Putting an item in the cache overrides any existing items.
      * @return The createTime value
      */
+    @Override
     public long getCreateTime()
     {
         return createTime;
@@ -228,6 +235,7 @@ public class ElementAttributes
      * <p>
      * @return The idleTime value
      */
+    @Override
     public long getIdleTime()
     {
         return this.maxIdleTimeSeconds;
@@ -239,6 +247,7 @@ public class ElementAttributes
      * This is the (max life + create time) - current time.
      * @return The TimeToLiveSeconds value
      */
+    @Override
     public long getTimeToLiveSeconds()
     {
         long now = System.currentTimeMillis();
@@ -250,6 +259,7 @@ public class ElementAttributes
      * <p>
      * @return The LastAccess value.
      */
+    @Override
     public long getLastAccessTime()
     {
         return this.lastAccessTime;
@@ -258,6 +268,7 @@ public class ElementAttributes
     /**
      * Sets the LastAccessTime as now of the IElementAttributes object
      */
+    @Override
     public void setLastAccessTimeNow()
     {
         this.lastAccessTime = System.currentTimeMillis();
@@ -269,6 +280,7 @@ public class ElementAttributes
      * By default this is true.
      * @return The spoolable value
      */
+    @Override
     public boolean getIsSpool()
     {
         return this.IS_SPOOL;
@@ -280,6 +292,7 @@ public class ElementAttributes
      * By default this is true.
      * @param val The new isSpool value
      */
+    @Override
     public void setIsSpool( boolean val )
     {
         this.IS_SPOOL = val;
@@ -291,6 +304,7 @@ public class ElementAttributes
      * By default this is true.
      * @return The isLateral value
      */
+    @Override
     public boolean getIsLateral()
     {
         return this.IS_LATERAL;
@@ -302,6 +316,7 @@ public class ElementAttributes
      * By default this is true.
      * @param val The new isLateral value
      */
+    @Override
     public void setIsLateral( boolean val )
     {
         this.IS_LATERAL = val;
@@ -311,6 +326,7 @@ public class ElementAttributes
      * Can this item be sent to the remote cache
      * @return true if the item can be sent to a remote auxiliary
      */
+    @Override
     public boolean getIsRemote()
     {
         return this.IS_REMOTE;
@@ -320,6 +336,7 @@ public class ElementAttributes
      * Sets the isRemote attribute of the ElementAttributes object
      * @param val The new isRemote value
      */
+    @Override
     public void setIsRemote( boolean val )
     {
         this.IS_REMOTE = val;
@@ -330,6 +347,7 @@ public class ElementAttributes
      * <p>
      * @return true if the item cannot expire.
      */
+    @Override
     public boolean getIsEternal()
     {
         return this.IS_ETERNAL;
@@ -342,6 +360,7 @@ public class ElementAttributes
      * <p>
      * @param val The new isEternal value
      */
+    @Override
     public void setIsEternal( boolean val )
     {
         this.IS_ETERNAL = val;
@@ -356,6 +375,7 @@ public class ElementAttributes
      * <p>
      * @param eventHandler The ElementEventHandler to be added to the list.
      */
+    @Override
     public void addElementEventHandler( IElementEventHandler eventHandler )
     {
         // lazy here, no concurrency problems expected
@@ -374,6 +394,7 @@ public class ElementAttributes
      * <p>
      * @param eventHandlers List of IElementEventHandler objects
      */
+    @Override
     public void addElementEventHandlers( ArrayList<IElementEventHandler> eventHandlers )
     {
         if ( eventHandlers == null )
@@ -392,6 +413,7 @@ public class ElementAttributes
      * <p>
      * @return The elementEventHandlers List of IElementEventHandler objects
      */
+    @Override
     public ArrayList<IElementEventHandler> getElementEventHandlers()
     {
         return this.eventHandlers;

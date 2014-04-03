@@ -121,6 +121,7 @@ public class LateralCacheMonitor
     /**
      * Main processing method for the LateralCacheMonitor object
      */
+    @Override
     public void run()
     {
         do

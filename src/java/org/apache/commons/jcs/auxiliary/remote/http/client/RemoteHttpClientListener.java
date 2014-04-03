@@ -47,6 +47,7 @@ public class RemoteHttpClientListener<K extends Serializable, V extends Serializ
     }
 
     /** Nothing */
+    @Override
     public void dispose()
     {
         // noop

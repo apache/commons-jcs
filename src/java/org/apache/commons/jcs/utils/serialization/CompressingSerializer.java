@@ -43,6 +43,7 @@ public class CompressingSerializer
      * @return byte[]
      * @throws IOException on i/o problem
      */
+    @Override
     public <T extends Serializable> byte[] serialize( T obj )
         throws IOException
     {
@@ -84,6 +85,7 @@ public class CompressingSerializer
      * @throws IOException on i/o problem
      * @throws ClassNotFoundException if class is not found during deserialization
      */
+    @Override
     public <T extends Serializable> T deSerialize( byte[] data )
         throws IOException, ClassNotFoundException
     {

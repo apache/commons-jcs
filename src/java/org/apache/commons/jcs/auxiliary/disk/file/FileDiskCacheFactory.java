@@ -53,6 +53,7 @@ public class FileDiskCacheFactory
      * @param elementSerializer the serializer
      * @return AuxiliaryCache
      */
+    @Override
     public <K extends Serializable, V extends Serializable> FileDiskCache<K, V> createCache(
             AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
@@ -81,6 +82,7 @@ public class FileDiskCacheFactory
      * <p>
      * @return The name value
      */
+    @Override
     public String getName()
     {
         return this.name;
@@ -91,6 +93,7 @@ public class FileDiskCacheFactory
      * <p>
      * @param name The new name value
      */
+    @Override
     public void setName( String name )
     {
         this.name = name;

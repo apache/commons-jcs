@@ -66,6 +66,7 @@ public class HSQLDiskCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
+    @Override
     public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
@@ -89,6 +90,7 @@ public class HSQLDiskCacheFactory
      * <p>
      * @param nameArg
      */
+    @Override
     public void setName( String nameArg )
     {
         name = nameArg;
@@ -99,6 +101,7 @@ public class HSQLDiskCacheFactory
      * <p>
      * @return name
      */
+    @Override
     public String getName()
     {
         return name;

@@ -302,6 +302,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
      * @return 0
      * @throws IOException
      */
+    @Override
     public int freeElements( int numberToFree )
         throws IOException
     {

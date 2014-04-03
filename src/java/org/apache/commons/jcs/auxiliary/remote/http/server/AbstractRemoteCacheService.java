@@ -76,6 +76,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @param item
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> item )
         throws IOException
     {
@@ -89,6 +90,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
@@ -147,6 +149,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
     {
@@ -166,6 +169,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
@@ -204,6 +208,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @return Map of keys and wrapped objects
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException
     {
@@ -219,6 +224,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @return Map of keys and wrapped objects
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
     {
@@ -255,6 +261,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
         throws IOException
     {
@@ -273,6 +280,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException
     {
@@ -306,6 +314,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet( String cacheName )
     {
         return processGetKeySet( cacheName );
@@ -331,6 +340,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @param key
      * @throws IOException
      */
+    @Override
     public void remove( String cacheName, K key )
         throws IOException
     {
@@ -347,6 +357,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
@@ -378,6 +389,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void removeAll( String cacheName )
         throws IOException
     {
@@ -393,6 +405,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
@@ -423,6 +436,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void dispose( String cacheName )
         throws IOException
     {

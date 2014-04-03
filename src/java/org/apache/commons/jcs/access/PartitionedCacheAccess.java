@@ -92,6 +92,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param object object
      * @throws CacheException on configuration problem
      */
+    @Override
     public void put( K key, V object )
         throws CacheException
     {
@@ -125,6 +126,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param object
      * @throws CacheException
      */
+    @Override
     public void putSafe( K key, V object )
         throws CacheException
     {
@@ -150,6 +152,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param attr
      * @throws CacheException on configuration problem
      */
+    @Override
     public void put( K key, V object, IElementAttributes attr )
         throws CacheException
     {
@@ -183,6 +186,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param key key
      * @return result, null if not found.
      */
+    @Override
     public V get( K key )
     {
         if ( key == null )
@@ -207,6 +211,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param key key
      * @return result, null if not found.
      */
+    @Override
     public ICacheElement<K, V> getCacheElement( K key )
     {
         if ( key == null )
@@ -231,6 +236,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param names
      * @return Map of keys to ICacheElement
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getCacheElements( Set<K> names )
     {
         if ( names == null )
@@ -277,6 +283,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param pattern
      * @return HashMap key to value
      */
+    @Override
     public Map<K, V> getMatching( String pattern )
     {
         if ( pattern == null )
@@ -305,6 +312,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param pattern
      * @return HashMap key to ICacheElement
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern )
     {
         if ( pattern == null )
@@ -332,6 +340,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param key
      * @throws CacheException
      */
+    @Override
     public void remove( K key )
         throws CacheException
     {
@@ -365,6 +374,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @return number removed
      * @throws CacheException
      */
+    @Override
     public int freeMemoryElements( int numberToFree )
         throws CacheException
     {
@@ -384,6 +394,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
     /**
      * @return ICompositeCacheAttributes from the first partition.
      */
+    @Override
     public ICompositeCacheAttributes getCacheAttributes()
     {
         if (!ensureInit())
@@ -403,6 +414,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @return IElementAttributes from the first partition.
      * @throws CacheException
      */
+    @Override
     public IElementAttributes getDefaultElementAttributes()
         throws CacheException
     {
@@ -426,6 +438,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @return IElementAttributes
      * @throws CacheException
      */
+    @Override
     public IElementAttributes getElementAttributes( K key )
         throws CacheException
     {
@@ -453,6 +466,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param attributes
      * @throws CacheException
      */
+    @Override
     public void resetElementAttributes( K key, IElementAttributes attributes )
         throws CacheException
     {
@@ -477,6 +491,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * <p>
      * @param cattr
      */
+    @Override
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
         if (!ensureInit())
@@ -495,6 +510,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * <p>
      * @throws CacheException
      */
+    @Override
     public void clear()
         throws CacheException
     {
@@ -519,6 +535,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * @param attr the default attributes.
      * @throws CacheException if something goes wrong.
      */
+    @Override
     public void setDefaultElementAttributes( IElementAttributes attr )
         throws CacheException
     {
@@ -540,6 +557,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * <p>
      * @return ICacheStats
      */
+    @Override
     public ICacheStats getStatistics()
     {
         if (!ensureInit())
@@ -558,6 +576,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
     /**
      * @return A String version of the stats.
      */
+    @Override
     public String getStats()
     {
         if (!ensureInit())
@@ -581,6 +600,7 @@ public class PartitionedCacheAccess<K extends Serializable, V extends Serializab
      * <p>
      * To simply remove all elements from the region use clear().
      */
+    @Override
     public synchronized void dispose()
     {
         if (!ensureInit())

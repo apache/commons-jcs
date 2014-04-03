@@ -102,6 +102,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param val The new tcpServer value
      */
+    @Override
     public void setTcpServer( String val )
     {
         this.tcpServer = val;
@@ -112,6 +113,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return The tcpServer value
      */
+    @Override
     public String getTcpServer()
     {
         return this.tcpServer;
@@ -122,6 +124,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param val The new tcpServers value
      */
+    @Override
     public void setTcpServers( String val )
     {
         this.tcpServers = val;
@@ -132,6 +135,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return The tcpServers value
      */
+    @Override
     public String getTcpServers()
     {
         return this.tcpServers;
@@ -142,6 +146,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param val The new tcpListenerPort value
      */
+    @Override
     public void setTcpListenerPort( int val )
     {
         this.tcpListenerPort = val;
@@ -152,6 +157,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return The tcpListenerPort value
      */
+    @Override
     public int getTcpListenerPort()
     {
         return this.tcpListenerPort;
@@ -163,6 +169,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param udpDiscoveryEnabled The udpDiscoveryEnabled to set.
      */
+    @Override
     public void setUdpDiscoveryEnabled( boolean udpDiscoveryEnabled )
     {
         this.udpDiscoveryEnabled = udpDiscoveryEnabled;
@@ -173,6 +180,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return Returns the udpDiscoveryEnabled.
      */
+    @Override
     public boolean isUdpDiscoveryEnabled()
     {
         return this.udpDiscoveryEnabled;
@@ -183,6 +191,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return Returns the udpDiscoveryPort.
      */
+    @Override
     public int getUdpDiscoveryPort()
     {
         return this.udpDiscoveryPort;
@@ -193,6 +202,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param udpDiscoveryPort The udpDiscoveryPort to set.
      */
+    @Override
     public void setUdpDiscoveryPort( int udpDiscoveryPort )
     {
         this.udpDiscoveryPort = udpDiscoveryPort;
@@ -203,6 +213,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return Returns the udpDiscoveryAddr.
      */
+    @Override
     public String getUdpDiscoveryAddr()
     {
         return this.udpDiscoveryAddr;
@@ -213,6 +224,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param udpDiscoveryAddr The udpDiscoveryAddr to set.
      */
+    @Override
     public void setUdpDiscoveryAddr( String udpDiscoveryAddr )
     {
         this.udpDiscoveryAddr = udpDiscoveryAddr;
@@ -225,6 +237,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param allowGet
      */
+    @Override
     public void setAllowGet( boolean allowGet )
     {
         this.allowGet = allowGet;
@@ -235,6 +248,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return true if the lateral will try to get
      */
+    @Override
     public boolean isAllowGet()
     {
         return this.allowGet;
@@ -245,6 +259,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param allowPut
      */
+    @Override
     public void setAllowPut( boolean allowPut )
     {
         this.allowPut = allowPut;
@@ -255,6 +270,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return true if puts are allowed
      */
+    @Override
     public boolean isAllowPut()
     {
         return this.allowPut;
@@ -267,6 +283,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param issueRemoveOnPut
      */
+    @Override
     public void setIssueRemoveOnPut( boolean issueRemoveOnPut )
     {
         this.issueRemoveOnPut = issueRemoveOnPut;
@@ -279,6 +296,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return true if updates will result in a remove command being sent.
      */
+    @Override
     public boolean isIssueRemoveOnPut()
     {
         return this.issueRemoveOnPut;
@@ -310,6 +328,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @return boolean
      */
+    @Override
     public boolean isFilterRemoveByHashCode()
     {
         return this.filterRemoveByHashCode;
@@ -324,6 +343,7 @@ public class TCPLateralCacheAttributes
      * <p>
      * @param filter
      */
+    @Override
     public void setFilterRemoveByHashCode( boolean filter )
     {
         this.filterRemoveByHashCode = filter;
@@ -332,6 +352,7 @@ public class TCPLateralCacheAttributes
     /**
      * @param socketTimeOut the socketTimeOut to set
      */
+    @Override
     public void setSocketTimeOut( int socketTimeOut )
     {
         this.socketTimeOut = socketTimeOut;
@@ -340,6 +361,7 @@ public class TCPLateralCacheAttributes
     /**
      * @return the socketTimeOut
      */
+    @Override
     public int getSocketTimeOut()
     {
         return socketTimeOut;
@@ -348,6 +370,7 @@ public class TCPLateralCacheAttributes
     /**
      * @param openTimeOut the openTimeOut to set
      */
+    @Override
     public void setOpenTimeOut( int openTimeOut )
     {
         this.openTimeOut = openTimeOut;
@@ -356,6 +379,7 @@ public class TCPLateralCacheAttributes
     /**
      * @return the openTimeOut
      */
+    @Override
     public int getOpenTimeOut()
     {
         return openTimeOut;

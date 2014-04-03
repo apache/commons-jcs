@@ -241,6 +241,7 @@ public class LateralTCPDiscoveryListener
      * <p>
      * @param service
      */
+    @Override
     public void addDiscoveredService( DiscoveredService service )
     {
         // get a cache and add it to the no waits
@@ -293,6 +294,7 @@ public class LateralTCPDiscoveryListener
      * <p>
      * @param service
      */
+    @Override
     public void removeDiscoveredService( DiscoveredService service )
     {
         // get a cache and add it to the no waits

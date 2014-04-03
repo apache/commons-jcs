@@ -48,6 +48,7 @@ public class JDBCDiskCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
+    @Override
     public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager compositeCacheManager,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
@@ -62,6 +63,7 @@ public class JDBCDiskCacheFactory
      * <p>
      * @param nameArg
      */
+    @Override
     public void setName( String nameArg )
     {
         name = nameArg;
@@ -72,6 +74,7 @@ public class JDBCDiskCacheFactory
      * <p>
      * @return String
      */
+    @Override
     public String getName()
     {
         return name;

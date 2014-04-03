@@ -190,6 +190,7 @@ public class UDPDiscoveryReceiver
     }
 
     /** Main processing method for the LateralUDPReceiver object */
+    @Override
     public void run()
     {
         try
@@ -286,6 +287,7 @@ public class UDPDiscoveryReceiver
         /**
          * Process the message.
          */
+        @Override
         public void run()
         {
             // consider comparing ports here instead.
@@ -367,6 +369,7 @@ public class UDPDiscoveryReceiver
          * @param runner
          * @return a daemon thread
          */
+        @Override
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );
@@ -379,6 +382,7 @@ public class UDPDiscoveryReceiver
     }
 
     /** Shuts down the socket. */
+    @Override
     public void shutdown()
     {
         try

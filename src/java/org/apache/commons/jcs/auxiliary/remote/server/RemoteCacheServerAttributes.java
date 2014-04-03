@@ -67,6 +67,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @return The localPort value
      */
+    @Override
     public int getServicePort()
     {
         return this.servicePort;
@@ -77,6 +78,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @param p The new localPort value
      */
+    @Override
     public void setServicePort( int p )
     {
         this.servicePort = p;
@@ -87,6 +89,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @return The localClusterConsistency value
      */
+    @Override
     public boolean isAllowClusterGet()
     {
         return allowClusterGet;
@@ -97,6 +100,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @param r The new localClusterConsistency value
      */
+    @Override
     public void setAllowClusterGet( boolean r )
     {
         allowClusterGet = r;
@@ -107,6 +111,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @return The clusterServers value
      */
+    @Override
     public String getConfigFileName()
     {
         return configFileName;
@@ -117,6 +122,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @param s The new clusterServers value
      */
+    @Override
     public void setConfigFileName( String s )
     {
         configFileName = s;
@@ -127,6 +133,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @param useRegistryKeepAlive the useRegistryKeepAlive to set
      */
+    @Override
     public void setUseRegistryKeepAlive( boolean useRegistryKeepAlive )
     {
         this.useRegistryKeepAlive = useRegistryKeepAlive;
@@ -137,6 +144,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @param startRegistry the startRegistry to set
      */
+    @Override
     public void setStartRegistry( boolean startRegistry )
     {
         this.startRegistry = startRegistry;
@@ -147,6 +155,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @return the startRegistry
      */
+    @Override
     public boolean isStartRegistry()
     {
         return startRegistry;
@@ -157,6 +166,7 @@ public class RemoteCacheServerAttributes
      * <p>
      * @return the useRegistryKeepAlive
      */
+    @Override
     public boolean isUseRegistryKeepAlive()
     {
         return useRegistryKeepAlive;
@@ -165,6 +175,7 @@ public class RemoteCacheServerAttributes
     /**
      * @param registryKeepAliveDelayMillis the registryKeepAliveDelayMillis to set
      */
+    @Override
     public void setRegistryKeepAliveDelayMillis( long registryKeepAliveDelayMillis )
     {
         this.registryKeepAliveDelayMillis = registryKeepAliveDelayMillis;
@@ -173,6 +184,7 @@ public class RemoteCacheServerAttributes
     /**
      * @return the registryKeepAliveDelayMillis
      */
+    @Override
     public long getRegistryKeepAliveDelayMillis()
     {
         return registryKeepAliveDelayMillis;

@@ -1104,6 +1104,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.getJdbcDiskCacheAttributes();

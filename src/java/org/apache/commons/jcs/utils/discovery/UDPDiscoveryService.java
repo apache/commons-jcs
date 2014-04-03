@@ -114,6 +114,7 @@ public class UDPDiscoveryService
     /**
      * @see org.apache.commons.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
      */
+    @Override
     public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
     {
         if (sender != null)
@@ -316,6 +317,7 @@ public class UDPDiscoveryService
     /**
      * Shuts down the receiver.
      */
+    @Override
     public void shutdown()
     {
         if ( !shutdown )

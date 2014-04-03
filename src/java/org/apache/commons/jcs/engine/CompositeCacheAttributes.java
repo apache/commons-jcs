@@ -115,6 +115,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param maxObjs The new maxObjects value
      */
+    @Override
     public void setMaxObjects( int maxObjs )
     {
         this.maxObjs = maxObjs;
@@ -125,6 +126,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The maxObjects value
      */
+    @Override
     public int getMaxObjects()
     {
         return this.maxObjs;
@@ -135,6 +137,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param useDisk The new useDisk value
      */
+    @Override
     public void setUseDisk( boolean useDisk )
     {
         this.useDisk = useDisk;
@@ -145,6 +148,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The useDisk value
      */
+    @Override
     public boolean isUseDisk()
     {
         return useDisk;
@@ -155,6 +159,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param b The new useLateral value
      */
+    @Override
     public void setUseLateral( boolean b )
     {
         this.useLateral = b;
@@ -165,6 +170,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The useLateral value
      */
+    @Override
     public boolean isUseLateral()
     {
         return this.useLateral;
@@ -175,6 +181,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param useRemote The new useRemote value
      */
+    @Override
     public void setUseRemote( boolean useRemote )
     {
         this.useRemote = useRemote;
@@ -185,6 +192,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The useRemote value
      */
+    @Override
     public boolean isUseRemote()
     {
         return this.useRemote;
@@ -195,6 +203,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param s The new cacheName value
      */
+    @Override
     public void setCacheName( String s )
     {
         this.cacheName = s;
@@ -205,6 +214,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return this.cacheName;
@@ -215,6 +225,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param s The new memoryCacheName value
      */
+    @Override
     public void setMemoryCacheName( String s )
     {
         this.memoryCacheName = s;
@@ -225,6 +236,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The memoryCacheName value
      */
+    @Override
     public String getMemoryCacheName()
     {
         return this.memoryCacheName;
@@ -235,6 +247,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param useShrinker The new UseMemoryShrinker value
      */
+    @Override
     public void setUseMemoryShrinker( boolean useShrinker )
     {
         this.useMemoryShrinker = useShrinker;
@@ -245,6 +258,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The UseMemoryShrinker value
      */
+    @Override
     public boolean isUseMemoryShrinker()
     {
         return this.useMemoryShrinker;
@@ -255,6 +269,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param seconds The new MaxMemoryIdleTimeSeconds value
      */
+    @Override
     public void setMaxMemoryIdleTimeSeconds( long seconds )
     {
         this.maxMemoryIdleTimeSeconds = seconds;
@@ -265,6 +280,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The MaxMemoryIdleTimeSeconds value
      */
+    @Override
     public long getMaxMemoryIdleTimeSeconds()
     {
         return this.maxMemoryIdleTimeSeconds;
@@ -276,6 +292,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param seconds The new ShrinkerIntervalSeconds value
      */
+    @Override
     public void setShrinkerIntervalSeconds( long seconds )
     {
         this.shrinkerIntervalSeconds = seconds;
@@ -287,6 +304,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The ShrinkerIntervalSeconds value
      */
+    @Override
     public long getShrinkerIntervalSeconds()
     {
         return this.shrinkerIntervalSeconds;
@@ -300,6 +318,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param maxSpoolPerRun The new maxSpoolPerRun value
      */
+    @Override
     public void setMaxSpoolPerRun( int maxSpoolPerRun )
     {
         this.maxSpoolPerRun = maxSpoolPerRun;
@@ -311,6 +330,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return The maxSpoolPerRun value
      */
+    @Override
     public int getMaxSpoolPerRun()
     {
         return this.maxSpoolPerRun;
@@ -321,6 +341,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param diskUsagePattern The diskUsagePattern to set.
      */
+    @Override
     public void setDiskUsagePattern( DiskUsagePattern diskUsagePattern )
     {
         this.diskUsagePattern = diskUsagePattern;
@@ -333,6 +354,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param diskUsagePatternName The diskUsagePattern to set.
      */
+    @Override
     public void setDiskUsagePatternName( String diskUsagePatternName )
     {
         if ( diskUsagePatternName != null )
@@ -354,6 +376,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return int
      */
+    @Override
     public int getSpoolChunkSize()
     {
         return spoolChunkSize;
@@ -364,6 +387,7 @@ public class CompositeCacheAttributes
      * <p>
      * @param spoolChunkSize
      */
+    @Override
     public void setSpoolChunkSize( int spoolChunkSize )
     {
         this.spoolChunkSize = spoolChunkSize;
@@ -372,6 +396,7 @@ public class CompositeCacheAttributes
     /**
      * @return Returns the diskUsagePattern.
      */
+    @Override
     public DiskUsagePattern getDiskUsagePattern()
     {
         return diskUsagePattern;
@@ -382,6 +407,7 @@ public class CompositeCacheAttributes
      * <p>
      * @return ICompositeCacheAttributes a copy
      */
+    @Override
     public ICompositeCacheAttributes copy()
     {
         try

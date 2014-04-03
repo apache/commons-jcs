@@ -372,6 +372,7 @@ public class RemoteCacheManager
      * @param cacheName
      * @return The cache value
      */
+    @Override
     public <K extends Serializable, V extends Serializable> RemoteCacheNoWait<K, V> getCache( String cacheName )
     {
         IRemoteCacheAttributes ca = (IRemoteCacheAttributes) remoteCacheAttributes.copy();
@@ -592,6 +593,7 @@ public class RemoteCacheManager
      * <p>
      * @see org.apache.commons.jcs.engine.behavior.IShutdownObserver#shutdown()
      */
+    @Override
     public void shutdown()
     {
         if ( log.isInfoEnabled() )

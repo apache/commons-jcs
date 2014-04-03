@@ -143,6 +143,7 @@ public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends S
      * <p>
      * @param cacheEventLogger
      */
+    @Override
     public void setCacheEventLogger( ICacheEventLogger cacheEventLogger )
     {
         this.cacheEventLogger = cacheEventLogger;
@@ -166,6 +167,7 @@ public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends S
      * <p>
      * @param elementSerializer
      */
+    @Override
     public void setElementSerializer( IElementSerializer elementSerializer )
     {
         if ( elementSerializer != null )
@@ -189,6 +191,7 @@ public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends S
      * <p>
      * @param keyMatcher
      */
+    @Override
     public void setKeyMatcher( IKeyMatcher<K> keyMatcher )
     {
         if ( keyMatcher != null )

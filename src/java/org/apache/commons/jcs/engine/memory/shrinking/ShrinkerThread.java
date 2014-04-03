@@ -90,6 +90,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
     /**
      * Main processing method for the ShrinkerThread object
      */
+    @Override
     public void run()
     {
         shrink();

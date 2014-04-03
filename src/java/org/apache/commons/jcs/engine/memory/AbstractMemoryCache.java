@@ -83,6 +83,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @param hub
      */
+    @Override
     public synchronized void initialize( CompositeCache<K, V> hub )
     {
         this.cacheName = hub.getCacheName();
@@ -97,6 +98,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     /**
      * @see org.apache.commons.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
      */
+    @Override
     public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
     {
         if ( cacheAttributes.isUseMemoryShrinker() )
@@ -122,6 +124,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * @return Description of the Return Value
      * @throws IOException Description of the Exception
      */
+    @Override
     public abstract boolean remove( K key )
         throws IOException;
 
@@ -132,6 +135,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * @return Description of the Return Value
      * @throws IOException Description of the Exception
      */
+    @Override
     public abstract ICacheElement<K, V> get( K key )
         throws IOException;
 
@@ -143,6 +147,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( Set<K> keys )
         throws IOException
     {
@@ -172,6 +177,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * @return Element matching key if found, or null
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> getQuiet( K key )
         throws IOException
     {
@@ -201,6 +207,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * @param ce Description of the Parameter
      * @throws IOException Description of the Exception
      */
+    @Override
     public abstract void update( ICacheElement<K, V> ce )
         throws IOException;
 
@@ -209,6 +216,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @return A set of the key type
      */
+    @Override
     public abstract Set<K> getKeySet();
 
     /**
@@ -216,6 +224,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @throws IOException
      */
+    @Override
     public void removeAll()
         throws IOException
     {
@@ -227,6 +236,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @throws IOException
      */
+    @Override
     public void dispose()
         throws IOException
     {
@@ -236,6 +246,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     /**
      * @return statistics about the cache
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();
@@ -248,6 +259,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @return The size value
      */
+    @Override
     public int getSize()
     {
         return this.map.size();
@@ -282,6 +294,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * @param ce
      * @throws IOException
      */
+    @Override
     public void waterfal( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -293,6 +306,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @return The iterator value
      */
+    @Override
     public Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
     {
         return map.entrySet().iterator();
@@ -317,6 +331,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @return The CacheAttributes value
      */
+    @Override
     public ICompositeCacheAttributes getCacheAttributes()
     {
         return this.cacheAttributes;
@@ -327,6 +342,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @param cattr The new CacheAttributes value
      */
+    @Override
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
         this.cacheAttributes = cattr;
@@ -337,6 +353,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
      * <p>
      * @return The cache value
      */
+    @Override
     public CompositeCache<K, V> getCompositeCache()
     {
         return this.cache;

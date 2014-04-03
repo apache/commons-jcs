@@ -71,6 +71,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @param name Key the object is stored as
      * @return The object if found or null
      */
+    @Override
     public V get( K name )
     {
         ICacheElement<K, V> element = this.cacheControl.get( name );
@@ -84,6 +85,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @param pattern - a key pattern for the objects stored
      * @return A map of key to values.  These are stripped from the wrapper.
      */
+    @Override
     public Map<K, V> getMatching( String pattern )
     {
         HashMap<K, V> unwrappedResults = new HashMap<K, V>();
@@ -118,6 +120,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @param name Key the Serializable is stored as
      * @return The ICacheElement<K, V> if the object is found or null
      */
+    @Override
     public ICacheElement<K, V> getCacheElement( K name )
     {
         return this.cacheControl.get( name );
@@ -140,6 +143,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @param names set of Serializable cache keys
      * @return a map of K key to ICacheElement<K, V> element, or empty map if none of the keys are present
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getCacheElements( Set<K> names )
     {
         return this.cacheControl.getMultiple( names );
@@ -162,6 +166,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @param pattern key search pattern
      * @return a map of K key to ICacheElement<K, V> element, or empty map if no keys match the pattern
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern )
     {
         return this.cacheControl.getMatching( pattern );
@@ -177,6 +182,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @throws CacheException and ObjectExistsException is thrown if the item is already in the
      *                cache.
      */
+    @Override
     public void putSafe( K key, V value )
         throws CacheException
     {
@@ -196,6 +202,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @param obj Object to store
      * @throws CacheException
      */
+    @Override
     public void put( K name, V obj )
         throws CacheException
     {
@@ -212,6 +219,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @see org.apache.commons.jcs.access.behavior.ICacheAccess#put(java.io.Serializable, java.io.Serializable,
      *      org.apache.commons.jcs.engine.behavior.IElementAttributes)
      */
+    @Override
     public void put( K key, V val, IElementAttributes attr )
         throws CacheException
     {
@@ -248,6 +256,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @param name the name of the item to remove.
      * @throws CacheException
      */
+    @Override
     public void remove( K name )
         throws CacheException
     {
@@ -263,6 +272,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @throws CacheException
      * @throws InvalidHandleException if the item does not exist.
      */
+    @Override
     public void resetElementAttributes( K name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
@@ -290,6 +300,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
      * @return Attributes for the object, null if object not in cache
      * @throws CacheException
      */
+    @Override
     public IElementAttributes getElementAttributes( K name )
         throws CacheException
     {

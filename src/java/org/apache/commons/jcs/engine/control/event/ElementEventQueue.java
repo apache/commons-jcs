@@ -90,6 +90,7 @@ public class ElementEventQueue
     /**
      * Event Q is empty.
      */
+    @Override
     public void destroy()
     {
         synchronized ( queueLock )
@@ -166,6 +167,7 @@ public class ElementEventQueue
     /**
      * @return The destroyed value
      */
+    @Override
     public boolean isAlive()
     {
         return !destroyed;
@@ -177,6 +179,7 @@ public class ElementEventQueue
      * @param event The IElementEventHandler IElementEvent event
      * @throws IOException
      */
+    @Override
     public void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException
     {
@@ -362,6 +365,7 @@ public class ElementEventQueue
         /**
          * Main processing method for the AbstractElementEvent object
          */
+        @Override
         public void run()
         {
             try

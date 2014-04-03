@@ -78,6 +78,7 @@ public class ShrinkerThread
     /**
      * Calls deleteExpired on each item in the set. It pauses between each call.
      */
+    @Override
     public void run()
     {
         try

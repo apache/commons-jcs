@@ -48,6 +48,7 @@ public class MySQLDiskCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
+    @Override
     public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager cacheManager,
                                        ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
     {
@@ -60,6 +61,7 @@ public class MySQLDiskCacheFactory
      * <p>
      * @param nameArg
      */
+    @Override
     public void setName( String nameArg )
     {
         name = nameArg;
@@ -70,6 +72,7 @@ public class MySQLDiskCacheFactory
      * <p>
      * @return factory name
      */
+    @Override
     public String getName()
     {
         return name;

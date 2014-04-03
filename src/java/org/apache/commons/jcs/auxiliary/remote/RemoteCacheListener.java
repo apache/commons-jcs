@@ -86,6 +86,7 @@ public class RemoteCacheListener<K extends Serializable, V extends Serializable>
      * <p>
      * @throws IOException
      */
+    @Override
     public synchronized void dispose()
         throws IOException
     {

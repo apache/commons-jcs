@@ -217,6 +217,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
          * @param runner
          * @return the daemon thread.
          */
+        @Override
         public Thread newThread( Runnable runner )
         {
             Thread t = new Thread( runner );

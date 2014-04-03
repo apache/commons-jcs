@@ -107,6 +107,7 @@ public class BlockDiskElementDescriptor<K extends Serializable>
      * (non-Javadoc)
      * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
      */
+    @Override
     @SuppressWarnings("unchecked") // Need cast to K
     public void readExternal( ObjectInput input )
         throws IOException, ClassNotFoundException
@@ -121,6 +122,7 @@ public class BlockDiskElementDescriptor<K extends Serializable>
      * (non-Javadoc)
      * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
      */
+    @Override
     public void writeExternal( ObjectOutput output )
         throws IOException
     {

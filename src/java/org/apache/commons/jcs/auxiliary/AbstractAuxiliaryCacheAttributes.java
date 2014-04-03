@@ -45,6 +45,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * @param name
      */
+    @Override
     public void setCacheName( String name )
     {
         this.cacheName = name;
@@ -55,6 +56,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * <p>
      * @return The cacheName value
      */
+    @Override
     public String getCacheName()
     {
         return this.cacheName;
@@ -65,6 +67,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCacheAttributes#setName(java.lang.String)
      */
+    @Override
     public void setName( String s )
     {
         this.name = s;
@@ -75,6 +78,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * <p>
      * @return The name value
      */
+    @Override
     public String getName()
     {
         return this.name;
@@ -85,6 +89,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * <p>
      * @param queueType SINGLE or POOLED
      */
+    @Override
     public void setEventQueueType( ICacheEventQueue.QueueType queueType )
     {
         this.eventQueueType = queueType;
@@ -93,6 +98,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
     /**
      * @return SINGLE or POOLED
      */
+    @Override
     public ICacheEventQueue.QueueType getEventQueueType()
     {
         return eventQueueType;
@@ -104,6 +110,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * <p>
      * @param s SINGLE or POOLED
      */
+    @Override
     public void setEventQueuePoolName( String s )
     {
         eventQueuePoolName = s;
@@ -115,6 +122,7 @@ public abstract class AbstractAuxiliaryCacheAttributes
      * <p>
      * @return name of thread pool to use for this auxiliary
      */
+    @Override
     public String getEventQueuePoolName()
     {
         return eventQueuePoolName;

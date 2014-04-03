@@ -361,6 +361,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     public abstract Set<K> getKeySet() throws IOException;
 
     /**
@@ -454,6 +455,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
     {
         Runnable disR = new Runnable()
         {
+            @Override
             public void run()
             {
                 boolean keepGoing = true;
@@ -503,6 +505,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * @return the region name.
      * @see ICache#getCacheName
      */
+    @Override
     public String getCacheName()
     {
         return cacheName;
@@ -513,6 +516,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * <p>
      * @return String
      */
+    @Override
     public String getStats()
     {
         return getStatistics().toString();
@@ -523,6 +527,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * <p>
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getStatistics()
      */
+    @Override
     public IStats getStatistics()
     {
         IStats stats = new Stats();
@@ -560,6 +565,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * @return the status -- alive or disposed from CacheConstants
      * @see ICache#getStatus
      */
+    @Override
     public CacheStatus getStatus()
     {
         return ( alive ? CacheStatus.ALIVE : CacheStatus.DISPOSED );
@@ -572,12 +578,14 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
      * @return the number of items.
      * @see ICache#getSize
      */
+    @Override
     public abstract int getSize();
 
     /**
      * @see org.apache.commons.jcs.engine.behavior.ICacheType#getCacheType
      * @return Always returns DISK_CACHE since subclasses should all be of that type.
      */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.DISK_CACHE;
@@ -598,6 +606,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
          * @throws IOException
          * @see ICacheListener#getListenerId
          */
+        @Override
         public long getListenerId()
             throws IOException
         {
@@ -609,6 +618,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
          * @throws IOException
          * @see ICacheListener#setListenerId
          */
+        @Override
         public void setListenerId( long id )
             throws IOException
         {
@@ -623,6 +633,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
          *      added to the cache event queue, that may not be needed ( they are always
          *      PurgatoryElements ).
          */
+        @Override
         public void handlePut( ICacheElement<K, V> element )
             throws IOException
         {
@@ -705,6 +716,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
          * @throws IOException
          * @see ICacheListener#handleRemove
          */
+        @Override
         public void handleRemove( String cacheName, K key )
             throws IOException
         {
@@ -722,6 +734,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
          * @throws IOException
          * @see ICacheListener#handleRemoveAll
          */
+        @Override
         public void handleRemoveAll( String cacheName )
             throws IOException
         {
@@ -736,6 +749,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
          * @throws IOException
          * @see ICacheListener#handleDispose
          */
+        @Override
         public void handleDispose( String cacheName )
             throws IOException
         {

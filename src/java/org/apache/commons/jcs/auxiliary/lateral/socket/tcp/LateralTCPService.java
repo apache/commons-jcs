@@ -94,6 +94,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param item
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> item )
         throws IOException
     {
@@ -108,6 +109,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @see org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal#update(org.apache.commons.jcs.engine.behavior.ICacheElement,
      *      long)
      */
+    @Override
     public void update( ICacheElement<K, V> item, long requesterId )
         throws IOException
     {
@@ -153,6 +155,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @see org.apache.commons.jcs.engine.behavior.ICacheService#remove(java.lang.String,
      *      java.io.Serializable)
      */
+    @Override
     public void remove( String cacheName, K key )
         throws IOException
     {
@@ -165,6 +168,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @see org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal#remove(java.lang.String,
      *      java.io.Serializable, long)
      */
+    @Override
     public void remove( String cacheName, K key, long requesterId )
         throws IOException
     {
@@ -180,6 +184,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * <p>
      * @throws IOException
      */
+    @Override
     public void release()
         throws IOException
     {
@@ -192,6 +197,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void dispose( String cacheName )
         throws IOException
     {
@@ -224,6 +230,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @return ICacheElement<K, V> if found.
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key )
         throws IOException
     {
@@ -239,6 +246,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @return ICacheElement<K, V> if found.
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( String cacheName, K key, long requesterId )
         throws IOException
     {
@@ -273,6 +281,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      *         data in cache matching the pattern.
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern )
         throws IOException
     {
@@ -289,6 +298,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      *         data in cache matching the pattern.
      * @throws IOException
      */
+    @Override
     @SuppressWarnings("unchecked") // Need to cast from Object
     public Map<K, ICacheElement<K, V>> getMatching( String cacheName, String pattern, long requesterId )
         throws IOException
@@ -324,6 +334,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys )
         throws IOException
     {
@@ -342,6 +353,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      *         data in cache for any of these keys
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple( String cacheName, Set<K> keys, long requesterId )
         throws IOException
     {
@@ -368,6 +380,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param cacheName the name of the cache region
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getKeySet()
      */
+    @Override
     @SuppressWarnings("unchecked") // Need cast from Object
     public Set<K> getKeySet(String cacheName) throws IOException
     {
@@ -388,6 +401,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void removeAll( String cacheName )
         throws IOException
     {
@@ -399,6 +413,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param requesterId
      * @throws IOException
      */
+    @Override
     public void removeAll( String cacheName, long requesterId )
         throws IOException
     {
@@ -455,6 +470,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param obj
      * @throws IOException
      */
+    @Override
     public <KK extends Serializable, VV extends Serializable> void addCacheListener( String cacheName, ICacheListener<KK, VV> obj )
         throws IOException
     {
@@ -465,6 +481,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param obj
      * @throws IOException
      */
+    @Override
     public <KK extends Serializable, VV extends Serializable> void addCacheListener( ICacheListener<KK, VV> obj )
         throws IOException
     {
@@ -476,6 +493,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param obj
      * @throws IOException
      */
+    @Override
     public <KK extends Serializable, VV extends Serializable> void removeCacheListener( String cacheName, ICacheListener<KK, VV> obj )
         throws IOException
     {
@@ -486,6 +504,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
      * @param obj
      * @throws IOException
      */
+    @Override
     public <KK extends Serializable, VV extends Serializable> void removeCacheListener( ICacheListener<KK, VV> obj )
         throws IOException
     {

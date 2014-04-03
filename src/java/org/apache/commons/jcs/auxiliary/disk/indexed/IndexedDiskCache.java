@@ -1049,6 +1049,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         {
             Runnable disR = new Runnable()
             {
+                @Override
                 public void run()
                 {
                     disposeInternal();
@@ -1189,6 +1190,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
                     {
                         currentOptimizationThread = new Thread( new Runnable()
                         {
+                            @Override
                             public void run()
                             {
                                 optimizeFile();
@@ -1521,6 +1523,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return this.cattr;
@@ -1674,6 +1677,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
          * <p>
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
+        @Override
         public int compare( IndexedDiskElementDescriptor o1, IndexedDiskElementDescriptor o2 )
         {
             IndexedDiskElementDescriptor ded1 = o1;

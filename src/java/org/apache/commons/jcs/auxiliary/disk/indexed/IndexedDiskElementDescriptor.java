@@ -92,6 +92,7 @@ public class IndexedDiskElementDescriptor
      * @param o Object
      * @return int
      */
+    @Override
     public int compareTo( IndexedDiskElementDescriptor o )
     {
         if ( o == null )

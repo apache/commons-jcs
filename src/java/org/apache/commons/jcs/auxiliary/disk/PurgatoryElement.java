@@ -88,6 +88,7 @@ public class PurgatoryElement<K extends Serializable, V extends Serializable>
      * @return cacheElement.getCacheName();
      * @see ICacheElement#getCacheName
      */
+    @Override
     public String getCacheName()
     {
         return cacheElement.getCacheName();
@@ -97,6 +98,7 @@ public class PurgatoryElement<K extends Serializable, V extends Serializable>
      * @return cacheElement.getKey();
      * @see ICacheElement#getKey
      */
+    @Override
     public K getKey()
     {
         return cacheElement.getKey();
@@ -106,6 +108,7 @@ public class PurgatoryElement<K extends Serializable, V extends Serializable>
      * @return cacheElement.getVal();
      * @see ICacheElement#getVal
      */
+    @Override
     public V getVal()
     {
         return cacheElement.getVal();
@@ -115,6 +118,7 @@ public class PurgatoryElement<K extends Serializable, V extends Serializable>
      * @return cacheElement.getElementAttributes();
      * @see ICacheElement#getElementAttributes
      */
+    @Override
     public IElementAttributes getElementAttributes()
     {
         return cacheElement.getElementAttributes();
@@ -124,6 +128,7 @@ public class PurgatoryElement<K extends Serializable, V extends Serializable>
      * @param attr
      * @see ICacheElement#setElementAttributes
      */
+    @Override
     public void setElementAttributes( IElementAttributes attr )
     {
         cacheElement.setElementAttributes( attr );

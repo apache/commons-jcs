@@ -53,6 +53,7 @@ public class LRUMapEntry<K, V>
     /**
      * @return key
      */
+    @Override
     public K getKey()
     {
         return this.key;
@@ -61,6 +62,7 @@ public class LRUMapEntry<K, V>
     /**
      * @return value
      */
+    @Override
     public V getValue()
     {
         return this.value;
@@ -70,6 +72,7 @@ public class LRUMapEntry<K, V>
      * @param valueArg
      * @return the old value
      */
+    @Override
     public V setValue(V valueArg)
     {
         V old = this.value;
