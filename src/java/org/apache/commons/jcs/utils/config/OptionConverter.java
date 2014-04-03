@@ -82,7 +82,7 @@ public class OptionConverter
     {
         char c;
         int len = s.length();
-        StringBuffer sbuf = new StringBuffer( len );
+        StringBuffer sb = new StringBuffer( len );
 
         int i = 0;
         while ( i < len )
@@ -124,9 +124,9 @@ public class OptionConverter
                     c = '\\';
                 }
             }
-            sbuf.append( c );
+            sb.append( c );
         }
-        return sbuf.toString();
+        return sb.toString();
     }
 
     /**

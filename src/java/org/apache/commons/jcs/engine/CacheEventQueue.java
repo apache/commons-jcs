@@ -383,13 +383,13 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
         se.setData( "" + this.isEmpty() );
         elems.add( se );
 
-        int size = 0;
+        int sz = 0;
         synchronized ( queueLock )
         {
             // wait until there is something to read
             if ( head == tail )
             {
-                size = 0;
+                sz = 0;
             }
             else
             {
@@ -397,13 +397,13 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
                 while ( n != null )
                 {
                     n = n.next;
-                    size++;
+                    sz++;
                 }
             }
 
             se = new StatElement();
             se.setName( "Size" );
-            se.setData( "" + size );
+            se.setData( "" + sz );
             elems.add( se );
         }
 

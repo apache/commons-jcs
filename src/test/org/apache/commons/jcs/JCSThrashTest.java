@@ -178,10 +178,10 @@ public class JCSThrashTest
                 public void execute()
                     throws Exception
                 {
-                    for ( int i = 0; i < 500; i++ )
+                    for ( int j = 0; j < 500; j++ )
                     {
-                        final String key = "key" + i;
-                        jcs.get( key );
+                        final String keyj = "key" + j;
+                        jcs.get( keyj );
                     }
                     jcs.get( "key" );
                 }
@@ -201,12 +201,12 @@ public class JCSThrashTest
                 {
 
                     // Add a bunch of entries
-                    for ( int i = 0; i < 500; i++ )
+                    for ( int j = 0; j < 500; j++ )
                     {
                         // Use a random length value
-                        final String key = "key" + i;
-                        byte[] value = new byte[10000];
-                        jcs.put( key, value );
+                        final String keyj = "key" + j;
+                        byte[] valuej = new byte[10000];
+                        jcs.put( keyj, valuej );
                     }
                 }
             };

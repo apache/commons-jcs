@@ -120,9 +120,8 @@ public class LateralTCPSender
             // have time out socket open do this for us
             try
             {
-                InetSocketAddress address = new InetSocketAddress( host, port );
                 socket = new Socket();
-                socket.connect( address, tcpLateralCacheAttributes.getOpenTimeOut() );
+                socket.connect( new InetSocketAddress( host, port ), tcpLateralCacheAttributes.getOpenTimeOut() );
             }
             catch ( IOException ioe )
             {

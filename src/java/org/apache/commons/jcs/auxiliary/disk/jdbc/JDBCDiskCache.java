@@ -151,18 +151,18 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
     protected JDBCDiskCachePoolAccess initializePoolAccess( JDBCDiskCacheAttributes cattr,
                                                             ICompositeCacheManager compositeCacheManager )
     {
-        JDBCDiskCachePoolAccess poolAccess = null;
+        JDBCDiskCachePoolAccess poolAccess1 = null;
         if ( cattr.getConnectionPoolName() != null )
         {
             JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( compositeCacheManager
                 .getConfigurationProperties() );
-            poolAccess = manager.getJDBCDiskCachePoolAccess( cattr.getConnectionPoolName() );
+            poolAccess1 = manager.getJDBCDiskCachePoolAccess( cattr.getConnectionPoolName() );
         }
         else
         {
             try
             {
-                poolAccess = JDBCDiskCachePoolAccessFactory.createPoolAccess( cattr );
+                poolAccess1 = JDBCDiskCachePoolAccessFactory.createPoolAccess( cattr );
             }
             catch ( Exception e )
             {
@@ -171,7 +171,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
                 log.error( "Problem getting connection.", e );
             }
         }
-        return poolAccess;
+        return poolAccess1;
     }
 
     /**

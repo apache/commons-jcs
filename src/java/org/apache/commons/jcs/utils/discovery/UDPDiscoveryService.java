@@ -138,15 +138,15 @@ public class UDPDiscoveryService
      */
     protected void serviceRequestBroadcast()
     {
-        UDPDiscoverySender sender = null;
+        UDPDiscoverySender sender1 = null;
         try
         {
             // create this connection each time.
             // more robust
-            sender = new UDPDiscoverySender( getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
+            sender1 = new UDPDiscoverySender( getUdpDiscoveryAttributes().getUdpDiscoveryAddr(),
                                              getUdpDiscoveryAttributes().getUdpDiscoveryPort() );
 
-            sender.passiveBroadcast( getUdpDiscoveryAttributes().getServiceAddress(), getUdpDiscoveryAttributes()
+            sender1.passiveBroadcast( getUdpDiscoveryAttributes().getServiceAddress(), getUdpDiscoveryAttributes()
                 .getServicePort(), this.getCacheNames() );
 
             // todo we should consider sending a request broadcast every so
@@ -167,9 +167,9 @@ public class UDPDiscoveryService
         {
             try
             {
-                if ( sender != null )
+                if ( sender1 != null )
                 {
-                    sender.destroy();
+                    sender1.destroy();
                 }
             }
             catch ( Exception e )

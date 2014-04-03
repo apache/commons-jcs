@@ -461,8 +461,8 @@ public class RemoteCacheServerFactory
         // shutdown
         if ( args.length > 0 && args[0].toLowerCase().indexOf( "-shutdown" ) != -1 )
         {
-            String serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-            String registry = "//:" + port + "/" + serviceName;
+            String remoteServiceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
+            String registry = "//:" + port + "/" + remoteServiceName;
 
             if ( log.isDebugEnabled() )
             {
@@ -494,8 +494,8 @@ public class RemoteCacheServerFactory
 
             try
             {
-                String serviceName = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
-                String registry = "//:" + port + "/" + serviceName;
+                String sz = prop.getProperty( REMOTE_CACHE_SERVICE_NAME, REMOTE_CACHE_SERVICE_VAL ).trim();
+                String registry = "//:" + port + "/" + sz;
                 log.debug( "looking up server " + registry );
                 Object obj = Naming.lookup( registry );
                 log.debug( "server found" );
