@@ -74,7 +74,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     @Override
     public V get( K name )
     {
-        ICacheElement<K, V> element = this.cacheControl.get( name );
+        ICacheElement<K, V> element = this.getCacheControl().get( name );
 
         return ( element != null ) ? element.getVal() : null;
     }
@@ -90,7 +90,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     {
         HashMap<K, V> unwrappedResults = new HashMap<K, V>();
 
-        Map<K, ICacheElement<K, V>> wrappedResults = this.cacheControl.getMatching( pattern );
+        Map<K, ICacheElement<K, V>> wrappedResults = this.getCacheControl().getMatching( pattern );
         if ( wrappedResults != null )
         {
             for (Map.Entry<K, ICacheElement<K, V>> entry : wrappedResults.entrySet())
@@ -123,7 +123,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     @Override
     public ICacheElement<K, V> getCacheElement( K name )
     {
-        return this.cacheControl.get( name );
+        return this.getCacheControl().get( name );
     }
 
     /**
@@ -146,7 +146,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     @Override
     public Map<K, ICacheElement<K, V>> getCacheElements( Set<K> names )
     {
-        return this.cacheControl.getMultiple( names );
+        return this.getCacheControl().getMultiple( names );
     }
 
     /**
@@ -169,7 +169,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     @Override
     public Map<K, ICacheElement<K, V>> getMatchingCacheElements( String pattern )
     {
-        return this.cacheControl.getMatching( pattern );
+        return this.getCacheControl().getMatching( pattern );
     }
 
     /**
@@ -186,7 +186,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     public void putSafe( K key, V value )
         throws CacheException
     {
-        if ( this.cacheControl.get( key ) != null )
+        if ( this.getCacheControl().get( key ) != null )
         {
             throw new ObjectExistsException( "putSafe failed.  Object exists in the cache for key [" + key
                 + "].  Remove first or use a non-safe put to override the value." );
@@ -208,7 +208,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     {
         // Call put with a copy of the contained caches default attributes.
         // the attributes are copied by the cacheControl
-        put( name, obj, this.cacheControl.getElementAttributes() );
+        put( name, obj, this.getCacheControl().getElementAttributes() );
     }
 
     /**
@@ -237,12 +237,12 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
         // should be wrapped by cache access.
         try
         {
-            CacheElement<K, V> ce = new CacheElement<K, V>( this.cacheControl.getCacheName(), key,
+            CacheElement<K, V> ce = new CacheElement<K, V>( this.getCacheControl().getCacheName(), key,
                                                 val );
 
             ce.setElementAttributes( attr );
 
-            this.cacheControl.update( ce );
+            this.getCacheControl().update( ce );
         }
         catch ( IOException e )
         {
@@ -260,7 +260,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     public void remove( K name )
         throws CacheException
     {
-        this.cacheControl.remove( name );
+        this.getCacheControl().remove( name );
     }
 
     /**
@@ -276,7 +276,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
     public void resetElementAttributes( K name, IElementAttributes attr )
         throws CacheException, InvalidHandleException
     {
-        ICacheElement<K, V> element = this.cacheControl.get( name );
+        ICacheElement<K, V> element = this.getCacheControl().get( name );
 
         if ( element == null )
         {
@@ -308,7 +308,7 @@ public class CacheAccess<K extends Serializable, V extends Serializable>
 
         try
         {
-            attr = this.cacheControl.getElementAttributes( name );
+            attr = this.getCacheControl().getElementAttributes( name );
         }
         catch ( IOException ioe )
         {

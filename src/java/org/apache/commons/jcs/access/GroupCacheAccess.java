@@ -63,7 +63,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     @Override
     public V getFromGroup( K name, String group )
     {
-        ICacheElement<GroupAttrName<K>, V> element = this.cacheControl.get( getGroupAttrName( group, name ) );
+        ICacheElement<GroupAttrName<K>, V> element = this.getCacheControl().get( getGroupAttrName( group, name ) );
         return ( element != null ) ? element.getVal() : null;
     }
 
@@ -76,7 +76,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
      */
     private GroupAttrName<K> getGroupAttrName( String group, K name )
     {
-        GroupId gid = new GroupId( this.cacheControl.getCacheName(), group );
+        GroupId gid = new GroupId( this.getCacheControl().getCacheName(), group );
         return new GroupAttrName<K>( gid, name );
     }
 
@@ -135,12 +135,12 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
         {
             GroupAttrName<K> key = getGroupAttrName( groupName, name );
             CacheElement<GroupAttrName<K>, V> ce =
-                new CacheElement<GroupAttrName<K>, V>( this.cacheControl.getCacheName(), key, value );
+                new CacheElement<GroupAttrName<K>, V>( this.getCacheControl().getCacheName(), key, value );
 
-            IElementAttributes attributes = (attr == null) ? this.cacheControl.getElementAttributes() : attr;
+            IElementAttributes attributes = (attr == null) ? this.getCacheControl().getElementAttributes() : attr;
             ce.setElementAttributes( attributes );
 
-            this.cacheControl.update( ce );
+            this.getCacheControl().update( ce );
         }
         catch ( IOException e )
         {
@@ -157,7 +157,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     public void removeFromGroup( K name, String group )
     {
         GroupAttrName<K> key = getGroupAttrName( group, name );
-        this.cacheControl.remove( key );
+        this.getCacheControl().remove( key );
     }
 
     /**
@@ -170,9 +170,9 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     public Set<K> getGroupKeys( String group )
     {
         Set<K> groupKeys = new HashSet<K>();
-        GroupId groupId = new GroupId( this.cacheControl.getCacheName(), group );
+        GroupId groupId = new GroupId( this.getCacheControl().getCacheName(), group );
 
-        for (GroupAttrName<K> gan : this.cacheControl.getKeySet())
+        for (GroupAttrName<K> gan : this.getCacheControl().getKeySet())
         {
             if (gan.groupId.equals( groupId ))
             {
@@ -191,7 +191,7 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     public Set<String> getGroupNames()
     {
         HashSet<String> names = new HashSet<String>();
-        for (GroupAttrName<K> gan : this.cacheControl.getKeySet())
+        for (GroupAttrName<K> gan : this.getCacheControl().getKeySet())
         {
             names.add(gan.groupId.groupName);
         }
@@ -207,6 +207,6 @@ public class GroupCacheAccess<K extends Serializable, V extends Serializable>
     @Override
     public void invalidateGroup( String group )
     {
-        this.cacheControl.remove(getGroupAttrName(group, null));
+        this.getCacheControl().remove(getGroupAttrName(group, null));
     }
 }

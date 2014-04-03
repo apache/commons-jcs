@@ -48,7 +48,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
      * <p>
      * TODO Should this be the interface?
      */
-    protected CompositeCache<K, V> cacheControl;
+    private final CompositeCache<K, V> cacheControl;
 
     /**
      * Constructor for the CacheAccess object.
@@ -71,7 +71,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     {
         try
         {
-            this.cacheControl.removeAll();
+            this.getCacheControl().removeAll();
         }
         catch ( IOException e )
         {
@@ -93,7 +93,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     public void setDefaultElementAttributes( IElementAttributes attr )
         throws CacheException
     {
-        this.cacheControl.setElementAttributes( attr );
+        this.getCacheControl().setElementAttributes( attr );
     }
 
     /**
@@ -110,7 +110,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     public IElementAttributes getDefaultElementAttributes()
         throws CacheException
     {
-        return this.cacheControl.getElementAttributes();
+        return this.getCacheControl().getElementAttributes();
     }
 
     /**
@@ -123,7 +123,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     @Override
     public ICacheStats getStatistics()
     {
-        return this.cacheControl.getStatistics();
+        return this.getCacheControl().getStatistics();
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     @Override
     public String getStats()
     {
-        return this.cacheControl.getStats();
+        return this.getCacheControl().getStats();
     }
 
     /**
@@ -144,7 +144,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     @Override
     public void dispose()
     {
-        this.cacheControl.dispose();
+        this.getCacheControl().dispose();
     }
 
     /**
@@ -156,7 +156,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     @Override
     public ICompositeCacheAttributes getCacheAttributes()
     {
-        return this.cacheControl.getCacheAttributes();
+        return this.getCacheControl().getCacheAttributes();
     }
 
     /**
@@ -167,7 +167,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
     @Override
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
-        this.cacheControl.setCacheAttributes( cattr );
+        this.getCacheControl().setCacheAttributes( cattr );
     }
 
     /**
@@ -187,7 +187,7 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
         int numFreed = -1;
         try
         {
-            numFreed = this.cacheControl.getMemoryCache().freeElements( numberToFree );
+            numFreed = this.getCacheControl().getMemoryCache().freeElements( numberToFree );
         }
         catch ( IOException ioe )
         {
@@ -196,4 +196,9 @@ public abstract class AbstractCacheAccess<K extends Serializable, V extends Seri
         }
         return numFreed;
     }
+
+    public CompositeCache<K, V> getCacheControl() {
+        return cacheControl;
+    }
+
 }
