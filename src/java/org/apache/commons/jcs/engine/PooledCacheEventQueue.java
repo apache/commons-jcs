@@ -30,6 +30,8 @@ import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * An event queue is used to propagate ordered cache events to one and only one target listener.
@@ -44,6 +46,9 @@ import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
 public class PooledCacheEventQueue<K extends Serializable, V extends Serializable>
     extends AbstractCacheEventQueue<K, V>
 {
+    /** The logger. */
+    private static final Log log = LogFactory.getLog( PooledCacheEventQueue.class );
+
     /** The type of event queue */
     private static final QueueType queueType = QueueType.POOLED;
 

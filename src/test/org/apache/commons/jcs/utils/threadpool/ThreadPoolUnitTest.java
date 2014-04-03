@@ -54,7 +54,6 @@ public class ThreadPoolUnitTest
         // add 6
         for ( int i = 1; i < 30; i++ )
         {
-            final ThreadPoolExecutor myPool = pool;
             final int cnt = i;
             pool.execute( new Runnable()
             {

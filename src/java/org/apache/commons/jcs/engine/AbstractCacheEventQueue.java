@@ -35,7 +35,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
     implements ICacheEventQueue<K, V>
 {
     /** The logger. */
-    protected static final Log log = LogFactory.getLog( AbstractCacheEventQueue.class );
+    private static final Log log = LogFactory.getLog( AbstractCacheEventQueue.class );
 
     /** default */
     protected static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;

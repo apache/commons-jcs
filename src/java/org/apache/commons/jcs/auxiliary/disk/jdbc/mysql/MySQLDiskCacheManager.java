@@ -50,7 +50,7 @@ public class MySQLDiskCacheManager
     private static final long serialVersionUID = -8258856770927857896L;
 
     /** The logger */
-    protected static final Log log = LogFactory.getLog( MySQLDiskCacheManager.class );
+    private static final Log log = LogFactory.getLog( MySQLDiskCacheManager.class );
 
     /** The singleton instance. */
     private static MySQLDiskCacheManager instance;

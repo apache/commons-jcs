@@ -65,7 +65,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     extends AbstractDiskCache<K, V>
 {
     /** The logger */
-    protected static final Log log = LogFactory.getLog( IndexedDiskCache.class );
+    private static final Log log = LogFactory.getLog( IndexedDiskCache.class );
 
     /** Cache name used in log messages */
     protected final String logCacheName;

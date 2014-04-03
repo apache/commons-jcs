@@ -61,7 +61,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = 1L;
 
     /** The logger. */
-    protected static final Log log = LogFactory.getLog( BlockDiskCache.class );
+    private static final Log log = LogFactory.getLog( BlockDiskCache.class );
 
     /** The name to prefix all log messages with. */
     private final String logCacheName;

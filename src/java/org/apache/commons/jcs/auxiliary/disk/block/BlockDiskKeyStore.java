@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
 public class BlockDiskKeyStore<K extends Serializable>
 {
     /** The logger */
-    protected static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );
+    private static final Log log = LogFactory.getLog( BlockDiskKeyStore.class );
 
     /** Attributes governing the behavior of the block disk cache. */
     private final BlockDiskCacheAttributes blockDiskCacheAttributes;

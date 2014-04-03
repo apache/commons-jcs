@@ -64,7 +64,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
     implements AuxiliaryCache<K, V>
 {
     /** The logger */
-    protected static final Log log = LogFactory.getLog( AbstractDiskCache.class );
+    private static final Log log = LogFactory.getLog( AbstractDiskCache.class );
 
     /** Generic disk cache attributes */
     private IDiskCacheAttributes diskCacheAttributes = null;

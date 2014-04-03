@@ -51,7 +51,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = 6403738094136424101L;
 
     /** The Logger. */
-    protected final static Log log = LogFactory.getLog( LRUMemoryCache.class );
+    private final static Log log = LogFactory.getLog( LRUMemoryCache.class );
 
     /** number of hits */
     protected int hitCnt = 0;
