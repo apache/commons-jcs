@@ -148,9 +148,9 @@ public class BlockDisk
             Integer emptyBlock = emptyBlocks.takeFirst();
             if (emptyBlock == null)
             {
-                emptyBlock = numberOfBlocks.getAndIncrement();
+                emptyBlock = Integer.valueOf(numberOfBlocks.getAndIncrement());
             }
-            blocks[i] = emptyBlock;
+            blocks[i] = emptyBlock.intValue();
         }
 
         return blocks;
