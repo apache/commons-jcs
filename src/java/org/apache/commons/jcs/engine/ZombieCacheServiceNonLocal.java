@@ -113,7 +113,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
     {
         if ( maxQueueSize > 0 )
         {
-            RemoveEvent<K, V> event = new RemoveEvent<K, V>( cacheName, key, listenerId );
+            RemoveEvent<K> event = new RemoveEvent<K>( cacheName, key, listenerId );
             queue.add( event );
         }
         // Zombies have no inner life
@@ -224,7 +224,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
             else if ( event instanceof RemoveEvent )
             {
                 @SuppressWarnings("unchecked") // Type checked by instanceof
-                RemoveEvent<K, V> removeEvent = (RemoveEvent<K, V>) event;
+                RemoveEvent<K> removeEvent = (RemoveEvent<K>) event;
                 service.remove( event.cacheName, removeEvent.key, event.requesterId );
             }
             else if ( event instanceof RemoveAllEvent )
@@ -275,7 +275,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
     /**
      * A basic Remove event.
      */
-    private static class RemoveEvent<K extends Serializable, V extends Serializable>
+    private static class RemoveEvent<K extends Serializable>
         extends ZombieEvent
     {
         /** The key to remove */
