@@ -58,32 +58,32 @@ public class CompositeCacheConfigurator
     private static final Log log = LogFactory.getLog( CompositeCacheConfigurator.class );
 
     /** default region prefix */
-    final static String DEFAULT_REGION = "jcs.default";
+    static final String DEFAULT_REGION = "jcs.default";
 
     /** normal region prefix */
-    final static String REGION_PREFIX = "jcs.region.";
+    static final String REGION_PREFIX = "jcs.region.";
 
     /** system region prefix. might not be used */
-    final static String SYSTEM_REGION_PREFIX = "jcs.system.";
+    static final String SYSTEM_REGION_PREFIX = "jcs.system.";
 
     /** auxiliary prefix */
-    final static String AUXILIARY_PREFIX = "jcs.auxiliary.";
+    static final String AUXILIARY_PREFIX = "jcs.auxiliary.";
 
     /** .attributes */
-    final static String ATTRIBUTE_PREFIX = ".attributes";
+    static final String ATTRIBUTE_PREFIX = ".attributes";
 
     /** .cacheattributes */
-    final static String CACHE_ATTRIBUTE_PREFIX = ".cacheattributes";
+    static final String CACHE_ATTRIBUTE_PREFIX = ".cacheattributes";
 
     /** .elementattributes */
-    final static String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
+    static final String ELEMENT_ATTRIBUTE_PREFIX = ".elementattributes";
 
     /**
      * jcs.auxiliary.NAME.keymatcher=CLASSNAME
      * <p>
      * jcs.auxiliary.NAME.keymatcher.attributes.CUSTOMPROPERTY=VALUE
      */
-    public final static String KEY_MATCHER_PREFIX = ".keymatcher";
+    public static final String KEY_MATCHER_PREFIX = ".keymatcher";
 
     /** Can't operate on the interface. */
     private final CompositeCacheManager compositeCacheManager;

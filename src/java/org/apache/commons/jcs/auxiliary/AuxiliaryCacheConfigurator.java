@@ -39,21 +39,21 @@ public class AuxiliaryCacheConfigurator
     private static final Log log = LogFactory.getLog( AuxiliaryCacheConfigurator.class );
 
     /** .attributes */
-    public final static String ATTRIBUTE_PREFIX = ".attributes";
+    public static final String ATTRIBUTE_PREFIX = ".attributes";
 
     /**
      * jcs.auxiliary.NAME.cacheeventlogger=CLASSNAME
      * <p>
      * jcs.auxiliary.NAME.cacheeventlogger.attributes.CUSTOMPROPERTY=VALUE
      */
-    public final static String CACHE_EVENT_LOGGER_PREFIX = ".cacheeventlogger";
+    public static final String CACHE_EVENT_LOGGER_PREFIX = ".cacheeventlogger";
 
     /**
      * jcs.auxiliary.NAME.serializer=CLASSNAME
      * <p>
      * jcs.auxiliary.NAME.serializer.attributes.CUSTOMPROPERTY=VALUE
      */
-    public final static String SERIALIZER_PREFIX = ".serializer";
+    public static final String SERIALIZER_PREFIX = ".serializer";
 
     /**
      * Parses the event logger config, if there is any for the auxiliary.

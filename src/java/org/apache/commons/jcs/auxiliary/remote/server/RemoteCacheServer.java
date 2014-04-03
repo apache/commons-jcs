@@ -79,7 +79,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     private static final Log log = LogFactory.getLog( RemoteCacheServer.class );
 
     /** timing -- if we should record operation times. */
-    protected final static boolean timing = true;
+    protected static final boolean timing = true;
 
     /** Number of puts into the cache. */
     private int puts = 0;

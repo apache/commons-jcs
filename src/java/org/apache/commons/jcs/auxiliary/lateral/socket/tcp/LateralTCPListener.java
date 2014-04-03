@@ -65,7 +65,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     private transient ICompositeCacheManager cacheManager;
 
     /** Map of available instances, keyed by port */
-    protected final static HashMap<String, ILateralCacheListener<?, ?>> instances =
+    protected static final HashMap<String, ILateralCacheListener<?, ?>> instances =
         new HashMap<String, ILateralCacheListener<?, ?>>();
 
     /** The socket listener */

@@ -54,10 +54,10 @@ public class RemoteHttpCacheMonitor
     private boolean alright = true;
 
     /** Time driven mode */
-    final static int TIME = 0;
+    static final int TIME = 0;
 
     /** Error driven mode -- only check on health if there is an error */
-    final static int ERROR = 1;
+    static final int ERROR = 1;
 
     /** The mode to use */
     static int mode = ERROR;

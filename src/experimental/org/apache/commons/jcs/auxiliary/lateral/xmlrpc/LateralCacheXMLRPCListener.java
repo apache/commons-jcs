@@ -53,7 +53,7 @@ public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, 
     /** Description of the Field */
     protected static transient CompositeCacheManager cacheMgr;
     /** Description of the Field */
-    protected final static HashMap instances = new HashMap();
+    protected static final HashMap instances = new HashMap();
 
     // instance vars
     private LateralXMLRPCReceiver receiver;

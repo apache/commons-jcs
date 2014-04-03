@@ -60,7 +60,7 @@ public class LateralCacheManager
 
     private static LateralCacheMonitor monitor;
 
-    final static Map instances = new HashMap();
+    static final Map instances = new HashMap();
 
     // each manager instance has caches
     final Map caches = new HashMap();

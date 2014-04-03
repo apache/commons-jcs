@@ -60,7 +60,7 @@ public class RemoteCacheManager
     private static final Log log = LogFactory.getLog( RemoteCacheManager.class );
 
     /** Contains mappings of Location instance to RemoteCacheManager instance. */
-    final static Map<Location, RemoteCacheManager> instances = new HashMap<Location, RemoteCacheManager>();
+    static final Map<Location, RemoteCacheManager> instances = new HashMap<Location, RemoteCacheManager>();
 
     /** Monitors connections. */
     private static RemoteCacheMonitor monitor;

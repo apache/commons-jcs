@@ -49,7 +49,7 @@ public class JGConnectionHolder
     /**
      * Description of the Field
      */
-    protected final static HashMap instances = new HashMap();
+    protected static final HashMap instances = new HashMap();
 
     /**
      * Gets the instance attribute of the LateralGroupCacheJGListener class

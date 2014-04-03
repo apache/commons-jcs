@@ -52,7 +52,7 @@ public class LateralCacheUDPListener implements ILateralCacheListener, Serializa
     protected static transient CompositeCacheManager cacheMgr;
 
     /** Description of the Field */
-    protected final static HashMap instances = new HashMap();
+    protected static final HashMap instances = new HashMap();
 
     // instance vars
     private LateralUDPReceiver receiver;

@@ -422,13 +422,13 @@ public class JavaGroupsCache
     static class Request
         implements Serializable
     {
-        public final static int UPDATE = 1;
+        public static final int UPDATE = 1;
 
-        public final static int REMOVE = 2;
+        public static final int REMOVE = 2;
 
-        public final static int REMOVE_ALL = 3;
+        public static final int REMOVE_ALL = 3;
 
-        public final static int GET = 5;
+        public static final int GET = 5;
 
         private ICacheElement<K, V> cacheElement;
 

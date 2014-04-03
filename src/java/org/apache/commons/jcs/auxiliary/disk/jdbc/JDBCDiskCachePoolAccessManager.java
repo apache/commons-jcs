@@ -51,7 +51,7 @@ public class JDBCDiskCachePoolAccessManager
     public static final String POOL_CONFIGURATION_PREFIX = "jcs.jdbcconnectionpool.";
 
     /** .attributes */
-    public final static String ATTRIBUTE_PREFIX = ".attributes";
+    public static final String ATTRIBUTE_PREFIX = ".attributes";
 
     /** The logger. */
     private static final Log log = LogFactory.getLog( JDBCDiskCachePoolAccessManager.class );

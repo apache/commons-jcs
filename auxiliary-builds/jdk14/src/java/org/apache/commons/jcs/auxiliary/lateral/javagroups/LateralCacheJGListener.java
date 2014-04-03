@@ -54,7 +54,7 @@ public class LateralCacheJGListener
     /**
      * Description of the Field
      */
-    protected final static HashMap instances = new HashMap();
+    protected static final HashMap instances = new HashMap();
 
     // instance vars
     private LateralJGReceiver receiver;
