@@ -256,10 +256,19 @@ public class FileDiskCacheUnitTest
         SleepUtil.sleepAtLeast( 100 );
 
         // DO WORK
-        ICacheElement<String, String> result = diskCache.get( "key0" );
+        int stillCached = 0;
+        for ( int i = 0; i < maxNumberOfFiles; i++ )
+        {
+            final String key = "key" + i;
+            ICacheElement<String, String> result = diskCache.get( key );
+//            System.out.println("Entry "+ key+ " null? " + (result==null));
+            if (result != null) {
+                stillCached++;
+            }
+        }
 
         // VERIFY
-        assertNotNull( "Should NOT be null.", result );
+        assertEquals("All files should still be cached", maxNumberOfFiles, stillCached);
     }
 
     /**
@@ -285,6 +294,7 @@ public class FileDiskCacheUnitTest
         }
         SleepUtil.sleepAtLeast( 500 );
 
+        // DO WORK
         int stillCached = 0;
         for ( int i = 0; i <= maxNumberOfFiles; i++ )
         {
@@ -295,12 +305,9 @@ public class FileDiskCacheUnitTest
                 stillCached++;
             }
         }
+
+        // VERIFY
         assertEquals(maxNumberOfFiles, stillCached);
-//        // DO WORK
-//        ICacheElement<String, String> result = diskCache.get( "key0" );
-//
-//        // VERIFY
-//        assertNull( "Should be null.", result );
     }
 
     /**
@@ -374,6 +381,9 @@ public class FileDiskCacheUnitTest
         for ( int i = 0; i < maxNumberOfFiles; i++ )
         {
             diskCache.update( new CacheElement<String, String>( cacheName, "key" + i, "Data" ) );
+            if (i == 0 ){
+                SleepUtil.sleepAtLeast( 1001 ); // ensure the first file is seen as older
+            }
         }
         SleepUtil.sleepAtLeast( 500 );
 
@@ -388,24 +398,13 @@ public class FileDiskCacheUnitTest
         diskCache.update( new CacheElement<String, String>( cacheName, "key" + maxNumberOfFiles, "Data" ) );
         SleepUtil.sleepAtLeast( 100 );
 
-//        // DO WORK
-//        ICacheElement<String, String> result = diskCache.get( "key0" );
-//
-        int stillCached = 0;
-        for ( int i = 0; i <= maxNumberOfFiles; i++ )
-        {
-            final String key = "key" + i;
-            ICacheElement<String, String> result = diskCache.get( key );
-            System.out.println("Entry "+ key+ " null? " + (result==null));
-            if (result != null) {
-                stillCached++;
-            }
-        }
-        assertEquals(maxNumberOfFiles, stillCached);
+        // DO WORK
+        ICacheElement<String, String> result = diskCache.get( "key0" );
 
         // VERIFY
-//        assertNull( "Should be null.", result );
+        assertNull( "Should be null.", result );
     }
+
     /**
      * Verify file.
      * <p>
