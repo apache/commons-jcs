@@ -72,9 +72,6 @@ public class LateralTCPCacheManager
     /** ITCPLateralCacheAttributes */
     protected ITCPLateralCacheAttributes lateralCacheAttributes;
 
-    /** number of clients, we can remove this. */
-    private int clients;
-
     /**
      * Handle to the lateral cache service; or a zombie handle if failed to connect.
      */
@@ -119,7 +116,6 @@ public class LateralTCPCacheManager
 
                 createMonitor( ins );
             }
-            ins.clients++;
 
             return ins;
         }
