@@ -31,6 +31,7 @@ public class MockAuxiliaryCacheAttributes
      * <p>
      * @return this
      */
+    @Override
     public AuxiliaryCacheAttributes copy()
     {
         return this;

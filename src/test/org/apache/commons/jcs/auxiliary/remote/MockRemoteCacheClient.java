@@ -80,6 +80,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * <p>
      * @see org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheClient#fixCache(org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal)
      */
+    @Override
     @SuppressWarnings("unchecked") // Don't know how to do this properly
     public void fixCache( ICacheServiceNonLocal<?, ?> remote )
     {
@@ -89,6 +90,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /**
      * @return long
      */
+    @Override
     public long getListenerId()
     {
         return 0;
@@ -97,6 +99,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /**
      * @return null
      */
+    @Override
     public IRemoteCacheListener<K, V> getListener()
     {
         return null;
@@ -108,6 +111,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#update(org.apache.commons.jcs.engine.behavior.ICacheElement)
      */
+    @Override
     public void update( ICacheElement<K, V> ce )
     {
         updateList.add( ce );
@@ -119,6 +123,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#get(java.io.Serializable)
      */
+    @Override
     public ICacheElement<K, V> get( K key )
     {
         log.info( "get [" + key + "]" );
@@ -132,6 +137,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * @return a map of K key to ICacheElement<K, V> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
         log.info( "get [" + keys + "]" );
@@ -144,6 +150,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#remove(java.io.Serializable)
      */
+    @Override
     public boolean remove( K key )
     {
         removeList.add( key );
@@ -153,6 +160,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /**
      * Removes all cached items from the cache.
      */
+    @Override
     public void removeAll()
     {
         // do nothing
@@ -161,6 +169,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /**
      * Prepares for shutdown.
      */
+    @Override
     public void dispose()
     {
         // do nothing
@@ -171,6 +180,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * <p>
      * @return number of elements
      */
+    @Override
     public int getSize()
     {
         return 0;
@@ -180,6 +190,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * Returns the status setup variable. (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getStatus()
      */
+    @Override
     public CacheStatus getStatus()
     {
         return status;
@@ -190,6 +201,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * <p>
      * @return usually the region name.
      */
+    @Override
     public String getCacheName()
     {
         return null;
@@ -198,6 +210,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /**
      * @return null
      */
+    @Override
     public Set<K> getKeySet( )
     {
         return null;
@@ -206,6 +219,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     /**
      * @return null
      */
+    @Override
     public IStats getStatistics()
     {
         return null;
@@ -217,6 +231,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * (non-Javadoc)
      * @see org.apache.commons.jcs.auxiliary.AuxiliaryCache#getAuxiliaryCacheAttributes()
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return attributes;
@@ -227,12 +242,14 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * <p>
      * @return String of important historical information.
      */
+    @Override
     public String getStats()
     {
         return null;
     }
 
     /** @return 0 */
+    @Override
     public CacheType getCacheType()
     {
         return CacheType.REMOTE_CACHE;
@@ -243,6 +260,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
      * @return Map
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching(String pattern)
         throws IOException
     {

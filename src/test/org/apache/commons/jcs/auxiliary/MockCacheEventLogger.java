@@ -54,6 +54,7 @@ public class MockCacheEventLogger
      * @param eventName
      * @param optionalDetails
      */
+    @Override
     public void logApplicationEvent( String source, String eventName, String optionalDetails )
     {
         applicationEventCalls++;
@@ -62,6 +63,7 @@ public class MockCacheEventLogger
     /**
      * @param event
      */
+    @Override
     public <T extends Serializable> void logICacheEvent( ICacheEvent<T> event )
     {
         endICacheEventCalls++;
@@ -72,6 +74,7 @@ public class MockCacheEventLogger
      * @param eventName
      * @param errorMessage
      */
+    @Override
     public void logError( String source, String eventName, String errorMessage )
     {
         errorEventCalls++;
@@ -86,6 +89,7 @@ public class MockCacheEventLogger
      * @param key
      * @return ICacheEvent
      */
+    @Override
     public <T extends Serializable> ICacheEvent<T> createICacheEvent( String source, String region,
             String eventName, String optionalDetails, T key )
     {

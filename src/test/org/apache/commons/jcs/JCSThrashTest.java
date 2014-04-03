@@ -174,6 +174,7 @@ public class JCSThrashTest
         {
             final JCSThrashTest.Executable executable = new JCSThrashTest.Executable()
             {
+                @Override
                 public void execute()
                     throws Exception
                 {
@@ -194,6 +195,7 @@ public class JCSThrashTest
         {
             final JCSThrashTest.Executable executable = new JCSThrashTest.Executable()
             {
+                @Override
                 public void execute()
                     throws Exception
                 {

@@ -41,6 +41,7 @@ public class MockAuxiliaryCacheFactory
      * @param elementSerializer
      * @return AuxiliaryCache
      */
+    @Override
     public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V>
         createCache( AuxiliaryCacheAttributes attr, ICompositeCacheManager cacheMgr,
            ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
@@ -54,6 +55,7 @@ public class MockAuxiliaryCacheFactory
     /**
      * @return String
      */
+    @Override
     public String getName()
     {
         return name;
@@ -62,6 +64,7 @@ public class MockAuxiliaryCacheFactory
     /**
      * @param s
      */
+    @Override
     public void setName( String s )
     {
         this.name = s;

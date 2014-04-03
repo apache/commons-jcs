@@ -67,6 +67,7 @@ public class RemoteCacheClientTester
      * @return The remoteType value
      * @throws IOException
      */
+    @Override
     public RemoteType getRemoteType()
         throws IOException
     {
@@ -201,6 +202,7 @@ public class RemoteCacheClientTester
      * @param cb
      * @throws IOException
      */
+    @Override
     public void handlePut( ICacheElement<String, String> cb )
         throws IOException
     {
@@ -212,6 +214,7 @@ public class RemoteCacheClientTester
      * @param key
      * @throws IOException
      */
+    @Override
     public void handleRemove( String cacheName, String key )
         throws IOException
     {
@@ -222,6 +225,7 @@ public class RemoteCacheClientTester
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void handleRemoveAll( String cacheName )
         throws IOException
     {
@@ -232,6 +236,7 @@ public class RemoteCacheClientTester
      * @param cacheName
      * @throws IOException
      */
+    @Override
     public void handleDispose( String cacheName )
         throws IOException
     {
@@ -284,6 +289,7 @@ public class RemoteCacheClientTester
      * @param id The new listenerId value
      * @throws IOException
      */
+    @Override
     public void setListenerId( long id )
         throws IOException
     {
@@ -296,6 +302,7 @@ public class RemoteCacheClientTester
      * @return The listenerId value
      * @throws IOException
      */
+    @Override
     public long getListenerId()
         throws IOException
     {
@@ -315,6 +322,7 @@ public class RemoteCacheClientTester
      * @return null
      * @throws IOException
      */
+    @Override
     public String getLocalHostAddress()
         throws IOException
     {
@@ -325,6 +333,7 @@ public class RemoteCacheClientTester
     /**
      * @throws IOException
      */
+    @Override
     public void dispose()
         throws IOException
     {

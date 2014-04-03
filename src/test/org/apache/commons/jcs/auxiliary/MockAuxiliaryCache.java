@@ -53,6 +53,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
      * @param ce
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -65,6 +66,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
      * @return ICacheElement
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( K key )
         throws IOException
     {
@@ -77,6 +79,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
      * @return Map
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMatching(String pattern)
         throws IOException
     {
@@ -91,6 +94,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
      * @return a map of K key to ICacheElement<String, String> element, or an empty map if there is no
      *         data in cache for any of these keys
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
     {
         return new HashMap<K, ICacheElement<K, V>>();
@@ -101,6 +105,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
      * @return boolean
      * @throws IOException
      */
+    @Override
     public boolean remove( K key )
         throws IOException
     {
@@ -111,6 +116,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @throws IOException
      */
+    @Override
     public void removeAll()
         throws IOException
     {
@@ -121,6 +127,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @throws IOException
      */
+    @Override
     public void dispose()
         throws IOException
     {
@@ -131,6 +138,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return int
      */
+    @Override
     public int getSize()
     {
         // TODO Auto-generated method stub
@@ -140,6 +148,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return int
      */
+    @Override
     public CacheStatus getStatus()
     {
         return status;
@@ -148,6 +157,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return null
      */
+    @Override
     public String getCacheName()
     {
         return null;
@@ -158,6 +168,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @see org.apache.commons.jcs.auxiliary.disk.AbstractDiskCache#getKeySet()
      */
+    @Override
     public Set<K> getKeySet() throws IOException
     {
         return null;
@@ -166,6 +177,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return null
      */
+    @Override
     public IStats getStatistics()
     {
         return null;
@@ -174,6 +186,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return null
      */
+    @Override
     public String getStats()
     {
         return null;
@@ -182,6 +195,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return cacheType
      */
+    @Override
     public CacheType getCacheType()
     {
         return cacheType;
@@ -190,6 +204,7 @@ public class MockAuxiliaryCache<K extends Serializable, V extends Serializable>
     /**
      * @return Returns the AuxiliaryCacheAttributes.
      */
+    @Override
     public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
     {
         return null;

@@ -296,6 +296,7 @@ public class AbstractDiskCacheUnitTest
         /**
          * @return null
          */
+        @Override
         public AuxiliaryCacheAttributes getAuxiliaryCacheAttributes()
         {
             return diskCacheAttributes;
