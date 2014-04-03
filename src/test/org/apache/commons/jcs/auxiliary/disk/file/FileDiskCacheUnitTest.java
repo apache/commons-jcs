@@ -300,7 +300,7 @@ public class FileDiskCacheUnitTest
         {
             final String key = "key" + i;
             ICacheElement<String, String> result = diskCache.get( key );
-            System.out.println("Entry "+ key+ " null? " + (result==null));
+//            System.out.println("Entry "+ key+ " null? " + (result==null));
             if (result != null) {
                 stillCached++;
             }
