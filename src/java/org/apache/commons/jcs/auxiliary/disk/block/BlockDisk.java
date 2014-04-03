@@ -55,7 +55,7 @@ public class BlockDisk
     private static final int DEFAULT_BLOCK_SIZE_BYTES = 4 * 1024;
 
     /** Size of the blocks */
-    private int blockSizeBytes;
+    private final int blockSizeBytes;
 
     /**
      * the total number of blocks that have been used. If there are no free, we will use this to
@@ -67,7 +67,7 @@ public class BlockDisk
     private final SingleLinkedList<Integer> emptyBlocks = new SingleLinkedList<Integer>();
 
     /** The serializer. */
-    protected IElementSerializer elementSerializer;
+    private final IElementSerializer elementSerializer;
 
     /** Location of the spot on disk */
     private final String filepath;
