@@ -58,6 +58,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * Does nothing
      * @param cache
      */
+    @Override
     public void initialize( CompositeCache<K, V> cache )
     {
         // nothing
@@ -68,6 +69,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * <p>
      * @throws IOException
      */
+    @Override
     public void dispose()
         throws IOException
     {
@@ -75,18 +77,21 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
     }
 
     /** @return size */
+    @Override
     public int getSize()
     {
         return map.size();
     }
 
     /** @return stats */
+    @Override
     public IStats getStatistics()
     {
         return null;
     }
 
     /** @return null */
+    @Override
     public Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
     {
         return null;
@@ -94,6 +99,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
 
     /**
      * @return map.keySet().toArray( */
+    @Override
     public Set<K> getKeySet()
     {
         return new LinkedHashSet<K>(map.keySet());
@@ -104,6 +110,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @return map.remove( key ) != null
      * @throws IOException
      */
+    @Override
     public boolean remove( K key )
         throws IOException
     {
@@ -113,6 +120,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
     /**
      * @throws IOException
      */
+    @Override
     public void removeAll()
         throws IOException
     {
@@ -124,6 +132,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @return (ICacheElement) map.get( key )
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> get( K key )
         throws IOException
     {
@@ -135,6 +144,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @return elements
      * @throws IOException
      */
+    @Override
     public Map<K, ICacheElement<K, V>> getMultiple(Set<K> keys)
         throws IOException
     {
@@ -165,6 +175,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @return (ICacheElement) map.get( key )
      * @throws IOException
      */
+    @Override
     public ICacheElement<K, V> getQuiet( K key )
         throws IOException
     {
@@ -175,6 +186,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @param ce
      * @throws IOException
      */
+    @Override
     public void waterfal( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -185,6 +197,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @param ce
      * @throws IOException
      */
+    @Override
     public void update( ICacheElement<K, V> ce )
         throws IOException
     {
@@ -197,6 +210,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
     /**
      * @return ICompositeCacheAttributes
      */
+    @Override
     public ICompositeCacheAttributes getCacheAttributes()
     {
         return cacheAttr;
@@ -205,12 +219,14 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
     /**
      * @param cattr
      */
+    @Override
     public void setCacheAttributes( ICompositeCacheAttributes cattr )
     {
         this.cacheAttr = cattr;
     }
 
     /** @return null */
+    @Override
     public CompositeCache<K, V> getCompositeCache()
     {
         return null;
@@ -238,6 +254,7 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
      * @return 0
      * @throws IOException
      */
+    @Override
     public int freeElements( int numberToFree )
         throws IOException
     {

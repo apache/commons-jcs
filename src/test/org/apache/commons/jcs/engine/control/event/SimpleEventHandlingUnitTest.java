@@ -279,6 +279,7 @@ public class SimpleEventHandlingUnitTest
         /**
          * @param event
          */
+        @Override
         public synchronized void handleElementEvent( IElementEvent event )
         {
             //System.out.println( "Handling Event of Type " +

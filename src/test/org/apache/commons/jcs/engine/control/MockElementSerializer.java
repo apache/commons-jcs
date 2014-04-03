@@ -48,6 +48,7 @@ public class MockElementSerializer
      * @throws ClassNotFoundException
      *
      */
+    @Override
     public <T extends Serializable> T deSerialize( byte[] bytes )
         throws IOException, ClassNotFoundException
     {
@@ -61,6 +62,7 @@ public class MockElementSerializer
      * @throws IOException
      *
      */
+    @Override
     public <T extends Serializable> byte[] serialize( T obj )
         throws IOException
     {

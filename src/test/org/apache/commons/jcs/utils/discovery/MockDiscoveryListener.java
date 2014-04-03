@@ -36,6 +36,7 @@ public class MockDiscoveryListener
      * <p>
      * @param service
      */
+    @Override
     public void addDiscoveredService( DiscoveredService service )
     {
         discoveredServices.add( service );
@@ -46,6 +47,7 @@ public class MockDiscoveryListener
      * <p>
      * @param service
      */
+    @Override
     public void removeDiscoveredService( DiscoveredService service )
     {
         discoveredServices.remove( service );

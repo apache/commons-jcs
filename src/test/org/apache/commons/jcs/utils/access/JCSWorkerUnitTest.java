@@ -49,6 +49,7 @@ public class JCSWorkerUnitTest
         {
             int timesCalled = 0;
 
+            @Override
             public Object doWork()
             {
                 Object results = Long.valueOf( ++timesCalled );

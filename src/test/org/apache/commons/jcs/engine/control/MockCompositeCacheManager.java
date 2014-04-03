@@ -40,6 +40,7 @@ public class MockCompositeCacheManager
      * @param cacheName
      * @return Returns a CompositeCache
      */
+    @Override
     @SuppressWarnings("unchecked")
     public <K extends Serializable, V extends Serializable> CompositeCache<K, V> getCache( String cacheName )
     {
@@ -85,12 +86,14 @@ public class MockCompositeCacheManager
      * <p>
      * @return the configurationProperties
      */
+    @Override
     public Properties getConfigurationProperties()
     {
         return configurationProperties;
     }
 
     /** @return Mock */
+    @Override
     public String getStats()
     {
         return "Mock";
