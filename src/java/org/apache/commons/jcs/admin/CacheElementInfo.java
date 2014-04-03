@@ -28,19 +28,19 @@ import java.beans.ConstructorProperties;
 public class CacheElementInfo
 {
     /** element key */
-    private String key = null;
+    private final String key;
 
     /** is it eternal */
-    private boolean eternal = false;
+    private final boolean eternal;
 
     /** when it was created */
-    private String createTime = null;
+    private final String createTime;
 
     /** max life */
-    private long maxLifeSeconds = -1;
+    private final long maxLifeSeconds;
 
     /** when it will expire */
-    private long expiresInSeconds = -1;
+    private final long expiresInSeconds;
 
     /**
      * Parameterized constructor
