@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.jcs.auxiliary.remote.behavior.ICommonRemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheConstants;
 
 /** Unit tests for the factory */
@@ -70,7 +71,7 @@ public class RemoteCacheServerFactoryUnitTest
         RemoteCacheServerAttributes result = RemoteCacheServerFactory.configureRemoteCacheServerAttributes( props );
 
         // VERIFY
-        assertEquals( "Wrong timeout", RemoteCacheServerAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS, result.getRmiSocketFactoryTimeoutMillis() );
+        assertEquals( "Wrong timeout", ICommonRemoteCacheAttributes.DEFAULT_RMI_SOCKET_FACTORY_TIMEOUT_MILLIS, result.getRmiSocketFactoryTimeoutMillis() );
     }
 
     /** verify that we get the registryKeepAliveDelayMillis value */
