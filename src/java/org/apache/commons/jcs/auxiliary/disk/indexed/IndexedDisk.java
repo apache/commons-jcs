@@ -38,8 +38,8 @@ class IndexedDisk
     /** The size of the header that indicates the amount of data stored in an occupied block. */
     public static final byte HEADER_SIZE_BYTES = 4;
 
-    /** The serializer. Uses a standard serializer by default. */
-    protected IElementSerializer elementSerializer = new StandardSerializer();
+    /** The serializer. */
+    private final IElementSerializer elementSerializer;
 
     /** The logger */
     private static final Log log = LogFactory.getLog( IndexedDisk.class );
