@@ -20,6 +20,10 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-113" dev="sebb" type="fix">
+                Potential NPE in JDBCDiskCache
+                Fixed NPEs in getSize() and getStatistics()
+            </action>
             <action issue="JCS-112" dev="sebb" type="fix">
                 RemoteCacheServer.logUpdateInfo bug updating put count
             </action>

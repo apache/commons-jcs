@@ -976,10 +976,14 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
         String selectString = "select count(*) from " + getJdbcDiskCacheAttributes().getTableName()
             + " where REGION = ?";
 
+        final JDBCDiskCachePoolAccess pool = getPoolAccess();
+        if (pool == null) {
+            return size;
+        }
         Connection con;
         try
         {
-            con = getPoolAccess().getConnection();
+            con = pool.getConnection();
         }
         catch ( SQLException e1 )
         {
@@ -1141,26 +1145,40 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
         se.setData( "" + getMatchingCount );
         elems.add( se );
 
+        final JDBCDiskCachePoolAccess pool = getPoolAccess();
+
         se = new StatElement();
         se.setName( "Size" );
-        se.setData( "" + getSize() );
+        if (pool != null) {
+            se.setData( "" + getSize() );
+        } else {
+            se.setData( "No db connection pool found" );
+        }
         elems.add( se );
 
         se = new StatElement();
         se.setName( "Active DB Connections" );
-        se.setData( "" + getPoolAccess().getNumActiveInPool() );
+        if (pool != null) {
+            se.setData( "" + pool.getNumActiveInPool() );
+        } else {
+            se.setData( "No db connection pool found" );
+        }
         elems.add( se );
 
         se = new StatElement();
         se.setName( "Idle DB Connections" );
-        se.setData( "" + getPoolAccess().getNumIdleInPool() );
+        if (pool != null) {
+            se.setData( "" + pool.getNumIdleInPool() );
+        } else {
+            se.setData( "No db connection pool found" );
+        }
         elems.add( se );
 
         se = new StatElement();
         se.setName( "DB URL" );
-        if ( getPoolAccess() != null )
+        if ( pool != null )
         {
-            se.setData( "" + getPoolAccess().getPoolUrl() );
+            se.setData( "" + pool.getPoolUrl() );
         }
         else
         {
