@@ -73,7 +73,7 @@ public class LateralElementDescriptor<K extends Serializable, V extends Serializ
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n LateralElementDescriptor " );
         buf.append( "\n command = [" + this.command + "]" );
         buf.append( "\n valHashCode = [" + this.valHashCode + "]" );

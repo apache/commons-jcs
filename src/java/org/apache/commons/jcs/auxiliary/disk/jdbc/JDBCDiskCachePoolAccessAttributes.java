@@ -166,7 +166,7 @@ public class JDBCDiskCachePoolAccessAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nJDBCDiskCachePoolAccessAttributes" );
         buf.append( "\n UserName [" + getUserName() + "]" );
         buf.append( "\n Url [" + getUrl() + "]" );

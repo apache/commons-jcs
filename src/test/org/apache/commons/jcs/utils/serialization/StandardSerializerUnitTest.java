@@ -85,7 +85,7 @@ public class StandardSerializerUnitTest
         StandardSerializer serializer = new StandardSerializer();
 
         String string = "This is my big string ABCDEFGH";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {

@@ -150,7 +150,7 @@ public class FileDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         str.append( "DiskFileCacheAttributes " );
         str.append( "\n diskPath = " + diskPath );
         str.append( "\n maxNumberOfFiles   = " + getMaxNumberOfFiles() );

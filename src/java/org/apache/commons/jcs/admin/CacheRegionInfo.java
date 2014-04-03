@@ -166,7 +166,7 @@ public class CacheRegionInfo
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nCacheRegionInfo " );
         if ( cacheName != null )
         {

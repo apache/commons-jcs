@@ -492,7 +492,7 @@ public class BlockDisk
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nBlock Disk " );
         buf.append( "\n  Filepath [" + filepath + "]" );
         buf.append( "\n  NumberOfBlocks [" + this.numberOfBlocks.get() + "]" );

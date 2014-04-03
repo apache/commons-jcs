@@ -248,7 +248,7 @@ public class MySQLTableOptimizer
         throws SQLException
     {
         ResultSet statusResultSet = sStatement.executeQuery( "show table status" );
-        StringBuffer statusString = new StringBuffer();
+        StringBuilder statusString = new StringBuilder();
         int numColumns = statusResultSet.getMetaData().getColumnCount();
         while ( statusResultSet.next() )
         {
@@ -279,7 +279,7 @@ public class MySQLTableOptimizer
 
         // if( message != null && message.indexOf( ) )
         ResultSet repairResult = sStatement.executeQuery( "repair table " + this.getTableName() );
-        StringBuffer repairString = new StringBuffer();
+        StringBuilder repairString = new StringBuilder();
         int numColumns = repairResult.getMetaData().getColumnCount();
         while ( repairResult.next() )
         {

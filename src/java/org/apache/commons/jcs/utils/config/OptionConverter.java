@@ -47,7 +47,7 @@ public class OptionConverter
     static int DELIM_STOP_LEN = 1;
 
     /** working buffer */
-    static StringBuffer sbuf = new StringBuffer();
+    static StringBuffer sbuf = new StringBuffer(); // TODO can this be changed to StringBuilder?? 
 
     /** No instances please. */
     private OptionConverter()
@@ -82,7 +82,7 @@ public class OptionConverter
     {
         char c;
         int len = s.length();
-        StringBuffer sb = new StringBuffer( len );
+        StringBuilder sb = new StringBuilder( len );
 
         int i = 0;
         while ( i < len )

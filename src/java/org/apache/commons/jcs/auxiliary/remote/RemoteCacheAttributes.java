@@ -250,7 +250,7 @@ public class RemoteCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer(super.toString());
+        StringBuilder buf = new StringBuilder(super.toString());
         buf.append( "\n receive = [" + isReceive() + "]" );
         buf.append( "\n getTimeoutMillis = [" + getGetTimeoutMillis() + "]" );
         buf.append( "\n threadPoolName = [" + getThreadPoolName() + "]" );

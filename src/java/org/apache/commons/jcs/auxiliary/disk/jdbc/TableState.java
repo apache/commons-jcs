@@ -105,7 +105,7 @@ public class TableState
     @Override
     public String toString()
     {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         str.append( "TableState " );
         str.append( "\n TableName = " + getTableName() );
         str.append( "\n State = " + getState() );

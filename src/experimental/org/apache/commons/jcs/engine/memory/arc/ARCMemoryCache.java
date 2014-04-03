@@ -493,9 +493,9 @@ public class ARCMemoryCache
         {
             if ( log.isInfoEnabled() )
             {
-                StringBuffer buf = new StringBuffer();
-                buf.append( "\n ce.key() = " + ce.getKey() );
-                buf.append( "\n isGet = " + isGet );
+                StringBuilder buf = new StringBuilder();
+                buf.append( "\n ce.key() = " ).append( ce.getKey() );
+                buf.append( "\n isGet = " ).append( isGet );
                 buf.append( getStats() );
                 log.info( buf.toString() );
             }

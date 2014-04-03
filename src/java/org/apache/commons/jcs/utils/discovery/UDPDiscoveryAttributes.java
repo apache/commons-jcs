@@ -216,7 +216,7 @@ public final class UDPDiscoveryAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n UDPDiscoveryAttributes" );
         buf.append( "\n ServiceName = [" + getServiceName() + "]" );
         buf.append( "\n ServiceAddress = [" + getServiceAddress() + "]" );

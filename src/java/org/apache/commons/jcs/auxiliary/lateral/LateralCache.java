@@ -430,7 +430,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n LateralCache " );
         buf.append( "\n Cache Name [" + lateralCacheAttributes.getCacheName() + "]" );
         buf.append( "\n cattr =  [" + lateralCacheAttributes + "]" );

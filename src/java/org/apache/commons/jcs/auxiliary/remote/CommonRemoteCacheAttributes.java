@@ -310,7 +310,7 @@ public class CommonRemoteCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n RemoteCacheAttributes " );
         buf.append( "\n remoteHost = [" + this.remoteHost + "]" );
         buf.append( "\n remotePort = [" + this.remotePort + "]" );

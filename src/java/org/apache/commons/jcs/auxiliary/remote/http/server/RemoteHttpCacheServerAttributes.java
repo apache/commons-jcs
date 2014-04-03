@@ -103,7 +103,7 @@ public class RemoteHttpCacheServerAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheServiceAttributes" );
         buf.append( "\n cacheName = [" + this.getCacheName() + "]" );
         buf.append( "\n allowClusterGet = [" + this.isAllowClusterGet() + "]" );

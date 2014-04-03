@@ -196,7 +196,7 @@ public class RemoteCacheServerAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer(super.toString());
+        StringBuilder buf = new StringBuilder(super.toString());
         buf.append( "\n servicePort = [" + this.getServicePort() + "]" );
         buf.append( "\n allowClusterGet = [" + this.isAllowClusterGet() + "]" );
         buf.append( "\n configFileName = [" + this.getConfigFileName() + "]" );

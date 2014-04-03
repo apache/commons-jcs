@@ -105,7 +105,7 @@ public class BlockDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         str.append( "\nBlockDiskAttributes " );
         str.append( "\n DiskPath [" + this.getDiskPath() + "]" );
         str.append( "\n MaxKeySize [" + this.getMaxKeySize() + "]" );

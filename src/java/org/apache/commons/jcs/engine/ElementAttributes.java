@@ -427,7 +427,7 @@ public class ElementAttributes
     @Override
     public String toString()
     {
-        StringBuffer dump = new StringBuffer();
+        StringBuilder dump = new StringBuilder();
 
         dump.append( "[ IS_LATERAL = " ).append( IS_LATERAL );
         dump.append( ", IS_SPOOL = " ).append( IS_SPOOL );

@@ -322,7 +322,7 @@ public class BlockDiskUnitTest
         BlockDisk disk = new BlockDisk( file, blockSizeBytes, new StandardSerializer() );
 
         String string = "This is my big string ABCDEFGH";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 8; i++ )
         {

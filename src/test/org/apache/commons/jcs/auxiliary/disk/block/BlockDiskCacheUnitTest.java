@@ -107,7 +107,7 @@ public class BlockDiskCacheUnitTest
         throws Exception
     {
         String string = "This is my big string ABCDEFGH";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {
@@ -156,7 +156,7 @@ public class BlockDiskCacheUnitTest
         throws Exception
     {
         String string = "This is my big string ABCDEFGH";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {
@@ -197,7 +197,7 @@ public class BlockDiskCacheUnitTest
         throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {
@@ -240,7 +240,7 @@ public class BlockDiskCacheUnitTest
         throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {
@@ -288,7 +288,7 @@ public class BlockDiskCacheUnitTest
     {
         X before = new X();
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {

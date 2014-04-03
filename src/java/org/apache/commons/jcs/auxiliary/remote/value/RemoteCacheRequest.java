@@ -173,7 +173,7 @@ public class RemoteCacheRequest<K extends Serializable, V extends Serializable>
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheRequest" );
         buf.append( "\n requesterId [" + getRequesterId() + "]" );
         buf.append( "\n requestType [" + getRequestType() + "]" );

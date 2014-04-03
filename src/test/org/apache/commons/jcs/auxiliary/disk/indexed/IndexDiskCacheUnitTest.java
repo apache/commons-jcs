@@ -792,7 +792,7 @@ public class IndexDiskCacheUnitTest
         throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {
@@ -834,7 +834,7 @@ public class IndexDiskCacheUnitTest
         throws Exception
     {
         String string = "IÒtÎrn‚tiÙn‡lizÊti¯n";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {

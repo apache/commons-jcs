@@ -224,7 +224,7 @@ public class JDBCDiskCacheShrinkUnitTest
     {
         boolean newT = true;
 
-        StringBuffer createSql = new StringBuffer();
+        StringBuilder createSql = new StringBuilder();
         createSql.append( "CREATE CACHED TABLE JCS_STORE_SHRINK " );
         createSql.append( "( " );
         createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );

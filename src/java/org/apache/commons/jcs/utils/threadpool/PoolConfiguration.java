@@ -243,7 +243,7 @@ public final class PoolConfiguration
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "useBoundary = [" + isUseBoundary() + "] " );
         buf.append( "boundarySize = [" + boundarySize + "] " );
         buf.append( "maximumPoolSize = [" + maximumPoolSize + "] " );

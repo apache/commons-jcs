@@ -192,7 +192,7 @@ public class IndexedDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         str.append( "IndexedDiskCacheAttributes " );
         str.append( "\n diskPath = " + diskPath );
         str.append( "\n maxPurgatorySize   = " + maxPurgatorySize );

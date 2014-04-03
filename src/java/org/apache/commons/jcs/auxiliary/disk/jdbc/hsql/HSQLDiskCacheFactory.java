@@ -176,7 +176,7 @@ public class HSQLDiskCacheFactory
         boolean newT = true;
 
         // TODO make the cached nature of the table configurable
-        StringBuffer createSql = new StringBuffer();
+        StringBuilder createSql = new StringBuilder();
         createSql.append( "CREATE CACHED TABLE " + tableName );
         createSql.append( "( " );
         createSql.append( "CACHE_KEY             VARCHAR(250)          NOT NULL, " );

@@ -233,7 +233,7 @@ public class RemoteHttpCacheManager
      */
     public String getStats()
     {
-        StringBuffer stats = new StringBuffer();
+        StringBuilder stats = new StringBuilder();
         for (RemoteCacheNoWait<?, ?> c : caches.values())
         {
             if ( c != null )

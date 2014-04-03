@@ -273,7 +273,7 @@ public class JDBCDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nJDBCCacheAttributes" );
         buf.append( "\n UserName [" + getUserName() + "]" );
         buf.append( "\n Url [" + getUrl() + "]" );

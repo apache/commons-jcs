@@ -123,7 +123,7 @@ public class CacheElementSerialized<K extends Serializable, V extends Serializab
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n CacheElementSerialized: " );
         buf.append( "\n CacheName = [" + getCacheName() + "]" );
         buf.append( "\n Key = [" + getKey() + "]" );

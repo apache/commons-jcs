@@ -105,7 +105,7 @@ public class RemoteUtils
             if ( log.isDebugEnabled() )
             {
                 Enumeration<Object> en = props.keys();
-                StringBuffer buf = new StringBuffer();
+                StringBuilder buf = new StringBuilder();
                 while ( en.hasMoreElements() )
                 {
                     String key = (String) en.nextElement();

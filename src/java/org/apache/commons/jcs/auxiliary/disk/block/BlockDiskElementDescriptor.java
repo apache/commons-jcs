@@ -86,7 +86,7 @@ public class BlockDiskElementDescriptor<K extends Serializable>
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nBlockDiskElementDescriptor" );
         buf.append( "\n key [" + this.getKey() + "]" );
         buf.append( "\n blocks [" );

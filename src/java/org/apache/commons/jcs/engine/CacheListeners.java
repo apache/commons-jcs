@@ -58,7 +58,7 @@ public class CacheListeners<K extends Serializable, V extends Serializable>
     @Override
     public String toString()
     {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append( "\n CacheListeners" );
         if ( cache != null )
         {

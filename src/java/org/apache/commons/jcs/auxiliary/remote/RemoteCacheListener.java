@@ -117,7 +117,7 @@ public class RemoteCacheListener<K extends Serializable, V extends Serializable>
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n RemoteCacheListener: " );
         buf.append( super.toString() );
         return buf.toString();

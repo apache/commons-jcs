@@ -95,7 +95,7 @@ public class RemoteCacheResponse<T>
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nRemoteHttpCacheResponse" );
         buf.append( "\n success [" + isSuccess() + "]" );
         buf.append( "\n payload [" + getPayload() + "]" );

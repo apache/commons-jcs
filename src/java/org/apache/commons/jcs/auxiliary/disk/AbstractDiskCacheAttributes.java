@@ -191,7 +191,7 @@ public abstract class AbstractDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         str.append( "AbstractDiskCacheAttributes " );
         str.append( "\n diskPath = " + getDiskPath() );
         str.append( "\n maxPurgatorySize   = " + getMaxPurgatorySize() );

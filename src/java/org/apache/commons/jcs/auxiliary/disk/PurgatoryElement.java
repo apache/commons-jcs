@@ -140,7 +140,7 @@ public class PurgatoryElement<K extends Serializable, V extends Serializable>
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "[PurgatoryElement: " );
         buf.append( " isSpoolable = " + isSpoolable() );
         buf.append( " CacheElement = " + getCacheElement() );

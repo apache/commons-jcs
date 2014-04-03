@@ -172,7 +172,7 @@ public class DiscoveredService
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n DiscoveredService" );
         buf.append( "\n CacheNames = [" + getCacheNames() + "]" );
         buf.append( "\n ServiceAddress = [" + getServiceAddress() + "]" );

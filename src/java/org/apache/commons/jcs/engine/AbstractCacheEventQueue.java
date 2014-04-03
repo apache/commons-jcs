@@ -356,7 +356,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         @Override
         public String toString()
         {
-            return new StringBuffer( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
+            return new StringBuilder( "PutEvent for key: " ).append( ice.getKey() ).append( " value: " )
                 .append( ice.getVal() ).toString();
         }
 
@@ -405,7 +405,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         @Override
         public String toString()
         {
-            return new StringBuffer( "RemoveEvent for " ).append( key ).toString();
+            return new StringBuilder( "RemoveEvent for " ).append( key ).toString();
         }
 
     }

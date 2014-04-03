@@ -459,7 +459,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( " LateralCacheNoWait " );
         buf.append( " Status = " + this.getStatus() );
         buf.append( " cache = [" + cache.toString() + "]" );

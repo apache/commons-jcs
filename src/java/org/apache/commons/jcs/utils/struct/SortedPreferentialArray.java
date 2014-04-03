@@ -597,7 +597,7 @@ public class SortedPreferentialArray<T extends Comparable<? super T>>
      */
     protected synchronized String dumpArray()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n ---------------------------" );
         buf.append( "\n curSize = " + curSize );
         buf.append( "\n array.length = " + array.length );

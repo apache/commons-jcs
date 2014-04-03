@@ -211,7 +211,7 @@ public class RemoteHttpCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n RemoteHttpCacheAttributes" );
         buf.append( "\n maxConnectionsPerHost = [" + getMaxConnectionsPerHost() + "]" );
         buf.append( "\n socketTimeoutMillis = [" + getSocketTimeoutMillis() + "]" );

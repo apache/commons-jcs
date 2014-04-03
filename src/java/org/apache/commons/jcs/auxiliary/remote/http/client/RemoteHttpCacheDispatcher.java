@@ -130,7 +130,7 @@ public class RemoteHttpCacheDispatcher
      */
     protected <K extends Serializable, V extends Serializable> String addParameters( RemoteCacheRequest<K, V> remoteCacheRequest, String baseUrl )
     {
-        StringBuffer url = new StringBuffer( baseUrl );
+        StringBuilder url = new StringBuilder( baseUrl );
 
         try
         {

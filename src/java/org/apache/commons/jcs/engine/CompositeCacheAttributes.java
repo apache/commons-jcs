@@ -430,7 +430,7 @@ public class CompositeCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer dump = new StringBuffer();
+        StringBuilder dump = new StringBuilder();
 
         dump.append( "[ " );
         dump.append( "useLateral = " ).append( useLateral );

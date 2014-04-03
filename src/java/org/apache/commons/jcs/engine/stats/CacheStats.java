@@ -111,7 +111,7 @@ public class CacheStats
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         buf.append( "Region Name = " + regionName );
 

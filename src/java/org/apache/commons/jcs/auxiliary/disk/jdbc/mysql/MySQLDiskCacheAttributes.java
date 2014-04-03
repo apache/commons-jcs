@@ -97,7 +97,7 @@ public class MySQLDiskCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nMySQLDiskCacheAttributes" );
         buf.append( "\n OptimizationSchedule [" + getOptimizationSchedule() + "]" );
         buf.append( "\n BalkDuringOptimization [" + isBalkDuringOptimization() + "]" );

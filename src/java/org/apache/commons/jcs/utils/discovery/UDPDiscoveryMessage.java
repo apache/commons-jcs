@@ -151,7 +151,7 @@ public class UDPDiscoveryMessage
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n host = [" + host + "]" );
         buf.append( "\n port = [" + port + "]" );
         buf.append( "\n requesterId = [" + requesterId + "]" );

@@ -301,7 +301,7 @@ public class LateralCacheAttributes
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         //buf.append( "cacheName=" + cacheName + "\n" );
         //buf.append( "putOnlyMode=" + putOnlyMode + "\n" );
         //buf.append( "transmissionTypeName=" + transmissionTypeName + "\n" );

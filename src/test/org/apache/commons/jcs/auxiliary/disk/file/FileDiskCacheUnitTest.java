@@ -523,7 +523,7 @@ public class FileDiskCacheUnitTest
         FileDiskCache<String, String> diskCache = new FileDiskCache<String, String>( cattr );
 
         String string = "This is my big string ABCDEFGH";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( string );
         for ( int i = 0; i < 4; i++ )
         {

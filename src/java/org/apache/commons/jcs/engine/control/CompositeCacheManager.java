@@ -790,7 +790,7 @@ public class CompositeCacheManager
         }
 
         // force the array elements into a string.
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int statsLen = stats.length;
         for ( int i = 0; i < statsLen; i++ )
         {

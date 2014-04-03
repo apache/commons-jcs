@@ -84,7 +84,7 @@ public class StatElement
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( name + " = " + data );
         return buf.toString();
     }

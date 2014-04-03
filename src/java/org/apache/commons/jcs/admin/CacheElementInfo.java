@@ -111,13 +111,13 @@ public class CacheElementInfo
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\nCacheElementInfo " );
-        buf.append( "\n Key [" + getKey() + "]" );
-        buf.append( "\n Eternal [" + isEternal() + "]" );
-        buf.append( "\n CreateTime [" + getCreateTime() + "]" );
-        buf.append( "\n MaxLifeSeconds [" + getMaxLifeSeconds() + "]" );
-        buf.append( "\n ExpiresInSeconds [" + getExpiresInSeconds() + "]" );
+        buf.append( "\n Key [" ).append( getKey() ).append( "]" );
+        buf.append( "\n Eternal [" ).append( isEternal() ).append( "]" );
+        buf.append( "\n CreateTime [" ).append( getCreateTime() ).append( "]" );
+        buf.append( "\n MaxLifeSeconds [" ).append( getMaxLifeSeconds() ).append( "]" );
+        buf.append( "\n ExpiresInSeconds [" ).append( getExpiresInSeconds() ).append( "]" );
 
         return buf.toString();
     }

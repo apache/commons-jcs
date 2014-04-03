@@ -343,7 +343,7 @@ public abstract class AbstractRemoteCacheListener<K extends Serializable, V exte
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append( "\n AbstractRemoteCacheListener: " );
         buf.append( "\n RemoteHost = " + irca.getRemoteHost() );
         buf.append( "\n RemotePort = " + irca.getRemotePort() );

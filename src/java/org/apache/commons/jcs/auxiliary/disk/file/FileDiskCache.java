@@ -128,7 +128,7 @@ public class FileDiskCache<K extends Serializable, V extends Serializable>
      */
     protected <KK extends Serializable> File file( KK key )
     {
-        StringBuffer fileNameBuffer = new StringBuffer();
+        StringBuilder fileNameBuffer = new StringBuilder();
 
         // add key as filename in a file system safe way
         String keys = key.toString();
