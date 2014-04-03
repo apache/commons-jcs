@@ -152,7 +152,7 @@ public class FileDiskCacheAttributes
     {
         StringBuilder str = new StringBuilder();
         str.append( "DiskFileCacheAttributes " );
-        str.append( "\n diskPath = " + diskPath );
+        str.append( "\n diskPath = " + super.getDiskPath() );
         str.append( "\n maxNumberOfFiles   = " + getMaxNumberOfFiles() );
         str.append( "\n maxRetriesOnDelete  = " + getMaxRetriesOnDelete() );
         return str.toString();

@@ -314,7 +314,7 @@ public class CommonRemoteCacheAttributes
         buf.append( "\n RemoteCacheAttributes " );
         buf.append( "\n remoteHost = [" + this.remoteHost + "]" );
         buf.append( "\n remotePort = [" + this.remotePort + "]" );
-        buf.append( "\n cacheName = [" + this.cacheName + "]" );
+        buf.append( "\n cacheName = [" + super.getCacheName() + "]" );
         buf.append( "\n remoteType = [" + remoteType + "]" );
         buf.append( "\n removeUponRemotePut = [" + this.removeUponRemotePut + "]" );
         buf.append( "\n getOnly = [" + getOnly + "]" );

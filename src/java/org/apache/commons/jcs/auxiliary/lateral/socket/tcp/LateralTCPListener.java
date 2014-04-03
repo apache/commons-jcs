@@ -65,7 +65,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     private transient ICompositeCacheManager cacheManager;
 
     /** Map of available instances, keyed by port */
-    protected static final HashMap<String, ILateralCacheListener<?, ?>> instances =
+    private static final HashMap<String, ILateralCacheListener<?, ?>> instances =
         new HashMap<String, ILateralCacheListener<?, ?>>();
 
     /** The socket listener */
@@ -78,7 +78,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     private int port;
 
     /** The processor. We should probably use an event queue here. */
-    protected ExecutorService pooledExecutor;
+    private ExecutorService pooledExecutor;
 
     /** put count */
     private int putCnt = 0;
@@ -96,10 +96,10 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     private long listenerId = CacheInfo.listenerId;
 
     /** is this shut down? */
-    protected boolean shutdown = false;
+    private boolean shutdown = false;
 
     /** is this terminated? */
-    protected boolean terminated = false;
+    private boolean terminated = false;
 
     /**
      * Gets the instance attribute of the LateralCacheTCPListener class.
@@ -484,7 +484,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         extends Thread
     {
         /** The socket listener */
-        private ServerSocket serverSocket;
+        private final ServerSocket serverSocket;
 
         /**
          * Constructor

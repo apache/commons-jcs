@@ -35,7 +35,7 @@ public class IndexedDiskElementDescriptor
     long pos;
 
     /** Number of bytes the serialized form of the cache data takes. */
-    public int len;
+    int len;
 
     /**
      * Constructs a usable disk element descriptor.

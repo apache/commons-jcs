@@ -69,10 +69,10 @@ public class LateralTCPDiscoveryListener
     private final ICompositeCacheManager cacheMgr;
 
     /** The event logger. */
-    protected ICacheEventLogger cacheEventLogger;
+    private final ICacheEventLogger cacheEventLogger;
 
     /** The serializer. */
-    protected IElementSerializer elementSerializer;
+    private final IElementSerializer elementSerializer;
 
     /**
      * This plugs into the udp discovery system. It will receive add and remove events.

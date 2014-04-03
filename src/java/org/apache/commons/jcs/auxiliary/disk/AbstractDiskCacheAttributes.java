@@ -41,13 +41,13 @@ public abstract class AbstractDiskCacheAttributes
     private static final Log log = LogFactory.getLog( AbstractDiskCacheAttributes.class );
 
     /** path to disk */
-    protected File diskPath;
+    private File diskPath;
 
     /** if this is false, we will not execute remove all */
     private boolean allowRemoveAll = true;
 
     /** default to 5000 */
-    protected int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFAULT;
+    private int maxPurgatorySize = MAX_PURGATORY_SIZE_DEFAULT;
 
     /** Default amount of time to allow for key persistence on shutdown */
     private static final int DEFAULT_shutdownSpoolTimeLimit = 60;
@@ -56,7 +56,7 @@ public abstract class AbstractDiskCacheAttributes
      * This default determines how long the shutdown will wait for the key spool and data defrag to
      * finish.
      */
-    protected int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
+    private int shutdownSpoolTimeLimit = DEFAULT_shutdownSpoolTimeLimit;
 
     /**
      * Sets the diskPath attribute of the DiskCacheAttributes object

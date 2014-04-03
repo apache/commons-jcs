@@ -174,7 +174,7 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
 
         se = new StatElement();
         se.setName( "Working" );
-        se.setData( "" + this.working );
+        se.setData( "" + super.isWorking() );
         elems.add( se );
 
         se = new StatElement();

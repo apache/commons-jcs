@@ -172,7 +172,7 @@ public class JDBCDiskCachePoolAccess
     /**
      * @param poolName The poolName to set.
      */
-    public void setPoolName( String poolName )
+    public void setPoolName( String poolName ) // TODO does it make sense to change the pool name after construction?
     {
         this.poolName = poolName;
     }

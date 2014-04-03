@@ -79,7 +79,7 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
     private final File rootDirectory;
 
     /** Store, loads, and persists the keys */
-    protected BlockDiskKeyStore<K> keyStore;
+    private BlockDiskKeyStore<K> keyStore;
 
     /**
      * Use this lock to synchronize reads and writes to the underlying storage mechanism. We don't

@@ -28,7 +28,7 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 public class CacheGroup
 {
     /** Element configuration. */
-    public IElementAttributes attr;
+    private IElementAttributes attr;
 
     /** Constructor for the CacheGroup object */
     public CacheGroup()

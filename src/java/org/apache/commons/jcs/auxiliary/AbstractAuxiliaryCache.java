@@ -35,13 +35,13 @@ public abstract class AbstractAuxiliaryCache<K extends Serializable, V extends S
     implements AuxiliaryCache<K, V>
 {
     /** An optional event logger */
-    protected ICacheEventLogger cacheEventLogger;
+    private ICacheEventLogger cacheEventLogger;
 
     /** The serializer. Uses a standard serializer by default. */
-    protected IElementSerializer elementSerializer = new StandardSerializer();
+    private IElementSerializer elementSerializer = new StandardSerializer();
 
     /** Key matcher used by the getMatching API */
-    protected IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<K>();
+    private IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<K>();
 
     /**
      * Logs an event if an event logger is configured.

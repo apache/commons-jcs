@@ -127,12 +127,12 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "Exiting failover runner. Failover index = " + facade.remoteCacheAttributes.getFailoverIndex() );
-            if ( facade.remoteCacheAttributes.getFailoverIndex() <= 0 )
+            log.info( "Exiting failover runner. Failover index = " + facade.getRemoteCacheAttributes().getFailoverIndex() );
+            if ( facade.getRemoteCacheAttributes().getFailoverIndex() <= 0 )
             {
                 log.info( "Failover index is <= 0, meaning we are not " + "connected to a failover server." );
             }
-            else if ( facade.remoteCacheAttributes.getFailoverIndex() > 0 )
+            else if ( facade.getRemoteCacheAttributes().getFailoverIndex() > 0 )
             {
                 log.info( "Failover index is > 0, meaning we are " + "connected to a failover server." );
             }
@@ -157,7 +157,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
             {
                 // Monitor each RemoteCacheManager instance one after the other.
                 // Each RemoteCacheManager corresponds to one remote connection.
-                String[] failovers = facade.remoteCacheAttributes.getFailovers();
+                String[] failovers = facade.getRemoteCacheAttributes().getFailovers();
                 // we should probably check to see if there are any failovers,
                 // even though the caller
                 // should have already.
@@ -177,7 +177,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                     }
                 }
 
-                int fidx = facade.remoteCacheAttributes.getFailoverIndex();
+                int fidx = facade.getRemoteCacheAttributes().getFailoverIndex();
                 log.debug( "fidx = " + fidx + " failovers.length = " + failovers.length );
 
                 // shouldn't we see if the primary is backup?
@@ -202,7 +202,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                     RemoteCacheAttributes rca = null;
                     try
                     {
-                        rca = (RemoteCacheAttributes) facade.remoteCacheAttributes.copy();
+                        rca = (RemoteCacheAttributes) facade.getRemoteCacheAttributes().copy();
                         rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
                         rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
                         RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
@@ -221,7 +221,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                             log.debug( "resetting no wait" );
                             facade.noWaits = new RemoteCacheNoWait[1];
                             facade.noWaits[0] = (RemoteCacheNoWait<K, V>) ic;
-                            facade.remoteCacheAttributes.setFailoverIndex( i );
+                            facade.getRemoteCacheAttributes().setFailoverIndex( i );
 
                             synchronized ( this )
                             {
@@ -285,13 +285,13 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                 if ( log.isInfoEnabled() )
                 {
                     log.info( "Failover runner is in primary recovery mode. Failover index = "
-                        + facade.remoteCacheAttributes.getFailoverIndex() + "\n" + "Will now try to reconnect to primary server." );
+                        + facade.getRemoteCacheAttributes().getFailoverIndex() + "\n" + "Will now try to reconnect to primary server." );
                 }
             }
 
             boolean primaryRestoredSuccessfully = false;
             // if we are not connected to the primary, try.
-            if ( facade.remoteCacheAttributes.getFailoverIndex() > 0 )
+            if ( facade.getRemoteCacheAttributes().getFailoverIndex() > 0 )
             {
                 primaryRestoredSuccessfully = restorePrimary();
                 if ( log.isDebugEnabled() )
@@ -318,7 +318,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
 
             // try to bring the listener back to the primary
         }
-        while ( facade.remoteCacheAttributes.getFailoverIndex() > 0 || !alright );
+        while ( facade.getRemoteCacheAttributes().getFailoverIndex() > 0 || !alright );
         // continue if the primary is not restored or if things are not alright.
 
     }
@@ -337,7 +337,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
     private boolean restorePrimary()
     {
         // try to move back to the primary
-        String[] failovers = facade.remoteCacheAttributes.getFailovers();
+        String[] failovers = facade.getRemoteCacheAttributes().getFailovers();
         String server = failovers[0];
 
         if ( log.isInfoEnabled() )
@@ -347,7 +347,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
 
         try
         {
-            RemoteCacheAttributes rca = (RemoteCacheAttributes) facade.remoteCacheAttributes.copy();
+            RemoteCacheAttributes rca = (RemoteCacheAttributes) facade.getRemoteCacheAttributes().copy();
             rca.setRemoteHost( server.substring( 0, server.indexOf( ":" ) ) );
             rca.setRemotePort( Integer.parseInt( server.substring( server.indexOf( ":" ) + 1 ) ) );
             RemoteCacheManager rcm = RemoteCacheManager.getInstance( rca, cacheMgr, cacheEventLogger, elementSerializer );
@@ -372,7 +372,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                     // stop duplicate listening.
                     if ( facade.noWaits[0] != null && facade.noWaits[0].getStatus() == CacheStatus.ALIVE )
                     {
-                        int fidx = facade.remoteCacheAttributes.getFailoverIndex();
+                        int fidx = facade.getRemoteCacheAttributes().getFailoverIndex();
 
                         if ( fidx > 0 )
                         {
@@ -388,7 +388,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                             {
                                 // create attributes that reflect the
                                 // previous failed over configuration.
-                                RemoteCacheAttributes rcaOld = (RemoteCacheAttributes) facade.remoteCacheAttributes.copy();
+                                RemoteCacheAttributes rcaOld = (RemoteCacheAttributes) facade.getRemoteCacheAttributes().copy();
                                 rcaOld.setRemoteHost( serverOld.substring( 0, serverOld.indexOf( ":" ) ) );
                                 rcaOld.setRemotePort( Integer.parseInt( serverOld.substring( serverOld
                                     .indexOf( ":" ) + 1 ) ) );
@@ -439,7 +439,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
                 // swap in a new one
                 facade.noWaits = new RemoteCacheNoWait[1];
                 facade.noWaits[0] = (RemoteCacheNoWait<K, V>) ic;
-                facade.remoteCacheAttributes.setFailoverIndex( 0 );
+                facade.getRemoteCacheAttributes().setFailoverIndex( 0 );
 
                 if ( log.isInfoEnabled() )
                 {

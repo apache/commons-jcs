@@ -60,13 +60,13 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
     private static final Log log = LogFactory.getLog( AbstractDoubleLinkedListMemoryCache.class );
 
     /** thread-safe double linked list for lru */
-    protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list;
+    protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list; // TODO privatise
 
     /** number of hits */
-    protected int hitCnt = 0;
+    private int hitCnt = 0;
 
     /** number of misses */
-    protected int missCnt = 0;
+    private int missCnt = 0;
 
     /** number of puts */
     private int putCnt = 0;

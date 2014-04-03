@@ -75,14 +75,14 @@ public class RemoteCacheNoWaitFacade<K extends Serializable, V extends Serializa
             log.info( "in failover for " + i );
         }
 
-        if ( remoteCacheAttributes.getRemoteType() == RemoteType.LOCAL )
+        if ( getRemoteCacheAttributes().getRemoteType() == RemoteType.LOCAL )
         {
             if ( noWaits[i].getStatus() == CacheStatus.ERROR )
             {
                 // start failover, primary recovery process
                 RemoteCacheFailoverRunner<K, V> runner =
                     new RemoteCacheFailoverRunner<K, V>( this, getCompositeCacheManager(),
-                      cacheEventLogger, elementSerializer );
+                      super.getCacheEventLogger(), super.getElementSerializer() );
                 runner.notifyError();
                 Thread t = new Thread( runner );
                 t.setDaemon( true );

@@ -104,7 +104,7 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
     private int timesOptimized = 0;
 
     /** The thread optimizing the file. */
-    protected volatile Thread currentOptimizationThread;
+    private volatile Thread currentOptimizationThread;
 
     /** used for counting the number of requests */
     private int removeCount = 0;

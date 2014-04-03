@@ -49,10 +49,10 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     private static final Log log = LogFactory.getLog( JDBCDiskCacheManagerAbstractTemplate.class );
 
     /** Incremented on getIntance, decremented on release. */
-    protected static int clients;
+    protected static int clients; // TODO needs to be made private and synchronised and/or turned into AtomicInt
 
     /** A map of JDBCDiskCache objects to region names. */
-    protected static Hashtable<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>> caches =
+    private static Hashtable<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>> caches =
         new Hashtable<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>>();
 
     /**
@@ -62,7 +62,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected static Hashtable<String, TableState> tableStates = new Hashtable<String, TableState>();
 
     /** The background disk shrinker, one for all regions. */
-    private ScheduledExecutorService shrinkerDaemon;
+    private ScheduledExecutorService shrinkerDaemon; // TODO this is not accessed in a threadsafe way. Perhaps use IODH idiom?
 
     /**
      * A map of table name to shrinker threads. This allows each table to have a different setting.

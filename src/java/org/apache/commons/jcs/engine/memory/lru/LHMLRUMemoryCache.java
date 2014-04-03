@@ -54,13 +54,13 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
     private static final Log log = LogFactory.getLog( LRUMemoryCache.class );
 
     /** number of hits */
-    protected int hitCnt = 0;
+    private int hitCnt = 0; // TODO should these be long values?
 
     /** number of misses */
-    protected int missCnt = 0;
+    private int missCnt = 0;
 
     /** number of puts */
-    protected int putCnt = 0;
+    private int putCnt = 0;
 
     /**
      * For post reflection creation initialization

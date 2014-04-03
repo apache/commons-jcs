@@ -58,22 +58,22 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     private static final Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
     /** The region name. This defines a namespace of sorts. */
-    protected String cacheName;
+    protected String cacheName; // TODO privatise (mainly seems to be used externally for debugging)
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    public Map<K, MemoryElementDescriptor<K, V>> map;
+    public Map<K, MemoryElementDescriptor<K, V>> map;// TODO privatise 
 
     /** Region Elemental Attributes, used as a default and copied for each item. */
-    public IElementAttributes elementAttributes;
+    public IElementAttributes elementAttributes;// TODO privatise 
 
     /** Cache Attributes.  Regions settings. */
-    public ICompositeCacheAttributes cacheAttributes;
+    public ICompositeCacheAttributes cacheAttributes;// TODO privatise 
 
     /** The cache region this store is associated with */
-    public CompositeCache<K, V> cache;
+    public CompositeCache<K, V> cache;// TODO privatise 
 
     /** status */
-    protected CacheStatus status;
+    private CacheStatus status;
 
     /** How many to spool at a time. */
     protected int chunkSize;

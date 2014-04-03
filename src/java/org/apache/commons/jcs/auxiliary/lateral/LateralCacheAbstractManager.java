@@ -72,10 +72,10 @@ public abstract class LateralCacheAbstractManager
     private LateralCacheWatchRepairable lateralWatch;
 
     /** The event logger. */
-    protected ICacheEventLogger cacheEventLogger;
+    private ICacheEventLogger cacheEventLogger;
 
     /** The serializer. */
-    protected IElementSerializer elementSerializer;
+    private IElementSerializer elementSerializer;
 
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.

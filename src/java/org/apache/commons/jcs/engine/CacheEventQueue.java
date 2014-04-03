@@ -50,7 +50,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
     private Thread processorThread;
 
     /** sync */
-    protected final Object queueLock = new Object();
+    private final Object queueLock = new Object();
 
     /** the head of the queue */
     private Node head = new Node();
@@ -370,7 +370,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
 
         se = new StatElement();
         se.setName( "Working" );
-        se.setData( "" + this.working );
+        se.setData( "" + super.isWorking() );
         elems.add( se );
 
         se = new StatElement();

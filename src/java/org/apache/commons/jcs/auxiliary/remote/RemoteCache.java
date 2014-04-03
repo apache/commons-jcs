@@ -150,7 +150,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
             log.debug( "Initiating failover, rcnf = " + rcnwf );
         }
 
-        if ( rcnwf != null && rcnwf.remoteCacheAttributes.getRemoteType() == RemoteType.LOCAL )
+        if ( rcnwf != null && rcnwf.getRemoteCacheAttributes().getRemoteType() == RemoteType.LOCAL )
         {
             if ( log.isDebugEnabled() )
             {

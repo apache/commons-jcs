@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 public class LateralTCPDiscoveryListenerManager
 {
     /** Map of available instances, keyed by port. Note, this is not static. */
-    protected Map<String, LateralTCPDiscoveryListener> instances =
+    private final Map<String, LateralTCPDiscoveryListener> instances =
         Collections.synchronizedMap( new HashMap<String, LateralTCPDiscoveryListener>() );
 
     /** The logger */

@@ -66,11 +66,11 @@ public class LateralTCPCacheManager
     private static LateralCacheMonitor monitor;
 
     /** Address to instance map. */
-    protected static final Map<String, LateralTCPCacheManager> instances =
+    private static final Map<String, LateralTCPCacheManager> instances =
         new ConcurrentHashMap<String, LateralTCPCacheManager>();
 
     /** ITCPLateralCacheAttributes */
-    protected ITCPLateralCacheAttributes lateralCacheAttributes;
+    private final ITCPLateralCacheAttributes lateralCacheAttributes;
 
     /**
      * Handle to the lateral cache service; or a zombie handle if failed to connect.
@@ -81,10 +81,14 @@ public class LateralTCPCacheManager
      * Wrapper of the lateral cache watch service; or wrapper of a zombie service if failed to
      * connect.
      */
-    private LateralCacheWatchRepairable lateralWatch;
+    private final LateralCacheWatchRepairable lateralWatch;
 
     /** This is set in the constructor. */
     private final ICompositeCacheManager cacheMgr;
+
+    private final ICacheEventLogger cacheEventLogger;
+
+    private final IElementSerializer elementSerializer;
 
     /**
      * Returns an instance of the LateralCacheManager.

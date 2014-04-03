@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
+import org.apache.commons.jcs.engine.ElementAttributesUtils;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.event.ElementEventHandlerMockImpl;
 import org.apache.commons.jcs.engine.memory.MockMemoryCache;
@@ -209,7 +210,7 @@ public class ShrinkerThreadUnitTest
         assertNotNull( "We should have received an element", returnedElement1 );
 
         // set this to 2 seconds ago.
-        elementAttr.lastAccessTime = System.currentTimeMillis() - 2000;
+        ElementAttributesUtils.setLastAccessTime( elementAttr,  System.currentTimeMillis() - 2000 );
 
         // DO WORK
         ShrinkerThread<String, String> shrinker = new ShrinkerThread<String, String>( memory );
@@ -258,7 +259,7 @@ public class ShrinkerThreadUnitTest
             assertNotNull( "We should have received an element", returnedElement1 );
 
             // set this to 2 seconds ago.
-            elementAttr.lastAccessTime = System.currentTimeMillis() - 2000;
+            ElementAttributesUtils.setLastAccessTime( elementAttr,  System.currentTimeMillis() - 2000 );
         }
 
         // DO WORK
@@ -311,7 +312,7 @@ public class ShrinkerThreadUnitTest
             assertNotNull( "We should have received an element", returnedElement1 );
 
             // set this to 2 seconds ago.
-            elementAttr.lastAccessTime = System.currentTimeMillis() - 2000;
+            ElementAttributesUtils.setLastAccessTime( elementAttr,  System.currentTimeMillis() - 2000 );
         }
 
         // DO WORK

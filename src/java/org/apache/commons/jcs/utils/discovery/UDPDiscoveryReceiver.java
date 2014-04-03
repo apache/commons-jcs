@@ -61,7 +61,7 @@ public class UDPDiscoveryReceiver
     private int cnt = 0;
 
     /** Service to get cache names and handle request broadcasts */
-    protected UDPDiscoveryService service = null;
+    private UDPDiscoveryService service = null;
 
     /** Address */
     private String multicastAddressString = "";

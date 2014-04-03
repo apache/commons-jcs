@@ -62,7 +62,7 @@ public class LRUMap<K, V>
     private final DoubleLinkedList<LRUElementDescriptor<K, V>> list;
 
     /** Map where items are stored by key. */
-    protected Map<K, LRUElementDescriptor<K, V>> map;
+    private Map<K, LRUElementDescriptor<K, V>> map;
 
     /** stats */
     int hitCnt = 0;

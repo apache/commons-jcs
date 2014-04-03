@@ -56,13 +56,13 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
     private static final Log log = LogFactory.getLog( AbstractRemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
-    public RemoteCacheNoWait<K, V>[] noWaits;
+    public RemoteCacheNoWait<K, V>[] noWaits; // TODO privatise if possible
 
     /** The cache name */
     private final String cacheName;
 
     /** holds failover and cluster information */
-    protected IRemoteCacheAttributes remoteCacheAttributes;
+    private IRemoteCacheAttributes remoteCacheAttributes;
 
     /** A cache manager */
     private ICompositeCacheManager compositeCacheManager;
@@ -88,8 +88,8 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
         this.remoteCacheAttributes = rca;
         this.cacheName = rca.getCacheName();
         setCompositeCacheManager( cacheMgr );
-        this.cacheEventLogger = cacheEventLogger;
-        this.elementSerializer = elementSerializer;
+        setCacheEventLogger( cacheEventLogger );
+        setElementSerializer( elementSerializer );
     }
 
     /**

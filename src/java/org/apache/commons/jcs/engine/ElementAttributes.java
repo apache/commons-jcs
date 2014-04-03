@@ -44,37 +44,37 @@ public class ElementAttributes
     private static final long serialVersionUID = 7814990748035017441L;
 
     /** Can this item be flushed to disk */
-    public boolean IS_SPOOL = true;
+    private boolean IS_SPOOL = true;
 
     /** Is this item laterally distributable */
-    public boolean IS_LATERAL = true;
+    private boolean IS_LATERAL = true;
 
     /** Can this item be sent to the remote cache */
-    public boolean IS_REMOTE = true;
+    private boolean IS_REMOTE = true;
 
     /**
      * You can turn off expiration by setting this to true. This causes the cache to bypass both max
      * life and idle time expiration.
      */
-    public boolean IS_ETERNAL = true;
+    private boolean IS_ETERNAL = true;
 
     /** Max life seconds */
-    public long maxLifeSeconds = -1;
+    private long maxLifeSeconds = -1;
 
     /**
      * The maximum time an entry can be idle. Setting this to -1 causes the idle time check to be
      * ignored.
      */
-    public long maxIdleTimeSeconds = -1;
+    private long maxIdleTimeSeconds = -1;
 
     /** The byte size of the field. Must be manually set. */
-    public int size = 0;
+    private int size = 0;
 
     /** The creation time. This is used to enforce the max life. */
-    public long createTime = 0;
+    private long createTime = 0;
 
     /** The last access time. This is used to enforce the max idel time. */
-    public long lastAccessTime = 0;
+    private long lastAccessTime = 0;
 
     /**
      * The list of Event handlers to use. This is transient, since the event handlers cannot usually
@@ -83,7 +83,7 @@ public class ElementAttributes
      * TODO we need to check that when an item is passed to a non-local cache that if the local
      * cache had a copy with event handlers, that those handlers are used.
      */
-    public transient ArrayList<IElementEventHandler> eventHandlers;
+    private transient ArrayList<IElementEventHandler> eventHandlers;
 
     /**
      * Constructor for the IElementAttributes object
@@ -272,6 +272,14 @@ public class ElementAttributes
     public void setLastAccessTimeNow()
     {
         this.lastAccessTime = System.currentTimeMillis();
+    }
+
+    /**
+     * only for use from test code
+     */
+    void setLastAccessTime(long time)
+    {
+        this.lastAccessTime = time;
     }
 
     /**

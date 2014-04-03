@@ -53,16 +53,16 @@ public abstract class AbstractRemoteCacheListener<K extends Serializable, V exte
     private static String localHostName = null;
 
     /** Has this client been shutdown. */
-    boolean disposed = false;
+    boolean disposed = false; // TODO not used in this class; move to RemoteCacheListener?
 
     /**
      * The cache manager used to put items in different regions. This is set lazily and should not
      * be sent to the remote server.
      */
-    protected transient ICompositeCacheManager cacheMgr;
+    private transient ICompositeCacheManager cacheMgr;
 
     /** The remote cache configuration object. */
-    protected IRemoteCacheAttributes irca;
+    private final IRemoteCacheAttributes irca;
 
     /** Number of put requests received. For debugging only. */
     protected int puts = 0;
@@ -71,7 +71,7 @@ public abstract class AbstractRemoteCacheListener<K extends Serializable, V exte
     protected int removes = 0;
 
     /** This is set by the remote cache server. */
-    protected long listenerId = 0;
+    private long listenerId = 0;
 
     /** Custom serializer. Standard by default. */
     private transient IElementSerializer elementSerializer = new StandardSerializer();

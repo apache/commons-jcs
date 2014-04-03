@@ -33,7 +33,7 @@ public class PropertySetterException
     private static final long serialVersionUID = -210271658004609028L;
 
     /** Description of the Field */
-    protected Throwable rootCause;
+    private final Throwable rootCause;
 
     /**
      * Constructor for the PropertySetterException object
@@ -43,6 +43,7 @@ public class PropertySetterException
     public PropertySetterException( String msg )
     {
         super( msg );
+        this.rootCause = null;
     }
 
     /**

@@ -60,7 +60,7 @@ public class LateralCacheAttributes
     private int httpListenerPort = 8080;
 
     /** disables gets from laterals */
-    boolean putOnlyMode = true;
+    private boolean putOnlyMode = true;
 
     /**
      * do we receive and broadcast or only broadcast this is useful when you don't want to get any

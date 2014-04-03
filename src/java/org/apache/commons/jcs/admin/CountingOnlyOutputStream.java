@@ -29,7 +29,7 @@ public class CountingOnlyOutputStream
     extends OutputStream
 {
     /** number of bytes passed through */
-    private int count;
+    private int count; // TODO should this be long?
 
     /**
      * count as we write.

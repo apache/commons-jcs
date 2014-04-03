@@ -69,6 +69,9 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
     /** Generic disk cache attributes */
     private IDiskCacheAttributes diskCacheAttributes = null;
 
+    // TODO most of these fields should be made private with getters/setters as necessary
+    // Though hopefully many of them can be set at construction and made final
+
     /**
      * Map where elements are stored between being added to this cache and actually spooled to disk.
      * This allows puts to the disk cache to return quickly, and the more expensive operation of
@@ -269,7 +272,7 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
                 log.debug( "Found element in purgatory, cacheName: " + cacheName + ", key: " + key );
             }
 
-            return pe.cacheElement;
+            return pe.getCacheElement();
         }
 
         // If we reach this point, element was not found in purgatory, so get

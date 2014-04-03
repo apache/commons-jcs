@@ -194,7 +194,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
                 if ( this.getRemoteCacheAttributes().getRemoteType() != RemoteType.CLUSTER )
                 {
                     retVal = SerializationConversionUtil.getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) retVal,
-                                                                                      this.elementSerializer );
+                            super.getElementSerializer() );
                 }
             }
         }
@@ -297,7 +297,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
                         {
                             unwrappedResult = SerializationConversionUtil
                                 .getDeSerializedCacheElement( (ICacheElementSerialized<K, V>) entry.getValue(),
-                                                              this.elementSerializer );
+                                        super.getElementSerializer() );
                         }
                     }
                     else
@@ -422,7 +422,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
 
                 // convert so we don't have to know about the object on the
                 // other end.
-                serialized = SerializationConversionUtil.getSerializedCacheElement( ce, this.elementSerializer );
+                serialized = SerializationConversionUtil.getSerializedCacheElement( ce, super.getElementSerializer() );
 
                 remoteCacheService.update( serialized, getListenerId() );
             }

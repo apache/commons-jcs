@@ -78,11 +78,11 @@ public class CompositeCacheManager
     /** JMX object name */
     private static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
-    /** Caches managed by this cache manager */
+    /** Caches managed by this cache manager */ // TODO privatise somehow
     protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> caches =
         new Hashtable<String, ICache<? extends Serializable, ? extends Serializable>>();
 
-    /** Internal system caches for this cache manager */
+    /** Internal system caches for this cache manager */ // TODO privatise somehow
     protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> systemCaches =
         new Hashtable<String, ICache<? extends Serializable, ? extends Serializable>>();
 
@@ -90,27 +90,27 @@ public class CompositeCacheManager
     private int clients;
 
     /** Default cache attributes for this cache manager */
-    protected ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();
+    private ICompositeCacheAttributes defaultCacheAttr = new CompositeCacheAttributes();
 
     /** Default element attributes for this cache manager */
-    protected IElementAttributes defaultElementAttr = new ElementAttributes();
+    private IElementAttributes defaultElementAttr = new ElementAttributes();
 
     /** Used to keep track of configured auxiliaries */
-    protected Hashtable<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
+    private Hashtable<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
         new Hashtable<String, AuxiliaryCacheFactory>( 11 );
 
     /** Used to keep track of attributes for auxiliaries. */
-    protected Hashtable<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
+    private Hashtable<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
         new Hashtable<String, AuxiliaryCacheAttributes>( 11 );
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
 
     /** The default auxiliary caches to be used if not preconfigured */
-    protected String defaultAuxValues;
+    protected String defaultAuxValues;// TODO privatise somehow
 
     /** The Singleton Instance */
-    protected static CompositeCacheManager instance;
+    private static CompositeCacheManager instance;
 
     /** The prefix of relevant system properties */
     private static final String SYSTEM_PROPERTY_KEY_PREFIX = "jcs";

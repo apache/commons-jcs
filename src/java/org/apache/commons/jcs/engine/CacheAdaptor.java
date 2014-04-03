@@ -42,7 +42,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
     private final ICache<K, V> cache;
 
     /** The unique id of this listener. */
-    protected long listenerId = 0;
+    private long listenerId = 0;
 
     /**
      * Sets the listenerId attribute of the CacheAdaptor object

@@ -44,7 +44,9 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * time to wait for an event before snuffing the background thread if the queue is empty. make
      * configurable later
      */
-    protected int waitToDieMillis = DEFAULT_WAIT_TO_DIE_MILLIS;
+    private int waitToDieMillis = DEFAULT_WAIT_TO_DIE_MILLIS;
+
+    // TODO privatise the fields
 
     /**
      * When the events are pulled off the queue, the tell the listener to handle the specific event
@@ -71,7 +73,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
      * This means that the queue is functional. If we reached the max number of failures, the queue
      * is marked as non functional and will never work again.
      */
-    protected boolean working = true;
+    private boolean working = true;
 
     /**
      * Returns the time to wait for events before killing the background thread.

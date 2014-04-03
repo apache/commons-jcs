@@ -194,12 +194,12 @@ public class IndexedDiskCacheAttributes
     {
         StringBuilder str = new StringBuilder();
         str.append( "IndexedDiskCacheAttributes " );
-        str.append( "\n diskPath = " + diskPath );
-        str.append( "\n maxPurgatorySize   = " + maxPurgatorySize );
+        str.append( "\n diskPath = " + super.getDiskPath() );
+        str.append( "\n maxPurgatorySize   = " + super.getMaxPurgatorySize() );
         str.append( "\n maxKeySize  = " + maxKeySize );
         str.append( "\n maxRecycleBinSize  = " + maxRecycleBinSize );
         str.append( "\n optimizeAtRemoveCount  = " + optimizeAtRemoveCount );
-        str.append( "\n shutdownSpoolTimeLimit  = " + shutdownSpoolTimeLimit );
+        str.append( "\n shutdownSpoolTimeLimit  = " + super.getShutdownSpoolTimeLimit() );
         str.append( "\n optimizeOnShutdown  = " + optimizeOnShutdown );
         str.append( "\n clearDiskOnStartup  = " + clearDiskOnStartup );
         return str.toString();

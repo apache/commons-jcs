@@ -78,7 +78,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
      * EventQueue for handling element events. Lazy initialized. One for each region. To be more efficient, the manager
      * should pass a shared queue in.
      */
-    public IElementEventQueue elementEventQ;
+    private IElementEventQueue elementEventQ;
 
     /** Auxiliary caches. */
     @SuppressWarnings("unchecked") // OK because this is an empty array
@@ -121,7 +121,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     private IMemoryCache<K, V> memCache;
 
     /** Key matcher used by the getMatching API */
-    protected IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<K>();
+    private IKeyMatcher<K> keyMatcher = new KeyMatcherPatternImpl<K>();
 
     /**
      * Constructor for the Cache object

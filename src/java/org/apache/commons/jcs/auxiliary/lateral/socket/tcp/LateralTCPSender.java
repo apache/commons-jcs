@@ -51,7 +51,7 @@ public class LateralTCPSender
     private InetAddress address;
 
     /** The port the server is listening to. */
-    int port = 1111;
+    private int port = 1111;
 
     /** The stream from the server connection. */
     private ObjectOutputStream oos;

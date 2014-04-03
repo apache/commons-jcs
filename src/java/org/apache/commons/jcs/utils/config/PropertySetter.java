@@ -58,10 +58,10 @@ public class PropertySetter
     private static final Log log = LogFactory.getLog( OptionConverter.class );
 
     /** Description of the Field */
-    protected Object obj;
+    private final Object obj;
 
     /** Description of the Field */
-    protected PropertyDescriptor[] props;
+    private PropertyDescriptor[] props;
 
     /**
      * Create a new PropertySetter for the specified Object. This is done in preparation for invoking
