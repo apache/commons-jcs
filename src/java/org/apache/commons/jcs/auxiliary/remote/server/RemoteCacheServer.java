@@ -385,10 +385,11 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      */
     private void logUpdateInfo( ICacheElement<K, V> item )
     {
+        // not thread safe, but it doesn't have to be 100% accurate
+        puts++;
+
         if ( log.isInfoEnabled() )
         {
-            // not thread safe, but it doesn't have to be accurate
-            puts++;
             if ( puts % logInterval == 0 )
             {
                 log.info( "puts = " + puts );
@@ -1066,7 +1067,8 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
      * <p>
      * @return puts
      */
-    protected int getPutCount()
+    // Currently only intended for use by unit tests
+    int getPutCount()
     {
         return puts;
     }

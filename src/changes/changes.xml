@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-112" dev="sebb" type="fix">
+                RemoteCacheServer.logUpdateInfo bug updating put count
+            </action>
             <action dev="tv" type="fix">
                 Fix updating of last access time, add tests for event handling
             </action>
