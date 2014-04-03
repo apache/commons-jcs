@@ -90,7 +90,7 @@ public class BasicRemoteCacheClientServerUnitTest
         SleepUtil.sleepAtLeast( 200 );
 
         // VERIFY
-        System.out.println( server.getStats() );
+//        System.out.println( server.getStats() );
         assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
 
         // DO WORK
@@ -129,7 +129,7 @@ public class BasicRemoteCacheClientServerUnitTest
         SleepUtil.sleepAtLeast( 50 );
 
         // VERIFY
-        System.out.println( server.getStats() );
+//        System.out.println( server.getStats() );
         assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
 
         // DO WORK
@@ -178,7 +178,7 @@ public class BasicRemoteCacheClientServerUnitTest
         // VERIFY
         try
         {
-            System.out.println( server.getStats() );
+//            System.out.println( server.getStats() );
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
             assertEquals( "Wrong number of puts to listener.", 1, listener.putCount );
         }
@@ -222,7 +222,7 @@ public class BasicRemoteCacheClientServerUnitTest
         SleepUtil.sleepAtLeast( 500 );
 
         // VERIFY
-        System.out.println( server.getStats() );
+//        System.out.println( server.getStats() );
         assertEquals( "Wrong number of puts", numToPut, server.getPutCount() - numPutsPrior );
         assertEquals( "Wrong number of puts to listener.", numToPut, listener.putCount );
     }

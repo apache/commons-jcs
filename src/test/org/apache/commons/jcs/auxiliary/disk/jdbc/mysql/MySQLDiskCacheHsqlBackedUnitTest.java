@@ -159,7 +159,7 @@ public class MySQLDiskCacheHsqlBackedUnitTest
         int items = 200;
         String region = "testCache2";
         CacheAccess<String, String> jcs = JCS.getInstance( region );
-        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
+//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // DO WORK
         for ( int i = 0; i <= items; i++ )
@@ -172,8 +172,8 @@ public class MySQLDiskCacheHsqlBackedUnitTest
 
         // VERIFY
         assertEquals( "Wrong number returned", 10, matchingResults.size() );
-        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
-        System.out.println( "\nAFTER TEST \n" + jcs.getStats() );
+//        System.out.println( "matchingResults.keySet() " + matchingResults.keySet() );
+//        System.out.println( "\nAFTER TEST \n" + jcs.getStats() );
     }
 
     /**

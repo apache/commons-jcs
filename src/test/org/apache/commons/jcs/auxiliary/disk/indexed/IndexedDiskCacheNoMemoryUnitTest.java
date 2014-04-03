@@ -174,6 +174,6 @@ public class IndexedDiskCacheNoMemoryUnitTest
         }
 
         // dump the stats to the report
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
     }
 }

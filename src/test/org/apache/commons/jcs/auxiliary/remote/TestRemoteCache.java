@@ -79,7 +79,6 @@ public class TestRemoteCache
         throws Exception
     {
         log.info( "testSimpleSend" );
-        System.out.println( "testSimpleSend" );
 
         CacheAccess<String, String> cache = JCS.getInstance( "testCache" );
 
@@ -87,9 +86,9 @@ public class TestRemoteCache
 
         for ( int i = 0; i < 1000; i++ )
         {
-            System.out.println( "puttting " + i );
+//            System.out.println( "puttting " + i );
             cache.put( "key" + i, "data" + i );
-            System.out.println( "put " + i );
+//            System.out.println( "put " + i );
             log.info( "put " + i );
         }
     }
@@ -118,7 +117,7 @@ public class TestRemoteCache
             String message = "adsfasasfasfasdasf";
             CacheElement<String, String> ce = new CacheElement<String, String>( "key" + 1, "data" + i, message );
             cache.update( ce );
-            System.out.println( "put " + ce );
+//            System.out.println( "put " + ce );
         }
 
         // Thread.sleep( 2000 );

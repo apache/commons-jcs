@@ -234,7 +234,7 @@ public class MRUMemoryCacheUnitTest
 
         String stats = cache.getStats();
 
-        System.out.println( stats );
+//        System.out.println( stats );
 
         // TODO improve stats check
         assertTrue( "Should have 200 puts", stats.indexOf( "2000" ) != -1 );

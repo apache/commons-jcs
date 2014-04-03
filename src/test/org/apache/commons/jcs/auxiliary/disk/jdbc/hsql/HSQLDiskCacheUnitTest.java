@@ -70,7 +70,7 @@ public class HSQLDiskCacheUnitTest
 
         //SleepUtil.sleepAtLeast( 1000 );
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
 
@@ -140,7 +140,7 @@ public class HSQLDiskCacheUnitTest
         // I discovered it and removed it.
         // Thread.sleep( 500 );
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         jcs.clear();
 
@@ -176,7 +176,7 @@ public class HSQLDiskCacheUnitTest
         // a db thread could be updating the disk when
         // Thread.sleep( 500 );
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         jcs.clear();
 

@@ -87,7 +87,7 @@ public class JDBCDiskCacheUnitTest
     {
         CacheAccess<String, String> jcs = JCS.getInstance( region );
 
-        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
+//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
 
@@ -96,11 +96,11 @@ public class JDBCDiskCacheUnitTest
             jcs.put( i + ":key", region + " data " + i );
         }
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         Thread.sleep( 1000 );
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
 

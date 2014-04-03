@@ -137,11 +137,7 @@ public class IndexedDiskCacheKeyStoreUnitTest
         disk.optimizeFile(); //deoptimizeRealTime();
         long postSize = disk.getDataFileSize();
 
-        System.out.println( "preAddRemoveSize " + preAddRemoveSize );
-        System.out.println( "preSize " + preSize );
-        System.out.println( "postSize " + postSize );
-
-        assertTrue( "Should be smaller.", postSize < preSize );
+        assertTrue( "Should be smaller. postsize="+postSize+" preSize="+preSize, postSize < preSize );
         assertEquals( "Should be the same size after optimization as before add and remove.", preAddRemoveSize, postSize );
 
         for ( int i = 0; i < cnt; i++ )

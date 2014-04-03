@@ -239,7 +239,7 @@ public class IndexedDiskCacheConcurrentUnitTest
             jcs.remove( i + ":key" );
         }
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         // Verify removal
         // another thread may have inserted since

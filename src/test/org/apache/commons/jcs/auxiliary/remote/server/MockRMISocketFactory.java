@@ -47,7 +47,7 @@ public class MockRMISocketFactory
     public Socket createSocket( String host, int port )
         throws IOException
     {
-        System.out.println( "Creating socket" );
+//        System.out.println( "Creating socket" );
 
         Socket socket = new Socket();
         socket.setSoTimeout( 1000 );
@@ -65,7 +65,7 @@ public class MockRMISocketFactory
     public ServerSocket createServerSocket( int port )
         throws IOException
     {
-        System.out.println( "Creating server socket" );
+//        System.out.println( "Creating server socket" );
 
         return new ServerSocket( port );
     }

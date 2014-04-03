@@ -211,7 +211,7 @@ public class LRUMapConcurrentUnitTest
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
-        System.out.println( map.getStatistics() ); // TODO replace noise with an assertion
+//        System.out.println( map.getStatistics() );
 
     }
 

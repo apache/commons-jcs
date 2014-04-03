@@ -53,7 +53,7 @@ public class CompositeCacheConfiguratorUnitTest
         props.put( auxPrefix + CompositeCacheConfigurator.ATTRIBUTE_PREFIX, auxiliaryAttributeClassName );
         props.put( auxPrefix + AuxiliaryCacheConfigurator.CACHE_EVENT_LOGGER_PREFIX, eventLoggerClassName );
 
-        System.out.print( props );
+//        System.out.print( props );
 
         CompositeCacheManager manager = CompositeCacheManager.getUnconfiguredInstance();
 

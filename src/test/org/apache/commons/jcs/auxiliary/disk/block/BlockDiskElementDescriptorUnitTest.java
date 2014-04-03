@@ -41,14 +41,14 @@ public class BlockDiskElementDescriptorUnitTest
     {
         // SETUP
         long memoryBefore = measureMemoryUse();
-        System.out.println( "Before: " + memoryBefore );
+//        System.out.println( "Before: " + memoryBefore );
 
         int numElements = 25000;
         @SuppressWarnings("unchecked")
         BlockDiskElementDescriptor<Integer>[] elements = new BlockDiskElementDescriptor[numElements];
 
         long memoryStart = measureMemoryUse();
-        System.out.println( "Start: " + memoryStart );
+//        System.out.println( "Start: " + memoryStart );
 
         // DO WORK
         for ( int i = 0; i < numElements; i++ )
@@ -61,16 +61,16 @@ public class BlockDiskElementDescriptorUnitTest
 
         // VERIFY
         long memoryEnd = measureMemoryUse();
-        System.out.println( "End: " + memoryEnd );
+//        System.out.println( "End: " + memoryEnd );
 
         long diff = memoryEnd - memoryStart;
-        System.out.println( "diff: " + diff );
+//        System.out.println( "diff: " + diff );
 
         long perDiff = diff / numElements;
-        System.out.println( "per diff: " + perDiff );
+//        System.out.println( "per diff: " + perDiff );
 
         // about 20 bytes each
-        assertTrue( "Too much was used.", perDiff < 75 );
+        assertTrue( "Too much was used: " + perDiff + " >= 75", perDiff < 75 );
     }
 
     /**

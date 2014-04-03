@@ -56,7 +56,6 @@ public class AdminBeanUnitTest
 
         for (CacheRegionInfo info : regions)
         {
-            System.out.println( info ); // TODO replace noise with an assertion
 
             if ( info.getCacheName().equals( regionName ) )
             {

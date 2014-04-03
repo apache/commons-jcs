@@ -105,7 +105,6 @@ public class SerializationConversionUtilUnitTest
 
         // VERIFY
         assertNotNull( "Should have a serialized object.", serialized );
-        System.out.println( "testSimpleConversion, " + serialized );
 
         // DO WORK
         ICacheElement<String, String> after =
@@ -149,7 +148,6 @@ public class SerializationConversionUtilUnitTest
 
         // VERIFY
         assertNotNull( "Should have a serialized object.", serialized );
-        System.out.println( "testSimpleConversion, " + serialized );
 
         // DO WORK
         ICacheElement<String, String> after =

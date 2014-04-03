@@ -54,7 +54,7 @@ public class CacheManagerStatsUnitTest
         CompositeCacheManager mgr = CompositeCacheManager.getInstance();
         String statsString = mgr.getStats();
 
-        System.out.println( statsString );
+//        System.out.println( statsString );
 
         assertTrue( "Should have the cacheName in here.", statsString.indexOf("testCache1") != -1 );
         assertTrue( "Should have the HitCountRam in here.", statsString.indexOf("HitCountRam") != -1 );
@@ -62,7 +62,7 @@ public class CacheManagerStatsUnitTest
 
         ICacheStats[] stats = mgr.getStatistics();
         int statsLen = stats.length;
-        System.out.println( "statsLen = " + statsLen );
+//        System.out.println( "statsLen = " + statsLen );
         for ( int i = 0; i < statsLen; i++ )
         {
             // TODO finish

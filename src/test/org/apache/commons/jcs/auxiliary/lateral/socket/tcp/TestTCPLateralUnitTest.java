@@ -97,7 +97,6 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( numMes * 3 );
 
         // VERIFY
-        System.out.println( "PutCount = " + listener.getPutCnt() );
         assertEquals( "Should have received " + numMes + " by now.", numMes, listener.getPutCnt() );
     }
 
@@ -112,7 +111,7 @@ public class TestTCPLateralUnitTest
         lattr.setTcpListenerPort( 1101 );
         lattr.setTransmissionTypeName( "TCP" );
         MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
-        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
+//        System.out.println( "mock cache = " + cacheMgr.getCache( "test" ) );
 
         LateralTCPListener.getInstance( lattr, cacheMgr );
 
@@ -135,7 +134,6 @@ public class TestTCPLateralUnitTest
         SleepUtil.sleepAtLeast( 1000 );
 
         // VERIFY
-        System.out.println( "cache. getPutCount = " + cacheMgr.getCache().getUpdateCount() );
         assertEquals( "Didn't get the correct number", cnt, cacheMgr.getCache().getUpdateCount() );
     }
 
@@ -153,7 +151,7 @@ public class TestTCPLateralUnitTest
         lattr.setTcpListenerPort( 1103 );
         MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         CompositeCache<String, String> cache = cacheMgr.getCache( "test" );
-        System.out.println( "mock cache = " + cache );
+//        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -181,8 +179,7 @@ public class TestTCPLateralUnitTest
 
         // VERIFY
         ICacheElement<String, String> cacheElement = cache.get( "key" );
-        System.out.println( "cacheElement = " + cacheElement );
-        assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
+        assertEquals( "Didn't get the correct object "+ cacheElement, element2.getVal(), cacheElement.getVal() );
     }
 
     /**
@@ -198,7 +195,7 @@ public class TestTCPLateralUnitTest
         lattr.setTransmissionTypeName( "TCP" );
         MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         CompositeCache<String, String> cache = cacheMgr.getCache( "test" );
-        System.out.println( "mock cache = " + cache );
+//        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -227,8 +224,7 @@ public class TestTCPLateralUnitTest
 
         // VERIFY
         ICacheElement<String, String> cacheElement = cache.get( "key" );
-        System.out.println( "cacheElement = " + cacheElement );
-        assertEquals( "Didn't get the correct object", element2.getVal(), cacheElement.getVal() );
+        assertEquals( "Didn't get the correct object: " + cacheElement , element2.getVal(), cacheElement.getVal() );
     }
 
     /**
@@ -246,7 +242,7 @@ public class TestTCPLateralUnitTest
         lattr.setTcpListenerPort( 1107 );
         MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         CompositeCache<String, String> cache = cacheMgr.getCache( "test" );
-        System.out.println( "mock cache = " + cache );
+//        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -270,7 +266,6 @@ public class TestTCPLateralUnitTest
         ICacheElement<String, String> result = service.get( "test", "key" );
 
         // VERIFY
-        System.out.println( "testSendAndReceived, result = " + result );
         assertNotNull( "Result should not be null.", result );
         assertEquals( "Didn't get the correct object", element.getVal(), result.getVal() );
     }
@@ -289,7 +284,7 @@ public class TestTCPLateralUnitTest
         lattr.setTcpListenerPort( 1150 );
         MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         CompositeCache<GroupAttrName<String>, String> cache = cacheMgr.getCache( "test" );
-        System.out.println( "mock cache = " + cache );
+//        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -318,7 +313,6 @@ public class TestTCPLateralUnitTest
        // SleepUtil.sleepAtLeast( 5000000 );
 
         // VERIFY
-        System.out.println( "testSendAndReceived, result = " + result );
         assertNotNull( "Result should not be null.", result );
         assertEquals( "Didn't get the correct object", "key", result.toArray()[0] );
     }
@@ -338,7 +332,7 @@ public class TestTCPLateralUnitTest
         lattr.setTcpListenerPort( 1108 );
         MockCompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         CompositeCache<String, Integer> cache = cacheMgr.getCache( "test" );
-        System.out.println( "mock cache = " + cache );
+//        System.out.println( "mock cache = " + cache );
 
         // get the listener started
         // give it our mock cache manager
@@ -368,7 +362,6 @@ public class TestTCPLateralUnitTest
         Map<String, ICacheElement<String, Integer>> result = service.getMatching( "test", keyprefix1 + ".+" );
 
         // VERIFY
-        System.out.println( "testSendAndReceived, result = " + result );
         assertNotNull( "Result should not be null.", result );
         assertEquals( "Wrong number returned 1:", numToInsertPrefix1, result.size() );
     }

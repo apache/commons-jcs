@@ -538,10 +538,9 @@ public class FileDiskCacheUnitTest
         // VERIFY
         ICacheElement<String, String> afterElement = diskCache.get( "x" );
         assertNotNull( afterElement );
-        System.out.println( "afterElement = " + afterElement );
         String after = afterElement.getVal();
 
-        assertNotNull( after );
+        assertNotNull( "afterElement = " + afterElement, after );
         assertEquals( "wrong string after retrieval", string, after );
     }
 }

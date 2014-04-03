@@ -78,9 +78,7 @@ public class IndexedDiskCacheOptimizationUnitTest
 
         // VERIFY
         long sizeAfterRemove = disk.getDataFileSize();
-        System.out.println( "file sizeAfterRemove " + sizeAfterRemove );
         long expectedSizeAfterRemove = DiskTestObjectUtil.totalSize( elements, removeCount, elements.length );
-        System.out.println( "totalSize expected after remove " + expectedSizeAfterRemove );
 
         // test is prone to failure for timing reasons.
         if ( expectedSizeAfterRemove != sizeAfterRemove )
@@ -88,7 +86,9 @@ public class IndexedDiskCacheOptimizationUnitTest
             SleepUtil.sleepAtLeast( 2000 );
         }
 
-        assertTrue( "The post optimization size should be smaller.", sizeAfterRemove < sizeBeforeRemove );
+        assertTrue( "The post optimization size should be smaller."
+                +"sizeAfterRemove=" + sizeAfterRemove + " sizeBeforeRemove= " +sizeBeforeRemove
+                , sizeAfterRemove < sizeBeforeRemove );
         assertEquals( "The file size is not as expected size.", expectedSizeAfterRemove, sizeAfterRemove );
     }
 }

@@ -86,7 +86,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
         CacheAccess<String, String> jcsExpire = JCS.getInstance( regionExpire );
 
-        System.out.println( "BEFORE PUT \n" + jcsExpire.getStats() );
+//        System.out.println( "BEFORE PUT \n" + jcsExpire.getStats() );
 
         // Add items to cache
 
@@ -95,12 +95,12 @@ public class JDBCDiskCacheShrinkUnitTest
             jcsExpire.put( i + ":key", regionExpire + " data " + i );
         }
 
-        System.out.println( jcsExpire.getStats() );
+//        System.out.println( jcsExpire.getStats() );
 
         // the shrinker is supposed to run every second
         SleepUtil.sleepAtLeast( 3000 );
 
-        System.out.println( jcsExpire.getStats() );
+//        System.out.println( jcsExpire.getStats() );
 
         // Test that all items have been removed from the cache
         for ( int i = 0; i <= items; i++ )
@@ -123,7 +123,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
         CacheAccess<String, String> jcs = JCS.getInstance( region );
 
-        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
+//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
 
@@ -132,11 +132,11 @@ public class JDBCDiskCacheShrinkUnitTest
             jcs.put( i + ":key", region + " data " + i );
         }
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         SleepUtil.sleepAtLeast( 1000 );
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
 
@@ -175,7 +175,7 @@ public class JDBCDiskCacheShrinkUnitTest
 
         CacheAccess<String, String> jcs = JCS.getInstance( region );
 
-        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
+//        System.out.println( "BEFORE PUT \n" + jcs.getStats() );
 
         // Add items to cache
 
@@ -184,11 +184,11 @@ public class JDBCDiskCacheShrinkUnitTest
             jcs.put( i + ":key", region + " data " + i );
         }
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         SleepUtil.sleepAtLeast( 1000 );
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
 

@@ -133,7 +133,7 @@ public class HSQLDiskCacheConcurrentUnitTest
             jcs.put( i + ":key", region + " data " + i );
         }
 
-        System.out.println( jcs.getStats() );
+//        System.out.println( jcs.getStats() );
 
         // Test that all items are in cache
 

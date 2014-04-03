@@ -123,7 +123,7 @@ public class BlockDiskCacheUnitTest
         BlockDisk blockDisk = new BlockDisk( file, 200, elementSerializer );
 
         int numBlocksNeeded = blockDisk.calculateTheNumberOfBlocksNeeded( data );
-        System.out.println( numBlocksNeeded );
+//        System.out.println( numBlocksNeeded );
 
         // get the individual sub arrays.
         byte[][] chunks = blockDisk.getBlockChunks( data, numBlocksNeeded );
@@ -205,7 +205,7 @@ public class BlockDiskCacheUnitTest
         }
         string = sb.toString();
 
-        System.out.println( "The string contains " + string.length() + " characters" );
+//        System.out.println( "The string contains " + string.length() + " characters" );
 
         String cacheName = "testUTF8String";
 

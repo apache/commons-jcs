@@ -65,7 +65,6 @@ public class BlockDiskUnitTest
         int[] blocks = disk.write( null );
 
         // VERIFY
-        System.out.println( "testWrite_NullBlockElement " + disk );
         assertEquals( "Wrong number of blocks recorded.", 1, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 1, blocks.length );
         assertEquals( "Wrong block returned.", 0, blocks[0] );
@@ -90,7 +89,6 @@ public class BlockDiskUnitTest
         int[] blocks = disk.write( new byte[bytes] );
 
         // VERIFY
-        System.out.println( "testWriteSingleBlockElement " + disk );
         assertEquals( "Wrong number of blocks recorded.", 1, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 1, blocks.length );
         assertEquals( "Wrong block returned.", 0, blocks[0] );
@@ -188,7 +186,6 @@ public class BlockDiskUnitTest
         int[] blocks = disk.write( new byte[bytes] );
 
         // VERIFY
-        System.out.println( "testWriteDoubleBlockElement " + disk );
         assertEquals( "Wrong number of blocks recorded.", 2, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", 2, blocks.length );
         assertEquals( "Wrong block returned.", 0, blocks[0] );
@@ -215,7 +212,6 @@ public class BlockDiskUnitTest
         int[] blocks = disk.write( new byte[bytes] );
 
         // VERIFY
-        System.out.println( "testWriteDoubleBlockElement " + disk );
         assertEquals( "Wrong number of blocks recorded.", numBlocks, disk.getNumberOfBlocks() );
         assertEquals( "Wrong number of blocks returned.", numBlocks, blocks.length );
         assertEquals( "Wrong block returned.", 0, blocks[0] );
@@ -249,7 +245,6 @@ public class BlockDiskUnitTest
             assertEquals( "Wrong item retured.", new byte[bytes].length, result.length );
             assertEquals( "Wrong number of blocks returned.", numBlocksPerElement, blocks.length );
         }
-        System.out.println( "testWriteAndReadMultipleMultiBlockElement " + disk );
     }
 
     /**
@@ -289,8 +284,7 @@ public class BlockDiskUnitTest
                 assertEquals( "Mismatch at offset " + j + " in attempt # " + (i + 1), src[j], result[j] );
             }
         }
-        System.out.println( "testWriteAndReadMultipleMultiBlockElement_setSize " + disk );
-        assertEquals( "Wrong number of elements.", numBlocksPerElement * numElements, disk.getNumberOfBlocks() );
+        assertEquals( "Wrong number of elements. "+disk, numBlocksPerElement * numElements, disk.getNumberOfBlocks() );
     }
 
     /**

@@ -246,7 +246,7 @@ public class BlockDiskCacheConcurrentUnitTest
             jcs.remove( i + ":key" );
         }
 
-        System.out.println( jcs.getStats() ); // TODO replace noise with an assertion
+//        System.out.println( jcs.getStats() );
 
         // Verify removal
         // another thread may have inserted since
