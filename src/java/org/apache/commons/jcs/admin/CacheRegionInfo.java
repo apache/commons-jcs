@@ -29,31 +29,31 @@ import java.beans.ConstructorProperties;
 public class CacheRegionInfo
 {
     /** The name of the cache region */
-    private String cacheName;
+    private final String cacheName;
 
     /** The size of the cache region */
-    private int cacheSize;
+    private final int cacheSize;
 
     /** The status of the cache region */
-    private String cacheStatus;
+    private final String cacheStatus;
 
     /** The statistics of the cache region */
-    private String cacheStatistics;
+    private final String cacheStatistics;
 
     /** The number of memory hits in the cache region */
-    private int hitCountRam;
+    private final int hitCountRam;
 
     /** The number of auxiliary hits in the cache region */
-    private int hitCountAux;
+    private final int hitCountAux;
 
     /** The number of misses in the cache region because the items were not found */
-    private int missCountNotFound;
+    private final int missCountNotFound;
 
     /** The number of misses in the cache region because the items were expired */
-    private int missCountExpired;
+    private final int missCountExpired;
 
     /** The number of bytes counted so far, will be a total of all items */
-    private long byteCount;
+    private final long byteCount;
 
     /**
      * Parameterized constructor
