@@ -394,7 +394,7 @@ public class SortedPrefArrayUnitTest
 
         // DO WORK
         Comparable<String> taken = array.takeNearestLargerOrEqual( "04" );
-        System.out.println( "testTakeLargerThanGreatest" + array.dumpArray() );
+//        System.out.println( "testTakeLargerThanGreatest" + array.dumpArray() );
 
         assertNull( "We should have nothing since the largest element was smaller than what we asked for. "
             + " Instead we got " + taken, taken );

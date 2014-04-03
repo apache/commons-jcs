@@ -44,16 +44,6 @@ public class LRUMapConcurrentTest
     }
 
     /**
-     * Description of the Method
-     * @param args Description of the Parameter
-     */
-    public static void main( String args[] )
-    {
-        String[] testCaseName = { LRUMapConcurrentTest.class.getName() };
-        junit.textui.TestRunner.main( testCaseName );
-    }
-
-    /**
      * A unit test suite for JUnit
      * @return The test suite
      */
@@ -163,9 +153,9 @@ public class LRUMapConcurrentTest
         Iterator<?> it = map.entrySet().iterator();
         while ( it.hasNext() )
         {
-            System.out.println( it.next() );
+            assertNotNull( it.next() );
         }
-        System.out.println( map.getStatistics() );
+//        System.out.println( map.getStatistics() );
 
         // get the max out backwards
         for ( int i = total - 1; i >= 0; i-- )
@@ -174,7 +164,7 @@ public class LRUMapConcurrentTest
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
-        System.out.println( map.getStatistics() );
+//        System.out.println( map.getStatistics() );
 
         //since we got them backwards the total should be at the end.
         // add one confirm that total is gone.
@@ -213,7 +203,7 @@ public class LRUMapConcurrentTest
             assertNotNull( "[" + i + ":key] should not be null", res );
         }
 
-        System.out.println( map.getStatistics() );
+//        System.out.println( map.getStatistics() );
 
     }
 

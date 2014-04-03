@@ -59,12 +59,13 @@ public class ThreadPoolUnitTest
             pool.execute( new Runnable()
             {
 
+                @Override
                 public void run()
                 {
                     try
                     {
                         //System.out.println( cnt );
-                        System.out.println( "count = " + cnt + " before sleep current size = " + myPool.getPoolSize() );
+//                        System.out.println( "count = " + cnt + " before sleep current size = " + myPool.getPoolSize() );
                         Thread.sleep( 200 / cnt );
                         //System.out.println( "count = " + cnt + " after sleep current size = " + myPool.getPool().getPoolSize() );
                     }
