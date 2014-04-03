@@ -36,7 +36,7 @@ public class CacheAdaptor<K extends Serializable, V extends Serializable>
     implements ICacheListener<K, V>
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( CacheAdaptor.class );
+    private static final Log log = LogFactory.getLog( CacheAdaptor.class );
 
     /** The cache we are adapting. */
     private final ICache<K, V> cache;

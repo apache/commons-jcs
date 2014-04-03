@@ -47,7 +47,7 @@ public class RemoteHttpCacheFactory
     private String name;
 
     /** store reference of facades to initiate failover */
-    private final static HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> facades =
+    private static final HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>> facades =
         new HashMap<String, RemoteCacheNoWaitFacade<? extends Serializable, ? extends Serializable>>();
 
     /**

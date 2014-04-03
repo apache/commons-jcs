@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 public class OptionConverter
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( OptionConverter.class );
+    private static final Log log = LogFactory.getLog( OptionConverter.class );
 
     /** System property delimter */
     static String DELIM_START = "${";

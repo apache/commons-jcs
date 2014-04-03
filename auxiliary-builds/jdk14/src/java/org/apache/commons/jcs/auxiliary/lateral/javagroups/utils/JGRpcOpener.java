@@ -37,7 +37,7 @@ public class JGRpcOpener
     implements Runnable
 {
 
-    private final static Log log = LogFactory.getLog( JGRpcOpener.class );
+    private static final Log log = LogFactory.getLog( JGRpcOpener.class );
 
     //private Socket socket;
     private Channel rpcCh;

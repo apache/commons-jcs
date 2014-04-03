@@ -47,7 +47,7 @@ public class LateralTCPService<K extends Serializable, V extends Serializable>
     implements ICacheServiceNonLocal<K, V>, ILateralCacheObserver
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( LateralTCPService.class );
+    private static final Log log = LogFactory.getLog( LateralTCPService.class );
 
     /** special configuration */
     private ITCPLateralCacheAttributes tcpLateralCacheAttributes;

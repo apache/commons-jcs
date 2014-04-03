@@ -35,7 +35,7 @@ public class LateralGroupCacheUDPListener
     extends LateralCacheUDPListener
     implements ILateralCacheListener, Serializable
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralGroupCacheUDPListener.class );
 
     /**

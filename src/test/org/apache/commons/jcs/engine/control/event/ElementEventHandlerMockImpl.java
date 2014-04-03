@@ -35,7 +35,7 @@ public class ElementEventHandlerMockImpl
     private int callCount = 0;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( ElementEventHandlerMockImpl.class );
+    private static final Log log = LogFactory.getLog( ElementEventHandlerMockImpl.class );
 
     /** ELEMENT_EVENT_SPOOLED_DISK_AVAILABLE */
     private int spoolCount = 0;

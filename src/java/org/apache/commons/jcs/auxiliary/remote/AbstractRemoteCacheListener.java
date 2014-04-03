@@ -47,7 +47,7 @@ public abstract class AbstractRemoteCacheListener<K extends Serializable, V exte
     private static final long serialVersionUID = 32442324243243L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( AbstractRemoteCacheListener.class );
+    private static final Log log = LogFactory.getLog( AbstractRemoteCacheListener.class );
 
     /** The cached name of the local host. The remote server gets this for logging purposes. */
     private static String localHostName = null;

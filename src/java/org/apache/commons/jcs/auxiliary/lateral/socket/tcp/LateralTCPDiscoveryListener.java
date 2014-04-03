@@ -49,7 +49,7 @@ public class LateralTCPDiscoveryListener
     implements IDiscoveryListener
 {
     /** The log factory */
-    private final static Log log = LogFactory.getLog( LateralTCPDiscoveryListener.class );
+    private static final Log log = LogFactory.getLog( LateralTCPDiscoveryListener.class );
 
     /**
      * Map of no wait facades. these are used to determine which regions are locally configured to

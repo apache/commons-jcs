@@ -40,7 +40,7 @@ public class UDPDiscoveryReceiver
     implements Runnable, IShutdownObserver
 {
     /** The log factory */
-    private final static Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
+    private static final Log log = LogFactory.getLog( UDPDiscoveryReceiver.class );
 
     /** buffer */
     private final byte[] mBuffer = new byte[65536];

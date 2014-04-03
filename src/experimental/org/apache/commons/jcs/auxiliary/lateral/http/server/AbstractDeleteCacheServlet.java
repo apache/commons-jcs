@@ -51,7 +51,7 @@ import org.apache.commons.jcs.utils.servlet.BasicHttpAuthenticator;
 public abstract class AbstractDeleteCacheServlet
      extends HttpServlet implements SingleThreadModel
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( AbstractDeleteCacheServlet.class );
 
     /** Description of the Field */

@@ -52,7 +52,7 @@ public class RemoteCacheServerFactory
     implements IRemoteCacheConstants
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteCacheServerFactory.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheServerFactory.class );
 
     /** The single instance of the RemoteCacheServer object. */
     private static RemoteCacheServer<? extends Serializable, ? extends Serializable> remoteCacheServer;

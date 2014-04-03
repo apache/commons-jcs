@@ -66,7 +66,7 @@ public class RemoteCacheStartupServlet
     private static final long serialVersionUID = 1L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteCacheStartupServlet.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheStartupServlet.class );
 
     /** The default port to start the registry on.  */
     private static final int DEFAULT_REGISTRY_PORT = 1101;

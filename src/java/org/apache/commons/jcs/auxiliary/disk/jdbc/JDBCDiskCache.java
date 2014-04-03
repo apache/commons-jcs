@@ -83,7 +83,7 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
     extends AbstractDiskCache<K, V>
 {
     /** The local logger. */
-    private final static Log log = LogFactory.getLog( JDBCDiskCache.class );
+    private static final Log log = LogFactory.getLog( JDBCDiskCache.class );
 
     /** Don't change. */
     private static final long serialVersionUID = -7169488308515823492L;

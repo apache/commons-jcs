@@ -45,7 +45,7 @@ public class LateralTCPDiscoveryListenerManager
         Collections.synchronizedMap( new HashMap<String, LateralTCPDiscoveryListener>() );
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( LateralTCPDiscoveryListenerManager.class );
+    private static final Log log = LogFactory.getLog( LateralTCPDiscoveryListenerManager.class );
 
     /** Does nothing. */
     public LateralTCPDiscoveryListenerManager()

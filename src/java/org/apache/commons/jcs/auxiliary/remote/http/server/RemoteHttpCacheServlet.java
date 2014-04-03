@@ -50,7 +50,7 @@ public class RemoteHttpCacheServlet
     private static final long serialVersionUID = 8752849397531933346L;
 
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( RemoteHttpCacheServlet.class );
+    private static final Log log = LogFactory.getLog( RemoteHttpCacheServlet.class );
 
     /** The cache manager */
     private static CompositeCacheManager cacheMgr;

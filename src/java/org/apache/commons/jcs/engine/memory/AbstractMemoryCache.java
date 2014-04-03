@@ -55,7 +55,7 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     private static final long serialVersionUID = -4494626991630099575L;
 
     /** Log instance */
-    private final static Log log = LogFactory.getLog( AbstractMemoryCache.class );
+    private static final Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
     /** The region name. This defines a namespace of sorts. */
     protected String cacheName;

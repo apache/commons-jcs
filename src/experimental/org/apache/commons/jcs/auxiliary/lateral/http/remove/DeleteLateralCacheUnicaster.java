@@ -35,7 +35,7 @@ import org.apache.commons.jcs.utils.threads.IThreadPoolRunnable;
  */
 public class DeleteLateralCacheUnicaster implements IThreadPoolRunnable
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( DeleteLateralCacheUnicaster.class );
 
     private final String hashtableName;

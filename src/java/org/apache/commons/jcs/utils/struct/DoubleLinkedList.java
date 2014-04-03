@@ -33,7 +33,7 @@ public class DoubleLinkedList<T extends DoubleLinkedListNode>
     private int size = 0;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( DoubleLinkedList.class );
+    private static final Log log = LogFactory.getLog( DoubleLinkedList.class );
 
     /** LRU double linked list head node */
     private T first;

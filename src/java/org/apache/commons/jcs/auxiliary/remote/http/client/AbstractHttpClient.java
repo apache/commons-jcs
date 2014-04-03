@@ -47,7 +47,7 @@ public abstract class AbstractHttpClient
     private RemoteHttpCacheAttributes remoteHttpCacheAttributes;
 
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( AbstractHttpClient.class );
+    private static final Log log = LogFactory.getLog( AbstractHttpClient.class );
 
     /**
      * Sets the default Properties File and Heading, and creates the HttpClient and connection

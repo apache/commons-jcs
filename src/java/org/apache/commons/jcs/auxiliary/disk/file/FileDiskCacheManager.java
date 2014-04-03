@@ -38,7 +38,7 @@ public class FileDiskCacheManager
     private static final long serialVersionUID = -4153287154512264626L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( FileDiskCacheManager.class );
+    private static final Log log = LogFactory.getLog( FileDiskCacheManager.class );
 
     /** Each region has an entry here. */
     private final Hashtable<String, FileDiskCache<? extends Serializable, ? extends Serializable>> caches =

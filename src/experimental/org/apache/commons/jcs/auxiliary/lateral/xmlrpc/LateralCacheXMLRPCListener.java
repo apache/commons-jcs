@@ -47,7 +47,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LateralCacheXMLRPCListener implements ILateralCacheXMLRPCListener, Serializable
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralCacheXMLRPCListener.class );
 
     /** Description of the Field */

@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 public class AuxiliaryCacheConfigurator
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( AuxiliaryCacheConfigurator.class );
+    private static final Log log = LogFactory.getLog( AuxiliaryCacheConfigurator.class );
 
     /** .attributes */
     public final static String ATTRIBUTE_PREFIX = ".attributes";

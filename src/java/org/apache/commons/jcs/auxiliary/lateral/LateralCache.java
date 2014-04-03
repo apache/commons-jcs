@@ -50,7 +50,7 @@ public class LateralCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = 6274549256562382782L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( LateralCache.class );
+    private static final Log log = LogFactory.getLog( LateralCache.class );
 
     /** generalize this, use another interface */
     private final ILateralCacheAttributes lateralCacheAttributes;

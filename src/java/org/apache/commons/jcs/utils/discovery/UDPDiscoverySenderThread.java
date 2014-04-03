@@ -31,7 +31,7 @@ public class UDPDiscoverySenderThread
     implements Runnable
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( UDPDiscoverySenderThread.class );
+    private static final Log log = LogFactory.getLog( UDPDiscoverySenderThread.class );
 
     /**
      * details of the host, port, and service being advertised to listen for TCP socket connections

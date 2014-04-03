@@ -40,7 +40,7 @@ public class CacheWatchRepairable
     implements ICacheObserver
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( CacheWatchRepairable.class );
+    private static final Log log = LogFactory.getLog( CacheWatchRepairable.class );
 
     /** the underlying ICacheObserver. */
     private ICacheObserver cacheWatch;

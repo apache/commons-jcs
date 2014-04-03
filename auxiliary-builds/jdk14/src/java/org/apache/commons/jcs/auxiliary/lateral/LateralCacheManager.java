@@ -56,7 +56,7 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 public class LateralCacheManager
     implements ILateralCacheManager
 {
-    private final static Log log = LogFactory.getLog( LateralCacheManager.class );
+    private static final Log log = LogFactory.getLog( LateralCacheManager.class );
 
     private static LateralCacheMonitor monitor;
 

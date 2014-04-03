@@ -53,7 +53,7 @@ public class RemoteCacheFailoverRunner<K extends Serializable, V extends Seriali
     implements Runnable
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteCacheFailoverRunner.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheFailoverRunner.class );
 
     /** The facade returned to the composite cache. */
     private final RemoteCacheNoWaitFacade<K, V> facade;

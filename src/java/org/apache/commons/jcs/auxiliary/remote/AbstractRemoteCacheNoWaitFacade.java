@@ -53,7 +53,7 @@ public abstract class AbstractRemoteCacheNoWaitFacade<K extends Serializable, V 
     private static final long serialVersionUID = -4529970797620747110L;
 
     /** log instance */
-    private final static Log log = LogFactory.getLog( AbstractRemoteCacheNoWaitFacade.class );
+    private static final Log log = LogFactory.getLog( AbstractRemoteCacheNoWaitFacade.class );
 
     /** The connection to a remote server, or a zombie. */
     public RemoteCacheNoWait<K, V>[] noWaits;

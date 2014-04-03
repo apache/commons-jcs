@@ -38,7 +38,7 @@ import org.jgroups.ChannelFactory;
 public class JavaGroupsCacheFactory
     implements AuxiliaryCacheFactory
 {
-    private final static Log log = LogFactory.getLog( JavaGroupsCacheFactory.class );
+    private static final Log log = LogFactory.getLog( JavaGroupsCacheFactory.class );
 
     private String name;
 

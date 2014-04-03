@@ -73,10 +73,10 @@ public class CompositeCacheManager
     implements IRemoteCacheConstants, ICompositeCacheManager, IShutdownObservable, IProvideScheduler
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( CompositeCacheManager.class );
+    private static final Log log = LogFactory.getLog( CompositeCacheManager.class );
 
     /** JMX object name */
-    private final static String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
+    private static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
     /** Caches managed by this cache manager */
     protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> caches =

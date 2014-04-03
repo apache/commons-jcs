@@ -76,7 +76,7 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = -8072345435941473116L;
 
     /** log instance */
-    private final static Log log = LogFactory.getLog( RemoteCacheServer.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheServer.class );
 
     /** timing -- if we should record operation times. */
     protected final static boolean timing = true;

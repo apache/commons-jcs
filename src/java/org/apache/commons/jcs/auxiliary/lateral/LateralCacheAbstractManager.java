@@ -56,7 +56,7 @@ public abstract class LateralCacheAbstractManager
     private static final long serialVersionUID = -515393179178435508L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
+    private static final Log log = LogFactory.getLog( LateralCacheAbstractManager.class );
 
     /** Each manager instance has caches.   */
     protected final Map<String, LateralCacheNoWait<? extends Serializable, ? extends Serializable>> caches =

@@ -41,7 +41,7 @@ import org.apache.xmlrpc.WebServer;
  */
 public class LateralXMLRPCReceiver implements IXMLRPCConstants
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralXMLRPCReceiver.class );
 
     private int port;
@@ -51,7 +51,7 @@ public class LateralXMLRPCReceiver implements IXMLRPCConstants
     /**
      * How long the server will block on an accept(). 0 is infinte.
      */
-    private final static int sTimeOut = 0;
+    private static final int sTimeOut = 0;
 
 
     /**

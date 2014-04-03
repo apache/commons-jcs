@@ -40,7 +40,7 @@ import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
  */
 public class LateralUDPReceiver implements Runnable
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralUDPReceiver.class );
 
     private final byte[] m_buffer = new byte[65536];

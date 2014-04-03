@@ -35,7 +35,7 @@ public class LateralCacheMonitor
     implements Runnable
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( LateralCacheMonitor.class );
+    private static final Log log = LogFactory.getLog( LateralCacheMonitor.class );
 
     /** How long to wait between runs */
     private static long idlePeriod = 20 * 1000;
@@ -51,7 +51,7 @@ public class LateralCacheMonitor
     private boolean shutdown = false;
 
     /** code for eror */
-    private final static int ERROR = 1;
+    private static final int ERROR = 1;
 
     /** The mode we are running in. Error driven */
     private static int mode = ERROR;

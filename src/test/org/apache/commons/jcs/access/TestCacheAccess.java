@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 public class TestCacheAccess
 {
     /** log instance */
-    private final static Log log = LogFactory.getLog( TestCacheAccess.class );
+    private static final Log log = LogFactory.getLog( TestCacheAccess.class );
 
     /** cache instance to use in testing */
     private CacheAccess<String, String> cache_control = null;

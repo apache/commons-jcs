@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 public class UDPDiscoveryManager
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( UDPDiscoveryManager.class );
+    private static final Log log = LogFactory.getLog( UDPDiscoveryManager.class );
 
     /** Singleton instance */
     private static UDPDiscoveryManager INSTANCE = new UDPDiscoveryManager();

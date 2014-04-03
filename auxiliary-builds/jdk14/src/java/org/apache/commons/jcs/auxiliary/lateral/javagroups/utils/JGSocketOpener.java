@@ -36,7 +36,7 @@ public class JGSocketOpener
     implements Runnable
 {
 
-    private final static Log log = LogFactory.getLog( JGSocketOpener.class );
+    private static final Log log = LogFactory.getLog( JGSocketOpener.class );
 
     private ILateralCacheAttributes lca;
 

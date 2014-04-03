@@ -44,7 +44,7 @@ public class RemoteCacheNoWaitFacade<K extends Serializable, V extends Serializa
     private static final long serialVersionUID = -4529970797620747111L;
 
     /** log instance */
-    private final static Log log = LogFactory.getLog( RemoteCacheNoWaitFacade.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheNoWaitFacade.class );
 
     /**
      * Constructs with the given remote cache, and fires events to any listeners.

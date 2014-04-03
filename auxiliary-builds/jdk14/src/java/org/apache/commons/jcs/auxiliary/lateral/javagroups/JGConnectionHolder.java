@@ -38,7 +38,7 @@ import org.jgroups.blocks.RpcDispatcher;
 public class JGConnectionHolder
 {
 
-    private final static Log log = LogFactory.getLog( JGConnectionHolder.class );
+    private static final Log log = LogFactory.getLog( JGConnectionHolder.class );
 
     private Channel jg;
 

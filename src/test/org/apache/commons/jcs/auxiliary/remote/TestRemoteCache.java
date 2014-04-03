@@ -40,7 +40,7 @@ public class TestRemoteCache
     extends TestCase
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( TestRemoteCache.class );
+    private static final Log log = LogFactory.getLog( TestRemoteCache.class );
 
     /**
      * Start the cache.

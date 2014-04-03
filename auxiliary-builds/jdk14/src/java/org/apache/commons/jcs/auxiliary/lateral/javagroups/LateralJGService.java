@@ -45,7 +45,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheListener;
 public class LateralJGService
     implements ICacheServiceNonLocal, ILateralCacheObserver
 {
-    private final static Log log = LogFactory.getLog( LateralJGService.class );
+    private static final Log log = LogFactory.getLog( LateralJGService.class );
 
     private ILateralCacheAttributes ilca;
 

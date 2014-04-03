@@ -56,7 +56,7 @@ public class LRUMap<K, V>
     implements Map<K, V>
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( LRUMap.class );
+    private static final Log log = LogFactory.getLog( LRUMap.class );
 
     /** double linked list for lru */
     private final DoubleLinkedList<LRUElementDescriptor<K, V>> list;

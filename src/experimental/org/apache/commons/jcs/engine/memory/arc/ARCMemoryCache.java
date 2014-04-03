@@ -50,7 +50,7 @@ public class ARCMemoryCache
 {
     private static final long serialVersionUID = 1L;
 
-    private final static Log log = LogFactory.getLog( ARCMemoryCache.class );
+    private static final Log log = LogFactory.getLog( ARCMemoryCache.class );
 
     // private int[] loc = new int[0];
 

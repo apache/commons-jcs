@@ -60,7 +60,7 @@ public class LateralTCPCacheManager
     private static final long serialVersionUID = -9213011856644392480L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( LateralTCPCacheManager.class );
+    private static final Log log = LogFactory.getLog( LateralTCPCacheManager.class );
 
     /** The monitor */
     private static LateralCacheMonitor monitor;

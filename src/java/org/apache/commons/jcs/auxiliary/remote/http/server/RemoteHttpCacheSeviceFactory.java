@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteHttpCacheSeviceFactory
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteHttpCacheSeviceFactory.class );
+    private static final Log log = LogFactory.getLog( RemoteHttpCacheSeviceFactory.class );
 
     /**
      * Configures the attributes and the event logger and constructs a service.

@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Serializable>
 {
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( RemoteCacheServiceAdaptor.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheServiceAdaptor.class );
 
     /** The service that does the work. */
     private ICacheServiceNonLocal<K, V> remoteCacheService;

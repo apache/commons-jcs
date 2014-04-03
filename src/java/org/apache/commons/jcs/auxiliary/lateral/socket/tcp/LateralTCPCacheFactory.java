@@ -53,7 +53,7 @@ public class LateralTCPCacheFactory
     extends LateralCacheAbstractFactory
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( LateralTCPCacheFactory.class );
+    private static final Log log = LogFactory.getLog( LateralTCPCacheFactory.class );
 
     /** Non singleton manager. Used by this instance of the factory. */
     private LateralTCPDiscoveryListenerManager lateralTCPDiscoveryListenerManager;

@@ -50,7 +50,7 @@ import org.apache.commons.logging.LogFactory;
 public class LateralXMLRPCService
      implements ICacheServiceNonLocal, ILateralCacheObserver
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralXMLRPCService.class );
 
     private ILateralCacheAttributes ilca;

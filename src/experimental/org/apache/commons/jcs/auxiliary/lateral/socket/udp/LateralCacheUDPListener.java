@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LateralCacheUDPListener implements ILateralCacheListener, Serializable
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralCacheUDPListener.class );
 
     /** Description of the Field */

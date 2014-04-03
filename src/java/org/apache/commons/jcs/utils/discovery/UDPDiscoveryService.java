@@ -47,7 +47,7 @@ public class UDPDiscoveryService
     implements IShutdownObserver, IRequireScheduler
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( UDPDiscoveryService.class );
+    private static final Log log = LogFactory.getLog( UDPDiscoveryService.class );
 
     /** thread that listens for messages */
     private Thread udpReceiverThread;

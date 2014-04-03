@@ -56,7 +56,7 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
     private static final long serialVersionUID = -9047687810358008955L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
+    private static final Log log = LogFactory.getLog( LateralCacheNoWaitFacade.class );
 
     /** The queuing facade to the client. */
     public LateralCacheNoWait<K, V>[] noWaits;

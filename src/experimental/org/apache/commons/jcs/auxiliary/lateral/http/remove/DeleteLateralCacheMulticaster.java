@@ -34,7 +34,7 @@ import org.apache.commons.jcs.utils.threads.ThreadPoolManager;
  */
 public class DeleteLateralCacheMulticaster
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( DeleteLateralCacheMulticaster.class );
 
     // must get servletName from the props file

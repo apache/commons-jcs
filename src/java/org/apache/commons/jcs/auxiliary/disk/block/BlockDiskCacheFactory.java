@@ -37,7 +37,7 @@ public class BlockDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( BlockDiskCacheFactory.class );
+    private static final Log log = LogFactory.getLog( BlockDiskCacheFactory.class );
 
     /** The auxiliary name. The composite cache manager keeps this in a map, keyed by name. */
     private String name;

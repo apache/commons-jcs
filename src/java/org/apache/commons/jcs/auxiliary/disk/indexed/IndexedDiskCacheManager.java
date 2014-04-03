@@ -38,7 +38,7 @@ public class IndexedDiskCacheManager
     private static final long serialVersionUID = -4153287154512274626L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( IndexedDiskCacheManager.class );
+    private static final Log log = LogFactory.getLog( IndexedDiskCacheManager.class );
 
     /** Singleton instance. */
     private static IndexedDiskCacheManager instance;

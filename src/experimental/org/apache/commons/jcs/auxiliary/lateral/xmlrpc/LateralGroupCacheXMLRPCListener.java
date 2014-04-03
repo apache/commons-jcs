@@ -36,7 +36,7 @@ public class LateralGroupCacheXMLRPCListener
      extends LateralCacheXMLRPCListener
      implements ILateralCacheXMLRPCListener
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralGroupCacheXMLRPCListener.class );
 
     /**

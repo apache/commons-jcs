@@ -58,7 +58,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
     private final int logInterval = 100;
 
     /** log instance */
-    private final static Log log = LogFactory.getLog( AbstractRemoteCacheService.class );
+    private static final Log log = LogFactory.getLog( AbstractRemoteCacheService.class );
 
     /**
      * Creates the super with the needed items.

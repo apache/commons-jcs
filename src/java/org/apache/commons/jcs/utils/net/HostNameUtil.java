@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 public class HostNameUtil
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( HostNameUtil.class );
+    private static final Log log = LogFactory.getLog( HostNameUtil.class );
 
     /**
      * Gets the address for the local machine.

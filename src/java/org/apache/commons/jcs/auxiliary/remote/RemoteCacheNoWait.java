@@ -73,7 +73,7 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = -3104089136003714717L;
 
     /** log instance */
-    private final static Log log = LogFactory.getLog( RemoteCacheNoWait.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheNoWait.class );
 
     /** The remote cache client */
     private final IRemoteCacheClient<K, V> remoteCacheClient;

@@ -44,7 +44,7 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 public class LateralCacheJGListener
     implements ILateralCacheJGListener, Serializable
 {
-    private final static Log log = LogFactory.getLog( LateralCacheJGListener.class );
+    private static final Log log = LogFactory.getLog( LateralCacheJGListener.class );
 
     /**
      * Description of the Field

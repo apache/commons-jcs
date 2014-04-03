@@ -34,7 +34,7 @@ public class FileDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( FileDiskCacheFactory.class );
+    private static final Log log = LogFactory.getLog( FileDiskCacheFactory.class );
 
     /** The auxiliary name. */
     private String name;

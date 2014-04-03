@@ -38,7 +38,7 @@ public class LateralJGReceiverConnection
     implements Runnable
 {
 
-    private final static Log log = LogFactory.getLog( LateralJGReceiverConnection.class );
+    private static final Log log = LogFactory.getLog( LateralJGReceiverConnection.class );
 
     //private Channel javagroups;
     private Message mes;

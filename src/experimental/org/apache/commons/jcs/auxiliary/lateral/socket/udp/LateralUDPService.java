@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class LateralUDPService implements ICacheServiceNonLocal, ILateralCacheObserver
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralUDPService.class );
 
     private ILateralCacheAttributes ilca;

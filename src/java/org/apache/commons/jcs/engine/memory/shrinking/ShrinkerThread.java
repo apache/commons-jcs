@@ -43,7 +43,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
     implements Runnable
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( ShrinkerThread.class );
+    private static final Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** The MemoryCache instance which this shrinker is watching */
     private final IMemoryCache<K, V> cache;

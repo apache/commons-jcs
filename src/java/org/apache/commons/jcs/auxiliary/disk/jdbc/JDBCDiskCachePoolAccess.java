@@ -41,7 +41,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 public class JDBCDiskCachePoolAccess
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( JDBCDiskCachePoolAccess.class );
+    private static final Log log = LogFactory.getLog( JDBCDiskCachePoolAccess.class );
 
     /** The default Pool Name to which the connection pool will be keyed. */
     public static final String DEFAULT_POOL_NAME = "jcs";

@@ -38,7 +38,7 @@ public abstract class AbstractDiskCacheAttributes
     private static final long serialVersionUID = 8306631920391711229L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( AbstractDiskCacheAttributes.class );
+    private static final Log log = LogFactory.getLog( AbstractDiskCacheAttributes.class );
 
     /** path to disk */
     protected File diskPath;

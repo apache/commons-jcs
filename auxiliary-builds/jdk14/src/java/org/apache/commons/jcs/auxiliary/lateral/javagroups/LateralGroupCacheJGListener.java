@@ -36,7 +36,7 @@ public class LateralGroupCacheJGListener
     extends LateralCacheJGListener
     implements ILateralCacheJGListener
 {
-    private final static Log log = LogFactory.getLog( LateralGroupCacheJGListener.class );
+    private static final Log log = LogFactory.getLog( LateralGroupCacheJGListener.class );
 
     /**
      * Constructor for the LateralGroupCacheJGListener object

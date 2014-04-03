@@ -37,7 +37,7 @@ public class RemoteHttpCacheMonitor
     implements Runnable
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteHttpCacheMonitor.class );
+    private static final Log log = LogFactory.getLog( RemoteHttpCacheMonitor.class );
 
     /** The remote cache that we are monitoring */
     private static RemoteHttpCacheMonitor instance;

@@ -57,7 +57,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
     private static final long serialVersionUID = 1422569420563967389L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( AbstractDoubleLinkedListMemoryCache.class );
+    private static final Log log = LogFactory.getLog( AbstractDoubleLinkedListMemoryCache.class );
 
     /** thread-safe double linked list for lru */
     protected DoubleLinkedList<MemoryElementDescriptor<K, V>> list;

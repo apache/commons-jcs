@@ -35,7 +35,7 @@ public class LateralCacheRestore
     implements ICacheRestore
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( LateralCacheRestore.class );
+    private static final Log log = LogFactory.getLog( LateralCacheRestore.class );
 
     /** The lateral manager. */
     private final ILateralCacheManager lcm;

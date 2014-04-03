@@ -37,7 +37,7 @@ public class ShrinkerThread
     implements Runnable
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( ShrinkerThread.class );
+    private static final Log log = LogFactory.getLog( ShrinkerThread.class );
 
     /** A set of JDBCDiskCache objects to call deleteExpired on. */
     private final Set<JDBCDiskCache<? extends Serializable, ? extends Serializable>> shrinkSet =

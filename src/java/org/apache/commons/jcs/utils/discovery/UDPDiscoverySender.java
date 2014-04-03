@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 public class UDPDiscoverySender
 {
     /** The logger. */
-    private final static Log log = LogFactory.getLog( UDPDiscoverySender.class );
+    private static final Log log = LogFactory.getLog( UDPDiscoverySender.class );
 
     /** The socket */
     private MulticastSocket localSocket;

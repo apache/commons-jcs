@@ -38,7 +38,7 @@ public class BlockDiskCacheManager
     private static final long serialVersionUID = -4153287154512274626L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( BlockDiskCacheManager.class );
+    private static final Log log = LogFactory.getLog( BlockDiskCacheManager.class );
 
     /** The singleton instance */
     private static BlockDiskCacheManager instance;

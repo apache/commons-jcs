@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 public class JDBCDiskCachePoolAccessFactory
 {
     /** The local logger. */
-    private final static Log log = LogFactory.getLog( JDBCDiskCachePoolAccessFactory.class );
+    private static final Log log = LogFactory.getLog( JDBCDiskCachePoolAccessFactory.class );
 
     /**
      * Creates a JDBCDiskCachePoolAccess object from the JDBCDiskCachePoolAccessAttributes. This is

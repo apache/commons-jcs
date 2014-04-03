@@ -47,7 +47,7 @@ public class RemoteHttpCacheManager
     private static final long serialVersionUID = 798077557166389498L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteHttpCacheManager.class );
+    private static final Log log = LogFactory.getLog( RemoteHttpCacheManager.class );
 
     /** Contains mappings of Location instance to RemoteCacheManager instance. */
     private static RemoteHttpCacheManager instance;

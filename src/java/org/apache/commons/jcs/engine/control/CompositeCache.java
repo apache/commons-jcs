@@ -72,7 +72,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = -2838097410378294960L;
 
     /** log instance */
-    private final static Log log = LogFactory.getLog( CompositeCache.class );
+    private static final Log log = LogFactory.getLog( CompositeCache.class );
 
     /**
      * EventQueue for handling element events. Lazy initialized. One for each region. To be more efficient, the manager

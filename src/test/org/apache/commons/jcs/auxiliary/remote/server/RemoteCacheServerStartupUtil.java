@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheServerStartupUtil
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteCacheServerStartupUtil.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheServerStartupUtil.class );
 
     /** Registry to use in the test. */
     private static final int DEFAULT_REGISTRY_PORT = 1101;

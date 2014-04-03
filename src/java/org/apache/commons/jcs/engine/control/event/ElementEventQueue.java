@@ -37,7 +37,7 @@ public class ElementEventQueue
     private static final long serialVersionUID = -2966341524571838475L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( ElementEventQueue.class );
+    private static final Log log = LogFactory.getLog( ElementEventQueue.class );
 
     /** The cache (region) name. */
     protected final String cacheName;

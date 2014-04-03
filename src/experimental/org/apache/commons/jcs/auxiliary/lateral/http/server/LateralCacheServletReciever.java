@@ -47,7 +47,7 @@ import org.apache.commons.logging.LogFactory;
 public class LateralCacheServletReciever
     extends HttpServlet
 {
-    private final static Log log = LogFactory.getLog( LateralCacheServletReciever.class );
+    private static final Log log = LogFactory.getLog( LateralCacheServletReciever.class );
 
     private static CompositeCacheManager cacheMgr;
 

@@ -57,7 +57,7 @@ public class RemoteCacheManager
     private static final long serialVersionUID = 798077557166389498L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteCacheManager.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheManager.class );
 
     /** Contains mappings of Location instance to RemoteCacheManager instance. */
     final static Map<Location, RemoteCacheManager> instances = new HashMap<Location, RemoteCacheManager>();
@@ -535,7 +535,7 @@ public class RemoteCacheManager
     /**
      * Location of the RMI registry.
      */
-    private final static class Location
+    private static final class Location
     {
         /** Description of the Field */
         public final String host;

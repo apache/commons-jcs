@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
 public final class CompressionUtil
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( CompressionUtil.class );
+    private static final Log log = LogFactory.getLog( CompressionUtil.class );
 
     /**
      * no instances.

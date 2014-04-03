@@ -49,7 +49,7 @@ import org.apache.xmlrpc.XmlRpcHandler;
 public class LateralXMLRPCReceiverConnection implements XmlRpcHandler, IXMLRPCConstants
 {//implements Runnable
 
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralXMLRPCReceiverConnection.class );
 
     private ILateralCacheXMLRPCListener ilcl;

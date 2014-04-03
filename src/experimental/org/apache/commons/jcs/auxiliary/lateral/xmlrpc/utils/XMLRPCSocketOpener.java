@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 public class XMLRPCSocketOpener implements Runnable
 {
 
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( XMLRPCSocketOpener.class );
 
 

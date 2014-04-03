@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
 public class SerializationConversionUtil
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( SerializationConversionUtil.class );
+    private static final Log log = LogFactory.getLog( SerializationConversionUtil.class );
 
     /**
      * This returns a wrapper that has a serialized version of the value instead

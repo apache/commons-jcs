@@ -50,7 +50,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = -5329231850422826460L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( RemoteCache.class );
+    private static final Log log = LogFactory.getLog( RemoteCache.class );
 
     /**
      * Constructor for the RemoteCache object. This object communicates with a remote cache server.

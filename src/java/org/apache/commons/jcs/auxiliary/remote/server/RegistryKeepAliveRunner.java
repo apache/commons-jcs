@@ -35,7 +35,7 @@ public class RegistryKeepAliveRunner
     implements Runnable
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( RegistryKeepAliveRunner.class );
+    private static final Log log = LogFactory.getLog( RegistryKeepAliveRunner.class );
 
     /** Hostname of the registry */
     private String registryHost;

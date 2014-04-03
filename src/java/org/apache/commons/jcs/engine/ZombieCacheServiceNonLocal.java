@@ -47,7 +47,7 @@ public class ZombieCacheServiceNonLocal<K extends Serializable, V extends Serial
     implements ICacheServiceNonLocal<K, V>
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( ZombieCacheServiceNonLocal.class );
+    private static final Log log = LogFactory.getLog( ZombieCacheServiceNonLocal.class );
 
     /** How big can the queue grow. */
     private int maxQueueSize = 0;

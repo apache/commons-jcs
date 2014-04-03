@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class LateralUDPSender
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralUDPSender.class );
 
     private MulticastSocket m_localSocket;

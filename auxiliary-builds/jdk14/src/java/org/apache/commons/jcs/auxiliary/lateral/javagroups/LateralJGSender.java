@@ -48,7 +48,7 @@ import org.jgroups.util.RspList;
 public class LateralJGSender
     implements IJGConstants
 {
-    private final static Log log = LogFactory.getLog( LateralJGSender.class );
+    private static final Log log = LogFactory.getLog( LateralJGSender.class );
 
     private ILateralCacheAttributes ilca;
 

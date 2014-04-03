@@ -44,7 +44,7 @@ public class MySQLDiskCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = -7169488308515823491L;
 
     /** local logger */
-    private final static Log log = LogFactory.getLog( MySQLDiskCache.class );
+    private static final Log log = LogFactory.getLog( MySQLDiskCache.class );
 
     /** config attributes */
     private final MySQLDiskCacheAttributes mySQLDiskCacheAttributes;

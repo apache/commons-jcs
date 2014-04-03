@@ -39,7 +39,7 @@ public class RemoteHttpCache<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = -5329231850422826461L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( RemoteHttpCache.class );
+    private static final Log log = LogFactory.getLog( RemoteHttpCache.class );
 
     /** Keep the child copy here for the restore process. */
     private RemoteHttpCacheAttributes remoteHttpCacheAttributes;

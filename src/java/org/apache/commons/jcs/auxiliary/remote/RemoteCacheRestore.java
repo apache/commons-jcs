@@ -44,7 +44,7 @@ public class RemoteCacheRestore
     implements ICacheRestore
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteCacheRestore.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheRestore.class );
 
     /** The manager */
     private final RemoteCacheManager remoteCacheManager;

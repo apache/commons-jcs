@@ -45,7 +45,7 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 public class LateralCacheFactory
     extends LateralCacheAbstractFactory
 {
-    private final static Log log = LogFactory.getLog( LateralCacheFactory.class );
+    private static final Log log = LogFactory.getLog( LateralCacheFactory.class );
 
     private String name;
 

@@ -43,7 +43,7 @@ import org.apache.commons.jcs.utils.threads.IThreadPoolRunnable;
 public class LateralCacheUnicaster
      implements IThreadPoolRunnable
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralCacheUnicaster.class );
 
     private final ICacheElement<K, V> item;

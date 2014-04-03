@@ -52,7 +52,7 @@ public class RemoteHttpCacheDispatcher
     private static final String PARAMETER_CACHE_NAME = "CacheName";
 
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( RemoteHttpCacheDispatcher.class );
+    private static final Log log = LogFactory.getLog( RemoteHttpCacheDispatcher.class );
 
     /** This needs to be standard, since the other side is standard */
     private StandardSerializer serializer = new StandardSerializer();

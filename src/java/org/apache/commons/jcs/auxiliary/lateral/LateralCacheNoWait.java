@@ -57,7 +57,7 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = -7251187566116178475L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( LateralCacheNoWait.class );
+    private static final Log log = LogFactory.getLog( LateralCacheNoWait.class );
 
     /** The cache */
     private final LateralCache<K, V> cache;

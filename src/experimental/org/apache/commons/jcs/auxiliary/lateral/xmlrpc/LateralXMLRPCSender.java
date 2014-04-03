@@ -62,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LateralXMLRPCSender implements IXMLRPCConstants
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralXMLRPCSender.class );
 
     private ILateralCacheAttributes ilca;
@@ -77,7 +77,7 @@ public class LateralXMLRPCSender implements IXMLRPCConstants
     /**
      * Only block for 5 seconds before timing out on startup.
      */
-    private final static int openTimeOut = 5000;
+    private static final int openTimeOut = 5000;
 
 
     /**

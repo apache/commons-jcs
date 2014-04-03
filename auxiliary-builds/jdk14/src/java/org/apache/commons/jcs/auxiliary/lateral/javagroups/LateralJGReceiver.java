@@ -39,7 +39,7 @@ import org.jgroups.blocks.RpcDispatcher;
 public class LateralJGReceiver
     implements IJGConstants, Runnable
 {
-    private final static Log log = LogFactory.getLog( LateralJGReceiver.class );
+    private static final Log log = LogFactory.getLog( LateralJGReceiver.class );
 
     private ILateralCacheJGListener ilcl;
 

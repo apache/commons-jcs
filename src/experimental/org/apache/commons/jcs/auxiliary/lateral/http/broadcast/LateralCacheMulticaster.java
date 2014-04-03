@@ -42,10 +42,10 @@ import org.apache.commons.jcs.utils.threads.ThreadPoolManager;
  */
 public class LateralCacheMulticaster
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralCacheMulticaster.class );
 
-    private final static String servlet = "/cache/cache/LateralCacheServletReceiver";
+    private static final String servlet = "/cache/cache/LateralCacheServletReceiver";
     private final ICacheElement<K, V> ice;
     private final ArrayList servers;
 

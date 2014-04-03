@@ -47,7 +47,7 @@ import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 public class LHMLRUMemoryCache
     extends AbstractMemoryCache
 {
-  private final static Log log = LogFactory.getLog(LRUMemoryCache.class);
+  private static final Log log = LogFactory.getLog(LRUMemoryCache.class);
 
   // the extended LinkedHashMap
   private Map map;

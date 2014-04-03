@@ -39,7 +39,7 @@ public class RemoteHttpCacheClient<K extends Serializable, V extends Serializabl
     implements IRemoteHttpCacheClient<K, V>
 {
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( RemoteHttpCacheClient.class );
+    private static final Log log = LogFactory.getLog( RemoteHttpCacheClient.class );
 
     /** The internal client. */
     private IRemoteCacheDispatcher remoteDispatcher;

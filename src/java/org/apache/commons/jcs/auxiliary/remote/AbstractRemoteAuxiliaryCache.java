@@ -63,7 +63,7 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
     private static final long serialVersionUID = -5329231850422826461L;
 
     /** The logger. */
-    private final static Log log = LogFactory.getLog( AbstractRemoteAuxiliaryCache.class );
+    private static final Log log = LogFactory.getLog( AbstractRemoteAuxiliaryCache.class );
 
     /**
      * This does the work. In an RMI instances, it will be a remote reference. In an http remote

@@ -39,10 +39,10 @@ import org.apache.commons.logging.LogFactory;
 
 public class LateralCacheThread extends Thread
 {
-    private final static Log log =
+    private static final Log log =
         LogFactory.getLog( LateralCacheThread.class );
 
-    private final static String servlet = "/rcash/ramraf/DistCacheServlet";
+    private static final String servlet = "/rcash/ramraf/DistCacheServlet";
 
     /** Description of the Field */
     protected String hashtableName;

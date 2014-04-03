@@ -51,7 +51,7 @@ public class MockRemoteCacheClient<K extends Serializable, V extends Serializabl
     private static final long serialVersionUID = 1L;
 
     /** log instance */
-    private final static Log log = LogFactory.getLog( MockRemoteCacheClient.class );
+    private static final Log log = LogFactory.getLog( MockRemoteCacheClient.class );
 
     /** List of ICacheElement<K, V> objects passed into update. */
     public List<ICacheElement<K, V>> updateList = new LinkedList<ICacheElement<K,V>>();

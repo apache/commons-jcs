@@ -46,7 +46,7 @@ public class RemoteCacheListener<K extends Serializable, V extends Serializable>
     private static final long serialVersionUID = 25345252345322345L;
 
     /** The logger */
-    private final static Log log = LogFactory.getLog( RemoteCacheListener.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheListener.class );
 
     /**
      * Only need one since it does work for all regions, just reference by multiple region names.

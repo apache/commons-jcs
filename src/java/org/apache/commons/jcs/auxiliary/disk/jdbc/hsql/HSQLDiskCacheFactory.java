@@ -49,7 +49,7 @@ public class HSQLDiskCacheFactory
     implements AuxiliaryCacheFactory
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( HSQLDiskCacheFactory.class );
+    private static final Log log = LogFactory.getLog( HSQLDiskCacheFactory.class );
 
     /** Name for logging, etc. */
     private String name = "HSQLDiskCacheFactory";

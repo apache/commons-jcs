@@ -56,10 +56,10 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
     implements ILateralCacheListener<K, V>, IShutdownObserver
 {
     /** The logger */
-    private final static Log log = LogFactory.getLog( LateralTCPListener.class );
+    private static final Log log = LogFactory.getLog( LateralTCPListener.class );
 
     /** How long the server will block on an accept(). 0 is infinite. */
-    private final static int acceptTimeOut = 1000;
+    private static final int acceptTimeOut = 1000;
 
     /** The CacheHub this listener is associated with */
     private transient ICompositeCacheManager cacheManager;

@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheRequestFactory
 {
     /** The Logger. */
-    private final static Log log = LogFactory.getLog( RemoteCacheRequestFactory.class );
+    private static final Log log = LogFactory.getLog( RemoteCacheRequestFactory.class );
 
     /**
      * Creates a get Request.
