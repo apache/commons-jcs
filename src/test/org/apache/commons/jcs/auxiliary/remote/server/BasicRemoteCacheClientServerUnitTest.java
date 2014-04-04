@@ -27,6 +27,7 @@ import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.RemoteCacheManager;
 import org.apache.commons.jcs.engine.CacheElement;
+import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
@@ -89,6 +90,8 @@ public class BasicRemoteCacheClientServerUnitTest
         cache.update( element );
         SleepUtil.sleepAtLeast( 200 );
 
+        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
+
         // VERIFY
         try {
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
@@ -132,6 +135,8 @@ public class BasicRemoteCacheClientServerUnitTest
         ICacheElement<String, String> element = new CacheElement<String, String>( regionName, "key", "value" );
         cache.update( element );
         SleepUtil.sleepAtLeast( 50 );
+
+        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
 
         // VERIFY
         try {
@@ -185,6 +190,8 @@ public class BasicRemoteCacheClientServerUnitTest
         cache.update( element );
         SleepUtil.sleepAtLeast( 50 );
 
+        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
+
         // VERIFY
         try
         {
@@ -233,6 +240,8 @@ public class BasicRemoteCacheClientServerUnitTest
             cache.update( element );
         }
         SleepUtil.sleepAtLeast( 500 );
+
+        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
 
         // VERIFY
         try {
