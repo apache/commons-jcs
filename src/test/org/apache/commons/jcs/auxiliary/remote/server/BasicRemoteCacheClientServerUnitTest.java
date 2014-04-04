@@ -90,8 +90,12 @@ public class BasicRemoteCacheClientServerUnitTest
         SleepUtil.sleepAtLeast( 200 );
 
         // VERIFY
-//        System.out.println( server.getStats() );
-        assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
+        try {
+            assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
+        } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( server.getStats() );
+            throw e;
+        }
 
         // DO WORK
         ICacheElement<String, String> result = cache.get( "key" );
@@ -129,8 +133,12 @@ public class BasicRemoteCacheClientServerUnitTest
         SleepUtil.sleepAtLeast( 50 );
 
         // VERIFY
-//        System.out.println( server.getStats() );
-        assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
+        try {
+            assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
+        } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( server.getStats() );
+            throw e;
+        }
 
         // DO WORK
         ICacheElement<String, String> result = cache.get( "key" );
@@ -178,9 +186,11 @@ public class BasicRemoteCacheClientServerUnitTest
         // VERIFY
         try
         {
-//            System.out.println( server.getStats() );
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
             assertEquals( "Wrong number of puts to listener.", 1, listener.putCount );
+        } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( server.getStats() );
+            throw e;
         }
         finally
         {
@@ -222,8 +232,12 @@ public class BasicRemoteCacheClientServerUnitTest
         SleepUtil.sleepAtLeast( 500 );
 
         // VERIFY
-//        System.out.println( server.getStats() );
-        assertEquals( "Wrong number of puts", numToPut, server.getPutCount() - numPutsPrior );
-        assertEquals( "Wrong number of puts to listener.", numToPut, listener.putCount );
+        try {
+            assertEquals( "Wrong number of puts", numToPut, server.getPutCount() - numPutsPrior );
+            assertEquals( "Wrong number of puts to listener.", numToPut, listener.putCount );
+        } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( server.getStats() );
+            throw e;
+        }
     }
 }
