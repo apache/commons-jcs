@@ -93,6 +93,7 @@ public class BasicRemoteCacheClientServerUnitTest
         try {
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
         } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( cache.getStats() );
             System.out.println( server.getStats() );
             throw e;
         }
@@ -136,6 +137,7 @@ public class BasicRemoteCacheClientServerUnitTest
         try {
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
         } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( cache.getStats() );
             System.out.println( server.getStats() );
             throw e;
         }
@@ -189,6 +191,7 @@ public class BasicRemoteCacheClientServerUnitTest
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
             assertEquals( "Wrong number of puts to listener.", 1, listener.putCount );
         } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( cache.getStats() );
             System.out.println( server.getStats() );
             throw e;
         }
@@ -215,7 +218,7 @@ public class BasicRemoteCacheClientServerUnitTest
         attributes.setRemotePort( remotePort );
 
         RemoteCacheManager remoteCacheManager = RemoteCacheManager.getInstance( attributes, compositeCacheManager, new MockCacheEventLogger(), new MockElementSerializer() );
-        String regionName = "testPutAndListen";
+        String regionName = "testPutaMultipleAndListen";
         AuxiliaryCache<String, String> cache = remoteCacheManager.getCache( regionName );
 
         MockRemoteCacheListener<String, String> listener = new MockRemoteCacheListener<String, String>();
@@ -236,6 +239,7 @@ public class BasicRemoteCacheClientServerUnitTest
             assertEquals( "Wrong number of puts", numToPut, server.getPutCount() - numPutsPrior );
             assertEquals( "Wrong number of puts to listener.", numToPut, listener.putCount );
         } catch (junit.framework.AssertionFailedError e) {
+            System.out.println( cache.getStats() );
             System.out.println( server.getStats() );
             throw e;
         }
