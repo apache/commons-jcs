@@ -90,10 +90,9 @@ public class BasicRemoteCacheClientServerUnitTest
         cache.update( element );
         SleepUtil.sleepAtLeast( 200 );
 
-        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
-
         // VERIFY
         try {
+            assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
         } catch (junit.framework.AssertionFailedError e) {
             System.out.println( cache.getStats() );
@@ -136,10 +135,9 @@ public class BasicRemoteCacheClientServerUnitTest
         cache.update( element );
         SleepUtil.sleepAtLeast( 50 );
 
-        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
-
         // VERIFY
         try {
+            assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
         } catch (junit.framework.AssertionFailedError e) {
             System.out.println( cache.getStats() );
@@ -190,11 +188,10 @@ public class BasicRemoteCacheClientServerUnitTest
         cache.update( element );
         SleepUtil.sleepAtLeast( 50 );
 
-        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
-
         // VERIFY
         try
         {
+            assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals( "Wrong number of puts", 1, server.getPutCount() - numPutsPrior );
             assertEquals( "Wrong number of puts to listener.", 1, listener.putCount );
         } catch (junit.framework.AssertionFailedError e) {
@@ -241,10 +238,9 @@ public class BasicRemoteCacheClientServerUnitTest
         }
         SleepUtil.sleepAtLeast( 500 );
 
-        assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
-
         // VERIFY
         try {
+            assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals( "Wrong number of puts", numToPut, server.getPutCount() - numPutsPrior );
             assertEquals( "Wrong number of puts to listener.", numToPut, listener.putCount );
         } catch (junit.framework.AssertionFailedError e) {
