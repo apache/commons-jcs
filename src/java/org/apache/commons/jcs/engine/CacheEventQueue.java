@@ -260,6 +260,7 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
          * Waits for a specified time (waitToDieMillis) for something to come in and if no new
          * events come in during that period the run method can exit and the thread is dereferenced.
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {

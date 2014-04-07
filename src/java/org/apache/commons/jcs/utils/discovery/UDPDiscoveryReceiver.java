@@ -287,6 +287,7 @@ public class UDPDiscoveryReceiver
         /**
          * Process the message.
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {
@@ -323,6 +324,7 @@ public class UDPDiscoveryReceiver
         /**
          * Process the incoming message.
          */
+        @SuppressWarnings("synthetic-access")
         private void processMessage()
         {
             DiscoveredService discoveredService = new DiscoveredService();

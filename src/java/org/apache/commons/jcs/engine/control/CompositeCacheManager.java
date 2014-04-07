@@ -926,6 +926,7 @@ public class CompositeCacheManager
          * <p>
          * @see java.lang.Thread#run()
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {

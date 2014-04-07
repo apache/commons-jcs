@@ -261,6 +261,7 @@ public abstract class AbstractCacheEventQueue<K extends Serializable, V extends 
         /**
          * Main processing method for the AbstractCacheEvent object
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {

@@ -498,6 +498,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         }
 
         /** Main processing method for the ListenerThread object */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {
@@ -592,7 +593,8 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
          * Main processing method for the LateralTCPReceiverConnection object
          */
         @Override
-        @SuppressWarnings("unchecked") // Need to cast from Object
+        @SuppressWarnings({"unchecked", // Need to cast from Object
+            "synthetic-access" })
         public void run()
         {
             ObjectInputStream ois;
@@ -667,6 +669,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
          * @param led
          * @throws IOException
          */
+        @SuppressWarnings("synthetic-access")
         private void handle( LateralElementDescriptor<K, V> led )
             throws IOException
         {

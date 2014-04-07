@@ -336,6 +336,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
          * @param eldest
          * @return true if removed
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         protected boolean removeEldestEntry( Map.Entry<K, MemoryElementDescriptor<K, V>> eldest )
         {
@@ -368,6 +369,7 @@ public class LHMLRUMemoryCache<K extends Serializable, V extends Serializable>
          * <p>
          * @param element The CacheElement
          */
+        @SuppressWarnings("synthetic-access")
         private void spoolToDisk( ICacheElement<K, V> element )
         {
             cache.spoolToDisk( element );

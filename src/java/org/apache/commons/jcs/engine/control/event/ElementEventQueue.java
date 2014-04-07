@@ -305,6 +305,7 @@ public class ElementEventQueue
          * Waits for a specified time (waitToDieMillis) for something to come in and if no new
          * events come in during that period the run method can exit and the thread is dereferenced.
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {
@@ -365,6 +366,7 @@ public class ElementEventQueue
         /**
          * Main processing method for the AbstractElementEvent object
          */
+        @SuppressWarnings("synthetic-access")
         @Override
         public void run()
         {
@@ -408,6 +410,7 @@ public class ElementEventQueue
          * @param event
          * @throws IOException
          */
+        @SuppressWarnings("synthetic-access")
         ElementEventRunner( IElementEventHandler hand, IElementEvent event )
             throws IOException
         {
