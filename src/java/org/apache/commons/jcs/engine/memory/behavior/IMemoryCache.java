@@ -21,14 +21,12 @@ package org.apache.commons.jcs.engine.memory.behavior;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 
 /** For the framework. Insures methods a MemoryCache needs to access. */
@@ -62,15 +60,6 @@ public interface IMemoryCache<K extends Serializable, V extends Serializable>
      * @return Statistics and Info for the Memory Cache.
      */
     IStats getStatistics();
-
-    /**
-     * Get an iterator for all elements in the memory cache. This should be
-     * removed since it is fairly dangerous. Other classes should not be able to
-     * directly access items in the memory cache.
-     * <p>
-     * @return An iterator
-     */
-    Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator();
 
     /**
      * Get a set of the keys for all elements in the memory cache.

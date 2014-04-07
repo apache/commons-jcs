@@ -22,7 +22,6 @@ package org.apache.commons.jcs.engine.memory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
@@ -299,17 +298,6 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
         throws IOException
     {
         this.cache.spoolToDisk( ce );
-    }
-
-    /**
-     * Gets the iterator attribute of the LRUMemoryCache object
-     * <p>
-     * @return The iterator value
-     */
-    @Override
-    public Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
-    {
-        return map.entrySet().iterator();
     }
 
     // ---------------------------------------------------------- debug method

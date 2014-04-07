@@ -49,7 +49,6 @@ import org.apache.commons.jcs.engine.match.KeyMatcherPatternImpl;
 import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
-import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.CacheStats;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
@@ -1446,17 +1445,14 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
                     if ( aux.getStatus() == CacheStatus.ALIVE )
                     {
-
-                        Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> itr =
-                            memCache.getIterator();
-
-                        while (itr.hasNext())
+                        for (K key : memCache.getKeySet())
                         {
-                            Map.Entry<K, MemoryElementDescriptor<K, V>> entry = itr.next();
+                            ICacheElement<K, V> ce = memCache.get(key);
 
-                            ICacheElement<K, V> ce = entry.getValue().ce;
-
-                            aux.update( ce );
+                            if (ce != null)
+                            {
+                            	aux.update( ce );
+                            }
                         }
                     }
                 }

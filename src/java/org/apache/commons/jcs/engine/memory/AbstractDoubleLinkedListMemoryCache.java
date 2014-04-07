@@ -691,17 +691,6 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
     }
 
     /**
-     * Gets the iterator attribute of the LRUMemoryCache object
-     * <p>
-     * @return The iterator value
-     */
-    @Override
-    public Iterator<Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
-    {
-        return new IteratorWrapper<K, V>( map );
-    }
-
-    /**
      * Get an Array of the keys for all elements in the memory cache
      * @return An Object[]
      */
