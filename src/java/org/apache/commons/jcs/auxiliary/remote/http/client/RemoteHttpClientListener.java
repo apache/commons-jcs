@@ -29,7 +29,7 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 public class RemoteHttpClientListener<K extends Serializable, V extends Serializable>
     extends AbstractRemoteCacheListener<K, V>
 {
-    /** TODO serialVersionUID */
+    /** Serial version */
     private static final long serialVersionUID = -9078366610772128010L;
 
     /**

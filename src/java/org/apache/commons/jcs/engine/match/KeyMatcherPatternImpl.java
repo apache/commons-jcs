@@ -31,7 +31,7 @@ import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
 public class KeyMatcherPatternImpl<K extends Serializable>
     implements IKeyMatcher<K>
 {
-    /** TODO serialVersionUID */
+    /** Serial version */
     private static final long serialVersionUID = 6667352064144381264L;
 
     /**
