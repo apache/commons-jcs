@@ -112,7 +112,7 @@ public class JDBCDiskCachePoolAccessManager
             }
             catch ( Exception e )
             {
-                log.error( "Problem creating connection poolfor pool name [" + poolName + "].", e );
+                log.error( "Problem creating connection pool for pool name [" + poolName + "].", e );
             }
         }
 
