@@ -31,7 +31,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
-import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -86,13 +85,6 @@ public class MockMemoryCache<K extends Serializable, V extends Serializable>
     /** @return stats */
     @Override
     public IStats getStatistics()
-    {
-        return null;
-    }
-
-    /** @return null */
-    @Override
-    public Iterator<Map.Entry<K, MemoryElementDescriptor<K, V>>> getIterator()
     {
         return null;
     }
