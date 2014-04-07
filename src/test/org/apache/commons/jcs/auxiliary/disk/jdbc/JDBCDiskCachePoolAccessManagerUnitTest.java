@@ -51,6 +51,8 @@ public class JDBCDiskCachePoolAccessManagerUnitTest
         props.put( prefix + ".driverClassName", driverClassName );
 
         JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( props );
+        // in case another test has initilized this. See: JCS-114, JCS-115
+        manager.setProps( props );
 
         // DO WORK
         JDBCDiskCachePoolAccessAttributes result = manager.configurePoolAccessAttributes( poolName );
@@ -90,7 +92,7 @@ public class JDBCDiskCachePoolAccessManagerUnitTest
         props.put( prefix + ".driverClassName", driverClassName );
 
         JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( props );
-        // in case another test has initilized this
+        // in case another test has initilized this. See: JCS-114, JCS-115
         manager.setProps( props );
 
         System.setProperty( "hsqldb.cache_scale", "8" );
