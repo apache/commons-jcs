@@ -55,7 +55,7 @@ import org.apache.commons.logging.LogFactory;
 public class PropertySetter
 {
     /** Logger */
-    private static final Log log = LogFactory.getLog( OptionConverter.class );
+    private static final Log log = LogFactory.getLog( PropertySetter.class );
 
     /** Description of the Field */
     private final Object obj;
