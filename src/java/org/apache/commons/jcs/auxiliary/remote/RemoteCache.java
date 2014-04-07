@@ -76,7 +76,7 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
     public IStats getStatistics()
     {
         IStats stats = new Stats();
-        stats.setTypeName( "Remote Cache No Wait" );
+        stats.setTypeName( "Remote Cache" );
 
         ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
 
