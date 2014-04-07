@@ -193,7 +193,7 @@ public class CompositeCacheConfigurator
     protected void setDefaultAuxValues( Properties props )
     {
         String value = OptionConverter.findAndSubst( DEFAULT_REGION, props );
-        compositeCacheManager.defaultAuxValues = value;
+        compositeCacheManager.setDefaultAuxValues(value);
 
         if ( log.isInfoEnabled() )
         {
@@ -248,10 +248,8 @@ public class CompositeCacheConfigurator
                 {
                     cache = parseRegion( props, regionName, value, null, SYSTEM_REGION_PREFIX );
                 }
-                compositeCacheManager.systemCaches.put( regionName, cache );
-                // to be available for remote reference they need to be here as
-                // well
-                compositeCacheManager.caches.put( regionName, cache );
+
+                compositeCacheManager.addCache( regionName, cache );
             }
         }
     }
@@ -281,7 +279,7 @@ public class CompositeCacheConfigurator
                 {
                     cache = parseRegion( props, regionName, auxiliaryList );
                 }
-                compositeCacheManager.caches.put( regionName, cache );
+                compositeCacheManager.addCache( regionName, cache );
             }
         }
 

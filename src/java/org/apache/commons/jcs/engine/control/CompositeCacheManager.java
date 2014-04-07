@@ -78,12 +78,8 @@ public class CompositeCacheManager
     /** JMX object name */
     private static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
-    /** Caches managed by this cache manager */ // TODO privatise somehow
-    protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> caches =
-        new Hashtable<String, ICache<? extends Serializable, ? extends Serializable>>();
-
-    /** Internal system caches for this cache manager */ // TODO privatise somehow
-    protected Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> systemCaches =
+    /** Caches managed by this cache manager */
+    private final Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> caches =
         new Hashtable<String, ICache<? extends Serializable, ? extends Serializable>>();
 
     /** Number of clients accessing this cache manager */
@@ -96,18 +92,18 @@ public class CompositeCacheManager
     private IElementAttributes defaultElementAttr = new ElementAttributes();
 
     /** Used to keep track of configured auxiliaries */
-    private Hashtable<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
+    private final Hashtable<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
         new Hashtable<String, AuxiliaryCacheFactory>( 11 );
 
     /** Used to keep track of attributes for auxiliaries. */
-    private Hashtable<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
+    private final Hashtable<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
         new Hashtable<String, AuxiliaryCacheAttributes>( 11 );
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
 
     /** The default auxiliary caches to be used if not preconfigured */
-    protected String defaultAuxValues;// TODO privatise somehow
+    private String defaultAuxValues;
 
     /** The Singleton Instance */
     private static CompositeCacheManager instance;
@@ -127,8 +123,11 @@ public class CompositeCacheManager
     /** The central background scheduler. */
     private ScheduledExecutorService scheduledExecutor;
 
-    /** Indicates whether shutdown has been called. */
-    private boolean isShutdown = false;
+    /** Shutdown hook thread instance */
+    private ShutdownHook shutdownHook;
+
+    /** Indicates whether the instance has been initialized. */
+    private boolean isInitialized = false;
 
     /** Indicates whether configure has been called. */
     private boolean isConfigured = false;
@@ -146,18 +145,7 @@ public class CompositeCacheManager
      */
     public static synchronized CompositeCacheManager getInstance() throws CacheException
     {
-        if ( instance == null )
-        {
-            log.debug( "Instance is null, creating with default config" );
-
-            instance = createInstance();
-
-            instance.configure();
-        }
-
-        instance.incrementClients();
-
-        return instance;
+        return getInstance( CacheConstants.DEFAULT_CONFIG );
     }
 
     /**
@@ -173,11 +161,14 @@ public class CompositeCacheManager
         {
             if ( log.isInfoEnabled() )
             {
-                log.info( "Instance is null, creating with default config [" + propsFilename + "]" );
+                log.info( "Instance is null, creating with config [" + propsFilename + "]" );
             }
 
             instance = createInstance();
+        }
 
+        if (!instance.isConfigured())
+        {
             instance.configure( propsFilename );
         }
 
@@ -220,48 +211,61 @@ public class CompositeCacheManager
         return new CompositeCacheManager();
     }
 
-    /** Creates a shutdown hook and starts the scheduler service */
+    /**
+     * Default constructor
+     */
     protected CompositeCacheManager()
     {
-        ShutdownHook shutdownHook = new ShutdownHook();
-        try
-        {
-            Runtime.getRuntime().addShutdownHook( shutdownHook );
-        }
-        catch ( AccessControlException e )
-        {
-            log.error( "Could not register shutdown hook.", e );
-        }
+        initialize();
+    }
 
-        this.scheduledExecutor = Executors.newScheduledThreadPool(4, new ThreadFactory()
+    /** Creates a shutdown hook and starts the scheduler service */
+    protected void initialize()
+    {
+        if (!isInitialized)
         {
-            @Override
-            public Thread newThread(Runnable runner)
+            this.shutdownHook = new ShutdownHook();
+            try
             {
-                Thread t = new Thread( runner );
-                String oldName = t.getName();
-                t.setName( "JCS-Scheduler-" + oldName );
-                t.setDaemon( true );
-                t.setPriority( Thread.MIN_PRIORITY );
-                return t;
+                Runtime.getRuntime().addShutdownHook( shutdownHook );
             }
-        });
+            catch ( AccessControlException e )
+            {
+                log.error( "Could not register shutdown hook.", e );
+            }
 
-        // Register JMX bean
-        if (!isJMXRegistered)
-        {
-	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-	        JCSAdminBean adminBean = new JCSAdminBean(this);
-	        try
-	        {
-	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
-				mbs.registerMBean(adminBean, jmxObjectName);
-				isJMXRegistered = true;
-			}
-	        catch (Exception e)
-	        {
-	            log.warn( "Could not register JMX bean.", e );
-			}
+            this.scheduledExecutor = Executors.newScheduledThreadPool(4, new ThreadFactory()
+            {
+                @Override
+                public Thread newThread(Runnable runner)
+                {
+                    Thread t = new Thread( runner );
+                    String oldName = t.getName();
+                    t.setName( "JCS-Scheduler-" + oldName );
+                    t.setDaemon( true );
+                    t.setPriority( Thread.MIN_PRIORITY );
+                    return t;
+                }
+            });
+
+            // Register JMX bean
+            if (!isJMXRegistered)
+            {
+    	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+    	        JCSAdminBean adminBean = new JCSAdminBean(this);
+    	        try
+    	        {
+    	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
+    				mbs.registerMBean(adminBean, jmxObjectName);
+    				isJMXRegistered = true;
+    			}
+    	        catch (Exception e)
+    	        {
+    	            log.warn( "Could not register JMX bean.", e );
+    			}
+            }
+
+            isInitialized = true;
         }
     }
 
@@ -625,52 +629,54 @@ public class CompositeCacheManager
      */
     public void shutDown()
     {
-        isShutdown = true;
-
-        // shutdown all scheduled jobs
-        this.scheduledExecutor.shutdownNow();
-
-        // notify any observers
-        synchronized ( shutdownObservers )
+        synchronized (CompositeCacheManager.class)
         {
-            // We don't need to worry about locking the set.
-            // since this is a shutdown command, nor do we need
-            // to queue these up.
-            for (IShutdownObserver observer : shutdownObservers)
+            isInitialized = false;
+
+            // shutdown all scheduled jobs
+            this.scheduledExecutor.shutdownNow();
+
+            // notify any observers
+            synchronized ( shutdownObservers )
             {
-                observer.shutdown();
+                // We don't need to worry about locking the set.
+                // since this is a shutdown command, nor do we need
+                // to queue these up.
+                for (IShutdownObserver observer : shutdownObservers)
+                {
+                    observer.shutdown();
+                }
             }
-        }
 
-        // Unregister JMX bean
-        if (isJMXRegistered)
-        {
-	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-	        try
-	        {
-	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
-				mbs.unregisterMBean(jmxObjectName);
-			}
-	        catch (Exception e)
-	        {
-	            log.warn( "Could not unregister JMX bean.", e );
-			}
+            // Unregister JMX bean
+            if (isJMXRegistered)
+            {
+    	        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+    	        try
+    	        {
+    	        	ObjectName jmxObjectName = new ObjectName(JMX_OBJECT_NAME);
+    				mbs.unregisterMBean(jmxObjectName);
+    			}
+    	        catch (Exception e)
+    	        {
+    	            log.warn( "Could not unregister JMX bean.", e );
+    			}
 
-			isJMXRegistered = false;
-        }
+    			isJMXRegistered = false;
+            }
 
-        // do the traditional shutdown of the regions.
-        String[] names = getCacheNames();
-        int len = names.length;
-        for ( int i = 0; i < len; i++ )
-        {
-            String name = names[i];
-            freeCache( name );
+            // do the traditional shutdown of the regions.
+            for (String name : getCacheNames())
+            {
+                freeCache( name );
+            }
+
+            isConfigured = false;
         }
     }
 
     /** */
-    protected void incrementClients()
+    private void incrementClients()
     {
         clients++;
     }
@@ -775,6 +781,25 @@ public class CompositeCacheManager
     }
 
     /**
+     * Add a cache to the map of registered caches
+     *
+     * @param cacheName the region name
+     * @param cache the cache instance
+     */
+    void addCache(String cacheName, ICache<?, ?> cache)
+    {
+        caches.put(cacheName, cache);
+    }
+
+    /**
+     * @param defaultAuxValues the defaultAuxValues to set
+     */
+    void setDefaultAuxValues(String defaultAuxValues)
+    {
+        this.defaultAuxValues = defaultAuxValues;
+    }
+
+    /**
      * Gets stats for debugging. This calls gets statistics and then puts all the results in a
      * string. This returns data for all regions.
      * <p>
@@ -874,11 +899,11 @@ public class CompositeCacheManager
     }
 
     /**
-     * @return the isShutdown
+     * @return the isInitialized
      */
-    public boolean isShutdown()
+    public boolean isInitialized()
     {
-        return isShutdown;
+        return isInitialized;
     }
 
     /**
@@ -904,7 +929,7 @@ public class CompositeCacheManager
         @Override
         public void run()
         {
-            if ( !isShutdown() )
+            if ( isInitialized() )
             {
                 log.info( "Shutdown hook activated.  Shutdown was not called.  Shutting down JCS." );
                 shutDown();
