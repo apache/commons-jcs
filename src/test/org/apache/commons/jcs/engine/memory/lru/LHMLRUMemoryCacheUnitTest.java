@@ -57,7 +57,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testLoadFromCCF()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGet" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testLoadFromCCF" );
         String memoryCacheName = cache.getCacheAttributes().getMemoryCacheName();
         assertTrue( "Cache name should have LHMLRU in it.", memoryCacheName.indexOf( "LHMLRUMemoryCache" ) != -1 );
     }
@@ -123,7 +123,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testPutGetThroughHubTwice()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHubTwice" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -163,7 +163,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testPutRemoveThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testPutRemoveThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -194,7 +194,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testClearThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testPutGetThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testClearThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max * 2;
@@ -279,7 +279,7 @@ public class LHMLRUMemoryCacheUnitTest
     public void testRemovePartialThroughHub()
         throws CacheException
     {
-        CacheAccess<String, String> cache = JCS.getInstance( "testGetStatsThroughHub" );
+        CacheAccess<String, String> cache = JCS.getInstance( "testRemovePartialThroughHub" );
 
         int max = cache.getCacheAttributes().getMaxObjects();
         int items = max / 2;
