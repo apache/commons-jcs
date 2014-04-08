@@ -19,6 +19,8 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
+import java.net.InetAddress;
+
 import junit.framework.TestCase;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
@@ -248,5 +250,10 @@ public class BasicRemoteCacheClientServerUnitTest
             System.out.println( server.getStats() );
             throw e;
         }
+    }
+
+    public void testLocalHost() throws Exception {
+        final InetAddress byName = InetAddress.getByName("localhost");
+        assertTrue("Expected localhost ("+byName.getHostAddress()+") to be a loopback address", byName.isLoopbackAddress());
     }
 }
