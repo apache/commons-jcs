@@ -17,8 +17,7 @@
 # #############################################################
 # ################# REMOTE SERVER CONFIG  #####################
 # Registry used to register and provide the IRmiCacheService service.
-# Use 127.0.0.1 rather than localhost in case it is not defined correctly
-registry.host=127.0.0.1
+registry.host=localhost
 registry.port=1102
 
 # client callback port.
