@@ -43,14 +43,15 @@ public class SystemPropertyUsageUnitTest
     public void testSystemPropertyUsage()
         throws Exception
     {
-        System.getProperties().setProperty( "jcs.default.cacheattributes.MaxObjects", "6789" );
+        final int testValue = 6789;
+
+        System.getProperties().setProperty( "jcs.default.cacheattributes.MaxObjects", String.valueOf(testValue) );
 
         JCS.setConfigFilename( "/TestSystemPropertyUsage.ccf" );
 
         CacheAccess<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
-        assertEquals( "System property value is not reflected", jcs.getCacheAttributes().getMaxObjects(), Integer
-            .parseInt( "6789" ) );
+        assertEquals( "System property value is not reflected", testValue, jcs.getCacheAttributes().getMaxObjects());
 
     }
 
