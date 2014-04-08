@@ -254,6 +254,7 @@ public class BasicRemoteCacheClientServerUnitTest
 
     public void testLocalHost() throws Exception {
         final InetAddress byName = InetAddress.getByName("localhost");
+        System.out.println("BasicRemoteCacheClientServerUnitTest:localhost="+byName);
         assertTrue("Expected localhost ("+byName.getHostAddress()+") to be a loopback address", byName.isLoopbackAddress());
     }
 }
