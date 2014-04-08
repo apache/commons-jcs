@@ -263,6 +263,7 @@ public class RemoteCacheServerFactory
             try
             {
                 LocateRegistry.createRegistry( registryPort );
+                log.info("Created the registry on port " + registryPort);
             }
             catch ( RemoteException e )
             {
@@ -569,6 +570,9 @@ public class RemoteCacheServerFactory
             t.setName( "JCS-RemoteCacheServerFactory-" + oldName );
             t.setDaemon( true );
             t.setPriority( Thread.MIN_PRIORITY );
+            if (log.isDebugEnabled()){
+                log.debug("Created thread: " + t);
+            }
             return t;
         }
     }
