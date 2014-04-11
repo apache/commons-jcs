@@ -29,7 +29,7 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
  *
  * @author Aaron Smuts
  */
-public interface ICompositeCacheManager
+public interface ICompositeCacheManager extends IShutdownObservable
 {
     /**
      * Gets the cache attribute of the CacheHub object

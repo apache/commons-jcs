@@ -37,7 +37,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,9 +52,6 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheManager
     implements AuxiliaryCacheManager, IShutdownObserver
 {
-    /** Don't change */
-    private static final long serialVersionUID = 798077557166389498L;
-
     /** The logger */
     private static final Log log = LogFactory.getLog( RemoteCacheManager.class );
 
@@ -128,11 +124,7 @@ public class RemoteCacheManager
         this.elementSerializer = elementSerializer;
 
         // register shutdown observer
-        // TODO add the shutdown observable methods to the interface
-        if ( this.cacheMgr instanceof CompositeCacheManager )
-        {
-            ( (CompositeCacheManager) this.cacheMgr ).registerShutdownObserver( this );
-        }
+        this.cacheMgr.registerShutdownObserver( this );
 
         String registry = "//" + host + ":" + port + "/" + service;
         if ( log.isInfoEnabled() )

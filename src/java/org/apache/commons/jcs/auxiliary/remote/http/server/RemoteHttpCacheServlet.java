@@ -218,7 +218,7 @@ public class RemoteHttpCacheServlet
      */
     protected synchronized void ensureCacheManager() throws CacheException
     {
-        if ( cacheMgr == null )
+        if ( cacheMgr == null || !cacheMgr.isInitialized() )
         {
             cacheMgr = CompositeCacheManager.getInstance();
         }

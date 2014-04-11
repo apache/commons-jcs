@@ -28,7 +28,6 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.CacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEvent;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
@@ -573,7 +572,7 @@ public abstract class AbstractRemoteCacheService<K extends Serializable, V exten
     /**
      * @param cacheManager the cacheManager to set
      */
-    protected void setCacheManager( CompositeCacheManager cacheManager )
+    protected void setCacheManager( ICompositeCacheManager cacheManager )
     {
         this.cacheManager = cacheManager;
     }

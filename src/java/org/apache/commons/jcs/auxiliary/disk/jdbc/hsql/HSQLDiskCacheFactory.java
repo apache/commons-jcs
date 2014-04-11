@@ -35,7 +35,6 @@ import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheAttributes;
 import org.apache.commons.jcs.auxiliary.disk.jdbc.JDBCDiskCacheManager;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,17 +60,18 @@ public class HSQLDiskCacheFactory
      * This factory method should create an instance of the hsqlcache.
      * <p>
      * @param rawAttr
-     * @param arg1
+     * @param cacheManager
      * @param cacheEventLogger
      * @param elementSerializer
      * @return AuxiliaryCache
      */
     @Override
-    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr, ICompositeCacheManager arg1,
-                                       ICacheEventLogger cacheEventLogger, IElementSerializer elementSerializer )
+    public <K extends Serializable, V extends Serializable> AuxiliaryCache<K, V> createCache( AuxiliaryCacheAttributes rawAttr,
+    									ICompositeCacheManager cacheManager,
+    									ICacheEventLogger cacheEventLogger,
+    									IElementSerializer elementSerializer )
     {
-        JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr,
-                                                                     CompositeCacheManager.getUnconfiguredInstance(),
+        JDBCDiskCacheManager mgr = JDBCDiskCacheManager.getInstance( (JDBCDiskCacheAttributes) rawAttr, cacheManager,
                                                                      cacheEventLogger, elementSerializer );
         try
         {

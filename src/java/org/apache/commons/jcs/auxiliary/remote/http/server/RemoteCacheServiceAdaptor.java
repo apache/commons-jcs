@@ -29,7 +29,7 @@ import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -58,7 +58,7 @@ public class RemoteCacheServiceAdaptor<K extends Serializable, V extends Seriali
      * <p>
      * @param cacheManager
      */
-    public RemoteCacheServiceAdaptor( CompositeCacheManager cacheManager )
+    public RemoteCacheServiceAdaptor( ICompositeCacheManager cacheManager )
     {
         ICacheServiceNonLocal<K, V> rcs = RemoteHttpCacheSeviceFactory.createRemoteHttpCacheService( cacheManager );
         setRemoteCacheService( rcs );

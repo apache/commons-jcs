@@ -51,7 +51,6 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IProvideScheduler;
-import org.apache.commons.jcs.engine.behavior.IShutdownObservable;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.stats.CacheStats;
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
@@ -70,7 +69,7 @@ import org.apache.commons.logging.LogFactory;
  * It is recommended that you use the JCS convenience class for all cache access.
  */
 public class CompositeCacheManager
-    implements IRemoteCacheConstants, ICompositeCacheManager, IShutdownObservable, IProvideScheduler
+    implements IRemoteCacheConstants, ICompositeCacheManager, IProvideScheduler
 {
     /** The logger */
     private static final Log log = LogFactory.getLog( CompositeCacheManager.class );

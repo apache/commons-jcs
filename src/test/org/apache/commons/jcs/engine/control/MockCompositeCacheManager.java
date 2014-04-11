@@ -25,6 +25,7 @@ import java.util.Properties;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
+import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 
 /** For testing. */
 public class MockCompositeCacheManager
@@ -98,4 +99,22 @@ public class MockCompositeCacheManager
     {
         return "Mock";
     }
+
+	/**
+	 * @see org.apache.commons.jcs.engine.behavior.IShutdownObservable#registerShutdownObserver(org.apache.commons.jcs.engine.behavior.IShutdownObserver)
+	 */
+	@Override
+	public void registerShutdownObserver(IShutdownObserver observer)
+	{
+		// Do nothing
+	}
+
+	/**
+	 * @see org.apache.commons.jcs.engine.behavior.IShutdownObservable#deregisterShutdownObserver(org.apache.commons.jcs.engine.behavior.IShutdownObserver)
+	 */
+	@Override
+	public void deregisterShutdownObserver(IShutdownObserver observer)
+	{
+		// Do nothing
+	}
 }

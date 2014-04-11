@@ -31,7 +31,6 @@ import org.apache.commons.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpC
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.config.OptionConverter;
 import org.apache.commons.logging.Log;
@@ -88,11 +87,7 @@ public class RemoteHttpCacheManager
         this.elementSerializer = elementSerializer;
 
         // register shutdown observer
-        // TODO add the shutdown observable methods to the interface
-        if ( this.cacheMgr instanceof CompositeCacheManager )
-        {
-            ( (CompositeCacheManager) this.cacheMgr ).registerShutdownObserver( this );
-        }
+        this.cacheMgr.registerShutdownObserver( this );
     }
 
     /**
