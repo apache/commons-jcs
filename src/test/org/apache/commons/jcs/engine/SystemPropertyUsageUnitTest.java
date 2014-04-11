@@ -34,8 +34,27 @@ import org.apache.commons.jcs.utils.props.PropertyLoader;
 public class SystemPropertyUsageUnitTest
     extends TestCase
 {
+    private static final String JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS = "jcs.default.cacheattributes.MaxObjects";
+    private static final int testValue = 6789;
 
-    /**
+    private CompositeCacheManager manager = null;
+
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	@Override
+	protected void tearDown() throws Exception
+	{
+		if (manager != null)
+		{
+			manager.shutDown();
+		}
+
+        System.clearProperty(JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS);
+		super.tearDown();
+	}
+
+	/**
      * Verify that the system properties are used.
      * @throws Exception
      *
@@ -43,16 +62,15 @@ public class SystemPropertyUsageUnitTest
     public void testSystemPropertyUsage()
         throws Exception
     {
-        final int testValue = 6789;
-
-        System.getProperties().setProperty( "jcs.default.cacheattributes.MaxObjects", String.valueOf(testValue) );
+        System.setProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS, String.valueOf(testValue) );
 
         JCS.setConfigFilename( "/TestSystemPropertyUsage.ccf" );
 
         CacheAccess<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
-        assertEquals( "System property value is not reflected", testValue, jcs.getCacheAttributes().getMaxObjects());
+        manager = CompositeCacheManager.getInstance();
 
+        assertEquals( "System property value is not reflected", testValue, jcs.getCacheAttributes().getMaxObjects());
     }
 
     /**
@@ -64,19 +82,18 @@ public class SystemPropertyUsageUnitTest
     public void testSystemPropertyUsage_inactive()
         throws Exception
     {
-        System.getProperties().setProperty( "jcs.default.cacheattributes.MaxObjects", "6789" );
+        System.setProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS, String.valueOf(testValue) );
 
-        CompositeCacheManager mgr = CompositeCacheManager.getUnconfiguredInstance();
+        manager = CompositeCacheManager.getUnconfiguredInstance();
 
         Properties props = PropertyLoader.loadProperties( "TestSystemPropertyUsage.ccf" );
 
-        mgr.configure( props, false );
+        manager.configure( props, false );
 
         CacheAccess<String, String> jcs = JCS.getInstance( "someCacheNotInFile" );
 
-        assertFalse( "System property value should not be reflected",
-                     jcs.getCacheAttributes().getMaxObjects() == Integer.parseInt( props
-                         .getProperty( "jcs.default.cacheattributes.MaxObjects" ) ) );
-
+        assertEquals( "System property value should not be reflected",
+                      Integer.parseInt( props.getProperty( JCS_DEFAULT_CACHEATTRIBUTES_MAX_OBJECTS ) ),
+                      jcs.getCacheAttributes().getMaxObjects());
     }
 }
