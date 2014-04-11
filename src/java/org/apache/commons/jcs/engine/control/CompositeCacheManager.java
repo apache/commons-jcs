@@ -167,6 +167,11 @@ public class CompositeCacheManager
             instance = createInstance();
         }
 
+        if (!instance.isInitialized())
+        {
+            instance.initialize();
+        }
+
         if (!instance.isConfigured())
         {
             instance.configure( propsFilename );
@@ -195,6 +200,11 @@ public class CompositeCacheManager
             instance = createInstance();
         }
 
+        if (!instance.isInitialized())
+        {
+            instance.initialize();
+        }
+
         instance.incrementClients();
 
         return instance;
@@ -216,7 +226,7 @@ public class CompositeCacheManager
      */
     protected CompositeCacheManager()
     {
-        initialize();
+    	// empty
     }
 
     /** Creates a shutdown hook and starts the scheduler service */
@@ -631,8 +641,6 @@ public class CompositeCacheManager
     {
         synchronized (CompositeCacheManager.class)
         {
-            isInitialized = false;
-
             // shutdown all scheduled jobs
             this.scheduledExecutor.shutdownNow();
 
@@ -671,7 +679,22 @@ public class CompositeCacheManager
                 freeCache( name );
             }
 
+            if (shutdownHook != null)
+            {
+            	try
+            	{
+					Runtime.getRuntime().removeShutdownHook(shutdownHook);
+				}
+            	catch (IllegalStateException e)
+            	{
+					// May fail if the JVM is already shutting down
+				}
+
+            	this.shutdownHook = null;
+            }
+
             isConfigured = false;
+            isInitialized = false;
         }
     }
 
@@ -882,7 +905,7 @@ public class CompositeCacheManager
      * <p>
      * @param props
      */
-    public void setConfigurationProperties( Properties props )
+    void setConfigurationProperties( Properties props )
     {
         this.configurationProperties = props;
     }
