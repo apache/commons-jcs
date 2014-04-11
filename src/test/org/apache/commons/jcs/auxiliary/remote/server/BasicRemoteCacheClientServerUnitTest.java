@@ -33,6 +33,7 @@ import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
+import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
 
 /**
@@ -255,7 +256,7 @@ public class BasicRemoteCacheClientServerUnitTest
     public void testLocalHost() throws Exception {
         final InetAddress byName = InetAddress.getByName("localhost");
         assertTrue("Expected localhost ("+byName.getHostAddress()+") to be a loopback address", byName.isLoopbackAddress());
-        final InetAddress localHost = InetAddress.getLocalHost();
-        assertTrue("Expected getLocalHost() ("+localHost+") to return a site local address", localHost.isSiteLocalAddress());
+        final InetAddress localHost = HostNameUtil.getLocalHostLANAddress();
+        assertTrue("Expected getLocalHostLANAddress() ("+localHost+") to return a site local address", localHost.isSiteLocalAddress());
     }
 }

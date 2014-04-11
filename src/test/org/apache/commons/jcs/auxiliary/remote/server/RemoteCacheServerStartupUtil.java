@@ -21,12 +21,12 @@ package org.apache.commons.jcs.auxiliary.remote.server;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Properties;
 
+import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.jcs.utils.props.PropertyLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,7 +86,7 @@ public class RemoteCacheServerStartupUtil
         String registryHost;
         try
         {
-            registryHost = InetAddress.getLocalHost().getHostAddress();
+            registryHost = HostNameUtil.getLocalHostAddress();
 
             if ( log.isDebugEnabled() )
             {
