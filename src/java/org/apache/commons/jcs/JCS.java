@@ -131,7 +131,7 @@ public abstract class JCS
     {
         synchronized ( JCS.class )
         {
-            if ( cacheMgr == null )
+            if ( cacheMgr == null || !cacheMgr.isInitialized())
             {
                 if ( configProps != null )
                 {
