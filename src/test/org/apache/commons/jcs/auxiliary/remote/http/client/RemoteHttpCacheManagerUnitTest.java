@@ -25,6 +25,7 @@ import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.remote.http.client.behavior.IRemoteHttpCacheClient;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 
 /** Unit tests for the manager. */
@@ -35,7 +36,7 @@ public class RemoteHttpCacheManagerUnitTest
     public void testCreateRemoteHttpCacheClient_Bad()
     {
         // SETUP
-        ICompositeCacheManager cacheMgr = null;
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         ICacheEventLogger cacheEventLogger = null;
         IElementSerializer elementSerializer = null;
 
@@ -59,7 +60,7 @@ public class RemoteHttpCacheManagerUnitTest
     public void testCreateRemoteHttpCacheClient_deafult()
     {
         // SETUP
-        ICompositeCacheManager cacheMgr = null;
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         ICacheEventLogger cacheEventLogger = null;
         IElementSerializer elementSerializer = null;
 
@@ -80,7 +81,7 @@ public class RemoteHttpCacheManagerUnitTest
     public void testGetCache_normal()
     {
         // SETUP
-        ICompositeCacheManager cacheMgr = null;
+        ICompositeCacheManager cacheMgr = new MockCompositeCacheManager();
         ICacheEventLogger cacheEventLogger = null;
         IElementSerializer elementSerializer = null;
 
