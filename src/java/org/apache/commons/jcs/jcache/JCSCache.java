@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
+// TODO: get statistics distributed?
 // TODO:: get configuration and CompleteConfiguration to get CacheLoader needed for get()
 // TODO:: optimize touch()
 public class JCSCache<K extends Serializable, V extends Serializable, C extends CompleteConfiguration<K, V>> implements Cache<K, V> {
