@@ -20,7 +20,8 @@ package org.apache.commons.jcs.auxiliary.disk.indexed;
  */
 
 import java.io.Serializable;
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
@@ -44,8 +45,8 @@ public class IndexedDiskCacheManager
     private static IndexedDiskCacheManager instance;
 
     /** Each region has an entry here. */
-    private final Hashtable<String, IndexedDiskCache<? extends Serializable, ? extends Serializable>> caches =
-        new Hashtable<String, IndexedDiskCache<? extends Serializable, ? extends Serializable>>();
+    private final Map<String, IndexedDiskCache<? extends Serializable, ? extends Serializable>> caches =
+        new ConcurrentHashMap<String, IndexedDiskCache<? extends Serializable, ? extends Serializable>>();
 
     /** User configurable attributes */
     private final IndexedDiskCacheAttributes defaultCacheAttributes;

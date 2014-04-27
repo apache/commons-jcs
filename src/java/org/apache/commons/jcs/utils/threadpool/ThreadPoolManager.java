@@ -107,7 +107,7 @@ public class ThreadPoolManager
     private static String propsFileName = null;
 
     /** the root property name */
-    private static String PROP_NAME_ROOT = "thread_pool";
+    public static String PROP_NAME_ROOT = "thread_pool";
 
     /** default property file name */
     private static String DEFAULT_PROP_NAME_ROOT = "thread_pool.default";
@@ -449,7 +449,7 @@ public class ThreadPoolManager
      * <p>
      * @author aaronsm
      */
-    protected static class MyThreadFactory
+    public static class MyThreadFactory
         implements ThreadFactory
     {
         /**

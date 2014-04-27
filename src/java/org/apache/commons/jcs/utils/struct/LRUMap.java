@@ -23,12 +23,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
 import org.apache.commons.jcs.engine.stats.StatElement;
@@ -89,7 +89,7 @@ public class LRUMap<K, V>
 
         // normal hshtable is faster for
         // sequential keys.
-        map = new Hashtable<K, LRUElementDescriptor<K, V>>();
+        map = new ConcurrentHashMap<K, LRUElementDescriptor<K, V>>();
         // map = new ConcurrentHashMap();
     }
 

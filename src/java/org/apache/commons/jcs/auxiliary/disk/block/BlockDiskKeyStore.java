@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.jcs.auxiliary.disk.LRUMapJCS;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.utils.timing.ElapsedTimer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -230,7 +231,7 @@ public class BlockDiskKeyStore<K extends Serializable>
             {
                 FileInputStream fis = new FileInputStream( keyFile );
                 BufferedInputStream bis = new BufferedInputStream( fis );
-                ObjectInputStream ois = new ObjectInputStream( bis );
+                ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( bis , null);
                 try
                 {
                     while ( true )

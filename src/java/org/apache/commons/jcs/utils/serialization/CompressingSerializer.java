@@ -28,6 +28,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.utils.zip.CompressionUtil;
 
 /**
@@ -110,7 +111,7 @@ public class CompressingSerializer
     {
         ByteArrayInputStream bais = new ByteArrayInputStream( decompressedByteArray );
         BufferedInputStream bis = new BufferedInputStream( bais );
-        ObjectInputStream ois = new ObjectInputStream( bis );
+        ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( bis, null );
 
         try
         {

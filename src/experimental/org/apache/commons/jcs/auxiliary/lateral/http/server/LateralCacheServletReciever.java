@@ -77,7 +77,7 @@ public class LateralCacheServletReciever
 
             // Create the ObjectInputStream with
             // the Request InputStream.
-            ObjectInputStream ois = new ObjectInputStream( request.getInputStream() );
+            ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( request.getInputStream(), null );
 
             if ( log.isDebugEnabled() )
             {

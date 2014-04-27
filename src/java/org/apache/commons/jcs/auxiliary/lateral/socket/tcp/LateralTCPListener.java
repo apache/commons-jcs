@@ -44,6 +44,7 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -601,7 +602,7 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
 
             try
             {
-                ois = new ObjectInputStream( socket.getInputStream() );
+                ois = new ObjectInputStreamClassLoaderAware( socket.getInputStream(), null );
             }
             catch ( Exception e )
             {

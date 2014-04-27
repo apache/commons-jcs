@@ -19,9 +19,6 @@ package org.apache.commons.jcs;
  * under the License.
  */
 
-import java.io.Serializable;
-import java.util.Properties;
-
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.GroupCacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
@@ -30,6 +27,9 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.engine.control.group.GroupAttrName;
+
+import java.io.Serializable;
+import java.util.Properties;
 
 /**
  * Simple class for using JCS. To use JCS in your application, you can use the static methods of
