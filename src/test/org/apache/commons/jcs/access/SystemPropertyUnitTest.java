@@ -23,6 +23,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
 /**
  * This test is for the system property usage in configuration values.
@@ -30,6 +32,7 @@ import org.apache.commons.jcs.engine.control.CompositeCacheManager;
  * @author Aaron Smuts
  *
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SystemPropertyUnitTest
     extends TestCase
 {
@@ -40,7 +43,7 @@ public class SystemPropertyUnitTest
      * @throws Exception
      *
      */
-    public void testSystemPropertyInValueDelimiter()
+    public void test1SystemPropertyInValueDelimiter()
         throws Exception
     {
 
@@ -54,6 +57,8 @@ public class SystemPropertyUnitTest
         assertEquals( "We should have used the system property for the memory size", maxMemory, cache
             .getCacheAttributes().getMaxObjects() );
 
+        System.clearProperty("MY_SYSTEM_PROPERTY_DISK_DIR");
+        System.clearProperty("MY_SYSTEM_PROPERTY_MAX_SIZE");
     }
 
     /**
@@ -64,7 +69,7 @@ public class SystemPropertyUnitTest
      * @throws Exception
      *
      */
-    public void testSystemPropertyMissingInValueDelimeter()
+    public void test2SystemPropertyMissingInValueDelimeter()
         throws Exception
     {
         System.getProperties().setProperty( "MY_SYSTEM_PROPERTY_DISK_DIR", "system_set" );
@@ -76,6 +81,8 @@ public class SystemPropertyUnitTest
         // TODO check against the actual default def
         assertEquals( "We should have used the default property for the memory size", 100, cache.getCacheAttributes()
             .getMaxObjects() );
+
+        System.clearProperty("MY_SYSTEM_PROPERTY_DISK_DIR");
 
     }
 
