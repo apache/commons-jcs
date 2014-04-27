@@ -20,7 +20,8 @@ package org.apache.commons.jcs.auxiliary.disk.block;
  */
 
 import java.io.Serializable;
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
@@ -44,8 +45,8 @@ public class BlockDiskCacheManager
     private static BlockDiskCacheManager instance;
 
     /** block disks for a region. */
-    private final Hashtable<String, BlockDiskCache<? extends Serializable, ? extends Serializable>> caches =
-        new Hashtable<String, BlockDiskCache<? extends Serializable, ? extends Serializable>>();
+    private final Map<String, BlockDiskCache<? extends Serializable, ? extends Serializable>> caches =
+        new ConcurrentHashMap<String, BlockDiskCache<? extends Serializable, ? extends Serializable>>();
 
     /** Attributes. */
     private final BlockDiskCacheAttributes defaultCacheAttributes;

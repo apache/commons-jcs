@@ -3,15 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <!--
-  NOTE: ENSURE TO hAVE BUILD commons-jcs BEFORE.
-
   TO RUN TCKs CALL:
 
   $ mvn -f tck.xml test
-
-  or one of the following profiles:
-  -P test-optional-cache
-  -P test-basic-cache
 
   to run from an IDE a JMX test add:
     -Dorg.jsr107.tck.management.agentId=MBeanServerJCS -Djavax.management.builder.initial=org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder
@@ -33,7 +27,8 @@
     <CacheImpl>org.apache.commons.jcs.jcache.JCSCache</CacheImpl>
     <CacheEntryImpl>org.apache.commons.jcs.jcache.JCSEntry</CacheEntryImpl>
 
-    <javax.management.builder.initial>org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder</javax.management.builder.initial>
+    <javax.management.builder.initial>org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder
+    </javax.management.builder.initial>
     <org.jsr107.tck.management.agentId>MBeanServerJCS</org.jsr107.tck.management.agentId>
 
     <domain-lib-dir>${project.build.directory}/domainlib</domain-lib-dir>
@@ -97,9 +92,34 @@
       <version>1.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-atinject_1.0_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-impl</artifactId>
+      <version>1.2.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
+    <testSourceDirectory>src/tck-java</testSourceDirectory>
     <testResources>
       <testResource>
         <directory>src/tck-resources</directory>
@@ -165,7 +185,8 @@
             <javax.cache.CacheManager>${CacheManagerImpl}</javax.cache.CacheManager>
             <javax.cache.Cache>${CacheImpl}</javax.cache.Cache>
             <javax.cache.Cache.Entry>${CacheEntryImpl}</javax.cache.Cache.Entry>
-            <javax.cache.annotation.CacheInvocationContext>${CacheInvocationContextImpl}</javax.cache.annotation.CacheInvocationContext>
+            <javax.cache.annotation.CacheInvocationContext>${CacheInvocationContextImpl}
+            </javax.cache.annotation.CacheInvocationContext>
           </systemPropertyVariables>
         </configuration>
       </plugin>

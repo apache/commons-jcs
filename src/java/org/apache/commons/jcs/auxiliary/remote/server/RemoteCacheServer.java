@@ -28,10 +28,10 @@ import java.rmi.server.RMISocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.Unreferenced;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
@@ -85,21 +85,21 @@ public class RemoteCacheServer<K extends Serializable, V extends Serializable>
     private int puts = 0;
 
     /** Maps cache name to CacheListeners object. association of listeners (regions). */
-    private final Hashtable<String, CacheListeners<K, V>> cacheListenersMap =
-        new Hashtable<String, CacheListeners<K, V>>();
+    private final Map<String, CacheListeners<K, V>> cacheListenersMap =
+        new ConcurrentHashMap<String, CacheListeners<K, V>>();
 
     /** maps cluster listeners to regions. */
-    private final Hashtable<String, CacheListeners<K, V>> clusterListenersMap =
-        new Hashtable<String, CacheListeners<K, V>>();
+    private final Map<String, CacheListeners<K, V>> clusterListenersMap =
+        new ConcurrentHashMap<String, CacheListeners<K, V>>();
 
     /** The central hub */
     private transient CompositeCacheManager cacheManager;
 
     /** relates listener id with a type */
-    private final Hashtable<Long, RemoteType> idTypeMap = new Hashtable<Long, RemoteType>();
+    private final Map<Long, RemoteType> idTypeMap = new ConcurrentHashMap<Long, RemoteType>();
 
     /** relates listener id with an ip address */
-    private final Hashtable<Long, String> idIPMap = new Hashtable<Long, String>();
+    private final Map<Long, String> idIPMap = new ConcurrentHashMap<Long, String>();
 
     /** Used to get the next listener id. */
     private final int[] listenerId = new int[1];
