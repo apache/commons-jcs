@@ -10,6 +10,7 @@ import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
 import org.apache.commons.jcs.jcache.jmx.JMXs;
 import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -36,13 +37,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
 // TODO: get statistics locally correct then correct even if distributed
 public class JCSCache<K extends Serializable, V extends Serializable, C extends CompleteConfiguration<K, V>> implements Cache<K, V> {
+    private static final String POOL_SIZE_PROPERTY = ThreadPoolManager.PROP_NAME_ROOT + ".size";
+
     private final CacheAccess<K, JCSElement<V>> delegate;
     private final CacheManager manager;
     private final JCSConfiguration<K, V> config;
@@ -55,12 +61,16 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>>();
     private final Statistics statistics = new Statistics();
     private final IElementSerializer serializer = new StandardSerializer();
+    private final ExecutorService pool;
 
     public JCSCache(final ClassLoader classLoader, final CacheManager mgr, final JCSConfiguration<K, V> configuration,
-                    final CompositeCache<K, JCSElement<V>> cache) {
+                    final CompositeCache<K, JCSElement<V>> cache, final Properties properties) {
         manager = mgr;
         delegate = new CacheAccess<K, JCSElement<V>>(cache);
         config = configuration;
+        pool = properties != null && properties.containsKey(POOL_SIZE_PROPERTY)?
+                Executors.newFixedThreadPool(Integer.parseInt(properties.getProperty(POOL_SIZE_PROPERTY)), new ThreadPoolManager.MyThreadFactory()) :
+                Executors.newCachedThreadPool(new ThreadPoolManager.MyThreadFactory());
 
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
         if (cacheLoaderFactory == null) {
@@ -207,7 +217,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         assertNotNull(key, "key");
         assertNotNull(rawValue, "value");
 
-        final long start = config.isStatisticsEnabled() ? Times.now() : 0;
+        final boolean statisticsEnabled = config.isStatisticsEnabled();
+        final long start = statisticsEnabled ? Times.now() : 0;
 
         try {
             final JCSElement<V> oldElt = delegate.get(key);
@@ -235,7 +246,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
                     }
                 }
 
-                if (config.isStatisticsEnabled()) {
+                if (statisticsEnabled) {
                     statistics.increasePuts(1);
                     statistics.addPutTime(System.currentTimeMillis() - start);
                 }
@@ -474,23 +485,31 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         for (final K k : keys) {
             assertNotNull(k, "a key");
         }
-        // TODO: async
+        pool.submit(new Runnable() {
+            @Override
+            public void run() {
+                doLoadAll(keys, replaceExistingValues, completionListener);
+            }
+        });
+    }
+
+    private void doLoadAll(final Set<? extends K> keys, final boolean replaceExistingValues,
+                           final CompletionListener completionListener) {
         try {
             for (final K k : keys) {
                 if (replaceExistingValues) {
-                    final V v = doLoad(k, containsKey(k), completionListener != null);
+                    doLoad(k, containsKey(k), completionListener != null);
                     continue;
                 } else if (containsKey(k)) {
                     continue;
                 }
-                doGetControllingExpiry(k, true, true, false, completionListener != null); // will trigger cacheloader and init
+                doGetControllingExpiry(k, true, true, false, completionListener != null);
             }
         } catch (final RuntimeException e) {
             if (completionListener != null) {
                 completionListener.onException(e);
                 return;
             }
-            throw e;
         }
         if (completionListener != null) {
             completionListener.onCompletion();
