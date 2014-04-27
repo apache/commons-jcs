@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class JCSCachingProvider implements CachingProvider {
-    public static final URI DEFAULT_URI = URI.create("jcs://default");
+    public static final URI DEFAULT_URI = URI.create("jcs://jcache.ccf");
 
     private final ConcurrentMap<ClassLoader, ConcurrentMap<URI, CacheManager>> cacheManagersByLoader =
                             new ConcurrentHashMap<ClassLoader, ConcurrentMap<URI, CacheManager>>();
