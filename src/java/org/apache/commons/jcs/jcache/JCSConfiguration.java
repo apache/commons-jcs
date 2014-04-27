@@ -40,8 +40,8 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
     private final Factory<ExpiryPolicy> expiryPolicyFactory;
     private final Set<CacheEntryListenerConfiguration<K, V>> cacheEntryListenerConfigurations;
 
-    private boolean statisticsEnabled = true;
-    private boolean managementEnabled = true;
+    private volatile boolean statisticsEnabled;
+    private volatile boolean managementEnabled;
 
     public JCSConfiguration(final Configuration<K, V> configuration, final Class<K> keyType, final Class<V> valueType) {
         this.keyType = keyType;
@@ -69,6 +69,8 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
             storeByValue = true;
             readThrough = false;
             writeThrough = false;
+            statisticsEnabled = false;
+            managementEnabled = false;
             cacheLoaderFactory = null;
             cacheWristerFactory = null;
             cacheEntryListenerConfigurations = new HashSet<CacheEntryListenerConfiguration<K, V>>();
@@ -136,5 +138,21 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
 
     public synchronized void removeListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
         cacheEntryListenerConfigurations.remove(cacheEntryListenerConfiguration);
+    }
+
+    public void statisticsEnabled() {
+        statisticsEnabled = true;
+    }
+
+    public void managementEnabled() {
+        managementEnabled = true;
+    }
+
+    public void statisticsDisabled() {
+        statisticsEnabled = false;
+    }
+
+    public void managementDisabled() {
+        managementEnabled = false;
     }
 }

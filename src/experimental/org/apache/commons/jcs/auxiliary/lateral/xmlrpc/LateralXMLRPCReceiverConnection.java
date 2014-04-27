@@ -85,7 +85,7 @@ public class LateralXMLRPCReceiverConnection implements XmlRpcHandler, IXMLRPCCo
             byte[] data = ( byte[] ) params.firstElement();
             ByteArrayInputStream bais = new ByteArrayInputStream( data );
             BufferedInputStream bis = new BufferedInputStream( bais );
-            ObjectInputStream ois = new ObjectInputStream( bis );
+            ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( bis, null );
             try
             {
                 led = ( LateralElementDescriptor ) ois.readObject();

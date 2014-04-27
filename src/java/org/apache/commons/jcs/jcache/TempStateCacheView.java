@@ -3,11 +3,13 @@ package org.apache.commons.jcs.jcache;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
+import javax.cache.configuration.CompleteConfiguration;
 import javax.cache.configuration.Configuration;
 import javax.cache.integration.CompletionListener;
 import javax.cache.processor.EntryProcessor;
 import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,14 +20,14 @@ import java.util.Set;
 
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
-public class TempStateCacheView<K, V> implements Cache<K, V> {
-    private final Cache<K, V> cache;
+public class TempStateCacheView<K extends Serializable, V extends Serializable> implements Cache<K, V> {
+    private final JCSCache<K, V, ?> cache;
     private final Map<K, V> put = new HashMap<K, V>();
     private final Collection<K> remove = new LinkedList<K>();
     private boolean removeAll = false;
     private boolean clear = false;
 
-    public TempStateCacheView(final Cache<K, V> entries) {
+    public TempStateCacheView(final JCSCache<K, V, ?> entries) {
         this.cache = entries;
     }
 
@@ -37,6 +39,16 @@ public class TempStateCacheView<K, V> implements Cache<K, V> {
         final V v = put.get(key);
         if (v != null) {
             return v;
+        }
+
+        // for an EntryProcessor we already incremented stats
+        if (cache.getConfiguration(CompleteConfiguration.class).isStatisticsEnabled()) {
+            final Statistics statistics = cache.getStatistics();
+            if (cache.containsKey(key)) {
+                statistics.increaseHits(-1);
+            } else {
+                statistics.increaseMisses(-1);
+            }
         }
         return cache.get(key);
     }
@@ -63,7 +75,7 @@ public class TempStateCacheView<K, V> implements Cache<K, V> {
     }
 
     public boolean containsKey(final K key) {
-        return !ignoreKey(key) && put.containsKey(key) || cache.containsKey(key);
+        return !ignoreKey(key) && (put.containsKey(key) || cache.containsKey(key));
     }
 
     public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener) {

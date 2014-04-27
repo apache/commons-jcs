@@ -2,6 +2,7 @@ package org.apache.commons.jcs.jcache;
 
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareHandler;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -9,6 +10,7 @@ import javax.cache.configuration.Configuration;
 import javax.cache.spi.CachingProvider;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,11 +76,15 @@ public class JCSCachingManager implements CacheManager {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
         if (!caches.containsKey(cacheName)) {
-            caches.putIfAbsent(cacheName,
+            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(
+                    loader,
                     new JCSCache/*<K, V, C>*/(
                             this,
                             new JCSConfiguration(configuration, configuration.getKeyType(), configuration.getValueType()),
-                            instance.getCache(cacheName)));
+                            instance.getCache(cacheName)),
+                    Cache.class
+            );
+            caches.putIfAbsent(cacheName, cache);
         } else {
             throw new javax.cache.CacheException("cache " + cacheName + " already exists");
         }
@@ -102,14 +108,33 @@ public class JCSCachingManager implements CacheManager {
     public void enableManagement(final String cacheName, final boolean enabled) {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
-        throw new UnsupportedOperationException();
+        final JCSCache<?, ?, ?> cache = getJCSCache(cacheName);
+        if (cache != null) {
+            if (enabled) {
+                cache.enableManagement();
+            } else {
+                cache.disableManagement();
+            }
+        }
+    }
+
+    private JCSCache<?, ?, ?> getJCSCache(final String cacheName) {
+        final Cache<?, ?> cache = caches.get(cacheName);
+        return JCSCache.class.cast(ClassLoaderAwareHandler.class.cast(Proxy.getInvocationHandler(cache)).getDelegate());
     }
 
     @Override
     public void enableStatistics(final String cacheName, final boolean enabled) {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
-        throw new UnsupportedOperationException();
+        final JCSCache<?, ?, ?> cache = getJCSCache(cacheName);
+        if (cache != null) {
+            if (enabled) {
+                cache.enableStatistics();
+            } else {
+                cache.disableStatistics();
+            }
+        }
     }
 
     @Override

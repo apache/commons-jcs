@@ -35,6 +35,7 @@ import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheRequest;
 import org.apache.commons.jcs.auxiliary.remote.value.RemoteCacheResponse;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -155,7 +156,7 @@ public class RemoteHttpCacheServlet
     protected RemoteCacheRequest<Serializable, Serializable> readRequestFromStream( InputStream inputStream )
         throws IOException, ClassNotFoundException
     {
-        ObjectInputStream ois = new ObjectInputStream( inputStream );
+        ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( inputStream, null );
 
         @SuppressWarnings("unchecked") // Need to cast from Object
         RemoteCacheRequest<Serializable, Serializable> remoteRequest

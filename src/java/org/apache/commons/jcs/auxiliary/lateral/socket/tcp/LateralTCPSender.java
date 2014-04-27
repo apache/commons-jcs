@@ -29,6 +29,7 @@ import java.net.Socket;
 
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
 import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralCacheAttributes;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -283,7 +284,7 @@ public class LateralTCPSender
                     {
                         // TODO make configurable
                         // socket.setSoTimeout( 2000 );
-                        ObjectInputStream ois = new ObjectInputStream( socket.getInputStream() );
+                        ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( socket.getInputStream(), null );
                         response = ois.readObject();
                     }
                     catch ( IOException ioe )

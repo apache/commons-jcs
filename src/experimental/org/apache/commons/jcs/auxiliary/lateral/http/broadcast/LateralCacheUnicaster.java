@@ -188,7 +188,7 @@ public class LateralCacheUnicaster
         String result = "";
         try
         {
-            ObjectInputStream is = new ObjectInputStream( conn.getInputStream() );
+            ObjectInputStream is = new ObjectInputStreamClassLoaderAware( conn.getInputStream(), null );
             try
             {
                 result = ( String ) is.readObject();

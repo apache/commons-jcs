@@ -198,7 +198,7 @@ public class LateralCacheThread extends Thread
         String result = "";
         try
         {
-            ObjectInputStream is = new ObjectInputStream( connection.getInputStream() );
+            ObjectInputStream is = new ObjectInputStreamClassLoaderAware( connection.getInputStream(), null );
             result = ( String ) is.readObject();
             is.close();
 
