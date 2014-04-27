@@ -41,7 +41,7 @@ import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 public class JCSCache<K extends Serializable, V extends Serializable, C extends CompleteConfiguration<K, V>> implements Cache<K, V> {
     private final CacheAccess<K, JCSElement<V>> delegate;
     private final CacheManager manager;
-    private final C config;
+    private final JCSConfiguration<K, V> config;
     private final CacheLoader<K, V> loader;
     private final CacheWriter<? super K, ? super V> writer;
     private final ExpiryPolicy expiryPolicy;
@@ -51,7 +51,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     private final Map<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>> listeners = new ConcurrentHashMap<CacheEntryListenerConfiguration<K, V>, JCSListener<K, V>>();
     private final Statistics statistics = new Statistics();
 
-    public JCSCache(final CacheManager mgr, final C configuration, final CompositeCache<K, JCSElement<V>> cache) {
+    public JCSCache(final CacheManager mgr, final JCSConfiguration<K, V> configuration, final CompositeCache<K, JCSElement<V>> cache) {
         manager = mgr;
         delegate = new CacheAccess<K, JCSElement<V>>(cache);
         config = configuration;
@@ -75,6 +75,10 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             expiryPolicy = new EternalExpiryPolicy();
         } else {
             expiryPolicy = expiryPolicyFactory.create();
+        }
+
+        for (final CacheEntryListenerConfiguration<K, V> listener : config.getCacheEntryListenerConfigurations()) {
+            listeners.put(listener, new JCSListener<K, V>(listener));
         }
 
         statistics.setActive(config.isStatisticsEnabled());
@@ -253,10 +257,12 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         assertNotClosed();
         assertNotNull(key, "key");
 
+        final JCSElement<V> v = delegate.get(key);
+        final V value = v != null && v.getElement() != null ? v.getElement() : null;
         final boolean remove = delegate.getCacheControl().remove(key);
         for (final JCSListener<K, V> listener : listeners.values()) {
             listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>>asList(
-                    new JCSCacheEntryEvent<K, V>(this, EventType.REMOVED, null, key, null)));
+                    new JCSCacheEntryEvent<K, V>(this, EventType.REMOVED, null, key, value)));
         }
         return remove;
     }
@@ -440,13 +446,18 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     @Override
     public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
         assertNotClosed();
+        if (listeners.containsKey(cacheEntryListenerConfiguration)) {
+            throw new IllegalArgumentException(cacheEntryListenerConfiguration + " already registered");
+        }
         listeners.put(cacheEntryListenerConfiguration, new JCSListener<K, V>(cacheEntryListenerConfiguration));
+        config.addListener(cacheEntryListenerConfiguration);
     }
 
     @Override
     public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
         assertNotClosed();
         listeners.remove(cacheEntryListenerConfiguration);
+        config.removeListener(cacheEntryListenerConfiguration);
     }
 
     @Override

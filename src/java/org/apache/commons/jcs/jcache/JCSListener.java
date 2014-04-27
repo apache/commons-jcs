@@ -82,6 +82,6 @@ public class JCSListener<K extends Serializable, V extends Serializable> {
     }
 
     public void close() {
-
+        // no-op
     }
 }

@@ -26,23 +26,19 @@ import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
 
     private final Class<K> keyType;
     private final Class<V> valueType;
-    private final ConcurrentMap<CacheEntryListenerConfiguration<K,V>, Object> cacheEntryListenerConfigurations = new ConcurrentHashMap<CacheEntryListenerConfiguration<K, V>, Object>();
     private final boolean storeByValue;
     private final boolean readThrough;
     private final boolean writeThrough;
     private final Factory<CacheLoader<K,V>> cacheLoaderFactory;
     private final Factory<CacheWriter<? super K,? super V>> cacheWristerFactory;
     private final Factory<ExpiryPolicy> expiryPolicyFactory;
-    private final Set<CacheEntryListenerConfiguration<K, V>> initialCacheEntryListenerConfigurations;
+    private final Set<CacheEntryListenerConfiguration<K, V>> cacheEntryListenerConfigurations;
 
     private boolean statisticsEnabled = true;
     private boolean managementEnabled = true;
@@ -60,15 +56,14 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
             cacheLoaderFactory = cConfiguration.getCacheLoaderFactory();
             cacheWristerFactory = cConfiguration.getCacheWriterFactory();
             this.expiryPolicyFactory = cConfiguration.getExpiryPolicyFactory();
-            final HashSet<CacheEntryListenerConfiguration<K, V>> set = new HashSet<CacheEntryListenerConfiguration<K, V>>();
+            cacheEntryListenerConfigurations = new HashSet<CacheEntryListenerConfiguration<K, V>>();
 
             final Iterable<CacheEntryListenerConfiguration<K, V>> entryListenerConfigurations = cConfiguration.getCacheEntryListenerConfigurations();
             if (entryListenerConfigurations != null) {
                 for (final CacheEntryListenerConfiguration<K, V> kvCacheEntryListenerConfiguration : entryListenerConfigurations) {
-                    set.add(kvCacheEntryListenerConfiguration);
+                    cacheEntryListenerConfigurations.add(kvCacheEntryListenerConfiguration);
                 }
             }
-            initialCacheEntryListenerConfigurations = Collections.unmodifiableSet(set);
         } else {
             expiryPolicyFactory = EternalExpiryPolicy.factoryOf();
             storeByValue = true;
@@ -76,7 +71,7 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
             writeThrough = false;
             cacheLoaderFactory = null;
             cacheWristerFactory = null;
-            initialCacheEntryListenerConfigurations = new HashSet<CacheEntryListenerConfiguration<K, V>>();
+            cacheEntryListenerConfigurations = new HashSet<CacheEntryListenerConfiguration<K, V>>();
         }
     }
 
@@ -117,7 +112,7 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
 
     @Override
     public Iterable<CacheEntryListenerConfiguration<K, V>> getCacheEntryListenerConfigurations() {
-        return cacheEntryListenerConfigurations.keySet();
+        return Collections.unmodifiableSet(cacheEntryListenerConfigurations);
     }
 
     @Override
@@ -133,5 +128,13 @@ public class JCSConfiguration<K, V> implements CompleteConfiguration<K, V> {
     @Override
     public Factory<ExpiryPolicy> getExpiryPolicyFactory() {
         return expiryPolicyFactory;
+    }
+
+    public synchronized void addListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
+        cacheEntryListenerConfigurations.add(cacheEntryListenerConfiguration);
+    }
+
+    public synchronized void removeListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
+        cacheEntryListenerConfigurations.remove(cacheEntryListenerConfiguration);
     }
 }
