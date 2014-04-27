@@ -46,7 +46,7 @@ public class ClassLoaderAwareHandler implements InvocationHandler {
         return method.invoke(delegate, args);
     }
 
-    private boolean isEquals(Method method, Object[] args) {
+    private boolean isEquals(final Method method, final Object[] args) {
         return "equals".equals(method.getName()) && args != null && args.length == 1;
     }
 

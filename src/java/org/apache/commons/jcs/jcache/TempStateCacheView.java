@@ -20,6 +20,7 @@ import java.util.Set;
 
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
+// kind of transactional view for a Cache<K, V>, to use with EntryProcessor
 public class TempStateCacheView<K extends Serializable, V extends Serializable> implements Cache<K, V> {
     private final JCSCache<K, V, ?> cache;
     private final Map<K, V> put = new HashMap<K, V>();
@@ -41,7 +42,7 @@ public class TempStateCacheView<K extends Serializable, V extends Serializable> 
             return v;
         }
 
-        // for an EntryProcessor we already incremented stats
+        // for an EntryProcessor we already incremented stats - to enhance surely
         if (cache.getConfiguration(CompleteConfiguration.class).isStatisticsEnabled()) {
             final Statistics statistics = cache.getStatistics();
             if (cache.containsKey(key)) {
@@ -112,9 +113,12 @@ public class TempStateCacheView<K extends Serializable, V extends Serializable> 
     }
 
     public boolean remove(final K key) {
+        final boolean noop = put.containsKey(key);
         put.remove(key);
-        if (!ignoreKey(key) && cache.containsKey(key)) {
-            remove.add(key);
+        if (!ignoreKey(key)) {
+            if (!noop) {
+                remove.add(key);
+            }
             return true;
         }
         return false;

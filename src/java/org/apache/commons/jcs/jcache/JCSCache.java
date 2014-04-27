@@ -8,6 +8,7 @@ import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
 import org.apache.commons.jcs.jcache.jmx.JMXs;
+import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
 import org.apache.commons.jcs.utils.serialization.StandardSerializer;
 
 import javax.cache.Cache;
@@ -24,6 +25,7 @@ import javax.cache.expiry.ExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import javax.cache.integration.CacheWriter;
+import javax.cache.integration.CacheWriterException;
 import javax.cache.integration.CompletionListener;
 import javax.cache.processor.EntryProcessor;
 import javax.cache.processor.EntryProcessorException;
@@ -54,7 +56,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     private final Statistics statistics = new Statistics();
     private final IElementSerializer serializer = new StandardSerializer();
 
-    public JCSCache(final CacheManager mgr, final JCSConfiguration<K, V> configuration, final CompositeCache<K, JCSElement<V>> cache) {
+    public JCSCache(final ClassLoader classLoader, final CacheManager mgr, final JCSConfiguration<K, V> configuration,
+                    final CompositeCache<K, JCSElement<V>> cache) {
         manager = mgr;
         delegate = new CacheAccess<K, JCSElement<V>>(cache);
         config = configuration;
@@ -63,14 +66,14 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         if (cacheLoaderFactory == null) {
             loader = NoLoader.INSTANCE;
         } else {
-            loader = cacheLoaderFactory.create();
+            loader = ExceptionWrapperHandler.newProxy(classLoader, cacheLoaderFactory.create(), CacheLoaderException.class, CacheLoader.class);
         }
 
         final Factory<CacheWriter<? super K, ? super V>> cacheWriterFactory = configuration.getCacheWriterFactory();
         if (cacheWriterFactory == null) {
             writer = NoWriter.INSTANCE;
         } else {
-            writer = cacheWriterFactory.create();
+            writer = ExceptionWrapperHandler.newProxy(classLoader, cacheWriterFactory.create(), CacheWriterException.class, CacheWriter.class);
         }
 
         final Factory<ExpiryPolicy> expiryPolicyFactory = configuration.getExpiryPolicyFactory();
@@ -122,25 +125,24 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         return doGetControllingExpiry(key, true, false, false, true);
     }
 
-    private V doLoad(final K key, final boolean forceDoLoad, final boolean propagateLoadException) {
+    private V doLoad(final K key, final boolean update, final boolean propagateLoadException) {
         V v = null;
         try {
             v = loader.load(key);
-        } catch (final RuntimeException e) {
+        } catch (final CacheLoaderException e) {
             if (propagateLoadException) {
-                throw new CacheLoaderException(e);
+                throw e;
             }
         }
         if (v != null) {
             try {
-                final Duration duration = forceDoLoad ? expiryPolicy.getExpiryForUpdate() : expiryPolicy.getExpiryForCreation();
+                final Duration duration = update ? expiryPolicy.getExpiryForUpdate() : expiryPolicy.getExpiryForCreation();
                 if (duration == null || !duration.isZero()) {
                     delegate.put(key, new JCSElement<V>(v, duration));
                 }
             } catch (final CacheException e) {
                 throw new IllegalStateException(e);
             }
-            writer.write(new JCSEntry<K, V>(key, v));
         }
         return v;
     }
@@ -179,11 +181,13 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             }
             result.put(key, val);
         }
-        for (final K k : keys) {
-            if (!result.containsKey(k)) {
-                final V v = doLoad(k, false, true);
-                if (v != null) {
-                    result.put(k, v);
+        if (config.isReadThrough() && result.size() != keys.size()) {
+            for (final K k : keys) {
+                if (!result.containsKey(k)) {
+                    final V v = doLoad(k, false, false);
+                    if (v != null) {
+                        result.put(k, v);
+                    }
                 }
             }
         }
@@ -219,8 +223,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
                     delegate.remove(key);
                 }
             } else {
-                delegate.put(storeByValue ? copy(key) : key, element);
                 writer.write(new JCSEntry<K, V>(key, value));
+                delegate.put(storeByValue ? copy(key) : key, element);
                 for (final JCSListener<K, V> listener : listeners.values()) {
                     if (created) {
                         listener.onCreated(Arrays.<CacheEntryEvent<? extends K, ? extends V>>asList(
@@ -280,10 +284,12 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         assertNotClosed();
         assertNotNull(key, "key");
 
-        final long start = config.isStatisticsEnabled() ? Times.now() : 0;
+        final boolean statisticsEnabled = config.isStatisticsEnabled();
+        final long start = statisticsEnabled ? Times.now() : 0;
 
         final JCSElement<V> v = delegate.get(key);
         final V value = v != null && v.getElement() != null ? v.getElement() : null;
+        writer.delete(key);
         boolean remove = delegate.getCacheControl().remove(key);
         if (v != null && v.isExpired()) {
             remove = false;
@@ -292,7 +298,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>>asList(
                     new JCSCacheEntryEvent<K, V>(this, EventType.REMOVED, null, key, value)));
         }
-        if (remove && config.isStatisticsEnabled()) {
+        if (remove && statisticsEnabled) {
             statistics.increaseRemovals(1);
             statistics.addRemoveTime(Times.now() - start);
         }
@@ -326,21 +332,22 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     private V doGetControllingExpiry(final K key, final boolean updateAcess,
                                      final boolean forceDoLoad, final boolean skipLoad,
                                      final boolean propagateLoadException) {
+        final boolean statisticsEnabled = config.isStatisticsEnabled();
         final long getStart = Times.now();
         final JCSElement<V> elt = delegate.get(key);
         V v = elt != null? elt.getElement() : null;
-        if (v == null && config.isReadThrough()) {
+        if (v == null && (config.isReadThrough() || forceDoLoad)) {
             if (!skipLoad) {
-                v = doLoad(key, forceDoLoad, propagateLoadException);
+                v = doLoad(key, false, propagateLoadException);
             }
-        } else if (config.isStatisticsEnabled()) {
-            if (elt != null) {
+        } else if (statisticsEnabled) {
+            if (v != null) {
                 statistics.increaseHits(1);
             } else {
                 statistics.increaseMisses(1);
-                statistics.addGetTime(Times.now() - getStart);
             }
         }
+
         if (updateAcess && elt != null) {
             elt.update(expiryPolicy.getExpiryForAccess());
             if (elt.isExpired()) {
@@ -440,17 +447,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
 
     @Override
     public void removeAll() {
-        if (config.isStatisticsEnabled()) {
-            int i = 0;
-            final CompositeCache<K, JCSElement<V>> underlying = delegate.getCacheControl();
-            for (final K elt : underlying.getKeySet()) {
-                if (!underlying.get(elt).getVal().isExpired()) {
-                    i++;
-                }
-            }
-            statistics.increaseRemovals(i);
-        }
-        clear();
+        removeAll(delegate.getCacheControl().getKeySet());
     }
 
     @Override
@@ -480,15 +477,13 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         // TODO: async
         try {
             for (final K k : keys) {
-                final boolean removed;
                 if (replaceExistingValues) {
-                    removed = delegate.getCacheControl().remove(k);
+                    final V v = doLoad(k, containsKey(k), completionListener != null);
+                    continue;
                 } else if (containsKey(k)) {
                     continue;
-                } else {
-                    removed = false;
                 }
-                doGetControllingExpiry(k, true, removed, false, completionListener != null); // will trigger cacheloader and init
+                doGetControllingExpiry(k, true, true, false, completionListener != null); // will trigger cacheloader and init
             }
         } catch (final RuntimeException e) {
             if (completionListener != null) {
