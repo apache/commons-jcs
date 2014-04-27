@@ -1,6 +1,5 @@
 package org.apache.commons.jcs.jcache;
 
-import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareHandler;
 
@@ -34,35 +33,31 @@ public class JCSCachingManager implements CacheManager {
         this.loader = loader;
         this.properties = properties;
 
-        if (uri == JCSCachingProvider.DEFAULT_URI && (properties == null || properties.isEmpty())) {
-            try {
-                instance = CompositeCacheManager.getInstance();
-            } catch (final CacheException e) {
-                throw new IllegalArgumentException(e);
+        instance = CompositeCacheManager.getUnconfiguredInstance();
+        final Properties props = new Properties();
+        InputStream inStream = null;
+        try {
+            if (JCSCachingProvider.DEFAULT_URI == uri || uri.toURL().getProtocol().equals("jcs")) {
+                inStream = loader.getResourceAsStream(uri.getPath());
+            } else {
+                inStream = uri.toURL().openStream();
             }
-        } else {
-            instance = CompositeCacheManager.getUnconfiguredInstance();
-            final Properties props = new Properties();
-            if (uri != JCSCachingProvider.DEFAULT_URI) {
-                InputStream inStream = null;
+            props.load(inStream);
+        } catch (final IOException e) {
+            throw new IllegalArgumentException(e);
+        } finally {
+            if (inStream != null) {
                 try {
-                    inStream = uri.toURL().openStream();
-                    props.load(inStream);
+                    inStream.close();
                 } catch (final IOException e) {
-                    throw new IllegalArgumentException(e);
-                } finally {
-                    if (inStream != null) {
-                        try {
-                            inStream.close();
-                        } catch (final IOException e) {
-                            // no-op
-                        }
-                    }
+                    // no-op
                 }
             }
-            props.putAll(properties);
-            instance.configure(props);
         }
+        if (properties != null) {
+            props.putAll(properties);
+        }
+        instance.configure(props);
     }
 
     private void assertNotClosed() {
