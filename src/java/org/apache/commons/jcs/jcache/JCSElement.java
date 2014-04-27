@@ -12,12 +12,8 @@ public class JCSElement<V> implements Serializable {
         update(duration);
     }
 
-    private static long now() {
-        return System.currentTimeMillis();
-    }
-
     public boolean isExpired() {
-        return end != -1 && (end == 0 || now() > end);
+        return end != -1 && (end == 0 || Times.now() > end);
     }
 
     public V getElement() {
@@ -30,7 +26,7 @@ public class JCSElement<V> implements Serializable {
         } else if (duration.isZero()) {
             end = 0;
         } else {
-            end = duration.getAdjustedTime(now());
+            end = duration.getAdjustedTime(Times.now());
         }
     }
 }

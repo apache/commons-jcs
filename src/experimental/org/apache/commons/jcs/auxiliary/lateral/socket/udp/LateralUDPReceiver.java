@@ -108,7 +108,7 @@ public class LateralUDPReceiver implements Runnable
 
             final ByteArrayInputStream byteStream = new ByteArrayInputStream( m_buffer, 0, packet.getLength() );
 
-            final ObjectInputStream objectStream = new ObjectInputStream( byteStream );
+            final ObjectInputStream objectStream = new ObjectInputStreamClassLoaderAware( byteStream, null );
 
             obj = objectStream.readObject();
 

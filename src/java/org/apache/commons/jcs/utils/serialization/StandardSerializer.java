@@ -19,6 +19,9 @@ package org.apache.commons.jcs.utils.serialization;
  * under the License.
  */
 
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,8 +29,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 
 /**
  * Performs default serialization and de-serialization.
@@ -76,7 +77,7 @@ public class StandardSerializer
     {
         ByteArrayInputStream bais = new ByteArrayInputStream( data );
         BufferedInputStream bis = new BufferedInputStream( bais );
-        ObjectInputStream ois = new ObjectInputStream( bis );
+        ObjectInputStream ois = new ObjectInputStreamClassLoaderAware( bis, null );
         try
         {
             @SuppressWarnings("unchecked") // Need to cast from Object

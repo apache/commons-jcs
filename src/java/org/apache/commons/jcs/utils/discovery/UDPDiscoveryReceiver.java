@@ -31,6 +31,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -165,7 +166,7 @@ public class UDPDiscoveryReceiver
             }
 
             final ByteArrayInputStream byteStream = new ByteArrayInputStream( mBuffer, 0, packet.getLength() );
-            final ObjectInputStream objectStream = new ObjectInputStream( byteStream );
+            final ObjectInputStream objectStream = new ObjectInputStreamClassLoaderAware( byteStream, null );
             obj = objectStream.readObject();
 
             if ( obj != null && obj instanceof UDPDiscoveryMessage )

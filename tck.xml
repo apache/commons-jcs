@@ -11,6 +11,8 @@
   -P test-optional-cache
   -P test-basic-cache
 
+  to run from an IDE a JMX test add:
+    -Dorg.jsr107.tck.management.agentId=MBeanServerJCS -Djavax.management.builder.initial=org.apache.commons.jcs.jcache.jmx.ConfigurableMBeanServerIdBuilder
   -->
 
   <groupId>org.apache.commons</groupId>
@@ -110,6 +112,7 @@
         <executions>
           <execution>
             <id>copy-cache-tests</id>
+            <phase>generate-test-resources</phase>
             <goals>
               <goal>unpack-dependencies</goal>
             </goals>
@@ -123,6 +126,7 @@
           </execution>
           <execution>
             <id>copy-domain</id>
+            <phase>generate-test-resources</phase>
             <goals>
               <goal>copy</goal>
             </goals>
