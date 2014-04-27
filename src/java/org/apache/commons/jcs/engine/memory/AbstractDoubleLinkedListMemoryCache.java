@@ -22,12 +22,12 @@ package org.apache.commons.jcs.engine.memory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs.engine.CacheConstants;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
@@ -92,7 +92,7 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
     @Override
     public Map<K, MemoryElementDescriptor<K, V>> createMap()
     {
-        return new Hashtable<K, MemoryElementDescriptor<K, V>>();
+        return new ConcurrentHashMap<K, MemoryElementDescriptor<K, V>>();
     }
 
     /**

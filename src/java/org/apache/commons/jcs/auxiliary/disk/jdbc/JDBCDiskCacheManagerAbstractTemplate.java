@@ -21,8 +21,8 @@ package org.apache.commons.jcs.auxiliary.disk.jdbc;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -52,14 +52,14 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
     protected static int clients; // TODO needs to be made private and synchronised and/or turned into AtomicInt
 
     /** A map of JDBCDiskCache objects to region names. */
-    private static Hashtable<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>> caches =
-        new Hashtable<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>>();
+    private static Map<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>> caches =
+        new ConcurrentHashMap<String, JDBCDiskCache<? extends Serializable, ? extends Serializable>>();
 
     /**
      * A map of TableState objects to table names. Each cache has a table state object, which is
      * used to determine if any long processes such as deletes or optimizations are running.
      */
-    protected static Hashtable<String, TableState> tableStates = new Hashtable<String, TableState>();
+    protected static Map<String, TableState> tableStates = new ConcurrentHashMap<String, TableState>();
 
     /** The background disk shrinker, one for all regions. */
     private ScheduledExecutorService shrinkerDaemon; // TODO this is not accessed in a threadsafe way. Perhaps use IODH idiom?
@@ -68,7 +68,7 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
      * A map of table name to shrinker threads. This allows each table to have a different setting.
      * It assumes that there is only one jdbc disk cache auxiliary defined per table.
      */
-    private final Map<String, ShrinkerThread> shrinkerThreadMap = new Hashtable<String, ShrinkerThread>();
+    private final Map<String, ShrinkerThread> shrinkerThreadMap = new ConcurrentHashMap<String, ShrinkerThread>();
 
     /**
      * Children must implement this method.

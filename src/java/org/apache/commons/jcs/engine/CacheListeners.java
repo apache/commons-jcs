@@ -20,9 +20,9 @@ package org.apache.commons.jcs.engine;
  */
 
 import java.io.Serializable;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICacheEventQueue;
@@ -38,7 +38,7 @@ public class CacheListeners<K extends Serializable, V extends Serializable>
 
     /** Map ICacheListener to ICacheEventQueue */
     public final Map<Long, ICacheEventQueue<K, V>> eventQMap =
-        new Hashtable<Long, ICacheEventQueue<K, V>>();
+        new ConcurrentHashMap<Long, ICacheEventQueue<K, V>>();
 
     /**
      * Constructs with the given cache.

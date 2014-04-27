@@ -26,10 +26,11 @@ import java.lang.management.ManagementFactory;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -78,8 +79,8 @@ public class CompositeCacheManager
     private static final String JMX_OBJECT_NAME = "org.apache.commons.jcs:type=JCSAdminBean";
 
     /** Caches managed by this cache manager */
-    private final Hashtable<String, ICache<? extends Serializable, ? extends Serializable>> caches =
-        new Hashtable<String, ICache<? extends Serializable, ? extends Serializable>>();
+    private final Map<String, ICache<? extends Serializable, ? extends Serializable>> caches =
+        new ConcurrentHashMap<String, ICache<? extends Serializable, ? extends Serializable>>();
 
     /** Number of clients accessing this cache manager */
     private int clients;
@@ -91,12 +92,12 @@ public class CompositeCacheManager
     private IElementAttributes defaultElementAttr = new ElementAttributes();
 
     /** Used to keep track of configured auxiliaries */
-    private final Hashtable<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
-        new Hashtable<String, AuxiliaryCacheFactory>( 11 );
+    private final Map<String, AuxiliaryCacheFactory> auxiliaryFactoryRegistry =
+        new ConcurrentHashMap<String, AuxiliaryCacheFactory>( 11 );
 
     /** Used to keep track of attributes for auxiliaries. */
-    private final Hashtable<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
-        new Hashtable<String, AuxiliaryCacheAttributes>( 11 );
+    private final Map<String, AuxiliaryCacheAttributes> auxiliaryAttributeRegistry =
+        new ConcurrentHashMap<String, AuxiliaryCacheAttributes>( 11 );
 
     /** Properties with which this manager was configured. This is exposed for other managers. */
     private Properties configurationProperties;
