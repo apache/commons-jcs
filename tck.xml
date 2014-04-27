@@ -167,54 +167,9 @@
             <javax.cache.Cache.Entry>${CacheEntryImpl}</javax.cache.Cache.Entry>
             <javax.cache.annotation.CacheInvocationContext>${CacheInvocationContextImpl}</javax.cache.annotation.CacheInvocationContext>
           </systemPropertyVariables>
-          <excludes>
-            <exclude>**/annotation/*Test.java</exclude>
-          </excludes>
         </configuration>
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>test-basic-cache</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <skipTests>false</skipTests>
-              <excludes>
-                <include>**/interceptor/*Test.java</include>
-              </excludes>
-              <systemPropertyVariables>
-                <domainJar>${domain-lib-dir}/${domain-jar}
-                </domainJar>
-              </systemPropertyVariables>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>test-optional-cache</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <includes>
-                <include>**/interceptor/*Test.java</include>
-              </includes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
 </project>
 
