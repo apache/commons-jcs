@@ -1,0 +1,2 @@
+# for tck this test needs to be excluded
+org.jsr107.tck.CachingTest#dummyTest

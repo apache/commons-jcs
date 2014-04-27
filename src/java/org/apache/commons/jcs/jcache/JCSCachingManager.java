@@ -79,6 +79,7 @@ public class JCSCachingManager implements CacheManager {
             final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(
                     loader,
                     new JCSCache/*<K, V, C>*/(
+                            loader,
                             this,
                             new JCSConfiguration(configuration, configuration.getKeyType(), configuration.getValueType()),
                             instance.getCache(cacheName)),
