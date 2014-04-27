@@ -77,7 +77,8 @@ public class JCSCachingManager implements CacheManager {
                             loader,
                             this,
                             new JCSConfiguration(configuration, configuration.getKeyType(), configuration.getValueType()),
-                            instance.getCache(cacheName)),
+                            instance.getCache(cacheName),
+                            instance.getConfigurationProperties()),
                     Cache.class
             );
             caches.putIfAbsent(cacheName, cache);
