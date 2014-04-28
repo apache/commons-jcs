@@ -303,14 +303,9 @@
   </contributors>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/resources</directory>
-      </resource>
-    </resources>
     <testResources>
         <testResource>
-            <directory>src/test-conf</directory>
+            <directory>src/test/test-conf</directory>
             <includes>
                 <include>**/*.properties</include>
                 <include>**/*.ccf</include>
