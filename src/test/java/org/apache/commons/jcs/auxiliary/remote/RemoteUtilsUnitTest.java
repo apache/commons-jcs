@@ -32,11 +32,11 @@ public class RemoteUtilsUnitTest
     extends TestCase
 {
     /**
-     * Call create registry twice.
+     * Call create registry.
      * <p>
      * The exception is in the security manager setting.
      */
-    public void testCreateRegistryTwice()
+    public void testCreateRegistry()
     {
         try
         {
@@ -45,16 +45,6 @@ public class RemoteUtilsUnitTest
         catch ( RemoteException e )
         {
             fail("RemoteException unexpected " + e);
-        }
-
-        try
-        {
-            RemoteUtils.createRegistry( 1102 );
-            fail("Second RemoteException expected");
-        }
-        catch ( Exception e )
-        {
-            // Expected
         }
     }
 }
