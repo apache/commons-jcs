@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -53,33 +52,57 @@ public class RemoteUtils
      * Creates and exports a registry on the specified port of the local host.
      * <p>
      * @param port
-     * @return the port the registry was started on
+     * @return the registry
      * @throws RemoteException
      */
-    public static int createRegistry( int port )
+    public static Registry createRegistry( int port )
         throws RemoteException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info( "createRegistry> setting security manager" );
-        }
-        System.setSecurityManager( new RMISecurityManager() );
+    	Registry registry = null;
+
+//        if ( log.isInfoEnabled() )
+//        {
+//            log.info( "createRegistry> Setting security manager" );
+//        }
+//
+//        System.setSecurityManager( new RMISecurityManager() );
 
         if ( port < 1024 )
         {
-            if ( log.isInfoEnabled() )
+            if ( log.isWarnEnabled() )
             {
-                log.info( "Port chosen was less than 1024, will use default [" + Registry.REGISTRY_PORT + "] instead." );
+                log.warn( "createRegistry> Port chosen was less than 1024, will use default [" + Registry.REGISTRY_PORT + "] instead." );
             }
             port = Registry.REGISTRY_PORT;
         }
 
-        if ( log.isInfoEnabled() )
+        try
         {
-            log.info( "createRegistry> creating registry on port [" + port + "]" );
+            registry = LocateRegistry.createRegistry( port );
+            log.info("createRegistry> Created the registry on port " + port);
         }
-        LocateRegistry.createRegistry( port );
-        return port;
+        catch ( RemoteException e )
+        {
+            log.warn( "createRegistry> Problem creating registry. It may already be started. " + e.getMessage() );
+        }
+        catch ( Throwable t )
+        {
+            log.error( "createRegistry> Problem creating registry.", t );
+        }
+
+        if (registry == null)
+        {
+        	try
+        	{
+            	registry = LocateRegistry.getRegistry( port );
+			}
+        	catch (RemoteException e)
+        	{
+                log.error( "createRegistry> Problem getting a registry reference.", e );
+			}
+        }
+
+        return registry;
     }
 
     /**

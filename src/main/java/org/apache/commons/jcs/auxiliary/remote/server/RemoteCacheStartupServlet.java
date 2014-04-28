@@ -22,8 +22,6 @@ package org.apache.commons.jcs.auxiliary.remote.server;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -100,30 +98,19 @@ public class RemoteCacheStartupServlet
         // all three
         int registryPort = DEFAULT_REGISTRY_PORT;
 
-        try
+        Properties props = PropertyLoader.loadProperties( propsFileName );
+        if ( props != null )
         {
-            Properties props = PropertyLoader.loadProperties( propsFileName );
-            if ( props != null )
-            {
-                String portS = props.getProperty( "registry.port", String.valueOf( DEFAULT_REGISTRY_PORT ) );
+            String portS = props.getProperty( "registry.port", String.valueOf( DEFAULT_REGISTRY_PORT ) );
 
-                try
-                {
-                    registryPort = Integer.parseInt( portS );
-                }
-                catch ( NumberFormatException e )
-                {
-                    log.error( "Problem converting port to an int.", e );
-                }
+            try
+            {
+                registryPort = Integer.parseInt( portS );
             }
-        }
-        catch ( Exception e )
-        {
-            log.error( "Problem loading props.", e );
-        }
-        catch ( Throwable t )
-        {
-            log.error( "Problem loading props.", t );
+            catch ( NumberFormatException e )
+            {
+                log.error( "Problem converting port to an int.", e );
+            }
         }
 
         // we will always use the local machine for the registry
@@ -145,19 +132,6 @@ public class RemoteCacheStartupServlet
 
             try
             {
-                LocateRegistry.createRegistry( registryPort );
-            }
-            catch ( RemoteException e )
-            {
-                log.error( "Problem creating registry.  It may already be started. " + e.getMessage() );
-            }
-            catch ( Throwable t )
-            {
-                log.error( "Problem creating registry.", t );
-            }
-
-            try
-            {
                 RemoteCacheServerFactory.startup( registryHost, registryPort, "/" + fullPropsFileName );
                 if ( log.isInfoEnabled() )
                 {
@@ -167,11 +141,6 @@ public class RemoteCacheStartupServlet
             catch ( IOException e )
             {
                 log.error( "Problem starting remote cache server.", e );
-            }
-
-            catch ( Throwable t )
-            {
-                log.error( "Problem starting remote cache server.", t );
             }
         }
         catch ( UnknownHostException e )

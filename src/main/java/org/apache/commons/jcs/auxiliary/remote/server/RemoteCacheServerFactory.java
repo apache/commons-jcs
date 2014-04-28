@@ -25,9 +25,9 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.RMISocketFactory;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -62,6 +62,9 @@ public class RemoteCacheServerFactory
 
     /** Executes the registry keep alive. */
     private static ScheduledExecutorService keepAliveDaemon;
+
+    /** A reference to the registry. */
+    private static Registry registry = null;
 
     /** Constructor for the RemoteCacheServerFactory object. */
     private RemoteCacheServerFactory()
@@ -180,7 +183,10 @@ public class RemoteCacheServerFactory
             remoteCacheServer.setCacheEventLogger( cacheEventLogger );
 
             // START THE REGISTRY
-            startTheRegistry( port, rcsa );
+            if (rcsa.isStartRegistry())
+            {
+            	registry = RemoteUtils.createRegistry(port);
+            }
 
             // REGISTER THE SERVER
             registerServer( host, port, serviceName );
@@ -251,32 +257,6 @@ public class RemoteCacheServerFactory
     }
 
     /**
-     * Starts the registry if needed
-     * <p>
-     * @param registryPort
-     * @param rcsa
-     */
-    private static void startTheRegistry( int registryPort, RemoteCacheServerAttributes rcsa )
-    {
-        if ( rcsa.isStartRegistry() )
-        {
-            try
-            {
-                LocateRegistry.createRegistry( registryPort );
-                log.info("Created the registry on port " + registryPort);
-            }
-            catch ( RemoteException e )
-            {
-                log.warn( "Problem creating registry.  It may already be started. " + e.getMessage() );
-            }
-            catch ( Throwable t )
-            {
-                log.error( "Problem creating registry.", t );
-            }
-        }
-    }
-
-    /**
      * Registers the server with the registry. I broke this off because we might want to have code
      * that will restart a dead registry. It will need to rebind the server.
      * <p>
@@ -290,9 +270,7 @@ public class RemoteCacheServerFactory
     {
         if ( remoteCacheServer == null )
         {
-            String message = "Cannot register the server until it is created.  Please start the server first.";
-            log.error( message );
-            throw new RemoteException( message );
+            throw new RemoteException( "Cannot register the server until it is created. Please start the server first." );
         }
 
         if ( log.isInfoEnabled() )
@@ -422,16 +400,20 @@ public class RemoteCacheServerFactory
             }
             remoteCacheServer.release();
             remoteCacheServer = null;
-            // TODO: safer exit ?
-            try
+
+            // Shut down keepalive scheduler
+            if ( keepAliveDaemon != null )
             {
-                Thread.sleep( 2000 );
+                keepAliveDaemon.shutdownNow();
+                keepAliveDaemon = null;
             }
-            catch ( InterruptedException ex )
+
+            // Try to release registry
+            if (registry != null)
             {
-                // swallow
+            	UnicastRemoteObject.unexportObject(registry, true);
+            	registry = null;
             }
-            System.exit( 0 );
         }
     }
 
@@ -529,7 +511,7 @@ public class RemoteCacheServerFactory
         if ( host == null || host.trim().equals( "" ) || host.trim().equals( "localhost" ) )
         {
             log.debug( "main> creating registry on the localhost" );
-            port = RemoteUtils.createRegistry( port );
+            RemoteUtils.createRegistry( port );
         }
         log.debug( "main> starting up RemoteCacheServer" );
         RemoteCacheServerFactory.startup( host, port, args.length > 0 ? args[0] : null );
