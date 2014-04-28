@@ -342,7 +342,6 @@
                 <!-- <exclude>**/JDBCDiskCacheRemovalUnitTest.java</exclude> -->
                 <!-- <exclude>**/JDBCDiskCacheUnitTest.java</exclude> -->
             </excludes>
-            <source>${maven.compiler.source}</source>
           </configuration>
         </plugin>
         <plugin>
@@ -431,8 +430,8 @@
 
     <!-- Default configuration for compiler source and target JVM -->
     <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
-  	<maven.compiler.source>1.6</maven.compiler.source>
-  	<maven.compiler.target>1.6</maven.compiler.target>
+  	<maven.compiler.source>1.7</maven.compiler.source>
+  	<maven.compiler.target>1.7</maven.compiler.target>
 
     <commons.componentid>jcs</commons.componentid>
     <commons.release.version>2.0</commons.release.version>
