@@ -26,7 +26,7 @@ import java.net.Socket;
 import junit.framework.TestCase;
 
 /** Unit tests for the custom factory */
-public class TimeoutConfigurableRMIScoketFactoryUnitTest
+public class TimeoutConfigurableRMISocketFactoryUnitTest
     extends TestCase
 {
     /**
