@@ -5,8 +5,6 @@ import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 
-import static com.sun.jmx.defaults.JmxProperties.JMX_INITIAL_BUILDER;
-
 public class JMXs {
     private static final MBeanServer SERVER = findMBeanServer();
 
@@ -35,7 +33,7 @@ public class JMXs {
     }
 
     private static MBeanServer findMBeanServer() {
-        if (System.getProperty(JMX_INITIAL_BUILDER) != null) {
+        if (System.getProperty("javax.management.builder.initial") != null) {
             return MBeanServerFactory.createMBeanServer();
         }
         return ManagementFactory.getPlatformMBeanServer();
