@@ -69,9 +69,6 @@ import org.apache.commons.logging.LogFactory;
 public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
     extends AbstractAuxiliaryCache<K, V>
 {
-    /** For serialization. Don't change. */
-    private static final long serialVersionUID = -3104089136003714717L;
-
     /** log instance */
     private static final Log log = LogFactory.getLog( RemoteCacheNoWait.class );
 
