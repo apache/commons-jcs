@@ -357,6 +357,15 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>tck-java-1.7</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <modules>
+        <module>commons-jcs-tck-tests</module>
+      </modules>
+    </profile>
   </profiles>
 
   <properties>
