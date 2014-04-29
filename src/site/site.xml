@@ -16,60 +16,60 @@
  limitations under the License.
 -->
 <project name="JCS">
-    <bannerRight>
-        <name>Commons JCS&#8482;</name>
-        <href>/index.html</href>
-    </bannerRight>
+  <bannerRight>
+    <name>Commons JCS&#8482;</name>
+    <href>/index.html</href>
+  </bannerRight>
 
-    <body>
-        <menu name="JCS">
-            <item name="Overview"      href="/index.html"/>
-            <item name="JCS and JCACHE" href="/JCSandJCACHE.html" />
-            <item name="Downloads" href="/download_jcs.cgi" />
-            <item name="FAQ" href="/faq.html" />
-        </menu>
+  <body>
+    <menu name="JCS">
+      <item name="Overview" href="/index.html"/>
+      <item name="JCS and JCACHE" href="/JCSandJCACHE.html"/>
+      <item name="Downloads" href="/download_jcs.cgi"/>
+      <item name="FAQ" href="/faq.html"/>
+    </menu>
 
-        <menu name="Development">
-            <item name="Release Notes"        href="/changes-report.html"/>
-            <item name="Mailing Lists"        href="/mail-lists.html"/>
-            <item name="Issue Tracking"       href="/issue-tracking.html"/>
-            <item name="Source Repository"    href="/source-repository.html"/>
-            <item name="Javadoc (SVN latest)" href="apidocs/index.html"/>
-        </menu>
+    <menu name="Development">
+      <item name="Release Notes" href="/changes-report.html"/>
+      <item name="Mailing Lists" href="/mail-lists.html"/>
+      <item name="Issue Tracking" href="/issue-tracking.html"/>
+      <item name="Source Repository" href="/source-repository.html"/>
+      <item name="Javadoc (SVN latest)" href="apidocs/index.html"/>
+    </menu>
 
-        <menu name="Getting Started">
-            <item name="Overview" href="/getting_started/intro.html" />
-            <item name="Basic JCS Config" href="/BasicJCSConfiguration.html" />
-            <item name="Plugin Overview" href="/JCSPlugins.html" />
-            <item name="Basic Web Example" href="/UsingJCSBasicWeb.html" />
-        </menu>
+    <menu name="Getting Started">
+      <item name="Overview" href="/getting_started/intro.html"/>
+      <item name="Basic JCS Config" href="/BasicJCSConfiguration.html"/>
+      <item name="Plugin Overview" href="/JCSPlugins.html"/>
+      <item name="Basic Web Example" href="/UsingJCSBasicWeb.html"/>
+    </menu>
 
-        <menu name="JCS User's Guide">
-            <item name="Core" href="/LocalCacheConfig.html" collapse="true">
-                <item name="Basic JCS Config" href="/BasicJCSConfiguration.html" />
-                <item name="Element Config" href="/ElementAttributes.html" />
-                <item name="Element Event Handling" href="/ElementEventHandling.html" />
-                <item name="Region Properties" href="/RegionProperties.html" />
-                <item name="Basic Web Example" href="/UsingJCSBasicWeb.html" />
-            </item>
-            <item name="Auxiliary" href="/JCSPlugins.html" collapse="true">
-                <item name="Cache Event Logging" href="/CacheEventLogging.html" />
-                <item name="Indexed Disk Cache" href="/IndexedDiskAuxCache.html" />
-                <item name="Indexed Disk Properties" href="/IndexedDiskCacheProperties.html" />
-                <item name="Block Disk Cache" href="/BlockDiskCache.html" />
-                <item name="JDBC Disk Cache" href="/JDBCDiskCache.html" />
-                <item name="JDBC Disk Properties" href="/JDBCDiskCacheProperties.html" />
-                <item name="MySQL Disk Properties" href="/MySQLDiskCacheProperties.html" />
-                <item name="Remote Cache" href="/RemoteAuxCache.html" />
-                <item name="Remote Cache Properties" href="/RemoteCacheProperties.html" />
-                <item name="Remote Http Cache Properties" href="/RemoteHttpCacheProperties.html" />
-                <item name="Lateral TCP Cache" href="/LateralTCPAuxCache.html" />
-                <item name="Lateral TCP Properties" href="/LateralTCPProperties.html" />
-                <item name="Lateral UDP Discovery" href="/LateralUDPDiscovery.html" />
-                <item name="Lateral JGroups Cache" href="/LateralJavaGroupsAuxCache.html" />
-            </item>
-        </menu>
+    <menu name="JCS User's Guide">
+      <item name="Core" href="/LocalCacheConfig.html" collapse="true">
+        <item name="Basic JCS Config" href="/BasicJCSConfiguration.html"/>
+        <item name="Element Config" href="/ElementAttributes.html"/>
+        <item name="Element Event Handling" href="/ElementEventHandling.html"/>
+        <item name="Region Properties" href="/RegionProperties.html"/>
+        <item name="Basic Web Example" href="/UsingJCSBasicWeb.html"/>
+      </item>
+      <item name="Auxiliary" href="/JCSPlugins.html" collapse="true">
+        <item name="Cache Event Logging" href="/CacheEventLogging.html"/>
+        <item name="Indexed Disk Cache" href="/IndexedDiskAuxCache.html"/>
+        <item name="Indexed Disk Properties" href="/IndexedDiskCacheProperties.html"/>
+        <item name="Block Disk Cache" href="/BlockDiskCache.html"/>
+        <item name="JDBC Disk Cache" href="/JDBCDiskCache.html"/>
+        <item name="JDBC Disk Properties" href="/JDBCDiskCacheProperties.html"/>
+        <item name="MySQL Disk Properties" href="/MySQLDiskCacheProperties.html"/>
+        <item name="Remote Cache" href="/RemoteAuxCache.html"/>
+        <item name="Remote Cache Properties" href="/RemoteCacheProperties.html"/>
+        <item name="Remote Http Cache Properties" href="/RemoteHttpCacheProperties.html"/>
+        <item name="Lateral TCP Cache" href="/LateralTCPAuxCache.html"/>
+        <item name="Lateral TCP Properties" href="/LateralTCPProperties.html"/>
+        <item name="Lateral UDP Discovery" href="/LateralUDPDiscovery.html"/>
+        <item name="Lateral JGroups Cache" href="/LateralJavaGroupsAuxCache.html"/>
+      </item>
+    </menu>
 
-    </body>
+  </body>
 
 </project>

@@ -17,13 +17,13 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-     <groupId>org.apache.commons</groupId>
-     <artifactId>commons-parent</artifactId>
-     <version>33</version>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-parent</artifactId>
+    <version>33</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
@@ -97,7 +97,7 @@
       <scope>test</scope>
     </dependency>
 
-<!-- Exclude for now -->
+    <!-- Exclude for now -->
     <!-- dependency>
       <groupId>org.jgroups</groupId>
       <artifactId>jgroups</artifactId>
@@ -113,36 +113,36 @@
     </dependency>
 
     <dependency>
-       <groupId>commons-httpclient</groupId>
-       <artifactId>commons-httpclient</artifactId>
-       <version>3.0.1</version>
-       <optional>true</optional>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.0.1</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
-       <groupId>javax.servlet</groupId>
-       <artifactId>servlet-api</artifactId>
-       <version>2.5</version>
-       <optional>true</optional>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.5</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
-        <groupId>javax.cache</groupId>
-        <artifactId>cache-api</artifactId>
-        <version>1.0.0</version>
-        <scope>provided</scope>
+      <groupId>javax.cache</groupId>
+      <artifactId>cache-api</artifactId>
+      <version>1.0.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>org.apache.geronimo.specs</groupId>
-        <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-        <version>1.0</version>
-        <scope>provided</scope>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>org.apache.geronimo.specs</groupId>
-        <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-        <version>1.0</version>
-        <scope>provided</scope>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- to debug tcks -->
@@ -263,19 +263,19 @@
       <id>asmuts</id>
       <name>Aaron Smuts</name>
       <email>asmuts@apache.org</email>
-      <organization />
+      <organization/>
     </developer>
     <developer>
       <id>jtaylor</id>
       <name>James Taylor</name>
       <email>james@jamestaylor.org</email>
-      <organization />
+      <organization/>
     </developer>
     <developer>
       <id>hchar</id>
       <name>Hanson Char</name>
       <email>hchar@apache.org</email>
-      <organization />
+      <organization/>
     </developer>
     <developer>
       <id>tsavo</id>
@@ -287,7 +287,7 @@
       <id>tv</id>
       <name>Thomas Vandahl</name>
       <email>tv@apache.org</email>
-      <organization />
+      <organization/>
     </developer>
   </developers>
 
@@ -304,13 +304,13 @@
 
   <build>
     <testResources>
-        <testResource>
-            <directory>src/test/test-conf</directory>
-            <includes>
-                <include>**/*.properties</include>
-                <include>**/*.ccf</include>
-            </includes>
-        </testResource>
+      <testResource>
+        <directory>src/test/test-conf</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.ccf</include>
+        </includes>
+      </testResource>
     </testResources>
     <pluginManagement>
       <plugins>
@@ -322,25 +322,25 @@
             <argLine>-Xmx256m -Djava.security.manager -Djava.security.policy=${basedir}/src/conf/cache.policy</argLine>
             <forkMode>pertest</forkMode>
             <includes>
-                <include>**/*UnitTest.java</include>
+              <include>**/*UnitTest.java</include>
             </includes>
             <excludes>
-                <!--
-                    Several of the test cases rely on background tasks that are timing
-                    sensitive.
-                -->
-                <!-- You need to manually run these test cases. -->
-                <exclude>**/BlockDiskElementDescriptorUnitTest.java</exclude>
-                <exclude>**/HSQLDiskCacheConcurrentUnitTest.java</exclude>
-                <exclude>**/HSQLDiskCacheUnitTest.java</exclude>
-                <exclude>**/IndexedDiskCacheOptimizationUnitTest.java</exclude>
-                <exclude>**/TestTCPLateralUnitTest.java</exclude>
-                <exclude>**/UDPDiscoveryUnitTest.java</exclude>
-                <!-- Causes hang in Continuum -->
-                <exclude>**/UDPDiscoverySenderUnitTest.java</exclude>
-                <!-- The ones that fail may be different for you. -->
-                <!-- <exclude>**/JDBCDiskCacheRemovalUnitTest.java</exclude> -->
-                <!-- <exclude>**/JDBCDiskCacheUnitTest.java</exclude> -->
+              <!--
+                  Several of the test cases rely on background tasks that are timing
+                  sensitive.
+              -->
+              <!-- You need to manually run these test cases. -->
+              <exclude>**/BlockDiskElementDescriptorUnitTest.java</exclude>
+              <exclude>**/HSQLDiskCacheConcurrentUnitTest.java</exclude>
+              <exclude>**/HSQLDiskCacheUnitTest.java</exclude>
+              <exclude>**/IndexedDiskCacheOptimizationUnitTest.java</exclude>
+              <exclude>**/TestTCPLateralUnitTest.java</exclude>
+              <exclude>**/UDPDiscoveryUnitTest.java</exclude>
+              <!-- Causes hang in Continuum -->
+              <exclude>**/UDPDiscoverySenderUnitTest.java</exclude>
+              <!-- The ones that fail may be different for you. -->
+              <!-- <exclude>**/JDBCDiskCacheRemovalUnitTest.java</exclude> -->
+              <!-- <exclude>**/JDBCDiskCacheUnitTest.java</exclude> -->
             </excludes>
           </configuration>
         </plugin>
@@ -420,18 +420,18 @@
                 </configuration>
               </execution>
             </executions>
-          </plugin>      
+          </plugin>
         </plugins>
       </build>
-    </profile>    
+    </profile>
   </profiles>
 
   <properties>
 
     <!-- Default configuration for compiler source and target JVM -->
     <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
-  	<maven.compiler.source>1.7</maven.compiler.source>
-  	<maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
 
     <commons.componentid>jcs</commons.componentid>
     <commons.release.version>2.0</commons.release.version>
@@ -440,7 +440,9 @@
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>JCS</commons.jira.id>
     <commons.site.path>commons-jcs</commons.site.path>
-    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/${commons.site.path}</commons.scmPubUrl>
+    <commons.scmPubUrl>
+      https://svn.apache.org/repos/infra/websites/production/commons/content/proper/${commons.site.path}
+    </commons.scmPubUrl>
     <!-- Ensure copies work OK (can be removed later when this is in parent POM) -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
