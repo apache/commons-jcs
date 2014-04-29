@@ -22,8 +22,6 @@
 
   <properties>
 
-    <jsr107.api.version>1.0.0</jsr107.api.version>
-
     <implementation-groupId>${project.groupId}</implementation-groupId>
     <implementation-artifactId>commons-jcs</implementation-artifactId>
     <implementation-version>${project.version}</implementation-version>
