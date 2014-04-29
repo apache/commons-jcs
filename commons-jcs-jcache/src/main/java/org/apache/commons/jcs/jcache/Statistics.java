@@ -2,7 +2,8 @@ package org.apache.commons.jcs.jcache;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Statistics {
+public class Statistics
+{
     private volatile boolean active = true;
 
     private final AtomicLong removals = new AtomicLong();
@@ -15,95 +16,120 @@ public class Statistics {
     private final AtomicLong getTimeTaken = new AtomicLong();
     private final AtomicLong removeTimeTaken = new AtomicLong();
 
-    public long getHits() {
+    public long getHits()
+    {
         return hits.get();
     }
 
-    public long getMisses() {
+    public long getMisses()
+    {
         return misses.get();
     }
 
-    public long getPuts() {
+    public long getPuts()
+    {
         return puts.get();
     }
 
-    public long getRemovals() {
+    public long getRemovals()
+    {
         return removals.get();
     }
 
-    public long getEvictions() {
+    public long getEvictions()
+    {
         return evictions.get();
     }
 
-    public long getTimeTakenForGets() {
+    public long getTimeTakenForGets()
+    {
         return getTimeTaken.get();
     }
 
-    public long getTimeTakenForPuts() {
+    public long getTimeTakenForPuts()
+    {
         return putTimeTaken.get();
     }
 
-    public long getTimeTakenForRemovals() {
+    public long getTimeTakenForRemovals()
+    {
         return removeTimeTaken.get();
     }
 
-    public void increaseRemovals(final long number) {
+    public void increaseRemovals(final long number)
+    {
         increment(removals, number);
     }
 
-    public void increaseExpiries(final long number) {
+    public void increaseExpiries(final long number)
+    {
         increment(expiries, number);
     }
 
-    public void increasePuts(final long number) {
+    public void increasePuts(final long number)
+    {
         increment(puts, number);
     }
 
-    public void increaseHits(final long number) {
+    public void increaseHits(final long number)
+    {
         increment(hits, number);
     }
 
-    public void increaseMisses(final long number) {
+    public void increaseMisses(final long number)
+    {
         increment(misses, number);
     }
 
-    public void increaseEvictions(final long number) {
+    public void increaseEvictions(final long number)
+    {
         increment(evictions, number);
     }
 
-    public void addGetTime(final long duration) {
+    public void addGetTime(final long duration)
+    {
         increment(duration, getTimeTaken);
     }
 
-    public void addPutTime(final long duration) {
+    public void addPutTime(final long duration)
+    {
         increment(duration, putTimeTaken);
     }
 
-    public void addRemoveTime(final long duration) {
+    public void addRemoveTime(final long duration)
+    {
         increment(duration, removeTimeTaken);
     }
 
-    private void increment(final AtomicLong counter, final long number) {
-        if (!active) {
+    private void increment(final AtomicLong counter, final long number)
+    {
+        if (!active)
+        {
             return;
         }
         counter.addAndGet(number);
     }
 
-    private void increment(final long duration, final AtomicLong counter) {
-        if (!active) {
+    private void increment(final long duration, final AtomicLong counter)
+    {
+        if (!active)
+        {
             return;
         }
 
-        if (counter.get() < Long.MAX_VALUE - duration) {
+        if (counter.get() < Long.MAX_VALUE - duration)
+        {
             counter.addAndGet(duration);
-        } else {
+        }
+        else
+        {
             reset();
             counter.set(duration);
         }
     }
 
-    public void reset() {
+    public void reset()
+    {
         puts.set(0);
         misses.set(0);
         removals.set(0);
@@ -115,7 +141,8 @@ public class Statistics {
         removeTimeTaken.set(0);
     }
 
-    public void setActive(final boolean active) {
+    public void setActive(final boolean active)
+    {
         this.active = active;
     }
 }

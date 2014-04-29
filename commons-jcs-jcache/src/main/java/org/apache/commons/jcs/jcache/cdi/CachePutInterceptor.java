@@ -7,9 +7,11 @@ import javax.interceptor.InvocationContext;
 
 @CachePut
 @Interceptor
-public class CachePutInterceptor {
+public class CachePutInterceptor
+{
     @AroundInvoke
-    public Object cache(final InvocationContext ic) throws Exception {
+    public Object cache(final InvocationContext ic) throws Exception
+    {
         throw new UnsupportedOperationException("TODO");
     }
 }

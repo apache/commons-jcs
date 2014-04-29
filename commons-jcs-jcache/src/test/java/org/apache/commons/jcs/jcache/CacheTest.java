@@ -1,6 +1,12 @@
 package org.apache.commons.jcs.jcache;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -20,17 +26,14 @@ import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
-public class CacheTest {
+public class CacheTest
+{
     @Test
-    public void getPut() {
+    public void getPut()
+    {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
         cacheManager.createCache("default", null);
@@ -45,21 +48,29 @@ public class CacheTest {
     }
 
     @Test
-    public void listeners() {
+    public void listeners()
+    {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
         cacheManager.createCache("default", null);
         final Cache<String, String> cache = cacheManager.getCache("default");
         final Set<String> event = new HashSet<String>();
-        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>() {
+        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
+        {
             @Override
-            public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory() {
-                return new Factory<CacheEntryListener<? super String, ? super String>>() {
+            public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
+            {
+                return new Factory<CacheEntryListener<? super String, ? super String>>()
+                {
                     @Override
-                    public CacheEntryListener<? super String, ? super String> create() {
-                        return new CacheEntryCreatedListener<String, String>() {
+                    public CacheEntryListener<? super String, ? super String> create()
+                    {
+                        return new CacheEntryCreatedListener<String, String>()
+                        {
                             @Override
-                            public void onCreated(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents) throws CacheEntryListenerException {
+                            public void onCreated(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
+                                    throws CacheEntryListenerException
+                            {
                                 event.add(cacheEntryEvents.iterator().next().getKey());
                             }
                         };
@@ -68,29 +79,39 @@ public class CacheTest {
             }
 
             @Override
-            public boolean isOldValueRequired() {
+            public boolean isOldValueRequired()
+            {
                 return false;
             }
 
             @Override
-            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory() {
+            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
+            {
                 return null;
             }
 
             @Override
-            public boolean isSynchronous() {
+            public boolean isSynchronous()
+            {
                 return false;
             }
         });
-        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>() {
+        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
+        {
             @Override
-            public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory() {
-                return new Factory<CacheEntryListener<? super String, ? super String>>() {
+            public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
+            {
+                return new Factory<CacheEntryListener<? super String, ? super String>>()
+                {
                     @Override
-                    public CacheEntryListener<? super String, ? super String> create() {
-                        return new CacheEntryUpdatedListener<String, String>() {
+                    public CacheEntryListener<? super String, ? super String> create()
+                    {
+                        return new CacheEntryUpdatedListener<String, String>()
+                        {
                             @Override
-                            public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents) throws CacheEntryListenerException {
+                            public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
+                                    throws CacheEntryListenerException
+                            {
                                 event.add(cacheEntryEvents.iterator().next().getKey());
                             }
                         };
@@ -99,29 +120,39 @@ public class CacheTest {
             }
 
             @Override
-            public boolean isOldValueRequired() {
+            public boolean isOldValueRequired()
+            {
                 return false;
             }
 
             @Override
-            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory() {
+            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
+            {
                 return null;
             }
 
             @Override
-            public boolean isSynchronous() {
+            public boolean isSynchronous()
+            {
                 return false;
             }
         });
-        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>() {
+        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
+        {
             @Override
-            public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory() {
-                return new Factory<CacheEntryListener<? super String, ? super String>>() {
+            public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
+            {
+                return new Factory<CacheEntryListener<? super String, ? super String>>()
+                {
                     @Override
-                    public CacheEntryListener<? super String, ? super String> create() {
-                        return new CacheEntryRemovedListener<String, String>() {
+                    public CacheEntryListener<? super String, ? super String> create()
+                    {
+                        return new CacheEntryRemovedListener<String, String>()
+                        {
                             @Override
-                            public void onRemoved(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents) throws CacheEntryListenerException {
+                            public void onRemoved(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
+                                    throws CacheEntryListenerException
+                            {
                                 event.add(cacheEntryEvents.iterator().next().getKey());
                             }
                         };
@@ -130,17 +161,20 @@ public class CacheTest {
             }
 
             @Override
-            public boolean isOldValueRequired() {
+            public boolean isOldValueRequired()
+            {
                 return false;
             }
 
             @Override
-            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory() {
+            public Factory<CacheEntryEventFilter<? super String, ? super String>> getCacheEntryEventFilterFactory()
+            {
                 return null;
             }
 
             @Override
-            public boolean isSynchronous() {
+            public boolean isSynchronous()
+            {
                 return false;
             }
         });
@@ -161,48 +195,61 @@ public class CacheTest {
     }
 
     @Test
-    public void loader() {
+    public void loader()
+    {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache("default", new CompleteConfiguration<Object, Object>() {
+        cacheManager.createCache("default", new CompleteConfiguration<Object, Object>()
+        {
             @Override
-            public boolean isReadThrough() {
+            public boolean isReadThrough()
+            {
                 return true;
             }
 
             @Override
-            public boolean isWriteThrough() {
+            public boolean isWriteThrough()
+            {
                 return false;
             }
 
             @Override
-            public boolean isStatisticsEnabled() {
+            public boolean isStatisticsEnabled()
+            {
                 return false;
             }
 
             @Override
-            public boolean isManagementEnabled() {
+            public boolean isManagementEnabled()
+            {
                 return false;
             }
 
             @Override
-            public Iterable<CacheEntryListenerConfiguration<Object, Object>> getCacheEntryListenerConfigurations() {
+            public Iterable<CacheEntryListenerConfiguration<Object, Object>> getCacheEntryListenerConfigurations()
+            {
                 return null;
             }
 
             @Override
-            public Factory<CacheLoader<Object, Object>> getCacheLoaderFactory() {
-                return new Factory<CacheLoader<Object, Object>>() {
+            public Factory<CacheLoader<Object, Object>> getCacheLoaderFactory()
+            {
+                return new Factory<CacheLoader<Object, Object>>()
+                {
                     @Override
-                    public CacheLoader<Object, Object> create() {
-                        return new CacheLoader<Object, Object>() {
+                    public CacheLoader<Object, Object> create()
+                    {
+                        return new CacheLoader<Object, Object>()
+                        {
                             @Override
-                            public Object load(Object key) throws CacheLoaderException {
+                            public Object load(Object key) throws CacheLoaderException
+                            {
                                 return "super";
                             }
 
                             @Override
-                            public Map<Object, Object> loadAll(Iterable<?> keys) throws CacheLoaderException {
+                            public Map<Object, Object> loadAll(Iterable<?> keys) throws CacheLoaderException
+                            {
                                 return null;
                             }
                         };
@@ -211,27 +258,32 @@ public class CacheTest {
             }
 
             @Override
-            public Factory<CacheWriter<? super Object, ? super Object>> getCacheWriterFactory() {
+            public Factory<CacheWriter<? super Object, ? super Object>> getCacheWriterFactory()
+            {
                 return null;
             }
 
             @Override
-            public Factory<ExpiryPolicy> getExpiryPolicyFactory() {
+            public Factory<ExpiryPolicy> getExpiryPolicyFactory()
+            {
                 return null;
             }
 
             @Override
-            public Class<Object> getKeyType() {
+            public Class<Object> getKeyType()
+            {
                 return null;
             }
 
             @Override
-            public Class<Object> getValueType() {
+            public Class<Object> getValueType()
+            {
                 return null;
             }
 
             @Override
-            public boolean isStoreByValue() {
+            public boolean isStoreByValue()
+            {
                 return false;
             }
         });

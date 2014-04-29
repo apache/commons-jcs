@@ -14,7 +14,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JCSListener<K extends Serializable, V extends Serializable> {
+public class JCSListener<K extends Serializable, V extends Serializable>
+{
     private final boolean oldValue;
     private final boolean synchronous;
     private final CacheEntryEventFilter<? super K, ? super V> filter;
@@ -24,14 +25,19 @@ public class JCSListener<K extends Serializable, V extends Serializable> {
     private final boolean update;
     private final boolean create;
 
-    public JCSListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
+    public JCSListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
         oldValue = cacheEntryListenerConfiguration.isOldValueRequired();
         synchronous = cacheEntryListenerConfiguration.isSynchronous();
 
-        final Factory<CacheEntryEventFilter<? super K, ? super V>> filterFactory = cacheEntryListenerConfiguration.getCacheEntryEventFilterFactory();
-        if (filterFactory == null) {
+        final Factory<CacheEntryEventFilter<? super K, ? super V>> filterFactory = cacheEntryListenerConfiguration
+                .getCacheEntryEventFilterFactory();
+        if (filterFactory == null)
+        {
             filter = NoFilter.INSTANCE;
-        } else {
+        }
+        else
+        {
             filter = filterFactory.create();
         }
 
@@ -42,46 +48,59 @@ public class JCSListener<K extends Serializable, V extends Serializable> {
         create = CacheEntryCreatedListener.class.isInstance(delegate);
     }
 
-    public void onRemoved(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException {
-        if (remove) {
+    public void onRemoved(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    {
+        if (remove)
+        {
             CacheEntryRemovedListener.class.cast(delegate).onRemoved(filter(events));
         }
     }
 
-
-    public void onExpired(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException {
-        if (expire) {
+    public void onExpired(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    {
+        if (expire)
+        {
             CacheEntryExpiredListener.class.cast(delegate).onExpired(filter(events));
         }
     }
 
-    public void onUpdated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException {
-        if (update) {
+    public void onUpdated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    {
+        if (update)
+        {
             CacheEntryUpdatedListener.class.cast(delegate).onUpdated(filter(events));
         }
     }
 
-    public void onCreated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException {
-        if (create) {
+    public void onCreated(final List<CacheEntryEvent<? extends K, ? extends V>> events) throws CacheEntryListenerException
+    {
+        if (create)
+        {
             CacheEntryCreatedListener.class.cast(delegate).onCreated(filter(events));
         }
     }
 
-    private Iterable<CacheEntryEvent<? extends K, ? extends V>> filter(final List<CacheEntryEvent<? extends K, ? extends V>> events) {
-        if (filter == NoFilter.INSTANCE) {
+    private Iterable<CacheEntryEvent<? extends K, ? extends V>> filter(final List<CacheEntryEvent<? extends K, ? extends V>> events)
+    {
+        if (filter == NoFilter.INSTANCE)
+        {
             return events;
         }
 
-        final List<CacheEntryEvent<? extends K, ? extends V>> filtered = new ArrayList<CacheEntryEvent<? extends K, ? extends V>>(events.size());
-        for (final CacheEntryEvent<? extends K, ? extends V> event : events) {
-            if (filter.evaluate(event)) {
+        final List<CacheEntryEvent<? extends K, ? extends V>> filtered = new ArrayList<CacheEntryEvent<? extends K, ? extends V>>(
+                events.size());
+        for (final CacheEntryEvent<? extends K, ? extends V> event : events)
+        {
+            if (filter.evaluate(event))
+            {
                 filtered.add(event);
             }
         }
         return filtered;
     }
 
-    public void close() {
+    public void close()
+    {
         // no-op
     }
 }

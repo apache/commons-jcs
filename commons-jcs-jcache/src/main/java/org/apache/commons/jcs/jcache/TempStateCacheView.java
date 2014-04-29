@@ -21,90 +21,115 @@ import java.util.Set;
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
 // kind of transactional view for a Cache<K, V>, to use with EntryProcessor
-public class TempStateCacheView<K extends Serializable, V extends Serializable> implements Cache<K, V> {
+public class TempStateCacheView<K extends Serializable, V extends Serializable> implements Cache<K, V>
+{
     private final JCSCache<K, V, ?> cache;
     private final Map<K, V> put = new HashMap<K, V>();
     private final Collection<K> remove = new LinkedList<K>();
     private boolean removeAll = false;
     private boolean clear = false;
 
-    public TempStateCacheView(final JCSCache<K, V, ?> entries) {
+    public TempStateCacheView(final JCSCache<K, V, ?> entries)
+    {
         this.cache = entries;
     }
 
-    public V get(final K key) {
-        if (ignoreKey(key)) {
+    public V get(final K key)
+    {
+        if (ignoreKey(key))
+        {
             return null;
         }
 
         final V v = put.get(key);
-        if (v != null) {
+        if (v != null)
+        {
             return v;
         }
 
-        // for an EntryProcessor we already incremented stats - to enhance surely
-        if (cache.getConfiguration(CompleteConfiguration.class).isStatisticsEnabled()) {
+        // for an EntryProcessor we already incremented stats - to enhance
+        // surely
+        if (cache.getConfiguration(CompleteConfiguration.class).isStatisticsEnabled())
+        {
             final Statistics statistics = cache.getStatistics();
-            if (cache.containsKey(key)) {
+            if (cache.containsKey(key))
+            {
                 statistics.increaseHits(-1);
-            } else {
+            }
+            else
+            {
                 statistics.increaseMisses(-1);
             }
         }
         return cache.get(key);
     }
 
-    private boolean ignoreKey(final K key) {
+    private boolean ignoreKey(final K key)
+    {
         return removeAll || clear || remove.contains(key);
     }
 
-    public Map<K, V> getAll(final Set<? extends K> keys) {
+    public Map<K, V> getAll(final Set<? extends K> keys)
+    {
         final Map<K, V> v = new HashMap<K, V>(keys.size());
         final Set<K> missing = new HashSet<K>();
-        for (final K k : keys) {
+        for (final K k : keys)
+        {
             final V value = put.get(k);
-            if (value != null) {
+            if (value != null)
+            {
                 v.put(k, value);
-            } else if (!ignoreKey(k)) {
+            }
+            else if (!ignoreKey(k))
+            {
                 missing.add(k);
             }
         }
-        if (!missing.isEmpty()) {
+        if (!missing.isEmpty())
+        {
             v.putAll(cache.getAll(missing));
         }
         return v;
     }
 
-    public boolean containsKey(final K key) {
+    public boolean containsKey(final K key)
+    {
         return !ignoreKey(key) && (put.containsKey(key) || cache.containsKey(key));
     }
 
-    public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener) {
+    public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
+    {
         cache.loadAll(keys, replaceExistingValues, completionListener);
     }
 
-    public void put(final K key, final V value) {
+    public void put(final K key, final V value)
+    {
         assertNotNull(key, "key");
         assertNotNull(value, "value");
         put.put(key, value);
         remove.remove(key);
     }
 
-    public V getAndPut(final K key, final V value) {
+    public V getAndPut(final K key, final V value)
+    {
         final V v = get(key);
         put(key, value);
         return v;
     }
 
-    public void putAll(final Map<? extends K, ? extends V> map) {
+    public void putAll(final Map<? extends K, ? extends V> map)
+    {
         put.putAll(map);
-        for (final K k : map.keySet()) {
+        for (final K k : map.keySet())
+        {
             remove.remove(k);
         }
     }
 
-    public boolean putIfAbsent(final K key, final V value) {
-        if (!put.containsKey(key)) {
+    public boolean putIfAbsent(final K key, final V value)
+    {
+        if (!put.containsKey(key))
+        {
             put.put(key, value);
             remove.remove(key);
             return true;
@@ -112,11 +137,14 @@ public class TempStateCacheView<K extends Serializable, V extends Serializable> 
         return false;
     }
 
-    public boolean remove(final K key) {
+    public boolean remove(final K key)
+    {
         final boolean noop = put.containsKey(key);
         put.remove(key);
-        if (!ignoreKey(key)) {
-            if (!noop) {
+        if (!ignoreKey(key))
+        {
+            if (!noop)
+            {
                 remove.add(key);
             }
             return true;
@@ -124,40 +152,49 @@ public class TempStateCacheView<K extends Serializable, V extends Serializable> 
         return false;
     }
 
-    public boolean remove(final K key, final V oldValue) {
+    public boolean remove(final K key, final V oldValue)
+    {
         put.remove(key);
-        if (!ignoreKey(key) && oldValue.equals(cache.get(key))) {
+        if (!ignoreKey(key) && oldValue.equals(cache.get(key)))
+        {
             remove.add(key);
             return true;
         }
         return false;
     }
 
-    public V getAndRemove(final K key) {
+    public V getAndRemove(final K key)
+    {
         final V v = get(key);
         remove.add(key);
         put.remove(key);
         return v;
     }
 
-    public boolean replace(final K key, final V oldValue, final V newValue) {
-        if (oldValue.equals(get(key))) {
+    public boolean replace(final K key, final V oldValue, final V newValue)
+    {
+        if (oldValue.equals(get(key)))
+        {
             put(key, newValue);
             return true;
         }
         return false;
     }
 
-    public boolean replace(final K key, final V value) {
-        if (containsKey(key)) {
+    public boolean replace(final K key, final V value)
+    {
+        if (containsKey(key))
+        {
             remove(key);
             return true;
         }
         return false;
     }
 
-    public V getAndReplace(final K key, final V value) {
-        if (containsKey(key)) {
+    public V getAndReplace(final K key, final V value)
+    {
+        if (containsKey(key))
+        {
             final V oldValue = get(key);
             put(key, value);
             return oldValue;
@@ -165,90 +202,111 @@ public class TempStateCacheView<K extends Serializable, V extends Serializable> 
         return null;
     }
 
-    public void removeAll(final Set<? extends K> keys) {
+    public void removeAll(final Set<? extends K> keys)
+    {
         remove.addAll(keys);
-        for (final K k : keys) {
+        for (final K k : keys)
+        {
             put.remove(keys);
         }
     }
 
     @Override
-    public void removeAll() {
+    public void removeAll()
+    {
         removeAll = true;
         put.clear();
         remove.clear();
     }
 
     @Override
-    public void clear() {
+    public void clear()
+    {
         clear = true;
         put.clear();
         remove.clear();
     }
 
-    public <C extends Configuration<K, V>> C getConfiguration(final Class<C> clazz) {
+    public <C extends Configuration<K, V>> C getConfiguration(final Class<C> clazz)
+    {
         return cache.getConfiguration(clazz);
     }
 
-    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException {
+    public <T> T invoke(final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) throws EntryProcessorException
+    {
         return cache.invoke(key, entryProcessor, arguments);
     }
 
-    public <T> Map<K, EntryProcessorResult<T>> invokeAll(Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments) {
+    public <T> Map<K, EntryProcessorResult<T>> invokeAll(Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
+            final Object... arguments)
+    {
         return cache.invokeAll(keys, entryProcessor, arguments);
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return cache.getName();
     }
 
     @Override
-    public CacheManager getCacheManager() {
+    public CacheManager getCacheManager()
+    {
         return cache.getCacheManager();
     }
 
     @Override
-    public void close() {
+    public void close()
+    {
         cache.close();
     }
 
     @Override
-    public boolean isClosed() {
+    public boolean isClosed()
+    {
         return cache.isClosed();
     }
 
     @Override
-    public <T> T unwrap(final Class<T> clazz) {
+    public <T> T unwrap(final Class<T> clazz)
+    {
         return cache.unwrap(clazz);
     }
 
-    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
+    public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
         cache.registerCacheEntryListener(cacheEntryListenerConfiguration);
     }
 
-    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
+    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
         cache.deregisterCacheEntryListener(cacheEntryListenerConfiguration);
     }
 
     @Override
-    public Iterator<Entry<K, V>> iterator() {
+    public Iterator<Entry<K, V>> iterator()
+    {
         return cache.iterator();
     }
 
-    public void merge() {
-        if (removeAll) {
+    public void merge()
+    {
+        if (removeAll)
+        {
             cache.removeAll();
         }
-        if (clear) {
+        if (clear)
+        {
             cache.clear();
         }
 
-        for (final Map.Entry<K, V> entry : put.entrySet()) {
+        for (final Map.Entry<K, V> entry : put.entrySet())
+        {
             cache.put(entry.getKey(), entry.getValue());
         }
         put.clear();
-        for (final K entry : remove) {
+        for (final K entry : remove)
+        {
             cache.remove(entry);
         }
         remove.clear();

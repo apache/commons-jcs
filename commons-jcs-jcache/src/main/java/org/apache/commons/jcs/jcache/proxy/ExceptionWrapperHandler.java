@@ -6,30 +6,43 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-public class ExceptionWrapperHandler<T> implements InvocationHandler {
+public class ExceptionWrapperHandler<T> implements InvocationHandler
+{
     private final T delegate;
     private final Constructor<? extends RuntimeException> wrapper;
 
-    public ExceptionWrapperHandler(final T delegate, final Class<? extends RuntimeException> exceptionType) {
+    public ExceptionWrapperHandler(final T delegate, final Class<? extends RuntimeException> exceptionType)
+    {
         this.delegate = delegate;
-        try {
+        try
+        {
             this.wrapper = exceptionType.getConstructor(Throwable.class);
-        } catch (final NoSuchMethodException e) {
+        }
+        catch (final NoSuchMethodException e)
+        {
             throw new IllegalStateException(e);
         }
     }
 
     @Override
-    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        try {
+    public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
+    {
+        try
+        {
             return method.invoke(delegate, args);
-        } catch (final InvocationTargetException ite) {
+        }
+        catch (final InvocationTargetException ite)
+        {
             final Throwable e = ite.getCause();
-            if (RuntimeException.class.isInstance(e)) {
+            if (RuntimeException.class.isInstance(e))
+            {
                 final RuntimeException re;
-                try {
+                try
+                {
                     re = wrapper.newInstance(e);
-                } catch (final Exception e1) {
+                }
+                catch (final Exception e1)
+                {
                     throw new IllegalArgumentException(e1);
                 }
                 throw re;
@@ -38,7 +51,9 @@ public class ExceptionWrapperHandler<T> implements InvocationHandler {
         }
     }
 
-    public static <T> T newProxy(final ClassLoader loader, final T delegate, final Class<? extends RuntimeException> exceptionType, final Class<T> apis) {
+    public static <T> T newProxy(final ClassLoader loader, final T delegate, final Class<? extends RuntimeException> exceptionType,
+            final Class<T> apis)
+    {
         return (T) Proxy.newProxyInstance(loader, new Class<?>[] { apis }, new ExceptionWrapperHandler<T>(delegate, exceptionType));
     }
 }

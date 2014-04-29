@@ -1,11 +1,14 @@
 package org.apache.commons.jcs.jcache;
 
-public class Times {
-    public static long now() {
+public class Times
+{
+    public static long now()
+    {
         return System.currentTimeMillis();
     }
 
-    private Times() {
+    private Times()
+    {
         // no-op
     }
 }
