@@ -26,7 +26,6 @@
     <version>33</version>
   </parent>
 
-  <groupId>org.apache.commons</groupId>
   <artifactId>commons-jcs</artifactId>
   <packaging>pom</packaging>
   <version>2.0-SNAPSHOT</version>
@@ -244,7 +243,7 @@
       </dependency>
       <dependency>
         <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-all</artifactId>
+        <artifactId>hamcrest-library</artifactId>
         <version>1.3</version>
         <scope>test</scope>
       </dependency>

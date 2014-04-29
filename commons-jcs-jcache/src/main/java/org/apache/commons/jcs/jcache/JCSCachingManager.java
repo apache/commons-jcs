@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.commons.jcs.jcache;
 
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
@@ -90,19 +108,21 @@ public class JCSCachingManager implements CacheManager
     {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
+        final Class<?> keyType = configuration == null ? Object.class : configuration.getKeyType();
+        final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
         if (!caches.containsKey(cacheName))
         {
             final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(
                     loader,
-                    new JCSCache/* <K, V, C> */(loader, this, new JCSConfiguration(configuration, configuration.getKeyType(), configuration
-                            .getValueType()), instance.getCache(cacheName), instance.getConfigurationProperties()), Cache.class);
+                    new JCSCache/* <K, V, C> */(loader, this, new JCSConfiguration(configuration, keyType, valueType),
+                                                instance.getCache(cacheName), instance.getConfigurationProperties()), Cache.class);
             caches.putIfAbsent(cacheName, cache);
         }
         else
         {
             throw new javax.cache.CacheException("cache " + cacheName + " already exists");
         }
-        return getCache(cacheName, configuration.getKeyType(), configuration.getValueType());
+        return (Cache<K, V>) getCache(cacheName, keyType, valueType);
     }
 
     @Override
@@ -183,6 +203,7 @@ public class JCSCachingManager implements CacheManager
         {
             JCSCachingProvider.class.cast(provider).remove(this);
         }
+		instance.shutDown();
     }
 
     @Override
@@ -239,7 +260,8 @@ public class JCSCachingManager implements CacheManager
         }
 
         final Configuration<K, V> config = cache.getConfiguration(Configuration.class);
-        if (!config.getKeyType().isAssignableFrom(keyType) || !config.getValueType().isAssignableFrom(valueType))
+        if ((keyType != null && !config.getKeyType().isAssignableFrom(keyType))
+            || (valueType != null && !config.getValueType().isAssignableFrom(valueType)))
         {
             throw new IllegalArgumentException("this cache is <" + config.getKeyType().getName() + ", " + config.getValueType().getName()
                     + "> " + " and not <" + keyType.getName() + ", " + valueType.getName() + ">");
