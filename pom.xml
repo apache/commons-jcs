@@ -28,138 +28,12 @@
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-jcs</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <version>2.0-SNAPSHOT</version>
   <name>Apache Commons JCS</name>
   <url>http://commons.apache.org/proper/commons-jcs/</url>
   <description>Apache Commons JCS is a distributed, versatile caching system.</description>
   <inceptionYear>2002</inceptionYear>
-
-  <dependencies>
-
-    <!--  REQUIRED FOR JCS CORE -->
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1.3</version>
-    </dependency>
-
-    <!--  JDBC DISK CACHE -->
-    <dependency>
-      <groupId>commons-dbcp</groupId>
-      <artifactId>commons-dbcp</artifactId>
-      <version>1.3</version>
-      <optional>true</optional>
-    </dependency>
-
-    <!--  JDBC DISK CACHE -->
-    <dependency>
-      <groupId>commons-pool</groupId>
-      <artifactId>commons-pool</artifactId>
-      <version>1.5.4</version>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>1.7.3.3</version>
-      <!-- <version>1.8.0.7</version> -->
-      <optional>true</optional>
-    </dependency>
-
-    <!--  For comparative performance tests only -->
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2.1</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!--  Test dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-all</artifactId>
-      <version>1.3</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Exclude for now -->
-    <!-- dependency>
-      <groupId>org.jgroups</groupId>
-      <artifactId>jgroups</artifactId>
-      <version>3.4.1.Final</version>
-      <optional>true</optional>
-    </dependency -->
-
-    <dependency>
-      <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity-tools</artifactId>
-      <version>2.0</version>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
-      <version>3.0.1</version>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.cache</groupId>
-      <artifactId>cache-api</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- to debug tcks -->
-    <dependency>
-      <groupId>javax.cache</groupId>
-      <artifactId>cache-tests</artifactId>
-      <version>1.0.0</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.cache</groupId>
-      <artifactId>cache-tests</artifactId>
-      <version>1.0.0</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 
   <issueManagement>
     <system>jira</system>
@@ -258,6 +132,10 @@
     </mailingList>
   </mailingLists>
 
+  <modules>
+    <module>commons-jcs-core</module>
+  </modules>
+
   <developers>
     <developer>
       <id>asmuts</id>
@@ -302,78 +180,133 @@
     </contributor>
   </contributors>
 
-  <build>
-    <testResources>
-      <testResource>
-        <directory>src/test/test-conf</directory>
-        <includes>
-          <include>**/*.properties</include>
-          <include>**/*.ccf</include>
-        </includes>
-      </testResource>
-    </testResources>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${commons.surefire.version}</version>
-          <configuration>
-            <argLine>-Xmx256m -Djava.security.manager -Djava.security.policy=${basedir}/src/conf/cache.policy</argLine>
-            <forkMode>pertest</forkMode>
-            <includes>
-              <include>**/*UnitTest.java</include>
-            </includes>
-            <excludes>
-              <!--
-                  Several of the test cases rely on background tasks that are timing
-                  sensitive.
-              -->
-              <!-- You need to manually run these test cases. -->
-              <exclude>**/BlockDiskElementDescriptorUnitTest.java</exclude>
-              <exclude>**/HSQLDiskCacheConcurrentUnitTest.java</exclude>
-              <exclude>**/HSQLDiskCacheUnitTest.java</exclude>
-              <exclude>**/IndexedDiskCacheOptimizationUnitTest.java</exclude>
-              <exclude>**/TestTCPLateralUnitTest.java</exclude>
-              <exclude>**/UDPDiscoveryUnitTest.java</exclude>
-              <!-- Causes hang in Continuum -->
-              <exclude>**/UDPDiscoverySenderUnitTest.java</exclude>
-              <!-- The ones that fail may be different for you. -->
-              <!-- <exclude>**/JDBCDiskCacheRemovalUnitTest.java</exclude> -->
-              <!-- <exclude>**/JDBCDiskCacheUnitTest.java</exclude> -->
-            </excludes>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>rmic-maven-plugin</artifactId>
-          <version>1.1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <!-- We need to generate some stub/skel classes with RMIC -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>rmic-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>rmic</id>
-            <goals>
-              <goal>rmic</goal>
-            </goals>
-            <configuration>
-              <includes>
-                <include>**/RemoteCacheListener.class</include>
-                <include>**/RemoteCacheServer.class</include>
-              </includes>
-              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+  <dependencyManagement>
+    <dependencies>
+
+      <!--  REQUIRED FOR JCS CORE -->
+      <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.3</version>
+      </dependency>
+
+      <!--  JDBC DISK CACHE -->
+      <dependency>
+        <groupId>commons-dbcp</groupId>
+        <artifactId>commons-dbcp</artifactId>
+        <version>1.3</version>
+        <optional>true</optional>
+      </dependency>
+
+      <!--  JDBC DISK CACHE -->
+      <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>1.5.4</version>
+        <optional>true</optional>
+      </dependency>
+
+      <dependency>
+        <groupId>hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>1.7.3.3</version>
+        <!-- <version>1.8.0.7</version> -->
+        <optional>true</optional>
+      </dependency>
+
+      <!--  For comparative performance tests only -->
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.1</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!--  Test dependencies -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-all</artifactId>
+        <version>1.3</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.16</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Exclude for now -->
+      <!-- dependency>
+        <groupId>org.jgroups</groupId>
+        <artifactId>jgroups</artifactId>
+        <version>3.4.1.Final</version>
+        <optional>true</optional>
+      </dependency -->
+
+      <dependency>
+        <groupId>org.apache.velocity</groupId>
+        <artifactId>velocity-tools</artifactId>
+        <version>2.0</version>
+        <optional>true</optional>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-httpclient</groupId>
+        <artifactId>commons-httpclient</artifactId>
+        <version>3.0.1</version>
+        <optional>true</optional>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <optional>true</optional>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.cache</groupId>
+        <artifactId>cache-api</artifactId>
+        <version>1.0.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-interceptor_1.1_spec</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- to debug tcks -->
+      <dependency>
+        <groupId>javax.cache</groupId>
+        <artifactId>cache-tests</artifactId>
+        <version>1.0.0</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.cache</groupId>
+        <artifactId>cache-tests</artifactId>
+        <version>1.0.0</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <reporting>
     <plugins>
