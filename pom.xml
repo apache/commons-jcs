@@ -190,6 +190,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>commons-jcs-jcache</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!--  REQUIRED FOR JCS CORE -->
       <dependency>
         <groupId>commons-logging</groupId>
