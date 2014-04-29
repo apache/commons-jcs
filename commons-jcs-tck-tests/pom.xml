@@ -79,8 +79,7 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>commons-jcs</artifactId>
-      <version>${project.version}</version>
+      <artifactId>commons-jcs-core</artifactId>
     </dependency>
 
     <dependency>

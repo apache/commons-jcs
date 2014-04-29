@@ -134,6 +134,7 @@
 
   <modules>
     <module>commons-jcs-core</module>
+    <module>commons-jcs-jcache</module>
   </modules>
 
   <developers>
@@ -182,6 +183,12 @@
 
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>commons-jcs-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!--  REQUIRED FOR JCS CORE -->
       <dependency>

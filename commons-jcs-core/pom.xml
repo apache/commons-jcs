@@ -117,22 +117,6 @@
       <optional>true</optional>
     </dependency>
 
-    <dependency>
-      <groupId>javax.cache</groupId>
-      <artifactId>cache-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-interceptor_1.1_spec</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
     <!-- to debug tcks -->
     <dependency>
       <groupId>javax.cache</groupId>
