@@ -134,7 +134,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${commons.surefire.version}</version>
           <configuration>
-            <argLine>-Xmx256m -Djava.security.manager -Djava.security.policy=${basedir}/src/conf/cache.policy</argLine>
+            <argLine>-Xmx256m -Djava.security.manager -Djava.security.policy=${basedir}/src/test/conf/cache.policy</argLine>
             <forkMode>pertest</forkMode>
             <includes>
               <include>**/*UnitTest.java</include>
