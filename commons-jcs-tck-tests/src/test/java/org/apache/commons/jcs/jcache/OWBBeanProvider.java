@@ -26,33 +26,41 @@ import javax.cache.annotation.BeanProvider;
 import javax.enterprise.inject.spi.Bean;
 import java.util.Set;
 
-public class OWBBeanProvider implements BeanProvider {
+public class OWBBeanProvider
+    implements BeanProvider
+{
     private final BeanManagerImpl bm;
 
-    public OWBBeanProvider() {
+    public OWBBeanProvider()
+    {
         final WebBeansContext webBeansContext = WebBeansContext.currentInstance();
-        final ContainerLifecycle lifecycle = webBeansContext.getService(ContainerLifecycle.class);
-        lifecycle.startApplication(null);
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        final ContainerLifecycle lifecycle = webBeansContext.getService( ContainerLifecycle.class );
+        lifecycle.startApplication( null );
+        Runtime.getRuntime().addShutdownHook( new Thread()
+        {
             @Override
-            public void run() {
-                lifecycle.stopApplication(null);
+            public void run()
+            {
+                lifecycle.stopApplication( null );
             }
-        });
+        } );
         bm = webBeansContext.getBeanManagerImpl();
     }
 
     @Override
-    public <T> T getBeanByType(final Class<T> tClass) {
-        if (tClass == null) {
-            throw new IllegalArgumentException("no bean class specified");
+    public <T> T getBeanByType( final Class<T> tClass )
+    {
+        if ( tClass == null )
+        {
+            throw new IllegalArgumentException( "no bean class specified" );
         }
 
-        final Set<Bean<?>> beans = bm.getBeans(tClass);
-        if (beans.isEmpty()) {
-            throw new IllegalStateException("no bean of type " + tClass.getName());
+        final Set<Bean<?>> beans = bm.getBeans( tClass );
+        if ( beans.isEmpty() )
+        {
+            throw new IllegalStateException( "no bean of type " + tClass.getName() );
         }
-        final Bean<?> bean = bm.resolve(beans);
-        return (T) bm.getReference(bean, bean.getBeanClass(), bm.createCreationalContext(bean));
+        final Bean<?> bean = bm.resolve( beans );
+        return (T) bm.getReference( bean, bean.getBeanClass(), bm.createCreationalContext( bean ) );
     }
 }
