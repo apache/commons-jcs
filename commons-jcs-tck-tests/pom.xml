@@ -81,24 +81,21 @@
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>test-domain</artifactId>
-      <version>${jsr107.api.version}</version>
     </dependency>
 
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>app-domain</artifactId>
-      <version>${jsr107.api.version}</version>
     </dependency>
+
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>cache-api</artifactId>
-      <version>${jsr107.api.version}</version>
     </dependency>
 
     <dependency>
       <groupId>javax.cache</groupId>
       <artifactId>cache-tests</artifactId>
-      <version>${jsr107.api.version}</version>
     </dependency>
 
     <dependency>
