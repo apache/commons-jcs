@@ -29,6 +29,8 @@
 
   <artifactId>commons-jcs-yajcache</artifactId>
 
+  <name>Apache Commons JCS :: Sandbox :: yajcache</name>
+
   <dependencies>
     <dependency>
       <groupId>commons-collections</groupId>

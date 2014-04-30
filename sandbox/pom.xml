@@ -30,6 +30,8 @@
   <artifactId>commons-jcs-sandbox</artifactId>
   <packaging>pom</packaging>
 
+  <name>Apache Commons JCS :: Sandbox</name>
+
   <modules>
     <module>yajcache</module>
   </modules>
