@@ -391,6 +391,12 @@
         <module>commons-jcs-tck-tests</module>
       </modules>
     </profile>
+    <profile>
+      <id>sandbox</id>
+      <modules>
+        <module>sandbox</module>
+      </modules>
+    </profile>
   </profiles>
 
   <properties>
