@@ -158,6 +158,12 @@
   <profiles>
     <profile>
       <id>jcacheTck</id>
+      <activation>
+        <property>
+          <name>jcache.tck</name>
+          <value>true</value>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
