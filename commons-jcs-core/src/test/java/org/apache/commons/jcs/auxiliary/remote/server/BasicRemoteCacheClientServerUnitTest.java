@@ -19,7 +19,6 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
-import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
@@ -32,10 +31,8 @@ import org.apache.commons.jcs.engine.control.MockCompositeCacheManager;
 import org.apache.commons.jcs.engine.control.MockElementSerializer;
 import org.apache.commons.jcs.utils.net.HostNameUtil;
 import org.apache.commons.jcs.utils.timing.SleepUtil;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -54,7 +51,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Aaron Smuts
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class BasicRemoteCacheClientServerUnitTest extends Assert {
+public class BasicRemoteCacheClientServerUnitTest extends Assert
+{
     /**
      * Server instance to use in the tests.
      */
@@ -71,14 +69,16 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
      * Starts the server. This is not in a setup, since the server is slow to kill right now.
      */
     @BeforeClass
-    public static void setup() {
+    public static void setup()
+    {
         String configFile = "TestRemoteCacheClientServer.ccf";
         server = RemoteCacheServerStartupUtil.startServerUsingProperties(configFile);
         remotePort = server.remoteCacheServerAttributes.getRemotePort();
     }
 
     @AfterClass
-    public static void stop() throws IOException, ServerNotActiveException {
+    public static void stop() throws IOException, ServerNotActiveException
+    {
         server.shutdown("localhost", remotePort);
     }
 
@@ -97,7 +97,8 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
      */
     @Test
     public void test1SinglePut()
-            throws Exception {
+            throws Exception
+    {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -117,10 +118,13 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
         SleepUtil.sleepAtLeast(200);
 
         // VERIFY
-        try {
+        try
+        {
             assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals("Wrong number of puts", 1, server.getPutCount() - numPutsPrior);
-        } catch (junit.framework.AssertionFailedError e) {
+        }
+        catch (junit.framework.AssertionFailedError e)
+        {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());
             throw e;
@@ -141,7 +145,8 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
      */
     @Test
     public void test2PutRemove()
-            throws Exception {
+            throws Exception
+    {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -163,10 +168,13 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
         SleepUtil.sleepAtLeast(50);
 
         // VERIFY
-        try {
+        try
+        {
             assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals("Wrong number of puts", 1, server.getPutCount() - numPutsPrior);
-        } catch (junit.framework.AssertionFailedError e) {
+        }
+        catch (junit.framework.AssertionFailedError e)
+        {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());
             throw e;
@@ -194,7 +202,8 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
      */
     @Test
     public void test3PutAndListen()
-            throws Exception {
+            throws Exception
+    {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -217,15 +226,20 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
         SleepUtil.sleepAtLeast(50);
 
         // VERIFY
-        try {
+        try
+        {
             assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals("Wrong number of puts", 1, server.getPutCount() - numPutsPrior);
             assertEquals("Wrong number of puts to listener.", 1, listener.putCount);
-        } catch (junit.framework.AssertionFailedError e) {
+        }
+        catch (junit.framework.AssertionFailedError e)
+        {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());
             throw e;
-        } finally {
+        }
+        finally
+        {
             // remove from all regions.
             server.removeCacheListener(listener);
         }
@@ -238,7 +252,8 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
      */
     @Test
     public void test4PutaMultipleAndListen()
-            throws Exception {
+            throws Exception
+    {
         // SETUP
         MockCompositeCacheManager compositeCacheManager = new MockCompositeCacheManager();
 
@@ -257,18 +272,22 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
         // DO WORK
         int numPutsPrior = server.getPutCount();
         int numToPut = 100;
-        for (int i = 0; i < numToPut; i++) {
+        for (int i = 0; i < numToPut; i++)
+        {
             ICacheElement<String, String> element = new CacheElement<String, String>(regionName, "key" + 1, "value" + i);
             cache.update(element);
         }
         SleepUtil.sleepAtLeast(500);
 
         // VERIFY
-        try {
+        try
+        {
             assertEquals("Cache is alive", CacheStatus.ALIVE, cache.getStatus());
             assertEquals("Wrong number of puts", numToPut, server.getPutCount() - numPutsPrior);
             assertEquals("Wrong number of puts to listener.", numToPut, listener.putCount);
-        } catch (junit.framework.AssertionFailedError e) {
+        }
+        catch (junit.framework.AssertionFailedError e)
+        {
             System.out.println(cache.getStats());
             System.out.println(server.getStats());
             throw e;
@@ -276,7 +295,8 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert {
     }
 
     @Test
-    public void testLocalHost() throws Exception {
+    public void testLocalHost() throws Exception
+    {
         final InetAddress byName = InetAddress.getByName("localhost");
         assertTrue("Expected localhost (" + byName.getHostAddress() + ") to be a loopback address", byName.isLoopbackAddress());
         final InetAddress localHost = HostNameUtil.getLocalHostLANAddress();
