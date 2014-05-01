@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -162,7 +161,7 @@ public class ThreadPoolManager
 
         pool = new ThreadPoolExecutor(config.getStartUpSize(), config.getMaximumPoolSize(),
                 config.getKeepAliveTime(), TimeUnit.MILLISECONDS,
-                queue, new MyThreadFactory());
+                queue, new DaemonThreadFactory("JCS-ThreadPoolManager-"));
 
         // when blocked policy
         switch (config.getWhenBlockedPolicy())
@@ -442,30 +441,5 @@ public class ThreadPoolManager
         }
 
         return config;
-    }
-
-    /**
-     * Allows us to set the daemon status on the threads.
-     * <p>
-     * @author aaronsm
-     */
-    public static class MyThreadFactory
-        implements ThreadFactory
-    {
-        /**
-         * Sets the thread to daemon.
-         * <p>
-         * @param runner
-         * @return a daemon thread
-         */
-        @Override
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            String oldName = t.getName();
-            t.setName( "JCS-ThreadPoolManager-" + oldName );
-            t.setDaemon( true );
-            return t;
-        }
     }
 }

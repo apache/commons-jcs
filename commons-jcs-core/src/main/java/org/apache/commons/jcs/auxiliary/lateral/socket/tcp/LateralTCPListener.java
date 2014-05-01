@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.auxiliary.lateral.LateralElementDescriptor;
@@ -45,6 +44,7 @@ import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -153,7 +153,8 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
         {
             this.port = getTcpLateralCacheAttributes().getTcpListenerPort();
 
-            pooledExecutor = Executors.newCachedThreadPool(new MyThreadFactory());
+            pooledExecutor = Executors.newCachedThreadPool(
+                    new DaemonThreadFactory("JCS-LateralTCPListener-"));
             terminated = false;
             shutdown = false;
 
@@ -743,28 +744,6 @@ public class LateralTCPListener<K extends Serializable, V extends Serializable>
                 oos.writeObject( obj );
                 oos.flush();
             }
-        }
-    }
-
-    /**
-     * Allows us to set the daemon status on the executor threads
-     * <p>
-     * @author Aaron Smuts
-     */
-    protected static class MyThreadFactory
-        implements ThreadFactory
-    {
-        /**
-         * @param runner
-         * @return daemon thread
-         */
-        @Override
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            return t;
         }
     }
 

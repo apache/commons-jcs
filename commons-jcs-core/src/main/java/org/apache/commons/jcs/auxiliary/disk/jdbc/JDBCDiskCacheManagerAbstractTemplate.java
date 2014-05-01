@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.disk.AbstractDiskCacheManager;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -138,7 +138,8 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
         {
             if ( shrinkerDaemon == null )
             {
-                shrinkerDaemon = Executors.newScheduledThreadPool(2, new MyThreadFactory());
+                shrinkerDaemon = Executors.newScheduledThreadPool(2,
+                        new DaemonThreadFactory("JCS-JDBCDiskCacheManager-", Thread.MIN_PRIORITY));
             }
 
             ShrinkerThread shrinkerThread = shrinkerThreadMap.get( cattr.getTableName() );
@@ -202,30 +203,6 @@ public abstract class JDBCDiskCacheManagerAbstractTemplate
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Allows us to set the daemon status on the clock-daemon
-     */
-    protected static class MyThreadFactory
-        implements ThreadFactory
-    {
-        /**
-         * Set the priority to min and daemon to true.
-         * <p>
-         * @param runner
-         * @return the daemon thread.
-         */
-        @Override
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            String oldName = t.getName();
-            t.setName( "JCS-JDBCDiskCacheManager-" + oldName );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            return t;
         }
     }
 }

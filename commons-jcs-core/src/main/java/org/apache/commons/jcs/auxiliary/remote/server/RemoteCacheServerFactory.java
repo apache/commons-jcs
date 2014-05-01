@@ -31,7 +31,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.auxiliary.AuxiliaryCacheConfigurator;
@@ -41,6 +40,7 @@ import org.apache.commons.jcs.engine.behavior.ICacheServiceAdmin;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.config.OptionConverter;
 import org.apache.commons.jcs.utils.config.PropertySetter;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -196,7 +196,8 @@ public class RemoteCacheServerFactory
             {
                 if ( keepAliveDaemon == null )
                 {
-                    keepAliveDaemon = Executors.newScheduledThreadPool(1, new MyThreadFactory());
+                    keepAliveDaemon = Executors.newScheduledThreadPool(1,
+                            new DaemonThreadFactory("JCS-RemoteCacheServerFactory-"));
                 }
                 RegistryKeepAliveRunner runner = new RegistryKeepAliveRunner( host, port, serviceName );
                 runner.setCacheEventLogger( cacheEventLogger );
@@ -532,30 +533,5 @@ public class RemoteCacheServerFactory
     protected static String getServiceName()
     {
         return serviceName;
-    }
-
-    /**
-     * Allows us to set the daemon status on the clockdaemon
-     */
-    protected static class MyThreadFactory
-        implements ThreadFactory
-    {
-        /**
-         * @param runner
-         * @return a new thread for the given Runnable
-         */
-        @Override
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            String oldName = t.getName();
-            t.setName( "JCS-RemoteCacheServerFactory-" + oldName );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            if (log.isDebugEnabled()){
-                log.debug("Created thread: " + t);
-            }
-            return t;
-        }
     }
 }

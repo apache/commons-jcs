@@ -26,13 +26,13 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.jcs.engine.CacheInfo;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.io.ObjectInputStreamClassLoaderAware;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryMessage.BroadcastType;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -91,7 +91,8 @@ public class UDPDiscoveryReceiver
         this.multicastPort = multicastPort;
 
         // create a small thread pool to handle a barrage
-        pooledExecutor = (ThreadPoolExecutor)Executors.newFixedThreadPool(maxPoolSize, new MyThreadFactory());
+        pooledExecutor = (ThreadPoolExecutor)Executors.newFixedThreadPool(maxPoolSize,
+                new DaemonThreadFactory("JCS-UDPDiscoveryReceiver-", Thread.MIN_PRIORITY));
         pooledExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
         //pooledExecutor.setMinimumPoolSize(1);
 
@@ -357,30 +358,6 @@ public class UDPDiscoveryReceiver
             {
                 service.addOrUpdateService( discoveredService );
             }
-        }
-    }
-
-    /**
-     * Allows us to set the daemon status on the executor threads
-     */
-    protected static class MyThreadFactory
-        implements ThreadFactory
-    {
-        /**
-         * Sets the thread to daemon.
-         * <p>
-         * @param runner
-         * @return a daemon thread
-         */
-        @Override
-        public Thread newThread( Runnable runner )
-        {
-            Thread t = new Thread( runner );
-            String oldName = t.getName();
-            t.setName( "JCS-UDPDiscoveryReceiver-" + oldName );
-            t.setDaemon( true );
-            t.setPriority( Thread.MIN_PRIORITY );
-            return t;
         }
     }
 
