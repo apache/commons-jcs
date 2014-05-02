@@ -19,13 +19,20 @@ package org.apache.commons.jcs.jcache;
  * under the License.
  */
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.CompleteConfiguration;
+import javax.cache.configuration.Configuration;
 import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryCreatedListener;
 import javax.cache.event.CacheEntryEvent;
@@ -39,11 +46,8 @@ import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheLoaderException;
 import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class CacheTest
 {
@@ -52,7 +56,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache("default", null);
+        cacheManager.createCache("default", (Configuration<String, String>)null);
         final Cache<String, String> cache = cacheManager.getCache("default");
         assertFalse(cache.containsKey("foo"));
         cache.put("foo", "bar");
@@ -68,7 +72,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache("default", null);
+        cacheManager.createCache("default", (Configuration<String, String>)null);
         final Cache<String, String> cache = cacheManager.getCache("default");
         final Set<String> event = new HashSet<String>();
         cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
