@@ -67,10 +67,10 @@ public class ElementEventQueue
     }
 
     /**
-     * Event Q is empty.
+     * Dispose queue
      */
     @Override
-    public synchronized void dispose()
+    public void dispose()
     {
         if ( !destroyed )
         {
@@ -95,7 +95,7 @@ public class ElementEventQueue
      * @throws IOException
      */
     @Override
-    public synchronized void addElementEvent( IElementEventHandler hand, IElementEvent event )
+    public void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException
     {
 
