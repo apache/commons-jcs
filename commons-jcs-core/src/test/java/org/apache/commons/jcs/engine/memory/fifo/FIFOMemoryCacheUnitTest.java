@@ -46,12 +46,12 @@ public class FIFOMemoryCacheUnitTest
         String cacheName = "testExpirationPolicy_oneExtra";
 
         ICompositeCacheAttributes attributes = new CompositeCacheAttributes();
+        attributes.setCacheName(cacheName);
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );
 
         FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<String, String>();
-        cache.initialize( new CompositeCache<String, String>( cacheName, attributes,
-                                              new ElementAttributes() ) );
+        cache.initialize( new CompositeCache<String, String>( attributes, new ElementAttributes() ) );
 
         for ( int i = 0; i <= maxObjects; i++ )
         {
@@ -86,12 +86,12 @@ public class FIFOMemoryCacheUnitTest
         String cacheName = "testExpirationPolicy_oneExtra";
 
         ICompositeCacheAttributes attributes = new CompositeCacheAttributes();
+        attributes.setCacheName(cacheName);
         attributes.setMaxObjects( maxObjects );
         attributes.setSpoolChunkSize( 1 );
 
         FIFOMemoryCache<String, String> cache = new FIFOMemoryCache<String, String>();
-        cache.initialize( new CompositeCache<String, String>( cacheName, attributes,
-                                              new ElementAttributes() ) );
+        cache.initialize( new CompositeCache<String, String>( attributes, new ElementAttributes() ) );
 
         // DO WORK
         for ( int i = 0; i <= (maxObjects * 2); i++ )

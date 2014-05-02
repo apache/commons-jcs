@@ -21,6 +21,7 @@ package org.apache.commons.jcs.engine;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
@@ -403,7 +404,7 @@ public class ElementAttributes
      * @param eventHandlers List of IElementEventHandler objects
      */
     @Override
-    public void addElementEventHandlers( ArrayList<IElementEventHandler> eventHandlers )
+    public void addElementEventHandlers( List<IElementEventHandler> eventHandlers )
     {
         if ( eventHandlers == null )
         {

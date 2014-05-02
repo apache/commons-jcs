@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IProvideScheduler;
-import org.apache.commons.jcs.engine.behavior.IShutdownObservable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -94,10 +93,7 @@ public class UDPDiscoveryManager
             service = new UDPDiscoveryService( attributes );
 
             // register for shutdown notification
-            if ( cacheMgr instanceof IShutdownObservable )
-            {
-                ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( service );
-            }
+            cacheMgr.registerShutdownObserver( service );
 
             // inject scheduler
             if ( cacheMgr instanceof IProvideScheduler)

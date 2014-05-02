@@ -20,6 +20,7 @@ package org.apache.commons.jcs.engine.behavior;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 
@@ -194,6 +195,6 @@ public interface IElementAttributes
      * Sets the eventHandlers of the IElementAttributes object
      * @param eventHandlers value
      */
-    void addElementEventHandlers( ArrayList<IElementEventHandler> eventHandlers );
+    void addElementEventHandlers( List<IElementEventHandler> eventHandlers );
 
 }

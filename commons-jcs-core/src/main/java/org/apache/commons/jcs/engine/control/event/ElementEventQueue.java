@@ -20,10 +20,14 @@ package org.apache.commons.jcs.engine.control.event;
  */
 
 import java.io.IOException;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventQueue;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,53 +37,28 @@ import org.apache.commons.logging.LogFactory;
 public class ElementEventQueue
     implements IElementEventQueue
 {
-    /** serial version */
-    private static final long serialVersionUID = -2966341524571838475L;
+    private static final String THREAD_PREFIX = "JCS-ElementEventQueue-";
 
     /** The logger */
     private static final Log log = LogFactory.getLog( ElementEventQueue.class );
 
-    /** The cache (region) name. */
-    protected final String cacheName;
-
-    /** default */
-    private static final int DEFAULT_WAIT_TO_DIE_MILLIS = 10000;
-
-    /**
-     * time to wait for an event before snuffing the background thread if the queue is empty. make
-     * configurable later
-     */
-    private int waitToDieMillis = DEFAULT_WAIT_TO_DIE_MILLIS;
-
     /** shutdown or not */
     private boolean destroyed = false;
 
-    /** The worker thread. */
-    private Thread processorThread;
+    /** The event queue */
+    private LinkedBlockingQueue<Runnable> queue;
 
-    /** Internal queue implementation */
-    protected final Object queueLock = new Object();
-
-    /** Dummy node */
-    private Node head = new Node();
-
-    /** tail of the doubly linked list */
-    private Node tail = head;
-
-    /** Number of items in the queue */
-    private int size = 0;
+    /** The worker thread pool. */
+    private ThreadPoolExecutor queueProcessor;
 
     /**
      * Constructor for the ElementEventQueue object
-     * <p>
-     * @param cacheName
      */
-    public ElementEventQueue( String cacheName )
+    public ElementEventQueue()
     {
-        this.cacheName = cacheName;
-
-        processorThread = new QProcessor( this );
-        processorThread.start();
+        queue = new LinkedBlockingQueue<Runnable>();
+        queueProcessor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+                queue, new DaemonThreadFactory(THREAD_PREFIX));
 
         if ( log.isDebugEnabled() )
         {
@@ -91,86 +70,22 @@ public class ElementEventQueue
      * Event Q is empty.
      */
     @Override
-    public void destroy()
+    public synchronized void dispose()
     {
-        synchronized ( queueLock )
-        {
-            if ( !destroyed )
-            {
-                destroyed = true;
-
-                // synchronize on queue so the thread will not wait forever,
-                // and then interrupt the QueueProcessor
-                processorThread.interrupt();
-                processorThread = null;
-
-                if ( log.isInfoEnabled() )
-                {
-                    log.info( "Element event queue destroyed: " + this );
-                }
-            }
-        }
-    }
-
-    /**
-     * Kill the processor thread and indicate that the queue is destroyed and no longer alive, but it
-     * can still be working.
-     */
-    public void stopProcessing()
-    {
-        synchronized ( queueLock )
+        if ( !destroyed )
         {
             destroyed = true;
-            processorThread = null;
+
+            // synchronize on queue so the thread will not wait forever,
+            // and then interrupt the QueueProcessor
+            queueProcessor.shutdownNow();
+            queueProcessor = null;
+
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Element event queue destroyed: " + this );
+            }
         }
-    }
-
-    /**
-     * Returns the time to wait for events before killing the background thread.
-     * <p>
-     * @return int
-     */
-    public int getWaitToDieMillis()
-    {
-        return waitToDieMillis;
-    }
-
-    /**
-     * Sets the time to wait for events before killing the background thread.
-     * <p>
-     * @param wtdm the ms for the q to sit idle.
-     */
-    public void setWaitToDieMillis( int wtdm )
-    {
-        waitToDieMillis = wtdm;
-    }
-
-    /**
-     * @return the region name for the event queue
-     */
-    @Override
-    public String toString()
-    {
-        return "cacheName=" + cacheName;
-    }
-
-    /**
-     * Returns the number of elements in the queue.
-     * <p>
-     * @return number of items in the queue.
-     */
-    public int size()
-    {
-        return size;
-    }
-
-    /**
-     * @return The destroyed value
-     */
-    @Override
-    public boolean isAlive()
-    {
-        return !destroyed;
     }
 
     /**
@@ -180,7 +95,7 @@ public class ElementEventQueue
      * @throws IOException
      */
     @Override
-    public void addElementEvent( IElementEventHandler hand, IElementEvent event )
+    public synchronized void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException
     {
 
@@ -189,7 +104,11 @@ public class ElementEventQueue
             log.debug( "Adding Event Handler to QUEUE, !destroyed = " + !destroyed );
         }
 
-        if ( !destroyed )
+        if (destroyed)
+        {
+            log.warn("Event submitted to disposed element event queue " + event);
+        }
+        else
         {
             ElementEventRunner runner = new ElementEventRunner( hand, event );
 
@@ -198,164 +117,11 @@ public class ElementEventQueue
                 log.debug( "runner = " + runner );
             }
 
-            put( runner );
-        }
-    }
-
-    /**
-     * Adds an event to the queue.
-     * @param event
-     */
-    private void put( AbstractElementEventRunner event )
-    {
-        Node newNode = new Node();
-
-        newNode.event = event;
-
-        synchronized ( queueLock )
-        {
-            size++;
-            tail.next = newNode;
-            tail = newNode;
-            if ( !isAlive() )
-            {
-                destroyed = false;
-                processorThread = new QProcessor( this );
-                processorThread.start();
-            }
-            else
-            {
-                queueLock.notify();
-            }
-            queueLock.notify();
-        }
-    }
-
-    /**
-     * Returns the next item on the queue, or waits if empty.
-     * <p>
-     * @return AbstractElementEventRunner
-     */
-    protected AbstractElementEventRunner take()
-    {
-        synchronized ( queueLock )
-        {
-            // wait until there is something to read
-            if ( head == tail )
-            {
-                return null;
-            }
-
-            Node node = head.next;
-
-            AbstractElementEventRunner value = node.event;
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "head.event = " + head.event );
-                log.debug( "node.event = " + node.event );
-            }
-
-            // Node becomes the new head (head is always empty)
-
-            node.event = null;
-            head = node;
-
-            size--;
-            return value;
+            queueProcessor.execute(runner);
         }
     }
 
     // /////////////////////////// Inner classes /////////////////////////////
-
-    /** A node in the queue. These are chained forming a singly linked list */
-    protected static class Node
-    {
-        /** The next node. */
-        Node next = null;
-
-        /** The event to run */
-        ElementEventQueue.AbstractElementEventRunner event = null;
-    }
-
-    /**
-     */
-    private class QProcessor
-        extends Thread
-    {
-        /** The event queue */
-        ElementEventQueue queue;
-
-        /**
-         * Constructor for the QProcessor object
-         * <p>
-         * @param aQueue
-         */
-        QProcessor( ElementEventQueue aQueue )
-        {
-            super( "ElementEventQueue.QProcessor-" + aQueue.cacheName );
-
-            setDaemon( true );
-            queue = aQueue;
-        }
-
-        /**
-         * Main processing method for the QProcessor object.
-         * <p>
-         * Waits for a specified time (waitToDieMillis) for something to come in and if no new
-         * events come in during that period the run method can exit and the thread is dereferenced.
-         */
-        @SuppressWarnings("synthetic-access")
-        @Override
-        public void run()
-        {
-            AbstractElementEventRunner event = null;
-
-            while ( queue.isAlive() )
-            {
-                event = queue.take();
-
-                if ( log.isDebugEnabled() )
-                {
-                    log.debug( "Event from queue = " + event );
-                }
-
-                if ( event == null )
-                {
-                    synchronized ( queueLock )
-                    {
-                        try
-                        {
-                            queueLock.wait( queue.getWaitToDieMillis() );
-                        }
-                        catch ( InterruptedException e )
-                        {
-                            log.warn( "Interrupted while waiting for another event to come in before we die." );
-                            return;
-                        }
-                        event = queue.take();
-                        if ( log.isDebugEnabled() )
-                        {
-                            log.debug( "Event from queue after sleep = " + event );
-                        }
-                    }
-                    if ( event == null )
-                    {
-                        queue.stopProcessing();
-                    }
-                }
-
-                if ( queue.isAlive() && event != null )
-                {
-                    event.run();
-                }
-            }
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "QProcessor exiting for " + queue );
-            }
-        }
-    }
 
     /**
      * Retries before declaring failure.

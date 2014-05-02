@@ -19,6 +19,9 @@ package org.apache.commons.jcs.auxiliary.remote.server;
  * under the License.
  */
 
+import java.io.IOException;
+import java.net.InetAddress;
+
 import org.apache.commons.jcs.auxiliary.AuxiliaryCache;
 import org.apache.commons.jcs.auxiliary.MockCacheEventLogger;
 import org.apache.commons.jcs.auxiliary.remote.MockRemoteCacheListener;
@@ -37,12 +40,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.rmi.server.ServerNotActiveException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * These tests startup the remote server and make requests to it.
@@ -63,8 +60,6 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
      */
     private static int remotePort;
 
-    private static final Lock lock = new ReentrantLock();
-
     /**
      * Starts the server. This is not in a setup, since the server is slow to kill right now.
      */
@@ -77,7 +72,7 @@ public class BasicRemoteCacheClientServerUnitTest extends Assert
     }
 
     @AfterClass
-    public static void stop() throws IOException, ServerNotActiveException
+    public static void stop() throws IOException
     {
         server.shutdown("localhost", remotePort);
     }

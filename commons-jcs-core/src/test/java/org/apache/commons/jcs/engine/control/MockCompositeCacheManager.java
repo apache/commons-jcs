@@ -48,8 +48,8 @@ public class MockCompositeCacheManager
         if ( cache == null )
         {
 //            System.out.println( "Creating mock cache" );
-            CompositeCache<K, V> newCache = new CompositeCache<K, V>( cacheName, new CompositeCacheAttributes(),
-                                                          new ElementAttributes() );
+            CompositeCache<K, V> newCache =
+                new CompositeCache<K, V>( new CompositeCacheAttributes(), new ElementAttributes() );
             this.setCache( newCache );
         }
 

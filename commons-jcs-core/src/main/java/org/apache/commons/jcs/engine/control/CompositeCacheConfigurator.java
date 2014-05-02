@@ -339,18 +339,23 @@ public class CompositeCacheConfigurator
         IElementAttributes ea = parseElementAttributes( props, regName, regionPrefix );
 
         CompositeCache<K, V> cache = ( cca == null )
-            ? new CompositeCache<K, V>( regName, parseCompositeCacheAttributes( props, regName, regionPrefix ), ea )
-            : new CompositeCache<K, V>( regName, cca, ea );
+            ? new CompositeCache<K, V>( parseCompositeCacheAttributes( props, regName, regionPrefix ), ea )
+            : new CompositeCache<K, V>( cca, ea );
+
+        // Inject scheduler service
+        cache.setScheduledExecutorService(compositeCacheManager.getScheduledExecutorService());
+
+        // Inject element event queue
+        cache.setElementEventQueue(compositeCacheManager.getElementEventQueue());
+
+        if (cache.getMemoryCache() instanceof IRequireScheduler)
+        {
+            ((IRequireScheduler)cache.getMemoryCache()).setScheduledExecutorService(
+                    compositeCacheManager.getScheduledExecutorService());
+        }
 
         if (value != null)
         {
-            // Inject scheduler service
-            if (cache.getMemoryCache() instanceof IRequireScheduler)
-            {
-                ((IRequireScheduler)cache.getMemoryCache()).setScheduledExecutorService(
-                        compositeCacheManager.getScheduledExecutorService());
-            }
-
             // Next, create the auxiliaries for the new cache
             List<AuxiliaryCache<K, V>> auxList = new ArrayList<AuxiliaryCache<K, V>>();
 

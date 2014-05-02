@@ -24,17 +24,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.engine.CacheStatus;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
-import org.apache.commons.jcs.engine.memory.shrinking.ShrinkerThread;
 import org.apache.commons.jcs.engine.memory.util.MemoryElementDescriptor;
 import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
@@ -48,11 +44,8 @@ import org.apache.commons.logging.LogFactory;
  * use the shrinker, the clock daemon will be setup to run the shrinker on this region.
  */
 public abstract class AbstractMemoryCache<K extends Serializable, V extends Serializable>
-    implements IMemoryCache<K, V>, Serializable, IRequireScheduler
+    implements IMemoryCache<K, V>
 {
-    /** Don't change. */
-    private static final long serialVersionUID = -4494626991630099575L;
-
     /** Log instance */
     private static final Log log = LogFactory.getLog( AbstractMemoryCache.class );
 
@@ -60,16 +53,16 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
     protected String cacheName; // TODO privatise (mainly seems to be used externally for debugging)
 
     /** Map where items are stored by key.  This is created by the concrete child class. */
-    public Map<K, MemoryElementDescriptor<K, V>> map;// TODO privatise 
+    public Map<K, MemoryElementDescriptor<K, V>> map;// TODO privatise
 
     /** Region Elemental Attributes, used as a default and copied for each item. */
-    public IElementAttributes elementAttributes;// TODO privatise 
+    public IElementAttributes elementAttributes;// TODO privatise
 
     /** Cache Attributes.  Regions settings. */
-    public ICompositeCacheAttributes cacheAttributes;// TODO privatise 
+    public ICompositeCacheAttributes cacheAttributes;// TODO privatise
 
     /** The cache region this store is associated with */
-    public CompositeCache<K, V> cache;// TODO privatise 
+    public CompositeCache<K, V> cache;// TODO privatise
 
     /** status */
     private CacheStatus status;
@@ -92,20 +85,6 @@ public abstract class AbstractMemoryCache<K extends Serializable, V extends Seri
 
         chunkSize = cacheAttributes.getSpoolChunkSize();
         status = CacheStatus.ALIVE;
-    }
-
-    /**
-     * @see org.apache.commons.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
-     */
-    @Override
-    public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
-    {
-        if ( cacheAttributes.isUseMemoryShrinker() )
-        {
-            scheduledExecutor.scheduleAtFixedRate(
-                    new ShrinkerThread<K, V>(this), 0, cacheAttributes.getShrinkerIntervalSeconds(),
-                    TimeUnit.SECONDS);
-        }
     }
 
     /**

@@ -24,7 +24,7 @@ package org.apache.commons.jcs.engine.control.event.behavior;
  * transient. They are not replicated and are not written to disk.
  * <p>
  * If you want an event handler by default for all elements in a region, then
- * you can add it to the default element attributes. This way it will get create
+ * you can add it to the default element attributes. This way it will get created
  * whenever an item gets put into the cache.
  *
  */

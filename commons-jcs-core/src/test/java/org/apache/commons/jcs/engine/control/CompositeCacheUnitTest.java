@@ -60,7 +60,7 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.DISK_CACHE;
@@ -100,7 +100,7 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;
@@ -143,7 +143,7 @@ public class CompositeCacheUnitTest
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.DISK_CACHE;
@@ -189,12 +189,13 @@ public class CompositeCacheUnitTest
         String cacheName = "testGetMatching_NotOnDisk";
         String memoryCacheClassName = "org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache";
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(cacheName);
         cattr.setMemoryCacheName( memoryCacheClassName );
         cattr.setMaxObjects( maxMemorySize );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.DISK_CACHE;
@@ -222,12 +223,13 @@ public class CompositeCacheUnitTest
         String cacheName = "testGetMatching_NotOnDisk";
         String memoryCacheClassName = "org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache";
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(cacheName);
         cattr.setMemoryCacheName( memoryCacheClassName );
         cattr.setMaxObjects( maxMemorySize );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cacheName, cattr, attr );
+        CompositeCache<String, Integer> cache = new CompositeCache<String, Integer>( cattr, attr );
 
         MockAuxiliaryCache<String, Integer> diskMock = new MockAuxiliaryCache<String, Integer>();
         diskMock.cacheType = CacheType.REMOTE_CACHE;

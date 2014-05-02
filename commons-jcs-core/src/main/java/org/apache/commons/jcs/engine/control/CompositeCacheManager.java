@@ -25,15 +25,14 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.security.AccessControlException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -53,8 +52,11 @@ import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 import org.apache.commons.jcs.engine.behavior.IProvideScheduler;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
+import org.apache.commons.jcs.engine.control.event.ElementEventQueue;
+import org.apache.commons.jcs.engine.control.event.behavior.IElementEventQueue;
 import org.apache.commons.jcs.engine.stats.CacheStats;
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
 import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,8 +68,6 @@ import org.apache.commons.logging.LogFactory;
  * The composite cache manager is responsible for creating / configuring cache regions. It serves as
  * a factory for the ComositeCache class. The CompositeCache is the core of JCS, the hub for various
  * auxiliaries.
- * <p>
- * It is recommended that you use the JCS convenience class for all cache access.
  */
 public class CompositeCacheManager
     implements IRemoteCacheConstants, ICompositeCacheManager, IProvideScheduler
@@ -118,10 +118,13 @@ public class CompositeCacheManager
     private static final boolean DEFAULT_FORCE_RECONFIGURATION = false;
 
     /** Those waiting for notification of a shutdown. */
-    private final Set<IShutdownObserver> shutdownObservers = new HashSet<IShutdownObserver>();
+    private final LinkedHashSet<IShutdownObserver> shutdownObservers = new LinkedHashSet<IShutdownObserver>();
 
     /** The central background scheduler. */
     private ScheduledExecutorService scheduledExecutor;
+
+    /** The central event queue. */
+    private IElementEventQueue elementEventQueue;
 
     /** Shutdown hook thread instance */
     private ShutdownHook shutdownHook;
@@ -244,19 +247,8 @@ public class CompositeCacheManager
                 log.error( "Could not register shutdown hook.", e );
             }
 
-            this.scheduledExecutor = Executors.newScheduledThreadPool(4, new ThreadFactory()
-            {
-                @Override
-                public Thread newThread(Runnable runner)
-                {
-                    Thread t = new Thread( runner );
-                    String oldName = t.getName();
-                    t.setName( "JCS-Scheduler-" + oldName );
-                    t.setDaemon( true );
-                    t.setPriority( Thread.MIN_PRIORITY );
-                    return t;
-                }
-            });
+            this.scheduledExecutor = Executors.newScheduledThreadPool(4,
+                    new DaemonThreadFactory("JCS-Scheduler-", Thread.MIN_PRIORITY));
 
             // Register JMX bean
             if (!isJMXRegistered)
@@ -275,8 +267,20 @@ public class CompositeCacheManager
     			}
             }
 
+            this.elementEventQueue = new ElementEventQueue();
+
             isInitialized = true;
         }
+    }
+
+    /**
+     * Get the element event queue
+     *
+     * @return the elementEventQueue
+     */
+    public IElementEventQueue getElementEventQueue()
+    {
+        return elementEventQueue;
     }
 
     /**
@@ -641,6 +645,9 @@ public class CompositeCacheManager
     {
         synchronized (CompositeCacheManager.class)
         {
+            // shutdown element event queue
+            this.elementEventQueue.dispose();
+
             // shutdown all scheduled jobs
             this.scheduledExecutor.shutdownNow();
 

@@ -54,6 +54,8 @@ import org.apache.commons.jcs.engine.stats.behavior.IStats;
 public class CompositeCacheDiskUsageUnitTest
     extends TestCase
 {
+    private static final String CACHE_NAME = "testSpoolAllowed";
+
     /**
      * Test setup
      */
@@ -97,11 +99,12 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
@@ -110,7 +113,7 @@ public class CompositeCacheDiskUsageUnitTest
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.spoolToDisk( inputElement );
@@ -128,11 +131,12 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
@@ -141,7 +145,7 @@ public class CompositeCacheDiskUsageUnitTest
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.spoolToDisk( inputElement );
@@ -163,11 +167,12 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
@@ -176,7 +181,7 @@ public class CompositeCacheDiskUsageUnitTest
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, true );
@@ -200,11 +205,12 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
@@ -213,7 +219,7 @@ public class CompositeCacheDiskUsageUnitTest
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, false );
@@ -237,11 +243,12 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.SWAP );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
@@ -250,7 +257,7 @@ public class CompositeCacheDiskUsageUnitTest
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, true );
@@ -272,11 +279,12 @@ public class CompositeCacheDiskUsageUnitTest
     {
         // SETUP
         ICompositeCacheAttributes cattr = new CompositeCacheAttributes();
+        cattr.setCacheName(CACHE_NAME);
         cattr.setDiskUsagePattern( ICompositeCacheAttributes.DiskUsagePattern.UPDATE );
 
         IElementAttributes attr = new ElementAttributes();
 
-        CompositeCache<String, String> cache = new CompositeCache<String, String>( "testSpoolAllowed", cattr, attr );
+        CompositeCache<String, String> cache = new CompositeCache<String, String>( cattr, attr );
 
         MockAuxCache<String, String> mock = new MockAuxCache<String, String>();
         mock.cacheType = CacheType.DISK_CACHE;
@@ -288,7 +296,7 @@ public class CompositeCacheDiskUsageUnitTest
         AuxiliaryCache<String, String>[] auxArray = new AuxiliaryCache[] { mock, mockLateral };
         cache.setAuxCaches( auxArray );
 
-        ICacheElement<String, String> inputElement = new CacheElement<String, String>( "testSpoolAllowed", "key", "value" );
+        ICacheElement<String, String> inputElement = new CacheElement<String, String>( CACHE_NAME, "key", "value" );
 
         // DO WORK
         cache.updateAuxiliaries( inputElement, false );

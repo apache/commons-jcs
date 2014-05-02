@@ -30,9 +30,7 @@ import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheListener;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheManager;
 import org.apache.commons.jcs.auxiliary.lateral.behavior.ILateralCacheObserver;
 import org.apache.commons.jcs.engine.behavior.ICacheServiceNonLocal;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
-import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -70,12 +68,6 @@ public abstract class LateralCacheAbstractManager
      * service if failed to connect.
      */
     private LateralCacheWatchRepairable lateralWatch;
-
-    /** The event logger. */
-    private ICacheEventLogger cacheEventLogger;
-
-    /** The serializer. */
-    private IElementSerializer elementSerializer;
 
     /**
      * Adds the lateral cache listener to the underlying cache-watch service.

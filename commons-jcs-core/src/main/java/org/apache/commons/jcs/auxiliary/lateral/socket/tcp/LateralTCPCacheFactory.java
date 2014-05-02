@@ -34,7 +34,6 @@ import org.apache.commons.jcs.auxiliary.lateral.socket.tcp.behavior.ITCPLateralC
 import org.apache.commons.jcs.engine.behavior.ICache;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheManager;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.behavior.IShutdownObservable;
 import org.apache.commons.jcs.engine.behavior.IShutdownObserver;
 import org.apache.commons.jcs.engine.logging.behavior.ICacheEventLogger;
 import org.apache.commons.jcs.utils.discovery.UDPDiscoveryManager;
@@ -98,10 +97,7 @@ public class LateralTCPCacheFactory
                                                                                  elementSerializer );
 
                 // register for shutdown notification
-                if (cacheMgr instanceof IShutdownObservable )
-                {
-                    ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( lcm );
-                }
+                cacheMgr.registerShutdownObserver( lcm );
 
                 ICache<K, V> ic = lcm.getCache( lacC.getCacheName() );
                 noWaits.add( ic );
@@ -154,9 +150,9 @@ public class LateralTCPCacheFactory
                 listener = LateralTCPListener.getInstance( attr, cacheMgr );
 
                 // register for shutdown notification
-                if ( listener instanceof IShutdownObserver && cacheMgr instanceof IShutdownObservable )
+                if ( listener instanceof IShutdownObserver )
                 {
-                    ( (IShutdownObservable) cacheMgr ).registerShutdownObserver( (IShutdownObserver) listener );
+                    cacheMgr.registerShutdownObserver( (IShutdownObserver) listener );
                 }
             }
             catch ( Exception e )

@@ -27,24 +27,14 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
 /** Either serialized value or the value should be null; */
 public class CacheElementSerialized<K extends Serializable, V extends Serializable>
+    extends CacheElement<K, V>
     implements ICacheElementSerialized<K, V>
 {
     /** Don't change. */
     private static final long serialVersionUID = -7265084818647601874L;
 
-    /** The name of the cache region. This is a namespace. */
-    private final String cacheName;
-
-    /** This is the cache key by which the value can be referenced. */
-    private final K key;
-
     /** The serialized value. */
     private final byte[] serializedValue;
-
-    /**
-     * These attributes hold information about the element and what it is allowed to do.
-     */
-    private IElementAttributes elementAttributes;
 
     /**
      * Constructs a usable wrapper.
@@ -57,28 +47,8 @@ public class CacheElementSerialized<K extends Serializable, V extends Serializab
     public CacheElementSerialized( String cacheNameArg, K keyArg, byte[] serializedValueArg,
                                    IElementAttributes elementAttributesArg )
     {
-        this.cacheName = cacheNameArg;
-        this.key = keyArg;
+        super(cacheNameArg, keyArg, null, elementAttributesArg);
         this.serializedValue = serializedValueArg;
-        this.elementAttributes = elementAttributesArg;
-    }
-
-    /**
-     * Returns the name of the cache. This is the name of the region.
-     * <p>
-     * @return this.cacheName;
-     */
-    @Override
-    public String getCacheName()
-    {
-        return this.cacheName;
-    }
-
-    /** @return Serializable */
-    @Override
-    public K getKey()
-    {
-        return this.key;
     }
 
     /** @return byte[] */
@@ -86,33 +56,6 @@ public class CacheElementSerialized<K extends Serializable, V extends Serializab
     public byte[] getSerializedValue()
     {
         return this.serializedValue;
-    }
-
-    /** @return IElementAttributes */
-    @Override
-    public IElementAttributes getElementAttributes()
-    {
-        return this.elementAttributes;
-    }
-
-    /**
-     * @param attr
-     */
-    @Override
-    public void setElementAttributes( IElementAttributes attr )
-    {
-        this.elementAttributes = attr;
-    }
-
-    /**
-     * Backward compatibility.
-     * <p>
-     * @return Serializable
-     */
-    @Override
-    public V getVal()
-    {
-        return null;
     }
 
     /**

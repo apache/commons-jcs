@@ -21,17 +21,19 @@ package org.apache.commons.jcs.auxiliary.disk;
 
 import java.io.Serializable;
 
+import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
 
 /**
- * Wrapper for cache elements in purgatory.
+ * Implementation of cache elements in purgatory.
  * <p>
- * Elements are stored in purgatory when they are spooled to the auxilliary cache, but have not yet
+ * Elements are stored in purgatory when they are spooled to the auxiliary cache, but have not yet
  * been written to disk.
  */
 public class PurgatoryElement<K extends Serializable, V extends Serializable>
-    implements ICacheElement<K, V>, Serializable
+    extends CacheElement<K, V>
+    implements ICacheElement<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -8152034342684135628L;
@@ -45,10 +47,13 @@ public class PurgatoryElement<K extends Serializable, V extends Serializable>
     /**
      * Constructor for the PurgatoryElement<K, V> object
      * <p>
-     * @param cacheElement CacheElement to wrap.
+     * @param cacheElement CacheElement
      */
     public PurgatoryElement( ICacheElement<K, V> cacheElement )
     {
+        super(cacheElement.getCacheName(),
+                cacheElement.getKey(), cacheElement.getVal(),
+                cacheElement.getElementAttributes());
         this.cacheElement = cacheElement;
     }
 

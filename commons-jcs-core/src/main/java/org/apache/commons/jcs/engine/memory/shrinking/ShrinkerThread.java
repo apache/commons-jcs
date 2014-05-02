@@ -19,17 +19,13 @@ package org.apache.commons.jcs.engine.memory.shrinking;
  * under the License.
  */
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Set;
 
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
-import org.apache.commons.jcs.engine.control.event.ElementEvent;
+import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
-import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
-import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,8 +41,8 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
     /** The logger */
     private static final Log log = LogFactory.getLog( ShrinkerThread.class );
 
-    /** The MemoryCache instance which this shrinker is watching */
-    private final IMemoryCache<K, V> cache;
+    /** The CompositeCache instance which this shrinker is watching */
+    private final CompositeCache<K, V> cache;
 
     /** Maximum memory idle time for the whole cache */
     private final long maxMemoryIdleTime;
@@ -62,7 +58,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
      * <p>
      * @param cache The MemoryCache which the new shrinker should watch.
      */
-    public ShrinkerThread( IMemoryCache<K, V> cache )
+    public ShrinkerThread( CompositeCache<K, V> cache )
     {
         super();
 
@@ -115,15 +111,14 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
     {
         if ( log.isDebugEnabled() )
         {
-            if ( this.cache.getCompositeCache() != null )
-            {
-                log.debug( "Shrinking memory cache for: " + this.cache.getCompositeCache().getCacheName() );
-            }
+            log.debug( "Shrinking memory cache for: " + this.cache.getCacheName() );
         }
+
+        IMemoryCache<K, V> memCache = cache.getMemoryCache();
 
         try
         {
-            Set<K> keys = cache.getKeySet();
+            Set<K> keys = memCache.getKeySet();
             int size = keys.size();
             if ( log.isDebugEnabled() )
             {
@@ -137,7 +132,7 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
 
             for (K key : keys)
             {
-                cacheElement = cache.getQuiet( key );
+                cacheElement = memCache.getQuiet( key );
 
                 if ( cacheElement == null )
                 {
@@ -154,11 +149,13 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
                 // removed and remove it if so.
                 if ( !cacheElement.getElementAttributes().getIsEternal() )
                 {
-                    remove = checkForRemoval( cacheElement, now );
+                    remove = cache.isExpired( cacheElement, now,
+                            ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND,
+                            ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
 
                     if ( remove )
                     {
-                        cache.remove( cacheElement.getKey() );
+                        memCache.remove( cacheElement.getKey() );
                     }
                 }
 
@@ -186,9 +183,9 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
 
                             spoolCount++;
 
-                            cache.remove( cacheElement.getKey() );
+                            memCache.remove( cacheElement.getKey() );
 
-                            cache.waterfal( cacheElement );
+                            memCache.waterfal( cacheElement );
 
                             key = null;
                             cacheElement = null;
@@ -221,92 +218,6 @@ public class ShrinkerThread<K extends Serializable, V extends Serializable>
 
             // stop for now
             return;
-        }
-    }
-
-    /**
-     * Check if either lifetime or idletime has expired for the provided event, and remove it from
-     * the cache if so.
-     * <p>
-     * @param cacheElement Element to check for expiration
-     * @param now Time to consider expirations relative to. This makes it easier to test.
-     * @return true if the element should be removed, or false.
-     * @throws IOException
-     */
-    protected boolean checkForRemoval( ICacheElement<?, ?> cacheElement, long now )
-        throws IOException
-    {
-        IElementAttributes attributes = cacheElement.getElementAttributes();
-
-        final long maxLifeSeconds = attributes.getMaxLifeSeconds();
-        final long createTime = attributes.getCreateTime();
-
-        // Check if maxLifeSeconds has been exceeded
-        if ( maxLifeSeconds != -1 && now - createTime > maxLifeSeconds * 1000 )
-        {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Exceeded maxLifeSeconds: " + cacheElement.getKey() );
-            }
-
-            handleElementEvents( cacheElement, ElementEventType.EXCEEDED_MAXLIFE_BACKGROUND );
-
-            return true;
-        }
-
-        final long idleTime = attributes.getIdleTime();
-        final long lastAccessTime = attributes.getLastAccessTime();
-
-        // Check maxIdleTime has been exceeded
-        if ( idleTime != -1 && now - lastAccessTime > idleTime * 1000 )
-        {
-            if ( log.isInfoEnabled() )
-            {
-                log.info( "Exceeded maxIdleTime " + cacheElement.getKey() );
-            }
-
-            handleElementEvents( cacheElement, ElementEventType.EXCEEDED_IDLETIME_BACKGROUND );
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Handle any events registered for the given element of the given event type.
-     * <p>
-     * @param cacheElement Element to handle events for
-     * @param eventType Type of event to handle
-     * @throws IOException If an error occurs
-     */
-    private void handleElementEvents( ICacheElement<?, ?> cacheElement, ElementEventType eventType )
-        throws IOException
-    {
-        IElementAttributes attributes = cacheElement.getElementAttributes();
-
-        ArrayList<IElementEventHandler> eventHandlers = attributes.getElementEventHandlers();
-
-        if ( eventHandlers != null )
-        {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Handlers are registered, type: " + eventType );
-            }
-
-            IElementEvent event = new ElementEvent( cacheElement, eventType );
-
-            for (IElementEventHandler hand : eventHandlers)
-            {
-                // extra safety
-                // TODO we shouldn't be operating on a variable of another class.
-                // we did this to get away from the singleton composite cache.
-                // we will need to create an event manager and pass it around instead.
-                if ( cache.getCompositeCache() != null )
-                {
-                    cache.getCompositeCache().addElementEvent( hand, event );
-                }
-            }
         }
     }
 }

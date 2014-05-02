@@ -20,16 +20,14 @@ package org.apache.commons.jcs.engine.control.event.behavior;
  */
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Interface for an element event queue. An event queue is used to propagate
  * ordered element events in one region.
  *
  */
-public interface IElementEventQueue extends Serializable
+public interface IElementEventQueue
 {
-
     /**
      * Adds an ElementEvent to be handled
      *
@@ -42,14 +40,9 @@ public interface IElementEventQueue extends Serializable
     void addElementEvent( IElementEventHandler hand, IElementEvent event )
         throws IOException;
 
-    /** Description of the Method */
-    void destroy();
-
     /**
-     * Gets the alive attribute of the IElementEventQueue object
+     * Destroy the event queue
      *
-     * @return The alive value
      */
-    boolean isAlive();
-
+    void dispose();
 }

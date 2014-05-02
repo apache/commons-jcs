@@ -28,25 +28,25 @@ import org.apache.commons.jcs.engine.behavior.IElementAttributes;
  * Generic element wrapper. Often stuffed inside another.
  */
 public class CacheElement<K extends Serializable, V extends Serializable>
-    implements ICacheElement<K, V>, Serializable
+    implements ICacheElement<K, V>
 {
     /** Don't change */
     private static final long serialVersionUID = -6062305728297627263L;
 
     /** The name of the cache region. This is a namespace. */
-    public final String cacheName;
+    private final String cacheName;
 
     /** This is the cache key by which the value can be referenced. */
-    public final K key;
+    private final K key;
 
     /** This is the cached value, reference by the key. */
-    public final V val;
+    private final V val;
 
     /**
      * These attributes hold information about the element and what it is
      * allowed to do.
      */
-    public IElementAttributes attr;
+    private IElementAttributes attr;
 
     /**
      * Constructor for the CacheElement object

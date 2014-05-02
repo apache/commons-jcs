@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.access.exception.ObjectNotFoundException;
@@ -38,8 +40,8 @@ import org.apache.commons.jcs.engine.behavior.ICacheElement;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes.DiskUsagePattern;
 import org.apache.commons.jcs.engine.behavior.IElementAttributes;
+import org.apache.commons.jcs.engine.behavior.IRequireScheduler;
 import org.apache.commons.jcs.engine.control.event.ElementEvent;
-import org.apache.commons.jcs.engine.control.event.ElementEventQueue;
 import org.apache.commons.jcs.engine.control.event.behavior.ElementEventType;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
 import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
@@ -49,6 +51,7 @@ import org.apache.commons.jcs.engine.match.KeyMatcherPatternImpl;
 import org.apache.commons.jcs.engine.match.behavior.IKeyMatcher;
 import org.apache.commons.jcs.engine.memory.behavior.IMemoryCache;
 import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
+import org.apache.commons.jcs.engine.memory.shrinking.ShrinkerThread;
 import org.apache.commons.jcs.engine.stats.CacheStats;
 import org.apache.commons.jcs.engine.stats.StatElement;
 import org.apache.commons.jcs.engine.stats.Stats;
@@ -65,11 +68,8 @@ import org.apache.commons.logging.LogFactory;
  * This is the core of a JCS region. Hence, this simple class is the core of JCS.
  */
 public class CompositeCache<K extends Serializable, V extends Serializable>
-    implements ICache<K, V>, Serializable
+    implements ICache<K, V>, IRequireScheduler
 {
-    /** For serialization. Don't change. */
-    private static final long serialVersionUID = -2838097410378294960L;
-
     /** log instance */
     private static final Log log = LogFactory.getLog( CompositeCache.class );
 
@@ -85,9 +85,6 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
     /** is this alive? */
     private boolean alive = true;
-
-    /** TODO - this is in the cacheAttr, shouldn't be used, remove */
-    final String cacheName;
 
     /** Region Elemental Attributes, default. */
     private IElementAttributes attr;
@@ -125,13 +122,11 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     /**
      * Constructor for the Cache object
      * <p>
-     * @param cacheName The name of the region
      * @param cattr The cache attribute
      * @param attr The default element attributes
      */
-    public CompositeCache( String cacheName, ICompositeCacheAttributes cattr, IElementAttributes attr )
+    public CompositeCache( ICompositeCacheAttributes cattr, IElementAttributes attr )
     {
-        this.cacheName = cacheName;
         this.attr = attr;
         this.cacheAttr = cattr;
 
@@ -139,7 +134,31 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "Constructed cache with name [" + cacheName + "] and cache attributes " + cattr );
+            log.info( "Constructed cache with name [" + cacheAttr.getCacheName() + "] and cache attributes " + cattr );
+        }
+    }
+
+    /**
+     * Injector for Element event queue
+     *
+     * @param queue
+     */
+    public void setElementEventQueue( IElementEventQueue queue )
+    {
+        this.elementEventQ = queue;
+    }
+
+    /**
+     * @see org.apache.commons.jcs.engine.behavior.IRequireScheduler#setScheduledExecutorService(java.util.concurrent.ScheduledExecutorService)
+     */
+    @Override
+    public void setScheduledExecutorService(ScheduledExecutorService scheduledExecutor)
+    {
+        if ( cacheAttr.isUseMemoryShrinker() )
+        {
+            scheduledExecutor.scheduleAtFixedRate(
+                    new ShrinkerThread<K, V>(this), 0, cacheAttr.getShrinkerIntervalSeconds(),
+                    TimeUnit.SECONDS);
         }
     }
 
@@ -485,7 +504,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( cacheName + " - Memory cache hit, but element expired" );
+                            log.debug( cacheAttr.getCacheName() + " - Memory cache hit, but element expired" );
                         }
 
                         missCountExpired++;
@@ -498,7 +517,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                     {
                         if ( log.isDebugEnabled() )
                         {
-                            log.debug( cacheName + " - Memory cache hit" );
+                            log.debug( cacheAttr.getCacheName() + " - Memory cache hit" );
                         }
 
                         // Update counters
@@ -550,7 +569,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                                 {
                                     if ( log.isDebugEnabled() )
                                     {
-                                        log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
+                                        log.debug( cacheAttr.getCacheName() + " - Aux cache[" + i + "] hit, but element expired." );
                                     }
 
                                     missCountExpired++;
@@ -567,7 +586,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                                 {
                                     if ( log.isDebugEnabled() )
                                     {
-                                        log.debug( cacheName + " - Aux cache[" + i + "] hit" );
+                                        log.debug( cacheAttr.getCacheName() + " - Aux cache[" + i + "] hit" );
                                     }
 
                                     // Update counters
@@ -595,7 +614,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( cacheName + " - Miss" );
+                log.debug( cacheAttr.getCacheName() + " - Miss" );
             }
         }
 
@@ -678,7 +697,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
             if ( log.isDebugEnabled() )
             {
-                log.debug( cacheName + " - " + ( keys.size() - elements.size() ) + " Misses" );
+                log.debug( cacheAttr.getCacheName() + " - " + ( keys.size() - elements.size() ) + " Misses" );
             }
         }
 
@@ -710,7 +729,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( cacheName + " - Memory cache hit, but element expired" );
+                        log.debug( cacheAttr.getCacheName() + " - Memory cache hit, but element expired" );
                     }
 
                     missCountExpired++;
@@ -722,7 +741,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( cacheName + " - Memory cache hit" );
+                        log.debug( cacheAttr.getCacheName() + " - Memory cache hit" );
                     }
 
                     // Update counters
@@ -968,7 +987,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( cacheName + " - Aux cache[" + i + "] hit, but element expired." );
+                        log.debug( cacheAttr.getCacheName() + " - Aux cache[" + i + "] hit, but element expired." );
                     }
 
                     missCountExpired++;
@@ -984,7 +1003,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 {
                     if ( log.isDebugEnabled() )
                     {
-                        log.debug( cacheName + " - Aux cache[" + i + "] hit" );
+                        log.debug( cacheAttr.getCacheName() + " - Aux cache[" + i + "] hit" );
                     }
 
                     // Update counters
@@ -1036,69 +1055,6 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         }
 
         return remainingKeys;
-    }
-
-    /**
-     * Determine if the element has exceeded its max life.
-     * <p>
-     * @param element
-     * @return true if the element is expired, else false.
-     */
-    protected boolean isExpired( ICacheElement<K, V> element )
-    {
-        try
-        {
-            IElementAttributes attributes = element.getElementAttributes();
-
-            if ( !attributes.getIsEternal() )
-            {
-                long now = System.currentTimeMillis();
-
-                // Remove if maxLifeSeconds exceeded
-
-                long maxLifeSeconds = attributes.getMaxLifeSeconds();
-                long createTime = attributes.getCreateTime();
-
-                if ( maxLifeSeconds != -1 && ( now - createTime ) > ( maxLifeSeconds * 1000 ) )
-                {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.debug( "Exceeded maxLife: " + element.getKey() );
-                    }
-
-                    handleElementEvent( element, ElementEventType.EXCEEDED_MAXLIFE_ONREQUEST );
-
-                    return true;
-                }
-                long idleTime = attributes.getIdleTime();
-                long lastAccessTime = attributes.getLastAccessTime();
-
-                // Remove if maxIdleTime exceeded
-                // If you have a 0 size memory cache, then the last access will
-                // not get updated.
-                // you will need to set the idle time to -1.
-
-                if ( ( idleTime != -1 ) && ( now - lastAccessTime ) > idleTime * 1000 )
-                {
-                    if ( log.isDebugEnabled() )
-                    {
-                        log.info( "Exceeded maxIdle: " + element.getKey() );
-                    }
-
-                    handleElementEvent( element, ElementEventType.EXCEEDED_IDLETIME_ONREQUEST );
-
-                    return true;
-                }
-            }
-        }
-        catch ( Exception e )
-        {
-            log.error( "Error determining expiration period, expiring", e );
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -1334,7 +1290,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     {
         if ( log.isInfoEnabled() )
         {
-            log.info( "In DISPOSE, [" + this.cacheName + "] fromRemote [" + fromRemote + "] \n" + this.getStats() );
+            log.info( "In DISPOSE, [" + this.cacheAttr.getCacheName() + "] fromRemote [" + fromRemote + "] \n" + this.getStats() );
         }
 
         // If already disposed, return immediately
@@ -1347,7 +1303,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         // Now, shut down the event queue
         if (elementEventQ != null)
         {
-        	elementEventQ.destroy();
+        	elementEventQ.dispose();
         	elementEventQ = null;
         }
 
@@ -1369,7 +1325,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
                 {
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "In DISPOSE, [" + this.cacheName + "] SKIPPING auxiliary [" + aux + "] fromRemote ["
+                        log.info( "In DISPOSE, [" + this.cacheAttr.getCacheName() + "] SKIPPING auxiliary [" + aux + "] fromRemote ["
                             + fromRemote + "]" );
                     }
                     continue;
@@ -1377,7 +1333,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
                 if ( log.isInfoEnabled() )
                 {
-                    log.info( "In DISPOSE, [" + this.cacheName + "] auxiliary [" + aux + "]" );
+                    log.info( "In DISPOSE, [" + this.cacheAttr.getCacheName() + "] auxiliary [" + aux + "]" );
                 }
 
                 // IT USED TO BE THE CASE THAT (If the auxiliary is not a lateral, or the cache
@@ -1395,7 +1351,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
                     if ( log.isInfoEnabled() )
                     {
-                        log.info( "In DISPOSE, [" + this.cacheName + "] put " + numToFree + " into auxiliary " + aux );
+                        log.info( "In DISPOSE, [" + this.cacheAttr.getCacheName() + "] put " + numToFree + " into auxiliary " + aux );
                     }
                 }
 
@@ -1410,7 +1366,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
 
         if ( log.isInfoEnabled() )
         {
-            log.info( "In DISPOSE, [" + this.cacheName + "] disposing of memory cache." );
+            log.info( "In DISPOSE, [" + this.cacheAttr.getCacheName() + "] disposing of memory cache." );
         }
         try
         {
@@ -1464,7 +1420,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         }
         if ( log.isDebugEnabled() )
         {
-            log.debug( "Called save for [" + cacheName + "]" );
+            log.debug( "Called save for [" + cacheAttr.getCacheName() + "]" );
         }
     }
 
@@ -1562,7 +1518,7 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     @Override
     public String getCacheName()
     {
-        return cacheName;
+        return cacheAttr.getCacheName();
     }
 
     /**
@@ -1629,6 +1585,124 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
             throw new ObjectNotFoundException( "key " + key + " is not found" );
         }
         return ce.getElementAttributes();
+    }
+
+    /**
+     * Determine if the element is expired based on the values of the element attributes
+     *
+     * @param element the element
+     *
+     * @return true if the element is expired
+     */
+    public boolean isExpired( ICacheElement<K, V> element)
+    {
+        return isExpired(element, System.currentTimeMillis(),
+                ElementEventType.EXCEEDED_MAXLIFE_ONREQUEST,
+                ElementEventType.EXCEEDED_IDLETIME_ONREQUEST );
+    }
+
+    /**
+     * Check if the element is expired based on the values of the element attributes
+     *
+     * @param element the element
+     * @param timestamp the timestamp to compare to
+     * @param eventMaxlife the event to fire in case the max life time is exceeded
+     * @param eventIdle the event to fire in case the idle time is exceeded
+     *
+     * @return true if the element is expired
+     */
+    public boolean isExpired(ICacheElement<K, V> element, long timestamp,
+            ElementEventType eventMaxlife, ElementEventType eventIdle)
+    {
+        try
+        {
+            IElementAttributes attributes = element.getElementAttributes();
+
+            if ( !attributes.getIsEternal() )
+            {
+                // Remove if maxLifeSeconds exceeded
+
+                long maxLifeSeconds = attributes.getMaxLifeSeconds();
+                long createTime = attributes.getCreateTime();
+
+                if ( maxLifeSeconds != -1 && ( timestamp - createTime ) > ( maxLifeSeconds * 1000 ) )
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "Exceeded maxLife: " + element.getKey() );
+                    }
+
+                    handleElementEvent( element, eventMaxlife );
+
+                    return true;
+                }
+                long idleTime = attributes.getIdleTime();
+                long lastAccessTime = attributes.getLastAccessTime();
+
+                // Remove if maxIdleTime exceeded
+                // If you have a 0 size memory cache, then the last access will
+                // not get updated.
+                // you will need to set the idle time to -1.
+
+                if ( ( idleTime != -1 ) && ( timestamp - lastAccessTime ) > idleTime * 1000 )
+                {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.info( "Exceeded maxIdle: " + element.getKey() );
+                    }
+
+                    handleElementEvent( element, eventIdle );
+
+                    return true;
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error determining expiration period, expiring", e );
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * If there are event handlers for the item, then create an event and queue it up.
+     * <p>
+     * This does not call handle directly; instead the handler and the event are put into a queue.
+     * This prevents the event handling from blocking normal cache operations.
+     * <p>
+     * @param element the item
+     * @param eventType the event type
+     */
+    public void handleElementEvent( ICacheElement<K, V> element, ElementEventType eventType )
+    {
+        ArrayList<IElementEventHandler> eventHandlers = element.getElementAttributes().getElementEventHandlers();
+        if ( eventHandlers != null )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Element Handlers are registered.  Create event type " + eventType );
+            }
+            if ( elementEventQ == null )
+            {
+                log.warn("No element event queue available for cache " + getCacheName());
+                return;
+            }
+            IElementEvent event = new ElementEvent( element, eventType );
+            for (IElementEventHandler hand : eventHandlers)
+            {
+                try
+                {
+                   elementEventQ.addElementEvent( hand, event );
+                }
+                catch ( IOException e )
+                {
+                    log.error( "Trouble adding element event to queue", e );
+                }
+            }
+        }
     }
 
     /**
@@ -1709,65 +1783,6 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
     public int getMissCountExpired()
     {
         return missCountExpired;
-    }
-
-    /**
-     * If there are event handlers for the item, then create an event and queue it up.
-     * <p>
-     * This does not call handle directly; instead the handler and the event are put into a queue.
-     * This prevents the event handling from blocking normal cache operations.
-     * <p>
-     * @param ce
-     * @param eventType
-     */
-    private void handleElementEvent( ICacheElement<K, V> ce, ElementEventType eventType )
-    {
-        // handle event, might move to a new method
-        ArrayList<IElementEventHandler> eventHandlers = ce.getElementAttributes().getElementEventHandlers();
-        if ( eventHandlers != null )
-        {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug( "Element Handlers are registered.  Create event type " + eventType );
-            }
-            IElementEvent event = new ElementEvent( ce, eventType );
-            for (IElementEventHandler hand : eventHandlers)
-            {
-                try
-                {
-                    addElementEvent( hand, event );
-                }
-                catch ( Exception e )
-                {
-                    log.error( "Trouble adding element event to queue", e );
-                }
-            }
-        }
-    }
-
-    /**
-     * Adds an ElementEvent to be handled to the queue.
-     * <p>
-     * @param hand The IElementEventHandler
-     * @param event The IElementEventHandler IElementEvent event
-     * @throws IOException Description of the Exception
-     */
-    public void addElementEvent( IElementEventHandler hand, IElementEvent event )
-        throws IOException
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Adding event to Element Event Queue" );
-        }
-        // lazy init
-        synchronized ( this )
-        {
-            if ( elementEventQ == null )
-            {
-                elementEventQ = new ElementEventQueue( this.getCacheName() );
-            }
-        }
-        elementEventQ.addElementEvent( hand, event );
     }
 
     /**
