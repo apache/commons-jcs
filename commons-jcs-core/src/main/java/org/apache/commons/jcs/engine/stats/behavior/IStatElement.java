@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * IAuxiliaryCacheStats will hold these IStatElements.
  */
-public interface IStatElement extends Serializable
+public interface IStatElement<V> extends Serializable
 {
     /**
      * Get the name of the stat element, ex. HitCount
@@ -39,16 +39,16 @@ public interface IStatElement extends Serializable
     void setName( String name );
 
     /**
-     * Get the data, ex. for hit count you would get a String value for some number.
+     * Get the data, ex. for hit count you would get a value for some number.
      * <p>
-     * @return String data
+     * @return data
      */
-    String getData();
+    V getData();
 
     /**
      * Set the data for this element.
      * <p>
      * @param data
      */
-    void setData( String data );
+    void setData( V data );
 }

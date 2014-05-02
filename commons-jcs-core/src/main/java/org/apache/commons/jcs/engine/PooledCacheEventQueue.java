@@ -168,52 +168,23 @@ public class PooledCacheEventQueue<K extends Serializable, V extends Serializabl
         IStats stats = new Stats();
         stats.setTypeName( "Pooled Cache Event Queue" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Working" );
-        se.setData( "" + super.isWorking() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Destroyed" );
-        se.setData( "" + this.isAlive() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Empty" );
-        se.setData( "" + this.isEmpty() );
-        elems.add( se );
+        elems.add(new StatElement<Boolean>( "Working", Boolean.valueOf(super.isWorking()) ) );
+        elems.add(new StatElement<Boolean>( "Alive", Boolean.valueOf(this.isAlive()) ) );
+        elems.add(new StatElement<Boolean>( "Empty", Boolean.valueOf(this.isEmpty()) ) );
 
         if ( pool.getQueue() != null )
         {
             BlockingQueue<Runnable> bb = pool.getQueue();
-            se = new StatElement();
-            se.setName( "Queue Size" );
-            se.setData( "" + bb.size() );
-            elems.add( se );
-
-            se = new StatElement();
-            se.setName( "Queue Capacity" );
-            se.setData( "" + bb.remainingCapacity() );
-            elems.add( se );
+            elems.add(new StatElement<Integer>( "Queue Size", Integer.valueOf(bb.size()) ) );
+            elems.add(new StatElement<Integer>( "Queue Capacity", Integer.valueOf(bb.remainingCapacity()) ) );
         }
 
-        se = new StatElement();
-        se.setName( "Pool Size" );
-        se.setData( "" + pool.getPoolSize() );
-        elems.add( se );
+        elems.add(new StatElement<Integer>( "Pool Size", Integer.valueOf(pool.getPoolSize()) ) );
+        elems.add(new StatElement<Integer>( "Maximum Pool Size", Integer.valueOf(pool.getMaximumPoolSize()) ) );
 
-        se = new StatElement();
-        se.setName( "Maximum Pool Size" );
-        se.setData( "" + pool.getMaximumPoolSize() );
-        elems.add( se );
-
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[elems.size()] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

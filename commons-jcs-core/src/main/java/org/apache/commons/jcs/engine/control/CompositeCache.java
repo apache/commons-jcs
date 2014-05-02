@@ -54,7 +54,6 @@ import org.apache.commons.jcs.engine.memory.lru.LRUMemoryCache;
 import org.apache.commons.jcs.engine.memory.shrinking.ShrinkerThread;
 import org.apache.commons.jcs.engine.stats.CacheStats;
 import org.apache.commons.jcs.engine.stats.StatElement;
-import org.apache.commons.jcs.engine.stats.Stats;
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
@@ -1480,28 +1479,22 @@ public class CompositeCache<K extends Serializable, V extends Serializable>
         stats.setRegionName( this.getCacheName() );
 
         // store the composite cache stats first
-        IStatElement[] elems = new StatElement[2];
-        elems[0] = new StatElement();
-        elems[0].setName( "HitCountRam" );
-        elems[0].setData( "" + getHitCountRam() );
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        elems[1] = new StatElement();
-        elems[1].setName( "HitCountAux" );
-        elems[1].setData( "" + getHitCountAux() );
+        elems.add(new StatElement<Integer>( "HitCountRam", Integer.valueOf(getHitCountRam()) ) );
+        elems.add(new StatElement<Integer>( "HitCountAux", Integer.valueOf(getHitCountAux()) ) );
 
-        // store these local stats
         stats.setStatElements( elems );
 
         // memory + aux, memory is not considered an auxiliary internally
         int total = auxCaches.length + 1;
-        IStats[] auxStats = new Stats[total];
+        ArrayList<IStats> auxStats = new ArrayList<IStats>(total);
 
-        auxStats[0] = getMemoryCache().getStatistics();
+        auxStats.add(getMemoryCache().getStatistics());
 
-        for ( int i = 0; i < auxCaches.length; i++ )
+        for ( AuxiliaryCache<K, V> aux : auxCaches )
         {
-            AuxiliaryCache<K, V> aux = auxCaches[i];
-            auxStats[i + 1] = aux.getStatistics();
+            auxStats.add(aux.getStatistics());
         }
 
         // store the auxiliary stats

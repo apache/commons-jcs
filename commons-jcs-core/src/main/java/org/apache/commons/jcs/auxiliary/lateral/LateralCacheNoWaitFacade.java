@@ -22,10 +22,8 @@ package org.apache.commons.jcs.auxiliary.lateral;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -515,35 +513,24 @@ public class LateralCacheNoWaitFacade<K extends Serializable, V extends Serializ
         IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait Facade" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
-
-        IStatElement se = null;
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
         if ( noWaits != null )
         {
-            se = new StatElement();
-            se.setName( "Number of No Waits" );
-            se.setData( "" + noWaits.length );
-            elems.add( se );
+            elems.add(new StatElement<Integer>( "Number of No Waits", Integer.valueOf(noWaits.length) ) );
 
-            for ( int i = 0; i < noWaits.length; i++ )
+            for ( LateralCacheNoWait<K, V> lcnw : noWaits )
             {
-                if ( noWaits[i] != null )
+                if ( lcnw != null )
                 {
                     // get the stats from the super too
-                    // get as array, convert to list, add list to our outer list
-                    IStats sStats = noWaits[i].getStatistics();
-                    IStatElement[] sSEs = sStats.getStatElements();
-                    List<IStatElement> sL = Arrays.asList( sSEs );
-                    elems.addAll( sL );
+                    IStats sStats = lcnw.getStatistics();
+                    elems.addAll(sStats.getStatElements());
                 }
             }
-
         }
 
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

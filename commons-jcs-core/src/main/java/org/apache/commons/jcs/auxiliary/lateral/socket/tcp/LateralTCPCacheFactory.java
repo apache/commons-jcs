@@ -150,10 +150,7 @@ public class LateralTCPCacheFactory
                 listener = LateralTCPListener.getInstance( attr, cacheMgr );
 
                 // register for shutdown notification
-                if ( listener instanceof IShutdownObserver )
-                {
-                    cacheMgr.registerShutdownObserver( (IShutdownObserver) listener );
-                }
+                cacheMgr.registerShutdownObserver( (IShutdownObserver) listener );
             }
             catch ( Exception e )
             {

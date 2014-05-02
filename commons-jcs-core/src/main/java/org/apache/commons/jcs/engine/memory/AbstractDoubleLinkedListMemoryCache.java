@@ -717,38 +717,15 @@ public abstract class AbstractDoubleLinkedListMemoryCache<K extends Serializable
         IStats stats = new Stats();
         stats.setTypeName( /*add algorithm name*/"Memory Cache" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
+        elems.add(new StatElement<Integer>( "List Size", Integer.valueOf(list.size()) ) );
+        elems.add(new StatElement<Integer>( "Map Size", Integer.valueOf(map.size()) ) );
+        elems.add(new StatElement<Integer>( "Put Count", Integer.valueOf(putCnt) ) );
+        elems.add(new StatElement<Integer>( "Hit Count", Integer.valueOf(hitCnt) ) );
+        elems.add(new StatElement<Integer>( "Miss Count", Integer.valueOf(missCnt) ) );
 
-        se = new StatElement();
-        se.setName( "List Size" );
-        se.setData( "" + list.size() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Map Size" );
-        se.setData( "" + map.size() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Put Count" );
-        se.setData( "" + putCnt );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Hit Count" );
-        se.setData( "" + hitCnt );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Miss Count" );
-        se.setData( "" + missCnt );
-        elems.add( se );
-
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

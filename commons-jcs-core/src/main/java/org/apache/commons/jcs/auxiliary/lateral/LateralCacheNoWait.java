@@ -23,10 +23,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.UnmarshalException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -411,44 +409,18 @@ public class LateralCacheNoWait<K extends Serializable, V extends Serializable>
         IStats stats = new Stats();
         stats.setTypeName( "Lateral Cache No Wait" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
-
-        // IStatElement se = null;
-        // no data gathered here
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
         // get the stats from the event queue too
-        // get as array, convert to list, add list to our outer list
         IStats eqStats = this.eventQueue.getStatistics();
+        elems.addAll(eqStats.getStatElements());
 
-        IStatElement[] eqSEs = eqStats.getStatElements();
-        List<IStatElement> eqL = Arrays.asList( eqSEs );
-        elems.addAll( eqL );
+        elems.add(new StatElement<Integer>( "Get Count", Integer.valueOf(this.getCount) ) );
+        elems.add(new StatElement<Integer>( "Remove Count", Integer.valueOf(this.removeCount) ) );
+        elems.add(new StatElement<Integer>( "Put Count", Integer.valueOf(this.putCount) ) );
+        elems.add(new StatElement<AuxiliaryCacheAttributes>( "Attributes", cache.getAuxiliaryCacheAttributes() ) );
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Get Count" );
-        se.setData( "" + this.getCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Remove Count" );
-        se.setData( "" + this.removeCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Put Count" );
-        se.setData( "" + this.putCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Attributes" );
-        se.setData( "" + cache.getAuxiliaryCacheAttributes() );
-        elems.add( se );
-
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[elems.size()] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

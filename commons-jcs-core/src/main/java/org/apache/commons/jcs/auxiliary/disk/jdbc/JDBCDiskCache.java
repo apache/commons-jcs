@@ -27,8 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1124,77 +1122,25 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
     {
         IStats stats = super.getStatistics();
         stats.setTypeName( "JDBC/Abstract Disk Cache" );
-        stats.getStatElements();
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        List<IStatElement<?>> elems = stats.getStatElements();
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Update Count" );
-        se.setData( "" + updateCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Get Count" );
-        se.setData( "" + getCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Get Matching Count" );
-        se.setData( "" + getMatchingCount );
-        elems.add( se );
+        elems.add(new StatElement<Integer>( "Update Count", Integer.valueOf(updateCount) ) );
+        elems.add(new StatElement<Integer>( "Get Count", Integer.valueOf(getCount) ) );
+        elems.add(new StatElement<Integer>( "Get Matching Count", Integer.valueOf(getMatchingCount) ) );
 
         final JDBCDiskCachePoolAccess pool = getPoolAccess();
 
-        se = new StatElement();
-        se.setName( "Size" );
-        if (pool != null) {
-            se.setData( "" + getSize() );
-        } else {
-            se.setData( "No db connection pool found" );
-        }
-        elems.add( se );
+        elems.add(new StatElement<Integer>( "Size",
+                Integer.valueOf(pool != null ? getSize() : -1) ) );
+        elems.add(new StatElement<Integer>( "Active DB Connections",
+                Integer.valueOf(pool != null ? pool.getNumActiveInPool() : -1) ) );
+        elems.add(new StatElement<Integer>( "Idle DB Connections",
+                Integer.valueOf(pool != null ? pool.getNumIdleInPool() : -1) ) );
+        elems.add(new StatElement<String>( "DB URL",
+                pool != null ? pool.getPoolUrl() : getJdbcDiskCacheAttributes().getUrl()) );
 
-        se = new StatElement();
-        se.setName( "Active DB Connections" );
-        if (pool != null) {
-            se.setData( "" + pool.getNumActiveInPool() );
-        } else {
-            se.setData( "No db connection pool found" );
-        }
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Idle DB Connections" );
-        if (pool != null) {
-            se.setData( "" + pool.getNumIdleInPool() );
-        } else {
-            se.setData( "No db connection pool found" );
-        }
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "DB URL" );
-        if ( pool != null )
-        {
-            se.setData( "" + pool.getPoolUrl() );
-        }
-        else
-        {
-            se.setData( "" + getJdbcDiskCacheAttributes().getUrl() );
-        }
-        elems.add( se );
-
-        // get the stats from the event queue too
-        // get as array, convert to list, add list to our outer list
-        IStatElement[] eqSEs = stats.getStatElements();
-        List<IStatElement> eqL = Arrays.asList( eqSEs );
-        elems.addAll( eqL );
-
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

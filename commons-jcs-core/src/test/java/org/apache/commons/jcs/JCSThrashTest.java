@@ -311,17 +311,17 @@ public class JCSThrashTest
         final String listSize = "List Size";
         final String lruMemoryCache = "LRU Memory Cache";
         String result = "0";
-        IStats istats[] = jcs.getStatistics().getAuxiliaryCacheStats();
-        for ( int i = 0; i < istats.length; i++ )
+        List<IStats> istats = jcs.getStatistics().getAuxiliaryCacheStats();
+        for ( IStats istat : istats )
         {
-            IStatElement statElements[] = istats[i].getStatElements();
-            if ( lruMemoryCache.equals( istats[i].getTypeName() ) )
+            List<IStatElement<?>> statElements = istat.getStatElements();
+            if ( lruMemoryCache.equals( istat.getTypeName() ) )
             {
-                for ( int j = 0; j < statElements.length; j++ )
+                for ( IStatElement<?> statElement : statElements )
                 {
-                    if ( listSize.equals( statElements[j].getName() ) )
+                    if ( listSize.equals( statElement.getName() ) )
                     {
-                        result = statElements[j].getData();
+                        result = statElement.getData().toString();
                     }
                 }
             }

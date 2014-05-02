@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
@@ -697,69 +696,35 @@ public class BlockDiskCache<K extends Serializable, V extends Serializable>
         IStats stats = new Stats();
         stats.setTypeName( "Block Disk Cache" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Is Alive" );
-        se.setData( "" + alive );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Key Map Size" );
-        se.setData( "" + this.keyStore.size() );
-        elems.add( se );
+        elems.add(new StatElement<Boolean>( "Is Alive", Boolean.valueOf(alive) ) );
+        elems.add(new StatElement<Integer>( "Key Map Size", Integer.valueOf(this.keyStore.size()) ) );
 
         try
         {
-            se = new StatElement();
-            se.setName( "Data File Length" );
-            if ( this.dataFile != null )
-            {
-                se.setData( "" + this.dataFile.length() );
-            }
-            else
-            {
-                se.setData( "-1" );
-            }
-            elems.add( se );
+            elems.add(new StatElement<Long>( "Data File Length",
+                    Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L) ) );
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
             log.error( e );
         }
 
-        se = new StatElement();
-        se.setName( "Block Size Bytes" );
-        se.setData( "" + this.dataFile.getBlockSizeBytes() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Number Of Blocks" );
-        se.setData( "" + this.dataFile.getNumberOfBlocks() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Average Put Size Bytes" );
-        se.setData( "" + this.dataFile.getAveragePutSizeBytes() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Empty Blocks" );
-        se.setData( "" + this.dataFile.getEmptyBlocks() );
-        elems.add( se );
+        elems.add(new StatElement<Integer>( "Block Size Bytes",
+                Integer.valueOf(this.dataFile.getBlockSizeBytes()) ) );
+        elems.add(new StatElement<Integer>( "Number Of Blocks",
+                Integer.valueOf(this.dataFile.getNumberOfBlocks()) ) );
+        elems.add(new StatElement<Long>( "Average Put Size Bytes",
+                Long.valueOf(this.dataFile.getAveragePutSizeBytes()) ) );
+        elems.add(new StatElement<Integer>( "Empty Blocks",
+                Integer.valueOf(this.dataFile.getEmptyBlocks()) ) );
 
         // get the stats from the super too
-        // get as array, convert to list, add list to our outer list
         IStats sStats = super.getStatistics();
-        IStatElement[] sSEs = sStats.getStatElements();
-        List<IStatElement> sL = Arrays.asList( sSEs );
-        elems.addAll( sL );
+        elems.addAll(sStats.getStatElements());
 
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

@@ -564,51 +564,30 @@ public abstract class AbstractRemoteAuxiliaryCache<K extends Serializable, V ext
         IStats stats = new Stats();
         stats.setTypeName( "AbstractRemoteAuxiliaryCache" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
+        elems.add(new StatElement<String>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
 
-        se = new StatElement();
-        se.setName( "Remote Type" );
-        se.setData( this.getRemoteCacheAttributes().getRemoteTypeName() + "" );
-        elems.add( se );
+//      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
+//      {
+//          // something cluster specific
+//      }
 
-//        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
-//        {
-//            // something cluster specific
-//        }
-
-        // no data gathered here
-
-        se = new StatElement();
-        se.setName( "UsePoolForGet" );
-        se.setData( "" + usePoolForGet );
-        elems.add( se );
+        elems.add(new StatElement<Boolean>( "UsePoolForGet", Boolean.valueOf(usePoolForGet) ) );
 
         if ( pool != null )
         {
-            se = new StatElement();
-            se.setName( "Pool Size" );
-            se.setData( "" + pool.getPoolSize() );
-            elems.add( se );
-
-            se = new StatElement();
-            se.setName( "Maximum Pool Size" );
-            se.setData( "" + pool.getMaximumPoolSize() );
-            elems.add( se );
+            elems.add(new StatElement<Integer>( "Pool Size", Integer.valueOf(pool.getPoolSize()) ) );
+            elems.add(new StatElement<Integer>( "Maximum Pool Size", Integer.valueOf(pool.getMaximumPoolSize()) ) );
         }
 
         if ( getRemoteCacheService() instanceof ZombieCacheServiceNonLocal )
         {
-            se = new StatElement();
-            se.setName( "Zombie Queue Size" );
-            se.setData( "" + ( (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService() ).getQueueSize() );
-            elems.add( se );
+            elems.add(new StatElement<Integer>( "Zombie Queue Size",
+                    Integer.valueOf(( (ZombieCacheServiceNonLocal<K, V>) getRemoteCacheService() ).getQueueSize()) ) );
         }
 
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

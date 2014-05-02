@@ -365,24 +365,11 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
         IStats stats = new Stats();
         stats.setTypeName( "Cache Event Queue" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Working" );
-        se.setData( "" + super.isWorking() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Alive" );
-        se.setData( "" + this.isAlive() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Empty" );
-        se.setData( "" + this.isEmpty() );
-        elems.add( se );
+        elems.add(new StatElement<Boolean>( "Working", Boolean.valueOf(super.isWorking()) ) );
+        elems.add(new StatElement<Boolean>( "Alive", Boolean.valueOf(this.isAlive()) ) );
+        elems.add(new StatElement<Boolean>( "Empty", Boolean.valueOf(this.isEmpty()) ) );
 
         int sz = 0;
         synchronized ( queueLock )
@@ -402,15 +389,10 @@ public class CacheEventQueue<K extends Serializable, V extends Serializable>
                 }
             }
 
-            se = new StatElement();
-            se.setName( "Size" );
-            se.setData( "" + sz );
-            elems.add( se );
+            elems.add(new StatElement<Integer>( "Size", Integer.valueOf(sz) ) );
         }
 
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

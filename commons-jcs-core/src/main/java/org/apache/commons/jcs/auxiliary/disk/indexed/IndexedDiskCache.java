@@ -1552,91 +1552,33 @@ public class IndexedDiskCache<K extends Serializable, V extends Serializable>
         IStats stats = new Stats();
         stats.setTypeName( "Indexed Disk Cache" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Is Alive" );
-        se.setData( "" + alive );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Key Map Size" );
-        if ( this.keyHash != null )
-        {
-            se.setData( "" + this.keyHash.size() );
-        }
-        else
-        {
-            se.setData( "-1" );
-        }
-        elems.add( se );
-
+        elems.add(new StatElement<Boolean>( "Is Alive", Boolean.valueOf(alive) ) );
+        elems.add(new StatElement<Integer>( "Key Map Size",
+                Integer.valueOf(this.keyHash != null ? this.keyHash.size() : -1) ) );
         try
         {
-            se = new StatElement();
-            se.setName( "Data File Length" );
-            if ( this.dataFile != null )
-            {
-                se.setData( "" + this.dataFile.length() );
-            }
-            else
-            {
-                se.setData( "-1" );
-            }
-            elems.add( se );
+            elems.add(new StatElement<Long>( "Data File Length",
+                    Long.valueOf(this.dataFile != null ? this.dataFile.length() : -1L) ) );
         }
         catch ( Exception e )
         {
             log.error( e );
         }
-
-        se = new StatElement();
-        se.setName( "Hit Count" );
-        se.setData( "" + this.hitCount.get() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Bytes Free" );
-        se.setData( "" + this.bytesFree );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Optimize Operation Count" );
-        se.setData( "" + this.removeCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Times Optimized" );
-        se.setData( "" + this.timesOptimized );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Recycle Count" );
-        se.setData( "" + this.recycleCnt );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Recycle Bin Size" );
-        se.setData( "" + this.recycle.size() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Startup Size" );
-        se.setData( "" + this.startupSize );
-        elems.add( se );
+        elems.add(new StatElement<Integer>( "Hit Count", Integer.valueOf(this.hitCount.get()) ) );
+        elems.add(new StatElement<Long>( "Bytes Free", Long.valueOf(this.bytesFree) ) );
+        elems.add(new StatElement<Integer>( "Optimize Operation Count", Integer.valueOf(this.removeCount) ) );
+        elems.add(new StatElement<Integer>( "Times Optimized", Integer.valueOf(this.timesOptimized) ) );
+        elems.add(new StatElement<Integer>( "Recycle Count", Integer.valueOf(this.recycleCnt) ) );
+        elems.add(new StatElement<Integer>( "Recycle Bin Size", Integer.valueOf(this.recycle.size()) ) );
+        elems.add(new StatElement<Integer>( "Startup Size", Integer.valueOf(this.startupSize) ) );
 
         // get the stats from the super too
-        // get as array, convert to list, add list to our outer list
         IStats sStats = super.getStatistics();
-        IStatElement[] sSEs = sStats.getStatElements();
-        List<IStatElement> sL = Arrays.asList( sSEs );
-        elems.addAll( sL );
+        elems.addAll(sStats.getStatElements());
 
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

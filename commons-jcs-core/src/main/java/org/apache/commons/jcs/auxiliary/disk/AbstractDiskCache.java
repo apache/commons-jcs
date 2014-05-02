@@ -22,10 +22,8 @@ package org.apache.commons.jcs.auxiliary.disk;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -536,30 +534,16 @@ public abstract class AbstractDiskCache<K extends Serializable, V extends Serial
         IStats stats = new Stats();
         stats.setTypeName( "Abstract Disk Cache" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Purgatory Hits" );
-        se.setData( "" + purgHits );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Purgatory Size" );
-        se.setData( "" + purgatory.size() );
-        elems.add( se );
+        elems.add(new StatElement<Integer>( "Purgatory Hits", Integer.valueOf(purgHits) ) );
+        elems.add(new StatElement<Integer>( "Purgatory Size", Integer.valueOf(purgatory.size()) ) );
 
         // get the stats from the event queue too
-        // get as array, convert to list, add list to our outer list
         IStats eqStats = this.cacheEventQueue.getStatistics();
-        IStatElement[] eqSEs = eqStats.getStatElements();
-        List<IStatElement> eqL = Arrays.asList( eqSEs );
-        elems.addAll( eqL );
+        elems.addAll(eqStats.getStatElements());
 
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

@@ -1,5 +1,7 @@
 package org.apache.commons.jcs.engine.stats.behavior;
 
+import java.util.List;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -40,10 +42,10 @@ public interface ICacheStats
     /**
      * @return IStats[]
      */
-    IStats[] getAuxiliaryCacheStats();
+    List<IStats> getAuxiliaryCacheStats();
 
     /**
      * @param stats
      */
-    void setAuxiliaryCacheStats( IStats[] stats );
+    void setAuxiliaryCacheStats( List<IStats> stats );
 }

@@ -19,6 +19,8 @@ package org.apache.commons.jcs.engine.stats;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 
@@ -32,7 +34,7 @@ public class Stats
     private static final long serialVersionUID = 227327902875154010L;
 
     /** The stats */
-    private IStatElement[] stats = null;
+    private List<IStatElement<?>> stats = null;
 
     /** The type of stat */
     private String typeName = null;
@@ -41,7 +43,7 @@ public class Stats
      * @return IStatElement[]
      */
     @Override
-    public IStatElement[] getStatElements()
+    public List<IStatElement<?>> getStatElements()
     {
         return stats;
     }
@@ -50,7 +52,7 @@ public class Stats
      * @param stats
      */
     @Override
-    public void setStatElements( IStatElement[] stats )
+    public void setStatElements( List<IStatElement<?>> stats )
     {
         this.stats = stats;
     }
@@ -85,10 +87,10 @@ public class Stats
 
         if ( stats != null )
         {
-            for ( int i = 0; i < stats.length; i++ )
+            for (Object stat : stats)
             {
                 buf.append( "\n" );
-                buf.append( stats[i] );
+                buf.append( stat );
             }
         }
 

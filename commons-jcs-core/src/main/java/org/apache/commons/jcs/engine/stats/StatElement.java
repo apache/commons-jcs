@@ -24,8 +24,8 @@ import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 /**
  * This is a stat data holder.
  */
-public class StatElement
-    implements IStatElement
+public class StatElement<V>
+    implements IStatElement<V>
 {
     /** Don't change */
     private static final long serialVersionUID = -2982373725267618092L;
@@ -34,7 +34,20 @@ public class StatElement
     private String name = null;
 
     /** the data */
-    private String data = null;
+    private V data = null;
+
+    /**
+     * Constructor
+     *
+     * @param name
+     * @param data
+     */
+    public StatElement(String name, V data)
+    {
+        super();
+        this.name = name;
+        this.data = data;
+    }
 
     /**
      * Get the name of the stat element, ex. HitCount
@@ -57,12 +70,12 @@ public class StatElement
     }
 
     /**
-     * Get the data, ex. for hit count you would get a String value for some number.
+     * Get the data, ex. for hit count you would get a value for some number.
      * <p>
-     * @return String data
+     * @return data
      */
     @Override
-    public String getData()
+    public V getData()
     {
         return data;
     }
@@ -73,7 +86,7 @@ public class StatElement
      * @param data
      */
     @Override
-    public void setData( String data )
+    public void setData( V data )
     {
         this.data = data;
     }

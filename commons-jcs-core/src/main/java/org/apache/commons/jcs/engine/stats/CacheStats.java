@@ -19,8 +19,9 @@ package org.apache.commons.jcs.engine.stats;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.commons.jcs.engine.stats.behavior.ICacheStats;
-import org.apache.commons.jcs.engine.stats.behavior.IStatElement;
 import org.apache.commons.jcs.engine.stats.behavior.IStats;
 
 /**
@@ -39,10 +40,7 @@ public class CacheStats
     private String regionName = null;
 
     /** What that auxiliaries are reporting. */
-    private IStats[] auxStats = null;
-
-    /** stats */
-    private IStatElement[] stats = null;
+    private List<IStats> auxStats = null;
 
     /**
      * Stats are for a region, though auxiliary data may be for more.
@@ -70,7 +68,7 @@ public class CacheStats
      * @return IStats[]
      */
     @Override
-    public IStats[] getAuxiliaryCacheStats()
+    public List<IStats> getAuxiliaryCacheStats()
     {
         return auxStats;
     }
@@ -79,30 +77,9 @@ public class CacheStats
      * @param stats
      */
     @Override
-    public void setAuxiliaryCacheStats( IStats[] stats )
+    public void setAuxiliaryCacheStats( List<IStats> stats )
     {
         auxStats = stats;
-    }
-
-    /**
-     * This returns data about the auxiliaries, such as hit count. Only the composite cache knows
-     * what the hit count across all auxiliaries is.
-     * <p>
-     * @return IStatElement[]
-     */
-    @Override
-    public IStatElement[] getStatElements()
-    {
-        return stats;
-    }
-
-    /**
-     * @param stats
-     */
-    @Override
-    public void setStatElements( IStatElement[] stats )
-    {
-        this.stats = stats;
     }
 
     /**
@@ -115,22 +92,22 @@ public class CacheStats
 
         buf.append( "Region Name = " + regionName );
 
-        if ( stats != null )
+        if ( getStatElements() != null )
         {
-            for ( int i = 0; i < stats.length; i++ )
+            for ( Object stat : getStatElements() )
             {
                 buf.append( "\n" );
-                buf.append( stats[i] );
+                buf.append( stat );
             }
         }
 
         if ( auxStats != null )
         {
-            for ( int i = 0; i < auxStats.length; i++ )
+            for ( Object auxStat : auxStats )
             {
                 buf.append( "\n" );
                 buf.append( "---------------------------" );
-                buf.append( auxStats[i] );
+                buf.append( auxStat );
             }
         }
 

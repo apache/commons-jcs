@@ -23,10 +23,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.UnmarshalException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -493,62 +491,28 @@ public class RemoteCacheNoWait<K extends Serializable, V extends Serializable>
         IStats stats = new Stats();
         stats.setTypeName( "Remote Cache No Wait" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
-
-        se = new StatElement();
-        se.setName( "Status" );
-        se.setData( getStatus().toString() );
-        elems.add( se );
-
-        // no data gathered here
+        elems.add(new StatElement<CacheStatus>( "Status", getStatus() ) );
 
         // get the stats from the cache queue too
-        // get as array, convert to list, add list to our outer list
         IStats cStats = this.remoteCacheClient.getStatistics();
         if ( cStats != null )
         {
-            IStatElement[] cSEs = cStats.getStatElements();
-            List<IStatElement> cL = Arrays.asList( cSEs );
-            elems.addAll( cL );
+            elems.addAll(cStats.getStatElements());
         }
 
         // get the stats from the event queue too
-        // get as array, convert to list, add list to our outer list
         IStats eqStats = this.cacheEventQueue.getStatistics();
-        IStatElement[] eqSEs = eqStats.getStatElements();
-        List<IStatElement> eqL = Arrays.asList( eqSEs );
-        elems.addAll( eqL );
+        elems.addAll(eqStats.getStatElements());
 
-        se = new StatElement();
-        se.setName( "Get Count" );
-        se.setData( "" + this.getCount );
-        elems.add( se );
+        elems.add(new StatElement<Integer>( "Get Count", Integer.valueOf(this.getCount) ) );
+        elems.add(new StatElement<Integer>( "GetMatching Count", Integer.valueOf(this.getMatchingCount) ) );
+        elems.add(new StatElement<Integer>( "GetMultiple Count", Integer.valueOf(this.getMultipleCount) ) );
+        elems.add(new StatElement<Integer>( "Remove Count", Integer.valueOf(this.removeCount) ) );
+        elems.add(new StatElement<Integer>( "Put Count", Integer.valueOf(this.putCount) ) );
 
-        se = new StatElement();
-        se.setName( "GetMatching Count" );
-        se.setData( "" + this.getMatchingCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "GetMultiple Count" );
-        se.setData( "" + this.getMultipleCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Remove Count" );
-        se.setData( "" + this.removeCount );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Put Count" );
-        se.setData( "" + this.putCount );
-        elems.add( se );
-
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[elems.size()] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

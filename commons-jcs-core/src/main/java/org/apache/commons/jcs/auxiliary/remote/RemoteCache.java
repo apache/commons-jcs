@@ -22,8 +22,6 @@ package org.apache.commons.jcs.auxiliary.remote;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheAttributes;
 import org.apache.commons.jcs.auxiliary.remote.behavior.IRemoteCacheListener;
@@ -78,35 +76,21 @@ public class RemoteCache<K extends Serializable, V extends Serializable>
         IStats stats = new Stats();
         stats.setTypeName( "Remote Cache" );
 
-        ArrayList<IStatElement> elems = new ArrayList<IStatElement>();
+        ArrayList<IStatElement<?>> elems = new ArrayList<IStatElement<?>>();
 
-        IStatElement se = null;
+        elems.add(new StatElement<String>( "Remote Host:Port", getIPAddressForService() ) );
+        elems.add(new StatElement<String>( "Remote Type", this.getRemoteCacheAttributes().getRemoteTypeName() ) );
 
-        se = new StatElement();
-        se.setName( "Remote Host:Port" );
-        se.setData( getIPAddressForService() );
-        elems.add( se );
-
-        se = new StatElement();
-        se.setName( "Remote Type" );
-        se.setData( this.getRemoteCacheAttributes().getRemoteTypeName() + "" );
-        elems.add( se );
-
-//        if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
-//        {
-//            // something cluster specific
-//        }
+//      if ( this.getRemoteCacheAttributes().getRemoteType() == RemoteType.CLUSTER )
+//      {
+//          // something cluster specific
+//      }
 
         // get the stats from the super too
-        // get as array, convert to list, add list to our outer list
         IStats sStats = super.getStatistics();
-        IStatElement[] sSEs = sStats.getStatElements();
-        List<IStatElement> sL = Arrays.asList( sSEs );
-        elems.addAll( sL );
+        elems.addAll(sStats.getStatElements());
 
-        // get an array and put them in the Stats object
-        IStatElement[] ses = elems.toArray( new StatElement[0] );
-        stats.setStatElements( ses );
+        stats.setStatElements( elems );
 
         return stats;
     }

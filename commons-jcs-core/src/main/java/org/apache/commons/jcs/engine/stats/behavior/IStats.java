@@ -20,6 +20,7 @@ package org.apache.commons.jcs.engine.stats.behavior;
  */
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * This interface defines the common behavior for a stats holder.
@@ -34,16 +35,16 @@ public interface IStats
     /**
      * Return generic statistical or historical data.
      *
-     * @return IStatElement[]
+     * @return list of IStatElements
      */
-    IStatElement[] getStatElements();
+    List<IStatElement<?>> getStatElements();
 
     /**
      * Set the generic statistical or historical data.
      *
      * @param stats
      */
-    void setStatElements( IStatElement[] stats );
+    void setStatElements( List<IStatElement<?>> stats );
 
     /**
      * Get the type name, such as "LRU Memory Cache." No formal type is defined.
