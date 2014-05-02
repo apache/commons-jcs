@@ -47,10 +47,12 @@ public class JCSElement<V> implements Serializable
         if (duration == null || duration.isEternal())
         {
             end = -1;
-        } else if (duration.isZero())
+        }
+        else if (duration.isZero())
         {
             end = 0;
-        } else
+        }
+        else
         {
             end = duration.getAdjustedTime(Times.now());
         }

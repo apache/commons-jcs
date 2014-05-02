@@ -112,10 +112,16 @@ public class JCSCachingManager implements CacheManager
         final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
         if (!caches.containsKey(cacheName))
         {
-            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(
-                    loader,
-                    new JCSCache/* <K, V, C> */(loader, this, new JCSConfiguration(configuration, keyType, valueType),
-                                                instance.getCache(cacheName), instance.getConfigurationProperties()), Cache.class);
+            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(loader, new JCSCache/*
+                                                                                            * <
+                                                                                            * K
+                                                                                            * ,
+                                                                                            * V
+                                                                                            * ,
+                                                                                            * C
+                                                                                            * >
+                                                                                            */(loader, this, new JCSConfiguration(
+                    configuration, keyType, valueType), instance.getCache(cacheName), instance.getConfigurationProperties()), Cache.class);
             caches.putIfAbsent(cacheName, cache);
         }
         else
@@ -203,7 +209,7 @@ public class JCSCachingManager implements CacheManager
         {
             JCSCachingProvider.class.cast(provider).remove(this);
         }
-		instance.shutDown();
+        instance.shutDown();
     }
 
     @Override
@@ -261,7 +267,7 @@ public class JCSCachingManager implements CacheManager
 
         final Configuration<K, V> config = cache.getConfiguration(Configuration.class);
         if ((keyType != null && !config.getKeyType().isAssignableFrom(keyType))
-            || (valueType != null && !config.getValueType().isAssignableFrom(valueType)))
+                || (valueType != null && !config.getValueType().isAssignableFrom(valueType)))
         {
             throw new IllegalArgumentException("this cache is <" + config.getKeyType().getName() + ", " + config.getValueType().getName()
                     + "> " + " and not <" + keyType.getName() + ", " + valueType.getName() + ">");

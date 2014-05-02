@@ -18,17 +18,18 @@
  */
 package org.apache.commons.jcs.jcache;
 
-import org.apache.commons.jcs.access.CacheAccess;
-import org.apache.commons.jcs.access.exception.CacheException;
-import org.apache.commons.jcs.engine.behavior.ICacheElement;
-import org.apache.commons.jcs.engine.behavior.IElementSerializer;
-import org.apache.commons.jcs.engine.control.CompositeCache;
-import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
-import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
-import org.apache.commons.jcs.jcache.jmx.JMXs;
-import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
-import org.apache.commons.jcs.utils.serialization.StandardSerializer;
-import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
+import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
@@ -50,18 +51,19 @@ import javax.cache.processor.EntryProcessor;
 import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
 import javax.management.ObjectName;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
+import org.apache.commons.jcs.access.CacheAccess;
+import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.engine.control.CompositeCache;
+import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
+import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
+import org.apache.commons.jcs.jcache.jmx.JMXs;
+import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
+import org.apache.commons.jcs.utils.serialization.StandardSerializer;
+import org.apache.commons.jcs.utils.threadpool.DaemonThreadFactory;
+import org.apache.commons.jcs.utils.threadpool.ThreadPoolManager;
 
 // TODO: get statistics locally correct then correct even if distributed
 public class JCSCache<K extends Serializable, V extends Serializable, C extends CompleteConfiguration<K, V>> implements Cache<K, V>
@@ -83,14 +85,14 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     private final ExecutorService pool;
 
     public JCSCache(final ClassLoader classLoader, final CacheManager mgr, final JCSConfiguration<K, V> configuration,
-                    final CompositeCache<K, JCSElement<V>> cache, final Properties properties)
+            final CompositeCache<K, JCSElement<V>> cache, final Properties properties)
     {
         manager = mgr;
         delegate = new CacheAccess<K, JCSElement<V>>(cache);
         config = configuration;
-        pool = properties != null && properties.containsKey(POOL_SIZE_PROPERTY)?
-                Executors.newFixedThreadPool(Integer.parseInt(properties.getProperty(POOL_SIZE_PROPERTY)), new ThreadPoolManager.MyThreadFactory()) :
-                Executors.newCachedThreadPool(new ThreadPoolManager.MyThreadFactory());
+        DaemonThreadFactory threadFactory = new DaemonThreadFactory("JCS-JCache-");
+        pool = properties != null && properties.containsKey(POOL_SIZE_PROPERTY) ? Executors.newFixedThreadPool(
+                Integer.parseInt(properties.getProperty(POOL_SIZE_PROPERTY)), threadFactory) : Executors.newCachedThreadPool(threadFactory);
 
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
         if (cacheLoaderFactory == null)
@@ -99,7 +101,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         }
         else
         {
-            loader = ExceptionWrapperHandler.newProxy(classLoader, cacheLoaderFactory.create(), CacheLoaderException.class, CacheLoader.class);
+            loader = ExceptionWrapperHandler
+                    .newProxy(classLoader, cacheLoaderFactory.create(), CacheLoaderException.class, CacheLoader.class);
         }
 
         final Factory<CacheWriter<? super K, ? super V>> cacheWriterFactory = configuration.getCacheWriterFactory();
@@ -109,7 +112,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         }
         else
         {
-            writer = ExceptionWrapperHandler.newProxy(classLoader, cacheWriterFactory.create(), CacheWriterException.class, CacheWriter.class);
+            writer = ExceptionWrapperHandler
+                    .newProxy(classLoader, cacheWriterFactory.create(), CacheWriterException.class, CacheWriter.class);
         }
 
         final Factory<ExpiryPolicy> expiryPolicyFactory = configuration.getExpiryPolicyFactory();
@@ -132,16 +136,10 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         final String mgrStr = manager.getURI().toString().replaceAll(",|:|=|\n", ".");
         try
         {
-            cacheConfigObjectName = new ObjectName(
-                    "javax.cache:type=CacheConfiguration," +
-                            "CacheManager=" + mgrStr + "," +
-                            "Cache=" + cache.getCacheName()
-            );
-            cacheStatsObjectName = new ObjectName(
-                    "javax.cache:type=CacheStatistics," +
-                            "CacheManager=" + mgrStr + "," +
-                            "Cache=" + cache.getCacheName()
-            );
+            cacheConfigObjectName = new ObjectName("javax.cache:type=CacheConfiguration," + "CacheManager=" + mgrStr + "," + "Cache="
+                    + cache.getCacheName());
+            cacheStatsObjectName = new ObjectName("javax.cache:type=CacheStatistics," + "CacheManager=" + mgrStr + "," + "Cache="
+                    + cache.getCacheName());
         }
         catch (final Exception e)
         {
@@ -223,7 +221,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         assertNotClosed();
         for (final K k : keys)
         {
-            assertNotNull(k , "key");
+            assertNotNull(k, "key");
         }
 
         final Set<K> names = (Set<K>) keys;
@@ -288,13 +286,14 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         try
         {
             final JCSElement<V> oldElt = delegate.get(key);
-            final V old = oldElt != null? oldElt.getElement() : null;
+            final V old = oldElt != null ? oldElt.getElement() : null;
 
             final boolean storeByValue = config.isStoreByValue();
             final V value = storeByValue ? copy(rawValue) : rawValue;
 
             final boolean created = old == null;
-            final JCSElement<V> element = new JCSElement<V>(value, created ? expiryPolicy.getExpiryForCreation() : expiryPolicy.getExpiryForUpdate());
+            final JCSElement<V> element = new JCSElement<V>(value, created ? expiryPolicy.getExpiryForCreation()
+                    : expiryPolicy.getExpiryForUpdate());
             if (element.isExpired())
             {
                 if (!created)
@@ -310,13 +309,13 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
                 {
                     if (created)
                     {
-                        listener.onCreated(Arrays.<CacheEntryEvent<? extends K, ? extends V>>asList(
-                                new JCSCacheEntryEvent<K, V>(this, EventType.CREATED, null, key, value)));
+                        listener.onCreated(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
+                                EventType.CREATED, null, key, value)));
                     }
                     else
                     {
-                        listener.onUpdated(Arrays.<CacheEntryEvent<? extends K, ? extends V>>asList(
-                                new JCSCacheEntryEvent<K, V>(this, EventType.UPDATED, old, key, value)));
+                        listener.onUpdated(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
+                                EventType.UPDATED, old, key, value)));
                     }
                 }
 
@@ -395,8 +394,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         }
         for (final JCSListener<K, V> listener : listeners.values())
         {
-            listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>>asList(
-                    new JCSCacheEntryEvent<K, V>(this, EventType.REMOVED, null, key, value)));
+            listener.onRemoved(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
+                    EventType.REMOVED, null, key, value)));
         }
         if (remove && statisticsEnabled)
         {
@@ -434,14 +433,13 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         return v;
     }
 
-    private V doGetControllingExpiry(final K key, final boolean updateAcess,
-                                     final boolean forceDoLoad, final boolean skipLoad,
-                                     final boolean propagateLoadException)
+    private V doGetControllingExpiry(final K key, final boolean updateAcess, final boolean forceDoLoad, final boolean skipLoad,
+            final boolean propagateLoadException)
     {
         final boolean statisticsEnabled = config.isStatisticsEnabled();
         final long getStart = Times.now();
         final JCSElement<V> elt = delegate.get(key);
-        V v = elt != null? elt.getElement() : null;
+        V v = elt != null ? elt.getElement() : null;
         if (v == null && (config.isReadThrough() || forceDoLoad))
         {
             if (!skipLoad)
@@ -615,8 +613,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     }
 
     @Override
-    public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues,
-                        final CompletionListener completionListener)
+    public void loadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
     {
         assertNotClosed();
         assertNotNull(keys, "keys");
@@ -634,8 +631,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         });
     }
 
-    private void doLoadAll(final Set<? extends K> keys, final boolean replaceExistingValues,
-                           final CompletionListener completionListener)
+    private void doLoadAll(final Set<? extends K> keys, final boolean replaceExistingValues, final CompletionListener completionListener)
     {
         try
         {
@@ -676,7 +672,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         return t;
     }
 
-    private <T> T doInvoke(final TempStateCacheView<K, V> view, final K key, final EntryProcessor<K, V, T> entryProcessor, final Object... arguments)
+    private <T> T doInvoke(final TempStateCacheView<K, V> view, final K key, final EntryProcessor<K, V, T> entryProcessor,
+            final Object... arguments)
     {
         assertNotClosed();
         assertNotNull(entryProcessor, "entryProcessor");
@@ -712,9 +709,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     }
 
     @Override
-    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys,
-                                                         final EntryProcessor<K, V, T> entryProcessor,
-                                                         final Object... arguments)
+    public <T> Map<K, EntryProcessorResult<T>> invokeAll(final Set<? extends K> keys, final EntryProcessor<K, V, T> entryProcessor,
+            final Object... arguments)
     {
         assertNotClosed();
         assertNotNull(entryProcessor, "entryProcessor");
@@ -755,7 +751,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     public void registerCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
     {
         assertNotClosed();
-        if (listeners.containsKey(cacheEntryListenerConfiguration)) {
+        if (listeners.containsKey(cacheEntryListenerConfiguration))
+        {
             throw new IllegalArgumentException(cacheEntryListenerConfiguration + " already registered");
         }
         listeners.put(cacheEntryListenerConfiguration, new JCSListener<K, V>(cacheEntryListenerConfiguration));
@@ -763,7 +760,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     }
 
     @Override
-    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration) {
+    public void deregisterCacheEntryListener(final CacheEntryListenerConfiguration<K, V> cacheEntryListenerConfiguration)
+    {
         assertNotClosed();
         listeners.remove(cacheEntryListenerConfiguration);
         config.removeListener(cacheEntryListenerConfiguration);

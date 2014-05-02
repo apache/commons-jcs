@@ -52,14 +52,14 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache( "default", null );
-        final Cache<String, String> cache = cacheManager.getCache( "default" );
-        assertFalse( cache.containsKey( "foo" ) );
-        cache.put( "foo", "bar" );
-        assertTrue( cache.containsKey( "foo" ) );
-        assertEquals( "bar", cache.get( "foo" ) );
-        cache.remove( "foo" );
-        assertFalse( cache.containsKey( "foo" ) );
+        cacheManager.createCache("default", null);
+        final Cache<String, String> cache = cacheManager.getCache("default");
+        assertFalse(cache.containsKey("foo"));
+        cache.put("foo", "bar");
+        assertTrue(cache.containsKey("foo"));
+        assertEquals("bar", cache.get("foo"));
+        cache.remove("foo");
+        assertFalse(cache.containsKey("foo"));
         cachingProvider.close();
     }
 
@@ -68,10 +68,10 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache( "default", null );
-        final Cache<String, String> cache = cacheManager.getCache( "default" );
+        cacheManager.createCache("default", null);
+        final Cache<String, String> cache = cacheManager.getCache("default");
         final Set<String> event = new HashSet<String>();
-        cache.registerCacheEntryListener( new CacheEntryListenerConfiguration<String, String>()
+        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
         {
             @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
@@ -84,11 +84,10 @@ public class CacheTest
                         return new CacheEntryCreatedListener<String, String>()
                         {
                             @Override
-                            public void onCreated(
-                                Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents )
-                                throws CacheEntryListenerException
+                            public void onCreated(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
+                                    throws CacheEntryListenerException
                             {
-                                event.add( cacheEntryEvents.iterator().next().getKey() );
+                                event.add(cacheEntryEvents.iterator().next().getKey());
                             }
                         };
                     }
@@ -112,8 +111,8 @@ public class CacheTest
             {
                 return false;
             }
-        } );
-        cache.registerCacheEntryListener( new CacheEntryListenerConfiguration<String, String>()
+        });
+        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
         {
             @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
@@ -126,11 +125,10 @@ public class CacheTest
                         return new CacheEntryUpdatedListener<String, String>()
                         {
                             @Override
-                            public void onUpdated(
-                                Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents )
-                                throws CacheEntryListenerException
+                            public void onUpdated(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
+                                    throws CacheEntryListenerException
                             {
-                                event.add( cacheEntryEvents.iterator().next().getKey() );
+                                event.add(cacheEntryEvents.iterator().next().getKey());
                             }
                         };
                     }
@@ -154,8 +152,8 @@ public class CacheTest
             {
                 return false;
             }
-        } );
-        cache.registerCacheEntryListener( new CacheEntryListenerConfiguration<String, String>()
+        });
+        cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
         {
             @Override
             public Factory<CacheEntryListener<? super String, ? super String>> getCacheEntryListenerFactory()
@@ -168,11 +166,10 @@ public class CacheTest
                         return new CacheEntryRemovedListener<String, String>()
                         {
                             @Override
-                            public void onRemoved(
-                                Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents )
-                                throws CacheEntryListenerException
+                            public void onRemoved(Iterable<CacheEntryEvent<? extends String, ? extends String>> cacheEntryEvents)
+                                    throws CacheEntryListenerException
                             {
-                                event.add( cacheEntryEvents.iterator().next().getKey() );
+                                event.add(cacheEntryEvents.iterator().next().getKey());
                             }
                         };
                     }
@@ -196,19 +193,19 @@ public class CacheTest
             {
                 return false;
             }
-        } );
+        });
 
-        cache.put( "foo", "bar" );
-        assertEquals( 1, event.size() );
-        assertEquals( "foo", event.iterator().next() );
+        cache.put("foo", "bar");
+        assertEquals(1, event.size());
+        assertEquals("foo", event.iterator().next());
         event.clear();
-        cache.put( "foo", "new" );
-        assertEquals( 1, event.size() );
-        assertEquals( "foo", event.iterator().next() );
+        cache.put("foo", "new");
+        assertEquals(1, event.size());
+        assertEquals("foo", event.iterator().next());
         event.clear();
-        cache.remove( "foo" );
-        assertEquals( 1, event.size() );
-        assertEquals( "foo", event.iterator().next() );
+        cache.remove("foo");
+        assertEquals(1, event.size());
+        assertEquals("foo", event.iterator().next());
 
         cachingProvider.close();
     }
@@ -218,7 +215,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache( "default", new CompleteConfiguration<Object, Object>()
+        cacheManager.createCache("default", new CompleteConfiguration<Object, Object>()
         {
             @Override
             public boolean isReadThrough()
@@ -261,15 +258,13 @@ public class CacheTest
                         return new CacheLoader<Object, Object>()
                         {
                             @Override
-                            public Object load( Object key )
-                                throws CacheLoaderException
+                            public Object load(Object key) throws CacheLoaderException
                             {
                                 return "super";
                             }
 
                             @Override
-                            public Map<Object, Object> loadAll( Iterable<?> keys )
-                                throws CacheLoaderException
+                            public Map<Object, Object> loadAll(Iterable<?> keys) throws CacheLoaderException
                             {
                                 return null;
                             }
@@ -307,9 +302,9 @@ public class CacheTest
             {
                 return false;
             }
-        } );
-        final Cache<String, String> cache = cacheManager.getCache( "default" );
-        assertEquals( "super", cache.get( "lazilyLoaded" ) );
+        });
+        final Cache<String, String> cache = cacheManager.getCache("default");
+        assertEquals("super", cache.get("lazilyLoaded"));
         cachingProvider.close();
     }
 }

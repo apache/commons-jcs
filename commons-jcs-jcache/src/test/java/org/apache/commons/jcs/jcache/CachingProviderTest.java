@@ -31,14 +31,14 @@ public class CachingProviderTest
     @Test
     public void findProvider()
     {
-        assertNotNull( Caching.getCachingProvider() );
+        assertNotNull(Caching.getCachingProvider());
     }
 
     @Test
     public void createCacheMgr()
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
-        assertNotNull( cachingProvider.getCacheManager() );
+        assertNotNull(cachingProvider.getCacheManager());
         cachingProvider.close();
     }
 }

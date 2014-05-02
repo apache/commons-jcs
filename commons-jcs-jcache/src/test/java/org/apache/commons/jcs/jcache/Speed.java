@@ -18,6 +18,17 @@
  */
 package org.apache.commons.jcs.jcache;
 
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
+import javax.cache.spi.CachingProvider;
+
 import org.apache.commons.jcs.engine.CacheElement;
 import org.apache.commons.jcs.engine.CompositeCacheAttributes;
 import org.apache.commons.jcs.engine.ElementAttributes;
@@ -32,49 +43,45 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
-import javax.cache.spi.CachingProvider;
-import java.io.IOException;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /* not a test, just a helper to run when micro-benchmarking
 
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
+ @BenchmarkMode(Mode.AverageTime)
+ @OutputTimeUnit(TimeUnit.NANOSECONDS)
  */
-public class Speed {
+public class Speed
+{
     private static final Random RDM = new Random(System.currentTimeMillis());
 
     @State(Scope.Benchmark)
-    public static class MapState {
+    public static class MapState
+    {
         private ConcurrentHashMap<String, Integer> map;
         private final AtomicInteger count = new AtomicInteger(0);
 
         @Setup
-        public void setup() {
+        public void setup()
+        {
             map = new ConcurrentHashMap<String, Integer>();
         }
 
         @TearDown
-        public void end() {
+        public void end()
+        {
             map.clear();
         }
     }
 
     @State(Scope.Benchmark)
-    public static class JCacheState {
+    public static class JCacheState
+    {
         private CachingProvider cachingProvider;
         private CacheManager manager;
         private Cache<Object, Object> jcache;
         private final AtomicInteger count = new AtomicInteger(0);
 
         @Setup
-        public void setup() {
+        public void setup()
+        {
             cachingProvider = Caching.getCachingProvider();
             manager = cachingProvider.getCacheManager();
             manager.createCache("speed-test", new MutableConfiguration<String, Integer>().setStoreByValue(false));
@@ -82,62 +89,76 @@ public class Speed {
         }
 
         @TearDown
-        public void end() {
+        public void end()
+        {
             cachingProvider.close();
         }
     }
 
     @State(Scope.Benchmark)
-    public static class LRUMemoryCacheState {
+    public static class LRUMemoryCacheState
+    {
         private LRUMemoryCache<String, Integer> map;
         private final AtomicInteger count = new AtomicInteger(0);
 
         @Setup
-        public void setup() {
+        public void setup()
+        {
             map = new LRUMemoryCache<String, Integer>();
-            map.initialize(new CompositeCache<String, Integer>("super-cache", new CompositeCacheAttributes(), new ElementAttributes()));
+            map.initialize(new CompositeCache<String, Integer>(new CompositeCacheAttributes(), new ElementAttributes()));
         }
 
         @TearDown
-        public void end() {
-            try {
+        public void end()
+        {
+            try
+            {
                 map.removeAll();
             }
-            catch (final IOException e) {
+            catch (final IOException e)
+            {
                 // no-op
             }
         }
     }
 
     @GenerateMicroBenchmark
-    public void memCachePut(final LRUMemoryCacheState state) {
+    public void memCachePut(final LRUMemoryCacheState state)
+    {
         final int i = state.count.incrementAndGet();
-        try {
+        try
+        {
             state.map.update(new CacheElement<String, Integer>("speed-test", Integer.toString(i), i));
         }
-        catch (final IOException e) {
+        catch (final IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
 
     @GenerateMicroBenchmark
-    public void memCacheGet(final LRUMemoryCacheState state) {
-        try {
+    public void memCacheGet(final LRUMemoryCacheState state)
+    {
+        try
+        {
             state.map.get(RDM.nextInt(1000) + "");
         }
-        catch (final IOException e) {
+        catch (final IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
 
     @GenerateMicroBenchmark
-    public void normalMapPut(final MapState state) {
+    public void normalMapPut(final MapState state)
+    {
         final int i = state.count.incrementAndGet();
         state.map.put(Integer.toString(i), i);
     }
 
     @GenerateMicroBenchmark
-    public void normalMapPutGet(final MapState state) {
+    public void normalMapPutGet(final MapState state)
+    {
         final int i = state.count.incrementAndGet();
         final String key = Integer.toString(i);
         state.map.get(key);
@@ -145,22 +166,26 @@ public class Speed {
     }
 
     @GenerateMicroBenchmark
-    public void normalMapGet(final MapState state) {
+    public void normalMapGet(final MapState state)
+    {
         state.map.get(RDM.nextInt(1000) + "");
     }
 
     @GenerateMicroBenchmark
-    public void jcsJCachePut(final JCacheState state) {
+    public void jcsJCachePut(final JCacheState state)
+    {
         final int i = state.count.incrementAndGet();
         state.jcache.put(Integer.toString(i), i);
     }
 
     @GenerateMicroBenchmark
-    public void jcsJCacheGet(final JCacheState state) {
+    public void jcsJCacheGet(final JCacheState state)
+    {
         state.jcache.get(RDM.nextInt(1000) + "");
     }
 
-    public static void main(final String[] args) throws IOException, RunnerException {
+    public static void main(final String[] args) throws IOException, RunnerException
+    {
         new Runner(new OptionsBuilder().include(".*" + Speed.class.getName() + ".*").warmupIterations(5).measurementIterations(5).forks(2)
                 .build()).run();
     }
