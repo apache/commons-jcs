@@ -18,7 +18,12 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
+import javax.cache.Cache;
+import javax.cache.annotation.CacheDefaults;
+import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.CacheRemove;
+import javax.cache.annotation.GeneratedCacheKey;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -27,9 +32,55 @@ import javax.interceptor.InvocationContext;
 @Interceptor
 public class CacheRemoveInterceptor
 {
+    @Inject
+    private CDIJCacheHelper helper;
+
     @AroundInvoke
-    public Object cache(final InvocationContext ic) throws Exception
+    public Object cache(final InvocationContext ic) throws Throwable
     {
-        throw new UnsupportedOperationException("TODO");
+        final CacheDefaults defaults = helper.findDefaults(ic);
+
+        final CacheRemove cacheRemove = ic.getMethod().getAnnotation(CacheRemove.class);
+        final String cacheName = helper.defaultName(ic.getMethod(), defaults, cacheRemove.cacheName());
+        final boolean afterInvocation = cacheRemove.afterInvocation();
+
+        final CacheKeyInvocationContext<CacheRemove> context = new CacheKeyInvocationContextImpl<CacheRemove>(ic, cacheRemove, cacheName);
+
+        if (!afterInvocation)
+        {
+            doRemove(context, defaults, cacheRemove);
+        }
+
+        final Object result;
+        try
+        {
+            result = ic.proceed();
+        }
+        catch (final Throwable t)
+        {
+            if (afterInvocation)
+            {
+                if (helper.isIncluded(t.getClass(), cacheRemove.evictFor(), cacheRemove.noEvictFor()))
+                {
+                    doRemove(context, defaults, cacheRemove);
+                }
+            }
+
+            throw t;
+        }
+
+        if (afterInvocation)
+        {
+            doRemove(context, defaults, cacheRemove);
+        }
+
+        return result;
+    }
+
+    private void doRemove(final CacheKeyInvocationContext<CacheRemove> context, final CacheDefaults defaults, final CacheRemove cacheRemove)
+    {
+        final Cache<Object, Object> cache = helper.cacheResolverFactoryFor(defaults, cacheRemove.cacheResolverFactory()).getCacheResolver(context).resolveCache(context);
+        final GeneratedCacheKey key = helper.cacheKeyGeneratorFor(defaults, cacheRemove.cacheKeyGenerator()).generateCacheKey(context);
+        cache.remove(key);
     }
 }

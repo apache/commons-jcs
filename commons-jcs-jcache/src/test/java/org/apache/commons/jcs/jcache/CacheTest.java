@@ -34,6 +34,7 @@ import javax.cache.configuration.CacheEntryListenerConfiguration;
 import javax.cache.configuration.CompleteConfiguration;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.Factory;
+import javax.cache.configuration.MutableConfiguration;
 import javax.cache.event.CacheEntryCreatedListener;
 import javax.cache.event.CacheEntryEvent;
 import javax.cache.event.CacheEntryEventFilter;
@@ -56,7 +57,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache("default", (Configuration<String, String>)null);
+        cacheManager.createCache("default", new MutableConfiguration<Object, Object>());
         final Cache<String, String> cache = cacheManager.getCache("default");
         assertFalse(cache.containsKey("foo"));
         cache.put("foo", "bar");
@@ -72,7 +73,7 @@ public class CacheTest
     {
         final CachingProvider cachingProvider = Caching.getCachingProvider();
         final CacheManager cacheManager = cachingProvider.getCacheManager();
-        cacheManager.createCache("default", (Configuration<String, String>)null);
+        cacheManager.createCache("default", new MutableConfiguration<Object, Object>());
         final Cache<String, String> cache = cacheManager.getCache("default");
         final Set<String> event = new HashSet<String>();
         cache.registerCacheEntryListener(new CacheEntryListenerConfiguration<String, String>()
@@ -292,13 +293,13 @@ public class CacheTest
             @Override
             public Class<Object> getKeyType()
             {
-                return null;
+                return Object.class;
             }
 
             @Override
             public Class<Object> getValueType()
             {
-                return null;
+                return Object.class;
             }
 
             @Override

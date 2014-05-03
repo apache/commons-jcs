@@ -18,7 +18,12 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
+import javax.cache.Cache;
+import javax.cache.annotation.CacheDefaults;
+import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.CachePut;
+import javax.cache.annotation.GeneratedCacheKey;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -27,9 +32,54 @@ import javax.interceptor.InvocationContext;
 @Interceptor
 public class CachePutInterceptor
 {
+    @Inject
+    private CDIJCacheHelper helper;
+
     @AroundInvoke
-    public Object cache(final InvocationContext ic) throws Exception
+    public Object cache(final InvocationContext ic) throws Throwable
     {
-        throw new UnsupportedOperationException("TODO");
+        final CacheDefaults defaults = helper.findDefaults(ic);
+
+        final CachePut cachePut = ic.getMethod().getAnnotation(CachePut.class);
+        final String cacheName = helper.defaultName(ic.getMethod(), defaults, cachePut.cacheName());
+        final boolean afterInvocation = cachePut.afterInvocation();
+
+        final CacheKeyInvocationContext<CachePut> context = new CacheKeyInvocationContextImpl<CachePut>(ic, cachePut, cacheName);
+        if (!afterInvocation)
+        {
+            doCache(context, defaults, cachePut);
+        }
+
+        final Object result;
+        try
+        {
+            result = ic.proceed();
+        }
+        catch (final Throwable t)
+        {
+            if (afterInvocation)
+            {
+                if (helper.isIncluded(t.getClass(), cachePut.cacheFor(), cachePut.noCacheFor()))
+                {
+                    doCache(context, defaults, cachePut);
+                }
+            }
+
+            throw t;
+        }
+
+        if (afterInvocation)
+        {
+            doCache(context, defaults, cachePut);
+        }
+
+        return result;
+    }
+
+    private void doCache(final CacheKeyInvocationContext<CachePut> context, final CacheDefaults defaults, final CachePut cachePut)
+    {
+        final Cache<Object, Object> cache = helper.cacheResolverFactoryFor(defaults, cachePut.cacheResolverFactory()).getCacheResolver(context).resolveCache(context);
+        final GeneratedCacheKey key = helper.cacheKeyGeneratorFor(defaults, cachePut.cacheKeyGenerator()).generateCacheKey(context);
+        cache.put(key, context.getValueParameter().getValue());
     }
 }

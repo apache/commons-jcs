@@ -18,7 +18,14 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
+import javax.cache.Cache;
+import javax.cache.annotation.CacheDefaults;
+import javax.cache.annotation.CacheKeyInvocationContext;
+import javax.cache.annotation.CacheResolver;
+import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.CacheResult;
+import javax.cache.annotation.GeneratedCacheKey;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -27,9 +34,69 @@ import javax.interceptor.InvocationContext;
 @Interceptor
 public class CacheResultInterceptor
 {
+    @Inject
+    private CDIJCacheHelper helper;
+
     @AroundInvoke
-    public Object cache(final InvocationContext ic) throws Exception
+    public Object cache(final InvocationContext ic) throws Throwable
     {
-        throw new UnsupportedOperationException("TODO");
+        final CacheDefaults defaults = helper.findDefaults(ic);
+
+        final CacheResult cacheResult = ic.getMethod().getAnnotation(CacheResult.class);
+        final String cacheName = helper.defaultName(ic.getMethod(), defaults, cacheResult.cacheName());
+
+        final CacheKeyInvocationContext<CacheResult> context = new CacheKeyInvocationContextImpl<CacheResult>(ic, cacheResult, cacheName);
+
+        final CacheResolverFactory cacheResolverFactory = helper.cacheResolverFactoryFor(defaults, cacheResult.cacheResolverFactory());
+        final CacheResolver cacheResolver = cacheResolverFactory.getCacheResolver(context);
+        final Cache<Object, Object> cache = cacheResolver.resolveCache(context);
+
+        final GeneratedCacheKey cacheKey = helper.cacheKeyGeneratorFor(defaults, cacheResult.cacheKeyGenerator()).generateCacheKey(context);
+
+        Cache<Object, Object> exceptionCache = null; // lazily created
+
+        Object result;
+        if (!cacheResult.skipGet())
+        {
+            result = cache.get(cacheKey);
+            if (result != null)
+            {
+                return result;
+            }
+
+
+            if (!cacheResult.exceptionCacheName().isEmpty())
+            {
+                exceptionCache = cacheResolverFactory.getExceptionCacheResolver(context).resolveCache(context);
+                final Object exception = exceptionCache.get(cacheKey);
+                if (exception != null)
+                {
+                    throw Throwable.class.cast(exception);
+                }
+            }
+        }
+
+        try
+        {
+            result = ic.proceed();
+            if (result != null)
+            {
+                cache.put(cacheKey, result);
+            }
+
+            return result;
+        }
+        catch (final Throwable t)
+        {
+            if (helper.isIncluded(t.getClass(), cacheResult.cachedExceptions(), cacheResult.nonCachedExceptions()))
+            {
+                if (exceptionCache == null)
+                {
+                    exceptionCache = cacheResolverFactory.getExceptionCacheResolver(context).resolveCache(context);
+                }
+                exceptionCache.put(cacheKey, t);
+            }
+            throw t;
+        }
     }
 }

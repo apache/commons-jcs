@@ -108,19 +108,12 @@ public class JCSCachingManager implements CacheManager
     {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
+        assertNotNull(configuration, "configuration");
         final Class<?> keyType = configuration == null ? Object.class : configuration.getKeyType();
         final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
         if (!caches.containsKey(cacheName))
         {
-            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(loader, new JCSCache/*
-                                                                                            * <
-                                                                                            * K
-                                                                                            * ,
-                                                                                            * V
-                                                                                            * ,
-                                                                                            * C
-                                                                                            * >
-                                                                                            */(loader, this, new JCSConfiguration(
+            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(loader, new JCSCache(loader, this, new JCSConfiguration(
                     configuration, keyType, valueType), instance.getCache(cacheName), instance.getConfigurationProperties()), Cache.class);
             caches.putIfAbsent(cacheName, cache);
         }
@@ -144,6 +137,7 @@ public class JCSCachingManager implements CacheManager
             cache.close();
             instance.freeCache(cacheName, true);
         }
+        instance.shutDown();
     }
 
     @Override
@@ -247,6 +241,8 @@ public class JCSCachingManager implements CacheManager
     {
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
+        assertNotNull(keyType, "keyType");
+        assertNotNull(valueType, "valueType");
         try
         {
             return doGetCache(cacheName, keyType, valueType);

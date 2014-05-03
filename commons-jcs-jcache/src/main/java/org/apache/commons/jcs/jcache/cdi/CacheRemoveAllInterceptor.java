@@ -18,7 +18,11 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
+import javax.cache.Cache;
+import javax.cache.annotation.CacheDefaults;
+import javax.cache.annotation.CacheKeyInvocationContext;
 import javax.cache.annotation.CacheRemoveAll;
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -27,9 +31,52 @@ import javax.interceptor.InvocationContext;
 @Interceptor
 public class CacheRemoveAllInterceptor
 {
+    @Inject
+    private CDIJCacheHelper helper;
+
     @AroundInvoke
-    public Object cache(final InvocationContext ic) throws Exception
+    public Object cache(final InvocationContext ic) throws Throwable
     {
-        throw new UnsupportedOperationException("TODO");
+        final CacheDefaults defaults = helper.findDefaults(ic);
+
+        final CacheRemoveAll cacheRemoveAll = ic.getMethod().getAnnotation(CacheRemoveAll.class);
+        final String cacheName = helper.defaultName(ic.getMethod(), defaults, cacheRemoveAll.cacheName());
+        final boolean afterInvocation = cacheRemoveAll.afterInvocation();
+
+        final CacheKeyInvocationContext<CacheRemoveAll> context = new CacheKeyInvocationContextImpl<CacheRemoveAll>(ic, cacheRemoveAll, cacheName);
+        if (!afterInvocation)
+        {
+            removeAll(context, defaults, cacheRemoveAll);
+        }
+
+        final Object result;
+        try
+        {
+            result = ic.proceed();
+        }
+        catch (final Throwable t)
+        {
+            if (afterInvocation)
+            {
+                if (helper.isIncluded(t.getClass(), cacheRemoveAll.evictFor(), cacheRemoveAll.noEvictFor()))
+                {
+                    removeAll(context, defaults, cacheRemoveAll);
+                }
+            }
+            throw t;
+        }
+
+        if (afterInvocation)
+        {
+            removeAll(context, defaults, cacheRemoveAll);
+        }
+
+        return result;
+    }
+
+    private void removeAll(final CacheKeyInvocationContext<CacheRemoveAll> context, final CacheDefaults defaults, final CacheRemoveAll cacheRemoveAll)
+    {
+        final Cache<Object, Object> cache = helper.cacheResolverFactoryFor(defaults, cacheRemoveAll.cacheResolverFactory()).getCacheResolver(context).resolveCache(context);
+        cache.removeAll();
     }
 }
