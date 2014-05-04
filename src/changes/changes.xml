@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-118" dev="olamy" type="add" due-to="Romain Manni-Bucau">
+                Add jcache implementation
+            </action>
             <action issue="JCS-113" dev="sebb" type="fix">
                 Potential NPE in JDBCDiskCache
                 Fixed NPEs in getSize() and getStatistics()
