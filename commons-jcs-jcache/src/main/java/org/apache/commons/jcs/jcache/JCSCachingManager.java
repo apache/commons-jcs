@@ -113,8 +113,11 @@ public class JCSCachingManager implements CacheManager
         final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
         if (!caches.containsKey(cacheName))
         {
-            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(loader, new JCSCache(loader, this, new JCSConfiguration(
-                    configuration, keyType, valueType), instance.getCache(cacheName), instance.getConfigurationProperties()), Cache.class);
+            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(
+                    loader, new JCSCache(loader, this, cacheName,
+                                        new JCSConfiguration(configuration, keyType, valueType),
+                                        instance.getCache(cacheName),
+                                        instance.getConfigurationProperties()), Cache.class);
             caches.putIfAbsent(cacheName, cache);
         }
         else

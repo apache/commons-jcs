@@ -20,6 +20,8 @@ package org.apache.commons.jcs.jcache;
 
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,6 +40,7 @@ import javax.cache.configuration.CompleteConfiguration;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.Factory;
 import javax.cache.event.CacheEntryEvent;
+import javax.cache.event.CacheEntryListener;
 import javax.cache.event.EventType;
 import javax.cache.expiry.Duration;
 import javax.cache.expiry.EternalExpiryPolicy;
@@ -54,8 +57,12 @@ import javax.management.ObjectName;
 
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
+import org.apache.commons.jcs.engine.ElementAttributes;
 import org.apache.commons.jcs.engine.behavior.ICacheElement;
+import org.apache.commons.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.commons.jcs.engine.behavior.IElementSerializer;
+import org.apache.commons.jcs.engine.control.event.behavior.IElementEvent;
+import org.apache.commons.jcs.engine.control.event.behavior.IElementEventHandler;
 import org.apache.commons.jcs.engine.control.CompositeCache;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheMXBean;
 import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
@@ -84,10 +91,16 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     private final IElementSerializer serializer = new StandardSerializer();
     private final ExecutorService pool;
 
-    public JCSCache(final ClassLoader classLoader, final CacheManager mgr, final JCSConfiguration<K, V> configuration,
-            final CompositeCache<K, JCSElement<V>> cache, final Properties properties)
+    public JCSCache(final ClassLoader classLoader, final CacheManager mgr,
+                    final String cacheName,
+                    final JCSConfiguration<K, V> configuration,
+                    final CompositeCache<K, JCSElement<V>> cache, final Properties properties)
     {
         manager = mgr;
+
+        final ICompositeCacheAttributes cacheAttributes = cache.getCacheAttributes();
+        cacheAttributes.setCacheName(cacheName);
+
         delegate = new CacheAccess<K, JCSElement<V>>(cache);
         config = configuration;
         DaemonThreadFactory threadFactory = new DaemonThreadFactory("JCS-JCache-");
@@ -825,10 +838,25 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
 
         delegate.dispose();
         manager.destroyCache(getName());
+        close(loader);
+        close(writer);
+        close(expiryPolicy);
+        for (final JCSListener<K, V> listener : listeners.values())
+        {
+            close(listener);
+        }
         closed = true;
         listeners.clear();
         JMXs.unregister(cacheConfigObjectName);
         JMXs.unregister(cacheStatsObjectName);
+    }
+
+    private static void close(final Object potentiallyCloseable)
+    {
+        if (Closeable.class.isInstance(potentiallyCloseable))
+        {
+            Closeable.class.cast(potentiallyCloseable);
+        }
     }
 
     @Override
