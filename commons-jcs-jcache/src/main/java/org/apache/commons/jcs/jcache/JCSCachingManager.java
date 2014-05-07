@@ -18,23 +18,20 @@
  */
 package org.apache.commons.jcs.jcache;
 
-import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Proxy;
-import java.net.URI;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareCache;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
 import javax.cache.configuration.Configuration;
 import javax.cache.spi.CachingProvider;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-import org.apache.commons.jcs.engine.control.CompositeCacheManager;
-import org.apache.commons.jcs.jcache.proxy.ClassLoaderAwareHandler;
+import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
 public class JCSCachingManager implements CacheManager
 {
@@ -43,7 +40,7 @@ public class JCSCachingManager implements CacheManager
     private final ClassLoader loader;
     private final Properties properties;
     private final ConcurrentMap<String, Cache<?, ?>> caches = new ConcurrentHashMap<String, Cache<?, ?>>();
-    private final CompositeCacheManager instance;
+    private final Properties configProperties;
     private volatile boolean closed = false;
 
     public JCSCachingManager(final CachingProvider provider, final URI uri, final ClassLoader loader, final Properties properties)
@@ -51,9 +48,11 @@ public class JCSCachingManager implements CacheManager
         this.provider = provider;
         this.uri = uri;
         this.loader = loader;
-        this.properties = properties;
+        this.properties = readConfig(uri, loader, properties);
+        this.configProperties = properties;
+    }
 
-        instance = CompositeCacheManager.getUnconfiguredInstance();
+    private Properties readConfig(final URI uri, final ClassLoader loader, final Properties properties) {
         final Properties props = new Properties();
         InputStream inStream = null;
         try
@@ -90,7 +89,7 @@ public class JCSCachingManager implements CacheManager
         {
             props.putAll(properties);
         }
-        instance.configure(props);
+        return props;
     }
 
     private void assertNotClosed()
@@ -113,11 +112,7 @@ public class JCSCachingManager implements CacheManager
         final Class<?> valueType = configuration == null ? Object.class : configuration.getValueType();
         if (!caches.containsKey(cacheName))
         {
-            final Cache<K, V> cache = ClassLoaderAwareHandler.newProxy(
-                    loader, new JCSCache(loader, this, cacheName,
-                                        new JCSConfiguration(configuration, keyType, valueType),
-                                        instance.getCache(cacheName),
-                                        instance.getConfigurationProperties()), Cache.class);
+            final Cache<K, V> cache = ClassLoaderAwareCache.wrap(loader, new JCSCache(loader, this, cacheName, new JCSConfiguration(configuration, keyType, valueType), properties));
             caches.putIfAbsent(cacheName, cache);
         }
         else
@@ -133,14 +128,11 @@ public class JCSCachingManager implements CacheManager
         assertNotClosed();
         assertNotNull(cacheName, "cacheName");
         final Cache<?, ?> cache = caches.remove(cacheName);
-        instance.freeCache(cacheName, true);
         if (cache != null && !cache.isClosed())
         {
             cache.clear();
             cache.close();
-            instance.freeCache(cacheName, true);
         }
-        instance.shutDown();
     }
 
     @Override
@@ -165,7 +157,7 @@ public class JCSCachingManager implements CacheManager
     private JCSCache<?, ?, ?> getJCSCache(final String cacheName)
     {
         final Cache<?, ?> cache = caches.get(cacheName);
-        return JCSCache.class.cast(ClassLoaderAwareHandler.class.cast(Proxy.getInvocationHandler(cache)).getDelegate());
+        return JCSCache.class.cast(ClassLoaderAwareCache.getDelegate(cache));
     }
 
     @Override
@@ -206,7 +198,6 @@ public class JCSCachingManager implements CacheManager
         {
             JCSCachingProvider.class.cast(provider).remove(this);
         }
-        instance.shutDown();
     }
 
     @Override
@@ -295,6 +286,6 @@ public class JCSCachingManager implements CacheManager
     @Override
     public Properties getProperties()
     {
-        return properties;
+        return configProperties;
     }
 }

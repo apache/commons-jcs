@@ -34,7 +34,7 @@ public class JCSElement<V> implements Serializable
 
     public boolean isExpired()
     {
-        return end != -1 && (end == 0 || Times.now() > end);
+        return end != -1 && (end == 0 || Times.now(false) > end);
     }
 
     public V getElement()
@@ -54,7 +54,7 @@ public class JCSElement<V> implements Serializable
         }
         else
         {
-            end = duration.getAdjustedTime(Times.now());
+            end = duration.getAdjustedTime(Times.now(false));
         }
     }
 }

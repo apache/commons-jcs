@@ -140,6 +140,7 @@
     <module>commons-jcs-core</module>
     <module>commons-jcs-jcache</module>
     <module>commons-jcs-tck-tests</module>
+    <module>commons-jcs-jcache-extras</module>
   </modules>
 
   <developers>
@@ -327,6 +328,19 @@
         <artifactId>geronimo-interceptor_1.1_spec</artifactId>
         <version>1.0</version>
         <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-atinject_1.0_spec</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.openwebbeans</groupId>
+        <artifactId>openwebbeans-impl</artifactId>
+        <version>1.2.2</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>

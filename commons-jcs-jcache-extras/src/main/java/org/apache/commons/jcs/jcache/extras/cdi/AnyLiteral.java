@@ -1,5 +1,3 @@
-package org.apache.commons.jcs.jcache;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,20 +16,18 @@ package org.apache.commons.jcs.jcache;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.commons.jcs.jcache.extras.cdi;
 
-public class Times
+import javax.enterprise.inject.Any;
+import javax.enterprise.util.AnnotationLiteral;
+
+public class AnyLiteral extends AnnotationLiteral<Any> implements Any
 {
-    public static long now(final boolean ignore)
-    {
-        if (ignore)
-        {
-            return -1;
-        }
-        return System.nanoTime() / 1000;
-    }
+    public static final AnyLiteral INSTANCE = new AnyLiteral();
 
-    private Times()
+    @Override
+    public String toString()
     {
-        // no-op
+        return "@javax.enterprise.inject.Any()";
     }
 }

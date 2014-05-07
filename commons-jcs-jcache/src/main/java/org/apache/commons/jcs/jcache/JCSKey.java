@@ -1,5 +1,3 @@
-package org.apache.commons.jcs.jcache;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,20 +16,47 @@ package org.apache.commons.jcs.jcache;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.commons.jcs.jcache;
 
-public class Times
+import java.io.Serializable;
+
+public class JCSKey<K extends Serializable> implements Serializable
 {
-    public static long now(final boolean ignore)
-    {
-        if (ignore)
-        {
-            return -1;
-        }
-        return System.nanoTime() / 1000;
+    private final K key;
+    private volatile long lastAccess = 0;
+
+    public JCSKey(final K key) {
+        this.key = key;
     }
 
-    private Times()
+    public void access(final long time)
     {
-        // no-op
+        lastAccess = time;
+    }
+
+    public long lastAccess()
+    {
+        return lastAccess;
+    }
+
+    public K getKey()
+    {
+        return key;
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if (this == o) return true;
+        // if (o == null || getClass() != o.getClass()) return false; // not needed normally
+        final JCSKey jcsKey = JCSKey.class.cast(o);
+        return key.equals(jcsKey.key);
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return key.hashCode();
     }
 }

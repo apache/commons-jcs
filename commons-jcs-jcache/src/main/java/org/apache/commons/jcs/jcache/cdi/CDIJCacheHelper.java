@@ -18,9 +18,6 @@
  */
 package org.apache.commons.jcs.jcache.cdi;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKeyGenerator;
 import javax.cache.annotation.CacheResolverFactory;
@@ -36,11 +33,12 @@ import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class CDIJCacheHelper
 {
-    private static final Log LOGGER = LogFactory.getLog(CDIJCacheHelper.class);
+    private static final Logger LOGGER = Logger.getLogger(CDIJCacheHelper.class.getName());
 
     private final CacheResolverFactory defaultCacheResolverFactory = new CacheResolverFactoryImpl();
     private final CacheKeyGeneratorImpl defaultCacheKeyGenerator = new CacheKeyGeneratorImpl();
@@ -173,7 +171,7 @@ public class CDIJCacheHelper
         final boolean dependent = Dependent.class.equals(scope);
         if (!dependent && !beanManager.isNormalScope(scope))
         {
-            LOGGER.warn("Not normal scope beans (" + type.getName() + ") can leak");
+            LOGGER.warning("Not normal scope beans (" + type.getName() + ") can leak");
         }
         try
         {

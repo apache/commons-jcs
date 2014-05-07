@@ -1,3 +1,3 @@
 #! /bin/bash
-mvn clean install -PjcacheTck
+mvn clean install -Djcache.tck
 
