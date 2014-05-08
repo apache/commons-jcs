@@ -257,7 +257,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
                 elt.update(expiryPolicy.getExpiryForAccess());
                 if (elt.isExpired())
                 {
-                    delegate.remove(cacheKey);
+                    expires(cacheKey);
                 }
                 else
                 {
@@ -301,7 +301,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         {
             if (!created)
             {
-                delegate.remove(cacheKey);
+                expires(cacheKey);
             }
         }
         else
@@ -331,6 +331,16 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             }
 
             evictIfMaxSize();
+        }
+    }
+
+    private void expires(final JCSKey<K> cacheKey)
+    {
+        final JCSElement<V> elt = delegate.remove(cacheKey);
+        for (final JCSListener<K, V> listener : listeners.values())
+        {
+            listener.onExpired(Arrays.<CacheEntryEvent<? extends K, ? extends V>> asList(new JCSCacheEntryEvent<K, V>(this,
+                    EventType.REMOVED, null, cacheKey.getKey(), elt.getElement())));
         }
     }
 
@@ -459,7 +469,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             elt.update(expiryPolicy.getExpiryForAccess());
             if (elt.isExpired())
             {
-                delegate.remove(key);
+                expires(key);
             }
             else
             {
