@@ -288,4 +288,8 @@ public class JCSCachingManager implements CacheManager
     {
         return configProperties;
     }
+
+    public void release(final String name) {
+        caches.remove(name);
+    }
 }

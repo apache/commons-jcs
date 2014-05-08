@@ -66,7 +66,7 @@ import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 public class JCSCache<K extends Serializable, V extends Serializable, C extends CompleteConfiguration<K, V>> implements Cache<K, V>
 {
     private final ConcurrentMap<JCSKey<K>, JCSElement<V>> delegate;
-    private final CacheManager manager;
+    private final JCSCachingManager manager;
     private final JCSConfiguration<K, V> config;
     private final CacheLoader<K, V> loader;
     private final CacheWriter<? super K, ? super V> writer;
@@ -82,7 +82,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     private final ExecutorService pool;
 
 
-    public JCSCache(final ClassLoader classLoader, final CacheManager mgr,
+    public JCSCache(final ClassLoader classLoader, final JCSCachingManager mgr,
                     final String cacheName,
                     final JCSConfiguration<K, V> configuration,
                     final Properties properties)
@@ -828,9 +828,9 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             return;
         }
 
-        manager.destroyCache(getName());
+        manager.release(getName());
         closed = true;
-        delegate.clear();
+        pool.shutdownNow();
         close(loader);
         close(writer);
         close(expiryPolicy);
@@ -839,9 +839,9 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             close(listener);
         }
         listeners.clear();
-        pool.shutdownNow();
         JMXs.unregister(cacheConfigObjectName);
         JMXs.unregister(cacheStatsObjectName);
+        delegate.clear();
     }
 
     private static void close(final Object potentiallyCloseable)
