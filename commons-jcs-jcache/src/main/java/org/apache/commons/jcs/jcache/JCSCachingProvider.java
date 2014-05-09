@@ -127,7 +127,7 @@ public class JCSCachingProvider implements CachingProvider
     @Override
     public boolean isSupported(final OptionalFeature optionalFeature)
     {
-        return false;
+        return optionalFeature == OptionalFeature.STORE_BY_REFERENCE;
     }
 
     @Override

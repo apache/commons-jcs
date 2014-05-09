@@ -68,7 +68,7 @@ public class CacheResolverFactoryImpl implements CacheResolverFactory
 
     private Cache<?, ?> createCache(final String exceptionCacheName)
     {
-        cacheManager.createCache(exceptionCacheName, new MutableConfiguration<Object, Object>());
+        cacheManager.createCache(exceptionCacheName, new MutableConfiguration<Object, Object>().setStoreByValue(false));
         return cacheManager.getCache(exceptionCacheName);
     }
 }

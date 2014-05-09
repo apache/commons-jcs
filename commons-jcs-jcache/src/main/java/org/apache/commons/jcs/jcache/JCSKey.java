@@ -20,7 +20,7 @@ package org.apache.commons.jcs.jcache;
 
 import java.io.Serializable;
 
-public class JCSKey<K extends Serializable> implements Serializable
+public class JCSKey<K> implements Serializable
 {
     private final K key;
     private volatile long lastAccess = 0;

@@ -27,7 +27,6 @@ import javax.cache.integration.CompletionListener;
 import javax.cache.processor.EntryProcessor;
 import javax.cache.processor.EntryProcessorException;
 import javax.cache.processor.EntryProcessorResult;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,7 +38,7 @@ import java.util.Set;
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
 // kind of transactional view for a Cache<K, V>, to use with EntryProcessor
-public class TempStateCacheView<K extends Serializable, V extends Serializable> implements Cache<K, V>
+public class TempStateCacheView<K, V> implements Cache<K, V>
 {
     private final JCSCache<K, V, ?> cache;
     private final Map<K, V> put = new HashMap<K, V>();
@@ -225,7 +224,7 @@ public class TempStateCacheView<K extends Serializable, V extends Serializable> 
         remove.addAll(keys);
         for (final K k : keys)
         {
-            put.remove(keys);
+            put.remove(k);
         }
     }
 

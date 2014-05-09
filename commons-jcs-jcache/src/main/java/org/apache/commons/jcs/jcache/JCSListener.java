@@ -29,11 +29,10 @@ import javax.cache.event.CacheEntryListenerException;
 import javax.cache.event.CacheEntryRemovedListener;
 import javax.cache.event.CacheEntryUpdatedListener;
 import java.io.Closeable;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JCSListener<K extends Serializable, V extends Serializable> implements Closeable
+public class JCSListener<K, V> implements Closeable
 {
     private final boolean oldValue;
     private final boolean synchronous;

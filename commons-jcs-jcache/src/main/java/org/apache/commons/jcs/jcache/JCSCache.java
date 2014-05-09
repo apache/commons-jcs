@@ -23,7 +23,6 @@ import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
 import org.apache.commons.jcs.jcache.jmx.JMXs;
 import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
-import org.apache.commons.jcs.jcache.serialization.Serializations;
 import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
 
 import javax.cache.Cache;
@@ -63,8 +62,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
+import static org.apache.commons.jcs.jcache.serialization.Serializations.copy;
 
-public class JCSCache<K extends Serializable, V extends Serializable, C extends CompleteConfiguration<K, V>> implements Cache<K, V>
+public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Cache<K, V>
 {
     private static final Subsitutor SUBSTITUTOR = Subsitutor.Helper.INSTANCE;
 
@@ -110,7 +110,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         final long evictionPause = Long.parseLong(properties.getProperty(cacheName + ".evictionPause", properties.getProperty("evictionPause", "30000")));
         if (evictionPause > 0)
         {
-            pool.submit(new EvictionThread<K, V>(this, evictionPause));
+            pool.submit(new EvictionThread<K>(this, evictionPause));
         }
 
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
@@ -227,7 +227,8 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
     {
         if (config.isStoreByValue())
         {
-            delegate.put(new JCSKey<K>(Serializations.copy(manager.getClassLoader(), key.getKey())), elt);
+            final Serializable copy = copy(manager.getClassLoader(), Serializable.class.cast(key.getKey()));
+            delegate.put(new JCSKey<K>((K) copy), elt);
         }
     }
 
@@ -295,7 +296,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         final V old = oldElt != null ? oldElt.getElement() : null;
 
         final boolean storeByValue = config.isStoreByValue();
-        final V value = storeByValue ? Serializations.copy(manager.getClassLoader(), rawValue) : rawValue;
+        final V value = storeByValue ? (V) copy(manager.getClassLoader(), Serializable.class.cast(rawValue)) : rawValue;
 
         final boolean created = old == null;
         final JCSElement<V> element = new JCSElement<V>(value, created ? expiryPolicy.getExpiryForCreation()
@@ -310,7 +311,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         else
         {
             writer.write(new JCSEntry<K, V>(key, value));
-            final JCSKey<K> jcsKey = storeByValue ? new JCSKey<K>(Serializations.copy(manager.getClassLoader(), key)) : cacheKey;
+            final JCSKey<K> jcsKey = storeByValue ? new JCSKey<K>((K) copy(manager.getClassLoader(), Serializable.class.cast(key))) : cacheKey;
             jcsKey.access(start);
             delegate.put(jcsKey, element);
             for (final JCSListener<K, V> listener : listeners.values())
@@ -907,7 +908,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
         JMXs.unregister(cacheStatsObjectName);
     }
 
-    private static class EvictionThread<K extends Serializable, V extends Serializable> implements Runnable
+    private static class EvictionThread<K> implements Runnable
     {
         private final long pause;
         private final JCSCache<K, ?, ?> cache;
@@ -959,7 +960,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
             return;
         }
 
-        final ConcurrentMap<JCSKey<K>, ? extends JCSElement<? extends Serializable>> map = delegate;
+        final ConcurrentMap<JCSKey<K>, ? extends JCSElement<?>> map = delegate;
         try
         {
             final TreeSet<JCSKey<K>> treeSet = new TreeSet<JCSKey<K>>(new Comparator<JCSKey<K>>()
@@ -983,7 +984,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
                 if (delete >= maxDelete) {
                     break;
                 }
-                final JCSElement<? extends Serializable> elt = map.get(key);
+                final JCSElement<?> elt = map.get(key);
                 if (elt != null) {
                     if (elt.isExpired())
                     {
@@ -1001,7 +1002,7 @@ public class JCSCache<K extends Serializable, V extends Serializable, C extends 
                     if (delete >= maxDelete) {
                         break;
                     }
-                    final JCSElement<? extends Serializable> elt = map.get(key);
+                    final JCSElement<?> elt = map.get(key);
                     if (elt != null) {
                         map.remove(key);
                         statistics.increaseEvictions(1);

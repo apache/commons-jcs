@@ -57,7 +57,7 @@ public class JCSCachingManager implements CacheManager
         InputStream inStream = null;
         try
         {
-            if (JCSCachingProvider.DEFAULT_URI == uri || uri.toURL().getProtocol().equals("jcs"))
+            if (JCSCachingProvider.DEFAULT_URI.toString().equals(uri.toString()) || uri.toURL().getProtocol().equals("jcs"))
             {
                 inStream = loader.getResourceAsStream(uri.getPath());
             }
