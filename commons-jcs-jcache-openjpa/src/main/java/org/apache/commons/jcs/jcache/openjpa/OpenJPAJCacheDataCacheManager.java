@@ -69,7 +69,10 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
     public void close()
     {
         super.close();
-        cacheManager.close();
+        if (!cacheManager.isClosed())
+        {
+            cacheManager.close();
+        }
         provider.close();
     }
 
