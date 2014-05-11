@@ -33,6 +33,7 @@ import javax.cache.expiry.ExpiryPolicy;
 import javax.cache.integration.CacheLoader;
 import javax.cache.integration.CacheWriter;
 import javax.cache.spi.CachingProvider;
+import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
 
@@ -59,7 +60,9 @@ public class OpenJPAJCacheDataCacheManager extends DataCacheManagerImpl
                 }
             }
         }
-        cacheManager = provider.getCacheManager(provider.getDefaultURI(), provider.getDefaultClassLoader(), properties);
+
+        final String uri = properties.getProperty("jcache.uri", provider.getDefaultURI().toString());
+        cacheManager = provider.getCacheManager(URI.create(uri), provider.getDefaultClassLoader(), properties);
     }
 
     @Override

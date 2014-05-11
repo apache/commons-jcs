@@ -51,9 +51,11 @@ public class OpenJPAJCacheDataCacheTest
         setProperty("openjpa.ConnectionURL", "jdbc:derby:memory:test;create=true");
         setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
         setProperty("openjpa.DataCacheManager", "jcache");
-        setProperty("openjpa.DataCache", "jcache");
-        setProperty("openjpa.QueryCache", "jcache");
         setProperty("openjpa.RuntimeUnenhancedClasses", "supported");
+
+        // implicit
+        // setProperty("openjpa.DataCache", "jcache");
+        // setProperty("openjpa.QueryCache", "jcache");
     }};
 
     @Test
