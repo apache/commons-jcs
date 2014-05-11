@@ -222,6 +222,13 @@ public class CompositeCacheManager
         return new CompositeCacheManager();
     }
 
+    protected static CompositeCacheManager createInitializedInstance()
+    {
+        final CompositeCacheManager compositeCacheManager = new CompositeCacheManager();
+        compositeCacheManager.initialize();
+        return compositeCacheManager;
+    }
+
     /**
      * Default constructor
      */

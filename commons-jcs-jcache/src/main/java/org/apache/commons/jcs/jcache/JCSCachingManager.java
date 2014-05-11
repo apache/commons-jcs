@@ -36,6 +36,14 @@ import static org.apache.commons.jcs.jcache.Asserts.assertNotNull;
 
 public class JCSCachingManager implements CacheManager
 {
+    private static class InternalManager extends CompositeCacheManager
+    {
+        protected static CompositeCacheManager create()
+        {
+            return createInitializedInstance();
+        }
+    }
+
     private final CachingProvider provider;
     private final URI uri;
     private final ClassLoader loader;
@@ -43,7 +51,7 @@ public class JCSCachingManager implements CacheManager
     private final ConcurrentMap<String, Cache<?, ?>> caches = new ConcurrentHashMap<String, Cache<?, ?>>();
     private final Properties configProperties;
     private volatile boolean closed = false;
-    private CompositeCacheManager delegate = CompositeCacheManager.getUnconfiguredInstance();;
+    private CompositeCacheManager delegate = InternalManager.create();
 
     public JCSCachingManager(final CachingProvider provider, final URI uri, final ClassLoader loader, final Properties properties)
     {
