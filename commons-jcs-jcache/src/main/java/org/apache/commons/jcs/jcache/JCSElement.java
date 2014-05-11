@@ -24,7 +24,7 @@ import java.io.Serializable;
 public class JCSElement<V> implements Serializable
 {
     private final V element;
-    private volatile long end;
+    private volatile long end = Long.MIN_VALUE;
 
     public JCSElement(final V element, final Duration duration)
     {
@@ -44,6 +44,11 @@ public class JCSElement<V> implements Serializable
 
     public void update(final Duration duration)
     {
+        if (end != Long.MIN_VALUE && duration == null)
+        {
+            return;
+        }
+
         if (duration == null || duration.isEternal())
         {
             end = -1;

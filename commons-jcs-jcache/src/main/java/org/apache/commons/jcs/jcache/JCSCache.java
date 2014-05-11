@@ -23,6 +23,7 @@ import org.apache.commons.jcs.jcache.jmx.JCSCacheStatisticsMXBean;
 import org.apache.commons.jcs.jcache.jmx.JMXs;
 import org.apache.commons.jcs.jcache.lang.Subsitutor;
 import org.apache.commons.jcs.jcache.proxy.ExceptionWrapperHandler;
+import org.apache.commons.jcs.jcache.spi.CacheEvictor;
 import org.apache.commons.jcs.jcache.thread.DaemonThreadFactory;
 
 import javax.cache.Cache;
@@ -110,7 +111,24 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
         final long evictionPause = Long.parseLong(properties.getProperty(cacheName + ".evictionPause", properties.getProperty("evictionPause", "30000")));
         if (evictionPause > 0)
         {
-            pool.submit(new EvictionThread<K>(this, evictionPause));
+            final CacheEvictor<K, V> evictor;
+            final String evictorClass = property(properties, cacheName, "evictor", null);
+            if (evictorClass != null)
+            {
+                try
+                {
+                    evictor = CacheEvictor.class.cast(classLoader.loadClass(evictorClass).newInstance());
+                }
+                catch (final Exception e)
+                {
+                    throw new IllegalStateException(e);
+                }
+            }
+            else
+            {
+                evictor = null;
+            }
+            pool.submit(new EvictionThread<K, V>(this, evictionPause, evictor));
         }
 
         final Factory<CacheLoader<K, V>> cacheLoaderFactory = configuration.getCacheLoaderFactory();
@@ -176,7 +194,12 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
 
     private static String property(final Properties properties, final String cacheName, final String name, final String defaultValue)
     {
-        return SUBSTITUTOR.substitute(properties.getProperty(cacheName + "." + name, properties.getProperty(name, defaultValue)));
+        final String property = properties.getProperty(cacheName + "." + name, properties.getProperty(name, defaultValue));
+        if (property == null)
+        {
+            return null;
+        }
+        return SUBSTITUTOR.substitute(property);
     }
 
     private void assertNotClosed()
@@ -908,15 +931,17 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
         JMXs.unregister(cacheStatsObjectName);
     }
 
-    private static class EvictionThread<K> implements Runnable
+    private static class EvictionThread<K, V> implements Runnable
     {
         private final long pause;
-        private final JCSCache<K, ?, ?> cache;
+        private final JCSCache<K, V, ?> cache;
+        private final CacheEvictor<K, V> evictor;
 
-        public EvictionThread(final JCSCache<K, ?, ?> cache, final long evictionPause)
+        public EvictionThread(final JCSCache<K, V, ?> cache, final long evictionPause, final CacheEvictor<K, V> evictor)
         {
             this.cache = cache;
             this.pause = evictionPause;
+            this.evictor = evictor;
         }
 
         @Override
@@ -924,7 +949,14 @@ public class JCSCache<K, V, C extends CompleteConfiguration<K, V>> implements Ca
         {
             while (!cache.isClosed())
             {
-                cache.evict();
+                if (evictor != null)
+                {
+                    evictor.evict(cache);
+                }
+                else
+                {
+                    cache.evict();
+                }
                 try
                 {
                     Thread.sleep(pause);
