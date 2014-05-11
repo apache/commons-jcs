@@ -50,12 +50,10 @@ public class JDBCDiskCachePoolAccessManagerUnitTest
         props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
         props.put( prefix + ".driverClassName", driverClassName );
 
-        JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( props );
-        // in case another test has initilized this. See: JCS-114, JCS-115
-        manager.setProps( props );
+        JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance();
 
         // DO WORK
-        JDBCDiskCachePoolAccessAttributes result = manager.configurePoolAccessAttributes( poolName );
+        JDBCDiskCachePoolAccessAttributes result = manager.configurePoolAccessAttributes( poolName, props );
 
         // VERIFY
         assertEquals( "Wrong url value", url, result.getUrl() );
@@ -91,9 +89,7 @@ public class JDBCDiskCachePoolAccessManagerUnitTest
         props.put( prefix + ".maxActive", String.valueOf( maxActive ) );
         props.put( prefix + ".driverClassName", driverClassName );
 
-        JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( props );
-        // in case another test has initilized this. See: JCS-114, JCS-115
-        manager.setProps( props );
+        JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance();
 
         System.setProperty( "hsqldb.cache_scale", "8" );
 
@@ -106,7 +102,7 @@ public class JDBCDiskCachePoolAccessManagerUnitTest
         HsqlSetupTableUtil.setupTABLE( cConn, "JCSTESTTABLE_ACCESS" );
 
         // DO WORK
-        JDBCDiskCachePoolAccess result = manager.getJDBCDiskCachePoolAccess( poolName );
+        JDBCDiskCachePoolAccess result = manager.getJDBCDiskCachePoolAccess( poolName, props );
 
         // VERIFY
         assertNotNull( "Should have an access class", result );

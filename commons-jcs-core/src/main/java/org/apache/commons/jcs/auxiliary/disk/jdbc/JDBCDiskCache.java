@@ -152,9 +152,10 @@ public class JDBCDiskCache<K extends Serializable, V extends Serializable>
         JDBCDiskCachePoolAccess poolAccess1 = null;
         if ( cattr.getConnectionPoolName() != null )
         {
-            JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance( compositeCacheManager
-                .getConfigurationProperties() );
-            poolAccess1 = manager.getJDBCDiskCachePoolAccess( cattr.getConnectionPoolName() );
+            JDBCDiskCachePoolAccessManager manager = JDBCDiskCachePoolAccessManager.getInstance();
+            poolAccess1 = manager.getJDBCDiskCachePoolAccess(
+                    cattr.getConnectionPoolName(),
+                    compositeCacheManager.getConfigurationProperties() );
         }
         else
         {

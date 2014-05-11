@@ -20,6 +20,9 @@
 	</properties>
 	<body>
 		<release version="2.0" date="unreleased" description="JDK 1.6 based major release">
+            <action issue="JCS-115" dev="tv" type="fix" due-to="Sebastian Bazley">
+                JDBCDiskCachePoolAccessManager is thread hostile
+            </action>
             <action issue="JCS-118" dev="olamy" type="add" due-to="Romain Manni-Bucau">
                 Add jcache implementation
             </action>

@@ -57,32 +57,23 @@ public class JDBCDiskCachePoolAccessManager
     private static final Log log = LogFactory.getLog( JDBCDiskCachePoolAccessManager.class );
 
     /**
-     * You can specify the properties to be used to configure the thread pool. Setting this post
-     * initialization will have no effect.
-     */
-    private Properties props = null;
-
-    /**
      * Singleton, private
-     * <p>
-     * @param props
      */
-    private JDBCDiskCachePoolAccessManager( Properties props )
+    private JDBCDiskCachePoolAccessManager()
     {
-        this.setProps( props );
+        // empty
     }
 
     /**
      * returns a singleton instance
      * <p>
-     * @param props
      * @return JDBCDiskCachePoolAccessManager
      */
-    public static synchronized JDBCDiskCachePoolAccessManager getInstance( Properties props )
+    public static synchronized JDBCDiskCachePoolAccessManager getInstance()
     {
         if ( instance == null )
         {
-            instance = new JDBCDiskCachePoolAccessManager( props );
+            instance = new JDBCDiskCachePoolAccessManager();
         }
         return instance;
     }
@@ -90,16 +81,17 @@ public class JDBCDiskCachePoolAccessManager
     /**
      * Returns a pool for the name if one has been created. Otherwise it creates a pool.
      * <p>
-     * @param poolName
+     * @param poolName the name of the pool
+     * @param props the configuration properties for the pool
      * @return JDBCDiskCachePoolAccess
      */
-    public synchronized JDBCDiskCachePoolAccess getJDBCDiskCachePoolAccess( String poolName )
+    public synchronized JDBCDiskCachePoolAccess getJDBCDiskCachePoolAccess( String poolName, Properties props )
     {
         JDBCDiskCachePoolAccess poolAccess = pools.get( poolName );
 
         if ( poolAccess == null )
         {
-            JDBCDiskCachePoolAccessAttributes poolAttributes = configurePoolAccessAttributes( poolName );
+            JDBCDiskCachePoolAccessAttributes poolAttributes = configurePoolAccessAttributes( poolName, props );
             try
             {
                 poolAccess = JDBCDiskCachePoolAccessFactory.createPoolAccess( poolAttributes );
@@ -124,15 +116,16 @@ public class JDBCDiskCachePoolAccessManager
     /**
      * Configures the attributes using the properties.
      * <p>
-     * @param poolName
+     * @param poolName the name of the pool
+     * @param props the configuration properties for the pool
      * @return JDBCDiskCachePoolAccessAttributes
      */
-    protected JDBCDiskCachePoolAccessAttributes configurePoolAccessAttributes( String poolName )
+    protected JDBCDiskCachePoolAccessAttributes configurePoolAccessAttributes( String poolName, Properties props )
     {
         JDBCDiskCachePoolAccessAttributes poolAttributes = new JDBCDiskCachePoolAccessAttributes();
 
         String poolAccessAttributePrefix = POOL_CONFIGURATION_PREFIX + poolName + ATTRIBUTE_PREFIX;
-        PropertySetter.setProperties( poolAttributes, getProps(), poolAccessAttributePrefix + "." );
+        PropertySetter.setProperties( poolAttributes, props, poolAccessAttributePrefix + "." );
 
         poolAttributes.setPoolName( poolName );
 
@@ -141,21 +134,5 @@ public class JDBCDiskCachePoolAccessManager
             log.info( "Configured attributes " + poolAttributes );
         }
         return poolAttributes;
-    }
-
-    /**
-     * @param props the props to set
-     */
-    protected void setProps( Properties props )
-    {
-        this.props = props;
-    }
-
-    /**
-     * @return the props
-     */
-    protected Properties getProps()
-    {
-        return props;
     }
 }
