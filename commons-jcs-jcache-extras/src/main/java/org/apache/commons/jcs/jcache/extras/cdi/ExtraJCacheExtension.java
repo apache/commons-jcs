@@ -31,11 +31,18 @@ import java.util.Properties;
 // add default CacheProvider and CacheManager
 public class ExtraJCacheExtension implements Extension
 {
+    private static final boolean ACTIVATED = "true".equals(System.getProperty("org.apache.jcs.extra.cdi", "true"));
+
     private boolean cacheManagerFound = false;
     private boolean cacheProviderFound = false;
 
     public <A> void processBean(final @Observes ProcessBean<A> processBeanEvent)
     {
+        if (!ACTIVATED)
+        {
+            return;
+        }
+
         if (cacheManagerFound && cacheProviderFound)
         {
             return;
@@ -59,6 +66,11 @@ public class ExtraJCacheExtension implements Extension
 
     public void addJCacheBeans(final @Observes AfterBeanDiscovery afterBeanDiscovery)
     {
+        if (!ACTIVATED)
+        {
+            return;
+        }
+
         if (cacheManagerFound && cacheProviderFound) {
             return;
         }

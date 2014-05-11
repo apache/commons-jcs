@@ -141,6 +141,7 @@
     <module>commons-jcs-jcache</module>
     <module>commons-jcs-tck-tests</module>
     <module>commons-jcs-jcache-extras</module>
+    <module>commons-jcs-jcache-openjpa</module>
   </modules>
 
   <developers>
